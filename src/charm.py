@@ -13,8 +13,9 @@ develop a new k8s charm using the Operator Framework:
 import logging
 
 from ops.charm import CharmBase
-from ops.main import main
 from ops.framework import StoredState
+from ops.main import main
+from ops.model import ActiveStatus
 
 logger = logging.getLogger(__name__)
 
@@ -26,9 +27,13 @@ class GithubRunnerOperator(CharmBase):
 
     def __init__(self, *args):
         super().__init__(*args)
+        self.framework.observe(self.on.install, self._on_install)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
         self.framework.observe(self.on.fortune_action, self._on_fortune_action)
         self._stored.set_default(things=[])
+
+    def _on_install(self, _):
+        self.unit.status = ActiveStatus("Active and running")
 
     def _on_config_changed(self, _):
         # Note: you need to uncomment the example in the config.yaml file for this to work (ensure
@@ -45,8 +50,10 @@ class GithubRunnerOperator(CharmBase):
         if fail:
             event.fail(fail)
         else:
-            event.set_results({"fortune": "A bug in the code is worth two in the documentation."})
+            event.set_results(
+                {"fortune": "A bug in the code is worth two in the documentation."}
+            )
 
 
 if __name__ == "__main__":
-    main(GithubRunnerOperatorCharm)
+    main(GithubRunnerOperator)
