@@ -19,7 +19,7 @@ from ops.framework import StoredState
 logger = logging.getLogger(__name__)
 
 
-class GithubRunnerOperatorCharm(CharmBase):
+class GithubRunnerOperator(CharmBase):
     """Charm the service."""
 
     _stored = StoredState()
