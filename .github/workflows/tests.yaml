@@ -56,4 +56,4 @@ jobs:
         with:
             provider: lxd
       - name: Run test
-        run: tox -e integration -- -m machine
+        run: tox -e integration

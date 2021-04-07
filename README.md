@@ -2,24 +2,24 @@
 
 ## Description
 
-TODO: Describe your charm in a few paragraphs of Markdown
+TODO
 
 ## Usage
 
-TODO: Provide high-level usage, such as required config or relations
+TODO
 
+## Development
 
-## Developing
+This charm uses black and flake8 for formatting. Both are run with the lint stage of tox.
 
-Create and activate a virtualenv with the development requirements:
-
-    virtualenv -p python3 venv
-    source venv/bin/activate
-    pip install -r requirements-dev.txt
 
 ## Testing
 
-The Python operator framework includes a very nice harness for testing
-operator behaviour without full deployment. Just `run_tests`:
+Testing is run via tox and pytest. To run the full test run:
 
-    ./run_tests
+    tox
+
+Dependencies are installed in virtual environments. Integration testing requires a juju controller to execute. These tests will use the existing controller, creating an ephemeral
+model for the tests which is removed after the testing. If you do not already have a controller setup, you can configure a local instance via LXD, see the [upstream
+documentation][https://juju.is/docs/lxd-cloud] for details.
+
