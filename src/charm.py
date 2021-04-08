@@ -15,7 +15,8 @@ import logging
 from ops.charm import CharmBase
 from ops.framework import StoredState
 from ops.main import main
-from ops.model import ActiveStatus
+from ops.model import ActiveStatus, MaintenanceStatus
+from runner import Runner
 
 logger = logging.getLogger(__name__)
 
@@ -31,8 +32,11 @@ class GithubRunnerOperator(CharmBase):
         self.framework.observe(self.on.config_changed, self._on_config_changed)
         self.framework.observe(self.on.fortune_action, self._on_fortune_action)
         self._stored.set_default(things=[])
+        self._runner = Runner()
 
     def _on_install(self, _):
+        self.unit.status = MaintenanceStatus("Installing runner")
+        self._runner.download()
         self.unit.status = ActiveStatus("Active and running")
 
     def _on_config_changed(self, _):

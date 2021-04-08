@@ -1,11 +1,15 @@
 import logging
-from pathlib import Path
-
-import yaml
 
 import pytest
+from runner import Runner
 
 log = logging.getLogger(__name__)
+
+
+async def file_contents(unit, path):
+    cmd = "cat {}".format(path)
+    action = await unit.run(cmd)
+    return action.results["Stdout"]
 
 
 @pytest.mark.abort_on_fail
@@ -15,11 +19,15 @@ async def test_build_and_deploy(ops_test):
     await ops_test.model.wait_for_idle()
 
 
-async def test_status(ops_test):
-    metadata = Path("./metadata.yaml")
-    charm_name = yaml.safe_load(metadata.read_text())["name"]
-    assert ops_test.model.applications[charm_name].units[0].workload_status == "active"
-    assert (
-        ops_test.model.applications[charm_name].units[0].workload_status_message
-        == "Active and running"
-    )
+async def test_status(units):
+    assert units[0].workload_status == "active"
+    assert units[0].workload_status_message == "Active and running"
+
+
+async def test_install(units):
+    runner = Runner()
+    for unit in units:
+        config = await file_contents(unit, runner.runner_path / "config.sh")
+        run = await file_contents(unit, runner.runner_path / "run.sh")
+        assert len(config)
+        assert len(run)
