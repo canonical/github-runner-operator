@@ -20,8 +20,8 @@ async def test_build_and_deploy(ops_test):
 
 
 async def test_status(units):
-    assert units[0].workload_status == "active"
-    assert units[0].workload_status_message == "Active and running"
+    assert units[0].workload_status == "blocked"
+    assert units[0].workload_status_message == "Waiting for registration"
 
 
 async def test_install(units):
