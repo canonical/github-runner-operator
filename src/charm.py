@@ -1,58 +1,60 @@
 #!/usr/bin/env python3
-# Copyright 2021 Chris
+# Copyright 2021 Canonical
 # See LICENSE file for licensing details.
 
-"""Charm the service.
-
-Refer to the following post for a quick-start guide that will help you
-develop a new k8s charm using the Operator Framework:
-
-    https://discourse.charmhub.io/t/4208
-"""
-
 import logging
+import subprocess
 
 from ops.charm import CharmBase
 from ops.framework import StoredState
 from ops.main import main
-from ops.model import ActiveStatus
+from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
+from runner import Runner
 
 logger = logging.getLogger(__name__)
 
 
 class GithubRunnerOperator(CharmBase):
-    """Charm the service."""
-
     _stored = StoredState()
 
     def __init__(self, *args):
         super().__init__(*args)
         self.framework.observe(self.on.install, self._on_install)
-        self.framework.observe(self.on.config_changed, self._on_config_changed)
-        self.framework.observe(self.on.fortune_action, self._on_fortune_action)
-        self._stored.set_default(things=[])
+        self.framework.observe(self.on.register_action, self._on_register_action)
+        self._stored.set_default(registered=False)
+        self._runner = Runner()
 
     def _on_install(self, _):
-        self.unit.status = ActiveStatus("Active and running")
+        self.unit.status = MaintenanceStatus("Installing runner")
+        self._runner.download()
+        self._runner.setup_env()
+        self.unit.status = BlockedStatus("Waiting for registration")
 
-    def _on_config_changed(self, _):
-        # Note: you need to uncomment the example in the config.yaml file for this to work (ensure
-        # to not just leave the example, but adapt to your configuration needs)
-        current = self.config["thing"]
-        if current not in self._stored.things:
-            logger.debug("found a new thing: %r", current)
-            self._stored.things.append(current)
-
-    def _on_fortune_action(self, event):
-        # Note: you need to uncomment the example in the actions.yaml file for this to work (ensure
-        # to not just leave the example, but adapt to your needs for actions commands)
-        fail = event.params["fail"]
-        if fail:
-            event.fail(fail)
-        else:
-            event.set_results(
-                {"fortune": "A bug in the code is worth two in the documentation."}
-            )
+    def _on_register_action(self, event):
+        if self._stored.registered:
+            event.set_results({"status": "Registration aborted, already registered"})
+            logger.error("Can not re-register, unit is already registered")
+            return
+        self.unit.status = MaintenanceStatus("Registering runner")
+        token = event.params["token"]
+        url = event.params["url"]
+        if not token:
+            event.fail("No token provided")
+            return
+        if not url:
+            event.fail("No url provided")
+            return
+        try:
+            self._runner.register(url, token)
+        except subprocess.CalledProcessError as e:
+            logger.error("Register: failed")
+            print(e)
+            logger.error(f"Register: return code {e.returncode}")
+            logger.error(f"Register: output {e.output}")
+            raise
+        event.set_results({"status": "runner registered"})
+        self.unit.status = ActiveStatus("Active and registered")
+        self._stored.registered = True
 
 
 if __name__ == "__main__":
