@@ -1,8 +1,7 @@
 from pathlib import Path
 
-import yaml
-
 import pytest
+import yaml
 
 
 @pytest.fixture
@@ -13,9 +12,14 @@ def metadata():
 
 
 @pytest.fixture
-def application(ops_test, metadata):
+def model(ops_test):
+    return ops_test.model
+
+
+@pytest.fixture
+def application(model, metadata):
     charm_name = metadata["name"]
-    app = ops_test.model.applications[charm_name]
+    app = model.applications[charm_name]
     return app
 
 
