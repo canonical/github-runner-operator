@@ -84,6 +84,7 @@ class Runner:
     def remove_runners(self, offline_only=True, timeout=30):
         """Remove runners"""
         api = self.api
+        repo = None
         if "/" in self.path:
             owner, repo = self.path.split("/")
         for id in self._find_offline_runners(timeout=timeout):
