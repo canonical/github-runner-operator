@@ -1,11 +1,21 @@
-# Copyright 2021 Chris
-# See LICENSE file for licensing details.
-#
-# This is only an example, and you should edit to suit your needs.
-# If you don't need config, you can remove the file entirely.
-# 
- options:
-   thing:
-     default: 🎁
-     description: A thing used by the charm.
-     type: string
+options:
+  path:
+      default: ""
+      type: string
+      description: "Either an organization name or repository in 'org/repo' format"
+  token:
+      default: ""
+      type: string
+      description: "Personal Access Token, required for auto registerting with the given url"
+  quantity:
+      default: 3
+      type: int
+      description: "Quantity of runners to maintain"
+  check-interval:
+      default: "*/1 * * * *"
+      type: string
+      description: "Cron interval to check runners, each deployed unit will check on this interval"
+  virt-type:
+      default: "container"
+      type: string
+      description: "Virtualization type for runners, either container or virtual-machine"

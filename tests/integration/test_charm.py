@@ -1,7 +1,8 @@
 import logging
 
 import pytest
-from runner import Runner
+
+# from runner import Runner
 
 log = logging.getLogger(__name__)
 
@@ -21,13 +22,4 @@ async def test_build_and_deploy(ops_test):
 
 async def test_status(units):
     assert units[0].workload_status == "blocked"
-    assert units[0].workload_status_message == "Waiting for registration"
-
-
-async def test_install(units):
-    runner = Runner()
-    for unit in units:
-        config = await file_contents(unit, runner.runner_path / "config.sh")
-        run = await file_contents(unit, runner.runner_path / "run.sh")
-        assert len(config)
-        assert len(run)
+    assert units[0].workload_status_message == "Waiting for Token and Path config"
