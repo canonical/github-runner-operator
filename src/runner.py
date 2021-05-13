@@ -222,6 +222,8 @@ class Runner:
     def _create_instance(self, image="focal", virt="container"):
         """Create an instance"""
         suffix = "".join(choices(ascii_lowercase + digits, k=6))
+        if not self.lxd.profiles.exists("runner"):
+            self.lxd.profiles.create("runner", {"security.nesting": "true"}, {})
         config = {
             "name": f"runner-{suffix}",
             "type": virt,
@@ -233,5 +235,6 @@ class Runner:
                 "alias": image,
             },
             "ephemeral": True,
+            "profiles": ["default", "runner"],
         }
         return self.lxd.instances.create(config=config, wait=True)
