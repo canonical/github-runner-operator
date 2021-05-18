@@ -223,7 +223,12 @@ class Runner:
         """Create an instance"""
         suffix = "".join(choices(ascii_lowercase + digits, k=6))
         if not self.lxd.profiles.exists("runner"):
-            self.lxd.profiles.create("runner", {"security.nesting": "true"}, {})
+            config = {
+                "security.nesting": "true",
+                "raw.lxc": "lxc.apparmor.profile=unconfined",
+            }
+            devices = {}
+            self.lxd.profiles.create("runner", config, devices)
         config = {
             "name": f"runner-{suffix}",
             "type": virt,
