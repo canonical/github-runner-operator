@@ -225,6 +225,7 @@ class Runner:
         if not self.lxd.profiles.exists("runner"):
             config = {
                 "security.nesting": "true",
+                "security.privileged": "true",
                 "raw.lxc": "lxc.apparmor.profile=unconfined",
             }
             devices = {}
