@@ -69,6 +69,7 @@ class Runner:
                 ],
             )
             self._start_runner(instance)
+            self._load_aaprofile(instance)
         except RuntimeError as e:
             instance.stop(wait=True)
             raise e
@@ -162,6 +163,23 @@ class Runner:
         self._check_output(instance, "sudo chmod u+x /opt/github-runner/start.sh")
         self._check_output(instance, "sudo -u ubuntu /opt/github-runner/start.sh")
 
+    def _load_aaprofile(self, instance):
+        """Load the apparmor profile so classic snaps can run"""
+        self._check_output(
+            instance,
+            ["bash", "-c", "sudo apparmor_parser -r /etc/apparmor.d/*snap-confine*"],
+            False,
+        )
+        cmd = [
+            "bash",
+            "-c",
+            "sudo apparmor_parser /var/lib/snapd/apparmor/profiles/snap-confine*",
+        ]
+        exit_code, stdout, stderr = instance.execute(cmd)
+        logger.info(f"Apparmor exit_code: {exit_code}")
+        logger.info(f"Apparmor stdout: {stdout}")
+        logger.info(f"Apparmor stderr: {stderr}")
+
     def _configure_runner(self, instance):
         """Configure the runner"""
         # Render proxies if configured
@@ -188,9 +206,11 @@ class Runner:
                 logger.warning("Failed to install runner, trying again")
                 time.sleep(0.5)
 
-    def _check_output(self, container, cmd):
+    def _check_output(self, container, cmd, split=True):
         """Check execution of a command in a container"""
-        exit_code, stdout, stderr = container.execute(cmd.split())
+        if split:
+            cmd = cmd.split()
+        exit_code, stdout, stderr = container.execute(cmd)
         logger.debug(f"Exit code {exit_code} from {cmd}")
         subprocess.CompletedProcess(cmd, exit_code, stdout, stderr).check_returncode()
         return stdout

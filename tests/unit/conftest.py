@@ -21,6 +21,7 @@ def mocks(monkeypatch):
     monkeypatch.setattr("runner.requests", mock.MagicMock())
     monkeypatch.setattr("runner.Runner._check_output", mock.MagicMock())
     monkeypatch.setattr("runner.Runner._get_runner_binary", mock.MagicMock())
+    monkeypatch.setattr("runner.Runner._load_aaprofile", mock.MagicMock())
 
     def active_count(runner_class, values=[0, 1, 2, 3]):
         return values.pop(0)
