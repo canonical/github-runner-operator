@@ -4,6 +4,7 @@ import logging
 import os
 import subprocess
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 from random import choices
@@ -19,12 +20,58 @@ from ghapi.all import GhApi
 logger = logging.getLogger(__name__)
 
 
-class Runner:
-    release_url = "https://api.github.com/repos/actions/runner/releases/latest"
+class RunnerInfo:
+    def __init__(self, name, local, remote):
+        self.name = name
+        self.local = local
+        self.remote = remote
+
+    @property
+    def is_active(self):
+        if not (self.local and self.remote):
+            return False
+        if self.local.status != "Running":
+            return False
+        if self.remote.status != "online":
+            return False
+        return True
+
+    @property
+    def is_offline(self):
+        if not self.remote:
+            return True
+        if self.remote.status != "online":
+            return True
+        if not self.local or self.local.status != "Running":
+            return True
+        return False
+
+    @property
+    def is_unregistered(self):
+        if self.remote and self.remote.status == "online":
+            return False
+        return self.local and self.local.status == "Running"
+
+
+class RunnerError(Exception):
+    pass
+
+
+class RunnerCreateFailed(RunnerError):
+    pass
+
+
+class RunnerRemoveFailed(RunnerError):
+    pass
+
+
+class RunnerManager:
+    runner_bin_path = Path("/var/cache/github-runner-operator/runner.tgz")
+    lock_dir_path = Path("/run/github-runner-operator")
     runner_path = Path("/opt/github-runner")
     env_file = runner_path / ".env"
 
-    def __init__(self, path, token):
+    def __init__(self, path, token, app_name, virt_type):
         http_proxy = os.environ.get("JUJU_CHARM_HTTP_PROXY", None)
         https_proxy = os.environ.get("JUJU_CHARM_HTTPS_PROXY", None)
         no_proxy = os.environ.get("JUJU_CHARM_NO_PROXY", None)
@@ -47,13 +94,109 @@ class Runner:
         self.lxd = pylxd.Client()
         self.path = path
         self.api = GhApi(token=token)
+        self.app_name = app_name
+        self.virt_type = virt_type
 
-    def install(self):
+    @classmethod
+    def install_deps(cls):
         """Install dependencies"""
-        cmd = "sudo snap install lxd"
-        subprocess.check_output(cmd.split())
-        cmd = "sudo lxd init --auto"
-        subprocess.check_output(cmd.split())
+        subprocess.run(["snap", "install", "lxd"], check=True)
+        subprocess.run(["lxd", "init", "--auto"], check=True)
+        cls.lock_dir_path.mkdir(exist_ok=True)
+        cls.runner_bin_path.parent.mkdir(parents=True, exist_ok=True)
+
+    def get_latest_runner_bin_url(self):
+        """Get the URL for the latest runner binary."""
+        # TODO: make these not hard-coded
+        os_name = "linux"
+        arch_name = "x64"
+
+        if "/" in self.path:
+            owner, repo = self.path.split("/")
+            runner_bins = self.api.actions.list_runner_applications_for_repo(
+                owner=owner, repo=repo
+            )
+        else:
+            runner_bins = self.api.actions.list_runner_applications_for_org(
+                org=self.path
+            )
+        for runner_bin in runner_bins:
+            if runner_bin.os == os_name and runner_bin.architecture == arch_name:
+                return runner_bin.download_url
+        return None
+
+    def update_runner_bin(self, download_url):
+        """Download a runner file, replacing the current copy"""
+        # Remove any existing runner bin file
+        if self.runner_bin_path.exists():
+            self.runner_bin_file_path.unlink()
+        # Download the new file
+        response = self.session.get(download_url)
+        with self.runner_bin_path.open(mode="wb") as runner_bin_file:
+            runner_bin_file.write(response.content)
+
+    def get_info(self):
+        """Return a list of RunnerInfo objects."""
+        local_runners = {
+            c.name: c
+            for c in self.lxd.containers.all()
+            if c.name.startswith(f"{self.app_name}-")
+        }
+        if "/" in self.path:
+            owner, repo = self.path.split("/")
+            remote_runners = self.api.actions.list_self_hosted_runners_for_repo(
+                owner=owner, repo=repo
+            )["runners"]
+        else:
+            remote_runners = self.api.actions.list_self_hosted_runners_for_org(
+                org=self.path
+            )["runners"]
+        remote_runners = {
+            r.name: r
+            for r in remote_runners
+            if r.name.startswith(f"{self.app_name}-")
+        }
+        runners = []
+        for name in set(local_runners.keys()) & set(remote_runners.keys()):
+            runners.append(
+                RunnerInfo(name, local_runners.get(name), remote_runners.get(name))
+            )
+        return runners
+
+    def reconcile(self, num_runners):
+        """Bring runners in line with target."""
+        active_runners = []
+        stale_runners = []
+        for runner in self.get_info():
+            if runner.is_active:
+                active_runners.append(runner)
+            else:
+                stale_runners.append(runner)
+
+        if stale_runners:
+            runner_names = ", ".join(r.name for r in stale_runners)
+            logging.info(f"Cleaning up stale runners: {runner_names}")
+            for runner in stale_runners:
+                self._remove_runner(runner)
+
+        delta = num_runners - len(active_runners)
+        if delta > 0:
+            logger.info(f"Adding {delta} additional runners")
+            for i in range(delta):
+                self._runner.create(image="ubuntu", virt=self.virt_type)
+        elif delta < 0:
+            active_runners.sort(key=lambda r: r.created_at)
+            old_runners = active_runners[abs(delta):]
+            runner_names = ", ".join(r.name for r in old_runners)
+            logger.info(f"Removing extra runners: {runner_names}")
+            for runner in old_runners:
+                self._remove_runner(runner)
+        return delta
+
+    def clear(self):
+        """Clear out all existing runners."""
+        for runner in self.get_info():
+            self._remove_runner(runner)
 
     def create(self, image, virt="container", wait=False):
         """Create a runner"""
@@ -65,55 +208,43 @@ class Runner:
             self._register_runner(
                 instance,
                 labels=[
+                    self.app_name,
                     image,
+                    virt,
                 ],
             )
             self._start_runner(instance)
             self._load_aaprofile(instance)
-        except RuntimeError as e:
+        except Exception as e:
             instance.stop(wait=True)
-            raise e
+            instance.delete(wait=True)
+            raise RunnerCreateFailed(str(e)) from e
 
-    def active_count(self):
-        """Return the number of active runners"""
-        count = 0
-        for container in self.lxd.containers.all():
-            if container.name.startswith("runner-"):
-                count += 1
-        return count
-
-    def remove_runners(self):
-        """Remove runners"""
-        api = self.api
-        repo = None
-        if "/" in self.path:
-            owner, repo = self.path.split("/")
-        hosted_runners = [container.name for container in self.lxd.containers.all()]
-        for runner in self._get_runners()["runners"]:
-            if runner.name in hosted_runners:
-                logger.info(f"Deregistering runner {runner.name}")
-                if repo:
-                    api.actions.delete_self_hosted_runner_from_repo(
-                        owner=owner, repo=repo, runner_id=runner.id
+    def _remove_runner(self, runner):
+        """Remove a runner"""
+        if runner.remote:
+            try:
+                if "/" in self.path:
+                    owner, repo = self.path.split("/")
+                    self.api.actions.delete_self_hosted_runner_from_repo(
+                        owner=owner, repo=repo, runner_id=id
                     )
                 else:
-                    api.actions.delete_self_hosted_runner_from_org(
-                        org=self.path, runner_id=runner.id
+                    self.api.actions.delete_self_hosted_runner_from_org(
+                        org=self.path, runner_id=id
                     )
+            except Exception as e:
+                logger.exception(f"Failed to remove remote runner: {e}")
+                raise RunnerRemoveFailed(str(e)) from e
 
-    def _get_runners(self):
-        """Return the runner data"""
-        api = self.api
-        repo = False
-        if "/" in self.path:
-            owner, repo = self.path.split("/")
-        if repo:
-            runners = api.actions.list_self_hosted_runners_for_repo(
-                owner=owner, repo=repo
-            )
-        else:
-            runners = api.actions.list_self_hosted_runners_for_org(org=self.path)
-        return runners
+        if runner.local:
+            try:
+                if runner.local.status == "Running":
+                    runner.stop(force=True, wait=True)
+                runner.delete(force=True, wait=True)
+            except Exception as e:
+                logger.exception(f"Failed to remove local runner: {e}")
+                raise RunnerRemoveFailed(str(e)) from e
 
     def _register_runner(self, container, labels):
         """Register a runner in a container"""
@@ -176,11 +307,10 @@ class Runner:
 
     def _install_binary(self, instance):
         """Install the binary in a instance"""
-        binary = self._get_runner_binary()
         instance.files.mk_dir("/opt/github-runner")
-        while True:
+        for attempt in range(10):
             try:
-                instance.files.put("/tmp/runner.tgz", binary.read_bytes())
+                instance.files.put("/tmp/runner.tgz", self.runner_bin_path.read_bytes())
                 self._check_output(
                     instance, "tar -xzf /tmp/runner.tgz -C /opt/github-runner"
                 )
@@ -189,8 +319,12 @@ class Runner:
                 )
                 break
             except subprocess.CalledProcessError:
-                logger.warning("Failed to install runner, trying again")
-                time.sleep(0.5)
+                if attempt < 9:
+                    logger.warning("Failed to install runner, trying again")
+                    time.sleep(0.5)
+                else:
+                    logger.error("Failed to install runner, giving up")
+                    raise
 
     def _check_output(self, container, cmd, split=True):
         """Check execution of a command in a container"""
@@ -201,30 +335,6 @@ class Runner:
         subprocess.CompletedProcess(cmd, exit_code, stdout, stderr).check_returncode()
         return stdout
 
-    def _get_runner_binary(self):
-        """Download a runner file"""
-        # Find the file name
-        response = self.session.get(self.release_url, allow_redirects=True)
-        content = response.json()
-        if not content:
-            raise RuntimeError("Unable to find github release")
-        download_url = None
-        for asset in content["assets"]:
-            if "linux-x64" in asset["name"]:
-                download_url = asset["browser_download_url"]
-                file_name = asset["name"]
-        # Return if existing
-        runner_binary = Path(f"/tmp/{file_name}")
-        if runner_binary.exists():
-            return runner_binary
-        # Remove any old versions before downloading
-        for path in Path("/tmp/").glob("*linux-x64*"):
-            path.unlink()
-        response = self.session.get(download_url)
-        with runner_binary.open(mode="wb") as tmp_file:
-            tmp_file.write(response.content)
-        return runner_binary
-
     def _create_instance(self, image="focal", virt="container"):
         """Create an instance"""
         suffix = "".join(choices(ascii_lowercase + digits, k=6))
@@ -232,12 +342,12 @@ class Runner:
             config = {
                 "security.nesting": "true",
                 "security.privileged": "true",
-                "raw.lxc": "lxc.apparmor.profile=unconfined",
+                # "raw.lxc": "lxc.apparmor.profile=unconfined",
             }
             devices = {}
             self.lxd.profiles.create("runner", config, devices)
         config = {
-            "name": f"runner-{suffix}",
+            "name": f"{self.app_name}-{suffix}",
             "type": virt,
             "source": {
                 "type": "image",

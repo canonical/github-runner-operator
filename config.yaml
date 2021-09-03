@@ -11,10 +11,14 @@ options:
       default: 3
       type: int
       description: "Quantity of runners to maintain"
-  check-interval:
-      default: "*/1 * * * *"
-      type: string
-      description: "Cron interval to check runners, each deployed unit will check on this interval"
+  reconcile-interval:
+      default: 5
+      type: int
+      description: "How frequently, in minutes, the runners should be reconciled"
+  update-interval:
+      default: 60
+      type: int
+      description: "How frequently, in minutes, the charm should check for new versions of the runner binary"
   virt-type:
       default: "container"
       type: string

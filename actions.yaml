@@ -6,4 +6,8 @@
 # It ties in to the example _on_fortune_action handler in src/charm.py
 # 
 check-runners:
-    description: Bring runner count in sync with config and remove offline runners
+    description: Get info on active and registered runners
+reconcile-runners:
+    description: Remove offline runners and replace any missing runners
+flush-runners:
+    description: Clear out all runners and start a new set
