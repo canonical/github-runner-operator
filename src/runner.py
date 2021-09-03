@@ -152,9 +152,7 @@ class RunnerManager:
                 org=self.path
             )["runners"]
         remote_runners = {
-            r.name: r
-            for r in remote_runners
-            if r.name.startswith(f"{self.app_name}-")
+            r.name: r for r in remote_runners if r.name.startswith(f"{self.app_name}-")
         }
         runners = []
         for name in set(local_runners.keys()) & set(remote_runners.keys()):
@@ -186,7 +184,7 @@ class RunnerManager:
                 self._runner.create(image="ubuntu", virt=self.virt_type)
         elif delta < 0:
             active_runners.sort(key=lambda r: r.created_at)
-            old_runners = active_runners[abs(delta):]
+            old_runners = active_runners[abs(delta) :]
             runner_names = ", ".join(r.name for r in old_runners)
             logger.info(f"Removing extra runners: {runner_names}")
             for runner in old_runners:
