@@ -181,7 +181,7 @@ class RunnerManager:
         if delta > 0:
             logger.info(f"Adding {delta} additional runners")
             for i in range(delta):
-                self._runner.create(image="ubuntu", virt=self.virt_type)
+                self.create(image="ubuntu", virt=self.virt_type)
         elif delta < 0:
             active_runners.sort(key=lambda r: r.created_at)
             old_runners = active_runners[abs(delta) :]
@@ -196,7 +196,7 @@ class RunnerManager:
         for runner in self.get_info():
             self._remove_runner(runner)
 
-    def create(self, image, virt="container", wait=False):
+    def create(self, image, virt="container"):
         """Create a runner"""
         instance = self._create_instance(image=image, virt=virt)
         instance.start(wait=True)
@@ -215,7 +215,12 @@ class RunnerManager:
             self._load_aaprofile(instance)
         except Exception as e:
             instance.stop(wait=True)
-            instance.delete(wait=True)
+            try:
+                instance.delete(wait=True)
+            except Exception:
+                # ephemeral containers should auto-delete when stopped;
+                # this is just a fall-back
+                pass
             raise RunnerCreateFailed(str(e)) from e
 
     def _remove_runner(self, runner):

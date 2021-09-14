@@ -3,8 +3,10 @@
 # See LICENSE file for licensing details.
 
 import logging
+import subprocess
+from pathlib import Path
 
-from crontab import CronTab
+from jinja2 import Environment, FileSystemLoader
 from ops.charm import CharmBase
 from ops.framework import EventBase, StoredState
 from ops.main import main
@@ -32,12 +34,12 @@ class GithubRunnerOperator(CharmBase):
             path=self.config["path"],  # for detecting changes
             runner_bin_url=None,
         )
-        self._cron_tab = CronTab
 
         self.on.define_event("reconcile_runners", ReconcileRunnersEvent)
         self.on.define_event("update_runner_bin", UpdateRunnerBinEvent)
 
         self.framework.observe(self.on.install, self._on_install)
+        self.framework.observe(self.on.upgrade_charm, self._on_install)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
         self.framework.observe(self.on.update_runner_bin, self._on_update_runner_bin)
@@ -61,7 +63,7 @@ class GithubRunnerOperator(CharmBase):
             path = self.config["path"]
         if not (token and path):
             return None
-        return RunnerManager(path, token, self.app.name)
+        return RunnerManager(path, token, self.app.name, self.config["virt-type"])
 
     def _on_install(self, event):
         self.unit.status = MaintenanceStatus("Installing packages")
@@ -84,10 +86,12 @@ class GithubRunnerOperator(CharmBase):
                 self.unit.status = BlockedStatus(f"Failed to start runners: {e}")
             else:
                 self.unit.status = ActiveStatus()
+        else:
+            self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
     def _on_config_changed(self, event):
-        self._ensure_cron("update-runner-bin", self.config["update-interval"])
-        self._ensure_cron("reconcile-runners", self.config["reconcile-interval"])
+        self._ensure_event_timer("update-runner-bin", self.config["update-interval"])
+        self._ensure_event_timer("reconcile-runners", self.config["reconcile-interval"])
 
         if self.config["path"] != self._stored.path:
             prev_runner_manager = self._get_runner_manager(path=self._stored.path)
@@ -99,9 +103,10 @@ class GithubRunnerOperator(CharmBase):
             self._stored.path = self.config["path"]
 
         runner_manager = self._get_runner_manager()
-        if not runner_manager:
+        if runner_manager:
+            self.unit.status = ActiveStatus()
+        else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
-            return
 
     def _on_update_runner_bin(self, event):
         runner_manager = self._get_runner_manager()
@@ -124,12 +129,12 @@ class GithubRunnerOperator(CharmBase):
 
     def _on_reconcile_runners(self, event):
         runner_manager = self._get_runner_manager()
-        if not runner_manager:
+        if not runner_manager or not runner_manager.runner_bin_path.exists():
             return
         self.unit.status = MaintenanceStatus("Reconciling runners")
         try:
-            self.runner_manager.reconcile(self.config["quantity"])
-        except RunnerError as e:
+            runner_manager.reconcile(self.config["quantity"])
+        except Exception as e:
             self.unit.status = BlockedStatus(f"Failed to reconcile runners: {e}")
         else:
             self.unit.status = ActiveStatus()
@@ -139,11 +144,15 @@ class GithubRunnerOperator(CharmBase):
         if not runner_manager:
             event.fail("Missing token or org/repo path config")
             return
+        if not runner_manager.runner_bin_path.exists():
+            event.fail("Missing runner binary")
+            return
 
         offline = 0
         unregistered = 0
         active = 0
         unknown = 0
+        runner_names = []
 
         try:
             runner_info = runner_manager.get_info()
@@ -154,6 +163,7 @@ class GithubRunnerOperator(CharmBase):
         for runner in runner_info:
             if runner.is_active:
                 active += 1
+                runner_names.append(runner.name)
             elif runner.is_offline:
                 offline += 1
             elif runner.is_unregistered:
@@ -167,6 +177,7 @@ class GithubRunnerOperator(CharmBase):
                 "unregistered": unregistered,
                 "active": active,
                 "unknown": unknown,
+                "runners": runner_names,
             }
         )
 
@@ -206,39 +217,29 @@ class GithubRunnerOperator(CharmBase):
         if runner_manager:
             runner_manager.clear()
 
-    def _ensure_cron(self, event_name, interval, timeout=...):
-        """Add a cron job to dispatch an event.
-
-        Only one cron job can be registered per event; duplicates will replace an existing
-        job. The event will be dispatched to the charm code via `juju-run`.
-
-        Currently supported events are: reconcile-runners
+    def _ensure_event_timer(self, event_name, interval, timeout=None):
+        """Ensure that a systemd service and timer are registered to dispatch the given event.
 
         The interval is how frequently, in minutes, that the event should be dispatched.
 
-        The timeout is the number of seconds before an event is timed out. If not given,
+        The timeout is the number of seconds before an event is timed out. If not given or 0,
         it defaults to half the interval period.
         """
-        if timeout is ...:
-            timeout = interval * 60 / 2
-
-        # Remove existing entries before adding the new with a possibly updated interval
-        self._remove_cron(event_name)
-
-        root_cron = self._cron_tab(user="root")
-        comment = f"Charm cron for {event_name}"
-        dispatch = self.charm_dir / "scripts" / "dispatch-event.sh"
-        command = f"{dispatch} {self.unit.name} {event_name} {timeout}"
-        job = root_cron.new(command=command, comment=comment)
-        job.setall(f"*/{interval} * * * *")
-        root_cron.write()
-
-    def _remove_cron(self, event_name):
-        """Remove cron job for provided event."""
-        root_cron = self._cron_tab(user="root")
-        for job in root_cron.find_comment(f"Charm cron for {event_name}"):
-            root_cron.remove(job)
-        root_cron.write()
+        context = {
+            "event": event_name,
+            "interval": interval,
+            "jitter": interval / 4,
+            "timeout": timeout or (interval * 60 / 2),
+            "unit": self.unit.name,
+        }
+        jinja = Environment(loader=FileSystemLoader("templates"))
+        for template_type in ("service", "timer"):
+            template = jinja.get_template(f"dispatch-event.{template_type}.j2")
+            dest = Path(f"/etc/systemd/system/ghro.{event_name}.{template_type}")
+            dest.write_text(template.render(context))
+        subprocess.run(["systemctl", "daemon-reload"], check=True)
+        subprocess.run(["systemctl", "enable", f"ghro.{event_name}.timer"], check=True)
+        subprocess.run(["systemctl", "start", f"ghro.{event_name}.timer"], check=True)
 
 
 if __name__ == "__main__":
