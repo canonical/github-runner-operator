@@ -39,7 +39,7 @@ class GithubRunnerOperator(CharmBase):
         self.on.define_event("update_runner_bin", UpdateRunnerBinEvent)
 
         self.framework.observe(self.on.install, self._on_install)
-        self.framework.observe(self.on.upgrade_charm, self._on_install)
+        self.framework.observe(self.on.upgrade_charm, self._on_upgrade_charm)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
         self.framework.observe(self.on.update_runner_bin, self._on_update_runner_bin)
@@ -89,6 +89,9 @@ class GithubRunnerOperator(CharmBase):
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
+    def _on_upgrade_charm(self, event):
+        RunnerManager.install_deps()
+
     def _on_config_changed(self, event):
         self._ensure_event_timer("update-runner-bin", self.config["update-interval"])
         self._ensure_event_timer("reconcile-runners", self.config["reconcile-interval"])
@@ -135,6 +138,7 @@ class GithubRunnerOperator(CharmBase):
         try:
             runner_manager.reconcile(self.config["quantity"])
         except Exception as e:
+            logger.exception("Failed to reconcile runners")
             self.unit.status = BlockedStatus(f"Failed to reconcile runners: {e}")
         else:
             self.unit.status = ActiveStatus()
@@ -156,7 +160,8 @@ class GithubRunnerOperator(CharmBase):
 
         try:
             runner_info = runner_manager.get_info()
-        except RunnerError as e:
+        except Exception as e:
+            logger.exception("Failed to get runner info")
             event.fail(f"Failed to get runner info: {e}")
             return
 
@@ -177,7 +182,7 @@ class GithubRunnerOperator(CharmBase):
                 "unregistered": unregistered,
                 "active": active,
                 "unknown": unknown,
-                "runners": runner_names,
+                "runners": ", ".join(runner_names),
             }
         )
 
@@ -189,7 +194,8 @@ class GithubRunnerOperator(CharmBase):
 
         try:
             delta = runner_manager.reconcile(self.config["quantity"])
-        except RunnerError as e:
+        except Exception as e:
+            logger.exception("Failed to reconcile runners")
             event.fail(f"Failed to reconcile runners: {e}")
             return
         self._on_check_runners_action(event)
@@ -204,18 +210,23 @@ class GithubRunnerOperator(CharmBase):
         try:
             runner_manager.clear()
             delta = runner_manager.reconcile(self.config["quantity"])
-        except RunnerError as e:
+        except Exception as e:
+            logger.exception("Failed to flush runners")
             event.fail(f"Failed to flush runners: {e}")
             return
         self._on_check_runners_action(event)
         event.set_results({"delta": delta})
 
     def _on_stop(self, event):
-        self._remove_cron("update-runner-bin")
-        self._remove_cron("reconcile-runners")
+        self._disable_event_timer("update-runner-bin")
+        self._disable_event_timer("reconcile-runners")
         runner_manager = self._get_runner_manager()
         if runner_manager:
-            runner_manager.clear()
+            try:
+                runner_manager.clear()
+            except Exception:
+                # Log but ignore error since we're stopping anyway.
+                logger.exception("Failed to clear runners")
 
     def _ensure_event_timer(self, event_name, interval, timeout=None):
         """Ensure that a systemd service and timer are registered to dispatch the given event.
@@ -240,6 +251,12 @@ class GithubRunnerOperator(CharmBase):
         subprocess.run(["systemctl", "daemon-reload"], check=True)
         subprocess.run(["systemctl", "enable", f"ghro.{event_name}.timer"], check=True)
         subprocess.run(["systemctl", "start", f"ghro.{event_name}.timer"], check=True)
+
+    def _disable_event_timer(self, event_name):
+        """Disable the systemd timer for the given event."""
+        # Don't check for errors in case the timer wasn't registered.
+        subprocess.run(["systemctl", "stop", f"ghro.{event_name}.timer"], check=False)
+        subprocess.run(["systemctl", "disable", f"ghro.{event_name}.timer"], check=False)
 
 
 if __name__ == "__main__":

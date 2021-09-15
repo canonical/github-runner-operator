@@ -129,7 +129,7 @@ class RunnerManager:
         """Download a runner file, replacing the current copy"""
         # Remove any existing runner bin file
         if self.runner_bin_path.exists():
-            self.runner_bin_file_path.unlink()
+            self.runner_bin_path.unlink()
         # Download the new file
         response = self.session.get(download_url)
         with self.runner_bin_path.open(mode="wb") as runner_bin_file:
@@ -173,7 +173,7 @@ class RunnerManager:
 
         if stale_runners:
             runner_names = ", ".join(r.name for r in stale_runners)
-            logging.info(f"Cleaning up stale runners: {runner_names}")
+            logger.info(f"Cleaning up stale runners: {runner_names}")
             for runner in stale_runners:
                 self._remove_runner(runner)
 
@@ -193,7 +193,10 @@ class RunnerManager:
 
     def clear(self):
         """Clear out all existing runners."""
-        for runner in self.get_info():
+        runners = self.get_info()
+        runner_names = ", ".join(r.name for r in runners)
+        logger.info(f"Removing existing runners: {runner_names}")
+        for runner in runners:
             self._remove_runner(runner)
 
     def create(self, image, virt="container"):
@@ -218,8 +221,8 @@ class RunnerManager:
             try:
                 instance.delete(wait=True)
             except Exception:
-                # ephemeral containers should auto-delete when stopped;
-                # this is just a fall-back
+                # Ephemeral containers should auto-delete when stopped;
+                # this is just a fall-back.
                 pass
             raise RunnerCreateFailed(str(e)) from e
 
@@ -230,24 +233,32 @@ class RunnerManager:
                 if "/" in self.path:
                     owner, repo = self.path.split("/")
                     self.api.actions.delete_self_hosted_runner_from_repo(
-                        owner=owner, repo=repo, runner_id=id
+                        owner=owner, repo=repo, runner_id=runner.remote.id
                     )
                 else:
                     self.api.actions.delete_self_hosted_runner_from_org(
-                        org=self.path, runner_id=id
+                        org=self.path, runner_id=runner.remote.id
                     )
             except Exception as e:
-                logger.exception(f"Failed to remove remote runner: {e}")
-                raise RunnerRemoveFailed(str(e)) from e
+                raise RunnerRemoveFailed(f"Failed remove remote runner: {runner.name}") from e
 
         if runner.local:
             try:
                 if runner.local.status == "Running":
-                    runner.stop(force=True, wait=True)
-                runner.delete(force=True, wait=True)
+                    runner.local.stop(wait=True)
+                    try:
+                        runner.local.delete(wait=True)
+                    except Exception:
+                        # Ephemeral containers should auto-delete when stopped;
+                        # this is just a fall-back.
+                        pass
+                else:
+                    # We somehow have a non-running instance which should have been
+                    # ephemeral. Try to delete it and allow any errors doing so to
+                    # surface.
+                    runner.local.delete(wait=True)
             except Exception as e:
-                logger.exception(f"Failed to remove local runner: {e}")
-                raise RunnerRemoveFailed(str(e)) from e
+                raise RunnerRemoveFailed(f"Failed remove local runner: {runner.name}") from e
 
     def _register_runner(self, container, labels):
         """Register a runner in a container"""
