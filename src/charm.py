@@ -26,9 +26,12 @@ class UpdateRunnerBinEvent(EventBase):
 
 class GithubRunnerOperator(CharmBase):
     _stored = StoredState()
+    _systemd_path = Path("/etc/systemd/system")
 
     def __init__(self, *args):
         super().__init__(*args)
+
+        self._jinja = Environment(loader=FileSystemLoader("templates"))
 
         self._stored.set_default(
             path=self.config["path"],  # for detecting changes
@@ -228,6 +231,11 @@ class GithubRunnerOperator(CharmBase):
                 # Log but ignore error since we're stopping anyway.
                 logger.exception("Failed to clear runners")
 
+    def _render_event_tmpl(self, tmpl_type, event_name, context):
+        tmpl = self.jinja.get_template(f"dispatch-event.{tmpl_type}.j2")
+        dest = self._systemd_path / f"ghro.{event_name}.{tmpl_type}"
+        dest.write_text(tmpl.render(context))
+
     def _ensure_event_timer(self, event_name, interval, timeout=None):
         """Ensure that a systemd service and timer are registered to dispatch the given event.
 
@@ -243,11 +251,8 @@ class GithubRunnerOperator(CharmBase):
             "timeout": timeout or (interval * 60 / 2),
             "unit": self.unit.name,
         }
-        jinja = Environment(loader=FileSystemLoader("templates"))
-        for template_type in ("service", "timer"):
-            template = jinja.get_template(f"dispatch-event.{template_type}.j2")
-            dest = Path(f"/etc/systemd/system/ghro.{event_name}.{template_type}")
-            dest.write_text(template.render(context))
+        self._render_event_tmpl("service", event_name, context)
+        self._render_event_tmpl("timer", event_name, context)
         subprocess.run(["systemctl", "daemon-reload"], check=True)
         subprocess.run(["systemctl", "enable", f"ghro.{event_name}.timer"], check=True)
         subprocess.run(["systemctl", "start", f"ghro.{event_name}.timer"], check=True)
@@ -256,7 +261,9 @@ class GithubRunnerOperator(CharmBase):
         """Disable the systemd timer for the given event."""
         # Don't check for errors in case the timer wasn't registered.
         subprocess.run(["systemctl", "stop", f"ghro.{event_name}.timer"], check=False)
-        subprocess.run(["systemctl", "disable", f"ghro.{event_name}.timer"], check=False)
+        subprocess.run(
+            ["systemctl", "disable", f"ghro.{event_name}.timer"], check=False
+        )
 
 
 if __name__ == "__main__":

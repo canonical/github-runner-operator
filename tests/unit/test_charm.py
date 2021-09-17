@@ -26,8 +26,8 @@ class TestCharm(unittest.TestCase):
         harness.update_config({"path": "mockorg", "token": "mocktoken"})
         harness.begin()
         harness.charm.on.config_changed.emit()
-        api = harness.charm._runner.api
-        api.actions.create_registration_token_for_org.assert_called_with(org="mockorg")
+        api = harness.charm.RunnerManager.GhApi()
+        api.actions.create_registration_token_for_org.assert_called_with(org="org")
 
     def test_repo_register(self):
         """Test repo registration"""
@@ -35,7 +35,7 @@ class TestCharm(unittest.TestCase):
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
         harness.charm.on.config_changed.emit()
-        api = harness.charm._runner.api
+        api = harness.charm.RunnerManager.GhApi()
         api.actions.create_registration_token_for_repo.assert_called_with(
             owner="mockorg", repo="repo"
         )

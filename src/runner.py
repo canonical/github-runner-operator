@@ -67,9 +67,7 @@ class RunnerRemoveFailed(RunnerError):
 
 class RunnerManager:
     runner_bin_path = Path("/var/cache/github-runner-operator/runner.tgz")
-    lock_dir_path = Path("/run/github-runner-operator")
-    runner_path = Path("/opt/github-runner")
-    env_file = runner_path / ".env"
+    env_file = Path("/opt/github-runner/.env")
 
     def __init__(self, path, token, app_name, virt_type):
         http_proxy = os.environ.get("JUJU_CHARM_HTTP_PROXY", None)
@@ -102,7 +100,6 @@ class RunnerManager:
         """Install dependencies"""
         subprocess.run(["snap", "install", "lxd"], check=True)
         subprocess.run(["lxd", "init", "--auto"], check=True)
-        cls.lock_dir_path.mkdir(exist_ok=True)
         cls.runner_bin_path.parent.mkdir(parents=True, exist_ok=True)
 
     def get_latest_runner_bin_url(self):
@@ -240,7 +237,9 @@ class RunnerManager:
                         org=self.path, runner_id=runner.remote.id
                     )
             except Exception as e:
-                raise RunnerRemoveFailed(f"Failed remove remote runner: {runner.name}") from e
+                raise RunnerRemoveFailed(
+                    f"Failed remove remote runner: {runner.name}"
+                ) from e
 
         if runner.local:
             try:
@@ -258,7 +257,9 @@ class RunnerManager:
                     # surface.
                     runner.local.delete(wait=True)
             except Exception as e:
-                raise RunnerRemoveFailed(f"Failed remove local runner: {runner.name}") from e
+                raise RunnerRemoveFailed(
+                    f"Failed remove local runner: {runner.name}"
+                ) from e
 
     def _register_runner(self, container, labels):
         """Register a runner in a container"""
