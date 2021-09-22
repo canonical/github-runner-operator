@@ -152,7 +152,7 @@ class RunnerManager:
             r.name: r for r in remote_runners if r.name.startswith(f"{self.app_name}-")
         }
         runners = []
-        for name in set(local_runners.keys()) & set(remote_runners.keys()):
+        for name in set(local_runners.keys()) | set(remote_runners.keys()):
             runners.append(
                 RunnerInfo(name, local_runners.get(name), remote_runners.get(name))
             )

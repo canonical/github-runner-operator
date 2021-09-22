@@ -232,7 +232,7 @@ class GithubRunnerOperator(CharmBase):
                 logger.exception("Failed to clear runners")
 
     def _render_event_tmpl(self, tmpl_type, event_name, context):
-        tmpl = self.jinja.get_template(f"dispatch-event.{tmpl_type}.j2")
+        tmpl = self._jinja.get_template(f"dispatch-event.{tmpl_type}.j2")
         dest = self._systemd_path / f"ghro.{event_name}.{tmpl_type}"
         dest.write_text(tmpl.render(context))
 
