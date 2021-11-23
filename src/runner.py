@@ -147,6 +147,7 @@ class Runner:
             f"--url https://github.com/{self.path} "
             "--token "
             f"{token.token} "
+            "--ephemeral "
             "--unattended "
             "--labels "
             f"{','.join(labels)}"
