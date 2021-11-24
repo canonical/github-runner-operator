@@ -82,41 +82,24 @@ class Runner:
                 count += 1
         return count
 
-    def remove_runners(self, offline_only=True, timeout=30):
+    def remove_runners(self):
         """Remove runners"""
         api = self.api
         repo = None
         if "/" in self.path:
             owner, repo = self.path.split("/")
-        for id in self._find_offline_runners(timeout=timeout):
-            if repo:
-                api.actions.delete_self_hosted_runner_from_repo(
-                    owner=owner, repo=repo, runner_id=id
-                )
-            else:
-                api.actions.delete_self_hosted_runner_from_org(
-                    org=self.path, runner_id=id
-                )
-
-    def _find_offline_runners(self, timeout=30):
-        """Return a list of ids for offline runners"""
-        offline = []
-        offline_initial = []
+        hosted_runners = [container.name for container in self.lxd.containers.all()]
         for runner in self._get_runners()["runners"]:
-            if not runner.name.startswith("runner-"):
-                continue
-            if runner.status == "offline":
-                offline_initial.append(runner.id)
-        if not offline_initial:
-            return offline
-        time.sleep(timeout)
-        for runner in self._get_runners()["runners"]:
-            if not runner.name.startswith("runner-"):
-                continue
-            if runner.status == "offline":
-                if runner.id in offline_initial:
-                    offline.append(runner.id)
-        return offline
+            if runner.name in hosted_runners:
+                logger.info(f"Deregistering runner {runner.name}")
+                if repo:
+                    api.actions.delete_self_hosted_runner_from_repo(
+                        owner=owner, repo=repo, runner_id=runner.id
+                    )
+                else:
+                    api.actions.delete_self_hosted_runner_from_org(
+                        org=self.path, runner_id=runner.id
+                    )
 
     def _get_runners(self):
         """Return the runner data"""
@@ -147,6 +130,9 @@ class Runner:
             f"--url https://github.com/{self.path} "
             "--token "
             f"{token.token} "
+            "--ephemeral "
+            "--name "
+            f"{container.name} "
             "--unattended "
             "--labels "
             f"{','.join(labels)}"
