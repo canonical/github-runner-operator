@@ -73,7 +73,6 @@ class GithubRunnerOperator(CharmBase):
     def _reconcile_runners(self):
         delta = self.config["quantity"] - self._runner.active_count()
         logger.info(f"Reconciling {delta} runners")
-        self._runner.remove_runners()
         while delta > 0:
             self.unit.status = MaintenanceStatus(f"Installing {delta} runner(s)")
             try:
