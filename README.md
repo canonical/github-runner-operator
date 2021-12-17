@@ -1,8 +1,8 @@
-# github-runner-operator
+# GitHub runner
 
 ## Description
 
-This charm creates self hosted github runners. Each unit of this charm will create start a configurable number of runners in LXD containers. Each runner performs only one job
+This charm creates self hosted GitHub runners. Each unit of this charm will create start a configurable number of runners in LXD containers. Each runner performs only one job
 after which the LXD is destroyed preventing the job from interacting with any other jobs. The charm will periodically check the number of currently active runners and spawn a new
 runner as necessary. Both the interval of the check and the number of runners to maintain are configurable.
 
