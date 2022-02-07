@@ -1,8 +1,6 @@
-from functools import partial
 from unittest import mock
 
 import pytest
-from runner import RunnerManager
 
 
 @pytest.fixture(autouse=True)
