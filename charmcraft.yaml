@@ -8,5 +8,9 @@ parts:
       - libssl-dev  # for cryptography
       - rust-all    # for cryptography
 bases:
-- name: "ubuntu"
-  channel: "20.04"
+  - build-on:
+    - name: "ubuntu"
+      channel: "20.04"
+    run-on:
+    - name: "ubuntu"
+      channel: "20.04"
