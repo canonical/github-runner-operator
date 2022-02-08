@@ -1,10 +1,15 @@
 # Copyright 2021 Chris
 # See LICENSE file for licensing details.
-name: github-runner-operator
+name: github-runner
 description: |
-  TODO: fill out the charm's description
+  Creates a cluster of self-hosted github runners
 summary: |
-  TODO: fill out the charm's summary
+  This charm creates self hosted github runners. Each unit of this charm will create start 
+  a configurable number of runners in LXD containers. Each runner performs only one job
+  after which the LXD is destroyed preventing the job from interacting with any other jobs. 
+  The charm will periodically check the number of currently active runners and spawn a new
+  runner as necessary. Both the interval of the check and the number of runners to maintain are configurable.
+
 series:
     - focal
 
