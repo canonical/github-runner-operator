@@ -22,4 +22,4 @@ async def test_build_and_deploy(ops_test):
 
 async def test_status(units):
     assert units[0].workload_status == "blocked"
-    assert units[0].workload_status_message == "Waiting for Token and Path config"
+    assert units[0].workload_status_message == "Missing token or org/repo path config"

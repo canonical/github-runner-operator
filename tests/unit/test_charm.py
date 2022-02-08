@@ -9,35 +9,42 @@ from ops.testing import Harness
 
 
 class TestCharm(unittest.TestCase):
-    @patch("runner.subprocess")
-    def test_install(self, sp):
+    @patch("pathlib.Path.write_text")
+    @patch("subprocess.run")
+    def test_install(self, run, wt):
         harness = Harness(GithubRunnerOperator)
         harness.begin()
         harness.charm.on.install.emit()
         calls = [
-            call(["sudo", "snap", "install", "lxd"]),
-            call(["sudo", "lxd", "init", "--auto"]),
+            call(["snap", "install", "lxd"], check=True),
+            call(["lxd", "init", "--auto"], check=True),
         ]
-        sp.check_output.assert_has_calls(calls)
+        run.assert_has_calls(calls)
 
-    def test_org_register(self):
+    @patch("charm.RunnerManager")
+    @patch("pathlib.Path.write_text")
+    @patch("subprocess.run")
+    def test_org_register(self, run, wt, rm):
         """Test org registration"""
         harness = Harness(GithubRunnerOperator)
         harness.update_config({"path": "mockorg", "token": "mocktoken"})
         harness.begin()
         harness.charm.on.config_changed.emit()
-        api = harness.charm._runner.api
-        api.actions.create_registration_token_for_org.assert_called_with(org="mockorg")
+        rm.assert_called_with(
+            "mockorg", "mocktoken", "github-runner-operator", "container"
+        )
 
-    def test_repo_register(self):
+    @patch("charm.RunnerManager")
+    @patch("pathlib.Path.write_text")
+    @patch("subprocess.run")
+    def test_repo_register(self, run, wt, rm):
         """Test repo registration"""
         harness = Harness(GithubRunnerOperator)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
         harness.charm.on.config_changed.emit()
-        api = harness.charm._runner.api
-        api.actions.create_registration_token_for_repo.assert_called_with(
-            owner="mockorg", repo="repo"
+        rm.assert_called_with(
+            "mockorg/repo", "mocktoken", "github-runner-operator", "container"
         )
 
     # def test_add_cron(self):
