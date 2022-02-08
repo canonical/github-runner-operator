@@ -30,9 +30,7 @@ class TestCharm(unittest.TestCase):
         harness.update_config({"path": "mockorg", "token": "mocktoken"})
         harness.begin()
         harness.charm.on.config_changed.emit()
-        rm.assert_called_with(
-            "mockorg", "mocktoken", "github-runner-operator", "container"
-        )
+        rm.assert_called_with("mockorg", "mocktoken", "github-runner", "container")
 
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.write_text")
@@ -43,9 +41,7 @@ class TestCharm(unittest.TestCase):
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
         harness.charm.on.config_changed.emit()
-        rm.assert_called_with(
-            "mockorg/repo", "mocktoken", "github-runner-operator", "container"
-        )
+        rm.assert_called_with("mockorg/repo", "mocktoken", "github-runner", "container")
 
     # def test_add_cron(self):
     #     """Test adding cron jobs."""
