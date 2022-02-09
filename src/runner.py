@@ -52,6 +52,10 @@ class RunnerInfo:
             return False
         return self.local and self.local.status == "Running"
 
+    @property
+    def virt_type(self):
+        return self.local.type if self.local else None
+
 
 class RunnerError(Exception):
     pass
@@ -69,7 +73,7 @@ class RunnerManager:
     runner_bin_path = Path("/var/cache/github-runner-operator/runner.tgz")
     env_file = Path("/opt/github-runner/.env")
 
-    def __init__(self, path, token, app_name, virt_type):
+    def __init__(self, path, token, app_name):
         http_proxy = os.environ.get("JUJU_CHARM_HTTP_PROXY", None)
         https_proxy = os.environ.get("JUJU_CHARM_HTTPS_PROXY", None)
         no_proxy = os.environ.get("JUJU_CHARM_NO_PROXY", None)
@@ -93,7 +97,6 @@ class RunnerManager:
         self.path = path
         self.api = GhApi(token=token)
         self.app_name = app_name
-        self.virt_type = virt_type
 
     @classmethod
     def install_deps(cls):
@@ -158,32 +161,33 @@ class RunnerManager:
             )
         return runners
 
-    def reconcile(self, num_runners):
+    def reconcile(self, virt_type, quantity):
         """Bring runners in line with target."""
         active_runners = []
         stale_runners = []
         for runner in self.get_info():
-            if runner.is_active:
-                active_runners.append(runner)
-            else:
-                stale_runners.append(runner)
+            if runner.virt_type == virt_type:
+                if runner.is_active:
+                    active_runners.append(runner)
+                else:
+                    stale_runners.append(runner)
 
         if stale_runners:
             runner_names = ", ".join(r.name for r in stale_runners)
-            logger.info(f"Cleaning up stale runners: {runner_names}")
+            logger.info(f"Cleaning up stale {virt_type} runners: {runner_names}")
             for runner in stale_runners:
                 self._remove_runner(runner)
 
-        delta = num_runners - len(active_runners)
+        delta = quantity - len(active_runners)
         if delta > 0:
-            logger.info(f"Adding {delta} additional runners")
+            logger.info(f"Adding {delta} additional {virt_type} runners")
             for i in range(delta):
-                self.create(image="ubuntu", virt=self.virt_type)
+                self.create(image="ubuntu", virt=virt_type)
         elif delta < 0:
             active_runners.sort(key=lambda r: r.created_at)
             old_runners = active_runners[abs(delta) :]
             runner_names = ", ".join(r.name for r in old_runners)
-            logger.info(f"Removing extra runners: {runner_names}")
+            logger.info(f"Removing extra {virt_type} runners: {runner_names}")
             for runner in old_runners:
                 self._remove_runner(runner)
         return delta
@@ -261,8 +265,8 @@ class RunnerManager:
                     f"Failed remove local runner: {runner.name}"
                 ) from e
 
-    def _register_runner(self, container, labels):
-        """Register a runner in a container"""
+    def _register_runner(self, instance, labels):
+        """Register a runner in an instance"""
         api = self.api
         if "/" in self.path:
             owner, repo = self.path.split("/")
@@ -278,12 +282,12 @@ class RunnerManager:
             f"{token.token} "
             "--ephemeral "
             "--name "
-            f"{container.name} "
+            f"{instance.name} "
             "--unattended "
             "--labels "
             f"{','.join(labels)}"
         )
-        self._check_output(container, cmd)
+        self._check_output(instance, cmd)
 
     def _start_runner(self, instance):
         """Start a runner that is already registered"""

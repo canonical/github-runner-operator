@@ -10,7 +10,17 @@ options:
   quantity:
       default: 3
       type: int
-      description: "Quantity of runners to maintain"
+      description: |
+        DEPRECATED: use `containers` and `virtual-machines`
+        Quantity of runners to maintain
+  containers:
+      default: 0
+      type: int
+      description: "Quantity of container runners to maintain"
+  virtual-machines:
+      default: 0
+      type: int
+      description: "Quantity of virtual machine runners to maintain"
   reconcile-interval:
       default: 5
       type: int
@@ -22,4 +32,6 @@ options:
   virt-type:
       default: "container"
       type: string
-      description: "Virtualization type for runners, either container or virtual-machine"
+      description: |
+        DEPRECATED: both `containers` and `virtual-machines` are supported at the same time
+        Virtualization type for runners, either container or virtual-machine
