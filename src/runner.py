@@ -57,9 +57,12 @@ class RunnerInfo:
         if self.local:
             return self.local.type
         elif self.remote:
-            remote_virt_type = (label["name"] for label in self.remote["labels"] if label["name"] in {"container", "virtual-machine"})
+            remote_virt_type = (
+                label["name"]
+                for label in self.remote["labels"]
+                if label["name"] in {"container", "virtual-machine"}
+            )
             return next(remote_virt_type, None)
-
 
 
 class RunnerError(Exception):
