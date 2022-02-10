@@ -232,6 +232,8 @@ class GithubRunnerOperator(CharmBase):
                 logger.exception("Failed to clear runners")
 
     def _reconcile_runners(self, runner_manager):
+        # handle deprecated config for `quantity` and `virt-type`
+
         containers = self.config["containers"]
         if containers == 0 and self.config["virt-type"] == "container":
             containers = self.config["quantity"]
