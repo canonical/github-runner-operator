@@ -97,7 +97,17 @@ class RunnerManager:
         """Install dependencies"""
         subprocess.run(["snap", "install", "lxd"], check=True)
         subprocess.run(["lxd", "init", "--auto"], check=True)
-        subprocess.run(["apt", "install", "-qy", "cpu-checker", "libvirt-clients", "libvirt-daemon-driver-qemu"], check=True)
+        subprocess.run(
+            [
+                "apt",
+                "install",
+                "-qy",
+                "cpu-checker",
+                "libvirt-clients",
+                "libvirt-daemon-driver-qemu",
+            ],
+            check=True,
+        )
         cls.runner_bin_path.parent.mkdir(parents=True, exist_ok=True)
 
     def get_latest_runner_bin_url(self):
@@ -160,7 +170,7 @@ class RunnerManager:
         """Bring runners in line with target."""
         runners = [r for r in self.get_info() if r.virt_type == virt_type]
         online_runners = [r for r in runners if r.is_online and r.is_local]
-        offline_runners = [r for r in runners if r.is_offline]                
+        offline_runners = [r for r in runners if r.is_offline]
 
         # Clean up stale (offline) runners
         if offline_runners:
@@ -168,7 +178,7 @@ class RunnerManager:
             logger.info(f"Cleaning up stale {virt_type} runners: {runner_names}")
             for runner in offline_runners:
                 self._remove_runner(runner)
-        
+
         # Add/Remove runners to match the target quantity
         delta = quantity - len(online_runners)
         if delta > 0:
@@ -202,7 +212,7 @@ class RunnerManager:
             try:
                 self._check_output(instance, "who")
                 break
-            except Exception as e:
+            except Exception:
                 time.sleep(15)
                 pass
 
