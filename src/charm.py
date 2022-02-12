@@ -155,9 +155,8 @@ class GithubRunnerOperator(CharmBase):
             event.fail("Missing runner binary")
             return
 
+        online = 0
         offline = 0
-        unregistered = 0
-        active = 0
         unknown = 0
         runner_names = []
 
@@ -169,21 +168,18 @@ class GithubRunnerOperator(CharmBase):
             return
 
         for runner in runner_info:
-            if runner.is_active:
-                active += 1
+            if runner.is_online:
+                online += 1
                 runner_names.append(runner.name)
             elif runner.is_offline:
                 offline += 1
-            elif runner.is_unregistered:
-                unregistered += 1
             else:
                 # might happen if runner dies and GH doesn't notice immediately
                 unknown += 1
         event.set_results(
             {
+                "online": online,
                 "offline": offline,
-                "unregistered": unregistered,
-                "active": active,
                 "unknown": unknown,
                 "runners": ", ".join(runner_names),
             }

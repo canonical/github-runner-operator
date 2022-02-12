@@ -27,34 +27,20 @@ class RunnerInfo:
         self.remote = remote
 
     @property
-    def is_active(self):
-        if not (self.local and self.remote):
-            return False
-        if self.local.status != "Running":
-            return False
-        if self.remote.status != "online":
-            return False
-        return True
-
-    @property
     def is_offline(self):
-        if not self.remote:
-            return True
-        if self.remote.status != "online":
-            return True
-        if not self.local or self.local.status != "Running":
-            return True
-        return False
+        return self.remote and self.remote.status != "online"
 
     @property
-    def is_unregistered(self):
-        if self.remote and self.remote.status == "online":
-            return False
-        return self.local and self.local.status == "Running"
+    def is_online(self):
+        return self.remote and self.remote.status == "online"
+
+    @property
+    def is_local(self):
+        return self.local is not None
 
     @property
     def virt_type(self):
-        if self.local:
+        if self.is_local:
             return self.local.type
         elif self.remote:
             remote_virt_type = (
@@ -111,6 +97,7 @@ class RunnerManager:
         """Install dependencies"""
         subprocess.run(["snap", "install", "lxd"], check=True)
         subprocess.run(["lxd", "init", "--auto"], check=True)
+        subprocess.run(["apt", "install", "-qy", "cpu-checker", "libvirt-clients", "libvirt-daemon-driver-qemu"], check=True)
         cls.runner_bin_path.parent.mkdir(parents=True, exist_ok=True)
 
     def get_latest_runner_bin_url(self):
@@ -147,7 +134,7 @@ class RunnerManager:
         """Return a list of RunnerInfo objects."""
         local_runners = {
             c.name: c
-            for c in self.lxd.containers.all()
+            for c in self.lxd.instances.all()
             if c.name.startswith(f"{self.app_name}-")
         }
         if "/" in self.path:
@@ -171,29 +158,26 @@ class RunnerManager:
 
     def reconcile(self, virt_type, quantity):
         """Bring runners in line with target."""
-        active_runners = []
-        stale_runners = []
-        for runner in self.get_info():
-            if runner.virt_type == virt_type:
-                if runner.is_active:
-                    active_runners.append(runner)
-                else:
-                    stale_runners.append(runner)
+        runners = [r for r in self.get_info() if r.virt_type == virt_type]
+        online_runners = [r for r in runners if r.is_online and r.is_local]
+        offline_runners = [r for r in runners if r.is_offline]                
 
-        if stale_runners:
-            runner_names = ", ".join(r.name for r in stale_runners)
+        # Clean up stale (offline) runners
+        if offline_runners:
+            runner_names = ", ".join(r.name for r in offline_runners)
             logger.info(f"Cleaning up stale {virt_type} runners: {runner_names}")
-            for runner in stale_runners:
+            for runner in offline_runners:
                 self._remove_runner(runner)
-
-        delta = quantity - len(active_runners)
+        
+        # Add/Remove runners to match the target quantity
+        delta = quantity - len(online_runners)
         if delta > 0:
             logger.info(f"Adding {delta} additional {virt_type} runners")
             for i in range(delta):
                 self.create(image="ubuntu", virt=virt_type)
         elif delta < 0:
-            active_runners.sort(key=lambda r: r.created_at)
-            old_runners = active_runners[abs(delta) :]
+            online_runners.sort(key=lambda r: r.local.created_at)
+            old_runners = online_runners[abs(delta) :]
             runner_names = ", ".join(r.name for r in old_runners)
             logger.info(f"Removing extra {virt_type} runners: {runner_names}")
             for runner in old_runners:
@@ -201,10 +185,10 @@ class RunnerManager:
         return delta
 
     def clear(self):
-        """Clear out all existing runners."""
-        runners = self.get_info()
+        """Clear out existing local runners."""
+        runners = [r for r in self.get_info() if r.is_local]
         runner_names = ", ".join(r.name for r in runners)
-        logger.info(f"Removing existing runners: {runner_names}")
+        logger.info(f"Removing existing local runners: {runner_names}")
         for runner in runners:
             self._remove_runner(runner)
 
@@ -212,6 +196,16 @@ class RunnerManager:
         """Create a runner"""
         instance = self._create_instance(image=image, virt=virt)
         instance.start(wait=True)
+
+        # Wait for the instance to boot
+        for attempt in range(8):
+            try:
+                self._check_output(instance, "who")
+                break
+            except Exception as e:
+                time.sleep(15)
+                pass
+
         try:
             self._install_binary(instance)
             self._configure_runner(instance)
@@ -224,7 +218,8 @@ class RunnerManager:
                 ],
             )
             self._start_runner(instance)
-            self._load_aaprofile(instance)
+            if virt == "container":
+                self._load_aaprofile(instance)
         except Exception as e:
             instance.stop(wait=True)
             try:
@@ -300,7 +295,7 @@ class RunnerManager:
     def _start_runner(self, instance):
         """Start a runner that is already registered"""
         script_contents = self.jinja.get_template("start.j2").render()
-        instance.files.put("/opt/github-runner/start.sh", script_contents)
+        instance.files.put("/opt/github-runner/start.sh", script_contents, mode="0755")
         self._check_output(
             instance, "sudo chown ubuntu:ubuntu /opt/github-runner/start.sh"
         )
@@ -329,7 +324,7 @@ class RunnerManager:
         # Render proxies if configured
         if self.proxies:
             contents = self.jinja.get_template("env.j2").render(proxies=self.proxies)
-            instance.files.put(self.env_file, contents)
+            instance.files.put(self.env_file, contents, mode="0600")
             self._check_output(instance, "chown ubuntu:ubuntu /opt/github-runner/.env")
 
     def _install_binary(self, instance):
