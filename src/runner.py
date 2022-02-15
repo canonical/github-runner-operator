@@ -27,6 +27,10 @@ class RunnerInfo:
         self.remote = remote
 
     @property
+    def is_idle(self):
+        return self.is_online and self.remote.busy is False
+
+    @property
     def is_offline(self):
         return self.remote and self.remote.status != "online"
 
@@ -63,11 +67,15 @@ class RunnerRemoveFailed(RunnerError):
     pass
 
 
+class RunnerStartFailed(RunnerError):
+    pass
+
+
 class RunnerManager:
     runner_bin_path = Path("/var/cache/github-runner-operator/runner.tgz")
     env_file = Path("/opt/github-runner/.env")
 
-    def __init__(self, path, token, app_name):
+    def __init__(self, path, token, app_name, reconcile_interval):
         http_proxy = os.environ.get("JUJU_CHARM_HTTP_PROXY", None)
         https_proxy = os.environ.get("JUJU_CHARM_HTTPS_PROXY", None)
         no_proxy = os.environ.get("JUJU_CHARM_NO_PROXY", None)
@@ -91,6 +99,7 @@ class RunnerManager:
         self.path = path
         self.api = GhApi(token=token)
         self.app_name = app_name
+        self.reconcile_interval = reconcile_interval
 
     @classmethod
     def install_deps(cls):
@@ -169,29 +178,38 @@ class RunnerManager:
     def reconcile(self, virt_type, quantity):
         """Bring runners in line with target."""
         runners = [r for r in self.get_info() if r.virt_type == virt_type]
-        online_runners = [r for r in runners if r.is_online and r.is_local]
-        offline_runners = [r for r in runners if r.is_offline]
 
-        # Clean up stale (offline) runners
+        # Clean up offline runners
+        offline_runners = [r for r in runners if r.is_offline]
         if offline_runners:
             runner_names = ", ".join(r.name for r in offline_runners)
-            logger.info(f"Cleaning up stale {virt_type} runners: {runner_names}")
+            logger.info(f"Cleaning up offline {virt_type} runners: {runner_names}")
             for runner in offline_runners:
                 self._remove_runner(runner)
 
         # Add/Remove runners to match the target quantity
-        delta = quantity - len(online_runners)
+        local_online_runners = [r for r in runners if r.is_online and r.is_local]
+        delta = quantity - len(local_online_runners)
         if delta > 0:
-            logger.info(f"Adding {delta} additional {virt_type} runners")
+            logger.info(f"Adding {delta} additional {virt_type} runner(s)")
             for i in range(delta):
                 self.create(image="ubuntu", virt=virt_type)
-        elif delta < 0:
-            online_runners.sort(key=lambda r: r.local.created_at)
-            old_runners = online_runners[abs(delta) :]
-            runner_names = ", ".join(r.name for r in old_runners)
-            logger.info(f"Removing extra {virt_type} runners: {runner_names}")
-            for runner in old_runners:
-                self._remove_runner(runner)
+
+        if delta < 0:
+            local_idle_runners = [r for r in local_online_runners if r.is_idle]
+            local_idle_runners.sort(key=lambda r: r.local.created_at)
+            offset = min(abs(delta), len(local_idle_runners))
+            if offset == 0:
+                logger.info(f"There are no idle {virt_type} runners to remove.")
+            else:
+                old_runners = local_online_runners[:offset]
+                runner_names = ", ".join(r.name for r in old_runners)
+                logger.info(
+                    f"Removing extra {offset} idle {virt_type} runner(s): {runner_names}"
+                )
+                for runner in old_runners:
+                    self._remove_runner(runner)
+
         return delta
 
     def clear(self):
@@ -205,18 +223,9 @@ class RunnerManager:
     def create(self, image, virt="container"):
         """Create a runner"""
         instance = self._create_instance(image=image, virt=virt)
-        instance.start(wait=True)
-
-        # Wait for the instance to boot
-        for attempt in range(8):
-            try:
-                self._check_output(instance, "who")
-                break
-            except Exception:
-                time.sleep(15)
-                pass
 
         try:
+            self._start_instance(instance)
             self._install_binary(instance)
             self._configure_runner(instance)
             self._register_runner(
@@ -392,3 +401,21 @@ class RunnerManager:
             "profiles": ["default", "runner"],
         }
         return self.lxd.instances.create(config=config, wait=True)
+
+    def _start_instance(self, instance):
+        """Start an instance and wait for it to boot"""
+        instance.start(wait=True)
+
+        # Wait for the instance to boot
+        wait_interval = 15  # seconds
+        attempts = int(self.reconcile_interval * 60 / wait_interval)
+        for attempt in range(attempts):
+            try:
+                self._check_output(instance, "who")
+                break
+            except Exception:
+                if attempt == attempts - 1:
+                    raise RunnerStartFailed()
+                else:
+                    time.sleep(wait_interval)
+                    pass

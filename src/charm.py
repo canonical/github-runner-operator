@@ -66,7 +66,9 @@ class GithubRunnerOperator(CharmBase):
             path = self.config["path"]
         if not (token and path):
             return None
-        return RunnerManager(path, token, self.app.name)
+        return RunnerManager(
+            path, token, self.app.name, self.config["reconcile-interval"]
+        )
 
     def _on_install(self, event):
         self.unit.status = MaintenanceStatus("Installing packages")
