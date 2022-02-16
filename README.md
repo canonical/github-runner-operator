@@ -1,31 +1,38 @@
-# github-runner-operator
+# github-runner
 
 ## Description
 
-This charm creates self hosted github runners. Each unit of this charm will create start a configurable number of runners in LXD containers. Each runner performs only one job
-after which the LXD is destroyed preventing the job from interacting with any other jobs. The charm will periodically check the number of currently active runners and spawn a new
-runner as necessary. Both the interval of the check and the number of runners to maintain are configurable.
+This charm creates self-hosted GitHub runners. Each unit of this charm will start a configurable number of LXD based containers and virtual machines to host GitHub runners. Each runner performs only one job, after which it unregisters from GitHub to ensure that each job runs in a clean environment.
+
+The charm will periodically check the number of idle runners and spawn or destroy runners as necessary to maintain the configured number of runners. Both the reconciliation interval and the number of runners to maintain are configurable.
 
 ## Usage
 
-There are two mandatory configuration options, `path` and `token`. Path is used to determine the organization or repository that the runner will be registered to. This value can
-not be changed, the charm should be redeployed with a new value instead. The token is a [GitHub Personal Access Token (PAT)](https://github.com/settings/tokens) (note: this is not the same as the token given in the Add a Runner instructions). This token requires **`repo`** ("Full control of private repositories") for
-use with repositories and both **`repo`** and **`admin:org`** ("Full control of orgs and teams, read and write org projects") for use with an organization. This is necessary because the charm will be creating and removing runners in order to
-make runners single use which protects jobs from leaking information to other jobs run on the same runner.
+There are two mandatory configuration options - `path` and `token`.
+* `path` determines the organization or repository that the runner will be registered with;
+* `token` is a [GitHub Personal Access Token (PAT)](https://github.com/settings/tokens) (note: this is not the same as the token given in the Add a Runner instructions). The PAT token requires either:
+  * the **`repo`** ("Full control of private repositories") permission for
+use with repositories or;
+  * both the **`repo`** and **`admin:org`** ("Full control of orgs and teams, read and write org projects") permissions for use with an organization. This is necessary because the charm will create and remove runners as needed to ensure that each runner executes only one job to protect jobs from leaking information to other jobs running on the same runner.
 
-With these values set the number of runners is controlled by the number of units you deploy and the number of runners on each unit. The config setting `quantity` configures how
-many runners a single unit has and each unit is the same. For example, if this charm is deployed with 2 units `juju deploy <charm> -n 2` and the default `quantity` of 3 is in use
-there will be a total of 6 runners registered, three on each of the two units. Decreasing the `quantity` config will not shut down runners, but will not spawn new ones until the
-number of runners on the unit is below the new value.
+The number of runners on a single unit is configured using two configuration options that can be both used at the same time:
+* the `containers` option configures the number of LXD container runners;
+* the `virtual-machines` option configures the number of LXD virtual machine runners.
 
-Finally the interval that units check the quantity of runners is configured in cron syntax with the `check-interval` setting. Each unit will check the quantity of runners on this
-interval. Runners take some time to spawn and the default time checks relatively frequently to start replacing runners. During the check, any offline runners are also removed from
-the configured organization or repository. This means that each interval, each unit will make one or more API calls. The interval may need to be lengthened if the number of units
-is large enough to trigger [Rate Limiting](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting).
+For example, if the charm is deployed with 2 units `juju deploy <charm> -n 2` and the `containers` value of 3 is in use,
+there will be a total of 6 container based runners, three on each unit.
+
+## Reconcilation
+
+Each unit will periodically check the number of idle runners at an interval that is configured using the `check-interval` setting to maintain the configured number of runners. During the check, all offline runners are unregistered from GitHub and corresponding containers or virtual machines are destroyed. 
+
+If there are more idle runners than configured, the oldest idle runners are unregistered and destroyed. If there are less idle runners than configured, new runners are spawn and registered with GitHub.
+
+This means that each interval, each unit will make one or more API calls to GitHub. The interval may need to be adjusted if the number of units is large enough to trigger [Rate Limiting](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting).
 
 ## Development
 
-This charm uses black and flake8 for formatting. Both are run with the lint stage of tox.
+This charm uses black and flake8 for formatting. Both run with the lint stage of tox.
 
 
 ## Testing
@@ -34,6 +41,4 @@ Testing is run via tox and pytest. To run the full test run:
 
     tox
 
-Dependencies are installed in virtual environments. Integration testing requires a juju controller to execute. These tests will use the existing controller, creating an ephemeral
-model for the tests which is removed after the testing. If you do not already have a controller setup, you can configure a local instance via LXD, see the [upstream
-documentation][https://juju.is/docs/lxd-cloud] for details.
+Dependencies are installed in virtual environments. Integration testing requires a juju controller to execute. These tests will use the existing controller, creating an ephemeral model for the tests which is removed after the testing. If you do not already have a controller setup, you can configure a local instance via LXD, see the [upstream documentation][https://juju.is/docs/lxd-cloud] for details.

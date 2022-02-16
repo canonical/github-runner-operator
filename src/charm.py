@@ -66,7 +66,9 @@ class GithubRunnerOperator(CharmBase):
             path = self.config["path"]
         if not (token and path):
             return None
-        return RunnerManager(path, token, self.app.name, self.config["virt-type"])
+        return RunnerManager(
+            path, token, self.app.name, self.config["reconcile-interval"]
+        )
 
     def _on_install(self, event):
         self.unit.status = MaintenanceStatus("Installing packages")
@@ -83,7 +85,7 @@ class GithubRunnerOperator(CharmBase):
                 return
             self.unit.status = MaintenanceStatus("Starting runners")
             try:
-                runner_manager.reconcile(self.config["quantity"])
+                self._reconcile_runners(runner_manager)
             except RunnerError as e:
                 logger.exception("Failed to start runners")
                 self.unit.status = BlockedStatus(f"Failed to start runners: {e}")
@@ -139,7 +141,7 @@ class GithubRunnerOperator(CharmBase):
             return
         self.unit.status = MaintenanceStatus("Reconciling runners")
         try:
-            runner_manager.reconcile(self.config["quantity"])
+            self._reconcile_runners(runner_manager)
         except Exception as e:
             logger.exception("Failed to reconcile runners")
             self.unit.status = BlockedStatus(f"Failed to reconcile runners: {e}")
@@ -155,9 +157,8 @@ class GithubRunnerOperator(CharmBase):
             event.fail("Missing runner binary")
             return
 
+        online = 0
         offline = 0
-        unregistered = 0
-        active = 0
         unknown = 0
         runner_names = []
 
@@ -169,21 +170,18 @@ class GithubRunnerOperator(CharmBase):
             return
 
         for runner in runner_info:
-            if runner.is_active:
-                active += 1
+            if runner.is_online:
+                online += 1
                 runner_names.append(runner.name)
             elif runner.is_offline:
                 offline += 1
-            elif runner.is_unregistered:
-                unregistered += 1
             else:
                 # might happen if runner dies and GH doesn't notice immediately
                 unknown += 1
         event.set_results(
             {
+                "online": online,
                 "offline": offline,
-                "unregistered": unregistered,
-                "active": active,
                 "unknown": unknown,
                 "runners": ", ".join(runner_names),
             }
@@ -196,13 +194,13 @@ class GithubRunnerOperator(CharmBase):
             return
 
         try:
-            delta = runner_manager.reconcile(self.config["quantity"])
+            delta = self._reconcile_runners(runner_manager)
         except Exception as e:
             logger.exception("Failed to reconcile runners")
             event.fail(f"Failed to reconcile runners: {e}")
             return
         self._on_check_runners_action(event)
-        event.set_results({"delta": delta})
+        event.set_results(delta)
 
     def _on_flush_runners_action(self, event):
         runner_manager = self._get_runner_manager()
@@ -212,13 +210,13 @@ class GithubRunnerOperator(CharmBase):
 
         try:
             runner_manager.clear()
-            delta = runner_manager.reconcile(self.config["quantity"])
+            delta = self._reconcile_runners(runner_manager)
         except Exception as e:
             logger.exception("Failed to flush runners")
             event.fail(f"Failed to flush runners: {e}")
             return
         self._on_check_runners_action(event)
-        event.set_results({"delta": delta})
+        event.set_results(delta)
 
     def _on_stop(self, event):
         self._disable_event_timer("update-runner-bin")
@@ -230,6 +228,28 @@ class GithubRunnerOperator(CharmBase):
             except Exception:
                 # Log but ignore error since we're stopping anyway.
                 logger.exception("Failed to clear runners")
+
+    def _reconcile_runners(self, runner_manager):
+        # handle deprecated config for `quantity` and `virt-type`
+
+        containers = self.config["containers"]
+        if containers == 0 and self.config["virt-type"] == "container":
+            containers = self.config["quantity"]
+
+        virtual_machines = self.config["virtual-machines"]
+        if virtual_machines == 0 and self.config["virt-type"] == "virtual-machine":
+            virtual_machines = self.config["quantity"]
+
+        delta_containers = runner_manager.reconcile("container", containers)
+        delta_virtual_machines = runner_manager.reconcile(
+            "virtual-machine", virtual_machines
+        )
+        return {
+            "delta": {
+                "containers": delta_containers,
+                "virtual-machines": delta_virtual_machines,
+            }
+        }
 
     def _render_event_tmpl(self, tmpl_type, event_name, context):
         tmpl = self._jinja.get_template(f"dispatch-event.{tmpl_type}.j2")
