@@ -10,12 +10,28 @@ options:
   quantity:
       default: 3
       type: int
-      description: "Quantity of runners to maintain"
-  check-interval:
-      default: "*/1 * * * *"
-      type: string
-      description: "Cron interval to check runners, each deployed unit will check on this interval"
+      description: |
+        DEPRECATED: use `containers` and `virtual-machines`
+        Quantity of runners to maintain
+  containers:
+      default: 0
+      type: int
+      description: "Quantity of container runners to maintain"
+  virtual-machines:
+      default: 0
+      type: int
+      description: "Quantity of virtual machine runners to maintain"
+  reconcile-interval:
+      default: 5
+      type: int
+      description: "How frequently, in minutes, the runners should be reconciled"
+  update-interval:
+      default: 60
+      type: int
+      description: "How frequently, in minutes, the charm should check for new versions of the runner binary"
   virt-type:
       default: "container"
       type: string
-      description: "Virtualization type for runners, either container or virtual-machine"
+      description: |
+        DEPRECATED: both `containers` and `virtual-machines` are supported at the same time
+        Virtualization type for runners, either container or virtual-machine

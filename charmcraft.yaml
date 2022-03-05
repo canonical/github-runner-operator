@@ -1,0 +1,16 @@
+type: charm
+parts:
+  charm:
+    charm-python-packages:
+      - setuptools  # for jinja2
+    build-packages:
+      - libffi-dev  # for cffi
+      - libssl-dev  # for cryptography
+      - rust-all    # for cryptography
+bases:
+  - build-on:
+    - name: "ubuntu"
+      channel: "20.04"
+    run-on:
+    - name: "ubuntu"
+      channel: "20.04"

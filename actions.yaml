@@ -2,4 +2,8 @@
 # See LICENSE file for licensing details.
 #
 check-runners:
-    description: Bring runner count in sync with config and remove offline runners
+    description: Get info on active and registered runners
+reconcile-runners:
+    description: Remove offline runners and replace any missing runners
+flush-runners:
+    description: Clear out all runners and start a new set
