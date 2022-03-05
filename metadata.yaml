@@ -1,6 +1,7 @@
-# Copyright 2021 Chris
+# Copyright 2021 Canonical Ltd.
 # See LICENSE file for licensing details.
 name: github-runner
+display-name: GitHub runner
 description: |
   Creates a cluster of self-hosted github runners
 summary: |
@@ -15,5 +16,3 @@ summary: |
 
 series:
     - focal
-
-

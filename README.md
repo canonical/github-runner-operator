@@ -1,10 +1,13 @@
-# github-runner
+# GitHub runner
 
 ## Description
 
-This charm creates self-hosted GitHub runners. Each unit of this charm will start a configurable number of LXD based containers and virtual machines to host GitHub runners. Each runner performs only one job, after which it unregisters from GitHub to ensure that each job runs in a clean environment.
+This charm creates self-hosted GitHub runners. Each unit of this charm will start a configurable number of LXD based containers and virtual 
+machines to host GitHub runners. Each runner performs only one job, after which it unregisters from GitHub to ensure that each job runs in
+a clean environment.
 
-The charm will periodically check the number of idle runners and spawn or destroy runners as necessary to maintain the configured number of runners. Both the reconciliation interval and the number of runners to maintain are configurable.
+The charm will periodically check the number of idle runners and spawn or destroy runners as necessary to maintain the configured number of 
+runners. Both the reconciliation interval and the number of runners to maintain are configurable.
 
 ## Usage
 

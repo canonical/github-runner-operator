@@ -1,10 +1,6 @@
-# Copyright 2021 Chris
+# Copyright 2021 Canonical Ltd.
 # See LICENSE file for licensing details.
 #
-# This is only an example, and you should edit to suit your needs.
-# If you don't need actions, you can remove the file entirely.
-# It ties in to the example _on_fortune_action handler in src/charm.py
-# 
 check-runners:
     description: Get info on active and registered runners
 reconcile-runners:
