@@ -2,10 +2,11 @@
 # See LICENSE file for licensing details.
 
 import unittest
-from unittest.mock import call, patch
+from unittest.mock import call, patch, MagicMock
 
 from charm import GithubRunnerOperator
 from ops.testing import Harness
+from runner import VMResources
 
 
 class TestCharm(unittest.TestCase):
@@ -46,6 +47,40 @@ class TestCharm(unittest.TestCase):
         harness.begin()
         harness.charm.on.config_changed.emit()
         rm.assert_called_with("mockorg/repo", "mocktoken", "github-runner", 5)
+
+    @patch("charm.RunnerManager")
+    @patch("pathlib.Path.write_text")
+    @patch("subprocess.run")
+    def test_update_config(self, run, wt, rm):
+        rm.return_value = mock_rm = MagicMock()
+        harness = Harness(GithubRunnerOperator)
+        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+        harness.begin()
+
+        # update to 10 containers
+        harness.update_config({"containers": 10, "virtual-machines": 0})
+        harness.charm.on.reconcile_runners.emit()
+        rm.assert_called_with("mockorg/repo", "mocktoken", "github-runner", 5)
+        mock_rm.reconcile.assert_has_calls(
+            [
+                call("container", 10),
+                call("virtual-machine", 0, VMResources(2, "7GiB", "10GiB")),
+            ]
+        )
+        mock_rm.reset_mock()
+
+        # update to 10 VMs with 4 cpu and 7GiB memory
+        harness.update_config({"containers": 0, "virtual-machines": 10, "vm-cpu": 4})
+        harness.charm.on.reconcile_runners.emit()
+        rm.assert_called_with("mockorg/repo", "mocktoken", "github-runner", 5)
+        mock_rm.reconcile.assert_has_calls(
+            [
+                # 3 containers from quantity
+                call("container", 3),
+                call("virtual-machine", 10, VMResources(4, "7GiB", "10GiB")),
+            ]
+        )
+        mock_rm.reset_mock()
 
     # def test_add_cron(self):
     #     """Test adding cron jobs."""

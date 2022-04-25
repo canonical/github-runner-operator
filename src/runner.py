@@ -6,6 +6,7 @@ import subprocess
 import time
 import urllib.error
 import urllib.request
+from collections import namedtuple
 from pathlib import Path
 from random import choices
 from string import ascii_lowercase, digits
@@ -16,8 +17,12 @@ from jinja2 import Environment, FileSystemLoader
 import fastcore.net
 import pylxd
 from ghapi.all import GhApi
+from pylxd.exceptions import LXDAPIException, NotFound
 
 logger = logging.getLogger(__name__)
+VMResources = namedtuple(
+    "VMResource", ["cpu", "memory", "disk"], defaults=[2, "7GiB", "10GiB"]
+)
 
 
 class RunnerInfo:
@@ -175,7 +180,7 @@ class RunnerManager:
             )
         return runners
 
-    def reconcile(self, virt_type, quantity):
+    def reconcile(self, virt_type, quantity, vm_resources=None):
         """Bring runners in line with target."""
         runners = [r for r in self.get_info() if r.virt_type == virt_type]
 
@@ -193,7 +198,7 @@ class RunnerManager:
         if delta > 0:
             logger.info(f"Adding {delta} additional {virt_type} runner(s)")
             for i in range(delta):
-                self.create(image="ubuntu", virt=virt_type)
+                self.create(image="ubuntu", virt=virt_type, vm_resources=vm_resources)
 
         if delta < 0:
             local_idle_runners = [r for r in local_online_runners if r.is_idle]
@@ -220,9 +225,13 @@ class RunnerManager:
         for runner in runners:
             self._remove_runner(runner)
 
-    def create(self, image, virt="container"):
+        self._clean_unused_profiles()
+
+    def create(self, image, virt="container", vm_resources=None):
         """Create a runner"""
-        instance = self._create_instance(image=image, virt=virt)
+        instance = self._create_instance(
+            image=image, virt=virt, vm_resources=vm_resources
+        )
 
         try:
             self._start_instance(instance)
@@ -286,6 +295,19 @@ class RunnerManager:
                 raise RunnerRemoveFailed(
                     f"Failed remove local runner: {runner.name}"
                 ) from e
+
+        # remove profile
+        try:
+            profile = self.lxd.profiles.get(runner.name)
+            profile.delete()
+        except (LXDAPIException, NotFound):
+            pass
+
+    def _clean_unused_profiles(self):
+        """Clean all unused profiles created with this manager."""
+        for profile in self.lxd.profiles.all():
+            if profile.name.startswith(self.app_name) and not profile.used_by:
+                profile.delete()
 
     def _register_runner(self, instance, labels):
         """Register a runner in an instance"""
@@ -376,9 +398,13 @@ class RunnerManager:
         subprocess.CompletedProcess(cmd, exit_code, stdout, stderr).check_returncode()
         return stdout
 
-    def _create_instance(self, image="focal", virt="container"):
+    def _create_instance(self, image="focal", virt="container", vm_resources=None):
         """Create an instance"""
+        if virt == "container" and vm_resources is not None:
+            logger.warning("vm resources should be use only with virtual-machine")
+
         suffix = "".join(choices(ascii_lowercase + digits, k=6))
+        name = f"{self.app_name}-{suffix}"
         if not self.lxd.profiles.exists("runner"):
             config = {
                 "security.nesting": "true",
@@ -387,8 +413,9 @@ class RunnerManager:
             }
             devices = {}
             self.lxd.profiles.create("runner", config, devices)
+
         config = {
-            "name": f"{self.app_name}-{suffix}",
+            "name": name,
             "type": virt,
             "source": {
                 "type": "image",
@@ -400,7 +427,43 @@ class RunnerManager:
             "ephemeral": True,
             "profiles": ["default", "runner"],
         }
+        # configure resources for VM via custom profile
+        if virt == "virtual-machine" and vm_resources is not None:
+            self._create_vm_profile(name, vm_resources)
+            config["profiles"].append(name)
+
         return self.lxd.instances.create(config=config, wait=True)
+
+    def _create_vm_profile(self, name, vm_resources):
+        """Create custom profile for VM."""
+        try:
+            vm_profile_config = {
+                "limits.cpu": str(vm_resources.cpu),
+                "limits.memory": vm_resources.memory,
+            }
+            vm_profile_devices = {
+                "root": {
+                    "path": "/",
+                    "pool": "default",
+                    "type": "disk",
+                    "size": vm_resources.disk,
+                }
+            }
+            self.lxd.profiles.create(
+                name,
+                vm_profile_config,
+                vm_profile_devices,
+            )
+            logger.error(f"profile {vm_profile_config}")
+        except AttributeError as error:
+            raise RunnerError(
+                "vm_resources variable was not defined in the correct format"
+            ) from error
+        except LXDAPIException as error:
+            raise RunnerError(
+                "VM resources were not provided in the correct format, check the juju"
+                "config for vm-cpu, vm-memory and vm-disk."
+            ) from error
 
     def _start_instance(self, instance):
         """Start an instance and wait for it to boot"""

@@ -21,6 +21,18 @@ options:
       default: 0
       type: int
       description: "Quantity of virtual machine runners to maintain"
+  vm-cpu:
+      default: 2
+      type: int
+      description: "Number of CPUs for VMs."
+  vm-memory:
+    default: 7GiB
+    type: string
+    description: "VM memory size."
+  vm-disk:
+    default: 10GiB
+    type: string
+    description: "VM disk size."
   reconcile-interval:
       default: 5
       type: int
