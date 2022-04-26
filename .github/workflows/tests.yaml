@@ -54,6 +54,7 @@ jobs:
       - name: Setup operator environment
         uses: charmed-kubernetes/actions-operator@main
         with:
+            lxd-channel: 4.24/stable
             provider: lxd
       - name: Run test
         run: tox -e integration

@@ -11,7 +11,7 @@ from ops.charm import CharmBase
 from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
-from runner import RunnerManager, RunnerError
+from runner import RunnerManager, RunnerError, VMResources
 
 logger = logging.getLogger(__name__)
 
@@ -230,6 +230,9 @@ class GithubRunnerOperator(CharmBase):
                 logger.exception("Failed to clear runners")
 
     def _reconcile_runners(self, runner_manager):
+        virtual_machines_resources = VMResources(
+            self.config["vm-cpu"], self.config["vm-memory"], self.config["vm-disk"]
+        )
         # handle deprecated config for `quantity` and `virt-type`
 
         containers = self.config["containers"]
@@ -242,7 +245,7 @@ class GithubRunnerOperator(CharmBase):
 
         delta_containers = runner_manager.reconcile("container", containers)
         delta_virtual_machines = runner_manager.reconcile(
-            "virtual-machine", virtual_machines
+            "virtual-machine", virtual_machines, virtual_machines_resources
         )
         return {
             "delta": {
