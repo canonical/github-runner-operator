@@ -20,9 +20,7 @@ from ghapi.all import GhApi
 from pylxd.exceptions import LXDAPIException, NotFound
 
 logger = logging.getLogger(__name__)
-VMResources = namedtuple(
-    "VMResource", ["cpu", "memory", "disk"], defaults=[2, "7GiB", "10GiB"]
-)
+VMResources = namedtuple("VMResource", ["cpu", "memory", "disk"])
 
 
 class RunnerInfo:

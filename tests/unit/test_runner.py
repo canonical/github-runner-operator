@@ -50,7 +50,9 @@ class TestRunner(unittest.TestCase):
         self.lxd.profiles.exists.return_value = True
 
         rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
-        rm._create_instance(virt="virtual-machine", vm_resources=VMResources(4))
+        rm._create_instance(
+            virt="virtual-machine", vm_resources=VMResources(4, "7GiB", "10GiB")
+        )
         self.lxd.profiles.create.assert_called_once_with(
             "test-1234",
             {"limits.cpu": "4", "limits.memory": "7GiB"},
@@ -83,7 +85,7 @@ class TestRunner(unittest.TestCase):
             response=mock.MagicMock()
         )
         with pytest.raises(RunnerError):
-            rm._create_vm_profile("test", vm_resources=VMResources())
+            rm._create_vm_profile("test", vm_resources=VMResources(2, "4GiB", "10GiB"))
 
     def test_remove_runner(self):
         """Test remove runner function.
