@@ -11,12 +11,11 @@ from pathlib import Path
 from random import choices
 from string import ascii_lowercase, digits
 
-import requests
-from jinja2 import Environment, FileSystemLoader
-
 import fastcore.net
 import pylxd
+import requests
 from ghapi.all import GhApi
+from jinja2 import Environment, FileSystemLoader
 from pylxd.exceptions import LXDAPIException, NotFound
 
 logger = logging.getLogger(__name__)
@@ -134,9 +133,7 @@ class RunnerManager:
                 owner=owner, repo=repo
             )
         else:
-            runner_bins = self.api.actions.list_runner_applications_for_org(
-                org=self.path
-            )
+            runner_bins = self.api.actions.list_runner_applications_for_org(org=self.path)
         for runner_bin in runner_bins:
             if runner_bin.os == os_name and runner_bin.architecture == arch_name:
                 return runner_bin.download_url
@@ -155,9 +152,7 @@ class RunnerManager:
     def get_info(self):
         """Return a list of RunnerInfo objects."""
         local_runners = {
-            c.name: c
-            for c in self.lxd.instances.all()
-            if c.name.startswith(f"{self.app_name}-")
+            c.name: c for c in self.lxd.instances.all() if c.name.startswith(f"{self.app_name}-")
         }
         if "/" in self.path:
             owner, repo = self.path.split("/")
@@ -165,17 +160,15 @@ class RunnerManager:
                 owner=owner, repo=repo
             )["runners"]
         else:
-            remote_runners = self.api.actions.list_self_hosted_runners_for_org(
-                org=self.path
-            )["runners"]
+            remote_runners = self.api.actions.list_self_hosted_runners_for_org(org=self.path)[
+                "runners"
+            ]
         remote_runners = {
             r.name: r for r in remote_runners if r.name.startswith(f"{self.app_name}-")
         }
         runners = []
         for name in set(local_runners.keys()) | set(remote_runners.keys()):
-            runners.append(
-                RunnerInfo(name, local_runners.get(name), remote_runners.get(name))
-            )
+            runners.append(RunnerInfo(name, local_runners.get(name), remote_runners.get(name)))
         return runners
 
     def reconcile(self, virt_type, quantity, vm_resources=None):
@@ -207,9 +200,7 @@ class RunnerManager:
             else:
                 old_runners = local_online_runners[:offset]
                 runner_names = ", ".join(r.name for r in old_runners)
-                logger.info(
-                    f"Removing extra {offset} idle {virt_type} runner(s): {runner_names}"
-                )
+                logger.info(f"Removing extra {offset} idle {virt_type} runner(s): {runner_names}")
                 for runner in old_runners:
                     self._remove_runner(runner)
 
@@ -227,9 +218,7 @@ class RunnerManager:
 
     def create(self, image, virt="container", vm_resources=None):
         """Create a runner"""
-        instance = self._create_instance(
-            image=image, virt=virt, vm_resources=vm_resources
-        )
+        instance = self._create_instance(image=image, virt=virt, vm_resources=vm_resources)
 
         try:
             self._start_instance(instance)
@@ -270,9 +259,7 @@ class RunnerManager:
                         org=self.path, runner_id=runner.remote.id
                     )
             except Exception as e:
-                raise RunnerRemoveFailed(
-                    f"Failed remove remote runner: {runner.name}"
-                ) from e
+                raise RunnerRemoveFailed(f"Failed remove remote runner: {runner.name}") from e
 
         if runner.local:
             try:
@@ -290,9 +277,7 @@ class RunnerManager:
                     # surface.
                     runner.local.delete(wait=True)
             except Exception as e:
-                raise RunnerRemoveFailed(
-                    f"Failed remove local runner: {runner.name}"
-                ) from e
+                raise RunnerRemoveFailed(f"Failed remove local runner: {runner.name}") from e
 
         # remove profile
         try:
@@ -312,9 +297,7 @@ class RunnerManager:
         api = self.api
         if "/" in self.path:
             owner, repo = self.path.split("/")
-            token = api.actions.create_registration_token_for_repo(
-                owner=owner, repo=repo
-            )
+            token = api.actions.create_registration_token_for_repo(owner=owner, repo=repo)
         else:
             token = api.actions.create_registration_token_for_org(org=self.path)
         cmd = (
@@ -335,9 +318,7 @@ class RunnerManager:
         """Start a runner that is already registered"""
         script_contents = self.jinja.get_template("start.j2").render()
         instance.files.put("/opt/github-runner/start.sh", script_contents, mode="0755")
-        self._check_output(
-            instance, "sudo chown ubuntu:ubuntu /opt/github-runner/start.sh"
-        )
+        self._check_output(instance, "sudo chown ubuntu:ubuntu /opt/github-runner/start.sh")
         self._check_output(instance, "sudo chmod u+x /opt/github-runner/start.sh")
         self._check_output(instance, "sudo -u ubuntu /opt/github-runner/start.sh")
 
@@ -372,12 +353,8 @@ class RunnerManager:
         for attempt in range(10):
             try:
                 instance.files.put("/tmp/runner.tgz", self.runner_bin_path.read_bytes())
-                self._check_output(
-                    instance, "tar -xzf /tmp/runner.tgz -C /opt/github-runner"
-                )
-                self._check_output(
-                    instance, "chown -R ubuntu:ubuntu /opt/github-runner"
-                )
+                self._check_output(instance, "tar -xzf /tmp/runner.tgz -C /opt/github-runner")
+                self._check_output(instance, "chown -R ubuntu:ubuntu /opt/github-runner")
                 break
             except subprocess.CalledProcessError:
                 if attempt < 9:

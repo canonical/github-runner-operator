@@ -2,10 +2,11 @@
 # See LICENSE file for licensing details.
 
 import unittest
-from unittest.mock import call, patch, MagicMock
+from unittest.mock import MagicMock, call, patch
+
+from ops.testing import Harness
 
 from charm import GithubRunnerOperator
-from ops.testing import Harness
 from runner import VMResources
 
 
@@ -28,9 +29,7 @@ class TestCharm(unittest.TestCase):
     def test_org_register(self, run, wt, rm):
         """Test org registration"""
         harness = Harness(GithubRunnerOperator)
-        harness.update_config(
-            {"path": "mockorg", "token": "mocktoken", "reconcile-interval": 5}
-        )
+        harness.update_config({"path": "mockorg", "token": "mocktoken", "reconcile-interval": 5})
         harness.begin()
         harness.charm.on.config_changed.emit()
         rm.assert_called_with("mockorg", "mocktoken", "github-runner", 5)
@@ -70,7 +69,7 @@ class TestCharm(unittest.TestCase):
         mock_rm.reset_mock()
 
         # update to 10 VMs with 4 cpu and 7GiB memory
-        harness.update_config({"containers": 0, "virtual-machines": 10, "vm-cpu": 4})
+        harness.update_config({"quantity": 3, "containers": 0, "virtual-machines": 10, "vm-cpu": 4})
         harness.charm.on.reconcile_runners.emit()
         rm.assert_called_with("mockorg/repo", "mocktoken", "github-runner", 5)
         mock_rm.reconcile.assert_has_calls(

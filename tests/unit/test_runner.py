@@ -4,6 +4,7 @@ from unittest import mock
 
 import pytest
 from pylxd.exceptions import LXDAPIException
+
 from runner import RunnerError, RunnerInfo, RunnerManager, VMResources
 
 
@@ -50,9 +51,7 @@ class TestRunner(unittest.TestCase):
         self.lxd.profiles.exists.return_value = True
 
         rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
-        rm._create_instance(
-            virt="virtual-machine", vm_resources=VMResources(4, "7GiB", "10GiB")
-        )
+        rm._create_instance(virt="virtual-machine", vm_resources=VMResources(4, "7GiB", "10GiB"))
         self.lxd.profiles.create.assert_called_once_with(
             "test-1234",
             {"limits.cpu": "4", "limits.memory": "7GiB"},
@@ -81,9 +80,7 @@ class TestRunner(unittest.TestCase):
         self.lxd.profiles.create.assert_not_called()
 
         # lxd profile creation failed
-        self.lxd.profiles.create.side_effect = LXDAPIException(
-            response=mock.MagicMock()
-        )
+        self.lxd.profiles.create.side_effect = LXDAPIException(response=mock.MagicMock())
         with pytest.raises(RunnerError):
             rm._create_vm_profile("test", vm_resources=VMResources(2, "4GiB", "10GiB"))
 

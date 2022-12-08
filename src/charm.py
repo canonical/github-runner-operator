@@ -11,7 +11,8 @@ from ops.charm import CharmBase
 from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
-from runner import RunnerManager, RunnerError, VMResources
+
+from runner import RunnerError, RunnerManager, VMResources
 
 logger = logging.getLogger(__name__)
 
@@ -48,15 +49,9 @@ class GithubRunnerOperator(CharmBase):
         self.framework.observe(self.on.update_runner_bin, self._on_update_runner_bin)
         self.framework.observe(self.on.stop, self._on_stop)
 
-        self.framework.observe(
-            self.on.check_runners_action, self._on_check_runners_action
-        )
-        self.framework.observe(
-            self.on.reconcile_runners_action, self._on_reconcile_runners_action
-        )
-        self.framework.observe(
-            self.on.flush_runners_action, self._on_flush_runners_action
-        )
+        self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
+        self.framework.observe(self.on.reconcile_runners_action, self._on_reconcile_runners_action)
+        self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
 
     def _get_runner_manager(self, token=None, path=None):
         """Get a RunnerManager instance, or None if missing config."""
@@ -66,9 +61,7 @@ class GithubRunnerOperator(CharmBase):
             path = self.config["path"]
         if not (token and path):
             return None
-        return RunnerManager(
-            path, token, self.app.name, self.config["reconcile-interval"]
-        )
+        return RunnerManager(path, token, self.app.name, self.config["reconcile-interval"])
 
     def _on_install(self, event):
         self.unit.status = MaintenanceStatus("Installing packages")
@@ -104,9 +97,7 @@ class GithubRunnerOperator(CharmBase):
         if self.config["path"] != self._stored.path:
             prev_runner_manager = self._get_runner_manager(path=self._stored.path)
             if prev_runner_manager:
-                self.unit.status = MaintenanceStatus(
-                    "Removing runners from old org/repo"
-                )
+                self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
                 prev_runner_manager.clear()
             self._stored.path = self.config["path"]
 
@@ -284,9 +275,7 @@ class GithubRunnerOperator(CharmBase):
         """Disable the systemd timer for the given event."""
         # Don't check for errors in case the timer wasn't registered.
         subprocess.run(["systemctl", "stop", f"ghro.{event_name}.timer"], check=False)
-        subprocess.run(
-            ["systemctl", "disable", f"ghro.{event_name}.timer"], check=False
-        )
+        subprocess.run(["systemctl", "disable", f"ghro.{event_name}.timer"], check=False)
 
 
 if __name__ == "__main__":
