@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 
+# Copyright 2022 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+"""RunnerManager for managing the dependencies and lifecycle of runners."""
+
 import logging
 import os
-import subprocess
+import subprocess  # nosec B404
 import time
 import urllib.error
 import urllib.request
@@ -10,43 +15,120 @@ from collections import namedtuple
 from pathlib import Path
 from random import choices
 from string import ascii_lowercase, digits
+from typing import List, Optional, Sequence, TypedDict
 
 import fastcore.net
 import pylxd
+import pylxd.models
 import requests
 from ghapi.all import GhApi
 from jinja2 import Environment, FileSystemLoader
 from pylxd.exceptions import LXDAPIException, NotFound
 
 logger = logging.getLogger(__name__)
-VMResources = namedtuple("VMResource", ["cpu", "memory", "disk"])
+
+VMResources = namedtuple("VMResources", ["cpu", "memory", "disk"])
 
 
+class RunnerLabel(TypedDict):
+    """Represents label in GitHub API for runner status."""
+
+    id: int
+    name: str
+    type: type
+
+
+class RemoteRunner(TypedDict):
+    """Represents runners in GitHub API."""
+
+    id: int
+    busy: bool
+    status: str
+    labels: List[RunnerLabel]
+
+
+class LxdInstanceConfigSource(TypedDict):
+    """Represents configuration for source image in LXD instance."""
+
+    type: str
+    mode: str
+    server: str
+    protocol: str
+    alias: str
+
+
+class LxdInstanceConfig(TypedDict):
+    """Represents configuration for LXD instance."""
+
+    name: str
+    type: str
+    source: LxdInstanceConfigSource
+    ephemeral: bool
+    profiles: List[str]
+
+
+# TODO: Create a Runner class. This splits the logic within the RunnerManager into smaller pieces
+# of methods. It should be easier to test as well. The RunnerManager class will have the logic
+# of managing a list of runners. The Runner class will have the logic of interacting with runner
+# and query runner info.
+#
+# Also enforce the local and remote info through type design. E.g., if Runner cannot be
+# neither local and remote at the same time, enforce it through type design.
+# Why:
+# * Impossible to create runner info that is neither local and remote. This
+#   is allowed by current design.
+# * Type-driven design works better with type checkers. Search for "mypy" in comment for add code
+#   needed for type checker under current-design.
 class RunnerInfo:
-    def __init__(self, name, local, remote):
+    """RunnerInfo stores the info on a runner.
+
+    Attributes:
+        name (str): Name of the runner.
+        local (pylxd.models.Instance): Local LXD instance information of runner.
+        remote (RemoteRunner): GitHub API information of runner.
+    """
+
+    def __init__(
+        self, name: str, local: Optional[pylxd.models.Instance], remote: Optional[RemoteRunner]
+    ):
+        """Construct a instance of runner information.
+
+        Args:
+            name (str): Name of the runner.
+            local (pylxd.models.Instance): Local LXD instance information of runner.
+            remote (RemoteRunner): GitHub API information of runner.
+        """
         self.name = name
         self.local = local
         self.remote = remote
 
     @property
-    def is_idle(self):
-        return self.is_online and self.remote.busy is False
+    def is_idle(self) -> bool:
+        """Whether the runner is idle."""
+        # Redundant None check for mypy type check.
+        return self.remote is not None and self.is_online and self.remote["busy"] is False
 
     @property
-    def is_offline(self):
-        return self.remote and self.remote.status != "online"
+    def is_offline(self) -> bool:
+        """Whether the runner is offline."""
+        return self.remote is not None and self.remote["status"] != "online"
 
     @property
-    def is_online(self):
-        return self.remote and self.remote.status == "online"
+    def is_online(self) -> bool:
+        """Whether the runner is online."""
+        return self.remote is not None and self.remote["status"] == "online"
 
     @property
-    def is_local(self):
+    def is_local(self) -> bool:
+        """Whether the runner is local."""
         return self.local is not None
 
     @property
-    def virt_type(self):
+    def virt_type(self) -> Optional[str]:
+        """Return the virtualization type of the runner."""
         if self.is_local:
+            # Assert for mypy type check. This check is already done by `is_local`.
+            assert self.local is not None  # nosec B101
             return self.local.type
         elif self.remote:
             remote_virt_type = (
@@ -55,29 +137,47 @@ class RunnerInfo:
                 if label["name"] in {"container", "virtual-machine"}
             )
             return next(remote_virt_type, None)
+        return None
 
 
 class RunnerError(Exception):
-    pass
+    """Generic runner error."""
 
 
-class RunnerCreateFailed(RunnerError):
-    pass
+class RunnerCreateError(RunnerError):
+    """Error for runner creation failure."""
 
 
-class RunnerRemoveFailed(RunnerError):
-    pass
+class RunnerRemoveError(RunnerError):
+    """Error for runner removal failure."""
 
 
-class RunnerStartFailed(RunnerError):
-    pass
+class RunnerStartError(RunnerError):
+    """Error for runner start failure."""
 
 
 class RunnerManager:
+    """Class for querying and controlling the runners.
+
+    Attributes:
+        proxies (Dict[str, str]): Mapping of proxy env vars.
+        path (str): GitHub repo path in the format '<org>/<repo>', or the GitHub org name.
+        app_name (str): An name for the set of runners.
+        reconcile_interval (int): Number of minutes between each reconciliation of runners state.
+    """
+
     runner_bin_path = Path("/var/cache/github-runner-operator/runner.tgz")
     env_file = Path("/opt/github-runner/.env")
 
-    def __init__(self, path, token, app_name, reconcile_interval):
+    def __init__(self, path: str, token: str, app_name: str, reconcile_interval: int):
+        """Construct RunnerManager object for creating and managing runners.
+
+        Args:
+            path (str): GitHub repo path in the format '<org>/<repo>', or the GitHub org name.
+            token (str): GitHub personal access token to register runner to the repo or org.
+            app_name (str): An name for the set of runners.
+            reconcile_interval (int): Number of minutes between each reconciliation of runners.
+        """
         http_proxy = os.environ.get("JUJU_CHARM_HTTP_PROXY", None)
         https_proxy = os.environ.get("JUJU_CHARM_HTTPS_PROXY", None)
         no_proxy = os.environ.get("JUJU_CHARM_NO_PROXY", None)
@@ -96,21 +196,22 @@ class RunnerManager:
             proxy = urllib.request.ProxyHandler(self.proxies)
             opener = urllib.request.build_opener(proxy)
             fastcore.net._opener = opener
-        self.jinja = Environment(loader=FileSystemLoader("templates"))
-        self.lxd = pylxd.Client()
+        self._jinja = Environment(loader=FileSystemLoader("templates"), autoescape=True)
+        self._lxd = pylxd.Client()
         self.path = path
-        self.api = GhApi(token=token)
+        self._api = GhApi(token=token)
         self.app_name = app_name
         self.reconcile_interval = reconcile_interval
 
     @classmethod
     def install_deps(cls):
-        """Install dependencies"""
-        subprocess.run(["snap", "install", "lxd"], check=True)
-        subprocess.run(["lxd", "init", "--auto"], check=True)
-        subprocess.run(
+        """Install dependencies."""
+        # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
+        subprocess.run(["/usr/bin/snap", "install", "lxd"], check=True)  # nosec 603
+        subprocess.run(["/usr/bin/lxd", "init", "--auto"], check=True)  # nosec 603
+        subprocess.run(  # nosec B603
             [
-                "apt",
+                "/usr/bin/apt",
                 "install",
                 "-qy",
                 "cpu-checker",
@@ -121,7 +222,7 @@ class RunnerManager:
         )
         cls.runner_bin_path.parent.mkdir(parents=True, exist_ok=True)
 
-    def get_latest_runner_bin_url(self):
+    def get_latest_runner_bin_url(self) -> Optional[str]:
         """Get the URL for the latest runner binary."""
         # TODO: make these not hard-coded
         os_name = "linux"
@@ -129,18 +230,18 @@ class RunnerManager:
 
         if "/" in self.path:
             owner, repo = self.path.split("/")
-            runner_bins = self.api.actions.list_runner_applications_for_repo(
+            runner_bins = self._api.actions.list_runner_applications_for_repo(
                 owner=owner, repo=repo
             )
         else:
-            runner_bins = self.api.actions.list_runner_applications_for_org(org=self.path)
+            runner_bins = self._api.actions.list_runner_applications_for_org(org=self.path)
         for runner_bin in runner_bins:
             if runner_bin.os == os_name and runner_bin.architecture == arch_name:
                 return runner_bin.download_url
         return None
 
-    def update_runner_bin(self, download_url):
-        """Download a runner file, replacing the current copy"""
+    def update_runner_bin(self, download_url: str):
+        """Download a runner file, replacing the current copy."""
         # Remove any existing runner bin file
         if self.runner_bin_path.exists():
             self.runner_bin_path.unlink()
@@ -149,18 +250,18 @@ class RunnerManager:
         with self.runner_bin_path.open(mode="wb") as runner_bin_file:
             runner_bin_file.write(response.content)
 
-    def get_info(self):
+    def get_info(self) -> Sequence[RunnerInfo]:
         """Return a list of RunnerInfo objects."""
         local_runners = {
-            c.name: c for c in self.lxd.instances.all() if c.name.startswith(f"{self.app_name}-")
+            c.name: c for c in self._lxd.instances.all() if c.name.startswith(f"{self.app_name}-")
         }
         if "/" in self.path:
             owner, repo = self.path.split("/")
-            remote_runners = self.api.actions.list_self_hosted_runners_for_repo(
+            remote_runners = self._api.actions.list_self_hosted_runners_for_repo(
                 owner=owner, repo=repo
             )["runners"]
         else:
-            remote_runners = self.api.actions.list_self_hosted_runners_for_org(org=self.path)[
+            remote_runners = self._api.actions.list_self_hosted_runners_for_org(org=self.path)[
                 "runners"
             ]
         remote_runners = {
@@ -171,7 +272,9 @@ class RunnerManager:
             runners.append(RunnerInfo(name, local_runners.get(name), remote_runners.get(name)))
         return runners
 
-    def reconcile(self, virt_type, quantity, vm_resources=None):
+    def reconcile(
+        self, virt_type: str, quantity: int, vm_resources: Optional[VMResources] = None
+    ) -> int:
         """Bring runners in line with target."""
         runners = [r for r in self.get_info() if r.virt_type == virt_type]
 
@@ -193,7 +296,11 @@ class RunnerManager:
 
         if delta < 0:
             local_idle_runners = [r for r in local_online_runners if r.is_idle]
-            local_idle_runners.sort(key=lambda r: r.local.created_at)
+            # The `local_idle_runners` are filter for only local runners
+            # The if-else statement is for mypy type check.
+            local_idle_runners.sort(
+                key=lambda r: r.local.created_at if r.local is not None else False
+            )
             offset = min(abs(delta), len(local_idle_runners))
             if offset == 0:
                 logger.info(f"There are no idle {virt_type} runners to remove.")
@@ -216,8 +323,10 @@ class RunnerManager:
 
         self._clean_unused_profiles()
 
-    def create(self, image, virt="container", vm_resources=None):
-        """Create a runner"""
+    def create(
+        self, image: str, virt: str = "container", vm_resources: Optional[VMResources] = None
+    ):
+        """Create a runner."""
         instance = self._create_instance(image=image, virt=virt, vm_resources=vm_resources)
 
         try:
@@ -239,27 +348,27 @@ class RunnerManager:
             instance.stop(wait=True)
             try:
                 instance.delete(wait=True)
-            except Exception:
-                # Ephemeral containers should auto-delete when stopped;
+            except Exception:  # nosec B110
                 # this is just a fall-back.
+                # Ephemeral containers should auto-delete when stopped;
                 pass
-            raise RunnerCreateFailed(str(e)) from e
+            raise RunnerCreateError(str(e)) from e
 
-    def _remove_runner(self, runner):
-        """Remove a runner"""
+    def _remove_runner(self, runner: RunnerInfo):
+        """Remove a runner."""
         if runner.remote:
             try:
                 if "/" in self.path:
                     owner, repo = self.path.split("/")
-                    self.api.actions.delete_self_hosted_runner_from_repo(
-                        owner=owner, repo=repo, runner_id=runner.remote.id
+                    self._api.actions.delete_self_hosted_runner_from_repo(
+                        owner=owner, repo=repo, runner_id=runner.remote["id"]
                     )
                 else:
-                    self.api.actions.delete_self_hosted_runner_from_org(
-                        org=self.path, runner_id=runner.remote.id
+                    self._api.actions.delete_self_hosted_runner_from_org(
+                        org=self.path, runner_id=runner.remote["id"]
                     )
             except Exception as e:
-                raise RunnerRemoveFailed(f"Failed remove remote runner: {runner.name}") from e
+                raise RunnerRemoveError(f"Failed remove remote runner: {runner.name}") from e
 
         if runner.local:
             try:
@@ -267,7 +376,7 @@ class RunnerManager:
                     runner.local.stop(wait=True)
                     try:
                         runner.local.delete(wait=True)
-                    except Exception:
+                    except Exception:  # nosec B110
                         # Ephemeral containers should auto-delete when stopped;
                         # this is just a fall-back.
                         pass
@@ -277,31 +386,31 @@ class RunnerManager:
                     # surface.
                     runner.local.delete(wait=True)
             except Exception as e:
-                raise RunnerRemoveFailed(f"Failed remove local runner: {runner.name}") from e
+                raise RunnerRemoveError(f"Failed remove local runner: {runner.name}") from e
 
         # remove profile
         try:
-            profile = self.lxd.profiles.get(runner.name)
+            profile = self._lxd.profiles.get(runner.name)
             profile.delete()
         except (LXDAPIException, NotFound):
             pass
 
     def _clean_unused_profiles(self):
         """Clean all unused profiles created with this manager."""
-        for profile in self.lxd.profiles.all():
+        for profile in self._lxd.profiles.all():
             if profile.name.startswith(self.app_name) and not profile.used_by:
                 profile.delete()
 
-    def _register_runner(self, instance, labels):
-        """Register a runner in an instance"""
-        api = self.api
+    def _register_runner(self, instance: pylxd.models.Instance, labels: Sequence[str]):
+        """Register a runner in an instance."""
+        api = self._api
         if "/" in self.path:
             owner, repo = self.path.split("/")
             token = api.actions.create_registration_token_for_repo(owner=owner, repo=repo)
         else:
             token = api.actions.create_registration_token_for_org(org=self.path)
         cmd = (
-            "sudo -u ubuntu /opt/github-runner/config.sh "
+            "sudo -u ubuntu /opt/github-runner/config.sh"
             f"--url https://github.com/{self.path} "
             "--token "
             f"{token.token} "
@@ -314,20 +423,21 @@ class RunnerManager:
         )
         self._check_output(instance, cmd)
 
-    def _start_runner(self, instance):
-        """Start a runner that is already registered"""
-        script_contents = self.jinja.get_template("start.j2").render()
+    def _start_runner(self, instance: pylxd.models.Instance):
+        """Start a runner that is already registered."""
+        script_contents = self._jinja.get_template("start.j2").render()
         instance.files.put("/opt/github-runner/start.sh", script_contents, mode="0755")
-        self._check_output(instance, "sudo chown ubuntu:ubuntu /opt/github-runner/start.sh")
-        self._check_output(instance, "sudo chmod u+x /opt/github-runner/start.sh")
-        self._check_output(instance, "sudo -u ubuntu /opt/github-runner/start.sh")
+        self._check_output(
+            instance, "sudo chown ubuntu:ubuntu /opt/github-runner/start.sh".split()
+        )
+        self._check_output(instance, "sudo chmod u+x /opt/github-runner/start.sh".split())
+        self._check_output(instance, "sudo -u ubuntu /opt/github-runner/start.sh".split())
 
-    def _load_aaprofile(self, instance):
-        """Load the apparmor profile so classic snaps can run"""
+    def _load_aaprofile(self, instance: pylxd.models.Instance):
+        """Load the apparmor profile so classic snaps can run."""
         self._check_output(
             instance,
             ["bash", "-c", "sudo apparmor_parser -r /etc/apparmor.d/*snap-confine*"],
-            False,
         )
         cmd = [
             "bash",
@@ -339,22 +449,24 @@ class RunnerManager:
         logger.info(f"Apparmor stdout: {stdout}")
         logger.info(f"Apparmor stderr: {stderr}")
 
-    def _configure_runner(self, instance):
-        """Configure the runner"""
+    def _configure_runner(self, instance: pylxd.models.Instance):
+        """Configure the runner."""
         # Render proxies if configured
         if self.proxies:
-            contents = self.jinja.get_template("env.j2").render(proxies=self.proxies)
+            contents = self._jinja.get_template("env.j2").render(proxies=self.proxies)
             instance.files.put(self.env_file, contents, mode="0600")
-            self._check_output(instance, "chown ubuntu:ubuntu /opt/github-runner/.env")
+            self._check_output(instance, "chown ubuntu:ubuntu /opt/github-runner/.env".split())
 
-    def _install_binary(self, instance):
-        """Install the binary in a instance"""
+    def _install_binary(self, instance: pylxd.models.Instance):
+        """Install the binary in a instance."""
         instance.files.mk_dir("/opt/github-runner")
         for attempt in range(10):
             try:
-                instance.files.put("/tmp/runner.tgz", self.runner_bin_path.read_bytes())
-                self._check_output(instance, "tar -xzf /tmp/runner.tgz -C /opt/github-runner")
-                self._check_output(instance, "chown -R ubuntu:ubuntu /opt/github-runner")
+                instance.files.put("/temp/runner.tgz", self.runner_bin_path.read_bytes())
+                self._check_output(
+                    instance, "tar -xzf /temp/runner.tgz -C /opt/github-runner".split()
+                )
+                self._check_output(instance, "chown -R ubuntu:ubuntu /opt/github-runner".split())
                 break
             except subprocess.CalledProcessError:
                 if attempt < 9:
@@ -364,32 +476,34 @@ class RunnerManager:
                     logger.error("Failed to install runner, giving up")
                     raise
 
-    def _check_output(self, container, cmd, split=True):
-        """Check execution of a command in a container"""
-        if split:
-            cmd = cmd.split()
+    def _check_output(self, container: pylxd.models.Instance, cmd: Sequence[str]) -> str:
+        """Check execution of a command in a container."""
         exit_code, stdout, stderr = container.execute(cmd)
         logger.debug(f"Exit code {exit_code} from {cmd}")
         subprocess.CompletedProcess(cmd, exit_code, stdout, stderr).check_returncode()
         return stdout
 
-    def _create_instance(self, image="focal", virt="container", vm_resources=None):
-        """Create an instance"""
+    def _create_instance(
+        self,
+        image: str = "focal",
+        virt: str = "container",
+        vm_resources: Optional[VMResources] = None,
+    ) -> pylxd.models.Instance:
+        """Create an instance."""
         if virt == "container" and vm_resources is not None:
             logger.warning("vm resources should be use only with virtual-machine")
 
-        suffix = "".join(choices(ascii_lowercase + digits, k=6))
+        # Generated a suffix for naming propose, not used as secret.
+        suffix = "".join(choices(ascii_lowercase + digits, k=6))  # nosec B311
         name = f"{self.app_name}-{suffix}"
-        if not self.lxd.profiles.exists("runner"):
-            config = {
+        if not self._lxd.profiles.exists("runner"):
+            profile_config = {
                 "security.nesting": "true",
                 "security.privileged": "true",
-                # "raw.lxc": "lxc.apparmor.profile=unconfined",
             }
-            devices = {}
-            self.lxd.profiles.create("runner", config, devices)
+            self._lxd.profiles.create("runner", profile_config, {})
 
-        config = {
+        instance_config: LxdInstanceConfig = {
             "name": name,
             "type": virt,
             "source": {
@@ -405,11 +519,11 @@ class RunnerManager:
         # configure resources for VM via custom profile
         if virt == "virtual-machine" and vm_resources is not None:
             self._create_vm_profile(name, vm_resources)
-            config["profiles"].append(name)
+            instance_config["profiles"].append(name)
 
-        return self.lxd.instances.create(config=config, wait=True)
+        return self._lxd.instances.create(config=instance_config, wait=True)
 
-    def _create_vm_profile(self, name, vm_resources):
+    def _create_vm_profile(self, name: str, vm_resources: VMResources):
         """Create custom profile for VM."""
         try:
             vm_profile_config = {
@@ -424,7 +538,7 @@ class RunnerManager:
                     "size": vm_resources.disk,
                 }
             }
-            self.lxd.profiles.create(
+            self._lxd.profiles.create(
                 name,
                 vm_profile_config,
                 vm_profile_devices,
@@ -440,8 +554,8 @@ class RunnerManager:
                 "config for vm-cpu, vm-memory and vm-disk."
             ) from error
 
-    def _start_instance(self, instance):
-        """Start an instance and wait for it to boot"""
+    def _start_instance(self, instance: pylxd.models.Instance):
+        """Start an instance and wait for it to boot."""
         instance.start(wait=True)
 
         # Wait for the instance to boot
@@ -449,11 +563,10 @@ class RunnerManager:
         attempts = int(self.reconcile_interval * 60 / wait_interval)
         for attempt in range(attempts):
             try:
-                self._check_output(instance, "who")
+                self._check_output(instance, ["who"])
                 break
             except Exception:
                 if attempt == attempts - 1:
-                    raise RunnerStartFailed()
+                    raise RunnerStartError()
                 else:
                     time.sleep(wait_interval)
-                    pass

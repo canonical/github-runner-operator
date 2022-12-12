@@ -18,8 +18,8 @@ class TestCharm(unittest.TestCase):
         harness.begin()
         harness.charm.on.install.emit()
         calls = [
-            call(["snap", "install", "lxd"], check=True),
-            call(["lxd", "init", "--auto"], check=True),
+            call(["/usr/bin/snap", "install", "lxd"], check=True),
+            call(["/usr/bin/lxd", "init", "--auto"], check=True),
         ]
         run.assert_has_calls(calls)
 
@@ -69,7 +69,9 @@ class TestCharm(unittest.TestCase):
         mock_rm.reset_mock()
 
         # update to 10 VMs with 4 cpu and 7GiB memory
-        harness.update_config({"quantity": 3, "containers": 0, "virtual-machines": 10, "vm-cpu": 4})
+        harness.update_config(
+            {"quantity": 3, "containers": 0, "virtual-machines": 10, "vm-cpu": 4}
+        )
         harness.charm.on.reconcile_runners.emit()
         rm.assert_called_with("mockorg/repo", "mocktoken", "github-runner", 5)
         mock_rm.reconcile.assert_has_calls(
