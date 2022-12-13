@@ -52,6 +52,10 @@ class EventTimer:
 
         The timeout is the number of seconds before an event is timed out. If not given or 0,
         it defaults to half the interval period.
+
+        Args:
+            event_name (str): Name of the juju event to schedule.
+            interval (float): Number of minutes between emitting each event.
         """
         # TODO: Split the configuration for service and timer.
         context: EventConfig = {
@@ -73,7 +77,11 @@ class EventTimer:
         )
 
     def disable_event_timer(self, event_name: str):
-        """Disable the systemd timer for the given event."""
+        """Disable the systemd timer for the given event.
+
+        Args:
+            event_name (str): Name of the juju event to disable.
+        """
         # Don't check for errors in case the timer wasn't registered.
         # Binding for systemctl do no exist, so `subprocess.run` used.
         subprocess.run(  # nosec B603
