@@ -6,7 +6,7 @@
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
 import logging
-from typing import Optional
+from typing import Dict, Optional
 
 from ops.charm import (
     ActionEvent,
@@ -35,7 +35,12 @@ class UpdateRunnerBinEvent(EventBase):
 
 
 class GithubRunnerOperator(CharmBase):
-    """Charm for managing GitHub self-hosted runners."""
+    """Charm for managing GitHub self-hosted runners.
+
+    TODO:
+    * Remove support of LXD containers, due to security concerns.
+    * Review the action results fields, and use TypedDict for the action results, and JSON-like return values.
+    """
 
     _stored = StoredState()
 
@@ -65,7 +70,12 @@ class GithubRunnerOperator(CharmBase):
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
 
     def _get_runner_manager(self, token: Optional[str] = None, path: Optional[str] = None):
-        """Get a RunnerManager instance, or None if missing config."""
+        """Get a RunnerManager instance, or None if missing config.
+
+        Args:
+            token (Optional[str]): GitHub personal access token to manager the runners with. Defaults to None.
+            path (str): GitHub repo path in the format '<org>/<repo>', or the GitHub org name. Defaults to None.
+        """
         if token is None:
             token = self.config["token"]
         if path is None:
@@ -75,6 +85,11 @@ class GithubRunnerOperator(CharmBase):
         return RunnerManager(path, token, self.app.name, self.config["reconcile-interval"])
 
     def _on_install(self, event: InstallEvent):
+        """Handle the installation of charm.
+
+        Args:
+            event (InstallEvent): Event of installing charm.
+        """
         self.unit.status = MaintenanceStatus("Installing packages")
         RunnerManager.install_deps()
         runner_manager = self._get_runner_manager()
@@ -99,9 +114,19 @@ class GithubRunnerOperator(CharmBase):
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
     def _on_upgrade_charm(self, event: UpgradeCharmEvent):
+        """Handle the update of charm.
+
+        Args:
+            event (UpgradeCharmEvent): Event of charm upgrade.
+        """
         RunnerManager.install_deps()
 
     def _on_config_changed(self, event: ConfigChangedEvent):
+        """Handle the configuration change.
+
+        Args:
+            event (ConfigChangedEvent): Event of configuration change.
+        """
         self._event_timer.ensure_event_timer("update-runner-bin", self.config["update-interval"])
         self._event_timer.ensure_event_timer(
             "reconcile-runners", self.config["reconcile-interval"]
@@ -121,6 +146,11 @@ class GithubRunnerOperator(CharmBase):
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
     def _on_update_runner_bin(self, event: UpdateRunnerBinEvent):
+        """Handle checking update of runner binary event.
+
+        Args:
+            event (UpdateRunnerBinEvent): Event of checking update of runner binary.
+        """
         runner_manager = self._get_runner_manager()
         if not runner_manager:
             return
@@ -140,6 +170,11 @@ class GithubRunnerOperator(CharmBase):
         self.unit.status = old_status
 
     def _on_reconcile_runners(self, event: ReconcileRunnersEvent):
+        """Handle the reconcile of runners.
+
+        Args:
+            event (ReconcileRunnersEvent): Event of reconciling the runner state.
+        """
         runner_manager = self._get_runner_manager()
         if not runner_manager or not runner_manager.runner_bin_path.exists():
             return
@@ -153,6 +188,11 @@ class GithubRunnerOperator(CharmBase):
             self.unit.status = ActiveStatus()
 
     def _on_check_runners_action(self, event: ActionEvent):
+        """Handle the action of checking of runner state.
+
+        Args:
+            event (ActionEvent): Action event of checking runner states.
+        """
         runner_manager = self._get_runner_manager()
         if not runner_manager:
             event.fail("Missing token or org/repo path config")
@@ -192,6 +232,11 @@ class GithubRunnerOperator(CharmBase):
         )
 
     def _on_reconcile_runners_action(self, event: ActionEvent):
+        """Handle the action of reconcile of runner state.
+
+        Args:
+            event (ActionEvent): Action event of reconciling the runner.
+        """
         runner_manager = self._get_runner_manager()
         if not runner_manager:
             event.fail("Missing token or org/repo path config")
@@ -207,6 +252,11 @@ class GithubRunnerOperator(CharmBase):
         event.set_results(delta)
 
     def _on_flush_runners_action(self, event: ActionEvent):
+        """Handle the action of flushing all runner and reconciling afterwards.
+
+        Args:
+            event (ActionEvent): Action event of flushing all runners.
+        """
         runner_manager = self._get_runner_manager()
         if not runner_manager:
             event.fail("Missing token or org/repo path config")
@@ -222,7 +272,12 @@ class GithubRunnerOperator(CharmBase):
         self._on_check_runners_action(event)
         event.set_results(delta)
 
-    def _on_stop(self, event: StopEvent):
+    def _on_stop(self, _: StopEvent):
+        """Handle the stopping of the charm.
+
+        Args:
+            event (StopEvent): Event of stopping the charm.
+        """
         self._event_timer.disable_event_timer("update-runner-bin")
         self._event_timer.disable_event_timer("reconcile-runners")
         runner_manager = self._get_runner_manager()
@@ -233,7 +288,15 @@ class GithubRunnerOperator(CharmBase):
                 # Log but ignore error since we're stopping anyway.
                 logger.exception("Failed to clear runners")
 
-    def _reconcile_runners(self, runner_manager: RunnerManager):
+    def _reconcile_runners(self, runner_manager: RunnerManager) -> Dict[str, Dict[str, int]]:
+        """Reconcile the current runners state and intended runner state.
+
+        Args:
+            runner_manager (RunnerManager): For querying and managing the runner state.
+
+        Returns:
+            Dict[str, Dict[str, int]]: Changes in runner number due to reconciling runners.
+        """
         virtual_machines_resources = VMResources(
             self.config["vm-cpu"], self.config["vm-memory"], self.config["vm-disk"]
         )
