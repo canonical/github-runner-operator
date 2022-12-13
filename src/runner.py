@@ -104,28 +104,48 @@ class RunnerInfo:
 
     @property
     def is_idle(self) -> bool:
-        """Whether the runner is idle."""
+        """Whether the runner is idle.
+
+        Returns:
+            bool: Whether the runner is idle.
+        """
         # Redundant None check for mypy type check.
         return self.remote is not None and self.is_online and self.remote["busy"] is False
 
     @property
     def is_offline(self) -> bool:
-        """Whether the runner is offline."""
+        """Whether the runner is offline.
+
+        Returns:
+            bool: Whether the runner is offline.
+        """
         return self.remote is not None and self.remote["status"] != "online"
 
     @property
     def is_online(self) -> bool:
-        """Whether the runner is online."""
+        """Whether the runner is online.
+
+        Returns:
+            bool: Whether the runner is online.
+        """
         return self.remote is not None and self.remote["status"] == "online"
 
     @property
     def is_local(self) -> bool:
-        """Whether the runner is local."""
+        """Whether the runner is local.
+
+        Returns:
+            bool: Whether the runner is local.
+        """
         return self.local is not None
 
     @property
     def virt_type(self) -> Optional[str]:
-        """Return the virtualization type of the runner."""
+        """Return the virtualization type of the runner.
+
+        Returns:
+            Optional[str]: Virtualization type of the runner.
+        """
         if self.is_local:
             # Assert for mypy type check. This check is already done by `is_local`.
             assert self.local is not None  # nosec B101
@@ -223,7 +243,11 @@ class RunnerManager:
         cls.runner_bin_path.parent.mkdir(parents=True, exist_ok=True)
 
     def get_latest_runner_bin_url(self) -> Optional[str]:
-        """Get the URL for the latest runner binary."""
+        """Get the URL for the latest runner binary.
+
+        Returns:
+            Optional[str]: URL to download the runner binary.
+        """
         # TODO: make these not hard-coded
         os_name = "linux"
         arch_name = "x64"
@@ -241,7 +265,11 @@ class RunnerManager:
         return None
 
     def update_runner_bin(self, download_url: str):
-        """Download a runner file, replacing the current copy."""
+        """Download a runner file, replacing the current copy.
+
+        Args:
+            download_url (str): URL to download the runner binary.
+        """
         # Remove any existing runner bin file
         if self.runner_bin_path.exists():
             self.runner_bin_path.unlink()
@@ -250,8 +278,12 @@ class RunnerManager:
         with self.runner_bin_path.open(mode="wb") as runner_bin_file:
             runner_bin_file.write(response.content)
 
-    def get_info(self) -> Sequence[RunnerInfo]:
-        """Return a list of RunnerInfo objects."""
+    def get_info(self) -> List[RunnerInfo]:
+        """Return a list of RunnerInfo objects.
+
+        Returns:
+            List[RunnerInfo]: List of information on the runners.
+        """
         local_runners = {
             c.name: c for c in self._lxd.instances.all() if c.name.startswith(f"{self.app_name}-")
         }
@@ -275,7 +307,16 @@ class RunnerManager:
     def reconcile(
         self, virt_type: str, quantity: int, vm_resources: Optional[VMResources] = None
     ) -> int:
-        """Bring runners in line with target."""
+        """Bring runners in line with target.
+
+        Args:
+            virt_type (str): Virtualization type of the runner to reconcile.
+            quantity (int): Number of intended runners.
+            vm_resources (Optional[VMResources]): Configuration of the virtual machine resources.
+
+        Returns:
+            int: Difference between intended runners and actual runners.
+        """
         runners = [r for r in self.get_info() if r.virt_type == virt_type]
 
         # Clean up offline runners
@@ -326,7 +367,13 @@ class RunnerManager:
     def create(
         self, image: str, virt: str = "container", vm_resources: Optional[VMResources] = None
     ):
-        """Create a runner."""
+        """Create a runner.
+
+        Args:
+            image (str): Image to launch the runner with.
+            virt (str): Virtualization type of the runner.
+            vm_resources (Optional[VMResources]): Configuration of the virtual machine resources.
+        """
         instance = self._create_instance(image=image, virt=virt, vm_resources=vm_resources)
 
         try:
@@ -355,7 +402,11 @@ class RunnerManager:
             raise RunnerCreateError(str(e)) from e
 
     def _remove_runner(self, runner: RunnerInfo):
-        """Remove a runner."""
+        """Remove a runner.
+
+        Args:
+            runner (RunnerInfo): Information on the runner to remove.
+        """
         if runner.remote:
             try:
                 if "/" in self.path:
@@ -402,7 +453,12 @@ class RunnerManager:
                 profile.delete()
 
     def _register_runner(self, instance: pylxd.models.Instance, labels: Sequence[str]):
-        """Register a runner in an instance."""
+        """Register a runner in an instance.
+
+        Args:
+            instance (pylxd.models.Instance): LXD instance of the runner.
+            labels (Sequence[str]): Sequence of labels to tag the runner with.
+        """
         api = self._api
         if "/" in self.path:
             owner, repo = self.path.split("/")
@@ -424,7 +480,11 @@ class RunnerManager:
         self._check_output(instance, cmd)
 
     def _start_runner(self, instance: pylxd.models.Instance):
-        """Start a runner that is already registered."""
+        """Start a runner that is already registered.
+
+        Args:
+            instance (pylxd.models.Instance): LXD instance of the runner.
+        """
         script_contents = self._jinja.get_template("start.j2").render()
         instance.files.put("/opt/github-runner/start.sh", script_contents, mode="0755")
         self._check_output(
@@ -434,7 +494,11 @@ class RunnerManager:
         self._check_output(instance, "sudo -u ubuntu /opt/github-runner/start.sh".split())
 
     def _load_aaprofile(self, instance: pylxd.models.Instance):
-        """Load the apparmor profile so classic snaps can run."""
+        """Load the apparmor profile so classic snaps can run.
+
+        Args:
+            instance (pylxd.models.Instance): LXD instance of the runner.
+        """
         self._check_output(
             instance,
             ["bash", "-c", "sudo apparmor_parser -r /etc/apparmor.d/*snap-confine*"],
@@ -450,7 +514,11 @@ class RunnerManager:
         logger.info(f"Apparmor stderr: {stderr}")
 
     def _configure_runner(self, instance: pylxd.models.Instance):
-        """Configure the runner."""
+        """Configure the runner.
+
+        Args:
+            instance (pylxd.models.Instance): LXD instance of the runner.
+        """
         # Render proxies if configured
         if self.proxies:
             contents = self._jinja.get_template("env.j2").render(proxies=self.proxies)
@@ -458,7 +526,11 @@ class RunnerManager:
             self._check_output(instance, "chown ubuntu:ubuntu /opt/github-runner/.env".split())
 
     def _install_binary(self, instance: pylxd.models.Instance):
-        """Install the binary in a instance."""
+        """Install the binary in a instance.
+
+        Args:
+            instance (pylxd.models.Instance): LXD instance of the runner.
+        """
         instance.files.mk_dir("/opt/github-runner")
         for attempt in range(10):
             try:
@@ -477,7 +549,12 @@ class RunnerManager:
                     raise
 
     def _check_output(self, container: pylxd.models.Instance, cmd: Sequence[str]) -> str:
-        """Check execution of a command in a container."""
+        """Check execution of a command in a container.
+
+        Args:
+            instance (pylxd.models.Instance): LXD instance of the runner.
+            cmd (Sequence[str]): Sequence of commend to execute on the runner.
+        """
         exit_code, stdout, stderr = container.execute(cmd)
         logger.debug(f"Exit code {exit_code} from {cmd}")
         subprocess.CompletedProcess(cmd, exit_code, stdout, stderr).check_returncode()
@@ -489,7 +566,17 @@ class RunnerManager:
         virt: str = "container",
         vm_resources: Optional[VMResources] = None,
     ) -> pylxd.models.Instance:
-        """Create an instance."""
+        """Create a instance of runner.
+
+        Args:
+            image (str, optional): Image to launch the runner. Defaults to "focal".
+            virt (str, optional): Virtualization type of the runner. Defaults to "container".
+            vm_resources (Optional[VMResources], optional): Configuration of the virtual machine resources. Defaults
+                to None.
+
+        Returns:
+            pylxd.models.Instance: LXD instance of the runner.
+        """
         if virt == "container" and vm_resources is not None:
             logger.warning("vm resources should be use only with virtual-machine")
 
@@ -524,7 +611,12 @@ class RunnerManager:
         return self._lxd.instances.create(config=instance_config, wait=True)
 
     def _create_vm_profile(self, name: str, vm_resources: VMResources):
-        """Create custom profile for VM."""
+        """Create custom profile for VM.
+
+        Args:
+            name (str): Name of the virtual machine profile.
+            vm_resources (Optional[VMResources], optional): Configuration of the virtual machine resources.
+        """
         try:
             vm_profile_config = {
                 "limits.cpu": str(vm_resources.cpu),
@@ -555,7 +647,11 @@ class RunnerManager:
             ) from error
 
     def _start_instance(self, instance: pylxd.models.Instance):
-        """Start an instance and wait for it to boot."""
+        """Start an instance and wait for it to boot.
+
+        Args:
+            instance (pylxd.models.Instance): LXD instance of the runner.
+        """
         instance.start(wait=True)
 
         # Wait for the instance to boot
