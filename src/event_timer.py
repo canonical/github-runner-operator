@@ -38,10 +38,10 @@ class EventTimer:
         self.unit_name = unit_name
         self._jinja = Environment(loader=FileSystemLoader("templates"), autoescape=True)
 
-    def _render_event_tmpl(self, tmpl_type: str, event_name: str, context: EventConfig):
-        tmpl = self._jinja.get_template(f"dispatch-event.{tmpl_type}.j2")
-        dest = self._systemd_path / f"ghro.{event_name}.{tmpl_type}"
-        dest.write_text(tmpl.render(context))
+    def _render_event_template(self, template_type: str, event_name: str, context: EventConfig):
+        template = self._jinja.get_template(f"dispatch-event.{template_type}.j2")
+        dest = self._systemd_path / f"ghro.{event_name}.{template_type}"
+        dest.write_text(template.render(context))
 
     def ensure_event_timer(
         self, event_name: str, interval: float, timeout: Optional[float] = None
@@ -61,8 +61,8 @@ class EventTimer:
             "timeout": timeout or (interval * 30),
             "unit": self.unit_name,
         }
-        self._render_event_tmpl("service", event_name, context)
-        self._render_event_tmpl("timer", event_name, context)
+        self._render_event_template("service", event_name, context)
+        self._render_event_template("timer", event_name, context)
         # Binding for systemctl do no exist, so `subprocess.run` used.
         subprocess.run(["/usr/bin/systemctl", "daemon-reload"], check=True)  # nosec B603
         subprocess.run(  # nosec B603
