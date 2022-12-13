@@ -1,0 +1,9 @@
+name: Tests
+
+on:
+  pull_request:
+
+jobs:
+  unit-tests:
+    uses: canonical/operator-workflows/.github/workflows/test.yaml@main
+    secrets: inherit

@@ -1,0 +1,12 @@
+name: Comment on the pull request
+
+on:
+  workflow_run:
+    workflows: ["Tests"]
+    types:
+      - completed
+
+jobs:
+  comment-on-pr:
+    uses: canonical/operator-workflows/.github/workflows/comment.yaml@main
+    secrets: inherit

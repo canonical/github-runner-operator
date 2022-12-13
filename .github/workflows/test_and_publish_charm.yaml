@@ -1,0 +1,23 @@
+name: Test and publish charm
+
+# On push to a "special" branch, we:
+# * always publish to charmhub at latest/edge/branchname
+# * always run tests
+# where a "special" branch is one of main/master or track/**, as
+# by convention these branches are the source for a corresponding
+# charmhub edge channel.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-and-publish-charm:
+    uses: canonical/operator-workflows/.github/workflows/test_and_publish_charm.yaml@main
+    with:
+      integration-test-extra-arguments: --cloud microk8s --jenkins-controller-name $(cat controller_name.txt) --jenkins-model-name $(cat model_name.txt) --jenkins-unit-number $(cat unit_number.txt)
+      integration-test-provider: 'microk8s'
+      integration-test-pre-run-script: files/pre-integration-test.sh
+    secrets: inherit

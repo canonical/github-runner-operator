@@ -1,0 +1,13 @@
+name: Integration tests
+
+on:
+  pull_request:
+
+jobs:
+  integration-tests:
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    with:
+      extra-arguments: --cloud microk8s --jenkins-controller-name $(cat controller_name.txt) --jenkins-model-name $(cat model_name.txt) --jenkins-unit-number $(cat unit_number.txt)
+      provider: 'microk8s'
+      pre-run-script: files/pre-integration-test.sh
+    secrets: inherit
