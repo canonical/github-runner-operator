@@ -557,7 +557,7 @@ class RunnerManager:
 
         Args:
             instance (pylxd.models.Instance): LXD instance of the runner.
-            cmd (Sequence[str]): Sequence of commend to execute on the runner.
+            cmd (Sequence[str]): Sequence of command to execute on the runner.
         """
         exit_code, stdout, stderr = container.execute(cmd)
         logger.debug(f"Exit code {exit_code} from {cmd}")
@@ -575,8 +575,8 @@ class RunnerManager:
         Args:
             image (str, optional): Image to launch the runner. Defaults to "focal".
             virt (str, optional): Virtualization type of the runner. Defaults to "container".
-            vm_resources (Optional[VMResources], optional): Configuration of the virtual machine resources. Defaults
-                to None.
+            vm_resources (Optional[VMResources], optional): Configuration of the virtual machine
+                resources. Defaults to None.
 
         Returns:
             pylxd.models.Instance: LXD instance of the runner.
@@ -619,7 +619,8 @@ class RunnerManager:
 
         Args:
             name (str): Name of the virtual machine profile.
-            vm_resources (Optional[VMResources], optional): Configuration of the virtual machine resources.
+            vm_resources (Optional[VMResources], optional): Configuration of the virtual machine
+                resources.
         """
         try:
             vm_profile_config = {

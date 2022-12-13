@@ -6,7 +6,7 @@
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
 import logging
-from typing import Dict, Optional
+from typing import TYPE_CHECKING, Dict, Optional
 
 from ops.charm import (
     ActionEvent,
@@ -22,6 +22,9 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 from event_timer import EventTimer
 from runner import RunnerError, RunnerManager, VMResources
+
+if TYPE_CHECKING:
+    from ops.model import JsonObject
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +42,8 @@ class GithubRunnerOperator(CharmBase):
 
     TODO:
     * Remove support of LXD containers, due to security concerns.
-    * Review the action results fields, and use TypedDict for the action results, and JSON-like return values.
+    * Review the action results fields, and use TypedDict for the action results, and JSON-like
+        return values.
     """
 
     _stored = StoredState()
@@ -73,8 +77,10 @@ class GithubRunnerOperator(CharmBase):
         """Get a RunnerManager instance, or None if missing config.
 
         Args:
-            token (Optional[str]): GitHub personal access token to manager the runners with. Defaults to None.
-            path (str): GitHub repo path in the format '<org>/<repo>', or the GitHub org name. Defaults to None.
+            token (Optional[str]): GitHub personal access token to manager the runners with.
+                Defaults to None.
+            path (str): GitHub repo path in the format '<org>/<repo>', or the GitHub org name.
+                Defaults to None.
         """
         if token is None:
             token = self.config["token"]
@@ -288,14 +294,14 @@ class GithubRunnerOperator(CharmBase):
                 # Log but ignore error since we're stopping anyway.
                 logger.exception("Failed to clear runners")
 
-    def _reconcile_runners(self, runner_manager: RunnerManager) -> Dict[str, Dict[str, int]]:
+    def _reconcile_runners(self, runner_manager: RunnerManager) -> Dict[str, "JsonObject"]:
         """Reconcile the current runners state and intended runner state.
 
         Args:
             runner_manager (RunnerManager): For querying and managing the runner state.
 
         Returns:
-            Dict[str, Dict[str, int]]: Changes in runner number due to reconciling runners.
+            Dict[str, JsonObject]: Changes in runner number due to reconciling runners.
         """
         virtual_machines_resources = VMResources(
             self.config["vm-cpu"], self.config["vm-memory"], self.config["vm-disk"]
