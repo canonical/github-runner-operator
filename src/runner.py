@@ -208,7 +208,8 @@ class RunnerManager:
                 old_runners = local_online_runners[:offset]
                 runner_names = ", ".join(r.name for r in old_runners)
                 logger.info(
-                    f"Removing extra {offset} idle {virt_type} runner(s): {runner_names}"
+                    f"Removing extra {offset} idle {virt_type} runner(s): "
+                    f"{runner_names}"
                 )
                 for runner in old_runners:
                     self._remove_runner(runner)

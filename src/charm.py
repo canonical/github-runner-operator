@@ -4,6 +4,7 @@
 
 import logging
 import subprocess
+import urllib.error
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
@@ -121,8 +122,13 @@ class GithubRunnerOperator(CharmBase):
         if not runner_manager:
             return
         old_status = self.unit.status
-        self.unit.status = MaintenanceStatus("Checking for runner updates")
-        runner_bin_url = runner_manager.get_latest_runner_bin_url()
+        try:
+            self.unit.status = MaintenanceStatus("Checking for runner updates")
+            runner_bin_url = runner_manager.get_latest_runner_bin_url()
+        except urllib.error.URLError as e:
+            logger.exception("Failed to check for runner updates")
+            self.unit.status = BlockedStatus(f"Failed to check for runner updates: {e}")
+            return
         if runner_bin_url != self._stored.runner_bin_url:
             self.unit.status = MaintenanceStatus("Updating runner binary")
             try:
@@ -260,12 +266,13 @@ class GithubRunnerOperator(CharmBase):
         dest.write_text(tmpl.render(context))
 
     def _ensure_event_timer(self, event_name, interval, timeout=None):
-        """Ensure that a systemd service and timer are registered to dispatch the given event.
+        """Ensure systemd service and timer are registered to dispatch the given event.
 
-        The interval is how frequently, in minutes, that the event should be dispatched.
+        The interval is how frequently, in minutes, that the event should be
+        dispatched.
 
-        The timeout is the number of seconds before an event is timed out. If not given or 0,
-        it defaults to half the interval period.
+        The timeout is the number of seconds before an event is timed out. If not given
+        or 0, it defaults to half the interval period.
         """
         context = {
             "event": event_name,

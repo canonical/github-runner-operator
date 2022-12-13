@@ -103,5 +103,6 @@ class TestCharm(unittest.TestCase):
     #     assert interval in calls["().new().setall"]["args"]
     #     # Check that add and remove use same comment
     #     assert (
-    #         calls["().new"]["kwargs"]["comment"] == calls["().find_comment"]["args"][0]
+    #         calls["().new"]["kwargs"]["comment"] == \
+    #              calls["().find_comment"]["args"][0]
     #     )
