@@ -17,7 +17,5 @@ jobs:
   test-and-publish-charm:
     uses: canonical/operator-workflows/.github/workflows/test_and_publish_charm.yaml@main
     with:
-      integration-test-extra-arguments: --cloud microk8s --jenkins-controller-name $(cat controller_name.txt) --jenkins-model-name $(cat model_name.txt) --jenkins-unit-number $(cat unit_number.txt)
-      integration-test-provider: 'microk8s'
-      integration-test-pre-run-script: files/pre-integration-test.sh
+      integration-test-provider: 'lxd'
     secrets: inherit
