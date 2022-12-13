@@ -3,7 +3,23 @@
 # Copyright 2022 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""RunnerManager for managing the dependencies and lifecycle of runners."""
+"""RunnerManager for managing the dependencies and lifecycle of runners.
+
+TODO:
+Create a Runner class. This splits the logic within the RunnerManager into smaller pieces
+of methods. It should be easier to test as well. The RunnerManager class will have the logic
+of managing a list of runners. The Runner class will have the logic of interacting with runner
+and query runner info.
+
+Also enforce the local and remote info through type design. E.g., if Runner cannot be
+neither local and remote at the same time, enforce it through type design.
+Why:
+* Impossible to create runner info that is neither local and remote. This
+is allowed by current design.
+* Type-driven design works better with type checkers. Search for "mypy" in comment for add code
+needed for type checker under current-design.
+"""
+
 
 import logging
 import os
@@ -67,18 +83,6 @@ class LxdInstanceConfig(TypedDict):
     profiles: List[str]
 
 
-# TODO: Create a Runner class. This splits the logic within the RunnerManager into smaller pieces
-# of methods. It should be easier to test as well. The RunnerManager class will have the logic
-# of managing a list of runners. The Runner class will have the logic of interacting with runner
-# and query runner info.
-#
-# Also enforce the local and remote info through type design. E.g., if Runner cannot be
-# neither local and remote at the same time, enforce it through type design.
-# Why:
-# * Impossible to create runner info that is neither local and remote. This
-#   is allowed by current design.
-# * Type-driven design works better with type checkers. Search for "mypy" in comment for add code
-#   needed for type checker under current-design.
 class RunnerInfo:
     """RunnerInfo stores the info on a runner.
 
