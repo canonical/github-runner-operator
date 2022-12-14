@@ -6,6 +6,7 @@
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
 import logging
+import urllib.error
 from typing import TYPE_CHECKING, Dict, Optional
 
 from ops.charm import (
@@ -173,8 +174,13 @@ class GithubRunnerOperator(CharmBase):
         if not runner_manager:
             return
         old_status = self.unit.status
-        self.unit.status = MaintenanceStatus("Checking for runner updates")
-        runner_bin_url = runner_manager.get_latest_runner_bin_url()
+        try:
+            self.unit.status = MaintenanceStatus("Checking for runner updates")
+            runner_bin_url = runner_manager.get_latest_runner_bin_url()
+        except urllib.error.URLError as e:
+            logger.exception("Failed to check for runner updates")
+            self.unit.status = BlockedStatus(f"Failed to check for runner updates: {e}")
+            return
         if runner_bin_url != self._stored.runner_bin_url:
             self.unit.status = MaintenanceStatus("Updating runner binary")
             try:
