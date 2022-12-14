@@ -64,6 +64,9 @@ class EventTimer:
         Args:
             event_name (str): Name of the juju event to schedule.
             interval (float): Number of minutes between emitting each event.
+
+        Raises:
+            TimerEnableError: Timer cannot be started. Events will be not emitted.
         """
         # TODO: Split the configuration for service and timer.
         context: EventConfig = {
@@ -92,6 +95,9 @@ class EventTimer:
 
         Args:
             event_name (str): Name of the juju event to disable.
+
+        Raises:
+            TimerDisableError: Timer cannot be stopped. Events will be emitted continuously.
         """
         try:
             # Don't check for errors in case the timer wasn't registered.
