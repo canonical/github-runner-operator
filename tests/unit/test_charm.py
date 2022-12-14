@@ -27,7 +27,7 @@ class TestCharm(unittest.TestCase):
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
     def test_org_register(self, run, wt, rm):
-        """Test org registration"""
+        """Test organization registration"""
         harness = Harness(GithubRunnerOperator)
         harness.update_config({"path": "mockorg", "token": "mocktoken", "reconcile-interval": 5})
         harness.begin()
@@ -38,7 +38,7 @@ class TestCharm(unittest.TestCase):
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
     def test_repo_register(self, run, wt, rm):
-        """Test repo registration"""
+        """Test repository registration"""
         harness = Harness(GithubRunnerOperator)
         harness.update_config(
             {"path": "mockorg/repo", "token": "mocktoken", "reconcile-interval": 5}

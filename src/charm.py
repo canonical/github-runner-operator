@@ -81,8 +81,8 @@ class GithubRunnerOperator(CharmBase):
         Args:
             token (Optional[str]): GitHub personal access token to manager the runners with.
                 Defaults to None.
-            path (str): GitHub repo path in the format '<org>/<repo>', or the GitHub org name.
-                Defaults to None.
+            path (str): GitHub repository path in the format '<org>/<repo>', or the GitHub
+                organization name. Defaults to None.
         """
         if token is None:
             token = self.config["token"]

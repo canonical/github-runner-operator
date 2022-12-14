@@ -3,52 +3,52 @@ options:
       type: string
       default: ""
       description: >
-        The path of the GitHub repo to register the self-hosted runners. Either an organization name
-        or repository in 'org/repo' format.
+        The path of the GitHub repository to register the self-hosted runners. Either an
+        organization name or repository in 'org/repo' format.
   token:
       type: string
       default: ""
       description:
-        The GitHub Personal Access Token for auto-registering the self-hosted runners.
+        The GitHub Personal Access Token for registering the self-hosted runners.
   containers:
       type: int
       default: 0
       description: >
-        The target quantity of container runners. This charm will spawn or destroy container
+        The number of container runners. This charm will spawn or destroy container
         runners to match this setting.
   virtual-machines:
       type: int
       default: 0
       description: >
-        The target quantity of virtual machine runners. This charm will spawn or destroy virtual
+        The number of virtual machine runners. This charm will spawn or destroy virtual
         machines runners to match this setting.
   vm-cpu:
       type: int
       default: 2
       description: >
-        The number of CPUs used by each virtual machine runner. Does not affect container runners.
+        The number of CPUs used per virtual machine runner. Does not affect container runners.
   vm-memory:
     type: string
     default: 7GiB
     description: >
-        The memory size used by each virtual machine runner. Does not affect container runners.
+        The memory size used per virtual machine runner. Does not affect container runners.
   vm-disk:
     type: string
     default: 10GiB
     description: >
-        The root disk size used by each virtual machine runner. Does not affect container runners.
+        The root disk size used per virtual machine runner. Does not affect container runners.
   reconcile-interval:
       type: int
       default: 5
       description: >
-        The number of minutes between each reconciliation between the current state of runners and
-        the intended state of the runners. On reconciliation the charm polls the state of runners,
-        such as, the number of container runners, and see if it needs make adjustments.
+        Minutes between each reconciliation between the current state and the target state of the
+        runners. On reconciliation the charm polls the state of runners, such as, the number of
+        container runners, and see if actions are needed.
   update-interval:
       type: int
       default: 60
       description: >
-        The number of minutes between each check for new versions of the runner binary.
+        Minutes between each check for new versions of the runner binary.
   virt-type:
       type: string
       default: "container"

@@ -185,7 +185,7 @@ class RunnerManager:
 
     Attributes:
         proxies (Dict[str, str]): Mapping of proxy env vars.
-        path (str): GitHub repo path in the format '<org>/<repo>', or the GitHub org name.
+        path (str): GitHub repository path in the format '<org>/<repo>', or the GitHub org name.
         app_name (str): An name for the set of runners.
         reconcile_interval (int): Number of minutes between each reconciliation of runners state.
     """
@@ -197,8 +197,10 @@ class RunnerManager:
         """Construct RunnerManager object for creating and managing runners.
 
         Args:
-            path (str): GitHub repo path in the format '<org>/<repo>', or the GitHub org name.
-            token (str): GitHub personal access token to register runner to the repo or org.
+            path (str): GitHub repository path in the format '<org>/<repo>', or the GitHub
+                organization name.
+            token (str): GitHub personal access token to register runner to the repository or
+                organization.
             app_name (str): An name for the set of runners.
             reconcile_interval (int): Number of minutes between each reconciliation of runners.
         """
