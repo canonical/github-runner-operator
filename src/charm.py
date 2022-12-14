@@ -76,7 +76,7 @@ class GithubRunnerOperator(CharmBase):
 
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
-    ) -> RunnerManager:
+    ) -> Optional[RunnerManager]:
         """Get a RunnerManager instance, or None if missing config.
 
         Args:
