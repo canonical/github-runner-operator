@@ -48,7 +48,7 @@ class GithubRunnerOperator(CharmBase):
 
     _stored = StoredState()
 
-    def __init__(self, *args):
+    def __init__(self, *args) -> None:
         """Construct the charm."""
         super().__init__(*args)
 
@@ -73,7 +73,9 @@ class GithubRunnerOperator(CharmBase):
         self.framework.observe(self.on.reconcile_runners_action, self._on_reconcile_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
 
-    def _get_runner_manager(self, token: Optional[str] = None, path: Optional[str] = None):
+    def _get_runner_manager(
+        self, token: Optional[str] = None, path: Optional[str] = None
+    ) -> RunnerManager:
         """Get a RunnerManager instance, or None if missing config.
 
         Args:
@@ -86,11 +88,11 @@ class GithubRunnerOperator(CharmBase):
             token = self.config["token"]
         if path is None:
             path = self.config["path"]
-        if not (token and path):
+        if not token or not path:
             return None
         return RunnerManager(path, token, self.app.name, self.config["reconcile-interval"])
 
-    def _on_install(self, event: InstallEvent):
+    def _on_install(self, event: InstallEvent) -> None:
         """Handle the installation of charm.
 
         Args:
@@ -119,7 +121,7 @@ class GithubRunnerOperator(CharmBase):
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
-    def _on_upgrade_charm(self, event: UpgradeCharmEvent):
+    def _on_upgrade_charm(self, event: UpgradeCharmEvent) -> None:
         """Handle the update of charm.
 
         Args:
@@ -127,7 +129,7 @@ class GithubRunnerOperator(CharmBase):
         """
         RunnerManager.install_deps()
 
-    def _on_config_changed(self, event: ConfigChangedEvent):
+    def _on_config_changed(self, event: ConfigChangedEvent) -> None:
         """Handle the configuration change.
 
         Args:
@@ -139,7 +141,9 @@ class GithubRunnerOperator(CharmBase):
         )
 
         if self.config["path"] != self._stored.path:
-            prev_runner_manager = self._get_runner_manager(path=str(self._stored.path))
+            prev_runner_manager = self._get_runner_manager(
+                path=str(self._stored.path)
+            )  # Casting for mypy checks.
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
                 prev_runner_manager.clear()
@@ -151,7 +155,7 @@ class GithubRunnerOperator(CharmBase):
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
-    def _on_update_runner_bin(self, event: UpdateRunnerBinEvent):
+    def _on_update_runner_bin(self, event: UpdateRunnerBinEvent) -> None:
         """Handle checking update of runner binary event.
 
         Args:
@@ -175,7 +179,7 @@ class GithubRunnerOperator(CharmBase):
             # TODO: Flush existing runners? What if they're processing a job?
         self.unit.status = old_status
 
-    def _on_reconcile_runners(self, event: ReconcileRunnersEvent):
+    def _on_reconcile_runners(self, event: ReconcileRunnersEvent) -> None:
         """Handle the reconcile of runners.
 
         Args:
@@ -193,7 +197,7 @@ class GithubRunnerOperator(CharmBase):
         else:
             self.unit.status = ActiveStatus()
 
-    def _on_check_runners_action(self, event: ActionEvent):
+    def _on_check_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of checking of runner state.
 
         Args:
@@ -237,7 +241,7 @@ class GithubRunnerOperator(CharmBase):
             }
         )
 
-    def _on_reconcile_runners_action(self, event: ActionEvent):
+    def _on_reconcile_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of reconcile of runner state.
 
         Args:
@@ -257,7 +261,7 @@ class GithubRunnerOperator(CharmBase):
         self._on_check_runners_action(event)
         event.set_results(delta)
 
-    def _on_flush_runners_action(self, event: ActionEvent):
+    def _on_flush_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of flushing all runner and reconciling afterwards.
 
         Args:
@@ -278,7 +282,7 @@ class GithubRunnerOperator(CharmBase):
         self._on_check_runners_action(event)
         event.set_results(delta)
 
-    def _on_stop(self, _: StopEvent):
+    def _on_stop(self, _: StopEvent) -> None:
         """Handle the stopping of the charm.
 
         Args:

@@ -94,7 +94,7 @@ class RunnerInfo:
 
     def __init__(
         self, name: str, local: Optional[pylxd.models.Instance], remote: Optional[RemoteRunner]
-    ):
+    ) -> None:
         """Construct a instance of runner information.
 
         Args:
@@ -193,7 +193,7 @@ class RunnerManager:
     runner_bin_path = Path("/var/cache/github-runner-operator/runner.tgz")
     env_file = Path("/opt/github-runner/.env")
 
-    def __init__(self, path: str, token: str, app_name: str, reconcile_interval: int):
+    def __init__(self, path: str, token: str, app_name: str, reconcile_interval: int) -> None:
         """Construct RunnerManager object for creating and managing runners.
 
         Args:
@@ -228,7 +228,7 @@ class RunnerManager:
         self.reconcile_interval = reconcile_interval
 
     @classmethod
-    def install_deps(cls):
+    def install_deps(cls) -> None:
         """Install dependencies."""
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
         subprocess.run(["/usr/bin/snap", "install", "lxd"], check=True)  # nosec 603
@@ -268,7 +268,7 @@ class RunnerManager:
                 return runner_bin.download_url
         return None
 
-    def update_runner_bin(self, download_url: str):
+    def update_runner_bin(self, download_url: str) -> None:
         """Download a runner file, replacing the current copy.
 
         Args:
@@ -358,7 +358,7 @@ class RunnerManager:
 
         return delta
 
-    def clear(self):
+    def clear(self) -> None:
         """Clear out existing local runners."""
         runners = [r for r in self.get_info() if r.is_local]
         runner_names = ", ".join(r.name for r in runners)
@@ -370,7 +370,7 @@ class RunnerManager:
 
     def create(
         self, image: str, virt: str = "container", vm_resources: Optional[VMResources] = None
-    ):
+    ) -> None:
         """Create a runner.
 
         Args:
@@ -405,7 +405,7 @@ class RunnerManager:
                 pass
             raise RunnerCreateError(str(e)) from e
 
-    def _remove_runner(self, runner: RunnerInfo):
+    def _remove_runner(self, runner: RunnerInfo) -> None:
         """Remove a runner.
 
         Args:
@@ -450,13 +450,13 @@ class RunnerManager:
         except (LXDAPIException, NotFound):
             pass
 
-    def _clean_unused_profiles(self):
+    def _clean_unused_profiles(self) -> None:
         """Clean all unused profiles created with this manager."""
         for profile in self._lxd.profiles.all():
             if profile.name.startswith(self.app_name) and not profile.used_by:
                 profile.delete()
 
-    def _register_runner(self, instance: pylxd.models.Instance, labels: Sequence[str]):
+    def _register_runner(self, instance: pylxd.models.Instance, labels: Sequence[str]) -> None:
         """Register a runner in an instance.
 
         Args:
@@ -483,7 +483,7 @@ class RunnerManager:
         )
         self._check_output(instance, cmd)
 
-    def _start_runner(self, instance: pylxd.models.Instance):
+    def _start_runner(self, instance: pylxd.models.Instance) -> None:
         """Start a runner that is already registered.
 
         Args:
@@ -497,7 +497,7 @@ class RunnerManager:
         self._check_output(instance, "sudo chmod u+x /opt/github-runner/start.sh".split())
         self._check_output(instance, "sudo -u ubuntu /opt/github-runner/start.sh".split())
 
-    def _load_aaprofile(self, instance: pylxd.models.Instance):
+    def _load_aaprofile(self, instance: pylxd.models.Instance) -> None:
         """Load the apparmor profile so classic snaps can run.
 
         Args:
@@ -517,7 +517,7 @@ class RunnerManager:
         logger.info(f"Apparmor stdout: {stdout}")
         logger.info(f"Apparmor stderr: {stderr}")
 
-    def _configure_runner(self, instance: pylxd.models.Instance):
+    def _configure_runner(self, instance: pylxd.models.Instance) -> None:
         """Configure the runner.
 
         Args:
@@ -529,7 +529,7 @@ class RunnerManager:
             instance.files.put(self.env_file, contents, mode="0600")
             self._check_output(instance, "chown ubuntu:ubuntu /opt/github-runner/.env".split())
 
-    def _install_binary(self, instance: pylxd.models.Instance):
+    def _install_binary(self, instance: pylxd.models.Instance) -> None:
         """Install the binary in a instance.
 
         Args:
@@ -614,7 +614,7 @@ class RunnerManager:
 
         return self._lxd.instances.create(config=instance_config, wait=True)
 
-    def _create_vm_profile(self, name: str, vm_resources: VMResources):
+    def _create_vm_profile(self, name: str, vm_resources: VMResources) -> None:
         """Create custom profile for VM.
 
         Args:
@@ -651,7 +651,7 @@ class RunnerManager:
                 "config for vm-cpu, vm-memory and vm-disk."
             ) from error
 
-    def _start_instance(self, instance: pylxd.models.Instance):
+    def _start_instance(self, instance: pylxd.models.Instance) -> None:
         """Start an instance and wait for it to boot.
 
         Args:
