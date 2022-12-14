@@ -10,6 +10,14 @@ from typing import Optional, TypedDict
 from jinja2 import Environment, FileSystemLoader
 
 
+class TimerEnableError(Exception):
+    """Raised when unable to enable a event timer."""
+
+
+class TimerDisableError(Exception):
+    """Raised when unable to disable a event timer."""
+
+
 class EventConfig(TypedDict):
     """Configuration used by service and timer templates."""
 
@@ -67,14 +75,17 @@ class EventTimer:
         }
         self._render_event_template("service", event_name, context)
         self._render_event_template("timer", event_name, context)
-        # Binding for systemctl do no exist, so `subprocess.run` used.
-        subprocess.run(["/usr/bin/systemctl", "daemon-reload"], check=True)  # nosec B603
-        subprocess.run(  # nosec B603
-            ["/usr/bin/systemctl", "enable", f"ghro.{event_name}.timer"], check=True
-        )
-        subprocess.run(  # nosec B603
-            ["/usr/bin/systemctl", "start", f"ghro.{event_name}.timer"], check=True
-        )
+        try:
+            # Binding for systemctl do no exist, so `subprocess.run` used.
+            subprocess.run(["/usr/bin/systemctl", "daemon-reload"], check=True)  # nosec B603
+            subprocess.run(  # nosec B603
+                ["/usr/bin/systemctl", "enable", f"ghro.{event_name}.timer"], check=True
+            )
+            subprocess.run(  # nosec B603
+                ["/usr/bin/systemctl", "start", f"ghro.{event_name}.timer"], check=True
+            )
+        except Exception as ex:
+            raise TimerEnableError from ex
 
     def disable_event_timer(self, event_name: str):
         """Disable the systemd timer for the given event.
@@ -82,11 +93,14 @@ class EventTimer:
         Args:
             event_name (str): Name of the juju event to disable.
         """
-        # Don't check for errors in case the timer wasn't registered.
-        # Binding for systemctl do no exist, so `subprocess.run` used.
-        subprocess.run(  # nosec B603
-            ["/usr/bin/systemctl", "stop", f"ghro.{event_name}.timer"], check=False
-        )
-        subprocess.run(  # nosec B603
-            ["/usr/bin/systemctl", "disable", f"ghro.{event_name}.timer"], check=False
-        )
+        try:
+            # Don't check for errors in case the timer wasn't registered.
+            # Binding for systemctl do no exist, so `subprocess.run` used.
+            subprocess.run(  # nosec B603
+                ["/usr/bin/systemctl", "stop", f"ghro.{event_name}.timer"], check=False
+            )
+            subprocess.run(  # nosec B603
+                ["/usr/bin/systemctl", "disable", f"ghro.{event_name}.timer"], check=False
+            )
+        except Exception as ex:
+            raise TimerDisableError from ex

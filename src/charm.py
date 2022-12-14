@@ -20,7 +20,7 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-from event_timer import EventTimer
+from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from runner import RunnerError, RunnerManager, VMResources
 
 if TYPE_CHECKING:
@@ -135,10 +135,18 @@ class GithubRunnerOperator(CharmBase):
         Args:
             event (ConfigChangedEvent): Event of configuration change.
         """
-        self._event_timer.ensure_event_timer("update-runner-bin", self.config["update-interval"])
-        self._event_timer.ensure_event_timer(
-            "reconcile-runners", self.config["reconcile-interval"]
-        )
+        try:
+            self._event_timer.ensure_event_timer(
+                "update-runner-bin", self.config["update-interval"]
+            )
+            self._event_timer.ensure_event_timer(
+                "reconcile-runners", self.config["reconcile-interval"]
+            )
+        except TimerEnableError as ex:
+            logger.exception("Failed to start the event timer")
+            self.unit.status = BlockedStatus(
+                f"Failed to start timer for regular reconciliation and binary update checks: {ex}"
+            )
 
         if self.config["path"] != self._stored.path:
             prev_runner_manager = self._get_runner_manager(
@@ -288,8 +296,13 @@ class GithubRunnerOperator(CharmBase):
         Args:
             event (StopEvent): Event of stopping the charm.
         """
-        self._event_timer.disable_event_timer("update-runner-bin")
-        self._event_timer.disable_event_timer("reconcile-runners")
+        try:
+            self._event_timer.disable_event_timer("update-runner-bin")
+            self._event_timer.disable_event_timer("reconcile-runners")
+        except TimerDisableError as ex:
+            logger.exception("Failed to stop the timer")
+            self.unit.status = BlockedStatus(f"Failed to stop charm event timer: {ex}")
+
         runner_manager = self._get_runner_manager()
         if runner_manager:
             try:
