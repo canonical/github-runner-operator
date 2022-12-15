@@ -1,7 +1,7 @@
 name: Public Docs
 
 on:
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   publish-docs:
