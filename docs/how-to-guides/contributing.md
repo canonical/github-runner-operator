@@ -66,4 +66,4 @@ juju deploy ./github-runner_ubuntu-22.04-amd64_ubuntu-20.04-amd64.charm
 
 ## Canonical Contributor Agreement
 
-Canonical welcomes contributions to the Indico Operator. Please check out our [contributor agreement](https://ubuntu.com/legal/contributors) if you're interested in contributing to the solution.
+Canonical welcomes contributions to the GitHub runner Operator. Please check out our [contributor agreement](https://ubuntu.com/legal/contributors) if you're interested in contributing to the solution.
