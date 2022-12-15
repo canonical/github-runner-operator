@@ -29,7 +29,7 @@ class EventConfig(TypedDict):
 
 
 class EventTimer:
-    """Manages the timer to emit juju event at regular intervals.
+    """Manages the timer to emit juju events at regular intervals.
 
     Attributes:
         unit_name (str): Name of the juju unit to emit events to.
@@ -41,12 +41,19 @@ class EventTimer:
         """Construct the timer manager.
 
         Args:
-            unit_name (str): Name of the juju unit to emit events to.
+            unit_name: Name of the juju unit to emit events to.
         """
         self.unit_name = unit_name
         self._jinja = Environment(loader=FileSystemLoader("templates"), autoescape=True)
 
     def _render_event_template(self, template_type: str, event_name: str, context: EventConfig):
+        """Write event configuration files to systemd path.
+
+        Args:
+            template_type: Name of the template type to use. Can be 'service' or 'timer'.
+            event_name: Name of the event to schedule.
+            context: Addition configuration for the event to schedule.
+        """
         template = self._jinja.get_template(f"dispatch-event.{template_type}.j2")
         dest = self._systemd_path / f"ghro.{event_name}.{template_type}"
         dest.write_text(template.render(context))
@@ -62,8 +69,8 @@ class EventTimer:
         it defaults to half the interval period.
 
         Args:
-            event_name (str): Name of the juju event to schedule.
-            interval (float): Number of minutes between emitting each event.
+            event_name: Name of the juju event to schedule.
+            interval: Number of minutes between emitting each event.
 
         Raises:
             TimerEnableError: Timer cannot be started. Events will be not emitted.
@@ -87,14 +94,16 @@ class EventTimer:
             subprocess.run(  # nosec B603
                 ["/usr/bin/systemctl", "start", f"ghro.{event_name}.timer"], check=True
             )
-        except Exception as ex:
+        except subprocess.CalledProcessError as ex:
+            raise TimerEnableError from ex
+        except subprocess.TimeoutExpired as ex:
             raise TimerEnableError from ex
 
     def disable_event_timer(self, event_name: str):
         """Disable the systemd timer for the given event.
 
         Args:
-            event_name (str): Name of the juju event to disable.
+            event_name: Name of the juju event to disable.
 
         Raises:
             TimerDisableError: Timer cannot be stopped. Events will be emitted continuously.
@@ -108,5 +117,7 @@ class EventTimer:
             subprocess.run(  # nosec B603
                 ["/usr/bin/systemctl", "disable", f"ghro.{event_name}.timer"], check=False
             )
-        except Exception as ex:
-            raise TimerDisableError from ex
+        except subprocess.CalledProcessError as ex:
+            raise TimerEnableError from ex
+        except subprocess.TimeoutExpired as ex:
+            raise TimerEnableError from ex

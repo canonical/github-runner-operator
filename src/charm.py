@@ -80,10 +80,12 @@ class GithubRunnerOperator(CharmBase):
         """Get a RunnerManager instance, or None if missing config.
 
         Args:
-            token (Optional[str]): GitHub personal access token to manager the runners with.
-                Defaults to None.
-            path (str): GitHub repository path in the format '<org>/<repo>', or the GitHub
-                organization name. Defaults to None.
+            token: GitHub personal access token to manager the runners with. Defaults to None.
+            path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
+                name. Defaults to None.
+
+        Returns:
+            A instance of RunnerManager if the token and path configuration can be found.
         """
         if token is None:
             token = self.config["token"]
@@ -97,7 +99,7 @@ class GithubRunnerOperator(CharmBase):
         """Handle the installation of charm.
 
         Args:
-            event (InstallEvent): Event of installing charm.
+            event: Event of installing charm.
         """
         self.unit.status = MaintenanceStatus("Installing packages")
         RunnerManager.install_deps()
@@ -126,7 +128,7 @@ class GithubRunnerOperator(CharmBase):
         """Handle the update of charm.
 
         Args:
-            event (UpgradeCharmEvent): Event of charm upgrade.
+            event: Event of charm upgrade.
         """
         RunnerManager.install_deps()
 
@@ -134,7 +136,7 @@ class GithubRunnerOperator(CharmBase):
         """Handle the configuration change.
 
         Args:
-            event (ConfigChangedEvent): Event of configuration change.
+            event: Event of configuration change.
         """
         try:
             self._event_timer.ensure_event_timer(
@@ -168,7 +170,7 @@ class GithubRunnerOperator(CharmBase):
         """Handle checking update of runner binary event.
 
         Args:
-            event (UpdateRunnerBinEvent): Event of checking update of runner binary.
+            event: Event of checking update of runner binary.
         """
         runner_manager = self._get_runner_manager()
         if not runner_manager:
@@ -194,10 +196,10 @@ class GithubRunnerOperator(CharmBase):
         self.unit.status = old_status
 
     def _on_reconcile_runners(self, event: ReconcileRunnersEvent) -> None:
-        """Handle the reconcile of runners.
+        """Handle the reconciliation of runners.
 
         Args:
-            event (ReconcileRunnersEvent): Event of reconciling the runner state.
+            event: Event of reconciling the runner state.
         """
         runner_manager = self._get_runner_manager()
         if not runner_manager or not runner_manager.runner_bin_path.exists():
@@ -215,7 +217,7 @@ class GithubRunnerOperator(CharmBase):
         """Handle the action of checking of runner state.
 
         Args:
-            event (ActionEvent): Action event of checking runner states.
+            event: Action event of checking runner states.
         """
         runner_manager = self._get_runner_manager()
         if not runner_manager:
@@ -259,7 +261,7 @@ class GithubRunnerOperator(CharmBase):
         """Handle the action of reconcile of runner state.
 
         Args:
-            event (ActionEvent): Action event of reconciling the runner.
+            event: Action event of reconciling the runner.
         """
         runner_manager = self._get_runner_manager()
         if not runner_manager:
@@ -279,7 +281,7 @@ class GithubRunnerOperator(CharmBase):
         """Handle the action of flushing all runner and reconciling afterwards.
 
         Args:
-            event (ActionEvent): Action event of flushing all runners.
+            event: Action event of flushing all runners.
         """
         runner_manager = self._get_runner_manager()
         if not runner_manager:
@@ -300,7 +302,7 @@ class GithubRunnerOperator(CharmBase):
         """Handle the stopping of the charm.
 
         Args:
-            event (StopEvent): Event of stopping the charm.
+            event: Event of stopping the charm.
         """
         try:
             self._event_timer.disable_event_timer("update-runner-bin")
@@ -321,10 +323,10 @@ class GithubRunnerOperator(CharmBase):
         """Reconcile the current runners state and intended runner state.
 
         Args:
-            runner_manager (RunnerManager): For querying and managing the runner state.
+            runner_manager: For querying and managing the runner state.
 
         Returns:
-            Dict[str, JsonObject]: Changes in runner number due to reconciling runners.
+            Changes in runner number due to reconciling runners.
         """
         virtual_machines_resources = VMResources(
             self.config["vm-cpu"], self.config["vm-memory"], self.config["vm-disk"]

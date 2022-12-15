@@ -27,11 +27,10 @@ import subprocess  # nosec B404
 import time
 import urllib.error
 import urllib.request
-from collections import namedtuple
 from pathlib import Path
 from random import choices
 from string import ascii_lowercase, digits
-from typing import List, Optional, Sequence, TypedDict
+from typing import List, NamedTuple, Optional, Sequence, TypedDict
 
 import fastcore.net
 import pylxd
@@ -43,11 +42,17 @@ from pylxd.exceptions import LXDAPIException, NotFound
 
 logger = logging.getLogger(__name__)
 
-VMResources = namedtuple("VMResources", ["cpu", "memory", "disk"])
+
+class VMResources(NamedTuple):
+    """Virtual machine resource configuration."""
+
+    cpu: int
+    memory: str
+    disk: str
 
 
 class RunnerLabel(TypedDict):
-    """Represents label in GitHub API for runner status."""
+    """Label in GitHub API for runner status."""
 
     id: int
     name: str
@@ -55,7 +60,7 @@ class RunnerLabel(TypedDict):
 
 
 class RemoteRunner(TypedDict):
-    """Represents runners in GitHub API."""
+    """Runner information in GitHub API."""
 
     id: int
     busy: bool
@@ -64,7 +69,7 @@ class RemoteRunner(TypedDict):
 
 
 class LxdInstanceConfigSource(TypedDict):
-    """Represents configuration for source image in LXD instance."""
+    """Configuration for source image in LXD instance."""
 
     type: str
     mode: str
@@ -74,7 +79,7 @@ class LxdInstanceConfigSource(TypedDict):
 
 
 class LxdInstanceConfig(TypedDict):
-    """Represents configuration for LXD instance."""
+    """Configuration for LXD instance."""
 
     name: str
     type: str
@@ -98,9 +103,9 @@ class RunnerInfo:
         """Construct a instance of runner information.
 
         Args:
-            name (str): Name of the runner.
-            local (pylxd.models.Instance): Local LXD instance information of runner.
-            remote (RemoteRunner): GitHub API information of runner.
+            name: Name of the runner.
+            local: Local LXD instance information of runner.
+            remote: GitHub API information of runner.
         """
         self.name = name
         self.local = local
@@ -111,17 +116,17 @@ class RunnerInfo:
         """Whether the runner is idle.
 
         Returns:
-            bool: Whether the runner is idle.
+            Whether the runner is idle.
         """
         # Redundant None check for mypy type check.
-        return self.remote is not None and self.is_online and self.remote["busy"] is False
+        return self.is_online and self.remote is not None and self.remote["busy"] is False
 
     @property
     def is_offline(self) -> bool:
         """Whether the runner is offline.
 
         Returns:
-            bool: Whether the runner is offline.
+            Whether the runner is offline.
         """
         return self.remote is not None and self.remote["status"] != "online"
 
@@ -130,7 +135,7 @@ class RunnerInfo:
         """Whether the runner is online.
 
         Returns:
-            bool: Whether the runner is online.
+            Whether the runner is online.
         """
         return self.remote is not None and self.remote["status"] == "online"
 
@@ -139,7 +144,7 @@ class RunnerInfo:
         """Whether the runner is local.
 
         Returns:
-            bool: Whether the runner is local.
+            Whether the runner is local.
         """
         return self.local is not None
 
@@ -148,7 +153,7 @@ class RunnerInfo:
         """Return the virtualization type of the runner.
 
         Returns:
-            Optional[str]: Virtualization type of the runner.
+            Virtualization type of the runner.
         """
         if self.is_local:
             # Assert for mypy type check. This check is already done by `is_local`.
@@ -197,12 +202,12 @@ class RunnerManager:
         """Construct RunnerManager object for creating and managing runners.
 
         Args:
-            path (str): GitHub repository path in the format '<org>/<repo>', or the GitHub
-                organization name.
-            token (str): GitHub personal access token to register runner to the repository or
+            path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
+                name.
+            token: GitHub personal access token to register runner to the repository or
                 organization.
-            app_name (str): An name for the set of runners.
-            reconcile_interval (int): Number of minutes between each reconciliation of runners.
+            app_name: An name for the set of runners.
+            reconcile_interval: Number of minutes between each reconciliation of runners.
         """
         http_proxy = os.environ.get("JUJU_CHARM_HTTP_PROXY", None)
         https_proxy = os.environ.get("JUJU_CHARM_HTTPS_PROXY", None)
@@ -252,7 +257,7 @@ class RunnerManager:
         """Get the URL for the latest runner binary.
 
         Returns:
-            Optional[str]: URL to download the runner binary.
+            URL to download the runner binary.
         """
         # TODO: make these not hard-coded
         os_name = "linux"
@@ -288,7 +293,7 @@ class RunnerManager:
         """Return a list of RunnerInfo objects.
 
         Returns:
-            List[RunnerInfo]: List of information on the runners.
+            List of information on the runners.
         """
         local_runners = {
             c.name: c for c in self._lxd.instances.all() if c.name.startswith(f"{self.app_name}-")
@@ -316,12 +321,12 @@ class RunnerManager:
         """Bring runners in line with target.
 
         Args:
-            virt_type (str): Virtualization type of the runner to reconcile.
-            quantity (int): Number of intended runners.
-            vm_resources (Optional[VMResources]): Configuration of the virtual machine resources.
+            virt_type: Virtualization type of the runner to reconcile.
+            quantity: Number of intended runners.
+            vm_resources: Configuration of the virtual machine resources.
 
         Returns:
-            int: Difference between intended runners and actual runners.
+            Difference between intended runners and actual runners.
         """
         runners = [r for r in self.get_info() if r.virt_type == virt_type]
 
@@ -376,9 +381,9 @@ class RunnerManager:
         """Create a runner.
 
         Args:
-            image (str): Image to launch the runner with.
-            virt (str): Virtualization type of the runner.
-            vm_resources (Optional[VMResources]): Configuration of the virtual machine resources.
+            image: Image to launch the runner with.
+            virt: Virtualization type of the runner.
+            vm_resources: Configuration of the virtual machine resources.
         """
         instance = self._create_instance(image=image, virt=virt, vm_resources=vm_resources)
 
@@ -411,7 +416,7 @@ class RunnerManager:
         """Remove a runner.
 
         Args:
-            runner (RunnerInfo): Information on the runner to remove.
+            runner: Information on the runner to remove.
         """
         if runner.remote:
             try:
@@ -462,8 +467,8 @@ class RunnerManager:
         """Register a runner in an instance.
 
         Args:
-            instance (pylxd.models.Instance): LXD instance of the runner.
-            labels (Sequence[str]): Sequence of labels to tag the runner with.
+            instance: LXD instance of the runner.
+            labels: Sequence of labels to tag the runner with.
         """
         api = self._api
         if "/" in self.path:
@@ -489,7 +494,7 @@ class RunnerManager:
         """Start a runner that is already registered.
 
         Args:
-            instance (pylxd.models.Instance): LXD instance of the runner.
+            instance: LXD instance of the runner.
         """
         script_contents = self._jinja.get_template("start.j2").render()
         instance.files.put("/opt/github-runner/start.sh", script_contents, mode="0755")
@@ -503,7 +508,7 @@ class RunnerManager:
         """Load the apparmor profile so classic snaps can run.
 
         Args:
-            instance (pylxd.models.Instance): LXD instance of the runner.
+            instance: LXD instance of the runner.
         """
         self._check_output(
             instance,
@@ -523,7 +528,7 @@ class RunnerManager:
         """Configure the runner.
 
         Args:
-            instance (pylxd.models.Instance): LXD instance of the runner.
+            instance: LXD instance of the runner.
         """
         # Render proxies if configured
         if self.proxies:
@@ -535,7 +540,7 @@ class RunnerManager:
         """Install the binary in a instance.
 
         Args:
-            instance (pylxd.models.Instance): LXD instance of the runner.
+            instance: LXD instance of the runner.
         """
         instance.files.mk_dir("/opt/github-runner")
         for attempt in range(10):
@@ -558,8 +563,8 @@ class RunnerManager:
         """Check execution of a command in a container.
 
         Args:
-            instance (pylxd.models.Instance): LXD instance of the runner.
-            cmd (Sequence[str]): Sequence of command to execute on the runner.
+            instance: LXD instance of the runner.
+            cmd: Sequence of command to execute on the runner.
         """
         exit_code, stdout, stderr = container.execute(cmd)
         logger.debug(f"Exit code {exit_code} from {cmd}")
@@ -575,13 +580,12 @@ class RunnerManager:
         """Create a instance of runner.
 
         Args:
-            image (str, optional): Image to launch the runner. Defaults to "focal".
-            virt (str, optional): Virtualization type of the runner. Defaults to "container".
-            vm_resources (Optional[VMResources], optional): Configuration of the virtual machine
-                resources. Defaults to None.
+            image: Image to launch the runner. Defaults to "focal".
+            virt: Virtualization type of the runner. Defaults to "container".
+            vm_resources: Configuration of the virtual machine resources. Defaults to None.
 
         Returns:
-            pylxd.models.Instance: LXD instance of the runner.
+            LXD instance of the runner.
         """
         if virt == "container" and vm_resources is not None:
             logger.warning("vm resources should be use only with virtual-machine")
@@ -620,9 +624,8 @@ class RunnerManager:
         """Create custom profile for VM.
 
         Args:
-            name (str): Name of the virtual machine profile.
-            vm_resources (Optional[VMResources], optional): Configuration of the virtual machine
-                resources.
+            name: Name of the virtual machine profile.
+            vm_resources: Configuration of the virtual machine resources.
         """
         try:
             vm_profile_config = {
@@ -657,7 +660,7 @@ class RunnerManager:
         """Start an instance and wait for it to boot.
 
         Args:
-            instance (pylxd.models.Instance): LXD instance of the runner.
+            instance: LXD instance of the runner.
         """
         instance.start(wait=True)
 
