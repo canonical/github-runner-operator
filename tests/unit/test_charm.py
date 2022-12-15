@@ -19,7 +19,7 @@ class TestCharm(unittest.TestCase):
         harness.charm.on.install.emit()
         calls = [
             call(["/usr/bin/snap", "install", "lxd"], check=True),
-            call(["/usr/bin/lxd", "init", "--auto"], check=True),
+            call(["/snap/bin/lxd", "init", "--auto"], check=True),
         ]
         run.assert_has_calls(calls)
 

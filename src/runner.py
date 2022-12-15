@@ -239,7 +239,7 @@ class RunnerManager:
         """Install dependencies."""
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
         subprocess.run(["/usr/bin/snap", "install", "lxd"], check=True)  # nosec 603
-        subprocess.run(["/usr/bin/lxd", "init", "--auto"], check=True)  # nosec 603
+        subprocess.run(["/snap/bin/lxd", "init", "--auto"], check=True)  # nosec 603
         subprocess.run(  # nosec B603
             [
                 "/usr/bin/apt",
