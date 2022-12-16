@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2021 Canonical
+# Copyright 2022 Canonical
 # See LICENSE file for licensing details.
 
 """Charm for creating and managing GitHub self-hosted runner instances."""

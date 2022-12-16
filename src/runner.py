@@ -195,6 +195,7 @@ class RunnerManager:
         reconcile_interval (int): Number of minutes between each reconciliation of runners state.
     """
 
+    # TODO: Verify if this violates bandit B108.
     runner_bin_path = Path("/var/cache/github-runner-operator/runner.tgz")
     env_file = Path("/opt/github-runner/.env")
 
@@ -476,18 +477,18 @@ class RunnerManager:
             token = api.actions.create_registration_token_for_repo(owner=owner, repo=repo)
         else:
             token = api.actions.create_registration_token_for_org(org=self.path)
-        cmd = (
-            "sudo -u ubuntu /opt/github-runner/config.sh"
-            f"--url https://github.com/{self.path} "
-            "--token "
-            f"{token.token} "
-            "--ephemeral "
-            "--name "
-            f"{instance.name} "
-            "--unattended "
-            "--labels "
-            f"{','.join(labels)}"
-        )
+        cmd = [
+            "sudo -u ubuntu /opt/github-runner/config.sh",
+            f"--url https://github.com/{self.path} ",
+            "--token ",
+            f"{token.token} ",
+            "--ephemeral ",
+            "--name ",
+            f"{instance.name} ",
+            "--unattended ",
+            "--labels ",
+            f"{','.join(labels)}",
+        ]
         self._check_output(instance, cmd)
 
     def _start_runner(self, instance: pylxd.models.Instance) -> None:
@@ -545,9 +546,10 @@ class RunnerManager:
         instance.files.mk_dir("/opt/github-runner")
         for attempt in range(10):
             try:
-                instance.files.put("/temp/runner.tgz", self.runner_bin_path.read_bytes())
+                # The LXD instance is meant to run untrusted workload, using hardcoded tmp directory should be fine.
+                instance.files.put("/tmp/runner.tgz", self.runner_bin_path.read_bytes())  # nosec B108
                 self._check_output(
-                    instance, "tar -xzf /temp/runner.tgz -C /opt/github-runner".split()
+                    instance, "tar -xzf /tmp/runner.tgz -C /opt/github-runner".split()
                 )
                 self._check_output(instance, "chown -R ubuntu:ubuntu /opt/github-runner".split())
                 break
@@ -559,7 +561,7 @@ class RunnerManager:
                     logger.error("Failed to install runner, giving up")
                     raise
 
-    def _check_output(self, container: pylxd.models.Instance, cmd: Sequence[str]) -> str:
+    def _check_output(self, container: pylxd.models.Instance, cmd: List[str]) -> str:
         """Check execution of a command in a container.
 
         Args:
