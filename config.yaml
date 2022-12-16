@@ -1,49 +1,62 @@
 options:
   path:
-      default: ""
       type: string
-      description: "Either an organization name or repository in 'org/repo' format"
+      default: ""
+      description: >
+        The path of the GitHub repository to register the self-hosted runners. Either an
+        organization name or repository in 'org/repo' format.
   token:
+      type: string
       default: ""
-      type: string
-      description: "Personal Access Token, required for auto registerting with the given url"
-  quantity:
-      default: 3
-      type: int
-      description: |
-        DEPRECATED: use `containers` and `virtual-machines`
-        Quantity of runners to maintain
+      description:
+        The GitHub Personal Access Token for registering the self-hosted runners.
   containers:
-      default: 0
       type: int
-      description: "Quantity of container runners to maintain"
+      default: 0
+      description: >
+        The number of container runners. This charm will spawn or destroy container
+        runners to match this setting.
   virtual-machines:
+      type: int
       default: 0
-      type: int
-      description: "Quantity of virtual machine runners to maintain"
+      description: >
+        The number of virtual machine runners. This charm will spawn or destroy virtual
+        machines runners to match this setting.
   vm-cpu:
+      type: int
       default: 2
-      type: int
-      description: "Number of CPUs for VMs."
+      description: >
+        The number of CPUs used per virtual machine runner. Does not affect container runners.
   vm-memory:
+    type: string
     default: 7GiB
-    type: string
-    description: "VM memory size."
+    description: >
+        The memory size used per virtual machine runner. Does not affect container runners.
   vm-disk:
-    default: 10GiB
     type: string
-    description: "VM disk size."
+    default: 10GiB
+    description: >
+        The root disk size used per virtual machine runner. Does not affect container runners.
   reconcile-interval:
+      type: int
       default: 5
-      type: int
-      description: "How frequently, in minutes, the runners should be reconciled"
+      description: >
+        Minutes between each reconciliation between the current state and the target state of the
+        runners. On reconciliation the charm polls the state of runners, such as, the number of
+        container runners, and see if actions are needed.
   update-interval:
-      default: 60
       type: int
-      description: "How frequently, in minutes, the charm should check for new versions of the runner binary"
+      default: 60
+      description: >
+        Minutes between each check for new versions of the runner binary.
   virt-type:
-      default: "container"
       type: string
-      description: |
+      default: "container"
+      description: >
         DEPRECATED: both `containers` and `virtual-machines` are supported at the same time
-        Virtualization type for runners, either container or virtual-machine
+        Virtualization type for runners, either container or virtual-machine.
+  quantity:
+      type: int
+      default: 0
+      description: >
+        DEPRECATED: use `containers` and `virtual-machines` Quantity of runners to maintain.
