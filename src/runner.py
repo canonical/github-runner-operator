@@ -546,8 +546,11 @@ class RunnerManager:
         instance.files.mk_dir("/opt/github-runner")
         for attempt in range(10):
             try:
-                # The LXD instance is meant to run untrusted workload, using hardcoded tmp directory should be fine.
-                instance.files.put("/tmp/runner.tgz", self.runner_bin_path.read_bytes())  # nosec B108
+                # The LXD instance is meant to run untrusted workload, using hardcoded tmp
+                # directory should be fine.
+                instance.files.put(
+                    "/tmp/runner.tgz", self.runner_bin_path.read_bytes()  # nosec B108
+                )
                 self._check_output(
                     instance, "tar -xzf /tmp/runner.tgz -C /opt/github-runner".split()
                 )

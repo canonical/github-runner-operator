@@ -11,8 +11,7 @@ skips = ["*/*test.py", "*/test_*.py"]
 branch = true
 
 [tool.coverage.report]
-# TODO: Enable this after migrate unittest to pytest
-# fail_under = 85
+fail_under = 38
 show_missing = true
 
 
