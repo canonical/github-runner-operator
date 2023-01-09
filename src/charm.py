@@ -38,7 +38,7 @@ class UpdateRunnerBinEvent(EventBase):
     """Event representing a periodic check for new versions of the runner binary."""
 
 
-class GithubRunnerOperator(CharmBase):
+class GithubRunnerCharm(CharmBase):
     """Charm for managing GitHub self-hosted runners.
 
     TODO:
@@ -354,4 +354,4 @@ class GithubRunnerOperator(CharmBase):
 
 
 if __name__ == "__main__":
-    main(GithubRunnerOperator)
+    main(GithubRunnerCharm)
