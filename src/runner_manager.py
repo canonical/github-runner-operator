@@ -2,12 +2,11 @@ import logging
 import os
 import random
 import string
-import subprocess
 import tarfile
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Sequence
+from typing import Dict, List, Optional
 
 import fastcore.net
 import jinja2
@@ -20,9 +19,9 @@ from ghapi.all import GhApi
 
 from errors import RunnerBinaryError
 from github_type import RunnerApplicationList, SelfHostedRunner
-from retry import retry
 from runner import Runner
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
+from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
 
@@ -116,45 +115,17 @@ class RunnerManager:
     def install_deps(cls) -> None:
         """Install dependencies."""
 
-        def execute(cmd: Sequence[str], check: bool = True) -> str:
-            """Execute a command on a subprocess.
-
-            Args:
-                cmd: Command in a list.
-                check: Whether to throw error on non-zero exit code. Defaults to True.
-
-            Returns:
-                Output on stdout.
-
-            TODO:
-                Move this function elsewhere and share this with event_timer.py.
-            """
-
-            result = subprocess.run(cmd, capture_output=True)  # nosec B603
-            logger.debug("Command %s returns: %s", " ".join(cmd), result.stdout)
-
-            if check:
-                try:
-                    result.check_returncode()
-                except subprocess.CalledProcessError as err:
-                    logger.error(
-                        "Command %s failed with code %i: %s",
-                        " ".join(cmd),
-                        err.returncode,
-                        err.stderr,
-                    )
-                    raise
-
         logger.info("Installing charm dependencies.")
+
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
-        execute(["/usr/bin/apt", "remove", "-qy", "lxd", "lxd-client"], check=False)
-        execute(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
-        execute(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
-        execute(["/snap/bin/lxd", "waitready"])
-        execute(["/snap/bin/lxd", "init", "--auto"])
-        execute(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
-        execute(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
-        execute(
+        execute_command(["/usr/bin/apt", "remove", "-qy", "lxd", "lxd-client"], check=False)
+        execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
+        execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
+        execute_command(["/snap/bin/lxd", "waitready"])
+        execute_command(["/snap/bin/lxd", "init", "--auto"])
+        execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
+        execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
+        execute_command(
             [
                 "/usr/bin/apt",
                 "install",

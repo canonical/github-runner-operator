@@ -21,8 +21,8 @@ from errors import (
     RunnerFileLoadError,
     RunnerRemoveError,
 )
-from retry import retry
 from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
+from utilities import retry
 
 logger = logging.getLogger(__name__)
 
@@ -302,7 +302,8 @@ class Runner:
         Args:
             reconcile_interval: Time in seconds of period between each reconciliation.
         """
-        assert self.instance is not None
+        if self.instance is None:
+            return
 
         logger.info("Starting LXD instance for runner: %s", self.name)
 
@@ -342,7 +343,9 @@ class Runner:
         if self.instance is None:
             return
 
-        binary_path = "/tmp/runner.tgz"
+        # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
+        # be fine.
+        binary_path = "/tmp/runner.tgz"  # nosec B108
 
         logger.info("Installing runner binary on LXD instance: %s", self.name)
 
@@ -439,7 +442,10 @@ class Runner:
         Returns:
             The stdout of the command executed.
         """
-        assert self.instance is not None
+        if self.instance is None:
+            raise RunnerExecutionError(
+                f"{self.name} is missing LXD instance to execute command {cmd}"
+            )
 
         exit_code, stdout, stderr = self.instance.execute(cmd)
         if exit_code == 0:

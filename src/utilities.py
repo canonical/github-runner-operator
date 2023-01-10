@@ -1,6 +1,7 @@
 import logging
+import subprocess  # nosec B404
 import time
-from typing import Callable, Optional, Type, TypeVar
+from typing import Callable, Optional, Sequence, Type, TypeVar
 
 logger = logging.getLogger(__name__)
 
@@ -74,3 +75,34 @@ def retry(
         return fn_with_retry
 
     return retry_decorator
+
+
+def execute_command(cmd: Sequence[str], check: bool = True) -> str:
+    """Execute a command on a subprocess.
+
+    Args:
+        cmd: Command in a list.
+        check: Whether to throw error on non-zero exit code. Defaults to True.
+
+    Returns:
+        Output on stdout.
+
+    TODO:
+        Update `event_timer.py` to use this function.
+    """
+    result = subprocess.run(cmd, capture_output=True)  # nosec B603
+    logger.debug("Command %s returns: %s", " ".join(cmd), result.stdout)
+
+    if check:
+        try:
+            result.check_returncode()
+        except subprocess.CalledProcessError as err:
+            logger.error(
+                "Command %s failed with code %i: %s",
+                " ".join(cmd),
+                err.returncode,
+                err.stderr,
+            )
+            raise
+
+    return str(result.stdout)
