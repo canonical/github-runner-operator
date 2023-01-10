@@ -352,6 +352,7 @@ class Runner:
         # Creating directory and putting the file are idempotent, and can be retried.
         self.instance.files.mk_dir(str(self.runner_application))
         self.instance.files.put(binary_path, binary.read_bytes())
+        self._execute(["tar", "-xzf", binary_path, "-C", str(self.runner_application)])
         self._execute(["chown", "-R", "ubuntu:ubuntu", str(self.runner_application)])
 
         # Verify the env file is written to runner.

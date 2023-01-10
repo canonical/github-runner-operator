@@ -1,3 +1,8 @@
+# Copyright 2022 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+"""Utilities used by the charm."""
+
 import logging
 import subprocess  # nosec B404
 import time
