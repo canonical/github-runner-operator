@@ -7,7 +7,7 @@ import tarfile
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, NamedTuple, Optional, TypedDict, Union
+from typing import Dict, List, Optional, Sequence
 
 import fastcore.net
 import jinja2
@@ -19,7 +19,7 @@ import urllib3
 from ghapi.all import GhApi
 
 from errors import RunnerBinaryError
-from github_type import RunnerApplicationList, SelfHostedRunner, SelfHostedRunnerList
+from github_type import RunnerApplicationList, SelfHostedRunner
 from retry import retry
 from runner import Runner
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
@@ -29,10 +29,17 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class RunnerInfo:
+    """Information from GitHub of a runner.
+
+    Used as a returned type to method querying runner information.
+
+    TODO:
+        See if more information should be shared by the charm.
+    """
+
     name: str
-    exist: bool = False
-    online: bool = False
-    busy: bool = False
+    online: bool
+    offline: bool
 
 
 class RunnerManager:
@@ -105,28 +112,49 @@ class RunnerManager:
         self.image = image
 
     @classmethod
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
     def install_deps(cls) -> None:
         """Install dependencies."""
+
+        def execute(cmd: Sequence[str], check: bool = True) -> str:
+            """Execute a command on a subprocess.
+
+            Args:
+                cmd: Command in a list.
+                check: Whether to throw error on non-zero exit code. Defaults to True.
+
+            Returns:
+                Output on stdout.
+
+            TODO:
+                Move this function elsewhere and share this with event_timer.py.
+            """
+
+            result = subprocess.run(cmd, capture_output=True)  # nosec B603
+            logger.debug("Command %s returns: %s", " ".join(cmd), result.stdout)
+
+            if check:
+                try:
+                    result.check_returncode()
+                except subprocess.CalledProcessError as err:
+                    logger.error(
+                        "Command %s failed with code %i: %s",
+                        " ".join(cmd),
+                        err.returncode,
+                        err.stderr,
+                    )
+                    raise
+
         logger.info("Installing charm dependencies.")
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
-        subprocess.run(  # nosec B603
-            ["/usr/bin/apt", "remove", "-qy", "lxd", "lxd-client"], check=False
-        )
-        subprocess.run(  # nosec B603
-            ["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"], check=True
-        )
-        subprocess.run(  # nosec B603
-            ["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"], check=True
-        )
-        subprocess.run(["/snap/bin/lxd", "waitready"], check=True)  # nosec 603
-        subprocess.run(["/snap/bin/lxd", "init", "--auto"], check=True)  # nosec 603
-        subprocess.run(  # nosec B603
-            ["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"], check=True
-        )
-        subprocess.run(  # nosec B603
-            ["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"]
-        )
-        subprocess.run(  # nosec B603
+        execute(["/usr/bin/apt", "remove", "-qy", "lxd", "lxd-client"], check=False)
+        execute(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
+        execute(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
+        execute(["/snap/bin/lxd", "waitready"])
+        execute(["/snap/bin/lxd", "init", "--auto"])
+        execute(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
+        execute(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
+        execute(
             [
                 "/usr/bin/apt",
                 "install",
@@ -135,9 +163,9 @@ class RunnerManager:
                 "libvirt-clients",
                 "libvirt-daemon-driver-qemu",
             ],
-            check=True,
         )
         cls.runner_bin_path.parent.mkdir(parents=True, exist_ok=True)
+
         logger.info("Finished installing charm dependencies.")
 
     def get_latest_runner_bin_url(self, os_name: str = "linux", arch_name: str = "x64") -> str:
@@ -167,7 +195,7 @@ class RunnerManager:
             f"Unable to download GitHub runner binary for {os_name} {arch_name}"
         )
 
-    @retry(tries=10, delay=5, max_delay=60, backoff=1.5)
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
     def update_runner_bin(self, download_url: str) -> None:
         """Download a runner file, replacing the current copy.
 
@@ -200,61 +228,19 @@ class RunnerManager:
                 logger.error("Failed to decompress downloaded GitHub runner binary.")
                 raise
 
-    def _get_runners(self) -> List[RunnerInfo]:
-        """Query for the list of runners.
+    def get_github_info(self) -> List[RunnerInfo]:
+        """Get information on the runners from GitHub.
 
         Returns:
-            List of runner objects.
+            List of information from GitHub on runners.
         """
+        remote_runners = self._get_runner_github_info()
+        return [
+            RunnerInfo(r.name, r.status == "online", r.status == "offline")
+            for r in remote_runners.values()
+        ]
 
-        def create_runner_info(
-            name: str,
-            local_runner: Optional[pylxd.models.Instance],
-            remote_runner: Optional[SelfHostedRunner],
-        ) -> RunnerInfo:
-            """Create runner from information from GitHub and LXD."""
-
-            running = local_runner is not None
-            online = False if remote_runner is None else remote_runner["status"] == "online"
-            busy = False if remote_runner is None else remote_runner["busy"]
-
-            return RunnerInfo(name, running, online, busy)
-
-        remote_runners_list: List[SelfHostedRunner] = []
-        if isinstance(self.path, GitHubRepo):
-            remote_runners_list = self._github.actions.list_self_hosted_runners_for_repo(
-                owner=self.path.owner, repo=self.path.repo
-            )["runners"]
-        elif isinstance(self.path, GitHubOrg):
-            remote_runners_list = self._github.actions.list_self_hosted_runners_for_org(
-                org=self.path.org
-            )["runners"]
-
-        remote_runners: Dict[str, SelfHostedRunner] = {
-            r.name: r for r in remote_runners_list if r.name.startswith(f"{self.app_name}-")
-        }
-
-        local_runners = {
-            i.name: i for i in self._lxd.instances.all() if i.name.startswith(f"{self.app_name}-")
-        }
-
-        runners: List[RunnerInfo] = []
-        for name in set(local_runners.keys()) | set(remote_runners.keys()):
-            runners.append(
-                create_runner_info(name, local_runners.get(name), remote_runners.get(name))
-            )
-
-        return runners
-
-    def _generate_runner_name(self) -> str:
-        """
-        TODO: Consider name collusion. LXD would fail to create VM on name collusion. Will may cause problems.
-        """
-        # Generated a suffix for naming propose, not used as secret.
-        suffix = "".join(random.choices(string.ascii_lowercase + string.digits, k=6))  # nosec B311
-        return f"{self.app_name}-{suffix}"
-
-    def reconcile(self, quantity: int, resources: Optional[VirtualMachineResources] = None) -> int:
+    def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
 
         Args:
@@ -288,26 +274,24 @@ class RunnerManager:
                 token = self._github.actions.create_registration_token_for_org(org=self.path.org)
 
             logger.info("Adding %i additional runner(s)", delta)
-            for i in range(delta):
+            for _ in range(delta):
                 runner = Runner(
                     self._github,
                     self._jinja,
                     self._lxd,
-                    self.path,
                     self.app_name,
-                    self.runner_bin_path,
-                    self._generate_runner_name(),
-                    self.image,
-                    resources,
+                    self.path,
                     self.proxies,
-                    self.reconcile_interval,
-                    token,
+                    self._generate_runner_name(),
                 )
-                runner.create()
+                runner.create(
+                    self.image, resources, self.runner_bin_path, self.reconcile_interval, token
+                )
         elif delta < 0:
             idle_runners = [r for r in online_runners if not r.busy]
             offset = min(-delta, len(idle_runners))
             if offset != 0:
+                logger.info("Removing %i runner(s)", offset)
                 remove_runners = idle_runners[:offset]
                 runner_names = ", ".join(r.name for r in remove_runners)
                 for runner in remove_runners:
@@ -321,7 +305,7 @@ class RunnerManager:
         """Remove existing runners.
 
         Returns:
-            The number of runner removed.
+            Number of runner removed.
         """
 
         runners = [r for r in self._get_runners() if r.exist]
@@ -332,3 +316,72 @@ class RunnerManager:
             runner.remove()
 
         return len(runners)
+
+    def _generate_runner_name(self) -> str:
+        """Generate a runner name based on charm name.
+
+        Returns:
+            Generated name of runner.
+
+        TODO:
+            Consider name collusion. LXD would fail to create VM on name collusion.
+        """
+        # Generated a suffix for naming propose, not used as secret.
+        suffix = "".join(random.choices(string.ascii_lowercase + string.digits, k=6))  # nosec B311
+        return f"{self.app_name}-{suffix}"
+
+    def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
+        remote_runners_list: List[SelfHostedRunner] = []
+        if isinstance(self.path, GitHubRepo):
+            remote_runners_list = self._github.actions.list_self_hosted_runners_for_repo(
+                owner=self.path.owner, repo=self.path.repo
+            )["runners"]
+        elif isinstance(self.path, GitHubOrg):
+            remote_runners_list = self._github.actions.list_self_hosted_runners_for_org(
+                org=self.path.org
+            )["runners"]
+
+        return {r.name: r for r in remote_runners_list if r.name.startswith(f"{self.app_name}-")}
+
+    def _get_runners(self) -> List[Runner]:
+        """Query for the list of runners.
+
+        Returns:
+            List of `Runner` from information on LXD or GitHub.
+        """
+
+        def create_runner(
+            name: str,
+            local_runner: Optional[pylxd.models.Instance],
+            remote_runner: Optional[SelfHostedRunner],
+        ) -> Runner:
+            """Create runner from information from GitHub and LXD."""
+
+            running = local_runner is not None
+            online = False if remote_runner is None else remote_runner["status"] == "online"
+            busy = False if remote_runner is None else remote_runner["busy"]
+
+            return Runner(
+                self._github,
+                self._jinja,
+                self._lxd,
+                self.app_name,
+                self.path,
+                self.proxies,
+                name,
+                running,
+                online,
+                busy,
+                local_runner,
+            )
+
+        remote_runners = self._get_runner_github_info()
+        local_runners = {
+            i.name: i for i in self._lxd.instances.all() if i.name.startswith(f"{self.app_name}-")
+        }
+
+        runners: List[Runner] = []
+        for name in set(local_runners.keys()) | set(remote_runners.keys()):
+            runners.append(create_runner(name, local_runners.get(name), remote_runners.get(name)))
+
+        return runners

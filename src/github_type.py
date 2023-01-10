@@ -8,8 +8,9 @@ from dataclasses import dataclass
 from typing import List, TypedDict
 
 
-@dataclass
 class RunnerApplication(TypedDict, total=False):
+    """Information on a single runner application."""
+
     os: str
     architecture: str
     download_url: str
@@ -20,15 +21,17 @@ class RunnerApplication(TypedDict, total=False):
 RunnerApplicationList = List[RunnerApplication]
 
 
-@dataclass
 class SelfHostedRunnerLabel(TypedDict, total=False):
+    """A single label of self-hosted runners."""
+
     id: int  # NotRequired
     name: str
     type: str  # NotRequired
 
 
-@dataclass
 class SelfHostedRunner(TypedDict):
+    """Information on a single self-hosted runner."""
+
     id: int
     name: str
     os: str
@@ -37,7 +40,8 @@ class SelfHostedRunner(TypedDict):
     labels: List[SelfHostedRunnerLabel]
 
 
-@dataclass
 class SelfHostedRunnerList(TypedDict):
+    """Information on a collection of self-hosted runners."""
+
     total_count: int
     runners: List[SelfHostedRunner]

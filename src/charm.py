@@ -14,6 +14,7 @@ from ops.charm import (
     CharmBase,
     ConfigChangedEvent,
     InstallEvent,
+    StartEvent,
     StopEvent,
     UpgradeCharmEvent,
 )
@@ -21,8 +22,10 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
+from errors import RunnerError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
-from runner import RunnerError, RunnerManager, VMResources
+from runner_manager import RunnerManager
+from runner_type import VirtualMachineResources
 
 if TYPE_CHECKING:
     from ops.model import JsonObject
@@ -64,6 +67,7 @@ class GithubRunnerCharm(CharmBase):
         self.on.define_event("update_runner_bin", UpdateRunnerBinEvent)
 
         self.framework.observe(self.on.install, self._on_install)
+        self.framework.observe(self.on.start, self._on_start)
         self.framework.observe(self.on.upgrade_charm, self._on_upgrade_charm)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
@@ -73,6 +77,7 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.reconcile_runners_action, self._on_reconcile_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
+        self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
 
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
@@ -103,6 +108,15 @@ class GithubRunnerCharm(CharmBase):
         """
         self.unit.status = MaintenanceStatus("Installing packages")
         RunnerManager.install_deps()
+
+    def _on_start(self, event: StartEvent) -> None:
+        """Handle the start of the charm.
+
+        Args:
+            event: Event of starting charm.
+        """
+
+        # TODO Review the blocked status.
         runner_manager = self._get_runner_manager()
         if runner_manager:
             self.unit.status = MaintenanceStatus("Installing runner binary")
@@ -233,17 +247,17 @@ class GithubRunnerCharm(CharmBase):
         runner_names = []
 
         try:
-            runner_info = runner_manager.get_info()
+            runner_info = runner_manager.get_github_info()
         except Exception as e:
             logger.exception("Failed to get runner info")
             event.fail(f"Failed to get runner info: {e}")
             return
 
         for runner in runner_info:
-            if runner.is_online:
+            if runner.online:
                 online += 1
                 runner_names.append(runner.name)
-            elif runner.is_offline:
+            elif runner.offline:
                 offline += 1
             else:
                 # might happen if runner dies and GH doesn't notice immediately
@@ -328,26 +342,19 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             Changes in runner number due to reconciling runners.
         """
-        virtual_machines_resources = VMResources(
+        virtual_machines_resources = VirtualMachineResources(
             self.config["vm-cpu"], self.config["vm-memory"], self.config["vm-disk"]
         )
-        # handle deprecated config for `quantity` and `virt-type`
-
-        containers = self.config["containers"]
-        if containers == 0 and self.config["virt-type"] == "container":
-            containers = self.config["quantity"]
 
         virtual_machines = self.config["virtual-machines"]
         if virtual_machines == 0 and self.config["virt-type"] == "virtual-machine":
             virtual_machines = self.config["quantity"]
 
-        delta_containers = runner_manager.reconcile("container", containers)
         delta_virtual_machines = runner_manager.reconcile(
-            "virtual-machine", virtual_machines, virtual_machines_resources
+            virtual_machines, virtual_machines_resources
         )
         return {
             "delta": {
-                "containers": delta_containers,
                 "virtual-machines": delta_virtual_machines,
             }
         }

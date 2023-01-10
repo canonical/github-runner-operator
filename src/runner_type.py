@@ -9,6 +9,7 @@ from typing import NamedTuple, TypedDict, Union
 
 
 class ProxySetting(TypedDict, total=False):
+    """Represent HTTP-related proxy settings."""
 
     no_proxy: str
     http: str
@@ -17,6 +18,8 @@ class ProxySetting(TypedDict, total=False):
 
 @dataclass
 class GitHubRepo:
+    """Represent GitHub repository."""
+
     owner: str
     repo: str
 
@@ -26,6 +29,8 @@ class GitHubRepo:
 
 @dataclass
 class GitHubOrg:
+    """Represent GitHub organization."""
+
     org: str
 
     def path(self) -> str:
