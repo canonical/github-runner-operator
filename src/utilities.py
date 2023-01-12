@@ -1,17 +1,23 @@
-# Copyright 2022 Canonical Ltd.
+# Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Utilities used by the charm."""
 
+import functools
 import logging
 import subprocess  # nosec B404
 import time
 from typing import Callable, Optional, Sequence, Type, TypeVar
 
+from typing_extensions import ParamSpec
+
 logger = logging.getLogger(__name__)
 
-# Return type of decorated function
-R = TypeVar("R")
+
+# Parameters of the function decorated with retry
+TParam = ParamSpec("TParam")
+# Return type of the function decorated with retry
+TReturn = TypeVar("TReturn")
 
 
 def retry(
@@ -21,28 +27,24 @@ def retry(
     max_delay: Optional[float] = None,
     backoff: float = 1,
     logger: logging.Logger = logger,
-) -> Callable[[Callable[..., R]], Callable[..., R]]:
+) -> Callable[[Callable[TParam, TReturn]], Callable[TParam, TReturn]]:
     """Parameterize the decorator for adding retry to functions.
 
     Args:
-        exception: Exception type to be retried. Defaults to Exception.
-        tries: Number of attempts at retry. Defaults to 1.
-        delay: Time in seconds to wait between retry. Defaults to 0.
-        max_delay: Max time in seconds to wait between retry. Defaults to None.
-        backoff: Factor to increase the delay by each retry. Defaults to 1.
-        logger: Logger for logging. Defaults to module logger.
+        exception: Exception type to be retried.
+        tries: Number of attempts at retry.
+        delay: Time in seconds to wait between retry.
+        max_delay: Max time in seconds to wait between retry.
+        backoff: Factor to increase the delay by each retry.
+        logger: Logger for logging.
 
     Returns:
         The function decorator for retry.
-
-    TODO:
-    For Python 3.10+, PEP 612 allows to specify the parameter of callable using `ParamSpec`. Do
-    this when focal (Python 3.8) is no longer supported.
     """
 
     def retry_decorator(
-        fn: Callable[..., R],
-    ) -> Callable[..., R]:
+        fn: Callable[TParam, TReturn],
+    ) -> Callable[TParam, TReturn]:
         """Decorate function with retry.
 
         Args:
@@ -52,11 +54,12 @@ def retry(
             Callable[..., R]: The resulting function with retry added.
         """
 
-        def fn_with_retry(*args, **kwargs) -> R:
+        @functools.wraps(fn)
+        def fn_with_retry(*args, **kwargs) -> TReturn:
             """Function with retry"""
             remain_tries, current_delay = tries, delay
 
-            while True:
+            for _ in range(tries):
                 try:
                     return fn(*args, **kwargs)
                 except exception as err:
@@ -64,11 +67,12 @@ def retry(
 
                     if remain_tries == 0:
                         if logger is not None:
-                            logger.error("Retry limit of %s exceed: %s", tries, err)
+                            logger.exception("Retry limit of %s exceed: %s", tries, err)
                         raise
 
                     if logger is not None:
                         logger.warning("Retrying error in %s seconds: %s", current_delay, err)
+                        logger.debug("Error to be retried:", stack_info=True)
 
                     time.sleep(current_delay)
 
@@ -76,6 +80,8 @@ def retry(
 
                     if max_delay is not None:
                         current_delay = min(current_delay, max_delay)
+
+            raise RuntimeError("Unreachable code of retry logic.")
 
         return fn_with_retry
 
@@ -87,7 +93,7 @@ def execute_command(cmd: Sequence[str], check: bool = True) -> str:
 
     Args:
         cmd: Command in a list.
-        check: Whether to throw error on non-zero exit code. Defaults to True.
+        check: Whether to throw error on non-zero exit code.
 
     Returns:
         Output on stdout.
@@ -95,8 +101,9 @@ def execute_command(cmd: Sequence[str], check: bool = True) -> str:
     TODO:
         Update `event_timer.py` to use this function.
     """
+    logger.info("Executing command %s", cmd)
     result = subprocess.run(cmd, capture_output=True)  # nosec B603
-    logger.debug("Command %s returns: %s", " ".join(cmd), result.stdout)
+    logger.debug("Command %s returns: %s", cmd, result.stdout)
 
     if check:
         try:

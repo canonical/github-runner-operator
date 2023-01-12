@@ -1,10 +1,14 @@
-# Copyright 2022 Canonical Ltd.
+# Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Type of returned data from GitHub web API."""
 
 
-from typing import List, TypedDict
+from __future__ import annotations
+
+from typing import TypedDict
+
+from typing_extensions import NotRequired
 
 
 class RunnerApplication(TypedDict, total=False):
@@ -14,18 +18,19 @@ class RunnerApplication(TypedDict, total=False):
     architecture: str
     download_url: str
     filename: str
-    sha256_checksum: str  # NotRequired
+    temp_download_token: NotRequired[str]
+    sha256_checksum: NotRequired[str]
 
 
-RunnerApplicationList = List[RunnerApplication]
+RunnerApplicationList = list[RunnerApplication]
 
 
 class SelfHostedRunnerLabel(TypedDict, total=False):
     """A single label of self-hosted runners."""
 
-    id: int  # NotRequired
+    id: NotRequired[int]
     name: str
-    type: str  # NotRequired
+    type: NotRequired[str]
 
 
 class SelfHostedRunner(TypedDict):
@@ -36,11 +41,17 @@ class SelfHostedRunner(TypedDict):
     os: str
     status: str
     busy: bool
-    labels: List[SelfHostedRunnerLabel]
+    labels: list[SelfHostedRunnerLabel]
 
 
 class SelfHostedRunnerList(TypedDict):
     """Information on a collection of self-hosted runners."""
 
     total_count: int
-    runners: List[SelfHostedRunner]
+    runners: list[SelfHostedRunner]
+
+
+class RegisterToken(TypedDict):
+    """Token used for registering github runners."""
+
+    token: str

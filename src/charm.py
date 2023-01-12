@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
-# Copyright 2022 Canonical
+# Copyright 2023 Canonical
 # See LICENSE file for licensing details.
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
 import logging
 import urllib.error
+from subprocess import CalledProcessError  # nosec B404
 from typing import TYPE_CHECKING, Dict, Optional
 
 from ops.charm import (
@@ -25,7 +26,8 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from errors import RunnerError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from runner_manager import RunnerManager
-from runner_type import VirtualMachineResources
+from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
+from utilities import execute_command, retry
 
 if TYPE_CHECKING:
     from ops.model import JsonObject
@@ -45,7 +47,6 @@ class GithubRunnerCharm(CharmBase):
     """Charm for managing GitHub self-hosted runners.
 
     TODO:
-    * Remove support of LXD containers, due to security concerns.
     * Review the action results fields, and use TypedDict for the action results, and JSON-like
         return values.
     """
@@ -67,7 +68,6 @@ class GithubRunnerCharm(CharmBase):
         self.on.define_event("update_runner_bin", UpdateRunnerBinEvent)
 
         self.framework.observe(self.on.install, self._on_install)
-        self.framework.observe(self.on.start, self._on_start)
         self.framework.observe(self.on.upgrade_charm, self._on_upgrade_charm)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
@@ -85,9 +85,9 @@ class GithubRunnerCharm(CharmBase):
         """Get a RunnerManager instance, or None if missing config.
 
         Args:
-            token: GitHub personal access token to manager the runners with. Defaults to None.
+            token: GitHub personal access token to manager the runners with.
             path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
-                name. Defaults to None.
+                name.
 
         Returns:
             A instance of RunnerManager if the token and path configuration can be found.
@@ -96,27 +96,31 @@ class GithubRunnerCharm(CharmBase):
             token = self.config["token"]
         if path is None:
             path = self.config["path"]
+
         if not token or not path:
             return None
+
+        if "/" in path:
+            owner, repo = path.split("/", 1)
+            path = GitHubRepo(owner=owner, repo=repo)
+        else:
+            path = GitHubOrg(org=path)
         return RunnerManager(path, token, self.app.name, self.config["reconcile-interval"])
 
     def _on_install(self, event: InstallEvent) -> None:
         """Handle the installation of charm.
-
         Args:
             event: Event of installing charm.
         """
         self.unit.status = MaintenanceStatus("Installing packages")
-        RunnerManager.install_deps()
 
-    def _on_start(self, event: StartEvent) -> None:
-        """Handle the start of the charm.
+        try:
+            self._install_deps()
+        except CalledProcessError as err:
+            logger.exception(err)
+            self.unit.status = MaintenanceStatus("Failed to install dependencies")
+            return
 
-        Args:
-            event: Event of starting charm.
-        """
-
-        # TODO Review the blocked status.
         runner_manager = self._get_runner_manager()
         if runner_manager:
             self.unit.status = MaintenanceStatus("Installing runner binary")
@@ -125,14 +129,14 @@ class GithubRunnerCharm(CharmBase):
                 runner_manager.update_runner_bin(self._stored.runner_bin_url)
             except Exception as e:
                 logger.exception("Failed to update runner binary")
-                self.unit.status = BlockedStatus(f"Failed to update runner binary: {e}")
+                self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {e}")
                 return
             self.unit.status = MaintenanceStatus("Starting runners")
             try:
                 self._reconcile_runners(runner_manager)
             except RunnerError as e:
                 logger.exception("Failed to start runners")
-                self.unit.status = BlockedStatus(f"Failed to start runners: {e}")
+                self.unit.status = MaintenanceStatus(f"Failed to start runners: {e}")
             else:
                 self.unit.status = ActiveStatus()
         else:
@@ -353,11 +357,34 @@ class GithubRunnerCharm(CharmBase):
         delta_virtual_machines = runner_manager.reconcile(
             virtual_machines, virtual_machines_resources
         )
-        return {
-            "delta": {
-                "virtual-machines": delta_virtual_machines,
-            }
-        }
+        return {"delta": {"virtual-machines": delta_virtual_machines}}
+
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
+    def _install_deps(cls) -> None:
+        """Install dependencies."""
+
+        logger.info("Installing charm dependencies.")
+
+        # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
+        execute_command(["/usr/bin/apt", "remove", "-qy", "lxd", "lxd-client"], check=False)
+        execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
+        execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
+        execute_command(["/snap/bin/lxd", "waitready"])
+        execute_command(["/snap/bin/lxd", "init", "--auto"])
+        execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
+        execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
+        execute_command(
+            [
+                "/usr/bin/apt",
+                "install",
+                "-qy",
+                "cpu-checker",
+                "libvirt-clients",
+                "libvirt-daemon-driver-qemu",
+            ],
+        )
+
+        logger.info("Finished installing charm dependencies.")
 
 
 if __name__ == "__main__":

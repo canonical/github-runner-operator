@@ -1,6 +1,11 @@
+# Copyright 2023 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+"""Errors used by the charm."""
+
 # TODO Review the errors and handling.
 class RunnerError(Exception):
-    """Generic runner error."""
+    """Generic runner error as base exception."""
 
 
 class RunnerExecutionError(RunnerError):
@@ -8,7 +13,7 @@ class RunnerExecutionError(RunnerError):
 
 
 class RunnerFileLoadError(RunnerError):
-    """Error for executing commands on runner."""
+    """Error for loading file on runner."""
 
 
 class RunnerCreateError(RunnerError):
@@ -23,5 +28,5 @@ class RunnerStartError(RunnerError):
     """Error for runner start failure."""
 
 
-class RunnerBinaryError(Exception):
+class RunnerBinaryError(RunnerError):
     """Error of getting runner binary."""

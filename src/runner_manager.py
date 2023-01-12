@@ -1,3 +1,11 @@
+# Copyright 2023 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+"""Runner Manager manages the runners on LXD and GitHub."""
+
+from __future__ import annotations
+
+import hashlib
 import logging
 import os
 import random
@@ -6,7 +14,7 @@ import tarfile
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 import fastcore.net
 import jinja2
@@ -18,10 +26,10 @@ import urllib3
 from ghapi.all import GhApi
 
 from errors import RunnerBinaryError
-from github_type import RunnerApplicationList, SelfHostedRunner
-from runner import Runner
-from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
-from utilities import execute_command, retry
+from github_type import RegisterToken, RunnerApplication, RunnerApplicationList, SelfHostedRunner
+from runner import Runner, RunnerConfig
+from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
+from utilities import retry
 
 logger = logging.getLogger(__name__)
 
@@ -42,12 +50,18 @@ class RunnerInfo:
 
 
 class RunnerManager:
+    """Manage a group of runners according to configuration."""
 
     # TODO: Verify if this violates bandit B108.
     runner_bin_path = Path("/var/cache/github-runner-operator/runner.tgz")
 
     def __init__(
-        self, path: str, token: str, app_name: str, reconcile_interval: int, image: str = "focal"
+        self,
+        path: GitHubPath,
+        token: str,
+        app_name: str,
+        reconcile_interval: int,
+        image: str = "focal",
     ) -> None:
         """Construct RunnerManager object for creating and managing runners.
 
@@ -59,11 +73,6 @@ class RunnerManager:
             app_name: An name for the set of runners.
             reconcile_interval: Number of minutes between each reconciliation of runners.
             image: Image to use for the runner LXD instances.
-
-        TODO:
-            Move `install_deps` class method elsewhere.
-
-            Change the `path` in `__init__` method to type `GitHubPath`.
         """
         http_proxy = os.environ.get("JUJU_CHARM_HTTP_PROXY", None)
         https_proxy = os.environ.get("JUJU_CHARM_HTTPS_PROXY", None)
@@ -100,54 +109,26 @@ class RunnerManager:
         )
         self._lxd = pylxd.Client()
 
-        if "/" in path:
-            owner, repo = path.split("/")
-            self.path = GitHubRepo(owner=owner, repo=repo)
-        else:
-            self.path = GitHubOrg(org=path)
+        self.path = path
 
         self.app_name = app_name
         self.reconcile_interval = reconcile_interval
         self.image = image
 
-    @classmethod
-    @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
-    def install_deps(cls) -> None:
-        """Install dependencies."""
-
-        logger.info("Installing charm dependencies.")
-
-        # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
-        execute_command(["/usr/bin/apt", "remove", "-qy", "lxd", "lxd-client"], check=False)
-        execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
-        execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
-        execute_command(["/snap/bin/lxd", "waitready"])
-        execute_command(["/snap/bin/lxd", "init", "--auto"])
-        execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
-        execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
-        execute_command(
-            [
-                "/usr/bin/apt",
-                "install",
-                "-qy",
-                "cpu-checker",
-                "libvirt-clients",
-                "libvirt-daemon-driver-qemu",
-            ],
-        )
-        cls.runner_bin_path.parent.mkdir(parents=True, exist_ok=True)
-
-        logger.info("Finished installing charm dependencies.")
-
-    def get_latest_runner_bin_url(self, os_name: str = "linux", arch_name: str = "x64") -> str:
+    def get_latest_runner_bin_url(
+        self, os_name: str = "linux", arch_name: str = "x64"
+    ) -> RunnerApplication:
         """Get the URL for the latest runner binary.
 
         The runner binary URL changes when a new version is available.
 
-        Returns:
-            The URL to the latest runner binary.
-        """
+        Args:
+            os_name: Name of operating system.
+            arch_name: Name of architecture.
 
+        Returns:
+            Information on the runner application.
+        """
         runner_bins: RunnerApplicationList = []
         if isinstance(self.path, GitHubRepo):
             runner_bins = self._github.actions.list_runner_applications_for_repo(
@@ -158,33 +139,49 @@ class RunnerManager:
 
         logger.debug("Response of runner binary list: %s", runner_bins)
 
-        for bin in runner_bins:
-            if bin.os == os_name and bin.architecture == arch_name:
-                return bin.download_url
-
-        raise RunnerBinaryError(
-            f"Unable to download GitHub runner binary for {os_name} {arch_name}"
-        )
+        try:
+            return next(
+                bin for bin in runner_bins if bin.os == os_name and bin.architecture == arch_name
+            )
+        except StopIteration as err:
+            raise RunnerBinaryError(
+                f"Unable query GitHub runner binary information for {os_name} {arch_name}"
+            ) from err
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
-    def update_runner_bin(self, download_url: str) -> None:
+    def update_runner_bin(self, binary: RunnerApplication) -> None:
         """Download a runner file, replacing the current copy.
 
         Args:
-            download_url (str): URL to download the runner binary.
+            binary: Information on the runner binary to download.
 
         TODO:
-            Deletion first cause no runner binary on download failure. See if this cause problems.
+            Convert to download of runner binary to streaming to file, rather than save in memory
+            then copy to file. Ignore if the file size is too small.
         """
-        logger.info("Downloading runner binary from: %s", download_url)
+        logger.info("Downloading runner binary from: %s", binary.download_url)
+
+        self.runner_bin_path.parent.mkdir(parents=True, exist_ok=True)
 
         # Remove any existing runner bin file
         if self.runner_bin_path.exists():
             self.runner_bin_path.unlink()
         # Download the new file
-        response = self.session.get(download_url)
+        response = self.session.get(binary.download_url)
 
-        logger.info("Download of runner binary return status code: %i", response.status_code)
+        logger.info(
+            "Download of runner binary from %s return status code: %i",
+            binary.download_url,
+            response.status_code,
+        )
+
+        if binary.sha256_checksum is not None:
+            if binary.sha256_checksum != hashlib.sha256(response.content):
+                raise RunnerBinaryError("Checksum mismatch for downloaded runner binary")
+        else:
+            logger.warning(
+                "Checksum for runner binary is not found, verification of download is not done."
+            )
 
         with self.runner_bin_path.open(mode="wb") as runner_bin_file:
             runner_bin_file.write(response.content)
@@ -199,7 +196,7 @@ class RunnerManager:
                 logger.error("Failed to decompress downloaded GitHub runner binary.")
                 raise
 
-    def get_github_info(self) -> List[RunnerInfo]:
+    def get_github_info(self) -> list[RunnerInfo]:
         """Get information on the runners from GitHub.
 
         Returns:
@@ -237,29 +234,29 @@ class RunnerManager:
         delta = quantity - len(online_runners)
         if delta > 0:
             logger.info("Getting registration token for GitHub runners.")
+
+            token: RegisterToken = {"token": None}
             if isinstance(self.path, GitHubRepo):
                 token = self._github.actions.create_registration_token_for_repo(
                     owner=self.path.owner, repo=self.path.repo
                 )
-            else:
+            elif isinstance(self.path, GitHubOrg):
                 token = self._github.actions.create_registration_token_for_org(org=self.path.org)
 
             logger.info("Adding %i additional runner(s)", delta)
             for _ in range(delta):
-                runner = Runner(
-                    self._github,
-                    self._jinja,
-                    self._lxd,
-                    self.app_name,
-                    self.path,
-                    self.proxies,
-                    self._generate_runner_name(),
+                config = RunnerConfig(
+                    self.app_name, self.path, self.proxies, self._generate_runner_name()
                 )
+                runner = Runner(self._github, self._jinja, self._lxd, config)
                 runner.create(
-                    self.image, resources, self.runner_bin_path, self.reconcile_interval, token
+                    self.image,
+                    resources,
+                    self.runner_bin_path,
+                    token.token,
                 )
         elif delta < 0:
-            idle_runners = [r for r in online_runners if not r.busy]
+            idle_runners = [runner for runner in online_runners if not runner.busy]
             offset = min(-delta, len(idle_runners))
             if offset != 0:
                 logger.info("Removing %i runner(s)", offset)
@@ -279,8 +276,8 @@ class RunnerManager:
             Number of runner removed.
         """
 
-        runners = [r for r in self._get_runners() if r.exist]
-        runner_names = ", ".join(r.name for r in runners)
+        runners = [runner for runner in self._get_runners() if runner.exist]
+        runner_names = ", ".join(runner.name for runner in runners)
         logger.info("Removing existing local runners: %s", runner_names)
 
         for runner in runners:
@@ -302,7 +299,7 @@ class RunnerManager:
         return f"{self.app_name}-{suffix}"
 
     def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
-        remote_runners_list: List[SelfHostedRunner] = []
+        remote_runners_list: list[SelfHostedRunner] = []
         if isinstance(self.path, GitHubRepo):
             remote_runners_list = self._github.actions.list_self_hosted_runners_for_repo(
                 owner=self.path.owner, repo=self.path.repo
@@ -312,9 +309,13 @@ class RunnerManager:
                 org=self.path.org
             )["runners"]
 
-        return {r.name: r for r in remote_runners_list if r.name.startswith(f"{self.app_name}-")}
+        return {
+            runner.name: runner
+            for runner in remote_runners_list
+            if runner.name.startswith(f"{self.app_name}-")
+        }
 
-    def _get_runners(self) -> List[Runner]:
+    def _get_runners(self) -> list[Runner]:
         """Query for the list of runners.
 
         Returns:
@@ -332,14 +333,12 @@ class RunnerManager:
             online = False if remote_runner is None else remote_runner["status"] == "online"
             busy = False if remote_runner is None else remote_runner["busy"]
 
+            config = RunnerConfig(self.app_name, self.path, self.proxies, name)
             return Runner(
                 self._github,
                 self._jinja,
                 self._lxd,
-                self.app_name,
-                self.path,
-                self.proxies,
-                name,
+                config,
                 running,
                 online,
                 busy,
@@ -348,10 +347,12 @@ class RunnerManager:
 
         remote_runners = self._get_runner_github_info()
         local_runners = {
-            i.name: i for i in self._lxd.instances.all() if i.name.startswith(f"{self.app_name}-")
+            instance.name: instance
+            for instance in self._lxd.instances.all()
+            if instance.name.startswith(f"{self.app_name}-")
         }
 
-        runners: List[Runner] = []
+        runners: list[Runner] = []
         for name in set(local_runners.keys()) | set(remote_runners.keys()):
             runners.append(create_runner(name, local_runners.get(name), remote_runners.get(name)))
 
