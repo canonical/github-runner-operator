@@ -100,8 +100,13 @@ class GithubRunnerCharm(CharmBase):
             return None
 
         if "/" in path:
-            owner, repo = path.split("/", 1)
-            path = GitHubRepo(owner=owner, repo=repo)
+            paths = path.split("/")
+            if len(paths) == 2:
+                owner, repo = paths
+                path = GitHubRepo(owner=owner, repo=repo)
+            else:
+                logger.error("Invalid path %s", path)
+                self.unit.status = BlockedStatus(f"Invalid path: {path}")
         else:
             path = GitHubOrg(org=path)
         return RunnerManager(path, token, self.app.name, self.config["reconcile-interval"])

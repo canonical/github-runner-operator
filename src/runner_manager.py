@@ -8,14 +8,12 @@ from __future__ import annotations
 import hashlib
 import logging
 import os
-import random
-import string
 import tarfile
 import urllib.request
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Optional
-import uuid
 
 import fastcore.net
 import jinja2

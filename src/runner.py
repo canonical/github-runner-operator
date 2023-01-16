@@ -1,10 +1,13 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Manage the dependencies and lifecycle of runners.
+"""Manage the lifecycle of runners.
 
-TODO:
-    Runner object
+The `Runner` class stores the information on the runners and manages the
+lifecycle of the runners on LXD and GitHub.
+
+The `RunnerManager` class from `runner_manager.py` creates and manages a
+collection of `Runner` instances.
 """
 
 from __future__ import annotations
@@ -130,7 +133,7 @@ class Runner:
         self,
         image: str,
         resources: VirtualMachineResources,
-        binary: Path,
+        binary_path: Path,
         registration_token: str,
     ):
         """Create the runner instance on LXD and register it on GitHub.
@@ -138,11 +141,11 @@ class Runner:
         Args:
             image: Name of the image to launch the LXD instance with.
             resources: Resource setting for the LXD instance.
-            binary: Path to the runner binary.
+            binary_path: Path to the runner binary.
             registration_token: Token to register the runner on GitHub.
 
         Raises:
-            RunnerCreateError: _description_
+            RunnerCreateError: Unable to create a LXD instance for runner.
         """
         logger.info("Creating runner: %s", self.name)
 
@@ -153,14 +156,14 @@ class Runner:
             # Wait some initial time for the instance to boot up
             time.sleep(60)
             self._wait_boot_up()
-            self._install_binary(binary)
+            self._install_binary(binary_path)
             self._configure_runner()
             self._register_runner(registration_token, labels=[self.app_name, image])
             self._start_runner()
         except Exception as err:
             self.instance.stop(wait=True)
 
-            with suppress(Exception):
+            with suppress(pylxd.exceptions.LXDAPIException):
                 # Ephemeral containers should auto-delete when stopped;
                 # this is just a fall-back.
                 self.instance.delete(wait=True)
@@ -191,11 +194,11 @@ class Runner:
         if self.instance.status == "Running":
             try:
                 self.instance.stop(wait=True, timeout=60)
-            except pylxd.exceptions.LXDAPIException as err:
+            except pylxd.exceptions.LXDAPIException:
                 logger.exception("Unable to gracefully stop runner within timeout.")
                 self.instance.stop(force=True)
 
-            with suppress(Exception):
+            with suppress(pylxd.exceptions.LXDAPIException):
                 # Ephemeral containers should auto-delete when stopped;
                 # this is just a fall-back.
                 self.instance.delete(wait=True)
@@ -205,7 +208,7 @@ class Runner:
             # surface.
             try:
                 self.instance.delete(wait=True)
-            except Exception as err:
+            except pylxd.exceptions.LXDAPIException as err:
                 raise RunnerRemoveError(f"Unable to remove {self.name}") from err
 
     @retry(tries=5, delay=1, logger=logger)
