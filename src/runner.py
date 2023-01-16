@@ -1,14 +1,18 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Manage the dependencies and lifecycle of runners."""
+"""Manage the dependencies and lifecycle of runners.
+
+TODO:
+    Runner object
+"""
 
 from __future__ import annotations
-from dataclasses import dataclass
 
 import logging
 import time
 from contextlib import suppress
+from dataclasses import dataclass
 from pathlib import Path
 from subprocess import CalledProcessError  # nosec B404
 from typing import Optional, Sequence, TypedDict
@@ -51,9 +55,10 @@ class LxdInstanceConfig(TypedDict):
     ephemeral: bool
     profiles: list[str]
 
+
 @dataclass
 class RunnerConfig:
-    """Configuration for runner"""
+    """Configuration for runner."""
 
     app_name: str
     path: GitHubPath
@@ -146,7 +151,7 @@ class Runner:
         try:
             self._start_instance()
             # Wait some initial time for the instance to boot up
-            time.sleep(30)
+            time.sleep(60)
             self._wait_boot_up()
             self._install_binary(binary)
             self._configure_runner()
@@ -162,7 +167,7 @@ class Runner:
 
             raise RunnerCreateError(f"Unable to create runner {self.name}") from err
 
-    @retry(tries=5, delay=30, logger=logger)
+    @retry(tries=5, delay=1, logger=logger)
     def remove(self) -> None:
         """Remove this runner instance from LXD and GitHub.
 
@@ -175,7 +180,7 @@ class Runner:
             self._github.actions.delete_self_hosted_runner_from_repo(
                 owner=self.path.owner, repo=self.path.repo, runner_id=self.name
             )
-        elif isinstance(self.path, GitHubOrg):
+        if isinstance(self.path, GitHubOrg):
             self._github.actions.delete_self_hosted_runner_from_org(
                 org=self.path.org, runner_id=self.name
             )
@@ -184,7 +189,11 @@ class Runner:
             return
 
         if self.instance.status == "Running":
-            self.instance.stop(wait=True)
+            try:
+                self.instance.stop(wait=True, timeout=60)
+            except pylxd.exceptions.LXDAPIException as err:
+                logger.exception("Unable to gracefully stop runner within timeout.")
+                self.instance.stop(force=True)
 
             with suppress(Exception):
                 # Ephemeral containers should auto-delete when stopped;
@@ -306,8 +315,8 @@ class Runner:
 
         return profile_name
 
-    @retry(tries=5, delay=30, logger=logger)
-    def _start_instance(self, reconcile_interval) -> None:
+    @retry(tries=5, delay=1, logger=logger)
+    def _start_instance(self) -> None:
         """Start an instance and wait for it to boot.
 
         Args:
@@ -321,7 +330,6 @@ class Runner:
         # Setting `wait=True` only ensure the instance has begin to boot up.
         self.instance.start(wait=True)
 
-    
     @retry(tries=5, delay=30, logger=logger)
     def _wait_boot_up(self) -> None:
         # Wait for the instance to finish to boot up and network to be up.
@@ -435,7 +443,7 @@ class Runner:
         # Put a script to run the GitHub self-hosted runner in the instance and run it.
         contents = self._jinja.get_template("start.j2").render()
         self.instance.files.put(self.runner_script, contents, mode="0755")
-        self._execute(["/usr/bin/sudo", "-u", "ubuntu:ubuntu", str(self.runner_script)])
+        self._execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self._execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
         self._execute(["/usr/bin/sudo", "-u", "ubuntu", str(self.runner_script)])
 

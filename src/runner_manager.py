@@ -15,6 +15,7 @@ import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Optional
+import uuid
 
 import fastcore.net
 import jinja2
@@ -134,7 +135,7 @@ class RunnerManager:
             runner_bins = self._github.actions.list_runner_applications_for_repo(
                 owner=self.path.owner, repo=self.path.repo
             )
-        elif isinstance(self.path, GitHubOrg):
+        if isinstance(self.path, GitHubOrg):
             runner_bins = self._github.actions.list_runner_application_for_org(org=self.path.org)
 
         logger.debug("Response of runner binary list: %s", runner_bins)
@@ -175,8 +176,14 @@ class RunnerManager:
             response.status_code,
         )
 
-        if binary.sha256_checksum is not None:
-            if binary.sha256_checksum != hashlib.sha256(response.content):
+        if binary.sha256_checksum:
+            hash = hashlib.sha256(response.content)
+            if binary.sha256_checksum != hash.hexdigest():
+                logger.error(
+                    "Mismatch of excepted hash of runner binary (%s) and calculated hash (%s)",
+                    binary.sha256_checksum,
+                    hash,
+                )
                 raise RunnerBinaryError("Checksum mismatch for downloaded runner binary")
         else:
             logger.warning(
@@ -266,6 +273,8 @@ class RunnerManager:
                     runner.remove()
             else:
                 logger.info("There are no idle runner to remove.")
+        else:
+            logger.info("No changes to number of runner needed.")
 
         return delta
 
@@ -275,7 +284,6 @@ class RunnerManager:
         Returns:
             Number of runner removed.
         """
-
         runners = [runner for runner in self._get_runners() if runner.exist]
         runner_names = ", ".join(runner.name for runner in runners)
         logger.info("Removing existing local runners: %s", runner_names)
@@ -290,12 +298,8 @@ class RunnerManager:
 
         Returns:
             Generated name of runner.
-
-        TODO:
-            Consider name collusion. LXD would fail to create VM on name collusion.
         """
-        # Generated a suffix for naming propose, not used as secret.
-        suffix = "".join(random.choices(string.ascii_lowercase + string.digits, k=6))  # nosec B311
+        suffix = str(uuid.uuid4())
         return f"{self.app_name}-{suffix}"
 
     def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
@@ -304,7 +308,7 @@ class RunnerManager:
             remote_runners_list = self._github.actions.list_self_hosted_runners_for_repo(
                 owner=self.path.owner, repo=self.path.repo
             )["runners"]
-        elif isinstance(self.path, GitHubOrg):
+        if isinstance(self.path, GitHubOrg):
             remote_runners_list = self._github.actions.list_self_hosted_runners_for_org(
                 org=self.path.org
             )["runners"]
@@ -328,7 +332,6 @@ class RunnerManager:
             remote_runner: Optional[SelfHostedRunner],
         ) -> Runner:
             """Create runner from information from GitHub and LXD."""
-
             running = local_runner is not None
             online = False if remote_runner is None else remote_runner["status"] == "online"
             busy = False if remote_runner is None else remote_runner["busy"]

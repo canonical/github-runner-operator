@@ -24,6 +24,7 @@ class GitHubRepo:
     repo: str
 
     def path(self) -> str:
+        """Return a string representing the path."""
         return f"{self.owner}/{self.repo}"
 
 
@@ -34,6 +35,7 @@ class GitHubOrg:
     org: str
 
     def path(self) -> str:
+        """Return a string representing the path."""
         return self.org
 
 

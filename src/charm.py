@@ -15,7 +15,6 @@ from ops.charm import (
     CharmBase,
     ConfigChangedEvent,
     InstallEvent,
-    StartEvent,
     StopEvent,
     UpgradeCharmEvent,
 )
@@ -109,13 +108,14 @@ class GithubRunnerCharm(CharmBase):
 
     def _on_install(self, event: InstallEvent) -> None:
         """Handle the installation of charm.
+
         Args:
             event: Event of installing charm.
         """
         self.unit.status = MaintenanceStatus("Installing packages")
 
         try:
-            self._install_deps()
+            GithubRunnerCharm._install_deps()
         except CalledProcessError as err:
             logger.exception(err)
             self.unit.status = MaintenanceStatus("Failed to install dependencies")
@@ -125,8 +125,9 @@ class GithubRunnerCharm(CharmBase):
         if runner_manager:
             self.unit.status = MaintenanceStatus("Installing runner binary")
             try:
-                self._stored.runner_bin_url = runner_manager.get_latest_runner_bin_url()
-                runner_manager.update_runner_bin(self._stored.runner_bin_url)
+                runner_info = runner_manager.get_latest_runner_bin_url()
+                self._stored.runner_bin_url = runner_info.download_url
+                runner_manager.update_runner_bin(runner_info)
             except Exception as e:
                 logger.exception("Failed to update runner binary")
                 self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {e}")
@@ -196,20 +197,20 @@ class GithubRunnerCharm(CharmBase):
         old_status = self.unit.status
         try:
             self.unit.status = MaintenanceStatus("Checking for runner updates")
-            runner_bin_url = runner_manager.get_latest_runner_bin_url()
+            runner_info = runner_manager.get_latest_runner_bin_url()
         except urllib.error.URLError as e:
             logger.exception("Failed to check for runner updates")
             self.unit.status = BlockedStatus(f"Failed to check for runner updates: {e}")
             return
-        if runner_bin_url != self._stored.runner_bin_url:
+        if runner_info.download_url != self._stored.runner_bin_url:
             self.unit.status = MaintenanceStatus("Updating runner binary")
             try:
-                runner_manager.update_runner_bin(runner_bin_url)
+                runner_manager.update_runner_bin(runner_info)
             except Exception as e:
                 logger.exception("Failed to update runner binary")
                 self.unit.status = BlockedStatus(f"Failed to update runner binary: {e}")
                 return
-            self._stored.runner_bin_url = runner_bin_url
+            self._stored.runner_bin_url = runner_info.download_url
             # TODO: Flush existing runners? What if they're processing a job?
         self.unit.status = old_status
 
@@ -359,10 +360,10 @@ class GithubRunnerCharm(CharmBase):
         )
         return {"delta": {"virtual-machines": delta_virtual_machines}}
 
+    @staticmethod
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
-    def _install_deps(cls) -> None:
+    def _install_deps() -> None:
         """Install dependencies."""
-
         logger.info("Installing charm dependencies.")
 
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.

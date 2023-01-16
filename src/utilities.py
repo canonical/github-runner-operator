@@ -56,7 +56,7 @@ def retry(
 
         @functools.wraps(fn)
         def fn_with_retry(*args, **kwargs) -> TReturn:
-            """Function with retry"""
+            """Wrap the function with retries."""
             remain_tries, current_delay = tries, delay
 
             for _ in range(tries):

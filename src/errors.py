@@ -3,7 +3,7 @@
 
 """Errors used by the charm."""
 
-# TODO Review the errors and handling.
+
 class RunnerError(Exception):
     """Generic runner error as base exception."""
 
