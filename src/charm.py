@@ -233,7 +233,7 @@ class GithubRunnerCharm(CharmBase):
             self._reconcile_runners(runner_manager)
         except Exception as e:
             logger.exception("Failed to reconcile runners")
-            self.unit.status = BlockedStatus(f"Failed to reconcile runners: {e}")
+            self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {e}")
         else:
             self.unit.status = ActiveStatus()
 

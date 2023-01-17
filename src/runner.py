@@ -170,7 +170,6 @@ class Runner:
 
             raise RunnerCreateError(f"Unable to create runner {self.name}") from err
 
-    @retry(tries=5, delay=1, logger=logger)
     def remove(self) -> None:
         """Remove this runner instance from LXD and GitHub.
 
@@ -260,7 +259,6 @@ class Runner:
             logger.info("Creating runner LXD profile")
             profile_config = {
                 "security.nesting": "true",
-                "security.privileged": "true",
             }
             self._lxd.profiles.create("runner", profile_config, {})
 
