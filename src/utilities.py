@@ -5,6 +5,7 @@
 
 import functools
 import logging
+import os
 import subprocess  # nosec B404
 import time
 from typing import Callable, Optional, Sequence, Type, TypeVar
@@ -118,3 +119,17 @@ def execute_command(cmd: Sequence[str], check: bool = True) -> str:
             raise
 
     return str(result.stdout)
+
+
+def get_env_var(env_var: str) -> Optional[str]:
+    """Get the environment variable value.
+
+    Looks for all upper-case and all low-case of the `env_var`.
+
+    Args:
+        env_var: Name of environment variable.
+
+    Returns:
+        Value of the environment variable. None if not found.
+    """
+    return os.environ.get(env_var.upper(), os.environ.get(env_var.lower(), None))

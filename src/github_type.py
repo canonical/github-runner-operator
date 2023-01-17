@@ -6,9 +6,17 @@
 
 from __future__ import annotations
 
+from enum import Enum
 from typing import TypedDict
 
 from typing_extensions import NotRequired
+
+
+class GitHubRunnerStatus(Enum):
+    """Status of runner on GitHub."""
+
+    online = "online"
+    offline = "offline"
 
 
 class RunnerApplication(TypedDict, total=False):
@@ -39,7 +47,7 @@ class SelfHostedRunner(TypedDict):
     id: int
     name: str
     os: str
-    status: str
+    status: GitHubRunnerStatus
     busy: bool
     labels: list[SelfHostedRunnerLabel]
 

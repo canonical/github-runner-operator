@@ -7,8 +7,8 @@ from __future__ import annotations
 
 import hashlib
 import logging
-import os
 import tarfile
+import tempfile
 import urllib.request
 import uuid
 from dataclasses import dataclass
@@ -24,11 +24,17 @@ import requests.adapters
 import urllib3
 from ghapi.all import GhApi
 
-from errors import RunnerBinaryError
-from github_type import RegisterToken, RunnerApplication, RunnerApplicationList, SelfHostedRunner
+from errors import RunnerBinaryError, RunnerCreateError
+from github_type import (
+    GitHubRunnerStatus,
+    RegisterToken,
+    RunnerApplication,
+    RunnerApplicationList,
+    SelfHostedRunner,
+)
 from runner import Runner, RunnerConfig
 from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
-from utilities import retry
+from utilities import get_env_var, retry
 
 logger = logging.getLogger(__name__)
 
@@ -44,15 +50,11 @@ class RunnerInfo:
     """
 
     name: str
-    online: bool
-    offline: bool
+    status: GitHubRunnerStatus
 
 
 class RunnerManager:
     """Manage a group of runners according to configuration."""
-
-    # TODO: Verify if this violates bandit B108.
-    runner_bin_path = Path("/var/cache/github-runner-operator/runner.tgz")
 
     def __init__(
         self,
@@ -73,9 +75,9 @@ class RunnerManager:
             reconcile_interval: Number of minutes between each reconciliation of runners.
             image: Image to use for the runner LXD instances.
         """
-        http_proxy = os.environ.get("JUJU_CHARM_HTTP_PROXY", None)
-        https_proxy = os.environ.get("JUJU_CHARM_HTTPS_PROXY", None)
-        no_proxy = os.environ.get("JUJU_CHARM_NO_PROXY", None)
+        http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY")
+        https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY")
+        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY")
 
         self.proxies: ProxySetting = {}
         if http_proxy:
@@ -114,6 +116,9 @@ class RunnerManager:
         self.reconcile_interval = reconcile_interval
         self.image = image
 
+        self.runner_bin_path: Optional[GitHubPath] = None
+
+    @retry(tries=5, delay=30, logger=logger)
     def get_latest_runner_bin_url(
         self, os_name: str = "linux", arch_name: str = "x64"
     ) -> RunnerApplication:
@@ -147,9 +152,14 @@ class RunnerManager:
                 f"Unable query GitHub runner binary information for {os_name} {arch_name}"
             ) from err
 
-    @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
+    @retry(tries=5, delay=30, logger=logger)
     def update_runner_bin(self, binary: RunnerApplication) -> None:
         """Download a runner file, replacing the current copy.
+
+        Remove the existing runner binary to prevent it from being used. This
+        is done to prevent security issues arising from outdated runner binary
+        containing security flaws. The newest version of runner binary should
+        always be used.
 
         Args:
             binary: Information on the runner binary to download.
@@ -160,13 +170,13 @@ class RunnerManager:
         """
         logger.info("Downloading runner binary from: %s", binary.download_url)
 
-        self.runner_bin_path.parent.mkdir(parents=True, exist_ok=True)
+        # Delete old version of runner binary.
+        if self.runner_bin_path is not None:
+            self.runner_bin_path.unlink(missing_ok=True)
+            self.runner_bin_path = None
 
-        # Remove any existing runner bin file
-        if self.runner_bin_path.exists():
-            self.runner_bin_path.unlink()
         # Download the new file
-        response = self.session.get(binary.download_url)
+        response = self.session.get(binary.download_url, stream=True)
 
         logger.info(
             "Download of runner binary from %s return status code: %i",
@@ -175,7 +185,19 @@ class RunnerManager:
         )
 
         if binary.sha256_checksum:
-            hash = hashlib.sha256(response.content)
+            hash = hashlib.sha256()
+
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            for chunk in response.iter_content(chunk_size=4096, decode_unicode=False):
+                tmp_file.write(chunk)
+
+                if binary.sha256_checksum:
+                    hash.update(chunk)
+
+        logger.info("Finished download of runner binary.")
+
+        # Verify the checksum if checksum is present.
+        if binary.sha256_checksum:
             if binary.sha256_checksum != hash.hexdigest():
                 logger.error(
                     "Mismatch of excepted hash of runner binary (%s) and calculated hash (%s)",
@@ -184,22 +206,17 @@ class RunnerManager:
                 )
                 raise RunnerBinaryError("Checksum mismatch for downloaded runner binary")
         else:
-            logger.warning(
-                "Checksum for runner binary is not found, verification of download is not done."
-            )
-
-        with self.runner_bin_path.open(mode="wb") as runner_bin_file:
-            runner_bin_file.write(response.content)
+            logger.warning("Checksum for runner binary is not found, download not verified.")
 
         # Verify the file integrity.
-        with tarfile.open(self.runner_bin_path, "r:gz") as f:
-            try:
-                logger.debug(
-                    "Downloaded GitHub runner binary contains files: %s", ", ".join(f.getnames())
-                )
-            except tarfile.TarError:
-                logger.error("Failed to decompress downloaded GitHub runner binary.")
-                raise
+        if not tarfile.is_tarfile(tmp_file.name):
+            logger.error("Failed to decompress downloaded GitHub runner binary.")
+            raise RunnerBinaryError("Downloaded runner binary cannot be decompressed.")
+
+        # Make the binary accessible after verification has passed.
+        self.runner_bin_path = Path(tmp_file.name)
+
+        logger.info("Validated newly downloaded runner binary and enabled it.")
 
     def get_github_info(self) -> list[RunnerInfo]:
         """Get information on the runners from GitHub.
@@ -208,10 +225,7 @@ class RunnerManager:
             List of information from GitHub on runners.
         """
         remote_runners = self._get_runner_github_info()
-        return [
-            RunnerInfo(r.name, r.status == "online", r.status == "offline")
-            for r in remote_runners.values()
-        ]
+        return [RunnerInfo(r.name, r.status) for r in remote_runners.values()]
 
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
@@ -238,6 +252,9 @@ class RunnerManager:
         online_runners = [r for r in runners if r.exist and r.online]
         delta = quantity - len(online_runners)
         if delta > 0:
+            if self.runner_bin_path is None:
+                raise RunnerCreateError("Unable to create runner due to missing runner binary.")
+
             logger.info("Getting registration token for GitHub runners.")
 
             token: RegisterToken = {"token": None}

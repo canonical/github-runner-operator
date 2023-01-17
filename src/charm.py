@@ -24,6 +24,7 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 from errors import RunnerError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
+from github_type import GitHubRunnerStatus
 from runner_manager import RunnerManager
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
 from utilities import execute_command, retry
@@ -226,7 +227,7 @@ class GithubRunnerCharm(CharmBase):
             event: Event of reconciling the runner state.
         """
         runner_manager = self._get_runner_manager()
-        if not runner_manager or not runner_manager.runner_bin_path.exists():
+        if not runner_manager or runner_manager.runner_bin_path is None:
             return
         self.unit.status = MaintenanceStatus("Reconciling runners")
         try:
@@ -247,7 +248,7 @@ class GithubRunnerCharm(CharmBase):
         if not runner_manager:
             event.fail("Missing token or org/repo path config")
             return
-        if not runner_manager.runner_bin_path.exists():
+        if runner_manager.runner_bin_path is None:
             event.fail("Missing runner binary")
             return
 
@@ -264,10 +265,10 @@ class GithubRunnerCharm(CharmBase):
             return
 
         for runner in runner_info:
-            if runner.online:
+            if runner.status == GitHubRunnerStatus.online:
                 online += 1
                 runner_names.append(runner.name)
-            elif runner.offline:
+            elif runner.status == GitHubRunnerStatus.offline:
                 offline += 1
             else:
                 # might happen if runner dies and GH doesn't notice immediately
