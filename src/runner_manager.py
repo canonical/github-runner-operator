@@ -293,13 +293,21 @@ class RunnerManager:
 
         return delta
 
-    def clean(self) -> int:
+    def flush(self, flush_busy: bool = True) -> int:
         """Remove existing runners.
+
+        Args:
+            flush_busy: Whether to flush busy runners as well.
 
         Returns:
             Number of runner removed.
         """
-        runners = [runner for runner in self._get_runners() if runner.exist]
+        if flush_busy:
+            runners = [runner for runner in self._get_runners() if runner.exist]
+        else:
+            runners = [
+                runner for runner in self._get_runners() if runner.exist and not runner.busy
+            ]
         runner_names = ", ".join(runner.name for runner in runners)
         logger.info("Removing existing local runners: %s", runner_names)
 

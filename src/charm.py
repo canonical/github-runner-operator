@@ -182,7 +182,7 @@ class GithubRunnerCharm(CharmBase):
             )  # Casting for mypy checks.
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
-                prev_runner_manager.clear()
+                prev_runner_manager.flush()
             self._stored.path = self.config["path"]
 
         runner_manager = self._get_runner_manager()
@@ -217,7 +217,11 @@ class GithubRunnerCharm(CharmBase):
                 self.unit.status = BlockedStatus(f"Failed to update runner binary: {e}")
                 return
             self._stored.runner_bin_url = runner_info.download_url
-            # TODO: Flush existing runners? What if they're processing a job?
+
+            # Flush the non-busy runner and reconcile.
+            runner_manager.flush(flush_busy=False)
+            self._reconcile_runners(runner_manager)
+
         self.unit.status = old_status
 
     def _on_reconcile_runners(self, event: ReconcileRunnersEvent) -> None:
@@ -314,7 +318,7 @@ class GithubRunnerCharm(CharmBase):
             return
 
         try:
-            runner_manager.clear()
+            runner_manager.flush()
             delta = self._reconcile_runners(runner_manager)
         except Exception as e:
             logger.exception("Failed to flush runners")
@@ -339,7 +343,7 @@ class GithubRunnerCharm(CharmBase):
         runner_manager = self._get_runner_manager()
         if runner_manager:
             try:
-                runner_manager.clear()
+                runner_manager.flush()
             except Exception:
                 # Log but ignore error since we're stopping anyway.
                 logger.exception("Failed to clear runners")
