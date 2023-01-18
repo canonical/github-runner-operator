@@ -242,11 +242,11 @@ class RunnerManager:
         # Clean up offline runners
         offline_runners = [r for r in runners if not r.online]
         if offline_runners:
-            runner_names = ", ".join(r.name for r in offline_runners)
-            logger.info("Cleaning up offline runners: %s", runner_names)
+            logger.info("Cleaning up offline runners.")
 
             for runner in offline_runners:
                 runner.remove()
+                logger.info("Removed runner: %s", runner.name)
 
         # Add/Remove runners to match the target quantity
         online_runners = [r for r in runners if r.exist and r.online]
@@ -265,7 +265,7 @@ class RunnerManager:
             elif isinstance(self.path, GitHubOrg):
                 token = self._github.actions.create_registration_token_for_org(org=self.path.org)
 
-            logger.info("Adding %i additional runner(s)", delta)
+            logger.info("Adding %i additional runner(s).", delta)
             for _ in range(delta):
                 config = RunnerConfig(
                     self.app_name, self.path, self.proxies, self._generate_runner_name()
@@ -277,15 +277,21 @@ class RunnerManager:
                     self.runner_bin_path,
                     token.token,
                 )
+                logger.info("Created runner: %s", runner.name)
         elif delta < 0:
+            # Idle runners are online runners that has not taken a job.
             idle_runners = [runner for runner in online_runners if not runner.busy]
             offset = min(-delta, len(idle_runners))
             if offset != 0:
-                logger.info("Removing %i runner(s)", offset)
+                logger.info("Removing %i runner(s).", offset)
                 remove_runners = idle_runners[:offset]
-                runner_names = ", ".join(r.name for r in remove_runners)
+
+                logger.info("Cleaning up idle runners.")
+
                 for runner in remove_runners:
                     runner.remove()
+                    logger.info("Removed runner: %s", runner.name)
+
             else:
                 logger.info("There are no idle runner to remove.")
         else:
