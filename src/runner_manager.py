@@ -1,7 +1,12 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Runner Manager manages the runners on LXD and GitHub."""
+"""Runner Manager manages the runners on LXD and GitHub.
+
+TODO:
+    Resolve race condition between removing runner and GitHub assigning work to
+    runner. This affects `RunnerManager.flush` and `RunnerManager.reconcile`.
+"""
 
 from __future__ import annotations
 
@@ -163,10 +168,6 @@ class RunnerManager:
 
         Args:
             binary: Information on the runner binary to download.
-
-        TODO:
-            Convert to download of runner binary to streaming to file, rather than save in memory
-            then copy to file. Ignore if the file size is too small.
         """
         logger.info("Downloading runner binary from: %s", binary.download_url)
 
@@ -200,13 +201,14 @@ class RunnerManager:
         if binary.sha256_checksum:
             if binary.sha256_checksum != hash.hexdigest():
                 logger.error(
-                    "Mismatch of excepted hash of runner binary (%s) and calculated hash (%s)",
+                    "The expected hash of runner binary (%s) doesn't match the calculated hash (%s)",
                     binary.sha256_checksum,
                     hash,
                 )
                 raise RunnerBinaryError("Checksum mismatch for downloaded runner binary")
         else:
-            logger.warning("Checksum for runner binary is not found, download not verified.")
+            logger.error("Checksum for runner binary is not found, unable to verify download.")
+            raise RunnerBinaryError("Checksum for runner binary is not found in GitHub response.")
 
         # Verify the file integrity.
         if not tarfile.is_tarfile(tmp_file.name):
@@ -314,11 +316,12 @@ class RunnerManager:
             runners = [
                 runner for runner in self._get_runners() if runner.exist and not runner.busy
             ]
-        runner_names = ", ".join(runner.name for runner in runners)
-        logger.info("Removing existing local runners: %s", runner_names)
+
+        logger.info("Removing existing %i local runners", len(runners))
 
         for runner in runners:
             runner.remove()
+            logger.info("Removed runner: %s", runner.name)
 
         return len(runners)
 

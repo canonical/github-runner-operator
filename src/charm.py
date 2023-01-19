@@ -53,9 +53,9 @@ class GithubRunnerCharm(CharmBase):
 
     _stored = StoredState()
 
-    def __init__(self, *args) -> None:
+    def __init__(self, *args, **kargs) -> None:
         """Construct the charm."""
-        super().__init__(*args)
+        super().__init__(*args, **kargs)
 
         self._event_timer = EventTimer(self.unit.name)
 

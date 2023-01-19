@@ -214,10 +214,10 @@ class Runner:
     def _create_instance(
         self, image: str, resources: VirtualMachineResources, ephemeral: bool = True
     ) -> pylxd.models.Instance:
-        """Create a instance of runner.
+        """Create an instance of runner.
 
         Args:
-            image: Image to launch the instance hosting the runner.
+            image: Image used to launch the instance hosting the runner.
             resources: Configuration of the virtual machine resources.
             ephemeral: Whether the instance is ephemeral.
 

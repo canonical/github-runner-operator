@@ -103,7 +103,7 @@ def execute_command(cmd: Sequence[str], check: bool = True) -> str:
         Update `event_timer.py` to use this function.
     """
     logger.info("Executing command %s", cmd)
-    result = subprocess.run(cmd, capture_output=True)  # nosec B603
+    result = subprocess.run(cmd, capture_output=True, shell=False)  # nosec B603
     logger.debug("Command %s returns: %s", cmd, result.stdout)
 
     if check:
