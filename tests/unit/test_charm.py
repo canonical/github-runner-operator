@@ -17,7 +17,7 @@ from ops.testing import Harness
 from charm import GithubRunnerCharm
 from errors import RunnerError
 from github_type import GitHubRunnerStatus
-from runner_manager import RunnerInfo
+from runner_manager import RunnerInfo, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
 
 
@@ -57,8 +57,11 @@ class TestCharm(unittest.TestCase):
                 ["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"],
                 capture_output=True,
                 shell=False,
+                check=False,
             ),
-            call(["/snap/bin/lxd", "init", "--auto"], capture_output=True, shell=False),
+            call(
+                ["/snap/bin/lxd", "init", "--auto"], capture_output=True, shell=False, check=False
+            ),
         ]
         run.assert_has_calls(calls, any_order=True)
 
@@ -71,7 +74,9 @@ class TestCharm(unittest.TestCase):
         harness.begin()
         harness.charm.on.config_changed.emit()
         rm.assert_called_with(
-            GitHubOrg(org="mockorg"), "mocktoken", "github-runner", 5, proxies={}
+            "github-runner",
+            RunnerManagerConfig(path=GitHubOrg(org="mockorg"), token="mocktoken"),
+            proxies={},
         )
 
     @patch("charm.RunnerManager")
@@ -85,7 +90,9 @@ class TestCharm(unittest.TestCase):
         harness.begin()
         harness.charm.on.config_changed.emit()
         rm.assert_called_with(
-            GitHubRepo(owner="mockorg", repo="repo"), "mocktoken", "github-runner", 5, proxies={}
+            "github-runner",
+            RunnerManagerConfig(path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken"),
+            proxies={},
         )
 
     @patch("charm.RunnerManager")
@@ -101,7 +108,9 @@ class TestCharm(unittest.TestCase):
         harness.update_config({"containers": 10, "virtual-machines": 0})
         harness.charm.on.reconcile_runners.emit()
         rm.assert_called_with(
-            GitHubRepo(owner="mockorg", repo="repo"), "mocktoken", "github-runner", 5, proxies={}
+            "github-runner",
+            RunnerManagerConfig(path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken"),
+            proxies={},
         )
         mock_rm.reconcile.assert_called_with(0, VirtualMachineResources(2, "7GiB", "10GiB")),
         mock_rm.reset_mock()
@@ -110,7 +119,9 @@ class TestCharm(unittest.TestCase):
         harness.update_config({"containers": 0, "virtual-machines": 10, "vm-cpu": 4})
         harness.charm.on.reconcile_runners.emit()
         rm.assert_called_with(
-            GitHubRepo(owner="mockorg", repo="repo"), "mocktoken", "github-runner", 5, proxies={}
+            "github-runner",
+            RunnerManagerConfig(path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken"),
+            proxies={},
         )
         mock_rm.reconcile.assert_called_with(
             10, VirtualMachineResources(cpu=4, memory="7GiB", disk="10GiB")
@@ -216,10 +227,10 @@ class TestCharm(unittest.TestCase):
     def test_check_runners_action(self, run, wt, rm):
         def mock_get_github_info():
             return [
-                RunnerInfo("test runner 0", GitHubRunnerStatus.online),
-                RunnerInfo("test runner 1", GitHubRunnerStatus.online),
-                RunnerInfo("test runner 2", GitHubRunnerStatus.offline),
-                RunnerInfo("test runner 3", GitHubRunnerStatus.offline),
+                RunnerInfo("test runner 0", GitHubRunnerStatus.ONLINE),
+                RunnerInfo("test runner 1", GitHubRunnerStatus.ONLINE),
+                RunnerInfo("test runner 2", GitHubRunnerStatus.OFFLINE),
+                RunnerInfo("test runner 3", GitHubRunnerStatus.OFFLINE),
                 RunnerInfo("test runner 4", "unknown"),
             ]
 

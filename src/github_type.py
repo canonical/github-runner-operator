@@ -15,8 +15,8 @@ from typing_extensions import NotRequired
 class GitHubRunnerStatus(Enum):
     """Status of runner on GitHub."""
 
-    online = "online"
-    offline = "offline"
+    ONLINE = "online"
+    OFFLINE = "offline"
 
 
 class RunnerApplication(TypedDict, total=False):

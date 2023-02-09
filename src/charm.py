@@ -25,7 +25,7 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from errors import RunnerError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
-from runner_manager import RunnerManager
+from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
 from utilities import execute_command, get_env_var, retry
 
@@ -123,11 +123,9 @@ class GithubRunnerCharm(CharmBase):
         else:
             path = GitHubOrg(org=path)
 
-        return RunnerManager(
-            path, token, self.app.name, self.config["reconcile-interval"], proxies=self.proxies
-        )
+        return RunnerManager(self.app.name, RunnerManagerConfig(path, token), proxies=self.proxies)
 
-    def _on_install(self, event: InstallEvent) -> None:
+    def _on_install(self, _event: InstallEvent) -> None:
         """Handle the installation of charm.
 
         Args:
@@ -141,7 +139,8 @@ class GithubRunnerCharm(CharmBase):
             logger.exception(err)
             self.unit.status = MaintenanceStatus("Failed to install dependencies")
             return
-        except Exception as err:
+        # Safe guard against unexpected error.
+        except Exception as err:  # pylint: disable=broad-exception-caught
             logger.exception(err)
             self.unit.status = BlockedStatus(str(err))
             return
@@ -153,32 +152,34 @@ class GithubRunnerCharm(CharmBase):
                 runner_info = runner_manager.get_latest_runner_bin_url()
                 self._stored.runner_bin_url = runner_info.download_url
                 runner_manager.update_runner_bin(runner_info)
-            except Exception as e:
+            # Safe guard against unexpected error.
+            except Exception as err:  # pylint: disable=broad-exception-caught
                 logger.exception("Failed to update runner binary")
-                self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {e}")
+                self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
                 return
             self.unit.status = MaintenanceStatus("Starting runners")
             try:
                 self._reconcile_runners(runner_manager)
                 self.unit.status = ActiveStatus()
-            except RunnerError as e:
+            except RunnerError as err:
                 logger.exception("Failed to start runners")
-                self.unit.status = MaintenanceStatus(f"Failed to start runners: {e}")
-            except Exception as err:
+                self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")
+            # Safe guard against unexpected error.
+            except Exception as err:  # pylint: disable=broad-exception-caught
                 logger.exception(err)
                 self.unit.status = BlockedStatus(str(err))
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
-    def _on_upgrade_charm(self, event: UpgradeCharmEvent) -> None:
+    def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
         """Handle the update of charm.
 
         Args:
             event: Event of charm upgrade.
         """
-        RunnerManager.install_deps()
+        GithubRunnerCharm._install_deps()
 
-    def _on_config_changed(self, event: ConfigChangedEvent) -> None:
+    def _on_config_changed(self, _event: ConfigChangedEvent) -> None:
         """Handle the configuration change.
 
         Args:
@@ -196,7 +197,8 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = BlockedStatus(
                 f"Failed to start timer for regular reconciliation and binary update checks: {ex}"
             )
-        except Exception as err:
+        # Safe guard against unexpected error.
+        except Exception as err:  # pylint: disable=broad-exception-caught
             logger.exception(err)
             self.unit.status = BlockedStatus(str(err))
 
@@ -215,7 +217,7 @@ class GithubRunnerCharm(CharmBase):
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
-    def _on_update_runner_bin(self, event: UpdateRunnerBinEvent) -> None:
+    def _on_update_runner_bin(self, _event: UpdateRunnerBinEvent) -> None:
         """Handle checking update of runner binary event.
 
         Args:
@@ -228,11 +230,12 @@ class GithubRunnerCharm(CharmBase):
         try:
             self.unit.status = MaintenanceStatus("Checking for runner updates")
             runner_info = runner_manager.get_latest_runner_bin_url()
-        except urllib.error.URLError as e:
+        except urllib.error.URLError as err:
             logger.exception("Failed to check for runner updates")
-            self.unit.status = BlockedStatus(f"Failed to check for runner updates: {e}")
+            self.unit.status = BlockedStatus(f"Failed to check for runner updates: {err}")
             return
-        except Exception as err:
+        # Safe guard against unexpected error.
+        except Exception as err:  # pylint: disable=broad-exception-caught
             logger.exception(err)
             self.unit.status = BlockedStatus(str(err))
             return
@@ -241,9 +244,10 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus("Updating runner binary")
             try:
                 runner_manager.update_runner_bin(runner_info)
-            except Exception as e:
+            # Safe guard against unexpected error.
+            except Exception as err:  # pylint: disable=broad-exception-caught
                 logger.exception("Failed to update runner binary")
-                self.unit.status = BlockedStatus(f"Failed to update runner binary: {e}")
+                self.unit.status = BlockedStatus(f"Failed to update runner binary: {err}")
                 return
             self._stored.runner_bin_url = runner_info.download_url
 
@@ -253,7 +257,7 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = old_status
 
-    def _on_reconcile_runners(self, event: ReconcileRunnersEvent) -> None:
+    def _on_reconcile_runners(self, _event: ReconcileRunnersEvent) -> None:
         """Handle the reconciliation of runners.
 
         Args:
@@ -266,9 +270,10 @@ class GithubRunnerCharm(CharmBase):
         try:
             self._reconcile_runners(runner_manager)
             self.unit.status = ActiveStatus()
-        except Exception as e:
+        # Safe guard against unexpected error.
+        except Exception as err:  # pylint: disable=broad-exception-caught
             logger.exception("Failed to reconcile runners")
-            self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {e}")
+            self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
 
     def _on_check_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of checking of runner state.
@@ -291,16 +296,17 @@ class GithubRunnerCharm(CharmBase):
 
         try:
             runner_info = runner_manager.get_github_info()
-        except Exception as e:
+        # Safe guard against unexpected error.
+        except Exception as err:  # pylint: disable=broad-exception-caught
             logger.exception("Failed to get runner info")
-            event.fail(f"Failed to get runner info: {e}")
+            event.fail(f"Failed to get runner info: {err}")
             return
 
         for runner in runner_info:
-            if runner.status == GitHubRunnerStatus.online:
+            if runner.status == GitHubRunnerStatus.ONLINE:
                 online += 1
                 runner_names.append(runner.name)
-            elif runner.status == GitHubRunnerStatus.offline:
+            elif runner.status == GitHubRunnerStatus.OFFLINE:
                 offline += 1
             else:
                 # might happen if runner dies and GH doesn't notice immediately
@@ -327,9 +333,10 @@ class GithubRunnerCharm(CharmBase):
 
         try:
             delta = self._reconcile_runners(runner_manager)
-        except Exception as e:
+        # Safe guard against unexpected error.
+        except Exception as err:  # pylint: disable=broad-exception-caught
             logger.exception("Failed to reconcile runners")
-            event.fail(f"Failed to reconcile runners: {e}")
+            event.fail(f"Failed to reconcile runners: {err}")
             return
         self._on_check_runners_action(event)
         event.set_results(delta)
@@ -348,9 +355,10 @@ class GithubRunnerCharm(CharmBase):
         try:
             runner_manager.flush()
             delta = self._reconcile_runners(runner_manager)
-        except Exception as e:
+        # Safe guard against unexpected error.
+        except Exception as err:  # pylint: disable=broad-exception-caught
             logger.exception("Failed to flush runners")
-            event.fail(f"Failed to flush runners: {e}")
+            event.fail(f"Failed to flush runners: {err}")
             return
         self._on_check_runners_action(event)
         event.set_results(delta)
@@ -372,7 +380,8 @@ class GithubRunnerCharm(CharmBase):
         if runner_manager:
             try:
                 runner_manager.flush()
-            except Exception:
+            # Safe guard against unexpected error.
+            except Exception:  # pylint: disable=broad-exception-caught
                 # Log but ignore error since we're stopping anyway.
                 logger.exception("Failed to clear runners")
 

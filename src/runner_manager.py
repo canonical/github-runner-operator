@@ -40,11 +40,26 @@ from github_type import (
     RunnerApplicationList,
     SelfHostedRunner,
 )
-from runner import Runner, RunnerConfig
+from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
 from utilities import retry
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class RunnerManagerConfig:
+    """Configuration of runner manager.
+
+    Attrs:
+        path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
+            name.
+        token: GitHub personal access token to register runner to the repository or
+            organization.
+    """
+
+    path: GitHubPath
+    token: str
 
 
 @dataclass
@@ -66,36 +81,26 @@ class RunnerManager:
 
     def __init__(
         self,
-        path: GitHubPath,
-        token: str,
         app_name: str,
-        reconcile_interval: int,
+        runner_manager_config: RunnerManagerConfig,
         image: str = "focal",
-        proxies: ProxySetting = {},
+        proxies: ProxySetting = ProxySetting(),
     ) -> None:
         """Construct RunnerManager object for creating and managing runners.
 
         Args:
-            path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
-                name.
-            token: GitHub personal access token to register runner to the repository or
-                organization.
             app_name: An name for the set of runners.
-            reconcile_interval: Number of minutes between each reconciliation of runners.
             image: Image to use for the runner LXD instances.
             proxies: HTTP proxy settings.
         """
-        self.path = path
-
         self.app_name = app_name
-        self.reconcile_interval = reconcile_interval
+        self.config = runner_manager_config
         self.image = image
         self.proxies = proxies
 
         self.runner_bin_path: Optional[Path] = None
 
         self.session = requests.Session()
-        # TODO: Review the retry strategy
         adapter = requests.adapters.HTTPAdapter(
             max_retries=urllib3.Retry(
                 total=10, backoff_factor=0.3, status_forcelist=[500, 502, 503, 504]
@@ -111,13 +116,13 @@ class RunnerManager:
             opener = urllib.request.build_opener(proxy)
             fastcore.net._opener = opener
 
-        self._github = GhApi(token=token)
-        self._jinja = jinja2.Environment(
-            loader=jinja2.FileSystemLoader("templates"), autoescape=True
+        self._clients = RunnerClients(
+            GhApi(token=self.config.token),
+            jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True),
+            pylxd.Client(),
         )
-        self._lxd = pylxd.Client()
 
-    @retry(tries=5, delay=30, logger=logger)
+    @retry(tries=5, delay=30, local_logger=logger)
     def get_latest_runner_bin_url(
         self, os_name: str = "linux", arch_name: str = "x64"
     ) -> RunnerApplication:
@@ -133,12 +138,14 @@ class RunnerManager:
             Information on the runner application.
         """
         runner_bins: RunnerApplicationList = []
-        if isinstance(self.path, GitHubRepo):
-            runner_bins = self._github.actions.list_runner_applications_for_repo(
-                owner=self.path.owner, repo=self.path.repo
+        if isinstance(self.config.path, GitHubRepo):
+            runner_bins = self._clients.github.actions.list_runner_applications_for_repo(
+                owner=self.config.path.owner, repo=self.config.path.repo
             )
-        if isinstance(self.path, GitHubOrg):
-            runner_bins = self._github.actions.list_runner_application_for_org(org=self.path.org)
+        if isinstance(self.config.path, GitHubOrg):
+            runner_bins = self._clients.github.actions.list_runner_application_for_org(
+                org=self.config.path.org
+            )
 
         logger.debug("Response of runner binary list: %s", runner_bins)
 
@@ -153,7 +160,7 @@ class RunnerManager:
                 f"Unable query GitHub runner binary information for {os_name} {arch_name}"
             ) from err
 
-    @retry(tries=5, delay=30, logger=logger)
+    @retry(tries=5, delay=30, local_logger=logger)
     def update_runner_bin(self, binary: RunnerApplication) -> None:
         """Download a runner file, replacing the current copy.
 
@@ -185,22 +192,22 @@ class RunnerManager:
             logger.error("Checksum for runner binary is not found, unable to verify download.")
             raise RunnerBinaryError("Checksum for runner binary is not found in GitHub response.")
 
-        hash = hashlib.sha256()
+        sha256 = hashlib.sha256()
 
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             for chunk in response.iter_content(decode_unicode=False):
                 tmp_file.write(chunk)
 
-                hash.update(chunk)
+                sha256.update(chunk)
 
         logger.info("Finished download of runner binary.")
 
         # Verify the checksum if checksum is present.
-        if binary["sha256_checksum"] != hash.hexdigest():
+        if binary["sha256_checksum"] != sha256.hexdigest():
             logger.error(
                 "Expected hash of runner binary (%s) doesn't match the calculated hash (%s)",
                 binary["sha256_checksum"],
-                hash,
+                sha256,
             )
             raise RunnerBinaryError("Checksum mismatch for downloaded runner binary")
 
@@ -236,16 +243,16 @@ class RunnerManager:
         runners = self._get_runners()
 
         # Clean up offline runners
-        offline_runners = [r for r in runners if not r.online]
+        offline_runners = [r for r in runners if not r.status.online]
         if offline_runners:
             logger.info("Cleaning up offline runners.")
 
             for runner in offline_runners:
                 runner.remove()
-                logger.info("Removed runner: %s", runner.name)
+                logger.info("Removed runner: %s", runner.config.name)
 
         # Add/Remove runners to match the target quantity
-        online_runners = [r for r in runners if r.exist and r.online]
+        online_runners = [r for r in runners if r.status.exist and r.status.online]
         delta = quantity - len(online_runners)
         if delta > 0:
             if self.runner_bin_path is None:
@@ -254,29 +261,31 @@ class RunnerManager:
             logger.info("Getting registration token for GitHub runners.")
 
             token: RegisterToken = {"token": None}
-            if isinstance(self.path, GitHubRepo):
-                token = self._github.actions.create_registration_token_for_repo(
-                    owner=self.path.owner, repo=self.path.repo
+            if isinstance(self.config.path, GitHubRepo):
+                token = self._clients.github.actions.create_registration_token_for_repo(
+                    owner=self.config.path.owner, repo=self.config.path.repo
                 )
-            elif isinstance(self.path, GitHubOrg):
-                token = self._github.actions.create_registration_token_for_org(org=self.path.org)
+            elif isinstance(self.config.path, GitHubOrg):
+                token = self._clients.github.actions.create_registration_token_for_org(
+                    org=self.config.path.org
+                )
 
             logger.info("Adding %i additional runner(s).", delta)
             for _ in range(delta):
                 config = RunnerConfig(
-                    self.app_name, self.path, self.proxies, self._generate_runner_name()
+                    self.app_name, self.config.path, self.proxies, self._generate_runner_name()
                 )
-                runner = Runner(self._github, self._jinja, self._lxd, config)
+                runner = Runner(self._clients, config, RunnerStatus())
                 runner.create(
                     self.image,
                     resources,
                     self.runner_bin_path,
                     token["token"],
                 )
-                logger.info("Created runner: %s", runner.name)
+                logger.info("Created runner: %s", runner.config.name)
         elif delta < 0:
             # Idle runners are online runners that has not taken a job.
-            idle_runners = [runner for runner in online_runners if not runner.busy]
+            idle_runners = [runner for runner in online_runners if not runner.status.busy]
             offset = min(-delta, len(idle_runners))
             if offset != 0:
                 logger.info("Removing %i runner(s).", offset)
@@ -286,7 +295,7 @@ class RunnerManager:
 
                 for runner in remove_runners:
                     runner.remove()
-                    logger.info("Removed runner: %s", runner.name)
+                    logger.info("Removed runner: %s", runner.config.name)
 
             else:
                 logger.info("There are no idle runner to remove.")
@@ -305,17 +314,19 @@ class RunnerManager:
             Number of runner removed.
         """
         if flush_busy:
-            runners = [runner for runner in self._get_runners() if runner.exist]
+            runners = [runner for runner in self._get_runners() if runner.status.exist]
         else:
             runners = [
-                runner for runner in self._get_runners() if runner.exist and not runner.busy
+                runner
+                for runner in self._get_runners()
+                if runner.status.exist and not runner.status.busy
             ]
 
         logger.info("Removing existing %i local runners", len(runners))
 
         for runner in runners:
             runner.remove()
-            logger.info("Removed runner: %s", runner.name)
+            logger.info("Removed runner: %s", runner.config.name)
 
         return len(runners)
 
@@ -330,13 +341,13 @@ class RunnerManager:
 
     def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
         remote_runners_list: list[SelfHostedRunner] = []
-        if isinstance(self.path, GitHubRepo):
-            remote_runners_list = self._github.actions.list_self_hosted_runners_for_repo(
-                owner=self.path.owner, repo=self.path.repo
+        if isinstance(self.config.path, GitHubRepo):
+            remote_runners_list = self._clients.github.actions.list_self_hosted_runners_for_repo(
+                owner=self.config.path.owner, repo=self.config.path.repo
             )["runners"]
-        if isinstance(self.path, GitHubOrg):
-            remote_runners_list = self._github.actions.list_self_hosted_runners_for_org(
-                org=self.path.org
+        if isinstance(self.config.path, GitHubOrg):
+            remote_runners_list = self._clients.github.actions.list_self_hosted_runners_for_org(
+                org=self.config.path.org
             )["runners"]
 
         return {
@@ -362,22 +373,19 @@ class RunnerManager:
             online = False if remote_runner is None else remote_runner["status"] == "online"
             busy = False if remote_runner is None else remote_runner["busy"]
 
-            config = RunnerConfig(self.app_name, self.path, self.proxies, name)
+            config = RunnerConfig(self.app_name, self.config.path, self.proxies, name)
             return Runner(
-                self._github,
-                self._jinja,
-                self._lxd,
+                self._clients,
                 config,
-                running,
-                online,
-                busy,
+                RunnerStatus(running, online, busy),
                 local_runner,
             )
 
         remote_runners = self._get_runner_github_info()
         local_runners = {
             instance.name: instance
-            for instance in self._lxd.instances.all()
+            # Pylint cannot find the `all` method.
+            for instance in self._clients.lxd.instances.all()  # pylint: disable=no-member
             if instance.name.startswith(f"{self.app_name}-")
         }
 

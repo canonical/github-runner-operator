@@ -14,8 +14,8 @@ from unittest.mock import MagicMock
 import pytest
 
 from errors import RunnerBinaryError
-from runner import Runner
-from runner_manager import RunnerManager
+from runner import Runner, RunnerStatus
+from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
 from tests.unit.mock import TEST_BINARY
 
@@ -33,7 +33,7 @@ from tests.unit.mock import TEST_BINARY
 )
 def runner_manager_fixture(request, tmp_path):
     runner_manager = RunnerManager(
-        request.param[0], "test_token", "test app", 60, proxies=request.param[1]
+        "test app", RunnerManagerConfig(request.param[0], "mock token"), proxies=request.param[1]
     )
     # Fake having a binary by setting to non-None value.
     runner_manager.runner_bin_path = tmp_path / "test_binary"
@@ -86,7 +86,7 @@ def test_update_runner_bin(runner_manager: RunnerManager):
     assert runner_manager.runner_bin_path is not None
 
 
-def test_reconcile_zero_count(runner_manager: RunnerManager, tmp_path: Path):
+def test_reconcile_zero_count(runner_manager: RunnerManager):
     """
     arrange: Nothing.
     act: Reconcile with the current amount of runner.
@@ -98,7 +98,7 @@ def test_reconcile_zero_count(runner_manager: RunnerManager, tmp_path: Path):
     assert delta == 0
 
 
-def test_reconcile_create_runner(runner_manager: RunnerManager, tmp_path: Path):
+def test_reconcile_create_runner(runner_manager: RunnerManager):
     """
     arrange: Nothing.
     act: Reconcile to create a runner.
@@ -110,7 +110,7 @@ def test_reconcile_create_runner(runner_manager: RunnerManager, tmp_path: Path):
     assert delta == 1
 
 
-def test_reconcile_remove_runner(runner_manager: RunnerManager, tmp_path: Path):
+def test_reconcile_remove_runner(runner_manager: RunnerManager):
     """
     arrange: Create online runners.
     act: Reconcile to remove a runner.
@@ -121,9 +121,8 @@ def test_reconcile_remove_runner(runner_manager: RunnerManager, tmp_path: Path):
         """Create three mock runners."""
         runners = []
         for _ in range(3):
-            runners.append(
-                Runner(MagicMock(), MagicMock(), MagicMock(), MagicMock(), True, True, False, None)
-            )
+            status = RunnerStatus(True, True, False)
+            runners.append(Runner(MagicMock(), MagicMock(), status, None))
         return runners
 
     # Create online runners.

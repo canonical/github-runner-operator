@@ -10,11 +10,12 @@ of Ghapi, pylxd, and request modules.
 
 import unittest
 from pathlib import Path
+from unittest.mock import MagicMock
 
 import pytest
 
 from errors import RunnerCreateError
-from runner import Runner, RunnerConfig
+from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
 from tests.unit.mock import MockPylxdClient, mock_pylxd_error_func, mock_runner_error_func
 
@@ -56,12 +57,13 @@ def mock_pylxd_client_fixture():
     ],
 )
 def runner_fixture(request, pylxd: MockPylxdClient):
+    client = RunnerClients(MagicMock(), MagicMock(), pylxd)
     config = RunnerConfig("test_app", request.param[0], request.param[1], "test_runner")
+    status = RunnerStatus()
     return Runner(
-        unittest.mock.MagicMock(),
-        unittest.mock.MagicMock(),
-        pylxd,
+        client,
         config,
+        status,
     )
 
 

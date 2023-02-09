@@ -16,19 +16,20 @@ logger = logging.getLogger(__name__)
 
 
 # Parameters of the function decorated with retry
-TParam = ParamSpec("TParam")
+ParamT = ParamSpec("ParamT")
 # Return type of the function decorated with retry
-TReturn = TypeVar("TReturn")
+ReturnT = TypeVar("ReturnT")
 
 
-def retry(
+# This decorator has default arguments, too many arguments is a problem.
+def retry(  # pylint: disable=too-many-arguments
     exception: Type[Exception] = Exception,
     tries: int = 1,
     delay: float = 0,
     max_delay: Optional[float] = None,
     backoff: float = 1,
-    logger: logging.Logger = logger,
-) -> Callable[[Callable[TParam, TReturn]], Callable[TParam, TReturn]]:
+    local_logger: logging.Logger = logger,
+) -> Callable[[Callable[ParamT, ReturnT]], Callable[ParamT, ReturnT]]:
     """Parameterize the decorator for adding retry to functions.
 
     Args:
@@ -44,8 +45,8 @@ def retry(
     """
 
     def retry_decorator(
-        fn: Callable[TParam, TReturn],
-    ) -> Callable[TParam, TReturn]:
+        func: Callable[ParamT, ReturnT],
+    ) -> Callable[ParamT, ReturnT]:
         """Decorate function with retry.
 
         Args:
@@ -55,25 +56,28 @@ def retry(
             Callable[..., R]: The resulting function with retry added.
         """
 
-        @functools.wraps(fn)
-        def fn_with_retry(*args, **kwargs) -> TReturn:
+        @functools.wraps(func)
+        def fn_with_retry(*args, **kwargs) -> ReturnT:
             """Wrap the function with retries."""
             remain_tries, current_delay = tries, delay
 
             for _ in range(tries):
                 try:
-                    return fn(*args, **kwargs)
-                except exception as err:
+                    return func(*args, **kwargs)
+                # Error caught is set by the input of the function.
+                except exception as err:  # pylint: disable=broad-exception-caught
                     remain_tries -= 1
 
                     if remain_tries == 0:
-                        if logger is not None:
-                            logger.exception("Retry limit of %s exceed: %s", tries, err)
+                        if local_logger is not None:
+                            local_logger.exception("Retry limit of %s exceed: %s", tries, err)
                         raise
 
-                    if logger is not None:
-                        logger.warning("Retrying error in %s seconds: %s", current_delay, err)
-                        logger.debug("Error to be retried:", stack_info=True)
+                    if local_logger is not None:
+                        local_logger.warning(
+                            "Retrying error in %s seconds: %s", current_delay, err
+                        )
+                        local_logger.debug("Error to be retried:", stack_info=True)
 
                     time.sleep(current_delay)
 
@@ -103,7 +107,7 @@ def execute_command(cmd: Sequence[str], check: bool = True) -> str:
         Update `event_timer.py` to use this function.
     """
     logger.info("Executing command %s", cmd)
-    result = subprocess.run(cmd, capture_output=True, shell=False)  # nosec B603
+    result = subprocess.run(cmd, capture_output=True, shell=False, check=False)  # nosec B603
     logger.debug("Command %s returns: %s", cmd, result.stdout)
 
     if check:

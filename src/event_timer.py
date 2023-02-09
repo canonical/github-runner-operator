@@ -74,8 +74,10 @@ class EventTimer:
 
         Raises:
             TimerEnableError: Timer cannot be started. Events will be not emitted.
+
+        TODO:
+            Split the configuration for service and timer.
         """
-        # TODO: Split the configuration for service and timer.
         context: EventConfig = {
             "event": event_name,
             "interval": interval,
