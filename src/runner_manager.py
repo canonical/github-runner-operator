@@ -6,6 +6,9 @@
 TODO:
     Resolve race condition between removing runner and GitHub assigning work to
     runner. This affects `RunnerManager.flush` and `RunnerManager.reconcile`.
+
+    Split the GitHub, LXD clients into interface for unit testing and to
+    separate the logic.
 """
 
 from __future__ import annotations
@@ -39,7 +42,7 @@ from github_type import (
 )
 from runner import Runner, RunnerConfig
 from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
-from utilities import get_env_var, retry
+from utilities import retry
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +71,7 @@ class RunnerManager:
         app_name: str,
         reconcile_interval: int,
         image: str = "focal",
+        proxies: ProxySetting = {},
     ) -> None:
         """Construct RunnerManager object for creating and managing runners.
 
@@ -79,18 +83,16 @@ class RunnerManager:
             app_name: An name for the set of runners.
             reconcile_interval: Number of minutes between each reconciliation of runners.
             image: Image to use for the runner LXD instances.
+            proxies: HTTP proxy settings.
         """
-        http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY")
-        https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY")
-        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY")
+        self.path = path
 
-        self.proxies: ProxySetting = {}
-        if http_proxy:
-            self.proxies["http"] = http_proxy
-        if https_proxy:
-            self.proxies["https"] = https_proxy
-        if no_proxy:
-            self.proxies["no_proxy"] = no_proxy
+        self.app_name = app_name
+        self.reconcile_interval = reconcile_interval
+        self.image = image
+        self.proxies = proxies
+
+        self.runner_bin_path: Optional[Path] = None
 
         self.session = requests.Session()
         # TODO: Review the retry strategy
@@ -114,14 +116,6 @@ class RunnerManager:
             loader=jinja2.FileSystemLoader("templates"), autoescape=True
         )
         self._lxd = pylxd.Client()
-
-        self.path = path
-
-        self.app_name = app_name
-        self.reconcile_interval = reconcile_interval
-        self.image = image
-
-        self.runner_bin_path: Optional[GitHubPath] = None
 
     @retry(tries=5, delay=30, logger=logger)
     def get_latest_runner_bin_url(
@@ -150,7 +144,9 @@ class RunnerManager:
 
         try:
             return next(
-                bin for bin in runner_bins if bin.os == os_name and bin.architecture == arch_name
+                bin
+                for bin in runner_bins
+                if bin["os"] == os_name and bin["architecture"] == arch_name
             )
         except StopIteration as err:
             raise RunnerBinaryError(
@@ -169,7 +165,7 @@ class RunnerManager:
         Args:
             binary: Information on the runner binary to download.
         """
-        logger.info("Downloading runner binary from: %s", binary.download_url)
+        logger.info("Downloading runner binary from: %s", binary["download_url"])
 
         # Delete old version of runner binary.
         if self.runner_bin_path is not None:
@@ -177,38 +173,36 @@ class RunnerManager:
             self.runner_bin_path = None
 
         # Download the new file
-        response = self.session.get(binary.download_url, stream=True)
+        response = self.session.get(binary["download_url"], stream=True)
 
         logger.info(
             "Download of runner binary from %s return status code: %i",
-            binary.download_url,
+            binary["download_url"],
             response.status_code,
         )
 
-        if binary.sha256_checksum:
-            hash = hashlib.sha256()
+        if not binary["sha256_checksum"]:
+            logger.error("Checksum for runner binary is not found, unable to verify download.")
+            raise RunnerBinaryError("Checksum for runner binary is not found in GitHub response.")
+
+        hash = hashlib.sha256()
 
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-            for chunk in response.iter_content(chunk_size=4096, decode_unicode=False):
+            for chunk in response.iter_content(decode_unicode=False):
                 tmp_file.write(chunk)
 
-                if binary.sha256_checksum:
-                    hash.update(chunk)
+                hash.update(chunk)
 
         logger.info("Finished download of runner binary.")
 
         # Verify the checksum if checksum is present.
-        if binary.sha256_checksum:
-            if binary.sha256_checksum != hash.hexdigest():
-                logger.error(
-                    "The expected hash of runner binary (%s) doesn't match the calculated hash (%s)",
-                    binary.sha256_checksum,
-                    hash,
-                )
-                raise RunnerBinaryError("Checksum mismatch for downloaded runner binary")
-        else:
-            logger.error("Checksum for runner binary is not found, unable to verify download.")
-            raise RunnerBinaryError("Checksum for runner binary is not found in GitHub response.")
+        if binary["sha256_checksum"] != hash.hexdigest():
+            logger.error(
+                "Expected hash of runner binary (%s) doesn't match the calculated hash (%s)",
+                binary["sha256_checksum"],
+                hash,
+            )
+            raise RunnerBinaryError("Checksum mismatch for downloaded runner binary")
 
         # Verify the file integrity.
         if not tarfile.is_tarfile(tmp_file.name):
@@ -277,7 +271,7 @@ class RunnerManager:
                     self.image,
                     resources,
                     self.runner_bin_path,
-                    token.token,
+                    token["token"],
                 )
                 logger.info("Created runner: %s", runner.name)
         elif delta < 0:
@@ -358,7 +352,7 @@ class RunnerManager:
             List of `Runner` from information on LXD or GitHub.
         """
 
-        def create_runner(
+        def create_runner_info(
             name: str,
             local_runner: Optional[pylxd.models.Instance],
             remote_runner: Optional[SelfHostedRunner],
@@ -389,6 +383,8 @@ class RunnerManager:
 
         runners: list[Runner] = []
         for name in set(local_runners.keys()) | set(remote_runners.keys()):
-            runners.append(create_runner(name, local_runners.get(name), remote_runners.get(name)))
+            runners.append(
+                create_runner_info(name, local_runners.get(name), remote_runners.get(name))
+            )
 
         return runners

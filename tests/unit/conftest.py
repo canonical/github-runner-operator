@@ -1,17 +1,21 @@
-# Copyright 2022 Canonical Ltd.
+# Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-from unittest import mock
+import unittest.mock
 
 import pytest
+
+from tests.unit.mock import MockGhapiClient, MockPylxdClient
 
 
 @pytest.fixture(autouse=True)
 def mocks(monkeypatch, tmp_path):
-    monkeypatch.setattr("runner.GhApi", mock.MagicMock())
-    monkeypatch.setattr("runner.pylxd", mock.MagicMock())
-    monkeypatch.setattr("runner.requests", mock.MagicMock())
-    monkeypatch.setattr("runner.time", mock.MagicMock())
-    monkeypatch.setattr("runner.RunnerManager._check_output", mock.MagicMock())
-    monkeypatch.setattr("runner.RunnerManager.runner_bin_path", tmp_path / "runner.tgz")
-    monkeypatch.setattr("runner.RunnerManager.env_file", tmp_path / "env")
+    monkeypatch.setattr("runner.GhApi", MockGhapiClient)
+    monkeypatch.setattr("runner.jinja2", unittest.mock.MagicMock())
+    monkeypatch.setattr("runner.pylxd.Client", MockPylxdClient)
+    monkeypatch.setattr("runner.time", unittest.mock.MagicMock())
+    monkeypatch.setattr("runner.execute_command", unittest.mock.MagicMock())
+    monkeypatch.setattr("runner_manager.GhApi", MockGhapiClient)
+    monkeypatch.setattr("runner_manager.jinja2", unittest.mock.MagicMock())
+    monkeypatch.setattr("runner_manager.pylxd.Client", MockPylxdClient)
+    monkeypatch.setattr("utilities.time", unittest.mock.MagicMock())

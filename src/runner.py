@@ -22,9 +22,9 @@ from typing import Optional, Sequence, TypedDict
 
 import jinja2
 import pylxd
-import pylxd.exceptions
 import pylxd.models
 from ghapi.all import GhApi
+from pylxd.exceptions import LXDAPIException
 
 from errors import (
     RunnerCreateError,
@@ -149,9 +149,8 @@ class Runner:
         """
         logger.info("Creating runner: %s", self.name)
 
-        self.instance = self._create_instance(image, resources)
-
         try:
+            self.instance = self._create_instance(image, resources)
             self._start_instance()
             # Wait some initial time for the instance to boot up
             time.sleep(60)
@@ -160,13 +159,14 @@ class Runner:
             self._configure_runner()
             self._register_runner(registration_token, labels=[self.app_name, image])
             self._start_runner()
-        except Exception as err:
-            self.instance.stop(wait=True)
+        except (RunnerError, LXDAPIException) as err:
+            if self.instance is not None:
+                self.instance.stop(wait=True)
 
-            with suppress(pylxd.exceptions.LXDAPIException):
-                # Ephemeral containers should auto-delete when stopped;
-                # this is just a fall-back.
-                self.instance.delete(wait=True)
+                with suppress(LXDAPIException):
+                    # Ephemeral containers should auto-delete when stopped;
+                    # this is just a fall-back.
+                    self.instance.delete(wait=True)
 
             raise RunnerCreateError(f"Unable to create runner {self.name}") from err
 
@@ -193,11 +193,11 @@ class Runner:
         if self.instance.status == "Running":
             try:
                 self.instance.stop(wait=True, timeout=60)
-            except pylxd.exceptions.LXDAPIException:
+            except LXDAPIException:
                 logger.exception("Unable to gracefully stop runner within timeout.")
                 self.instance.stop(force=True)
 
-            with suppress(pylxd.exceptions.LXDAPIException):
+            with suppress(LXDAPIException):
                 # Ephemeral containers should auto-delete when stopped;
                 # this is just a fall-back.
                 self.instance.delete(wait=True)
@@ -207,7 +207,7 @@ class Runner:
             # surface.
             try:
                 self.instance.delete(wait=True)
-            except pylxd.exceptions.LXDAPIException as err:
+            except LXDAPIException as err:
                 raise RunnerRemoveError(f"Unable to remove {self.name}") from err
 
     @retry(tries=5, delay=1, logger=logger)
@@ -301,7 +301,7 @@ class Runner:
                 self._lxd.profiles.create(
                     profile_name, resource_profile_config, resource_profile_devices
                 )
-            except pylxd.exceptions.LXDAPIException as error:
+            except LXDAPIException as error:
                 logger.error(error)
                 raise RunnerError(
                     "Resources were not provided in the correct format, check the juju config for "
@@ -449,20 +449,6 @@ class Runner:
         self._execute(["/usr/bin/sudo", "-u", "ubuntu", str(self.runner_script)])
 
         logger.info("Started runner %s", self.name)
-
-    @retry(tries=5, delay=30, logger=logger)
-    def _check_shutdown(self) -> None:
-        """Check whether a LXD instance is stopped.
-
-        Raises:
-            RunnerRemoveError: Unable to stop the runner for removal.
-        """
-        if self.instance is None:
-            return
-
-        instance = self._lxd.instances.get(self.name)
-        if instance.status != "Stopped":
-            raise RunnerRemoveError(f"Unable to stop LXD instance for runner {self.name}")
 
     def _execute(
         self,

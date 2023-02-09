@@ -1,115 +1,152 @@
-# Copyright 2022 Canonical Ltd.
+# Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+"""Test cases of Runner class.
+
+TODO:
+    Rewrite the test when the test are rewritten with pytest and interfaces
+of Ghapi, pylxd, and request modules.
+"""
+
 import unittest
-from unittest import mock
+from pathlib import Path
 
 import pytest
-from pylxd.exceptions import LXDAPIException
 
-from runner import RunnerError, RunnerInfo, RunnerManager, VMResources
+from errors import RunnerCreateError
+from runner import Runner, RunnerConfig
+from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
+from tests.unit.mock import MockPylxdClient, mock_pylxd_error_func, mock_runner_error_func
 
 
-class TestRunner(unittest.TestCase):
-    def setUp(self):
-        mocker_pylxd = mock.patch("runner.pylxd")
-        mock_pylxd = mocker_pylxd.start()
-        self.lxd = mock_pylxd.Client.return_value = mock.MagicMock()
-        self.addCleanup(mocker_pylxd.stop)
+@pytest.fixture(scope="module", name="vm_resources")
+def vm_resources():
+    return VirtualMachineResources(2, "7Gib", "10Gib")
 
-    @mock.patch("runner.choices", return_value="1234")
-    def test_create_instance(self, _):
-        """Test function for creating instances."""
-        # no runner profile exists, creating container
-        self.lxd.profiles.exists.return_value = False
 
-        rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
-        rm._create_instance(virt="container")
-        self.lxd.profiles.create.assert_called_once_with(
-            "runner", {"security.nesting": "true", "security.privileged": "true"}, {}
-        )
-        self.lxd.instances.create.assert_called_once_with(config=mock.ANY, wait=True)
-        self.lxd.reset_mock()
+@pytest.fixture(scope="function", name="binary_path")
+def binary_path_fixture(tmp_path: Path):
+    return tmp_path / "test_binary"
 
-        # runner profile exists, creating container
-        self.lxd.profiles.exists.return_value = True
 
-        rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
-        rm._create_instance(virt="container")
-        self.lxd.profiles.create.assert_not_called()
-        self.lxd.instances.create.assert_called_once_with(config=mock.ANY, wait=True)
-        self.lxd.reset_mock()
+@pytest.fixture(scope="module", name="instance", params=["Running", "Stopped", None])
+def instance_fixture(request):
+    if request.param[0] is None:
+        return None
 
-        # runner profile exists, creating virtual-machine without vm-resources specify
-        self.lxd.profiles.exists.return_value = True
+    attrs = {"status": request.param[0], "execute.return_value": (0, "", "")}
+    instance = unittest.mock.MagicMock(**attrs)
+    return instance
 
-        rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
-        rm._create_instance(virt="virtual-machine")
-        self.lxd.profiles.create.assert_not_called()
-        self.lxd.instances.create.assert_called_once_with(config=mock.ANY, wait=True)
-        self.lxd.reset_mock()
 
-        # runner profile exists, creating virtual-machine with vm-resources specify
-        self.lxd.profiles.exists.return_value = True
+@pytest.fixture(scope="function", name="pylxd")
+def mock_pylxd_client_fixture():
+    return MockPylxdClient()
 
-        rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
-        rm._create_instance(virt="virtual-machine", vm_resources=VMResources(4, "7GiB", "10GiB"))
-        self.lxd.profiles.create.assert_called_once_with(
-            "test-1234",
-            {"limits.cpu": "4", "limits.memory": "7GiB"},
-            {"root": {"path": "/", "pool": "default", "type": "disk", "size": "10GiB"}},
-        )
-        self.lxd.instances.create.assert_called_once_with(config=mock.ANY, wait=True)
-        self.lxd.reset_mock()
 
-    def test_create_vm_profile(self):
-        """Test creation of VM profile."""
-        rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
+@pytest.fixture(
+    scope="function",
+    name="runner",
+    params=[
+        (GitHubOrg("test_org"), {}),
+        (
+            GitHubRepo("test_owner", "test_repo"),
+            {"no_proxy": "test_no_proxy", "http": "test_http", "https": "test_https"},
+        ),
+    ],
+)
+def runner_fixture(request, pylxd: MockPylxdClient):
+    config = RunnerConfig("test_app", request.param[0], request.param[1], "test_runner")
+    return Runner(
+        unittest.mock.MagicMock(),
+        unittest.mock.MagicMock(),
+        pylxd,
+        config,
+    )
 
-        # without any error
-        rm._create_vm_profile("test", vm_resources=VMResources(2, "4GiB", "20GiB"))
-        self.lxd.profiles.create.assert_called_once_with(
-            "test",
-            {"limits.cpu": "2", "limits.memory": "4GiB"},
-            {"root": {"path": "/", "pool": "default", "type": "disk", "size": "20GiB"}},
-        )
-        self.lxd.reset_mock()
 
-        # vm-resources not valid object
-        with pytest.raises(RunnerError):
-            rm._create_vm_profile("test", vm_resources=[2, "4GiB", "20GiB"])
+def test_create(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    binary_path: Path,
+    pylxd: MockPylxdClient,
+):
+    """
+    arrange: Nothing.
+    act: Create a runner.
+    assert: An pylxd instance for the runner is created.
+    """
 
-        self.lxd.profiles.create.assert_not_called()
+    runner.create("test_image", vm_resources, binary_path, "test_token")
+    assert len(pylxd.instances.all()) == 1
 
-        # lxd profile creation failed
-        self.lxd.profiles.create.side_effect = LXDAPIException(response=mock.MagicMock())
-        with pytest.raises(RunnerError):
-            rm._create_vm_profile("test", vm_resources=VMResources(2, "4GiB", "10GiB"))
 
-    def test_remove_runner(self):
-        """Test remove runner function.
+def test_create_pylxd_fail(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    binary_path: Path,
+    pylxd: MockPylxdClient,
+):
+    """
+    arrange: Setup the create runner to fail with pylxd error.
+    act: Create a runner.
+    assert: Correct exception should be thrown. Any created instance should be
+        cleanup.
+    """
+    pylxd.profiles.exists = mock_pylxd_error_func
 
-        Note: This function is not completed, it tests only profile removal.
-        """
-        runner = RunnerInfo("test-1234", None, None)
-        profile = self.lxd.profiles.get.return_value = mock.MagicMock()
+    with pytest.raises(RunnerCreateError):
+        runner.create("test_image", vm_resources, binary_path, "test_token")
 
-        rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
-        rm._remove_runner(runner)
-        self.lxd.profiles.get.assert_called_once_with(runner.name)
-        profile.delete.assert_called_once()
+    assert len(pylxd.instances.all()) == 0
 
-    def test_clean_unused_profiles(self):
-        """Test function to clean all unused LXD profiles."""
-        used_profile = mock.MagicMock()
-        used_profile.name = "test-1234"
-        used_profile.used_by = ["test-1234"]
-        unused_profile = mock.MagicMock()
-        unused_profile.name = "test-1235"
-        unused_profile.used_by = []
-        self.lxd.profiles.all.return_value = [used_profile, unused_profile]
 
-        rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
-        rm._clean_unused_profiles()
-        used_profile.delete.assert_not_called()
-        unused_profile.delete.assert_called_once()
+def test_create_runner_fail(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    binary_path: Path,
+    pylxd: MockPylxdClient,
+):
+    """
+    arrange: Setup the create runner to fail with runner error.
+    act: Create a runner.
+    assert: Correct exception should be thrown. Any created instance should be
+        cleanup.
+    """
+    runner._execute = mock_runner_error_func
+
+    with pytest.raises(RunnerCreateError):
+        runner.create("test_image", vm_resources, binary_path, "test_token")
+
+    assert len(pylxd.instances.all()) == 0
+
+
+def test_remove(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    binary_path: Path,
+    pylxd: MockPylxdClient,
+):
+    """
+    arrange: Create a runner.
+    act: Remove the runner.
+    assert: The pylxd instance for the runner is removed.
+    """
+
+    runner.create("test_image", vm_resources, binary_path, "test_token")
+    runner.remove()
+    assert len(pylxd.instances.all()) == 0
+
+
+def test_remove_none(
+    runner: Runner,
+    pylxd: MockPylxdClient,
+):
+    """
+    arrange: Not creating a runner.
+    act: Remove the runner.
+    assert: The pylxd instance for the runner is removed.
+    """
+
+    runner.remove()
+    assert len(pylxd.instances.all()) == 0

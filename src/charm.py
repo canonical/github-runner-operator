@@ -26,8 +26,8 @@ from errors import RunnerError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerManager
-from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
-from utilities import execute_command, retry
+from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
+from utilities import execute_command, get_env_var, retry
 
 if TYPE_CHECKING:
     from ops.model import JsonObject
@@ -63,6 +63,18 @@ class GithubRunnerCharm(CharmBase):
             path=self.config["path"],  # for detecting changes
             runner_bin_url=None,
         )
+
+        http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY")
+        https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY")
+        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY")
+
+        self.proxies: ProxySetting = {}
+        if http_proxy:
+            self.proxies["http"] = http_proxy
+        if https_proxy:
+            self.proxies["https"] = https_proxy
+        if no_proxy:
+            self.proxies["no_proxy"] = no_proxy
 
         self.on.define_event("reconcile_runners", ReconcileRunnersEvent)
         self.on.define_event("update_runner_bin", UpdateRunnerBinEvent)
@@ -107,10 +119,13 @@ class GithubRunnerCharm(CharmBase):
                 path = GitHubRepo(owner=owner, repo=repo)
             else:
                 logger.error("Invalid path %s", path)
-                self.unit.status = BlockedStatus(f"Invalid path: {path}")
+                return None
         else:
             path = GitHubOrg(org=path)
-        return RunnerManager(path, token, self.app.name, self.config["reconcile-interval"])
+
+        return RunnerManager(
+            path, token, self.app.name, self.config["reconcile-interval"], proxies=self.proxies
+        )
 
     def _on_install(self, event: InstallEvent) -> None:
         """Handle the installation of charm.
@@ -125,6 +140,10 @@ class GithubRunnerCharm(CharmBase):
         except CalledProcessError as err:
             logger.exception(err)
             self.unit.status = MaintenanceStatus("Failed to install dependencies")
+            return
+        except Exception as err:
+            logger.exception(err)
+            self.unit.status = BlockedStatus(str(err))
             return
 
         runner_manager = self._get_runner_manager()
@@ -141,11 +160,13 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus("Starting runners")
             try:
                 self._reconcile_runners(runner_manager)
+                self.unit.status = ActiveStatus()
             except RunnerError as e:
                 logger.exception("Failed to start runners")
                 self.unit.status = MaintenanceStatus(f"Failed to start runners: {e}")
-            else:
-                self.unit.status = ActiveStatus()
+            except Exception as err:
+                logger.exception(err)
+                self.unit.status = BlockedStatus(str(err))
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
@@ -175,6 +196,9 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = BlockedStatus(
                 f"Failed to start timer for regular reconciliation and binary update checks: {ex}"
             )
+        except Exception as err:
+            logger.exception(err)
+            self.unit.status = BlockedStatus(str(err))
 
         if self.config["path"] != self._stored.path:
             prev_runner_manager = self._get_runner_manager(
@@ -208,6 +232,11 @@ class GithubRunnerCharm(CharmBase):
             logger.exception("Failed to check for runner updates")
             self.unit.status = BlockedStatus(f"Failed to check for runner updates: {e}")
             return
+        except Exception as err:
+            logger.exception(err)
+            self.unit.status = BlockedStatus(str(err))
+            return
+
         if runner_info.download_url != self._stored.runner_bin_url:
             self.unit.status = MaintenanceStatus("Updating runner binary")
             try:
@@ -236,11 +265,10 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Reconciling runners")
         try:
             self._reconcile_runners(runner_manager)
+            self.unit.status = ActiveStatus()
         except Exception as e:
             logger.exception("Failed to reconcile runners")
             self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {e}")
-        else:
-            self.unit.status = ActiveStatus()
 
     def _on_check_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of checking of runner state.
