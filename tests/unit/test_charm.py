@@ -192,7 +192,7 @@ class TestCharm(unittest.TestCase):
 
         GithubRunnerCharm._install_deps = raise_called_process_error
         harness.charm.on.install.emit()
-        assert harness.charm.unit.status == MaintenanceStatus("Failed to install dependencies")
+        assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")
 
         GithubRunnerCharm._install_deps = raise_error
         harness.charm.on.install.emit()
