@@ -191,6 +191,9 @@ class RunnerManager:
 
         sha256 = hashlib.sha256()
 
+        # Use tempfile as recommend by bandit to avoid hardcoding the file
+        # path.  The `delete=False` arg save the file permanently for the charm
+        # to use start runners.
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             for chunk in response.iter_content(decode_unicode=False):
                 tmp_file.write(chunk)

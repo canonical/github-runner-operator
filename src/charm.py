@@ -130,10 +130,12 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Installing packages")
 
         try:
+            # The `_install_deps` includes retry.
             GithubRunnerCharm._install_deps()
         except CalledProcessError as err:
             logger.exception(err)
-            self.unit.status = MaintenanceStatus("Failed to install dependencies")
+            # The charm cannot proceed without dependencies.
+            self.unit.status = BlockedStatus("Failed to install dependencies")
             return
         # Safe guard against unexpected error.
         except Exception as err:  # pylint: disable=broad-exception-caught
@@ -151,6 +153,8 @@ class GithubRunnerCharm(CharmBase):
             # Safe guard against unexpected error.
             except Exception as err:  # pylint: disable=broad-exception-caught
                 logger.exception("Failed to update runner binary")
+                # Failure to download runner binary is a transient error.
+                # The charm automatically update runner binary on a schedule.
                 self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
                 return
             self.unit.status = MaintenanceStatus("Starting runners")
