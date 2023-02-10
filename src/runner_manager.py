@@ -4,9 +4,6 @@
 """Runner Manager manages the runners on LXD and GitHub.
 
 TODO:
-    Resolve race condition between removing runner and GitHub assigning work to
-    runner. This affects `RunnerManager.flush` and `RunnerManager.reconcile`.
-
     Split the GitHub, LXD clients into interface for unit testing and to
     separate the logic.
 """
@@ -21,7 +18,7 @@ import urllib.request
 import uuid
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Iterator, Optional
 
 import fastcore.net
 import jinja2
@@ -221,14 +218,14 @@ class RunnerManager:
 
         logger.info("Validated newly downloaded runner binary and enabled it.")
 
-    def get_github_info(self) -> list[RunnerInfo]:
+    def get_github_info(self) -> Iterator[RunnerInfo]:
         """Get information on the runners from GitHub.
 
         Returns:
             List of information from GitHub on runners.
         """
         remote_runners = self._get_runner_github_info()
-        return [RunnerInfo(r.name, r.status) for r in remote_runners.values()]
+        return iter(RunnerInfo(runner.name, runner.status) for runner in remote_runners.values())
 
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
@@ -243,7 +240,7 @@ class RunnerManager:
         runners = self._get_runners()
 
         # Clean up offline runners
-        offline_runners = [r for r in runners if not r.status.online]
+        offline_runners = [runner for runner in runners if not runner.status.online]
         if offline_runners:
             logger.info("Cleaning up offline runners.")
 
@@ -252,7 +249,9 @@ class RunnerManager:
                 logger.info("Removed runner: %s", runner.config.name)
 
         # Add/Remove runners to match the target quantity
-        online_runners = [r for r in runners if r.status.exist and r.status.online]
+        online_runners = [
+            runner for runner in runners if runner.status.exist and runner.status.online
+        ]
         delta = quantity - len(online_runners)
         if delta > 0:
             if self.runner_bin_path is None:

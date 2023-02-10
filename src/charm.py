@@ -64,16 +64,12 @@ class GithubRunnerCharm(CharmBase):
             runner_bin_url=None,
         )
 
-        http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY")
-        https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY")
-        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY")
-
         self.proxies: ProxySetting = {}
-        if http_proxy:
+        if http_proxy := get_env_var("JUJU_CHARM_HTTP_PROXY"):
             self.proxies["http"] = http_proxy
-        if https_proxy:
+        if https_proxy := get_env_var("JUJU_CHARM_HTTPS_PROXY"):
             self.proxies["https"] = https_proxy
-        if no_proxy:
+        if no_proxy := get_env_var("JUJU_NO_PROXY"):
             self.proxies["no_proxy"] = no_proxy
 
         self.on.define_event("reconcile_runners", ReconcileRunnersEvent)
