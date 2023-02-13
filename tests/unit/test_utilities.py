@@ -1,10 +1,7 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Test cases of utilities.
-
-TODO: Add more tests.
-"""
+"""Test cases of utilities."""
 
 from subprocess import CalledProcessError  # nosec B404
 from unittest.mock import MagicMock

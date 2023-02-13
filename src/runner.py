@@ -358,10 +358,6 @@ class Runner:
 
         Raises:
             RunnerFileLoadError: Unable to load the file into the runner instance.
-
-        TODO:
-            Change `lxc file push` to `instance.files.put`, once ws4py websocket problem is
-            resolved.
         """
         if self.instance is None:
             return
@@ -420,12 +416,6 @@ class Runner:
         Args:
             registration_token: Registration token request from GitHub.
             labels: Labels to tag the runner with.
-
-        TODO:
-            Consider input injections.
-            The path is from user input. How should input sanitization be done??
-            Registration Token is returned by GitHub API. Input sanitization needed??
-            The label are currently only hardcoded value, not from user input, but future??
         """
         if self.instance is None:
             return
@@ -483,10 +473,6 @@ class Runner:
 
         Returns:
             The stdout of the command executed.
-
-        TODO:
-            `instance.exec` of `pylxd` is frequency error out with `BrokenPipeError`. Using
-            `subprocess.run` as workaround for now.
         """
         if self.instance is None:
             raise RunnerExecutionError(

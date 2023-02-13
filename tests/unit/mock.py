@@ -1,12 +1,7 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Mock for testing.
-
-TODO:
-    Rewrite the mock when the test are rewritten with pytest and interfaces
-of Ghapi, pylxd, and request modules.
-"""
+"""Mock for testing."""
 
 from __future__ import annotations
 

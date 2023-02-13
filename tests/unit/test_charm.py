@@ -1,10 +1,7 @@
 # Copyright 2021 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Test cases for GithubRunnerCharm.
-
-TODO: Convert the test to using pytest.
-"""
+"""Test cases for GithubRunnerCharm."""
 
 import unittest
 import urllib.error
@@ -217,7 +214,7 @@ class TestCharm(unittest.TestCase):
 
         mock_rm.get_latest_runner_bin_url = raise_url_error
         harness.charm.on.update_runner_bin.emit()
-        assert harness.charm.unit.status == BlockedStatus(
+        assert harness.charm.unit.status == MaintenanceStatus(
             "Failed to check for runner updates: <urlopen error mock error>"
         )
 

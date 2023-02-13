@@ -1,12 +1,7 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Runner Manager manages the runners on LXD and GitHub.
-
-TODO:
-    Split the GitHub, LXD clients into interface for unit testing and to
-    separate the logic.
-"""
+"""Runner Manager manages the runners on LXD and GitHub."""
 
 from __future__ import annotations
 
@@ -64,9 +59,6 @@ class RunnerInfo:
     """Information from GitHub of a runner.
 
     Used as a returned type to method querying runner information.
-
-    TODO:
-        See if more information should be shared by the charm.
     """
 
     name: str

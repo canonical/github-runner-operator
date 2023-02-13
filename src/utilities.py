@@ -102,9 +102,6 @@ def execute_command(cmd: Sequence[str], check: bool = True) -> str:
 
     Returns:
         Output on stdout.
-
-    TODO:
-        Update `event_timer.py` to use this function.
     """
     logger.info("Executing command %s", cmd)
     result = subprocess.run(cmd, capture_output=True, shell=False, check=False)  # nosec B603

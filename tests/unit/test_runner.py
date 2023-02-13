@@ -1,12 +1,7 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Test cases of Runner class.
-
-TODO:
-    Rewrite the test when the test are rewritten with pytest and interfaces
-of Ghapi, pylxd, and request modules.
-"""
+"""Test cases of Runner class."""
 
 import unittest
 from pathlib import Path

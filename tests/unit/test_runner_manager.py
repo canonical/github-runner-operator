@@ -1,12 +1,7 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Test cases of RunnerManager class.
-
-TODO:
-    Rewrite the test when the test are rewritten with pytest and interfaces
-of Ghapi, pylxd, and request modules.
-"""
+"""Test cases of RunnerManager class."""
 
 from pathlib import Path
 from unittest.mock import MagicMock
