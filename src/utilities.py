@@ -21,7 +21,7 @@ ParamT = ParamSpec("ParamT")
 ReturnT = TypeVar("ReturnT")
 
 
-# This decorator has default arguments, too many arguments is a problem.
+# This decorator has default arguments, one extra argument is not a problem.
 def retry(  # pylint: disable=too-many-arguments
     exception: Type[Exception] = Exception,
     tries: int = 1,

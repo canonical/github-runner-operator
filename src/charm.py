@@ -201,6 +201,9 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus("Installing runner binary")
             try:
                 runner_info = runner_manager.get_latest_runner_bin_url()
+                logger.info(
+                    "Downloading %s from: %s", runner_info.filename, runner_info.download_url
+                )
                 self._stored.runner_bin_url = runner_info.download_url
                 runner_manager.update_runner_bin(runner_info)
             # Safe guard against transient unexpected error.

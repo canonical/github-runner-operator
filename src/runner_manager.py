@@ -201,11 +201,13 @@ class RunnerManager:
                 binary["sha256_checksum"],
                 sha256,
             )
+            Path(tmp_file.name).unlink(missing_ok=True)
             raise RunnerBinaryError("Checksum mismatch for downloaded runner binary")
 
         # Verify the file integrity.
         if not tarfile.is_tarfile(tmp_file.name):
             logger.error("Failed to decompress downloaded GitHub runner binary.")
+            Path(tmp_file.name).unlink(missing_ok=True)
             raise RunnerBinaryError("Downloaded runner binary cannot be decompressed.")
 
         # Make the binary accessible after verification has passed.
