@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
-# Copyright 2022 Canonical
+# Copyright 2023 Canonical
 # See LICENSE file for licensing details.
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
+import functools
 import logging
 import urllib.error
-from typing import TYPE_CHECKING, Dict, Optional
+from subprocess import CalledProcessError  # nosec B404
+from typing import TYPE_CHECKING, Callable, Dict, Optional, TypeVar
 
 from ops.charm import (
     ActionEvent,
@@ -21,8 +23,12 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
+from errors import RunnerError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
-from runner import RunnerError, RunnerManager, VMResources
+from github_type import GitHubRunnerStatus
+from runner_manager import RunnerManager, RunnerManagerConfig
+from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
+from utilities import execute_command, get_env_var, retry
 
 if TYPE_CHECKING:
     from ops.model import JsonObject
@@ -38,20 +44,75 @@ class UpdateRunnerBinEvent(EventBase):
     """Event representing a periodic check for new versions of the runner binary."""
 
 
-class GithubRunnerOperator(CharmBase):
-    """Charm for managing GitHub self-hosted runners.
+CharmT = TypeVar("CharmT")
+EventT = TypeVar("EventT")
 
-    TODO:
-    * Remove support of LXD containers, due to security concerns.
-    * Review the action results fields, and use TypedDict for the action results, and JSON-like
-        return values.
+
+def catch_unexpected_charm_errors(
+    func: Callable[[CharmT, EventT], None]
+) -> Callable[[CharmT, EventT], None]:
+    """Catch unexpected errors in charm.
+
+    This decorator is for unrecoverable errors and sets the charm to
+    `BlockedStatus`.
+
+    Args:
+        func: Charm function to be decorated.
+
+    Returns:
+        Decorated charm function with catching unexpected errors.
     """
+
+    @functools.wraps(func)
+    def func_with_catch_unexpected_errors(self, event: EventT) -> None:
+        # Safe guard against unexpected error.
+        try:
+            func(self, event)
+        except Exception as err:  # pylint: disable=broad-exception-caught
+            logger.exception(err)
+            self.unit.status = BlockedStatus(str(err))
+
+    return func_with_catch_unexpected_errors
+
+
+def catch_unexpected_action_errors(
+    func: Callable[[CharmT, ActionEvent], None]
+) -> Callable[[CharmT, ActionEvent], None]:
+    """Catch unexpected errors in actions.
+
+    Args:
+        func: Action function to be decorated.
+
+    Returns:
+        Decorated charm function with catching unexpected errors.
+    """
+
+    @functools.wraps(func)
+    def func_with_catch_unexpected_errors(self, event: ActionEvent) -> None:
+        # Safe guard against unexpected error.
+        try:
+            func(self, event)
+        except Exception as err:  # pylint: disable=broad-exception-caught
+            logger.exception(err)
+            event.fail(f"Failed to get runner info: {err}")
+
+    return func_with_catch_unexpected_errors
+
+
+class GithubRunnerCharm(CharmBase):
+    """Charm for managing GitHub self-hosted runners."""
 
     _stored = StoredState()
 
-    def __init__(self, *args) -> None:
-        """Construct the charm."""
-        super().__init__(*args)
+    def __init__(self, *args, **kargs) -> None:
+        """Construct the charm.
+
+        Args:
+            args: List of arguments to be passed to the `CharmBase` class.
+            kargs: List of keyword arguments to be passed to the `CharmBase`
+                class.
+        """
+        super().__init__(*args, **kargs)
 
         self._event_timer = EventTimer(self.unit.name)
 
@@ -59,6 +120,14 @@ class GithubRunnerOperator(CharmBase):
             path=self.config["path"],  # for detecting changes
             runner_bin_url=None,
         )
+
+        self.proxies: ProxySetting = {}
+        if http_proxy := get_env_var("JUJU_CHARM_HTTP_PROXY"):
+            self.proxies["http"] = http_proxy
+        if https_proxy := get_env_var("JUJU_CHARM_HTTPS_PROXY"):
+            self.proxies["https"] = https_proxy
+        if no_proxy := get_env_var("JUJU_CHARM_NO_PROXY"):
+            self.proxies["no_proxy"] = no_proxy
 
         self.on.define_event("reconcile_runners", ReconcileRunnersEvent)
         self.on.define_event("update_runner_bin", UpdateRunnerBinEvent)
@@ -73,6 +142,7 @@ class GithubRunnerOperator(CharmBase):
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.reconcile_runners_action, self._on_reconcile_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
+        self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
 
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
@@ -80,9 +150,9 @@ class GithubRunnerOperator(CharmBase):
         """Get a RunnerManager instance, or None if missing config.
 
         Args:
-            token: GitHub personal access token to manager the runners with. Defaults to None.
+            token: GitHub personal access token to manager the runners with.
             path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
-                name. Defaults to None.
+                name.
 
         Returns:
             A instance of RunnerManager if the token and path configuration can be found.
@@ -91,48 +161,79 @@ class GithubRunnerOperator(CharmBase):
             token = self.config["token"]
         if path is None:
             path = self.config["path"]
+
         if not token or not path:
             return None
-        return RunnerManager(path, token, self.app.name, self.config["reconcile-interval"])
 
-    def _on_install(self, event: InstallEvent) -> None:
+        if "/" in path:
+            paths = path.split("/")
+            if len(paths) != 2:
+                logger.error("Invalid path %s", path)
+                return None
+
+            owner, repo = paths
+            path = GitHubRepo(owner=owner, repo=repo)
+        else:
+            path = GitHubOrg(org=path)
+
+        return RunnerManager(self.app.name, RunnerManagerConfig(path, token), proxies=self.proxies)
+
+    @catch_unexpected_charm_errors
+    def _on_install(self, _event: InstallEvent) -> None:
         """Handle the installation of charm.
 
         Args:
             event: Event of installing charm.
         """
         self.unit.status = MaintenanceStatus("Installing packages")
-        RunnerManager.install_deps()
+
+        try:
+            # The `_install_deps` includes retry.
+            GithubRunnerCharm._install_deps()
+        except CalledProcessError as err:
+            logger.exception(err)
+            # The charm cannot proceed without dependencies.
+            self.unit.status = BlockedStatus("Failed to install dependencies")
+            return
+
         runner_manager = self._get_runner_manager()
         if runner_manager:
             self.unit.status = MaintenanceStatus("Installing runner binary")
             try:
-                self._stored.runner_bin_url = runner_manager.get_latest_runner_bin_url()
-                runner_manager.update_runner_bin(self._stored.runner_bin_url)
-            except Exception as e:
+                runner_info = runner_manager.get_latest_runner_bin_url()
+                logger.info(
+                    "Downloading %s from: %s", runner_info.filename, runner_info.download_url
+                )
+                self._stored.runner_bin_url = runner_info.download_url
+                runner_manager.update_runner_bin(runner_info)
+            # Safe guard against transient unexpected error.
+            except Exception as err:  # pylint: disable=broad-exception-caught
                 logger.exception("Failed to update runner binary")
-                self.unit.status = BlockedStatus(f"Failed to update runner binary: {e}")
+                # Failure to download runner binary is a transient error.
+                # The charm automatically update runner binary on a schedule.
+                self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
                 return
             self.unit.status = MaintenanceStatus("Starting runners")
             try:
                 self._reconcile_runners(runner_manager)
-            except RunnerError as e:
-                logger.exception("Failed to start runners")
-                self.unit.status = BlockedStatus(f"Failed to start runners: {e}")
-            else:
                 self.unit.status = ActiveStatus()
+            except RunnerError as err:
+                logger.exception("Failed to start runners")
+                self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
-    def _on_upgrade_charm(self, event: UpgradeCharmEvent) -> None:
+    @catch_unexpected_charm_errors
+    def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
         """Handle the update of charm.
 
         Args:
             event: Event of charm upgrade.
         """
-        RunnerManager.install_deps()
+        GithubRunnerCharm._install_deps()
 
-    def _on_config_changed(self, event: ConfigChangedEvent) -> None:
+    @catch_unexpected_charm_errors
+    def _on_config_changed(self, _event: ConfigChangedEvent) -> None:
         """Handle the configuration change.
 
         Args:
@@ -157,7 +258,7 @@ class GithubRunnerOperator(CharmBase):
             )  # Casting for mypy checks.
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
-                prev_runner_manager.clear()
+                prev_runner_manager.flush()
             self._stored.path = self.config["path"]
 
         runner_manager = self._get_runner_manager()
@@ -166,7 +267,8 @@ class GithubRunnerOperator(CharmBase):
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
-    def _on_update_runner_bin(self, event: UpdateRunnerBinEvent) -> None:
+    @catch_unexpected_charm_errors
+    def _on_update_runner_bin(self, _event: UpdateRunnerBinEvent) -> None:
         """Handle checking update of runner binary event.
 
         Args:
@@ -178,41 +280,55 @@ class GithubRunnerOperator(CharmBase):
         old_status = self.unit.status
         try:
             self.unit.status = MaintenanceStatus("Checking for runner updates")
-            runner_bin_url = runner_manager.get_latest_runner_bin_url()
-        except urllib.error.URLError as e:
+            runner_info = runner_manager.get_latest_runner_bin_url()
+        except urllib.error.URLError as err:
             logger.exception("Failed to check for runner updates")
-            self.unit.status = BlockedStatus(f"Failed to check for runner updates: {e}")
+            # Failure to download runner binary is a transient error.
+            # The charm automatically update runner binary on a schedule.
+            self.unit.status = MaintenanceStatus(f"Failed to check for runner updates: {err}")
             return
-        if runner_bin_url != self._stored.runner_bin_url:
+
+        if runner_info.download_url != self._stored.runner_bin_url:
             self.unit.status = MaintenanceStatus("Updating runner binary")
             try:
-                runner_manager.update_runner_bin(runner_bin_url)
-            except Exception as e:
+                runner_manager.update_runner_bin(runner_info)
+            # Safe guard against transient unexpected error.
+            except Exception as err:  # pylint: disable=broad-exception-caught
                 logger.exception("Failed to update runner binary")
-                self.unit.status = BlockedStatus(f"Failed to update runner binary: {e}")
+                # Failure to download runner binary is a transient error.
+                # The charm automatically update runner binary on a schedule.
+                self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
                 return
-            self._stored.runner_bin_url = runner_bin_url
-            # TODO: Flush existing runners? What if they're processing a job?
+            self._stored.runner_bin_url = runner_info.download_url
+
+            # Flush the non-busy runner and reconcile.
+            runner_manager.flush(flush_busy=False)
+            self._reconcile_runners(runner_manager)
+
         self.unit.status = old_status
 
-    def _on_reconcile_runners(self, event: ReconcileRunnersEvent) -> None:
+    @catch_unexpected_charm_errors
+    def _on_reconcile_runners(self, _event: ReconcileRunnersEvent) -> None:
         """Handle the reconciliation of runners.
 
         Args:
             event: Event of reconciling the runner state.
         """
         runner_manager = self._get_runner_manager()
-        if not runner_manager or not runner_manager.runner_bin_path.exists():
+        if not runner_manager or runner_manager.runner_bin_path is None:
             return
         self.unit.status = MaintenanceStatus("Reconciling runners")
         try:
             self._reconcile_runners(runner_manager)
-        except Exception as e:
+        # Safe guard against transient unexpected error.
+        except Exception as err:  # pylint: disable=broad-exception-caught
             logger.exception("Failed to reconcile runners")
-            self.unit.status = BlockedStatus(f"Failed to reconcile runners: {e}")
-        else:
-            self.unit.status = ActiveStatus()
+            self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
+            return
 
+        self.unit.status = ActiveStatus()
+
+    @catch_unexpected_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of checking of runner state.
 
@@ -223,7 +339,7 @@ class GithubRunnerOperator(CharmBase):
         if not runner_manager:
             event.fail("Missing token or org/repo path config")
             return
-        if not runner_manager.runner_bin_path.exists():
+        if runner_manager.runner_bin_path is None:
             event.fail("Missing runner binary")
             return
 
@@ -232,18 +348,13 @@ class GithubRunnerOperator(CharmBase):
         unknown = 0
         runner_names = []
 
-        try:
-            runner_info = runner_manager.get_info()
-        except Exception as e:
-            logger.exception("Failed to get runner info")
-            event.fail(f"Failed to get runner info: {e}")
-            return
+        runner_info = runner_manager.get_github_info()
 
         for runner in runner_info:
-            if runner.is_online:
+            if runner.status == GitHubRunnerStatus.ONLINE:
                 online += 1
                 runner_names.append(runner.name)
-            elif runner.is_offline:
+            elif runner.status == GitHubRunnerStatus.OFFLINE:
                 offline += 1
             else:
                 # might happen if runner dies and GH doesn't notice immediately
@@ -257,6 +368,7 @@ class GithubRunnerOperator(CharmBase):
             }
         )
 
+    @catch_unexpected_action_errors
     def _on_reconcile_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of reconcile of runner state.
 
@@ -268,15 +380,12 @@ class GithubRunnerOperator(CharmBase):
             event.fail("Missing token or org/repo path config")
             return
 
-        try:
-            delta = self._reconcile_runners(runner_manager)
-        except Exception as e:
-            logger.exception("Failed to reconcile runners")
-            event.fail(f"Failed to reconcile runners: {e}")
-            return
+        delta = self._reconcile_runners(runner_manager)
+
         self._on_check_runners_action(event)
         event.set_results(delta)
 
+    @catch_unexpected_action_errors
     def _on_flush_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of flushing all runner and reconciling afterwards.
 
@@ -288,16 +397,13 @@ class GithubRunnerOperator(CharmBase):
             event.fail("Missing token or org/repo path config")
             return
 
-        try:
-            runner_manager.clear()
-            delta = self._reconcile_runners(runner_manager)
-        except Exception as e:
-            logger.exception("Failed to flush runners")
-            event.fail(f"Failed to flush runners: {e}")
-            return
+        runner_manager.flush()
+        delta = self._reconcile_runners(runner_manager)
+
         self._on_check_runners_action(event)
         event.set_results(delta)
 
+    @catch_unexpected_charm_errors
     def _on_stop(self, _: StopEvent) -> None:
         """Handle the stopping of the charm.
 
@@ -314,8 +420,9 @@ class GithubRunnerOperator(CharmBase):
         runner_manager = self._get_runner_manager()
         if runner_manager:
             try:
-                runner_manager.clear()
-            except Exception:
+                runner_manager.flush()
+            # Safe guard against unexpected error.
+            except Exception:  # pylint: disable=broad-exception-caught
                 # Log but ignore error since we're stopping anyway.
                 logger.exception("Failed to clear runners")
 
@@ -328,30 +435,46 @@ class GithubRunnerOperator(CharmBase):
         Returns:
             Changes in runner number due to reconciling runners.
         """
-        virtual_machines_resources = VMResources(
+        virtual_machines_resources = VirtualMachineResources(
             self.config["vm-cpu"], self.config["vm-memory"], self.config["vm-disk"]
         )
-        # handle deprecated config for `quantity` and `virt-type`
-
-        containers = self.config["containers"]
-        if containers == 0 and self.config["virt-type"] == "container":
-            containers = self.config["quantity"]
 
         virtual_machines = self.config["virtual-machines"]
         if virtual_machines == 0 and self.config["virt-type"] == "virtual-machine":
             virtual_machines = self.config["quantity"]
 
-        delta_containers = runner_manager.reconcile("container", containers)
         delta_virtual_machines = runner_manager.reconcile(
-            "virtual-machine", virtual_machines, virtual_machines_resources
+            virtual_machines, virtual_machines_resources
         )
-        return {
-            "delta": {
-                "containers": delta_containers,
-                "virtual-machines": delta_virtual_machines,
-            }
-        }
+        return {"delta": {"virtual-machines": delta_virtual_machines}}
+
+    @staticmethod
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
+    def _install_deps() -> None:
+        """Install dependencies."""
+        logger.info("Installing charm dependencies.")
+
+        # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
+        execute_command(["/usr/bin/apt", "remove", "-qy", "lxd", "lxd-client"], check=False)
+        execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
+        execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
+        execute_command(["/snap/bin/lxd", "waitready"])
+        execute_command(["/snap/bin/lxd", "init", "--auto"])
+        execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
+        execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
+        execute_command(
+            [
+                "/usr/bin/apt",
+                "install",
+                "-qy",
+                "cpu-checker",
+                "libvirt-clients",
+                "libvirt-daemon-driver-qemu",
+            ],
+        )
+
+        logger.info("Finished installing charm dependencies.")
 
 
 if __name__ == "__main__":
-    main(GithubRunnerOperator)
+    main(GithubRunnerCharm)

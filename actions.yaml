@@ -7,3 +7,5 @@ reconcile-runners:
     description: Remove offline runners and replace any missing runners
 flush-runners:
     description: Clear out all runners and start a new set
+update-runner-bin:
+    description: Update GitHub self-hosted runner binary
