@@ -132,7 +132,7 @@ class RunnerManager:
                 owner=self.config.path.owner, repo=self.config.path.repo
             )
         if isinstance(self.config.path, GitHubOrg):
-            runner_bins = self._clients.github.actions.list_runner_application_for_org(
+            runner_bins = self._clients.github.actions.list_runner_applications_for_org(
                 org=self.config.path.org
             )
 

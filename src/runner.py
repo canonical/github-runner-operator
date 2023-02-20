@@ -246,7 +246,7 @@ class Runner:
             "source": {
                 "type": "image",
                 "mode": "pull",
-                "server": "https://cloud-images.ubuntu.com/jammy",
+                "server": "https://cloud-images.ubuntu.com/daily",
                 "protocol": "simplestreams",
                 "alias": image,
             },

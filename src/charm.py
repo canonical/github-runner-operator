@@ -277,7 +277,6 @@ class GithubRunnerCharm(CharmBase):
         runner_manager = self._get_runner_manager()
         if not runner_manager:
             return
-        old_status = self.unit.status
         try:
             self.unit.status = MaintenanceStatus("Checking for runner updates")
             runner_info = runner_manager.get_latest_runner_bin_url()
@@ -305,7 +304,7 @@ class GithubRunnerCharm(CharmBase):
             runner_manager.flush(flush_busy=False)
             self._reconcile_runners(runner_manager)
 
-        self.unit.status = old_status
+        self.unit.status = ActiveStatus()
 
     @catch_unexpected_charm_errors
     def _on_reconcile_runners(self, _event: ReconcileRunnersEvent) -> None:
