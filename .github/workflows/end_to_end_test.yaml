@@ -5,31 +5,11 @@ on:
   workflow_call:
 
 jobs:
-  get-runner-image:
-    name: Get runner image
-    uses: canonical/operator-workflows/.github/workflows/get_runner_image.yaml@main
-  build-charm:
-    name: Build the charm
-    needs: get-runner-image
-    runs-on: ${{ needs.get-runner-image.outputs.runs-on }}
+  # Add a job for triggering the build, deploy, and configure the charm.
+  hello-world-test:
+    name: hello world test
+    runs-on: [self-hosted, linux, x64, demo-runner]
     steps:
-      - uses: actions/checkout@v3
-      - name: Add runner user to lxd group
-        run: sudo adduser runner lxd
-      - name: Switch user to apply group change
-        run: sudo su runner
-      - name: Initialize LXD
-        run: sudo lxd init --auto
-      - name: Install charmcraft
-        run: sudo snap install charmcraft --classic
-      - name: Pack charm
-        run: charmcraft pack
-      - uses: actions/upload-artifact@v3
-        with:
-          name: github-runner-charm
-          path: github-runner_*.charm
-      - uses: mxschmitt/action-tmate@v3
-        if: ${{ failure() }}
-        with:
-          limit-access-to-actor: true
-      
+      - name: Echo hello world
+        run: echo "hello world"
+ 
