@@ -25,7 +25,7 @@ jobs:
           name: github-runner-charm
           path: github-runner_*.charm
       - uses: mxschmitt/action-tmate@v3
-        if: $
+        if: ${{ failure() }}
         with:
           limit-access-to-actor: true
       
