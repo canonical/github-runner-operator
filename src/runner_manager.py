@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import hashlib
 import logging
+import os
 import tarfile
 import tempfile
 import urllib.request
@@ -86,6 +87,17 @@ class RunnerManager:
         self.config = runner_manager_config
         self.image = image
         self.proxies = proxies
+
+        # Setting the env var to this process and any child process spawned.
+        if "no_proxy" in self.proxies:
+            os.environ["NO_PROXY"] = self.proxies["no_proxy"]
+            os.environ["no_proxy"] = self.proxies["no_proxy"]
+        if "http" in self.proxies:
+            os.environ["HTTP_PROXY"] = self.proxies["http"]
+            os.environ["http_proxy"] = self.proxies["http"]
+        if "https" in self.proxies:
+            os.environ["HTTPS_PROXY"] = self.proxies["https"]
+            os.environ["https_proxy"] = self.proxies["https"]
 
         self.runner_bin_path: Optional[Path] = None
 
