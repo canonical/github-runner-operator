@@ -3,6 +3,7 @@ name: End to end tests
 on: 
   pull_request:
   workflow_call:
+  workflow_dispatch:
 
 jobs:
   # Add a job for triggering the build, deploy, and configure the charm.
