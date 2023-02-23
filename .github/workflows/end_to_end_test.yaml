@@ -14,6 +14,8 @@ jobs:
     runs-on: ${{ needs.get-runner-image.outputs.runs-on }}
     steps:
       - uses: actions/checkout@v3
+      - name: Initialize LXD
+        run: sudo lxd init --auto
       - name: Install charmcraft
         run: sudo snap install charmcraft --classic
       - name: Pack charm
