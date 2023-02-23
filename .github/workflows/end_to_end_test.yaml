@@ -14,7 +14,6 @@ jobs:
     runs-on: ${{ needs.get-runner-image.outputs.runs-on }}
     steps:
       - uses: actions/checkout@v3
-      - uses: mxschmitt/action-tmate@v3
       - name: Add user to lxd group
         run: sudo adduser ubuntu lxd
       - name: Install charmcraft
@@ -25,4 +24,8 @@ jobs:
         with:
           name: github-runner-charm
           path: github-runner_*.charm
+      - uses: mxschmitt/action-tmate@v3
+        if: $
+        with:
+          limit-access-to-actor: true
       
