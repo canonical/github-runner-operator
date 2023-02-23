@@ -14,8 +14,9 @@ jobs:
     runs-on: ${{ needs.get-runner-image.outputs.runs-on }}
     steps:
       - uses: actions/checkout@v3
-      - name: Initialize LXD
-        run: sudo lxd init --auto
+      - uses: mxschmitt/action-tmate@v3
+      - name: Add user to lxd group
+        run: sudo adduser ubuntu lxd
       - name: Install charmcraft
         run: sudo snap install charmcraft --classic
       - name: Pack charm
