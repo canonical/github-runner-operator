@@ -15,12 +15,14 @@ jobs:
     runs-on: ${{ needs.get-runner-image.outputs.runs-on }}
     steps:
       - uses: actions/checkout@v3
+      - name: Add user to lxd group
+        run: sudo adduser runner lxd
       - name: Initialize LXD
         run: sudo lxd init --auto
       - name: Install charmcraft
         run: sudo snap install charmcraft --classic
       - name: Pack charm
-        run: charmcraft pack
+        run: sudo -u runner charmcraft pack
       - uses: actions/upload-artifact@v3
         with:
           name: github-runner-charm
