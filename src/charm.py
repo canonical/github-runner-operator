@@ -200,7 +200,7 @@ class GithubRunnerCharm(CharmBase):
 
         runner_manager = self._get_runner_manager()
         if runner_manager:
-            self.unit.status = MaintenanceStatus("Installing runner binary")
+            self.unit.status = MaintenanceStatus("Downloading runner binary")
             try:
                 runner_info = runner_manager.get_latest_runner_bin_url()
                 logger.info(
