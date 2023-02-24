@@ -29,10 +29,6 @@ jobs:
         with:
           name: github-runner-charm
           path: github-runner_*.charm
-      - uses: mxschmitt/action-tmate@v3
-        if: ${{ failure() }}
-        with:
-          limit-access-to-actor: true
   e2e-test:
     name: end to end test
     runs-on: [self-hosted, linux, x64, demo-runner]

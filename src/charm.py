@@ -244,6 +244,8 @@ class GithubRunnerCharm(CharmBase):
             if info.status == GitHubRunnerStatus.ONLINE:
                 vm_count += 1
 
+        logger.info("Expected runner count: %i, Online runner count: %i", vm_num, vm_count)
+
         if vm_num != vm_count:
             self.unit.status = MaintenanceStatus("Waiting runners number to be reconciled")
         else:
