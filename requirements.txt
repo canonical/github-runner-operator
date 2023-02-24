@@ -4,5 +4,5 @@ requests
 jinja2
 ghapi
 pylxd
-# Newer version does not work with default OpenSSL version on focal/jammy.
+# Newer version does not work with default OpenSSL version on jammy.
 cryptography <= 38.0.4

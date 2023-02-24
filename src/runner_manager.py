@@ -73,7 +73,7 @@ class RunnerManager:
         self,
         app_name: str,
         runner_manager_config: RunnerManagerConfig,
-        image: str = "focal",
+        image: str = "jammy",
         proxies: ProxySetting = ProxySetting(),
     ) -> None:
         """Construct RunnerManager object for creating and managing runners.
