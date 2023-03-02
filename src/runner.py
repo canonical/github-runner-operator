@@ -200,14 +200,10 @@ class Runner:
                 self.instance.stop(wait=True, timeout=60)
             except LXDAPIException:
                 logger.exception("Unable to gracefully stop runner within timeout.")
-                if self.instance is not None:
+                try:
                     self.instance.stop(force=True)
-
-            with suppress(LXDAPIException):
-                # Ephemeral containers should auto-delete when stopped;
-                # this is just a fall-back.
-                if self.instance is not None:
-                    self.instance.delete(wait=True)
+                except LXDAPIException:
+                    raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
         else:
             # We somehow have a non-running instance which should have been
             # ephemeral. Try to delete it and allow any errors doing so to
