@@ -341,8 +341,13 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of reconciling the runner state.
         """
+        if not RunnerManager.runner_bin_path.is_file():
+            logger.warn("Unable to reconcile due to missing runner binary")
+            return
+
         runner_manager = self._get_runner_manager()
-        if not runner_manager or runner_manager.runner_bin_path is None:
+        if not runner_manager:
+            self.unit.status = BlockedStatus("Missing token or org/repo path config")
             return
         self.unit.status = MaintenanceStatus("Reconciling runners")
         try:
