@@ -169,12 +169,7 @@ class Runner:
             self._start_runner()
         except (RunnerError, LXDAPIException) as err:
             if self.instance is not None:
-                self.instance.stop(wait=True)
-
-                with suppress(LXDAPIException):
-                    # Ephemeral containers should auto-delete when stopped;
-                    # this is just a fall-back.
-                    self.instance.delete(wait=True)
+                self.remove()
 
             raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err
 
@@ -205,12 +200,14 @@ class Runner:
                 self.instance.stop(wait=True, timeout=60)
             except LXDAPIException:
                 logger.exception("Unable to gracefully stop runner within timeout.")
-                self.instance.stop(force=True)
+                if self.instance is not None:
+                    self.instance.stop(force=True)
 
             with suppress(LXDAPIException):
                 # Ephemeral containers should auto-delete when stopped;
                 # this is just a fall-back.
-                self.instance.delete(wait=True)
+                if self.instance is not None:
+                    self.instance.delete(wait=True)
         else:
             # We somehow have a non-running instance which should have been
             # ephemeral. Try to delete it and allow any errors doing so to

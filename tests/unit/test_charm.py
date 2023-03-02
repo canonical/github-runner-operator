@@ -9,7 +9,7 @@ import urllib.error
 from subprocess import CalledProcessError  # nosec B404
 from unittest.mock import MagicMock, call, patch
 
-from ops.model import BlockedStatus, MaintenanceStatus
+from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
@@ -196,7 +196,7 @@ class TestCharm(unittest.TestCase):
 
         # Base case: no error thrown.
         harness.charm.on.install.emit()
-        assert harness.charm.unit.status == MaintenanceStatus("Starting runners")
+        assert harness.charm.unit.status == ActiveStatus()
 
         harness.charm._reconcile_runners = raise_runner_error
         harness.charm.on.install.emit()

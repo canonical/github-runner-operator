@@ -252,6 +252,14 @@ class RunnerManager:
         online_runners = [
             runner for runner in runners if runner.status.exist and runner.status.online
         ]
+
+        logger.info(
+            "Expected runner count: %i, Online runner count: %i, Offline runner count: %i",
+            quantity,
+            len(online_runners),
+            len(offline_runners),
+        )
+
         delta = quantity - len(online_runners)
         if delta > 0:
             if RunnerManager.runner_bin_path is None:

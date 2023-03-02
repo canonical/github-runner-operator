@@ -216,6 +216,7 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus("Starting runners")
             try:
                 self._reconcile_runners(runner_manager)
+                self.unit.status = ActiveStatus()
             except RunnerError as err:
                 logger.exception("Failed to start runners")
                 self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")

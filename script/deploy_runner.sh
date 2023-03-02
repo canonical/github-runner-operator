@@ -14,7 +14,7 @@ DOWNLOAD_LOCATION=$(curl \
   "https://api.github.com/repos/canonical/github-runner-operator/actions/artifacts/{$GITHUB_RUNNER_ARTIFACT_ID}/zip" \
   | grep location)
 # Parse out the URL from the format "Location: URL\r".
-LOCATION_ARRAY=($DOWNLOAD_LOCATION)
+read -ra LOCATION_ARRAY <<< "$DOWNLOAD_LOCATION"
 URL=$(echo "${LOCATION_ARRAY[1]}" | tr -d '\r')
 
 # Download the github runner charm.
