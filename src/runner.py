@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import logging
 import time
-from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 from subprocess import CalledProcessError  # nosec B404
@@ -202,7 +201,7 @@ class Runner:
                 logger.exception("Unable to gracefully stop runner within timeout.")
                 try:
                     self.instance.stop(force=True)
-                except LXDAPIException:
+                except LXDAPIException as err:
                     raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
         else:
             # We somehow have a non-running instance which should have been
