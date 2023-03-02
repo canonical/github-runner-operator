@@ -26,12 +26,13 @@ from tests.unit.mock import TEST_BINARY
         ),
     ],
 )
-def runner_manager_fixture(request, tmp_path):
+def runner_manager_fixture(request, tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        "runner_manager.RunnerManager.runner_bin_path", Path(tmp_path / "mock_runner_binary")
+    )
     runner_manager = RunnerManager(
         "test app", RunnerManagerConfig(request.param[0], "mock token"), proxies=request.param[1]
     )
-    # Fake having a binary by setting to non-None value.
-    runner_manager.runner_bin_path = tmp_path / "test_binary"
     return runner_manager
 
 
@@ -78,7 +79,6 @@ def test_update_runner_bin(runner_manager: RunnerManager):
     runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux", arch_name="x64")
 
     runner_manager.update_runner_bin(runner_bin)
-    assert runner_manager.runner_bin_path is not None
 
 
 def test_reconcile_zero_count(runner_manager: RunnerManager):

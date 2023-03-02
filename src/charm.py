@@ -17,7 +17,6 @@ from ops.charm import (
     ConfigChangedEvent,
     InstallEvent,
     StopEvent,
-    UpdateStatusEvent,
     UpgradeCharmEvent,
 )
 from ops.framework import EventBase, StoredState
@@ -134,7 +133,6 @@ class GithubRunnerCharm(CharmBase):
         self.on.define_event("update_runner_bin", UpdateRunnerBinEvent)
 
         self.framework.observe(self.on.install, self._on_install)
-        self.framework.observe(self.on.update_status, self._on_update_status)
         self.framework.observe(self.on.upgrade_charm, self._on_upgrade_charm)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
@@ -223,33 +221,6 @@ class GithubRunnerCharm(CharmBase):
                 self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
-
-    def _on_update_status(self, _event: UpdateStatusEvent) -> None:
-        """Handle the update status of charm.
-
-        Args:
-            event: Event of charm update status.
-        """
-        vm_num = self.config["virtual-machines"]
-
-        runner_manager = self._get_runner_manager()
-        if not runner_manager:
-            self.unit.status = BlockedStatus("Missing token or org/repo path config")
-            return
-
-        runner_info = runner_manager.get_github_info()
-
-        vm_count = 0
-        for info in runner_info:
-            if info.status == GitHubRunnerStatus.ONLINE:
-                vm_count += 1
-
-        logger.info("Expected runner count: %i, Online runner count: %i", vm_num, vm_count)
-
-        if vm_num != vm_count:
-            self.unit.status = MaintenanceStatus("Waiting runners number to be reconciled")
-        else:
-            self.unit.status = ActiveStatus()
 
     @catch_unexpected_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
@@ -342,7 +313,7 @@ class GithubRunnerCharm(CharmBase):
             event: Event of reconciling the runner state.
         """
         if not RunnerManager.runner_bin_path.is_file():
-            logger.warn("Unable to reconcile due to missing runner binary")
+            logger.warning("Unable to reconcile due to missing runner binary")
             return
 
         runner_manager = self._get_runner_manager()

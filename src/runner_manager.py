@@ -68,7 +68,7 @@ class RunnerInfo:
 class RunnerManager:
     """Manage a group of runners according to configuration."""
 
-    runner_bin_path = Path("opt/github-runner-app")
+    runner_bin_path = Path("/opt/github-runner-app")
 
     def __init__(
         self,

@@ -9,7 +9,7 @@ import urllib.error
 from subprocess import CalledProcessError  # nosec B404
 from unittest.mock import MagicMock, call, patch
 
-from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
+from ops.model import BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
@@ -298,26 +298,3 @@ class TestCharm(unittest.TestCase):
         harness.charm._on_flush_runners_action(mock_event)
         mock_event.fail.assert_called()
         mock_event.reset_mock()
-
-    @patch("charm.RunnerManager")
-    @patch("pathlib.Path.write_text")
-    @patch("subprocess.run")
-    def test_on_update_status(self, run, wt, rm):
-        rm.return_value = mock_rm = MagicMock()
-        mock_rm.get_github_info = mock_get_github_info
-
-        harness = Harness(GithubRunnerCharm)
-        harness.begin()
-
-        harness.charm.on.update_status.emit()
-        assert harness.charm.unit.status == BlockedStatus("Missing token or org/repo path config")
-
-        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
-        harness.charm.on.update_status.emit()
-        assert harness.charm.unit.status == MaintenanceStatus(
-            "Waiting runners number to be reconciled"
-        )
-
-        harness.update_config({"virtual-machines": 2})
-        harness.charm.on.update_status.emit()
-        assert harness.charm.unit.status == ActiveStatus()
