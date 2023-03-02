@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import hashlib
 import logging
-import os
 import tarfile
 import urllib.request
 import uuid
@@ -34,7 +33,7 @@ from github_type import (
 )
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
-from utilities import retry
+from utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
 
@@ -91,14 +90,11 @@ class RunnerManager:
 
         # Setting the env var to this process and any child process spawned.
         if "no_proxy" in self.proxies:
-            os.environ["NO_PROXY"] = self.proxies["no_proxy"]
-            os.environ["no_proxy"] = self.proxies["no_proxy"]
+            set_env_var("NO_PROXY", self.proxies["no_proxy"])
         if "http" in self.proxies:
-            os.environ["HTTP_PROXY"] = self.proxies["http"]
-            os.environ["http_proxy"] = self.proxies["http"]
+            set_env_var("HTTP_PROXY", self.proxies["http"])
         if "https" in self.proxies:
-            os.environ["HTTPS_PROXY"] = self.proxies["https"]
-            os.environ["https_proxy"] = self.proxies["https"]
+            set_env_var("HTTPS_PROXY", self.proxies["https"])
 
         self.session = requests.Session()
         adapter = requests.adapters.HTTPAdapter(
