@@ -7,8 +7,17 @@ on:
 
 jobs:
   e2e-test:
-    name: end to end test
+    name: basic end to end test
     runs-on: [self-hosted, linux, x64, e2e-runner]
+    steps:
+      - name: Echo hello world
+        run: echo "hello world"
+  e2e-respawn-test:
+    name: respawning runner end to end test
+    runs-on: [self-hosted, linux, x64, e2e-runner]
+    strategy:
+      matrix:
+        runner: [1, 2]
     steps:
       - name: Echo hello world
         run: echo "hello world"
