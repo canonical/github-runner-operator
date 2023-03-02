@@ -115,7 +115,7 @@ class Runner:
     runner_application = Path("/opt/github-runner")
     env_file = runner_application / ".env"
     config_script = runner_application / "config.sh"
-    runner_script = runner_application / "start.sh"
+    run_script = runner_application / "run.sh"
 
     def __init__(
         self,
@@ -450,12 +450,15 @@ class Runner:
 
         logger.info("Starting runner %s", self.config.name)
 
-        # Put a script to run the GitHub self-hosted runner in the instance and run it.
-        contents = self._clients.jinja.get_template("start.j2").render()
-        self.instance.files.put(self.runner_script, contents, mode="0755")
-        self._execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
-        self._execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
-        self._execute(["/usr/bin/sudo", "-u", "ubuntu", str(self.runner_script)])
+        self._execute(
+            [
+                "/usr/bin/sudo",
+                "-u",
+                "ubuntu",
+                str(self.run_script),
+            ],
+            cwd=str(self.runner_application),
+        )
 
         logger.info("Started runner %s", self.config.name)
 
