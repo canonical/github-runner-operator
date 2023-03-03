@@ -10,12 +10,6 @@ options:
       default: ""
       description:
         The GitHub Personal Access Token for registering the self-hosted runners.
-  containers:
-      type: int
-      default: 0
-      description: >
-        The number of container runners. This charm will spawn or destroy container
-        runners to match this setting.
   virtual-machines:
       type: int
       default: 0
@@ -49,14 +43,3 @@ options:
       default: 60
       description: >
         Minutes between each check for new versions of the runner binary.
-  virt-type:
-      type: string
-      default: "container"
-      description: >
-        DEPRECATED: both `containers` and `virtual-machines` are supported at the same time
-        Virtualization type for runners, either container or virtual-machine.
-  quantity:
-      type: int
-      default: 0
-      description: >
-        DEPRECATED: use `containers` and `virtual-machines` Quantity of runners to maintain.

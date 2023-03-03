@@ -8,7 +8,6 @@ from __future__ import annotations
 import hashlib
 import logging
 import tarfile
-import tempfile
 import urllib.request
 import uuid
 from dataclasses import dataclass
@@ -34,7 +33,7 @@ from github_type import (
 )
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
-from utilities import retry
+from utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
 
@@ -68,11 +67,13 @@ class RunnerInfo:
 class RunnerManager:
     """Manage a group of runners according to configuration."""
 
+    runner_bin_path = Path("/opt/github-runner-app")
+
     def __init__(
         self,
         app_name: str,
         runner_manager_config: RunnerManagerConfig,
-        image: str = "focal",
+        image: str = "jammy",
         proxies: ProxySetting = ProxySetting(),
     ) -> None:
         """Construct RunnerManager object for creating and managing runners.
@@ -87,7 +88,13 @@ class RunnerManager:
         self.image = image
         self.proxies = proxies
 
-        self.runner_bin_path: Optional[Path] = None
+        # Setting the env var to this process and any child process spawned.
+        if "no_proxy" in self.proxies:
+            set_env_var("NO_PROXY", self.proxies["no_proxy"])
+        if "http" in self.proxies:
+            set_env_var("HTTP_PROXY", self.proxies["http"])
+        if "https" in self.proxies:
+            set_env_var("HTTPS_PROXY", self.proxies["https"])
 
         self.session = requests.Session()
         adapter = requests.adapters.HTTPAdapter(
@@ -132,7 +139,7 @@ class RunnerManager:
                 owner=self.config.path.owner, repo=self.config.path.repo
             )
         if isinstance(self.config.path, GitHubOrg):
-            runner_bins = self._clients.github.actions.list_runner_application_for_org(
+            runner_bins = self._clients.github.actions.list_runner_applications_for_org(
                 org=self.config.path.org
             )
 
@@ -164,9 +171,7 @@ class RunnerManager:
         logger.info("Downloading runner binary from: %s", binary["download_url"])
 
         # Delete old version of runner binary.
-        if self.runner_bin_path is not None:
-            self.runner_bin_path.unlink(missing_ok=True)
-            self.runner_bin_path = None
+        RunnerManager.runner_bin_path.unlink(missing_ok=True)
 
         # Download the new file
         response = self.session.get(binary["download_url"], stream=True)
@@ -183,12 +188,9 @@ class RunnerManager:
 
         sha256 = hashlib.sha256()
 
-        # Use tempfile as recommend by bandit to avoid hardcoding the file
-        # path.  The `delete=False` arg save the file permanently for the charm
-        # to use start runners.
-        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+        with RunnerManager.runner_bin_path.open(mode="wb") as file:
             for chunk in response.iter_content(decode_unicode=False):
-                tmp_file.write(chunk)
+                file.write(chunk)
 
                 sha256.update(chunk)
 
@@ -201,17 +203,14 @@ class RunnerManager:
                 binary["sha256_checksum"],
                 sha256,
             )
-            Path(tmp_file.name).unlink(missing_ok=True)
+            RunnerManager.runner_bin_path.unlink(missing_ok=True)
             raise RunnerBinaryError("Checksum mismatch for downloaded runner binary")
 
         # Verify the file integrity.
-        if not tarfile.is_tarfile(tmp_file.name):
+        if not tarfile.is_tarfile(file.name):
             logger.error("Failed to decompress downloaded GitHub runner binary.")
-            Path(tmp_file.name).unlink(missing_ok=True)
+            RunnerManager.runner_bin_path.unlink(missing_ok=True)
             raise RunnerBinaryError("Downloaded runner binary cannot be decompressed.")
-
-        # Make the binary accessible after verification has passed.
-        self.runner_bin_path = Path(tmp_file.name)
 
         logger.info("Validated newly downloaded runner binary and enabled it.")
 
@@ -249,9 +248,17 @@ class RunnerManager:
         online_runners = [
             runner for runner in runners if runner.status.exist and runner.status.online
         ]
+
+        logger.info(
+            "Expected runner count: %i, Online runner count: %i, Offline runner count: %i",
+            quantity,
+            len(online_runners),
+            len(offline_runners),
+        )
+
         delta = quantity - len(online_runners)
         if delta > 0:
-            if self.runner_bin_path is None:
+            if RunnerManager.runner_bin_path is None:
                 raise RunnerCreateError("Unable to create runner due to missing runner binary.")
 
             logger.info("Getting registration token for GitHub runners.")
@@ -275,7 +282,7 @@ class RunnerManager:
                 runner.create(
                     self.image,
                     resources,
-                    self.runner_bin_path,
+                    RunnerManager.runner_bin_path,
                     token["token"],
                 )
                 logger.info("Created runner: %s", runner.config.name)

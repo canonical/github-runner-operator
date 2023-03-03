@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import logging
 import time
-from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 from subprocess import CalledProcessError  # nosec B404
@@ -169,12 +168,7 @@ class Runner:
             self._start_runner()
         except (RunnerError, LXDAPIException) as err:
             if self.instance is not None:
-                self.instance.stop(wait=True)
-
-                with suppress(LXDAPIException):
-                    # Ephemeral containers should auto-delete when stopped;
-                    # this is just a fall-back.
-                    self.instance.delete(wait=True)
+                self.remove()
 
             raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err
 
@@ -205,12 +199,10 @@ class Runner:
                 self.instance.stop(wait=True, timeout=60)
             except LXDAPIException:
                 logger.exception("Unable to gracefully stop runner within timeout.")
-                self.instance.stop(force=True)
-
-            with suppress(LXDAPIException):
-                # Ephemeral containers should auto-delete when stopped;
-                # this is just a fall-back.
-                self.instance.delete(wait=True)
+                try:
+                    self.instance.stop(force=True)
+                except LXDAPIException as err:
+                    raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
         else:
             # We somehow have a non-running instance which should have been
             # ephemeral. Try to delete it and allow any errors doing so to
@@ -246,7 +238,7 @@ class Runner:
             "source": {
                 "type": "image",
                 "mode": "pull",
-                "server": "https://cloud-images.ubuntu.com/jammy",
+                "server": "https://cloud-images.ubuntu.com/daily",
                 "protocol": "simplestreams",
                 "alias": image,
             },

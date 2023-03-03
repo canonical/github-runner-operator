@@ -128,9 +128,22 @@ def get_env_var(env_var: str) -> Optional[str]:
     Looks for all upper-case and all low-case of the `env_var`.
 
     Args:
-        env_var: Name of environment variable.
+        env_var: Name of the environment variable.
 
     Returns:
         Value of the environment variable. None if not found.
     """
     return os.environ.get(env_var.upper(), os.environ.get(env_var.lower(), None))
+
+
+def set_env_var(env_var: str, value: str) -> None:
+    """Set the environment variable value.
+
+    Set the all upper case and all low case of the `env_var`.
+
+    Args:
+        env_var: Name of the environment variable.
+        value: Value to set environment variable to.
+    """
+    os.environ[env_var.upper()] = value
+    os.environ[env_var.lower()] = value

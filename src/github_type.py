@@ -7,7 +7,7 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import TypedDict
+from typing import List, TypedDict
 
 from typing_extensions import NotRequired
 
@@ -30,7 +30,7 @@ class RunnerApplication(TypedDict, total=False):
     sha256_checksum: NotRequired[str]
 
 
-RunnerApplicationList = list[RunnerApplication]
+RunnerApplicationList = List[RunnerApplication]
 
 
 class SelfHostedRunnerLabel(TypedDict, total=False):

@@ -3,6 +3,7 @@
 
 """Test cases for GithubRunnerCharm."""
 
+import os
 import unittest
 import urllib.error
 from subprocess import CalledProcessError  # nosec B404
@@ -40,8 +41,34 @@ def mock_get_latest_runner_bin_url():
     return mock
 
 
+def mock_get_github_info():
+    return [
+        RunnerInfo("test runner 0", GitHubRunnerStatus.ONLINE),
+        RunnerInfo("test runner 1", GitHubRunnerStatus.ONLINE),
+        RunnerInfo("test runner 2", GitHubRunnerStatus.OFFLINE),
+        RunnerInfo("test runner 3", GitHubRunnerStatus.OFFLINE),
+        RunnerInfo("test runner 4", "unknown"),
+    ]
+
+
 class TestCharm(unittest.TestCase):
     """Test cases for GithubRunnerCharm."""
+
+    @patch.dict(
+        os.environ,
+        {
+            "JUJU_CHARM_HTTPS_PROXY": "mock_https_proxy",
+            "JUJU_CHARM_HTTP_PROXY": "mock_http_proxy",
+            "JUJU_CHARM_NO_PROXY": "mock_no_proxy",
+        },
+    )
+    def test_proxy_setting(self):
+        harness = Harness(GithubRunnerCharm)
+        harness.begin()
+
+        assert harness.charm.proxies["https"] == "mock_https_proxy"
+        assert harness.charm.proxies["http"] == "mock_http_proxy"
+        assert harness.charm.proxies["no_proxy"] == "mock_no_proxy"
 
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -101,8 +128,8 @@ class TestCharm(unittest.TestCase):
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
 
-        # update to 10 containers
-        harness.update_config({"containers": 10, "virtual-machines": 0})
+        # update to 0 virtual machines
+        harness.update_config({"virtual-machines": 0})
         harness.charm.on.reconcile_runners.emit()
         rm.assert_called_with(
             "github-runner",
@@ -113,7 +140,7 @@ class TestCharm(unittest.TestCase):
         mock_rm.reset_mock()
 
         # update to 10 VMs with 4 cpu and 7GiB memory
-        harness.update_config({"containers": 0, "virtual-machines": 10, "vm-cpu": 4})
+        harness.update_config({"virtual-machines": 10, "vm-cpu": 4})
         harness.charm.on.reconcile_runners.emit()
         rm.assert_called_with(
             "github-runner",
@@ -222,15 +249,6 @@ class TestCharm(unittest.TestCase):
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
     def test_check_runners_action(self, run, wt, rm):
-        def mock_get_github_info():
-            return [
-                RunnerInfo("test runner 0", GitHubRunnerStatus.ONLINE),
-                RunnerInfo("test runner 1", GitHubRunnerStatus.ONLINE),
-                RunnerInfo("test runner 2", GitHubRunnerStatus.OFFLINE),
-                RunnerInfo("test runner 3", GitHubRunnerStatus.OFFLINE),
-                RunnerInfo("test runner 4", "unknown"),
-            ]
-
         rm.return_value = mock_rm = MagicMock()
         mock_event = MagicMock()
 

@@ -79,6 +79,8 @@ class MockPylxdInstance:
 
     def stop(self, wait: bool = True, timeout: int = 60):
         self.status = "Stopped"
+        # Ephemeral virtual machine should be deleted on stop.
+        self.deleted = True
 
     def delete(self, wait: bool = True, timeout: int = 60):
         self.deleted = True
@@ -150,7 +152,7 @@ class MockGhapiActions:
     def list_runner_applications_for_repo(self, owner: str, repo: str):
         return self._list_runner_applications()
 
-    def list_runner_application_for_org(self, org: str):
+    def list_runner_applications_for_org(self, org: str):
         return self._list_runner_applications()
 
     def create_registration_token_for_repo(self, owner: str, repo: str):
