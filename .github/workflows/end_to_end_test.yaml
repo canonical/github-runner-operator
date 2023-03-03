@@ -10,7 +10,7 @@ jobs:
     name: end to end test
     runs-on: [self-hosted, linux, x64, e2e-runner]
     strategy:
-      # Two tests are schedule to test if the charm is able to spawn new runners.
+      # Two tests are scheduled to test if the charm is able to spawn new runners.
       matrix:
         runner: [1, 2]
     steps:

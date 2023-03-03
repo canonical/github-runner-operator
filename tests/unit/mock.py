@@ -79,7 +79,7 @@ class MockPylxdInstance:
 
     def stop(self, wait: bool = True, timeout: int = 60):
         self.status = "Stopped"
-        # Ephemeral virtual machine should delete on stop.
+        # Ephemeral virtual machine should be deleted on stop.
         self.deleted = True
 
     def delete(self, wait: bool = True, timeout: int = 60):
