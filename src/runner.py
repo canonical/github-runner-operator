@@ -357,8 +357,8 @@ class Runner:
         # TEMP: Install common tools used in GitHub Actions. This will be removed once virtual
         # machines are created from custom images/GitHub runner image.
         logger.info("Setting up installation of docker...")
-        self._execute(["/usr/bin/apt", "apt", "update"])
-        self._execute(["/usr/bin/apt", "apt", "ca-certificates", "curl", "gnupg", "lsb-release"])
+        self._execute(["/usr/bin/apt", "update"])
+        self._execute(["/usr/bin/apt", "install", "ca-certificates", "curl", "gnupg", "lsb-release"])
         self._execute(["/usr/bin/mkdir", "-m", "0755", "-p", "/etc/apt/keyrings"])
         self._execute(
             [
@@ -366,7 +366,7 @@ class Runner:
                 "-fsSL",
                 "https://download.docker.com/linux/ubuntu/gpg",
                 "|",
-                "gpg",
+                "/usr/bin/gpg",
                 "--dearmor",
                 "-o",
                 "/etc/apt/keyrings/docker.gpg",
@@ -386,7 +386,7 @@ class Runner:
                 "/dev/null",
             ]
         )
-        self._execute(["/usr/bin/apt", "apt", "update"])
+        self._execute(["/usr/bin/apt", "update"])
         logger.info("Installing docker...")
         self._execute(
             [
