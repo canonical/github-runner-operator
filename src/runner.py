@@ -354,6 +354,54 @@ class Runner:
         if self.instance is None:
             return
 
+        # TEMP: Install common tools used in GitHub Actions. This will be removed once virtual
+        # machines are created from custom images/GitHub runner image.
+        self._execute(["/usr/bin/apt", "apt", "update"])
+        self._execute(["/usr/bin/apt", "apt", "ca-certificates", "curl", "gnupg", "lsb-release"])
+        self._execute(["/usr/bin/mkdir", "-m", "0755", "-p", "/etc/apt/keyrings"])
+        self._execute(
+            [
+                "/usr/bin/curl",
+                "-fsSL",
+                "https://download.docker.com/linux/ubuntu/gpg",
+                "|",
+                "gpg",
+                "--dearmor",
+                "-o",
+                "/etc/apt/keyrings/docker.gpg",
+            ]
+        )
+        self._execute(
+            [
+                "echo",
+                (
+                    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg"
+                    "] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+                ),
+                "|",
+                "/usr/bin/tee",
+                "/etc/apt/sources.list.d/docker.list",
+                ">",
+                "/dev/null",
+            ]
+        )
+        self._execute(["/usr/bin/apt", "apt", "update"])
+        self._execute(
+            [
+                "/usr/bin/apt",
+                "install",
+                "docker-ce",
+                "docker-ce-cli",
+                "containerd.io",
+                "docker-buildx-plugin",
+                "docker-compose-plugin",
+            ]
+        )
+        # Test docker.
+        self._execute(["/usr/bin/docker", "run", "hello-world"])
+
+        self._execute(["/usr/bin/apt", "install", "python3-pip"])
+
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
         binary_path = "/tmp/runner.tgz"  # nosec B108
