@@ -356,6 +356,7 @@ class Runner:
 
         # TEMP: Install common tools used in GitHub Actions. This will be removed once virtual
         # machines are created from custom images/GitHub runner image.
+        logger.info("Setting up installation of docker...")
         self._execute(["/usr/bin/apt", "apt", "update"])
         self._execute(["/usr/bin/apt", "apt", "ca-certificates", "curl", "gnupg", "lsb-release"])
         self._execute(["/usr/bin/mkdir", "-m", "0755", "-p", "/etc/apt/keyrings"])
@@ -386,6 +387,7 @@ class Runner:
             ]
         )
         self._execute(["/usr/bin/apt", "apt", "update"])
+        logger.info("Installing docker...")
         self._execute(
             [
                 "/usr/bin/apt",
@@ -397,9 +399,10 @@ class Runner:
                 "docker-compose-plugin",
             ]
         )
-        # Test docker.
+        logger.info("Testing docker...")
         self._execute(["/usr/bin/docker", "run", "hello-world"])
 
+        logger.info("Installing Python 3 pip...")
         self._execute(["/usr/bin/apt", "install", "python3-pip"])
 
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
