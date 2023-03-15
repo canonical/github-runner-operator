@@ -16,3 +16,10 @@ jobs:
     steps:
       - name: Echo hello world
         run: echo "hello world"
+  docker-test:
+    name: docker test
+    runs-on: [self-hosted, linux, x64, e2e-runner]
+    steps:
+      - name: Docker hello world
+        run: docker run hello-world
+    

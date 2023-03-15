@@ -405,8 +405,6 @@ class Runner:
                 "docker-compose-plugin",
             ]
         )
-        logger.info("Testing docker...")
-        self._execute(["/usr/bin/docker", "run", "hello-world"])
 
         logger.info("Installing Python 3 pip...")
         self._execute(["/usr/bin/apt", "install", "python3-pip"])
