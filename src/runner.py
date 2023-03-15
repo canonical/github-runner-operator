@@ -359,7 +359,7 @@ class Runner:
         logger.info("Setting up installation of docker...")
         self._execute(["/usr/bin/apt", "update"])
         self._execute(
-            ["/usr/bin/apt", "install", "ca-certificates", "curl", "gnupg", "lsb-release"]
+            ["/usr/bin/apt", "install", "-yq", "ca-certificates", "curl", "gnupg", "lsb-release"]
         )
         self._execute(["/usr/bin/mkdir", "-m", "0755", "-p", "/etc/apt/keyrings"])
         gpg_key = self._execute(
@@ -398,6 +398,7 @@ class Runner:
             [
                 "/usr/bin/apt",
                 "install",
+                "-yq",
                 "docker-ce",
                 "docker-ce-cli",
                 "containerd.io",
@@ -406,8 +407,11 @@ class Runner:
             ]
         )
 
+        logger.info("Install npm...")
+        self._execute(["/usr/bin/apt", "install", "-yq", "npm"])
+
         logger.info("Installing Python 3 pip...")
-        self._execute(["/usr/bin/apt", "install", "python3-pip"])
+        self._execute(["/usr/bin/apt", "install", "-yq", "python3-pip"])
 
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
