@@ -358,19 +358,25 @@ class Runner:
         # machines are created from custom images/GitHub runner image.
         logger.info("Setting up installation of docker...")
         self._execute(["/usr/bin/apt", "update"])
-        self._execute(["/usr/bin/apt", "install", "ca-certificates", "curl", "gnupg", "lsb-release"])
-        self._execute(["/usr/bin/mkdir", "-m", "0755", "-p", "/etc/apt/keyrings"])
         self._execute(
+            ["/usr/bin/apt", "install", "ca-certificates", "curl", "gnupg", "lsb-release"]
+        )
+        self._execute(["/usr/bin/mkdir", "-m", "0755", "-p", "/etc/apt/keyrings"])
+        gpg_key = self._execute(
             [
                 "/usr/bin/curl",
                 "-fsSL",
                 "https://download.docker.com/linux/ubuntu/gpg",
-                "|",
+            ]
+        )
+        self._execute(
+            [
                 "/usr/bin/gpg",
                 "--dearmor",
                 "-o",
                 "/etc/apt/keyrings/docker.gpg",
-            ]
+            ],
+            input=gpg_key,
         )
         self._execute(
             [
@@ -502,17 +508,18 @@ class Runner:
 
         logger.info("Started runner %s", self.config.name)
 
-    def _execute(
-        self,
-        cmd: list[str],
-        cwd: Optional[str] = None,
-    ) -> str:
+    def _execute(self, cmd: list[str], cwd: Optional[str] = None, **kwargs) -> str:
         """Check execution of a command in a LXD instance.
+
+        The command is executed with `subprocess.run`, additional arguments can be pass into as
+        keyword arguments. The following arguments to `subprocess.run` should not be set
+        `capture_output`, `shell`, `check`. As those arguments are used by this function.
 
         Args:
             instance: LXD instance of the runner.
             cmd: Sequence of command to execute on the runner.
             cwd: Working directory to execute the command.
+            kwargs: Additional keyword arguments for the `subprocess.run` call.
 
         Returns:
             The stdout of the command executed.
@@ -529,7 +536,7 @@ class Runner:
         lxc_exec_cmd += ["--"] + cmd
 
         try:
-            return execute_command(lxc_exec_cmd)
+            return execute_command(lxc_exec_cmd, **kwargs)
         except CalledProcessError as err:
             raise RunnerExecutionError(
                 f"Failed to execute command in {self.config.name}: {cmd}"

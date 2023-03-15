@@ -93,18 +93,30 @@ def retry(  # pylint: disable=too-many-arguments
     return retry_decorator
 
 
-def execute_command(cmd: Sequence[str], check: bool = True) -> str:
+def execute_command(cmd: Sequence[str], check: bool = True, **kwargs) -> str:
     """Execute a command on a subprocess.
+
+    The command is executed with `subprocess.run`, additional arguments can be pass into as keyword
+    arguments. The following arguments to `subprocess.run` should not be set `capture_output`,
+    `shell`, `check`. As those arguments are used by this function.
 
     Args:
         cmd: Command in a list.
         check: Whether to throw error on non-zero exit code.
+        kwargs: Additional keyword arguments for the `subprocess.run` call.
 
     Returns:
         Output on stdout.
     """
     logger.info("Executing command %s", cmd)
-    result = subprocess.run(cmd, capture_output=True, shell=False, check=False)  # nosec B603
+    result = subprocess.run(  # nosec B603
+        cmd,
+        capture_output=True,
+        shell=False,
+        check=False,
+        # Disable type check due to the support for unpacking arguments in mypy is experimental.
+        **kwargs  # type: ignore
+    )
     logger.debug("Command %s returns: %s", cmd, result.stdout)
 
     if check:
