@@ -356,58 +356,12 @@ class Runner:
 
         # TEMP: Install common tools used in GitHub Actions. This will be removed once virtual
         # machines are created from custom images/GitHub runner image.
-        logger.info("Setting up installation of docker...")
         self._execute(["/usr/bin/apt", "update"])
-        self._execute(
-            ["/usr/bin/apt", "install", "-yq", "ca-certificates", "curl", "gnupg", "lsb-release"]
-        )
-        self._execute(["/usr/bin/mkdir", "-m", "0755", "-p", "/etc/apt/keyrings"])
-        gpg_key = self._execute(
-            [
-                "/usr/bin/curl",
-                "-fsSL",
-                "https://download.docker.com/linux/ubuntu/gpg",
-            ]
-        )
-        self._execute(
-            [
-                "/usr/bin/gpg",
-                "--dearmor",
-                "-o",
-                "/etc/apt/keyrings/docker.gpg",
-            ],
-            input=gpg_key,
-        )
-        self._execute(
-            [
-                "echo",
-                (
-                    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg"
-                    "] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-                ),
-                "|",
-                "/usr/bin/tee",
-                "/etc/apt/sources.list.d/docker.list",
-                ">",
-                "/dev/null",
-            ]
-        )
-        self._execute(["/usr/bin/apt", "update"])
-        logger.info("Installing docker...")
-        self._execute(
-            [
-                "/usr/bin/apt",
-                "install",
-                "-yq",
-                "docker-ce",
-                "docker-ce-cli",
-                "containerd.io",
-                "docker-buildx-plugin",
-                "docker-compose-plugin",
-            ]
-        )
 
-        logger.info("Install npm...")
+        logger.info("Installing docker...")
+        self._execute(["/usr/bin/apt", "install", "-yq", "docker.io"])
+
+        logger.info("Installing npm...")
         self._execute(["/usr/bin/apt", "install", "-yq", "npm"])
 
         logger.info("Installing Python 3 pip...")
