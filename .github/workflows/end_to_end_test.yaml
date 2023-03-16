@@ -9,20 +9,9 @@ jobs:
   e2e-test:
     name: end to end test
     runs-on: [self-hosted, linux, x64, e2e-runner]
-    strategy:
-      # Two tests are scheduled to test if the charm is able to spawn new runners.
-      matrix:
-        runner: [1, 2]
     steps:
       - name: Echo hello world
         run: echo "hello world"
-  docker-test:
-    name: docker test
-    needs: e2e-test
-    runs-on: [self-hosted, linux, x64, e2e-runner]
-    steps:
-      - name: Docker hello world
-        run: docker run hello-world
   pip-test:
     name: pip test
     needs: e2e-test
@@ -37,3 +26,10 @@ jobs:
     steps:
       - name: npm version
         run: npm --version
+  docker-test:
+    name: docker test
+    needs: e2e-test
+    runs-on: [self-hosted, linux, x64, e2e-runner]
+    steps:
+      - name: Docker hello world
+        run: sudo docker run hello-world
