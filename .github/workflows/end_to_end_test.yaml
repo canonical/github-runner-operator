@@ -12,6 +12,13 @@ jobs:
     steps:
       - name: Echo hello world
         run: echo "hello world"
+  docker-test:
+    name: docker test
+    needs: e2e-test
+    runs-on: [self-hosted, linux, x64, e2e-runner]
+    steps:
+      - name: Docker version
+        run: docker --version
   pip-test:
     name: pip test
     needs: e2e-test
@@ -26,10 +33,3 @@ jobs:
     steps:
       - name: npm version
         run: npm --version
-  docker-test:
-    name: docker test
-    needs: e2e-test
-    runs-on: [self-hosted, linux, x64, e2e-runner]
-    steps:
-      - name: Docker hello world
-        run: sudo docker run hello-world
