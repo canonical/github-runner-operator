@@ -20,20 +20,20 @@ options:
       type: int
       default: 2
       description: >
-        The number of CPUs used per virtual machine runner. Does not affect container runners.
+        The number of CPUs used per virtual machine runner.
   vm-memory:
     type: string
     default: 7GiB
     description: >
-        The memory size used per virtual machine runner. Does not affect container runners.
+        The memory size used per virtual machine runner.
   vm-disk:
     type: string
     default: 10GiB
     description: >
-        The root disk size used per virtual machine runner. Does not affect container runners.
+        The root disk size used per virtual machine runner.
   reconcile-interval:
       type: int
-      default: 5
+      default: 10
       description: >
         Minutes between each reconciliation between the current state and the target state of the
         runners. On reconciliation the charm polls the state of runners, such as, the number of

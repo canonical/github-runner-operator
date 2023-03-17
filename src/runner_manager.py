@@ -249,11 +249,22 @@ class RunnerManager:
             runner for runner in runners if runner.status.exist and runner.status.online
         ]
 
+        local_runners = {
+            instance.name: instance
+            # Pylint cannot find the `all` method.
+            for instance in self._clients.lxd.instances.all()  # pylint: disable=no-member
+            if instance.name.startswith(f"{self.app_name}-")
+        }
+
         logger.info(
-            "Expected runner count: %i, Online runner count: %i, Offline runner count: %i",
+            (
+                "Expected runner count: %i, Online runner count: %i, Offline runner count: %i, "
+                "LXD instance count: %i"
+            ),
             quantity,
             len(online_runners),
             len(offline_runners),
+            len(local_runners),
         )
 
         delta = quantity - len(online_runners)

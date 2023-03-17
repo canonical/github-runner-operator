@@ -354,6 +354,19 @@ class Runner:
         if self.instance is None:
             return
 
+        # TEMP: Install common tools used in GitHub Actions. This will be removed once virtual
+        # machines are created from custom images/GitHub runner image.
+        self._execute(["/usr/bin/apt", "update"])
+
+        logger.info("Installing docker...")
+        self._execute(["/usr/bin/apt", "install", "-yq", "docker.io"])
+
+        logger.info("Installing npm...")
+        self._execute(["/usr/bin/apt", "install", "-yq", "npm"])
+
+        logger.info("Installing Python 3 pip...")
+        self._execute(["/usr/bin/apt", "install", "-yq", "python3-pip"])
+
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
         binary_path = "/tmp/runner.tgz"  # nosec B108
@@ -451,17 +464,18 @@ class Runner:
 
         logger.info("Started runner %s", self.config.name)
 
-    def _execute(
-        self,
-        cmd: list[str],
-        cwd: Optional[str] = None,
-    ) -> str:
+    def _execute(self, cmd: list[str], cwd: Optional[str] = None, **kwargs) -> str:
         """Check execution of a command in a LXD instance.
+
+        The command is executed with `subprocess.run`, additional arguments can be passed to it as
+        keyword arguments. The following arguments to `subprocess.run` should not be set:
+        `capture_output`, `shell`, `check`. As those arguments are used by this function.
 
         Args:
             instance: LXD instance of the runner.
             cmd: Sequence of command to execute on the runner.
             cwd: Working directory to execute the command.
+            kwargs: Additional keyword arguments for the `subprocess.run` call.
 
         Returns:
             The stdout of the command executed.
@@ -478,7 +492,7 @@ class Runner:
         lxc_exec_cmd += ["--"] + cmd
 
         try:
-            return execute_command(lxc_exec_cmd)
+            return execute_command(lxc_exec_cmd, **kwargs)
         except CalledProcessError as err:
             raise RunnerExecutionError(
                 f"Failed to execute command in {self.config.name}: {cmd}"
