@@ -96,9 +96,9 @@ def retry(  # pylint: disable=too-many-arguments
 def execute_command(cmd: Sequence[str], check: bool = True, **kwargs) -> str:
     """Execute a command on a subprocess.
 
-    The command is executed with `subprocess.run`, additional arguments can be pass into as keyword
-    arguments. The following arguments to `subprocess.run` should not be set `capture_output`,
-    `shell`, `check`. As those arguments are used by this function.
+    The command is executed with `subprocess.run`, additional arguments can be passed to it as
+    keyword arguments. The following arguments to `subprocess.run` should not be set:
+    `capture_output`, `shell`, `check`. As those arguments are used by this function.
 
     Args:
         cmd: Command in a list.

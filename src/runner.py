@@ -467,8 +467,8 @@ class Runner:
     def _execute(self, cmd: list[str], cwd: Optional[str] = None, **kwargs) -> str:
         """Check execution of a command in a LXD instance.
 
-        The command is executed with `subprocess.run`, additional arguments can be pass into as
-        keyword arguments. The following arguments to `subprocess.run` should not be set
+        The command is executed with `subprocess.run`, additional arguments can be passed to it as
+        keyword arguments. The following arguments to `subprocess.run` should not be set:
         `capture_output`, `shell`, `check`. As those arguments are used by this function.
 
         Args:
