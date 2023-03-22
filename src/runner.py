@@ -360,6 +360,8 @@ class Runner:
 
         logger.info("Installing docker...")
         self._execute(["/usr/bin/apt", "install", "-yq", "docker.io"])
+        self._execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
+        self._execute(["/usr/bin/newgrp", "docker"])
 
         logger.info("Installing npm...")
         self._execute(["/usr/bin/apt", "install", "-yq", "npm"])
