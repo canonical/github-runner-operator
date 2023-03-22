@@ -376,7 +376,7 @@ class Runner:
         self._execute(["/usr/bin/apt", "install", "-yq", "jq"])
 
         logger.info("Installing yq")
-        self._execute(["/usr/bin/apt", "install", "-yq", "yq"])
+        self._execute(["/usr/bin/snap", "install", "yq"])
 
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
