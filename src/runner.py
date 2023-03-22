@@ -375,6 +375,9 @@ class Runner:
         logger.info("Installing jq")
         self._execute(["/usr/bin/apt", "install", "-yq", "jq"])
 
+        logger.info("Installing yq")
+        self._execute(["/usr/bin/apt", "install", "-yq", "yq"])
+
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
         binary_path = "/tmp/runner.tgz"  # nosec B108
