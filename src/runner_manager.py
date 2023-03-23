@@ -383,9 +383,21 @@ class RunnerManager:
             remote_runner: Optional[SelfHostedRunner],
         ) -> Runner:
             """Create runner from information from GitHub and LXD."""
+            logger.debug(
+                (
+                    "Found runner %s with GitHub info [status: %s, busy %s, labels: %s] and LXD "
+                    "info [status: %s]"
+                ),
+                name,
+                remote_runner.get("status", None),
+                remote_runner.get("busy", None),
+                remote_runner.get("labels", None),
+                getattr(local_runner, "status", None),
+            )
+
             running = local_runner is not None
             online = False if remote_runner is None else remote_runner["status"] == "online"
-            busy = False if remote_runner is None else remote_runner["busy"]
+            busy = remote_runner.get("busy", False)
 
             config = RunnerConfig(self.app_name, self.config.path, self.proxies, name)
             return Runner(
