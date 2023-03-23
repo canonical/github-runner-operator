@@ -504,11 +504,11 @@ class Runner:
         Args:
             packages: Packages to be install via apt.
         """
-        self._execute(["/usr/bin/apt", "update"])
+        self._execute(["/usr/bin/apt-get", "update"])
 
         for pkg in packages:
             logger.info("Installing %s via APT...", pkg)
-            self._execute(["/usr/bin/apt", "install", "-yq", pkg])
+            self._execute(["/usr/bin/apt-get", "install", "-yq", pkg])
 
     def _snap_install(self, packages: Iterable[str]) -> None:
         """Installs the given snap packages.
