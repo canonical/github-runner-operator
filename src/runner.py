@@ -17,7 +17,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from subprocess import CalledProcessError  # nosec B404
-from typing import Optional, Sequence, TypedDict
+from typing import Iterable, Optional, Sequence, TypedDict
 
 import jinja2
 import pylxd
@@ -356,18 +356,13 @@ class Runner:
 
         # TEMP: Install common tools used in GitHub Actions. This will be removed once virtual
         # machines are created from custom images/GitHub runner image.
-        self._execute(["/usr/bin/apt", "update"])
 
-        logger.info("Installing docker...")
-        self._execute(["/usr/bin/apt", "install", "-yq", "docker.io"])
+        self._apt_install(["docker.io", "npm", "python3-pip", "shellcheck", "jq"])
+        self._snap_install(["yq"])
+
+        # Add the user to docker group.
         self._execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
         self._execute(["/usr/bin/newgrp", "docker"])
-
-        logger.info("Installing npm...")
-        self._execute(["/usr/bin/apt", "install", "-yq", "npm"])
-
-        logger.info("Installing Python 3 pip...")
-        self._execute(["/usr/bin/apt", "install", "-yq", "python3-pip"])
 
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
@@ -499,3 +494,31 @@ class Runner:
             raise RunnerExecutionError(
                 f"Failed to execute command in {self.config.name}: {cmd}"
             ) from err
+
+    def _apt_install(self, packages: Iterable[str]) -> None:
+        """Installs the given APT packages.
+
+        This is a temporary solution to provide tools not offered by the base ubuntu image. Custom
+        images based on the GitHub action runner image will be used in the future.
+
+        Args:
+            packages: Packages to be install via apt.
+        """
+        self._execute(["/usr/bin/apt-get", "update"])
+
+        for pkg in packages:
+            logger.info("Installing %s via APT...", pkg)
+            self._execute(["/usr/bin/apt-get", "install", "-yq", pkg])
+
+    def _snap_install(self, packages: Iterable[str]) -> None:
+        """Installs the given snap packages.
+
+        This is a temporary solution to provide tools not offered by the base ubuntu image. Custom
+        images based on the GitHub action runner image will be used in the future.
+
+        Args:
+            packages: Packages to be install via snap.
+        """
+        for pkg in packages:
+            logger.info("Installing %s via snap...", pkg)
+            self._execute(["/usr/bin/snap", "install", pkg])

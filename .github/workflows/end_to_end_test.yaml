@@ -12,24 +12,21 @@ jobs:
     steps:
       - name: Echo hello world
         run: echo "hello world"
-  docker-test:
-    name: docker test
+  dep-test:
+    # Test the dependencies in one job to avoid using too many runners at once.
+    name: dependency test
     needs: e2e-test
     runs-on: [self-hosted, linux, x64, e2e-runner]
     steps:
       - name: Docker version
         run: docker version
-  pip-test:
-    name: pip test
-    needs: e2e-test
-    runs-on: [self-hosted, linux, x64, e2e-runner]
-    steps:
       - name: pip version
         run: pip --version
-  npm-test:
-    name: npm test
-    needs: e2e-test
-    runs-on: [self-hosted, linux, x64, e2e-runner]
-    steps:
       - name: npm version
         run: npm --version
+      - name: shellcheck version
+        run: shellcheck --version
+      - name: jq version
+        run: jq --version
+      - name: yq version
+        run: yq --version

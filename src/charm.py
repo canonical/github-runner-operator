@@ -465,7 +465,7 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Installing charm dependencies.")
 
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
-        execute_command(["/usr/bin/apt", "remove", "-qy", "lxd", "lxd-client"], check=False)
+        execute_command(["/usr/bin/apt-get", "remove", "-qy", "lxd", "lxd-client"], check=False)
         execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
         execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
         execute_command(["/snap/bin/lxd", "waitready"])
@@ -474,7 +474,7 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
         execute_command(
             [
-                "/usr/bin/apt",
+                "/usr/bin/apt-get",
                 "install",
                 "-qy",
                 "cpu-checker",
