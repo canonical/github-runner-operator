@@ -94,12 +94,21 @@ class TestCharm(unittest.TestCase):
     @patch("subprocess.run")
     def test_org_register(self, run, wt, rm):
         harness = Harness(GithubRunnerCharm)
-        harness.update_config({"path": "mockorg", "token": "mocktoken", "reconcile-interval": 5})
+        harness.update_config(
+            {
+                "path": "mockorg",
+                "token": "mocktoken",
+                "group": "mockgroup",
+                "reconcile-interval": 5,
+            }
+        )
         harness.begin()
         harness.charm.on.config_changed.emit()
         rm.assert_called_with(
             "github-runner",
-            RunnerManagerConfig(path=GitHubOrg(org="mockorg"), token="mocktoken"),
+            RunnerManagerConfig(
+                path=GitHubOrg(org="mockorg", group="mockgroup"), token="mocktoken"
+            ),
             proxies={},
         )
 

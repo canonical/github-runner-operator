@@ -19,7 +19,7 @@ from tests.unit.mock import TEST_BINARY
     scope="function",
     name="runner_manager",
     params=[
-        (GitHubOrg("test_org"), {}),
+        (GitHubOrg("test_org", "test_group"), {}),
         (
             GitHubRepo("test_owner", "test_repo"),
             {"no_proxy": "test_no_proxy", "http": "test_http", "https": "test_https"},

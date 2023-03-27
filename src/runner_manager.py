@@ -385,7 +385,7 @@ class RunnerManager:
             """Create runner from information from GitHub and LXD."""
             logger.debug(
                 (
-                    "Found runner %s with GitHub info [status: %s, busy %s, labels: %s] and LXD "
+                    "Found runner %s with GitHub info [status: %s, busy: %s, labels: %s] and LXD "
                     "info [status: %s]"
                 ),
                 name,

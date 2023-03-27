@@ -424,23 +424,28 @@ class Runner:
 
         logger.info("Registering runner %s", self.config.name)
 
+        register_cmd = [
+            "/usr/bin/sudo",
+            "-u",
+            "ubuntu",
+            str(self.config_script),
+            "--url",
+            f"https://github.com/{self.config.path.path()}",
+            "--token",
+            registration_token,
+            "--ephemeral",
+            "--name",
+            self.instance.name,
+            "--unattended",
+            "--labels",
+            f"{','.join(labels)}",
+        ]
+
+        if isinstance(self.config.path, GitHubOrg):
+            register_cmd += ["--runnergroup", self.config.path.group]
+
         self._execute(
-            [
-                "/usr/bin/sudo",
-                "-u",
-                "ubuntu",
-                str(self.config_script),
-                "--url",
-                f"https://github.com/{self.config.path.path()}",
-                "--token",
-                f"{registration_token}",
-                "--ephemeral",
-                "--name",
-                f"{self.instance.name}",
-                "--unattended",
-                "--labels",
-                f"{','.join(labels)}",
-            ],
+            register_cmd,
             cwd=str(self.runner_application),
         )
 
