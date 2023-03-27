@@ -51,6 +51,7 @@ class RunnerManagerConfig:
 
     path: GitHubPath
     token: str
+    image: str
 
 
 @dataclass
@@ -74,7 +75,6 @@ class RunnerManager:
         app_name: str,
         unit: int,
         runner_manager_config: RunnerManagerConfig,
-        image: str = "jammy",
         proxies: ProxySetting = ProxySetting(),
     ) -> None:
         """Construct RunnerManager object for creating and managing runners.
@@ -82,13 +82,12 @@ class RunnerManager:
         Args:
             app_name: An name for the set of runners.
             unit: Unit number of the set of runners.
-            image: Image to use for the runner LXD instances.
+            runner_manager_config: Configuration for the runner manager.
             proxies: HTTP proxy settings.
         """
         self.app_name = app_name
         self.instance_name = f"{app_name}-{unit}-"
         self.config = runner_manager_config
-        self.image = image
         self.proxies = proxies
 
         # Setting the env var to this process and any child process spawned.
@@ -297,7 +296,7 @@ class RunnerManager:
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
                 runner.create(
-                    self.image,
+                    self.config.image,
                     resources,
                     RunnerManager.runner_bin_path,
                     token["token"],

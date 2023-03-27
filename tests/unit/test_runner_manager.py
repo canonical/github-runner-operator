@@ -31,7 +31,10 @@ def runner_manager_fixture(request, tmp_path, monkeypatch):
         "runner_manager.RunnerManager.runner_bin_path", Path(tmp_path / "mock_runner_binary")
     )
     runner_manager = RunnerManager(
-        "test app", RunnerManagerConfig(request.param[0], "mock token"), proxies=request.param[1]
+        "test app",
+        "0",
+        RunnerManagerConfig(request.param[0], "mock token", "jammy"),
+        proxies=request.param[1],
     )
     return runner_manager
 

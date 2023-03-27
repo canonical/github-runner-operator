@@ -180,7 +180,7 @@ class GithubRunnerCharm(CharmBase):
         return RunnerManager(
             app_name,
             unit,
-            RunnerManagerConfig(path, token),
+            RunnerManagerConfig(path, token, "jammy"),
             proxies=self.proxies,
         )
 

@@ -105,9 +105,10 @@ class TestCharm(unittest.TestCase):
         harness.begin()
         harness.charm.on.config_changed.emit()
         rm.assert_called_with(
-            "github-runner-0",
+            "github-runner",
+            "0",
             RunnerManagerConfig(
-                path=GitHubOrg(org="mockorg", group="mockgroup"), token="mocktoken"
+                path=GitHubOrg(org="mockorg", group="mockgroup"), token="mocktoken", image="jammy"
             ),
             proxies={},
         )
@@ -123,8 +124,11 @@ class TestCharm(unittest.TestCase):
         harness.begin()
         harness.charm.on.config_changed.emit()
         rm.assert_called_with(
-            "github-runner-0",
-            RunnerManagerConfig(path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken"),
+            "github-runner",
+            "0",
+            RunnerManagerConfig(
+                path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
+            ),
             proxies={},
         )
 
@@ -141,8 +145,11 @@ class TestCharm(unittest.TestCase):
         harness.update_config({"virtual-machines": 0})
         harness.charm.on.reconcile_runners.emit()
         rm.assert_called_with(
-            "github-runner-0",
-            RunnerManagerConfig(path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken"),
+            "github-runner",
+            "0",
+            RunnerManagerConfig(
+                path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
+            ),
             proxies={},
         )
         mock_rm.reconcile.assert_called_with(0, VirtualMachineResources(2, "7GiB", "10GiB")),
@@ -152,8 +159,11 @@ class TestCharm(unittest.TestCase):
         harness.update_config({"virtual-machines": 10, "vm-cpu": 4})
         harness.charm.on.reconcile_runners.emit()
         rm.assert_called_with(
-            "github-runner-0",
-            RunnerManagerConfig(path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken"),
+            "github-runner",
+            "0",
+            RunnerManagerConfig(
+                path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
+            ),
             proxies={},
         )
         mock_rm.reconcile.assert_called_with(
