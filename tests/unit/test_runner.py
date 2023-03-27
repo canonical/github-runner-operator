@@ -44,7 +44,7 @@ def mock_pylxd_client_fixture():
     scope="function",
     name="runner",
     params=[
-        (GitHubOrg("test_org"), {}),
+        (GitHubOrg("test_org", "test_group"), {}),
         (
             GitHubRepo("test_owner", "test_repo"),
             {"no_proxy": "test_no_proxy", "http": "test_http", "https": "test_https"},

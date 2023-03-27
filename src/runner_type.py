@@ -33,6 +33,7 @@ class GitHubOrg:
     """Represent GitHub organization."""
 
     org: str
+    group: str
 
     def path(self) -> str:
         """Return a string representing the path."""
