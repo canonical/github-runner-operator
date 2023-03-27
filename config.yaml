@@ -30,7 +30,7 @@ options:
     type: string
     default: 7GiB
     description: >
-      The memory size used per virtual machine runner.
+      Amount of memory to allocate per virtual machine runner. Positive integers with GiB suffix.
   vm-disk:
     type: string
     default: 10GiB
