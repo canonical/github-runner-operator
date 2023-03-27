@@ -177,7 +177,9 @@ class GithubRunnerCharm(CharmBase):
             path = GitHubOrg(org=path)
 
         return RunnerManager(
-            self.app.name, self.unit.name, RunnerManagerConfig(path, token), proxies=self.proxies
+            self.unit.name,
+            RunnerManagerConfig(path, token),
+            proxies=self.proxies,
         )
 
     @catch_unexpected_charm_errors

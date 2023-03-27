@@ -71,8 +71,7 @@ class RunnerManager:
 
     def __init__(
         self,
-        app_name: str,
-        unit_name: str,
+        instance_name: str,
         runner_manager_config: RunnerManagerConfig,
         image: str = "jammy",
         proxies: ProxySetting = ProxySetting(),
@@ -80,11 +79,11 @@ class RunnerManager:
         """Construct RunnerManager object for creating and managing runners.
 
         Args:
-            app_name: An name for the set of runners.
+            instance_name: An name for the set of runners.
             image: Image to use for the runner LXD instances.
             proxies: HTTP proxy settings.
         """
-        self.instance_name = f"{app_name}-{unit_name}"
+        self.instance_name = instance_name
         self.config = runner_manager_config
         self.image = image
         self.proxies = proxies
@@ -355,7 +354,6 @@ class RunnerManager:
             Generated name of runner.
         """
         suffix = str(uuid.uuid4())
-        # TODO: Add unit number to name.
         return f"{self.instance_name}-{suffix}"
 
     def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:

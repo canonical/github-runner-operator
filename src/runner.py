@@ -180,23 +180,24 @@ class Runner:
         """
         logger.info("Removing LXD instance of runner: %s", self.config.name)
 
-        if self.instance and self.instance.status == "Running":
-            try:
-                self.instance.stop(wait=True, timeout=60)
-            except LXDAPIException:
-                logger.exception("Unable to gracefully stop runner within timeout.")
+        if self.instance:
+            if self.instance.status == "Running":
                 try:
-                    self.instance.stop(force=True)
+                    self.instance.stop(wait=True, timeout=60)
+                except LXDAPIException:
+                    logger.exception("Unable to gracefully stop runner within timeout.")
+                    try:
+                        self.instance.stop(force=True)
+                    except LXDAPIException as err:
+                        raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
+            else:
+                # We somehow have a non-running instance which should have been
+                # ephemeral. Try to delete it and allow any errors doing so to
+                # surface.
+                try:
+                    self.instance.delete(wait=True)
                 except LXDAPIException as err:
                     raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
-        else:
-            # We somehow have a non-running instance which should have been
-            # ephemeral. Try to delete it and allow any errors doing so to
-            # surface.
-            try:
-                self.instance.delete(wait=True)
-            except LXDAPIException as err:
-                raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
 
         if isinstance(self.config.path, GitHubRepo):
             self._clients.github.actions.delete_self_hosted_runner_from_repo(
