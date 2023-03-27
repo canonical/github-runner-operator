@@ -174,7 +174,7 @@ class GithubRunnerCharm(CharmBase):
             owner, repo = paths
             path = GitHubRepo(owner=owner, repo=repo)
         else:
-            path = GitHubOrg(org=path)
+            path = GitHubOrg(org=path, group=self.config["group"])
 
         return RunnerManager(
             self.unit.name,
