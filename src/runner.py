@@ -180,21 +180,7 @@ class Runner:
         """
         logger.info("Removing LXD instance of runner: %s", self.config.name)
 
-        if isinstance(self.config.path, GitHubRepo):
-            self._clients.github.actions.delete_self_hosted_runner_from_repo(
-                owner=self.config.path.owner,
-                repo=self.config.path.repo,
-                runner_id=self.config.name,
-            )
-        if isinstance(self.config.path, GitHubOrg):
-            self._clients.github.actions.delete_self_hosted_runner_from_org(
-                org=self.config.path.org, runner_id=self.config.name
-            )
-
-        if self.instance is None:
-            return
-
-        if self.instance.status == "Running":
+        if self.instance and self.instance.status == "Running":
             try:
                 self.instance.stop(wait=True, timeout=60)
             except LXDAPIException:
@@ -211,6 +197,17 @@ class Runner:
                 self.instance.delete(wait=True)
             except LXDAPIException as err:
                 raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
+
+        if isinstance(self.config.path, GitHubRepo):
+            self._clients.github.actions.delete_self_hosted_runner_from_repo(
+                owner=self.config.path.owner,
+                repo=self.config.path.repo,
+                runner_id=self.config.name,
+            )
+        if isinstance(self.config.path, GitHubOrg):
+            self._clients.github.actions.delete_self_hosted_runner_from_org(
+                org=self.config.path.org, runner_id=self.config.name
+            )
 
     @retry(tries=5, delay=1, local_logger=logger)
     def _create_instance(

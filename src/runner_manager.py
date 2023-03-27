@@ -72,6 +72,7 @@ class RunnerManager:
     def __init__(
         self,
         app_name: str,
+        unit_name: str,
         runner_manager_config: RunnerManagerConfig,
         image: str = "jammy",
         proxies: ProxySetting = ProxySetting(),
@@ -83,7 +84,7 @@ class RunnerManager:
             image: Image to use for the runner LXD instances.
             proxies: HTTP proxy settings.
         """
-        self.app_name = app_name
+        self.instance_name = f"{app_name}-{unit_name}"
         self.config = runner_manager_config
         self.image = image
         self.proxies = proxies
@@ -253,7 +254,7 @@ class RunnerManager:
             instance.name: instance
             # Pylint cannot find the `all` method.
             for instance in self._clients.lxd.instances.all()  # pylint: disable=no-member
-            if instance.name.startswith(f"{self.app_name}-")
+            if instance.name.startswith(f"{self.instance_name}-")
         }
 
         logger.info(
@@ -287,7 +288,10 @@ class RunnerManager:
             logger.info("Adding %i additional runner(s).", delta)
             for _ in range(delta):
                 config = RunnerConfig(
-                    self.app_name, self.config.path, self.proxies, self._generate_runner_name()
+                    self.instance_name,
+                    self.config.path,
+                    self.proxies,
+                    self._generate_runner_name(),
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
                 runner.create(
@@ -351,7 +355,8 @@ class RunnerManager:
             Generated name of runner.
         """
         suffix = str(uuid.uuid4())
-        return f"{self.app_name}-{suffix}"
+        # TODO: Add unit number to name.
+        return f"{self.instance_name}-{suffix}"
 
     def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
         remote_runners_list: list[SelfHostedRunner] = []
@@ -367,7 +372,7 @@ class RunnerManager:
         return {
             runner.name: runner
             for runner in remote_runners_list
-            if runner.name.startswith(f"{self.app_name}-")
+            if runner.name.startswith(f"{self.instance_name}-")
         }
 
     def _get_runners(self) -> list[Runner]:
@@ -399,7 +404,7 @@ class RunnerManager:
             online = getattr(remote_runner, "status", None) == "online"
             busy = getattr(remote_runner, "busy", None)
 
-            config = RunnerConfig(self.app_name, self.config.path, self.proxies, name)
+            config = RunnerConfig(self.instance_name, self.config.path, self.proxies, name)
             return Runner(
                 self._clients,
                 config,
@@ -412,7 +417,7 @@ class RunnerManager:
             instance.name: instance
             # Pylint cannot find the `all` method.
             for instance in self._clients.lxd.instances.all()  # pylint: disable=no-member
-            if instance.name.startswith(f"{self.app_name}-")
+            if instance.name.startswith(f"{self.instance_name}-")
         }
 
         runners: list[Runner] = []

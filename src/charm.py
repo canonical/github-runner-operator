@@ -176,7 +176,9 @@ class GithubRunnerCharm(CharmBase):
         else:
             path = GitHubOrg(org=path)
 
-        return RunnerManager(self.app.name, RunnerManagerConfig(path, token), proxies=self.proxies)
+        return RunnerManager(
+            self.app.name, self.unit.name, RunnerManagerConfig(path, token), proxies=self.proxies
+        )
 
     @catch_unexpected_charm_errors
     def _on_install(self, _event: InstallEvent) -> None:
