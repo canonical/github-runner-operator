@@ -35,7 +35,7 @@ options:
     type: string
     default: 10GiB
     description: >
-      The root disk size used per virtual machine runner.
+      Amount of disk space to allocate to root disk for virtual machine runner. Positive integers with GiB suffix.
   reconcile-interval:
     type: int
     default: 10
