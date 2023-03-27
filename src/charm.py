@@ -176,8 +176,10 @@ class GithubRunnerCharm(CharmBase):
         else:
             path = GitHubOrg(org=path, group=self.config["group"])
 
+        app_name, unit = self.unit.name.rsplit("/", 1)
         return RunnerManager(
-            self.unit.name.replace("/", "-"),
+            app_name,
+            unit,
             RunnerManagerConfig(path, token),
             proxies=self.proxies,
         )

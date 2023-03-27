@@ -71,7 +71,8 @@ class RunnerManager:
 
     def __init__(
         self,
-        instance_name: str,
+        app_name: str,
+        unit: int,
         runner_manager_config: RunnerManagerConfig,
         image: str = "jammy",
         proxies: ProxySetting = ProxySetting(),
@@ -79,11 +80,13 @@ class RunnerManager:
         """Construct RunnerManager object for creating and managing runners.
 
         Args:
-            instance_name: An name for the set of runners.
+            app_name: An name for the set of runners.
+            unit: Unit number of the set of runners.
             image: Image to use for the runner LXD instances.
             proxies: HTTP proxy settings.
         """
-        self.instance_name = instance_name
+        self.app_name = app_name
+        self.instance_name = f"{app_name}-{unit}-"
         self.config = runner_manager_config
         self.image = image
         self.proxies = proxies
@@ -287,7 +290,7 @@ class RunnerManager:
             logger.info("Adding %i additional runner(s).", delta)
             for _ in range(delta):
                 config = RunnerConfig(
-                    self.instance_name,
+                    self.app_name,
                     self.config.path,
                     self.proxies,
                     self._generate_runner_name(),
@@ -402,7 +405,7 @@ class RunnerManager:
             online = getattr(remote_runner, "status", None) == "online"
             busy = getattr(remote_runner, "busy", None)
 
-            config = RunnerConfig(self.instance_name, self.config.path, self.proxies, name)
+            config = RunnerConfig(self.app_name, self.config.path, self.proxies, name)
             return Runner(
                 self._clients,
                 config,
