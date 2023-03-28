@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import hashlib
+import unittest
 from typing import Sequence
 
 import pylxd
@@ -189,3 +190,19 @@ class MockGhapiActions:
 
     def delete_self_hosted_runner_from_org(self, org: str, runner_id: str):
         pass
+
+
+class MockJinjaTemplate:
+    def __init__(self):
+        pass
+
+    def render(self, *args, **kwargs) -> str:
+        return ""
+
+
+class MockJinja(unittest.mock.MagicMock):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def get_template(self, template: str) -> MockJinjaTemplate:
+        return MockJinjaTemplate()

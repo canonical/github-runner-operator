@@ -12,7 +12,12 @@ import pytest
 from errors import RunnerCreateError
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
-from tests.unit.mock import MockPylxdClient, mock_pylxd_error_func, mock_runner_error_func
+from tests.unit.mock import (
+    MockJinja,
+    MockPylxdClient,
+    mock_pylxd_error_func,
+    mock_runner_error_func,
+)
 
 
 @pytest.fixture(scope="module", name="vm_resources")
@@ -52,7 +57,7 @@ def mock_pylxd_client_fixture():
     ],
 )
 def runner_fixture(request, pylxd: MockPylxdClient):
-    client = RunnerClients(MagicMock(), MagicMock(), pylxd)
+    client = RunnerClients(MagicMock(), MockJinja(), pylxd)
     config = RunnerConfig("test_app", request.param[0], request.param[1], "test_runner")
     status = RunnerStatus()
     return Runner(
