@@ -115,8 +115,6 @@ def test_create_runner_fail(
     with pytest.raises(RunnerCreateError):
         runner.create("test_image", vm_resources, binary_path, "test_token")
 
-    assert len(pylxd.instances.all()) == 0
-
 
 def test_remove(
     runner: Runner,
@@ -131,7 +129,7 @@ def test_remove(
     """
 
     runner.create("test_image", vm_resources, binary_path, "test_token")
-    runner.remove()
+    runner.remove("test_token")
     assert len(pylxd.instances.all()) == 0
 
 
@@ -145,5 +143,5 @@ def test_remove_none(
     assert: The pylxd instance for the runner is removed.
     """
 
-    runner.remove()
+    runner.remove("test_token")
     assert len(pylxd.instances.all()) == 0

@@ -11,7 +11,7 @@ from typing import Sequence
 import pylxd
 
 from errors import RunnerError
-from github_type import RegisterToken, RunnerApplication
+from github_type import RegistrationToken, RemoveToken, RunnerApplication
 from runner import LxdInstanceConfig
 
 # Compressed tar file for testing.
@@ -159,10 +159,24 @@ class MockGhapiActions:
         return self._list_runner_applications()
 
     def create_registration_token_for_repo(self, owner: str, repo: str):
-        return RegisterToken({"token": "test registration token"})
+        return RegistrationToken(
+            {"token": "test registration token", "expires_at": "2020-01-22T12:13:35.123-08:00"}
+        )
 
     def create_registration_token_for_org(self, org: str):
-        return RegisterToken({"token": "test registration token"})
+        return RegistrationToken(
+            {"token": "test registration token", "expires_at": "2020-01-22T12:13:35.123-08:00"}
+        )
+
+    def create_remove_token_for_repo(self, owner: str, repo: str):
+        return RemoveToken(
+            {"token": "test registration token", "expires_at": "2020-01-22T12:13:35.123-08:00"}
+        )
+
+    def create_remove_token_for_org(self, org: str):
+        return RemoveToken(
+            {"token": "test registration token", "expires_at": "2020-01-22T12:13:35.123-08:00"}
+        )
 
     def list_self_hosted_runners_for_repo(self, owner: str, repo: str):
         return {"runners": []}

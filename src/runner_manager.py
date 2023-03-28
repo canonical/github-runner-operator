@@ -22,11 +22,13 @@ import requests
 import requests.adapters
 import urllib3
 from ghapi.all import GhApi
+from typing_extensions import assert_never
 
 from errors import RunnerBinaryError, RunnerCreateError
 from github_type import (
     GitHubRunnerStatus,
-    RegisterToken,
+    RegistrationToken,
+    RemoveToken,
     RunnerApplication,
     RunnerApplicationList,
     SelfHostedRunner,
@@ -86,7 +88,7 @@ class RunnerManager:
             proxies: HTTP proxy settings.
         """
         self.app_name = app_name
-        self.instance_name = f"{app_name}-{unit}-"
+        self.instance_name = f"{app_name}-{unit}"
         self.config = runner_manager_config
         self.proxies = proxies
 
@@ -242,8 +244,10 @@ class RunnerManager:
         if offline_runners:
             logger.info("Cleaning up offline runners.")
 
+            remove_token = self._get_github_remove_token()
+
             for runner in offline_runners:
-                runner.remove()
+                runner.remove(remove_token)
                 logger.info("Removed runner: %s", runner.config.name)
 
         # Add/Remove runners to match the target quantity
@@ -276,15 +280,8 @@ class RunnerManager:
 
             logger.info("Getting registration token for GitHub runners.")
 
-            token: RegisterToken = {"token": None}
-            if isinstance(self.config.path, GitHubRepo):
-                token = self._clients.github.actions.create_registration_token_for_repo(
-                    owner=self.config.path.owner, repo=self.config.path.repo
-                )
-            elif isinstance(self.config.path, GitHubOrg):
-                token = self._clients.github.actions.create_registration_token_for_org(
-                    org=self.config.path.org
-                )
+            registration_token = self._get_github_registration_token()
+            remove_token = self._get_github_remove_token()
 
             logger.info("Adding %i additional runner(s).", delta)
             for _ in range(delta):
@@ -295,13 +292,20 @@ class RunnerManager:
                     self._generate_runner_name(),
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
-                runner.create(
-                    self.config.image,
-                    resources,
-                    RunnerManager.runner_bin_path,
-                    token["token"],
-                )
-                logger.info("Created runner: %s", runner.config.name)
+                try:
+                    runner.create(
+                        self.config.image,
+                        resources,
+                        RunnerManager.runner_bin_path,
+                        registration_token,
+                    )
+                    logger.info("Created runner: %s", runner.config.name)
+                except RunnerCreateError:
+                    logger.error("Unable to create runner: %s", runner.config.name)
+                    runner.remove(remove_token)
+                    logger.info("Cleaned up runner: %s", runner.config.name)
+                    raise
+
         elif delta < 0:
             # Idle runners are online runners that has not taken a job.
             idle_runners = [runner for runner in online_runners if not runner.status.busy]
@@ -312,8 +316,10 @@ class RunnerManager:
 
                 logger.info("Cleaning up idle runners.")
 
+                remove_token = self._get_github_remove_token()
+
                 for runner in remove_runners:
-                    runner.remove()
+                    runner.remove(remove_token)
                     logger.info("Removed runner: %s", runner.config.name)
 
             else:
@@ -343,8 +349,10 @@ class RunnerManager:
 
         logger.info("Removing existing %i local runners", len(runners))
 
+        remove_token = self._get_github_remove_token()
+
         for runner in runners:
-            runner.remove()
+            runner.remove(remove_token)
             logger.info("Removed runner: %s", runner.config.name)
 
         return len(runners)
@@ -429,3 +437,43 @@ class RunnerManager:
             )
 
         return runners
+
+    def _get_github_registration_token(self) -> str:
+        """Get token from GitHub used for registering runners.
+
+        Returns:
+            The registration token.
+        """
+        token: RegistrationToken
+        if isinstance(self.config.path, GitHubRepo):
+            token = self._clients.github.actions.create_registration_token_for_repo(
+                owner=self.config.path.owner, repo=self.config.path.repo
+            )
+        elif isinstance(self.config.path, GitHubOrg):
+            token = self._clients.github.actions.create_registration_token_for_org(
+                org=self.config.path.org
+            )
+        else:
+            assert_never(token)
+
+        return token["token"]
+
+    def _get_github_remove_token(self) -> str:
+        """Get token from GitHub used for removing runners.
+
+        Returns:
+            The removing token.
+        """
+        token: RemoveToken
+        if isinstance(self.config.path, GitHubRepo):
+            token = self._clients.github.actions.create_remove_token_for_repo(
+                owner=self.config.path.owner, repo=self.config.path.repo
+            )
+        elif isinstance(self.config.path, GitHubOrg):
+            token = self._clients.github.actions.create_remove_token_for_org(
+                org=self.config.path.org
+            )
+        else:
+            assert_never(token)
+
+        return token["token"]
