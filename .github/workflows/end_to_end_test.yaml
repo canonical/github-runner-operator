@@ -32,6 +32,6 @@ jobs:
         run: yq --version
       - name: install check-jsonschema
         run: python3 -m pip install check-jsonschema
-      # Test 
+      # Test program installed by pip. The directory `~/.local/bin` need to be added to PATH.
       - name: test check-jsonschema
         run: check-jsonschema --version 
