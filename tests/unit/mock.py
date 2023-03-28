@@ -101,6 +101,9 @@ class MockPylxdInstanceFiles:
     def put(self, filepath, data, mode=None, uid=None, gid=None):
         pass
 
+    def get(self, filepath):
+        return ""
+
 
 class MockErrorResponse:
     """Mock of an error response for request library."""
