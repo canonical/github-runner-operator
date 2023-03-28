@@ -369,6 +369,8 @@ class RunnerManager:
                 org=self.config.path.org
             )["runners"]
 
+        logger.debug("List of runners found on GitHub:%s", remote_runners_list)
+
         return {
             runner.name: runner
             for runner in remote_runners_list
