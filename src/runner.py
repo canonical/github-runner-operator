@@ -383,6 +383,7 @@ class Runner:
         execute_command(
             ["/snap/bin/lxc", "file", "push", "-p", str(binary), self.config.name + binary_path]
         )
+        self._execute(["/usr/bin/mkdir", "-p", str(self.runner_application)])
         self._execute(["/usr/bin/tar", "-xzf", binary_path, "-C", str(self.runner_application)])
         self._execute(["/usr/bin/chown", "-R", "ubuntu:ubuntu", str(self.runner_application)])
 
