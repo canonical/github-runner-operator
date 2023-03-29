@@ -93,7 +93,7 @@ def retry(  # pylint: disable=too-many-arguments
     return retry_decorator
 
 
-def execute_command(cmd: Sequence[str], check: bool = True, **kwargs) -> str:
+def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> str:
     """Execute a command on a subprocess.
 
     The command is executed with `subprocess.run`, additional arguments can be passed to it as
@@ -102,7 +102,7 @@ def execute_command(cmd: Sequence[str], check: bool = True, **kwargs) -> str:
 
     Args:
         cmd: Command in a list.
-        check: Whether to throw error on non-zero exit code.
+        check_exit: Whether to check for non-zero exit code and raise exceptions.
         kwargs: Additional keyword arguments for the `subprocess.run` call.
 
     Returns:
@@ -119,7 +119,7 @@ def execute_command(cmd: Sequence[str], check: bool = True, **kwargs) -> str:
     )
     logger.debug("Command %s returns: %s", cmd, result.stdout)
 
-    if check:
+    if check_exit:
         try:
             result.check_returncode()
         except subprocess.CalledProcessError as err:

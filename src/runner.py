@@ -191,7 +191,8 @@ class Runner:
                     "remove",
                     "--token",
                     remove_token,
-                ]
+                ],
+                check_exit=False,
             )
 
             if self.instance.status == "Running":
@@ -483,7 +484,9 @@ class Runner:
 
         logger.info("Started runner %s", self.config.name)
 
-    def _execute(self, cmd: list[str], cwd: Optional[str] = None, **kwargs) -> str:
+    def _execute(
+        self, cmd: list[str], cwd: Optional[str] = None, check_exit: bool = True, **kwargs
+    ) -> str:
         """Check execution of a command in a LXD instance.
 
         The command is executed with `subprocess.run`, additional arguments can be passed to it as
@@ -494,6 +497,7 @@ class Runner:
             instance: LXD instance of the runner.
             cmd: Sequence of command to execute on the runner.
             cwd: Working directory to execute the command.
+            check_exit: Whether to check for non-zero exit code and raise exceptions.
             kwargs: Additional keyword arguments for the `subprocess.run` call.
 
         Returns:
@@ -511,7 +515,7 @@ class Runner:
         lxc_exec_cmd += ["--"] + cmd
 
         try:
-            return execute_command(lxc_exec_cmd, **kwargs)
+            return execute_command(lxc_exec_cmd, check_exit, **kwargs)
         except CalledProcessError as err:
             raise RunnerExecutionError(
                 f"Failed to execute command in {self.config.name}: {cmd}"
