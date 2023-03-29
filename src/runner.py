@@ -404,9 +404,14 @@ class Runner:
             return
 
         # Add `~/.local/bin` to PATH in `.bashrc`.
-        bashrc = self.instance.files.get("/home/ubuntu/.bashrc")
-        bashrc += "\nexport PATH=/home/ubuntu/.local/bin:$PATH"
-        self.instance.files.put("/home/ubuntu/.bashrc", bashrc)
+        self._execute(
+            [
+                "/usr/bin/sed",
+                "-i",
+                "$ a\\export PATH=/home/ubuntu/.local/bin:$PATH",
+                "/home/ubuntu/.bashrc",
+            ]
+        )
 
         if self.config.proxies:
             contents = self._clients.jinja.get_template("env.j2").render(
