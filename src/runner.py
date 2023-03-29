@@ -13,7 +13,6 @@ collection of `Runner` instances.
 from __future__ import annotations
 
 import logging
-import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -192,8 +191,7 @@ class Runner:
                     "remove",
                     "--token",
                     remove_token,
-                ],
-                check_output=False,
+                ]
             )
 
             if self.instance.status == "Running":
@@ -380,10 +378,10 @@ class Runner:
         logger.info("Installing runner binary on LXD instance: %s", self.config.name)
 
         # Creating directory and putting the file are idempotent, and can be retried.
+        self.instance.files.mk_dir(str(self.runner_application))
         execute_command(
-            ["/snap/bin/lxc", "file", "push", "-p", str(binary), self.config.name + binary_path]
+            ["/snap/bin/lxc", "file", "push", str(binary), self.config.name + binary_path]
         )
-        self._execute(["/usr/bin/mkdir", "-p", str(self.runner_application)])
         self._execute(["/usr/bin/tar", "-xzf", binary_path, "-C", str(self.runner_application)])
         self._execute(["/usr/bin/chown", "-R", "ubuntu:ubuntu", str(self.runner_application)])
 
@@ -406,31 +404,15 @@ class Runner:
             return
 
         # Add `~/.local/bin` to PATH in `.bashrc`.
-        self._execute(
-            [
-                "/usr/bin/sed",
-                "-i",
-                "$ a\\export PATH=/home/ubuntu/.local/bin:$PATH",
-                "/home/ubuntu/.bashrc",
-            ]
-        )
+        bashrc = self.instance.files.get("/home/ubuntu/.bashrc")
+        bashrc += "\nexport PATH=/home/ubuntu/.local/bin:$PATH"
+        self.instance.files.put("/home/ubuntu/.bashrc", bashrc)
 
         if self.config.proxies:
             contents = self._clients.jinja.get_template("env.j2").render(
                 proxies=self.config.proxies
             )
-            with tempfile.NamedTemporaryFile() as file:
-                file.write(contents.encode())
-                execute_command(
-                    [
-                        "/snap/bin/lxc",
-                        "file",
-                        "push",
-                        "--mode=0600",
-                        file.name,
-                        self.config.name + str(self.env_file),
-                    ]
-                )
+            self.instance.files.put(self.env_file, contents, mode="0600")
             self._execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
 
             # Verify the env file is written to runner.
@@ -489,27 +471,14 @@ class Runner:
 
         # Put a script to run the GitHub self-hosted runner in the instance and run it.
         contents = self._clients.jinja.get_template("start.j2").render()
-        with tempfile.NamedTemporaryFile() as file:
-            file.write(contents.encode())
-            execute_command(
-                [
-                    "/snap/bin/lxc",
-                    "file",
-                    "push",
-                    file.name,
-                    self.config.name + str(self.runner_script),
-                ]
-            )
-
+        self.instance.files.put(self.runner_script, contents, mode="0755")
         self._execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self._execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
         self._execute(["/usr/bin/sudo", "-u", "ubuntu", str(self.runner_script)])
 
         logger.info("Started runner %s", self.config.name)
 
-    def _execute(
-        self, cmd: list[str], cwd: Optional[str] = None, check_output: bool = True, **kwargs
-    ) -> str:
+    def _execute(self, cmd: list[str], cwd: Optional[str] = None, **kwargs) -> str:
         """Check execution of a command in a LXD instance.
 
         The command is executed with `subprocess.run`, additional arguments can be passed to it as
@@ -520,7 +489,6 @@ class Runner:
             instance: LXD instance of the runner.
             cmd: Sequence of command to execute on the runner.
             cwd: Working directory to execute the command.
-            check_output: Whether to throw error on non-zero exit code.
             kwargs: Additional keyword arguments for the `subprocess.run` call.
 
         Returns:
@@ -538,7 +506,7 @@ class Runner:
         lxc_exec_cmd += ["--"] + cmd
 
         try:
-            return execute_command(lxc_exec_cmd, check_output, **kwargs)
+            return execute_command(lxc_exec_cmd, **kwargs)
         except CalledProcessError as err:
             raise RunnerExecutionError(
                 f"Failed to execute command in {self.config.name}: {cmd}"
