@@ -176,7 +176,13 @@ class GithubRunnerCharm(CharmBase):
         else:
             path = GitHubOrg(org=path, group=self.config["group"])
 
-        return RunnerManager(self.app.name, RunnerManagerConfig(path, token), proxies=self.proxies)
+        app_name, unit = self.unit.name.rsplit("/", 1)
+        return RunnerManager(
+            app_name,
+            unit,
+            RunnerManagerConfig(path, token, "jammy"),
+            proxies=self.proxies,
+        )
 
     @catch_unexpected_charm_errors
     def _on_install(self, _event: InstallEvent) -> None:
@@ -465,13 +471,9 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Installing charm dependencies.")
 
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
-        execute_command(["/usr/bin/apt-get", "remove", "-qy", "lxd", "lxd-client"], check=False)
-        execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
-        execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
-        execute_command(["/snap/bin/lxd", "waitready"])
-        execute_command(["/snap/bin/lxd", "init", "--auto"])
-        execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
-        execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
+        execute_command(
+            ["/usr/bin/apt-get", "remove", "-qy", "lxd", "lxd-client"], check_exit=False
+        )
         execute_command(
             [
                 "/usr/bin/apt-get",
@@ -482,7 +484,12 @@ class GithubRunnerCharm(CharmBase):
                 "libvirt-daemon-driver-qemu",
             ],
         )
-
+        execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
+        execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
+        execute_command(["/snap/bin/lxd", "waitready"])
+        execute_command(["/snap/bin/lxd", "init", "--auto"])
+        execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
+        execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
         logger.info("Finished installing charm dependencies.")
 
 

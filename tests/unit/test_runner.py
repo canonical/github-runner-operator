@@ -3,6 +3,7 @@
 
 """Test cases of Runner class."""
 
+import secrets
 import unittest
 from pathlib import Path
 from unittest.mock import MagicMock
@@ -16,8 +17,13 @@ from tests.unit.mock import MockPylxdClient, mock_pylxd_error_func, mock_runner_
 
 
 @pytest.fixture(scope="module", name="vm_resources")
-def vm_resources():
+def vm_resources_fixture():
     return VirtualMachineResources(2, "7Gib", "10Gib")
+
+
+@pytest.fixture(scope="function", name="token")
+def token_fixture():
+    return secrets.token_hex()
 
 
 @pytest.fixture(scope="function", name="binary_path")
@@ -65,6 +71,7 @@ def runner_fixture(request, pylxd: MockPylxdClient):
 def test_create(
     runner: Runner,
     vm_resources: VirtualMachineResources,
+    token: str,
     binary_path: Path,
     pylxd: MockPylxdClient,
 ):
@@ -74,13 +81,14 @@ def test_create(
     assert: An pylxd instance for the runner is created.
     """
 
-    runner.create("test_image", vm_resources, binary_path, "test_token")
+    runner.create("test_image", vm_resources, binary_path, token)
     assert len(pylxd.instances.all()) == 1
 
 
 def test_create_pylxd_fail(
     runner: Runner,
     vm_resources: VirtualMachineResources,
+    token: str,
     binary_path: Path,
     pylxd: MockPylxdClient,
 ):
@@ -93,7 +101,7 @@ def test_create_pylxd_fail(
     pylxd.profiles.exists = mock_pylxd_error_func
 
     with pytest.raises(RunnerCreateError):
-        runner.create("test_image", vm_resources, binary_path, "test_token")
+        runner.create("test_image", vm_resources, binary_path, token)
 
     assert len(pylxd.instances.all()) == 0
 
@@ -101,6 +109,7 @@ def test_create_pylxd_fail(
 def test_create_runner_fail(
     runner: Runner,
     vm_resources: VirtualMachineResources,
+    token: str,
     binary_path: Path,
     pylxd: MockPylxdClient,
 ):
@@ -113,14 +122,13 @@ def test_create_runner_fail(
     runner._execute = mock_runner_error_func
 
     with pytest.raises(RunnerCreateError):
-        runner.create("test_image", vm_resources, binary_path, "test_token")
-
-    assert len(pylxd.instances.all()) == 0
+        runner.create("test_image", vm_resources, binary_path, token)
 
 
 def test_remove(
     runner: Runner,
     vm_resources: VirtualMachineResources,
+    token: str,
     binary_path: Path,
     pylxd: MockPylxdClient,
 ):
@@ -130,13 +138,14 @@ def test_remove(
     assert: The pylxd instance for the runner is removed.
     """
 
-    runner.create("test_image", vm_resources, binary_path, "test_token")
-    runner.remove()
+    runner.create("test_image", vm_resources, binary_path, token)
+    runner.remove("test_token")
     assert len(pylxd.instances.all()) == 0
 
 
 def test_remove_none(
     runner: Runner,
+    token: str,
     pylxd: MockPylxdClient,
 ):
     """
@@ -145,5 +154,5 @@ def test_remove_none(
     assert: The pylxd instance for the runner is removed.
     """
 
-    runner.remove()
+    runner.remove(token)
     assert len(pylxd.instances.all()) == 0

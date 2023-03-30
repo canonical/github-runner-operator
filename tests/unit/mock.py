@@ -6,12 +6,13 @@
 from __future__ import annotations
 
 import hashlib
+import secrets
 from typing import Sequence
 
 import pylxd
 
 from errors import RunnerError
-from github_type import RegisterToken, RunnerApplication
+from github_type import RegistrationToken, RemoveToken, RunnerApplication
 from runner import LxdInstanceConfig
 
 # Compressed tar file for testing.
@@ -101,6 +102,9 @@ class MockPylxdInstanceFiles:
     def put(self, filepath, data, mode=None, uid=None, gid=None):
         pass
 
+    def get(self, filepath):
+        return ""
+
 
 class MockErrorResponse:
     """Mock of an error response for request library."""
@@ -135,6 +139,10 @@ class MockGhapiActions:
         hash = hashlib.sha256()
         hash.update(TEST_BINARY)
         self.test_hash = hash.hexdigest()
+        self.registration_token_repo = secrets.token_hex()
+        self.registration_token_org = secrets.token_hex()
+        self.remove_token_repo = secrets.token_hex()
+        self.remove_token_org = secrets.token_hex()
 
     def _list_runner_applications(self):
         runners = []
@@ -156,10 +164,24 @@ class MockGhapiActions:
         return self._list_runner_applications()
 
     def create_registration_token_for_repo(self, owner: str, repo: str):
-        return RegisterToken({"token": "test registration token"})
+        return RegistrationToken(
+            {"token": self.registration_token_repo, "expires_at": "2020-01-22T12:13:35.123-08:00"}
+        )
 
     def create_registration_token_for_org(self, org: str):
-        return RegisterToken({"token": "test registration token"})
+        return RegistrationToken(
+            {"token": self.registration_token_org, "expires_at": "2020-01-22T12:13:35.123-08:00"}
+        )
+
+    def create_remove_token_for_repo(self, owner: str, repo: str):
+        return RemoveToken(
+            {"token": self.remove_token_repo, "expires_at": "2020-01-22T12:13:35.123-08:00"}
+        )
+
+    def create_remove_token_for_org(self, org: str):
+        return RemoveToken(
+            {"token": self.remove_token_org, "expires_at": "2020-01-22T12:13:35.123-08:00"}
+        )
 
     def list_self_hosted_runners_for_repo(self, owner: str, repo: str):
         return {"runners": []}

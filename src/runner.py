@@ -149,7 +149,7 @@ class Runner:
             image: Name of the image to launch the LXD instance with.
             resources: Resource setting for the LXD instance.
             binary_path: Path to the runner binary.
-            registration_token: Token to register the runner on GitHub.
+            registration_token: Token for registering the runner on GitHub.
 
         Raises:
             RunnerCreateError: Unable to create a LXD instance for runner.
@@ -167,19 +167,48 @@ class Runner:
             self._register_runner(registration_token, labels=[self.config.app_name, image])
             self._start_runner()
         except (RunnerError, LXDAPIException) as err:
-            if self.instance is not None:
-                self.remove()
-
             raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err
 
-    def remove(self) -> None:
+    def remove(self, remove_token: str) -> None:
         """Remove this runner instance from LXD and GitHub.
+
+        Args:
+            remove_token: Token for removing the runner on GitHub.
 
         Raises:
             RunnerRemoveError: Failure in removing runner.
         """
         logger.info("Removing LXD instance of runner: %s", self.config.name)
 
+        if self.instance:
+            # Run script to remove the the runner and cleanup.
+            self._execute(
+                [
+                    "/usr/bin/sudo",
+                    "-u",
+                    "ubuntu",
+                    str(self.config_script),
+                    "remove",
+                    "--token",
+                    remove_token,
+                ],
+                check_exit=False,
+            )
+
+            if self.instance.status == "Running":
+                try:
+                    self.instance.stop(wait=True, timeout=60)
+                except LXDAPIException:
+                    logger.exception(
+                        "Unable to gracefully stop runner %s within timeout.", self.config.name
+                    )
+                    logger.info("Force stopping of runner %s", self.config.name)
+                    try:
+                        self.instance.stop(force=True)
+                    except LXDAPIException as err:
+                        raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
+
+        # The runner should cleanup itself.  Cleanup on GitHub in case of runner cleanup error.
         if isinstance(self.config.path, GitHubRepo):
             self._clients.github.actions.delete_self_hosted_runner_from_repo(
                 owner=self.config.path.owner,
@@ -190,27 +219,6 @@ class Runner:
             self._clients.github.actions.delete_self_hosted_runner_from_org(
                 org=self.config.path.org, runner_id=self.config.name
             )
-
-        if self.instance is None:
-            return
-
-        if self.instance.status == "Running":
-            try:
-                self.instance.stop(wait=True, timeout=60)
-            except LXDAPIException:
-                logger.exception("Unable to gracefully stop runner within timeout.")
-                try:
-                    self.instance.stop(force=True)
-                except LXDAPIException as err:
-                    raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
-        else:
-            # We somehow have a non-running instance which should have been
-            # ephemeral. Try to delete it and allow any errors doing so to
-            # surface.
-            try:
-                self.instance.delete(wait=True)
-            except LXDAPIException as err:
-                raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
 
     @retry(tries=5, delay=1, local_logger=logger)
     def _create_instance(
@@ -462,11 +470,30 @@ class Runner:
         self.instance.files.put(self.runner_script, contents, mode="0755")
         self._execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self._execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
-        self._execute(["/usr/bin/sudo", "-u", "ubuntu", str(self.runner_script)])
+        self._execute(
+            [
+                "/usr/bin/sudo",
+                "-u",
+                "ubuntu",
+                (
+                    "PATH=/home/ubuntu/.local/bin"
+                    ":/usr/local/sbin"
+                    ":/usr/local/bin"
+                    ":/usr/sbin"
+                    ":/usr/bin"
+                    ":/sbin"
+                    ":/bin"
+                    ":/snap/bin"
+                ),
+                str(self.runner_script),
+            ]
+        )
 
         logger.info("Started runner %s", self.config.name)
 
-    def _execute(self, cmd: list[str], cwd: Optional[str] = None, **kwargs) -> str:
+    def _execute(
+        self, cmd: list[str], cwd: Optional[str] = None, check_exit: bool = True, **kwargs
+    ) -> str:
         """Check execution of a command in a LXD instance.
 
         The command is executed with `subprocess.run`, additional arguments can be passed to it as
@@ -477,6 +504,7 @@ class Runner:
             instance: LXD instance of the runner.
             cmd: Sequence of command to execute on the runner.
             cwd: Working directory to execute the command.
+            check_exit: Whether to check for non-zero exit code and raise exceptions.
             kwargs: Additional keyword arguments for the `subprocess.run` call.
 
         Returns:
@@ -494,7 +522,7 @@ class Runner:
         lxc_exec_cmd += ["--"] + cmd
 
         try:
-            return execute_command(lxc_exec_cmd, **kwargs)
+            return execute_command(lxc_exec_cmd, check_exit, **kwargs)
         except CalledProcessError as err:
             raise RunnerExecutionError(
                 f"Failed to execute command in {self.config.name}: {cmd}"

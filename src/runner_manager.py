@@ -22,11 +22,13 @@ import requests
 import requests.adapters
 import urllib3
 from ghapi.all import GhApi
+from typing_extensions import assert_never
 
 from errors import RunnerBinaryError, RunnerCreateError
 from github_type import (
     GitHubRunnerStatus,
-    RegisterToken,
+    RegistrationToken,
+    RemoveToken,
     RunnerApplication,
     RunnerApplicationList,
     SelfHostedRunner,
@@ -51,6 +53,7 @@ class RunnerManagerConfig:
 
     path: GitHubPath
     token: str
+    image: str
 
 
 @dataclass
@@ -72,20 +75,21 @@ class RunnerManager:
     def __init__(
         self,
         app_name: str,
+        unit: int,
         runner_manager_config: RunnerManagerConfig,
-        image: str = "jammy",
         proxies: ProxySetting = ProxySetting(),
     ) -> None:
         """Construct RunnerManager object for creating and managing runners.
 
         Args:
             app_name: An name for the set of runners.
-            image: Image to use for the runner LXD instances.
+            unit: Unit number of the set of runners.
+            runner_manager_config: Configuration for the runner manager.
             proxies: HTTP proxy settings.
         """
         self.app_name = app_name
+        self.instance_name = f"{app_name}-{unit}"
         self.config = runner_manager_config
-        self.image = image
         self.proxies = proxies
 
         # Setting the env var to this process and any child process spawned.
@@ -240,8 +244,10 @@ class RunnerManager:
         if offline_runners:
             logger.info("Cleaning up offline runners.")
 
+            remove_token = self._get_github_remove_token()
+
             for runner in offline_runners:
-                runner.remove()
+                runner.remove(remove_token)
                 logger.info("Removed runner: %s", runner.config.name)
 
         # Add/Remove runners to match the target quantity
@@ -253,7 +259,7 @@ class RunnerManager:
             instance.name: instance
             # Pylint cannot find the `all` method.
             for instance in self._clients.lxd.instances.all()  # pylint: disable=no-member
-            if instance.name.startswith(f"{self.app_name}-")
+            if instance.name.startswith(f"{self.instance_name}-")
         }
 
         logger.info(
@@ -274,29 +280,32 @@ class RunnerManager:
 
             logger.info("Getting registration token for GitHub runners.")
 
-            token: RegisterToken = {"token": None}
-            if isinstance(self.config.path, GitHubRepo):
-                token = self._clients.github.actions.create_registration_token_for_repo(
-                    owner=self.config.path.owner, repo=self.config.path.repo
-                )
-            elif isinstance(self.config.path, GitHubOrg):
-                token = self._clients.github.actions.create_registration_token_for_org(
-                    org=self.config.path.org
-                )
+            registration_token = self._get_github_registration_token()
+            remove_token = self._get_github_remove_token()
 
             logger.info("Adding %i additional runner(s).", delta)
             for _ in range(delta):
                 config = RunnerConfig(
-                    self.app_name, self.config.path, self.proxies, self._generate_runner_name()
+                    self.app_name,
+                    self.config.path,
+                    self.proxies,
+                    self._generate_runner_name(),
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
-                runner.create(
-                    self.image,
-                    resources,
-                    RunnerManager.runner_bin_path,
-                    token["token"],
-                )
-                logger.info("Created runner: %s", runner.config.name)
+                try:
+                    runner.create(
+                        self.config.image,
+                        resources,
+                        RunnerManager.runner_bin_path,
+                        registration_token,
+                    )
+                    logger.info("Created runner: %s", runner.config.name)
+                except RunnerCreateError:
+                    logger.error("Unable to create runner: %s", runner.config.name)
+                    runner.remove(remove_token)
+                    logger.info("Cleaned up runner: %s", runner.config.name)
+                    raise
+
         elif delta < 0:
             # Idle runners are online runners that has not taken a job.
             idle_runners = [runner for runner in online_runners if not runner.status.busy]
@@ -307,8 +316,10 @@ class RunnerManager:
 
                 logger.info("Cleaning up idle runners.")
 
+                remove_token = self._get_github_remove_token()
+
                 for runner in remove_runners:
-                    runner.remove()
+                    runner.remove(remove_token)
                     logger.info("Removed runner: %s", runner.config.name)
 
             else:
@@ -338,8 +349,10 @@ class RunnerManager:
 
         logger.info("Removing existing %i local runners", len(runners))
 
+        remove_token = self._get_github_remove_token()
+
         for runner in runners:
-            runner.remove()
+            runner.remove(remove_token)
             logger.info("Removed runner: %s", runner.config.name)
 
         return len(runners)
@@ -351,7 +364,7 @@ class RunnerManager:
             Generated name of runner.
         """
         suffix = str(uuid.uuid4())
-        return f"{self.app_name}-{suffix}"
+        return f"{self.instance_name}-{suffix}"
 
     def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
         remote_runners_list: list[SelfHostedRunner] = []
@@ -364,10 +377,12 @@ class RunnerManager:
                 org=self.config.path.org
             )["runners"]
 
+        logger.debug("List of runners found on GitHub:%s", remote_runners_list)
+
         return {
             runner.name: runner
             for runner in remote_runners_list
-            if runner.name.startswith(f"{self.app_name}-")
+            if runner.name.startswith(f"{self.instance_name}-")
         }
 
     def _get_runners(self) -> list[Runner]:
@@ -412,7 +427,7 @@ class RunnerManager:
             instance.name: instance
             # Pylint cannot find the `all` method.
             for instance in self._clients.lxd.instances.all()  # pylint: disable=no-member
-            if instance.name.startswith(f"{self.app_name}-")
+            if instance.name.startswith(f"{self.instance_name}-")
         }
 
         runners: list[Runner] = []
@@ -422,3 +437,43 @@ class RunnerManager:
             )
 
         return runners
+
+    def _get_github_registration_token(self) -> str:
+        """Get token from GitHub used for registering runners.
+
+        Returns:
+            The registration token.
+        """
+        token: RegistrationToken
+        if isinstance(self.config.path, GitHubRepo):
+            token = self._clients.github.actions.create_registration_token_for_repo(
+                owner=self.config.path.owner, repo=self.config.path.repo
+            )
+        elif isinstance(self.config.path, GitHubOrg):
+            token = self._clients.github.actions.create_registration_token_for_org(
+                org=self.config.path.org
+            )
+        else:
+            assert_never(token)
+
+        return token["token"]
+
+    def _get_github_remove_token(self) -> str:
+        """Get token from GitHub used for removing runners.
+
+        Returns:
+            The removing token.
+        """
+        token: RemoveToken
+        if isinstance(self.config.path, GitHubRepo):
+            token = self._clients.github.actions.create_remove_token_for_repo(
+                owner=self.config.path.owner, repo=self.config.path.repo
+            )
+        elif isinstance(self.config.path, GitHubOrg):
+            token = self._clients.github.actions.create_remove_token_for_org(
+                org=self.config.path.org
+            )
+        else:
+            assert_never(token)
+
+        return token["token"]

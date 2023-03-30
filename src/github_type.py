@@ -59,7 +59,15 @@ class SelfHostedRunnerList(TypedDict):
     runners: list[SelfHostedRunner]
 
 
-class RegisterToken(TypedDict):
+class RegistrationToken(TypedDict):
     """Token used for registering github runners."""
 
     token: str
+    expires_at: str
+
+
+class RemoveToken(TypedDict):
+    """Token used for removing github runners."""
+
+    token: str
+    expires_at: str

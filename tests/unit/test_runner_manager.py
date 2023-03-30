@@ -3,6 +3,7 @@
 
 """Test cases of RunnerManager class."""
 
+import secrets
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -13,6 +14,11 @@ from runner import Runner, RunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
 from tests.unit.mock import TEST_BINARY
+
+
+@pytest.fixture(scope="function", name="token")
+def token_fixture():
+    return secrets.token_hex()
 
 
 @pytest.fixture(
@@ -26,12 +32,15 @@ from tests.unit.mock import TEST_BINARY
         ),
     ],
 )
-def runner_manager_fixture(request, tmp_path, monkeypatch):
+def runner_manager_fixture(request, tmp_path, monkeypatch, token):
     monkeypatch.setattr(
         "runner_manager.RunnerManager.runner_bin_path", Path(tmp_path / "mock_runner_binary")
     )
     runner_manager = RunnerManager(
-        "test app", RunnerManagerConfig(request.param[0], "mock token"), proxies=request.param[1]
+        "test app",
+        "0",
+        RunnerManagerConfig(request.param[0], token, "jammy"),
+        proxies=request.param[1],
     )
     return runner_manager
 

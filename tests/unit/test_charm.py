@@ -106,8 +106,9 @@ class TestCharm(unittest.TestCase):
         harness.charm.on.config_changed.emit()
         rm.assert_called_with(
             "github-runner",
+            "0",
             RunnerManagerConfig(
-                path=GitHubOrg(org="mockorg", group="mockgroup"), token="mocktoken"
+                path=GitHubOrg(org="mockorg", group="mockgroup"), token="mocktoken", image="jammy"
             ),
             proxies={},
         )
@@ -124,7 +125,10 @@ class TestCharm(unittest.TestCase):
         harness.charm.on.config_changed.emit()
         rm.assert_called_with(
             "github-runner",
-            RunnerManagerConfig(path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken"),
+            "0",
+            RunnerManagerConfig(
+                path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
+            ),
             proxies={},
         )
 
@@ -142,7 +146,10 @@ class TestCharm(unittest.TestCase):
         harness.charm.on.reconcile_runners.emit()
         rm.assert_called_with(
             "github-runner",
-            RunnerManagerConfig(path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken"),
+            "0",
+            RunnerManagerConfig(
+                path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
+            ),
             proxies={},
         )
         mock_rm.reconcile.assert_called_with(0, VirtualMachineResources(2, "7GiB", "10GiB")),
@@ -153,7 +160,10 @@ class TestCharm(unittest.TestCase):
         harness.charm.on.reconcile_runners.emit()
         rm.assert_called_with(
             "github-runner",
-            RunnerManagerConfig(path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken"),
+            "0",
+            RunnerManagerConfig(
+                path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
+            ),
             proxies={},
         )
         mock_rm.reconcile.assert_called_with(

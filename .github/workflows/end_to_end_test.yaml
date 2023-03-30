@@ -21,7 +21,7 @@ jobs:
       - name: Docker version
         run: docker version
       - name: pip version
-        run: pip --version
+        run: python3 -m pip --version
       - name: npm version
         run: npm --version
       - name: shellcheck version
@@ -30,3 +30,8 @@ jobs:
         run: jq --version
       - name: yq version
         run: yq --version
+      - name: install check-jsonschema
+        run: python3 -m pip install check-jsonschema
+      # Test program installed by pip. The directory `~/.local/bin` need to be added to PATH.
+      - name: test check-jsonschema
+        run: check-jsonschema --version 
