@@ -410,7 +410,7 @@ class Runner:
                 "/usr/bin/sed",
                 "-i",
                 "-e",
-                "'$aexport PATH=/home/ubuntu/.local/bin:$PATH'",
+                "$aexport PATH=/home/ubuntu/.local/bin:$PATH",
                 "/home/ubuntu/.bashrc",
             ]
         )
