@@ -404,17 +404,6 @@ class Runner:
         if self.instance is None:
             return
 
-        # Add `~/.local/bin` to PATH in `.bashrc`.
-        self._execute(
-            [
-                "/usr/bin/sed",
-                "-i",
-                "-e",
-                "$aexport PATH=/home/ubuntu/.local/bin:$PATH",
-                "/home/ubuntu/.bashrc",
-            ]
-        )
-
         if self.config.proxies:
             contents = self._clients.jinja.get_template("env.j2").render(
                 proxies=self.config.proxies
@@ -481,7 +470,24 @@ class Runner:
         self.instance.files.put(self.runner_script, contents, mode="0755")
         self._execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self._execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
-        self._execute(["/usr/bin/sudo", "-u", "ubuntu", str(self.runner_script)])
+        self._execute(
+            [
+                "/usr/bin/sudo",
+                "-u",
+                "ubuntu",
+                (
+                    "PATH=/home/ubuntu/.local/bin"
+                    ":/usr/local/sbin"
+                    ":/usr/local/bin"
+                    ":/usr/sbin"
+                    ":/usr/bin"
+                    ":/sbin"
+                    ":/bin"
+                    ":/snap/bin"
+                ),
+                str(self.runner_script),
+            ]
+        )
 
         logger.info("Started runner %s", self.config.name)
 
