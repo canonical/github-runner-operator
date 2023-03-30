@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import hashlib
+import secrets
 from typing import Sequence
 
 import pylxd
@@ -138,6 +139,10 @@ class MockGhapiActions:
         hash = hashlib.sha256()
         hash.update(TEST_BINARY)
         self.test_hash = hash.hexdigest()
+        self.registration_token_repo = secrets.token_hex()
+        self.registration_token_org = secrets.token_hex()
+        self.remove_token_repo = secrets.token_hex()
+        self.remove_token_org = secrets.token_hex()
 
     def _list_runner_applications(self):
         runners = []
@@ -160,22 +165,22 @@ class MockGhapiActions:
 
     def create_registration_token_for_repo(self, owner: str, repo: str):
         return RegistrationToken(
-            {"token": "test registration token", "expires_at": "2020-01-22T12:13:35.123-08:00"}
+            {"token": self.registration_token_repo, "expires_at": "2020-01-22T12:13:35.123-08:00"}
         )
 
     def create_registration_token_for_org(self, org: str):
         return RegistrationToken(
-            {"token": "test registration token", "expires_at": "2020-01-22T12:13:35.123-08:00"}
+            {"token": self.registration_token_org, "expires_at": "2020-01-22T12:13:35.123-08:00"}
         )
 
     def create_remove_token_for_repo(self, owner: str, repo: str):
         return RemoveToken(
-            {"token": "test registration token", "expires_at": "2020-01-22T12:13:35.123-08:00"}
+            {"token": self.remove_token_repo, "expires_at": "2020-01-22T12:13:35.123-08:00"}
         )
 
     def create_remove_token_for_org(self, org: str):
         return RemoveToken(
-            {"token": "test registration token", "expires_at": "2020-01-22T12:13:35.123-08:00"}
+            {"token": self.remove_token_org, "expires_at": "2020-01-22T12:13:35.123-08:00"}
         )
 
     def list_self_hosted_runners_for_repo(self, owner: str, repo: str):
