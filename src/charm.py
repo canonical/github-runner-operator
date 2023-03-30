@@ -474,12 +474,6 @@ class GithubRunnerCharm(CharmBase):
         execute_command(
             ["/usr/bin/apt-get", "remove", "-qy", "lxd", "lxd-client"], check_exit=False
         )
-        execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
-        execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
-        execute_command(["/snap/bin/lxd", "waitready"])
-        execute_command(["/snap/bin/lxd", "init", "--auto"])
-        execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
-        execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
         execute_command(
             [
                 "/usr/bin/apt-get",
@@ -490,7 +484,12 @@ class GithubRunnerCharm(CharmBase):
                 "libvirt-daemon-driver-qemu",
             ],
         )
-
+        execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
+        execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
+        execute_command(["/snap/bin/lxd", "waitready"])
+        execute_command(["/snap/bin/lxd", "init", "--auto"])
+        execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
+        execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
         logger.info("Finished installing charm dependencies.")
 
 
