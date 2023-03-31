@@ -405,11 +405,20 @@ class Runner:
             return
 
         if self.config.proxies:
-            contents = self._clients.jinja.get_template("env.j2").render(
+            env_contents = self._clients.jinja.get_template("env.j2").render(
                 proxies=self.config.proxies
             )
-            self.instance.files.put(self.env_file, contents, mode="0600")
+            self.instance.files.put(self.env_file, env_contents, mode="0600")
             self._execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
+
+            docker_proxy_contents = self._clients.jinja.get_template(
+                "systemd-docker-proxy.j2"
+            ).render(proxies=self.config.proxies)
+            self.instance.files.put(
+                "/etc/systemd/system/docker.service.d/http-proxy.conf", docker_proxy_contents
+            )
+            self._execute(["systemctl", "daemon-reload"])
+            self._execute(["systemctl", "reload", "docker"])
 
             # Verify the env file is written to runner.
             exit_code, _, _ = self.instance.execute(["test", "-f", str(self.env_file)])
