@@ -94,16 +94,16 @@ class MockPylxdInstanceFiles:
     """Mock the behavior of a pylxd Instance files."""
 
     def __init__(self):
-        pass
+        self.files = {}
 
     def mk_dir(self, path, mode=None, uid=None, gid=None):
         pass
 
     def put(self, filepath, data, mode=None, uid=None, gid=None):
-        pass
+        self.files[str(filepath)] = data
 
     def get(self, filepath):
-        return ""
+        return self.files.get(str(filepath), None)
 
 
 class MockErrorResponse:
