@@ -24,6 +24,7 @@ def get_runners():
                 "Authorization": "Bearer " + TOKEN,
                 "Accept": "application/vnd.github+json",
             },
+            timeout=60,
         )
 
         response.raise_for_status()
@@ -59,6 +60,7 @@ def delete_runner(runner):
                 "Authorization": "Bearer " + TOKEN,
                 "Accept": "application/vnd.github+json",
             },
+            timeout = 60,
         )
 
         response.raise_for_status()
@@ -69,11 +71,7 @@ def delete_runner(runner):
 
 
 if __name__ == "__main__":
-    while True:
-        runners = get_runners()
-        offline_runners = filter_offline_runners(runners)
-        if len(offline_runners)<=0:
-            break
+    while offline_runners := filter_offline_runners(get_runners()) > 0:
 
         for runner in offline_runners:
             delete_runner(runner)
