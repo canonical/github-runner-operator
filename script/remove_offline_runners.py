@@ -1,4 +1,4 @@
-# Copyright 2022 Canonical
+# Copyright 2023 Canonical
 # See LICENSE file for licensing details.
 
 import sys
