@@ -405,10 +405,12 @@ class Runner:
             return
 
         if self.config.proxies:
+            logger.info("Adding proxy setting to the runner.")
             env_contents = self._clients.jinja.get_template("env.j2").render(
                 proxies=self.config.proxies
             )
-            self.instance.files.put(self.env_file, env_contents, mode="0600")
+            logger.debug("Proxy setting for the runner: {}", env_contents)
+            self.instance.files.put(self.env_file, env_contents)
             self._execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
 
             docker_proxy_contents = self._clients.jinja.get_template(
