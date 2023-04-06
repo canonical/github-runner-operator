@@ -88,11 +88,13 @@ def test_create(
 
     if runner.config.proxies:
         instance = instances[0]
+        env_proxy = instance.files.get("/opt/github-runner/.env")
         systemd_docker_proxy = instance.files.get(
             "/etc/systemd/system/docker.service.d/http-proxy.conf"
         )
         # Test the file has being written to.  This value does not contain the string as the
         # jinja2.environment.Environment is mocked with MagicMock.
+        assert env_proxy is not None
         assert systemd_docker_proxy is not None
 
 

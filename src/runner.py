@@ -405,22 +405,14 @@ class Runner:
             return
 
         if self.config.proxies:
+            # Creating directory and putting the file are idempotent, and can be retried.
             logger.info("Adding proxy setting to the runner.")
+
             env_contents = self._clients.jinja.get_template("env.j2").render(
                 proxies=self.config.proxies
             )
-            logger.debug("Proxy setting for the runner: %s", env_contents)
             self.instance.files.put(self.env_file, env_contents)
             self._execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
-
-            docker_proxy_contents = self._clients.jinja.get_template(
-                "systemd-docker-proxy.j2"
-            ).render(proxies=self.config.proxies)
-            self.instance.files.put(
-                "/etc/systemd/system/docker.service.d/http-proxy.conf", docker_proxy_contents
-            )
-            self._execute(["systemctl", "daemon-reload"])
-            self._execute(["systemctl", "reload", "docker"])
 
             # Verify the env file is written to runner.
             exit_code, _, _ = self.instance.execute(["test", "-f", str(self.env_file)])
@@ -429,6 +421,31 @@ class Runner:
             else:
                 logger.error("Unable to load env file on runner instance %s", self.config.name)
                 raise RunnerFileLoadError(f"Failed to load env file on {self.config.name}")
+
+            docker_proxy_contents = self._clients.jinja.get_template(
+                "systemd-docker-proxy.j2"
+            ).render(proxies=self.config.proxies)
+
+            docker_service_path = Path("/etc/systemd/system/docker.service.d")
+            docker_service_proxy = docker_service_path / "http-proxy.conf"
+
+            self.instance.files.mk_dir(str(docker_service_path))
+            self.instance.files.put(str(docker_service_proxy), docker_proxy_contents)
+
+            # Verify the env file is written to runner.
+            exit_code, _, _ = self.instance.execute(["test", "-f", str(docker_service_proxy)])
+            if exit_code == 0:
+                logger.info("Loaded docker proxy file on runner instance %s.", self.config.name)
+            else:
+                logger.error(
+                    "Unable to load docker proxy file on runner instance %s", self.config.name
+                )
+                raise RunnerFileLoadError(
+                    f"Failed to load docker proxy file on {self.config.name}"
+                )
+
+            self._execute(["systemctl", "daemon-reload"])
+            self._execute(["systemctl", "reload", "docker"])
 
     @retry(tries=5, delay=30, local_logger=logger)
     def _register_runner(self, registration_token: str, labels: Sequence[str]) -> None:
