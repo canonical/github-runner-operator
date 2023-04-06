@@ -445,7 +445,7 @@ class Runner:
                 )
 
             self._execute(["systemctl", "daemon-reload"])
-            self._execute(["systemctl", "reload", "docker"])
+            self._execute(["systemctl", "restart", "docker"])
 
     @retry(tries=5, delay=30, local_logger=logger)
     def _register_runner(self, registration_token: str, labels: Sequence[str]) -> None:
