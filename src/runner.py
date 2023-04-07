@@ -415,11 +415,15 @@ class Runner:
             self._execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
 
             # Verify the env file is written to runner.
-            exit_code, _, _ = self.instance.execute(["test", "-f", str(self.env_file)])
+            exit_code, _, stderr = self.instance.execute(["test", "-f", str(self.env_file)])
             if exit_code == 0:
                 logger.info("Loaded env file on runner instance %s.", self.config.name)
             else:
-                logger.error("Unable to load env file on runner instance %s", self.config.name)
+                logger.error(
+                    "Unable to load env file on runner instance %s due to: %s",
+                    self.config.name,
+                    stderr.read(),
+                )
                 raise RunnerFileLoadError(f"Failed to load env file on {self.config.name}")
 
             docker_proxy_contents = self._clients.jinja.get_template(
@@ -433,12 +437,14 @@ class Runner:
             self.instance.files.put(str(docker_service_proxy), docker_proxy_contents)
 
             # Verify the env file is written to runner.
-            exit_code, _, _ = self.instance.execute(["test", "-f", str(docker_service_proxy)])
+            exit_code, _, stderr = self.instance.execute(["test", "-f", str(docker_service_proxy)])
             if exit_code == 0:
                 logger.info("Loaded docker proxy file on runner instance %s.", self.config.name)
             else:
                 logger.error(
-                    "Unable to load docker proxy file on runner instance %s", self.config.name
+                    "Unable to load docker proxy file on runner instance %s due to: %s",
+                    self.config.name,
+                    stderr.read(),
                 )
                 raise RunnerFileLoadError(
                     f"Failed to load docker proxy file on {self.config.name}"
