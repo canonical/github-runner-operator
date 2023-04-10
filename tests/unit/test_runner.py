@@ -82,7 +82,20 @@ def test_create(
     """
 
     runner.create("test_image", vm_resources, binary_path, token)
-    assert len(pylxd.instances.all()) == 1
+
+    instances = pylxd.instances.all()
+    assert len(instances) == 1
+
+    if runner.config.proxies:
+        instance = instances[0]
+        env_proxy = instance.files.get("/opt/github-runner/.env")
+        systemd_docker_proxy = instance.files.get(
+            "/etc/systemd/system/docker.service.d/http-proxy.conf"
+        )
+        # Test the file has being written to.  This value does not contain the string as the
+        # jinja2.environment.Environment is mocked with MagicMock.
+        assert env_proxy is not None
+        assert systemd_docker_proxy is not None
 
 
 def test_create_pylxd_fail(
