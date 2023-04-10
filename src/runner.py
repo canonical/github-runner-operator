@@ -476,11 +476,11 @@ class Runner:
             "--token",
             registration_token,
             "--ephemeral",
-            "--name",
-            self.instance.name,
             "--unattended",
             "--labels",
-            f"{','.join(labels)}",
+            ','.join(labels),
+            "--name",
+            self.instance.name,
         ]
 
         if isinstance(self.config.path, GitHubOrg):
