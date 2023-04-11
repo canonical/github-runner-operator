@@ -404,27 +404,27 @@ class Runner:
         if self.instance is None:
             return
 
+        env_contents = self._clients.jinja.get_template("env.j2").render(
+            proxies=self.config.proxies
+        )
+        self.instance.files.put(self.env_file, env_contents)
+        self._execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
+
+        # Verify the env file is written to runner.
+        exit_code, _, stderr = self.instance.execute(["test", "-f", str(self.env_file)])
+        if exit_code == 0:
+            logger.info("Loaded env file on runner instance %s.", self.config.name)
+        else:
+            logger.error(
+                "Unable to load env file on runner instance %s due to: %s",
+                self.config.name,
+                stderr.read(),
+            )
+            raise RunnerFileLoadError(f"Failed to load env file on {self.config.name}")
+
         if self.config.proxies:
             # Creating directory and putting the file are idempotent, and can be retried.
             logger.info("Adding proxy setting to the runner.")
-
-            env_contents = self._clients.jinja.get_template("env.j2").render(
-                proxies=self.config.proxies
-            )
-            self.instance.files.put(self.env_file, env_contents)
-            self._execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
-
-            # Verify the env file is written to runner.
-            exit_code, _, stderr = self.instance.execute(["test", "-f", str(self.env_file)])
-            if exit_code == 0:
-                logger.info("Loaded env file on runner instance %s.", self.config.name)
-            else:
-                logger.error(
-                    "Unable to load env file on runner instance %s due to: %s",
-                    self.config.name,
-                    stderr.read(),
-                )
-                raise RunnerFileLoadError(f"Failed to load env file on {self.config.name}")
 
             docker_proxy_contents = self._clients.jinja.get_template(
                 "systemd-docker-proxy.j2"
@@ -509,16 +509,6 @@ class Runner:
                 "/usr/bin/sudo",
                 "-u",
                 "ubuntu",
-                (
-                    "PATH=/home/ubuntu/.local/bin"
-                    ":/usr/local/sbin"
-                    ":/usr/local/bin"
-                    ":/usr/sbin"
-                    ":/usr/bin"
-                    ":/sbin"
-                    ":/bin"
-                    ":/snap/bin"
-                ),
                 str(self.runner_script),
             ]
         )
