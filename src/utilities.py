@@ -93,6 +93,29 @@ def retry(  # pylint: disable=too-many-arguments
     return retry_decorator
 
 
+def run_subprocess(cmd: Sequence[str], **kwargs) -> subprocess.CompletedProcess[bytes]:
+    """Run command in subprocess according to security recommendations.
+
+    The argument `shell` is set to `False` for security reasons.
+
+    Args:
+        cmd: Command in a list.
+        kwargs: Additional keyword arguments for the `subprocess.run` call.
+
+    Returns:
+        Object representing the completed process. The outputs subprocess can accessed.
+
+    """
+    return subprocess.run(  # nosec B603
+        cmd,
+        capture_output=True,
+        shell=False,
+        check=False,
+        # Disable type check due to the support for unpacking arguments in mypy is experimental.
+        **kwargs  # type: ignore
+    )
+
+
 def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> str:
     """Execute a command on a subprocess.
 
@@ -109,14 +132,7 @@ def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> st
         Output on stdout.
     """
     logger.info("Executing command %s", cmd)
-    result = subprocess.run(  # nosec B603
-        cmd,
-        capture_output=True,
-        shell=False,
-        check=False,
-        # Disable type check due to the support for unpacking arguments in mypy is experimental.
-        **kwargs  # type: ignore
-    )
+    result = run_subprocess(cmd, **kwargs)
     logger.debug("Command %s returns: %s", cmd, result.stdout)
 
     if check_exit:

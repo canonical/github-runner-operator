@@ -10,9 +10,7 @@ from tests.unit.mock import MockGhapiClient, MockPylxdClient
 
 @pytest.fixture(autouse=True)
 def mocks(monkeypatch, tmp_path):
-    monkeypatch.setattr("runner.GhApi", MockGhapiClient)
-    monkeypatch.setattr("runner.jinja2", unittest.mock.MagicMock())
-    monkeypatch.setattr("runner.pylxd.Client", MockPylxdClient)
+    monkeypatch.setattr("lxd.pylxd.Client", MockPylxdClient)
     monkeypatch.setattr("runner.time", unittest.mock.MagicMock())
     monkeypatch.setattr("runner.execute_command", unittest.mock.MagicMock())
     monkeypatch.setattr("runner_manager.GhApi", MockGhapiClient)

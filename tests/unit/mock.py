@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import hashlib
 import secrets
-from typing import Sequence
+from typing import Optional, Sequence
 
 import pylxd
 
@@ -86,7 +86,7 @@ class MockPylxdInstance:
     def delete(self, wait: bool = True, timeout: int = 60):
         self.deleted = True
 
-    def execute(self, cmd: Sequence[str]) -> tuple[int, str, str]:
+    def execute(self, cmd: Sequence[str], cwd: Optional[str] = None) -> tuple[int, str, str]:
         return 0, "", ""
 
 
