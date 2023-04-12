@@ -7,15 +7,17 @@ maintainers:
   - launchpad.net/~canonical-is-devops
 docs: https://discourse.charmhub.io/t/github-runner-documentation-overview/7817
 issues: https://github.com/canonical/github-runner-operator/issues
+source: https://github.com/canonical/github-runner-operator
 summary: Creates a cluster of self-hosted github runners.
-description: >
-  This charm creates self-hosted GitHub runners. Each unit of this charm will start a configurable
-  number of LXD based containers and virtual machines to host them. Each runner performs only one
-  job, after which it unregisters from GitHub to ensure that each job runs in a clean environment.
-
+description: |
+  A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators)
+  deploying self-hosted GitHub runners.
+  
+  Each unit of this charm will start a configurable number of LXD based containers
+  and virtual machines to host them. Each runner performs only one job, after which
+  it unregisters from GitHub to ensure that each job runs in a clean environment.
   The charm will periodically check the number of idle runners and spawn or destroy them as
   necessary to maintain the configured number of runners. Both the reconciliation interval and the
   number of runners to maintain are configurable.
-
 series:
     - jammy
