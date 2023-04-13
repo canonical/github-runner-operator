@@ -17,7 +17,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from subprocess import CalledProcessError  # nosec B404
-from typing import Iterable, Optional, Sequence, TypedDict
+from typing import Dict, Iterable, Optional, Sequence, TypedDict
 
 import jinja2
 import pylxd
@@ -48,26 +48,13 @@ class LxdInstanceConfigSource(TypedDict):
     alias: str
 
 
-class LxdInstanceConfigConfig(TypedDict):
-    """Configuration for config image in LXD instance."""
-
-    write_files: list[LxdInstanceConfigConfigFiles]
-
-
-class LxdInstanceConfigConfigFiles(TypedDict):
-    """Configuration for config image in LXD instance."""
-
-    path: str
-    content: str
-
-
 class LxdInstanceConfig(TypedDict):
     """Configuration for LXD instance."""
 
     name: str
     type: str
     source: LxdInstanceConfigSource
-    config: LxdInstanceConfigConfig
+    config: Dict[str, str]
     ephemeral: bool
     profiles: list[str]
 
@@ -260,13 +247,13 @@ class Runner:
                 "protocol": "simplestreams",
                 "alias": image,
             },
-            "config": {"write_files": []},
+            "config": {},
             "ephemeral": ephemeral,
             "profiles": ["default", "runner", resource_profile],
         }
         if self.config.proxies:
-            instance_config["config"]["write_files"] = [
-                {
+            user_config = {
+                "write_files": {
                     "path": "/etc/environment",
                     "content": f"""
                 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
@@ -275,7 +262,8 @@ class Runner:
                 HTTP_PROXY={self.config.proxies["https"]}
                 """,
                 }
-            ]
+            }
+            instance_config["config"] = {"user.ubuntu": str(user_config)}
 
         instance = self._clients.lxd.instances.create(config=instance_config, wait=True)
         self.status.exist = True
