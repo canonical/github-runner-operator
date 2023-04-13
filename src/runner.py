@@ -252,16 +252,16 @@ class Runner:
             "profiles": ["default", "runner", resource_profile],
         }
         if self.config.proxies:
-            user_config = f"""
-                #cloud-config
-                write_files:
-                - path: /etc/environment
-                    content: |
-                    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
-                    NO_PROXY={self.config.proxies["no_proxy"]}
-                    HTTPS_PROXY={self.config.proxies["http"]}
-                    HTTP_PROXY={self.config.proxies["https"]}
-            """
+            user_config = (
+                "#cloud-config\n"
+                "write_files:\n"
+                "  - path: /etc/environment\n"
+                "    content: |\n"
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin\n"
+                "NO_PROXY=" + self.config.proxies["no_proxy"] + "\n"
+                "HTTPS_PROXY=" + self.config.proxies["http"] + "\n"
+                "HTTP_PROXY=" + self.config.proxies["https"] + "\n"
+            )
             instance_config["config"] = {"user.ubuntu": user_config}
 
         instance = self._clients.lxd.instances.create(config=instance_config, wait=True)
