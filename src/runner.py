@@ -257,10 +257,10 @@ class Runner:
                 "write_files:\n"
                 "  - path: /etc/environment\n"
                 "    content: |\n"
-                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin\n"
-                "NO_PROXY=" + self.config.proxies["no_proxy"] + "\n"
-                "HTTPS_PROXY=" + self.config.proxies["http"] + "\n"
-                "HTTP_PROXY=" + self.config.proxies["https"] + "\n"
+                "      PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin\n"
+                "      NO_PROXY=" + self.config.proxies["no_proxy"] + "\n"
+                "      HTTPS_PROXY=" + self.config.proxies["http"] + "\n"
+                "      HTTP_PROXY=" + self.config.proxies["https"] + "\n"
             )
             instance_config["config"] = {"user.ubuntu": user_config}
 
