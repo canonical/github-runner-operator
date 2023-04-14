@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Echo hello world
         run: echo "hello world"
+      - name: Proxy set in /etc/environment
+        run: cat /etc/environment | grep PROXY
   dep-test:
     # Test the dependencies in one job to avoid using too many runners at once.
     name: dependency test
