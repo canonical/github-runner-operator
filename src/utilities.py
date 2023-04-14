@@ -93,10 +93,13 @@ def retry(  # pylint: disable=too-many-arguments
     return retry_decorator
 
 
-def run_subprocess(cmd: Sequence[str], **kwargs) -> subprocess.CompletedProcess[bytes]:
+def secure_run_subprocess(cmd: Sequence[str], **kwargs) -> subprocess.CompletedProcess[bytes]:
     """Run command in subprocess according to security recommendations.
 
     The argument `shell` is set to `False` for security reasons.
+
+    The argument `check` is set to `False`, therefore, CalledProcessError will not be raised.
+    Errors are handled by the caller by checking the exit code.
 
     Args:
         cmd: Command in a list.
@@ -104,7 +107,6 @@ def run_subprocess(cmd: Sequence[str], **kwargs) -> subprocess.CompletedProcess[
 
     Returns:
         Object representing the completed process. The outputs subprocess can accessed.
-
     """
     return subprocess.run(  # nosec B603
         cmd,
@@ -132,7 +134,7 @@ def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> st
         Output on stdout.
     """
     logger.info("Executing command %s", cmd)
-    result = run_subprocess(cmd, **kwargs)
+    result = secure_run_subprocess(cmd, **kwargs)
     logger.debug("Command %s returns: %s", cmd, result.stdout)
 
     if check_exit:

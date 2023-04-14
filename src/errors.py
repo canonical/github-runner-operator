@@ -30,3 +30,7 @@ class RunnerStartError(RunnerError):
 
 class RunnerBinaryError(RunnerError):
     """Error of getting runner binary."""
+
+
+class LxdError(Exception):
+    """Error for executing LXD actions."""

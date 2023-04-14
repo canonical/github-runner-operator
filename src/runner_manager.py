@@ -16,8 +16,6 @@ from typing import Dict, Iterator, Optional
 
 import fastcore.net
 import jinja2
-import pylxd
-import pylxd.models
 import requests
 import requests.adapters
 import urllib3
@@ -33,7 +31,7 @@ from github_type import (
     RunnerApplicationList,
     SelfHostedRunner,
 )
-from lxd import Lxd
+from lxd import Lxd, LxdInstance
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
 from utilities import retry, set_env_var
@@ -395,7 +393,7 @@ class RunnerManager:
 
         def create_runner_info(
             name: str,
-            local_runner: Optional[pylxd.models.Instance],
+            local_runner: Optional[LxdInstance],
             remote_runner: Optional[SelfHostedRunner],
         ) -> Runner:
             """Create runner from information from GitHub and LXD."""

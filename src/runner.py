@@ -17,9 +17,9 @@ import time
 from pathlib import Path
 from typing import Iterable, Optional, Sequence
 
-from errors import RunnerCreateError, RunnerError, RunnerFileLoadError, RunnerRemoveError
+from errors import LxdError, RunnerCreateError, RunnerError, RunnerFileLoadError, RunnerRemoveError
 from lxd import LxdInstance
-from lxd_type import LxdException, LxdInstanceConfig
+from lxd_type import LxdInstanceConfig
 from runner_type import (
     GitHubOrg,
     GitHubRepo,
@@ -101,7 +101,7 @@ class Runner:
             self._configure_runner()
             self._register_runner(registration_token, labels=[self.config.app_name, image])
             self._start_runner()
-        except (RunnerError, LxdException) as err:
+        except (RunnerError, LxdError) as err:
             raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err
 
     def remove(self, remove_token: str) -> None:
@@ -132,14 +132,14 @@ class Runner:
             if self.instance.status == "Running":
                 try:
                     self.instance.stop(wait=True, timeout=60)
-                except LxdException:
+                except LxdError:
                     logger.exception(
                         "Unable to gracefully stop runner %s within timeout.", self.config.name
                     )
                     logger.info("Force stopping of runner %s", self.config.name)
                     try:
                         self.instance.stop(force=True)
-                    except LxdException as err:
+                    except LxdError as err:
                         raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
 
         # The runner should cleanup itself.  Cleanup on GitHub in case of runner cleanup error.
@@ -245,7 +245,7 @@ class Runner:
                 self._clients.lxd.profiles.create(
                     profile_name, resource_profile_config, resource_profile_devices
                 )
-            except LxdException as error:
+            except LxdError as error:
                 logger.error(error)
                 raise RunnerError(
                     "Resources were not provided in the correct format, check the juju config for "
@@ -277,6 +277,9 @@ class Runner:
 
     @retry(tries=5, delay=30, local_logger=logger)
     def _wait_boot_up(self) -> None:
+        if self.instance is None:
+            return
+
         # Wait for the instance to finish to boot up and network to be up.
         self.instance.execute(["/usr/bin/who"])
         self.instance.execute(["/usr/bin/nslookup", "github.com"])
@@ -473,6 +476,9 @@ class Runner:
         Args:
             packages: Packages to be install via apt.
         """
+        if self.instance is None:
+            return
+
         self.instance.execute(["/usr/bin/apt-get", "update"])
 
         for pkg in packages:
@@ -488,6 +494,9 @@ class Runner:
         Args:
             packages: Packages to be install via snap.
         """
+        if self.instance is None:
+            return
+
         for pkg in packages:
             logger.info("Installing %s via snap...", pkg)
             self.instance.execute(["/usr/bin/snap", "install", pkg])

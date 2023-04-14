@@ -1,19 +1,22 @@
+# Copyright 2023 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+"""Types used by Lxd class."""
+
 from __future__ import annotations
 
 from typing import TypedDict
 
-
-class LxdException(Exception):
-    pass
-
-
 # The keys are not valid identifiers, hence this is defined with function-based syntax.
 ResourceProfileConfig = TypedDict(
-    "ResourceProfileCOnfig", {"limits.cpu": str, "limits.memory": str}
+    "ResourceProfileConfig", {"limits.cpu": str, "limits.memory": str}
 )
+ResourceProfileConfig.__doc__ = "Represent LXD profile configuration."
 
 
 class ResourceProfileDevicesRoot(TypedDict):
+    """Represents LXD device profile."""
+
     path: str
     pool: str
     type: str
@@ -21,6 +24,8 @@ class ResourceProfileDevicesRoot(TypedDict):
 
 
 class ResourceProfileDevices(TypedDict):
+    """Represents LXD device profile."""
+
     root: ResourceProfileDevicesRoot
 
 
