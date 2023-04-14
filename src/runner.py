@@ -324,7 +324,7 @@ class Runner:
             ["/usr/bin/chown", "-R", "ubuntu:ubuntu", str(self.runner_application)]
         )
 
-        # Verify the env file is written to runner.
+        # Verify the config script is written to runner.
         exit_code, _, stderr = self.instance.execute(["test", "-f", str(self.config_script)])
         if exit_code == 0:
             logger.info("Runner binary loaded on runner instance %s.", self.config.name)
