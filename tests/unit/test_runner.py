@@ -114,7 +114,6 @@ def test_create_pylxd_fail(
     pylxd.profiles.exists = mock_pylxd_error_func
 
     with pytest.raises(RunnerCreateError):
-        pytest.set_trace()
         runner.create("test_image", vm_resources, binary_path, token)
 
     assert len(pylxd.instances.all()) == 0

@@ -346,6 +346,13 @@ class Runner:
         if self.instance is None:
             return
 
+        # Load `/etc/environment` file.
+        environment_contents = self._clients.jinja.get_template("environment.j2").render(
+            proxies=self.config.proxies
+        )
+        self.instance.files.put("/etc/environment", environment_contents)
+
+        # Load `.env` config file for GitHub self-hosted runner.
         env_contents = self._clients.jinja.get_template("env.j2").render(
             proxies=self.config.proxies
         )
