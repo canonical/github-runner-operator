@@ -404,6 +404,12 @@ class Runner:
         if self.instance is None:
             return
 
+        # Load `/etc/environment` file.
+        environment_contents = self._clients.jinja.get_template("environment.j2").render(
+            proxies=self.config.proxies
+        )
+        self.instance.files.put("/etc/environment", environment_contents)
+
         if self.config.proxies:
             # Creating directory and putting the file are idempotent, and can be retried.
             logger.info("Adding proxy setting to the runner.")
