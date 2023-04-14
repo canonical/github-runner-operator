@@ -14,6 +14,12 @@ jobs:
         run: echo "hello world"
       - name: Proxy set in /etc/environment
         run: cat /etc/environment | grep PROXY
+      - name: Install microk8s
+        run: snap install microk8s --classic
+      - name: Wait for microk8s
+        run: microk8s status --wait-ready
+      - name: Deploy microbot for testing
+        run: microk8s kubectl create deployment nginx --image=nginx
   dep-test:
     # Test the dependencies in one job to avoid using too many runners at once.
     name: dependency test
