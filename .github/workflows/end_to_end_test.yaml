@@ -21,7 +21,7 @@ jobs:
       - name: Deploy nginx for testing
         run: sudo microk8s kubectl create deployment nginx --image=nginx
       - name: Wait for nginx to be ready
-        run: sudo microk8s kubectl rollout status deployment/nginx --timeout=5m
+        run: sudo microk8s kubectl rollout status deployment/nginx --timeout=30m
   dep-test:
     # Test the dependencies in one job to avoid using too many runners at once.
     name: dependency test
