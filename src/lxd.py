@@ -63,7 +63,7 @@ class LxdInstanceFiles:
                 "file",
                 "push",
                 file.name,
-                f"{self.instance.name}/{filename}",
+                f"{self.instance.name}/{filename.lstrip('/')}",
             ]
             if mode:
                 lxc_cmd += ["--mode", str(mode)]
