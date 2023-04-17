@@ -59,7 +59,7 @@ class LxdInstanceFiles:
         with tempfile.NamedTemporaryFile() as file:
             file.write(content)
             lxc_cmd = [
-                "/usr/bin/lxc",
+                "/snap/bin/lxc",
                 "file",
                 "push",
                 file.name,
