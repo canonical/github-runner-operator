@@ -53,7 +53,7 @@ class LxdInstanceFiles:
         Raises:
             LxdException: Unable to load the file into the LXD instance.
         """
-        if content is str:
+        if isinstance(content, str):
             content = content.encode()
 
         with tempfile.NamedTemporaryFile() as file:
