@@ -10,7 +10,7 @@ from __future__ import annotations
 import io
 import tempfile
 from subprocess import CalledProcessError  # nosec B404
-from typing import IO, Optional, Tuple
+from typing import IO, Optional, Tuple, Union
 
 import pylxd.models
 
@@ -42,7 +42,7 @@ class LxdInstanceFiles:
         """
         self.instance.execute(["/usr/bin/mkdir", "-p", dir_name])
 
-    def put(self, filename: str, content: bytes, mode: Optional[int] = None) -> None:
+    def put(self, filename: str, content: Union[str, bytes], mode: Optional[int] = None) -> None:
         """Put a file with the given content in the LXD instance.
 
         Args:
@@ -53,6 +53,9 @@ class LxdInstanceFiles:
         Raises:
             LxdException: Unable to load the file into the LXD instance.
         """
+        if content is str:
+            content = content.encode()
+
         with tempfile.NamedTemporaryFile() as file:
             file.write(content)
             lxc_cmd = [
