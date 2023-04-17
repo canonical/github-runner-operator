@@ -152,7 +152,7 @@ class LxdInstance:
         lxc_cmd += ["--"] + cmd
 
         result = secure_run_subprocess(lxc_cmd)
-        return (result.returncode, io.StringIO(result.stdout), io.StringIO(result.stderr))
+        return (result.returncode, io.BytesIO(result.stdout), io.BytesIO(result.stderr))
 
 
 class LxdInstances:
