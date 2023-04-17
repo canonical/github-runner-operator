@@ -92,7 +92,7 @@ def test_create(
         systemd_docker_proxy = instance.files.get(
             "/etc/systemd/system/docker.service.d/http-proxy.conf"
         )
-        # Test the file has being written.  This value does not contain the string as the
+        # Test the file has being written to.  This value does not contain the string as the
         # jinja2.environment.Environment is mocked with MagicMock.
         assert env_proxy is not None
         assert systemd_docker_proxy is not None

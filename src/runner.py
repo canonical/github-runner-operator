@@ -394,8 +394,9 @@ class Runner:
                 logger.info("Loaded docker proxy file on runner instance %s.", self.config.name)
             else:
                 logger.error(
-                    "Unable to load docker proxy file on runner instance %s due to: %s",
+                    "Unable to load docker proxy file on runner instance %s due to: %s due to: %s",
                     self.config.name,
+                    stderr.read(),
                     stderr.read(),
                 )
                 raise RunnerFileLoadError(
