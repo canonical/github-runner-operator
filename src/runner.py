@@ -359,7 +359,7 @@ class Runner:
         env_contents = self._clients.jinja.get_template("env.j2").render(
             proxies=self.config.proxies
         )
-        self.instance.files.put(self.env_file, env_contents)
+        self.instance.files.put(str(self.env_file), env_contents)
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
 
         # Verify the env file is written to runner.
@@ -454,7 +454,7 @@ class Runner:
 
         # Put a script to run the GitHub self-hosted runner in the instance and run it.
         contents = self._clients.jinja.get_template("start.j2").render()
-        self.instance.files.put(self.runner_script, contents, mode="0755")
+        self.instance.files.put(str(self.runner_script), contents, mode="0755")
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
         self.instance.execute(
