@@ -9,15 +9,13 @@ from __future__ import annotations
 
 import io
 import logging
-import tempfile
-from subprocess import CalledProcessError  # nosec B404
 from typing import IO, Optional, Tuple, Union
 
 import pylxd.models
 
 from errors import LxdError
 from lxd_type import LxdInstanceConfig, ResourceProfileConfig, ResourceProfileDevices
-from utilities import execute_command, secure_run_subprocess
+from utilities import secure_run_subprocess
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +76,7 @@ class LxdInstance:
         """
         self.name = name
         self._pylxd_instance = pylxd_instance
-        self.files = LxdInstanceFiles(self._pylxd_instance)
+        self.files = LxdInstanceFiles(self._pylxd_instance, self._pylxd_instance.files)
 
     @property
     def status(self) -> str:
