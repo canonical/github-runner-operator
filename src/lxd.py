@@ -8,16 +8,15 @@ The Lxd class is intend to be layer of abstraction to isolate the underlying imp
 from __future__ import annotations
 
 import io
-import logging
+import tempfile
+from subprocess import CalledProcessError  # nosec B404
 from typing import IO, Optional, Tuple, Union
 
 import pylxd.models
 
 from errors import LxdError
 from lxd_type import LxdInstanceConfig, ResourceProfileConfig, ResourceProfileDevices
-from utilities import secure_run_subprocess
-
-logger = logging.getLogger(__name__)
+from utilities import execute_command, secure_run_subprocess
 
 
 class LxdInstanceFiles:
@@ -56,7 +55,26 @@ class LxdInstanceFiles:
         Raises:
             LxdException: Unable to load the file into the LXD instance.
         """
-        self._pylxd_files.put(filename, content, mode)
+        if isinstance(content, str):
+            content = content.encode()
+
+        with tempfile.NamedTemporaryFile() as file:
+            file.write(content)
+            lxc_cmd = [
+                "/snap/bin/lxc",
+                "file",
+                "push",
+                file.name,
+                f"{self.instance.name}/{filename.lstrip('/')}",
+            ]
+            if mode:
+                lxc_cmd += ["--mode", str(mode)]
+            try:
+                execute_command(lxc_cmd)
+            except CalledProcessError as err:
+                raise LxdError(
+                    f"Unable to push file into LXD instance {self.instance.name}"
+                ) from err
 
 
 class LxdInstance:
@@ -132,7 +150,6 @@ class LxdInstance:
         Returns:
             Tuple containing the exit code, stdout, stderr.
         """
-        logger.info("Executing command %s", cmd)
         lxc_cmd = ["/snap/bin/lxc", "exec", self.name]
         if cwd:
             lxc_cmd += ["--cwd", cwd]
@@ -140,7 +157,6 @@ class LxdInstance:
         lxc_cmd += ["--"] + cmd
 
         result = secure_run_subprocess(lxc_cmd)
-        logger.debug("Command %s returns: %s", cmd, result.stdout)
         return (result.returncode, io.BytesIO(result.stdout), io.BytesIO(result.stderr))
 
 
