@@ -26,15 +26,13 @@ class LxdInstanceFiles:
         instance (LxdInstance): LXD instance where the files are located in.
     """
 
-    def __init__(self, instance: LxdInstance, pylxd_files: pylxd.models.Instance.FilesManager):
+    def __init__(self, instance: LxdInstance):
         """Construct the file manager.
 
         Args:
             instance: LXD instance where the files are located in.
-            pylxd_files: The pylxd FilesManager for the LXD instance.
         """
         self.instance = instance
-        self._pylxd_files = pylxd_files
 
     def mk_dir(self, dir_name: str) -> None:
         """Create a directory in the LXD instance.
@@ -151,7 +149,7 @@ class LxdInstance:
         """
         self.name = name
         self._pylxd_instance = pylxd_instance
-        self.files = LxdInstanceFiles(self._pylxd_instance, self._pylxd_instance.files)
+        self.files = LxdInstanceFiles(self._pylxd_instance)
 
     @property
     def status(self) -> str:
@@ -312,7 +310,7 @@ class LxdProfiles:
             raise LxdError(f"Unable to create LXD profile {name} exists") from err
 
 
-# Disable pylint as this class intends to mirror pylxd.
+# Disable pylint as the public methods of this class in splitted into instances and profiles.
 class Lxd:  # pylint: disable=too-few-public-methods
     """LXD client."""
 

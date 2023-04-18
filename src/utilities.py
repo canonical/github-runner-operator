@@ -108,7 +108,8 @@ def secure_run_subprocess(cmd: Sequence[str], **kwargs) -> subprocess.CompletedP
     Returns:
         Object representing the completed process. The outputs subprocess can accessed.
     """
-    return subprocess.run(  # nosec B603
+    logger.info("Executing command %s", cmd)
+    result = subprocess.run(  # nosec B603
         cmd,
         capture_output=True,
         shell=False,
@@ -116,6 +117,8 @@ def secure_run_subprocess(cmd: Sequence[str], **kwargs) -> subprocess.CompletedP
         # Disable type check due to the support for unpacking arguments in mypy is experimental.
         **kwargs  # type: ignore
     )
+    logger.debug("Command %s returns: %s", cmd, result.stdout)
+    return result
 
 
 def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> str:
@@ -133,9 +136,7 @@ def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> st
     Returns:
         Output on stdout.
     """
-    logger.info("Executing command %s", cmd)
     result = secure_run_subprocess(cmd, **kwargs)
-    logger.debug("Command %s returns: %s", cmd, result.stdout)
 
     if check_exit:
         try:

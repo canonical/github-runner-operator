@@ -10,7 +10,7 @@ skips = ["*/*test.py", "*/test_*.py"]
 [tool.coverage.run]
 branch = true
 omit = [
-    # Contains interface for calling LXD. Tested in integration tests.
+    # Contains interface for calling LXD. Tested in integration tests and end to end tests.
     "src/lxd.py"
 ]
 
