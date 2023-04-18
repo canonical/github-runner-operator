@@ -39,13 +39,13 @@ options:
       with GiB suffix.
   reconcile-interval:
     type: int
-    default: 30
+    default: 10
     description: >
       Minutes between each reconciliation between the current state and the target state of the
       runners. On reconciliation the charm polls the state of runners, such as, the number of
       container runners, and see if actions are needed.
   update-interval:
     type: int
-    default: 120
+    default: 60
     description: >
       Minutes between each check for new versions of the runner binary.
