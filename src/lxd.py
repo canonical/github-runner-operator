@@ -310,7 +310,7 @@ class LxdProfiles:
             raise LxdError(f"Unable to create LXD profile {name} exists") from err
 
 
-# Disable pylint as the public methods of this class in splitted into instances and profiles.
+# Disable pylint as the public methods of this class in split into instances and profiles.
 class Lxd:  # pylint: disable=too-few-public-methods
     """LXD client."""
 
