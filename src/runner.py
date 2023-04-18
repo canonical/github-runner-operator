@@ -454,7 +454,7 @@ class Runner:
             raise RunnerError("Runner operation called prior to runner creation.")
 
         self.instance.files.put(filepath, content, mode)
-        content_on_runner = self.instance.files.get(filepath).decode("utf-8")
+        content_on_runner = self.instance.files.get(filepath)
         if content_on_runner != content:
             logger.error(
                 "Loaded file %s in runner %s did not match expected content",

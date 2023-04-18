@@ -114,7 +114,7 @@ class LxdInstanceFiles:
                 f"Unable to pull file {str(source)} from LXD instance {self.instance.name}"
             ) from err
 
-    def get(self, filepath: str) -> bytes:
+    def get(self, filepath: str) -> str:
         """Get content of a file in the LXD instance.
 
         Args:
@@ -129,7 +129,7 @@ class LxdInstanceFiles:
         with tempfile.NamedTemporaryFile() as file:
             self.pull(filepath, file.name)
 
-            return file.read()
+            return file.read().decode("utf-8")
 
 
 class LxdInstance:
