@@ -317,7 +317,7 @@ class Runner:
 
         # Creating directory and putting the file are idempotent, and can be retried.
         self.instance.files.mk_dir(str(self.runner_application))
-        self.instance.files.push(self.config.name + binary_path, str(binary))
+        self.instance.files.push(str(binary), binary_path)
 
         self.instance.execute(
             ["/usr/bin/tar", "-xzf", binary_path, "-C", str(self.runner_application)]
