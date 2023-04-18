@@ -29,13 +29,15 @@ class LxdInstanceFiles:
         instance (LxdInstance): LXD instance where the files are located in.
     """
 
-    def __init__(self, instance: LxdInstance):
+    def __init__(self, instance: LxdInstance, pylxd_files: pylxd.models.Instance.FilesManager):
         """Construct the file manager.
 
         Args:
             instance: LXD instance where the files are located in.
+            pylxd_files: The pylxd FilesManager for the LXD instance.
         """
         self.instance = instance
+        self._pylxd_files = pylxd_files
 
     def mk_dir(self, dir_name: str) -> None:
         """Create a directory in the LXD instance.
@@ -56,28 +58,7 @@ class LxdInstanceFiles:
         Raises:
             LxdException: Unable to load the file into the LXD instance.
         """
-        if isinstance(content, str):
-            content = content.encode()
-
-        with tempfile.NamedTemporaryFile() as file:
-            file.write(content)
-
-            lxc_cmd = [
-                "/snap/bin/lxc",
-                "file",
-                "push",
-                "--create-dirs",
-                file.name,
-                f"{self.instance.name}/{filename.lstrip('/')}",
-            ]
-            if mode:
-                lxc_cmd += ["--mode", str(mode)]
-            try:
-                execute_command(lxc_cmd)
-            except CalledProcessError as err:
-                raise LxdError(
-                    f"Unable to push file into LXD instance {self.instance.name}"
-                ) from err
+        self._pylxd_files.put(filename, content, mode)
 
 
 class LxdInstance:
