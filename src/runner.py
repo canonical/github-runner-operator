@@ -28,7 +28,7 @@ from runner_type import (
     RunnerStatus,
     VirtualMachineResources,
 )
-from utilities import execute_command, retry
+from utilities import retry
 
 logger = logging.getLogger(__name__)
 
@@ -268,7 +268,7 @@ class Runner:
             reconcile_interval: Time in seconds of period between each reconciliation.
         """
         if self.instance is None:
-            return
+            raise RunnerError("Runner operation called prior to runner creation.")
 
         logger.info("Starting LXD instance for runner: %s", self.config.name)
 
@@ -278,7 +278,7 @@ class Runner:
     @retry(tries=5, delay=30, local_logger=logger)
     def _wait_boot_up(self) -> None:
         if self.instance is None:
-            return
+            raise RunnerError("Runner operation called prior to runner creation.")
 
         # Wait for the instance to finish to boot up and network to be up.
         self.instance.execute(["/usr/bin/who"])
@@ -297,7 +297,7 @@ class Runner:
             RunnerFileLoadError: Unable to load the file into the runner instance.
         """
         if self.instance is None:
-            return
+            raise RunnerError("Runner operation called prior to runner creation.")
 
         # TEMP: Install common tools used in GitHub Actions. This will be removed once virtual
         # machines are created from custom images/GitHub runner image.
@@ -317,9 +317,8 @@ class Runner:
 
         # Creating directory and putting the file are idempotent, and can be retried.
         self.instance.files.mk_dir(str(self.runner_application))
-        execute_command(
-            ["/snap/bin/lxc", "file", "push", str(binary), self.config.name + binary_path]
-        )
+        self.instance.files.push(str(binary), self.config.name + binary_path)
+
         self.instance.execute(
             ["/usr/bin/tar", "-xzf", binary_path, "-C", str(self.runner_application)]
         )
@@ -347,32 +346,20 @@ class Runner:
             RunnerFileLoadError: Unable to load configuration file on the runner.
         """
         if self.instance is None:
-            return
+            raise RunnerError("Runner operation called prior to runner creation.")
 
         # Load `/etc/environment` file.
         environment_contents = self._clients.jinja.get_template("environment.j2").render(
             proxies=self.config.proxies
         )
-        self.instance.files.put("/etc/environment", environment_contents)
+        self._put_file("/etc/environment", environment_contents)
 
         # Load `.env` config file for GitHub self-hosted runner.
         env_contents = self._clients.jinja.get_template("env.j2").render(
             proxies=self.config.proxies
         )
-        self.instance.files.put(str(self.env_file), env_contents)
+        self._put_file(str(self.env_file), env_contents)
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
-
-        # Verify the env file is written to runner.
-        exit_code, _, stderr = self.instance.execute(["test", "-f", str(self.env_file)])
-        if exit_code == 0:
-            logger.info("Loaded env file on runner instance %s.", self.config.name)
-        else:
-            logger.error(
-                "Unable to load env file on runner instance %s due to: %s",
-                self.config.name,
-                stderr.read(),
-            )
-            raise RunnerFileLoadError(f"Failed to load env file on {self.config.name}")
 
         if self.config.proxies:
             # Creating directory and putting the file are idempotent, and can be retried.
@@ -386,22 +373,7 @@ class Runner:
             docker_service_proxy = docker_service_path / "http-proxy.conf"
 
             self.instance.files.mk_dir(str(docker_service_path))
-            self.instance.files.put(str(docker_service_proxy), docker_proxy_contents)
-
-            # Verify the env file is written to runner.
-            exit_code, _, stderr = self.instance.execute(["test", "-f", str(docker_service_proxy)])
-            if exit_code == 0:
-                logger.info("Loaded docker proxy file on runner instance %s.", self.config.name)
-            else:
-                logger.error(
-                    "Unable to load docker proxy file on runner instance %s due to: %s due to: %s",
-                    self.config.name,
-                    stderr.read(),
-                    stderr.read(),
-                )
-                raise RunnerFileLoadError(
-                    f"Failed to load docker proxy file on {self.config.name}"
-                )
+            self._put_file(str(docker_service_proxy), docker_proxy_contents)
 
             self.instance.execute(["systemctl", "daemon-reload"])
             self.instance.execute(["systemctl", "restart", "docker"])
@@ -415,7 +387,7 @@ class Runner:
             labels: Labels to tag the runner with.
         """
         if self.instance is None:
-            return
+            raise RunnerError("Runner operation called prior to runner creation.")
 
         logger.info("Registering runner %s", self.config.name)
 
@@ -448,13 +420,13 @@ class Runner:
     def _start_runner(self) -> None:
         """Start the GitHub runner."""
         if self.instance is None:
-            return
+            raise RunnerError("Runner operation called prior to runner creation.")
 
         logger.info("Starting runner %s", self.config.name)
 
         # Put a script to run the GitHub self-hosted runner in the instance and run it.
         contents = self._clients.jinja.get_template("start.j2").render()
-        self.instance.files.put(str(self.runner_script), contents, mode="0755")
+        self._put_file(str(self.runner_script), contents, mode="0755")
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
         self.instance.execute(
@@ -468,6 +440,26 @@ class Runner:
 
         logger.info("Started runner %s", self.config.name)
 
+    def _put_file(self, filepath: str, content: str, mode: Optional[str] = None) -> None:
+        """Put a file into the runner instance.
+
+        Args:
+            filepath: Path to load the file in the runner instance.
+            content: Content of the file.
+
+        Raises:
+            RunnerFileLoadError: Failed to load the file into the runner instance.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        self.instance.files.put(filepath, content, mode)
+        if self.instance.files.get(filepath) != content:
+            logger.error("Loaded file %s in runner %s did not match expected content")
+            raise RunnerFileLoadError(
+                f"Failed to load file {filepath} to runner {self.instance.name}"
+            )
+
     def _apt_install(self, packages: Iterable[str]) -> None:
         """Installs the given APT packages.
 
@@ -478,7 +470,7 @@ class Runner:
             packages: Packages to be install via apt.
         """
         if self.instance is None:
-            return
+            raise RunnerError("Runner operation called prior to runner creation.")
 
         self.instance.execute(["/usr/bin/apt-get", "update"])
 
@@ -496,7 +488,7 @@ class Runner:
             packages: Packages to be install via snap.
         """
         if self.instance is None:
-            return
+            raise RunnerError("Runner operation called prior to runner creation.")
 
         for pkg in packages:
             logger.info("Installing %s via snap...", pkg)

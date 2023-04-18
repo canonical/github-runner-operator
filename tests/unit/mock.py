@@ -8,7 +8,7 @@ from __future__ import annotations
 import hashlib
 import logging
 import secrets
-from typing import Optional, Sequence
+from typing import Optional, Sequence, Union
 
 from errors import LxdError, RunnerError
 from github_type import RegistrationToken, RemoveToken, RunnerApplication
@@ -97,13 +97,16 @@ class MockLxdInstanceFiles:
     def __init__(self):
         self.files = {}
 
-    def mk_dir(self, path, mode=None, uid=None, gid=None):
+    def mk_dir(self, path):
         pass
 
-    def put(self, filepath, data, mode=None, uid=None, gid=None):
-        self.files[str(filepath)] = data
+    def push(self, source: str, destination: str, mode: Optional[str] = None):
+        self.files[destination] = "mock_content"
 
-    def get(self, filepath):
+    def put(self, filepath: str, data: Union[bytes, str], mode: Optional[str] = None):
+        self.files[filepath] = data
+
+    def get(self, filepath: str):
         return self.files.get(str(filepath), None)
 
 

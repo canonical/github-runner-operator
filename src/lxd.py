@@ -44,16 +44,43 @@ class LxdInstanceFiles:
         """
         self.instance.execute(["/usr/bin/mkdir", "-p", dir_name])
 
-    def put(self, filename: str, content: Union[str, bytes], mode: Optional[int] = None) -> None:
-        """Put a file with the given content in the LXD instance.
+    def push(self, source: str, destination: str, mode: Optional[str] = None) -> None:
+        """Push a file to the LXD instance.
 
         Args:
-            filename: Name of the file path.
-            content: Content of the file.
+            source: Path of the file to push to the LXD instance.
+            destination: Path in the LXD instance to load the file.
             mode: File permission setting.
 
         Raises:
             LxdException: Unable to load the file into the LXD instance.
+        """
+        lxc_cmd = [
+            "/snap/bin/lxc",
+            "file",
+            "push",
+            source,
+            f"{self.instance.name}/{destination.lstrip('/')}",
+        ]
+
+        if mode:
+            lxc_cmd += ["--mode", str(mode)]
+
+        try:
+            execute_command(lxc_cmd)
+        except CalledProcessError as err:
+            raise LxdError(f"Unable to push file into LXD instance {self.instance.name}") from err
+
+    def put(self, filepath: str, content: Union[str, bytes], mode: Optional[str] = None) -> None:
+        """Put a file with the given content in the LXD instance.
+
+        Args:
+            filepath: Path in the LXD instance to load the file.
+            content: Content of the file.
+            mode: File permission setting.
+
+        Raises:
+            LxdException: Unable to load the file to the LXD instance.
         """
         if isinstance(content, str):
             content = content.encode("utf-8")
@@ -62,21 +89,49 @@ class LxdInstanceFiles:
             file.write(content)
             file.flush()
 
-            lxc_cmd = [
-                "/snap/bin/lxc",
-                "file",
-                "push",
-                file.name,
-                f"{self.instance.name}/{filename.lstrip('/')}",
-            ]
-            if mode:
-                lxc_cmd += ["--mode", str(mode)]
-            try:
-                execute_command(lxc_cmd)
-            except CalledProcessError as err:
-                raise LxdError(
-                    f"Unable to push file into LXD instance {self.instance.name}"
-                ) from err
+            self.push(file.name, filepath, mode)
+
+    def pull(self, source: str, destination: str) -> None:
+        """Pull a file from the LXD instance.
+
+        Args:
+            source: Path of the file to pull in the LXD instance.
+            destination: Path of load the file.
+
+        Raises:
+            LxdException: Unable to load the file from the LXD instance.
+        """
+        lxc_cmd = [
+            "/snap/bin/lxc",
+            "file",
+            "pull",
+            f"{self.instance.name}/{source.lstrip('/')}",
+            destination,
+        ]
+
+        try:
+            execute_command(lxc_cmd)
+        except CalledProcessError as err:
+            raise LxdError(
+                f"Unable to pull file {str(source)} from LXD instance {self.instance.name}"
+            ) from err
+
+    def get(self, filepath: str) -> bytes:
+        """Get content of a file in the LXD instance.
+
+        Args:
+            filepath: Path of the file in the LXD instance.
+
+        Raises:
+            LxdException: Unable to load the file from the LXD instance.
+
+        Returns:
+            The content of the file.
+        """
+        with tempfile.NamedTemporaryFile() as file:
+            self.pull(filepath, file.name)
+
+            return file.read()
 
 
 class LxdInstance:
