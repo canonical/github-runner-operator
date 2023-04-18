@@ -56,10 +56,12 @@ class LxdInstanceFiles:
             LxdException: Unable to load the file into the LXD instance.
         """
         if isinstance(content, str):
-            content = content.encode()
+            content = content.encode("utf-8")
 
         with tempfile.NamedTemporaryFile() as file:
             file.write(content)
+            file.flush()
+
             lxc_cmd = [
                 "/snap/bin/lxc",
                 "file",
