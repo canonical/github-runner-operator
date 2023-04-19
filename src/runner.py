@@ -348,6 +348,12 @@ class Runner:
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
+        # Load the runner startup script.
+        contents = self._clients.jinja.get_template("start.j2").render()
+        self._put_file(str(self.runner_script), contents, mode="0755")
+        self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
+        self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
+
         # Load `/etc/environment` file.
         environment_contents = self._clients.jinja.get_template("environment.j2").render(
             proxies=self.config.proxies
@@ -424,11 +430,6 @@ class Runner:
 
         logger.info("Starting runner %s", self.config.name)
 
-        # Put a script to run the GitHub self-hosted runner in the instance and run it.
-        contents = self._clients.jinja.get_template("start.j2").render()
-        self._put_file(str(self.runner_script), contents, mode="0755")
-        self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
-        self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
         self.instance.execute(
             [
                 "/usr/bin/sudo",
