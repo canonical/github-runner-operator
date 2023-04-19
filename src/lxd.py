@@ -68,10 +68,10 @@ class LxdInstanceFileManager:
         except SubprocessError as err:
             raise LxdError(f"Unable to push file into LXD instance {self.instance.name}") from err
 
-    def put_content(
+    def write_file(
         self, filepath: str, content: Union[str, bytes], mode: Optional[str] = None
     ) -> None:
-        """Put a file with the given content in the LXD instance.
+        """Write a file with the given content in the LXD instance.
 
         Args:
             filepath: Path in the LXD instance to load the file.
@@ -115,8 +115,8 @@ class LxdInstanceFileManager:
                 f"Unable to pull file {source} from LXD instance {self.instance.name}"
             ) from err
 
-    def get_content(self, filepath: str) -> str:
-        """Get content of a file in the LXD instance.
+    def read_file(self, filepath: str) -> str:
+        """Read content of a file in the LXD instance.
 
         Args:
             filepath: Path of the file in the LXD instance.

@@ -88,8 +88,8 @@ def test_create(
 
     if runner.config.proxies:
         instance = instances[0]
-        env_proxy = instance.files.get_content("/opt/github-runner/.env")
-        systemd_docker_proxy = instance.files.get_content(
+        env_proxy = instance.files.read_file("/opt/github-runner/.env")
+        systemd_docker_proxy = instance.files.read_file(
             "/etc/systemd/system/docker.service.d/http-proxy.conf"
         )
         # Test the file has being written to.  This value does not contain the string as the

@@ -349,8 +349,8 @@ class Runner:
             raise RunnerError("Runner operation called prior to runner creation.")
 
         # Load the runner startup script.
-        contents = self._clients.jinja.get_template("start.j2").render()
-        self._put_file(str(self.runner_script), contents, mode="0755")
+        startup_contents = self._clients.jinja.get_template("start.j2").render()
+        self._put_file(str(self.runner_script), startup_contents, mode="0755")
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
 
@@ -454,8 +454,8 @@ class Runner:
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
-        self.instance.files.put_content(filepath, content, mode)
-        content_on_runner = self.instance.files.get_content(filepath)
+        self.instance.files.write_file(filepath, content, mode)
+        content_on_runner = self.instance.files.read_file(filepath)
         if content_on_runner != content:
             logger.error(
                 "Loaded file %s in runner %s did not match expected content",

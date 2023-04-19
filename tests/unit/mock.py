@@ -103,10 +103,10 @@ class MockLxdInstanceFileManager:
     def push_file(self, source: str, destination: str, mode: Optional[str] = None):
         self.files[destination] = "mock_content"
 
-    def put_content(self, filepath: str, data: Union[bytes, str], mode: Optional[str] = None):
+    def write_file(self, filepath: str, data: Union[bytes, str], mode: Optional[str] = None):
         self.files[filepath] = data
 
-    def get_content(self, filepath: str):
+    def read_file(self, filepath: str):
         return self.files.get(str(filepath), None)
 
 
