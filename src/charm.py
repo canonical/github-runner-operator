@@ -8,7 +8,6 @@
 import functools
 import logging
 import urllib.error
-from subprocess import CalledProcessError  # nosec B404
 from typing import TYPE_CHECKING, Callable, Dict, Optional, TypeVar
 
 from ops.charm import (
@@ -23,7 +22,7 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-from errors import RunnerError
+from errors import RunnerError, SubprocessError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
@@ -196,7 +195,7 @@ class GithubRunnerCharm(CharmBase):
         try:
             # The `_install_deps` includes retry.
             GithubRunnerCharm._install_deps()
-        except CalledProcessError as err:
+        except SubprocessError as err:
             logger.exception(err)
             # The charm cannot proceed without dependencies.
             self.unit.status = BlockedStatus("Failed to install dependencies")

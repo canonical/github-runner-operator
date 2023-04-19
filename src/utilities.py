@@ -12,6 +12,8 @@ from typing import Callable, Optional, Sequence, Type, TypeVar
 
 from typing_extensions import ParamSpec
 
+from errors import SubprocessError
+
 logger = logging.getLogger(__name__)
 
 
@@ -115,7 +117,7 @@ def secure_run_subprocess(cmd: Sequence[str], **kwargs) -> subprocess.CompletedP
         shell=False,
         check=False,
         # Disable type check due to the support for unpacking arguments in mypy is experimental.
-        **kwargs  # type: ignore
+        **kwargs,  # type: ignore
     )
     logger.debug("Command %s returns: %s", cmd, result.stdout)
     return result
@@ -148,7 +150,8 @@ def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> st
                 err.returncode,
                 err.stderr,
             )
-            raise
+
+            raise SubprocessError(cmd, err.returncode, err.stdout, err.stderr) from err
 
     return str(result.stdout)
 

@@ -32,11 +32,11 @@ class MockLxdClient:
     """Mock the behavior of the pylxd client."""
 
     def __init__(self):
-        self.instances = MockLxdInstances()
-        self.profiles = MockLxdProfiles()
+        self.instances = MockLxdInstanceManager()
+        self.profiles = MockLxdProfileManager()
 
 
-class MockLxdInstances:
+class MockLxdInstanceManager:
     """Mock the behavior of the pylxd Instances."""
 
     def __init__(self):
@@ -53,7 +53,7 @@ class MockLxdInstances:
         return [i for i in self.instances.values() if not i.deleted]
 
 
-class MockLxdProfiles:
+class MockLxdProfileManager:
     """Mock the behavior of the pylxd Profiles."""
 
     def __init__(self):
@@ -74,7 +74,7 @@ class MockLxdInstance:
         self.status = "Stopped"
         self.deleted = False
 
-        self.files = MockLxdInstanceFiles()
+        self.files = MockLxdInstanceFileManager()
 
     def start(self, wait: bool = True, timeout: int = 60):
         self.status = "Running"
@@ -91,7 +91,7 @@ class MockLxdInstance:
         return 0, "", ""
 
 
-class MockLxdInstanceFiles:
+class MockLxdInstanceFileManager:
     """Mock the behavior of a pylxd Instance files."""
 
     def __init__(self):
@@ -100,13 +100,13 @@ class MockLxdInstanceFiles:
     def mk_dir(self, path):
         pass
 
-    def push(self, source: str, destination: str, mode: Optional[str] = None):
+    def push_file(self, source: str, destination: str, mode: Optional[str] = None):
         self.files[destination] = "mock_content"
 
-    def put(self, filepath: str, data: Union[bytes, str], mode: Optional[str] = None):
+    def put_content(self, filepath: str, data: Union[bytes, str], mode: Optional[str] = None):
         self.files[filepath] = data
 
-    def get(self, filepath: str):
+    def get_content(self, filepath: str):
         return self.files.get(str(filepath), None)
 
 

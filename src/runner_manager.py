@@ -31,7 +31,7 @@ from github_type import (
     RunnerApplicationList,
     SelfHostedRunner,
 )
-from lxd import Lxd, LxdInstance
+from lxd import LxdClient, LxdInstance
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
 from utilities import retry, set_env_var
@@ -118,7 +118,7 @@ class RunnerManager:
         self._clients = RunnerClients(
             GhApi(token=self.config.token),
             jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True),
-            Lxd(),
+            LxdClient(),
         )
 
     @retry(tries=5, delay=30, local_logger=logger)

@@ -6,14 +6,13 @@
 import os
 import unittest
 import urllib.error
-from subprocess import CalledProcessError  # nosec B404
 from unittest.mock import MagicMock, call, patch
 
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
-from errors import RunnerError
+from errors import RunnerError, SubprocessError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
@@ -27,8 +26,8 @@ def raise_runner_error(*args, **kargs):
     raise RunnerError("mock error")
 
 
-def raise_called_process_error(*args, **kargs):
-    raise CalledProcessError(returncode=1, cmd="mock cmd")
+def raise_subprocess_error(*args, **kargs):
+    raise SubprocessError(cmd=["mock"], return_code=1, stdout="mock stdout", stderr="mock stderr")
 
 
 def raise_url_error(*args, **kargs):
@@ -233,7 +232,7 @@ class TestCharm(unittest.TestCase):
             "Failed to update runner binary: mock error"
         )
 
-        GithubRunnerCharm._install_deps = raise_called_process_error
+        GithubRunnerCharm._install_deps = raise_subprocess_error
         harness.charm.on.install.emit()
         assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")
 

@@ -10,7 +10,7 @@ from typing import NamedTuple, TypedDict, Union
 import jinja2
 from ghapi.all import GhApi
 
-from lxd import Lxd
+from lxd import LxdClient
 
 
 class ProxySetting(TypedDict, total=False):
@@ -68,7 +68,7 @@ class RunnerClients:
 
     github: GhApi
     jinja: jinja2.Environment
-    lxd: Lxd
+    lxd: LxdClient
 
 
 @dataclass

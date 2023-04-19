@@ -9,17 +9,16 @@ from __future__ import annotations
 
 import io
 import tempfile
-from subprocess import CalledProcessError  # nosec B404
 from typing import IO, Optional, Tuple, Union
 
 import pylxd.models
 
-from errors import LxdError
+from errors import LxdError, SubprocessError
 from lxd_type import LxdInstanceConfig, ResourceProfileConfig, ResourceProfileDevices
 from utilities import execute_command, secure_run_subprocess
 
 
-class LxdInstanceFiles:
+class LxdInstanceFileManager:
     """File manager of a LXD instance.
 
     Attrs:
@@ -42,7 +41,7 @@ class LxdInstanceFiles:
         """
         self.instance.execute(["/usr/bin/mkdir", "-p", dir_name])
 
-    def push(self, source: str, destination: str, mode: Optional[str] = None) -> None:
+    def push_file(self, source: str, destination: str, mode: Optional[str] = None) -> None:
         """Push a file to the LXD instance.
 
         Args:
@@ -62,14 +61,16 @@ class LxdInstanceFiles:
         ]
 
         if mode:
-            lxc_cmd += ["--mode", str(mode)]
+            lxc_cmd += ["--mode", mode]
 
         try:
             execute_command(lxc_cmd)
-        except CalledProcessError as err:
+        except SubprocessError as err:
             raise LxdError(f"Unable to push file into LXD instance {self.instance.name}") from err
 
-    def put(self, filepath: str, content: Union[str, bytes], mode: Optional[str] = None) -> None:
+    def put_content(
+        self, filepath: str, content: Union[str, bytes], mode: Optional[str] = None
+    ) -> None:
         """Put a file with the given content in the LXD instance.
 
         Args:
@@ -87,9 +88,9 @@ class LxdInstanceFiles:
             file.write(content)
             file.flush()
 
-            self.push(file.name, filepath, mode)
+            self.push_file(file.name, filepath, mode)
 
-    def pull(self, source: str, destination: str) -> None:
+    def pull_file(self, source: str, destination: str) -> None:
         """Pull a file from the LXD instance.
 
         Args:
@@ -109,12 +110,12 @@ class LxdInstanceFiles:
 
         try:
             execute_command(lxc_cmd)
-        except CalledProcessError as err:
+        except SubprocessError as err:
             raise LxdError(
-                f"Unable to pull file {str(source)} from LXD instance {self.instance.name}"
+                f"Unable to pull file {source} from LXD instance {self.instance.name}"
             ) from err
 
-    def get(self, filepath: str) -> str:
+    def get_content(self, filepath: str) -> str:
         """Get content of a file in the LXD instance.
 
         Args:
@@ -127,7 +128,7 @@ class LxdInstanceFiles:
             The content of the file.
         """
         with tempfile.NamedTemporaryFile() as file:
-            self.pull(filepath, file.name)
+            self.pull_file(filepath, file.name)
 
             return file.read().decode("utf-8")
 
@@ -149,7 +150,7 @@ class LxdInstance:
         """
         self.name = name
         self._pylxd_instance = pylxd_instance
-        self.files = LxdInstanceFiles(self._pylxd_instance)
+        self.files = LxdInstanceFileManager(self._pylxd_instance)
 
     @property
     def status(self) -> str:
@@ -215,7 +216,7 @@ class LxdInstance:
         return (result.returncode, io.BytesIO(result.stdout), io.BytesIO(result.stderr))
 
 
-class LxdInstances:
+class LxdInstanceManager:
     """LXD instance manager."""
 
     def __init__(self, pylxd_client: pylxd.Client):
@@ -263,7 +264,7 @@ class LxdInstances:
             raise LxdError(f"Unable to create LXD instance {config['name']}") from err
 
 
-class LxdProfiles:
+class LxdProfileManager:
     """LXD profile manager."""
 
     def __init__(self, pylxd_client: pylxd.Client):
@@ -311,11 +312,11 @@ class LxdProfiles:
 
 
 # Disable pylint as the public methods of this class in split into instances and profiles.
-class Lxd:  # pylint: disable=too-few-public-methods
+class LxdClient:  # pylint: disable=too-few-public-methods
     """LXD client."""
 
     def __init__(self):
         """Construct the LXD client."""
         pylxd_client = pylxd.Client()
-        self.instances = LxdInstances(pylxd_client)
-        self.profiles = LxdProfiles(pylxd_client)
+        self.instances = LxdInstanceManager(pylxd_client)
+        self.profiles = LxdProfileManager(pylxd_client)

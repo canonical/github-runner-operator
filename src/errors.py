@@ -2,6 +2,9 @@
 # See LICENSE file for licensing details.
 
 """Errors used by the charm."""
+from __future__ import annotations
+
+from typing import Union
 
 
 class RunnerError(Exception):
@@ -34,3 +37,36 @@ class RunnerBinaryError(RunnerError):
 
 class LxdError(Exception):
     """Error for executing LXD actions."""
+
+
+class SubprocessError(Exception):
+    """Error for Subprocess calls.
+
+    Attrs:
+        cmd: Command in list form.
+        return_code: Return code of the subprocess.
+        stdout: Content of stdout of the subprocess.
+        stderr: Content of stderr of the subprocess.
+    """
+
+    def __init__(
+        self,
+        cmd: list[str],
+        return_code: int,
+        stdout: Union[bytes, str],
+        stderr: Union[bytes, str],
+    ):
+        """Construct the subprocess error.
+
+        Args:
+            cmd: Command in list form.
+            return_code: Return code of the subprocess.
+            stdout: Content of stdout of the subprocess.
+            stderr: Content of stderr of the subprocess.
+        """
+        super().__init__(f"[{' '.join(cmd)}] failed with return code {return_code!r}: {stderr!r}")
+
+        self.cmd = cmd
+        self.return_code = return_code
+        self.stdout = stdout
+        self.stderr = stderr

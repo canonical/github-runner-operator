@@ -317,7 +317,7 @@ class Runner:
 
         # Creating directory and putting the file are idempotent, and can be retried.
         self.instance.files.mk_dir(str(self.runner_application))
-        self.instance.files.push(str(binary), binary_path)
+        self.instance.files.push_file(str(binary), binary_path)
 
         self.instance.execute(
             ["/usr/bin/tar", "-xzf", binary_path, "-C", str(self.runner_application)]
@@ -453,8 +453,8 @@ class Runner:
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
-        self.instance.files.put(filepath, content, mode)
-        content_on_runner = self.instance.files.get(filepath)
+        self.instance.files.put_content(filepath, content, mode)
+        content_on_runner = self.instance.files.get_content(filepath)
         if content_on_runner != content:
             logger.error(
                 "Loaded file %s in runner %s did not match expected content",
