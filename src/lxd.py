@@ -1,9 +1,9 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""LXD client interface.
+"""Low-level LXD client interface.
 
-The Lxd class is intend to be layer of abstraction to isolate the underlying implementation of LXD.
+The LxdClient class offer a low-level interface isolate the underlying implementation of LXD.
 """
 from __future__ import annotations
 
@@ -146,6 +146,7 @@ class LxdInstance:
         """Construct the LXD instance representation.
 
         Args:
+            name: Name of the LXD instance.
             pylxd_instance: Instance of pylxd.models.Instance for the LXD instance.
         """
         self.name = name

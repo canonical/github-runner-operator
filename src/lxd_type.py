@@ -15,7 +15,17 @@ ResourceProfileConfig.__doc__ = "Represent LXD profile configuration."
 
 
 class ResourceProfileDevicesRoot(TypedDict):
-    """Represents LXD device profile."""
+    """Represents LXD device profile of disk used as root.
+
+    The details of the configuration of different types of devices can be found here:
+    https://linuxcontainers.org/lxd/docs/latest/reference/devices/
+
+    For example, configuration for disk:
+    https://linuxcontainers.org/lxd/docs/latest/reference/devices_disk/#
+
+    The unit of storage and network limits can be found here:
+    https://linuxcontainers.org/lxd/docs/latest/reference/instance_units/#instances-limit-units
+    """
 
     path: str
     pool: str
@@ -24,7 +34,13 @@ class ResourceProfileDevicesRoot(TypedDict):
 
 
 class ResourceProfileDevices(TypedDict):
-    """Represents LXD device profile."""
+    """Represents LXD device profile for a LXD instance.
+
+    A device for root is defined.
+
+    The details of the configuration can be found in this link:
+    https://linuxcontainers.org/lxd/docs/latest/reference/devices/
+    """
 
     root: ResourceProfileDevicesRoot
 
