@@ -14,88 +14,23 @@ from __future__ import annotations
 
 import logging
 import time
-from dataclasses import dataclass
 from pathlib import Path
-from subprocess import CalledProcessError  # nosec B404
-from typing import Iterable, Optional, Sequence, TypedDict
+from typing import Iterable, Optional, Sequence
 
-import jinja2
-import pylxd
-import pylxd.models
-from ghapi.all import GhApi
-from pylxd.exceptions import LXDAPIException
-
-from errors import (
-    RunnerCreateError,
-    RunnerError,
-    RunnerExecutionError,
-    RunnerFileLoadError,
-    RunnerRemoveError,
+from errors import LxdError, RunnerCreateError, RunnerError, RunnerFileLoadError, RunnerRemoveError
+from lxd import LxdInstance
+from lxd_type import LxdInstanceConfig
+from runner_type import (
+    GitHubOrg,
+    GitHubRepo,
+    RunnerClients,
+    RunnerConfig,
+    RunnerStatus,
+    VirtualMachineResources,
 )
-from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
-from utilities import execute_command, retry
+from utilities import retry
 
 logger = logging.getLogger(__name__)
-
-
-class LxdInstanceConfigSource(TypedDict):
-    """Configuration for source image in LXD instance."""
-
-    type: str
-    mode: str
-    server: str
-    protocol: str
-    alias: str
-
-
-class LxdInstanceConfig(TypedDict):
-    """Configuration for LXD instance."""
-
-    name: str
-    type: str
-    source: LxdInstanceConfigSource
-    ephemeral: bool
-    profiles: list[str]
-
-
-@dataclass
-class RunnerClients:
-    """Clients for access various services.
-
-    Attrs:
-        github: Used to query GitHub API.
-        jinja: Used for templating.
-        lxd: Used to interact with LXD API.
-    """
-
-    github: GhApi
-    jinja: jinja2.Environment
-    lxd: pylxd.Client
-
-
-@dataclass
-class RunnerConfig:
-    """Configuration for runner."""
-
-    app_name: str
-    path: GitHubPath
-    proxies: ProxySetting
-    name: str
-
-
-@dataclass
-class RunnerStatus:
-    """Status of runner.
-
-    Attrs:
-        exist: Whether the runner instance exists on LXD.
-        online: Whether GitHub marks this runner as online.
-        busy: Whether GitHub marks this runner as busy.
-    """
-
-    exist: bool = False
-    online: bool = False
-    busy: bool = False
 
 
 class Runner:
@@ -121,7 +56,7 @@ class Runner:
         clients: RunnerClients,
         runner_config: RunnerConfig,
         runner_status: RunnerStatus,
-        instance: Optional[pylxd.models.Instance] = None,
+        instance: Optional[LxdInstance] = None,
     ):
         """Construct the runner instance.
 
@@ -166,7 +101,7 @@ class Runner:
             self._configure_runner()
             self._register_runner(registration_token, labels=[self.config.app_name, image])
             self._start_runner()
-        except (RunnerError, LXDAPIException) as err:
+        except (RunnerError, LxdError) as err:
             raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err
 
     def remove(self, remove_token: str) -> None:
@@ -182,7 +117,7 @@ class Runner:
 
         if self.instance:
             # Run script to remove the the runner and cleanup.
-            self._execute(
+            self.instance.execute(
                 [
                     "/usr/bin/sudo",
                     "-u",
@@ -192,20 +127,19 @@ class Runner:
                     "--token",
                     remove_token,
                 ],
-                check_exit=False,
             )
 
             if self.instance.status == "Running":
                 try:
                     self.instance.stop(wait=True, timeout=60)
-                except LXDAPIException:
+                except LxdError:
                     logger.exception(
                         "Unable to gracefully stop runner %s within timeout.", self.config.name
                     )
                     logger.info("Force stopping of runner %s", self.config.name)
                     try:
                         self.instance.stop(force=True)
-                    except LXDAPIException as err:
+                    except LxdError as err:
                         raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
 
         # The runner should cleanup itself.  Cleanup on GitHub in case of runner cleanup error.
@@ -223,7 +157,7 @@ class Runner:
     @retry(tries=5, delay=1, local_logger=logger)
     def _create_instance(
         self, image: str, resources: VirtualMachineResources, ephemeral: bool = True
-    ) -> pylxd.models.Instance:
+    ) -> LxdInstance:
         """Create an instance of runner.
 
         Args:
@@ -311,7 +245,7 @@ class Runner:
                 self._clients.lxd.profiles.create(
                     profile_name, resource_profile_config, resource_profile_devices
                 )
-            except LXDAPIException as error:
+            except LxdError as error:
                 logger.error(error)
                 raise RunnerError(
                     "Resources were not provided in the correct format, check the juju config for "
@@ -334,7 +268,7 @@ class Runner:
             reconcile_interval: Time in seconds of period between each reconciliation.
         """
         if self.instance is None:
-            return
+            raise RunnerError("Runner operation called prior to runner creation.")
 
         logger.info("Starting LXD instance for runner: %s", self.config.name)
 
@@ -343,9 +277,12 @@ class Runner:
 
     @retry(tries=5, delay=30, local_logger=logger)
     def _wait_boot_up(self) -> None:
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
         # Wait for the instance to finish to boot up and network to be up.
-        self._execute(["/usr/bin/who"])
-        self._execute(["/usr/bin/nslookup", "github.com"])
+        self.instance.execute(["/usr/bin/who"])
+        self.instance.execute(["/usr/bin/nslookup", "github.com"])
 
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
@@ -360,7 +297,7 @@ class Runner:
             RunnerFileLoadError: Unable to load the file into the runner instance.
         """
         if self.instance is None:
-            return
+            raise RunnerError("Runner operation called prior to runner creation.")
 
         # TEMP: Install common tools used in GitHub Actions. This will be removed once virtual
         # machines are created from custom images/GitHub runner image.
@@ -369,8 +306,8 @@ class Runner:
         self._snap_install(["yq"])
 
         # Add the user to docker group.
-        self._execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
-        self._execute(["/usr/bin/newgrp", "docker"])
+        self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
+        self.instance.execute(["/usr/bin/newgrp", "docker"])
 
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
@@ -380,18 +317,25 @@ class Runner:
 
         # Creating directory and putting the file are idempotent, and can be retried.
         self.instance.files.mk_dir(str(self.runner_application))
-        execute_command(
-            ["/snap/bin/lxc", "file", "push", str(binary), self.config.name + binary_path]
-        )
-        self._execute(["/usr/bin/tar", "-xzf", binary_path, "-C", str(self.runner_application)])
-        self._execute(["/usr/bin/chown", "-R", "ubuntu:ubuntu", str(self.runner_application)])
+        self.instance.files.push_file(str(binary), binary_path)
 
-        # Verify the env file is written to runner.
-        exit_code, _, _ = self.instance.execute(["test", "-f", str(self.config_script)])
+        self.instance.execute(
+            ["/usr/bin/tar", "-xzf", binary_path, "-C", str(self.runner_application)]
+        )
+        self.instance.execute(
+            ["/usr/bin/chown", "-R", "ubuntu:ubuntu", str(self.runner_application)]
+        )
+
+        # Verify the config script is written to runner.
+        exit_code, _, stderr = self.instance.execute(["test", "-f", str(self.config_script)])
         if exit_code == 0:
             logger.info("Runner binary loaded on runner instance %s.", self.config.name)
         else:
-            logger.error("Unable to load runner binary on runner instance %s", self.config.name)
+            logger.error(
+                "Unable to load runner binary on runner instance %s: %s",
+                self.config.name,
+                stderr.read(),
+            )
             raise RunnerFileLoadError(f"Failed to load runner binary on {self.config.name}")
 
     @retry(tries=5, delay=1, local_logger=logger)
@@ -402,35 +346,30 @@ class Runner:
             RunnerFileLoadError: Unable to load configuration file on the runner.
         """
         if self.instance is None:
-            return
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        # Load the runner startup script.
+        startup_contents = self._clients.jinja.get_template("start.j2").render()
+        self._put_file(str(self.runner_script), startup_contents, mode="0755")
+        self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
+        self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
 
         # Load `/etc/environment` file.
         environment_contents = self._clients.jinja.get_template("environment.j2").render(
             proxies=self.config.proxies
         )
-        self.instance.files.put("/etc/environment", environment_contents)
+        self._put_file("/etc/environment", environment_contents)
+
+        # Load `.env` config file for GitHub self-hosted runner.
+        env_contents = self._clients.jinja.get_template("env.j2").render(
+            proxies=self.config.proxies
+        )
+        self._put_file(str(self.env_file), env_contents)
+        self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
 
         if self.config.proxies:
             # Creating directory and putting the file are idempotent, and can be retried.
             logger.info("Adding proxy setting to the runner.")
-
-            env_contents = self._clients.jinja.get_template("env.j2").render(
-                proxies=self.config.proxies
-            )
-            self.instance.files.put(self.env_file, env_contents)
-            self._execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
-
-            # Verify the env file is written to runner.
-            exit_code, _, stderr = self.instance.execute(["test", "-f", str(self.env_file)])
-            if exit_code == 0:
-                logger.info("Loaded env file on runner instance %s.", self.config.name)
-            else:
-                logger.error(
-                    "Unable to load env file on runner instance %s due to: %s",
-                    self.config.name,
-                    stderr.read(),
-                )
-                raise RunnerFileLoadError(f"Failed to load env file on {self.config.name}")
 
             docker_proxy_contents = self._clients.jinja.get_template(
                 "systemd-docker-proxy.j2"
@@ -440,24 +379,10 @@ class Runner:
             docker_service_proxy = docker_service_path / "http-proxy.conf"
 
             self.instance.files.mk_dir(str(docker_service_path))
-            self.instance.files.put(str(docker_service_proxy), docker_proxy_contents)
+            self._put_file(str(docker_service_proxy), docker_proxy_contents)
 
-            # Verify the env file is written to runner.
-            exit_code, _, stderr = self.instance.execute(["test", "-f", str(docker_service_proxy)])
-            if exit_code == 0:
-                logger.info("Loaded docker proxy file on runner instance %s.", self.config.name)
-            else:
-                logger.error(
-                    "Unable to load docker proxy file on runner instance %s due to: %s",
-                    self.config.name,
-                    stderr.read(),
-                )
-                raise RunnerFileLoadError(
-                    f"Failed to load docker proxy file on {self.config.name}"
-                )
-
-            self._execute(["systemctl", "daemon-reload"])
-            self._execute(["systemctl", "restart", "docker"])
+            self.instance.execute(["systemctl", "daemon-reload"])
+            self.instance.execute(["systemctl", "restart", "docker"])
 
     @retry(tries=5, delay=30, local_logger=logger)
     def _register_runner(self, registration_token: str, labels: Sequence[str]) -> None:
@@ -468,7 +393,7 @@ class Runner:
             labels: Labels to tag the runner with.
         """
         if self.instance is None:
-            return
+            raise RunnerError("Runner operation called prior to runner creation.")
 
         logger.info("Registering runner %s", self.config.name)
 
@@ -482,17 +407,17 @@ class Runner:
             "--token",
             registration_token,
             "--ephemeral",
-            "--name",
-            self.instance.name,
             "--unattended",
             "--labels",
-            f"{','.join(labels)}",
+            ",".join(labels),
+            "--name",
+            self.instance.name,
         ]
 
         if isinstance(self.config.path, GitHubOrg):
             register_cmd += ["--runnergroup", self.config.path.group]
 
-        self._execute(
+        self.instance.execute(
             register_cmd,
             cwd=str(self.runner_application),
         )
@@ -501,72 +426,52 @@ class Runner:
     def _start_runner(self) -> None:
         """Start the GitHub runner."""
         if self.instance is None:
-            return
+            raise RunnerError("Runner operation called prior to runner creation.")
 
         logger.info("Starting runner %s", self.config.name)
 
-        # Put a script to run the GitHub self-hosted runner in the instance and run it.
-        contents = self._clients.jinja.get_template("start.j2").render()
-        self.instance.files.put(self.runner_script, contents, mode="0755")
-        self._execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
-        self._execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
-        self._execute(
+        self.instance.execute(
             [
                 "/usr/bin/sudo",
                 "-u",
                 "ubuntu",
-                (
-                    "PATH=/home/ubuntu/.local/bin"
-                    ":/usr/local/sbin"
-                    ":/usr/local/bin"
-                    ":/usr/sbin"
-                    ":/usr/bin"
-                    ":/sbin"
-                    ":/bin"
-                    ":/snap/bin"
-                ),
                 str(self.runner_script),
             ]
         )
 
         logger.info("Started runner %s", self.config.name)
 
-    def _execute(
-        self, cmd: list[str], cwd: Optional[str] = None, check_exit: bool = True, **kwargs
-    ) -> str:
-        """Check execution of a command in a LXD instance.
-
-        The command is executed with `subprocess.run`, additional arguments can be passed to it as
-        keyword arguments. The following arguments to `subprocess.run` should not be set:
-        `capture_output`, `shell`, `check`. As those arguments are used by this function.
+    def _put_file(self, filepath: str, content: str, mode: Optional[str] = None) -> None:
+        """Put a file into the runner instance.
 
         Args:
-            instance: LXD instance of the runner.
-            cmd: Sequence of command to execute on the runner.
-            cwd: Working directory to execute the command.
-            check_exit: Whether to check for non-zero exit code and raise exceptions.
-            kwargs: Additional keyword arguments for the `subprocess.run` call.
+            filepath: Path to load the file in the runner instance.
+            content: Content of the file.
 
-        Returns:
-            The stdout of the command executed.
+        Raises:
+            RunnerFileLoadError: Failed to load the file into the runner instance.
         """
         if self.instance is None:
-            raise RunnerExecutionError(
-                f"{self.config.name} is missing LXD instance to execute command {cmd}"
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        self.instance.files.write_file(filepath, content, mode)
+        content_on_runner = self.instance.files.read_file(filepath)
+        if content_on_runner != content:
+            logger.error(
+                "Loaded file %s in runner %s did not match expected content",
+                filepath,
+                self.instance.name,
             )
-
-        lxc_exec_cmd = ["/snap/bin/lxc", "exec", self.instance.name]
-        if cwd is not None:
-            lxc_exec_cmd += ["--cwd", cwd]
-
-        lxc_exec_cmd += ["--"] + cmd
-
-        try:
-            return execute_command(lxc_exec_cmd, check_exit, **kwargs)
-        except CalledProcessError as err:
-            raise RunnerExecutionError(
-                f"Failed to execute command in {self.config.name}: {cmd}"
-            ) from err
+            logger.debug(
+                "Excepted file content for file %s on runner %s: %s\nFound: %s",
+                filepath,
+                self.instance.name,
+                content,
+                content_on_runner,
+            )
+            raise RunnerFileLoadError(
+                f"Failed to load file {filepath} to runner {self.instance.name}"
+            )
 
     def _apt_install(self, packages: Iterable[str]) -> None:
         """Installs the given APT packages.
@@ -577,11 +482,14 @@ class Runner:
         Args:
             packages: Packages to be install via apt.
         """
-        self._execute(["/usr/bin/apt-get", "update"])
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        self.instance.execute(["/usr/bin/apt-get", "update"])
 
         for pkg in packages:
             logger.info("Installing %s via APT...", pkg)
-            self._execute(["/usr/bin/apt-get", "install", "-yq", pkg])
+            self.instance.execute(["/usr/bin/apt-get", "install", "-yq", pkg])
 
     def _snap_install(self, packages: Iterable[str]) -> None:
         """Installs the given snap packages.
@@ -592,6 +500,9 @@ class Runner:
         Args:
             packages: Packages to be install via snap.
         """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
         for pkg in packages:
             logger.info("Installing %s via snap...", pkg)
-            self._execute(["/usr/bin/snap", "install", pkg])
+            self.instance.execute(["/usr/bin/snap", "install", pkg])

@@ -7,6 +7,11 @@
 from dataclasses import dataclass
 from typing import NamedTuple, TypedDict, Union
 
+import jinja2
+from ghapi.all import GhApi
+
+from lxd import LxdClient
+
 
 class ProxySetting(TypedDict, total=False):
     """Represent HTTP-related proxy settings."""
@@ -49,3 +54,43 @@ class VirtualMachineResources(NamedTuple):
     cpu: int
     memory: str
     disk: str
+
+
+@dataclass
+class RunnerClients:
+    """Clients for access various services.
+
+    Attrs:
+        github: Used to query GitHub API.
+        jinja: Used for templating.
+        lxd: Used to interact with LXD API.
+    """
+
+    github: GhApi
+    jinja: jinja2.Environment
+    lxd: LxdClient
+
+
+@dataclass
+class RunnerConfig:
+    """Configuration for runner."""
+
+    app_name: str
+    path: GitHubPath
+    proxies: ProxySetting
+    name: str
+
+
+@dataclass
+class RunnerStatus:
+    """Status of runner.
+
+    Attrs:
+        exist: Whether the runner instance exists on LXD.
+        online: Whether GitHub marks this runner as online.
+        busy: Whether GitHub marks this runner as busy.
+    """
+
+    exist: bool = False
+    online: bool = False
+    busy: bool = False

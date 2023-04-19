@@ -9,6 +9,10 @@ skips = ["*/*test.py", "*/test_*.py"]
 # Testing tools configuration
 [tool.coverage.run]
 branch = true
+omit = [
+    # Contains interface for calling LXD. Tested in integration tests and end to end tests.
+    "src/lxd.py"
+]
 
 [tool.coverage.report]
 fail_under = 38

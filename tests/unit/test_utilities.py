@@ -8,6 +8,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from errors import SubprocessError
 from utilities import execute_command
 
 
@@ -26,5 +27,5 @@ def test_execute_command_with_error(monkeypatch):
     mock_result.check_returncode = raise_called_process_error
     monkeypatch.setattr("utilities.subprocess.run", mock_run)
 
-    with pytest.raises(CalledProcessError):
+    with pytest.raises(SubprocessError):
         execute_command(["mock", "cmd"])

@@ -6,14 +6,15 @@
 from __future__ import annotations
 
 import hashlib
+import logging
 import secrets
-from typing import Sequence
+from typing import Optional, Sequence, Union
 
-import pylxd
-
-from errors import RunnerError
+from errors import LxdError, RunnerError
 from github_type import RegistrationToken, RemoveToken, RunnerApplication
 from runner import LxdInstanceConfig
+
+logger = logging.getLogger(__name__)
 
 # Compressed tar file for testing.
 # Python `tarfile` module works on only files.
@@ -27,22 +28,22 @@ TEST_BINARY = (
 )
 
 
-class MockPylxdClient:
+class MockLxdClient:
     """Mock the behavior of the pylxd client."""
 
     def __init__(self):
-        self.instances = MockPylxdInstances()
-        self.profiles = MockPylxdProfiles()
+        self.instances = MockLxdInstanceManager()
+        self.profiles = MockLxdProfileManager()
 
 
-class MockPylxdInstances:
+class MockLxdInstanceManager:
     """Mock the behavior of the pylxd Instances."""
 
     def __init__(self):
         self.instances = {}
 
-    def create(self, config: LxdInstanceConfig, wait: bool = False) -> MockPylxdInstance:
-        self.instances[config["name"]] = MockPylxdInstance(config["name"])
+    def create(self, config: LxdInstanceConfig, wait: bool = False) -> MockLxdInstance:
+        self.instances[config["name"]] = MockLxdInstance(config["name"])
         return self.instances[config["name"]]
 
     def get(self, name: str):
@@ -52,7 +53,7 @@ class MockPylxdInstances:
         return [i for i in self.instances.values() if not i.deleted]
 
 
-class MockPylxdProfiles:
+class MockLxdProfileManager:
     """Mock the behavior of the pylxd Profiles."""
 
     def __init__(self):
@@ -65,7 +66,7 @@ class MockPylxdProfiles:
         return name in self.profiles
 
 
-class MockPylxdInstance:
+class MockLxdInstance:
     """Mock the behavior of a pylxd Instance."""
 
     def __init__(self, name: str):
@@ -73,7 +74,7 @@ class MockPylxdInstance:
         self.status = "Stopped"
         self.deleted = False
 
-        self.files = MockPylxdInstanceFiles()
+        self.files = MockLxdInstanceFileManager()
 
     def start(self, wait: bool = True, timeout: int = 60):
         self.status = "Running"
@@ -86,23 +87,26 @@ class MockPylxdInstance:
     def delete(self, wait: bool = True, timeout: int = 60):
         self.deleted = True
 
-    def execute(self, cmd: Sequence[str]) -> tuple[int, str, str]:
+    def execute(self, cmd: Sequence[str], cwd: Optional[str] = None) -> tuple[int, str, str]:
         return 0, "", ""
 
 
-class MockPylxdInstanceFiles:
+class MockLxdInstanceFileManager:
     """Mock the behavior of a pylxd Instance files."""
 
     def __init__(self):
         self.files = {}
 
-    def mk_dir(self, path, mode=None, uid=None, gid=None):
+    def mk_dir(self, path):
         pass
 
-    def put(self, filepath, data, mode=None, uid=None, gid=None):
-        self.files[str(filepath)] = data
+    def push_file(self, source: str, destination: str, mode: Optional[str] = None):
+        self.files[destination] = "mock_content"
 
-    def get(self, filepath):
+    def write_file(self, filepath: str, data: Union[bytes, str], mode: Optional[str] = None):
+        self.files[filepath] = data
+
+    def read_file(self, filepath: str):
         return self.files.get(str(filepath), None)
 
 
@@ -117,7 +121,7 @@ class MockErrorResponse:
 
 
 def mock_pylxd_error_func(*arg, **kargs):
-    raise pylxd.exceptions.LXDAPIException(MockErrorResponse())
+    raise LxdError(MockErrorResponse())
 
 
 def mock_runner_error_func(*arg, **kargs):

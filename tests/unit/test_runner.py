@@ -13,7 +13,7 @@ import pytest
 from errors import RunnerCreateError
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
-from tests.unit.mock import MockPylxdClient, mock_pylxd_error_func, mock_runner_error_func
+from tests.unit.mock import MockLxdClient, mock_pylxd_error_func, mock_runner_error_func
 
 
 @pytest.fixture(scope="module", name="vm_resources")
@@ -43,7 +43,7 @@ def instance_fixture(request):
 
 @pytest.fixture(scope="function", name="pylxd")
 def mock_pylxd_client_fixture():
-    return MockPylxdClient()
+    return MockLxdClient()
 
 
 @pytest.fixture(
@@ -57,7 +57,7 @@ def mock_pylxd_client_fixture():
         ),
     ],
 )
-def runner_fixture(request, pylxd: MockPylxdClient):
+def runner_fixture(request, pylxd: MockLxdClient):
     client = RunnerClients(MagicMock(), MagicMock(), pylxd)
     config = RunnerConfig("test_app", request.param[0], request.param[1], "test_runner")
     status = RunnerStatus()
@@ -73,7 +73,7 @@ def test_create(
     vm_resources: VirtualMachineResources,
     token: str,
     binary_path: Path,
-    pylxd: MockPylxdClient,
+    pylxd: MockLxdClient,
 ):
     """
     arrange: Nothing.
@@ -88,8 +88,8 @@ def test_create(
 
     if runner.config.proxies:
         instance = instances[0]
-        env_proxy = instance.files.get("/opt/github-runner/.env")
-        systemd_docker_proxy = instance.files.get(
+        env_proxy = instance.files.read_file("/opt/github-runner/.env")
+        systemd_docker_proxy = instance.files.read_file(
             "/etc/systemd/system/docker.service.d/http-proxy.conf"
         )
         # Test the file has being written to.  This value does not contain the string as the
@@ -103,7 +103,7 @@ def test_create_pylxd_fail(
     vm_resources: VirtualMachineResources,
     token: str,
     binary_path: Path,
-    pylxd: MockPylxdClient,
+    pylxd: MockLxdClient,
 ):
     """
     arrange: Setup the create runner to fail with pylxd error.
@@ -124,7 +124,7 @@ def test_create_runner_fail(
     vm_resources: VirtualMachineResources,
     token: str,
     binary_path: Path,
-    pylxd: MockPylxdClient,
+    pylxd: MockLxdClient,
 ):
     """
     arrange: Setup the create runner to fail with runner error.
@@ -132,7 +132,7 @@ def test_create_runner_fail(
     assert: Correct exception should be thrown. Any created instance should be
         cleanup.
     """
-    runner._execute = mock_runner_error_func
+    runner._clients.lxd.instances.create = mock_runner_error_func
 
     with pytest.raises(RunnerCreateError):
         runner.create("test_image", vm_resources, binary_path, token)
@@ -143,7 +143,7 @@ def test_remove(
     vm_resources: VirtualMachineResources,
     token: str,
     binary_path: Path,
-    pylxd: MockPylxdClient,
+    pylxd: MockLxdClient,
 ):
     """
     arrange: Create a runner.
@@ -159,7 +159,7 @@ def test_remove(
 def test_remove_none(
     runner: Runner,
     token: str,
-    pylxd: MockPylxdClient,
+    pylxd: MockLxdClient,
 ):
     """
     arrange: Not creating a runner.
