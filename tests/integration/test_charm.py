@@ -1,11 +1,9 @@
-# Copyright 2022 Canonical Ltd.
+# Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 import logging
 
 import pytest
-
-# from runner import Runner
 
 log = logging.getLogger(__name__)
 
