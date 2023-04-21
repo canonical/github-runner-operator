@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Copyright 2023 Canonical Ltd.
+# See LICENSE file for licensing details.
+
 set -e
 
 rm -f github_runner.zip
