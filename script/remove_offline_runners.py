@@ -1,8 +1,8 @@
-# Copyright 2023 Canonical
+# Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-import sys
 import logging
+import sys
 
 import requests
 
@@ -60,7 +60,7 @@ def delete_runner(runner):
                 "Authorization": "Bearer " + TOKEN,
                 "Accept": "application/vnd.github+json",
             },
-            timeout = 60,
+            timeout=60,
         )
 
         response.raise_for_status()
@@ -72,6 +72,5 @@ def delete_runner(runner):
 
 if __name__ == "__main__":
     while offline_runners := filter_offline_runners(get_runners()) > 0:
-
         for runner in offline_runners:
             delete_runner(runner)
