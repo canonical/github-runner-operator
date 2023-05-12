@@ -141,6 +141,18 @@ class Runner:
                         self.instance.stop(force=True)
                     except LxdError as err:
                         raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
+            else:
+                # Delete ephemeral instances that are in error status or stopped status that LXD
+                # failed to clean up.
+                logger.warning(
+                    "Found runner %s in status %s, forcing deletion",
+                    self.config.name,
+                    self.instance.status,
+                )
+                try:
+                    self.instance.delete(wait=True)
+                except LxdError as err:
+                    raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
 
         # The runner should cleanup itself.  Cleanup on GitHub in case of runner cleanup error.
         if isinstance(self.config.path, GitHubRepo):
