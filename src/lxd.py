@@ -194,6 +194,20 @@ class LxdInstance:
         except pylxd.exceptions.LXDAPIException as err:
             raise LxdError(f"Unable to stop LXD instance {self.name}") from err
 
+    def delete(self, wait: bool = False) -> None:
+        """Delete the LXD instance.
+
+        Args:
+            wait: Whether to wait until the LXD instance stopped before returning.
+
+        Raises:
+            LxdException: Unable to delete the LXD instance.
+        """
+        try:
+            self._pylxd_instance.delete(wait)
+        except pylxd.exceptions.LXDAPIException as err:
+            raise LxdError(f"Unable to delete LXD instance {self.name}") from err
+
     def execute(self, cmd: list[str], cwd: Optional[str] = None) -> Tuple[int, IO, IO]:
         """Execute a command within the LXD instance.
 
