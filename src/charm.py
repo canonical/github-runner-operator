@@ -235,7 +235,16 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of charm upgrade.
         """
+        logger.info("Reinstalling dependencies...")
         GithubRunnerCharm._install_deps()
+
+        logger.info("Flushing the runners...")
+        runner_manager = self._get_runner_manager()
+        if not runner_manager:
+            return
+
+        runner_manager.flush()
+        self._reconcile_runners(runner_manager)
 
     @catch_unexpected_charm_errors
     def _on_config_changed(self, _event: ConfigChangedEvent) -> None:
