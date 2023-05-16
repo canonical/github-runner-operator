@@ -56,6 +56,7 @@ class LxdInstanceFileManager:
             "/snap/bin/lxc",
             "file",
             "push",
+            "--create-dirs",
             source,
             f"{self.instance.name}/{destination.lstrip('/')}",
         ]

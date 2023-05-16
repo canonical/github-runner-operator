@@ -11,6 +11,7 @@ collection of `Runner` instances.
 """
 
 from __future__ import annotations
+import json
 
 import logging
 import time
@@ -366,6 +367,9 @@ class Runner:
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
 
+        # Set permission to the same as GitHub-hosted runner for this directory.
+        self.instance.execute(["/usr/bin/sudo", "chmod", "777", "/usr/local/bin"])
+
         # Load `/etc/environment` file.
         environment_contents = self._clients.jinja.get_template("environment.j2").render(
             proxies=self.config.proxies
@@ -387,6 +391,7 @@ class Runner:
                 "systemd-docker-proxy.j2"
             ).render(proxies=self.config.proxies)
 
+            # Set docker daemon proxy config
             docker_service_path = Path("/etc/systemd/system/docker.service.d")
             docker_service_proxy = docker_service_path / "http-proxy.conf"
 
@@ -395,6 +400,25 @@ class Runner:
 
             self.instance.execute(["systemctl", "daemon-reload"])
             self.instance.execute(["systemctl", "restart", "docker"])
+
+            # Set docker client proxy config
+            # Configure the docker client for root user and ubuntu user.
+            docker_config_paths = (
+                Path("/home/ubuntu/.docker/config.json"),
+                Path("/root/.docker/config.json"),
+            )
+            docker_client_proxy = {
+                "proxies": {
+                    "default": {
+                        "httpProxy": self.config.proxies["http"],
+                        "httpsProxy": self.config.proxies["https"],
+                        "noProxy": self.config.proxies["no_proxy"],
+                    }
+                }
+            }
+            docker_client_proxy_content = json.dumps(docker_client_proxy)
+            for path in docker_config_paths:
+                self._put_file(str(path), docker_client_proxy_content)
 
     @retry(tries=5, delay=30, local_logger=logger)
     def _register_runner(self, registration_token: str, labels: Sequence[str]) -> None:
