@@ -11,8 +11,8 @@ collection of `Runner` instances.
 """
 
 from __future__ import annotations
-import json
 
+import json
 import logging
 import time
 from pathlib import Path
