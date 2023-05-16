@@ -17,7 +17,7 @@ jobs:
       - name: Proxy set in /etc/environment
         run: cat /etc/environment | grep HTTP_PROXY
       - name: Proxy set in docker daemon 
-        run: cat /etc/systemd/system/docker.service.d/http-proxy.conf | grep HTTP_PROXY
+        run: sudo cat /etc/systemd/system/docker.service.d/http-proxy.conf | grep HTTP_PROXY
       - name: Proxy set in docker client
         run: cat /home/ubuntu/.docker/config.json | grep httpProxy
       - name: Install microk8s
