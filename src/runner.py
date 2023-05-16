@@ -402,11 +402,6 @@ class Runner:
             self.instance.execute(["systemctl", "restart", "docker"])
 
             # Set docker client proxy config
-            # Configure the docker client for root user and ubuntu user.
-            docker_config_paths = (
-                Path("/home/ubuntu/.docker/config.json"),
-                Path("/root/.docker/config.json"),
-            )
             docker_client_proxy = {
                 "proxies": {
                     "default": {
@@ -417,8 +412,12 @@ class Runner:
                 }
             }
             docker_client_proxy_content = json.dumps(docker_client_proxy)
-            for path in docker_config_paths:
-                self._put_file(str(path), docker_client_proxy_content)
+            # Configure the docker client for root user and ubuntu user.
+            self._put_file("/root/.docker/config.json", docker_client_proxy_content)
+            self._put_file("/home/ubuntu/.docker/config.json", docker_client_proxy_content)
+            self.instance.execute(
+                ["/usr/bin/chown", "-R", "ubuntu:ubuntu", "/home/ubuntu/.docker/config.json"]
+            )
 
     @retry(tries=5, delay=30, local_logger=logger)
     def _register_runner(self, registration_token: str, labels: Sequence[str]) -> None:
