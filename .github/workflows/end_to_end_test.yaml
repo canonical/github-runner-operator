@@ -14,7 +14,7 @@ jobs:
         run: echo "hello world"
       - name: File permission for /usr/local/bin
         run: ls -ld /usr/local/bin | grep drwxrwxrwx
-      - name: Test fille permission for /usr/local/bin
+      - name: Test file permission for /usr/local/bin
         run: touch /usr/local/bin/test_file
       # "Install microk8s" step will test if the proxies settings are correct.
       - name: Proxy set in /etc/environment
