@@ -382,6 +382,8 @@ class Runner:
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
 
         # Set permission to the same as GitHub-hosted runner for this directory.
+        # Some GitHub Actions require this permission setting to run.
+        # As the user already has sudo access, this does not give the user any additional access.
         self.instance.execute(["/usr/bin/sudo", "chmod", "777", "/usr/local/bin"])
 
         # Load `/etc/environment` file.
