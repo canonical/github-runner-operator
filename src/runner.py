@@ -416,7 +416,7 @@ class Runner:
             self._put_file("/root/.docker/config.json", docker_client_proxy_content)
             self._put_file("/home/ubuntu/.docker/config.json", docker_client_proxy_content)
             self.instance.execute(
-                ["/usr/bin/chown", "-R", "ubuntu:ubuntu", "/home/ubuntu/.docker/config.json"]
+                ["/usr/bin/chown", "-R", "ubuntu:ubuntu", "/home/ubuntu/.docker"]
             )
 
     @retry(tries=5, delay=30, local_logger=logger)
