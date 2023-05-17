@@ -411,6 +411,7 @@ class RunnerManager:
                 getattr(local_runner, "status", None),
             )
 
+            runner_id = getattr(remote_runner, "id", None)
             running = local_runner is not None
             online = getattr(remote_runner, "status", None) == "online"
             busy = getattr(remote_runner, "busy", None)
@@ -419,7 +420,7 @@ class RunnerManager:
             return Runner(
                 self._clients,
                 config,
-                RunnerStatus(running, online, busy),
+                RunnerStatus(runner_id, running, online, busy),
                 local_runner,
             )
 

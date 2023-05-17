@@ -125,7 +125,8 @@ def test_reconcile_remove_runner(runner_manager: RunnerManager):
         """Create three mock runners."""
         runners = []
         for _ in range(3):
-            status = RunnerStatus(True, True, False)
+            # 0 is a mock runner id.
+            status = RunnerStatus(0, True, True, False)
             runners.append(Runner(MagicMock(), MagicMock(), status, None))
         return runners
 
