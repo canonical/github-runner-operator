@@ -157,12 +157,23 @@ class Runner:
 
         # The runner should cleanup itself.  Cleanup on GitHub in case of runner cleanup error.
         if isinstance(self.config.path, GitHubRepo):
+            logger.debug(
+                "Ensure runner %s is removed from GitHub repo %s/%s",
+                self.config.name,
+                self.config.path.owner,
+                self.config.path.repo,
+            )
             self._clients.github.actions.delete_self_hosted_runner_from_repo(
                 owner=self.config.path.owner,
                 repo=self.config.path.repo,
                 runner_id=self.config.name,
             )
         if isinstance(self.config.path, GitHubOrg):
+            logger.debug(
+                "Ensure runner %s is removed from GitHub org %s",
+                self.config.name,
+                self.config.path.org,
+            )
             self._clients.github.actions.delete_self_hosted_runner_from_org(
                 org=self.config.path.org, runner_id=self.config.name
             )
