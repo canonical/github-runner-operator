@@ -12,6 +12,7 @@ collection of `Runner` instances.
 
 from __future__ import annotations
 
+import json
 import logging
 import time
 from pathlib import Path
@@ -155,16 +156,31 @@ class Runner:
                     raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
 
         # The runner should cleanup itself.  Cleanup on GitHub in case of runner cleanup error.
-        if isinstance(self.config.path, GitHubRepo):
-            self._clients.github.actions.delete_self_hosted_runner_from_repo(
-                owner=self.config.path.owner,
-                repo=self.config.path.repo,
-                runner_id=self.config.name,
-            )
-        if isinstance(self.config.path, GitHubOrg):
-            self._clients.github.actions.delete_self_hosted_runner_from_org(
-                org=self.config.path.org, runner_id=self.config.name
-            )
+        if self.status.runner_id is not None:
+            if isinstance(self.config.path, GitHubRepo):
+                logger.debug(
+                    "Ensure runner %s with id %s is removed from GitHub repo %s/%s",
+                    self.config.name,
+                    self.status.runner_id,
+                    self.config.path.owner,
+                    self.config.path.repo,
+                )
+                self._clients.github.actions.delete_self_hosted_runner_from_repo(
+                    owner=self.config.path.owner,
+                    repo=self.config.path.repo,
+                    runner_id=self.status.runner_id,
+                )
+            if isinstance(self.config.path, GitHubOrg):
+                logger.debug(
+                    "Ensure runner %s with id %s is removed from GitHub org %s",
+                    self.config.name,
+                    self.status.runner_id,
+                    self.config.path.org,
+                )
+                self._clients.github.actions.delete_self_hosted_runner_from_org(
+                    org=self.config.path.org,
+                    runner_id=self.status.runner_id,
+                )
 
     @retry(tries=5, delay=1, local_logger=logger)
     def _create_instance(
@@ -366,6 +382,11 @@ class Runner:
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
 
+        # Set permission to the same as GitHub-hosted runner for this directory.
+        # Some GitHub Actions require this permission setting to run.
+        # As the user already has sudo access, this does not give the user any additional access.
+        self.instance.execute(["/usr/bin/sudo", "chmod", "777", "/usr/local/bin"])
+
         # Load `/etc/environment` file.
         environment_contents = self._clients.jinja.get_template("environment.j2").render(
             proxies=self.config.proxies
@@ -387,6 +408,7 @@ class Runner:
                 "systemd-docker-proxy.j2"
             ).render(proxies=self.config.proxies)
 
+            # Set docker daemon proxy config
             docker_service_path = Path("/etc/systemd/system/docker.service.d")
             docker_service_proxy = docker_service_path / "http-proxy.conf"
 
@@ -395,6 +417,24 @@ class Runner:
 
             self.instance.execute(["systemctl", "daemon-reload"])
             self.instance.execute(["systemctl", "restart", "docker"])
+
+            # Set docker client proxy config
+            docker_client_proxy = {
+                "proxies": {
+                    "default": {
+                        "httpProxy": self.config.proxies["http"],
+                        "httpsProxy": self.config.proxies["https"],
+                        "noProxy": self.config.proxies["no_proxy"],
+                    }
+                }
+            }
+            docker_client_proxy_content = json.dumps(docker_client_proxy)
+            # Configure the docker client for root user and ubuntu user.
+            self._put_file("/root/.docker/config.json", docker_client_proxy_content)
+            self._put_file("/home/ubuntu/.docker/config.json", docker_client_proxy_content)
+            self.instance.execute(
+                ["/usr/bin/chown", "-R", "ubuntu:ubuntu", "/home/ubuntu/.docker"]
+            )
 
     @retry(tries=5, delay=30, local_logger=logger)
     def _register_runner(self, registration_token: str, labels: Sequence[str]) -> None:
