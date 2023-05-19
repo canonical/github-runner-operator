@@ -238,21 +238,12 @@ class RunnerManager:
         """
         runners = self._get_runners()
 
-        # Clean up offline runners
-        offline_runners = [runner for runner in runners if not runner.status.online]
-        if offline_runners:
-            logger.info("Cleaning up offline runners.")
-
-            remove_token = self._get_github_remove_token()
-
-            for runner in offline_runners:
-                runner.remove(remove_token)
-                logger.info("Removed runner: %s", runner.config.name)
-
         # Add/Remove runners to match the target quantity
         online_runners = [
             runner for runner in runners if runner.status.exist and runner.status.online
         ]
+
+        offline_runners = [runner for runner in runners if not runner.status.online]
 
         local_runners = {
             instance.name: instance
@@ -272,7 +263,18 @@ class RunnerManager:
             len(local_runners),
         )
 
+        # Clean up offline runners
+        if offline_runners:
+            logger.info("Cleaning up offline runners.")
+
+            remove_token = self._get_github_remove_token()
+
+            for runner in offline_runners:
+                runner.remove(remove_token)
+                logger.info("Removed runner: %s", runner.config.name)
+
         delta = quantity - len(online_runners)
+        # Spawn new runners
         if delta > 0:
             if RunnerManager.runner_bin_path is None:
                 raise RunnerCreateError("Unable to create runner due to missing runner binary.")
@@ -409,6 +411,7 @@ class RunnerManager:
                 getattr(local_runner, "status", None),
             )
 
+            runner_id = getattr(remote_runner, "id", None)
             running = local_runner is not None
             online = getattr(remote_runner, "status", None) == "online"
             busy = getattr(remote_runner, "busy", None)
@@ -417,7 +420,7 @@ class RunnerManager:
             return Runner(
                 self._clients,
                 config,
-                RunnerStatus(running, online, busy),
+                RunnerStatus(runner_id, running, online, busy),
                 local_runner,
             )
 

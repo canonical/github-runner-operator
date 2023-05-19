@@ -5,7 +5,7 @@
 
 
 from dataclasses import dataclass
-from typing import NamedTuple, TypedDict, Union
+from typing import NamedTuple, Optional, TypedDict, Union
 
 import jinja2
 from ghapi.all import GhApi
@@ -91,6 +91,7 @@ class RunnerStatus:
         busy: Whether GitHub marks this runner as busy.
     """
 
+    runner_id: Optional[int] = None
     exist: bool = False
     online: bool = False
     busy: bool = False

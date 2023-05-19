@@ -29,7 +29,7 @@ TEST_BINARY = (
 
 
 class MockLxdClient:
-    """Mock the behavior of the pylxd client."""
+    """Mock the behavior of the lxd client."""
 
     def __init__(self):
         self.instances = MockLxdInstanceManager()
@@ -37,7 +37,7 @@ class MockLxdClient:
 
 
 class MockLxdInstanceManager:
-    """Mock the behavior of the pylxd Instances."""
+    """Mock the behavior of the lxd Instances."""
 
     def __init__(self):
         self.instances = {}
@@ -54,7 +54,7 @@ class MockLxdInstanceManager:
 
 
 class MockLxdProfileManager:
-    """Mock the behavior of the pylxd Profiles."""
+    """Mock the behavior of the lxd Profiles."""
 
     def __init__(self):
         self.profiles = set()
@@ -67,7 +67,7 @@ class MockLxdProfileManager:
 
 
 class MockLxdInstance:
-    """Mock the behavior of a pylxd Instance."""
+    """Mock the behavior of a lxd Instance."""
 
     def __init__(self, name: str):
         self.name = name
@@ -84,7 +84,7 @@ class MockLxdInstance:
         # Ephemeral virtual machine should be deleted on stop.
         self.deleted = True
 
-    def delete(self, wait: bool = True, timeout: int = 60):
+    def delete(self, wait: bool = True):
         self.deleted = True
 
     def execute(self, cmd: Sequence[str], cwd: Optional[str] = None) -> tuple[int, str, str]:
@@ -92,7 +92,7 @@ class MockLxdInstance:
 
 
 class MockLxdInstanceFileManager:
-    """Mock the behavior of a pylxd Instance files."""
+    """Mock the behavior of a lxd Instance files."""
 
     def __init__(self):
         self.files = {}
@@ -120,7 +120,7 @@ class MockErrorResponse:
         return {"metadata": {"err": "test error"}}
 
 
-def mock_pylxd_error_func(*arg, **kargs):
+def mock_lxd_error_func(*arg, **kargs):
     raise LxdError(MockErrorResponse())
 
 

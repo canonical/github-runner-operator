@@ -52,10 +52,10 @@ def retry(  # pylint: disable=too-many-arguments
         """Decorate function with retry.
 
         Args:
-            fn (Callable[..., R]): The function to decorate.
+            fn: The function to decorate.
 
         Returns:
-            Callable[..., R]: The resulting function with retry added.
+            The resulting function with retry added.
         """
 
         @functools.wraps(func)
