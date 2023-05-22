@@ -5,7 +5,7 @@ on:
 
 jobs:
   unit-tests:
-    uses: canonical/operator-workflows/.github/workflows/test.yaml@self-hosted-runner
+    uses: canonical/operator-workflows/.github/workflows/test.yaml@main
     with:
         self-hosted-runner: true
     secrets: inherit
