@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# TODO: get the source repo and target branch name
+
+curl -X POST http://127.0.0.1:8080/check-run \
+    -H 'Authorization: Bearer {{one-time-token}}' \
+    -H 'Content-Type: application/json' \
+    -d '{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"\", \"target_branch_name\": \"\", \"source_branch_name\": \"${GITHUB_REF_NAME}\", \"commit_sha\": \"${GITHUB_SHA}\"}'

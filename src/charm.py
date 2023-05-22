@@ -7,9 +7,14 @@
 
 import functools
 import logging
+import os
+import secrets
+import shutil
 import urllib.error
+from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Dict, Optional, TypeVar
 
+import jinja2
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -128,6 +133,8 @@ class GithubRunnerCharm(CharmBase):
         if no_proxy := get_env_var("JUJU_CHARM_NO_PROXY"):
             self.proxies["no_proxy"] = no_proxy
 
+        self.service_token = None
+
         self.on.define_event("reconcile_runners", ReconcileRunnersEvent)
         self.on.define_event("update_runner_bin", UpdateRunnerBinEvent)
 
@@ -180,6 +187,7 @@ class GithubRunnerCharm(CharmBase):
             app_name,
             unit,
             RunnerManagerConfig(path, token, "jammy"),
+            self.service_token,
             proxies=self.proxies,
         )
 
@@ -193,8 +201,9 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Installing packages")
 
         try:
-            # The `_install_deps` includes retry.
-            GithubRunnerCharm._install_deps()
+            # The `_start_services`, `_install_deps` includes retry.
+            self._install_deps()
+            self._start_services()
         except SubprocessError as err:
             logger.exception(err)
             # The charm cannot proceed without dependencies.
@@ -236,7 +245,8 @@ class GithubRunnerCharm(CharmBase):
             event: Event of charm upgrade.
         """
         logger.info("Reinstalling dependencies...")
-        GithubRunnerCharm._install_deps()
+        self._install_deps()
+        self._start_services()
 
         logger.info("Flushing the runners...")
         runner_manager = self._get_runner_manager()
@@ -472,13 +482,28 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
             return {"delta": {"virtual-machines": 0}}
 
-    @staticmethod
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
-    def _install_deps() -> None:
+    def _install_deps(self) -> None:
         """Install dependencies."""
         logger.info("Installing charm dependencies.")
 
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
+        execute_command(["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip"])
+        execute_command(
+            [
+                "/usr/bin/pip",
+                "install",
+                "flask",
+                # TODO: Review this.
+                "git+https://github.com/canonical/repo-policy-compliance@flask-blueprint",
+            ],
+            env={
+                "HTTP_PROXY": self.proxies["http"],
+                "HTTPS_PROXY": self.proxies["https"],
+                "NO_PROXY": self.proxies["no_proxy"],
+            },
+        )
+
         execute_command(
             ["/usr/bin/apt-get", "remove", "-qy", "lxd", "lxd-client"], check_exit=False
         )
@@ -499,6 +524,52 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
         execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
         logger.info("Finished installing charm dependencies.")
+
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
+    def _start_services(self) -> None:
+        """Start services."""
+        logger.info("Starting charm services...")
+
+        service_token_path = Path("token")
+        repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
+        repo_check_web_service_script = Path("src/repo_policy_compliance_service.py")
+        repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
+
+        logger.info("Getting the secret token...")
+        if service_token_path.exists():
+            logger.info("Found existing token file.")
+            with open(service_token_path, "r") as file:
+                self.service_token = file.read()
+        else:
+            logger.info("Generate new token.")
+            self.service_token = secrets.token_hex(16)
+            with open(service_token_path, "w") as file:
+                file.write(self.service_token)
+
+        # Move script to home directorye
+
+        logger.info("Loading the repo policy compliance flask app...")
+        os.makedirs(repo_check_web_service_path, exist_ok=True)
+        shutil.copyfile(
+            repo_check_web_service_script,
+            repo_check_web_service_path / "app.py",
+        )
+
+        # Move the systemd service.
+        logger.info("Loading the repo policy compliance gunicorn systemd service...")
+        environment = jinja2.Environment(
+            loader=jinja2.FileSystemLoader("templates"), autoescape=True
+        )
+
+        service_content = environment.get_template("repo-policy-compliance.service.j2").render(
+            working_directory=str(repo_check_web_service_path), charm_token=self.service_token
+        )
+        repo_check_systemd_service.write_text(service_content)
+
+        execute_command(["/usr/bin/systemctl", "start", "repo-policy-compliance"])
+        execute_command(["/usr/bin/systemctl", "enable", "repo-policy-compliance"])
+
+        logger.info("Finished starting charm services")
 
 
 if __name__ == "__main__":

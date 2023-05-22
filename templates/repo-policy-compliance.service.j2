@@ -1,0 +1,10 @@
+[Unit]
+Description=Gunicorn instance to serve repo policy compliance endpoints
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory={{working_directory}}
+Environment="CHARM_TOKEN={{charm_token}}"
+ExecStart=/usr/bin/gunicorn --bind 0.0.0.0:8080 app:app
