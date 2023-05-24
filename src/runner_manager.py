@@ -121,8 +121,8 @@ class RunnerManager:
         # setting configured. The is a separated requests Session as the other one configured
         # according proxies setting provided by user.
         local_session = requests.Session()
-        local_session.session.mount("http://", adapter)
-        local_session.session.mount("https://", adapter)
+        local_session.mount("http://", adapter)
+        local_session.mount("https://", adapter)
 
         self._clients = RunnerClients(
             GhApi(token=self.config.token),
