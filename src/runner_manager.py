@@ -117,11 +117,18 @@ class RunnerManager:
             opener = urllib.request.build_opener(proxy)
             fastcore.net._opener = opener
 
+        # The repo policy compliance service is on localhost and should not have any proxies
+        # setting configured. The is a separated requests Session as the other one configured
+        # according proxies setting provided by user.
+        local_session = requests.Session()
+        local_session.session.mount("http://", adapter)
+        local_session.session.mount("https://", adapter)
+
         self._clients = RunnerClients(
             GhApi(token=self.config.token),
             jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True),
             LxdClient(),
-            RepoPolicyComplianceClient(self.session, "http://127.0.0.1:8080", service_token),
+            RepoPolicyComplianceClient(local_session, "http://127.0.0.1:8080", service_token),
         )
 
     @retry(tries=5, delay=30, local_logger=logger)
