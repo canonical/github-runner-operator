@@ -168,7 +168,7 @@ class GithubRunnerCharm(CharmBase):
         if path is None:
             path = self.config["path"]
 
-        if not token or not path:
+        if not token or not path or self.service_token is None:
             return None
 
         if "/" in path:
@@ -538,15 +538,14 @@ class GithubRunnerCharm(CharmBase):
         if service_token_path.exists():
             logger.info("Found existing token file.")
             with open(service_token_path, "r") as file:
-                self.service_token = file.read()
+                self.service_token = file.read().strip()
         else:
             logger.info("Generate new token.")
             self.service_token = secrets.token_hex(16)
             with open(service_token_path, "w") as file:
                 file.write(self.service_token)
 
-        # Move script to home directorye
-
+        # Move script to home directory
         logger.info("Loading the repo policy compliance flask app...")
         os.makedirs(repo_check_web_service_path, exist_ok=True)
         shutil.copyfile(

@@ -387,7 +387,7 @@ class Runner:
 
         # Load the runner pre-job script.
         one_time_token = self._clients.repo.get_one_time_token()
-        pre_job_contents = self._client.jinja.get_template("pre-job.j2").render(
+        pre_job_contents = self._clients.jinja.get_template("pre-job.j2").render(
             one_time_token=one_time_token
         )
         self._put_file(str(self.pre_job_script), pre_job_contents)
