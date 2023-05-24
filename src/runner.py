@@ -235,17 +235,7 @@ class Runner:
             profile_config = {
                 "security.nesting": "true",
             }
-            # The "repo-check-service" expose the 127.0.0.1:8080 port on host
-            # to LXD instances.
-            profile_devices = {
-                "repo-check-service": {
-                    "bind": "container",
-                    "connect": "tcp:127.0.0.1:8080",
-                    "listen": "tcp:0.0.0.0:8080",
-                    "type": "proxy",
-                }
-            }
-            self._clients.lxd.profiles.create("runner", profile_config, profile_devices)
+            self._clients.lxd.profiles.create("runner", profile_config, {})
 
             # Verify the action is successful.
             if not self._clients.lxd.profiles.exists("runner"):
