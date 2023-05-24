@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 
+# The option `--format` is missing from `lxc netwrok show`, therefore awk is used for parsing.
+HOST_IP=$(lxc network show lxdbr0 | grep 'ipv4.address' | awk '{split($2, array, "/"); print array[1]}')
 GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq '.github.event.pull_request.head.repo.full_name')
 
 # TODO: Debug only
@@ -10,7 +12,7 @@ echo $GITHUB_BASE_REF
 echo $GITHUB_REF_NAME
 echo $GITHUB_SHA
 
-curl -X POST http://127.0.0.1:8080/check-run \
+curl -X POST "http://${HOST_IP}/check-run" \
     -H 'Authorization: Bearer {{one-time-token}}' \
     -H 'Content-Type: application/json' \
     -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_REF_NAME}\", \"commit_sha\": \"${GITHUB_SHA}\"}"

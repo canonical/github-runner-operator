@@ -494,8 +494,7 @@ class GithubRunnerCharm(CharmBase):
                 "/usr/bin/pip",
                 "install",
                 "flask",
-                # TODO: Review this.
-                "git+https://github.com/canonical/repo-policy-compliance@flask-blueprint",
+                "git+https://github.com/canonical/repo-policy-compliance@main",
             ],
             env={
                 "HTTP_PROXY": self.proxies["http"],
