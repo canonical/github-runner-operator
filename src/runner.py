@@ -243,7 +243,6 @@ class Runner:
                     "connect": "tcp:127.0.0.1:8080",
                     "listen": "tcp:0.0.0.0:8080",
                     "type": "proxy",
-                    "nat": "true",
                 }
             }
             self._clients.lxd.profiles.create("runner", profile_config, profile_devices)
