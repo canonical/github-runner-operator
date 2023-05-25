@@ -108,6 +108,8 @@ class GithubRunnerCharm(CharmBase):
 
     _stored = StoredState()
 
+    service_token_path = Path("service_token")
+
     def __init__(self, *args, **kargs) -> None:
         """Construct the charm.
 
@@ -491,6 +493,17 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Installing charm dependencies.")
 
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
+        env = {}
+        if "http" in self.proxies:
+            env["HTTP_PROXY"] = self.proxies["http"]
+            env["http_proxy"] = self.proxies["http"]
+        if "https" in self.proxies:
+            env["HTTPS_PROXY"] = self.proxies["https"]
+            env["https_proxy"] = self.proxies["https"]
+        if "no_proxy" in self.proxies:
+            env["NO_PROXY"] = self.proxies["no_proxy"]
+            env["no_proxy"] = self.proxies["no_proxy"]
+
         execute_command(["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip"])
         execute_command(
             [
@@ -499,11 +512,7 @@ class GithubRunnerCharm(CharmBase):
                 "flask",
                 "git+https://github.com/canonical/repo-policy-compliance@main",
             ],
-            env={
-                "HTTP_PROXY": self.proxies["http"],
-                "HTTPS_PROXY": self.proxies["https"],
-                "NO_PROXY": self.proxies["no_proxy"],
-            },
+            env=env,
         )
 
         execute_command(
@@ -569,17 +578,15 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             The service token.
         """
-        service_token_path = Path("token")
-
         logger.info("Getting the secret token...")
-        if service_token_path.exists():
+        if self.service_token_path.exists():
             logger.info("Found existing token file.")
-            with open(service_token_path, "r") as file:
+            with open(self.service_token_path, "r") as file:
                 service_token = file.read().strip()
         else:
             logger.info("Generate new token.")
             service_token = secrets.token_hex(16)
-            with open(service_token_path, "w") as file:
+            with open(self.service_token_path, "w") as file:
                 file.write(service_token)
 
         return service_token

@@ -386,9 +386,11 @@ class Runner:
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
 
         # Load the runner pre-job script.
+        bridge_address_range = self._clients.lxd.networks.get("lxdbr0").config["ipv4.address"]
+        host_ip, _ = bridge_address_range.split("/")
         one_time_token = self._clients.repo.get_one_time_token()
         pre_job_contents = self._clients.jinja.get_template("pre-job.j2").render(
-            one_time_token=one_time_token
+            host_ip=host_ip, one_time_token=one_time_token
         )
         self._put_file(str(self.pre_job_script), pre_job_contents)
         self.instance.execute(

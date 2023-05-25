@@ -20,7 +20,7 @@ class RepoPolicyComplianceClient:
         try:
             response = self.session.get(url, headers={"Authorization": f"Bearer {self.token}"})
             response.raise_for_status()
-            return response.content
+            return response.content.decode("utf-8")
         except requests.HTTPError:
             logger.exception("Unable to get one time token from repo policy compliance service.")
             raise

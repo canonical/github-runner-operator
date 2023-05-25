@@ -15,7 +15,12 @@ from typing import IO, Optional, Tuple, Union
 import pylxd.models
 
 from errors import LxdError, SubprocessError
-from lxd_type import LxdInstanceConfig, ResourceProfileConfig, ResourceProfileDevices
+from lxd_type import (
+    LxdInstanceConfig,
+    LxdNetwork,
+    LxdResourceProfileConfig,
+    LxdResourceProfileDevices,
+)
 from utilities import execute_command, secure_run_subprocess
 
 logger = logging.getLogger(__name__)
@@ -320,7 +325,7 @@ class LxdProfileManager:
             raise LxdError(f"Unable to check if LXD profile {name} exists") from err
 
     def create(
-        self, name: str, config: ResourceProfileConfig, devices: ResourceProfileDevices
+        self, name: str, config: LxdResourceProfileConfig, devices: LxdResourceProfileDevices
     ) -> None:
         """Create a LXD profile.
 
@@ -339,6 +344,29 @@ class LxdProfileManager:
             raise LxdError(f"Unable to create LXD profile {name}") from err
 
 
+class LxdNetworkManager:
+    "LXD network manager."
+
+    def __init__(self, pylxd_client: pylxd.Client):
+        """Construct the LXD profile manager.
+
+        Args:
+            pylxd_client: Instance of pylxd.Client.
+        """
+        self._pylxd_client = pylxd_client
+
+    def get(self, name: str) -> LxdNetwork:
+        network = self._pylxd_client.networks.get(name)
+        return LxdNetwork(
+            network.name,
+            network.description,
+            network.type,
+            network.config,
+            network.managed,
+            network.used_by,
+        )
+
+
 # Disable pylint as the public methods of this class in split into instances and profiles.
 class LxdClient:  # pylint: disable=too-few-public-methods
     """LXD client."""
@@ -348,3 +376,4 @@ class LxdClient:  # pylint: disable=too-few-public-methods
         pylxd_client = pylxd.Client()
         self.instances = LxdInstanceManager(pylxd_client)
         self.profiles = LxdProfileManager(pylxd_client)
+        self.networks = LxdNetworkManager(pylxd_client)
