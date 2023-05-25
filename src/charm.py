@@ -168,8 +168,11 @@ class GithubRunnerCharm(CharmBase):
         if path is None:
             path = self.config["path"]
 
-        if not token or not path or self.service_token is None:
+        if not token or not path:
             return None
+
+        if self.service_token is None:
+            self.service_token = self._get_service_token()
 
         if "/" in path:
             paths = path.split("/")
@@ -529,21 +532,12 @@ class GithubRunnerCharm(CharmBase):
         """Start services."""
         logger.info("Starting charm services...")
 
-        service_token_path = Path("token")
         repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
         repo_check_web_service_script = Path("src/repo_policy_compliance_service.py")
         repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
 
-        logger.info("Getting the secret token...")
-        if service_token_path.exists():
-            logger.info("Found existing token file.")
-            with open(service_token_path, "r") as file:
-                self.service_token = file.read().strip()
-        else:
-            logger.info("Generate new token.")
-            self.service_token = secrets.token_hex(16)
-            with open(service_token_path, "w") as file:
-                file.write(self.service_token)
+        if self.service_token is None:
+            self.service_token = self._get_service_token()
 
         # Move script to home directory
         logger.info("Loading the repo policy compliance flask app...")
@@ -568,6 +562,27 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/usr/bin/systemctl", "enable", "repo-policy-compliance"])
 
         logger.info("Finished starting charm services")
+
+    def _get_service_token(self) -> str:
+        """Get the service token.
+
+        Returns:
+            The service token.
+        """
+        service_token_path = Path("token")
+
+        logger.info("Getting the secret token...")
+        if service_token_path.exists():
+            logger.info("Found existing token file.")
+            with open(service_token_path, "r") as file:
+                service_token = file.read().strip()
+        else:
+            logger.info("Generate new token.")
+            service_token = secrets.token_hex(16)
+            with open(service_token_path, "w") as file:
+                file.write(service_token)
+
+        return service_token
 
 
 if __name__ == "__main__":
