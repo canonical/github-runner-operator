@@ -103,12 +103,14 @@ class TestCharm(unittest.TestCase):
         )
         harness.begin()
         harness.charm.on.config_changed.emit()
+        token = harness.charm._get_service_token()
         rm.assert_called_with(
             "github-runner",
             "0",
             RunnerManagerConfig(
                 path=GitHubOrg(org="mockorg", group="mockgroup"), token="mocktoken", image="jammy"
             ),
+            token,
             proxies={},
         )
 
@@ -122,12 +124,14 @@ class TestCharm(unittest.TestCase):
         )
         harness.begin()
         harness.charm.on.config_changed.emit()
+        token = harness.charm._get_service_token()
         rm.assert_called_with(
             "github-runner",
             "0",
             RunnerManagerConfig(
                 path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
             ),
+            token,
             proxies={},
         )
 
@@ -143,12 +147,14 @@ class TestCharm(unittest.TestCase):
         # update to 0 virtual machines
         harness.update_config({"virtual-machines": 0})
         harness.charm.on.reconcile_runners.emit()
+        token = harness.charm._get_service_token()
         rm.assert_called_with(
             "github-runner",
             "0",
             RunnerManagerConfig(
                 path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
             ),
+            token,
             proxies={},
         )
         mock_rm.reconcile.assert_called_with(0, VirtualMachineResources(2, "7GiB", "10GiB")),
@@ -157,12 +163,14 @@ class TestCharm(unittest.TestCase):
         # update to 10 VMs with 4 cpu and 7GiB memory
         harness.update_config({"virtual-machines": 10, "vm-cpu": 4})
         harness.charm.on.reconcile_runners.emit()
+        token = harness.charm._get_service_token()
         rm.assert_called_with(
             "github-runner",
             "0",
             RunnerManagerConfig(
                 path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
             ),
+            token,
             proxies={},
         )
         mock_rm.reconcile.assert_called_with(
