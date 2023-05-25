@@ -191,8 +191,7 @@ class GithubRunnerCharm(CharmBase):
         return RunnerManager(
             app_name,
             unit,
-            RunnerManagerConfig(path, token, "jammy"),
-            self.service_token,
+            RunnerManagerConfig(path, token, "jammy", self.service_token),
             proxies=self.proxies,
         )
 
@@ -565,7 +564,7 @@ class GithubRunnerCharm(CharmBase):
         service_content = environment.get_template("repo-policy-compliance.service.j2").render(
             working_directory=str(repo_check_web_service_path), charm_token=self.service_token
         )
-        repo_check_systemd_service.write_text(service_content)
+        repo_check_systemd_service.write_text(service_content, encoding="utf-8")
 
         execute_command(["/usr/bin/systemctl", "start", "repo-policy-compliance"])
         execute_command(["/usr/bin/systemctl", "enable", "repo-policy-compliance"])
@@ -581,12 +580,12 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Getting the secret token...")
         if self.service_token_path.exists():
             logger.info("Found existing token file.")
-            with open(self.service_token_path, "r") as file:
+            with open(self.service_token_path, "r", encoding="utf-8") as file:
                 service_token = file.read().strip()
         else:
             logger.info("Generate new token.")
             service_token = secrets.token_hex(16)
-            with open(self.service_token_path, "w") as file:
+            with open(self.service_token_path, "w", encoding="utf-8") as file:
                 file.write(service_token)
 
         return service_token

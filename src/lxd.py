@@ -344,8 +344,9 @@ class LxdProfileManager:
             raise LxdError(f"Unable to create LXD profile {name}") from err
 
 
-class LxdNetworkManager:
-    "LXD network manager."
+# Disable pylint as other method of this class can be extended in the future.
+class LxdNetworkManager:  # pylint: disable=too-few-public-methods
+    """LXD network manager."""
 
     def __init__(self, pylxd_client: pylxd.Client):
         """Construct the LXD profile manager.
@@ -356,6 +357,14 @@ class LxdNetworkManager:
         self._pylxd_client = pylxd_client
 
     def get(self, name: str) -> LxdNetwork:
+        """Get a LXD network information.
+
+        Args:
+            name: The name of the LXD network.
+
+        Returns:
+            Information on the LXD network.
+        """
         network = self._pylxd_client.networks.get(name)
         return LxdNetwork(
             network.name,

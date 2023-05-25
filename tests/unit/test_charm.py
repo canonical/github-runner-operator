@@ -108,9 +108,11 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubOrg(org="mockorg", group="mockgroup"), token="mocktoken", image="jammy"
+                path=GitHubOrg(org="mockorg", group="mockgroup"),
+                token="mocktoken",
+                image="jammy",
+                service_token=token,
             ),
-            token,
             proxies={},
         )
 
@@ -129,9 +131,11 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
+                path=GitHubRepo(owner="mockorg", repo="repo"),
+                token="mocktoken",
+                image="jammy",
+                service_token=token,
             ),
-            token,
             proxies={},
         )
 
@@ -152,9 +156,11 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
+                path=GitHubRepo(owner="mockorg", repo="repo"),
+                token="mocktoken",
+                image="jammy",
+                service_token=token,
             ),
-            token,
             proxies={},
         )
         mock_rm.reconcile.assert_called_with(0, VirtualMachineResources(2, "7GiB", "10GiB")),
@@ -168,9 +174,11 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
+                path=GitHubRepo(owner="mockorg", repo="repo"),
+                token="mocktoken",
+                image="jammy",
+                service_token=token,
             ),
-            token,
             proxies={},
         )
         mock_rm.reconcile.assert_called_with(

@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-
-# The option `--format` is missing from `lxc netwrok show`, therefore awk is used for parsing.
 GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq '.github.event.pull_request.head.repo.full_name')
 
 # TODO: Debug only

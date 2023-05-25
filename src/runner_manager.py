@@ -54,6 +54,7 @@ class RunnerManagerConfig:
     path: GitHubPath
     token: str
     image: str
+    service_token: str
 
 
 @dataclass
@@ -77,7 +78,6 @@ class RunnerManager:
         app_name: str,
         unit: int,
         runner_manager_config: RunnerManagerConfig,
-        service_token: str,
         proxies: ProxySetting = ProxySetting(),
     ) -> None:
         """Construct RunnerManager object for creating and managing runners.
@@ -128,7 +128,9 @@ class RunnerManager:
             GhApi(token=self.config.token),
             jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True),
             LxdClient(),
-            RepoPolicyComplianceClient(local_session, "http://127.0.0.1:8080", service_token),
+            RepoPolicyComplianceClient(
+                local_session, "http://127.0.0.1:8080", self.config.service_token
+            ),
         )
 
     @retry(tries=5, delay=30, local_logger=logger)

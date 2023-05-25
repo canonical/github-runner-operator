@@ -10,7 +10,7 @@ from typing import TypedDict
 
 # The keys are not valid identifiers, hence this is defined with function-based syntax.
 LxdResourceProfileConfig = TypedDict(
-    "ResourceProfileConfig", {"limits.cpu": str, "limits.memory": str}
+    "LxdResourceProfileConfig", {"limits.cpu": str, "limits.memory": str}
 )
 LxdResourceProfileConfig.__doc__ = "Configuration LXD profile."
 
@@ -67,7 +67,7 @@ LxdNetworkConfig.__doc__ = "Represent LXD network configuration."
 
 @dataclass
 class LxdNetwork:
-    """LXD Network"""
+    """LXD network information."""
 
     name: str
     description: str
