@@ -5,14 +5,15 @@
 GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq '.github.event.pull_request.head.repo.full_name')
 
 # TODO: Debug only
+cat ${GITHUB_EVENT_PATH}
 echo $GITHUB_REPOSITORY
 echo $GITHUB_SOURCE_REPOSITORY
 echo $GITHUB_BASE_REF
-echo $GITHUB_REF_NAME
+echo $GITHUB_HEAD_REF
 echo $GITHUB_SHA
 
 curl --noproxy '*' \
     -H 'Authorization: Bearer {{one_time_token}}' \
     -H 'Content-Type: application/json' \
-    -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_REF_NAME}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
-    -X POST "http://{{host_ip}}/check-run"
+    -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_HEAD_REF}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
+    -X POST "http://{{host_ip}}:8080/check-run"
