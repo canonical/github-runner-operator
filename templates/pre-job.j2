@@ -2,13 +2,6 @@
 
 GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.repo.full_name')
 
-# TODO: Debug only
-echo $GITHUB_REPOSITORY
-echo $GITHUB_SOURCE_REPOSITORY
-echo $GITHUB_BASE_REF
-echo $GITHUB_HEAD_REF
-echo $GITHUB_SHA
-
 curl --noproxy '*' \
     --fail-with-body \
     -H 'Authorization: Bearer {{one_time_token}}' \
