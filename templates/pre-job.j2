@@ -2,6 +2,7 @@
 
 GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.repo.full_name')
 
+# Request repo-policy-compliance service check.
 curl --noproxy '*' \
     --fail-with-body \
     -H 'Authorization: Bearer {{one_time_token}}' \
