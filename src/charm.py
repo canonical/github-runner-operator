@@ -109,6 +109,9 @@ class GithubRunnerCharm(CharmBase):
     _stored = StoredState()
 
     service_token_path = Path("service_token")
+    repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
+    repo_check_web_service_script = Path("src/repo_policy_compliance_service.py")
+    repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
 
     def __init__(self, *args, **kargs) -> None:
         """Construct the charm.
@@ -540,19 +543,15 @@ class GithubRunnerCharm(CharmBase):
         """Start services."""
         logger.info("Starting charm services...")
 
-        repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
-        repo_check_web_service_script = Path("src/repo_policy_compliance_service.py")
-        repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
-
         if self.service_token is None:
             self.service_token = self._get_service_token()
 
         # Move script to home directory
         logger.info("Loading the repo policy compliance flask app...")
-        os.makedirs(repo_check_web_service_path, exist_ok=True)
+        os.makedirs(self.repo_check_web_service_path, exist_ok=True)
         shutil.copyfile(
-            repo_check_web_service_script,
-            repo_check_web_service_path / "app.py",
+            self.repo_check_web_service_script,
+            self.repo_check_web_service_path / "app.py",
         )
 
         # Move the systemd service.
@@ -562,12 +561,12 @@ class GithubRunnerCharm(CharmBase):
         )
 
         service_content = environment.get_template("repo-policy-compliance.service.j2").render(
-            working_directory=str(repo_check_web_service_path),
+            working_directory=str(self.repo_check_web_service_path),
             charm_token=self.service_token,
             github_token=self.config["token"],
             proxies=self.proxies,
         )
-        repo_check_systemd_service.write_text(service_content, encoding="utf-8")
+        self.repo_check_systemd_service.write_text(service_content, encoding="utf-8")
 
         execute_command(["/usr/bin/systemctl", "start", "repo-policy-compliance"])
         execute_command(["/usr/bin/systemctl", "enable", "repo-policy-compliance"])

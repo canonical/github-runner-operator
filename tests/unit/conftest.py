@@ -14,6 +14,9 @@ def mocks(monkeypatch, tmp_path):
     monkeypatch.setattr(
         "charm.GithubRunnerCharm.service_token_path", Path(tmp_path / "mock_service_token")
     )
+    monkeypatch.setattr(
+        "charm.GithubRunnerCharm.repo_check_systemd_service", Path(tmp_path / "systemd_service")
+    )
     monkeypatch.setattr("charm.os", unittest.mock.MagicMock())
     monkeypatch.setattr("charm.shutil", unittest.mock.MagicMock())
     monkeypatch.setattr("charm.jinja2", unittest.mock.MagicMock())
