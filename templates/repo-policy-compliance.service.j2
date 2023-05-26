@@ -6,5 +6,12 @@ After=network.target
 User=ubuntu
 Group=www-data
 WorkingDirectory={{working_directory}}
+Environment="GITHUB_TOKEN={{github_token}}"
 Environment="CHARM_TOKEN={{charm_token}}"
+Environment="HTTP_PROXY={{proxies['http']}}"
+Environment="HTTPS_PROXY={{proxies['https']}}"
+Environment="NO_PROXY={{proxies['no_proxy']}}"
+Environment="http_proxy={{proxies['http']}}"
+Environment="https_proxy={{proxies['https']}}"
+Environment="no_proxy={{proxies['no_proxy']}}"
 ExecStart=/usr/bin/gunicorn --bind 0.0.0.0:8080 app:app

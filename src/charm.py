@@ -562,7 +562,9 @@ class GithubRunnerCharm(CharmBase):
         )
 
         service_content = environment.get_template("repo-policy-compliance.service.j2").render(
-            working_directory=str(repo_check_web_service_path), charm_token=self.service_token
+            working_directory=str(repo_check_web_service_path),
+            charm_token=self.service_token,
+            github_token=self.config["token"],
         )
         repo_check_systemd_service.write_text(service_content, encoding="utf-8")
 
