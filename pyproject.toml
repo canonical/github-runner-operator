@@ -11,7 +11,9 @@ skips = ["*/*test.py", "*/test_*.py"]
 branch = true
 omit = [
     # Contains interface for calling LXD. Tested in integration tests and end to end tests.
-    "src/lxd.py"
+    "src/lxd.py",
+    # Contains interface for calling repo policy compliance service. Tested in integration test and end to end tests.
+    "src/repo_policy_compliance_client.py",
 ]
 
 [tool.coverage.report]
