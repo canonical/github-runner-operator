@@ -583,13 +583,11 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Getting the secret token...")
         if self.service_token_path.exists():
             logger.info("Found existing token file.")
-            with open(self.service_token_path, "r", encoding="utf-8") as file:
-                service_token = file.read().strip()
+            service_token = self.service_token_path.read_text(encoding="utf-8")
         else:
             logger.info("Generate new token.")
             service_token = secrets.token_hex(16)
-            with open(self.service_token_path, "w", encoding="utf-8") as file:
-                file.write(service_token)
+            self.service_token_path.write_text(service_token, encoding="utf-8")
 
         return service_token
 
