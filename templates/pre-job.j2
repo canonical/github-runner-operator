@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq '.pull_request.head.repo.full_name')
+GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.repo.full_name')
 
 # TODO: Debug only
 echo $GITHUB_REPOSITORY
