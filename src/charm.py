@@ -565,6 +565,7 @@ class GithubRunnerCharm(CharmBase):
             working_directory=str(repo_check_web_service_path),
             charm_token=self.service_token,
             github_token=self.config["token"],
+            proxies=self.proxies,
         )
         repo_check_systemd_service.write_text(service_content, encoding="utf-8")
 
