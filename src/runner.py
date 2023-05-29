@@ -51,6 +51,7 @@ class Runner:
     env_file = runner_application / ".env"
     config_script = runner_application / "config.sh"
     runner_script = runner_application / "start.sh"
+    pre_job_script = runner_application / "pre-job.sh"
 
     def __init__(
         self,
@@ -155,32 +156,34 @@ class Runner:
                 except LxdError as err:
                     raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
 
+        if self.status.runner_id is None:
+            return
+
         # The runner should cleanup itself.  Cleanup on GitHub in case of runner cleanup error.
-        if self.status.runner_id is not None:
-            if isinstance(self.config.path, GitHubRepo):
-                logger.debug(
-                    "Ensure runner %s with id %s is removed from GitHub repo %s/%s",
-                    self.config.name,
-                    self.status.runner_id,
-                    self.config.path.owner,
-                    self.config.path.repo,
-                )
-                self._clients.github.actions.delete_self_hosted_runner_from_repo(
-                    owner=self.config.path.owner,
-                    repo=self.config.path.repo,
-                    runner_id=self.status.runner_id,
-                )
-            if isinstance(self.config.path, GitHubOrg):
-                logger.debug(
-                    "Ensure runner %s with id %s is removed from GitHub org %s",
-                    self.config.name,
-                    self.status.runner_id,
-                    self.config.path.org,
-                )
-                self._clients.github.actions.delete_self_hosted_runner_from_org(
-                    org=self.config.path.org,
-                    runner_id=self.status.runner_id,
-                )
+        if isinstance(self.config.path, GitHubRepo):
+            logger.debug(
+                "Ensure runner %s with id %s is removed from GitHub repo %s/%s",
+                self.config.name,
+                self.status.runner_id,
+                self.config.path.owner,
+                self.config.path.repo,
+            )
+            self._clients.github.actions.delete_self_hosted_runner_from_repo(
+                owner=self.config.path.owner,
+                repo=self.config.path.repo,
+                runner_id=self.status.runner_id,
+            )
+        if isinstance(self.config.path, GitHubOrg):
+            logger.debug(
+                "Ensure runner %s with id %s is removed from GitHub org %s",
+                self.config.name,
+                self.status.runner_id,
+                self.config.path.org,
+            )
+            self._clients.github.actions.delete_self_hosted_runner_from_org(
+                org=self.config.path.org,
+                runner_id=self.status.runner_id,
+            )
 
     @retry(tries=5, delay=1, local_logger=logger)
     def _create_instance(
@@ -382,6 +385,19 @@ class Runner:
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
 
+        # Load the runner pre-job script.
+        bridge_address_range = self._clients.lxd.networks.get("lxdbr0").config["ipv4.address"]
+        host_ip, _ = bridge_address_range.split("/")
+        one_time_token = self._clients.repo.get_one_time_token()
+        pre_job_contents = self._clients.jinja.get_template("pre-job.j2").render(
+            host_ip=host_ip, one_time_token=one_time_token
+        )
+        self._put_file(str(self.pre_job_script), pre_job_contents)
+        self.instance.execute(
+            ["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.pre_job_script)]
+        )
+        self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.pre_job_script)])
+
         # Set permission to the same as GitHub-hosted runner for this directory.
         # Some GitHub Actions require this permission setting to run.
         # As the user already has sudo access, this does not give the user any additional access.
@@ -395,7 +411,7 @@ class Runner:
 
         # Load `.env` config file for GitHub self-hosted runner.
         env_contents = self._clients.jinja.get_template("env.j2").render(
-            proxies=self.config.proxies
+            proxies=self.config.proxies, pre_job_script=str(self.pre_job_script)
         )
         self._put_file(str(self.env_file), env_contents)
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])

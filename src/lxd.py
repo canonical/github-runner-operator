@@ -8,14 +8,22 @@ The LxdClient class offer a low-level interface isolate the underlying implement
 from __future__ import annotations
 
 import io
+import logging
 import tempfile
 from typing import IO, Optional, Tuple, Union
 
 import pylxd.models
 
 from errors import LxdError, SubprocessError
-from lxd_type import LxdInstanceConfig, ResourceProfileConfig, ResourceProfileDevices
+from lxd_type import (
+    LxdInstanceConfig,
+    LxdNetwork,
+    LxdResourceProfileConfig,
+    LxdResourceProfileDevices,
+)
 from utilities import execute_command, secure_run_subprocess
+
+logger = logging.getLogger(__name__)
 
 
 class LxdInstanceFileManager:
@@ -67,6 +75,7 @@ class LxdInstanceFileManager:
         try:
             execute_command(lxc_cmd)
         except SubprocessError as err:
+            logger.exception("Failed to push file")
             raise LxdError(f"Unable to push file into LXD instance {self.instance.name}") from err
 
     def write_file(
@@ -112,6 +121,7 @@ class LxdInstanceFileManager:
         try:
             execute_command(lxc_cmd)
         except SubprocessError as err:
+            logger.exception("Failed to pull file")
             raise LxdError(
                 f"Unable to pull file {source} from LXD instance {self.instance.name}"
             ) from err
@@ -177,6 +187,7 @@ class LxdInstance:
         try:
             self._pylxd_instance.start(timeout, force, wait)
         except pylxd.exceptions.LXDAPIException as err:
+            logger.exception("Failed to start LXD instance")
             raise LxdError(f"Unable to start LXD instance {self.name}") from err
 
     def stop(self, timeout: int = 30, force: bool = True, wait: bool = False) -> None:
@@ -193,6 +204,7 @@ class LxdInstance:
         try:
             self._pylxd_instance.stop(timeout, force, wait)
         except pylxd.exceptions.LXDAPIException as err:
+            logger.exception("Failed to stop LXD instance")
             raise LxdError(f"Unable to stop LXD instance {self.name}") from err
 
     def delete(self, wait: bool = False) -> None:
@@ -207,6 +219,7 @@ class LxdInstance:
         try:
             self._pylxd_instance.delete(wait)
         except pylxd.exceptions.LXDAPIException as err:
+            logger.exception("Failed to delete LXD instance")
             raise LxdError(f"Unable to delete LXD instance {self.name}") from err
 
     def execute(self, cmd: list[str], cwd: Optional[str] = None) -> Tuple[int, IO, IO]:
@@ -258,6 +271,7 @@ class LxdInstanceManager:
                 for instance in self._pylxd_client.instances.all()
             ]
         except pylxd.exceptions.LXDAPIException as err:
+            logger.exception("Failed to get all LXD instance")
             raise LxdError("Unable to get all LXD instances") from err
 
     def create(self, config: LxdInstanceConfig, wait: bool) -> LxdInstance:
@@ -277,6 +291,7 @@ class LxdInstanceManager:
             pylxd_instance = self._pylxd_client.instances.create(config=config, wait=wait)
             return LxdInstance(config["name"], pylxd_instance)
         except pylxd.exceptions.LXDAPIException as err:
+            logger.exception("Failed to create LXD instance")
             raise LxdError(f"Unable to create LXD instance {config['name']}") from err
 
 
@@ -306,10 +321,11 @@ class LxdProfileManager:
         try:
             return self._pylxd_client.profiles.exists(name)
         except pylxd.exceptions.LXDAPIException as err:
+            logger.exception("Failed to check if LXD profile exists")
             raise LxdError(f"Unable to check if LXD profile {name} exists") from err
 
     def create(
-        self, name: str, config: ResourceProfileConfig, devices: ResourceProfileDevices
+        self, name: str, config: LxdResourceProfileConfig, devices: LxdResourceProfileDevices
     ) -> None:
         """Create a LXD profile.
 
@@ -324,7 +340,40 @@ class LxdProfileManager:
         try:
             self._pylxd_client.profiles.create(name, config, devices)
         except pylxd.exceptions.LXDAPIException as err:
-            raise LxdError(f"Unable to create LXD profile {name} exists") from err
+            logger.exception("Failed to create LXD profile")
+            raise LxdError(f"Unable to create LXD profile {name}") from err
+
+
+# Disable pylint as other method of this class can be extended in the future.
+class LxdNetworkManager:  # pylint: disable=too-few-public-methods
+    """LXD network manager."""
+
+    def __init__(self, pylxd_client: pylxd.Client):
+        """Construct the LXD profile manager.
+
+        Args:
+            pylxd_client: Instance of pylxd.Client.
+        """
+        self._pylxd_client = pylxd_client
+
+    def get(self, name: str) -> LxdNetwork:
+        """Get a LXD network information.
+
+        Args:
+            name: The name of the LXD network.
+
+        Returns:
+            Information on the LXD network.
+        """
+        network = self._pylxd_client.networks.get(name)
+        return LxdNetwork(
+            network.name,
+            network.description,
+            network.type,
+            network.config,
+            network.managed,
+            network.used_by,
+        )
 
 
 # Disable pylint as the public methods of this class in split into instances and profiles.
@@ -336,3 +385,4 @@ class LxdClient:  # pylint: disable=too-few-public-methods
         pylxd_client = pylxd.Client()
         self.instances = LxdInstanceManager(pylxd_client)
         self.profiles = LxdProfileManager(pylxd_client)
+        self.networks = LxdNetworkManager(pylxd_client)

@@ -5,17 +5,18 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import TypedDict
 
 # The keys are not valid identifiers, hence this is defined with function-based syntax.
-ResourceProfileConfig = TypedDict(
-    "ResourceProfileConfig", {"limits.cpu": str, "limits.memory": str}
+LxdResourceProfileConfig = TypedDict(
+    "LxdResourceProfileConfig", {"limits.cpu": str, "limits.memory": str}
 )
-ResourceProfileConfig.__doc__ = "Represent LXD profile configuration."
+LxdResourceProfileConfig.__doc__ = "Configuration LXD profile."
 
 
-class ResourceProfileDevicesRoot(TypedDict):
-    """Represents LXD device profile of disk used as root.
+class LxdResourceProfileDevicesDisk(TypedDict):
+    """LXD device profile of disk.
 
     The details of the configuration of different types of devices can be found here:
     https://linuxcontainers.org/lxd/docs/latest/reference/devices/
@@ -33,16 +34,7 @@ class ResourceProfileDevicesRoot(TypedDict):
     size: str
 
 
-class ResourceProfileDevices(TypedDict):
-    """Represents LXD device profile for a LXD instance.
-
-    A device for root is defined.
-
-    The details of the configuration can be found in this link:
-    https://linuxcontainers.org/lxd/docs/latest/reference/devices/
-    """
-
-    root: ResourceProfileDevicesRoot
+LxdResourceProfileDevices = dict[str, LxdResourceProfileDevicesDisk]
 
 
 class LxdInstanceConfigSource(TypedDict):
@@ -63,3 +55,23 @@ class LxdInstanceConfig(TypedDict):
     source: LxdInstanceConfigSource
     ephemeral: bool
     profiles: list[str]
+
+
+# The keys are not valid identifiers, hence this is defined with function-based syntax.
+LxdNetworkConfig = TypedDict(
+    "LxdNetworkConfig",
+    {"ipv4.address": str, "ipv4.nat": str, "ipv6.address": str, "ipv6.nat": str},
+)
+LxdNetworkConfig.__doc__ = "Represent LXD network configuration."
+
+
+@dataclass
+class LxdNetwork:
+    """LXD network information."""
+
+    name: str
+    description: str
+    type: str
+    config: LxdNetworkConfig
+    managed: bool
+    used_by: tuple[str]

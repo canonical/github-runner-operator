@@ -12,6 +12,7 @@ from typing import Optional, Sequence, Union
 
 from errors import LxdError, RunnerError
 from github_type import RegistrationToken, RemoveToken, RunnerApplication
+from lxd_type import LxdNetwork
 from runner import LxdInstanceConfig
 
 logger = logging.getLogger(__name__)
@@ -34,6 +35,7 @@ class MockLxdClient:
     def __init__(self):
         self.instances = MockLxdInstanceManager()
         self.profiles = MockLxdProfileManager()
+        self.networks = MockLxdNetworkManager()
 
 
 class MockLxdInstanceManager:
@@ -64,6 +66,18 @@ class MockLxdProfileManager:
 
     def exists(self, name) -> bool:
         return name in self.profiles
+
+
+class MockLxdNetworkManager:
+    """Mock the behavior of the lxd networks"""
+
+    def __init__(self):
+        pass
+
+    def get(self, name: str) -> LxdNetwork:
+        return LxdNetwork(
+            "lxdbr0", "", "bridge", {"ipv4.address": "10.1.1.1/24"}, True, ("default")
+        )
 
 
 class MockLxdInstance:
@@ -198,3 +212,13 @@ class MockGhapiActions:
 
     def delete_self_hosted_runner_from_org(self, org: str, runner_id: str):
         pass
+
+
+class MockRepoPolicyComplianceClient:
+    """Mock for RepoPolicyComplianceClient."""
+
+    def __init__(self, session=None, url=None, charm_token=None):
+        pass
+
+    def get_one_time_token(self) -> str:
+        return "MOCK_TOKEN_" + secrets.token_hex(8)

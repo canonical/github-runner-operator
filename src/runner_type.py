@@ -11,6 +11,7 @@ import jinja2
 from ghapi.all import GhApi
 
 from lxd import LxdClient
+from repo_policy_compliance_client import RepoPolicyComplianceClient
 
 
 class ProxySetting(TypedDict, total=False):
@@ -69,6 +70,7 @@ class RunnerClients:
     github: GhApi
     jinja: jinja2.Environment
     lxd: LxdClient
+    repo: RepoPolicyComplianceClient
 
 
 @dataclass
