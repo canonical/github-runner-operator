@@ -386,10 +386,10 @@ class GithubRunnerCharm(CharmBase):
         runner_info = runner_manager.get_github_info()
 
         for runner in runner_info:
-            if runner.status == GitHubRunnerStatus.ONLINE:
+            if runner.status == GitHubRunnerStatus.ONLINE.value:
                 online += 1
                 runner_names.append(runner.name)
-            elif runner.status == GitHubRunnerStatus.OFFLINE:
+            elif runner.status == GitHubRunnerStatus.OFFLINE.value:
                 offline += 1
             else:
                 # might happen if runner dies and GH doesn't notice immediately
@@ -471,7 +471,11 @@ class GithubRunnerCharm(CharmBase):
             Changes in runner number due to reconciling runners.
         """
         virtual_machines_resources = VirtualMachineResources(
-            self.config["vm-cpu"], self.config["vm-memory"], self.config["vm-disk"]
+            self.config["vm-cpu"],
+            self.config["vm-memory"],
+            self.config["vm-disk"],
+            self.config["vm-disk-read"],
+            self.config["vm-disk-write"],
         )
 
         virtual_machines = self.config["virtual-machines"]

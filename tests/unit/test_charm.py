@@ -42,10 +42,10 @@ def mock_get_latest_runner_bin_url():
 
 def mock_get_github_info():
     return [
-        RunnerInfo("test runner 0", GitHubRunnerStatus.ONLINE),
-        RunnerInfo("test runner 1", GitHubRunnerStatus.ONLINE),
-        RunnerInfo("test runner 2", GitHubRunnerStatus.OFFLINE),
-        RunnerInfo("test runner 3", GitHubRunnerStatus.OFFLINE),
+        RunnerInfo("test runner 0", GitHubRunnerStatus.ONLINE.value),
+        RunnerInfo("test runner 1", GitHubRunnerStatus.ONLINE.value),
+        RunnerInfo("test runner 2", GitHubRunnerStatus.OFFLINE.value),
+        RunnerInfo("test runner 3", GitHubRunnerStatus.OFFLINE.value),
         RunnerInfo("test runner 4", "unknown"),
     ]
 
@@ -163,7 +163,9 @@ class TestCharm(unittest.TestCase):
             ),
             proxies={},
         )
-        mock_rm.reconcile.assert_called_with(0, VirtualMachineResources(2, "7GiB", "10GiB")),
+        mock_rm.reconcile.assert_called_with(
+            0, VirtualMachineResources(2, "7GiB", "10GiB", "100MiB", "50MiB")
+        ),
         mock_rm.reset_mock()
 
         # update to 10 VMs with 4 cpu and 7GiB memory
@@ -182,7 +184,10 @@ class TestCharm(unittest.TestCase):
             proxies={},
         )
         mock_rm.reconcile.assert_called_with(
-            10, VirtualMachineResources(cpu=4, memory="7GiB", disk="10GiB")
+            10,
+            VirtualMachineResources(
+                cpu=4, memory="7GiB", disk="10GiB", disk_read="100MiB", disk_write="50MiB"
+            ),
         )
         mock_rm.reset_mock()
 

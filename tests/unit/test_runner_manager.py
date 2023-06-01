@@ -97,7 +97,9 @@ def test_reconcile_zero_count(runner_manager: RunnerManager):
     assert: No error should be raised.
     """
     # Reconcile with no change to runner count.
-    delta = runner_manager.reconcile(0, VirtualMachineResources(2, "7GiB", "10Gib"))
+    delta = runner_manager.reconcile(
+        0, VirtualMachineResources(2, "7GiB", "10Gib", "100MiB", "50MiB")
+    )
 
     assert delta == 0
 
@@ -109,7 +111,9 @@ def test_reconcile_create_runner(runner_manager: RunnerManager):
     assert: One runner should be created.
     """
     # Create a runner.
-    delta = runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
+    delta = runner_manager.reconcile(
+        1, VirtualMachineResources(2, "7GiB", "10Gib", "100MiB", "50MiB")
+    )
 
     assert delta == 1
 
@@ -133,7 +137,9 @@ def test_reconcile_remove_runner(runner_manager: RunnerManager):
     # Create online runners.
     runner_manager._get_runners = mock_get_runners
 
-    delta = runner_manager.reconcile(2, VirtualMachineResources(2, "7GiB", "10Gib"))
+    delta = runner_manager.reconcile(
+        2, VirtualMachineResources(2, "7GiB", "10Gib", "100MiB", "50MiB")
+    )
 
     assert delta == -1
 
@@ -144,9 +150,9 @@ def test_reconcile(runner_manager: RunnerManager, tmp_path: Path):
     act: Reconcile with the current amount of runner.
     assert: Still have one runner.
     """
-    runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
+    runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib", "100MiB", "50MiB"))
     # Reconcile with no change to runner count.
-    runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
+    runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib", "100MiB", "50MiB"))
 
     assert len(runner_manager._get_runners()) == 1
 
@@ -168,7 +174,7 @@ def test_flush(runner_manager: RunnerManager, tmp_path: Path):
     assert: No runners.
     """
     # Create a runner.
-    runner_manager.reconcile(2, VirtualMachineResources(2, "7GiB", "10Gib"))
+    runner_manager.reconcile(2, VirtualMachineResources(2, "7GiB", "10Gib", "100MiB", "50MiB"))
 
     runner_manager.flush()
     assert len(runner_manager._get_runners()) == 0

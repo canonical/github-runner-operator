@@ -40,6 +40,18 @@ options:
     description: >
       Amount of disk space to allocate to root disk for virtual machine runner. Positive integers
       with GiB suffix.
+  vm-disk-read:
+    type: string
+    default: 100MiB
+    description: >
+      Limit of disk read IO per second of the root disk for virtual machine runner. Positive integers
+      with MiB suffix.
+  vm-disk-write:
+    type: string
+    default: 50MiB
+    description: >
+      Limit of disk write IO per second of the root disk for virtual machine runner. Positive integers
+      with MiB suffix.
   reconcile-interval:
     type: int
     default: 10

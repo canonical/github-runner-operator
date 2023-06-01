@@ -23,7 +23,7 @@ from tests.unit.mock import (
 
 @pytest.fixture(scope="module", name="vm_resources")
 def vm_resources_fixture():
-    return VirtualMachineResources(2, "7Gib", "10Gib")
+    return VirtualMachineResources(2, "7GiB", "10GiB", "100MiB", "50MiB")
 
 
 @pytest.fixture(scope="function", name="token")

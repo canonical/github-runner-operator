@@ -257,7 +257,10 @@ class Runner:
             str: Name of the profile for the given resource limit.
         """
         # Ensure the resource profile exists.
-        profile_name = f"cpu-{resources.cpu}-mem-{resources.memory}-disk-{resources.disk}"
+        profile_name = (
+            f"cpu-{resources.cpu}-mem-{resources.memory}-disk-{resources.disk}-"
+            f"read-{resources.disk_read}-write-{resources.disk_write}"
+        )
         if not self._clients.lxd.profiles.exists(profile_name):
             logger.info("Creating LXD profile for resource usage.")
             try:
@@ -271,6 +274,8 @@ class Runner:
                         "pool": "default",
                         "type": "disk",
                         "size": resources.disk,
+                        "limits.read": resources.disk_read,
+                        "limits.write": resources.disk_write,
                     }
                 }
                 self._clients.lxd.profiles.create(
