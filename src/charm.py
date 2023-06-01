@@ -474,8 +474,8 @@ class GithubRunnerCharm(CharmBase):
             self.config["vm-cpu"],
             self.config["vm-memory"],
             self.config["vm-disk"],
-            self.config["vm-disk-read"],
-            self.config["vm-disk-write"],
+            self.config["vm-disk-read-limit"],
+            self.config["vm-disk-write-limit"],
         )
 
         virtual_machines = self.config["virtual-machines"]

@@ -33,25 +33,26 @@ options:
     type: string
     default: 7GiB
     description: >
-      Amount of memory to allocate per virtual machine runner. Positive integers with GiB suffix.
+      Amount of memory to allocate per virtual machine runner. Positive integers followed by the unit.
+      The unit could be the follow KiB, MiB, GiB, TiB.
   vm-disk:
     type: string
     default: 10GiB
     description: >
       Amount of disk space to allocate to root disk for virtual machine runner. Positive integers
-      with GiB suffix.
-  vm-disk-read:
+      followed by the unit. The unit could be the follow KiB, MiB, GiB, TiB.
+  vm-disk-read-limit:
     type: string
     default: 100MiB
     description: >
       Limit of disk read IO per second of the root disk for virtual machine runner. Positive integers
-      with MiB suffix.
-  vm-disk-write:
+      followed by the unit. The unit could be the follow KiB, MiB, GiB, TiB.
+  vm-disk-write-limit:
     type: string
     default: 50MiB
     description: >
       Limit of disk write IO per second of the root disk for virtual machine runner. Positive integers
-      with MiB suffix.
+      followed by the unit. The unit could be the follow KiB, MiB, GiB, TiB.
   reconcile-interval:
     type: int
     default: 10
