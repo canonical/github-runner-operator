@@ -10,14 +10,20 @@ issues: https://github.com/canonical/github-runner-operator/issues
 source: https://github.com/canonical/github-runner-operator
 summary: Creates a cluster of self-hosted github runners.
 description: |
-  A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators)
-  deploying self-hosted GitHub runners.
-  
-  Each unit of this charm will start a configurable number of LXD based containers
-  and virtual machines to host them. Each runner performs only one job, after which
-  it unregisters from GitHub to ensure that each job runs in a clean environment.
-  The charm will periodically check the number of idle runners and spawn or destroy them as
-  necessary to maintain the configured number of runners. Both the reconciliation interval and the
-  number of runners to maintain are configurable.
+  A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) deploying
+  self-hosted GitHub runners.
+
+  Each unit of this charm will start a configurable number of LXD based virtual machines to host
+  them. Each runner performs only one job, after which it unregisters from GitHub to ensure that
+  each job runs in a clean environment. The charm will periodically check the number of idle runners
+  and spawn or destroy them as necessary to maintain the configured number of runners. Both the
+  reconciliation interval and the number of runners to maintain are configurable.
 series:
-    - jammy
+  - jammy
+
+storage:
+  lxd:
+    type: filesystem
+    description: Storage for the LXD instances to run the self-hosted runners.
+    minimum-size: 2.5GB
+    location: /charm-storage/lxd

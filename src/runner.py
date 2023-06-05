@@ -18,7 +18,14 @@ import time
 from pathlib import Path
 from typing import Iterable, Optional, Sequence
 
-from errors import LxdError, RunnerCreateError, RunnerError, RunnerFileLoadError, RunnerRemoveError
+from errors import (
+    LxdError,
+    RunnerCreateError,
+    RunnerError,
+    RunnerFileLoadError,
+    MissingStorageError,
+    RunnerRemoveError,
+)
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
 from runner_type import (
@@ -202,6 +209,7 @@ class Runner:
         logger.info("Creating an LXD instance for runner: %s", self.config.name)
 
         self._ensure_runner_profile()
+        self._ensure_runner_storage_pool()
         resource_profile = self._get_resource_profile(resources)
 
         # Create runner instance.
@@ -243,6 +251,27 @@ class Runner:
         else:
             logger.info("Found existing runner LXD profile")
 
+    @retry(tries=5, delay=5, local_logger=logger)
+    def _ensure_runner_storage_pool(self) -> None:
+        if not self.config.lxd_pool_path.exists():
+            raise MissingStorageError("Path to storage for LXD instance does not exist.")
+
+        if not self._clients.lxd.storage_pools.exists("runner"):
+            logger.info("Creating runner LXD storage pool.")
+            self._clients.lxd.storage_pools.create(
+                {
+                    "name": "runner",
+                    "driver": "dir",
+                    "config": {"source": str(self.config.lxd_pool_path)},
+                }
+            )
+
+            # Verify the action is successful.
+            if not self._clients.lxd.storage_pools.exists("runner"):
+                raise RunnerError("Failed to create runner LXD storage pool")
+        else:
+            logger.info("Found existing runner LXD storage pool.")
+
     @retry(tries=5, delay=1, local_logger=logger)
     def _get_resource_profile(self, resources: VirtualMachineResources) -> str:
         """Get the LXD profile name of given resource limit.
@@ -268,7 +297,7 @@ class Runner:
                 resource_profile_devices = {
                     "root": {
                         "path": "/",
-                        "pool": "default",
+                        "pool": "runner",
                         "type": "disk",
                         "size": resources.disk,
                     }

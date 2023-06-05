@@ -34,7 +34,7 @@ def token_fixture():
 )
 def runner_manager_fixture(request, tmp_path, monkeypatch, token):
     monkeypatch.setattr(
-        "runner_manager.RunnerManager.runner_bin_path", Path(tmp_path / "mock_runner_binary")
+        "runner_manager.RunnerManager.runner_bin_path", tmp_path / "mock_runner_binary"
     )
     runner_manager = RunnerManager(
         "test app",

@@ -35,6 +35,28 @@ class RunnerBinaryError(RunnerError):
     """Error of getting runner binary."""
 
 
+class MissingStorageError(Exception):
+    """Error for missing juju storage."""
+
+
+class MissingConfigurationError(Exception):
+    """Error for missing juju configuration
+
+    Attrs:
+        configs: The missing configurations.
+    """
+
+    def __init__(self, configs: list[str]):
+        """Construct the MissingConfigurationError.
+
+        Args:
+            configs: The missing configurations.
+        """
+        super().__init__(f"Missing required charm configuration: {configs}")
+
+        self.configs = configs
+
+
 class LxdError(Exception):
     """Error for executing LXD actions."""
 

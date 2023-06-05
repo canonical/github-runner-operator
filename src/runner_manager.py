@@ -55,6 +55,7 @@ class RunnerManagerConfig:
     token: str
     image: str
     service_token: str
+    lxd_pool_path: Path
 
 
 @dataclass
@@ -302,6 +303,7 @@ class RunnerManager:
                     self.app_name,
                     self.config.path,
                     self.proxies,
+                    self.config.lxd_pool_path,
                     self._generate_runner_name(),
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
@@ -428,7 +430,9 @@ class RunnerManager:
             online = getattr(remote_runner, "status", None) == "online"
             busy = getattr(remote_runner, "busy", None)
 
-            config = RunnerConfig(self.app_name, self.config.path, self.proxies, name)
+            config = RunnerConfig(
+                self.app_name, self.config.path, self.proxies, self.config.lxd_pool_path, name
+            )
             return Runner(
                 self._clients,
                 config,

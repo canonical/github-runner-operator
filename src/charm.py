@@ -22,12 +22,13 @@ from ops.charm import (
     InstallEvent,
     StopEvent,
     UpgradeCharmEvent,
+    StorageAttachedEvent,
 )
 from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-from errors import RunnerError, SubprocessError
+from errors import MissingConfigurationError, RunnerError, MissingStorageError, SubprocessError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
@@ -52,9 +53,7 @@ CharmT = TypeVar("CharmT")
 EventT = TypeVar("EventT")
 
 
-def catch_unexpected_charm_errors(
-    func: Callable[[CharmT, EventT], None]
-) -> Callable[[CharmT, EventT], None]:
+def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[CharmT, EventT], None]:
     """Catch unexpected errors in charm.
 
     This decorator is for unrecoverable errors and sets the charm to
@@ -72,14 +71,19 @@ def catch_unexpected_charm_errors(
         # Safe guard against unexpected error.
         try:
             func(self, event)
-        except Exception as err:  # pylint: disable=broad-exception-caught
-            logger.exception(err)
-            self.unit.status = BlockedStatus(str(err))
+        except MissingConfigurationError as err:
+            logger.exception("Missing required charm configuration")
+            self.unit.status = BlockedStatus(
+                f"Missing required charm configuration: {err.configs}"
+            )
+        except MissingStorageError:
+            logger.exception("Directory to be used as LXD storage is missing")
+            self.unit.status = BlockedStatus("Missing juju storage `lxd`")
 
     return func_with_catch_unexpected_errors
 
 
-def catch_unexpected_action_errors(
+def catch_action_errors(
     func: Callable[[CharmT, ActionEvent], None]
 ) -> Callable[[CharmT, ActionEvent], None]:
     """Catch unexpected errors in actions.
@@ -92,15 +96,18 @@ def catch_unexpected_action_errors(
     """
 
     @functools.wraps(func)
-    def func_with_catch_unexpected_errors(self, event: ActionEvent) -> None:
+    def func_with_catch_errors(self, event: ActionEvent) -> None:
         # Safe guard against unexpected error.
         try:
             func(self, event)
-        except Exception as err:  # pylint: disable=broad-exception-caught
-            logger.exception(err)
-            event.fail(f"Failed to get runner info: {err}")
+        except MissingConfigurationError as err:
+            logger.exception("Missing required charm configuration")
+            event.fail(f"Missing required charm configuration: {err.configs}")
+        except MissingStorageError:
+            logger.exception("Directory to be used as LXD storage is missing")
+            event.fail("Missing juju storage `lxd`")
 
-    return func_with_catch_unexpected_errors
+    return func_with_catch_errors
 
 
 class GithubRunnerCharm(CharmBase):
@@ -149,15 +156,21 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
         self.framework.observe(self.on.update_runner_bin, self._on_update_runner_bin)
         self.framework.observe(self.on.stop, self._on_stop)
+        self.framework.observe(self.on.lxd_storage_attached, self._on_lxd_storage_attached)
 
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.reconcile_runners_action, self._on_reconcile_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
 
+    def _on_lxd_storage_attached(self, _event: StorageAttachedEvent) -> None:
+        lxd_storage = self.model.storages["lxd"][0]
+        pool_dir = Path(lxd_storage.location) / "pool"
+        pool_dir.mkdir(exist_ok=True)
+
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
-    ) -> Optional[RunnerManager]:
+    ) -> RunnerManager:
         """Get a RunnerManager instance, or None if missing config.
 
         Args:
@@ -166,15 +179,21 @@ class GithubRunnerCharm(CharmBase):
                 name.
 
         Returns:
-            A instance of RunnerManager if the token and path configuration can be found.
+            A instance of RunnerManager.
         """
         if token is None:
             token = self.config["token"]
         if path is None:
             path = self.config["path"]
 
-        if not token or not path:
-            return None
+        missing_configs = []
+        if not token:
+            missing_configs.append("token")
+        if not path:
+            missing_configs.append("path")
+
+        if missing_configs:
+            raise MissingConfigurationError(missing_configs)
 
         if self.service_token is None:
             self.service_token = self._get_service_token()
@@ -191,14 +210,16 @@ class GithubRunnerCharm(CharmBase):
             path = GitHubOrg(org=path, group=self.config["group"])
 
         app_name, unit = self.unit.name.rsplit("/", 1)
+        lxd_storage = self.model.storages["lxd"][0]
+        pool_dir = Path(lxd_storage.location) / "pool"
         return RunnerManager(
             app_name,
             unit,
-            RunnerManagerConfig(path, token, "jammy", self.service_token),
+            RunnerManagerConfig(path, token, "jammy", self.service_token, pool_dir),
             proxies=self.proxies,
         )
 
-    @catch_unexpected_charm_errors
+    @catch_charm_errors
     def _on_install(self, _event: InstallEvent) -> None:
         """Handle the installation of charm.
 
@@ -244,7 +265,7 @@ class GithubRunnerCharm(CharmBase):
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
-    @catch_unexpected_charm_errors
+    @catch_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
         """Handle the update of charm.
 
@@ -263,7 +284,7 @@ class GithubRunnerCharm(CharmBase):
         runner_manager.flush()
         self._reconcile_runners(runner_manager)
 
-    @catch_unexpected_charm_errors
+    @catch_charm_errors
     def _on_config_changed(self, _event: ConfigChangedEvent) -> None:
         """Handle the configuration change.
 
@@ -298,7 +319,7 @@ class GithubRunnerCharm(CharmBase):
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
-    @catch_unexpected_charm_errors
+    @catch_charm_errors
     def _on_update_runner_bin(self, _event: UpdateRunnerBinEvent) -> None:
         """Handle checking update of runner binary event.
 
@@ -337,7 +358,7 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = ActiveStatus()
 
-    @catch_unexpected_charm_errors
+    @catch_charm_errors
     def _on_reconcile_runners(self, _event: ReconcileRunnersEvent) -> None:
         """Handle the reconciliation of runners.
 
@@ -363,7 +384,7 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = ActiveStatus()
 
-    @catch_unexpected_action_errors
+    @catch_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of checking of runner state.
 
@@ -403,7 +424,7 @@ class GithubRunnerCharm(CharmBase):
             }
         )
 
-    @catch_unexpected_action_errors
+    @catch_action_errors
     def _on_reconcile_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of reconcile of runner state.
 
@@ -420,7 +441,7 @@ class GithubRunnerCharm(CharmBase):
         self._on_check_runners_action(event)
         event.set_results(delta)
 
-    @catch_unexpected_action_errors
+    @catch_action_errors
     def _on_flush_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of flushing all runner and reconciling afterwards.
 
@@ -438,7 +459,7 @@ class GithubRunnerCharm(CharmBase):
         self._on_check_runners_action(event)
         event.set_results(delta)
 
-    @catch_unexpected_charm_errors
+    @catch_charm_errors
     def _on_stop(self, _: StopEvent) -> None:
         """Handle the stopping of the charm.
 
@@ -511,7 +532,6 @@ class GithubRunnerCharm(CharmBase):
             [
                 "/usr/bin/pip",
                 "install",
-                "flask",
                 "git+https://github.com/canonical/repo-policy-compliance@main",
             ],
             env=env,

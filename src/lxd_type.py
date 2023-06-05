@@ -1,7 +1,17 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Types used by Lxd class."""
+"""Types used by Lxd class.
+
+The details of the configuration of different types of devices can be found here:
+https://linuxcontainers.org/lxd/docs/latest/reference/devices/
+
+For example, configuration for disk:
+https://linuxcontainers.org/lxd/docs/latest/reference/devices_disk/#
+
+The unit of storage and network limits can be found here:
+https://linuxcontainers.org/lxd/docs/latest/reference/instance_units/#instances-limit-units
+"""
 
 from __future__ import annotations
 
@@ -16,17 +26,7 @@ LxdResourceProfileConfig.__doc__ = "Configuration LXD profile."
 
 
 class LxdResourceProfileDevicesDisk(TypedDict):
-    """LXD device profile of disk.
-
-    The details of the configuration of different types of devices can be found here:
-    https://linuxcontainers.org/lxd/docs/latest/reference/devices/
-
-    For example, configuration for disk:
-    https://linuxcontainers.org/lxd/docs/latest/reference/devices_disk/#
-
-    The unit of storage and network limits can be found here:
-    https://linuxcontainers.org/lxd/docs/latest/reference/instance_units/#instances-limit-units
-    """
+    """LXD device profile of disk."""
 
     path: str
     pool: str
@@ -63,6 +63,19 @@ LxdNetworkConfig = TypedDict(
     {"ipv4.address": str, "ipv4.nat": str, "ipv6.address": str, "ipv6.nat": str},
 )
 LxdNetworkConfig.__doc__ = "Represent LXD network configuration."
+
+
+class LxdStoragePoolConfig(TypedDict):
+    source: str
+    size: str
+
+
+class LxdStoragePoolConfiguration(TypedDict):
+    """Configuration for LXD storage pool."""
+
+    name: str
+    driver: str
+    config: LxdStoragePoolConfig
 
 
 @dataclass
