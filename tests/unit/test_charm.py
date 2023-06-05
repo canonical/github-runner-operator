@@ -42,10 +42,10 @@ def mock_get_latest_runner_bin_url():
 
 def mock_get_github_info():
     return [
-        RunnerInfo("test runner 0", GitHubRunnerStatus.ONLINE),
-        RunnerInfo("test runner 1", GitHubRunnerStatus.ONLINE),
-        RunnerInfo("test runner 2", GitHubRunnerStatus.OFFLINE),
-        RunnerInfo("test runner 3", GitHubRunnerStatus.OFFLINE),
+        RunnerInfo("test runner 0", GitHubRunnerStatus.ONLINE.value),
+        RunnerInfo("test runner 1", GitHubRunnerStatus.ONLINE.value),
+        RunnerInfo("test runner 2", GitHubRunnerStatus.OFFLINE.value),
+        RunnerInfo("test runner 3", GitHubRunnerStatus.OFFLINE.value),
         RunnerInfo("test runner 4", "unknown"),
     ]
 
