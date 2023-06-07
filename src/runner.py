@@ -20,10 +20,10 @@ from typing import Iterable, Optional, Sequence
 
 from errors import (
     LxdError,
+    MissingStorageError,
     RunnerCreateError,
     RunnerError,
     RunnerFileLoadError,
-    MissingStorageError,
     RunnerRemoveError,
 )
 from lxd import LxdInstance

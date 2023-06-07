@@ -40,7 +40,7 @@ class MissingStorageError(Exception):
 
 
 class MissingConfigurationError(Exception):
-    """Error for missing juju configuration
+    """Error for missing juju configuration.
 
     Attrs:
         configs: The missing configurations.

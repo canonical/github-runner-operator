@@ -385,16 +385,45 @@ class LxdStoragePoolManager:
         self._pylxd_client = pylxd_client
 
     def all(self) -> list[LxdStoragePool]:
+        """Get all LXD storage pool.
+
+        Returns:
+            List of LXD storage pools.
+        """
         return [LxdStoragePool(pool) for pool in self._pylxd_client.storage_pools.all()]
 
     def get(self, name: str) -> LxdStoragePool:
+        """Get a LXD storage pool.
+
+        Args:
+            name: Name of the storage pool.
+
+        Returns:
+            The LXD storage pool.
+        """
         return LxdStoragePool(self._pylxd_client.storage_pools.get(name))
 
     def exists(self, name: str) -> bool:
+        """Check if a LXD storage pool exists.
+
+        Args:
+            name: Name to check for.
+
+        Returns:
+            Whether the storage pool exists.
+        """
         return self._pylxd_client.storage_pools.exists(name)
 
     def create(self, config: LxdStoragePoolConfiguration) -> LxdStoragePool:
-        self._pylxd_client.storage_pools.create(config)
+        """Create a LXD storage pool.
+
+        Args:
+            config: Configuration for the storage pool.
+
+        Returns:
+            The LXD storage pool.
+        """
+        return self._pylxd_client.storage_pools.create(config)
 
 
 class LxdStoragePool:
@@ -426,10 +455,12 @@ class LxdStoragePool:
         self.managed = self._pylxd_storage_pool.managed
 
     def save(self):
+        """Save the current configuration of storage pool."""
         self._pylxd_storage_pool.config = self.config
         self._pylxd_storage_pool.save()
 
     def delete(self):
+        """Delete the storage pool."""
         self._pylxd_storage_pool.delete()
 
 

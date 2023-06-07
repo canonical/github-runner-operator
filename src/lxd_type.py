@@ -66,6 +66,8 @@ LxdNetworkConfig.__doc__ = "Represent LXD network configuration."
 
 
 class LxdStoragePoolConfig(TypedDict):
+    """Configuration of the storage pool."""
+
     source: str
     size: str
 

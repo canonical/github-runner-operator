@@ -21,14 +21,14 @@ from ops.charm import (
     ConfigChangedEvent,
     InstallEvent,
     StopEvent,
-    UpgradeCharmEvent,
     StorageAttachedEvent,
+    UpgradeCharmEvent,
 )
 from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-from errors import MissingConfigurationError, RunnerError, MissingStorageError, SubprocessError
+from errors import MissingConfigurationError, MissingStorageError, RunnerError, SubprocessError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
