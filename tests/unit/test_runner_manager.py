@@ -40,7 +40,7 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token):
         "test app",
         "0",
         RunnerManagerConfig(
-            request.param[0], token, "jammy", secrets.token_hex(16), Path("fake_path")
+            request.param[0], token, "jammy", secrets.token_hex(16), tmp_path / "pool"
         ),
         proxies=request.param[1],
     )

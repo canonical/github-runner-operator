@@ -401,7 +401,11 @@ class LxdStoragePoolManager:
         Returns:
             The LXD storage pool.
         """
-        return LxdStoragePool(self._pylxd_client.storage_pools.get(name))
+        try:
+            return LxdStoragePool(self._pylxd_client.storage_pools.get(name))
+        except pylxd.exceptions.NotFound as err:
+            logger.exception("LXD storage pool not found")
+            raise LxdError(f"LXD storage pool {name} not found") from err
 
     def exists(self, name: str) -> bool:
         """Check if a LXD storage pool exists.

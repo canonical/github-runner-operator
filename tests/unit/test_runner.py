@@ -62,7 +62,7 @@ def mock_lxd_client_fixture():
         ),
     ],
 )
-def runner_fixture(request, lxd: MockLxdClient):
+def runner_fixture(request, lxd: MockLxdClient, tmp_path: Path):
     client = RunnerClients(
         MagicMock(),
         MagicMock(),
@@ -70,7 +70,7 @@ def runner_fixture(request, lxd: MockLxdClient):
         MockRepoPolicyComplianceClient(),
     )
     config = RunnerConfig(
-        "test_app", request.param[0], request.param[1], "fake_path", "test_runner"
+        "test_app", request.param[0], request.param[1], tmp_path / "pool", "test_runner"
     )
     status = RunnerStatus()
     return Runner(
