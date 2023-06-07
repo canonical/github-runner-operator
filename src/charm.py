@@ -145,6 +145,7 @@ class GithubRunnerCharm(CharmBase):
         if no_proxy := get_env_var("JUJU_CHARM_NO_PROXY"):
             self.proxies["no_proxy"] = no_proxy
 
+        self._pool_dir = None
         self.service_token = None
 
         self.on.define_event("reconcile_runners", ReconcileRunnersEvent)
@@ -165,8 +166,8 @@ class GithubRunnerCharm(CharmBase):
 
     def _on_lxd_storage_attached(self, _event: StorageAttachedEvent) -> None:
         lxd_storage = self.model.storages["lxd"][0]
-        pool_dir = Path(lxd_storage.location) / "pool"
-        pool_dir.mkdir(exist_ok=True)
+        self._pool_dir = Path(lxd_storage.location) / "pool"
+        self._pool_dir.mkdir(exist_ok=True)
 
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
@@ -191,9 +192,11 @@ class GithubRunnerCharm(CharmBase):
             missing_configs.append("token")
         if not path:
             missing_configs.append("path")
-
         if missing_configs:
             raise MissingConfigurationError(missing_configs)
+
+        if not self._pool_dir:
+            raise MissingStorageError("Missing storage for LXD instance")
 
         if self.service_token is None:
             self.service_token = self._get_service_token()
@@ -210,12 +213,10 @@ class GithubRunnerCharm(CharmBase):
             path = GitHubOrg(org=path, group=self.config["group"])
 
         app_name, unit = self.unit.name.rsplit("/", 1)
-        lxd_storage = self.model.storages["lxd"][0]
-        pool_dir = Path(lxd_storage.location) / "pool"
         return RunnerManager(
             app_name,
             unit,
-            RunnerManagerConfig(path, token, "jammy", self.service_token, pool_dir),
+            RunnerManagerConfig(path, token, "jammy", self.service_token, self._pool_dir),
             proxies=self.proxies,
         )
 
