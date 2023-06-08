@@ -42,7 +42,8 @@ options:
       with GiB suffix.
   reconcile-interval:
     type: int
-    default: 10
+    # TODO: Set to 30 for debugging.
+    default: 30
     description: >
       Minutes between each reconciliation between the current state and the target state of the
       runners. On reconciliation the charm polls the state of runners, such as, the number of
