@@ -163,14 +163,12 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
 
-    def _on_lxd_storage_attached(self, _event: StorageAttachedEvent) -> None:
-        pool_dir = self.get_pool_dir()
-        if pool_dir is None:
-            raise MissingStorageError("Missing storage for LXD instance")
+    def _get_lxd_storage_pool_path(self) -> Optional[Path]:
+        """Get the path for use as LXD storage pool.
 
-        pool_dir.mkdir(exist_ok=True)
-
-    def get_pool_dir(self) -> Optional[Path]:
+        Returns:
+            Path used as the LXD storage pool.
+        """
         if "lxd" not in self.model.storages:
             return None
         if not self.model.storages["lxd"]:
@@ -205,7 +203,7 @@ class GithubRunnerCharm(CharmBase):
         if missing_configs:
             raise MissingConfigurationError(missing_configs)
 
-        pool_dir = self.get_pool_dir()
+        pool_dir = self._get_lxd_storage_pool_path()
         if pool_dir is None:
             raise MissingStorageError("Missing storage for LXD instance")
 
@@ -493,6 +491,19 @@ class GithubRunnerCharm(CharmBase):
             except Exception:  # pylint: disable=broad-exception-caught
                 # Log but ignore error since we're stopping anyway.
                 logger.exception("Failed to clear runners")
+
+    @catch_charm_errors
+    def _on_lxd_storage_attached(self, _event: StorageAttachedEvent) -> None:
+        """Handle storage attached for storage named 'lxd'.
+
+        Args:
+            event: Event of storage attached.
+        """
+        pool_dir = self._get_lxd_storage_pool_path()
+        if pool_dir is None:
+            raise MissingStorageError("Missing storage for LXD instance")
+
+        pool_dir.mkdir(exist_ok=True)
 
     def _reconcile_runners(self, runner_manager: RunnerManager) -> Dict[str, "JsonObject"]:
         """Reconcile the current runners state and intended runner state.

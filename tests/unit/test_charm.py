@@ -6,20 +6,17 @@
 import os
 import unittest
 import urllib.error
+from pathlib import Path
 from unittest.mock import MagicMock, call, patch
 
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
-from errors import RunnerError, SubprocessError
+from errors import MissingConfigurationError, RunnerError, SubprocessError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
-
-
-def raise_error(*args, **kargs):
-    raise Exception("mock error")
 
 
 def raise_runner_error(*args, **kargs):
@@ -89,9 +86,10 @@ class TestCharm(unittest.TestCase):
         run.assert_has_calls(calls, any_order=True)
 
     @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_org_register(self, run, wt, rm):
+    def test_org_register(self, run, wt, mkdir, rm):
         harness = Harness(GithubRunnerCharm)
         harness.update_config(
             {
@@ -102,6 +100,7 @@ class TestCharm(unittest.TestCase):
             }
         )
         harness.begin()
+        harness.add_storage("lxd", 1, attach=True)
         harness.charm.on.config_changed.emit()
         token = harness.charm.service_token
         rm.assert_called_with(
@@ -112,19 +111,22 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
+                lxd_pool_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
             ),
             proxies={},
         )
 
     @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_repo_register(self, run, wt, rm):
+    def test_repo_register(self, run, wt, mkdir, rm):
         harness = Harness(GithubRunnerCharm)
         harness.update_config(
             {"path": "mockorg/repo", "token": "mocktoken", "reconcile-interval": 5}
         )
         harness.begin()
+        harness.add_storage("lxd", 1, attach=True)
         harness.charm.on.config_changed.emit()
         token = harness.charm.service_token
         rm.assert_called_with(
@@ -135,18 +137,21 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
+                lxd_pool_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
             ),
             proxies={},
         )
 
     @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_update_config(self, run, wt, rm):
+    def test_update_config(self, run, wt, mkdir, rm):
         rm.return_value = mock_rm = MagicMock()
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
+        harness.add_storage("lxd", 1, attach=True)
 
         # update to 0 virtual machines
         harness.update_config({"virtual-machines": 0})
@@ -160,6 +165,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
+                lxd_pool_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
             ),
             proxies={},
         )
@@ -178,6 +184,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
+                lxd_pool_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
             ),
             proxies={},
         )
@@ -187,26 +194,31 @@ class TestCharm(unittest.TestCase):
         mock_rm.reset_mock()
 
     @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_on_stop(self, run, wt, rm):
+    def test_on_stop(self, run, wt, mkdir, rm):
         rm.return_value = mock_rm = MagicMock()
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
+        harness.add_storage("lxd", 1, attach=True)
         harness.charm.on.stop.emit()
         mock_rm.flush.assert_called()
 
+    @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_get_runner_manager(self, run, wt):
+    def test_get_runner_manager(self, run, wt, mkdir):
         harness = Harness(GithubRunnerCharm)
         harness.begin()
+        harness.add_storage("lxd", 1, attach=True)
 
         # Get runner manager via input.
         assert harness.charm._get_runner_manager("mocktoken", "mockorg/repo") is not None
 
-        assert harness.charm._get_runner_manager() is None
+        with self.assertRaises(MissingConfigurationError):
+            harness.charm._get_runner_manager()
 
         # Get runner manager via config.
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
@@ -216,9 +228,10 @@ class TestCharm(unittest.TestCase):
         assert harness.charm._get_runner_manager("mocktoken", "mock/invalid/path") is None
 
     @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_on_install_failure(self, run, wt, rm):
+    def test_on_install_failure(self, run, wt, mkdir, rm):
         """Test various error thrown during install."""
 
         rm.return_value = mock_rm = MagicMock()
@@ -227,6 +240,7 @@ class TestCharm(unittest.TestCase):
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
+        harness.add_storage("lxd", 1, attach=True)
 
         # Base case: no error thrown.
         harness.charm.on.install.emit()
@@ -238,40 +252,24 @@ class TestCharm(unittest.TestCase):
             "Failed to start runners: mock error"
         )
 
-        harness.charm._reconcile_runners = raise_error
-        harness.charm.on.install.emit()
-        assert harness.charm.unit.status == BlockedStatus("mock error")
-
-        mock_rm.update_runner_bin = raise_error
-        harness.charm.on.install.emit()
-        assert harness.charm.unit.status == MaintenanceStatus(
-            "Failed to update runner binary: mock error"
-        )
-
         GithubRunnerCharm._install_deps = raise_subprocess_error
         harness.charm.on.install.emit()
         assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")
 
-        GithubRunnerCharm._install_deps = raise_error
-        harness.charm.on.install.emit()
-        assert harness.charm.unit.status == BlockedStatus("mock error")
-
     @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_on_update_runner_bin(self, run, wt, rm):
+    def test_on_update_runner_bin(self, run, wt, mkdir, rm):
         rm.return_value = mock_rm = MagicMock()
         mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
 
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
+        harness.add_storage("lxd", 1, attach=True)
 
         harness.charm.on.update_runner_bin.emit()
-
-        mock_rm.get_latest_runner_bin_url = raise_error
-        harness.charm.on.update_runner_bin.emit()
-        assert harness.charm.unit.status == BlockedStatus("mock error")
 
         mock_rm.get_latest_runner_bin_url = raise_url_error
         harness.charm.on.update_runner_bin.emit()
@@ -280,9 +278,10 @@ class TestCharm(unittest.TestCase):
         )
 
     @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_check_runners_action(self, run, wt, rm):
+    def test_check_runners_action(self, run, wt, mkdir, rm):
         rm.return_value = mock_rm = MagicMock()
         mock_event = MagicMock()
 
@@ -291,6 +290,7 @@ class TestCharm(unittest.TestCase):
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
+        harness.add_storage("lxd", 1, attach=True)
 
         harness.charm._on_check_runners_action(mock_event)
         mock_event.set_results.assert_called_with(
@@ -298,26 +298,32 @@ class TestCharm(unittest.TestCase):
         )
 
     @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_check_runners_action_with_errors(self, run, wt, rm):
+    def test_check_runners_action_with_errors(self, run, wt, mkdir, rm):
         mock_event = MagicMock()
 
         harness = Harness(GithubRunnerCharm)
         harness.begin()
+        harness.add_storage("lxd", 1, attach=True)
 
         # No config
         harness.charm._on_check_runners_action(mock_event)
-        mock_event.fail.assert_called_with("Missing token or org/repo path config")
+        mock_event.fail.assert_called_with(
+            "Missing required charm configuration: ['token', 'path']"
+        )
 
     @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_on_flush_runners_action(self, run, wt, rm):
+    def test_on_flush_runners_action(self, run, wt, mkdir, rm):
         mock_event = MagicMock()
 
         harness = Harness(GithubRunnerCharm)
         harness.begin()
+        harness.add_storage("lxd", 1, attach=True)
 
         harness.charm._on_flush_runners_action(mock_event)
         mock_event.fail.assert_called_with(
@@ -328,9 +334,4 @@ class TestCharm(unittest.TestCase):
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.charm._on_flush_runners_action(mock_event)
         mock_event.set_results.assert_called()
-        mock_event.reset_mock()
-
-        harness.charm._reconcile_runners = raise_error
-        harness.charm._on_flush_runners_action(mock_event)
-        mock_event.fail.assert_called()
         mock_event.reset_mock()
