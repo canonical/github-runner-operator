@@ -78,7 +78,7 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
             )
         except MissingStorageError:
             logger.exception("Directory to be used as LXD storage is missing")
-            self.unit.status = BlockedStatus("Missing juju storage `lxd`")
+            self.unit.status = BlockedStatus("Missing juju storage 'lxd'")
 
     return func_with_catch_unexpected_errors
 
@@ -105,7 +105,7 @@ def catch_action_errors(
             event.fail(f"Missing required charm configuration: {err.configs}")
         except MissingStorageError:
             logger.exception("Directory to be used as LXD storage is missing")
-            event.fail("Missing juju storage `lxd`")
+            event.fail("Missing juju storage 'lxd'")
 
     return func_with_catch_errors
 
@@ -145,7 +145,6 @@ class GithubRunnerCharm(CharmBase):
         if no_proxy := get_env_var("JUJU_CHARM_NO_PROXY"):
             self.proxies["no_proxy"] = no_proxy
 
-        self._pool_dir = None
         self.service_token = None
 
         self.on.define_event("reconcile_runners", ReconcileRunnersEvent)
@@ -165,9 +164,20 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
 
     def _on_lxd_storage_attached(self, _event: StorageAttachedEvent) -> None:
+        pool_dir = self.get_pool_dir()
+        if pool_dir is None:
+            raise MissingStorageError("Missing storage for LXD instance")
+
+        pool_dir.mkdir(exist_ok=True)
+
+    def get_pool_dir(self) -> Optional[Path]:
+        if "lxd" not in self.model.storage:
+            return None
+        if not self.model.storage["lxd"]:
+            return None
+
         lxd_storage = self.model.storages["lxd"][0]
-        self._pool_dir = Path(lxd_storage.location) / "pool"
-        self._pool_dir.mkdir(exist_ok=True)
+        return Path(lxd_storage.location) / "pool"
 
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
@@ -195,7 +205,8 @@ class GithubRunnerCharm(CharmBase):
         if missing_configs:
             raise MissingConfigurationError(missing_configs)
 
-        if not self._pool_dir:
+        pool_dir = self.get_pool_dir()
+        if pool_dir is None:
             raise MissingStorageError("Missing storage for LXD instance")
 
         if self.service_token is None:
@@ -216,7 +227,7 @@ class GithubRunnerCharm(CharmBase):
         return RunnerManager(
             app_name,
             unit,
-            RunnerManagerConfig(path, token, "jammy", self.service_token, self._pool_dir),
+            RunnerManagerConfig(path, token, "jammy", self.service_token, pool_dir),
             proxies=self.proxies,
         )
 
