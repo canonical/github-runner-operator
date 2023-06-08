@@ -320,7 +320,9 @@ class TestCharm(unittest.TestCase):
         harness.begin()
 
         harness.charm._on_flush_runners_action(mock_event)
-        mock_event.fail.assert_called_with("Missing token or org/repo path config")
+        mock_event.fail.assert_called_with(
+            "Missing required charm configuration: ['token', 'path']"
+        )
         mock_event.reset_mock()
 
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})

@@ -36,12 +36,12 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token):
     monkeypatch.setattr(
         "runner_manager.RunnerManager.runner_bin_path", tmp_path / "mock_runner_binary"
     )
+    pool_path = tmp_path / "test_storage"
+    pool_path.mkdir(exist_ok=True)
     runner_manager = RunnerManager(
         "test app",
         "0",
-        RunnerManagerConfig(
-            request.param[0], token, "jammy", secrets.token_hex(16), tmp_path / "pool"
-        ),
+        RunnerManagerConfig(request.param[0], token, "jammy", secrets.token_hex(16), pool_path),
         proxies=request.param[1],
     )
     return runner_manager

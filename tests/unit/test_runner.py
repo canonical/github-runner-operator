@@ -69,9 +69,9 @@ def runner_fixture(request, lxd: MockLxdClient, tmp_path: Path):
         lxd,
         MockRepoPolicyComplianceClient(),
     )
-    config = RunnerConfig(
-        "test_app", request.param[0], request.param[1], tmp_path / "pool", "test_runner"
-    )
+    pool_path = tmp_path / "test_storage"
+    pool_path.mkdir(exist_ok=True)
+    config = RunnerConfig("test_app", request.param[0], request.param[1], pool_path, "test_runner")
     status = RunnerStatus()
     return Runner(
         client,

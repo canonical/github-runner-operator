@@ -139,7 +139,7 @@ class MockLxdStoragePoolManager:
 
     def exists(self, name):
         if name in self.pools:
-            return self.pools[name].delete
+            return not self.pools[name].delete
         else:
             return False
 
