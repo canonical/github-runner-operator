@@ -171,9 +171,9 @@ class GithubRunnerCharm(CharmBase):
         pool_dir.mkdir(exist_ok=True)
 
     def get_pool_dir(self) -> Optional[Path]:
-        if "lxd" not in self.model.storage:
+        if "lxd" not in self.model.storages:
             return None
-        if not self.model.storage["lxd"]:
+        if not self.model.storages["lxd"]:
             return None
 
         lxd_storage = self.model.storages["lxd"][0]
