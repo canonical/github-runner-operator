@@ -15,6 +15,11 @@ jobs:
       - name: Install charmcraft
         run: sudo snap install charmcraft --classic
 
+      - name: Remove Unnecessary Components
+        run: |
+          rm -rf .git
+          rm -rf .github
+
       - name: Cache github-runner Charm
         uses: actions/cache@v3
         id: cache-charm
@@ -34,6 +39,7 @@ jobs:
 
   deploy-e2e-test-runner:
     runs-on: [self-hosted, linux, x64, e2e-test]
+    needs: build-charm
     steps:
       - name: Download github-runner Charm
         uses: actions/download-artifact@v3
