@@ -1,0 +1,9 @@
+[Unit]
+Description=Dispatch the {{event}} event on {{unit}}
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/juju-run "{{unit}}" "JUJU_DISPATCH_PATH={{event}} timeout {{timeout}} ./dispatch"
+
+[Install]
+WantedBy=multi-user.target

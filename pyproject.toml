@@ -1,0 +1,47 @@
+# Copyright 2023 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+[tool.bandit]
+exclude_dirs = ["/venv/"]
+[tool.bandit.assert_used]
+skips = ["*/*test.py", "*/test_*.py"]
+
+# Testing tools configuration
+[tool.coverage.run]
+branch = true
+omit = [
+    # Contains interface for calling LXD. Tested in integration tests and end to end tests.
+    "src/lxd.py",
+    # Contains interface for calling repo policy compliance service. Tested in integration test and end to end tests.
+    "src/repo_policy_compliance_client.py",
+]
+
+[tool.coverage.report]
+fail_under = 38
+show_missing = true
+
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+log_cli_level = "INFO"
+
+# Formatting tools configuration
+[tool.black]
+line-length = 99
+
+[tool.isort]
+line_length = 99
+profile = "black"
+
+# Linting tools configuration
+[tool.flake8]
+max-line-length = 99
+max-doc-length = 99
+max-complexity = 10
+exclude = [".git", "__pycache__", ".tox", "build", "dist", "*.egg_info", "venv"]
+docstring-convention = "google"
+
+[tool.mypy]
+ignore_missing_imports = true
+explicit_package_bases = true
+namespace_packages = true

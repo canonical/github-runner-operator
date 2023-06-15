@@ -1,0 +1,54 @@
+# Copyright 2023 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+options:
+  path:
+    type: string
+    default: ""
+    description: >
+      The organization or the repository to register the self-hosted runners. For repository the
+      path should be in the "{owner}/{repo}" format.
+  group:
+    type: string
+    default: "default"
+    description: >
+      The organization runner group to register the self-hosted runner under. This has no effect on
+      runners under a repository.
+  token:
+    type: string
+    default: ""
+    description: The GitHub Personal Access Token for registering the self-hosted runners.
+  virtual-machines:
+    type: int
+    default: 0
+    description: >
+      The number of virtual machine runners. This charm will spawn or destroy virtual machines
+      runners to match this setting.
+  vm-cpu:
+    type: int
+    default: 2
+    description: >
+      The number of CPUs used per virtual machine runner.
+  vm-memory:
+    type: string
+    default: 7GiB
+    description: >
+      Amount of memory to allocate per virtual machine runner. Positive integers with GiB suffix.
+  vm-disk:
+    type: string
+    default: 10GiB
+    description: >
+      Amount of disk space to allocate to root disk for virtual machine runner. Positive integers
+      with GiB suffix.
+  reconcile-interval:
+    type: int
+    default: 10
+    description: >
+      Minutes between each reconciliation between the current state and the target state of the
+      runners. On reconciliation the charm polls the state of runners, such as, the number of
+      container runners, and see if actions are needed.
+  update-interval:
+    type: int
+    default: 60
+    description: >
+      Minutes between each check for new versions of the runner binary.

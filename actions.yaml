@@ -1,0 +1,11 @@
+# Copyright 2023 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+check-runners:
+    description: Get info on active and registered runners
+reconcile-runners:
+    description: Remove offline runners and replace any missing runners
+flush-runners:
+    description: Clear out all runners and start a new set
+update-runner-bin:
+    description: Update GitHub self-hosted runner binary
