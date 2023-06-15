@@ -74,7 +74,7 @@ jobs:
             -b e2e-${{ github.run_id }}-${{ github.run_number }} \
             --json workflowDatabaseId,status
           
-          get_workflow_status() {
+          get-workflow-status() {
               output=$(gh run list \
                         --workflow=test.yaml \
                         -R ${{ secrets.E2E_TESTING_REPO }} \
@@ -91,8 +91,8 @@ jobs:
               fi
           }
           
-          for i in {1..20}
+          for i in {1..3600}
           do
-              get_workflow_status
+              echo workflow status: get-workflow-status
               sleep 1
           done
