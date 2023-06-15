@@ -39,11 +39,6 @@ jobs:
     runs-on: [ self-hosted, linux, x64, e2e-test ]
     needs: build-charm
     steps:
-      - name: Download github-runner Charm
-        uses: actions/download-artifact@v3
-        with:
-          name: github-runner_ubuntu-22.04-amd64.charm
-
       - name: Setup Lxd Controller
         uses: charmed-kubernetes/actions-operator@main
         with:
@@ -58,6 +53,13 @@ jobs:
 
       - name: Change Testing Model Logging Level
         run: juju model-config logging-config="<root>=INFO;unit=DEBUG"
+
+      - name: Download github-runner Charm
+        uses: actions/download-artifact@v3
+        with:
+          name: github-runner_ubuntu-22.04-amd64.charm
+
+      - run: ls -lah
 
       - name: Deploy github-runner Charm
         run: |
