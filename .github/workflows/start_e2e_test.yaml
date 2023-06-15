@@ -41,7 +41,10 @@ jobs:
 #            --config path=canonical/github-runner-operator \
 #            --config token=${{ secrets.E2E_TESTING_TOKEN }} \
 #            --config virtual-machines=1
-  
+
+      - name: Install GitHub Cli
+        run: which gh || sudo apt install gh -y
+
       - name: Dispatch Workflow on Testing Runner
         env:
           GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
@@ -70,3 +73,26 @@ jobs:
             -R ${{ secrets.E2E_TESTING_REPO }} \
             -b e2e-${{ github.run_id }}-${{ github.run_number }} \
             --json workflowDatabaseId,status
+          
+          get_workflow_status() {
+              output=$(gh run list \
+                        --workflow=test.yaml \
+                        -R ${{ secrets.E2E_TESTING_REPO }} \
+                        -b e2e-${{ github.run_id }}-${{ github.run_number }} \
+                        --json workflowDatabaseId,status)
+
+              if [ $(echo "$output" | jq 'length') -eq 0 ]
+              then
+                  echo "not-started"
+              else
+                  # Parse output with jq to get the status field of the first object
+                  status=$(echo "$output" | jq -r '.[0].status')
+                  echo "$status"
+              fi
+          }
+          
+          for i in {1..20}
+          do
+              get_workflow_status
+              sleep 1
+          done
