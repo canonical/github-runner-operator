@@ -49,9 +49,6 @@ jobs:
       - name: Install juju
         run: sudo snap install juju --channel=3.1/stable
 
-      - name: Pack github-runner Charm
-        run: charmcraft pack || ( cat /home/ubuntu/.local/state/charmcraft/log/* 1 && exit 1 )
-
       - name: Bootstrap Juju LXD controller
         run: juju bootstrap lxd
 
