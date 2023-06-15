@@ -26,7 +26,6 @@ jobs:
         if: steps.cache-charm.outputs.cache-hit != 'true'
         run: charmcraft pack || ( cat /home/ubuntu/.local/state/charmcraft/log/* 1 && exit 1 )
 
-
       - name: Upload github-runner Charm
         uses: actions/upload-artifact@v3
         with:
@@ -40,7 +39,7 @@ jobs:
       - name: Download github-runner Charm
         uses: actions/download-artifact@v3
         with:
-          name: github-runner.charm
+          name: github-runner_ubuntu-22.04-amd64.charm
       - run: ls -lah
 
 #  deploy-e2e-test-runner:
