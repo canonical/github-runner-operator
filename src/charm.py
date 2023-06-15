@@ -21,14 +21,13 @@ from ops.charm import (
     ConfigChangedEvent,
     InstallEvent,
     StopEvent,
-    StorageAttachedEvent,
     UpgradeCharmEvent,
 )
 from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-from errors import MissingConfigurationError, MissingStorageError, RunnerError, SubprocessError
+from errors import MissingConfigurationError, RunnerError, SubprocessError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
@@ -76,9 +75,6 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
             self.unit.status = BlockedStatus(
                 f"Missing required charm configuration: {err.configs}"
             )
-        except MissingStorageError:
-            logger.exception("Directory to be used as LXD storage is missing")
-            self.unit.status = BlockedStatus("Missing juju storage 'lxd'")
 
     return func_with_catch_unexpected_errors
 
@@ -103,9 +99,6 @@ def catch_action_errors(
         except MissingConfigurationError as err:
             logger.exception("Missing required charm configuration")
             event.fail(f"Missing required charm configuration: {err.configs}")
-        except MissingStorageError:
-            logger.exception("Directory to be used as LXD storage is missing")
-            event.fail("Missing juju storage 'lxd'")
 
     return func_with_catch_errors
 
@@ -156,26 +149,23 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
         self.framework.observe(self.on.update_runner_bin, self._on_update_runner_bin)
         self.framework.observe(self.on.stop, self._on_stop)
-        self.framework.observe(self.on.lxd_storage_attached, self._on_lxd_storage_attached)
 
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.reconcile_runners_action, self._on_reconcile_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
 
-    def _get_lxd_storage_pool_path(self) -> Optional[Path]:
-        """Get the path for use as LXD storage pool.
+    def _ensure_ramdisk_lvm_volume_group_exist(self) -> str:
+        """Create a ramdisk as a LVM volume group.
 
         Returns:
-            Path used as the LXD storage pool.
+            Name of the LVM volume group.
         """
-        if "lxd" not in self.model.storages:
-            return None
-        if not self.model.storages["lxd"]:
-            return None
-
-        lxd_storage = self.model.storages["lxd"][0]
-        return Path(lxd_storage.location) / "pool"
+        vg_name = "ramdisk_pool"
+        # TODO: Not hardcode the size.
+        execute_command(["modprobe", "brd", "rd_size=5242880", "rd_nr=1"])
+        execute_command(["vgcreate", vg_name, "/dev/ram0"])
+        return vg_name
 
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
@@ -203,9 +193,7 @@ class GithubRunnerCharm(CharmBase):
         if missing_configs:
             raise MissingConfigurationError(missing_configs)
 
-        pool_dir = self._get_lxd_storage_pool_path()
-        if pool_dir is None:
-            raise MissingStorageError("Missing storage for LXD instance")
+        pool_name = self._ensure_ramdisk_lvm_volume_group_exist()
 
         if self.service_token is None:
             self.service_token = self._get_service_token()
@@ -225,7 +213,7 @@ class GithubRunnerCharm(CharmBase):
         return RunnerManager(
             app_name,
             unit,
-            RunnerManagerConfig(path, token, "jammy", self.service_token, pool_dir),
+            RunnerManagerConfig(path, token, "jammy", self.service_token, pool_name),
             proxies=self.proxies,
         )
 
@@ -491,19 +479,6 @@ class GithubRunnerCharm(CharmBase):
             except Exception:  # pylint: disable=broad-exception-caught
                 # Log but ignore error since we're stopping anyway.
                 logger.exception("Failed to clear runners")
-
-    @catch_charm_errors
-    def _on_lxd_storage_attached(self, _event: StorageAttachedEvent) -> None:
-        """Handle storage attached for storage named 'lxd'.
-
-        Args:
-            event: Event of storage attached.
-        """
-        pool_dir = self._get_lxd_storage_pool_path()
-        if pool_dir is None:
-            raise MissingStorageError("Missing storage for LXD instance")
-
-        pool_dir.mkdir(exist_ok=True)
 
     def _reconcile_runners(self, runner_manager: RunnerManager) -> Dict[str, "JsonObject"]:
         """Reconcile the current runners state and intended runner state.

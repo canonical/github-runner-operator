@@ -18,14 +18,7 @@ import time
 from pathlib import Path
 from typing import Iterable, Optional, Sequence
 
-from errors import (
-    LxdError,
-    MissingStorageError,
-    RunnerCreateError,
-    RunnerError,
-    RunnerFileLoadError,
-    RunnerRemoveError,
-)
+from errors import LxdError, RunnerCreateError, RunnerError, RunnerFileLoadError, RunnerRemoveError
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
 from runner_type import (
@@ -253,16 +246,13 @@ class Runner:
 
     @retry(tries=5, delay=5, local_logger=logger)
     def _ensure_runner_storage_pool(self) -> None:
-        if not self.config.lxd_pool_path.exists():
-            raise MissingStorageError("Path to storage for LXD instance does not exist.")
-
         if not self._clients.lxd.storage_pools.exists("runner"):
             logger.info("Creating runner LXD storage pool.")
             self._clients.lxd.storage_pools.create(
                 {
                     "name": "runner",
-                    "driver": "dir",
-                    "config": {"source": str(self.config.lxd_pool_path)},
+                    "driver": "lvm",
+                    "config": {"source": str(self.config.lvm_pool)},
                 }
             )
 

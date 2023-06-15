@@ -35,10 +35,6 @@ class RunnerBinaryError(RunnerError):
     """Error of getting runner binary."""
 
 
-class MissingStorageError(Exception):
-    """Error for missing juju storage."""
-
-
 class MissingConfigurationError(Exception):
     """Error for missing juju configuration.
 

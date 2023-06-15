@@ -55,7 +55,7 @@ class RunnerManagerConfig:
     token: str
     image: str
     service_token: str
-    lxd_pool_path: Path
+    lxd_pool_path: str
 
 
 @dataclass
