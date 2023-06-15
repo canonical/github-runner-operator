@@ -13,7 +13,7 @@ on:
 jobs:
   e2e-test:
     name: end to end test
-    runs-on: [self-hosted, linux, x64, e2e-test]
+    runs-on: [self-hosted, linux, x64, ${{ test-runner }}]
     steps:
       - name: Echo hello world
         run: echo "hello world"
