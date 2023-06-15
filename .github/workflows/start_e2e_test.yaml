@@ -63,8 +63,9 @@ jobs:
 
       - name: Deploy github-runner Charm
         run: |
-          juju deploy ./github-runner_ubuntu-22.04-amd64.charm \
+          juju deploy ${{ github.workspace }}/github-runner_ubuntu-22.04-amd64.charm \
             e2e-i${{ github.run_id }}n${{ github.run_number }}r \
+            ---base ubuntu@22.04 \
             --config path=canonical/github-runner-operator \
             --config token=${{ secrets.E2E_TESTING_TOKEN }} \
             --config virtual-machines=1
