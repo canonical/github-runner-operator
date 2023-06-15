@@ -44,14 +44,11 @@ jobs:
         with:
           name: github-runner_ubuntu-22.04-amd64.charm
 
-      - name: Setup LXD
-        uses: canonical/setup-lxd@main
-
-      - name: Install juju
-        run: sudo snap install juju --channel=3.1/stable
-
-      - name: Bootstrap Juju LXD controller
-        run: juju bootstrap lxd
+      - name: Setup Lxd Controller
+        uses: charmed-kubernetes/actions-operator@main
+        with:
+          juju-channel: 3.1/stable
+          provider: lxd
 
       - name: Create Testing Juju Model
         run: juju add-model testing
