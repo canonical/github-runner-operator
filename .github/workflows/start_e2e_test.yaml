@@ -47,7 +47,6 @@ jobs:
           GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
           set +x
-          GH_TOKEN=
           MAIN_SHA=$(gh api \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
