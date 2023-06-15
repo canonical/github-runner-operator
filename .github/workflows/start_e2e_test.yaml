@@ -7,41 +7,41 @@ jobs:
   deploy-e2e-test-runner:
     runs-on: ubuntu-latest
     steps:
-#      - uses: actions/checkout@v3
-#
-#      - name: Setup LXD
-#        uses: canonical/setup-lxd@main
-#
-#      - name: Install charmcraft
-#        run: sudo snap install charmcraft --classic
-#
-#      - name: Install juju
-#        run: sudo snap install juju --channel=3.1/stable
-#
-#      - name: Pack github-runner Charm
-#        run: charmcraft pack
-#
-#      - name: Bootstrap Juju LXD controller
-#        run: juju bootstrap lxd
-#
-#      - name: Create Testing Juju Model
-#        run: juju add-model testing
-#
-#      - run: juju status
-#
-#      - name: Setting Testing Model Constraints
-#        run: juju set-model-constraints "virt-type=virtual-machine mem=16G cores=4"
-#
-#      - name: Change Testing Model Logging Level
-#        run: juju model-config logging-config="<root>=INFO;unit=DEBUG"
-#
-#      - name: Deploy github-runner Charm
-#        run: |
-#          juju deploy ./github-runner_ubuntu-22.04-amd64.charm \
-#            e2e-i${{ github.run_id }}n${{ github.run_number }}r \
-#            --config path=canonical/github-runner-operator \
-#            --config token=${{ secrets.E2E_TESTING_TOKEN }} \
-#            --config virtual-machines=1
+      - uses: actions/checkout@v3
+
+      - name: Setup LXD
+        uses: canonical/setup-lxd@main
+
+      - name: Install charmcraft
+        run: sudo snap install charmcraft --classic
+
+      - name: Install juju
+        run: sudo snap install juju --channel=3.1/stable
+
+      - name: Pack github-runner Charm
+        run: charmcraft pack
+
+      - name: Bootstrap Juju LXD controller
+        run: juju bootstrap lxd
+
+      - name: Create Testing Juju Model
+        run: juju add-model testing
+
+      - run: juju status
+
+      - name: Setting Testing Model Constraints
+        run: juju set-model-constraints "virt-type=virtual-machine mem=16G cores=4"
+
+      - name: Change Testing Model Logging Level
+        run: juju model-config logging-config="<root>=INFO;unit=DEBUG"
+
+      - name: Deploy github-runner Charm
+        run: |
+          juju deploy ./github-runner_ubuntu-22.04-amd64.charm \
+            e2e-i${{ github.run_id }}n${{ github.run_number }}r \
+            --config path=canonical/github-runner-operator \
+            --config token=${{ secrets.E2E_TESTING_TOKEN }} \
+            --config virtual-machines=1
 
       - name: Install GitHub Cli
         run: which gh || sudo apt install gh -y
@@ -50,7 +50,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
-          set +x
           MAIN_SHA=$(gh api \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
@@ -92,10 +91,10 @@ jobs:
               fi
           }
           
-          for i in {1..3600}
+          juju debug-log &
+
+          for i in {1..1200}
           do
               echo workflow status: $(get-workflow-status)
-              sleep 1
-          done
-#juju debug-log &
-#for i in {1..30};do echo $i && sleep 1;done; kill $(jobs -p) &
+              sleep 3
+          done; kill $(jobs -p) &
