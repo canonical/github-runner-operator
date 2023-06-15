@@ -1,5 +1,5 @@
-GitHub self-hosted runner offer a way to run GitHub action workloads on non-GitHub servers.
-
-For information on GitHub Actions, see [this page](https://docs.github.com/en/actions).
-
-For information on self-hosted runner, see [this page](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners).
+A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) deploying self-hosted GitHub runners.
+  
+Each unit of this charm will start a configurable number of LXD based containers and virtual machines to host them. Each runner performs only one
+job, after which it unregisters from GitHub to ensure that each job runs in a clean environment. The charm will periodically check the number of idle runners and spawn or destroy them as
+necessary to maintain the configured number of runners. Both the reconciliation interval and the number of runners to maintain are configurable.
