@@ -39,7 +39,7 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token):
     runner_manager = RunnerManager(
         "test app",
         "0",
-        RunnerManagerConfig(request.param[0], token, "jammy"),
+        RunnerManagerConfig(request.param[0], token, "jammy", secrets.token_hex(16)),
         proxies=request.param[1],
     )
     return runner_manager
@@ -125,7 +125,8 @@ def test_reconcile_remove_runner(runner_manager: RunnerManager):
         """Create three mock runners."""
         runners = []
         for _ in range(3):
-            status = RunnerStatus(True, True, False)
+            # 0 is a mock runner id.
+            status = RunnerStatus(0, True, True, False)
             runners.append(Runner(MagicMock(), MagicMock(), status, None))
         return runners
 

@@ -1,4 +1,4 @@
-# Copyright 2021 Canonical Ltd.
+# Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Test cases for GithubRunnerCharm."""
@@ -6,14 +6,13 @@
 import os
 import unittest
 import urllib.error
-from subprocess import CalledProcessError  # nosec B404
 from unittest.mock import MagicMock, call, patch
 
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
-from errors import RunnerError
+from errors import RunnerError, SubprocessError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
@@ -27,8 +26,8 @@ def raise_runner_error(*args, **kargs):
     raise RunnerError("mock error")
 
 
-def raise_called_process_error(*args, **kargs):
-    raise CalledProcessError(returncode=1, cmd="mock cmd")
+def raise_subprocess_error(*args, **kargs):
+    raise SubprocessError(cmd=["mock"], return_code=1, stdout="mock stdout", stderr="mock stderr")
 
 
 def raise_url_error(*args, **kargs):
@@ -43,10 +42,10 @@ def mock_get_latest_runner_bin_url():
 
 def mock_get_github_info():
     return [
-        RunnerInfo("test runner 0", GitHubRunnerStatus.ONLINE),
-        RunnerInfo("test runner 1", GitHubRunnerStatus.ONLINE),
-        RunnerInfo("test runner 2", GitHubRunnerStatus.OFFLINE),
-        RunnerInfo("test runner 3", GitHubRunnerStatus.OFFLINE),
+        RunnerInfo("test runner 0", GitHubRunnerStatus.ONLINE.value),
+        RunnerInfo("test runner 1", GitHubRunnerStatus.ONLINE.value),
+        RunnerInfo("test runner 2", GitHubRunnerStatus.OFFLINE.value),
+        RunnerInfo("test runner 3", GitHubRunnerStatus.OFFLINE.value),
         RunnerInfo("test runner 4", "unknown"),
     ]
 
@@ -104,11 +103,15 @@ class TestCharm(unittest.TestCase):
         )
         harness.begin()
         harness.charm.on.config_changed.emit()
+        token = harness.charm.service_token
         rm.assert_called_with(
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubOrg(org="mockorg", group="mockgroup"), token="mocktoken", image="jammy"
+                path=GitHubOrg(org="mockorg", group="mockgroup"),
+                token="mocktoken",
+                image="jammy",
+                service_token=token,
             ),
             proxies={},
         )
@@ -123,11 +126,15 @@ class TestCharm(unittest.TestCase):
         )
         harness.begin()
         harness.charm.on.config_changed.emit()
+        token = harness.charm.service_token
         rm.assert_called_with(
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
+                path=GitHubRepo(owner="mockorg", repo="repo"),
+                token="mocktoken",
+                image="jammy",
+                service_token=token,
             ),
             proxies={},
         )
@@ -144,11 +151,15 @@ class TestCharm(unittest.TestCase):
         # update to 0 virtual machines
         harness.update_config({"virtual-machines": 0})
         harness.charm.on.reconcile_runners.emit()
+        token = harness.charm.service_token
         rm.assert_called_with(
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
+                path=GitHubRepo(owner="mockorg", repo="repo"),
+                token="mocktoken",
+                image="jammy",
+                service_token=token,
             ),
             proxies={},
         )
@@ -158,11 +169,15 @@ class TestCharm(unittest.TestCase):
         # update to 10 VMs with 4 cpu and 7GiB memory
         harness.update_config({"virtual-machines": 10, "vm-cpu": 4})
         harness.charm.on.reconcile_runners.emit()
+        token = harness.charm.service_token
         rm.assert_called_with(
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubRepo(owner="mockorg", repo="repo"), token="mocktoken", image="jammy"
+                path=GitHubRepo(owner="mockorg", repo="repo"),
+                token="mocktoken",
+                image="jammy",
+                service_token=token,
             ),
             proxies={},
         )
@@ -233,7 +248,7 @@ class TestCharm(unittest.TestCase):
             "Failed to update runner binary: mock error"
         )
 
-        GithubRunnerCharm._install_deps = raise_called_process_error
+        GithubRunnerCharm._install_deps = raise_subprocess_error
         harness.charm.on.install.emit()
         assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")
 

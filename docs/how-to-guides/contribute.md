@@ -1,3 +1,7 @@
+# How to contribute
+
+## Overview
+
 This document explains the processes and practices recommended for contributing enhancements to the GitHub Runner operator.
 
 * Generally, before developing enhancements to this charm, you should consider [opening an issue](https://github.com/canonical/github-runner-operator/issues) explaining your use case.
@@ -31,6 +35,7 @@ juju set-model-constraints mem=8G cores=2 root-disk=50G
 # Assuming you're on amd64
 juju deploy ./github-runner_ubuntu-22.04-amd64_ubuntu-20.04-amd64.charm
 ```
+
 ## Canonical Contributor Agreement
 
 Canonical welcomes contributions to the GitHub Runner Operator. Please check out our [contributor agreement](https://ubuntu.com/legal/contributors) if you’re interested in contributing to the solution.

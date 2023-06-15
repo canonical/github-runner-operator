@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
 
-# Copyright 2023 Canonical
+# Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
 import functools
 import logging
+import os
+import secrets
+import shutil
 import urllib.error
-from subprocess import CalledProcessError  # nosec B404
+from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Dict, Optional, TypeVar
 
+import jinja2
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -23,7 +27,7 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-from errors import RunnerError
+from errors import RunnerError, SubprocessError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
@@ -104,6 +108,11 @@ class GithubRunnerCharm(CharmBase):
 
     _stored = StoredState()
 
+    service_token_path = Path("service_token")
+    repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
+    repo_check_web_service_script = Path("src/repo_policy_compliance_service.py")
+    repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
+
     def __init__(self, *args, **kargs) -> None:
         """Construct the charm.
 
@@ -128,6 +137,8 @@ class GithubRunnerCharm(CharmBase):
             self.proxies["https"] = https_proxy
         if no_proxy := get_env_var("JUJU_CHARM_NO_PROXY"):
             self.proxies["no_proxy"] = no_proxy
+
+        self.service_token = None
 
         self.on.define_event("reconcile_runners", ReconcileRunnersEvent)
         self.on.define_event("update_runner_bin", UpdateRunnerBinEvent)
@@ -165,6 +176,9 @@ class GithubRunnerCharm(CharmBase):
         if not token or not path:
             return None
 
+        if self.service_token is None:
+            self.service_token = self._get_service_token()
+
         if "/" in path:
             paths = path.split("/")
             if len(paths) != 2:
@@ -180,7 +194,7 @@ class GithubRunnerCharm(CharmBase):
         return RunnerManager(
             app_name,
             unit,
-            RunnerManagerConfig(path, token, "jammy"),
+            RunnerManagerConfig(path, token, "jammy", self.service_token),
             proxies=self.proxies,
         )
 
@@ -194,9 +208,10 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Installing packages")
 
         try:
-            # The `_install_deps` includes retry.
-            GithubRunnerCharm._install_deps()
-        except CalledProcessError as err:
+            # The `_start_services`, `_install_deps` includes retry.
+            self._install_deps()
+            self._start_services()
+        except SubprocessError as err:
             logger.exception(err)
             # The charm cannot proceed without dependencies.
             self.unit.status = BlockedStatus("Failed to install dependencies")
@@ -236,7 +251,17 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of charm upgrade.
         """
-        GithubRunnerCharm._install_deps()
+        logger.info("Reinstalling dependencies...")
+        self._install_deps()
+        self._start_services()
+
+        logger.info("Flushing the runners...")
+        runner_manager = self._get_runner_manager()
+        if not runner_manager:
+            return
+
+        runner_manager.flush()
+        self._reconcile_runners(runner_manager)
 
     @catch_unexpected_charm_errors
     def _on_config_changed(self, _event: ConfigChangedEvent) -> None:
@@ -361,10 +386,10 @@ class GithubRunnerCharm(CharmBase):
         runner_info = runner_manager.get_github_info()
 
         for runner in runner_info:
-            if runner.status == GitHubRunnerStatus.ONLINE:
+            if runner.status == GitHubRunnerStatus.ONLINE.value:
                 online += 1
                 runner_names.append(runner.name)
-            elif runner.status == GitHubRunnerStatus.OFFLINE:
+            elif runner.status == GitHubRunnerStatus.OFFLINE.value:
                 offline += 1
             else:
                 # might happen if runner dies and GH doesn't notice immediately
@@ -464,13 +489,34 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
             return {"delta": {"virtual-machines": 0}}
 
-    @staticmethod
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
-    def _install_deps() -> None:
+    def _install_deps(self) -> None:
         """Install dependencies."""
         logger.info("Installing charm dependencies.")
 
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
+        env = {}
+        if "http" in self.proxies:
+            env["HTTP_PROXY"] = self.proxies["http"]
+            env["http_proxy"] = self.proxies["http"]
+        if "https" in self.proxies:
+            env["HTTPS_PROXY"] = self.proxies["https"]
+            env["https_proxy"] = self.proxies["https"]
+        if "no_proxy" in self.proxies:
+            env["NO_PROXY"] = self.proxies["no_proxy"]
+            env["no_proxy"] = self.proxies["no_proxy"]
+
+        execute_command(["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip"])
+        execute_command(
+            [
+                "/usr/bin/pip",
+                "install",
+                "flask",
+                "git+https://github.com/canonical/repo-policy-compliance@main",
+            ],
+            env=env,
+        )
+
         execute_command(
             ["/usr/bin/apt-get", "remove", "-qy", "lxd", "lxd-client"], check_exit=False
         )
@@ -491,6 +537,58 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
         execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
         logger.info("Finished installing charm dependencies.")
+
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
+    def _start_services(self) -> None:
+        """Start services."""
+        logger.info("Starting charm services...")
+
+        if self.service_token is None:
+            self.service_token = self._get_service_token()
+
+        # Move script to home directory
+        logger.info("Loading the repo policy compliance flask app...")
+        os.makedirs(self.repo_check_web_service_path, exist_ok=True)
+        shutil.copyfile(
+            self.repo_check_web_service_script,
+            self.repo_check_web_service_path / "app.py",
+        )
+
+        # Move the systemd service.
+        logger.info("Loading the repo policy compliance gunicorn systemd service...")
+        environment = jinja2.Environment(
+            loader=jinja2.FileSystemLoader("templates"), autoescape=True
+        )
+
+        service_content = environment.get_template("repo-policy-compliance.service.j2").render(
+            working_directory=str(self.repo_check_web_service_path),
+            charm_token=self.service_token,
+            github_token=self.config["token"],
+            proxies=self.proxies,
+        )
+        self.repo_check_systemd_service.write_text(service_content, encoding="utf-8")
+
+        execute_command(["/usr/bin/systemctl", "start", "repo-policy-compliance"])
+        execute_command(["/usr/bin/systemctl", "enable", "repo-policy-compliance"])
+
+        logger.info("Finished starting charm services")
+
+    def _get_service_token(self) -> str:
+        """Get the service token.
+
+        Returns:
+            The service token.
+        """
+        logger.info("Getting the secret token...")
+        if self.service_token_path.exists():
+            logger.info("Found existing token file.")
+            service_token = self.service_token_path.read_text(encoding="utf-8")
+        else:
+            logger.info("Generate new token.")
+            service_token = secrets.token_hex(16)
+            self.service_token_path.write_text(service_token, encoding="utf-8")
+
+        return service_token
 
 
 if __name__ == "__main__":

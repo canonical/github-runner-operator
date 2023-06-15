@@ -12,6 +12,8 @@ from typing import Callable, Optional, Sequence, Type, TypeVar
 
 from typing_extensions import ParamSpec
 
+from errors import SubprocessError
+
 logger = logging.getLogger(__name__)
 
 
@@ -50,10 +52,10 @@ def retry(  # pylint: disable=too-many-arguments
         """Decorate function with retry.
 
         Args:
-            fn (Callable[..., R]): The function to decorate.
+            fn: The function to decorate.
 
         Returns:
-            Callable[..., R]: The resulting function with retry added.
+            The resulting function with retry added.
         """
 
         @functools.wraps(func)
@@ -93,6 +95,34 @@ def retry(  # pylint: disable=too-many-arguments
     return retry_decorator
 
 
+def secure_run_subprocess(cmd: Sequence[str], **kwargs) -> subprocess.CompletedProcess[bytes]:
+    """Run command in subprocess according to security recommendations.
+
+    The argument `shell` is set to `False` for security reasons.
+
+    The argument `check` is set to `False`, therefore, CalledProcessError will not be raised.
+    Errors are handled by the caller by checking the exit code.
+
+    Args:
+        cmd: Command in a list.
+        kwargs: Additional keyword arguments for the `subprocess.run` call.
+
+    Returns:
+        Object representing the completed process. The outputs subprocess can accessed.
+    """
+    logger.info("Executing command %s", cmd)
+    result = subprocess.run(  # nosec B603
+        cmd,
+        capture_output=True,
+        shell=False,
+        check=False,
+        # Disable type check due to the support for unpacking arguments in mypy is experimental.
+        **kwargs,  # type: ignore
+    )
+    logger.debug("Command %s returns: %s", cmd, result.stdout)
+    return result
+
+
 def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> str:
     """Execute a command on a subprocess.
 
@@ -108,16 +138,7 @@ def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> st
     Returns:
         Output on stdout.
     """
-    logger.info("Executing command %s", cmd)
-    result = subprocess.run(  # nosec B603
-        cmd,
-        capture_output=True,
-        shell=False,
-        check=False,
-        # Disable type check due to the support for unpacking arguments in mypy is experimental.
-        **kwargs  # type: ignore
-    )
-    logger.debug("Command %s returns: %s", cmd, result.stdout)
+    result = secure_run_subprocess(cmd, **kwargs)
 
     if check_exit:
         try:
@@ -129,7 +150,8 @@ def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> st
                 err.returncode,
                 err.stderr,
             )
-            raise
+
+            raise SubprocessError(cmd, err.returncode, err.stdout, err.stderr) from err
 
     return str(result.stdout)
 

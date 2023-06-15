@@ -1,9 +1,13 @@
+# Copyright 2023 Canonical Ltd.
+# See LICENSE file for licensing details.
+
 type: charm
 parts:
   charm:
     charm-python-packages:
       - setuptools  # for jinja2
     build-packages:
+      - git  # for installing git source of pylxd 
       - libffi-dev  # for cffi
       - libssl-dev  # for cryptography
       - rust-all  # for cryptography

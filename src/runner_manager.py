@@ -16,8 +16,6 @@ from typing import Dict, Iterator, Optional
 
 import fastcore.net
 import jinja2
-import pylxd
-import pylxd.models
 import requests
 import requests.adapters
 import urllib3
@@ -33,6 +31,8 @@ from github_type import (
     RunnerApplicationList,
     SelfHostedRunner,
 )
+from lxd import LxdClient, LxdInstance
+from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
 from utilities import retry, set_env_var
@@ -54,6 +54,7 @@ class RunnerManagerConfig:
     path: GitHubPath
     token: str
     image: str
+    service_token: str
 
 
 @dataclass
@@ -116,10 +117,20 @@ class RunnerManager:
             opener = urllib.request.build_opener(proxy)
             fastcore.net._opener = opener
 
+        # The repo policy compliance service is on localhost and should not have any proxies
+        # setting configured. The is a separated requests Session as the other one configured
+        # according proxies setting provided by user.
+        local_session = requests.Session()
+        local_session.mount("http://", adapter)
+        local_session.mount("https://", adapter)
+
         self._clients = RunnerClients(
             GhApi(token=self.config.token),
             jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True),
-            pylxd.Client(),
+            LxdClient(),
+            RepoPolicyComplianceClient(
+                local_session, "http://127.0.0.1:8080", self.config.service_token
+            ),
         )
 
     @retry(tries=5, delay=30, local_logger=logger)
@@ -239,21 +250,12 @@ class RunnerManager:
         """
         runners = self._get_runners()
 
-        # Clean up offline runners
-        offline_runners = [runner for runner in runners if not runner.status.online]
-        if offline_runners:
-            logger.info("Cleaning up offline runners.")
-
-            remove_token = self._get_github_remove_token()
-
-            for runner in offline_runners:
-                runner.remove(remove_token)
-                logger.info("Removed runner: %s", runner.config.name)
-
         # Add/Remove runners to match the target quantity
         online_runners = [
             runner for runner in runners if runner.status.exist and runner.status.online
         ]
+
+        offline_runners = [runner for runner in runners if not runner.status.online]
 
         local_runners = {
             instance.name: instance
@@ -273,7 +275,18 @@ class RunnerManager:
             len(local_runners),
         )
 
+        # Clean up offline runners
+        if offline_runners:
+            logger.info("Cleaning up offline runners.")
+
+            remove_token = self._get_github_remove_token()
+
+            for runner in offline_runners:
+                runner.remove(remove_token)
+                logger.info("Removed runner: %s", runner.config.name)
+
         delta = quantity - len(online_runners)
+        # Spawn new runners
         if delta > 0:
             if RunnerManager.runner_bin_path is None:
                 raise RunnerCreateError("Unable to create runner due to missing runner binary.")
@@ -394,7 +407,7 @@ class RunnerManager:
 
         def create_runner_info(
             name: str,
-            local_runner: Optional[pylxd.models.Instance],
+            local_runner: Optional[LxdInstance],
             remote_runner: Optional[SelfHostedRunner],
         ) -> Runner:
             """Create runner from information from GitHub and LXD."""
@@ -410,6 +423,7 @@ class RunnerManager:
                 getattr(local_runner, "status", None),
             )
 
+            runner_id = getattr(remote_runner, "id", None)
             running = local_runner is not None
             online = getattr(remote_runner, "status", None) == "online"
             busy = getattr(remote_runner, "busy", None)
@@ -418,7 +432,7 @@ class RunnerManager:
             return Runner(
                 self._clients,
                 config,
-                RunnerStatus(running, online, busy),
+                RunnerStatus(runner_id, running, online, busy),
                 local_runner,
             )
 
