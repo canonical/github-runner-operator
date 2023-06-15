@@ -59,8 +59,6 @@ jobs:
         with:
           name: github-runner_ubuntu-22.04-amd64.charm
 
-      - run: ls -lah
-
       - name: Deploy github-runner Charm
         run: |
           cp github-runner_ubuntu-22.04-amd64.charm /home/ubuntu/github-runner_ubuntu-22.04-amd64.charm
@@ -105,7 +103,7 @@ jobs:
             | jq '.[] | select(.headBranch=="e2e-i${{ github.run_id }}n${{ github.run_number }}r")'
 
           get-workflow-status() {
-              output=$(gh run list 
+              output=$(gh run list \
                         -R ${{ secrets.E2E_TESTING_REPO }} \
                         -L 100 \
                         --json headBranch,status \
