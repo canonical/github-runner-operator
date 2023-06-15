@@ -7,10 +7,30 @@ jobs:
   deploy-e2e-test-runner:
     runs-on: ubuntu-latest
     steps:
-      - uses: canonical/setup-lxd@main
       - uses: actions/checkout@v3
-      - run: sudo snap install charmcraft --classic
-      - run: sudo snap install juju --channel=3.1/stable
-      - run: charmcraft pack
-      - run: juju bootstrap lxd
+
+      - name: Setup LXD
+        uses: canonical/setup-lxd@main
+
+      - name: Install charmcraft
+        run: sudo snap install charmcraft --classic
+
+      - name: Install juju
+        run: sudo snap install juju --channel=3.1/stable
+
+      - name: Pack github-runner Charm
+        run: charmcraft pack
+
+      - name: Bootstrap Juju LXD controller
+        run: juju bootstrap lxd
+
+      - name: Create Testing Juju Model
+        run: juju add-model testing
+
       - run: juju status
+
+
+#      - name: Deploy github-runner Charm
+#        run: |
+#          juju deploy ./github-runner_ubuntu-22.04-amd64.charm e2e-${{ github.run_id }}-${{ github.run_number }} \
+#            --config=
