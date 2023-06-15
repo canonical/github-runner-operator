@@ -19,15 +19,13 @@ jobs:
         run: sudo snap install juju --channel=3.1/stable
 
       - name: Pack github-runner Charm
-        run: charmcraft pack
+        run: charmcraft pack || ( cat /home/ubuntu/.local/state/charmcraft/log/* 1 && exit 1 )
 
       - name: Bootstrap Juju LXD controller
         run: juju bootstrap lxd
 
       - name: Create Testing Juju Model
         run: juju add-model testing
-
-      - run: juju status
 
       - name: Setting Testing Model Constraints
         run: juju set-model-constraints "virt-type=virtual-machine mem=16G cores=4"
