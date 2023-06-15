@@ -93,6 +93,6 @@ jobs:
           
           for i in {1..3600}
           do
-              echo workflow status: get-workflow-status
+              echo workflow status: $(get-workflow-status)
               sleep 1
           done
