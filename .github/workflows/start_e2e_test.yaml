@@ -37,7 +37,8 @@ jobs:
 #
 #      - name: Deploy github-runner Charm
 #        run: |
-#          juju deploy ./github-runner_ubuntu-22.04-amd64.charm e2e-${{ github.run_id }}-${{ github.run_number }} \
+#          juju deploy ./github-runner_ubuntu-22.04-amd64.charm \
+#            e2e-${{ github.run_id }}-${{ github.run_number }}-runner \
 #            --config path=canonical/github-runner-operator \
 #            --config token=${{ secrets.E2E_TESTING_TOKEN }} \
 #            --config virtual-machines=1
@@ -60,25 +61,25 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             /repos/${{ secrets.E2E_TESTING_REPO }}/git/refs \
-            -f ref='refs/heads/e2e-${{ github.run_id }}-${{ github.run_number }}' \
+            -f ref='refs/heads/e2e-${{ github.run_id }}-${{ github.run_number }}-runner' \
             -f sha=$MAIN_SHA
           
           gh workflow run test.yaml \
             -R ${{ secrets.E2E_TESTING_REPO }} \
-            --ref e2e-${{ github.run_id }}-${{ github.run_number }} \
-            -f runner=e2e-${{ github.run_id }}-${{ github.run_number }}
+            --ref e2e-${{ github.run_id }}-${{ github.run_number }}-runner \
+            -f runner=e2e-${{ github.run_id }}-${{ github.run_number }}-runner
           
           gh run list \
             --workflow=test.yaml \
             -R ${{ secrets.E2E_TESTING_REPO }} \
-            -b e2e-${{ github.run_id }}-${{ github.run_number }} \
+            -b e2e-${{ github.run_id }}-${{ github.run_number }}-runner \
             --json workflowDatabaseId,status
           
           get-workflow-status() {
               output=$(gh run list \
                         --workflow=test.yaml \
                         -R ${{ secrets.E2E_TESTING_REPO }} \
-                        -b e2e-${{ github.run_id }}-${{ github.run_number }} \
+                        -b e2e-${{ github.run_id }}-${{ github.run_number }}-runner \
                         --json workflowDatabaseId,status)
 
               if [ $(echo "$output" | jq 'length') -eq 0 ]
