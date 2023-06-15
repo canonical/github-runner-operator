@@ -1,0 +1,61 @@
+name: End to end tests
+
+on:
+  pull_request:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  e2e-test:
+    name: end to end test
+    runs-on: [self-hosted, linux, x64, e2e-runner]
+    steps:
+      - name: Echo hello world
+        run: echo "hello world"
+      - name: File permission for /usr/local/bin
+        run: ls -ld /usr/local/bin | grep drwxrwxrwx
+      - name: Test file permission for /usr/local/bin
+        run: touch /usr/local/bin/test_file
+      # "Install microk8s" step will test if the proxies settings are correct.
+      - name: Proxy set in /etc/environment
+        run: cat /etc/environment | grep HTTP_PROXY
+      # "Update apt in python docker container" step will test docker default proxy settings due to
+      # pulling the python image.
+      - name: Proxy set in docker daemon
+        run: sudo cat /etc/systemd/system/docker.service.d/http-proxy.conf | grep HTTP_PROXY
+      # "Update apt in python docker container" step will test docker client default proxy settings.
+      - name: Proxy set in docker client
+        run: cat /home/ubuntu/.docker/config.json | grep httpProxy
+      - name: Install microk8s
+        run: sudo snap install microk8s --classic
+      - name: Wait for microk8s
+        run: sudo microk8s status --wait-ready
+      - name: Deploy nginx for testing
+        run: sudo microk8s kubectl create deployment nginx --image=nginx
+      - name: Wait for nginx to be ready
+        run: sudo microk8s kubectl rollout status deployment/nginx --timeout=30m
+      - name: Update apt in python docker container
+        run: docker run python:3.10-slim apt update
+  dep-test:
+    # Test the dependencies in one job to avoid using too many runners at once.
+    name: dependency test
+    needs: e2e-test
+    runs-on: [self-hosted, linux, x64, e2e-runner]
+    steps:
+      - name: Docker version
+        run: docker version
+      - name: pip version
+        run: python3 -m pip --version
+      - name: npm version
+        run: npm --version
+      - name: shellcheck version
+        run: shellcheck --version
+      - name: jq version
+        run: jq --version
+      - name: yq version
+        run: yq --version
+      - name: install check-jsonschema
+        run: python3 -m pip install check-jsonschema
+      # Test program installed by pip. The directory `~/.local/bin` need to be added to PATH.
+      - name: test check-jsonschema
+        run: check-jsonschema --version
