@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy-e2e-test-runner:
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: canonical/setup-lxd@main
       - uses: actions/checkout@v3
