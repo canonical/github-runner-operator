@@ -9,12 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup LXD
-        uses: canonical/setup-lxd@main
-
-      - name: Install charmcraft
-        run: sudo snap install charmcraft --classic
-
       - name: Remove Unnecessary Components
         run: |
           rm -rf .git
@@ -27,6 +21,10 @@ jobs:
           path: github-runner_ubuntu-22.04-amd64.charm
           key: github-runner-charm-${{ hashFiles('**/*') }}
 
+      - name: Install charmcraft
+        if: steps.cache-charm.outputs.cache-hit != 'true'
+        run: sudo snap install charmcraft --classic
+
       - name: Pack github-runner Charm
         if: steps.cache-charm.outputs.cache-hit != 'true'
         run: charmcraft pack || ( cat /home/ubuntu/.local/state/charmcraft/log/* 1 && exit 1 )
@@ -38,13 +36,16 @@ jobs:
           path: github-runner_ubuntu-22.04-amd64.charm
 
   deploy-e2e-test-runner:
-    runs-on: [self-hosted, linux, x64, e2e-test]
+    runs-on: [ self-hosted, linux, x64, e2e-test ]
     needs: build-charm
     steps:
       - name: Download github-runner Charm
         uses: actions/download-artifact@v3
         with:
           name: github-runner_ubuntu-22.04-amd64.charm
+
+      - name: Setup LXD
+        uses: canonical/setup-lxd@main
 
       - name: Install juju
         run: sudo snap install juju --channel=3.1/stable
