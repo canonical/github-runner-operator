@@ -7,7 +7,7 @@ jobs:
   deploy-e2e-test-runner:
     run-on: ubuntu-latest
     steps:
-      - uses: canonical/setup-lxd
+      - uses: canonical/setup-lxd@main
       - uses: actions/checkout@v3
       - run: sudo snap install charmcraft --classic
       - run: sudo snap install juju --channel=3.1/stable
