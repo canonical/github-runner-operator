@@ -1,14 +1,19 @@
 name: End to end tests
 
 on:
-  pull_request:
   workflow_call:
+    inputs:
+      test-runner:
+        required: true
   workflow_dispatch:
+    inputs:
+      test-runner:
+        required: true
 
 jobs:
   e2e-test:
     name: end to end test
-    runs-on: [self-hosted, linux, x64, e2e-runner]
+    runs-on: [self-hosted, linux, x64, e2e-test]
     steps:
       - name: Echo hello world
         run: echo "hello world"

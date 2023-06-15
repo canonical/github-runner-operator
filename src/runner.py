@@ -306,14 +306,14 @@ class Runner:
         # Setting `wait=True` only ensure the instance has begin to boot up.
         self.instance.start(wait=True)
 
-    @retry(tries=5, delay=30, local_logger=logger)
+    @retry(tries=20, delay=30, local_logger=logger)
     def _wait_boot_up(self) -> None:
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
         # Wait for the instance to finish to boot up and network to be up.
-        self.instance.execute(["/usr/bin/who"])
-        self.instance.execute(["/usr/bin/nslookup", "github.com"])
+        assert self.instance.execute(["/usr/bin/who"])[0] == 0
+        assert self.instance.execute(["/usr/bin/nslookup", "github.com"])[0] == 0
 
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 

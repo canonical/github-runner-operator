@@ -1,0 +1,16 @@
+name: Start E2E Test
+
+on:
+  pull_request:
+
+jobs:
+  deploy-e2e-test-runner:
+    run-on: ubuntu-latest
+    steps:
+      - uses: canonical/setup-lxd
+      - uses: actions/checkout@v3
+      - run: sudo snap install charmcraft --classic
+      - run: sudo snap install juju --channel=3.1/stable
+      - run: charmcraft pack
+      - run: juju bootstrap lxd
+      - run: juju status
