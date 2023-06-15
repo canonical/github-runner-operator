@@ -63,9 +63,8 @@ jobs:
 
       - name: Deploy github-runner Charm
         run: |
-          cp github-runner_ubuntu-22.04-amd64.charm /var/snap/juju/common/github-runner_ubuntu-22.04-amd64.charm
-          chmod 777 /var/snap/juju/common/github-runner_ubuntu-22.04-amd64.charm
-          juju deploy /var/snap/juju/common/github-runner_ubuntu-22.04-amd64.charm \
+          cp github-runner_ubuntu-22.04-amd64.charm /home/ubuntu/github-runner_ubuntu-22.04-amd64.charm
+          juju deploy /home/ubuntu/github-runner_ubuntu-22.04-amd64.charm \
             e2e-i${{ github.run_id }}n${{ github.run_number }}r \
             --base ubuntu@22.04 \
             --config path=canonical/github-runner-operator \
