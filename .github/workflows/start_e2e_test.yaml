@@ -79,7 +79,7 @@ jobs:
             --config token=${{ secrets.E2E_TESTING_TOKEN }} \
             --config virtual-machines=1 \
             --config vm-cpu=4 \
-            --config vm-cpu=16GiB
+            --config vm-memory=16GiB
 
       - name: Install GitHub Cli
         run: which gh || sudo apt install gh -y
