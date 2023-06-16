@@ -29,7 +29,7 @@ from runner_type import (
     RunnerStatus,
     VirtualMachineResources,
 )
-from utilities import retry, execute_command
+from utilities import retry
 
 logger = logging.getLogger(__name__)
 
@@ -54,11 +54,11 @@ class Runner:
     pre_job_script = runner_application / "pre-job.sh"
 
     def __init__(
-            self,
-            clients: RunnerClients,
-            runner_config: RunnerConfig,
-            runner_status: RunnerStatus,
-            instance: Optional[LxdInstance] = None,
+        self,
+        clients: RunnerClients,
+        runner_config: RunnerConfig,
+        runner_status: RunnerStatus,
+        instance: Optional[LxdInstance] = None,
     ):
         """Construct the runner instance.
 
@@ -74,11 +74,11 @@ class Runner:
         self.instance = instance
 
     def create(
-            self,
-            image: str,
-            resources: VirtualMachineResources,
-            binary_path: Path,
-            registration_token: str,
+        self,
+        image: str,
+        resources: VirtualMachineResources,
+        binary_path: Path,
+        registration_token: str,
     ):
         """Create the runner instance on LXD and register it on GitHub.
 
@@ -187,7 +187,7 @@ class Runner:
 
     @retry(tries=5, delay=1, local_logger=logger)
     def _create_instance(
-            self, image: str, resources: VirtualMachineResources, ephemeral: bool = True
+        self, image: str, resources: VirtualMachineResources, ephemeral: bool = True
     ) -> LxdInstance:
         """Create an instance of runner.
 
@@ -218,24 +218,8 @@ class Runner:
             "ephemeral": ephemeral,
             "profiles": ["default", "runner", resource_profile],
         }
-        execute_command(
-            [
-                "/snap/bin/lxc",
-                "init", "ubuntu:22.04",
-                self.config.name,
-                "--vm",
-                "--ephemeral",
-                "--profile",
-                "default",
-                "--profile",
-                "runner",
-                "--profile",
-                resource_profile
-            ]
-        )
-        instances = self._clients.lxd.instances.all()
-        instance = [i for i in instances if i.name == self.config.name][0]
-        # instance = self._clients.lxd.instances.create(config=instance_config, wait=True)
+
+        instance = self._clients.lxd.instances.create(config=instance_config, wait=True)
         self.status.exist = True
         return instance
 
