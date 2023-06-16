@@ -39,7 +39,7 @@ jobs:
     runs-on: [ self-hosted, linux, x64, e2e-test ]
     needs: build-charm
     steps:
-      - name: Setup Lxd Controller
+      - name: Setup Lxd Juju Controller
         uses: charmed-kubernetes/actions-operator@main
         with:
           juju-channel: 3.1/stable
@@ -53,6 +53,12 @@ jobs:
 
       - name: Change Testing Model Logging Level
         run: juju model-config logging-config="<root>=INFO;unit=DEBUG"
+
+      - name: Set Testing Model Proxy Configuration
+        run: |
+          juju model-config juju-http-proxy=$http_proxy
+          juju model-config juju-https-proxy=$https_proxy
+          juju model-config juju-no-proxy=$no_proxy
 
       - name: Download github-runner Charm
         uses: actions/download-artifact@v3
@@ -123,10 +129,10 @@ jobs:
               fi
           }
 
-          juju debug-log &
+          juju debug-log --replay --tail &
 
-          for i in {1..1200}
+          for i in {1..360}
           do
               echo workflow status: $(get-workflow-status)
-              sleep 3
+              sleep 10
           done; kill $(jobs -p) &
