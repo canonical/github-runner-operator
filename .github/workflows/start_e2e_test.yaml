@@ -95,8 +95,12 @@ jobs:
             -f runner=e2e-i${{ github.run_id }}n${{ github.run_number }}r
           
           sleep 5
-          
-          gh run list 
+
+      - name: Watch github-runner
+        env:
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+        run: |
+          gh run list \
             -R ${{ secrets.E2E_TESTING_REPO }} \
             -L 100 \
             --json headBranch,status,workflowDatabaseId \
