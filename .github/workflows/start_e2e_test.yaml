@@ -23,7 +23,7 @@ jobs:
 
       - name: Setup LXD
         if: steps.cache-charm.outputs.cache-hit != 'true'
-        uses: canonical/setup-lxd
+        uses: canonical/setup-lxd@main
 
       - name: Install charmcraft
         if: steps.cache-charm.outputs.cache-hit != 'true'
