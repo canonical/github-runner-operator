@@ -1,0 +1,10 @@
+name: hello-world
+
+on:
+  pull_request:
+
+jobs:
+  hello-world:
+    runs-on: [self-hosted, small]
+    steps:
+      - run: echo "hello world"
