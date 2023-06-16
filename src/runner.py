@@ -207,7 +207,7 @@ class Runner:
         # Create runner instance.
         instance_config: LxdInstanceConfig = {
             "name": self.config.name,
-            "type": "virtual-machine",
+            "type": "container",
             "source": {
                 "type": "image",
                 "mode": "pull",
