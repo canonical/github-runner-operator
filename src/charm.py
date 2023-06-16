@@ -32,7 +32,7 @@ from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
-from utilities import execute_command, get_env_var, retry
+from utilities import execute_command, get_env_var, retry, secure_run_subprocess
 
 if TYPE_CHECKING:
     from ops.model import JsonObject  # pragma: no cover
@@ -162,9 +162,18 @@ class GithubRunnerCharm(CharmBase):
             Name of the LVM volume group.
         """
         vg_name = "ramdisk_pool"
-        # TODO: Not hardcode the size.
-        execute_command(["modprobe", "brd", "rd_size=5242880", "rd_nr=1"])
-        execute_command(["vgcreate", vg_name, "/dev/ram0"])
+
+        # Check if ramdisk at /dev/ram0 exists.
+        result = secure_run_subprocess(["test", "-e", "/dev/ram0"])
+        if result.returncode != 0:
+            # TODO: Not hardcode the size.
+            execute_command(["modprobe", "brd", "rd_size=5242880", "rd_nr=1"])
+
+        # Check if volume group exits.
+        result = secure_run_subprocess(["vgdisplay", vg_name])
+        if result.returncode != 0:
+            execute_command(["vgcreate", vg_name, "/dev/ram0"])
+
         return vg_name
 
     def _get_runner_manager(
