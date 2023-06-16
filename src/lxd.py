@@ -198,8 +198,8 @@ class LxdInstance:
             LxdException: Unable to start the LXD instance.
         """
         try:
-            execute_command(["/snap/bin/lxc", "start", self.name])
-        except SubprocessError as err:
+            self._pylxd_instance.start(timeout, force, wait)
+        except pylxd.exceptions.LXDAPIException as err:
             logger.exception("Failed to start LXD instance")
             raise LxdError(f"Unable to start LXD instance {self.name}") from err
 
