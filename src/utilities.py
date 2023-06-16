@@ -181,3 +181,31 @@ def set_env_var(env_var: str, value: str) -> None:
     """
     os.environ[env_var.upper()] = value
     os.environ[env_var.lower()] = value
+
+
+def bytes_with_unit_to_kib(num_bytes: str) -> int:
+    """Convert a positive integer followed by a unit to number of kibibytes.
+
+    Args:
+        num_bytes: A positive integer followed by one of the following unit: KiB, MiB, GiB, TiB,
+            PiB, EiB.
+    Returns:
+        Number of kilobytes.
+    """
+    num_of_kib = {
+        "KiB": 1024**0,
+        "MiB": 1024**1,
+        "GiB": 1024**2,
+        "TiB": 1024**3,
+        "PiB": 1024**4,
+        "EiB": 1024**5,
+    }
+
+    num = num_bytes[:-3]
+    unit = num_bytes[-3:]
+    if unit in num_of_kib:
+        return num_of_kib[unit] * num
+    else:
+        raise ValueError(
+            "Must be a positive integer followed by a unit",
+        )

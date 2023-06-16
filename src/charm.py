@@ -32,7 +32,12 @@ from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
-from utilities import execute_command, get_env_var, retry, secure_run_subprocess
+from utilities import (
+    execute_command,
+    get_env_var,
+    retry,
+    secure_run_subprocess,
+)
 
 if TYPE_CHECKING:
     from ops.model import JsonObject  # pragma: no cover
@@ -155,19 +160,23 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
 
-    def _ensure_ramdisk_lvm_volume_group_exist(self) -> str:
-        """Create a ramdisk as a LVM volume group.
+    def _ensure_ramdisk_lvm_volume_group_exist(self, size: int = 10485760) -> str:
+        """Create a ramdisk as a LVM volume group if needed.
+
+        Args:
+            size: Size of the ramdisk in kilobytes.
 
         Returns:
             Name of the LVM volume group.
         """
         vg_name = "ramdisk_pool"
 
+        # execute_command(["rmmod", "brd"])
+
         # Check if ramdisk at /dev/ram0 exists.
         result = secure_run_subprocess(["test", "-e", "/dev/ram0"])
         if result.returncode != 0:
-            # TODO: Not hardcode the size.
-            execute_command(["modprobe", "brd", "rd_size=5242880", "rd_nr=1"])
+            execute_command(["modprobe", "brd", f"rd_size={size}", "rd_nr=1"])
 
         # Check if volume group exits.
         result = secure_run_subprocess(["vgdisplay", vg_name])

@@ -33,13 +33,20 @@ options:
     type: string
     default: 7GiB
     description: >
-      Amount of memory to allocate per virtual machine runner. Positive integers with GiB suffix.
+      Amount of memory to allocate per virtual machine runner. Positive integers with KiB, MiB, GiB,
+      TiB, PiB, EiB suffix.
   vm-disk:
     type: string
     default: 10GiB
     description: >
       Amount of disk space to allocate to root disk for virtual machine runner. Positive integers
-      with GiB suffix.
+      with KiB, MiB, GiB, TiB, PiB, EiB suffix.
+  ram-disk:
+    type: bool
+    default: false
+    description: >
+      Whether to use system memory as the disk for the runners. The amount of memory allocated for
+      this would be the disk space per runner multiple by the number of runners.
   reconcile-interval:
     type: int
     default: 10
