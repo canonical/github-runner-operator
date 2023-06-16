@@ -42,7 +42,7 @@ options:
       Amount of disk space to allocate to root disk for virtual machine runner. Positive integers
       with KiB, MiB, GiB, TiB, PiB, EiB suffix.
   ram-disk:
-    type: bool
+    type: boolean
     default: false
     description: >
       Whether to use system memory as the disk for the runners. The amount of memory allocated for
