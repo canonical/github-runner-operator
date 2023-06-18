@@ -4,7 +4,8 @@ on:
   pull_request:
 
 jobs:
-  build-charm:
+  end-to-end-test:
+    name: Run End-to-End Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -71,7 +72,7 @@ jobs:
           EOF
           sudo snap set lxd daemon.group=adm
           sudo snap restart lxd
-          sudo lxc storage list
+          sudo lxc profile list
 
       - name: Install charmcraft
         if: steps.cache-charm.outputs.cache-hit != 'true'
@@ -79,7 +80,7 @@ jobs:
 
       - name: Pack github-runner Charm
         if: steps.cache-charm.outputs.cache-hit != 'true'
-        run: charmcraft pack || ( cat /home/ubuntu/.local/state/charmcraft/log/* 1 && exit 1 )
+        run: charmcraft pack || ( cat ~/.local/state/charmcraft/log/* 1 && exit 1 )
 
 #      - name: Upload github-runner Charm
 #        uses: actions/upload-artifact@v3
