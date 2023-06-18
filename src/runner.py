@@ -239,10 +239,12 @@ class Runner:
         if not self._clients.lxd.profiles.exists("runner"):
             logger.info("Creating runner LXD profile")
             profile_config = {}
+            profile_devices = {}
             if _LXD_PROFILE_YAML.exists():
-                additional_configs = yaml.safe_load(_LXD_PROFILE_YAML.read_text())["config"]
-                profile_config.update({k: json.dumps(v) for k, v in additional_configs.items()})
-            self._clients.lxd.profiles.create("runner", profile_config, {})
+                additional_lxc_profile = yaml.safe_load(_LXD_PROFILE_YAML.read_text())
+                profile_config = {k: json.dumps(v) for k, v in additional_lxc_profile["config"].items()}
+                profile_devices = additional_lxc_profile["devices"]
+            self._clients.lxd.profiles.create("runner", profile_config, profile_devices)
 
             # Verify the action is successful.
             if not self._clients.lxd.profiles.exists("runner"):
