@@ -37,7 +37,7 @@ jobs:
             sudo snap install lxd
           fi
           sudo lxd waitready
-          cat <<EOF | lxd init --preseed
+          cat <<EOF | sudo lxd init --preseed
           config: {}
           networks:
           - config:
