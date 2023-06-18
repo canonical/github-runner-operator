@@ -90,7 +90,6 @@ jobs:
 
       - name: Deploy github-runner Charm
         run: |
-          cp github-runner_ubuntu-22.04-amd64.charm /home/ubuntu/github-runner_ubuntu-22.04-amd64.charm
           juju deploy /home/ubuntu/github-runner_ubuntu-22.04-amd64.charm \
             e${{ github.run_id }}n${{ github.run_number }}r \
             --base ubuntu@22.04 \
