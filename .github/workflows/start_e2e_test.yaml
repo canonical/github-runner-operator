@@ -151,11 +151,12 @@ jobs:
 
           for i in {1..90}
           do
-            sleep 10
-            echo workflow status: $(get-workflow-status)
+            status=$(get-workflow-status)
+            echo "workflow status: $status"
             if [[ $status != "not-started" && $status != "queued" && $status != "in_progress" ]]; then
               break
             fi
+            sleep 10
           done
           
           kill $(jobs -p)
