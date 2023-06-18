@@ -4,8 +4,8 @@ on:
   pull_request:
 
 jobs:
-  end-to-end-test:
-    name: Run End-to-End Test
+  build-charm:
+    name: Build Charm
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -17,11 +17,6 @@ jobs:
 
       - name: Setup LXD
         uses: canonical/setup-lxd@main
-
-      - name: Update LXD Storage
-        run: |
-          sudo lxc storage create default-btrfs btrfs size=50GiB
-          sudo lxc profile device set default root pool=default-btrfs
 
       - name: Write lxd-profile.yaml
         run: |
@@ -47,11 +42,23 @@ jobs:
         if: steps.cache-charm.outputs.cache-hit != 'true'
         run: charmcraft pack || ( cat ~/.local/state/charmcraft/log/* 1 && exit 1 )
 
-#      - name: Upload github-runner Charm
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: github-runner_ubuntu-22.04-amd64.charm
-#          path: github-runner_ubuntu-22.04-amd64.charm
+      - name: Upload github-runner Charm
+        uses: actions/upload-artifact@v3
+        with:
+          name: github-runner_ubuntu-22.04-amd64.charm
+          path: github-runner_ubuntu-22.04-amd64.charm
+
+  deploy-e2e-test-runner:
+    runs-on: ubuntu-latest
+    needs: build-charm
+    steps:
+      - name: Setup LXD
+        uses: canonical/setup-lxd@main
+
+      - name: Update LXD Storage
+        run: |
+          sudo lxc storage create default-btrfs btrfs size=50GiB
+          sudo lxc profile device set default root pool=default-btrfs
 
       - name: Install Juju
         run: sudo snap install juju --classic --channel=3.1/stable
@@ -66,6 +73,11 @@ jobs:
 
       - name: Create Testing Juju Model
         run: juju add-model testing
+
+      - name: Download github-runner Charm
+        uses: actions/download-artifact@v3
+        with:
+          name: github-runner_ubuntu-22.04-amd64.charm
 
       - name: Deploy github-runner Charm
         run: |
