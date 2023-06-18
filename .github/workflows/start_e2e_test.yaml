@@ -58,6 +58,7 @@ jobs:
           path: github-runner_ubuntu-22.04-amd64.charm
 
   deploy-e2e-test-runner:
+    name: Deploy End-to-End Testing Runner
     runs-on: ubuntu-latest
     needs: build-charm
     steps:
