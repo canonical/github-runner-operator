@@ -170,7 +170,7 @@ jobs:
 
           juju debug-log --replay --tail &
 
-          for i in {1..90}
+          for i in {1..360}
           do
             status=$(get-workflow-status)
             echo "workflow status: $status"
