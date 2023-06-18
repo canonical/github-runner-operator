@@ -52,24 +52,27 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-charm
     steps:
-      - name: Setup LXD
-        uses: canonical/setup-lxd@main
+      - name: Setup Lxd Juju Controller
+        uses: charmed-kubernetes/actions-operator@main
+        with:
+          juju-channel: 3.1/stable
+          provider: lxd
 
       - name: Update LXD Storage
         run: |
           sudo lxc storage create default-btrfs btrfs size=50GiB
           sudo lxc profile device set default root pool=default-btrfs
 
-      - name: Install Juju
-        run: sudo snap install juju --classic --channel=3.1/stable
-
-      - name: Bootstrap Juju LXD Controller
-        run: |
-          sudo sg lxd -c juju bootstrap --debug --verbose lxd \
-            --model-default test-mode=true \
-            --model-default automatically-retry-hooks=false \
-            --model-default logging-config="<root>=DEBUG"  \
-            --bootstrap-constraints="cores=2 mem=4G"
+#      - name: Install Juju
+#        run: sudo snap install juju --classic --channel=3.1/stable
+#
+#      - name: Bootstrap Juju LXD Controller
+#        run: |
+#          sudo sg lxd -c juju bootstrap --debug --verbose lxd \
+#            --model-default test-mode=true \
+#            --model-default automatically-retry-hooks=false \
+#            --model-default logging-config="<root>=DEBUG"  \
+#            --bootstrap-constraints="cores=2 mem=4G"
 
       - name: Create Testing Juju Model
         run: juju add-model testing
