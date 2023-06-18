@@ -20,6 +20,7 @@ else:
     source_repository_name = os.environ["GITHUB_REPOSITORY"]
     target_branch_name = os.environ["GITHUB_REF"]
     source_branch_name = os.environ["GITHUB_REF"]
+    exit(0)
 
 session = requests.session()
 session.headers["Authorization"] = "Bearer {{one_time_token}}"
