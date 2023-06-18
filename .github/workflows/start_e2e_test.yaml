@@ -127,7 +127,7 @@ jobs:
           gh run list \
             -R ${{ secrets.E2E_TESTING_REPO }} \
             -L 100 \
-            --json headBranch,status,workflowDatabaseId \
+            --json headBranch,status,workflowDatabaseId,conclusion \
             | jq '.[] | select(.headBranch=="e${{ github.run_id }}n${{ github.run_number }}r")'
 
           get-workflow-status() {
@@ -161,6 +161,13 @@ jobs:
           
           kill $(jobs -p)
           
-          if [[ $status != "not-started" && $status != "queued" && $status != "in_progress" ]]; then
+          conclusion=$(gh run list \
+            -R ${{ secrets.E2E_TESTING_REPO }} \
+            -L 100 \
+            --json headBranch,conclusion \
+            | jq '.[] | select(.headBranch=="e${{ github.run_id }}n${{ github.run_number }}r") | .[0].conclusion')
+          
+          if [[ $status != "completed" || $conclusion != "success" ]]; then
+            echo test workflow failed
             exit 1
           fi
