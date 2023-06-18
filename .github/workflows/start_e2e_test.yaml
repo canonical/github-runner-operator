@@ -165,7 +165,7 @@ jobs:
             -R ${{ secrets.E2E_TESTING_REPO }} \
             -L 100 \
             --json headBranch,conclusion \
-            | jq '.[] | select(.headBranch=="e${{ github.run_id }}n${{ github.run_number }}r") | .[0].conclusion')
+            | jq '.[] | select(.headBranch=="e${{ github.run_id }}n${{ github.run_number }}r") | .conclusion')
           
           if [[ $status != "completed" || $conclusion != "success" ]]; then
             echo "test workflow failed with status: $status, conclusion: $conclusion"
