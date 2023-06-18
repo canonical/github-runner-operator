@@ -14,6 +14,15 @@ jobs:
           rm -rf .git
           rm -rf .github
 
+      - name: Write lxd-profile.yaml
+        run: |
+          cat << EOF > ./lxd-profile.yaml
+          config:
+            security.nesting: true
+            security.privileged: true
+            raw.lxc: lxc.apparmor.profile=unconfined
+          EOF
+
       - name: Cache github-runner Charm
         uses: actions/cache@v3
         id: cache-charm
@@ -23,7 +32,43 @@ jobs:
 
       - name: Setup LXD
         if: steps.cache-charm.outputs.cache-hit != 'true'
-        uses: canonical/setup-lxd@main
+        run: |
+          if ! snap info lxd | grep "installed"; then
+            sudo snap install lxd
+          fi
+          sudo lxd waitready
+          cat <<EOF | lxd init --preseed
+          config: {}
+          networks:
+          - config:
+              ipv4.address: auto
+              ipv6.address: none
+            description: ""
+            name: lxdbr0
+            type: ""
+            project: default
+          storage_pools:
+          - config:
+              size: 50GiB
+            description: ""
+            name: default
+            driver: btrfs
+          profiles:
+          - config: {}
+            description: ""
+            devices:
+              eth0:
+                name: eth0
+                network: lxdbr0
+                type: nic
+              root:
+                path: /
+                pool: default
+                type: disk
+            name: default
+          projects: []
+          cluster: null
+          EOF
 
       - name: Install charmcraft
         if: steps.cache-charm.outputs.cache-hit != 'true'
@@ -33,41 +78,23 @@ jobs:
         if: steps.cache-charm.outputs.cache-hit != 'true'
         run: charmcraft pack || ( cat /home/ubuntu/.local/state/charmcraft/log/* 1 && exit 1 )
 
-      - name: Upload github-runner Charm
-        uses: actions/upload-artifact@v3
-        with:
-          name: github-runner_ubuntu-22.04-amd64.charm
-          path: github-runner_ubuntu-22.04-amd64.charm
+#      - name: Upload github-runner Charm
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: github-runner_ubuntu-22.04-amd64.charm
+#          path: github-runner_ubuntu-22.04-amd64.charm
 
-  deploy-e2e-test-runner:
-    runs-on: [ self-hosted, linux, x64, e2e-test ]
-    needs: build-charm
-    steps:
-      - name: Setup Lxd Juju Controller
-        uses: charmed-kubernetes/actions-operator@main
-        with:
-          juju-channel: 3.1/stable
-          provider: lxd
+      - name: Setup LXD Juju Controller
+        run: |
+          sudo snap install juju --classic --channel=3.1/stable
+          sudo sg lxd -c juju bootstrap --debug --verbose lxd \
+            --model-default test-mode=true \
+            --model-default automatically-retry-hooks=false \
+            --model-default logging-config="<root>=DEBUG"  \
+            --bootstrap-constraints="cores=2 mem=4G"
 
       - name: Create Testing Juju Model
         run: juju add-model testing
-
-      - name: Setting Testing Model Constraints
-        run: juju set-model-constraints "virt-type=virtual-machine mem=24G cores=6"
-
-      - name: Change Testing Model Logging Level
-        run: juju model-config logging-config="<root>=INFO;unit=DEBUG"
-
-      - name: Set Testing Model Proxy Configuration
-        run: |
-          juju model-config juju-http-proxy=$http_proxy
-          juju model-config juju-https-proxy=$https_proxy
-          juju model-config juju-no-proxy=$no_proxy
-
-      - name: Download github-runner Charm
-        uses: actions/download-artifact@v3
-        with:
-          name: github-runner_ubuntu-22.04-amd64.charm
 
       - name: Deploy github-runner Charm
         run: |
@@ -77,9 +104,7 @@ jobs:
             --base ubuntu@22.04 \
             --config path=${{ secrets.E2E_TESTING_REPO }} \
             --config token=${{ secrets.E2E_TESTING_TOKEN }} \
-            --config virtual-machines=1 \
-            --config vm-cpu=4 \
-            --config vm-memory=16GiB
+            --config virtual-machines=1
 
       - name: Install GitHub Cli
         run: which gh || sudo apt install gh -y
@@ -142,3 +167,107 @@ jobs:
               echo workflow status: $(get-workflow-status)
               sleep 30
           done; kill $(jobs -p) &
+#
+#  deploy-e2e-test-runner:
+#    runs-on: ubuntu-latest
+#    needs: build-charm
+#    steps:
+#      - name: Setup Lxd Juju Controller
+#        uses: charmed-kubernetes/actions-operator@main
+#        with:
+#          juju-channel: 3.1/stable
+#          provider: lxd
+#
+#      - name: Create Testing Juju Model
+#        run: juju add-model testing
+#
+#      - name: Setting Testing Model Constraints
+#        run: juju set-model-constraints "virt-type=virtual-machine mem=24G cores=6"
+#
+#      - name: Change Testing Model Logging Level
+#        run: juju model-config logging-config="<root>=INFO;unit=DEBUG"
+#
+#      - name: Set Testing Model Proxy Configuration
+#        run: |
+#          juju model-config juju-http-proxy=$http_proxy
+#          juju model-config juju-https-proxy=$https_proxy
+#          juju model-config juju-no-proxy=$no_proxy
+#
+#      - name: Download github-runner Charm
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: github-runner_ubuntu-22.04-amd64.charm
+#
+#      - name: Deploy github-runner Charm
+#        run: |
+#          cp github-runner_ubuntu-22.04-amd64.charm /home/ubuntu/github-runner_ubuntu-22.04-amd64.charm
+#          juju deploy /home/ubuntu/github-runner_ubuntu-22.04-amd64.charm \
+#            e${{ github.run_id }}n${{ github.run_number }}r \
+#            --base ubuntu@22.04 \
+#            --config path=${{ secrets.E2E_TESTING_REPO }} \
+#            --config token=${{ secrets.E2E_TESTING_TOKEN }} \
+#            --config virtual-machines=1 \
+#            --config vm-cpu=4 \
+#            --config vm-memory=16GiB
+#
+#      - name: Install GitHub Cli
+#        run: which gh || sudo apt install gh -y
+#
+#      - name: Dispatch Workflow on Testing Runner
+#        env:
+#          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+#        run: |
+#          MAIN_SHA=$(gh api \
+#            -H "Accept: application/vnd.github+json" \
+#            -H "X-GitHub-Api-Version: 2022-11-28" \
+#            /repos/${{ secrets.E2E_TESTING_REPO }}/git/ref/heads/main --jq .object.sha)
+#
+#          gh api \
+#            --method POST \
+#            -H "Accept: application/vnd.github+json" \
+#            -H "X-GitHub-Api-Version: 2022-11-28" \
+#            /repos/${{ secrets.E2E_TESTING_REPO }}/git/refs \
+#            -f ref='refs/heads/e${{ github.run_id }}n${{ github.run_number }}r' \
+#            -f sha=$MAIN_SHA
+#
+#          gh workflow run test.yaml \
+#            -R ${{ secrets.E2E_TESTING_REPO }} \
+#            --ref e${{ github.run_id }}n${{ github.run_number }}r \
+#            -f runner=e${{ github.run_id }}n${{ github.run_number }}r
+#
+#          sleep 5
+#
+#      - name: Watch github-runner
+#        env:
+#          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+#        run: |
+#          gh run list \
+#            -R ${{ secrets.E2E_TESTING_REPO }} \
+#            -L 100 \
+#            --json headBranch,status,workflowDatabaseId \
+#            | jq '.[] | select(.headBranch=="e${{ github.run_id }}n${{ github.run_number }}r")'
+#
+#          get-workflow-status() {
+#              output=$(gh run list \
+#                        -R ${{ secrets.E2E_TESTING_REPO }} \
+#                        -L 100 \
+#                        --json headBranch,status \
+#                        | jq '[.[] | select(.headBranch=="e${{ github.run_id }}n${{ github.run_number }}r")]')
+#
+#              if [ $(echo "$output" | jq 'length') -eq 0 ]
+#              then
+#                  echo "not-started"
+#              else
+#                  # Parse output with jq to get the status field of the first object
+#                  status=$(echo "$output" | jq -r '.[0].status')
+#                  echo "$status"
+#              fi
+#          }
+#
+#          juju debug-log --replay --tail &
+#
+#          for i in {1..120}
+#          do
+#              echo workflow status: $(get-workflow-status)
+#              sleep 30
+#          done; kill $(jobs -p) &

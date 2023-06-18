@@ -14,9 +14,12 @@ from __future__ import annotations
 
 import json
 import logging
+import pathlib
 import time
 from pathlib import Path
 from typing import Iterable, Optional, Sequence
+
+import yaml
 
 from errors import LxdError, RunnerCreateError, RunnerError, RunnerFileLoadError, RunnerRemoveError
 from lxd import LxdInstance
@@ -32,6 +35,9 @@ from runner_type import (
 from utilities import retry
 
 logger = logging.getLogger(__name__)
+_LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
+if _LXD_PROFILE_YAML.exists():
+    logger.info("lxd-profile.yaml file exists, starting testing mode")
 
 
 class Runner:
@@ -54,11 +60,11 @@ class Runner:
     pre_job_script = runner_application / "pre-job.sh"
 
     def __init__(
-        self,
-        clients: RunnerClients,
-        runner_config: RunnerConfig,
-        runner_status: RunnerStatus,
-        instance: Optional[LxdInstance] = None,
+            self,
+            clients: RunnerClients,
+            runner_config: RunnerConfig,
+            runner_status: RunnerStatus,
+            instance: Optional[LxdInstance] = None,
     ):
         """Construct the runner instance.
 
@@ -74,11 +80,11 @@ class Runner:
         self.instance = instance
 
     def create(
-        self,
-        image: str,
-        resources: VirtualMachineResources,
-        binary_path: Path,
-        registration_token: str,
+            self,
+            image: str,
+            resources: VirtualMachineResources,
+            binary_path: Path,
+            registration_token: str,
     ):
         """Create the runner instance on LXD and register it on GitHub.
 
@@ -187,7 +193,7 @@ class Runner:
 
     @retry(tries=5, delay=1, local_logger=logger)
     def _create_instance(
-        self, image: str, resources: VirtualMachineResources, ephemeral: bool = True
+            self, image: str, resources: VirtualMachineResources, ephemeral: bool = True
     ) -> LxdInstance:
         """Create an instance of runner.
 
@@ -207,7 +213,7 @@ class Runner:
         # Create runner instance.
         instance_config: LxdInstanceConfig = {
             "name": self.config.name,
-            "type": "container",
+            "type": "container" if _LXD_PROFILE_YAML.exists() else "virtual-machine",
             "source": {
                 "type": "image",
                 "mode": "pull",
@@ -235,6 +241,9 @@ class Runner:
             profile_config = {
                 "security.nesting": "true",
             }
+            if _LXD_PROFILE_YAML.exists():
+                additional_configs = yaml.safe_load(_LXD_PROFILE_YAML.read_text())["config"]
+                profile_config.update({k: json.dumps(v) for k, v in additional_configs.items()})
             self._clients.lxd.profiles.create("runner", profile_config, {})
 
             # Verify the action is successful.
