@@ -74,7 +74,7 @@ jobs:
 
       - name: Bootstrap Juju LXD Controller
         run: |
-          sudo sg lxd -c juju bootstrap --debug --verbose lxd \
+          lxd -c juju bootstrap --debug --verbose lxd \
             --model-default test-mode=true \
             --model-default automatically-retry-hooks=false \
             --model-default logging-config="<root>=DEBUG"  \
