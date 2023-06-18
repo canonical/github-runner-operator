@@ -87,9 +87,9 @@ jobs:
         id: run-id
         shell: python
         run: |
-          import random
           import os
-          import strings
+          import random
+          import string
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               run_id = "".join(random.choice(string.ascii_lowercase) for _ in range(8))
               f.write(f"run-id={run_id}\n")
