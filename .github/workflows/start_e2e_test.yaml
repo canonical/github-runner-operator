@@ -168,6 +168,6 @@ jobs:
             | jq '.[] | select(.headBranch=="e${{ github.run_id }}n${{ github.run_number }}r") | .[0].conclusion')
           
           if [[ $status != "completed" || $conclusion != "success" ]]; then
-            echo test workflow failed
+            echo "test workflow failed with status: $status, conclusion: $conclusion"
             exit 1
           fi
