@@ -1,5 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env bash
 
+python3 - | << EOF
 import os
 import json
 import requests
@@ -31,3 +32,4 @@ response = session.post("http://{{host_ip}}:8080/check-run", timeout=10, json={
     "commit_sha": commit_sha
 })
 response.raise_for_status()
+EOF

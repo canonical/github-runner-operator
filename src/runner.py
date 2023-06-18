@@ -238,9 +238,7 @@ class Runner:
         """
         if not self._clients.lxd.profiles.exists("runner"):
             logger.info("Creating runner LXD profile")
-            profile_config = {
-                "security.nesting": "true",
-            }
+            profile_config = {}
             if _LXD_PROFILE_YAML.exists():
                 additional_configs = yaml.safe_load(_LXD_PROFILE_YAML.read_text())["config"]
                 profile_config.update({k: json.dumps(v) for k, v in additional_configs.items()})

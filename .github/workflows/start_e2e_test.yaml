@@ -92,7 +92,7 @@ jobs:
           import string
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               run_id = "".join(random.choice(string.ascii_lowercase) for _ in range(8))
-              f.write(f"run-id={run_id}\n")
+              f.write(f"run-id=e2e-{run_id}\n")
 
       - name: Deploy github-runner Charm
         run: |
@@ -180,5 +180,6 @@ jobs:
           
           if [[ $status != "completed" || $conclusion != "success" ]]; then
             echo "test workflow failed with status: $status, conclusion: $conclusion"
+            
             exit 1
           fi
