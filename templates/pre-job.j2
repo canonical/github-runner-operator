@@ -1,11 +1,33 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
 
-GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.repo.full_name')
+import os
+import json
+import requests
 
-# Request repo-policy-compliance service check.
-#curl --noproxy '*' \
-#    --fail-with-body \
-#    -H 'Authorization: Bearer {{one_time_token}}' \
-#    -H 'Content-Type: application/json' \
-#    -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_HEAD_REF}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
-#    http://{{host_ip}}:8080/check-run
+event_name = os.environ["GITHUB_EVENT_NAME"]
+if event_name not in ("pull_request", "workflow_dispatch"):
+    raise ValueError(f"github event {event_name} is not supported")
+commit_sha = os.environ["GITHUB_SHA"]
+repository_name = os.environ["GITHUB_REPOSITORY"]
+if event_name == "pull_request":
+    event_path = os.environ["GITHUB_EVENT_PATH"]
+    with open(event_path) as fo:
+        source_repository_name = json.load(fo)["pull_request"]["head"]["repo"]["full_name"]
+    target_branch_name = os.environ["GITHUB_BASE_REF"]
+    source_branch_name = os.environ["GITHUB_HEAD_REF"]
+else:
+    source_repository_name = os.environ["GITHUB_REPOSITORY"]
+    target_branch_name = os.environ["GITHUB_REF"]
+    source_branch_name = os.environ["GITHUB_REF"]
+
+session = requests.session()
+session.headers["Authorization"] = "Bearer {{one_time_token}}"
+session.trust_env = False
+response = session.post("http://{{host_ip}}:8080/check-run", timeout=10, json={
+    "repository_name": repository_name,
+    "source_repository_name": source_repository_name,
+    "target_branch_name": target_branch_name,
+    "source_branch_name": source_branch_name,
+    "commit_sha": commit_sha
+})
+response.raise_for_status()
