@@ -24,12 +24,14 @@ else:
 session = requests.session()
 session.headers["Authorization"] = "Bearer {{one_time_token}}"
 session.trust_env = False
-response = session.post("http://{{host_ip}}:8080/check-run", timeout=10, json={
+payload = {
     "repository_name": repository_name,
     "source_repository_name": source_repository_name,
     "target_branch_name": target_branch_name,
     "source_branch_name": source_branch_name,
     "commit_sha": commit_sha
-})
+}
+print("repo policy compliance check with payload: {payload}")
+response = session.post("http://{{host_ip}}:8080/check-run", timeout=10, json=payload)
 response.raise_for_status()
 EOF
