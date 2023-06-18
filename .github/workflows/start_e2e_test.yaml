@@ -149,15 +149,17 @@ jobs:
 
           juju debug-log --replay --tail &
 
-          for i in {1..120}
+          for i in {1..90}
           do
-            sleep 30
+            sleep 10
             echo workflow status: $(get-workflow-status)
             if [[ $status != "not-started" && $status != "queued" && $status != "in_progress" ]]; then
               break
             fi
           done
+          
           kill $(jobs -p)
+          
           if [[ $status != "not-started" && $status != "queued" && $status != "in_progress" ]]; then
             exit 1
           fi
