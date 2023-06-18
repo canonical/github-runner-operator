@@ -128,7 +128,8 @@ jobs:
             --base ubuntu@22.04 \
             --config path=${{ secrets.E2E_TESTING_REPO }} \
             --config token=${{ secrets.E2E_TESTING_TOKEN }} \
-            --config virtual-machines=1
+            --config virtual-machines=1 \
+            --force
 
       - name: Install GitHub Cli
         run: which gh || sudo apt install gh -y
