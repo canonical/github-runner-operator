@@ -31,7 +31,7 @@ payload = {
     "source_branch_name": source_branch_name,
     "commit_sha": commit_sha
 }
-print("repo policy compliance check with payload: {payload}")
+print(f"repo policy compliance check with payload: {payload}")
 response = session.post("http://{{host_ip}}:8080/check-run", timeout=10, json=payload)
 response.raise_for_status()
 EOF
