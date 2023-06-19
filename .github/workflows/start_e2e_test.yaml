@@ -131,7 +131,8 @@ jobs:
             fi
           done
           if [[ $STATUS != "completed" || $CONCLUSION != "success" ]]; then
-            echo "test workflow failed with status: $STATUS, conclusion: $CONCLUSION"  
+            echo "test workflow failed with status: $STATUS, conclusion: $CONCLUSION"
+            kill $(jobs -p)
             exit 1
           fi
 

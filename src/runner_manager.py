@@ -123,6 +123,7 @@ class RunnerManager:
         local_session = requests.Session()
         local_session.mount("http://", adapter)
         local_session.mount("https://", adapter)
+        local_session.trust_env = False
 
         self._clients = RunnerClients(
             GhApi(token=self.config.token),
