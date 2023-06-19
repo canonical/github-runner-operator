@@ -69,8 +69,6 @@ jobs:
           sudo lxd init --auto
           sudo chmod a+wr /var/snap/lxd/common/lxd/unix.socket
           sudo lxc network set lxdbr0 ipv6.address none
-          sudo lxc storage create default-btrfs btrfs size=50GiB
-          sudo lxc profile device set default root pool=default-btrfs
           sudo iptables -F FORWARD
           sudo iptables -P FORWARD ACCEPT
 
@@ -118,8 +116,8 @@ jobs:
       - name: Install GitHub Cli
         run: which gh || sudo apt install gh -y
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+#      - name: Setup tmate session
+#        uses: mxschmitt/action-tmate@v3
 
       - name: Dispatch Workflow on Testing Runner
         env:
