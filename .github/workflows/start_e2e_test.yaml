@@ -90,7 +90,7 @@ jobs:
         run: |
           [[ -z $http_proxy ]] || juju model-config juju-http-proxy=$http_proxy
           [[ -z $https_proxy ]] || juju model-config juju-https-proxy=$https_proxy
-          [[ -z no_proxy ]] ||juju model-config juju-no-proxy=$no_proxy
+          [[ -z $no_proxy ]] ||juju model-config juju-no-proxy=$no_proxy
 
       - name: Download github-runner Charm
         uses: actions/download-artifact@v3
