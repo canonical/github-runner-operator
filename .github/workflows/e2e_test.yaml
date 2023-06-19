@@ -55,7 +55,7 @@ jobs:
       - name: Upload github-runner Charm
         uses: actions/upload-artifact@v3
         with:
-          name: danger-test-only-github-runner_ubuntu-22.04-amd64.charm
+          name: dangerous-test-only-github-runner_ubuntu-22.04-amd64.charm
           path: github-runner_ubuntu-22.04-amd64.charm
 
   run-id:
@@ -98,7 +98,7 @@ jobs:
       - name: Download github-runner Charm
         uses: actions/download-artifact@v3
         with:
-          name: danger-test-only-github-runner_ubuntu-22.04-amd64.charm
+          name: dangerous-test-only-github-runner_ubuntu-22.04-amd64.charm
 
       - name: Deploy github-runner Charm
         run: |
