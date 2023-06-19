@@ -126,7 +126,7 @@ jobs:
             /repos/${{ secrets.E2E_TESTING_REPO }}/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs)
             CONCLUSION=$(echo $JOBS | jq -r '.jobs[] | select(.name == "End-to-End Test") | .conclusion')
             STATUS=$(echo $JOBS | jq -r '.jobs[] | select(.name == "End-to-End Test") | .status')
-            if [[ $status != "queued" && $status != "in_progress" ]]; then
+            if [[ $STATUS != "queued" && $STATUS != "in_progress" ]]; then
               break
             fi
           done
@@ -134,7 +134,7 @@ jobs:
             echo "test workflow failed with status: $STATUS, conclusion: $CONCLUSION"  
             exit 1
           fi
- 
+
   e2e-test:
     name: End-to-End Test
     needs: [ build-charm, run-id ]
