@@ -30,9 +30,9 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from errors import RunnerError, SubprocessError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
+from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
-from src.runner import LXD_PROFILE_YAML
 from utilities import execute_command, get_env_var, retry
 
 if TYPE_CHECKING:
