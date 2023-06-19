@@ -20,10 +20,3 @@ description: |
   reconciliation interval and the number of runners to maintain are configurable.
 series:
   - jammy
-
-storage:
-  lxd:
-    type: filesystem
-    description: Storage for the LXD instances to run the self-hosted runners.
-    minimum-size: 2.5GB
-    location: /charm-storage/lxd
