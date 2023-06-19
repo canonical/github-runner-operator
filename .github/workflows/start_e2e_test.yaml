@@ -111,14 +111,8 @@ jobs:
 
       - name: Generate Run ID
         id: run-id
-        shell: python
         run: |
-          import os
-          import random
-          import string
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
-              run_id = "".join(random.choice(string.ascii_lowercase) for _ in range(8))
-              f.write(f"run-id=e2e-{run_id}\n")
+          echo "run-id=e2e-$(LC_ALL=C tr -dc 'a-z' < /dev/urandom | head -c8)" >> $GITHUB_OUTPUT
 
       - name: Deploy github-runner Charm
         run: |
