@@ -242,7 +242,10 @@ class Runner:
             profile_devices = {}
             if _LXD_PROFILE_YAML.exists():
                 additional_lxc_profile = yaml.safe_load(_LXD_PROFILE_YAML.read_text())
-                profile_config = {k: json.dumps(v) for k, v in additional_lxc_profile["config"].items()}
+                profile_config = {
+                    k: json.dumps(v) if isinstance(v, bool) else v
+                    for k, v in additional_lxc_profile["config"].items()
+                }
                 profile_devices = additional_lxc_profile["devices"]
             self._clients.lxd.profiles.create("runner", profile_config, profile_devices)
 
