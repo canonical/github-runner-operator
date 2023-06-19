@@ -35,9 +35,9 @@ from runner_type import (
 from utilities import retry
 
 logger = logging.getLogger(__name__)
-_LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
-if _LXD_PROFILE_YAML.exists():
-    logger.info("lxd-profile.yaml file exists, starting testing mode")
+LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
+if not LXD_PROFILE_YAML.exists():
+    LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
 
 
 class Runner:
@@ -213,7 +213,7 @@ class Runner:
         # Create runner instance.
         instance_config: LxdInstanceConfig = {
             "name": self.config.name,
-            "type": "container" if _LXD_PROFILE_YAML.exists() else "virtual-machine",
+            "type": "container" if LXD_PROFILE_YAML.exists() else "virtual-machine",
             "source": {
                 "type": "image",
                 "mode": "pull",
@@ -240,8 +240,8 @@ class Runner:
             logger.info("Creating runner LXD profile")
             profile_config = {}
             profile_devices = {}
-            if _LXD_PROFILE_YAML.exists():
-                additional_lxc_profile = yaml.safe_load(_LXD_PROFILE_YAML.read_text())
+            if LXD_PROFILE_YAML.exists():
+                additional_lxc_profile = yaml.safe_load(LXD_PROFILE_YAML.read_text())
                 profile_config = {
                     k: json.dumps(v) if isinstance(v, bool) else v
                     for k, v in additional_lxc_profile["config"].items()

@@ -109,6 +109,7 @@ jobs:
             --config path=${{ secrets.E2E_TESTING_REPO }} \
             --config token=${{ secrets.E2E_TESTING_TOKEN }} \
             --config virtual-machines=1 \
+            --config test-mode=insecure
 
       - name: Watch github-runner
         env:

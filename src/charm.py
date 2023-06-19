@@ -32,6 +32,7 @@ from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
+from src.runner import LXD_PROFILE_YAML
 from utilities import execute_command, get_env_var, retry
 
 if TYPE_CHECKING:
@@ -122,7 +123,11 @@ class GithubRunnerCharm(CharmBase):
                 class.
         """
         super().__init__(*args, **kargs)
-
+        if LXD_PROFILE_YAML.exists():
+            if self.config.get("test-mode") != "insecure":
+                raise RuntimeError("lxd-profile.yaml detected outside test mode")
+            else:
+                logger.critical("test mode is enabled")
         self._event_timer = EventTimer(self.unit.name)
 
         self._stored.set_default(
