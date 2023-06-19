@@ -47,22 +47,7 @@ class LxdInstanceFileManager:
         Args:
             dir: Name of the directory to create.
         """
-        lxc_command = [
-            "/snap/bin/lxc",
-            "exec",
-            self.instance.name,
-            "--",
-            "/usr/bin/mkdir",
-            "-p",
-            dir_name,
-        ]
-        try:
-            execute_command(lxc_command)
-        except SubprocessError as err:
-            logger.exception("Failed to create directory")
-            raise LxdError(
-                f"Unable to create directory in LXD instance {self.instance.name}"
-            ) from err
+        self.instance.execute(["/usr/bin/mkdir", "-p", dir_name])
 
     def push_file(self, source: str, destination: str, mode: Optional[str] = None) -> None:
         """Push a file to the LXD instance.
