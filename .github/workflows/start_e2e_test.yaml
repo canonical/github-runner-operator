@@ -121,7 +121,7 @@ jobs:
 
       - name: Watch github-runner
         env:
-          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           juju debug-log --replay --tail &
           
@@ -135,6 +135,7 @@ jobs:
             if [[ $STATUS != "queued" && $STATUS != "in_progress" ]]; then
               break
             fi
+            sleep 10
           done
           if [[ $STATUS != "completed" || $CONCLUSION != "success" ]]; then
             echo "test workflow failed with status: $STATUS, conclusion: $CONCLUSION"
