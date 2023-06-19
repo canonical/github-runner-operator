@@ -73,6 +73,18 @@ jobs:
     runs-on: [ self-hosted, linux, x64, e2e-test ]
     needs: [ build-charm, run-id ]
     steps:
+      - name: Install GitHub Cli
+        run: which gh || sudo apt install gh -y
+
+      - name: Watch github-runner
+        env:
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+        run: |
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ secrets.E2E_TESTING_REPO }}/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs
+
       - name: Setup Lxd Juju Controller
         uses: charmed-kubernetes/actions-operator@main
         with:
@@ -113,8 +125,6 @@ jobs:
         run: which gh || sudo apt install gh -y
 
       - name: Watch github-runner
-        env:
-          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
           gh api \
             -H "Accept: application/vnd.github+json" \
