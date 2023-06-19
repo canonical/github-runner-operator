@@ -71,7 +71,7 @@ jobs:
 
   deploy-e2e-test-runner:
     name: Deploy End-to-End Test Runner
-    runs-on: [ self-hosted, linux, x64, e2e-test ]
+    runs-on: ubuntu-latest
     needs: [ build-charm, run-id ]
     steps:
       - name: Enable Kernel Modules
@@ -112,8 +112,6 @@ jobs:
             --config path=${{ secrets.E2E_TESTING_REPO }} \
             --config token=${{ secrets.E2E_TESTING_TOKEN }} \
             --config virtual-machines=1 \
-            --config vm-cpu=4 \
-            --config vm-memory=16GiB \
             --force
 
       - name: Install GitHub Cli
