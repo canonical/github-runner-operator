@@ -113,6 +113,8 @@ jobs:
         run: which gh || sudo apt install gh -y
 
       - name: Watch github-runner
+        env:
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
           gh api \
             -H "Accept: application/vnd.github+json" \
