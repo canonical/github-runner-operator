@@ -6,7 +6,7 @@ on:
 jobs:
   build-charm:
     name: Build Charm
-    runs-on: [self-hosted, linux, x64, e2e-test]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -59,7 +59,7 @@ jobs:
 
   deploy-e2e-test-runner:
     name: Deploy End-to-End Testing Runner
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, e2e-test]
     needs: build-charm
     steps:
       - name: Initialize LXD
