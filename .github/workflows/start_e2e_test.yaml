@@ -92,6 +92,9 @@ jobs:
           juju-channel: 3.1/stable
           provider: lxd
 
+      - name: Create Testing Juju Model
+        run: juju add-model testing
+
       - name: Set Testing Model Proxy Configuration
         run: |
           [[ -z $http_proxy ]] || juju model-config juju-http-proxy=$http_proxy
