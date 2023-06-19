@@ -15,9 +15,6 @@ jobs:
           rm -rf .git
           rm -rf .github
 
-      - name: Setup LXD
-        uses: canonical/setup-lxd@main
-
       - name: Write lxd-profile.yaml
         run: |
           cat << EOF > ./lxd-profile.yaml
@@ -42,6 +39,10 @@ jobs:
         with:
           path: github-runner_ubuntu-22.04-amd64.charm
           key: github-runner-charm-${{ hashFiles('**/*') }}
+
+      - name: Setup LXD
+        if: steps.cache-charm.outputs.cache-hit != 'true'
+        uses: canonical/setup-lxd@main
 
       - name: Install charmcraft
         if: steps.cache-charm.outputs.cache-hit != 'true'
