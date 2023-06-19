@@ -60,11 +60,11 @@ class Runner:
     pre_job_script = runner_application / "pre-job.sh"
 
     def __init__(
-            self,
-            clients: RunnerClients,
-            runner_config: RunnerConfig,
-            runner_status: RunnerStatus,
-            instance: Optional[LxdInstance] = None,
+        self,
+        clients: RunnerClients,
+        runner_config: RunnerConfig,
+        runner_status: RunnerStatus,
+        instance: Optional[LxdInstance] = None,
     ):
         """Construct the runner instance.
 
@@ -80,11 +80,11 @@ class Runner:
         self.instance = instance
 
     def create(
-            self,
-            image: str,
-            resources: VirtualMachineResources,
-            binary_path: Path,
-            registration_token: str,
+        self,
+        image: str,
+        resources: VirtualMachineResources,
+        binary_path: Path,
+        registration_token: str,
     ):
         """Create the runner instance on LXD and register it on GitHub.
 
@@ -193,7 +193,7 @@ class Runner:
 
     @retry(tries=5, delay=1, local_logger=logger)
     def _create_instance(
-            self, image: str, resources: VirtualMachineResources, ephemeral: bool = True
+        self, image: str, resources: VirtualMachineResources, ephemeral: bool = True
     ) -> LxdInstance:
         """Create an instance of runner.
 
@@ -318,14 +318,16 @@ class Runner:
         # Setting `wait=True` only ensure the instance has begin to boot up.
         self.instance.start(wait=True)
 
-    @retry(tries=120, delay=30, local_logger=logger)
+    @retry(tries=20, delay=30, local_logger=logger)
     def _wait_boot_up(self) -> None:
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
         # Wait for the instance to finish to boot up and network to be up.
-        assert self.instance.execute(["/usr/bin/who"])[0] == 0
-        assert self.instance.execute(["/usr/bin/nslookup", "github.com"])[0] == 0
+        if self.instance.execute(["/usr/bin/who"])[0] != 0:
+            raise RunnerError("Runner system is not ready")
+        if self.instance.execute(["/usr/bin/nslookup", "github.com"])[0] != 0:
+            raise RunnerError("Runner network is not ready")
 
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 

@@ -74,11 +74,11 @@ class RunnerManager:
     runner_bin_path = Path("/opt/github-runner-app")
 
     def __init__(
-            self,
-            app_name: str,
-            unit: int,
-            runner_manager_config: RunnerManagerConfig,
-            proxies: ProxySetting = ProxySetting(),
+        self,
+        app_name: str,
+        unit: int,
+        runner_manager_config: RunnerManagerConfig,
+        proxies: ProxySetting = ProxySetting(),
     ) -> None:
         """Construct RunnerManager object for creating and managing runners.
 
@@ -136,7 +136,7 @@ class RunnerManager:
 
     @retry(tries=5, delay=30, local_logger=logger)
     def get_latest_runner_bin_url(
-            self, os_name: str = "linux", arch_name: str = "x64"
+        self, os_name: str = "linux", arch_name: str = "x64"
     ) -> RunnerApplication:
         """Get the URL for the latest runner binary.
 
@@ -407,9 +407,9 @@ class RunnerManager:
         """
 
         def create_runner_info(
-                name: str,
-                local_runner: Optional[LxdInstance],
-                remote_runner: Optional[SelfHostedRunner],
+            name: str,
+            local_runner: Optional[LxdInstance],
+            remote_runner: Optional[SelfHostedRunner],
         ) -> Runner:
             """Create runner from information from GitHub and LXD."""
             logger.debug(

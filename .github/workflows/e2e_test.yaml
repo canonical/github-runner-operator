@@ -55,7 +55,7 @@ jobs:
       - name: Upload github-runner Charm
         uses: actions/upload-artifact@v3
         with:
-          name: github-runner_ubuntu-22.04-amd64.charm
+          name: danger-test-only-github-runner_ubuntu-22.04-amd64.charm
           path: github-runner_ubuntu-22.04-amd64.charm
 
   run-id:
@@ -74,17 +74,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build-charm, run-id ]
     steps:
-      - name: Enable Kernel Modules
-        run: |
-          for m in ip_tables ip6_tables nf_nat overlay br_netfilter; do 
-            sudo modprobe $m; 
-          done
-
       - name: Setup Lxd Juju Controller
         uses: charmed-kubernetes/actions-operator@main
         with:
           juju-channel: 3.1/stable
           provider: lxd
+
+      - name: Install GitHub Cli
+        run: which gh || sudo apt install gh -y
 
       - name: Create Testing Juju Model
         run: juju add-model testing
@@ -101,7 +98,7 @@ jobs:
       - name: Download github-runner Charm
         uses: actions/download-artifact@v3
         with:
-          name: github-runner_ubuntu-22.04-amd64.charm
+          name: danger-test-only-github-runner_ubuntu-22.04-amd64.charm
 
       - name: Deploy github-runner Charm
         run: |
@@ -112,14 +109,11 @@ jobs:
             --config path=${{ secrets.E2E_TESTING_REPO }} \
             --config token=${{ secrets.E2E_TESTING_TOKEN }} \
             --config virtual-machines=1 \
-            --force
-
-      - name: Install GitHub Cli
-        run: which gh || sudo apt install gh -y
 
       - name: Watch github-runner
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        timeout-minutes: 30
         run: |
           juju debug-log --replay --tail &
           

@@ -54,13 +54,15 @@ class LxdInstanceFileManager:
             "--",
             "/usr/bin/mkdir",
             "-p",
-            dir_name
+            dir_name,
         ]
         try:
             execute_command(lxc_command)
         except SubprocessError as err:
             logger.exception("Failed to create directory")
-            raise LxdError(f"Unable to create directory in LXD instance {self.instance.name}") from err
+            raise LxdError(
+                f"Unable to create directory in LXD instance {self.instance.name}"
+            ) from err
 
     def push_file(self, source: str, destination: str, mode: Optional[str] = None) -> None:
         """Push a file to the LXD instance.
