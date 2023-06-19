@@ -136,7 +136,8 @@ class GithubRunnerCharm(CharmBase):
         if https_proxy := get_env_var("JUJU_CHARM_HTTPS_PROXY"):
             self.proxies["https"] = https_proxy
         # there's no need for no_proxy if there's no http_proxy or https_proxy
-        if no_proxy := get_env_var("JUJU_CHARM_NO_PROXY") and (https_proxy or http_proxy):
+        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY")
+        if (https_proxy or http_proxy) and no_proxy:
             self.proxies["no_proxy"] = no_proxy
 
         self.service_token = None

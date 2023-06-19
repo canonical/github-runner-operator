@@ -155,7 +155,7 @@ jobs:
         run: touch /usr/local/bin/test_file
       # "Install microk8s" step will test if the proxies settings are correct.
       - name: Proxy set in /etc/environment
-        run: cat /etc/environment | grep HTTP_PROXY
+        run: cat /etc/environment
       # "Update apt in python docker container" step will test docker default proxy settings due to
       # pulling the python image.
       - name: Proxy set in docker daemon
