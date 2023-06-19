@@ -116,8 +116,8 @@ jobs:
       - name: Install GitHub Cli
         run: which gh || sudo apt install gh -y
 
-#      - name: Setup tmate session
-#        uses: mxschmitt/action-tmate@v3
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
 
       - name: Dispatch Workflow on Testing Runner
         env:
