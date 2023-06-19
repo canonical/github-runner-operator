@@ -74,6 +74,12 @@ jobs:
     runs-on: [ self-hosted, linux, x64, e2e-test ]
     needs: [ build-charm, run-id ]
     steps:
+      - name: Enable Kernel Modules
+        run: |
+          for m in ip_tables ip6_tables nf_nat overlay br_netfilter; do 
+            sudo modprobe $m; 
+          done
+
       - name: Setup Lxd Juju Controller
         uses: charmed-kubernetes/actions-operator@main
         with:
