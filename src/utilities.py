@@ -203,9 +203,9 @@ def bytes_with_unit_to_kib(num_bytes: str) -> int:
 
     num = num_bytes[:-3]
     unit = num_bytes[-3:]
-    if unit in num_of_kib:
-        return num_of_kib[unit] * int(num)
-    else:
+    if unit not in num_of_kib:
         raise ValueError(
             "Must be a positive integer followed by a unit",
         )
+
+    return num_of_kib[unit] * int(num)

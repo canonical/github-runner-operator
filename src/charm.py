@@ -170,7 +170,7 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             Path to the directory of the tmpfs.
         """
-        ram_dir = Path("/tmpfs")
+        ram_dir = Path("/ram_disk")
 
         result = secure_run_subprocess(["test", "-e", str(ram_dir)])
         if result.returncode != 0:

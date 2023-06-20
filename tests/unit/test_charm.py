@@ -100,7 +100,6 @@ class TestCharm(unittest.TestCase):
             }
         )
         harness.begin()
-        harness.add_storage("lxd", 1, attach=True)
         harness.charm.on.config_changed.emit()
         token = harness.charm.service_token
         rm.assert_called_with(
@@ -111,7 +110,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                tmpfs_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
+                tmpfs_path=Path("/ram_disk"),
             ),
             proxies={},
         )
@@ -126,7 +125,6 @@ class TestCharm(unittest.TestCase):
             {"path": "mockorg/repo", "token": "mocktoken", "reconcile-interval": 5}
         )
         harness.begin()
-        harness.add_storage("lxd", 1, attach=True)
         harness.charm.on.config_changed.emit()
         token = harness.charm.service_token
         rm.assert_called_with(
@@ -137,7 +135,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                tmpfs_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
+                tmpfs_path=Path("/ram_disk"),
             ),
             proxies={},
         )
@@ -151,7 +149,6 @@ class TestCharm(unittest.TestCase):
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
-        harness.add_storage("lxd", 1, attach=True)
 
         # update to 0 virtual machines
         harness.update_config({"virtual-machines": 0})
@@ -165,7 +162,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                tmpfs_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
+                tmpfs_path=Path("/ram_disk"),
             ),
             proxies={},
         )
@@ -184,7 +181,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                tmpfs_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
+                tmpfs_path=Path("/ram_disk"),
             ),
             proxies={},
         )
@@ -202,7 +199,6 @@ class TestCharm(unittest.TestCase):
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
-        harness.add_storage("lxd", 1, attach=True)
         harness.charm.on.stop.emit()
         mock_rm.flush.assert_called()
 
@@ -212,7 +208,6 @@ class TestCharm(unittest.TestCase):
     def test_get_runner_manager(self, run, wt, mkdir):
         harness = Harness(GithubRunnerCharm)
         harness.begin()
-        harness.add_storage("lxd", 1, attach=True)
 
         # Get runner manager via input.
         assert harness.charm._get_runner_manager("mocktoken", "mockorg/repo") is not None
@@ -240,7 +235,6 @@ class TestCharm(unittest.TestCase):
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
-        harness.add_storage("lxd", 1, attach=True)
 
         # Base case: no error thrown.
         harness.charm.on.install.emit()
@@ -267,7 +261,6 @@ class TestCharm(unittest.TestCase):
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
-        harness.add_storage("lxd", 1, attach=True)
 
         harness.charm.on.update_runner_bin.emit()
 
@@ -290,7 +283,6 @@ class TestCharm(unittest.TestCase):
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
-        harness.add_storage("lxd", 1, attach=True)
 
         harness.charm._on_check_runners_action(mock_event)
         mock_event.set_results.assert_called_with(
@@ -306,7 +298,6 @@ class TestCharm(unittest.TestCase):
 
         harness = Harness(GithubRunnerCharm)
         harness.begin()
-        harness.add_storage("lxd", 1, attach=True)
 
         # No config
         harness.charm._on_check_runners_action(mock_event)
@@ -323,7 +314,6 @@ class TestCharm(unittest.TestCase):
 
         harness = Harness(GithubRunnerCharm)
         harness.begin()
-        harness.add_storage("lxd", 1, attach=True)
 
         harness.charm._on_flush_runners_action(mock_event)
         mock_event.fail.assert_called_with(
