@@ -118,7 +118,7 @@ class GithubRunnerCharm(CharmBase):
     repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
     repo_check_web_service_script = Path("src/repo_policy_compliance_service.py")
     repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
-    ram_pool_path = Path("/var/snap/lxd/common/lxd/storage-pools/ram")
+    ram_pool_path = Path("/var/snap/lxd/data/ram")
 
     def __init__(self, *args, **kargs) -> None:
         """Construct the charm.
