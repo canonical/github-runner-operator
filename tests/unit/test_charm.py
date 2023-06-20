@@ -6,7 +6,6 @@
 import os
 import unittest
 import urllib.error
-from pathlib import Path
 from unittest.mock import MagicMock, call, patch
 
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
@@ -110,7 +109,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                tmpfs_path=Path("/ram_disk"),
+                ram_pool_path=GithubRunnerCharm.ram_pool_path,
             ),
             proxies={},
         )
@@ -135,7 +134,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                tmpfs_path=Path("/ram_disk"),
+                ram_pool_path=GithubRunnerCharm.ram_pool_path,
             ),
             proxies={},
         )
@@ -162,7 +161,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                tmpfs_path=Path("/ram_disk"),
+                ram_pool_path=GithubRunnerCharm.ram_pool_path,
             ),
             proxies={},
         )
@@ -181,7 +180,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                tmpfs_path=Path("/ram_disk"),
+                ram_pool_path=GithubRunnerCharm.ram_pool_path,
             ),
             proxies={},
         )

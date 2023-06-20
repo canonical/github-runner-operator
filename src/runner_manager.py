@@ -49,13 +49,16 @@ class RunnerManagerConfig:
             name.
         token: GitHub personal access token to register runner to the repository or
             organization.
+        image: Name of the image for creating LXD instance.
+        service_token: Token for accessing local service.
+        ram_pool_path: Path to the in-memory storage pool.
     """
 
     path: GitHubPath
     token: str
     image: str
     service_token: str
-    tmpfs_path: Path
+    ram_pool_path: Path
 
 
 @dataclass
@@ -303,7 +306,7 @@ class RunnerManager:
                     self.app_name,
                     self.config.path,
                     self.proxies,
-                    self.config.tmpfs_path,
+                    self.config.ram_pool_path,
                     self._generate_runner_name(),
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
@@ -431,7 +434,7 @@ class RunnerManager:
             busy = getattr(remote_runner, "busy", None)
 
             config = RunnerConfig(
-                self.app_name, self.config.path, self.proxies, self.config.tmpfs_path, name
+                self.app_name, self.config.path, self.proxies, self.config.ram_pool_path, name
             )
             return Runner(
                 self._clients,
