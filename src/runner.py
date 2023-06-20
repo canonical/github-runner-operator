@@ -201,8 +201,8 @@ class Runner:
         """
         logger.info("Creating an LXD instance for runner: %s", self.config.name)
 
-        self._ensure_runner_profile()
         self._ensure_runner_storage_pool()
+        self._ensure_runner_profile()
         resource_profile = self._get_resource_profile(resources)
 
         # Create runner instance.
@@ -248,13 +248,11 @@ class Runner:
     def _ensure_runner_storage_pool(self) -> None:
         if not self._clients.lxd.storage_pools.exists("runner"):
             logger.info("Creating runner LXD storage pool.")
-            pool_path = self.config.tmpfs_path / "lxd_pool"
-            pool_path.mkdir(exist_ok=True)
             self._clients.lxd.storage_pools.create(
                 {
-                    "name": "runner",
+                    "name": "ram",
                     "driver": "dir",
-                    "config": {"source": str(pool_path)},
+                    "config": {"source": str(self.config.tmpfs_path)},
                 }
             )
 
@@ -289,7 +287,7 @@ class Runner:
                 resource_profile_devices = {
                     "root": {
                         "path": "/",
-                        "pool": "runner",
+                        "pool": "ram",
                         "type": "disk",
                         "size": resources.disk,
                     }
