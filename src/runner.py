@@ -248,11 +248,13 @@ class Runner:
     def _ensure_runner_storage_pool(self) -> None:
         if not self._clients.lxd.storage_pools.exists("runner"):
             logger.info("Creating runner LXD storage pool.")
+            pool_path = self.config.tmpfs_path / "lxd_pool"
+            pool_path.mkdir(exist_ok=True)
             self._clients.lxd.storage_pools.create(
                 {
                     "name": "runner",
                     "driver": "dir",
-                    "config": {"source": str(self.config.tmpfs_path)},
+                    "config": {"source": str(pool_path)},
                 }
             )
 

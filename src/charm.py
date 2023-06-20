@@ -522,7 +522,7 @@ class GithubRunnerCharm(CharmBase):
             return {"delta": {"virtual-machines": delta_virtual_machines}}
         # Safe guard against transient unexpected error.
         except Exception as err:  # pylint: disable=broad-exception-caught
-            logger.exception("Failed to update runner binary")
+            logger.exception("Failed to reconcile runners.")
             # Failure to reconcile runners is a transient error.
             # The charm automatically reconciles runners on a schedule.
             self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
