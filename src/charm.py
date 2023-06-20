@@ -176,12 +176,10 @@ class GithubRunnerCharm(CharmBase):
         if result.returncode != 0:
             # If not exists, create the tmpfs.
             ram_dir.mkdir(parents=True, exist_ok=True)
-            execute_command(
-                ["mount", "-t", "tmpfs", "-o", f"size={size}Ki", "tmpfs", str(ram_dir)]
-            )
+            execute_command(["mount", "-t", "tmpfs", "-o", f"size={size}k", "tmpfs", str(ram_dir)])
         else:
             # If exists, resize the tmpfs.
-            execute_command(["mount", "-o", f"remount,size={size}Ki", str(ram_dir)])
+            execute_command(["mount", "-o", f"remount,size={size}k", str(ram_dir)])
 
         return ram_dir
 
