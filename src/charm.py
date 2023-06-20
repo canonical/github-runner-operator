@@ -171,11 +171,11 @@ class GithubRunnerCharm(CharmBase):
             Path to the directory of the tmpfs.
         """
         ram_dir = Path("/tmpfs")
-        ram_dir.mkdir(parents=True, exist_ok=True)
 
         result = secure_run_subprocess(["test", "-e", str(ram_dir)])
         if result.returncode != 0:
             # If not exists, create the tmpfs.
+            ram_dir.mkdir(parents=True, exist_ok=True)
             execute_command(
                 ["mount", "-t", "tmpfs", "-o", f"size={size}Ki", "tmpfs", str(ram_dir)]
             )
