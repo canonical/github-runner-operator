@@ -573,13 +573,26 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Finished installing charm dependencies.")
 
         logger.info("Setting apparmor to complain mode.")
-        execute_command(["aa-complain", "/etc/apparmor.d/lsb_release"])
-        execute_command(["aa-complain", "/etc/apparmor.d/nvidia_modprobe"])
-        execute_command(["aa-complain", "/etc/apparmor.d/sbin.dhclient"])
-        execute_command(["aa-complain", "/etc/apparmor.d/usr.bin.man"])
-        execute_command(["aa-complain", "/etc/apparmor.d/usr.bin.tcpdump"])
-        execute_command(["aa-complain", "/etc/apparmor.d/usr.lib.snapd.snap-confine.real"])
-        execute_command(["aa-complain", "/etc/apparmor.d/usr.sbin.rsyslogd"])
+        self._apparmor_complain_mode(
+            [
+                "/etc/apparmor.d/lsb_release",
+                "/etc/apparmor.d/nvidia_modprobe",
+                "/etc/apparmor.d/sbin.dhclient",
+                "/etc/apparmor.d/usr.bin.man",
+                "/etc/apparmor.d/usr.bin.tcpdump",
+                "/etc/apparmor.d/usr.lib.snapd.snap-confine.real",
+                "/etc/apparmor.d/usr.sbin.rsyslogd",
+            ]
+        )
+
+    def _apparmor_complain_mode(self, profiles: list[str]) -> None:
+        """Enable complain mode for the apparmor profile.
+
+        Args:
+            profiles: Profiles to enable complain mode.
+        """
+        for profile in profiles:
+            execute_command(["aa-complain", profile])
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
     def _start_services(self) -> None:
