@@ -165,7 +165,7 @@ class GithubRunnerCharm(CharmBase):
             # The block ram disk is set to 1 TiB size, as a way to not limit it.
             # Block ram disk does not pre-allocate the memory.
             # Each LXD instance memory usage is restricted through the LXD profile.
-            execute_command(["modprobe", "brd", "rd_size=1048576000", "rd_nr=1"])
+            execute_command(["modprobe", "brd", "rd_size=1073741824", "rd_nr=1"])
 
         # Check if volume group exits.
         result = secure_run_subprocess(["vgdisplay", self.lvm_vg_name])
