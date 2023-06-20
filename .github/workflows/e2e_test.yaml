@@ -50,7 +50,7 @@ jobs:
 
       - name: Pack github-runner Charm
         if: steps.cache-charm.outputs.cache-hit != 'true'
-        run: charmcraft pack || ( cat ~/.local/state/charmcraft/log/* 1 && exit 1 )
+        run: charmcraft pack || ( cat ~/.local/state/charmcraft/log/* && exit 1 )
 
       - name: Upload github-runner Charm
         uses: actions/upload-artifact@v3
