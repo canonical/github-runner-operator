@@ -532,9 +532,6 @@ class GithubRunnerCharm(CharmBase):
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
     def _install_deps(self) -> None:
         """Install dependencies."""
-        logger.info("Setting apparmor to complain mode.")
-        execute_command(["aa-complain", "/etc/apparmor.d/*"])
-
         logger.info("Installing charm dependencies.")
 
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
@@ -570,6 +567,7 @@ class GithubRunnerCharm(CharmBase):
                 "cpu-checker",
                 "libvirt-clients",
                 "libvirt-daemon-driver-qemu",
+                "apparmor-utils",
             ],
         )
         execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
@@ -579,6 +577,9 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
         execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
         logger.info("Finished installing charm dependencies.")
+
+        logger.info("Setting apparmor to complain mode.")
+        execute_command(["aa-complain", "/etc/apparmor.d/*"])
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
     def _start_services(self) -> None:
