@@ -246,7 +246,7 @@ class Runner:
 
     @retry(tries=5, delay=5, local_logger=logger)
     def _ensure_runner_storage_pool(self) -> None:
-        if not self._clients.lxd.storage_pools.exists("runner"):
+        if not self._clients.lxd.storage_pools.exists("ram"):
             logger.info("Creating runner LXD storage pool.")
             self._clients.lxd.storage_pools.create(
                 {
@@ -257,10 +257,10 @@ class Runner:
             )
 
             # Verify the action is successful.
-            if not self._clients.lxd.storage_pools.exists("runner"):
-                raise RunnerError("Failed to create runner LXD storage pool")
+            if not self._clients.lxd.storage_pools.exists("ram"):
+                raise RunnerError("Failed to create ram LXD storage pool")
         else:
-            logger.info("Found existing runner LXD storage pool.")
+            logger.info("Found existing ram LXD storage pool.")
 
     @retry(tries=5, delay=1, local_logger=logger)
     def _get_resource_profile(self, resources: VirtualMachineResources) -> str:
