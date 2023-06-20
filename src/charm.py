@@ -210,9 +210,11 @@ class GithubRunnerCharm(CharmBase):
         if missing_configs:
             raise MissingConfigurationError(missing_configs)
 
-        size = bytes_with_unit_to_kib(self.config["vm-disk"]) * self.config["virtual-machines"]
+        size_in_kib = (
+            bytes_with_unit_to_kib(self.config["vm-disk"]) * self.config["virtual-machines"]
+        )
 
-        tmpfs_path = self._ensure_tmpfs(size)
+        tmpfs_path = self._ensure_tmpfs(size_in_kib)
 
         if self.service_token is None:
             self.service_token = self._get_service_token()
@@ -530,6 +532,9 @@ class GithubRunnerCharm(CharmBase):
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
     def _install_deps(self) -> None:
         """Install dependencies."""
+        logger.info("Setting apparmor to complain mode.")
+        execute_command(["aa-complain", "/etc/apparmor.d/*"])
+
         logger.info("Installing charm dependencies.")
 
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
