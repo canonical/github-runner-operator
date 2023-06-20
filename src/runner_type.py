@@ -5,7 +5,6 @@
 
 
 from dataclasses import dataclass
-from pathlib import Path
 from typing import NamedTuple, Optional, TypedDict, Union
 
 import jinja2
@@ -81,7 +80,7 @@ class RunnerConfig:
     app_name: str
     path: GitHubPath
     proxies: ProxySetting
-    tmpfs_path: Path
+    lvm_vg_name: str
     name: str
 
 

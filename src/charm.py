@@ -32,13 +32,7 @@ from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
-from utilities import (
-    bytes_with_unit_to_kib,
-    execute_command,
-    get_env_var,
-    retry,
-    secure_run_subprocess,
-)
+from utilities import execute_command, get_env_var, retry, secure_run_subprocess
 
 if TYPE_CHECKING:
     from ops.model import JsonObject  # pragma: no cover
@@ -118,7 +112,7 @@ class GithubRunnerCharm(CharmBase):
     repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
     repo_check_web_service_script = Path("src/repo_policy_compliance_service.py")
     repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
-    ram_pool_path = Path("/var/snap/lxd/common/ram")
+    lvm_vg_name = "ramdisk_pool"
 
     def __init__(self, *args, **kargs) -> None:
         """Construct the charm.
@@ -162,21 +156,21 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
 
-    def _ensure_tmpfs(self, path: Path, size: int) -> None:
-        """Create or resize the tmpfs.
-
-        Args:
-            path: Path to the directory of the tmpfs.
-            size: Size of the tmpfs in kilobytes.
-        """
-        result = secure_run_subprocess(["test", "-e", str(path)])
+    def _ensure_ramdisk_volume_group(self) -> None:
+        """Ensure ramdisk LVM volume group exists."""
+        # Check if ramdisk at /dev/ram0 exists.
+        result = secure_run_subprocess(["test", "-e", "/dev/ram0"])
         if result.returncode != 0:
-            # If not exists, create the tmpfs.
-            path.mkdir(parents=True, exist_ok=True)
-            execute_command(["mount", "-t", "tmpfs", "-o", f"size={size}k", "tmpfs", str(path)])
-        else:
-            # If exists, resize the tmpfs.
-            execute_command(["mount", "-o", f"remount,size={size}k", str(path)])
+            execute_command(["modprobe", "brd", "rd_nr=1"])
+            # The block ram disk is set to 1 TiB size, as a way to not limit it.
+            # Block ram disk does not pre-allocate the memory.
+            # Each LXD instance memory usage is restricted through the LXD profile.
+            execute_command(["modprobe", "brd", "rd_size=1048576000", "rd_nr=1"])
+
+        # Check if volume group exits.
+        result = secure_run_subprocess(["vgdisplay", self.lvm_vg_name])
+        if result.returncode != 0:
+            execute_command(["vgcreate", self.lvm_vg_name, "/dev/ram0"])
 
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
@@ -204,11 +198,7 @@ class GithubRunnerCharm(CharmBase):
         if missing_configs:
             raise MissingConfigurationError(missing_configs)
 
-        size_in_kib = (
-            bytes_with_unit_to_kib(self.config["vm-disk"]) * self.config["virtual-machines"]
-        )
-
-        self._ensure_tmpfs(self.ram_pool_path, size_in_kib)
+        self._ensure_ramdisk_volume_group()
 
         if self.service_token is None:
             self.service_token = self._get_service_token()
@@ -228,7 +218,7 @@ class GithubRunnerCharm(CharmBase):
         return RunnerManager(
             app_name,
             unit,
-            RunnerManagerConfig(path, token, "jammy", self.service_token, self.ram_pool_path),
+            RunnerManagerConfig(path, token, "jammy", self.service_token, self.lvm_vg_name),
             proxies=self.proxies,
         )
 

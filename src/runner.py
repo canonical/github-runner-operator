@@ -251,8 +251,8 @@ class Runner:
             self._clients.lxd.storage_pools.create(
                 {
                     "name": "ram",
-                    "driver": "dir",
-                    "config": {"source": str(self.config.tmpfs_path)},
+                    "driver": "lvm",
+                    "config": {"source": self.config.lvm_vg_name},
                 }
             )
 
