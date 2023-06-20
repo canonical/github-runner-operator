@@ -578,7 +578,13 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Finished installing charm dependencies.")
 
         logger.info("Setting apparmor to complain mode.")
-        execute_command(["aa-complain", "/etc/apparmor.d/*"])
+        execute_command(["aa-complain", "/etc/apparmor.d/lsb_release"])
+        execute_command(["aa-complain", "/etc/apparmor.d/nvidia_modprobe"])
+        execute_command(["aa-complain", "/etc/apparmor.d/sbin.dhclient"])
+        execute_command(["aa-complain", "/etc/apparmor.d/usr.bin.man"])
+        execute_command(["aa-complain", "/etc/apparmor.d/usr.bin.tcpdump"])
+        execute_command(["aa-complain", "/etc/apparmor.d/usr.lib.snapd.snap-confine.real"])
+        execute_command(["aa-complain", "/etc/apparmor.d/usr.sbin.rsyslogd"])
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
     def _start_services(self) -> None:
