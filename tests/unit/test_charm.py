@@ -111,7 +111,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                lxd_pool_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
+                tmpfs_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
             ),
             proxies={},
         )
@@ -137,7 +137,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                lxd_pool_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
+                tmpfs_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
             ),
             proxies={},
         )
@@ -165,7 +165,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                lxd_pool_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
+                tmpfs_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
             ),
             proxies={},
         )
@@ -184,7 +184,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                lxd_pool_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
+                tmpfs_path=Path(harness.charm.model.storages["lxd"][0].location) / "pool",
             ),
             proxies={},
         )
