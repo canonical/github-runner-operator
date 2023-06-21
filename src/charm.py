@@ -128,6 +128,7 @@ class GithubRunnerCharm(CharmBase):
 
         self._stored.set_default(
             path=self.config["path"],  # for detecting changes
+            disk=self.config["vm-disk"],
             runner_bin_url=None,
         )
 
@@ -323,6 +324,11 @@ class GithubRunnerCharm(CharmBase):
                 self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
                 prev_runner_manager.flush()
             self._stored.path = self.config["path"]
+
+        # Temporary disable changing disk size. Will be enable once LXD support tmpfs.
+        if self.config["vm-disk"] != self._store.disk:
+            self.unit.status = BlockedStatus("Changing vm-disk size is not support right now")
+            return
 
         runner_manager = self._get_runner_manager()
         if runner_manager:
