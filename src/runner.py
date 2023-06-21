@@ -245,14 +245,14 @@ class Runner:
             logger.info("Found existing runner LXD profile")
 
     @retry(tries=5, delay=5, local_logger=logger)
-    def _ensure_runner_storage_pool(self) -> None:
+    def _ensure_runner_storage_pool(self) -> str:
         if not self._clients.lxd.storage_pools.exists("ram"):
             logger.info("Creating runner LXD storage pool.")
             self._clients.lxd.storage_pools.create(
                 {
                     "name": "ram",
-                    "driver": "dir",
-                    "config": {"source": str(self.config.tmpfs_path)},
+                    "driver": "lvm",
+                    "config": {"source": str(self.config.lvm_vg_name)},
                 }
             )
 
