@@ -252,7 +252,7 @@ class Runner:
             self._clients.lxd.storage_pools.create(
                 {
                     "name": "runner",
-                    "driver": "lvm",
+                    "driver": "dir",
                     "config": {"source": str(self.config.lxd_storage_path)},
                 }
             )

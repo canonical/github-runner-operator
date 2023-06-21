@@ -174,6 +174,7 @@ class GithubRunnerCharm(CharmBase):
             execute_command(["truncate", f"--size={size}K", str(tmpfs_path / "storage")])
             execute_command(["mkfs.ext4", str(tmpfs_path / "storage")])
             execute_command(["mount", "-o", "loop", str(tmpfs_path / "storage"), str(path)])
+            execute_command(["rm", "-rf", str(path / "lost+found")])
 
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
