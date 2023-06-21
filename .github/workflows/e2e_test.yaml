@@ -141,6 +141,7 @@ jobs:
     needs: [ build-charm, run-id ]
     runs-on: [ self-hosted, linux, x64, "${{ needs.run-id.outputs.run-id }}" ]
     steps:
+      # below is a series of simple tests to assess the functionality of the newly spawned runner.
       - name: Echo hello world
         run: echo "hello world"
       - name: File permission for /usr/local/bin
