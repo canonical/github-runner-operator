@@ -5,6 +5,7 @@
 
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import NamedTuple, Optional, TypedDict, Union
 
 import jinja2
@@ -82,14 +83,14 @@ class RunnerConfig:
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
             name.
         proxies: HTTP(S) proxy settings.
-        lvm_vg_name: Name of the LVM volume group to use as storage.
+        lxd_storage_path: Path to be used as LXD storage.
         name: Name of the runner.
     """
 
     app_name: str
     path: GitHubPath
     proxies: ProxySetting
-    lvm_vg_name: str
+    lxd_storage_path: Path
     name: str
 
 

@@ -109,7 +109,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                lvm_vg_name=GithubRunnerCharm.vg_name,
+                lxd_storage_path=GithubRunnerCharm.ram_pool_path,
             ),
             proxies={},
         )
@@ -134,7 +134,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                lvm_vg_name=GithubRunnerCharm.vg_name,
+                lxd_storage_path=GithubRunnerCharm.ram_pool_path,
             ),
             proxies={},
         )
@@ -161,7 +161,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                lvm_vg_name=GithubRunnerCharm.vg_name,
+                lxd_storage_path=GithubRunnerCharm.ram_pool_path,
             ),
             proxies={},
         )
@@ -180,7 +180,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                lvm_vg_name=GithubRunnerCharm.vg_name,
+                lxd_storage_path=GithubRunnerCharm.ram_pool_path,
             ),
             proxies={},
         )

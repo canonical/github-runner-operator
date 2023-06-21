@@ -51,14 +51,14 @@ class RunnerManagerConfig:
             organization.
         image: Name of the image for creating LXD instance.
         service_token: Token for accessing local service.
-        lvm_vg_name: Name of the LVM volume group to use as storage.
+        lxd_storage_path: Path to be used as LXD storage.
     """
 
     path: GitHubPath
     token: str
     image: str
     service_token: str
-    lvm_vg_name: str
+    lxd_storage_path: Path
 
 
 @dataclass
@@ -306,7 +306,7 @@ class RunnerManager:
                     self.app_name,
                     self.config.path,
                     self.proxies,
-                    self.config.lvm_vg_name,
+                    self.config.lxd_storage_path,
                     self._generate_runner_name(),
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
@@ -434,7 +434,7 @@ class RunnerManager:
             busy = getattr(remote_runner, "busy", None)
 
             config = RunnerConfig(
-                self.app_name, self.config.path, self.proxies, self.config.lvm_vg_name, name
+                self.app_name, self.config.path, self.proxies, self.config.lxd_storage_path, name
             )
             return Runner(
                 self._clients,

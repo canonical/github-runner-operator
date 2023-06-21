@@ -253,7 +253,7 @@ class Runner:
                 {
                     "name": "runner",
                     "driver": "lvm",
-                    "config": {"source": str(self.config.lvm_vg_name)},
+                    "config": {"source": str(self.config.lxd_storage_path)},
                 }
             )
 

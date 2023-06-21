@@ -112,8 +112,7 @@ class GithubRunnerCharm(CharmBase):
     repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
     repo_check_web_service_script = Path("src/repo_policy_compliance_service.py")
     repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
-    ram_pool_path = Path("/var/snap/lxd/common/ram")
-    vg_name = "ram_vg"
+    ram_pool_path = Path("/mnt/loop")
 
     def __init__(self, *args, **kargs) -> None:
         """Construct the charm.
@@ -157,23 +156,24 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
 
-    def _create_memory_storage(self, name: str, path: Path, size: int) -> None:
+    def _create_memory_storage(self, path: Path, size: int) -> None:
         """Create a tmpfs-based LVM volume group.
 
         Args:
-            name: Name of the LVM volume group.
-            path: Path to the directory of the tmpfs.
+            path: Path to directory for memory storage.
             size: Size of the tmpfs in kilobytes.
         """
-        mnt_path = Path("/mnt/ram-loop")
+        tmpfs_path = Path("/var/snap/lxd/common/ram")
 
-        if not path.exists():
-            path.mkdir(parents=True)
-            mnt_path.mkdir(parents=True, exist_ok=True)
-            execute_command(["mount", "-t", "tmpfs", "-o", f"size={size}k", "tmpfs", str(path)])
-            execute_command(["truncate", f"--size={size}K", str(path / "loop")])
-            execute_command(["mount", "-o", "loop", str(path / "loop"), str(mnt_path)])
-            execute_command(["vgcreate", name, "/dev/ram-loop"])
+        if not tmpfs_path.exists():
+            tmpfs_path.mkdir(parents=True)
+            path.mkdir(parents=True, exist_ok=True)
+            execute_command(
+                ["mount", "-t", "tmpfs", "-o", f"size={size}k", "tmpfs", str(tmpfs_path)]
+            )
+            execute_command(["truncate", f"--size={size}K", str(tmpfs_path / "storage")])
+            execute_command(["mkfs.ext4", str(tmpfs_path / "storage")])
+            execute_command(["mount", "-o", "loop", str(tmpfs_path / "storage"), str(path)])
 
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
@@ -205,7 +205,7 @@ class GithubRunnerCharm(CharmBase):
             bytes_with_unit_to_kib(self.config["vm-disk"]) * self.config["virtual-machines"]
         )
 
-        self._create_memory_storage(self.vg_name, self.ram_pool_path, size_in_kib)
+        self._create_memory_storage(self.ram_pool_path, size_in_kib)
 
         if self.service_token is None:
             self.service_token = self._get_service_token()
@@ -225,7 +225,7 @@ class GithubRunnerCharm(CharmBase):
         return RunnerManager(
             app_name,
             unit,
-            RunnerManagerConfig(path, token, "jammy", self.service_token, self.vg_name),
+            RunnerManagerConfig(path, token, "jammy", self.service_token, self.ram_pool_path),
             proxies=self.proxies,
         )
 
