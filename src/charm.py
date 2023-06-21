@@ -32,13 +32,7 @@ from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
-from utilities import (
-    bytes_with_unit_to_kib,
-    execute_command,
-    get_env_var,
-    retry,
-    secure_run_subprocess,
-)
+from utilities import bytes_with_unit_to_kib, execute_command, get_env_var, retry
 
 if TYPE_CHECKING:
     from ops.model import JsonObject  # pragma: no cover
@@ -171,12 +165,14 @@ class GithubRunnerCharm(CharmBase):
             path: Path to the directory of the tmpfs.
             size: Size of the tmpfs in kilobytes.
         """
-        result = secure_run_subprocess(["test", "-e", str(path)])
-        if result.returncode != 0:
-            path.mkdir(parents=True, exist_ok=True)
+        mnt_path = Path("/mnt/ram-loop")
+
+        if not path.exists():
+            path.mkdir(parents=True)
+            mnt_path.mkdir(parents=True, exist_ok=True)
             execute_command(["mount", "-t", "tmpfs", "-o", f"size={size}k", "tmpfs", str(path)])
             execute_command(["truncate", f"--size={size}K", str(path / "loop")])
-            execute_command(["mount", "-o", "loop", str(path / "loop"), "/dev/ram-loop"])
+            execute_command(["mount", "-o", "loop", str(path / "loop"), str(mnt_path)])
             execute_command(["vgcreate", name, "/dev/ram-loop"])
 
     def _get_runner_manager(
