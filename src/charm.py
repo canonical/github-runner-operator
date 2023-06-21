@@ -326,7 +326,7 @@ class GithubRunnerCharm(CharmBase):
             self._stored.path = self.config["path"]
 
         # Temporary disable changing disk size. Will be enable once LXD support tmpfs.
-        if self.config["vm-disk"] != self._store.disk:
+        if self.config["vm-disk"] != self._stored.disk:
             self.unit.status = BlockedStatus("Changing vm-disk size is not support right now")
             return
 
