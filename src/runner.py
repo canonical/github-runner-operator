@@ -245,22 +245,23 @@ class Runner:
             logger.info("Found existing runner LXD profile")
 
     @retry(tries=5, delay=5, local_logger=logger)
-    def _ensure_runner_storage_pool(self) -> str:
-        if not self._clients.lxd.storage_pools.exists("ram"):
+    def _ensure_runner_storage_pool(self) -> None:
+        """Ensure the runner storage pool exists."""
+        if not self._clients.lxd.storage_pools.exists("runner"):
             logger.info("Creating runner LXD storage pool.")
             self._clients.lxd.storage_pools.create(
                 {
-                    "name": "ram",
+                    "name": "runner",
                     "driver": "lvm",
-                    "config": {"source": str(self.config.lvm_vg_name)},
+                    "config": {"source": str(self.config.ram_vg_name)},
                 }
             )
 
             # Verify the action is successful.
-            if not self._clients.lxd.storage_pools.exists("ram"):
-                raise RunnerError("Failed to create ram LXD storage pool")
+            if not self._clients.lxd.storage_pools.exists("runner"):
+                raise RunnerError("Failed to create runner LXD storage pool")
         else:
-            logger.info("Found existing ram LXD storage pool.")
+            logger.info("Found existing runner LXD storage pool.")
 
     @retry(tries=5, delay=1, local_logger=logger)
     def _get_resource_profile(self, resources: VirtualMachineResources) -> str:
@@ -287,7 +288,7 @@ class Runner:
                 resource_profile_devices = {
                     "root": {
                         "path": "/",
-                        "pool": "ram",
+                        "pool": "runner",
                         "type": "disk",
                         "size": resources.disk,
                     }
