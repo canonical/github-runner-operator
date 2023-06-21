@@ -123,6 +123,7 @@ class RunnerManager:
         local_session = requests.Session()
         local_session.mount("http://", adapter)
         local_session.mount("https://", adapter)
+        local_session.trust_env = False
 
         self._clients = RunnerClients(
             GhApi(token=self.config.token),
@@ -204,7 +205,7 @@ class RunnerManager:
         sha256 = hashlib.sha256()
 
         with RunnerManager.runner_bin_path.open(mode="wb") as file:
-            for chunk in response.iter_content(decode_unicode=False):
+            for chunk in response.iter_content(chunk_size=128 * 1024, decode_unicode=False):
                 file.write(chunk)
 
                 sha256.update(chunk)
