@@ -259,21 +259,22 @@ class Runner:
     @retry(tries=5, delay=5, local_logger=logger)
     def _ensure_runner_storage_pool(self) -> None:
         """Ensure the runner storage pool exists."""
-        if not self._clients.lxd.storage_pools.exists("runner"):
-            logger.info("Creating runner LXD storage pool.")
-            self._clients.lxd.storage_pools.create(
-                {
-                    "name": "runner",
-                    "driver": "dir",
-                    "config": {"source": str(self.config.lxd_storage_path)},
-                }
-            )
-
-            # Verify the action is successful.
-            if not self._clients.lxd.storage_pools.exists("runner"):
-                raise RunnerError("Failed to create runner LXD storage pool")
-        else:
+        if self._clients.lxd.storage_pools.exists("runner"):
             logger.info("Found existing runner LXD storage pool.")
+            return
+
+        logger.info("Creating runner LXD storage pool.")
+        self._clients.lxd.storage_pools.create(
+            {
+                "name": "runner",
+                "driver": "dir",
+                "config": {"source": str(self.config.lxd_storage_path)},
+            }
+        )
+
+        # Verify the action is successful.
+        if not self._clients.lxd.storage_pools.exists("runner"):
+            raise RunnerError("Failed to create runner LXD storage pool")
 
     @retry(tries=5, delay=1, local_logger=logger)
     def _get_resource_profile(self, resources: VirtualMachineResources) -> str:

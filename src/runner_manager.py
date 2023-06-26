@@ -209,6 +209,7 @@ class RunnerManager:
         sha256 = hashlib.sha256()
 
         with RunnerManager.runner_bin_path.open(mode="wb") as file:
+            # Process with chunk_size of 128 KiB.
             for chunk in response.iter_content(chunk_size=128 * 1024, decode_unicode=False):
                 file.write(chunk)
 

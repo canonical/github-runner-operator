@@ -198,7 +198,7 @@ class GithubRunnerCharm(CharmBase):
                 name.
 
         Returns:
-            A instance of RunnerManager.
+            An instance of RunnerManager.
         """
         if token is None:
             token = self.config["token"]
