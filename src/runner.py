@@ -243,12 +243,7 @@ class Runner:
 
         logger.info("Creating runner LXD profile")
         profile_config = {}
-        profile_devices = {
-            "root": {
-                # Temporary fix to allow tmpfs to work for LXD VM.
-                "io.cache": "unsafe",
-            }
-        }
+        profile_devices = {}
         if LXD_PROFILE_YAML.exists():
             additional_lxc_profile = yaml.safe_load(LXD_PROFILE_YAML.read_text())
             profile_config = {
@@ -312,6 +307,10 @@ class Runner:
                         "size": resources.disk,
                     }
                 }
+                # Temporary fix to allow tmpfs to work for LXD VM.
+                if not LXD_PROFILE_YAML.exists():
+                    resource_profile_devices["root"]["io.cache"] = "unsafe"
+
                 self._clients.lxd.profiles.create(
                     profile_name, resource_profile_config, resource_profile_devices
                 )
