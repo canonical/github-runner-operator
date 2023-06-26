@@ -237,24 +237,30 @@ class Runner:
         Raises:
             RunnerError: Unable to create the runner profile.
         """
-        if not self._clients.lxd.profiles.exists("runner"):
-            logger.info("Creating runner LXD profile")
-            profile_config = {}
-            profile_devices = {}
-            if LXD_PROFILE_YAML.exists():
-                additional_lxc_profile = yaml.safe_load(LXD_PROFILE_YAML.read_text())
-                profile_config = {
-                    k: json.dumps(v) if isinstance(v, bool) else v
-                    for k, v in additional_lxc_profile["config"].items()
-                }
-                profile_devices = additional_lxc_profile["devices"]
-            self._clients.lxd.profiles.create("runner", profile_config, profile_devices)
-
-            # Verify the action is successful.
-            if not self._clients.lxd.profiles.exists("runner"):
-                raise RunnerError("Failed to create runner LXD profile")
-        else:
+        if self._clients.lxd.profiles.exists("runner"):
             logger.info("Found existing runner LXD profile")
+            return
+
+        logger.info("Creating runner LXD profile")
+        profile_config = {}
+        profile_devices = {
+            "root": {
+                # Temporary fix to allow tmpfs to work for LXD VM.
+                "io.cache": "unsafe",
+            }
+        }
+        if LXD_PROFILE_YAML.exists():
+            additional_lxc_profile = yaml.safe_load(LXD_PROFILE_YAML.read_text())
+            profile_config = {
+                k: json.dumps(v) if isinstance(v, bool) else v
+                for k, v in additional_lxc_profile["config"].items()
+            }
+            profile_devices = additional_lxc_profile["devices"]
+        self._clients.lxd.profiles.create("runner", profile_config, profile_devices)
+
+        # Verify the action is successful.
+        if not self._clients.lxd.profiles.exists("runner"):
+            raise RunnerError("Failed to create runner LXD profile")
 
     @retry(tries=5, delay=5, local_logger=logger)
     def _ensure_runner_storage_pool(self) -> None:
@@ -304,8 +310,6 @@ class Runner:
                         "pool": "runner",
                         "type": "disk",
                         "size": resources.disk,
-                        # Temporary fix to allow tmpfs to work for LXD VM.
-                        "io.cache": "unsafe",
                     }
                 }
                 self._clients.lxd.profiles.create(
