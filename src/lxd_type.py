@@ -25,13 +25,12 @@ LxdResourceProfileConfig = TypedDict(
 LxdResourceProfileConfig.__doc__ = "Configuration LXD profile."
 
 
-class LxdResourceProfileDevicesDisk(TypedDict):
-    """LXD device profile of disk."""
-
-    path: str
-    pool: str
-    type: str
-    size: str
+# The keys are not valid identifiers, hence this is defined with function-based syntax.
+LxdResourceProfileDevicesDisk = TypedDict(
+    "LxdResourceProfileDevicesDisk",
+    {"path": str, "pool": str, "type": str, "size": str, "io.cache": str},
+)
+LxdResourceProfileDevicesDisk.__doc__ = "LXD device profile of disk."
 
 
 LxdResourceProfileDevices = dict[str, LxdResourceProfileDevicesDisk]

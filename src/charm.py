@@ -113,7 +113,7 @@ class GithubRunnerCharm(CharmBase):
     repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
     repo_check_web_service_script = Path("src/repo_policy_compliance_service.py")
     repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
-    ram_pool_path = Path("/mnt/loop")
+    ram_pool_path = Path("/storage/ram")
 
     def __init__(self, *args, **kargs) -> None:
         """Construct the charm.
@@ -170,18 +170,11 @@ class GithubRunnerCharm(CharmBase):
             path: Path to directory for memory storage.
             size: Size of the tmpfs in kilobytes.
         """
-        tmpfs_path = Path("/var/snap/lxd/common/ram")
-
-        if not tmpfs_path.exists():
-            tmpfs_path.mkdir(parents=True)
-            path.mkdir(parents=True, exist_ok=True)
-            execute_command(
-                ["mount", "-t", "tmpfs", "-o", f"size={size}k", "tmpfs", str(tmpfs_path)]
-            )
-            execute_command(["truncate", f"--size={size}K", str(tmpfs_path / "storage")])
-            execute_command(["mkfs.ext4", str(tmpfs_path / "storage")])
-            execute_command(["mount", "-o", "loop", str(tmpfs_path / "storage"), str(path)])
-            execute_command(["rm", "-rf", str(path / "lost+found")])
+        # Create tmpfs if not exists, else resize it.
+        if not path.exists():
+            execute_command(["mount", "-t", "tmpfs", "-o", f"size={size}k", "tmpfs", str(path)])
+        else:
+            execute_command(["mount", "-o", f"remount,size={size}k", str(path)])
 
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None

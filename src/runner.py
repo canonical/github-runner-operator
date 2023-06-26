@@ -303,6 +303,8 @@ class Runner:
                         "pool": "runner",
                         "type": "disk",
                         "size": resources.disk,
+                        # Temporary fix to allow tmpfs to work for LXD VM.
+                        "io.cache": "unsafe",
                     }
                 }
                 self._clients.lxd.profiles.create(
