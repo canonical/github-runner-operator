@@ -30,6 +30,7 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from errors import MissingConfigurationError, RunnerError, SubprocessError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
+from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
 from utilities import bytes_with_unit_to_kib, execute_command, get_env_var, retry
@@ -123,7 +124,10 @@ class GithubRunnerCharm(CharmBase):
                 class.
         """
         super().__init__(*args, **kargs)
-
+        if LXD_PROFILE_YAML.exists():
+            if self.config.get("test-mode") != "insecure":
+                raise RuntimeError("lxd-profile.yaml detected outside test mode")
+            logger.critical("test mode is enabled")
         self._event_timer = EventTimer(self.unit.name)
 
         self._stored.set_default(
@@ -137,7 +141,9 @@ class GithubRunnerCharm(CharmBase):
             self.proxies["http"] = http_proxy
         if https_proxy := get_env_var("JUJU_CHARM_HTTPS_PROXY"):
             self.proxies["https"] = https_proxy
-        if no_proxy := get_env_var("JUJU_CHARM_NO_PROXY"):
+        # there's no need for no_proxy if there's no http_proxy or https_proxy
+        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY")
+        if (https_proxy or http_proxy) and no_proxy:
             self.proxies["no_proxy"] = no_proxy
 
         self.service_token = None

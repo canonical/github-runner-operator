@@ -53,3 +53,8 @@ options:
     default: 60
     description: >
       Minutes between each check for new versions of the runner binary.
+  test-mode:
+    type: string
+    description: >
+      When set to 'insecure', the charm test mode is activated, which may deactivate some security
+      hardening measures.

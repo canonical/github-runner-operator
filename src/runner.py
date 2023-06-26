@@ -14,9 +14,12 @@ from __future__ import annotations
 
 import json
 import logging
+import pathlib
 import time
 from pathlib import Path
 from typing import Iterable, Optional, Sequence
+
+import yaml
 
 from errors import LxdError, RunnerCreateError, RunnerError, RunnerFileLoadError, RunnerRemoveError
 from lxd import LxdInstance
@@ -32,6 +35,9 @@ from runner_type import (
 from utilities import retry
 
 logger = logging.getLogger(__name__)
+LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
+if not LXD_PROFILE_YAML.exists():
+    LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
 
 
 class Runner:
@@ -208,7 +214,7 @@ class Runner:
         # Create runner instance.
         instance_config: LxdInstanceConfig = {
             "name": self.config.name,
-            "type": "virtual-machine",
+            "type": "container" if LXD_PROFILE_YAML.exists() else "virtual-machine",
             "source": {
                 "type": "image",
                 "mode": "pull",
@@ -233,10 +239,16 @@ class Runner:
         """
         if not self._clients.lxd.profiles.exists("runner"):
             logger.info("Creating runner LXD profile")
-            profile_config = {
-                "security.nesting": "true",
-            }
-            self._clients.lxd.profiles.create("runner", profile_config, {})
+            profile_config = {}
+            profile_devices = {}
+            if LXD_PROFILE_YAML.exists():
+                additional_lxc_profile = yaml.safe_load(LXD_PROFILE_YAML.read_text())
+                profile_config = {
+                    k: json.dumps(v) if isinstance(v, bool) else v
+                    for k, v in additional_lxc_profile["config"].items()
+                }
+                profile_devices = additional_lxc_profile["devices"]
+            self._clients.lxd.profiles.create("runner", profile_config, profile_devices)
 
             # Verify the action is successful.
             if not self._clients.lxd.profiles.exists("runner"):
@@ -326,14 +338,16 @@ class Runner:
         # Setting `wait=True` only ensure the instance has begin to boot up.
         self.instance.start(wait=True)
 
-    @retry(tries=5, delay=30, local_logger=logger)
+    @retry(tries=20, delay=30, local_logger=logger)
     def _wait_boot_up(self) -> None:
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
         # Wait for the instance to finish to boot up and network to be up.
-        self.instance.execute(["/usr/bin/who"])
-        self.instance.execute(["/usr/bin/nslookup", "github.com"])
+        if self.instance.execute(["/usr/bin/who"])[0] != 0:
+            raise RunnerError("Runner system is not ready")
+        if self.instance.execute(["/usr/bin/nslookup", "github.com"])[0] != 0:
+            raise RunnerError("Runner network is not ready")
 
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
