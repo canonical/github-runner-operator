@@ -170,19 +170,17 @@ class GithubRunnerCharm(CharmBase):
             size: Size of the tmpfs in kilobytes.
         """
         try:
-            path.mkdir(parents=True, exist_ok=True)
-        except OSError as err:
-            logger.exception("Unable to create directory")
-            raise RunnerError("Problem with runner storage due to unable setup directory") from err
-
-        try:
             # Create tmpfs if not exists, else resize it.
             if not path.exists():
+                path.mkdir(parents=True, exist_ok=True)
                 execute_command(
                     ["mount", "-t", "tmpfs", "-o", f"size={size}k", "tmpfs", str(path)]
                 )
             else:
                 execute_command(["mount", "-o", f"remount,size={size}k", str(path)])
+        except OSError as err:
+            logger.exception("Unable to create directory")
+            raise RunnerError("Problem with runner storage due to unable setup directory") from err
         except SubprocessError as err:
             logger.exception("Unable to create or resize tmpfs")
             raise RunnerError(
