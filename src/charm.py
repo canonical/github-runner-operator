@@ -169,11 +169,19 @@ class GithubRunnerCharm(CharmBase):
             path: Path to directory for memory storage.
             size: Size of the tmpfs in kilobytes.
         """
-        # Create tmpfs if not exists, else resize it.
-        if not path.exists():
-            execute_command(["mount", "-t", "tmpfs", "-o", f"size={size}k", "tmpfs", str(path)])
-        else:
-            execute_command(["mount", "-o", f"remount,size={size}k", str(path)])
+        try:
+            # Create tmpfs if not exists, else resize it.
+            if not path.exists():
+                execute_command(
+                    ["mount", "-t", "tmpfs", "-o", f"size={size}k", "tmpfs", str(path)]
+                )
+            else:
+                execute_command(["mount", "-o", f"remount,size={size}k", str(path)])
+        except SubprocessError as err:
+            logger.exception("Unable to create or resize tmpfs")
+            raise RunnerError(
+                "Problem with runner storage due to unable to create or resize tmpfs"
+            ) from err
 
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
