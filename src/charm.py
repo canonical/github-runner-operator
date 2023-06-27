@@ -6,6 +6,7 @@
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
 import functools
+import json
 import logging
 import os
 import secrets
@@ -29,6 +30,7 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 from errors import MissingConfigurationError, RunnerError, SubprocessError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
+from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
@@ -39,6 +41,32 @@ if TYPE_CHECKING:
     from ops.model import JsonObject  # pragma: no cover
 
 logger = logging.getLogger(__name__)
+LXD_INIT_CONFIG = {
+    "config": {},
+    "networks": [
+        {
+            "config": {"ipv4.address": "auto", "ipv6.address": "none"},
+            "description": "",
+            "name": "lxdbr0",
+            "type": "",
+        }
+    ],
+    "storage_pools": [
+        {"config": {"size": "19GB"}, "description": "", "name": "default", "driver": "zfs"}
+    ],
+    "profiles": [
+        {
+            "config": {},
+            "description": "",
+            "devices": {
+                "eth0": {"name": "eth0", "network": "lxdbr0", "type": "nic"},
+                "root": {"path": "/", "pool": "default", "type": "disk"},
+            },
+            "name": "default",
+        }
+    ],
+    "cluster": None,
+}
 
 
 class ReconcileRunnersEvent(EventBase):
@@ -259,7 +287,7 @@ class GithubRunnerCharm(CharmBase):
             # The charm cannot proceed without dependencies.
             self.unit.status = BlockedStatus("Failed to install dependencies")
             return
-
+        self._refresh_firewall()
         runner_manager = self._get_runner_manager()
         if runner_manager:
             self.unit.status = MaintenanceStatus("Downloading runner binary")
@@ -297,6 +325,7 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Reinstalling dependencies...")
         self._install_deps()
         self._start_services()
+        self._refresh_firewall()
 
         logger.info("Flushing the runners...")
         runner_manager = self._get_runner_manager()
@@ -313,6 +342,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of configuration change.
         """
+        self._refresh_firewall()
         try:
             self._event_timer.ensure_event_timer(
                 "update-runner-bin", self.config["update-interval"]
@@ -549,7 +579,9 @@ class GithubRunnerCharm(CharmBase):
             env["NO_PROXY"] = self.proxies["no_proxy"]
             env["no_proxy"] = self.proxies["no_proxy"]
 
-        execute_command(["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip"])
+        execute_command(
+            ["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip", "nftables"]
+        )
         execute_command(
             [
                 "/usr/bin/pip",
@@ -576,9 +608,11 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
         execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
         execute_command(["/snap/bin/lxd", "waitready"])
-        execute_command(["/snap/bin/lxd", "init", "--auto"])
+        execute_command(
+            ["/snap/bin/lxd", "init", "--preseed"],
+            input=json.dumps(LXD_INIT_CONFIG).encode("utf-8"),
+        )
         execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
-        execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
         logger.info("Finished installing charm dependencies.")
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
@@ -632,6 +666,15 @@ class GithubRunnerCharm(CharmBase):
             self.service_token_path.write_text(service_token, encoding="utf-8")
 
         return service_token
+
+    def _refresh_firewall(self):
+        """Refresh the firewall configuration and rules."""
+        firewall_allowlist_config = self.config.get("allowlist")
+        allowlist = [
+            FirewallEntry.decode(entry.strip()) for entry in firewall_allowlist_config.split(",")
+        ]
+        firewall = Firewall.for_network()
+        firewall.refresh_firewall(allowlist)
 
 
 if __name__ == "__main__":

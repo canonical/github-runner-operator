@@ -58,3 +58,10 @@ options:
     description: >
       When set to 'insecure', the charm test mode is activated, which may deactivate some security
       hardening measures.
+  allowlist:
+    type: string
+    default: "0.0.0.0/0:1-65535, 0.0.0.0/0:1-65535:udp"
+    description: >
+      A list of IPv4 networks and tcp/udp ports that runners can access. Note that ICMP traffic 
+      and IPv6 traffic are always disallowed. Additionally, the runner will always have
+      access to essential services such as DHCP and DNS regardless of the allowlist configuration.
