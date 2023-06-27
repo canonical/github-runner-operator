@@ -27,13 +27,13 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-from errors import RunnerError, SubprocessError
+from errors import MissingConfigurationError, RunnerError, SubprocessError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
-from utilities import execute_command, get_env_var, retry
+from utilities import bytes_with_unit_to_kib, execute_command, get_env_var, retry
 
 if TYPE_CHECKING:
     from ops.model import JsonObject  # pragma: no cover
@@ -53,9 +53,7 @@ CharmT = TypeVar("CharmT")
 EventT = TypeVar("EventT")
 
 
-def catch_unexpected_charm_errors(
-    func: Callable[[CharmT, EventT], None]
-) -> Callable[[CharmT, EventT], None]:
+def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[CharmT, EventT], None]:
     """Catch unexpected errors in charm.
 
     This decorator is for unrecoverable errors and sets the charm to
@@ -73,14 +71,16 @@ def catch_unexpected_charm_errors(
         # Safe guard against unexpected error.
         try:
             func(self, event)
-        except Exception as err:  # pylint: disable=broad-exception-caught
-            logger.exception(err)
-            self.unit.status = BlockedStatus(str(err))
+        except MissingConfigurationError as err:
+            logger.exception("Missing required charm configuration")
+            self.unit.status = BlockedStatus(
+                f"Missing required charm configuration: {err.configs}"
+            )
 
     return func_with_catch_unexpected_errors
 
 
-def catch_unexpected_action_errors(
+def catch_action_errors(
     func: Callable[[CharmT, ActionEvent], None]
 ) -> Callable[[CharmT, ActionEvent], None]:
     """Catch unexpected errors in actions.
@@ -93,15 +93,15 @@ def catch_unexpected_action_errors(
     """
 
     @functools.wraps(func)
-    def func_with_catch_unexpected_errors(self, event: ActionEvent) -> None:
+    def func_with_catch_errors(self, event: ActionEvent) -> None:
         # Safe guard against unexpected error.
         try:
             func(self, event)
-        except Exception as err:  # pylint: disable=broad-exception-caught
-            logger.exception(err)
-            event.fail(f"Failed to get runner info: {err}")
+        except MissingConfigurationError as err:
+            logger.exception("Missing required charm configuration")
+            event.fail(f"Missing required charm configuration: {err.configs}")
 
-    return func_with_catch_unexpected_errors
+    return func_with_catch_errors
 
 
 class GithubRunnerCharm(CharmBase):
@@ -113,6 +113,7 @@ class GithubRunnerCharm(CharmBase):
     repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
     repo_check_web_service_script = Path("src/repo_policy_compliance_service.py")
     repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
+    ram_pool_path = Path("/storage/ram")
 
     def __init__(self, *args, **kargs) -> None:
         """Construct the charm.
@@ -161,9 +162,34 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
 
+    def _create_memory_storage(self, path: Path, size: int) -> None:
+        """Create a tmpfs-based LVM volume group.
+
+        Args:
+            path: Path to directory for memory storage.
+            size: Size of the tmpfs in kilobytes.
+        """
+        try:
+            # Create tmpfs if not exists, else resize it.
+            if not path.exists():
+                path.mkdir(parents=True, exist_ok=True)
+                execute_command(
+                    ["mount", "-t", "tmpfs", "-o", f"size={size}k", "tmpfs", str(path)]
+                )
+            else:
+                execute_command(["mount", "-o", f"remount,size={size}k", str(path)])
+        except OSError as err:
+            logger.exception("Unable to create directory")
+            raise RunnerError("Problem with runner storage due to unable setup directory") from err
+        except SubprocessError as err:
+            logger.exception("Unable to create or resize tmpfs")
+            raise RunnerError(
+                "Problem with runner storage due to unable to create or resize tmpfs"
+            ) from err
+
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
-    ) -> Optional[RunnerManager]:
+    ) -> RunnerManager:
         """Get a RunnerManager instance, or None if missing config.
 
         Args:
@@ -172,15 +198,26 @@ class GithubRunnerCharm(CharmBase):
                 name.
 
         Returns:
-            A instance of RunnerManager if the token and path configuration can be found.
+            An instance of RunnerManager.
         """
         if token is None:
             token = self.config["token"]
         if path is None:
             path = self.config["path"]
 
-        if not token or not path:
-            return None
+        missing_configs = []
+        if not token:
+            missing_configs.append("token")
+        if not path:
+            missing_configs.append("path")
+        if missing_configs:
+            raise MissingConfigurationError(missing_configs)
+
+        size_in_kib = (
+            bytes_with_unit_to_kib(self.config["vm-disk"]) * self.config["virtual-machines"]
+        )
+
+        self._create_memory_storage(self.ram_pool_path, size_in_kib)
 
         if self.service_token is None:
             self.service_token = self._get_service_token()
@@ -200,11 +237,11 @@ class GithubRunnerCharm(CharmBase):
         return RunnerManager(
             app_name,
             unit,
-            RunnerManagerConfig(path, token, "jammy", self.service_token),
+            RunnerManagerConfig(path, token, "jammy", self.service_token, self.ram_pool_path),
             proxies=self.proxies,
         )
 
-    @catch_unexpected_charm_errors
+    @catch_charm_errors
     def _on_install(self, _event: InstallEvent) -> None:
         """Handle the installation of charm.
 
@@ -250,7 +287,7 @@ class GithubRunnerCharm(CharmBase):
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
-    @catch_unexpected_charm_errors
+    @catch_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
         """Handle the update of charm.
 
@@ -269,7 +306,7 @@ class GithubRunnerCharm(CharmBase):
         runner_manager.flush()
         self._reconcile_runners(runner_manager)
 
-    @catch_unexpected_charm_errors
+    @catch_charm_errors
     def _on_config_changed(self, _event: ConfigChangedEvent) -> None:
         """Handle the configuration change.
 
@@ -304,7 +341,7 @@ class GithubRunnerCharm(CharmBase):
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
-    @catch_unexpected_charm_errors
+    @catch_charm_errors
     def _on_update_runner_bin(self, _event: UpdateRunnerBinEvent) -> None:
         """Handle checking update of runner binary event.
 
@@ -343,7 +380,7 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = ActiveStatus()
 
-    @catch_unexpected_charm_errors
+    @catch_charm_errors
     def _on_reconcile_runners(self, _event: ReconcileRunnersEvent) -> None:
         """Handle the reconciliation of runners.
 
@@ -369,7 +406,7 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = ActiveStatus()
 
-    @catch_unexpected_action_errors
+    @catch_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of checking of runner state.
 
@@ -409,7 +446,7 @@ class GithubRunnerCharm(CharmBase):
             }
         )
 
-    @catch_unexpected_action_errors
+    @catch_action_errors
     def _on_reconcile_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of reconcile of runner state.
 
@@ -426,7 +463,7 @@ class GithubRunnerCharm(CharmBase):
         self._on_check_runners_action(event)
         event.set_results(delta)
 
-    @catch_unexpected_action_errors
+    @catch_action_errors
     def _on_flush_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of flushing all runner and reconciling afterwards.
 
@@ -444,7 +481,7 @@ class GithubRunnerCharm(CharmBase):
         self._on_check_runners_action(event)
         event.set_results(delta)
 
-    @catch_unexpected_charm_errors
+    @catch_charm_errors
     def _on_stop(self, _: StopEvent) -> None:
         """Handle the stopping of the charm.
 
@@ -489,7 +526,7 @@ class GithubRunnerCharm(CharmBase):
             return {"delta": {"virtual-machines": delta_virtual_machines}}
         # Safe guard against transient unexpected error.
         except Exception as err:  # pylint: disable=broad-exception-caught
-            logger.exception("Failed to update runner binary")
+            logger.exception("Failed to reconcile runners.")
             # Failure to reconcile runners is a transient error.
             # The charm automatically reconciles runners on a schedule.
             self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
@@ -517,7 +554,6 @@ class GithubRunnerCharm(CharmBase):
             [
                 "/usr/bin/pip",
                 "install",
-                "flask",
                 "git+https://github.com/canonical/repo-policy-compliance@main",
             ],
             env=env,
@@ -534,6 +570,7 @@ class GithubRunnerCharm(CharmBase):
                 "cpu-checker",
                 "libvirt-clients",
                 "libvirt-daemon-driver-qemu",
+                "apparmor-utils",
             ],
         )
         execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])

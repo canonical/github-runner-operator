@@ -5,6 +5,7 @@
 
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import NamedTuple, Optional, TypedDict, Union
 
 import jinja2
@@ -75,11 +76,21 @@ class RunnerClients:
 
 @dataclass
 class RunnerConfig:
-    """Configuration for runner."""
+    """Configuration for runner.
+
+    Attrs:
+        app_name: Application name of the charm.
+        path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
+            name.
+        proxies: HTTP(S) proxy settings.
+        lxd_storage_path: Path to be used as LXD storage.
+        name: Name of the runner.
+    """
 
     app_name: str
     path: GitHubPath
     proxies: ProxySetting
+    lxd_storage_path: Path
     name: str
 
 

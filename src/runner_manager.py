@@ -49,12 +49,16 @@ class RunnerManagerConfig:
             name.
         token: GitHub personal access token to register runner to the repository or
             organization.
+        image: Name of the image for creating LXD instance.
+        service_token: Token for accessing local service.
+        lxd_storage_path: Path to be used as LXD storage.
     """
 
     path: GitHubPath
     token: str
     image: str
     service_token: str
+    lxd_storage_path: Path
 
 
 @dataclass
@@ -205,6 +209,7 @@ class RunnerManager:
         sha256 = hashlib.sha256()
 
         with RunnerManager.runner_bin_path.open(mode="wb") as file:
+            # Process with chunk_size of 128 KiB.
             for chunk in response.iter_content(chunk_size=128 * 1024, decode_unicode=False):
                 file.write(chunk)
 
@@ -303,6 +308,7 @@ class RunnerManager:
                     self.app_name,
                     self.config.path,
                     self.proxies,
+                    self.config.lxd_storage_path,
                     self._generate_runner_name(),
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
@@ -429,7 +435,9 @@ class RunnerManager:
             online = getattr(remote_runner, "status", None) == "online"
             busy = getattr(remote_runner, "busy", None)
 
-            config = RunnerConfig(self.app_name, self.config.path, self.proxies, name)
+            config = RunnerConfig(
+                self.app_name, self.config.path, self.proxies, self.config.lxd_storage_path, name
+            )
             return Runner(
                 self._clients,
                 config,

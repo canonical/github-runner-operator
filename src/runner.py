@@ -207,6 +207,7 @@ class Runner:
         """
         logger.info("Creating an LXD instance for runner: %s", self.config.name)
 
+        self._ensure_runner_storage_pool()
         self._ensure_runner_profile()
         resource_profile = self._get_resource_profile(resources)
 
@@ -236,24 +237,45 @@ class Runner:
         Raises:
             RunnerError: Unable to create the runner profile.
         """
-        if not self._clients.lxd.profiles.exists("runner"):
-            logger.info("Creating runner LXD profile")
-            profile_config = {}
-            profile_devices = {}
-            if LXD_PROFILE_YAML.exists():
-                additional_lxc_profile = yaml.safe_load(LXD_PROFILE_YAML.read_text())
-                profile_config = {
-                    k: json.dumps(v) if isinstance(v, bool) else v
-                    for k, v in additional_lxc_profile["config"].items()
-                }
-                profile_devices = additional_lxc_profile["devices"]
-            self._clients.lxd.profiles.create("runner", profile_config, profile_devices)
-
-            # Verify the action is successful.
-            if not self._clients.lxd.profiles.exists("runner"):
-                raise RunnerError("Failed to create runner LXD profile")
-        else:
+        if self._clients.lxd.profiles.exists("runner"):
             logger.info("Found existing runner LXD profile")
+            return
+
+        logger.info("Creating runner LXD profile")
+        profile_config = {}
+        profile_devices = {}
+        if LXD_PROFILE_YAML.exists():
+            additional_lxc_profile = yaml.safe_load(LXD_PROFILE_YAML.read_text())
+            profile_config = {
+                k: json.dumps(v) if isinstance(v, bool) else v
+                for k, v in additional_lxc_profile["config"].items()
+            }
+            profile_devices = additional_lxc_profile["devices"]
+        self._clients.lxd.profiles.create("runner", profile_config, profile_devices)
+
+        # Verify the action is successful.
+        if not self._clients.lxd.profiles.exists("runner"):
+            raise RunnerError("Failed to create runner LXD profile")
+
+    @retry(tries=5, delay=5, local_logger=logger)
+    def _ensure_runner_storage_pool(self) -> None:
+        """Ensure the runner storage pool exists."""
+        if self._clients.lxd.storage_pools.exists("runner"):
+            logger.info("Found existing runner LXD storage pool.")
+            return
+
+        logger.info("Creating runner LXD storage pool.")
+        self._clients.lxd.storage_pools.create(
+            {
+                "name": "runner",
+                "driver": "dir",
+                "config": {"source": str(self.config.lxd_storage_path)},
+            }
+        )
+
+        # Verify the action is successful.
+        if not self._clients.lxd.storage_pools.exists("runner"):
+            raise RunnerError("Failed to create runner LXD storage pool")
 
     @retry(tries=5, delay=1, local_logger=logger)
     def _get_resource_profile(self, resources: VirtualMachineResources) -> str:
@@ -280,11 +302,15 @@ class Runner:
                 resource_profile_devices = {
                     "root": {
                         "path": "/",
-                        "pool": "default",
+                        "pool": "runner",
                         "type": "disk",
                         "size": resources.disk,
                     }
                 }
+                # Temporary fix to allow tmpfs to work for LXD VM.
+                if not LXD_PROFILE_YAML.exists():
+                    resource_profile_devices["root"]["io.cache"] = "unsafe"
+
                 self._clients.lxd.profiles.create(
                     profile_name, resource_profile_config, resource_profile_devices
                 )
