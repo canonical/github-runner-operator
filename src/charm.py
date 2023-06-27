@@ -646,8 +646,7 @@ class GithubRunnerCharm(CharmBase):
             FirewallEntry.decode(entry.strip()) for entry in firewall_allowlist_config.split(",")
         ]
         firewall = Firewall.for_network()
-        if not LXD_PROFILE_YAML.exists():
-            firewall.refresh_firewall(allowlist)
+        firewall.refresh_firewall(allowlist)
 
 
 if __name__ == "__main__":
