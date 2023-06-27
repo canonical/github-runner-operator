@@ -563,6 +563,7 @@ class GithubRunnerCharm(CharmBase):
             env["NO_PROXY"] = self.proxies["no_proxy"]
             env["no_proxy"] = self.proxies["no_proxy"]
 
+        # install dependencies used by repo-policy-compliance and the firewall
         execute_command(
             ["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip", "nftables"]
         )

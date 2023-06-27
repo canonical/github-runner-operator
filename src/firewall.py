@@ -120,5 +120,5 @@ class Firewall:  # pylint: disable=too-few-public-methods
             lxc_network: The target lxc network name.
         """
         network = execute_command(["/snap/bin/lxc", "network", "get", lxc_network, "ipv4.address"])
-        host_ip = str(ipaddress.IPv4Interface(network).ip)
+        host_ip = str(ipaddress.IPv4Interface(network.strip()).ip)
         return cls(host_ip=host_ip)
