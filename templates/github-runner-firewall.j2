@@ -8,14 +8,14 @@ table bridge github_runner_firewall {
         ether type arp accept
         ct state established,related accept
 
-        iifname "tap*" ip daddr {{ host_ip }} udp dport 53 counter accept
-        iifname "tap*" ip daddr { {{ host_ip }}, 255.255.255.255 } udp dport 67 counter accept
-        iifname "tap*" ip daddr {{ host_ip }} tcp dport 8080 counter accept
+        ibrname lxdbr0 ip daddr {{ host_ip }} udp dport 53 counter accept
+        ibrname lxdbr0 ip daddr { {{ host_ip }}, 255.255.255.255 } udp dport 67 counter accept
+        ibrname lxdbr0 ip daddr {{ host_ip }} tcp dport 8080 counter accept
 
 {% for entry in allowlist %}
-        iifname "tap*" ip daddr {{ entry.ip_range }} {{ "udp" if entry.is_udp else "tcp" }} dport {{ entry.port_range }} counter accept
+        ibrname lxdbr0 ip daddr {{ entry.ip_range }} {{ "udp" if entry.is_udp else "tcp" }} dport {{ entry.port_range }} counter accept
 {% endfor %}
 
-        iifname "tap*" counter reject with icmpx type admin-prohibited
+        ibrname lxdbr0 counter reject with icmpx type admin-prohibited
     }
 }

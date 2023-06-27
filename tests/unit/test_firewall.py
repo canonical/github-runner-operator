@@ -42,6 +42,7 @@ def test_default_firewall_ruleset():
     ]
 
     ruleset = firewall._render_firewall_template(allowlist)
+    print(ruleset)
     excepted = textwrap.dedent(
         """\
     table bridge github_runner_firewall
@@ -54,14 +55,14 @@ def test_default_firewall_ruleset():
             ether type arp accept
             ct state established,related accept
 
-            iifname "tap*" ip daddr 10.98.139.1 udp dport 53 counter accept
-            iifname "tap*" ip daddr { 10.98.139.1, 255.255.255.255 } udp dport 67 counter accept
-            iifname "tap*" ip daddr 10.98.139.1 tcp dport 8080 counter accept
+            ibrname lxdbr0 ip daddr 10.98.139.1 udp dport 53 counter accept
+            ibrname lxdbr0 ip daddr { 10.98.139.1, 255.255.255.255 } udp dport 67 counter accept
+            ibrname lxdbr0 ip daddr 10.98.139.1 tcp dport 8080 counter accept
 
-            iifname "tap*" ip daddr 0.0.0.0/0 tcp dport 1-65535 counter accept
-            iifname "tap*" ip daddr 0.0.0.0/0 udp dport 1-65535 counter accept
+            ibrname lxdbr0 ip daddr 0.0.0.0/0 tcp dport 1-65535 counter accept
+            ibrname lxdbr0 ip daddr 0.0.0.0/0 udp dport 1-65535 counter accept
 
-            iifname "tap*" counter reject with icmpx type admin-prohibited
+            ibrname lxdbr0 counter reject with icmpx type admin-prohibited
         }
     }"""
     )
