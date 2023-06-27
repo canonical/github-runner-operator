@@ -24,13 +24,13 @@ TESTING_FIREWALL_ENTRIES = (
 )
 
 
-@pytest.mark.parametrize("entry,excepted_firewall_entry", TESTING_FIREWALL_ENTRIES)
-def test_parse_firewall_entry(entry: str, excepted_firewall_entry: typing.Optional[FirewallEntry]):
+@pytest.mark.parametrize("entry,expected_firewall_entry", TESTING_FIREWALL_ENTRIES)
+def test_parse_firewall_entry(entry: str, expected_firewall_entry: typing.Optional[FirewallEntry]):
     try:
         firewall_entry = FirewallEntry.decode(entry)
-        assert firewall_entry == excepted_firewall_entry
+        assert firewall_entry == expected_firewall_entry
     except ValueError:
-        if excepted_firewall_entry is not None:
+        if expected_firewall_entry is not None:
             raise
 
 
