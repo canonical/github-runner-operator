@@ -176,8 +176,8 @@ class GithubRunnerCharm(CharmBase):
                 execute_command(
                     ["mount", "-t", "tmpfs", "-o", f"size={size}k", "tmpfs", str(path)]
                 )
-            else:
-                execute_command(["mount", "-o", f"remount,size={size}k", str(path)])
+            # else:
+            #     execute_command(["mount", "-o", f"remount,size={size}k", str(path)])
         except OSError as err:
             logger.exception("Unable to create directory")
             raise RunnerError("Problem with runner storage due to unable setup directory") from err
