@@ -8,7 +8,7 @@ on:
 jobs:
   e2e-test:
     name: end to end test
-    runs-on: [self-hosted, linux, x64, runner]
+    runs-on: [self-hosted, linux, x64, manual-runner]
     steps:
       - name: Echo hello world
         run: echo "hello world"
@@ -40,7 +40,7 @@ jobs:
     # Test the dependencies in one job to avoid using too many runners at once.
     name: dependency test
     needs: e2e-test
-    runs-on: [self-hosted, linux, x64, runner]
+    runs-on: [self-hosted, linux, x64, manual-runner]
     steps:
       - name: Docker version
         run: docker version
