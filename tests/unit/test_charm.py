@@ -2,7 +2,6 @@
 # See LICENSE file for licensing details.
 
 """Test cases for GithubRunnerCharm."""
-import json
 import os
 import unittest
 import urllib.error
@@ -11,7 +10,7 @@ from unittest.mock import MagicMock, call, patch
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
-from charm import LXD_INIT_CONFIG, GithubRunnerCharm
+from charm import GithubRunnerCharm
 from errors import MissingConfigurationError, RunnerError, SubprocessError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
@@ -79,11 +78,7 @@ class TestCharm(unittest.TestCase):
                 check=False,
             ),
             call(
-                ["/snap/bin/lxd", "init", "--preseed"],
-                capture_output=True,
-                shell=False,
-                check=False,
-                input=json.dumps(LXD_INIT_CONFIG).encode("utf-8"),
+                ["/snap/bin/lxd", "init", "--auto"], capture_output=True, shell=False, check=False
             ),
         ]
         run.assert_has_calls(calls, any_order=True)

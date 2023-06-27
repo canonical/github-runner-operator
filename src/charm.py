@@ -6,7 +6,6 @@
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
 import functools
-import json
 import logging
 import os
 import secrets
@@ -41,16 +40,6 @@ if TYPE_CHECKING:
     from ops.model import JsonObject  # pragma: no cover
 
 logger = logging.getLogger(__name__)
-LXD_INIT_CONFIG = {
-    "networks": [
-        {
-            "config": {"ipv4.address": "auto", "ipv6.address": "none"},
-            "description": "",
-            "name": "lxdbr0",
-            "type": "",
-        }
-    ]
-}
 
 
 class ReconcileRunnersEvent(EventBase):
@@ -593,10 +582,8 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
         execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
         execute_command(["/snap/bin/lxd", "waitready"])
-        execute_command(
-            ["/snap/bin/lxd", "init", "--preseed"],
-            input=json.dumps(LXD_INIT_CONFIG).encode("utf-8"),
-        )
+        execute_command(["/snap/bin/lxd", "init", "--auto"])
+        execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
         execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
         logger.info("Finished installing charm dependencies.")
 
