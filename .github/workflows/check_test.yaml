@@ -2,6 +2,7 @@ name: disk io test
 
 on:
   pull_request:
+  workflow_call:
 
 jobs:
   disk-io:
