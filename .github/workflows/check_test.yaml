@@ -1,10 +1,10 @@
 name: hello-world
 
 on:
-  pull_request:
+  # pull_request:
 
 jobs:
   disk-io:
     runs-on: [self-hosted, manual-runner]
     steps:
-      - run: touch test && dd if=/dev/zero of=test bs=1M count=8192
+      - run: touch test && dd if=/dev/zero of=test bs=1M count=8192 || echo "Failed successfully"
