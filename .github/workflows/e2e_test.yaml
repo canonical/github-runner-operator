@@ -100,6 +100,9 @@ jobs:
         with:
           name: dangerous-test-only-github-runner_ubuntu-22.04-amd64.charm
 
+      - name: Enable br_netfilter
+        run: sudo modprobe br_netfilter
+
       - name: Deploy github-runner Charm
         run: |
           cp github-runner_ubuntu-22.04-amd64.charm /home/$USER/github-runner_ubuntu-22.04-amd64.charm
