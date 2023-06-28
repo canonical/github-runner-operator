@@ -1,8 +1,7 @@
-name: hello-world
+name: disk io test
 
 on:
   pull_request:
-  workflow_dispatch:
 
 jobs:
   disk-io:
