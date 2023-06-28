@@ -4,6 +4,7 @@ on:
   # pull_request:
   workflow_dispatch:
 
+
 jobs:
   unit-tests:
     uses: canonical/operator-workflows/.github/workflows/test.yaml@self-hosted-runner
