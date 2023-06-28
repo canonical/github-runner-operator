@@ -4,9 +4,10 @@
 """The runner firewall manager."""
 import dataclasses
 import ipaddress
+import json
 import typing
 
-import jinja2
+import yaml
 
 from utilities import execute_command
 
@@ -78,28 +79,26 @@ class FirewallEntry:
 class Firewall:  # pylint: disable=too-few-public-methods
     """Represent a firewall and provides methods to refresh its configuration."""
 
-    def __init__(self, host_ip: str):
+    _ACL_RULESET_NAME = "github"
+
+    def __init__(self, network: str):
         """Initialize a new Firewall instance.
 
         Args:
-            host_ip: The IP address of the host.
+            network: The LXD network name.
         """
-        self._environment = jinja2.Environment(
-            loader=jinja2.FileSystemLoader("templates"), autoescape=True, trim_blocks=True
-        )
-        self._template = self._environment.get_template("github-runner-firewall.j2")
-        self._host_ip = host_ip
+        self._network = network
 
-    def _render_firewall_template(self, allowlist: typing.List[FirewallEntry]) -> str:
-        """Render the firewall template with the provided allowlist.
-
-        Args:
-            allowlist: The list of FirewallEntry objects to allow.
+    def _get_host_ip(self) -> str:
+        """Get the host IP address for the corresponding LXD network.
 
         Returns:
-            str: The rendered firewall template as a string.
+            The host IP address.
         """
-        return self._template.render(allowlist=allowlist, host_ip=self._host_ip)
+        address = execute_command(
+            ["/snap/bin/lxc", "network", "get", self._network, "ipv4.address"]
+        )
+        return str(ipaddress.IPv4Interface(address.strip()).ip)
 
     def refresh_firewall(self, allowlist: typing.List[FirewallEntry]):
         """Refresh the firewall configuration.
@@ -107,18 +106,37 @@ class Firewall:  # pylint: disable=too-few-public-methods
         Args:
             allowlist: The list of FirewallEntry objects to allow.
         """
+        current_acls = [
+            acl["name"]
+            for acl in yaml.safe_load(
+                execute_command(["lxc", "network", "acl", "list", "-f", "yaml"])
+            )
+        ]
+        if self._ACL_RULESET_NAME not in current_acls:
+            execute_command(["/snap/bin/lxc", "network", "acl", "create", self._ACL_RULESET_NAME])
         execute_command(
-            ["/usr/sbin/nft", "-f", "-"],
-            input=self._render_firewall_template(allowlist).encode("ascii"),
+            [
+                "/snap/bin/lxc",
+                "network",
+                "set",
+                self._network,
+                f"security.acls={self._ACL_RULESET_NAME}",
+            ]
         )
-
-    @classmethod
-    def for_network(cls, lxc_network: str = "lxdbr0") -> "Firewall":
-        """Create a firewall manager instance based on given lxc network.
-
-        Args:
-            lxc_network: The target lxc network name.
-        """
-        network = execute_command(["/snap/bin/lxc", "network", "get", lxc_network, "ipv4.address"])
-        host_ip = str(ipaddress.IPv4Interface(network.strip()).ip)
-        return cls(host_ip=host_ip)
+        acl_config = yaml.safe_load(
+            execute_command(["/snap/bin/lxc", "network", "acl", "show", self._ACL_RULESET_NAME])
+        )
+        acl_config["egress"] = [
+            {
+                "action": "allow",
+                "destination": entry.ip_range,
+                "protocol": "udp" if entry.is_udp else "tcp",
+                "destination_port": entry.port_range,
+                "state": "enabled",
+            }
+            for entry in allowlist
+        ]
+        execute_command(
+            ["lxc", "network", "acl", "edit", self._ACL_RULESET_NAME],
+            input=json.dumps(acl_config).encode("ascii"),
+        )

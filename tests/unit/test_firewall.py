@@ -2,12 +2,11 @@
 # See LICENSE file for licensing details.
 
 """Test cases for Firewall."""
-import textwrap
 import typing
 
 import pytest
 
-from firewall import Firewall, FirewallEntry
+from firewall import FirewallEntry
 
 TESTING_FIREWALL_ENTRIES = (
     pytest.param("1.2.3.4:1-2", FirewallEntry(ip_range="1.2.3.4", port_range="1-2", is_udp=False)),
@@ -32,38 +31,3 @@ def test_parse_firewall_entry(entry: str, expected_firewall_entry: typing.Option
     except ValueError:
         if expected_firewall_entry is not None:
             raise
-
-
-def test_default_firewall_ruleset():
-    firewall = Firewall("10.98.139.1")
-    allowlist = [
-        FirewallEntry.decode("0.0.0.0/0:1-65535"),
-        FirewallEntry.decode("0.0.0.0/0:1-65535:udp"),
-    ]
-
-    ruleset = firewall._render_firewall_template(allowlist)
-    print(ruleset)
-    excepted = textwrap.dedent(
-        """\
-    table bridge github_runner_firewall
-    delete table bridge github_runner_firewall
-
-    table bridge github_runner_firewall {
-        chain github_runner_firewall_prerouting {
-            type filter hook prerouting priority 0; policy accept;
-
-            ether type arp accept
-            ct state established,related accept
-
-            ibrname lxdbr0 ip daddr 10.98.139.1 udp dport 53 counter accept
-            ibrname lxdbr0 ip daddr { 10.98.139.1, 255.255.255.255 } udp dport 67 counter accept
-            ibrname lxdbr0 ip daddr 10.98.139.1 tcp dport 8080 counter accept
-
-            ibrname lxdbr0 ip daddr 0.0.0.0/0 tcp dport 1-65535 counter accept
-            ibrname lxdbr0 ip daddr 0.0.0.0/0 udp dport 1-65535 counter accept
-
-            ibrname lxdbr0 counter reject with icmpx type admin-prohibited
-        }
-    }"""
-    )
-    assert excepted == ruleset

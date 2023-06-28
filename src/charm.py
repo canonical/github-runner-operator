@@ -584,6 +584,21 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/snap/bin/lxd", "waitready"])
         execute_command(["/snap/bin/lxd", "init", "--auto"])
         execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
+        execute_command(["/usr/sbin/modprobe", "br_netfilter"])
+        execute_command(
+            [
+                "/snap/bin/lxc",
+                "profile",
+                "device",
+                "set",
+                "default",
+                "eth0",
+                "security.ipv4_filtering=true",
+                "security.ipv6_filtering=true",
+                "security.mac_filtering=true",
+                "security.port_isolation=true",
+            ]
+        )
         logger.info("Finished installing charm dependencies.")
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
@@ -644,7 +659,7 @@ class GithubRunnerCharm(CharmBase):
         allowlist = [
             FirewallEntry.decode(entry.strip()) for entry in firewall_allowlist_config.split(",")
         ]
-        firewall = Firewall.for_network()
+        firewall = Firewall("lxdbr0")
         firewall.refresh_firewall(allowlist)
 
 
