@@ -584,7 +584,8 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/snap/bin/lxd", "waitready"])
         execute_command(["/snap/bin/lxd", "init", "--auto"])
         execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
-        execute_command(["/usr/sbin/modprobe", "br_netfilter"])
+        if not LXD_PROFILE_YAML.exists():
+            execute_command(["/usr/sbin/modprobe", "br_netfilter"])
         execute_command(
             [
                 "/snap/bin/lxc",
