@@ -101,12 +101,30 @@ class Firewall:  # pylint: disable=too-few-public-methods
         acl_config = yaml.safe_load(
             execute_command(["/snap/bin/lxc", "network", "acl", "show", self._ACL_RULESET_NAME])
         )
+        host_ip = self.get_host_ip()
         egress_rules = [
             {
-                "action": "allow",
-                "destination": self.get_host_ip(),
-                "destination_port": "8080",
+                "action": "reject",
+                "destination": host_ip,
+                "destination_port": "0-8079,8081-65535",
                 "protocol": "tcp",
+                "state": "enabled",
+            },
+            {
+                "action": "reject",
+                "destination": host_ip,
+                "protocol": "udp",
+                "state": "enabled",
+            },
+            {
+                "action": "reject",
+                "destination": host_ip,
+                "protocol": "icmp4",
+                "state": "enabled",
+            },
+            {
+                "action": "reject",
+                "destination": "::/0",
                 "state": "enabled",
             }
         ]
