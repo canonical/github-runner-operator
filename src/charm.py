@@ -181,7 +181,7 @@ class GithubRunnerCharm(CharmBase):
                 execute_command(["mount", "-o", f"remount,size={size}k", str(path)])
         except OSError as err:
             logger.exception("Unable to create storage directory")
-            # Ensure the path is not empty for next retry.
+            # Ensure the path is empty for next retry.
             if path.exists():
                 shutil.rmtree(path, ignore_errors=True)
                 path.rmdir()
