@@ -201,4 +201,4 @@ jobs:
       - name: Test Firewall
         run: |
           HOST_IP=$(ip route | grep default | cut -f 3 -d" ")
-          [ $(ping $HOST_IP -c 5 || : | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
+          [ $((ping $HOST_IP -c 5 || :) | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
