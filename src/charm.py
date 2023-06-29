@@ -180,9 +180,13 @@ class GithubRunnerCharm(CharmBase):
                 execute_command(["mount", "-o", f"remount,size={size}k", str(path)])
         except OSError as err:
             logger.exception("Unable to create directory")
+            # Ensure the path is not empty for next retry.
+            shutil.rmtree(path, ignore_errors=True)
             raise RunnerError("Problem with runner storage due to unable setup directory") from err
         except SubprocessError as err:
             logger.exception("Unable to create or resize tmpfs")
+            # Remove the path if is not in use. If the tmpfs is in use, the removal will fail.
+            shutil.rmtree(path, ignore_errors=True)
             raise RunnerError(
                 "Problem with runner storage due to unable to create or resize tmpfs"
             ) from err
