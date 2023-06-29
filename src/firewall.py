@@ -126,18 +126,25 @@ class Firewall:  # pylint: disable=too-few-public-methods
                 "action": "reject",
                 "destination": "::/0",
                 "state": "enabled",
-            }
+            },
         ]
-        egress_rules.extend(
-            [
-                {
-                    "action": "reject",
-                    "destination": entry.ip_range,
-                    "state": "enabled",
-                }
-                for entry in denylist
-            ]
-        )
+        for entry in denylist:
+            entry_network = ipaddress.IPv4Network(entry.ip_range)
+            host_network = ipaddress.IPv4Network(host_ip)
+            try:
+                excluded = list(entry_network.address_exclude(host_network))
+            except ValueError:
+                excluded = [entry_network]
+            egress_rules.extend(
+                [
+                    {
+                        "action": "reject",
+                        "destination": str(ip),
+                        "state": "enabled",
+                    }
+                    for ip in excluded
+                ]
+            )
         acl_config["egress"] = egress_rules
         execute_command(
             ["lxc", "network", "acl", "edit", self._ACL_RULESET_NAME],
