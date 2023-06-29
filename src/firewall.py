@@ -106,7 +106,7 @@ class Firewall:  # pylint: disable=too-few-public-methods
             {
                 "action": "reject",
                 "destination": host_ip,
-                "destination_port": "0-8079,8081-65535",
+                "destination_port": "1-8079,8081-65535",
                 "protocol": "tcp",
                 "state": "enabled",
             },
