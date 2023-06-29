@@ -89,7 +89,7 @@ class Firewall:  # pylint: disable=too-few-public-methods
         """
         self._network = network
 
-    def _get_host_ip(self) -> str:
+    def get_host_ip(self) -> str:
         """Get the host IP address for the corresponding LXD network.
 
         Returns:

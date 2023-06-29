@@ -661,6 +661,8 @@ class GithubRunnerCharm(CharmBase):
             FirewallEntry.decode(entry.strip()) for entry in firewall_allowlist_config.split(",")
         ]
         firewall = Firewall("lxdbr0")
+        # allow network traffic to the repo policy compliance service
+        allowlist.append(FirewallEntry.decode(f"{firewall.get_host_ip()}:8080"))
         firewall.refresh_firewall(allowlist)
 
 
