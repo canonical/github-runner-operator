@@ -665,6 +665,10 @@ class GithubRunnerCharm(CharmBase):
             ]
         firewall = Firewall("lxdbr0")
         firewall.refresh_firewall(denylist)
+        logger.debug(
+            "firewall update, current firewall: %s",
+            execute_command(["/usr/sbin/nft", "list", "ruleset"]),
+        )
 
 
 if __name__ == "__main__":

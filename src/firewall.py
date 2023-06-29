@@ -128,9 +128,9 @@ class Firewall:  # pylint: disable=too-few-public-methods
                 "state": "enabled",
             },
         ]
+        host_network = ipaddress.IPv4Network(host_ip)
         for entry in denylist:
             entry_network = ipaddress.IPv4Network(entry.ip_range)
-            host_network = ipaddress.IPv4Network(host_ip)
             try:
                 excluded = list(entry_network.address_exclude(host_network))
             except ValueError:
