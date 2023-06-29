@@ -656,14 +656,15 @@ class GithubRunnerCharm(CharmBase):
 
     def _refresh_firewall(self):
         """Refresh the firewall configuration and rules."""
-        firewall_allowlist_config = self.config.get("allowlist")
-        allowlist = [
-            FirewallEntry.decode(entry.strip()) for entry in firewall_allowlist_config.split(",")
-        ]
+        firewall_denylist_config = self.config.get("denylist")
+        denylist = []
+        if firewall_denylist_config.strip():
+            denylist = [
+                FirewallEntry.decode(entry.strip())
+                for entry in firewall_denylist_config.split(",")
+            ]
         firewall = Firewall("lxdbr0")
-        # allow network traffic to the repo policy compliance service
-        allowlist.append(FirewallEntry.decode(f"{firewall.get_host_ip()}:8080"))
-        firewall.refresh_firewall(allowlist)
+        firewall.refresh_firewall(denylist)
 
 
 if __name__ == "__main__":
