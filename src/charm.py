@@ -162,6 +162,7 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
 
+    @retry(tries=5, delay=15, max_delay=60, backoff=1.5)
     def _create_memory_storage(self, path: Path, size: int) -> None:
         """Create a tmpfs-based LVM volume group.
 
@@ -179,16 +180,20 @@ class GithubRunnerCharm(CharmBase):
             else:
                 execute_command(["mount", "-o", f"remount,size={size}k", str(path)])
         except OSError as err:
-            logger.exception("Unable to create directory")
+            logger.exception("Unable to create storage directory")
             # Ensure the path is not empty for next retry.
-            shutil.rmtree(path, ignore_errors=True)
-            path.rmdir()
+            if path.exists():
+                shutil.rmtree(path, ignore_errors=True)
+                path.rmdir()
+                logger.error("Cleaned up storage directory")
             raise RunnerError("Problem with runner storage due to unable setup directory") from err
         except SubprocessError as err:
             logger.exception("Unable to create or resize tmpfs")
             # Remove the path if is not in use. If the tmpfs is in use, the removal will fail.
-            shutil.rmtree(path, ignore_errors=True)
-            path.rmdir()
+            if path.exists():
+                shutil.rmtree(path, ignore_errors=True)
+                path.rmdir()
+                logger.error("Cleaned up storage directory")
             raise RunnerError(
                 "Problem with runner storage due to unable to create or resize tmpfs"
             ) from err
