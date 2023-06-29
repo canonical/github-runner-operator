@@ -169,6 +169,9 @@ class GithubRunnerCharm(CharmBase):
         Args:
             path: Path to directory for memory storage.
             size: Size of the tmpfs in kilobytes.
+
+        Raises:
+            RunnerError: Unable to setup storage for runner.
         """
         try:
             # Create tmpfs if not exists, else resize it.
@@ -179,24 +182,14 @@ class GithubRunnerCharm(CharmBase):
                 )
             else:
                 execute_command(["mount", "-o", f"remount,size={size}k", str(path)])
-        except OSError as err:
-            logger.exception("Unable to create storage directory")
-            # Ensure the path is empty for next retry.
-            if path.exists():
-                shutil.rmtree(path, ignore_errors=True)
-                path.rmdir()
-                logger.info("Cleaned up storage directory")
-            raise RunnerError("Problem with runner storage due to unable setup directory") from err
-        except SubprocessError as err:
-            logger.exception("Unable to create or resize tmpfs")
+        except (OSError, SubprocessError) as err:
+            logger.exception("Unable to setup storage directory")
             # Remove the path if is not in use. If the tmpfs is in use, the removal will fail.
             if path.exists():
                 shutil.rmtree(path, ignore_errors=True)
                 path.rmdir()
                 logger.info("Cleaned up storage directory")
-            raise RunnerError(
-                "Problem with runner storage due to unable to create or resize tmpfs"
-            ) from err
+            raise RunnerError("Failed to configure runner storage") from err
 
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
