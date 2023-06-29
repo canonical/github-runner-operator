@@ -409,7 +409,7 @@ class Runner:
             )
             raise RunnerFileLoadError(f"Failed to load runner binary on {self.config.name}")
 
-    @retry(tries=5, delay=1, local_logger=logger)
+    @retry(tries=5, delay=30, max_delay=300, backoff=2, local_logger=logger)
     def _configure_runner(self) -> None:
         """Load configuration on to the runner.
 

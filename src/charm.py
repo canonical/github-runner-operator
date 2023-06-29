@@ -162,7 +162,7 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
 
-    @retry(tries=5, delay=15, max_delay=60, backoff=1.5)
+    @retry(tries=5, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _create_memory_storage(self, path: Path, size: int) -> None:
         """Create a tmpfs-based LVM volume group.
 
@@ -543,7 +543,7 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
             return {"delta": {"virtual-machines": 0}}
 
-    @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _install_deps(self) -> None:
         """Install dependencies."""
         logger.info("Installing charm dependencies.")
@@ -592,7 +592,7 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
         logger.info("Finished installing charm dependencies.")
 
-    @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _start_services(self) -> None:
         """Start services."""
         logger.info("Starting charm services...")

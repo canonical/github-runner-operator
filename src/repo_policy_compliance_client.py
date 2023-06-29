@@ -8,6 +8,8 @@ from urllib.parse import urljoin
 
 import requests
 
+from utilities import execute_command
+
 logger = logging.getLogger(__name__)
 
 
@@ -45,4 +47,5 @@ class RepoPolicyComplianceClient:  # pylint: disable=too-few-public-methods
             return response.content.decode("utf-8")
         except requests.HTTPError:
             logger.exception("Unable to get one time token from repo policy compliance service.")
+            execute_command(["/usr/bin/systemctl", "restart", "repo-policy-compliance"])
             raise
