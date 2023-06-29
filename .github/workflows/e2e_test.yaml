@@ -112,6 +112,7 @@ jobs:
             --config path=${{ secrets.E2E_TESTING_REPO }} \
             --config token=${{ secrets.E2E_TESTING_TOKEN }} \
             --config virtual-machines=1 \
+            --config denylist=10.0.0.0/8 \
             --config test-mode=insecure
 
       - name: Watch github-runner
@@ -197,3 +198,5 @@ jobs:
       # Test program installed by pip. The directory `~/.local/bin` need to be added to PATH.
       - name: test check-jsonschema
         run: check-jsonschema --version
+      - name: Test Firewall
+        run: ping $(ip route | grep default | cut -f 3 -d" ") -c 5
