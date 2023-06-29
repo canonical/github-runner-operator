@@ -199,4 +199,6 @@ jobs:
       - name: test check-jsonschema
         run: check-jsonschema --version
       - name: Test Firewall
-        run: ping $(ip route | grep default | cut -f 3 -d" ") -c 5
+        run: |
+          HOST_IP=$(ip route | grep default | cut -f 3 -d" ")
+          [ $(ping $HOST_IP -c 5 || : | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
