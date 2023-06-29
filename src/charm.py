@@ -185,7 +185,7 @@ class GithubRunnerCharm(CharmBase):
             if path.exists():
                 shutil.rmtree(path, ignore_errors=True)
                 path.rmdir()
-                logger.error("Cleaned up storage directory")
+                logger.info("Cleaned up storage directory")
             raise RunnerError("Problem with runner storage due to unable setup directory") from err
         except SubprocessError as err:
             logger.exception("Unable to create or resize tmpfs")
@@ -193,7 +193,7 @@ class GithubRunnerCharm(CharmBase):
             if path.exists():
                 shutil.rmtree(path, ignore_errors=True)
                 path.rmdir()
-                logger.error("Cleaned up storage directory")
+                logger.info("Cleaned up storage directory")
             raise RunnerError(
                 "Problem with runner storage due to unable to create or resize tmpfs"
             ) from err
