@@ -198,11 +198,13 @@ class GithubRunnerCharm(CharmBase):
         Services managed include:
          * repo-policy-compliance
         """
+        logger.info("Checking health of repo-policy-compliance service")
         try:
-            execute_command(["/usr/bin/systemctl", "status", "repo-policy-compliance"])
+            execute_command(["/usr/bin/systemctl", "is-active", "repo-policy-compliance"])
         except SubprocessError:
-            logger.exception("Service repo-policy-compliance is down")
+            logger.exception("Found inactive repo-policy-compliance service")
             execute_command(["/usr/bin/systemctl", "restart", "repo-policy-compliance"])
+            logger.exception("Restart repo-policy-compliance service")
             raise
 
     def _get_runner_manager(
