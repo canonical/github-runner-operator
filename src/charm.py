@@ -162,12 +162,16 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
 
+    @retry(tries=5, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _create_memory_storage(self, path: Path, size: int) -> None:
         """Create a tmpfs-based LVM volume group.
 
         Args:
             path: Path to directory for memory storage.
             size: Size of the tmpfs in kilobytes.
+
+        Raises:
+            RunnerError: Unable to setup storage for runner.
         """
         try:
             # Create tmpfs if not exists, else resize it.
@@ -178,14 +182,30 @@ class GithubRunnerCharm(CharmBase):
                 )
             else:
                 execute_command(["mount", "-o", f"remount,size={size}k", str(path)])
-        except OSError as err:
-            logger.exception("Unable to create directory")
-            raise RunnerError("Problem with runner storage due to unable setup directory") from err
-        except SubprocessError as err:
-            logger.exception("Unable to create or resize tmpfs")
-            raise RunnerError(
-                "Problem with runner storage due to unable to create or resize tmpfs"
-            ) from err
+        except (OSError, SubprocessError) as err:
+            logger.exception("Unable to setup storage directory")
+            # Remove the path if is not in use. If the tmpfs is in use, the removal will fail.
+            if path.exists():
+                shutil.rmtree(path, ignore_errors=True)
+                path.rmdir()
+                logger.info("Cleaned up storage directory")
+            raise RunnerError("Failed to configure runner storage") from err
+
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
+    def _ensure_service_health(self) -> None:
+        """Ensure services managed by the charm is healthy.
+
+        Services managed include:
+         * repo-policy-compliance
+        """
+        logger.info("Checking health of repo-policy-compliance service")
+        try:
+            execute_command(["/usr/bin/systemctl", "is-active", "repo-policy-compliance"])
+        except SubprocessError:
+            logger.exception("Found inactive repo-policy-compliance service")
+            execute_command(["/usr/bin/systemctl", "restart", "repo-policy-compliance"])
+            logger.exception("Restart repo-policy-compliance service")
+            raise
 
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
@@ -200,6 +220,8 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             An instance of RunnerManager.
         """
+        self._ensure_service_health()
+
         if token is None:
             token = self.config["token"]
         if path is None:
@@ -532,7 +554,7 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
             return {"delta": {"virtual-machines": 0}}
 
-    @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _install_deps(self) -> None:
         """Install dependencies."""
         logger.info("Installing charm dependencies.")
@@ -581,7 +603,7 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
         logger.info("Finished installing charm dependencies.")
 
-    @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _start_services(self) -> None:
         """Start services."""
         logger.info("Starting charm services...")
