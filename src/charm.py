@@ -191,6 +191,20 @@ class GithubRunnerCharm(CharmBase):
                 logger.info("Cleaned up storage directory")
             raise RunnerError("Failed to configure runner storage") from err
 
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
+    def _ensure_service_health(self) -> None:
+        """Ensure services managed by the charm is healthy.
+
+        Services managed include:
+         * repo-policy-compliance
+        """
+        try:
+            execute_command(["/usr/bin/systemctl", "status", "repo-policy-compliance"])
+        except SubprocessError:
+            logger.exception("Service repo-policy-compliance is down")
+            execute_command(["/usr/bin/systemctl", "restart", "repo-policy-compliance"])
+            raise
+
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
     ) -> RunnerManager:
@@ -204,6 +218,8 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             An instance of RunnerManager.
         """
+        self._ensure_service_health()
+
         if token is None:
             token = self.config["token"]
         if path is None:
