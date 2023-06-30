@@ -15,3 +15,5 @@ Environment="http_proxy={{proxies['http']}}"
 Environment="https_proxy={{proxies['https']}}"
 Environment="no_proxy={{proxies['no_proxy']}}"
 ExecStart=/usr/bin/gunicorn --bind 0.0.0.0:8080 app:app
+Restart=always
+RestartSec=5
