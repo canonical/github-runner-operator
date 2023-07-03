@@ -29,6 +29,7 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 from errors import MissingConfigurationError, RunnerError, SubprocessError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
+from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
@@ -281,7 +282,7 @@ class GithubRunnerCharm(CharmBase):
             # The charm cannot proceed without dependencies.
             self.unit.status = BlockedStatus("Failed to install dependencies")
             return
-
+        self._refresh_firewall()
         runner_manager = self._get_runner_manager()
         if runner_manager:
             self.unit.status = MaintenanceStatus("Downloading runner binary")
@@ -319,6 +320,7 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Reinstalling dependencies...")
         self._install_deps()
         self._start_services()
+        self._refresh_firewall()
 
         logger.info("Flushing the runners...")
         runner_manager = self._get_runner_manager()
@@ -335,6 +337,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of configuration change.
         """
+        self._refresh_firewall()
         try:
             self._event_timer.ensure_event_timer(
                 "update-runner-bin", self.config["update-interval"]
@@ -571,7 +574,10 @@ class GithubRunnerCharm(CharmBase):
             env["NO_PROXY"] = self.proxies["no_proxy"]
             env["no_proxy"] = self.proxies["no_proxy"]
 
-        execute_command(["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip"])
+        # install dependencies used by repo-policy-compliance and the firewall
+        execute_command(
+            ["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip", "nftables"]
+        )
         execute_command(
             [
                 "/usr/bin/pip",
@@ -599,8 +605,23 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
         execute_command(["/snap/bin/lxd", "waitready"])
         execute_command(["/snap/bin/lxd", "init", "--auto"])
-        execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
         execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
+        if not LXD_PROFILE_YAML.exists():
+            execute_command(["/usr/sbin/modprobe", "br_netfilter"])
+        execute_command(
+            [
+                "/snap/bin/lxc",
+                "profile",
+                "device",
+                "set",
+                "default",
+                "eth0",
+                "security.ipv4_filtering=true",
+                "security.ipv6_filtering=true",
+                "security.mac_filtering=true",
+                "security.port_isolation=true",
+            ]
+        )
         logger.info("Finished installing charm dependencies.")
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
@@ -654,6 +675,22 @@ class GithubRunnerCharm(CharmBase):
             self.service_token_path.write_text(service_token, encoding="utf-8")
 
         return service_token
+
+    def _refresh_firewall(self):
+        """Refresh the firewall configuration and rules."""
+        firewall_denylist_config = self.config.get("denylist")
+        denylist = []
+        if firewall_denylist_config.strip():
+            denylist = [
+                FirewallEntry.decode(entry.strip())
+                for entry in firewall_denylist_config.split(",")
+            ]
+        firewall = Firewall("lxdbr0")
+        firewall.refresh_firewall(denylist)
+        logger.debug(
+            "firewall update, current firewall: %s",
+            execute_command(["/usr/sbin/nft", "list", "ruleset"]),
+        )
 
 
 if __name__ == "__main__":
