@@ -100,7 +100,7 @@ def test_create(
 
     if runner.config.proxies:
         instance = instances[0]
-        env_proxy = instance.files.read_file("/opt/github-runner/.env")
+        env_proxy = instance.files.read_file("/home/ubuntu/github-runner/.env")
         systemd_docker_proxy = instance.files.read_file(
             "/etc/systemd/system/docker.service.d/http-proxy.conf"
         )
