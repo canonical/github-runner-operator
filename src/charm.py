@@ -29,6 +29,7 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 from errors import MissingConfigurationError, RunnerBinaryError, RunnerError, SubprocessError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
+from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
@@ -162,12 +163,16 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
 
+    @retry(tries=5, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _create_memory_storage(self, path: Path, size: int) -> None:
         """Create a tmpfs-based LVM volume group.
 
         Args:
             path: Path to directory for memory storage.
             size: Size of the tmpfs in kilobytes.
+
+        Raises:
+            RunnerError: Unable to setup storage for runner.
         """
         try:
             # Create tmpfs if not exists, else resize it.
@@ -178,14 +183,30 @@ class GithubRunnerCharm(CharmBase):
                 )
             else:
                 execute_command(["mount", "-o", f"remount,size={size}k", str(path)])
-        except OSError as err:
-            logger.exception("Unable to create directory")
-            raise RunnerError("Problem with runner storage due to unable setup directory") from err
-        except SubprocessError as err:
-            logger.exception("Unable to create or resize tmpfs")
-            raise RunnerError(
-                "Problem with runner storage due to unable to create or resize tmpfs"
-            ) from err
+        except (OSError, SubprocessError) as err:
+            logger.exception("Unable to setup storage directory")
+            # Remove the path if is not in use. If the tmpfs is in use, the removal will fail.
+            if path.exists():
+                shutil.rmtree(path, ignore_errors=True)
+                path.rmdir()
+                logger.info("Cleaned up storage directory")
+            raise RunnerError("Failed to configure runner storage") from err
+
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
+    def _ensure_service_health(self) -> None:
+        """Ensure services managed by the charm is healthy.
+
+        Services managed include:
+         * repo-policy-compliance
+        """
+        logger.info("Checking health of repo-policy-compliance service")
+        try:
+            execute_command(["/usr/bin/systemctl", "is-active", "repo-policy-compliance"])
+        except SubprocessError:
+            logger.exception("Found inactive repo-policy-compliance service")
+            execute_command(["/usr/bin/systemctl", "restart", "repo-policy-compliance"])
+            logger.exception("Restart repo-policy-compliance service")
+            raise
 
     def _get_runner_manager(
         self, token: Optional[str] = None, path: Optional[str] = None
@@ -200,6 +221,8 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             An instance of RunnerManager.
         """
+        self._ensure_service_health()
+
         if token is None:
             token = self.config["token"]
         if path is None:
@@ -259,7 +282,7 @@ class GithubRunnerCharm(CharmBase):
             # The charm cannot proceed without dependencies.
             self.unit.status = BlockedStatus("Failed to install dependencies")
             return
-
+        self._refresh_firewall()
         runner_manager = self._get_runner_manager()
         if runner_manager:
             self.unit.status = MaintenanceStatus("Downloading runner binary")
@@ -307,6 +330,7 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Reinstalling dependencies...")
         self._install_deps()
         self._start_services()
+        self._refresh_firewall()
 
         logger.info("Flushing the runners...")
         runner_manager = self._get_runner_manager()
@@ -323,6 +347,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of configuration change.
         """
+        self._refresh_firewall()
         try:
             self._event_timer.ensure_event_timer(
                 "update-runner-bin", self.config["update-interval"]
@@ -542,7 +567,7 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
             return {"delta": {"virtual-machines": 0}}
 
-    @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _install_deps(self) -> None:
         """Install dependencies."""
         logger.info("Installing charm dependencies.")
@@ -560,7 +585,10 @@ class GithubRunnerCharm(CharmBase):
             env["no_proxy"] = self.proxies["no_proxy"]
 
         execute_command(["/usr/bin/apt-get", "update"])
-        execute_command(["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip"])
+        # install dependencies used by repo-policy-compliance and the firewall
+        execute_command(
+            ["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip", "nftables"]
+        )
         execute_command(
             [
                 "/usr/bin/pip",
@@ -588,11 +616,26 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
         execute_command(["/snap/bin/lxd", "waitready"])
         execute_command(["/snap/bin/lxd", "init", "--auto"])
-        execute_command(["/usr/bin/chmod", "a+wr", "/var/snap/lxd/common/lxd/unix.socket"])
         execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
+        if not LXD_PROFILE_YAML.exists():
+            execute_command(["/usr/sbin/modprobe", "br_netfilter"])
+        execute_command(
+            [
+                "/snap/bin/lxc",
+                "profile",
+                "device",
+                "set",
+                "default",
+                "eth0",
+                "security.ipv4_filtering=true",
+                "security.ipv6_filtering=true",
+                "security.mac_filtering=true",
+                "security.port_isolation=true",
+            ]
+        )
         logger.info("Finished installing charm dependencies.")
 
-    @retry(tries=10, delay=15, max_delay=60, backoff=1.5)
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _start_services(self) -> None:
         """Start services."""
         logger.info("Starting charm services...")
@@ -643,6 +686,22 @@ class GithubRunnerCharm(CharmBase):
             self.service_token_path.write_text(service_token, encoding="utf-8")
 
         return service_token
+
+    def _refresh_firewall(self):
+        """Refresh the firewall configuration and rules."""
+        firewall_denylist_config = self.config.get("denylist")
+        denylist = []
+        if firewall_denylist_config.strip():
+            denylist = [
+                FirewallEntry.decode(entry.strip())
+                for entry in firewall_denylist_config.split(",")
+            ]
+        firewall = Firewall("lxdbr0")
+        firewall.refresh_firewall(denylist)
+        logger.debug(
+            "firewall update, current firewall: %s",
+            execute_command(["/usr/sbin/nft", "list", "ruleset"]),
+        )
 
 
 if __name__ == "__main__":

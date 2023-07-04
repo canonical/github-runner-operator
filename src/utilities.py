@@ -153,7 +153,11 @@ def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> st
 
             raise SubprocessError(cmd, err.returncode, err.stdout, err.stderr) from err
 
-    return str(result.stdout)
+    return (
+        result.stdout
+        if isinstance(result.stdout, str)
+        else result.stdout.decode(kwargs.get("encoding", "utf-8"))
+    )
 
 
 def get_env_var(env_var: str) -> Optional[str]:

@@ -108,7 +108,7 @@ class RunnerManager:
         self.session = requests.Session()
         adapter = requests.adapters.HTTPAdapter(
             max_retries=urllib3.Retry(
-                total=10, backoff_factor=0.3, status_forcelist=[500, 502, 503, 504]
+                total=3, backoff_factor=0.3, status_forcelist=[500, 502, 503, 504]
             )
         )
         self.session.mount("http://", adapter)

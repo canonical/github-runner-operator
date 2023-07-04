@@ -58,3 +58,10 @@ options:
     description: >
       When set to 'insecure', the charm test mode is activated, which may deactivate some security
       hardening measures.
+  denylist:
+    type: string
+    default: ""
+    description: >
+      A comma separated list of IPv4 networks in CIDR notation that runners can not access.
+      The runner will always have access to essential services such as DHCP and DNS regardless 
+      of the denylist configuration.

@@ -100,6 +100,9 @@ jobs:
         with:
           name: dangerous-test-only-github-runner_ubuntu-22.04-amd64.charm
 
+      - name: Enable br_netfilter
+        run: sudo modprobe br_netfilter
+
       - name: Deploy github-runner Charm
         run: |
           cp github-runner_ubuntu-22.04-amd64.charm /home/$USER/github-runner_ubuntu-22.04-amd64.charm
@@ -109,6 +112,7 @@ jobs:
             --config path=${{ secrets.E2E_TESTING_REPO }} \
             --config token=${{ secrets.E2E_TESTING_TOKEN }} \
             --config virtual-machines=1 \
+            --config denylist=10.0.0.0/8 \
             --config test-mode=insecure
 
       - name: Watch github-runner
@@ -135,6 +139,10 @@ jobs:
             kill $(jobs -p)
             exit 1
           fi
+
+      - name: Show Firewall Rules
+        run: |
+          juju ssh ${{ needs.run-id.outputs.run-id }}/0 sudo nft list ruleset
 
   e2e-test:
     name: End-to-End Test
@@ -190,3 +198,7 @@ jobs:
       # Test program installed by pip. The directory `~/.local/bin` need to be added to PATH.
       - name: test check-jsonschema
         run: check-jsonschema --version
+      - name: Test Firewall
+        run: |
+          HOST_IP=$(ip route | grep default | cut -f 3 -d" ")
+          [ $((ping $HOST_IP -c 5 || :) | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
