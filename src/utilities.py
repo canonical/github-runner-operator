@@ -123,7 +123,7 @@ def secure_run_subprocess(cmd: Sequence[str], **kwargs) -> subprocess.CompletedP
     return result
 
 
-def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> str:
+def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> tuple[str, int]:
     """Execute a command on a subprocess.
 
     The command is executed with `subprocess.run`, additional arguments can be passed to it as
@@ -136,7 +136,7 @@ def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> st
         kwargs: Additional keyword arguments for the `subprocess.run` call.
 
     Returns:
-        Output on stdout.
+        Output on stdout, and the exit code.
     """
     result = secure_run_subprocess(cmd, **kwargs)
 
@@ -153,11 +153,10 @@ def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> st
 
             raise SubprocessError(cmd, err.returncode, err.stdout, err.stderr) from err
 
-    return (
-        result.stdout
-        if isinstance(result.stdout, str)
-        else result.stdout.decode(kwargs.get("encoding", "utf-8"))
-    )
+    if isinstance(result.stdout, str):
+        return (result.stdout, result.returncode)
+
+    return (result.stdout.decode(kwargs.get("encoding", "utf-8")), result.returncode)
 
 
 def get_env_var(env_var: str) -> Optional[str]:

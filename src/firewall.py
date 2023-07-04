@@ -61,7 +61,7 @@ class Firewall:  # pylint: disable=too-few-public-methods
         Returns:
             The host IP address.
         """
-        address = execute_command(
+        address, _ = execute_command(
             ["/snap/bin/lxc", "network", "get", self._network, "ipv4.address"]
         )
         return str(ipaddress.IPv4Interface(address.strip()).ip)
@@ -75,7 +75,7 @@ class Firewall:  # pylint: disable=too-few-public-methods
         current_acls = [
             acl["name"]
             for acl in yaml.safe_load(
-                execute_command(["lxc", "network", "acl", "list", "-f", "yaml"])
+                execute_command(["lxc", "network", "acl", "list", "-f", "yaml"])[0]
             )
         ]
         if self._ACL_RULESET_NAME not in current_acls:
@@ -99,7 +99,7 @@ class Firewall:  # pylint: disable=too-few-public-methods
             ]
         )
         acl_config = yaml.safe_load(
-            execute_command(["/snap/bin/lxc", "network", "acl", "show", self._ACL_RULESET_NAME])
+            execute_command(["/snap/bin/lxc", "network", "acl", "show", self._ACL_RULESET_NAME])[0]
         )
         host_ip = self.get_host_ip()
         egress_rules = [
