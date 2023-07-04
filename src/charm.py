@@ -27,7 +27,7 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-from errors import MissingConfigurationError, RunnerError, SubprocessError
+from errors import MissingConfigurationError, RunnerBinaryError, RunnerError, SubprocessError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
@@ -35,6 +35,9 @@ from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
 from utilities import bytes_with_unit_to_kib, execute_command, get_env_var, retry
+
+if TYPE_CHECKING:
+    from ops.model import JsonObject  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -270,6 +273,12 @@ class GithubRunnerCharm(CharmBase):
         """
         self.unit.status = MaintenanceStatus("Installing packages")
 
+        # Temporary solution: Upgrade the kernel due to a kernel bug in 5.15. Kernel upgrade
+        # not needed for container-based end-to-end tests.
+        if not LXD_PROFILE_YAML.exists():
+            self.unit.status = MaintenanceStatus("Upgrading kernel")
+            self._upgrade_kernel()
+
         try:
             # The `_start_services`, `_install_deps` includes retry.
             self._install_deps()
@@ -291,12 +300,13 @@ class GithubRunnerCharm(CharmBase):
                 self._stored.runner_bin_url = runner_info.download_url
                 runner_manager.update_runner_bin(runner_info)
             # Safe guard against transient unexpected error.
-            except Exception as err:  # pylint: disable=broad-exception-caught
+            except RunnerBinaryError as err:
                 logger.exception("Failed to update runner binary")
                 # Failure to download runner binary is a transient error.
                 # The charm automatically update runner binary on a schedule.
                 self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
                 return
+
             self.unit.status = MaintenanceStatus("Starting runners")
             try:
                 self._reconcile_runners(runner_manager)
@@ -306,6 +316,16 @@ class GithubRunnerCharm(CharmBase):
                 self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
+
+    def _upgrade_kernel(self) -> None:
+        """Upgrade the Linux kernel."""
+        execute_command(["/usr/bin/apt-get", "update"])
+        execute_command(["/usr/bin/apt-get", "install", "-qy", "linux-generic-hwe-22.04"])
+
+        _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
+        if exit_code == 0:
+            logger.info("Rebooting system...")
+            execute_command(["reboot"])
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
@@ -571,6 +591,7 @@ class GithubRunnerCharm(CharmBase):
             env["NO_PROXY"] = self.proxies["no_proxy"]
             env["no_proxy"] = self.proxies["no_proxy"]
 
+        execute_command(["/usr/bin/apt-get", "update"])
         # install dependencies used by repo-policy-compliance and the firewall
         execute_command(
             ["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip", "nftables"]
