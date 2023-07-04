@@ -37,7 +37,7 @@ from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResou
 from utilities import bytes_with_unit_to_kib, execute_command, get_env_var, retry
 
 if TYPE_CHECKING:
-    from ops.model import JsonObject  # pragma: no cover
+    from ops.model import JsonObject  # type: ignore
 
 logger = logging.getLogger(__name__)
 
