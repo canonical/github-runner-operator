@@ -53,7 +53,7 @@ class Runner:
         busy (bool): Whether GitHub marks this runner as busy.
     """
 
-    runner_application = Path("/opt/github-runner")
+    runner_application = Path("/home/ubuntu/github-runner")
     env_file = runner_application / ".env"
     config_script = runner_application / "config.sh"
     runner_script = runner_application / "start.sh"
