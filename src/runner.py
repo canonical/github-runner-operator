@@ -635,5 +635,5 @@ class Runner:
         for executable in executables:
             executable_path = f"/usr/bin/{executable.cmd}"
             logger.info("Downloading %s via wget to %s...", executable.url, executable_path)
-            self.instance.execute(["wget", executable.url, "-O", executable_path])
-            self.instance.execute(["chmod", "+x", executable_path])
+            self.instance.execute(["/usr/bin/wget", executable.url, "-O", executable_path])
+            self.instance.execute(["/usr/bin/chmod", "+x", executable_path])
