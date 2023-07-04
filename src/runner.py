@@ -620,6 +620,24 @@ class Runner:
             logger.info("Installing %s via APT...", pkg)
             self.instance.execute(["/usr/bin/apt-get", "install", "-yq", pkg])
 
+    def _get_filtered_proxies(self) -> tuple[str, str]:
+        """Filter http and https proxy with no proxy.
+
+        Returns:
+            Filtered http and https proxy values.
+        """
+        http_proxy = self.config.proxies["http"]
+        https_proxy = self.config.proxies["https"]
+        if not self.config.proxies["no_proxy"]:
+            return (http_proxy, https_proxy)
+
+        no_proxy_hosts = set(self.config.proxies["no_proxy"].split(","))
+        if http_proxy in no_proxy_hosts:
+            http_proxy = ""
+        if https_proxy in no_proxy_hosts:
+            https_proxy = ""
+        return (http_proxy, https_proxy)
+
     def _wget_install(self, executables: Iterable[WgetExecutable]) -> None:
         """Installs the given binaries.
 
@@ -636,11 +654,12 @@ class Runner:
             executable_path = f"/usr/bin/{executable.cmd}"
             logger.info("Downloading %s via wget to %s...", executable.url, executable_path)
             wget_cmd = ["/usr/bin/wget", executable.url, "-O", executable_path]
-            if self.config.proxies["http"] or self.config.proxies["https"]:
+            http_proxy, https_proxy = self._get_filtered_proxies()
+            if http_proxy or https_proxy:
                 wget_cmd += ["-e", "use_proxy=on"]
-            if self.config.proxies["http"]:
-                wget_cmd += ["-e", f"http_proxy={self.config.proxies['http']}"]
-            if self.config.proxies["https"]:
-                wget_cmd += ["-e", f"https_proxy={self.config.proxies['https']}"]
+            if http_proxy:
+                wget_cmd += ["-e", f"http_proxy={http_proxy}"]
+            if https_proxy:
+                wget_cmd += ["-e", f"https_proxy={https_proxy}"]
             self.instance.execute(wget_cmd)
             self.instance.execute(["/usr/bin/chmod", "+x", executable_path])
