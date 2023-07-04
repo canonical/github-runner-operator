@@ -321,8 +321,10 @@ class GithubRunnerCharm(CharmBase):
         """Upgrade the Linux kernel."""
         execute_command(["/usr/bin/apt-get", "update"])
         execute_command(["/usr/bin/apt-get", "install", "-qy", "linux-generic-hwe-22.04"])
+
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
         if exit_code == 0:
+            logger.info("Rebooting system...")
             execute_command(["reboot"])
 
     @catch_charm_errors
