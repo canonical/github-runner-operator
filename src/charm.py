@@ -301,8 +301,10 @@ class GithubRunnerCharm(CharmBase):
                 self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
                 return
 
-            # Temporary solution: Upgrade the kernel due to a kernel bug in 5.15.
-            self._upgrade_kernel()
+            # Temporary solution: Upgrade the kernel due to a kernel bug in 5.15. Kernel upgrade
+            # not needed for container-based end-to-end tests.
+            if not LXD_PROFILE_YAML.exists():
+                self._upgrade_kernel()
 
             self.unit.status = MaintenanceStatus("Starting runners")
             try:
