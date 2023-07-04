@@ -643,6 +643,6 @@ class Runner:
             if self.config.proxies["https"]:
                 wget_cmd += ["-e", f"https_proxy={self.config.proxies['https']}"]
             if self.config.proxies["no_proxy"]:
-                wget_cmd += ["-e", f"https_proxy={self.config.proxies['no_proxy']}"]
+                wget_cmd += ["-e", f"no_proxy={self.config.proxies['no_proxy']}"]
             self.instance.execute(wget_cmd)
             self.instance.execute(["/usr/bin/chmod", "+x", executable_path])
