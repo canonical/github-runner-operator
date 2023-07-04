@@ -273,6 +273,12 @@ class GithubRunnerCharm(CharmBase):
         """
         self.unit.status = MaintenanceStatus("Installing packages")
 
+        # Temporary solution: Upgrade the kernel due to a kernel bug in 5.15. Kernel upgrade
+        # not needed for container-based end-to-end tests.
+        if not LXD_PROFILE_YAML.exists():
+            self.unit.status = MaintenanceStatus("Upgrading kernel")
+            self._upgrade_kernel()
+
         try:
             # The `_start_services`, `_install_deps` includes retry.
             self._install_deps()
@@ -301,11 +307,6 @@ class GithubRunnerCharm(CharmBase):
                 self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
                 return
 
-            # Temporary solution: Upgrade the kernel due to a kernel bug in 5.15. Kernel upgrade
-            # not needed for container-based end-to-end tests.
-            if not LXD_PROFILE_YAML.exists():
-                self._upgrade_kernel()
-
             self.unit.status = MaintenanceStatus("Starting runners")
             try:
                 self._reconcile_runners(runner_manager)
@@ -320,7 +321,9 @@ class GithubRunnerCharm(CharmBase):
         """Upgrade the Linux kernel."""
         execute_command(["/usr/bin/apt-get", "update"])
         execute_command(["/usr/bin/apt-get", "install", "-qy", "linux-generic-hwe-22.04"])
-        execute_command(["reboot"])
+        _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
+        if exit_code == 0:
+            execute_command(["reboot"])
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:

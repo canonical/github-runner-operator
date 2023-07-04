@@ -61,7 +61,7 @@ class Firewall:  # pylint: disable=too-few-public-methods
         Returns:
             The host IP address.
         """
-        address = execute_command(
+        address, _ = execute_command(
             ["/snap/bin/lxc", "network", "get", self._network, "ipv4.address"]
         )
         return str(ipaddress.IPv4Interface(address.strip()).ip)
