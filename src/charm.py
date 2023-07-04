@@ -27,7 +27,7 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-from errors import MissingConfigurationError, RunnerError, SubprocessError
+from errors import MissingConfigurationError, RunnerBinaryError, RunnerError, SubprocessError
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
@@ -271,12 +271,16 @@ class GithubRunnerCharm(CharmBase):
                 self._stored.runner_bin_url = runner_info.download_url
                 runner_manager.update_runner_bin(runner_info)
             # Safe guard against transient unexpected error.
-            except Exception as err:  # pylint: disable=broad-exception-caught
+            except RunnerBinaryError as err:
                 logger.exception("Failed to update runner binary")
                 # Failure to download runner binary is a transient error.
                 # The charm automatically update runner binary on a schedule.
                 self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
                 return
+
+            # Temporary solution: Upgrade the kernel due to a kernel bug in 5.15.
+            self._upgrade_kernel()
+
             self.unit.status = MaintenanceStatus("Starting runners")
             try:
                 self._reconcile_runners(runner_manager)
@@ -286,6 +290,12 @@ class GithubRunnerCharm(CharmBase):
                 self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
+
+    def _upgrade_kernel(self) -> None:
+        """Upgrade the Linux kernel."""
+        execute_command(["/usr/bin/apt-get", "update"])
+        execute_command(["/usr/bin/apt-get", "install", "-qy", "linux-generic-hwe-22.04"])
+        execute_command(["reboot"])
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
@@ -549,6 +559,7 @@ class GithubRunnerCharm(CharmBase):
             env["NO_PROXY"] = self.proxies["no_proxy"]
             env["no_proxy"] = self.proxies["no_proxy"]
 
+        execute_command(["/usr/bin/apt-get", "update"])
         execute_command(["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip"])
         execute_command(
             [

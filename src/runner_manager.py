@@ -190,30 +190,40 @@ class RunnerManager:
         """
         logger.info("Downloading runner binary from: %s", binary["download_url"])
 
-        # Delete old version of runner binary.
-        RunnerManager.runner_bin_path.unlink(missing_ok=True)
+        try:
+            # Delete old version of runner binary.
+            RunnerManager.runner_bin_path.unlink(missing_ok=True)
+        except OSError as err:
+            logger.exception("Unable to perform file operation on the runner binary path")
+            raise RunnerBinaryError("File operation failed on the runner binary path") from err
 
-        # Download the new file
-        response = self.session.get(binary["download_url"], stream=True)
+        try:
+            # Download the new file
+            response = self.session.get(binary["download_url"], stream=True)
 
-        logger.info(
-            "Download of runner binary from %s return status code: %i",
-            binary["download_url"],
-            response.status_code,
-        )
+            logger.info(
+                "Download of runner binary from %s return status code: %i",
+                binary["download_url"],
+                response.status_code,
+            )
 
-        if not binary["sha256_checksum"]:
-            logger.error("Checksum for runner binary is not found, unable to verify download.")
-            raise RunnerBinaryError("Checksum for runner binary is not found in GitHub response.")
+            if not binary["sha256_checksum"]:
+                logger.error("Checksum for runner binary is not found, unable to verify download.")
+                raise RunnerBinaryError(
+                    "Checksum for runner binary is not found in GitHub response."
+                )
 
-        sha256 = hashlib.sha256()
+            sha256 = hashlib.sha256()
 
-        with RunnerManager.runner_bin_path.open(mode="wb") as file:
-            # Process with chunk_size of 128 KiB.
-            for chunk in response.iter_content(chunk_size=128 * 1024, decode_unicode=False):
-                file.write(chunk)
+            with RunnerManager.runner_bin_path.open(mode="wb") as file:
+                # Process with chunk_size of 128 KiB.
+                for chunk in response.iter_content(chunk_size=128 * 1024, decode_unicode=False):
+                    file.write(chunk)
 
-                sha256.update(chunk)
+                    sha256.update(chunk)
+        except requests.RequestException as err:
+            logger.exception("Failed to download of runner binary")
+            raise RunnerBinaryError("Failed to download runner binary") from err
 
         logger.info("Finished download of runner binary.")
 
@@ -224,13 +234,11 @@ class RunnerManager:
                 binary["sha256_checksum"],
                 sha256,
             )
-            RunnerManager.runner_bin_path.unlink(missing_ok=True)
             raise RunnerBinaryError("Checksum mismatch for downloaded runner binary")
 
         # Verify the file integrity.
         if not tarfile.is_tarfile(file.name):
             logger.error("Failed to decompress downloaded GitHub runner binary.")
-            RunnerManager.runner_bin_path.unlink(missing_ok=True)
             raise RunnerBinaryError("Downloaded runner binary cannot be decompressed.")
 
         logger.info("Validated newly downloaded runner binary and enabled it.")
