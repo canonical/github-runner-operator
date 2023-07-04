@@ -36,9 +36,6 @@ from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
 from utilities import bytes_with_unit_to_kib, execute_command, get_env_var, retry
 
-if TYPE_CHECKING:
-    from ops.model import JsonObject  # type: ignore
-
 logger = logging.getLogger(__name__)
 
 
