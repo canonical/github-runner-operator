@@ -627,7 +627,7 @@ class Runner:
         images based on the GitHub action runner image will be used in the future.
 
         Args:
-            binary_urls: The URL to installable binaries.
+            executables: The executables to download.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
