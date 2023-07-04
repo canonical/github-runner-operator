@@ -40,6 +40,7 @@ LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
 if not LXD_PROFILE_YAML.exists():
     LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
 
+
 @dataclass
 class WgetExecutable:
     """The executable to be installed through wget.
@@ -48,8 +49,10 @@ class WgetExecutable:
         url: The URL of the executable binary.
         cmd: Executable command name. E.g. yq_linux_amd64 -> yq
     """
+
     url: str
     cmd: str
+
 
 class Runner:
     """Single instance of GitHub self-hosted runner.
@@ -385,7 +388,14 @@ class Runner:
         # machines are created from custom images/GitHub runner image.
 
         self._apt_install(["docker.io", "npm", "python3-pip", "shellcheck", "jq", "wget"])
-        self._wget_install([WgetExecutable(url="https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64", cmd="yq")])
+        self._wget_install(
+            [
+                WgetExecutable(
+                    url="https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64",
+                    cmd="yq",
+                )
+            ]
+        )
 
         # Add the user to docker group.
         self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
