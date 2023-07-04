@@ -12,7 +12,7 @@ import secrets
 import shutil
 import urllib.error
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Dict, Optional, TypeVar
+from typing import Any, Callable, Dict, Optional, TypeVar
 
 import jinja2
 from ops.charm import (
@@ -35,9 +35,6 @@ from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
 from utilities import bytes_with_unit_to_kib, execute_command, get_env_var, retry
-
-if TYPE_CHECKING:
-    from ops.model import JsonObject  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -546,7 +543,7 @@ class GithubRunnerCharm(CharmBase):
                 # Log but ignore error since we're stopping anyway.
                 logger.exception("Failed to clear runners")
 
-    def _reconcile_runners(self, runner_manager: RunnerManager) -> Dict[str, "JsonObject"]:
+    def _reconcile_runners(self, runner_manager: RunnerManager) -> Dict[str, Any]:
         """Reconcile the current runners state and intended runner state.
 
         Args:

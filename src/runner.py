@@ -16,6 +16,7 @@ import json
 import logging
 import pathlib
 import time
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Optional, Sequence
 
@@ -40,6 +41,19 @@ if not LXD_PROFILE_YAML.exists():
     LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
 
 
+@dataclass
+class WgetExecutable:
+    """The executable to be installed through wget.
+
+    Args:
+        url: The URL of the executable binary.
+        cmd: Executable command name. E.g. yq_linux_amd64 -> yq
+    """
+
+    url: str
+    cmd: str
+
+
 class Runner:
     """Single instance of GitHub self-hosted runner.
 
@@ -53,7 +67,7 @@ class Runner:
         busy (bool): Whether GitHub marks this runner as busy.
     """
 
-    runner_application = Path("/opt/github-runner")
+    runner_application = Path("/home/ubuntu/github-runner")
     env_file = runner_application / ".env"
     config_script = runner_application / "config.sh"
     runner_script = runner_application / "start.sh"
@@ -373,8 +387,15 @@ class Runner:
         # TEMP: Install common tools used in GitHub Actions. This will be removed once virtual
         # machines are created from custom images/GitHub runner image.
 
-        self._apt_install(["docker.io", "npm", "python3-pip", "shellcheck", "jq"])
-        self._snap_install(["yq"])
+        self._apt_install(["docker.io", "npm", "python3-pip", "shellcheck", "jq", "wget"])
+        self._wget_install(
+            [
+                WgetExecutable(
+                    url="https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64",
+                    cmd="yq",
+                )
+            ]
+        )
 
         # Add the user to docker group.
         self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
@@ -599,18 +620,20 @@ class Runner:
             logger.info("Installing %s via APT...", pkg)
             self.instance.execute(["/usr/bin/apt-get", "install", "-yq", pkg])
 
-    def _snap_install(self, packages: Iterable[str]) -> None:
-        """Installs the given snap packages.
+    def _wget_install(self, executables: Iterable[WgetExecutable]) -> None:
+        """Installs the given binaries.
 
         This is a temporary solution to provide tools not offered by the base ubuntu image. Custom
         images based on the GitHub action runner image will be used in the future.
 
         Args:
-            packages: Packages to be install via snap.
+            executables: The executables to download.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
-        for pkg in packages:
-            logger.info("Installing %s via snap...", pkg)
-            self.instance.execute(["/usr/bin/snap", "install", pkg])
+        for executable in executables:
+            executable_path = f"/usr/bin/{executable.cmd}"
+            logger.info("Downloading %s via wget to %s...", executable.url, executable_path)
+            self.instance.execute(["/usr/bin/wget", executable.url, "-O", executable_path])
+            self.instance.execute(["/usr/bin/chmod", "+x", executable_path])
