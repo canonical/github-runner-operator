@@ -11,7 +11,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from errors import RunnerCreateError, RunnerRemoveError
-from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
+from runner import GITHUB_RUNNER_PATH, Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
 from tests.unit.mock import (
     MockLxdClient,
@@ -100,7 +100,7 @@ def test_create(
 
     if runner.config.proxies:
         instance = instances[0]
-        env_proxy = instance.files.read_file("/home/ubuntu/github-runner/.env")
+        env_proxy = instance.files.read_file(f"{GITHUB_RUNNER_PATH}/.env")
         systemd_docker_proxy = instance.files.read_file(
             "/etc/systemd/system/docker.service.d/http-proxy.conf"
         )

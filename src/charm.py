@@ -31,7 +31,7 @@ from errors import MissingConfigurationError, RunnerBinaryError, RunnerError, Su
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
-from runner import LXD_PROFILE_YAML
+from runner import HOME_PATH, LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
 from utilities import bytes_with_unit_to_kib, execute_command, get_env_var, retry
@@ -108,7 +108,7 @@ class GithubRunnerCharm(CharmBase):
     _stored = StoredState()
 
     service_token_path = Path("service_token")
-    repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
+    repo_check_web_service_path = Path(HOME_PATH / "repo_policy_compliance_service")
     repo_check_web_service_script = Path("src/repo_policy_compliance_service.py")
     repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
     ram_pool_path = Path("/storage/ram")

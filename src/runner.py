@@ -40,6 +40,9 @@ LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
 if not LXD_PROFILE_YAML.exists():
     LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
 
+HOME_PATH = Path("/home/ubuntu")
+GITHUB_RUNNER_PATH = Path(HOME_PATH / "github-runner")
+
 
 @dataclass
 class WgetExecutable:
@@ -67,7 +70,7 @@ class Runner:
         busy (bool): Whether GitHub marks this runner as busy.
     """
 
-    runner_application = Path("/home/ubuntu/github-runner")
+    runner_application = GITHUB_RUNNER_PATH
     env_file = runner_application / ".env"
     config_script = runner_application / "config.sh"
     runner_script = runner_application / "start.sh"
@@ -508,9 +511,9 @@ class Runner:
             docker_client_proxy_content = json.dumps(docker_client_proxy)
             # Configure the docker client for root user and ubuntu user.
             self._put_file("/root/.docker/config.json", docker_client_proxy_content)
-            self._put_file("/home/ubuntu/.docker/config.json", docker_client_proxy_content)
+            self._put_file(f"{HOME_PATH}/.docker/config.json", docker_client_proxy_content)
             self.instance.execute(
-                ["/usr/bin/chown", "-R", "ubuntu:ubuntu", "/home/ubuntu/.docker"]
+                ["/usr/bin/chown", "-R", "ubuntu:ubuntu", f"{HOME_PATH}/.docker"]
             )
 
     @retry(tries=5, delay=30, local_logger=logger)

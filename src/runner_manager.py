@@ -33,7 +33,7 @@ from github_type import (
 )
 from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
-from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
+from runner import HOME_PATH, Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
 from utilities import retry, set_env_var
 
@@ -75,7 +75,7 @@ class RunnerInfo:
 class RunnerManager:
     """Manage a group of runners according to configuration."""
 
-    runner_bin_path = Path("/home/ubuntu/github-runner-app")
+    runner_bin_path = Path(HOME_PATH / "github-runner-app")
 
     def __init__(
         self,
