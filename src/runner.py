@@ -635,5 +635,14 @@ class Runner:
         for executable in executables:
             executable_path = f"/usr/bin/{executable.cmd}"
             logger.info("Downloading %s via wget to %s...", executable.url, executable_path)
-            self.instance.execute(["/usr/bin/wget", executable.url, "-O", executable_path])
+            wget_cmd = ["/usr/bin/wget", executable.url, "-O", executable_path]
+            if self.config.proxies.get("http", None) or self.config.proxies.get("https", None):
+                wget_cmd += ["-e", "use_proxy=on"]
+            if self.config.proxies.get("http", None):
+                wget_cmd += ["-e", f"http_proxy={self.config.proxies['http']}"]
+            if self.config.proxies.get("https", None):
+                wget_cmd += ["-e", f"https_proxy={self.config.proxies['https']}"]
+            if self.config.proxies.get("no_proxy", None):
+                wget_cmd += ["-e", f"no_proxy={self.config.proxies['no_proxy']}"]
+            self.instance.execute(wget_cmd)
             self.instance.execute(["/usr/bin/chmod", "+x", executable_path])
