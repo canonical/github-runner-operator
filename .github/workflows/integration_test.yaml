@@ -1,0 +1,18 @@
+name: Integration test
+
+on:
+  pull_request:
+
+jobs:
+  integration-tests:
+    name: Integration test
+    runs-on: ["self-hosted", "integration-runner"]
+    steps:
+      - name: Install tox
+        run: python3 -m pip install --user tox
+      - name: Run Integration tests
+        run: |
+          tox -e integration -- \
+            --keep-models \
+            --path ${{secrets.E2E_TESTING_REPO}} \
+            --token ${{secrets.E2E_TESTING_TOKEN}}
