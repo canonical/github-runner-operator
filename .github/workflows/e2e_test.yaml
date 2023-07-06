@@ -1,7 +1,9 @@
 name: End-to-End Test
 
 on:
-  pull_request:
+  # TODO: Enable on pull_request and remove workflow_call.
+  # pull_request:
+  workflow_call:
 
 jobs:
   build-charm:
@@ -72,7 +74,7 @@ jobs:
   deploy-e2e-test-runner:
     name: Deploy End-to-End Test Runner
     runs-on: ubuntu-latest
-    needs: [ build-charm, run-id ]
+    needs: [build-charm, run-id]
     steps:
       - name: Setup Lxd Juju Controller
         uses: charmed-kubernetes/actions-operator@main
@@ -121,7 +123,7 @@ jobs:
         timeout-minutes: 30
         run: |
           juju debug-log --replay --tail &
-          
+
           while :; do
             JOBS=$(gh api \
             -H "Accept: application/vnd.github+json" \
@@ -146,8 +148,8 @@ jobs:
 
   e2e-test:
     name: End-to-End Test
-    needs: [ build-charm, run-id ]
-    runs-on: [ self-hosted, linux, x64, "${{ needs.run-id.outputs.run-id }}" ]
+    needs: [build-charm, run-id]
+    runs-on: [self-hosted, linux, x64, "${{ needs.run-id.outputs.run-id }}"]
     steps:
       # below is a series of simple tests to assess the functionality of the newly spawned runner.
       - name: Echo hello world
