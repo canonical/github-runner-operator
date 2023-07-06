@@ -6,7 +6,8 @@ on:
 jobs:
   integration-tests:
     name: Integration test
-    runs-on: ["self-hosted", "integration-runner"]
+    # TODO: Switch back to using staging env runners.
+    runs-on: ["self-hosted", "large"]
     steps:
       - name: Install tox
         run: python3 -m pip install --user tox
