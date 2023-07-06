@@ -4,7 +4,7 @@
 """Integration tests for github-runner charm."""
 
 import pytest
-from ops.model import ActiveStatus, BlockedStatus, Application
+from ops.model import ActiveStatus, Application, BlockedStatus
 from pytest_operator.plugin import OpsTest
 
 
