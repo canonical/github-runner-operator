@@ -1,7 +1,9 @@
 name: Tests
 
 on:
-  pull_request:
+  # TODO: Enable on pull_request and remove workflow_call.
+  # pull_request:
+  workflow_call:
 
 jobs:
   unit-tests:
