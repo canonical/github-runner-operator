@@ -9,9 +9,9 @@ jobs:
     # TODO: Switch back to using staging env runners.
     runs-on: ["self-hosted", "large"]
     steps:
-      - name: Install tox
-        run: python3 -m pip install --user tox
       - uses: actions/checkout@v3
+      - name: Setup operator environment
+        uses: charmed-kubernetes/actions-operator@main
       - name: Run Integration tests
         run: |
           tox -e integration -- \
