@@ -52,16 +52,13 @@ EventT = TypeVar("EventT")
 
 
 def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[CharmT, EventT], None]:
-    """Catch unexpected errors in charm.
-
-    This decorator is for unrecoverable errors and sets the charm to
-    `BlockedStatus`.
+    """Catch common errors in charm.
 
     Args:
         func: Charm function to be decorated.
 
     Returns:
-        Decorated charm function with catching unexpected errors.
+        Decorated charm function with catching common errors.
     """
 
     @functools.wraps(func)
@@ -81,13 +78,13 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
 def catch_action_errors(
     func: Callable[[CharmT, ActionEvent], None]
 ) -> Callable[[CharmT, ActionEvent], None]:
-    """Catch unexpected errors in actions.
+    """Catch common errors in actions.
 
     Args:
         func: Action function to be decorated.
 
     Returns:
-        Decorated charm function with catching unexpected errors.
+        Decorated charm function with catching common errors.
     """
 
     @functools.wraps(func)
@@ -202,7 +199,7 @@ class GithubRunnerCharm(CharmBase):
         except SubprocessError:
             logger.exception("Found inactive repo-policy-compliance service")
             execute_command(["/usr/bin/systemctl", "restart", "repo-policy-compliance"])
-            logger.exception("Restart repo-policy-compliance service")
+            logger.info("Restart repo-policy-compliance service")
             raise
 
     def _get_runner_manager(
