@@ -30,5 +30,5 @@ unzip -p github_runner.zip > github-runner.charm
 rm github_runner.zip
 
 # Deploy the charm.
-juju deploy ./github-runner.charm --series=jammy e2e-runner
+juju deploy ./github-runner.charm --series=jammy --constraints="cores=4 mem=32G" e2e-runner
 juju config e2e-runner token="$GITHUB_TOKEN" path=canonical/github-runner-operator virtual-machines=1

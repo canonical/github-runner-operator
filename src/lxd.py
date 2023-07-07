@@ -8,14 +8,23 @@ The LxdClient class offer a low-level interface isolate the underlying implement
 from __future__ import annotations
 
 import io
+import logging
 import tempfile
 from typing import IO, Optional, Tuple, Union
 
 import pylxd.models
 
 from errors import LxdError, SubprocessError
-from lxd_type import LxdInstanceConfig, ResourceProfileConfig, ResourceProfileDevices
+from lxd_type import (
+    LxdInstanceConfig,
+    LxdNetwork,
+    LxdResourceProfileConfig,
+    LxdResourceProfileDevices,
+    LxdStoragePoolConfiguration,
+)
 from utilities import execute_command, secure_run_subprocess
+
+logger = logging.getLogger(__name__)
 
 
 class LxdInstanceFileManager:
@@ -67,6 +76,7 @@ class LxdInstanceFileManager:
         try:
             execute_command(lxc_cmd)
         except SubprocessError as err:
+            logger.exception("Failed to push file")
             raise LxdError(f"Unable to push file into LXD instance {self.instance.name}") from err
 
     def write_file(
@@ -112,6 +122,7 @@ class LxdInstanceFileManager:
         try:
             execute_command(lxc_cmd)
         except SubprocessError as err:
+            logger.exception("Failed to pull file")
             raise LxdError(
                 f"Unable to pull file {source} from LXD instance {self.instance.name}"
             ) from err
@@ -143,15 +154,14 @@ class LxdInstance:
         status (str): Status of the LXD instance.
     """
 
-    def __init__(self, name: str, pylxd_instance: pylxd.models.Instance):
+    def __init__(self, pylxd_instance: pylxd.models.Instance):
         """Construct the LXD instance representation.
 
         Args:
-            name: Name of the LXD instance.
             pylxd_instance: Instance of pylxd.models.Instance for the LXD instance.
         """
-        self.name = name
         self._pylxd_instance = pylxd_instance
+        self.name = self._pylxd_instance.name
         self.files = LxdInstanceFileManager(self._pylxd_instance)
 
     @property
@@ -177,6 +187,7 @@ class LxdInstance:
         try:
             self._pylxd_instance.start(timeout, force, wait)
         except pylxd.exceptions.LXDAPIException as err:
+            logger.exception("Failed to start LXD instance")
             raise LxdError(f"Unable to start LXD instance {self.name}") from err
 
     def stop(self, timeout: int = 30, force: bool = True, wait: bool = False) -> None:
@@ -193,6 +204,7 @@ class LxdInstance:
         try:
             self._pylxd_instance.stop(timeout, force, wait)
         except pylxd.exceptions.LXDAPIException as err:
+            logger.exception("Failed to stop LXD instance")
             raise LxdError(f"Unable to stop LXD instance {self.name}") from err
 
     def delete(self, wait: bool = False) -> None:
@@ -207,6 +219,7 @@ class LxdInstance:
         try:
             self._pylxd_instance.delete(wait)
         except pylxd.exceptions.LXDAPIException as err:
+            logger.exception("Failed to delete LXD instance")
             raise LxdError(f"Unable to delete LXD instance {self.name}") from err
 
     def execute(self, cmd: list[str], cwd: Optional[str] = None) -> Tuple[int, IO, IO]:
@@ -253,11 +266,9 @@ class LxdInstanceManager:
             List of LXD instances.
         """
         try:
-            return [
-                LxdInstance(instance.name, instance)
-                for instance in self._pylxd_client.instances.all()
-            ]
+            return [LxdInstance(instance) for instance in self._pylxd_client.instances.all()]
         except pylxd.exceptions.LXDAPIException as err:
+            logger.exception("Failed to get all LXD instance")
             raise LxdError("Unable to get all LXD instances") from err
 
     def create(self, config: LxdInstanceConfig, wait: bool) -> LxdInstance:
@@ -275,8 +286,9 @@ class LxdInstanceManager:
         """
         try:
             pylxd_instance = self._pylxd_client.instances.create(config=config, wait=wait)
-            return LxdInstance(config["name"], pylxd_instance)
+            return LxdInstance(pylxd_instance)
         except pylxd.exceptions.LXDAPIException as err:
+            logger.exception("Failed to create LXD instance")
             raise LxdError(f"Unable to create LXD instance {config['name']}") from err
 
 
@@ -306,10 +318,11 @@ class LxdProfileManager:
         try:
             return self._pylxd_client.profiles.exists(name)
         except pylxd.exceptions.LXDAPIException as err:
+            logger.exception("Failed to check if LXD profile exists")
             raise LxdError(f"Unable to check if LXD profile {name} exists") from err
 
     def create(
-        self, name: str, config: ResourceProfileConfig, devices: ResourceProfileDevices
+        self, name: str, config: LxdResourceProfileConfig, devices: LxdResourceProfileDevices
     ) -> None:
         """Create a LXD profile.
 
@@ -324,7 +337,135 @@ class LxdProfileManager:
         try:
             self._pylxd_client.profiles.create(name, config, devices)
         except pylxd.exceptions.LXDAPIException as err:
-            raise LxdError(f"Unable to create LXD profile {name} exists") from err
+            logger.exception("Failed to create LXD profile")
+            raise LxdError(f"Unable to create LXD profile {name}") from err
+
+
+# Disable pylint as other method of this class can be extended in the future.
+class LxdNetworkManager:  # pylint: disable=too-few-public-methods
+    """LXD network manager."""
+
+    def __init__(self, pylxd_client: pylxd.Client):
+        """Construct the LXD profile manager.
+
+        Args:
+            pylxd_client: Instance of pylxd.Client.
+        """
+        self._pylxd_client = pylxd_client
+
+    def get(self, name: str) -> LxdNetwork:
+        """Get a LXD network information.
+
+        Args:
+            name: The name of the LXD network.
+
+        Returns:
+            Information on the LXD network.
+        """
+        network = self._pylxd_client.networks.get(name)
+        return LxdNetwork(
+            network.name,
+            network.description,
+            network.type,
+            network.config,
+            network.managed,
+            network.used_by,
+        )
+
+
+class LxdStoragePoolManager:
+    """LXD storage pool manager."""
+
+    def __init__(self, pylxd_client: pylxd.Client):
+        """Construct the LXD storage pool manager.
+
+        Args:
+            pylxd_client: Instance of pylxd.Client.
+        """
+        self._pylxd_client = pylxd_client
+
+    def all(self) -> list[LxdStoragePool]:
+        """Get all LXD storage pool.
+
+        Returns:
+            List of LXD storage pools.
+        """
+        return [LxdStoragePool(pool) for pool in self._pylxd_client.storage_pools.all()]
+
+    def get(self, name: str) -> LxdStoragePool:
+        """Get a LXD storage pool.
+
+        Args:
+            name: Name of the storage pool.
+
+        Returns:
+            The LXD storage pool.
+        """
+        try:
+            return LxdStoragePool(self._pylxd_client.storage_pools.get(name))
+        except pylxd.exceptions.NotFound as err:
+            logger.exception("LXD storage pool not found")
+            raise LxdError(f"LXD storage pool {name} not found") from err
+
+    def exists(self, name: str) -> bool:
+        """Check if a LXD storage pool exists.
+
+        Args:
+            name: Name to check for.
+
+        Returns:
+            Whether the storage pool exists.
+        """
+        return self._pylxd_client.storage_pools.exists(name)
+
+    def create(self, config: LxdStoragePoolConfiguration) -> LxdStoragePool:
+        """Create a LXD storage pool.
+
+        Args:
+            config: Configuration for the storage pool.
+
+        Returns:
+            The LXD storage pool.
+        """
+        return self._pylxd_client.storage_pools.create(config)
+
+
+class LxdStoragePool:
+    """A LXD storage pool.
+
+    Attrs:
+        name (str): Name of the storage pool.
+        driver (str): Type of driver of the storage pool.
+        used_by (list[str]): LXD instance that uses the storage pool.
+        config (dict[str, any]): Dictionary of the configuration of the storage pool.
+        managed (bool): Whether LXD manages the storage pool.
+    """
+
+    def __init__(
+        self,
+        pylxd_storage_pool: pylxd.models.StoragePool,
+    ):
+        """Construct the LXD storage pool.
+
+        Args:
+            pylxd_storage_pool: Instance of the pylxd.models.StoragePool.
+        """
+        self._pylxd_storage_pool = pylxd_storage_pool
+
+        self.name = self._pylxd_storage_pool.name
+        self.driver = self._pylxd_storage_pool.driver
+        self.used_by = self._pylxd_storage_pool.used_by
+        self.config = self._pylxd_storage_pool.config
+        self.managed = self._pylxd_storage_pool.managed
+
+    def save(self):
+        """Save the current configuration of storage pool."""
+        self._pylxd_storage_pool.config = self.config
+        self._pylxd_storage_pool.save()
+
+    def delete(self):
+        """Delete the storage pool."""
+        self._pylxd_storage_pool.delete()
 
 
 # Disable pylint as the public methods of this class in split into instances and profiles.
@@ -336,3 +477,5 @@ class LxdClient:  # pylint: disable=too-few-public-methods
         pylxd_client = pylxd.Client()
         self.instances = LxdInstanceManager(pylxd_client)
         self.profiles = LxdProfileManager(pylxd_client)
+        self.networks = LxdNetworkManager(pylxd_client)
+        self.storage_pools = LxdStoragePoolManager(pylxd_client)

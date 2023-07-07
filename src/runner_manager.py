@@ -32,6 +32,7 @@ from github_type import (
     SelfHostedRunner,
 )
 from lxd import LxdClient, LxdInstance
+from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
 from utilities import retry, set_env_var
@@ -48,11 +49,16 @@ class RunnerManagerConfig:
             name.
         token: GitHub personal access token to register runner to the repository or
             organization.
+        image: Name of the image for creating LXD instance.
+        service_token: Token for accessing local service.
+        lxd_storage_path: Path to be used as LXD storage.
     """
 
     path: GitHubPath
     token: str
     image: str
+    service_token: str
+    lxd_storage_path: Path
 
 
 @dataclass
@@ -69,7 +75,7 @@ class RunnerInfo:
 class RunnerManager:
     """Manage a group of runners according to configuration."""
 
-    runner_bin_path = Path("/opt/github-runner-app")
+    runner_bin_path = Path("/home/ubuntu/github-runner-app")
 
     def __init__(
         self,
@@ -102,7 +108,7 @@ class RunnerManager:
         self.session = requests.Session()
         adapter = requests.adapters.HTTPAdapter(
             max_retries=urllib3.Retry(
-                total=10, backoff_factor=0.3, status_forcelist=[500, 502, 503, 504]
+                total=3, backoff_factor=0.3, status_forcelist=[500, 502, 503, 504]
             )
         )
         self.session.mount("http://", adapter)
@@ -115,10 +121,21 @@ class RunnerManager:
             opener = urllib.request.build_opener(proxy)
             fastcore.net._opener = opener
 
+        # The repo policy compliance service is on localhost and should not have any proxies
+        # setting configured. The is a separated requests Session as the other one configured
+        # according proxies setting provided by user.
+        local_session = requests.Session()
+        local_session.mount("http://", adapter)
+        local_session.mount("https://", adapter)
+        local_session.trust_env = False
+
         self._clients = RunnerClients(
             GhApi(token=self.config.token),
             jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True),
             LxdClient(),
+            RepoPolicyComplianceClient(
+                local_session, "http://127.0.0.1:8080", self.config.service_token
+            ),
         )
 
     @retry(tries=5, delay=30, local_logger=logger)
@@ -173,29 +190,40 @@ class RunnerManager:
         """
         logger.info("Downloading runner binary from: %s", binary["download_url"])
 
-        # Delete old version of runner binary.
-        RunnerManager.runner_bin_path.unlink(missing_ok=True)
+        try:
+            # Delete old version of runner binary.
+            RunnerManager.runner_bin_path.unlink(missing_ok=True)
+        except OSError as err:
+            logger.exception("Unable to perform file operation on the runner binary path")
+            raise RunnerBinaryError("File operation failed on the runner binary path") from err
 
-        # Download the new file
-        response = self.session.get(binary["download_url"], stream=True)
+        try:
+            # Download the new file
+            response = self.session.get(binary["download_url"], stream=True)
 
-        logger.info(
-            "Download of runner binary from %s return status code: %i",
-            binary["download_url"],
-            response.status_code,
-        )
+            logger.info(
+                "Download of runner binary from %s return status code: %i",
+                binary["download_url"],
+                response.status_code,
+            )
 
-        if not binary["sha256_checksum"]:
-            logger.error("Checksum for runner binary is not found, unable to verify download.")
-            raise RunnerBinaryError("Checksum for runner binary is not found in GitHub response.")
+            if not binary["sha256_checksum"]:
+                logger.error("Checksum for runner binary is not found, unable to verify download.")
+                raise RunnerBinaryError(
+                    "Checksum for runner binary is not found in GitHub response."
+                )
 
-        sha256 = hashlib.sha256()
+            sha256 = hashlib.sha256()
 
-        with RunnerManager.runner_bin_path.open(mode="wb") as file:
-            for chunk in response.iter_content(decode_unicode=False):
-                file.write(chunk)
+            with RunnerManager.runner_bin_path.open(mode="wb") as file:
+                # Process with chunk_size of 128 KiB.
+                for chunk in response.iter_content(chunk_size=128 * 1024, decode_unicode=False):
+                    file.write(chunk)
 
-                sha256.update(chunk)
+                    sha256.update(chunk)
+        except requests.RequestException as err:
+            logger.exception("Failed to download of runner binary")
+            raise RunnerBinaryError("Failed to download runner binary") from err
 
         logger.info("Finished download of runner binary.")
 
@@ -206,13 +234,11 @@ class RunnerManager:
                 binary["sha256_checksum"],
                 sha256,
             )
-            RunnerManager.runner_bin_path.unlink(missing_ok=True)
             raise RunnerBinaryError("Checksum mismatch for downloaded runner binary")
 
         # Verify the file integrity.
         if not tarfile.is_tarfile(file.name):
             logger.error("Failed to decompress downloaded GitHub runner binary.")
-            RunnerManager.runner_bin_path.unlink(missing_ok=True)
             raise RunnerBinaryError("Downloaded runner binary cannot be decompressed.")
 
         logger.info("Validated newly downloaded runner binary and enabled it.")
@@ -290,6 +316,7 @@ class RunnerManager:
                     self.app_name,
                     self.config.path,
                     self.proxies,
+                    self.config.lxd_storage_path,
                     self._generate_runner_name(),
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
@@ -416,7 +443,9 @@ class RunnerManager:
             online = getattr(remote_runner, "status", None) == "online"
             busy = getattr(remote_runner, "busy", None)
 
-            config = RunnerConfig(self.app_name, self.config.path, self.proxies, name)
+            config = RunnerConfig(
+                self.app_name, self.config.path, self.proxies, self.config.lxd_storage_path, name
+            )
             return Runner(
                 self._clients,
                 config,

@@ -12,6 +12,7 @@ from typing import Optional, Sequence, Union
 
 from errors import LxdError, RunnerError
 from github_type import RegistrationToken, RemoveToken, RunnerApplication
+from lxd_type import LxdNetwork
 from runner import LxdInstanceConfig
 
 logger = logging.getLogger(__name__)
@@ -29,15 +30,17 @@ TEST_BINARY = (
 
 
 class MockLxdClient:
-    """Mock the behavior of the lxd client."""
+    """Mock the behavior of the LXD client."""
 
     def __init__(self):
         self.instances = MockLxdInstanceManager()
         self.profiles = MockLxdProfileManager()
+        self.networks = MockLxdNetworkManager()
+        self.storage_pools = MockLxdStoragePoolManager()
 
 
 class MockLxdInstanceManager:
-    """Mock the behavior of the lxd Instances."""
+    """Mock the behavior of the LXD Instances."""
 
     def __init__(self):
         self.instances = {}
@@ -54,7 +57,7 @@ class MockLxdInstanceManager:
 
 
 class MockLxdProfileManager:
-    """Mock the behavior of the lxd Profiles."""
+    """Mock the behavior of the LXD Profiles."""
 
     def __init__(self):
         self.profiles = set()
@@ -66,8 +69,20 @@ class MockLxdProfileManager:
         return name in self.profiles
 
 
+class MockLxdNetworkManager:
+    """Mock the behavior of the LXD networks"""
+
+    def __init__(self):
+        pass
+
+    def get(self, name: str) -> LxdNetwork:
+        return LxdNetwork(
+            "lxdbr0", "", "bridge", {"ipv4.address": "10.1.1.1/24"}, True, ("default")
+        )
+
+
 class MockLxdInstance:
-    """Mock the behavior of a lxd Instance."""
+    """Mock the behavior of a LXD Instance."""
 
     def __init__(self, name: str):
         self.name = name
@@ -92,7 +107,7 @@ class MockLxdInstance:
 
 
 class MockLxdInstanceFileManager:
-    """Mock the behavior of a lxd Instance files."""
+    """Mock the behavior of a LXD Instance files."""
 
     def __init__(self):
         self.files = {}
@@ -108,6 +123,42 @@ class MockLxdInstanceFileManager:
 
     def read_file(self, filepath: str):
         return self.files.get(str(filepath), None)
+
+
+class MockLxdStoragePoolManager:
+    """Mock the behavior of LXD storage pools."""
+
+    def __init__(self):
+        self.pools = {}
+
+    def all(self):
+        return [pool for pool in self.pools.values() if not pool.delete]
+
+    def get(self, name):
+        return self.pools[name]
+
+    def exists(self, name):
+        if name in self.pools:
+            return not self.pools[name].delete
+        else:
+            return False
+
+    def create(self, config):
+        self.pools[config["name"]] = MockLxdStoragePool()
+        return self.pools[config["name"]]
+
+
+class MockLxdStoragePool:
+    """Mock the behavior of a LXD storage pool."""
+
+    def __init__(self):
+        self.delete = False
+
+    def save(self):
+        pass
+
+    def delete(self):
+        self.delete = True
 
 
 class MockErrorResponse:
@@ -198,3 +249,13 @@ class MockGhapiActions:
 
     def delete_self_hosted_runner_from_org(self, org: str, runner_id: str):
         pass
+
+
+class MockRepoPolicyComplianceClient:
+    """Mock for RepoPolicyComplianceClient."""
+
+    def __init__(self, session=None, url=None, charm_token=None):
+        pass
+
+    def get_one_time_token(self) -> str:
+        return "MOCK_TOKEN_" + secrets.token_hex(8)

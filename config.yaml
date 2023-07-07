@@ -33,13 +33,14 @@ options:
     type: string
     default: 7GiB
     description: >
-      Amount of memory to allocate per virtual machine runner. Positive integers with GiB suffix.
+      Amount of memory to allocate per virtual machine runner. Positive integers with KiB, MiB, GiB,
+      TiB, PiB, EiB suffix.
   vm-disk:
     type: string
     default: 10GiB
     description: >
       Amount of disk space to allocate to root disk for virtual machine runner. Positive integers
-      with GiB suffix.
+      with KiB, MiB, GiB, TiB, PiB, EiB suffix.
   reconcile-interval:
     type: int
     default: 10
@@ -52,3 +53,15 @@ options:
     default: 60
     description: >
       Minutes between each check for new versions of the runner binary.
+  test-mode:
+    type: string
+    description: >
+      When set to 'insecure', the charm test mode is activated, which may deactivate some security
+      hardening measures.
+  denylist:
+    type: string
+    default: ""
+    description: >
+      A comma separated list of IPv4 networks in CIDR notation that runners can not access.
+      The runner will always have access to essential services such as DHCP and DNS regardless 
+      of the denylist configuration.

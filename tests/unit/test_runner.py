@@ -10,10 +10,15 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from errors import RunnerCreateError
+from errors import RunnerCreateError, RunnerRemoveError
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
-from tests.unit.mock import MockLxdClient, mock_lxd_error_func, mock_runner_error_func
+from tests.unit.mock import (
+    MockLxdClient,
+    MockRepoPolicyComplianceClient,
+    mock_lxd_error_func,
+    mock_runner_error_func,
+)
 
 
 @pytest.fixture(scope="module", name="vm_resources")
@@ -57,9 +62,16 @@ def mock_lxd_client_fixture():
         ),
     ],
 )
-def runner_fixture(request, lxd: MockLxdClient):
-    client = RunnerClients(MagicMock(), MagicMock(), lxd)
-    config = RunnerConfig("test_app", request.param[0], request.param[1], "test_runner")
+def runner_fixture(request, lxd: MockLxdClient, tmp_path: Path):
+    client = RunnerClients(
+        MagicMock(),
+        MagicMock(),
+        lxd,
+        MockRepoPolicyComplianceClient(),
+    )
+    pool_path = tmp_path / "test_storage"
+    pool_path.mkdir(exist_ok=True)
+    config = RunnerConfig("test_app", request.param[0], request.param[1], pool_path, "test_runner")
     status = RunnerStatus()
     return Runner(
         client,
@@ -88,7 +100,7 @@ def test_create(
 
     if runner.config.proxies:
         instance = instances[0]
-        env_proxy = instance.files.read_file("/opt/github-runner/.env")
+        env_proxy = instance.files.read_file("/home/ubuntu/github-runner/.env")
         systemd_docker_proxy = instance.files.read_file(
             "/etc/systemd/system/docker.service.d/http-proxy.conf"
         )
@@ -189,3 +201,42 @@ def test_remove_none(
 
     runner.remove(token)
     assert len(lxd.instances.all()) == 0
+
+
+def test_remove_with_stop_error(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    token: str,
+    binary_path: Path,
+    lxd: MockLxdClient,
+):
+    """
+    arrange: Create a runner. Set up LXD stop fails with LxdError.
+    act: Remove the runner.
+    assert: RunnerRemoveError is raised.
+    """
+    runner.create("test_image", vm_resources, binary_path, token)
+    runner.instance.stop = mock_lxd_error_func
+
+    with pytest.raises(RunnerRemoveError):
+        runner.remove("test_token")
+
+
+def test_remove_with_delete_error(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    token: str,
+    binary_path: Path,
+    lxd: MockLxdClient,
+):
+    """
+    arrange: Create a runner. Set up LXD delete fails with LxdError.
+    act: Remove the runner.
+    assert: RunnerRemoveError is raised.
+    """
+    runner.create("test_image", vm_resources, binary_path, token)
+    runner.instance.status = "Stopped"
+    runner.instance.delete = mock_lxd_error_func
+
+    with pytest.raises(RunnerRemoveError):
+        runner.remove("test_token")
