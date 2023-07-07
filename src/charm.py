@@ -332,7 +332,7 @@ class GithubRunnerCharm(CharmBase):
             event: Event of charm upgrade.
         """
         logger.info("Reinstalling dependencies...")
-        self._install_deps()
+        self._install_deps(upgrade_compliance=True)
         self._start_services()
         self._refresh_firewall()
 
@@ -572,11 +572,24 @@ class GithubRunnerCharm(CharmBase):
             return {"delta": {"virtual-machines": 0}}
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
-    def _install_deps(self) -> None:
-        """Install dependencies."""
+    def _install_deps(self, upgrade_compliance: bool = False) -> None:
+        """Install dependencies.
+
+        Args:
+            upgrade_compliance: Upgrade (True) or install (False)
+                the repo-policy-compliance package.
+
+        """
         logger.info("Installing charm dependencies.")
 
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
+        execute_command(["/usr/bin/apt-get", "update"])
+        # install dependencies used by repo-policy-compliance and the firewall
+        execute_command(
+            ["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip", "nftables"]
+        )
+
+        # Install repo-policy-compliance package.
         env = {}
         if "http" in self.proxies:
             env["HTTP_PROXY"] = self.proxies["http"]
@@ -588,17 +601,17 @@ class GithubRunnerCharm(CharmBase):
             env["NO_PROXY"] = self.proxies["no_proxy"]
             env["no_proxy"] = self.proxies["no_proxy"]
 
-        execute_command(["/usr/bin/apt-get", "update"])
-        # install dependencies used by repo-policy-compliance and the firewall
+        command = [
+            "/usr/bin/pip",
+            "install",
+            "git+https://github.com/canonical/repo-policy-compliance@main",
+        ]
+
+        if upgrade_compliance is True:
+            command.insert(2, "--upgrade")
+
         execute_command(
-            ["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip", "nftables"]
-        )
-        execute_command(
-            [
-                "/usr/bin/pip",
-                "install",
-                "git+https://github.com/canonical/repo-policy-compliance@main",
-            ],
+            command,
             env=env,
         )
 
