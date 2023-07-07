@@ -7,7 +7,7 @@ jobs:
   integration-tests:
     name: Integration test
     # TODO: Switch back to using staging env runners.
-    runs-on: ["self-hosted", "two-xlarge"]
+    runs-on: ["self-hosted", "test-runner"]
     steps:
       - uses: actions/checkout@v3
       - name: Setup operator environment
@@ -22,3 +22,6 @@ jobs:
             --keep-models \
             --path ${{secrets.E2E_TESTING_REPO}} \
             --token ${{secrets.E2E_TESTING_TOKEN}}
+      # TODO: Debug only
+      - name: Wait 6 hours
+        run: sleep 6h
