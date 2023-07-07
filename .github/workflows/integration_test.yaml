@@ -7,7 +7,7 @@ jobs:
   integration-tests:
     name: Integration test
     # TODO: Switch back to using staging env runners.
-    runs-on: ["self-hosted", "runner"]
+    runs-on: ["self-hosted", "two-xlarge"]
     steps:
       - uses: actions/checkout@v3
       - name: Setup operator environment
