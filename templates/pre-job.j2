@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
+# Log common env variables.
+logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
+  GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}, \
+  GITHUB_SHA: ${GITHUB_SHA}"
+
 # Workflow dispatch - Request repo-policy-compliance service check:
 if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
 
-  logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
-  GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}, \
-  GITHUB_REF_NAME: ${GITHUB_REF_NAME}, \
-  GITHUB_SHA: ${GITHUB_SHA}"
+  logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
 
   curl --noproxy '*' \
       --fail-with-body \
@@ -20,13 +22,11 @@ elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
 
   GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.repo.full_name')
 
-  logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
+  logger -s " \
   GITHUB_SOURCE_REPOSITORY: ${GITHUB_SOURCE_REPOSITORY}, \
-  GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}, \
   GITHUB_SOURCE_REPOSITORY: ${GITHUB_SOURCE_REPOSITORY} \
   GITHUB_BASE_REF: ${GITHUB_BASE_REF}, \
-  GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}, \
-  GITHUB_SHA: ${GITHUB_SHA}"
+  GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
 
   curl --noproxy '*' \
       --fail-with-body \
