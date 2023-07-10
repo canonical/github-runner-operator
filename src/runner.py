@@ -387,6 +387,10 @@ class Runner:
         # TEMP: Install common tools used in GitHub Actions. This will be removed once virtual
         # machines are created from custom images/GitHub runner image.
 
+        # Pre-create the microk8s group and add the user to it.
+        self.instance.execute(["/usr/sbin/groupadd", "microk8s"])
+        self.instance.execute(["/usr/sbin/usermod", "-aG", "microk8s", "ubuntu"])
+
         self._apt_install(["docker.io", "npm", "python3-pip", "shellcheck", "jq", "wget"])
         self._wget_install(
             [
@@ -399,7 +403,6 @@ class Runner:
 
         # Add the user to docker group.
         self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
-        self.instance.execute(["/usr/bin/newgrp", "docker"])
 
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
