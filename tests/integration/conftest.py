@@ -41,7 +41,7 @@ async def app(ops_test: OpsTest, path: str) -> Application:
     application = await ops_test.model.deploy(
         charm,
         series="jammy",
-        config={path: path, "virtual-machines": 1, "denylist": "10.0.0.0/8"},
+        config={"path": path, "virtual-machines": 1, "denylist": "10.0.0.0/8"},
         constraints={"cores": 4, "mem": 32, "virt-type": "virtual-machine"},
     )
 
