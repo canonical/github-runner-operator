@@ -576,6 +576,7 @@ class GithubRunnerCharm(CharmBase):
         """Install dependencies."""
         logger.info("Installing charm dependencies.")
 
+        # Snap and Apt will use any proxies configured in the Juju model.
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
         execute_command(["/usr/bin/apt-get", "update"])
         # install dependencies used by repo-policy-compliance and the firewall
@@ -583,7 +584,7 @@ class GithubRunnerCharm(CharmBase):
             ["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip", "nftables"]
         )
 
-        # Install repo-policy-compliance package.
+        # Prepare environment for pip subprocess
         env = {}
         if "http" in self.proxies:
             env["HTTP_PROXY"] = self.proxies["http"]
@@ -595,6 +596,7 @@ class GithubRunnerCharm(CharmBase):
             env["NO_PROXY"] = self.proxies["no_proxy"]
             env["no_proxy"] = self.proxies["no_proxy"]
 
+        # Install repo-policy-compliance package
         execute_command(
             [
                 "/usr/bin/pip",
