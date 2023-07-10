@@ -26,7 +26,6 @@ async def test_missing_config(ops_test: OpsTest, app: Application) -> None:
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-@pytest.mark.requires_secrets
 async def test_config(ops_test: OpsTest, app: Application, token: str) -> None:
     """
     arrange: Deploy an application without token configuration
