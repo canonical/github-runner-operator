@@ -23,6 +23,6 @@ jobs:
             --path ${{secrets.E2E_TESTING_REPO}} \
             --token ${{secrets.E2E_TESTING_TOKEN}}
       # TODO: Debug only
-      - name: Wait 6 hours
+      - name: Wait 6 hours on failure
         if: failure()
         run: sleep 6h
