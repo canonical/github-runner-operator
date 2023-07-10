@@ -42,7 +42,7 @@ async def app(ops_test: OpsTest, path: str) -> Application:
         charm,
         series="jammy",
         config={path: path, "virtual-machines": 1, "denylist": "10.0.0.0/8"},
-        constraints={"cores": 4, "mem": "32G", "virt-type": "virtual-machine"},
+        constraints={"cores": 4, "mem": 32, "virt-type": "virtual-machine"},
     )
 
     yield application
