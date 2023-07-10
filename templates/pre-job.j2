@@ -5,15 +5,18 @@ logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
   GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}, \
   GITHUB_SHA: ${GITHUB_SHA}"
 
+# Prepare curl auth arguments
+CURL_AUTH_ARGS="--noproxy '*' \
+--fail-with-body \
+-H 'Authorization: Bearer {{one_time_token}}' \
+-H 'Content-Type: application/json'"
+
 # Workflow dispatch - Request repo-policy-compliance service check:
 if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
 
   logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
 
-  curl --noproxy '*' \
-      --fail-with-body \
-      -H 'Authorization: Bearer {{one_time_token}}' \
-      -H 'Content-Type: application/json' \
+  curl "${CURL_AUTH_ARGS}" \
       -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"branch_name\": \"${GITHUB_REF_NAME}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
       http://{{host_ip}}:8080/workflow_dispatch/check-run
 
@@ -28,10 +31,7 @@ elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
   GITHUB_BASE_REF: ${GITHUB_BASE_REF}, \
   GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
 
-  curl --noproxy '*' \
-      --fail-with-body \
-      -H 'Authorization: Bearer {{one_time_token}}' \
-      -H 'Content-Type: application/json' \
+  curl "${CURL_AUTH_ARGS}" \
       -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_HEAD_REF}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
       http://{{host_ip}}:8080/pull_request/check-run
 
