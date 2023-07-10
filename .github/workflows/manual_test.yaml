@@ -8,7 +8,16 @@ on:
 jobs:
   test:
     name: test
-    runs-on: [self-hosted, small]
+    runs-on: [self-hosted, manual-runner]
     steps:
       - name: Echo hello world
         run: echo "hello world"
+      - name: Install microk8s
+        run: sudo snap install microk8s --classic
+      - name: Wait for microk8s
+        timeout-minutes: 10
+        run: microk8s status --wait-ready
+      - name: Deploy nginx for testing
+        run: microk8s kubectl create deployment nginx --image=nginx
+      - name: Wait for nginx to be ready
+        run: microk8s kubectl rollout status deployment/nginx --timeout=30m
