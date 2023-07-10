@@ -176,9 +176,9 @@ jobs:
         timeout-minutes: 10
         run: microk8s status --wait-ready
       - name: Deploy nginx for testing
-        run: sudo microk8s kubectl create deployment nginx --image=nginx
+        run: microk8s kubectl create deployment nginx --image=nginx
       - name: Wait for nginx to be ready
-        run: sudo microk8s kubectl rollout status deployment/nginx --timeout=30m
+        run: microk8s kubectl rollout status deployment/nginx --timeout=30m
       - name: Update apt in python docker container
         run: docker run python:3.10-slim apt update
       - name: Docker version
