@@ -33,7 +33,7 @@ elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
       -H 'Authorization: Bearer {{one_time_token}}' \
       -H 'Content-Type: application/json' \
       -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_HEAD_REF}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
-      http://{{host_ip}}:8080/check-run
+      http://{{host_ip}}:8080/pull_request/check-run
 
 else
 
