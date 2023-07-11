@@ -1,18 +1,17 @@
-name: Matrix test
+name: Manual test
 
 on:
   pull_request:
+  workflow_call:
+  workflow_dispatch:
 
 jobs:
   test:
-    runs-on: ["self-hosted", "kernel"]
-    strategy:
-      fail-fast: false
-      matrix:
-        num: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    name: test
+    runs-on: [self-hosted, kernel]
     steps:
-      - name: Echo number
-        run: echo "${{matrix.num}}"
+      - name: Echo hello world
+        run: echo "hello world"
       - name: Install microk8s
         run: sudo snap install microk8s --classic
       - name: Wait for microk8s
