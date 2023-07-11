@@ -2,8 +2,6 @@ name: Manual test
 
 on:
   pull_request:
-  workflow_call:
-  workflow_dispatch:
 
 jobs:
   test:
@@ -12,10 +10,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        num: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     steps:
       - name: Echo number
-        run: echo ${{matrix.runs}}
+        run: echo "${{ matrix.num }}"
       - name: Install microk8s
         run: sudo snap install microk8s --classic
       - name: Wait for microk8s
