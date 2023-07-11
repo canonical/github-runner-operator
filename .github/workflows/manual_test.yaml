@@ -15,7 +15,7 @@ jobs:
     runs-on: [self-hosted, kernel]
     steps:
       - name: Echo number
-        run: echo "${{matrix.num}}""
+        run: echo "${{matrix.num}}"
       - name: Install microk8s
         run: sudo snap install microk8s --classic
       - name: Wait for microk8s
