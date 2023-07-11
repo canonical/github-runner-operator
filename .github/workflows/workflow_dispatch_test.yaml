@@ -3,10 +3,10 @@ name: Workflow Dispatch Tests
 on:
   # Manually dispatched workflow action
   workflow_dispatch:
-    inputs:
-      runner:
-        description: 'Self hosted gh runner'
-        required: true
+  #  inputs:
+  #    runner:
+  #      description: 'Self hosted gh runner'
+  #      required: true
 jobs:
   workflow-dispatch-tests:
     runs-on: ubuntu-latest
