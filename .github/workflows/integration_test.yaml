@@ -14,7 +14,7 @@ jobs:
         uses: charmed-kubernetes/actions-operator@main
         with:
           # TODO: juju version should be a workflow input.
-          juju-channel: 3.0/stable
+          juju-channel: 3.1/stable
           provider: lxd
           bootstrap-constraints: "virt-type=virtual-machine"
       - name: Run Integration tests
