@@ -21,7 +21,10 @@ jobs:
           tox -e integration -- \
             --keep-models \
             --path ${{secrets.E2E_TESTING_REPO}} \
-            --token ${{secrets.E2E_TESTING_TOKEN}}
+            --token ${{secrets.E2E_TESTING_TOKEN}} \
+            --http-proxy $http_proxy \
+            --https-proxy $https_proxy \
+            --no-proxy $no_proxy
       # TODO: Debug only
       - name: Wait 6 hours on failure
         if: failure()
