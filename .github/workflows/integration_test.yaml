@@ -16,6 +16,7 @@ jobs:
           # TODO: juju version should be a workflow input.
           juju-channel: 3.0/stable
           provider: lxd
+          bootstrap-constraints: "virt-type=virtual-machine"
       - name: Run Integration tests
         run: |
           tox -e integration -- \
