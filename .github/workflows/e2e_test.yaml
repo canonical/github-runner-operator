@@ -205,9 +205,8 @@ jobs:
 
   e2e-test-workflow-dispatch:
     name: End-to-End Workflow Dispatch Test
-    #needs: [ build-charm, run-id ]
-    needs: [ run-id ]
-    runs-on: ubuntu-latest
+    needs: [ build-charm, run-id ]
+    runs-on: [ self-hosted, linux, x64, "${{ needs.run-id.outputs.run-id }}" ]
     steps:
       - name: Echo hello world
         run: echo "hello world"
@@ -229,11 +228,11 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             /repos/${{ secrets.E2E_TESTING_REPO }}/git/refs \
-            -f ref='refs/heads/${{ steps.run-id.outputs.run-id }}' \
+            -f ref='refs/heads/${{ needs.run-id.outputs.run-id }}' \
             -f sha=$MAIN_SHA
           
           gh workflow run workflow_dispatch_test.yaml \
             -R ${{ secrets.E2E_TESTING_REPO }} \
-            --ref ${{ steps.run-id.outputs.run-id }} \
-            -f runner=${{ steps.run-id.outputs.run-id }}
+            --ref ${{ needs.run-id.outputs.run-id }} \
+            -f runner=${{ needs.run-id.outputs.run-id }}
           
