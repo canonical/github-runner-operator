@@ -205,7 +205,8 @@ jobs:
 
   e2e-test-workflow-dispatch:
     name: End-to-End Workflow Dispatch Test
-    needs: [ build-charm, run-id ]
+    #needs: [ build-charm, run-id ]
+    needs: run-id
     #runs-on: [ self-hosted, linux, x64, "${{ needs.run-id.outputs.run-id }}" ]
     runs-on: ubuntu-latest
     steps:
