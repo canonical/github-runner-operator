@@ -61,14 +61,15 @@ async def app(
 ) -> Application:
     charm = await ops_test.build_charm(".")
 
-    ops_test.model.set_config(
+    await ops_test.model.set_constraints({"virt-type": "virtual-machine"})
+    await ops_test.model.set_config(
         {"juju-http-proxy": http_proxy, "juju-https-proxy": https_proxy, "juju-no-proxy": no_proxy}
     )
     application = await ops_test.model.deploy(
         charm,
         series="jammy",
         config={"path": path, "virtual-machines": 1, "denylist": "10.0.0.0/8"},
-        constraints={"cores": 4, "mem": 32, "virt-type": "virtual-machine"},
+        constraints={"cores": 4, "mem": 32},
     )
 
     yield application
