@@ -20,8 +20,8 @@ jobs:
         run: sudo snap install microk8s --classic
       - name: Wait for microk8s
         timeout-minutes: 10
-        run: microk8s status --wait-ready
+        run: sudo microk8s status --wait-ready
       - name: Deploy nginx for testing
-        run: microk8s kubectl create deployment nginx --image=nginx
+        run: sudo microk8s kubectl create deployment nginx --image=nginx
       - name: Wait for nginx to be ready
-        run: microk8s kubectl rollout status deployment/nginx --timeout=30m
+        run: sudo microk8s kubectl rollout status deployment/nginx --timeout=30m
