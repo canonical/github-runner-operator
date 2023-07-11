@@ -202,3 +202,81 @@ jobs:
         run: |
           HOST_IP=$(ip route | grep default | cut -f 3 -d" ")
           [ $((ping $HOST_IP -c 5 || :) | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
+
+  e2e-test-workflow-dispatch:
+    name: End-to-End Workflow Dispatch Test
+    needs: [ build-charm, run-id ]
+    runs-on: [ self-hosted, linux, x64, "${{ needs.run-id.outputs.run-id }}" ]
+    steps:
+      - name: Echo hello world
+        run: echo "hello world"
+      # Install prerequisites
+      - name: Install GitHub Cli
+        run: which gh || sudo apt install gh -y
+      - name: Dispatch Workflow
+        env:
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+        run: |
+          MAIN_SHA=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ secrets.E2E_TESTING_REPO }}/git/ref/heads/main --jq .object.sha)
+
+          # Create a reference
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ secrets.E2E_TESTING_REPO }}/git/refs \
+            -f ref='refs/heads/${{ needs.run-id.outputs.run-id }}' \
+            -f sha=$MAIN_SHA
+
+          # Dispatch other workflow
+          gh workflow run workflow_dispatch_test.yaml \
+            -R ${{ secrets.E2E_TESTING_REPO }} \
+            --ref ${{ needs.run-id.outputs.run-id }} \
+            -f runner=${{ needs.run-id.outputs.run-id }}
+
+          get-workflow-status() {
+              # Search recent workflow runs for the one designated by the run-id ref
+              output=$(gh run list \
+                        -R ${{ secrets.E2E_TESTING_REPO }} \
+                        -L 100 \
+                        --json headBranch,status \
+                        --jq '[.[] | select(.headBranch=="${{ needs.run-id.outputs.run-id }}")]')
+
+              # Workflows that have not started have no status
+              if [ $(echo "$output" | jq 'length') -eq 0 ]
+              then
+                  echo "not_started"
+              else
+                  # Parse output with jq to get the status field of the first object
+                  status=$(echo "$output" | jq -r '.[0].status')
+                  echo "$status"
+              fi
+          }
+          
+          # Wait for the workflow to start while checking its status
+          for i in {1..360}
+          do
+            status=$(get-workflow-status)
+            echo "workflow status: $status"
+            if [[ $status != "not_started" && $status != "queued" && $status != "in_progress" ]]; then
+              break
+            fi
+            sleep 10
+          done
+          
+          # Make sure the workflow was completed or else consider it failed
+          conclusion=$(gh run list \
+            -R ${{ secrets.E2E_TESTING_REPO }} \
+            -L 100 \
+            --json headBranch,conclusion \
+            --jq '.[] | select(.headBranch=="${{ needs.run-id.outputs.run-id }}") | .conclusion')
+
+          if [[ $status != "completed" || $conclusion != "success" ]]; then
+            echo "test workflow failed with status: $status, conclusion: $conclusion"            
+            exit 1
+          else
+            echo "Workflow completed with status: $status, conclusion: $conclusion, run-id: ${{ needs.run-id.outputs.run-id }}"
+          fi
