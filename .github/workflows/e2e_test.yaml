@@ -202,3 +202,38 @@ jobs:
         run: |
           HOST_IP=$(ip route | grep default | cut -f 3 -d" ")
           [ $((ping $HOST_IP -c 5 || :) | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
+
+  e2e-test-workflow-dispatch:
+    name: End-to-End Workflow Dispatch Test
+    #needs: [ build-charm, run-id ]
+    needs: [ run-id ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo hello world
+        run: echo "hello world"
+      # Install prerequisites
+      - name: Install GitHub Cli
+        run: which gh || sudo apt install gh -y
+      - name: Dispatch Workflow
+        env:
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+        run: |
+          MAIN_SHA=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ secrets.E2E_TESTING_REPO }}/git/ref/heads/main --jq .object.sha)
+          
+          # Create a reference
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ secrets.E2E_TESTING_REPO }}/git/refs \
+            -f ref='refs/heads/${{ steps.run-id.outputs.run-id }}' \
+            -f sha=$MAIN_SHA
+          
+          gh workflow run workflow_dispatch_test.yaml \
+            -R ${{ secrets.E2E_TESTING_REPO }} \
+            --ref ${{ steps.run-id.outputs.run-id }} \
+            -f runner=${{ steps.run-id.outputs.run-id }}
+          
