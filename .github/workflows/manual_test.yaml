@@ -7,12 +7,9 @@ jobs:
   test:
     name: test
     runs-on: ["self-hosted", "kernel"]
-    strategy:
-      matrix:
-        num: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     steps:
       - name: Echo number
-        run: echo "${{ matrix.num }}"
+        run: echo "1"
       - name: Install microk8s
         run: sudo snap install microk8s --classic
       - name: Wait for microk8s
