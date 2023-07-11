@@ -8,7 +8,7 @@ on:
 jobs:
   test:
     name: test
-    runs-on: [self-hosted, kernel]
+    runs-on: [self-hosted, runner]
     steps:
       - name: Echo hello world
         run: echo "hello world"
