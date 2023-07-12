@@ -259,6 +259,20 @@ jobs:
               fi
           }
           
+          cleanup () {
+            # Cleanup actions
+
+            # Delete temporary reference/branch
+            # Doc: https://docs.github.com/en/rest/git/refs?apiVersion=2022-11-28#delete-a-reference
+            gh api \
+              --method DELETE \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "/repos/${{ secrets.E2E_TESTING_REPO }}/git/refs/heads/${{ needs.run-id.outputs.run-id }}"
+            echo "Deleted ref ${{ needs.run-id.outputs.run-id }}"
+
+          }
+
           # Wait for the workflow to start while checking its status
           for i in {1..360}
           do
@@ -278,8 +292,10 @@ jobs:
             --jq '.[] | select(.headBranch=="${{ needs.run-id.outputs.run-id }}") | .conclusion')
 
           if [[ $status != "completed" || $conclusion != "success" ]]; then
-            echo "test workflow failed with status: $status, conclusion: $conclusion"            
+            echo "test workflow failed with status: $status, conclusion: $conclusion"
+            cleanup
             exit 1
           else
             echo "Workflow completed with status: $status, conclusion: $conclusion, run-id: ${{ needs.run-id.outputs.run-id }}"
+            cleanup
           fi
