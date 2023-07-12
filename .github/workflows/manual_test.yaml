@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  prod-test:
-    name: prod test
-    runs-on: [self-hosted, large]
+  manual-test:
+    name: manual test
+    runs-on: [self-hosted, manual-runner]
     steps:
       - name: Install microk8s
         run: sudo snap install microk8s --classic
