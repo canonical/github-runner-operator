@@ -59,16 +59,44 @@ def no_proxy(pytestconfig: pytest.Config) -> str:
 async def app(
     ops_test: OpsTest, path: str, http_proxy: str, https_proxy: str, no_proxy: str
 ) -> Application:
+    with open("lxd-profile.yaml", "w") as profile_file:
+        profile_file.writelines(
+            """config:
+    security.nesting: true
+    security.privileged: true
+    raw.lxc: |
+        lxc.apparmor.profile=unconfined
+        lxc.mount.auto=proc:rw sys:rw cgroup:rw
+        lxc.cgroup.devices.allow=a
+        lxc.cap.drop=
+devices:
+    kmsg:
+        path: /dev/kmsg
+        source: /dev/kmsg
+        type: unix-char
+"""
+        )
+
     charm = await ops_test.build_charm(".")
 
     await ops_test.model.set_constraints({"virt-type": "virtual-machine"})
     await ops_test.model.set_config(
-        {"juju-http-proxy": http_proxy, "juju-https-proxy": https_proxy, "juju-no-proxy": no_proxy}
+        {
+            "juju-http-proxy": http_proxy,
+            "juju-https-proxy": https_proxy,
+            "juju-no-proxy": no_proxy,
+            "logging-config": "<root>=INFO;unit=DEBUG",
+        }
     )
     application = await ops_test.model.deploy(
         charm,
         series="jammy",
-        config={"path": path, "virtual-machines": 1, "denylist": "10.0.0.0/8"},
+        config={
+            "path": path,
+            "virtual-machines": 1,
+            "denylist": "10.0.0.0/8",
+            "test-mode": "insecure",
+        },
         constraints={"cores": 4, "mem": 32},
     )
 

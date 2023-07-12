@@ -17,6 +17,8 @@ jobs:
           juju-channel: 3.1/stable
           provider: lxd
           bootstrap-constraints: "virt-type=virtual-machine"
+      - name: Enable br_netfilter
+        run: sudo modprobe br_netfilter
       - name: Run Integration tests
         run: |
           tox -e integration -- \
