@@ -217,19 +217,21 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
-          MAIN_SHA=$(gh api \
+          # Base any future branches on the current branch
+          REF_SHA=$(gh api \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            /repos/${{ secrets.E2E_TESTING_REPO }}/git/ref/heads/main --jq .object.sha)
+            /repos/${{ secrets.E2E_TESTING_REPO }}/git/ref/heads/${GITHUB_REF_NAME} \
+            --jq .object.sha)
 
-          # Create a reference
+          # Create a temporary reference/branch
           gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             /repos/${{ secrets.E2E_TESTING_REPO }}/git/refs \
             -f ref='refs/heads/${{ needs.run-id.outputs.run-id }}' \
-            -f sha=$MAIN_SHA
+            -f sha=$REF_SHA
 
           # Dispatch other workflow
           gh workflow run workflow_dispatch_test.yaml \
