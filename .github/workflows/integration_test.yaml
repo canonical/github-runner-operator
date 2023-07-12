@@ -6,8 +6,7 @@ on:
 jobs:
   integration-tests:
     name: Integration test
-    # TODO: Switch back to using staging env runners.
-    runs-on: ["self-hosted", "test-runner"]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Setup operator environment
@@ -16,7 +15,6 @@ jobs:
           # TODO: juju version should be a workflow input.
           juju-channel: 3.1/stable
           provider: lxd
-          bootstrap-constraints: "virt-type=virtual-machine"
       - name: Enable br_netfilter
         run: sudo modprobe br_netfilter
       - name: Run Integration tests
@@ -28,7 +26,3 @@ jobs:
             --http-proxy $http_proxy \
             --https-proxy $https_proxy \
             --no-proxy $no_proxy
-      # TODO: Debug only
-      - name: Wait 6 hours on failure
-        if: failure()
-        run: sleep 6h

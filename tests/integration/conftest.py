@@ -79,7 +79,6 @@ devices:
 
     charm = await ops_test.build_charm(".")
 
-    await ops_test.model.set_constraints({"virt-type": "virtual-machine"})
     await ops_test.model.set_config(
         {
             "juju-http-proxy": http_proxy,
