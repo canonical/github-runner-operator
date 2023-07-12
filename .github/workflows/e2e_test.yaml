@@ -208,8 +208,9 @@ jobs:
     needs: [ build-charm, run-id ]
     runs-on: [ self-hosted, linux, x64, "${{ needs.run-id.outputs.run-id }}" ]
     steps:
-      - name: Echo hello world
-        run: echo "hello world"
+      - name: Current branch
+        run: |
+          echo "Current branch: ${GITHUB_REF_NAME}"
       # Install prerequisites
       - name: Install GitHub Cli
         run: which gh || sudo apt install gh -y
