@@ -11,8 +11,14 @@ from typing import NamedTuple, Optional, TypedDict, Union
 import jinja2
 from ghapi.all import GhApi
 
-from lxd import LxdClient
+from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
+
+
+@dataclass
+class Runners:
+    healthy: tuple[LxdInstance]
+    unhealthy: tuple[LxdInstance]
 
 
 class ProxySetting(TypedDict, total=False):

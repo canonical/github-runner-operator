@@ -34,7 +34,14 @@ from github_type import (
 from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
-from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
+from runner_type import (
+    GitHubOrg,
+    GitHubPath,
+    GitHubRepo,
+    ProxySetting,
+    Runners,
+    VirtualMachineResources,
+)
 from utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
@@ -252,6 +259,26 @@ class RunnerManager:
         remote_runners = self._get_runner_github_info()
         return iter(RunnerInfo(runner.name, runner.status) for runner in remote_runners.values())
 
+    def _get_runner_by_health(self) -> Runners:
+        local_runners = {
+            instance.name: instance
+            # Pylint cannot find the `all` method.
+            for instance in self._clients.lxd.instances.all()  # pylint: disable=no-member
+            if instance.name.startswith(f"{self.instance_name}-")
+        }
+
+        healthy = []
+        unhealthy = []
+
+        for runner in local_runners:
+            _, stdout, stderr = runner.execute(["ps", "aux"])
+            if f"/bin/bash {Runner.runner_script}" in stdout.read():
+                healthy.append(runner)
+            else:
+                unhealthy.append(runner)
+
+        return Runners(healthy, unhealthy)
+
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
 
@@ -262,44 +289,26 @@ class RunnerManager:
         Returns:
             Difference between intended runners and actual runners.
         """
-        runners = self._get_runners()
-
-        # Add/Remove runners to match the target quantity
-        online_runners = [
-            runner for runner in runners if runner.status.exist and runner.status.online
-        ]
-
-        offline_runners = [runner for runner in runners if not runner.status.online]
-
-        local_runners = {
-            instance.name: instance
-            # Pylint cannot find the `all` method.
-            for instance in self._clients.lxd.instances.all()  # pylint: disable=no-member
-            if instance.name.startswith(f"{self.instance_name}-")
-        }
+        runners = self._get_runner_by_health()
 
         logger.info(
-            (
-                "Expected runner count: %i, Online runner count: %i, Offline runner count: %i, "
-                "LXD instance count: %i"
-            ),
+            ("Expected runner count: %i, healthy count: %i, unhealthy count: %i"),
             quantity,
-            len(online_runners),
-            len(offline_runners),
-            len(local_runners),
+            len(runners.healthy),
+            len(runners.unhealthy),
         )
 
-        # Clean up offline runners
-        if offline_runners:
-            logger.info("Cleaning up offline runners.")
+        # Clean up unhealthy runners
+        if runners.unhealthy:
+            logger.info("Cleaning up unhealthy runners.")
 
             remove_token = self._get_github_remove_token()
 
-            for runner in offline_runners:
+            for runner in runners.unhealthy:
                 runner.remove(remove_token)
                 logger.info("Removed runner: %s", runner.config.name)
 
-        delta = quantity - len(online_runners)
+        delta = quantity - len(runners.healthy)
         # Spawn new runners
         if delta > 0:
             if RunnerManager.runner_bin_path is None:
@@ -333,25 +342,6 @@ class RunnerManager:
                     runner.remove(remove_token)
                     logger.info("Cleaned up runner: %s", runner.config.name)
                     raise
-
-        elif delta < 0:
-            # Idle runners are online runners that has not taken a job.
-            idle_runners = [runner for runner in online_runners if not runner.status.busy]
-            offset = min(-delta, len(idle_runners))
-            if offset != 0:
-                logger.info("Removing %i runner(s).", offset)
-                remove_runners = idle_runners[:offset]
-
-                logger.info("Cleaning up idle runners.")
-
-                remove_token = self._get_github_remove_token()
-
-                for runner in remove_runners:
-                    runner.remove(remove_token)
-                    logger.info("Removed runner: %s", runner.config.name)
-
-            else:
-                logger.info("There are no idle runner to remove.")
         else:
             logger.info("No changes to number of runner needed.")
 
