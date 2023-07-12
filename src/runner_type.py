@@ -16,7 +16,9 @@ from repo_policy_compliance_client import RepoPolicyComplianceClient
 
 
 @dataclass
-class Runners:
+class RunnerSet:
+    """Set of runners by health state."""
+
     healthy: tuple[LxdInstance]
     unhealthy: tuple[LxdInstance]
 

@@ -39,7 +39,7 @@ from runner_type import (
     GitHubPath,
     GitHubRepo,
     ProxySetting,
-    Runners,
+    RunnerSet,
     VirtualMachineResources,
 )
 from utilities import retry, set_env_var
@@ -259,7 +259,7 @@ class RunnerManager:
         remote_runners = self._get_runner_github_info()
         return iter(RunnerInfo(runner.name, runner.status) for runner in remote_runners.values())
 
-    def _get_runner_by_health(self) -> Runners:
+    def _get_runner_by_health(self) -> RunnerSet:
         local_runners = {
             instance.name: instance
             # Pylint cannot find the `all` method.
@@ -277,7 +277,7 @@ class RunnerManager:
             else:
                 unhealthy.append(runner)
 
-        return Runners(healthy, unhealthy)
+        return RunnerSet(healthy, unhealthy)
 
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
