@@ -549,9 +549,11 @@ class Runner:
         if isinstance(self.config.path, GitHubOrg):
             register_cmd += ["--runnergroup", self.config.path.group]
 
+        logger.info("Executing registration command...")
         self.instance.execute(
             register_cmd,
             cwd=str(self.runner_application),
+            hide_cmd=True,
         )
 
     @retry(tries=5, delay=30, local_logger=logger)
