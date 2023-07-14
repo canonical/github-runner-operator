@@ -6,9 +6,10 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import logging
 import secrets
-from typing import Optional, Sequence, Union
+from typing import IO, Optional, Sequence, Union
 
 from errors import LxdError, RunnerError
 from github_type import RegistrationToken, RemoveToken, RunnerApplication
@@ -104,8 +105,8 @@ class MockLxdInstance:
 
     def execute(
         self, cmd: Sequence[str], cwd: Optional[str] = None, hide_cmd: bool = False
-    ) -> tuple[int, str, str]:
-        return 0, "", ""
+    ) -> tuple[int, IO, IO]:
+        return 0, io.BytesIO(b""), io.BytesIO(b"")
 
 
 class MockLxdInstanceFileManager:
@@ -240,10 +241,10 @@ class MockGhapiActions:
             {"token": self.remove_token_org, "expires_at": "2020-01-22T12:13:35.123-08:00"}
         )
 
-    def list_self_hosted_runners_for_repo(self, owner: str, repo: str):
+    def list_self_hosted_runners_for_repo(self, owner: str, repo: str, per_page: int):
         return {"runners": []}
 
-    def list_self_hosted_runners_for_org(self, org: str):
+    def list_self_hosted_runners_for_org(self, org: str, per_page: int):
         return {"runners": []}
 
     def delete_self_hosted_runner_from_repo(self, owner: str, repo: str, runner_id: str):

@@ -272,7 +272,7 @@ class RunnerManager:
 
         for runner in local_runners:
             _, stdout, _ = runner.execute(["ps", "aux"])
-            if f"/bin/bash {Runner.runner_script}" in stdout:
+            if f"/bin/bash {Runner.runner_script}" in stdout.read().decode("utf-8"):
                 healthy.append(runner)
             else:
                 unhealthy.append(runner)

@@ -7,9 +7,10 @@ The LxdClient class offer a low-level interface isolate the underlying implement
 """
 from __future__ import annotations
 
+import io
 import logging
 import tempfile
-from typing import Optional, Tuple, Union
+from typing import IO, Optional, Tuple, Union
 
 import pylxd.models
 
@@ -223,7 +224,7 @@ class LxdInstance:
 
     def execute(
         self, cmd: list[str], cwd: Optional[str] = None, hide_cmd: bool = False
-    ) -> Tuple[int, str, str]:
+    ) -> Tuple[int, IO, IO]:
         """Execute a command within the LXD instance.
 
         Exceptions are not raise if command execution failed. Caller should check the exit code and
@@ -244,7 +245,7 @@ class LxdInstance:
         lxc_cmd += ["--"] + cmd
 
         result = secure_run_subprocess(lxc_cmd, hide_cmd)
-        return (result.returncode, result.stdout, result.stderr)
+        return (result.returncode, io.BytesIO(result.stdout), io.BytesIO(result.stderr))
 
 
 class LxdInstanceManager:
