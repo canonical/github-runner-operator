@@ -138,7 +138,7 @@ class Runner:
         logger.info("Removing LXD instance of runner: %s", self.config.name)
 
         if self.instance:
-            # Run script to remove the the runner and cleanup.
+            logger.info("Executing command to removal of runner and clean up...")
             self.instance.execute(
                 [
                     "/usr/bin/sudo",
@@ -149,6 +149,7 @@ class Runner:
                     "--token",
                     remove_token,
                 ],
+                hide_cmd=True,
             )
 
             if self.instance.status == "Running":
