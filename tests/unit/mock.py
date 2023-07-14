@@ -102,7 +102,9 @@ class MockLxdInstance:
     def delete(self, wait: bool = True):
         self.deleted = True
 
-    def execute(self, cmd: Sequence[str], cwd: Optional[str] = None) -> tuple[int, str, str]:
+    def execute(
+        self, cmd: Sequence[str], cwd: Optional[str] = None, hide_cmd: bool = False
+    ) -> tuple[int, str, str]:
         return 0, "", ""
 
 

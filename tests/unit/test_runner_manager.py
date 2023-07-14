@@ -5,15 +5,13 @@
 
 import secrets
 from pathlib import Path
-from unittest.mock import MagicMock
 
 import pytest
 
 from errors import RunnerBinaryError
-from runner import Runner, RunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
-from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
-from tests.unit.mock import TEST_BINARY
+from runner_type import GitHubOrg, GitHubRepo, RunnerLxdInstance, VirtualMachineResources
+from tests.unit.mock import TEST_BINARY, MockLxdInstance
 
 
 @pytest.fixture(scope="function", name="token")
@@ -118,24 +116,19 @@ def test_reconcile_create_runner(runner_manager: RunnerManager):
 
 def test_reconcile_remove_runner(runner_manager: RunnerManager):
     """
-    arrange: Create online runners.
-    act: Reconcile to remove a runner.
-    assert: One runner should be removed.
+    arrange: Setup 2 runners.
+    act: Reconcile to 1 runners.
+    assert: Runner manager should attempt to remove one runner.
     """
+    runner_manager._get_lxd_instance_by_runner_health = lambda: RunnerLxdInstance(
+        (
+            MockLxdInstance(f"{runner_manager.instance_name}-0"),
+            MockLxdInstance(f"{runner_manager.instance_name}-1"),
+        ),
+        (),
+    )
 
-    def mock_get_runners():
-        """Create three mock runners."""
-        runners = []
-        for _ in range(3):
-            # 0 is a mock runner id.
-            status = RunnerStatus(0, True, True, False)
-            runners.append(Runner(MagicMock(), MagicMock(), status, None))
-        return runners
-
-    # Create online runners.
-    runner_manager._get_runners = mock_get_runners
-
-    delta = runner_manager.reconcile(2, VirtualMachineResources(2, "7GiB", "10Gib"))
+    delta = runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 
     assert delta == -1
 
@@ -146,11 +139,14 @@ def test_reconcile(runner_manager: RunnerManager, tmp_path: Path):
     act: Reconcile with the current amount of runner.
     assert: Still have one runner.
     """
-    runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
+    runner_manager._get_lxd_instance_by_runner_health = lambda: RunnerLxdInstance(
+        (MockLxdInstance(f"{runner_manager.instance_name}-0"),),
+        (),
+    )
     # Reconcile with no change to runner count.
-    runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
+    delta = runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 
-    assert len(runner_manager._get_runners()) == 1
+    assert delta == 0
 
 
 def test_empty_flush(runner_manager: RunnerManager):

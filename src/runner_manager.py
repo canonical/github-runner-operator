@@ -39,7 +39,7 @@ from runner_type import (
     GitHubPath,
     GitHubRepo,
     ProxySetting,
-    RunnerSet,
+    RunnerLxdInstance,
     VirtualMachineResources,
 )
 from utilities import retry, set_env_var
@@ -259,25 +259,25 @@ class RunnerManager:
         remote_runners = self._get_runner_github_info()
         return iter(RunnerInfo(runner.name, runner.status) for runner in remote_runners.values())
 
-    def _get_runner_by_health(self) -> RunnerSet:
-        local_runners = {
-            instance.name: instance
+    def _get_lxd_instance_by_runner_health(self) -> RunnerLxdInstance:
+        local_runners = [
+            instance
             # Pylint cannot find the `all` method.
             for instance in self._clients.lxd.instances.all()  # pylint: disable=no-member
             if instance.name.startswith(f"{self.instance_name}-")
-        }
+        ]
 
         healthy = []
         unhealthy = []
 
         for runner in local_runners:
-            _, stdout, stderr = runner.execute(["ps", "aux"])
-            if f"/bin/bash {Runner.runner_script}" in stdout.read():
+            _, stdout, _ = runner.execute(["ps", "aux"])
+            if f"/bin/bash {Runner.runner_script}" in stdout:
                 healthy.append(runner)
             else:
                 unhealthy.append(runner)
 
-        return RunnerSet(healthy, unhealthy)
+        return RunnerLxdInstance(healthy, unhealthy)
 
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
@@ -289,26 +289,34 @@ class RunnerManager:
         Returns:
             Difference between intended runners and actual runners.
         """
-        runners = self._get_runner_by_health()
+        runner_lxd_instances = self._get_lxd_instance_by_runner_health()
 
         logger.info(
             ("Expected runner count: %i, healthy count: %i, unhealthy count: %i"),
             quantity,
-            len(runners.healthy),
-            len(runners.unhealthy),
+            len(runner_lxd_instances.healthy),
+            len(runner_lxd_instances.unhealthy),
         )
 
         # Clean up unhealthy runners
-        if runners.unhealthy:
+        if runner_lxd_instances.unhealthy:
             logger.info("Cleaning up unhealthy runners.")
 
             remove_token = self._get_github_remove_token()
 
-            for runner in runners.unhealthy:
+            for instance in runner_lxd_instances.unhealthy:
+                config = RunnerConfig(
+                    self.app_name,
+                    self.config.path,
+                    self.proxies,
+                    self.config.lxd_storage_path,
+                    instance.name,
+                )
+                runner = Runner(self._clients, config, RunnerStatus())
                 runner.remove(remove_token)
                 logger.info("Removed runner: %s", runner.config.name)
 
-        delta = quantity - len(runners.healthy)
+        delta = quantity - len(runner_lxd_instances.healthy)
         # Spawn new runners
         if delta > 0:
             if RunnerManager.runner_bin_path is None:
@@ -319,7 +327,7 @@ class RunnerManager:
             registration_token = self._get_github_registration_token()
             remove_token = self._get_github_remove_token()
 
-            logger.info("Adding %i additional runner(s).", delta)
+            logger.info("Attempting to add %i runner(s).", delta)
             for _ in range(delta):
                 config = RunnerConfig(
                     self.app_name,
@@ -342,6 +350,17 @@ class RunnerManager:
                     runner.remove(remove_token)
                     logger.info("Cleaned up runner: %s", runner.config.name)
                     raise
+        if delta < 0:
+            logger.info("Attempting to remove %i runner(s).", -delta)
+            runners_to_remove = [
+                runner
+                for runner in self._get_runners()
+                if runner.status.exist and not runner.status.busy
+            ][:-delta]
+            logger.info("Found %i non-busy and online runner to remove", len(runners_to_remove))
+            for runner in runners_to_remove:
+                runner.remove(remove_token)
+                logger.info("Removed runner: %s", runner.config.name)
         else:
             logger.info("No changes to number of runner needed.")
 
