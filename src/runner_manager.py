@@ -407,11 +407,14 @@ class RunnerManager:
         remote_runners_list: list[SelfHostedRunner] = []
         if isinstance(self.config.path, GitHubRepo):
             remote_runners_list = self._clients.github.actions.list_self_hosted_runners_for_repo(
-                owner=self.config.path.owner, repo=self.config.path.repo
+                owner=self.config.path.owner,
+                repo=self.config.path.repo,
+                per_page=100,
             )["runners"]
         if isinstance(self.config.path, GitHubOrg):
             remote_runners_list = self._clients.github.actions.list_self_hosted_runners_for_org(
-                org=self.config.path.org
+                org=self.config.path.org,
+                per_page=100,
             )["runners"]
 
         logger.debug("List of runners found on GitHub:%s", remote_runners_list)
