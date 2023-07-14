@@ -7,7 +7,7 @@ on:
 
 jobs:
   manual-test:
-    name: manual test
+    name: manual tests
     runs-on: [self-hosted, manual-runner]
     steps:
       - name: Install microk8s
