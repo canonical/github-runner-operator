@@ -189,6 +189,9 @@ class MockGhapiClient:
         self.token = token
         self.actions = MockGhapiActions()
 
+    def last_page(self) -> int:
+        return 0
+
 
 class MockGhapiActions:
     """Mock for actions in Ghapi client."""
@@ -254,9 +257,6 @@ class MockGhapiActions:
 
     def delete_self_hosted_runner_from_org(self, org: str, runner_id: str):
         pass
-
-    def last_page(self) -> int:
-        return 0
 
 
 class MockRepoPolicyComplianceClient:
