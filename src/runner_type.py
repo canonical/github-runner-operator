@@ -11,16 +11,16 @@ from typing import NamedTuple, Optional, TypedDict, Union
 import jinja2
 from ghapi.all import GhApi
 
-from lxd import LxdClient, LxdInstance
+from lxd import LxdClient
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 
 
 @dataclass
-class RunnerLxdInstance:
+class RunnerByHealth:
     """Set of runners LXD instance by health state."""
 
-    healthy: tuple[LxdInstance]
-    unhealthy: tuple[LxdInstance]
+    healthy: tuple[str]
+    unhealthy: tuple[str]
 
 
 class ProxySetting(TypedDict, total=False):
