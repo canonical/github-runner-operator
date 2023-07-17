@@ -135,7 +135,7 @@ class Runner:
         Raises:
             RunnerRemoveError: Failure in removing runner.
         """
-        logger.info("Removing LXD instance of runner: %s", self.config.name)
+        logger.info("Removing runner: %s", self.config.name)
 
         if self.instance:
             logger.info("Executing command to removal of runner and clean up...")
@@ -153,6 +153,7 @@ class Runner:
             )
 
             if self.instance.status == "Running":
+                logger.info("Removing LXD instance of runner: %s", self.config.name)
                 try:
                     self.instance.stop(wait=True, timeout=60)
                 except LxdError:
@@ -179,6 +180,8 @@ class Runner:
 
         if self.status.runner_id is None:
             return
+
+        logger.info("Removing runner on GitHub: %s", self.config.name)
 
         # The runner should cleanup itself.  Cleanup on GitHub in case of runner cleanup error.
         if isinstance(self.config.path, GitHubRepo):

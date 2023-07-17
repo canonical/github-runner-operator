@@ -303,16 +303,10 @@ class RunnerManager:
             logger.info("Cleaning up unhealthy runners.")
 
             remove_token = self._get_github_remove_token()
+            runners = {runner.config.name: runner for runner in self._get_runners()}
 
             for instance in runner_lxd_instances.unhealthy:
-                config = RunnerConfig(
-                    self.app_name,
-                    self.config.path,
-                    self.proxies,
-                    self.config.lxd_storage_path,
-                    instance.name,
-                )
-                runner = Runner(self._clients, config, RunnerStatus())
+                runner = runners[instance.name]
                 runner.remove(remove_token)
                 logger.info("Removed runner: %s", runner.config.name)
 
