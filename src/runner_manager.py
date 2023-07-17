@@ -20,6 +20,7 @@ import requests
 import requests.adapters
 import urllib3
 from ghapi.all import GhApi
+from ghapi.page import pages
 from typing_extensions import assert_never
 
 from errors import RunnerBinaryError, RunnerCreateError
@@ -422,16 +423,40 @@ class RunnerManager:
     def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
         remote_runners_list: list[SelfHostedRunner] = []
         if isinstance(self.config.path, GitHubRepo):
-            remote_runners_list = self._clients.github.actions.list_self_hosted_runners_for_repo(
-                owner=self.config.path.owner,
-                repo=self.config.path.repo,
-                per_page=100,
-            )["runners"]
+            # The documentation of ghapi for pagination is incorrect and examples will give errors.
+            # This workaround is a temp solution. Will be moving to PyGitHub in the future.
+            self._clients.github.actions.list_self_hosted_runners_for_repo(
+                owner=self.config.path.owner, repo=self.config.path.repo, per_page=100
+            )
+            num_of_pages = self._clients.github.actions.last_page()
+            remote_runners_list = [
+                item
+                for page in pages(
+                    self._clients.github.actions.list_self_hosted_runners_for_repo,
+                    num_of_pages + 1,
+                    owner=self.config.path.owner,
+                    repo=self.config.path.repo,
+                    per_page=100,
+                )
+                for item in page["runners"]
+            ]
         if isinstance(self.config.path, GitHubOrg):
-            remote_runners_list = self._clients.github.actions.list_self_hosted_runners_for_org(
-                org=self.config.path.org,
-                per_page=100,
-            )["runners"]
+            # The documentation of ghapi for pagination is incorrect and examples will give errors.
+            # This workaround is a temp solution. Will be moving to PyGitHub in the future.
+            self._clients.github.actions.list_self_hosted_runners_for_org(
+                org=self.config.path.org, per_page=100
+            )
+            num_of_pages = self._clients.github.actions.last_page()
+            remote_runners_list = [
+                item
+                for page in pages(
+                    self._clients.github.actions.list_self_hosted_runners_for_org,
+                    num_of_pages + 1,
+                    org=self.config.path.org,
+                    per_page=100,
+                )
+                for item in page["runners"]
+            ]
 
         logger.debug("List of runners found on GitHub:%s", remote_runners_list)
 
