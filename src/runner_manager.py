@@ -428,7 +428,7 @@ class RunnerManager:
             self._clients.github.actions.list_self_hosted_runners_for_repo(
                 owner=self.config.path.owner, repo=self.config.path.repo, per_page=100
             )
-            num_of_pages = self._clients.github.actions.last_page()
+            num_of_pages = self._clients.github.last_page()
             remote_runners_list = [
                 item
                 for page in pages(
@@ -446,7 +446,7 @@ class RunnerManager:
             self._clients.github.actions.list_self_hosted_runners_for_org(
                 org=self.config.path.org, per_page=100
             )
-            num_of_pages = self._clients.github.actions.last_page()
+            num_of_pages = self._clients.github.last_page()
             remote_runners_list = [
                 item
                 for page in pages(
