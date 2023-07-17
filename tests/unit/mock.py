@@ -241,10 +241,12 @@ class MockGhapiActions:
             {"token": self.remove_token_org, "expires_at": "2020-01-22T12:13:35.123-08:00"}
         )
 
-    def list_self_hosted_runners_for_repo(self, owner: str, repo: str, per_page: int):
+    def list_self_hosted_runners_for_repo(
+        self, owner: str, repo: str, per_page: int, page: int = 0
+    ):
         return {"runners": []}
 
-    def list_self_hosted_runners_for_org(self, org: str, per_page: int):
+    def list_self_hosted_runners_for_org(self, org: str, per_page: int, page: int = 0):
         return {"runners": []}
 
     def delete_self_hosted_runner_from_repo(self, owner: str, repo: str, runner_id: str):
@@ -252,6 +254,9 @@ class MockGhapiActions:
 
     def delete_self_hosted_runner_from_org(self, org: str, runner_id: str):
         pass
+
+    def last_page(self) -> int:
+        return 0
 
 
 class MockRepoPolicyComplianceClient:
