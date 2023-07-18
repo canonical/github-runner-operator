@@ -12,7 +12,7 @@ import pytest
 from errors import RunnerBinaryError
 from runner import Runner, RunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
-from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
+from runner_type import GitHubOrg, GitHubRepo, RunnerByHealth, VirtualMachineResources
 from tests.unit.mock import TEST_BINARY
 
 
@@ -134,6 +134,14 @@ def test_reconcile_remove_runner(runner_manager: RunnerManager):
 
     # Create online runners.
     runner_manager._get_runners = mock_get_runners
+    runner_manager._get_runner_health_states = lambda: RunnerByHealth(
+        (
+            f"{runner_manager.instance_name}-0",
+            f"{runner_manager.instance_name}-1",
+            f"{runner_manager.instance_name}-2",
+        ),
+        (),
+    )
 
     delta = runner_manager.reconcile(2, VirtualMachineResources(2, "7GiB", "10Gib"))
 
