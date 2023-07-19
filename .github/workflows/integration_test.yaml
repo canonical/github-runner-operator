@@ -22,3 +22,9 @@ jobs:
             --keep-models \
             --path ${{secrets.E2E_TESTING_REPO}} \
             --token ${{secrets.E2E_TESTING_TOKEN}}
+      # TODO: Remove
+      - name: Setup tmate session
+        if: failure()
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true

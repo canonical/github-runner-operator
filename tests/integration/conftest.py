@@ -3,8 +3,8 @@
 
 """Fixtures for github runner charm integration tests."""
 
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
 import pytest
 import pytest_asyncio
