@@ -95,7 +95,6 @@ devices:
             "denylist": "10.0.0.0/8",
             "test-mode": "insecure",
         },
-        constraints={"cores": 4, "mem": 32},
     )
 
     yield application
