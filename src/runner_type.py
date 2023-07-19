@@ -15,6 +15,14 @@ from lxd import LxdClient
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 
 
+@dataclass
+class RunnerByHealth:
+    """Set of runners LXD instance by health state."""
+
+    healthy: tuple[str]
+    unhealthy: tuple[str]
+
+
 class ProxySetting(TypedDict, total=False):
     """Represent HTTP-related proxy settings."""
 

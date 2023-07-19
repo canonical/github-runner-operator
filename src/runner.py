@@ -135,10 +135,10 @@ class Runner:
         Raises:
             RunnerRemoveError: Failure in removing runner.
         """
-        logger.info("Removing LXD instance of runner: %s", self.config.name)
+        logger.info("Removing runner: %s", self.config.name)
 
         if self.instance:
-            # Run script to remove the the runner and cleanup.
+            logger.info("Executing command to removal of runner and clean up...")
             self.instance.execute(
                 [
                     "/usr/bin/sudo",
@@ -149,9 +149,11 @@ class Runner:
                     "--token",
                     remove_token,
                 ],
+                hide_cmd=True,
             )
 
             if self.instance.status == "Running":
+                logger.info("Removing LXD instance of runner: %s", self.config.name)
                 try:
                     self.instance.stop(wait=True, timeout=60)
                 except LxdError:
@@ -178,6 +180,8 @@ class Runner:
 
         if self.status.runner_id is None:
             return
+
+        logger.info("Removing runner on GitHub: %s", self.config.name)
 
         # The runner should cleanup itself.  Cleanup on GitHub in case of runner cleanup error.
         if isinstance(self.config.path, GitHubRepo):
@@ -387,6 +391,10 @@ class Runner:
         # TEMP: Install common tools used in GitHub Actions. This will be removed once virtual
         # machines are created from custom images/GitHub runner image.
 
+        # Pre-create the microk8s group and add the user to it.
+        self.instance.execute(["/usr/sbin/groupadd", "microk8s"])
+        self.instance.execute(["/usr/sbin/usermod", "-aG", "microk8s", "ubuntu"])
+
         self._apt_install(["docker.io", "npm", "python3-pip", "shellcheck", "jq", "wget"])
         self._wget_install(
             [
@@ -399,7 +407,6 @@ class Runner:
 
         # Add the user to docker group.
         self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
-        self.instance.execute(["/usr/bin/newgrp", "docker"])
 
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
@@ -546,9 +553,11 @@ class Runner:
         if isinstance(self.config.path, GitHubOrg):
             register_cmd += ["--runnergroup", self.config.path.group]
 
+        logger.info("Executing registration command...")
         self.instance.execute(
             register_cmd,
             cwd=str(self.runner_application),
+            hide_cmd=True,
         )
 
     @retry(tries=5, delay=30, local_logger=logger)
