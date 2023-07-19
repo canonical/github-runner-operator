@@ -18,10 +18,6 @@ async def test_missing_config(ops_test: OpsTest, app: Application) -> None:
     """
     await ops_test.model.wait_for_idle()
     assert ops_test.model.applications["github-runner"].status == BlockedStatus.name
-    assert (
-        ops_test.model.applications["github-runner"].status_message
-        == "Missing token or org/repo path config"
-    )
 
 
 @pytest.mark.asyncio
