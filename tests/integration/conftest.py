@@ -37,22 +37,19 @@ def token(pytestconfig: pytest.Config) -> str:
 @pytest.fixture(scope="module")
 def http_proxy(pytestconfig: pytest.Config) -> str:
     http_proxy = pytestconfig.getoption("--http-proxy")
-    assert http_proxy is not None, "Please specify the --http-proxy command line option"
-    return http_proxy
+    return "" if http_proxy is None else http_proxy
 
 
 @pytest.fixture(scope="module")
 def https_proxy(pytestconfig: pytest.Config) -> str:
     https_proxy = pytestconfig.getoption("--https-proxy")
-    assert https_proxy is not None, "Please specify the --https-proxy command line option"
-    return https_proxy
+    return "" if https_proxy is None else https_proxy
 
 
 @pytest.fixture(scope="module")
 def no_proxy(pytestconfig: pytest.Config) -> str:
     no_proxy = pytestconfig.getoption("--no-proxy")
-    assert no_proxy is not None, "Please specify the --no-proxy command line option"
-    return no_proxy
+    return "" if no_proxy is None else no_proxy
 
 
 @pytest_asyncio.fixture(scope="module")
