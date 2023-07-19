@@ -4,6 +4,7 @@
 """Fixtures for github runner charm integration tests."""
 
 from pathlib import Path
+import subprocess
 
 import pytest
 import pytest_asyncio
@@ -76,6 +77,7 @@ devices:
 
     charm = await ops_test.build_charm(".")
 
+    subprocess.run(["sudo", "modprobe", "br_netfilter"])
     await ops_test.model.set_config(
         {
             "juju-http-proxy": http_proxy,

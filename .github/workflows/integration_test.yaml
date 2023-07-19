@@ -12,7 +12,6 @@ jobs:
       - name: Setup operator environment
         uses: charmed-kubernetes/actions-operator@main
         with:
-          # TODO: juju version should be a workflow input.
           juju-channel: 3.1/stable
           provider: lxd
       - name: Enable br_netfilter

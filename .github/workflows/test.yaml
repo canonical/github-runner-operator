@@ -1,8 +1,7 @@
 name: Tests
 
 on:
-  # TODO: Enable on pull_request and remove workflow_call.
-  # pull_request:
+  pull_request:
   workflow_call:
 
 jobs:
@@ -10,4 +9,4 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/test.yaml@main
     secrets: inherit
     with:
-      self-hosted-runner: false
+      self-hosted-runner: true
