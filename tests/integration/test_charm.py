@@ -48,6 +48,5 @@ async def test_check_runners(ops_test: OpsTest, app: Application) -> None:
     assert: The returned runner status is correct.
     """
     action = await app.units[0].run_action("check-runners")
-    print(action)
-    result = await action.wait()
-    print(result)
+    await action.wait()
+    assert action.result == {}
