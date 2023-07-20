@@ -3,8 +3,10 @@
 
 """Fixtures for github runner charm integration tests."""
 
+import os
 import subprocess
 from pathlib import Path
+from typing import Any, AsyncIterator
 
 import pytest
 import pytest_asyncio
@@ -15,7 +17,7 @@ from pytest_operator.plugin import OpsTest
 
 
 @pytest.fixture(scope="module")
-def metadata() -> dict[str, any]:
+def metadata() -> dict[str, Any]:
     """Metadata information of the charm"""
     metadata = Path("./metadata.yaml")
     data = yaml.safe_load(metadata.read_text())
@@ -62,9 +64,10 @@ def model(ops_test: OpsTest) -> Model:
 
 @pytest_asyncio.fixture(scope="module")
 async def app(
-    ops_test: OpsTest, path: str, http_proxy: str, https_proxy: str, no_proxy: str
-) -> Application:
-    with open("lxd-profile.yaml", "w") as profile_file:
+    ops_test: OpsTest, model: Model, path: str, http_proxy: str, https_proxy: str, no_proxy: str
+) -> AsyncIterator[Application]:
+    lxd_profile_path = Path("lxd-profile.yaml")
+    with open(lxd_profile_path, "w") as profile_file:
         profile_file.writelines(
             """config:
     security.nesting: true
@@ -84,8 +87,10 @@ devices:
 
     charm = await ops_test.build_charm(".")
 
+    os.remove(lxd_profile_path)
+
     subprocess.run(["sudo", "modprobe", "br_netfilter"])
-    await ops_test.model.set_config(
+    await model.set_config(
         {
             "juju-http-proxy": http_proxy,
             "juju-https-proxy": https_proxy,
@@ -93,7 +98,7 @@ devices:
             "logging-config": "<root>=INFO;unit=DEBUG",
         }
     )
-    application = await ops_test.model.deploy(
+    application = await model.deploy(
         charm,
         series="jammy",
         config={

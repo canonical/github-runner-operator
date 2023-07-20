@@ -19,8 +19,9 @@ async def test_missing_config(model: Model, app: Application) -> None:
     assert: The application is in blocked status.
     """
     await model.wait_for_idle()
-    assert app.status == BlockedStatus.name
-    assert app.units[0].workload_status == BlockedStatus.name
+    # mypy can not find type of `name` attribute.
+    assert app.status == BlockedStatus.name  # type: ignore
+    assert app.units[0].workload_status == BlockedStatus.name  # type: ignore
     assert (
         app.units[0].workload_status_message == "Missing required charm configuration: ['token']"
     )
@@ -36,7 +37,8 @@ async def test_config(model: Model, app: Application, token: str) -> None:
     """
     await app.set_config({"token": token})
     await model.wait_for_idle()
-    assert app.status == ActiveStatus.name
+    # mypy can not find type of `name` attribute.
+    assert app.status == ActiveStatus.name  # type: ignore
 
 
 @pytest.mark.asyncio
@@ -49,4 +51,11 @@ async def test_check_runners(ops_test: OpsTest, app: Application) -> None:
     """
     action = await app.units[0].run_action("check-runners")
     await action.wait()
-    assert action.results == {}
+
+    assert action.results["online"] == 1
+    assert action.results["offline"] == 0
+    assert action.results["unknown"] == 0
+
+    runner_names = action.results["runner"].split(", ")
+    assert len(runner_names) == 1
+    assert runner_names[0].start_with("github-runner-0-")
