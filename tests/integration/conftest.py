@@ -9,7 +9,8 @@ from pathlib import Path
 import pytest
 import pytest_asyncio
 import yaml
-from ops.model import Application
+from juju.model import Model
+from juju.application import Application
 from pytest_operator.plugin import OpsTest
 
 
@@ -51,6 +52,12 @@ def https_proxy(pytestconfig: pytest.Config) -> str:
 def no_proxy(pytestconfig: pytest.Config) -> str:
     no_proxy = pytestconfig.getoption("--no-proxy")
     return "" if no_proxy is None else no_proxy
+
+
+@pytest.fixture(scope="module")
+def model(ops_test: OpsTest) -> Model:
+    assert ops_test.model is not None
+    return ops_test.model
 
 
 @pytest_asyncio.fixture(scope="module")
