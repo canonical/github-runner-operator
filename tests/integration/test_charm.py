@@ -4,9 +4,9 @@
 """Integration tests for github-runner charm."""
 
 import pytest
-from ops.model import ActiveStatus, BlockedStatus
-from juju.model import Model
 from juju.application import Application
+from juju.model import Model
+from ops.model import ActiveStatus, BlockedStatus
 from pytest_operator.plugin import OpsTest
 
 
@@ -49,4 +49,4 @@ async def test_check_runners(ops_test: OpsTest, app: Application) -> None:
     """
     action = await app.units[0].run_action("check-runners")
     await action.wait()
-    assert action.result == {}
+    assert action.results == {}

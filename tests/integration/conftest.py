@@ -9,8 +9,8 @@ from pathlib import Path
 import pytest
 import pytest_asyncio
 import yaml
-from juju.model import Model
 from juju.application import Application
+from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
 
