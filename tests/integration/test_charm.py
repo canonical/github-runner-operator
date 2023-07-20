@@ -20,7 +20,10 @@ async def test_missing_config(model: Model, app: Application) -> None:
     """
     await model.wait_for_idle()
     assert app.status == BlockedStatus.name
-    assert app.status_message == ""
+    assert app.units[0].workload_status == BlockedStatus.name
+    assert (
+        app.units[0].workload_status_message == "Missing required charm configuration: ['token']"
+    )
 
 
 @pytest.mark.asyncio
@@ -44,6 +47,7 @@ async def test_check_runners(ops_test: OpsTest, app: Application) -> None:
     act: Run check-runners action.
     assert: The returned runner status is correct.
     """
-    action = app.units[0].run_action("check-runners")
+    action = await app.units[0].run_action("check-runners")
+    print(action)
     result = await action.wait()
     print(result)
