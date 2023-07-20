@@ -25,15 +25,15 @@ async def test_missing_config(model: Model, app: Application) -> None:
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_config(ops_test: OpsTest, app: Application, token: str) -> None:
+async def test_config(model: Model, app: Application, token: str) -> None:
     """
     arrange: Deploy an application without token configuration.
     act: Set the token configuration and wait.
     assert: The application is in active status.
     """
     await app.set_config({"token": token})
-    await ops_test.model.wait_for_idle()
-    assert ops_test.model.applications["github-runner"].status == ActiveStatus.name
+    await model.wait_for_idle()
+    assert app.status == ActiveStatus.name
 
 
 @pytest.mark.asyncio
@@ -44,4 +44,6 @@ async def test_check_runners(ops_test: OpsTest, app: Application) -> None:
     act: Run check-runners action.
     assert: The returned runner status is correct.
     """
-    pass
+    action = app.units[0].run_action("check-runners")
+    result = await action.wait()
+    print(result)
