@@ -4,11 +4,14 @@
 """Integration tests for github-runner charm."""
 
 import json
+
 import pytest
 from juju.application import Application
 from juju.model import Model
 from ops.model import ActiveStatus, BlockedStatus
 from pytest_operator.plugin import OpsTest
+
+from utilities import retry
 
 
 @pytest.mark.asyncio
@@ -63,6 +66,17 @@ async def test_check_runners_with_no_runner(model: Model, app: Application) -> N
     assert not action.results["runners"]
 
 
+@retry(tries=10, delay=30)
+async def check_lxd_instance(app: Application, num: int) -> None:
+    action = await app.units[0].run("lxc list --format json")
+    await action.wait()
+
+    assert action.results["return_code"] == 0
+
+    lxc_instance = json.loads(action.results["output"])
+    assert len(lxc_instance) == num
+
+
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 @pytest.mark.dependency(depends=["test_check_runners_with_no_runner"])
@@ -70,19 +84,13 @@ async def test_spawn_runner(model: Model, app: Application, path: str, token: st
     await app.set_config({"virtual-machines": "1"})
     await model.wait_for_idle()
 
-    action = await app.units[0].run("lxc list --format json")
-    await action.wait()
-
-    assert action.results["return_code"] == 0
-
-    lxc_instance = json.loads(action.results["output"])
-    assert len(lxc_instance) == 1
+    await check_lxd_instance(app, 1)
 
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 @pytest.mark.dependency(depends=["test_spawn_runner"])
-async def test_check_runners_with_no_runner(ops_test: OpsTest, app: Application) -> None:
+async def test_check_runners(ops_test: OpsTest, app: Application) -> None:
     action = await app.units[0].run_action("check-runners")
     await action.wait()
 

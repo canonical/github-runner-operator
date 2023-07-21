@@ -62,7 +62,7 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
     """
 
     @functools.wraps(func)
-    def func_with_catch_unexpected_errors(self, event: EventT) -> None:
+    def func_with_catch_errors(self, event: EventT) -> None:
         # Safe guard against unexpected error.
         try:
             func(self, event)
@@ -72,7 +72,7 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
                 f"Missing required charm configuration: {err.configs}"
             )
 
-    return func_with_catch_unexpected_errors
+    return func_with_catch_errors
 
 
 def catch_action_errors(
