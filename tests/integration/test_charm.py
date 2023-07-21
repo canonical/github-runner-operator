@@ -3,6 +3,7 @@
 
 """Integration tests for github-runner charm."""
 
+import json
 import pytest
 from juju.application import Application
 from juju.model import Model
@@ -46,44 +47,49 @@ async def test_config(model: Model, app: Application, token: str) -> None:
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 @pytest.mark.dependency(depends=["test_config"])
-async def test_check_runners(app: Application) -> None:
+async def test_check_runners_with_no_runner(model: Model, app: Application) -> None:
     """
     arrange: An working application of github-runner with no runners.
     act: Run check-runners action.
     assert: Action returns with no runners.
     """
-    action = await app.units[0].run_action("check-runners")
-    await action.wait()
-
-    runner_names = action.results["runner"].split(", ")
-    assert len(runner_names) == 1
-    assert runner_names[0].start_with("github-runner-0-")
-
-    assert action.results["online"] == "1"
-    assert action.results["offline"] == "0"
-    assert action.results["unknown"] == "0"
-
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-@pytest.mark.dependency(depends=["test_check_runners"])
-async def test_reconcile_no_runner(model: Model, app: Application, path: str, token: str) -> None:
-    await app.set_config({"virtual-machines": "0"})
     await model.wait_for_idle()
-
-    action = await app.units[0].run_action("reconcile-runners")
-    await action.wait()
-
-    assert action.results["online"] == "1"
-
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-@pytest.mark.dependency(depends=["test_spawn_one_runner"])
-async def test_check_runners_with_no_runner(ops_test: OpsTest, app: Application) -> None:
     action = await app.units[0].run_action("check-runners")
     await action.wait()
 
     assert action.results["online"] == "0"
     assert action.results["offline"] == "0"
     assert action.results["unknown"] == "0"
+    assert not action.results["runners"]
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+@pytest.mark.dependency(depends=["test_check_runners_with_no_runner"])
+async def test_spawn_runner(model: Model, app: Application, path: str, token: str) -> None:
+    await app.set_config({"virtual-machines": "1"})
+    await model.wait_for_idle()
+
+    action = await app.units[0].run("lxc list --format json")
+    await action.wait()
+
+    assert action.results["return_code"] == 0
+
+    lxc_instance = json.loads(action.results["output"])
+    assert len(lxc_instance) == 1
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+@pytest.mark.dependency(depends=["test_spawn_runner"])
+async def test_check_runners_with_no_runner(ops_test: OpsTest, app: Application) -> None:
+    action = await app.units[0].run_action("check-runners")
+    await action.wait()
+
+    assert action.results["online"] == "1"
+    assert action.results["offline"] == "0"
+    assert action.results["unknown"] == "0"
+
+    runner_names = action.results["runners"].split(", ")
+    assert len(runner_names) == 1
+    assert runner_names[0].start_with("github-runner-0-")

@@ -376,6 +376,7 @@ class GithubRunnerCharm(CharmBase):
 
         runner_manager = self._get_runner_manager()
         if runner_manager:
+            self._reconcile_runners(runner_manager)
             self.unit.status = ActiveStatus()
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
