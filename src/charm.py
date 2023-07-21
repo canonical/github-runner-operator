@@ -168,6 +168,9 @@ class GithubRunnerCharm(CharmBase):
         Raises:
             RunnerError: Unable to setup storage for runner.
         """
+        if size <= 0:
+            return
+
         try:
             # Create tmpfs if not exists, else resize it.
             if not path.exists():
