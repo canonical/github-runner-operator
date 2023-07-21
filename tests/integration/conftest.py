@@ -100,6 +100,7 @@ devices:
     )
     application = await model.deploy(
         charm,
+        application_name="integration",
         series="jammy",
         config={
             "path": path,

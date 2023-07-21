@@ -12,6 +12,7 @@ from pytest_operator.plugin import OpsTest
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
+@pytest.mark.dependency()
 async def test_missing_config(model: Model, app: Application) -> None:
     """
     arrange: Deploy an application without token configuration.
@@ -29,6 +30,7 @@ async def test_missing_config(model: Model, app: Application) -> None:
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
+@pytest.mark.dependency(depends=["test_missing_config"])
 async def test_config(model: Model, app: Application, token: str) -> None:
     """
     arrange: Deploy an application without token configuration.
@@ -43,19 +45,45 @@ async def test_config(model: Model, app: Application, token: str) -> None:
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_check_runners(ops_test: OpsTest, app: Application) -> None:
+@pytest.mark.dependency(depends=["test_config"])
+async def test_check_runners(app: Application) -> None:
     """
-    arrange: An working application of github-runner.
+    arrange: An working application of github-runner with no runners.
     act: Run check-runners action.
-    assert: The returned runner status is correct.
+    assert: Action returns with no runners.
     """
     action = await app.units[0].run_action("check-runners")
     await action.wait()
 
-    assert action.results["online"] == 1
-    assert action.results["offline"] == 0
-    assert action.results["unknown"] == 0
-
     runner_names = action.results["runner"].split(", ")
     assert len(runner_names) == 1
     assert runner_names[0].start_with("github-runner-0-")
+
+    assert action.results["online"] == "1"
+    assert action.results["offline"] == "0"
+    assert action.results["unknown"] == "0"
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+@pytest.mark.dependency(depends=["test_check_runners"])
+async def test_reconcile_no_runner(model: Model, app: Application, path: str, token: str) -> None:
+    await app.set_config({"virtual-machines": "0"})
+    await model.wait_for_idle()
+
+    action = await app.units[0].run_action("reconcile-runners")
+    await action.wait()
+
+    assert action.results["online"] == "1"
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+@pytest.mark.dependency(depends=["test_spawn_one_runner"])
+async def test_check_runners_with_no_runner(ops_test: OpsTest, app: Application) -> None:
+    action = await app.units[0].run_action("check-runners")
+    await action.wait()
+
+    assert action.results["online"] == "0"
+    assert action.results["offline"] == "0"
+    assert action.results["unknown"] == "0"
