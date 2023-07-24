@@ -354,6 +354,7 @@ class GithubRunnerCharm(CharmBase):
         """
         if self.config["token"] != self._stored.token:
             self._start_services()
+            self._stored.token = None
 
         self._refresh_firewall()
         try:
