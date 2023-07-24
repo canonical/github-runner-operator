@@ -351,6 +351,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of configuration change.
         """
+        self._start_services()
         self._refresh_firewall()
         try:
             self._event_timer.ensure_event_timer(
