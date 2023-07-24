@@ -376,7 +376,7 @@ class GithubRunnerCharm(CharmBase):
             )  # Casting for mypy checks.
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
-                prev_runner_manager.flush()
+                prev_runner_manager.flush(flush_busy=False)
             self._stored.path = self.config["path"]
 
         runner_manager = self._get_runner_manager()
@@ -386,7 +386,7 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
         if self.config["token"] != self._stored.token:
-            runner_manager.flush()
+            runner_manager.flush(flush_busy=False)
             self._stored.token = self.config["token"]
 
     @catch_charm_errors
