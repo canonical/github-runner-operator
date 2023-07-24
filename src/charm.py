@@ -130,6 +130,7 @@ class GithubRunnerCharm(CharmBase):
 
         self._stored.set_default(
             path=self.config["path"],  # for detecting changes
+            token=self.config["token"],  # for detecting changes
             runner_bin_url=None,
         )
 
@@ -351,7 +352,10 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of configuration change.
         """
-        self._start_services()
+        if self.config["token"] != self._stored.token:
+            self._start_services()
+            self._stored.token = self.config["token"]
+
         self._refresh_firewall()
         try:
             self._event_timer.ensure_event_timer(
