@@ -354,7 +354,6 @@ class GithubRunnerCharm(CharmBase):
         """
         if self.config["token"] != self._stored.token:
             self._start_services()
-            self._stored.token = self.config["token"]
 
         self._refresh_firewall()
         try:
@@ -384,6 +383,10 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = ActiveStatus()
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
+
+        if self.config["token"] != self._stored.token:
+            runner_manager.flush()
+            self._stored.token = self.config["token"]
 
     @catch_charm_errors
     def _on_update_runner_bin(self, _event: UpdateRunnerBinEvent) -> None:
