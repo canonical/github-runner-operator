@@ -45,22 +45,3 @@ jobs:
         run: microk8s kubectl create deployment nginx --image=nginx
       - name: Wait for nginx to be ready
         run: microk8s kubectl rollout status deployment/nginx --timeout=30m
-  # test:
-  #   name: test
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       num: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-  #   runs-on: [self-hosted, kernel]
-  #   steps:
-  #     - name: Echo number
-  #       run: echo "${{matrix.num}}"
-  #     - name: Install microk8s
-  #       run: sudo snap install microk8s --classic
-  #     - name: Wait for microk8s
-  #       timeout-minutes: 10
-  #       run: sudo microk8s status --wait-ready
-  #     - name: Deploy nginx for testing
-  #       run: sudo microk8s kubectl create deployment nginx --image=nginx
-  #     - name: Wait for nginx to be ready
-  #       run: sudo microk8s kubectl rollout status deployment/nginx --timeout=30m
