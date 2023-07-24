@@ -352,6 +352,7 @@ class GithubRunnerCharm(CharmBase):
             event: Event of configuration change.
         """
         self._refresh_firewall()
+        self._start_services()
         try:
             self._event_timer.ensure_event_timer(
                 "update-runner-bin", self.config["update-interval"]
@@ -674,7 +675,8 @@ class GithubRunnerCharm(CharmBase):
         )
         self.repo_check_systemd_service.write_text(service_content, encoding="utf-8")
 
-        execute_command(["/usr/bin/systemctl", "start", "repo-policy-compliance"])
+        execute_command(["/usr/bin/systemctl", "daemon-reload"])
+        execute_command(["/usr/bin/systemctl", "restart", "repo-policy-compliance"])
         execute_command(["/usr/bin/systemctl", "enable", "repo-policy-compliance"])
 
         logger.info("Finished starting charm services")
