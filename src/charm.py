@@ -352,7 +352,6 @@ class GithubRunnerCharm(CharmBase):
             event: Event of configuration change.
         """
         self._refresh_firewall()
-        self._start_services()
         try:
             self._event_timer.ensure_event_timer(
                 "update-runner-bin", self.config["update-interval"]
