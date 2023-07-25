@@ -105,7 +105,7 @@ async def test_check_runners(model: Model, app: Application) -> None:
 
     runner_names = action.results["runners"].split(", ")
     assert len(runner_names) == 1
-    assert runner_names[0].start_with("github-runner-0-")
+    assert runner_names[0].startswith("github-runner-0-")
 
 
 @pytest.mark.asyncio
