@@ -95,7 +95,9 @@ def retry(  # pylint: disable=too-many-arguments
     return retry_decorator
 
 
-def secure_run_subprocess(cmd: Sequence[str], **kwargs) -> subprocess.CompletedProcess[bytes]:
+def secure_run_subprocess(
+    cmd: Sequence[str], hide_cmd: bool = False, **kwargs
+) -> subprocess.CompletedProcess[bytes]:
     """Run command in subprocess according to security recommendations.
 
     The argument `shell` is set to `False` for security reasons.
@@ -105,12 +107,17 @@ def secure_run_subprocess(cmd: Sequence[str], **kwargs) -> subprocess.CompletedP
 
     Args:
         cmd: Command in a list.
+        hide_cmd: Hide logging of cmd.
         kwargs: Additional keyword arguments for the `subprocess.run` call.
 
     Returns:
         Object representing the completed process. The outputs subprocess can accessed.
     """
-    logger.info("Executing command %s", cmd)
+    if not hide_cmd:
+        logger.info("Executing command %s", cmd)
+    else:
+        logger.info("Executing sensitive command")
+
     result = subprocess.run(  # nosec B603
         cmd,
         capture_output=True,

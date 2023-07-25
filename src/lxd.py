@@ -222,7 +222,9 @@ class LxdInstance:
             logger.exception("Failed to delete LXD instance")
             raise LxdError(f"Unable to delete LXD instance {self.name}") from err
 
-    def execute(self, cmd: list[str], cwd: Optional[str] = None) -> Tuple[int, IO, IO]:
+    def execute(
+        self, cmd: list[str], cwd: Optional[str] = None, hide_cmd: bool = False
+    ) -> Tuple[int, IO, IO]:
         """Execute a command within the LXD instance.
 
         Exceptions are not raise if command execution failed. Caller should check the exit code and
@@ -231,6 +233,7 @@ class LxdInstance:
         Args:
             cmd: Commands to be executed.
             cwd: Working directory to execute the commands.
+            hide_cmd: Hide logging of cmd.
 
         Returns:
             Tuple containing the exit code, stdout, stderr.
@@ -241,7 +244,7 @@ class LxdInstance:
 
         lxc_cmd += ["--"] + cmd
 
-        result = secure_run_subprocess(lxc_cmd)
+        result = secure_run_subprocess(lxc_cmd, hide_cmd)
         return (result.returncode, io.BytesIO(result.stdout), io.BytesIO(result.stderr))
 
 
