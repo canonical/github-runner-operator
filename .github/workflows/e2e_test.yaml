@@ -157,7 +157,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
-          set -x
+          juju debug-log --replay --tail &
+
           # Base any future branches on the current branch
           REF_SHA=$(gh api \
             -H "Accept: application/vnd.github+json" \
@@ -219,9 +220,11 @@ jobs:
 
           if [[ $status != "completed" || $conclusion != "success" ]]; then
             echo "test workflow failed with status: $status, conclusion: $conclusion"
+            kill $(jobs -p)
             exit 1
           else
             echo "Workflow completed with status: $status, conclusion: $conclusion, run-id: ${{ steps.runner-name.outputs.name }}"
+            kill $(jobs -p)
           fi
 
       - name: Show Firewall Rules
