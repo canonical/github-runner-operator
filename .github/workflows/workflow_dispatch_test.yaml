@@ -7,6 +7,7 @@ on:
       runner:
         description: 'Self hosted gh runner'
         required: true
+
 jobs:
   workflow-dispatch-tests:
     runs-on: ubuntu-latest
