@@ -1,8 +1,7 @@
 name: End-to-End Test
 
 on:
-  # TODO: Enable on pull_request and remove workflow_call.
-  # pull_request:
+  pull_request:
   workflow_call:
 
 jobs:

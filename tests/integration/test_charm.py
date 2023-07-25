@@ -112,7 +112,7 @@ async def test_check_runners(model: Model, app: Application, app_name: str) -> N
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-@pytest.mark.dependency(depends=["test_spawn_runner"])
+@pytest.mark.dependency(depends=["test_check_runners"])
 async def test_change_token(model: Model, app: Application, token_two: str) -> None:
     await app.set_config({"token": token_two})
     await model.wait_for_idle()
