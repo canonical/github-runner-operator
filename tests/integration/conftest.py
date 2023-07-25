@@ -113,7 +113,7 @@ devices:
         config={
             "path": path,
             "virtual-machines": 0,
-            "denylist": "10.0.0.0/8",
+            # "denylist": "10.0.0.0/8",
             "test-mode": "insecure",
         },
     )
