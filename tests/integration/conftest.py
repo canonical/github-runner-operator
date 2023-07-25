@@ -109,7 +109,7 @@ devices:
     )
     application = await model.deploy(
         charm,
-        application_name=f"integration-{secrets.token_hex(8)}",
+        application_name=f"integration-{secrets.token_hex(4)}",
         series="jammy",
         config={
             "path": path,
