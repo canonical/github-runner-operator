@@ -4,10 +4,10 @@
 """Fixtures for github runner charm integration tests."""
 
 import os
+import secrets
 import subprocess
 from pathlib import Path
 from typing import Any, AsyncIterator
-import secrets
 
 import pytest
 import pytest_asyncio
