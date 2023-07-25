@@ -10,6 +10,7 @@ from juju.application import Application
 from juju.model import Model
 from ops.model import ActiveStatus, BlockedStatus
 
+from runner import Runner
 from utilities import retry
 
 
@@ -71,7 +72,13 @@ async def test_check_runners_with_no_runner(model: Model, app: Application) -> N
 
 
 @retry(tries=30, delay=30)
-async def check_lxd_instance(app: Application, num: int) -> None:
+async def check_runner_instance(app: Application, num: int) -> None:
+    """Helper function to wait for runner instances to be ready.
+
+    Args:
+      app: Application instance to check the runners.
+      num: Number of runner instances to check for.
+    """
     action = await app.units[0].run("lxc list --format json")
     await action.wait()
 
@@ -80,23 +87,39 @@ async def check_lxd_instance(app: Application, num: int) -> None:
     lxc_instance = json.loads(action.results["stdout"])
     assert len(lxc_instance) == num
 
+    for instance in lxc_instance:
+        action = await app.units[0].run(f"lxc exec {instance['name']} -- ps aux")
+        await action.wait()
+
+        assert f"/bin/bash {Runner.runner_script}" in action.results["stdout"]
+
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 @pytest.mark.dependency(depends=["test_check_runners_with_no_runner"])
 async def test_reconcile_runners_spawn_one(model: Model, app: Application) -> None:
+    """
+    arrange: An working application of github-runner with no runners.
+    act: Set number of runner to 1, and run reconcile-runners.
+    assert: One runner instance exists.
+    """
     await app.set_config({"virtual-machines": "1"})
     action = await app.units[0].run_action("reconcile-runners")
     await action.wait()
     await model.wait_for_idle()
 
-    await check_lxd_instance(app, 1)
+    await check_runner_instance(app, 1)
 
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 @pytest.mark.dependency(depends=["test_reconcile_runners_spawn_one"])
 async def test_check_runners(model: Model, app: Application, app_name: str) -> None:
+    """
+    arrange: An working application of github-runner with one runner.
+    act: Run check-runners action.
+    assert: Action returns with one runner.
+    """
     await model.wait_for_idle()
     action = await app.units[0].run_action("check-runners")
     await action.wait()
@@ -114,10 +137,21 @@ async def test_check_runners(model: Model, app: Application, app_name: str) -> N
 @pytest.mark.abort_on_fail
 @pytest.mark.dependency(depends=["test_check_runners"])
 async def test_change_token(model: Model, app: Application, token_two: str) -> None:
+    """
+    arrange: An working application of github-runner with one runner.
+    act: Change the token in charm configuration.
+    assert: Existing runners are flushed, and repo-policy-compliance is using the new token.
+    """
     await app.set_config({"token": token_two})
     await model.wait_for_idle()
 
-    await check_lxd_instance(app, 1)
+    # The old runner should be flushed out.
+    action = await app.units[0].run_action("check-runners")
+    await action.wait()
+
+    assert action.results["online"] == "0"
+    assert action.results["offline"] == "0"
+    assert action.results["unknown"] == "0"
 
     action = await app.units[0].run("cat /etc/systemd/system/repo-policy-compliance.service")
     await action.wait()
