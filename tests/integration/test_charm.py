@@ -156,4 +156,4 @@ async def test_change_token(model: Model, app: Application, token_two: str) -> N
     action = await app.units[0].run("cat /etc/systemd/system/repo-policy-compliance.service")
     await action.wait()
 
-    assert f"GITHUB-TOKEN={token_two}" in action.results["stdout"]
+    assert f"GITHUB_TOKEN={token_two}" in action.results["stdout"]
