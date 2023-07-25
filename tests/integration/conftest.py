@@ -32,9 +32,17 @@ def path(pytestconfig: pytest.Config) -> str:
 
 
 @pytest.fixture(scope="module")
-def token(pytestconfig: pytest.Config) -> str:
-    token = pytestconfig.getoption("--token")
-    assert token is not None, "Please specify the --token command line option"
+def token_one(pytestconfig: pytest.Config) -> str:
+    token = pytestconfig.getoption("--token-one")
+    assert token is not None, "Please specify the --token-one command line option"
+    return token
+
+
+@pytest.fixture(scope="module")
+def token_two(pytestconfig: pytest.Config, token_one: str) -> str:
+    token = pytestconfig.getoption("--token-two")
+    assert token is not None, "Please specify the --token-two command line option"
+    assert token != token_one, "Please specify a different token for --token-two"
     return token
 
 
