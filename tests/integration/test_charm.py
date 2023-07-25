@@ -84,8 +84,10 @@ async def check_lxd_instance(app: Application, num: int) -> None:
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 @pytest.mark.dependency(depends=["test_check_runners_with_no_runner"])
-async def test_spawn_runner(model: Model, app: Application) -> None:
+async def test_reconcile_runners_spawn_one(model: Model, app: Application) -> None:
     await app.set_config({"virtual-machines": "1"})
+    action = await app.units[0].run_action("reconcile-runners")
+    await action.wait()
     await model.wait_for_idle()
 
     await check_lxd_instance(app, 1)
@@ -93,7 +95,7 @@ async def test_spawn_runner(model: Model, app: Application) -> None:
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-@pytest.mark.dependency(depends=["test_spawn_runner"])
+@pytest.mark.dependency(depends=["test_reconcile_runners_spawn_one"])
 async def test_check_runners(model: Model, app: Application) -> None:
     await model.wait_for_idle()
     action = await app.units[0].run_action("check-runners")

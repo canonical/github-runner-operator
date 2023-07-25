@@ -7,6 +7,7 @@ import os
 import subprocess
 from pathlib import Path
 from typing import Any, AsyncIterator
+import secrets
 
 import pytest
 import pytest_asyncio
@@ -108,12 +109,11 @@ devices:
     )
     application = await model.deploy(
         charm,
-        application_name="integration",
+        application_name=f"integration-{secrets.token_hex(8)}",
         series="jammy",
         config={
             "path": path,
             "virtual-machines": 0,
-            # "denylist": "10.0.0.0/8",
             "test-mode": "insecure",
         },
     )
