@@ -157,6 +157,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
+          set -x
           # Base any future branches on the current branch
           REF_SHA=$(gh api \
             -H "Accept: application/vnd.github+json" \
@@ -229,6 +230,8 @@ jobs:
 
       - name: Clean Up
         if: always() && matrix.event.name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}      
         run: |
           gh api \
           --method DELETE \
