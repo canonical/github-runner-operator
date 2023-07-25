@@ -67,12 +67,19 @@ jobs:
       - name: Generate Run ID
         id: run-id
         run: |
-          echo "run-id=e2e-$(LC_ALL=C tr -dc 'a-z' < /dev/urandom | head -c8)" >> $GITHUB_OUTPUT
+          echo "run-id=e2e-$(LC_ALL=C tr -dc 'a-z' < /dev/urandom | head -c4)" >> $GITHUB_OUTPUT
 
   deploy-e2e-test-runner:
-    name: Deploy End-to-End Test Runner
+    name: Deploy End-to-End Test Runner (${{ matrix.event.name }})
     runs-on: ubuntu-latest
     needs: [build-charm, run-id]
+    strategy:
+      matrix:
+        event: 
+          - name: pull_request
+            abbreviation: pr
+          - name: workflow_dispatch
+            abbreviation: wd
     steps:
       - name: Setup Lxd Juju Controller
         uses: charmed-kubernetes/actions-operator@main
@@ -103,11 +110,15 @@ jobs:
       - name: Enable br_netfilter
         run: sudo modprobe br_netfilter
 
+      - name: Generate Runner Name
+        id: runner-name
+        run: echo name=${{ matrix.event.abbreviation }}-${{ needs.run-id.outputs.run-id }} >> $GITHUB_OUTPUT
+
       - name: Deploy github-runner Charm
         run: |
           cp github-runner_ubuntu-22.04-amd64.charm /home/$USER/github-runner_ubuntu-22.04-amd64.charm
           juju deploy /home/$USER/github-runner_ubuntu-22.04-amd64.charm \
-            ${{ needs.run-id.outputs.run-id }} \
+            ${{ steps.runner-name.outputs.name }} \
             --base ubuntu@22.04 \
             --config path=${{ secrets.E2E_TESTING_REPO }} \
             --config token=${{ secrets.E2E_TESTING_TOKEN }} \
@@ -115,7 +126,8 @@ jobs:
             --config denylist=10.0.0.0/8 \
             --config test-mode=insecure
 
-      - name: Watch github-runner
+      - name: Watch github-runner (Pull Request)
+        if: matrix.event.name == 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         timeout-minutes: 30
@@ -140,14 +152,101 @@ jobs:
             exit 1
           fi
 
+      - name: Watch github-runner (Workflow Dispatch)
+        if: matrix.event.name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+        run: |
+          juju debug-log --replay --tail &
+
+          # Base any future branches on the current branch
+          REF_SHA=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ secrets.E2E_TESTING_REPO }}/git/ref/heads/$GITHUB_HEAD_REF \
+            --jq .object.sha)
+
+          # Create a temporary reference/branch
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ secrets.E2E_TESTING_REPO }}/git/refs \
+            -f ref='refs/heads/${{ steps.runner-name.outputs.name }}' \
+            -f sha=$REF_SHA
+
+          # Dispatch other workflow
+          gh workflow run workflow_dispatch_test.yaml \
+            -R ${{ secrets.E2E_TESTING_REPO }} \
+            --ref ${{ steps.runner-name.outputs.name }} \
+            -f runner=${{ steps.runner-name.outputs.name }}
+
+          get-workflow-status() {
+              # Search recent workflow runs for the one designated by the run-id ref
+              output=$(gh run list \
+                        -R ${{ secrets.E2E_TESTING_REPO }} \
+                        -L 100 \
+                        --json headBranch,status \
+                        --jq '[.[] | select(.headBranch=="${{ steps.runner-name.outputs.name }}")]')
+
+              # Workflows that have not started have no status
+              if [ $(echo "$output" | jq 'length') -eq 0 ]
+              then
+                  echo "not_started"
+              else
+                  # Parse output with jq to get the status field of the first object
+                  status=$(echo "$output" | jq -r '.[0].status')
+                  echo "$status"
+              fi
+          }
+          
+          # Wait for the workflow to start while checking its status
+          for i in {1..360}
+          do
+            status=$(get-workflow-status)
+            echo "workflow status: $status"
+            if [[ $status != "not_started" && $status != "queued" && $status != "in_progress" ]]; then
+              break
+            fi
+            sleep 10
+          done
+          
+          # Make sure the workflow was completed or else consider it failed
+          conclusion=$(gh run list \
+            -R ${{ secrets.E2E_TESTING_REPO }} \
+            -L 100 \
+            --json headBranch,conclusion \
+            --jq '.[] | select(.headBranch=="${{ steps.runner-name.outputs.name }}") | .conclusion')
+
+          if [[ $status != "completed" || $conclusion != "success" ]]; then
+            echo "test workflow failed with status: $status, conclusion: $conclusion"
+            kill $(jobs -p)
+            exit 1
+          else
+            echo "Workflow completed with status: $status, conclusion: $conclusion, run-id: ${{ steps.runner-name.outputs.name }}"
+            kill $(jobs -p)
+          fi
+
       - name: Show Firewall Rules
         run: |
-          juju ssh ${{ needs.run-id.outputs.run-id }}/0 sudo nft list ruleset
+          juju ssh ${{ steps.runner-name.outputs.name }}/0 sudo nft list ruleset
+
+      - name: Clean Up
+        if: always() && matrix.event.name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}      
+        run: |
+          gh api \
+          --method DELETE \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          "/repos/${{ secrets.E2E_TESTING_REPO }}/git/refs/heads/${{ steps.runner-name.outputs.name }}"
+          echo "Deleted ref ${{ steps.runner-name.outputs.name }}"
 
   e2e-test:
     name: End-to-End Test
     needs: [build-charm, run-id]
-    runs-on: [self-hosted, linux, x64, "${{ needs.run-id.outputs.run-id }}"]
+    runs-on: [self-hosted, linux, x64, "pr-${{ needs.run-id.outputs.run-id }}"]
     steps:
       # below is a series of simple tests to assess the functionality of the newly spawned runner.
       - name: Echo hello world
