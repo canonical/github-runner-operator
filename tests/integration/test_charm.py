@@ -96,7 +96,7 @@ async def test_reconcile_runners_spawn_one(model: Model, app: Application) -> No
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 @pytest.mark.dependency(depends=["test_reconcile_runners_spawn_one"])
-async def test_check_runners(model: Model, app: Application) -> None:
+async def test_check_runners(model: Model, app: Application, app_name: str) -> None:
     await model.wait_for_idle()
     action = await app.units[0].run_action("check-runners")
     await action.wait()
@@ -107,7 +107,7 @@ async def test_check_runners(model: Model, app: Application) -> None:
 
     runner_names = action.results["runners"].split(", ")
     assert len(runner_names) == 1
-    assert runner_names[0].startswith("github-runner-0-")
+    assert runner_names[0].startswith(f"{app_name}-0")
 
 
 @pytest.mark.asyncio

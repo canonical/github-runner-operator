@@ -26,6 +26,12 @@ def metadata() -> dict[str, Any]:
 
 
 @pytest.fixture(scope="module")
+def app_name() -> str:
+    # Randomized app name to avoid collision while connecting to GitHub.
+    return f"integration-{secrets.token_hex(4)}"
+
+
+@pytest.fixture(scope="module")
 def path(pytestconfig: pytest.Config) -> str:
     path = pytestconfig.getoption("--path")
     assert path is not None, "Please specify the --path command line option"
@@ -73,7 +79,13 @@ def model(ops_test: OpsTest) -> Model:
 
 @pytest_asyncio.fixture(scope="module")
 async def app(
-    ops_test: OpsTest, model: Model, path: str, http_proxy: str, https_proxy: str, no_proxy: str
+    ops_test: OpsTest,
+    model: Model,
+    app_name: str,
+    path: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
 ) -> AsyncIterator[Application]:
     lxd_profile_path = Path("lxd-profile.yaml")
     with open(lxd_profile_path, "w") as profile_file:
@@ -109,7 +121,7 @@ devices:
     )
     application = await model.deploy(
         charm,
-        application_name=f"integration-{secrets.token_hex(4)}",
+        application_name=app_name,
         series="jammy",
         config={
             "path": path,
