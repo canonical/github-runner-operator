@@ -127,6 +127,7 @@ class GithubRunnerCharm(CharmBase):
 
         self._stored.set_default(
             path=self.config["path"],  # for detecting changes
+            token=self.config["token"],  # for detecting changes
             runner_bin_url=None,
         )
 
@@ -351,6 +352,10 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of configuration change.
         """
+        if self.config["token"] != self._stored.token:
+            self._start_services()
+            self._stored.token = None
+
         self._refresh_firewall()
         try:
             self._event_timer.ensure_event_timer(
@@ -371,7 +376,7 @@ class GithubRunnerCharm(CharmBase):
             )  # Casting for mypy checks.
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
-                prev_runner_manager.flush()
+                prev_runner_manager.flush(flush_busy=False)
             self._stored.path = self.config["path"]
 
         runner_manager = self._get_runner_manager()
@@ -380,6 +385,10 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = ActiveStatus()
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
+
+        if self.config["token"] != self._stored.token:
+            runner_manager.flush(flush_busy=False)
+            self._stored.token = self.config["token"]
 
     @catch_charm_errors
     def _on_update_runner_bin(self, _event: UpdateRunnerBinEvent) -> None:
@@ -675,7 +684,8 @@ class GithubRunnerCharm(CharmBase):
         )
         self.repo_check_systemd_service.write_text(service_content, encoding="utf-8")
 
-        execute_command(["/usr/bin/systemctl", "start", "repo-policy-compliance"])
+        execute_command(["/usr/bin/systemctl", "daemon-reload"])
+        execute_command(["/usr/bin/systemctl", "restart", "repo-policy-compliance"])
         execute_command(["/usr/bin/systemctl", "enable", "repo-policy-compliance"])
 
         logger.info("Finished starting charm services")
