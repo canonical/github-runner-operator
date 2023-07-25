@@ -126,7 +126,10 @@ def secure_run_subprocess(
         # Disable type check due to the support for unpacking arguments in mypy is experimental.
         **kwargs,  # type: ignore
     )
-    logger.debug("Command %s returns: %s", cmd, result.stdout)
+    if not hide_cmd:
+        logger.debug("Command %s returns: %s", cmd, result.stdout)
+    else:
+        logger.debug("Command returns: %s", result.stdout)
     return result
 
 
