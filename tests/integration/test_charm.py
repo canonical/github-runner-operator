@@ -42,6 +42,11 @@ async def test_config(model: Model, app: Application, token_one: str) -> None:
     """
     await app.set_config({"token": token_one})
     await model.wait_for_idle()
+
+    action = await app.units[0].run_action("update-runner-bin")
+    await action.wait()
+    await model.wait_for_idle()
+
     # mypy can not find type of `name` attribute.
     assert app.status == ActiveStatus.name  # type: ignore
 
