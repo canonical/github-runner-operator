@@ -4,12 +4,21 @@ on:
   pull_request:
 
 jobs:
+  get-argument:
+    env:
+      TESTING_REPO: ${{ secrets.E2E_TESTING_REPO }}
+      TESTING_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+      TESTING_TOKEN_ALT: ${{ secrets.E2E_TESTING_TOKEN_ALT }}
+    output:
+      ARG: ${{ steps.arg.outputs.arg }}
+    steps:
+      - id: arg
+        run: echo "--path $TESTING_REPO --token $TESTING_TOKEN --token-alt $TESTING_TOKEN_ALT" >> $GITHUB_OUTPUT
   integration-test:
+    needs: get-argument
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
       juju-channel: 3.1/stable
       provider: lxd
-      extra-arguments: --path ${{secrets.E2E_TESTING_REPO}} \
-        --token-one ${{secrets.E2E_TESTING_TOKEN}} \
-        --token-two ${{secrets.E2E_TESTING_TOKEN_ALT}}
+      extra-arguments: ${{ needs.get-arguments.outputs.arg }}

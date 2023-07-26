@@ -38,18 +38,18 @@ def path(pytestconfig: pytest.Config) -> str:
 
 
 @pytest.fixture(scope="module")
-def token_one(pytestconfig: pytest.Config) -> str:
-    token = pytestconfig.getoption("--token-one")
-    assert token, "Please specify the --token-one command line option"
+def token(pytestconfig: pytest.Config) -> str:
+    token = pytestconfig.getoption("--token")
+    assert token, "Please specify the --token command line option"
     return token
 
 
 @pytest.fixture(scope="module")
-def token_two(pytestconfig: pytest.Config, token_one: str) -> str:
-    token = pytestconfig.getoption("--token-two")
-    assert token, "Please specify the --token-two command line option"
-    assert token != token_one, "Please specify a different token for --token-two"
-    return token
+def token_alt(pytestconfig: pytest.Config, token: str) -> str:
+    token_alt = pytestconfig.getoption("--token-alt")
+    assert token_alt, "Please specify the --token-alt command line option"
+    assert token_alt != token, "Please specify a different token for --token-alt"
+    return token_alt
 
 
 @pytest.fixture(scope="module")
@@ -141,10 +141,8 @@ async def app_no_token(
 
 
 @pytest_asyncio.fixture(scope="module")
-async def app(
-    model: Model, app_no_token: Application, token_one: str
-) -> AsyncIterator[Application]:
-    await app_no_token.set_config({"token": token_one})
+async def app(model: Model, app_no_token: Application, token: str) -> AsyncIterator[Application]:
+    await app_no_token.set_config({"token": token})
     await model.wait_for_idle()
 
     yield app_no_token
