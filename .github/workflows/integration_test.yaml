@@ -5,11 +5,12 @@ on:
 
 jobs:
   get-argument:
+    runs-on: ubuntu-latest
     env:
       TESTING_REPO: ${{ secrets.E2E_TESTING_REPO }}
       TESTING_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
       TESTING_TOKEN_ALT: ${{ secrets.E2E_TESTING_TOKEN_ALT }}
-    output:
+    outputs:
       ARG: ${{ steps.arg.outputs.arg }}
     steps:
       - id: arg
