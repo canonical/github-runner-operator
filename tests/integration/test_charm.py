@@ -8,28 +8,26 @@ import json
 import pytest
 from juju.application import Application
 from juju.model import Model
-from ops.model import ActiveStatus, BlockedStatus
 
 from runner import Runner
+from tests.status_name import ACTIVE_STATUS_NAME, BLOCK_STATUS_NAME
 from utilities import retry
 
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 @pytest.mark.dependency()
-async def test_missing_config(model: Model, app: Application) -> None:
+async def test_missing_config(model: Model, app_no_token: Application) -> None:
     """
     arrange: Deploy an application without token configuration.
     act: Check the status the application.
     assert: The application is in blocked status.
     """
-    await model.wait_for_idle()
-    # mypy can not find type of `name` attribute.
-    assert app.status == BlockedStatus.name  # type: ignore
-    assert app.units[0].workload_status == BlockedStatus.name  # type: ignore
-    assert (
-        app.units[0].workload_status_message == "Missing required charm configuration: ['token']"
-    )
+    assert app_no_token.status == BLOCK_STATUS_NAME
+
+    unit = app_no_token.units[0]
+    assert unit.workload_status == BLOCK_STATUS_NAME
+    assert unit.workload_status_message == "Missing required charm configuration: ['token']"
 
 
 @pytest.mark.asyncio
@@ -41,17 +39,13 @@ async def test_config(model: Model, app: Application, token_one: str) -> None:
     act: Set the token configuration and wait.
     assert: The application is in active status.
     """
-    await app.set_config({"token": token_one})
-    await model.wait_for_idle()
-
     action = await app.units[0].run_action("update-runner-bin")
     await action.wait()
     assert action.status == "completed"
 
     await model.wait_for_idle()
 
-    # mypy can not find type of `name` attribute.
-    assert app.status == ActiveStatus.name  # type: ignore
+    assert app.status == ACTIVE_STATUS_NAME
 
 
 @pytest.mark.asyncio

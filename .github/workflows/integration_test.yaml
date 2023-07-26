@@ -4,22 +4,12 @@ on:
   pull_request:
 
 jobs:
-  integration-tests:
-    name: Integration test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup operator environment
-        uses: charmed-kubernetes/actions-operator@main
-        with:
-          juju-channel: 3.1/stable
-          provider: lxd
-      - name: Enable br_netfilter
-        run: sudo modprobe br_netfilter
-      - name: Run Integration tests
-        run: |
-          tox -e integration -- \
-            --keep-models \
-            --path ${{secrets.E2E_TESTING_REPO}} \
-            --token-one ${{secrets.E2E_TESTING_TOKEN}} \
-            --token-two ${{secrets.E2E_TESTING_TOKEN_ALT}}
+  integration-test:
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    secrets: inherit
+    with:
+      juju-channel: 3.1/stable
+      provider: lxd
+      extra-arguments: --path ${{secrets.E2E_TESTING_REPO}} \
+        --token-one ${{secrets.E2E_TESTING_TOKEN}} \
+        --token-two ${{secrets.E2E_TESTING_TOKEN_ALT}}

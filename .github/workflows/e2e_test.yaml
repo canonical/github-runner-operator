@@ -2,7 +2,6 @@ name: End-to-End Test
 
 on:
   pull_request:
-  workflow_call:
 
 jobs:
   build-charm:
@@ -76,7 +75,7 @@ jobs:
     needs: [build-charm, run-id]
     strategy:
       matrix:
-        event: 
+        event:
           - name: pull_request
             abbreviation: pr
           - name: workflow_dispatch
@@ -200,7 +199,7 @@ jobs:
                   echo "$status"
               fi
           }
-          
+
           # Wait for the workflow to start while checking its status
           for i in {1..360}
           do
@@ -211,7 +210,7 @@ jobs:
             fi
             sleep 10
           done
-          
+
           # Make sure the workflow was completed or else consider it failed
           conclusion=$(gh run list \
             -R ${{ secrets.E2E_TESTING_REPO }} \
@@ -235,7 +234,7 @@ jobs:
       - name: Clean Up
         if: always() && matrix.event.name == 'workflow_dispatch'
         env:
-          GH_TOKEN: ${{ github.token }}      
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh api \
           --method DELETE \

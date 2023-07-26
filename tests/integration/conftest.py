@@ -3,7 +3,6 @@
 
 """Fixtures for github runner charm integration tests."""
 
-import os
 import secrets
 import subprocess
 from pathlib import Path
@@ -78,16 +77,9 @@ def model(ops_test: OpsTest) -> Model:
 
 
 @pytest_asyncio.fixture(scope="module")
-async def app(
-    ops_test: OpsTest,
-    model: Model,
-    app_name: str,
-    path: str,
-    http_proxy: str,
-    https_proxy: str,
-    no_proxy: str,
-) -> AsyncIterator[Application]:
+async def lxd_profile() -> AsyncIterator[Path]:
     lxd_profile_path = Path("lxd-profile.yaml")
+
     with open(lxd_profile_path, "w") as profile_file:
         profile_file.writelines(
             """config:
@@ -106,9 +98,23 @@ devices:
 """
         )
 
-    charm = await ops_test.build_charm(".")
+    yield lxd_profile_path
 
-    os.remove(lxd_profile_path)
+    lxd_profile_path.unlink(missing_ok=True)
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app_no_token(
+    ops_test: OpsTest,
+    model: Model,
+    app_name: str,
+    path: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
+    lxd_profile: Path,
+) -> AsyncIterator[Application]:
+    charm = await ops_test.build_charm(".")
 
     subprocess.run(["sudo", "modprobe", "br_netfilter"])
     await model.set_config(
@@ -129,5 +135,19 @@ devices:
             "test-mode": "insecure",
         },
     )
+    await model.wait_for_idle()
 
     yield application
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app(
+    model: Model, app_no_token: Application, token_one: str
+) -> AsyncIterator[Application]:
+    await app_no_token.set_config({"token": token_one})
+    await model.wait_for_idle()
+
+    yield app_no_token
+
+    await app_no_token.set_config({"token": ""})
+    await model.wait_for_idle()
