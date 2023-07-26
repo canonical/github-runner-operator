@@ -140,6 +140,11 @@ jobs:
             kill $(jobs -p)
             exit 1
           fi
+
+      - name: Show Firewall Rules
+        run: |
+          juju ssh ${{ needs.run-id.outputs.run-id }}/0 sudo nft list ruleset
+
   e2e-test:
     name: End-to-End Test
     needs: [build-charm, run-id]
