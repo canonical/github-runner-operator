@@ -7,9 +7,11 @@ on:
       runner:
         description: 'Self hosted gh runner'
         required: true
+
 jobs:
   workflow-dispatch-tests:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, "${{ inputs.runner }}"]
     steps:
-      - name: Run a one-line script
-        run: echo Hello, world of workflow dispatches!
+      - name: Echo input variable and message
+        run: |
+          echo "Hello, runner: ${{ inputs.runner }}"
