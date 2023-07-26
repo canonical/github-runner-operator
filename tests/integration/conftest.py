@@ -34,21 +34,21 @@ def app_name() -> str:
 @pytest.fixture(scope="module")
 def path(pytestconfig: pytest.Config) -> str:
     path = pytestconfig.getoption("--path")
-    assert path is not None, "Please specify the --path command line option"
+    assert path, "Please specify the --path command line option"
     return path
 
 
 @pytest.fixture(scope="module")
 def token_one(pytestconfig: pytest.Config) -> str:
     token = pytestconfig.getoption("--token-one")
-    assert token is not None, "Please specify the --token-one command line option"
+    assert token, "Please specify the --token-one command line option"
     return token
 
 
 @pytest.fixture(scope="module")
 def token_two(pytestconfig: pytest.Config, token_one: str) -> str:
     token = pytestconfig.getoption("--token-two")
-    assert token is not None, "Please specify the --token-two command line option"
+    assert token, "Please specify the --token-two command line option"
     assert token != token_one, "Please specify a different token for --token-two"
     return token
 

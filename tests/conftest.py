@@ -4,15 +4,14 @@
 """Fixtures for github runner charm."""
 
 
-import argparse
+from pytest import Parser
 
 
-def pytest_addoption(parser: argparse.ArgumentParser):
+def pytest_addoption(parser: Parser):
     """Add options to pytest parser."""
-    # mypy cannot find the `addoption` attr.
-    parser.addoption("--path", action="store")  # type: ignore
-    parser.addoption("--token-one", action="store")  # type: ignore
-    parser.addoption("--token-two", action="store")  # type: ignore
-    parser.addoption("--http-proxy", action="store")  # type: ignore
-    parser.addoption("--https-proxy", action="store")  # type: ignore
-    parser.addoption("--no-proxy", action="store")  # type: ignore
+    parser.addoption("--path", action="store")
+    parser.addoption("--token-one", action="store")
+    parser.addoption("--token-two", action="store")
+    parser.addoption("--http-proxy", action="store")
+    parser.addoption("--https-proxy", action="store")
+    parser.addoption("--no-proxy", action="store")
