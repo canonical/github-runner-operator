@@ -11,10 +11,16 @@ jobs:
       TESTING_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
       TESTING_TOKEN_ALT: ${{ secrets.E2E_TESTING_TOKEN_ALT }}
     outputs:
-      ARG: ${{ steps.arg.outputs.arg }}
+      REPO: ${{ steps.step1.outputs.repo }}
+      TOKEN: ${{ steps.step2.outputs.token }}
+      TOKEN_ALT: ${{ steps.step3.outputs.token_alt }}
     steps:
-      - id: arg
-        run: echo "--path $TESTING_REPO --token $TESTING_TOKEN --token-alt $TESTING_TOKEN_ALT" >> $GITHUB_OUTPUT
+      - id: step1
+        run: echo "repo=$TESTING_REPO" >> $GITHUB_OUTPUT
+      - id: step2
+        run: echo "token=$TESTING_TOKEN" >> $GITHUB_OUTPUT
+      - id: step3
+        run: echo "token_alt=$TESTING_TOKEN_ALT" >> $GITHUB_OUTPUT
   integration-test:
     needs: get-argument
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
@@ -22,4 +28,6 @@ jobs:
     with:
       juju-channel: 3.1/stable
       provider: lxd
-      extra-arguments: ${{ needs.get-arguments.outputs.arg }}
+      extra-arguments: --path ${{ needs.get-arguments.outputs.REPO }} \
+        --token ${{ needs.get-arguments.outputs.token}} \
+        --token-alt ${{ needs.get-arguments.outputs.token_alt}}
