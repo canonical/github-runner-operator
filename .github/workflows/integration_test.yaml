@@ -4,30 +4,22 @@ on:
   pull_request:
 
 jobs:
-  get-argument:
-    runs-on: ubuntu-latest
-    env:
-      TESTING_REPO: ${{ secrets.E2E_TESTING_REPO }}
-      TESTING_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
-      TESTING_TOKEN_ALT: ${{ secrets.E2E_TESTING_TOKEN_ALT }}
-    outputs:
-      REPO: ${{ steps.step1.outputs.repo }}
-      TOKEN: ${{ steps.step2.outputs.token }}
-      TOKEN_ALT: ${{ steps.step3.outputs.token_alt }}
-    steps:
-      - id: step1
-        run: echo "repo=$TESTING_REPO" >> $GITHUB_OUTPUT
-      - id: step2
-        run: echo "token=$TESTING_TOKEN" >> $GITHUB_OUTPUT
-      - id: step3
-        run: echo "token_alt=$TESTING_TOKEN_ALT" >> $GITHUB_OUTPUT
   integration-test:
-    needs: get-argument
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-    secrets: inherit
-    with:
-      juju-channel: 3.1/stable
-      provider: lxd
-      extra-arguments: --path ${{ needs.get-arguments.outputs.REPO }} \
-        --token ${{ needs.get-arguments.outputs.token}} \
-        --token-alt ${{ needs.get-arguments.outputs.token_alt}}
+    name: Integration test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup operator environment
+        uses: charmed-kubernetes/actions-operator@main
+        with:
+          juju-channel: 3.1/stable
+          provider: lxd
+      - name: Enable br_netfilter
+        run: sudo modprobe br_netfilter
+      - name: Run Integration tests
+        run: |
+          tox -e integration -- \
+            --keep-models \
+            --path ${{secrets.E2E_TESTING_REPO}} \
+            --token-one ${{secrets.E2E_TESTING_TOKEN}} \
+            --token-two ${{secrets.E2E_TESTING_TOKEN_ALT}
