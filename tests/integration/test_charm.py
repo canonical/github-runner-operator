@@ -46,6 +46,8 @@ async def test_config(model: Model, app: Application, token_one: str) -> None:
 
     action = await app.units[0].run_action("update-runner-bin")
     await action.wait()
+    assert action.status == "completed"
+
     await model.wait_for_idle()
 
     # mypy can not find type of `name` attribute.
@@ -64,6 +66,7 @@ async def test_check_runners_with_no_runner(model: Model, app: Application) -> N
     await model.wait_for_idle()
     action = await app.units[0].run_action("check-runners")
     await action.wait()
+    assert action.status == "completed"
 
     assert action.results["online"] == "0"
     assert action.results["offline"] == "0"
@@ -81,6 +84,7 @@ async def check_runner_instance(app: Application, num: int) -> None:
     """
     action = await app.units[0].run("lxc list --format json")
     await action.wait()
+    assert action.status == "completed"
 
     assert action.results["return-code"] == 0
 
@@ -90,6 +94,7 @@ async def check_runner_instance(app: Application, num: int) -> None:
     for instance in lxc_instance:
         action = await app.units[0].run(f"lxc exec {instance['name']} -- ps aux")
         await action.wait()
+        assert action.status == "completed"
 
         assert f"/bin/bash {Runner.runner_script}" in action.results["stdout"]
 
@@ -106,6 +111,8 @@ async def test_reconcile_runners_spawn_one(model: Model, app: Application) -> No
     await app.set_config({"virtual-machines": "1"})
     action = await app.units[0].run_action("reconcile-runners")
     await action.wait()
+    assert action.status == "completed"
+
     await model.wait_for_idle()
 
     await check_runner_instance(app, 1)
@@ -124,6 +131,7 @@ async def test_check_runners(model: Model, app: Application, app_name: str) -> N
     action = await app.units[0].run_action("check-runners")
     await action.wait()
 
+    assert action.status == "completed"
     assert action.results["online"] == "1"
     assert action.results["offline"] == "0"
     assert action.results["unknown"] == "0"
@@ -149,6 +157,7 @@ async def test_change_token(model: Model, app: Application, token_two: str) -> N
     action = await app.units[0].run_action("check-runners")
     await action.wait()
 
+    assert action.status == "completed"
     assert action.results["online"] == "0"
     assert action.results["offline"] == "0"
     assert action.results["unknown"] == "0"
@@ -156,4 +165,5 @@ async def test_change_token(model: Model, app: Application, token_two: str) -> N
     action = await app.units[0].run("cat /etc/systemd/system/repo-policy-compliance.service")
     await action.wait()
 
+    assert action.status == "completed"
     assert f"GITHUB_TOKEN={token_two}" in action.results["stdout"]
