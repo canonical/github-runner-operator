@@ -9,6 +9,7 @@ from pytest import Parser
 
 def pytest_addoption(parser: Parser):
     """Add options to pytest parser."""
+    parser.addoption("--charm-file", action="store")
     parser.addoption("--path", action="store")
     parser.addoption("--token", action="store")
     parser.addoption("--token-alt", action="store")

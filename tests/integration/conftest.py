@@ -30,6 +30,16 @@ def app_name() -> str:
     return f"integration-{secrets.token_hex(4)}"
 
 
+@pytest_asyncio.fixture(scope="module")
+async def charm_path(ops_test: OpsTest, pytestconfig: pytest.Config) -> AsyncIterator[Path]:
+    charm = pytestconfig.getoption("--charm-file")
+
+    if charm:
+        yield Path(charm)
+
+    yield await ops_test.build_charm(".")
+
+
 @pytest.fixture(scope="module")
 def path(pytestconfig: pytest.Config) -> str:
     path = pytestconfig.getoption("--path")
@@ -106,6 +116,7 @@ devices:
 async def app_no_token(
     ops_test: OpsTest,
     model: Model,
+    charm_path: Path,
     app_name: str,
     path: str,
     http_proxy: str,
@@ -113,9 +124,8 @@ async def app_no_token(
     no_proxy: str,
     lxd_profile: Path,
 ) -> AsyncIterator[Application]:
-    charm = await ops_test.build_charm(".")
-
     subprocess.run(["sudo", "modprobe", "br_netfilter"])
+
     await model.set_config(
         {
             "juju-http-proxy": http_proxy,
@@ -124,8 +134,9 @@ async def app_no_token(
             "logging-config": "<root>=INFO;unit=DEBUG",
         }
     )
+
     application = await model.deploy(
-        charm,
+        charm_path,
         application_name=app_name,
         series="jammy",
         config={
