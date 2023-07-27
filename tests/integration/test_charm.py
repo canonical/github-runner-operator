@@ -115,7 +115,7 @@ async def test_config(model: Model, app: Application, app_name: str, token_alt: 
     assert runner_names[0].startswith(f"{app_name}-0")
 
     # 6.
-    await app.set_config({"vm-cpu": 1, "vm-memory": "3GiB", "vm-disk": "5GiB"})
+    await app.set_config({"vm-cpu": "1", "vm-memory": "3GiB", "vm-disk": "5GiB"})
 
     # 7.
     action = await app.units[0].run_action("flush-runners")
