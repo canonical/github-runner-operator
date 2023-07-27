@@ -295,6 +295,20 @@ class Runner:
         if not self._clients.lxd.storage_pools.exists("runner"):
             raise RunnerError("Failed to create runner LXD storage pool")
 
+    @classmethod
+    def _get_resource_profile_name(cls, cpu: int, memory: str, disk: str) -> str:
+        """Get the LXD profile name for resource limit.
+
+        Args:
+            cpu: CPU resource limit.
+            memory: Memory resource limit.
+            disk: Disk resource limit.
+
+        Returns:
+            Name for the LXD profile of the given resource limits.
+        """
+        return f"cpu-{cpu}-mem-{memory}-disk-{disk}"
+
     @retry(tries=5, delay=1, local_logger=logger)
     def _get_resource_profile(self, resources: VirtualMachineResources) -> str:
         """Get the LXD profile name of given resource limit.
@@ -309,7 +323,9 @@ class Runner:
             str: Name of the profile for the given resource limit.
         """
         # Ensure the resource profile exists.
-        profile_name = f"cpu-{resources.cpu}-mem-{resources.memory}-disk-{resources.disk}"
+        profile_name = self._get_resource_profile_name(
+            resources.cpu, resources.memory, resources.disk
+        )
         if not self._clients.lxd.profiles.exists(profile_name):
             logger.info("Creating LXD profile for resource usage.")
             try:

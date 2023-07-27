@@ -4,6 +4,7 @@
 """Utilities for integration test."""
 
 import json
+from typing import Any
 
 from juju.unit import Unit
 
@@ -13,6 +14,7 @@ from utilities import retry
 
 
 async def remove_runner_bin(unit: Unit):
+    """"""
     action = await unit.run(f"rm {RunnerManager.runner_bin_path}")
     await action.wait()
 
@@ -22,9 +24,22 @@ async def remove_runner_bin(unit: Unit):
     assert action.results["return-code"] != 0
 
 
+async def check_resource_config(unit: Unit, configs: dict[str, Any]):
+    resource_profile_name = Runner._get_resource_profile_name(
+        configs["vm-cpu"], configs["vm-memory"], configs["vm-disk"]
+    )
+
+    action = await unit.run("lxc profile list --format json")
+    await action.wait()
+    assert action.results["return-code"] != 0
+    profiles = json.loads(action.results["stdout"])
+    profile_names = [profile["name"] for profile in profiles]
+    assert resource_profile_name in profile_names
+
+
 @retry(tries=30, delay=30)
 async def check_runner_instance(unit: Unit, num: int) -> None:
-    """Helper function to wait for runner instances to be ready.
+    """Wait for runner instances to be ready.
 
     Args:
       app: Application instance to check the runners.

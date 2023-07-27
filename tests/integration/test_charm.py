@@ -9,7 +9,11 @@ from juju.application import Application
 from juju.model import Model
 
 from runner_manager import RunnerManager
-from tests.integration.test_helpers import check_runner_instance, remove_runner_bin
+from tests.integration.helpers import (
+    check_resource_config,
+    check_runner_instance,
+    remove_runner_bin,
+)
 from tests.status_name import ACTIVE_STATUS_NAME, BLOCK_STATUS_NAME
 
 
@@ -39,14 +43,21 @@ async def test_config(model: Model, app: Application, app_name: str, token_alt: 
         3. Run check-runners action.
         4. Configure to one runner and run reconcile-runners action.
         5. Run check-runners action.
-        6. Change the token in application configuration.
+        6. Change the virtual machine resource configuration.
+        7. Run flush-runners action.
+        8. Change the token configuration.
     assert:
         1. The application is in active status.
         2. Runner binary exists in the charm.
         3. Action returns result with no runner.
-        4. One runner should be spawned.
+        4. a. One runner should be spawned.
+           b. LXD profile matching the default virtual machine resources exists.
         5. Action returns result with one runner.
-        6. Old runner should be flushed, repo-policy-compliance using the new token.
+        6. Nothing.
+        7. a. One runner should exist. The runner name should be different.
+           b. LXD profile matching virtual machine resources of step 6 exists.
+        8. a. The repo-policy-compliance using the new token.
+           b. Current runners should be flushed out.
     """
     unit = app.units[0]
 
@@ -86,6 +97,8 @@ async def test_config(model: Model, app: Application, app_name: str, token_alt: 
     await action.wait()
     await model.wait_for_idle()
 
+    configs = await app.get_config()
+    await check_resource_config(unit, configs)
     await check_runner_instance(unit, 1)
 
     # 5.
@@ -102,6 +115,29 @@ async def test_config(model: Model, app: Application, app_name: str, token_alt: 
     assert runner_names[0].startswith(f"{app_name}-0")
 
     # 6.
+    await app.set_config({"vm-cpu": 1, "vm-memory": "3GiB", "vm-disk": "5GiB"})
+
+    # 7.
+    action = await app.units[0].run_action("flush-runners")
+    await action.wait()
+
+    configs = await app.get_config()
+    await check_resource_config(unit, configs)
+    await check_runner_instance(unit, 1)
+
+    action = await app.units[0].run_action("check-runners")
+    await action.wait()
+
+    assert action.status == "completed"
+    assert action.results["online"] == "1"
+    assert action.results["offline"] == "0"
+    assert action.results["unknown"] == "0"
+
+    new_runner_names = action.results["runners"].split(", ")
+    assert len(new_runner_names) == 1
+    assert new_runner_names[0] != runner_names[0]
+
+    # 8.
     await app.set_config({"token": token_alt})
     await model.wait_for_idle()
 
@@ -119,3 +155,6 @@ async def test_config(model: Model, app: Application, app_name: str, token_alt: 
 
     assert action.status == "completed"
     assert f"GITHUB_TOKEN={token_alt}" in action.results["stdout"]
+
+    # Cleanup
+    await app.set_config({"virtual-machines": 0})
