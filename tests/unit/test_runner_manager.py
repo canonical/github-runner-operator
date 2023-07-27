@@ -38,12 +38,14 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token):
     )
     pool_path = tmp_path / "test_storage"
     pool_path.mkdir(exist_ok=True)
+
     runner_manager = RunnerManager(
         "test app",
         "0",
         RunnerManagerConfig(request.param[0], token, "jammy", secrets.token_hex(16), pool_path),
         proxies=request.param[1],
     )
+    runner_manager.runner_bin_path.write_bytes(TEST_BINARY)
     return runner_manager
 
 
@@ -72,7 +74,7 @@ def test_get_latest_runner_bin_url_missing_binary(runner_manager: RunnerManager)
 
 def test_update_runner_bin(runner_manager: RunnerManager):
     """
-    arrange: Nothing.
+    arrange: Remove the existing runner binary.
     act: Update runner binary.
     assert: Runner binary in runner manager is set.
     """
@@ -84,12 +86,14 @@ def test_update_runner_bin(runner_manager: RunnerManager):
         def iter_content(self, *arg, **kargs):
             return iter([TEST_BINARY])
 
+    runner_manager.runner_bin_path.unlink(missing_ok=True)
+
     runner_manager.session.get = MockRequestLibResponse
-    # Remove the fake binary in fixture.
-    runner_manager.runner_bin_path = None
     runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux", arch_name="x64")
 
     runner_manager.update_runner_bin(runner_bin)
+
+    assert runner_manager.runner_bin_path.read_bytes() == TEST_BINARY
 
 
 def test_reconcile_zero_count(runner_manager: RunnerManager):

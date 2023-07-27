@@ -328,7 +328,7 @@ class RunnerManager:
         delta = quantity - len(runner_states.healthy)
         # Spawn new runners
         if delta > 0:
-            if RunnerManager.runner_bin_path is None:
+            if not RunnerManager.runner_bin_path.exists():
                 raise RunnerCreateError("Unable to create runner due to missing runner binary.")
 
             logger.info("Getting registration token for GitHub runners.")

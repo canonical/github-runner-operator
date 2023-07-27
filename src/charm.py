@@ -52,20 +52,17 @@ EventT = TypeVar("EventT")
 
 
 def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[CharmT, EventT], None]:
-    """Catch unexpected errors in charm.
-
-    This decorator is for unrecoverable errors and sets the charm to
-    `BlockedStatus`.
+    """Catch common errors in charm.
 
     Args:
         func: Charm function to be decorated.
 
     Returns:
-        Decorated charm function with catching unexpected errors.
+        Decorated charm function with catching common errors.
     """
 
     @functools.wraps(func)
-    def func_with_catch_unexpected_errors(self, event: EventT) -> None:
+    def func_with_catch_errors(self, event: EventT) -> None:
         # Safe guard against unexpected error.
         try:
             func(self, event)
@@ -75,19 +72,19 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
                 f"Missing required charm configuration: {err.configs}"
             )
 
-    return func_with_catch_unexpected_errors
+    return func_with_catch_errors
 
 
 def catch_action_errors(
     func: Callable[[CharmT, ActionEvent], None]
 ) -> Callable[[CharmT, ActionEvent], None]:
-    """Catch unexpected errors in actions.
+    """Catch common errors in actions.
 
     Args:
         func: Action function to be decorated.
 
     Returns:
-        Decorated charm function with catching unexpected errors.
+        Decorated charm function with catching common errors.
     """
 
     @functools.wraps(func)
@@ -172,6 +169,9 @@ class GithubRunnerCharm(CharmBase):
         Raises:
             RunnerError: Unable to setup storage for runner.
         """
+        if size <= 0:
+            return
+
         try:
             # Create tmpfs if not exists, else resize it.
             if not path.exists():
@@ -203,7 +203,7 @@ class GithubRunnerCharm(CharmBase):
         except SubprocessError:
             logger.exception("Found inactive repo-policy-compliance service")
             execute_command(["/usr/bin/systemctl", "restart", "repo-policy-compliance"])
-            logger.exception("Restart repo-policy-compliance service")
+            logger.info("Restart repo-policy-compliance service")
             raise
 
     def _get_runner_manager(
@@ -381,6 +381,7 @@ class GithubRunnerCharm(CharmBase):
 
         runner_manager = self._get_runner_manager()
         if runner_manager:
+            self._reconcile_runners(runner_manager)
             self.unit.status = ActiveStatus()
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
