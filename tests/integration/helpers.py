@@ -26,12 +26,12 @@ async def remove_runner_bin(unit: Unit):
 
 async def check_resource_config(unit: Unit, configs: dict[str, Any]):
     resource_profile_name = Runner._get_resource_profile_name(
-        configs["vm-cpu"], configs["vm-memory"], configs["vm-disk"]
+        configs["vm-cpu"]["value"], configs["vm-memory"]["value"], configs["vm-disk"]["value"]
     )
 
     action = await unit.run("lxc profile list --format json")
     await action.wait()
-    assert action.results["return-code"] != 0
+    assert action.results["return-code"] == 0
     profiles = json.loads(action.results["stdout"])
     profile_names = [profile["name"] for profile in profiles]
     assert resource_profile_name in profile_names
