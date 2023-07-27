@@ -26,7 +26,7 @@ def metadata() -> dict[str, Any]:
 
 @pytest.fixture(scope="module")
 def app_name() -> str:
-    # Randomized app name to avoid collision while connecting to GitHub.
+    # Randomized app name to avoid collision when connecting to GitHub.
     return f"integration-{secrets.token_hex(4)}"
 
 
