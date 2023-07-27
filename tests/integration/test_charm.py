@@ -15,7 +15,7 @@ from tests.status_name import ACTIVE_STATUS_NAME, BLOCK_STATUS_NAME
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_missing_config(model: Model, app_no_token: Application) -> None:
+async def test_missing_config(app_no_token: Application) -> None:
     """
     arrange: An application without token configuration.
     act: Check the status the application.
