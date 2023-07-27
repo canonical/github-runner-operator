@@ -21,5 +21,5 @@ jobs:
           tox -e integration -- \
             --keep-models \
             --path ${{secrets.E2E_TESTING_REPO}} \
-            --token-one ${{secrets.E2E_TESTING_TOKEN}} \
-            --token-two ${{secrets.E2E_TESTING_TOKEN_ALT}
+            --token ${{secrets.E2E_TESTING_TOKEN}} \
+            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}}

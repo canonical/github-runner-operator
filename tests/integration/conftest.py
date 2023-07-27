@@ -80,9 +80,8 @@ def model(ops_test: OpsTest) -> Model:
 async def lxd_profile() -> AsyncIterator[Path]:
     lxd_profile_path = Path("lxd-profile.yaml")
 
-    with open(lxd_profile_path, "w") as profile_file:
-        profile_file.writelines(
-            """config:
+    lxd_profile_path.write_text(
+        """config:
     security.nesting: true
     security.privileged: true
     raw.lxc: |
@@ -96,7 +95,7 @@ devices:
         source: /dev/kmsg
         type: unix-char
 """
-        )
+    )
 
     yield lxd_profile_path
 

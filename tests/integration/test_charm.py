@@ -7,10 +7,10 @@
 import pytest
 from juju.application import Application
 from juju.model import Model
+from ops import ActiveStatus, BlockedStatus
 
 from runner_manager import RunnerManager
 from tests.integration.test_helpers import check_runner_instance, remove_runner_bin
-from tests.status_name import ACTIVE_STATUS_NAME, BLOCK_STATUS_NAME
 
 
 @pytest.mark.asyncio
@@ -21,10 +21,10 @@ async def test_missing_config(model: Model, app_no_token: Application) -> None:
     act: Check the status the application.
     assert: The application is in blocked status.
     """
-    assert app_no_token.status == BLOCK_STATUS_NAME
+    assert app_no_token.status == BlockedStatus.name
 
     unit = app_no_token.units[0]
-    assert unit.workload_status == BLOCK_STATUS_NAME
+    assert unit.workload_status == BlockedStatus.name
     assert unit.workload_status_message == "Missing required charm configuration: ['token']"
 
 
@@ -51,7 +51,7 @@ async def test_config(model: Model, app: Application, app_name: str, token_alt: 
     unit = app.units[0]
 
     # 1.
-    assert app.status == ACTIVE_STATUS_NAME
+    assert app.status == ActiveStatus.name
 
     # 2.
     # Ensure there is no runner binary.
@@ -62,7 +62,7 @@ async def test_config(model: Model, app: Application, app_name: str, token_alt: 
 
     await model.wait_for_idle()
 
-    assert app.status == ACTIVE_STATUS_NAME
+    assert app.status == ActiveStatus.name
     action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
     await action.wait()
     assert action.results["return-code"] == 0
