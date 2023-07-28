@@ -211,3 +211,47 @@ async def test_token_config_changed(model: Model, app: Application, token_alt: s
 
     assert action.status == "completed"
     assert f"GITHUB_TOKEN={token_alt}" in action.results["stdout"]
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_deny_list(app: Application) -> None:
+    """
+    arrange: Start a webserver on a IP on the denylist.
+    act: Make HTTP request to the IP.
+    assert: The HTTP requests fails.
+    """
+    pass
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_deny_list_not_denied(app: Application) -> None:
+    """
+    arrange: Start a webserver on a IP not on the denylist.
+    act: Make HTTP request to IP.
+    assert: The HTTP requests succeeds.
+    """
+    pass
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_deny_list_config_changed(app: Application) -> None:
+    """
+    arrange: Start a webserver on a IP.
+    act: Change the denylist to include the IP, and make a HTTP request to it.
+    assert: The HTTP requests fails.
+    """
+    pass
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_deny_list_config_changed_not_denied(app: Application) -> None:
+    """
+    arrange: Start a webserver on a IP.
+    act: Change the denylist to not include the IP, and make a HTTP request to it.
+    assert: The HTTP requests succeeds.
+    """
+    pass

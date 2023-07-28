@@ -35,7 +35,9 @@ def app_name() -> str:
 
 
 @pytest_asyncio.fixture(scope="module")
-async def charm_path(ops_test: OpsTest, pytestconfig: pytest.Config) -> AsyncIterator[Path]:
+async def charm_path(
+    ops_test: OpsTest, pytestconfig: pytest.Config, lxd_profile: Path
+) -> AsyncIterator[Path]:
     """Path to the built charm."""
     charm = pytestconfig.getoption("--charm-file")
 
@@ -138,7 +140,6 @@ async def app_no_token(
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
-    lxd_profile: Path,
 ) -> AsyncIterator[Application]:
     """Application with no token.
 
@@ -183,7 +184,7 @@ async def app_no_runner(
     Test should ensure it returns with the application in a good state and has
     no runner.
     """
-    unit = app.units[0]
+    unit = app_no_token.units[0]
 
     await app_no_token.set_config({"token": token})
     await model.wait_for_idle()
@@ -199,29 +200,29 @@ async def app_no_runner(
 
 
 @pytest_asyncio.fixture(scope="module")
-async def app(model: Model, app: Application) -> AsyncIterator[Application]:
+async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Application]:
     """Application with a single runner.
 
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
-    unit = app.units[0]
+    unit = app_no_runner.units[0]
 
     action = await unit.run_action("update-runner-bin")
     await action.wait()
 
-    await app.set_config({"virtual-machines": "1"})
+    await app_no_runner.set_config({"virtual-machines": "1"})
     action = await unit.run_action("reconcile-runners")
     await action.wait()
     await model.wait_for_idle()
-    assert app.status == ACTIVE_STATUS_NAME
+    assert app_no_runner.status == ACTIVE_STATUS_NAME
 
     # Wait until there is one runner.
     await check_runner_instance(unit, 1)
 
-    yield app
+    yield app_no_runner
 
-    await app.set_config({"virtual-machines": "0"})
+    await app_no_runner.set_config({"virtual-machines": "0"})
     action = await unit.run_action("reconcile-runners")
     await action.wait()
     await model.wait_for_idle()
