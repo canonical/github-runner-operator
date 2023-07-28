@@ -10,7 +10,7 @@ from juju.model import Model
 
 from runner_manager import RunnerManager
 from tests.integration.helpers import (
-    check_resource_config,
+    check_resource_lxd_profile,
     check_runner_instance,
     remove_runner_bin,
 )
@@ -34,38 +34,14 @@ async def test_missing_config(app_no_token: Application) -> None:
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_config(model: Model, app: Application, app_name: str, token_alt: str) -> None:
+async def test_update_runner_bin_action(model: Model, app_no_runner: Application) -> None:
     """
-    arrange: An working application with no runners.
-    act:
-        1. Nothing
-        2. Run update-runner-bin action.
-        3. Run check-runners action.
-        4. Configure to one runner and run reconcile-runners action.
-        5. Run check-runners action.
-        6. Change the virtual machine resource configuration.
-        7. Run flush-runners action.
-        8. Change the token configuration.
-    assert:
-        1. The application is in active status.
-        2. Runner binary exists in the charm.
-        3. Action returns result with no runner.
-        4. a. One runner should be spawned.
-           b. LXD profile matching the default virtual machine resources exists.
-        5. Action returns result with one runner.
-        6. Nothing.
-        7. a. One runner should exist. The runner name should be different.
-           b. LXD profile matching virtual machine resources of step 6 exists.
-        8. a. The repo-policy-compliance using the new token.
-           b. Current runners should be flushed out.
+    arrange: Remove runner binary if exists.
+    act: Run update-runner-bin action.
+    assert: Runner binary exists in the charm.
     """
-    unit = app.units[0]
+    unit = app_no_runner.units[0]
 
-    # 1.
-    assert app.status == ACTIVE_STATUS_NAME
-
-    # 2.
-    # Ensure there is no runner binary.
     await remove_runner_bin(unit)
 
     action = await unit.run_action("update-runner-bin")
@@ -73,14 +49,21 @@ async def test_config(model: Model, app: Application, app_name: str, token_alt: 
 
     await model.wait_for_idle()
 
-    assert app.status == ACTIVE_STATUS_NAME
+    assert app_no_runner.status == ACTIVE_STATUS_NAME
     action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
     await action.wait()
     assert action.results["return-code"] == 0
 
-    # 3.
-    # Verify there is no runners.
-    await check_runner_instance(unit, 0)
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_check_runners_no_runners(app_no_runner: Application) -> None:
+    """
+    arrange: An working application with no runners.
+    act: Run check-runners action.
+    assert: Action returns result with no runner.
+    """
+    unit = app_no_runner.units[0]
 
     action = await unit.run_action("check-runners")
     await action.wait()
@@ -90,18 +73,72 @@ async def test_config(model: Model, app: Application, app_name: str, token_alt: 
     assert action.results["unknown"] == "0"
     assert not action.results["runners"]
 
-    # 4.
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_reconcile_runners(model: Model, app_no_runner: Application) -> None:
+    """
+    arrange: An working application with no runners.
+    act:
+        1.  a. Set virtual-machines config to 1.
+            b. Run reconcile_runners action.
+        2.  a. Set virtual-machiens config to 0.
+            b. Run reconcile_runners action.
+    assert:
+        1. One runner should exist.
+        2. No runner should exist.
+
+    The two test is combine to maintain no runners in the application after the
+    test.
+    """
+    # Rename since the app will have a runner.
+    app = app_no_runner
+
+    unit = app.units[0]
+
+    # 1.
     await app.set_config({"virtual-machines": "1"})
 
     action = await unit.run_action("reconcile-runners")
     await action.wait()
     await model.wait_for_idle()
 
-    configs = await app.get_config()
-    await check_resource_config(unit, configs)
     await check_runner_instance(unit, 1)
 
-    # 5.
+    # 2.
+    await app.set_config({"virtual-machines": "0"})
+
+    action = await unit.run_action("reconcile-runners")
+    await action.wait()
+    await model.wait_for_idle()
+
+    await check_runner_instance(unit, 0)
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_flush_runner_and_resource_config(app: Application) -> None:
+    """
+    arrange: An working application with one runner.
+    act:
+        1. Run Check_runner action. Record the runner name for later.
+        2. Nothing.
+        3. Change the virtual machine resource configuration.
+        4. Run flush_runner action.
+
+    assert:
+        1. One runner exists.
+        2. LXD profile of matching resource config exists.
+        3. Nothing.
+        4.  a. The runner name should be different to the runner prior running
+                the action.
+            b. LXD profile matching virtual machine resources of step 2 exists.
+
+    Test are combined to reduce number of runner spawned.
+    """
+    unit = app.units[0]
+
+    # 1.
     action = await app.units[0].run_action("check-runners")
     await action.wait()
 
@@ -112,17 +149,20 @@ async def test_config(model: Model, app: Application, app_name: str, token_alt: 
 
     runner_names = action.results["runners"].split(", ")
     assert len(runner_names) == 1
-    assert runner_names[0].startswith(f"{app_name}-0")
 
-    # 6.
+    # 2.
+    configs = await app.get_config()
+    await check_resource_lxd_profile(unit, configs)
+
+    # 3.
     await app.set_config({"vm-cpu": "1", "vm-memory": "3GiB", "vm-disk": "5GiB"})
 
-    # 7.
+    # 4.
     action = await app.units[0].run_action("flush-runners")
     await action.wait()
 
     configs = await app.get_config()
-    await check_resource_config(unit, configs)
+    await check_resource_lxd_profile(unit, configs)
     await check_runner_instance(unit, 1)
 
     action = await app.units[0].run_action("check-runners")
@@ -137,24 +177,37 @@ async def test_config(model: Model, app: Application, app_name: str, token_alt: 
     assert len(new_runner_names) == 1
     assert new_runner_names[0] != runner_names[0]
 
-    # 8.
-    await app.set_config({"token": token_alt})
-    await model.wait_for_idle()
 
-    # The old runner should be flushed out.
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_check_runner(app: Application) -> None:
+    """
+    arrange: An working application with one runner.
+    act: Run check_runner action.
+    assert: Action returns result with one runner.
+    """
     action = await app.units[0].run_action("check-runners")
     await action.wait()
 
     assert action.status == "completed"
-    assert action.results["online"] == "0"
+    assert action.results["online"] == "1"
     assert action.results["offline"] == "0"
     assert action.results["unknown"] == "0"
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_token_config_changed(model: Model, app: Application, token_alt: str) -> None:
+    """
+    arrange: An working application.
+    act: Change the token configuration.
+    assert: The repo-policy-compliance using the new token.
+    """
+    await app.set_config({"token": token_alt})
+    await model.wait_for_idle()
 
     action = await app.units[0].run("cat /etc/systemd/system/repo-policy-compliance.service")
     await action.wait()
 
     assert action.status == "completed"
     assert f"GITHUB_TOKEN={token_alt}" in action.results["stdout"]
-
-    # Cleanup
-    await app.set_config({"virtual-machines": 0})

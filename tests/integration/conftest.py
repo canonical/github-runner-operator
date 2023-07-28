@@ -15,6 +15,9 @@ from juju.application import Application
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
+from tests.integration.helpers import check_runner_instance
+from tests.status_name import ACTIVE_STATUS_NAME
+
 
 @pytest.fixture(scope="module")
 def metadata() -> dict[str, Any]:
@@ -180,8 +183,14 @@ async def app_no_runner(
     Test should ensure it returns with the application in a good state and has
     no runner.
     """
+    unit = app.units[0]
+
     await app_no_token.set_config({"token": token})
     await model.wait_for_idle()
+    assert app_no_token.status == ACTIVE_STATUS_NAME
+
+    # Wait until there is no runner.
+    await check_runner_instance(unit, 0)
 
     yield app_no_token
 
@@ -205,6 +214,10 @@ async def app(model: Model, app: Application) -> AsyncIterator[Application]:
     action = await unit.run_action("reconcile-runners")
     await action.wait()
     await model.wait_for_idle()
+    assert app.status == ACTIVE_STATUS_NAME
+
+    # Wait until there is one runner.
+    await check_runner_instance(unit, 1)
 
     yield app
 
