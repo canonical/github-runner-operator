@@ -12,3 +12,4 @@ jobs:
     with:
       juju-channel: 3.1/stable
       provider: lxd
+      tmate-debug: True
