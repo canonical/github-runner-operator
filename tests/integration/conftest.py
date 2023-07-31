@@ -39,10 +39,10 @@ async def charm_path(
     ops_test: OpsTest, pytestconfig: pytest.Config, lxd_profile: Path
 ) -> AsyncIterator[Path]:
     """Path to the built charm."""
-    charm = pytestconfig.getoption("--charm-file")
-
-    if charm:
-        yield Path(charm)
+    # TODO: Re-enable this once operator-workflow updated.
+    # charm = pytestconfig.getoption("--charm-file")
+    # if charm:
+    #     yield Path(charm)
 
     yield await ops_test.build_charm(".")
 
