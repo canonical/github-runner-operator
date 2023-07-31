@@ -35,15 +35,12 @@ def app_name() -> str:
 
 
 @pytest_asyncio.fixture(scope="module")
-async def charm_path(
-    ops_test: OpsTest, pytestconfig: pytest.Config, lxd_profile: Path
-) -> AsyncIterator[Path]:
-    """Path to the built charm."""
-    # TODO: Re-enable this once operator-workflow updated.
-    # charm = pytestconfig.getoption("--charm-file")
-    # if charm:
-    #     yield Path(charm)
+async def charm_path(ops_test: OpsTest, lxd_profile: Path) -> AsyncIterator[Path]:
+    """Path to the built charm.
 
+    Including lxd_profile fixture as an argument, will make lxd_profile.yaml
+    file present under the charm directory during the building of the charm.
+    """
     yield await ops_test.build_charm(".")
 
 
