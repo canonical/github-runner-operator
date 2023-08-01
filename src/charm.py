@@ -614,7 +614,8 @@ class GithubRunnerCharm(CharmBase):
                 "/usr/bin/pip",
                 "show",
                 "repo-policy-compliance",
-            ]
+            ],
+            check_exit=False,
         )
 
         execute_command(
@@ -632,7 +633,8 @@ class GithubRunnerCharm(CharmBase):
                 "/usr/bin/pip",
                 "show",
                 "repo-policy-compliance",
-            ]
+            ],
+            check_exit=False,
         )
         return old_version == new_version
 
