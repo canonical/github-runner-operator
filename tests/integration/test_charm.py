@@ -9,8 +9,8 @@ from juju.model import Model
 
 from runner_manager import RunnerManager
 from tests.integration.helpers import (
-    check_resource_lxd_profile,
-    check_runner_instance,
+    assert_resource_lxd_profile,
+    assesrt_num_of_runners,
     remove_runner_bin,
 )
 from tests.status_name import ACTIVE_STATUS_NAME, BLOCK_STATUS_NAME
@@ -102,7 +102,7 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     await action.wait()
     await model.wait_for_idle()
 
-    await check_runner_instance(unit, 1)
+    await assesrt_num_of_runners(unit, 1)
 
     # 2.
     await app.set_config({"virtual-machines": "0"})
@@ -111,7 +111,7 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     await action.wait()
     await model.wait_for_idle()
 
-    await check_runner_instance(unit, 0)
+    await assesrt_num_of_runners(unit, 0)
 
 
 @pytest.mark.asyncio
@@ -151,7 +151,7 @@ async def test_flush_runner_and_resource_config(app: Application) -> None:
 
     # 2.
     configs = await app.get_config()
-    await check_resource_lxd_profile(unit, configs)
+    await assert_resource_lxd_profile(unit, configs)
 
     # 3.
     await app.set_config({"vm-cpu": "1", "vm-memory": "3GiB", "vm-disk": "5GiB"})
@@ -161,8 +161,8 @@ async def test_flush_runner_and_resource_config(app: Application) -> None:
     await action.wait()
 
     configs = await app.get_config()
-    await check_resource_lxd_profile(unit, configs)
-    await check_runner_instance(unit, 1)
+    await assert_resource_lxd_profile(unit, configs)
+    await assesrt_num_of_runners(unit, 1)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()

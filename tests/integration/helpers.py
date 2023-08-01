@@ -25,7 +25,7 @@ async def remove_runner_bin(unit: Unit):
     assert action.results["return-code"] != 0
 
 
-async def check_resource_lxd_profile(unit: Unit, configs: dict[str, Any]):
+async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]):
     """Check for LXD profile of the matching resource config.
 
     Args:
@@ -60,7 +60,7 @@ async def check_resource_lxd_profile(unit: Unit, configs: dict[str, Any]):
 
 
 @retry(tries=30, delay=30)
-async def check_runner_instance(unit: Unit, num: int) -> None:
+async def assesrt_num_of_runners(unit: Unit, num: int) -> None:
     """Check if runner instances are ready.
 
     Args:
