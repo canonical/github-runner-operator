@@ -597,7 +597,6 @@ class GithubRunnerCharm(CharmBase):
             Whether version install is changed. Going from not installed to
             installed will return True.
         """
-
         # Prepare environment for pip subprocess
         env = {}
         if "http" in self.proxies:
@@ -692,7 +691,7 @@ class GithubRunnerCharm(CharmBase):
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _start_services(self) -> None:
-        """Ensure all services managed by the charm is runnning."""
+        """Ensure all services managed by the charm is running."""
         logger.info("Starting charm services...")
 
         if self.service_token is None:
