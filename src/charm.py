@@ -612,7 +612,7 @@ class GithubRunnerCharm(CharmBase):
         old_version = execute_command(
             [
                 "/usr/bin/pip",
-                "install",
+                "show",
                 "repo-policy-compliance",
             ]
         )
@@ -630,7 +630,7 @@ class GithubRunnerCharm(CharmBase):
         new_version = execute_command(
             [
                 "/usr/bin/pip",
-                "install",
+                "show",
                 "repo-policy-compliance",
             ]
         )
