@@ -43,8 +43,8 @@ class ReconcileRunnersEvent(EventBase):
     """Event representing a periodic check to ensure runners are ok."""
 
 
-class UpdateRunnerBinEvent(EventBase):
-    """Event representing a periodic check for new versions of the runner binary."""
+class UpdateDependenciesEvent(EventBase):
+    """Event representing a periodic check for new versions of the runner binary and services."""
 
 
 CharmT = TypeVar("CharmT")
@@ -144,19 +144,19 @@ class GithubRunnerCharm(CharmBase):
         self.service_token = None
 
         self.on.define_event("reconcile_runners", ReconcileRunnersEvent)
-        self.on.define_event("update_runner_bin", UpdateRunnerBinEvent)
+        self.on.define_event("update_dependencies", UpdateDependenciesEvent)
 
         self.framework.observe(self.on.install, self._on_install)
         self.framework.observe(self.on.upgrade_charm, self._on_upgrade_charm)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
-        self.framework.observe(self.on.update_runner_bin, self._on_update_runner_bin)
+        self.framework.observe(self.on.update_dependencies, self._on_update_dependencies)
         self.framework.observe(self.on.stop, self._on_stop)
 
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.reconcile_runners_action, self._on_reconcile_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
-        self.framework.observe(self.on.update_runner_bin_action, self._on_update_runner_bin)
+        self.framework.observe(self.on.update_dependencies_action, self._on_update_dependencies)
 
     @retry(tries=5, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _create_memory_storage(self, path: Path, size: int) -> None:
@@ -359,7 +359,7 @@ class GithubRunnerCharm(CharmBase):
         self._refresh_firewall()
         try:
             self._event_timer.ensure_event_timer(
-                "update-runner-bin", self.config["update-interval"]
+                "update-dependencies", self.config["update-interval"]
             )
             self._event_timer.ensure_event_timer(
                 "reconcile-runners", self.config["reconcile-interval"]
@@ -367,7 +367,10 @@ class GithubRunnerCharm(CharmBase):
         except TimerEnableError as ex:
             logger.exception("Failed to start the event timer")
             self.unit.status = BlockedStatus(
-                f"Failed to start timer for regular reconciliation and binary update checks: {ex}"
+                (
+                    f"Failed to start timer for regular reconciliation and dependencies update "
+                    f"checks: {ex}"
+                )
             )
 
         if self.config["path"] != self._stored.path:
@@ -391,15 +394,19 @@ class GithubRunnerCharm(CharmBase):
             self._stored.token = self.config["token"]
 
     @catch_charm_errors
-    def _on_update_runner_bin(self, _event: UpdateRunnerBinEvent) -> None:
-        """Handle checking update of runner binary event.
+    def _on_update_dependencies(self, _event: UpdateDependenciesEvent) -> None:
+        """Handle checking update of dependencies event.
 
         Args:
-            event: Event of checking update of runner binary.
+            event: Event of checking update of runner binary and services.
         """
         runner_manager = self._get_runner_manager()
         if not runner_manager:
             return
+
+        # Flush runners on version change for repo_policy_compliance
+        flush = self._install_repo_policy_compliance()
+
         try:
             self.unit.status = MaintenanceStatus("Checking for runner updates")
             runner_info = runner_manager.get_latest_runner_bin_url()
@@ -422,8 +429,10 @@ class GithubRunnerCharm(CharmBase):
                 self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
                 return
             self._stored.runner_bin_url = runner_info.download_url
+            flush = True
 
-            # Flush the non-busy runner and reconcile.
+        if flush:
+            self._start_services()
             runner_manager.flush(flush_busy=False)
             self._reconcile_runners(runner_manager)
 
@@ -538,7 +547,7 @@ class GithubRunnerCharm(CharmBase):
             event: Event of stopping the charm.
         """
         try:
-            self._event_timer.disable_event_timer("update-runner-bin")
+            self._event_timer.disable_event_timer("update-dependencies")
             self._event_timer.disable_event_timer("reconcile-runners")
         except TimerDisableError as ex:
             logger.exception("Failed to stop the timer")
@@ -581,18 +590,13 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
             return {"delta": {"virtual-machines": 0}}
 
-    @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
-    def _install_deps(self) -> None:
-        """Install dependencies."""
-        logger.info("Installing charm dependencies.")
+    def _install_repo_policy_compliance(self) -> bool:
+        """Install latest version of repo_policy_compliance service.
 
-        # Snap and Apt will use any proxies configured in the Juju model.
-        # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
-        execute_command(["/usr/bin/apt-get", "update"])
-        # Install dependencies used by repo-policy-compliance and the firewall
-        execute_command(
-            ["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip", "nftables"]
-        )
+        Returns:
+            Whether version install is changed. Going from not installed to
+            installed will return True.
+        """
 
         # Prepare environment for pip subprocess
         env = {}
@@ -606,7 +610,14 @@ class GithubRunnerCharm(CharmBase):
             env["NO_PROXY"] = self.proxies["no_proxy"]
             env["no_proxy"] = self.proxies["no_proxy"]
 
-        # Install repo-policy-compliance package
+        old_version = execute_command(
+            [
+                "/usr/bin/pip",
+                "install",
+                "repo-policy-compliance",
+            ]
+        )
+
         execute_command(
             [
                 "/usr/bin/pip",
@@ -616,6 +627,31 @@ class GithubRunnerCharm(CharmBase):
             ],
             env=env,
         )
+
+        new_version = execute_command(
+            [
+                "/usr/bin/pip",
+                "install",
+                "repo-policy-compliance",
+            ]
+        )
+        return old_version == new_version
+
+    @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
+    def _install_deps(self) -> None:
+        """Install dependencies."""
+        logger.info("Installing charm dependencies.")
+
+        # Snap and Apt will use any proxies configured in the Juju model.
+        # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
+        execute_command(["/usr/bin/apt-get", "update"])
+        # install dependencies used by repo-policy-compliance and the firewall
+        execute_command(
+            ["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip", "nftables"]
+        )
+
+        # Install repo-policy-compliance package
+        self._install_repo_policy_compliance()
 
         execute_command(
             ["/usr/bin/apt-get", "remove", "-qy", "lxd", "lxd-client"], check_exit=False
@@ -656,7 +692,7 @@ class GithubRunnerCharm(CharmBase):
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _start_services(self) -> None:
-        """Start services."""
+        """Ensure all services managed by the charm is runnning."""
         logger.info("Starting charm services...")
 
         if self.service_token is None:
