@@ -333,8 +333,15 @@ class GithubRunnerCharm(CharmBase):
             event: Event of charm upgrade.
         """
         logger.info("Reinstalling dependencies...")
-        self._install_deps()
-        self._start_services()
+        try:
+            # The `_start_services`, `_install_deps` includes retry.
+            self._install_deps()
+            self._start_services()
+        except SubprocessError as err:
+            logger.exception(err)
+            # The charm cannot proceed without dependencies.
+            self.unit.status = BlockedStatus("Failed to install dependencies")
+            return
         self._refresh_firewall()
 
         logger.info("Flushing the runners...")
@@ -673,6 +680,7 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/snap/bin/lxd", "waitready"])
         execute_command(["/snap/bin/lxd", "init", "--auto"])
         execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
+        execute_command(["/snap/bin/lxd", "waitready"])
         if not LXD_PROFILE_YAML.exists():
             execute_command(["/usr/sbin/modprobe", "br_netfilter"])
         execute_command(
@@ -746,6 +754,9 @@ class GithubRunnerCharm(CharmBase):
 
     def _refresh_firewall(self):
         """Refresh the firewall configuration and rules."""
+        # Temp: Monitor the LXD networks to track down issues with missing network.
+        logger.info(execute_command(["/usr/bin/lxc", "network", "list"]))
+
         firewall_denylist_config = self.config.get("denylist")
         denylist = []
         if firewall_denylist_config.strip():
