@@ -11,9 +11,16 @@ from runner_manager import RunnerManager
 from tests.integration.helpers import (
     assert_resource_lxd_profile,
     assesrt_num_of_runners,
+    get_repo_policy_compliance_pip_info,
+    install_repo_policy_compliance_from_git_source,
     remove_runner_bin,
 )
 from tests.status_name import ACTIVE_STATUS_NAME, BLOCK_STATUS_NAME
+
+REPO_POLICY_COMPLIANCE_VER_0_2_GIT_SOURCE = (
+    "git+https://github.com/canonical/"
+    "repo-policy-compliance@48b36c130b207278d20c3847ce651ac13fb9e9d7"
+)
 
 
 @pytest.mark.asyncio
@@ -29,6 +36,89 @@ async def test_missing_config(app_no_token: Application) -> None:
     unit = app_no_token.units[0]
     assert unit.workload_status == BLOCK_STATUS_NAME
     assert unit.workload_status_message == "Missing required charm configuration: ['token']"
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_update_dependencies_action_latest_service(
+    model: Model, app_no_runner: Application
+) -> None:
+    """
+    arrange: An working application with latest version of repo-policy-compliance service.
+    act: Run update-dependencies action.
+    assert:
+        a. Service is installed in the charm.
+        b. Action did not flushed the runners.
+    """
+    unit = app_no_runner.units[0]
+
+    # The fixture should provide an application with the latest version of services.
+
+    action = await unit.run_action("update-dependencies")
+    await action.wait()
+
+    await model.wait_for_idle()
+
+    assert app_no_runner.status == ACTIVE_STATUS_NAME
+    assert not action.results["flush"]
+    assert await get_repo_policy_compliance_pip_info(unit) is not None
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_update_dependencies_action_no_service(
+    model: Model, app_no_runner: Application
+) -> None:
+    """
+    arrange: Remove repo-policy-compliance service installation.
+    act: Run update-dependencies action.
+    assert:
+        a. Service is installed in the charm.
+        b. Action flushed the runners.
+    """
+    unit = app_no_runner.units[0]
+
+    await install_repo_policy_compliance_from_git_source(unit, None)
+    assert await get_repo_policy_compliance_pip_info(unit) is None
+
+    action = await unit.run_action("update-dependencies")
+    await action.wait()
+
+    await model.wait_for_idle()
+
+    assert app_no_runner.status == ACTIVE_STATUS_NAME
+    assert action.results["flush"]
+    assert await get_repo_policy_compliance_pip_info(unit) is not None
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_update_dependencies_action_old_service(
+    model: Model, app_no_runner: Application
+) -> None:
+    """
+    arrange: Replace repo-policy-compliance service installation to a older version.
+    act: Run update-dependencies action.
+    assert:
+        a. Service is installed in the charm.
+        b. Action flushed the runners.
+    """
+    unit = app_no_runner.units[0]
+    latest_version_info = await get_repo_policy_compliance_pip_info(unit)
+
+    await install_repo_policy_compliance_from_git_source(
+        unit, REPO_POLICY_COMPLIANCE_VER_0_2_GIT_SOURCE
+    )
+    assert await get_repo_policy_compliance_pip_info(unit) != latest_version_info
+
+    action = await unit.run_action("update-dependencies")
+    await action.wait()
+
+    await model.wait_for_idle()
+
+    assert app_no_runner.status == ACTIVE_STATUS_NAME
+    assert action.results["flush"]
+    assert await get_repo_policy_compliance_pip_info(unit) is not None
 
 
 @pytest.mark.asyncio
