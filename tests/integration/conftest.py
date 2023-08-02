@@ -205,7 +205,7 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     """
     unit = app_no_runner.units[0]
 
-    action = await unit.run_action("update-runner-bin")
+    action = await unit.run_action("update-dependencies")
     await action.wait()
 
     await app_no_runner.set_config({"virtual-machines": "1"})
