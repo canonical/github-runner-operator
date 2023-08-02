@@ -52,8 +52,6 @@ async def test_update_dependencies_action_latest_service(
     """
     unit = app_no_runner.units[0]
 
-    # The fixture should provide an application with the latest version of services.
-
     action = await unit.run_action("update-dependencies")
     await action.wait()
 

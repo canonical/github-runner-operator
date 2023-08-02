@@ -785,7 +785,7 @@ class GithubRunnerCharm(CharmBase):
     def _refresh_firewall(self):
         """Refresh the firewall configuration and rules."""
         # Temp: Monitor the LXD networks to track down issues with missing network.
-        logger.info(execute_command(["/snap/bin/lxc", "network", "list"]))
+        logger.info(execute_command(["/snap/bin/lxc", "network", "list", "--format", "json"]))
 
         firewall_denylist_config = self.config.get("denylist")
         denylist = []

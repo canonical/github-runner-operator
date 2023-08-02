@@ -185,6 +185,11 @@ async def app_no_runner(
 
     await app_no_token.set_config({"token": token})
     await model.wait_for_idle()
+
+    action = await unit.run_action("update-dependencies")
+    await action.wait()
+    await model.wait_for_idle()
+
     assert app_no_token.status == ACTIVE_STATUS_NAME
 
     # Wait until there is no runner.
@@ -204,10 +209,6 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     one runner.
     """
     unit = app_no_runner.units[0]
-
-    action = await unit.run_action("update-dependencies")
-
-    await action.wait()
 
     await app_no_runner.set_config({"virtual-machines": "1"})
     action = await unit.run_action("reconcile-runners")
