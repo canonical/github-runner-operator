@@ -536,6 +536,9 @@ class Runner:
                 ["/usr/bin/chown", "-R", "ubuntu:ubuntu", "/home/ubuntu/.docker"]
             )
 
+        # Setup bash aliases
+        self._put_file("/home/ubuntu/.bash_aliases", "alias python=python3")
+
     @retry(tries=5, delay=30, local_logger=logger)
     def _register_runner(self, registration_token: str, labels: Sequence[str]) -> None:
         """Register the runner on GitHub.
