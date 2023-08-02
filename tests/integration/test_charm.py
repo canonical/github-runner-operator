@@ -33,11 +33,19 @@ async def test_missing_config(app_no_token: Application) -> None:
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_update_dependencies_action(model: Model, app_no_runner: Application) -> None:
+async def test_update_dependencies_action_on_runner_binary(
+    model: Model, app_no_runner: Application
+) -> None:
     """
     arrange: Remove runner binary if exists.
-    act: Run update-dependencies action.
-    assert: Runner binary exists in the charm.
+    act:
+        1. Run update-dependencies action.
+        2. Run update-dependencies action.
+    assert:
+        1.  a. Runner binary exists in the charm.
+            b. Action flushed the runners.
+        2.  a. Runner binary exists in the charm.
+            b. Action did not flushed the runners.
     """
     unit = app_no_runner.units[0]
 
@@ -49,6 +57,22 @@ async def test_update_dependencies_action(model: Model, app_no_runner: Applicati
     await model.wait_for_idle()
 
     assert app_no_runner.status == ACTIVE_STATUS_NAME
+    # The runners should be flushed on update of runner binary.
+    assert action.results["flush"]
+
+    action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
+    await action.wait()
+    assert action.results["return-code"] == 0
+
+    action = await unit.run_action("update-dependencies")
+    await action.wait()
+
+    await model.wait_for_idle()
+
+    assert app_no_runner.status == ACTIVE_STATUS_NAME
+    # The runners should be flushed on update of runner binary.
+    assert not action.results["flush"]
+
     action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
     await action.wait()
     assert action.results["return-code"] == 0

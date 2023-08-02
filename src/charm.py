@@ -156,7 +156,9 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.reconcile_runners_action, self._on_reconcile_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
-        self.framework.observe(self.on.update_dependencies_action, self._on_update_dependencies)
+        self.framework.observe(
+            self.on.update_dependencies_action, self._on_update_dependencies_action
+        )
 
     @retry(tries=5, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _create_memory_storage(self, path: Path, size: int) -> None:
@@ -400,19 +402,20 @@ class GithubRunnerCharm(CharmBase):
             runner_manager.flush(flush_busy=False)
             self._stored.token = self.config["token"]
 
-    @catch_charm_errors
-    def _on_update_dependencies(self, _event: UpdateDependenciesEvent) -> None:
-        """Handle checking update of dependencies event.
+    def _check_and_update_dependencies(self) -> bool:
+        """Check and updates runner binary and services.
 
-        Args:
-            event: Event of checking update of runner binary and services.
+        The runners are flushed if needed.
+
+        Returns:
+            Whether the runner binary or the services was updated.
         """
         runner_manager = self._get_runner_manager()
         if not runner_manager:
-            return
+            return False
 
         # Flush runners on version change for repo_policy_compliance
-        flush = self._install_repo_policy_compliance()
+        service_updated = self._install_repo_policy_compliance()
 
         try:
             self.unit.status = MaintenanceStatus("Checking for runner updates")
@@ -422,8 +425,9 @@ class GithubRunnerCharm(CharmBase):
             # Failure to download runner binary is a transient error.
             # The charm automatically update runner binary on a schedule.
             self.unit.status = MaintenanceStatus(f"Failed to check for runner updates: {err}")
-            return
+            return False
 
+        runner_bin_updated = False
         if runner_info.download_url != self._stored.runner_bin_url:
             self.unit.status = MaintenanceStatus("Updating runner binary")
             try:
@@ -434,16 +438,32 @@ class GithubRunnerCharm(CharmBase):
                 # Failure to download runner binary is a transient error.
                 # The charm automatically update runner binary on a schedule.
                 self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
-                return
+                return False
             self._stored.runner_bin_url = runner_info.download_url
-            flush = True
+            runner_bin_updated = True
 
-        if flush:
+        if service_updated or runner_bin_updated:
+            logger.info(
+                "Flushing runner due to: service updated=%s, runner binary update=%s",
+                service_updated,
+                runner_bin_updated,
+            )
+
             self._start_services()
             runner_manager.flush(flush_busy=False)
             self._reconcile_runners(runner_manager)
 
         self.unit.status = ActiveStatus()
+        return service_updated or runner_bin_updated
+
+    @catch_charm_errors
+    def _on_update_dependencies(self, _event: UpdateDependenciesEvent) -> None:
+        """Handle checking update of dependencies event.
+
+        Args:
+            event: Event of checking update of runner binary and services.
+        """
+        self._check_and_update_dependencies()
 
     @catch_charm_errors
     def _on_reconcile_runners(self, _event: ReconcileRunnersEvent) -> None:
@@ -545,6 +565,16 @@ class GithubRunnerCharm(CharmBase):
 
         self._on_check_runners_action(event)
         event.set_results(delta)
+
+    @catch_action_errors
+    def _on_update_dependencies_action(self, event: ActionEvent) -> None:
+        """Handle the action of updating dependencies and flushing runners if needed.
+
+        Args:
+            event: Action event of updating dependencies.
+        """
+        flushed = self._check_and_update_dependencies()
+        event.set_results({"flush": flushed})
 
     @catch_charm_errors
     def _on_stop(self, _: StopEvent) -> None:
