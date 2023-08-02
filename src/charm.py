@@ -643,7 +643,7 @@ class GithubRunnerCharm(CharmBase):
             ],
             check_exit=False,
         )
-        return old_version == new_version
+        return old_version != new_version
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _install_deps(self) -> None:
