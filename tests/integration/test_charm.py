@@ -52,6 +52,11 @@ async def test_update_dependencies_action_latest_service(
     """
     unit = app_no_runner.units[0]
 
+    # Ensure the application has the latest version.
+    action = await unit.run_action("update-dependencies")
+    await action.wait()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+
     action = await unit.run_action("update-dependencies")
     await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
