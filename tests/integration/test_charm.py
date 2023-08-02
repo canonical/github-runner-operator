@@ -15,7 +15,7 @@ from tests.integration.helpers import (
     install_repo_policy_compliance_from_git_source,
     remove_runner_bin,
 )
-from tests.status_name import ACTIVE_STATUS_NAME, BLOCK_STATUS_NAME
+from tests.status_name import ACTIVE_STATUS_NAME, BLOCKED_STATUS_NAME
 
 REPO_POLICY_COMPLIANCE_VER_0_2_GIT_SOURCE = (
     "git+https://github.com/canonical/"
@@ -31,10 +31,10 @@ async def test_missing_config(app_no_token: Application) -> None:
     act: Check the status the application.
     assert: The application is in blocked status.
     """
-    assert app_no_token.status == BLOCK_STATUS_NAME
+    assert app_no_token.status == BLOCKED_STATUS_NAME
 
     unit = app_no_token.units[0]
-    assert unit.workload_status == BLOCK_STATUS_NAME
+    assert unit.workload_status == BLOCKED_STATUS_NAME
     assert unit.workload_status_message == "Missing required charm configuration: ['token']"
 
 
@@ -54,10 +54,8 @@ async def test_update_dependencies_action_latest_service(
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    await model.wait_for_idle()
-
-    assert app_no_runner.status == ACTIVE_STATUS_NAME
     assert not action.results["flush"]
     assert await get_repo_policy_compliance_pip_info(unit) is not None
 
@@ -81,10 +79,8 @@ async def test_update_dependencies_action_no_service(
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    await model.wait_for_idle()
-
-    assert app_no_runner.status == ACTIVE_STATUS_NAME
     assert action.results["flush"]
     assert await get_repo_policy_compliance_pip_info(unit) is not None
 
@@ -111,10 +107,8 @@ async def test_update_dependencies_action_old_service(
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    await model.wait_for_idle()
-
-    assert app_no_runner.status == ACTIVE_STATUS_NAME
     assert action.results["flush"]
     assert await get_repo_policy_compliance_pip_info(unit) is not None
 
@@ -141,10 +135,8 @@ async def test_update_dependencies_action_on_runner_binary(
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    await model.wait_for_idle()
-
-    assert app_no_runner.status == ACTIVE_STATUS_NAME
     # The runners should be flushed on update of runner binary.
     assert action.results["flush"]
 
@@ -154,10 +146,8 @@ async def test_update_dependencies_action_on_runner_binary(
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    await model.wait_for_idle()
-
-    assert app_no_runner.status == ACTIVE_STATUS_NAME
     # The runners should be flushed on update of runner binary.
     assert not action.results["flush"]
 
@@ -212,7 +202,7 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
 
     action = await unit.run_action("reconcile-runners")
     await action.wait()
-    await model.wait_for_idle()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     await assesrt_num_of_runners(unit, 1)
 
@@ -221,7 +211,7 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
 
     action = await unit.run_action("reconcile-runners")
     await action.wait()
-    await model.wait_for_idle()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     await assesrt_num_of_runners(unit, 0)
 
@@ -315,7 +305,7 @@ async def test_token_config_changed(model: Model, app: Application, token_alt: s
     assert: The repo-policy-compliance using the new token.
     """
     await app.set_config({"token": token_alt})
-    await model.wait_for_idle()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     action = await app.units[0].run("cat /etc/systemd/system/repo-policy-compliance.service")
     await action.wait()

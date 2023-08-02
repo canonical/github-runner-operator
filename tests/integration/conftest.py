@@ -16,7 +16,7 @@ from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
 from tests.integration.helpers import assesrt_num_of_runners
-from tests.status_name import ACTIVE_STATUS_NAME
+from tests.status_name import ACTIVE_STATUS_NAME, BLOCKED_STATUS_NAME
 
 
 @pytest.fixture(scope="module")
@@ -184,11 +184,11 @@ async def app_no_runner(
     unit = app_no_token.units[0]
 
     await app_no_token.set_config({"token": token})
-    await model.wait_for_idle()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
-    await model.wait_for_idle()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     assert app_no_token.status == ACTIVE_STATUS_NAME
 
@@ -198,7 +198,7 @@ async def app_no_runner(
     yield app_no_token
 
     await app_no_token.set_config({"token": ""})
-    await model.wait_for_idle()
+    await model.wait_for_idle(status=BLOCKED_STATUS_NAME)
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -213,8 +213,7 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     await app_no_runner.set_config({"virtual-machines": "1"})
     action = await unit.run_action("reconcile-runners")
     await action.wait()
-    await model.wait_for_idle()
-    assert app_no_runner.status == ACTIVE_STATUS_NAME
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # Wait until there is one runner.
     await assesrt_num_of_runners(unit, 1)
@@ -224,4 +223,4 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     await app_no_runner.set_config({"virtual-machines": "0"})
     action = await unit.run_action("reconcile-runners")
     await action.wait()
-    await model.wait_for_idle()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
