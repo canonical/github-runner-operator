@@ -33,17 +33,17 @@ async def test_missing_config(app_no_token: Application) -> None:
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_update_runner_bin_action(model: Model, app_no_runner: Application) -> None:
+async def test_update_dependencies_action(model: Model, app_no_runner: Application) -> None:
     """
     arrange: Remove runner binary if exists.
-    act: Run update-runner-bin action.
+    act: Run update-dependencies action.
     assert: Runner binary exists in the charm.
     """
     unit = app_no_runner.units[0]
 
     await remove_runner_bin(unit)
 
-    action = await unit.run_action("update-runner-bin")
+    action = await unit.run_action("update-dependencies")
     await action.wait()
 
     await model.wait_for_idle()
