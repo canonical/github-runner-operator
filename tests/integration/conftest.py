@@ -129,11 +129,12 @@ devices:
 
 
 @pytest_asyncio.fixture(scope="module")
-async def app_no_token(
+async def app_no_runner(
     model: Model,
     charm_path: Path,
     app_name: str,
     path: str,
+    token: str,
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
@@ -160,6 +161,7 @@ async def app_no_token(
         series="jammy",
         config={
             "path": path,
+            "token": token,
             "virtual-machines": 0,
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
@@ -168,36 +170,6 @@ async def app_no_token(
     await model.wait_for_idle()
 
     yield application
-
-
-@pytest_asyncio.fixture(scope="module")
-async def app_no_runner(
-    model: Model, app_no_token: Application, token: str
-) -> AsyncIterator[Application]:
-    """Application with no runner.
-
-    The application might not have runner binary downloaded.
-
-    Test should ensure it returns with the application in a good state and has
-    no runner.
-    """
-    unit = app_no_token.units[0]
-
-    await app_no_token.set_config({"token": token})
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
-
-    pytest.set_trace()
-
-    action = await unit.run_action("update-dependencies")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
-
-    assert app_no_token.status == ACTIVE_STATUS_NAME
-
-    # Wait until there is no runner.
-    await assesrt_num_of_runners(unit, 0)
-
-    yield app_no_token
 
 
 @pytest_asyncio.fixture(scope="module")

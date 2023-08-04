@@ -221,8 +221,6 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             An instance of RunnerManager.
         """
-        self._ensure_service_health()
-
         if token is None:
             token = self.config["token"]
         if path is None:
@@ -235,6 +233,8 @@ class GithubRunnerCharm(CharmBase):
             missing_configs.append("path")
         if missing_configs:
             raise MissingConfigurationError(missing_configs)
+
+        self._ensure_service_health()
 
         size_in_kib = (
             bytes_with_unit_to_kib(self.config["vm-disk"]) * self.config["virtual-machines"]
@@ -414,7 +414,6 @@ class GithubRunnerCharm(CharmBase):
         if not runner_manager:
             return False
 
-        # Flush runners on version change for repo_policy_compliance
         service_updated = self._install_repo_policy_compliance()
 
         try:
@@ -426,9 +425,6 @@ class GithubRunnerCharm(CharmBase):
             # The charm automatically update runner binary on a schedule.
             self.unit.status = MaintenanceStatus(f"Failed to check for runner updates: {err}")
             return False
-
-        # TODO: Remove debugging.
-        logger.info("debug: %s %s", runner_info.download_url, self._stored.runner_bin_url)
 
         runner_bin_updated = False
         if runner_info.download_url != self._stored.runner_bin_url:

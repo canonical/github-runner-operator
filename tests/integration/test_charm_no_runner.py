@@ -40,7 +40,7 @@ async def test_update_dependencies_action_latest_service(
     await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    assert not action.results["flush"]
+    assert action.results["flush"] == "False"
     assert await get_repo_policy_compliance_pip_info(unit) is not None
 
 
@@ -65,7 +65,7 @@ async def test_update_dependencies_action_no_service(
     await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    assert action.results["flush"]
+    assert action.results["flush"] == "True"
     assert await get_repo_policy_compliance_pip_info(unit) is not None
 
 
@@ -93,7 +93,7 @@ async def test_update_dependencies_action_old_service(
     await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    assert action.results["flush"]
+    assert action.results["flush"] == "True"
     assert await get_repo_policy_compliance_pip_info(unit) is not None
 
 
@@ -133,7 +133,7 @@ async def test_update_dependencies_action_on_runner_binary(
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # The runners should be flushed on update of runner binary.
-    assert not action.results["flush"]
+    assert action.results["flush"] == "False"
 
     action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
     await action.wait()
