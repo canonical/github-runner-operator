@@ -428,7 +428,7 @@ class GithubRunnerCharm(CharmBase):
             return False
 
         # TODO: Remove debugging.
-        logger.info("%s %s", runner_info.download_url, self._stored.runner_bin_url)
+        logger.info("debug: %s %s", runner_info.download_url, self._stored.runner_bin_url)
 
         runner_bin_updated = False
         if runner_info.download_url != self._stored.runner_bin_url:
