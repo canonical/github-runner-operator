@@ -416,6 +416,10 @@ class GithubRunnerCharm(CharmBase):
 
         service_updated = self._install_repo_policy_compliance()
 
+        # Check if the runner binary file exists.
+        if not runner_manager.check_runner_bin():
+            self._stored.runner_bin_url = None
+
         try:
             self.unit.status = MaintenanceStatus("Checking for runner updates")
             runner_info = runner_manager.get_latest_runner_bin_url()

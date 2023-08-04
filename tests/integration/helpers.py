@@ -35,7 +35,7 @@ async def install_repo_policy_compliance_from_git_source(unit: Unit, source: Non
     Args:
         source: The git source to install the package. If none the package is removed.
     """
-    action = await unit.run("pip uninstall repo-policy-compliance")
+    action = await unit.run("pip uninstall --yes repo-policy-compliance")
     await action.wait()
 
     if source:

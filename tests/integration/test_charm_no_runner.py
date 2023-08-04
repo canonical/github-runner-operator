@@ -122,8 +122,9 @@ async def test_update_dependencies_action_on_runner_binary(
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # The runners should be flushed on update of runner binary.
-    assert action.results["flush"]
+    assert action.results["flush"] == "True"
 
+    # Check the runner bin does exist.
     action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
     await action.wait()
     assert action.results["return-code"] == 0
@@ -135,6 +136,7 @@ async def test_update_dependencies_action_on_runner_binary(
     # The runners should be flushed on update of runner binary.
     assert action.results["flush"] == "False"
 
+    # Check the runner bin does exist.
     action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
     await action.wait()
     assert action.results["return-code"] == 0
