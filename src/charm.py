@@ -427,10 +427,11 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus(f"Failed to check for runner updates: {err}")
             return False
 
+        # TODO: Remove debugging.
+        logger.info("%s %s", runner_info.download_url, self._stored.runner_bin_url)
+
         runner_bin_updated = False
         if runner_info.download_url != self._stored.runner_bin_url:
-            # TODO: Remove debugging.
-            logger.info("%s %s", runner_info.download_url, self._stored.runner_bin_url)
             self.unit.status = MaintenanceStatus("Updating runner binary")
             try:
                 runner_manager.update_runner_bin(runner_info)

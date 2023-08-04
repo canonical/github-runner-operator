@@ -56,6 +56,8 @@ async def test_update_dependencies_action_latest_service(
     await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
+    pytest.set_trace()
+
     assert not action.results["flush"]
     assert await get_repo_policy_compliance_pip_info(unit) is not None
 
