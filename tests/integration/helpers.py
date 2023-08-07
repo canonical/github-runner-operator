@@ -20,7 +20,7 @@ async def get_repo_policy_compliance_pip_info(unit: Unit) -> None | str:
     Args:
         source: The git source to install the package. If none the package is removed.
     """
-    action = await unit.run("pip show repo-policy-compliance")
+    action = await unit.run("python3 -m pip show repo-policy-compliance")
     await action.wait()
 
     if action.results["return-code"] == 0:
@@ -35,11 +35,11 @@ async def install_repo_policy_compliance_from_git_source(unit: Unit, source: Non
     Args:
         source: The git source to install the package. If none the package is removed.
     """
-    action = await unit.run("pip uninstall --yes repo-policy-compliance")
+    action = await unit.run("python3 -m pip uninstall --yes repo-policy-compliance")
     await action.wait()
 
     if source:
-        action = await unit.run(f"pip install {source}")
+        action = await unit.run(f"python3 -m pip install {source}")
         await action.wait()
 
         assert action.results["return-code"] == 0
