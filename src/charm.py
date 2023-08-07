@@ -653,7 +653,9 @@ class GithubRunnerCharm(CharmBase):
 
         old_version = execute_command(
             [
-                "/usr/bin/pip",
+                "/usr/bin/python3"
+                "-m"
+                "pip",
                 "show",
                 "repo-policy-compliance",
             ],
@@ -662,7 +664,9 @@ class GithubRunnerCharm(CharmBase):
 
         execute_command(
             [
-                "/usr/bin/pip",
+                "/usr/bin/python3"
+                "-m"
+                "pip",
                 "install",
                 "--upgrade",
                 "git+https://github.com/canonical/repo-policy-compliance@main",
@@ -672,7 +676,9 @@ class GithubRunnerCharm(CharmBase):
 
         new_version = execute_command(
             [
-                "/usr/bin/pip",
+                "/usr/bin/python3"
+                "-m"
+                "pip",
                 "show",
                 "repo-policy-compliance",
             ],
