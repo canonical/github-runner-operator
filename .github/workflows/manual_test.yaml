@@ -6,42 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  basic-test-0:
-    name: basic tests 0
-    runs-on: [self-hosted, runner]
+  test:
+    name: test
+    runs-on: [self-hosted, xlarge]
     steps:
-      - name: Install microk8s
-        run: sudo snap install microk8s --classic
-      - name: Wait for microk8s
-        timeout-minutes: 10
-        run: microk8s status --wait-ready
-      - name: Deploy nginx for testing
-        run: microk8s kubectl create deployment nginx --image=nginx
-      - name: Wait for nginx to be ready
-        run: microk8s kubectl rollout status deployment/nginx --timeout=30m
-  basic-test-1:
-    name: basic tests 1
-    runs-on: [self-hosted, runner]
-    steps:
-      - name: Install microk8s
-        run: sudo snap install microk8s --classic
-      - name: Wait for microk8s
-        timeout-minutes: 10
-        run: microk8s status --wait-ready
-      - name: Deploy nginx for testing
-        run: microk8s kubectl create deployment nginx --image=nginx
-      - name: Wait for nginx to be ready
-        run: microk8s kubectl rollout status deployment/nginx --timeout=30m
-  basic-test-2:
-    name: basic tests 2
-    runs-on: [self-hosted, runner]
-    steps:
-      - name: Install microk8s
-        run: sudo snap install microk8s --classic
-      - name: Wait for microk8s
-        timeout-minutes: 10
-        run: microk8s status --wait-ready
-      - name: Deploy nginx for testing
-        run: microk8s kubectl create deployment nginx --image=nginx
-      - name: Wait for nginx to be ready
-        run: microk8s kubectl rollout status deployment/nginx --timeout=30m
+      - name: curl
+        run: curl -vvv https://s3.amazonaws.com/data-charms-testing?list-type=2&prefix=mysql%2F&delimiter=%2F&encoding-type=url
+      - name: Install requests
+        run: python3 -m pip install requests
+      - name: Make HTTP request with Python
+        run: python3 -c "import requests;requests.get('https://s3.amazonaws.com/data-charms-testing?list-type=2&prefix=mysql%2F&delimiter=%2F&encoding-type=url')"
