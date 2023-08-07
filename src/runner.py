@@ -537,6 +537,7 @@ class Runner:
             )
 
         # Make python an alias of python3
+        self.instance.execute(["rm", "/usr/bin/python3"])
         self.instance.execute(["ln", "-s", "/usr/bin/python3", "/usr/bin/python"])
 
     @retry(tries=5, delay=30, local_logger=logger)
