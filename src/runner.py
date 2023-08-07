@@ -135,10 +135,10 @@ class Runner:
         Raises:
             RunnerRemoveError: Failure in removing runner.
         """
-        logger.info("Removing LXD instance of runner: %s", self.config.name)
+        logger.info("Removing runner: %s", self.config.name)
 
         if self.instance:
-            # Run script to remove the the runner and cleanup.
+            logger.info("Executing command to removal of runner and clean up...")
             self.instance.execute(
                 [
                     "/usr/bin/sudo",
@@ -149,9 +149,11 @@ class Runner:
                     "--token",
                     remove_token,
                 ],
+                hide_cmd=True,
             )
 
             if self.instance.status == "Running":
+                logger.info("Removing LXD instance of runner: %s", self.config.name)
                 try:
                     self.instance.stop(wait=True, timeout=60)
                 except LxdError:
@@ -178,6 +180,8 @@ class Runner:
 
         if self.status.runner_id is None:
             return
+
+        logger.info("Removing runner on GitHub: %s", self.config.name)
 
         # The runner should cleanup itself.  Cleanup on GitHub in case of runner cleanup error.
         if isinstance(self.config.path, GitHubRepo):
@@ -549,9 +553,11 @@ class Runner:
         if isinstance(self.config.path, GitHubOrg):
             register_cmd += ["--runnergroup", self.config.path.group]
 
+        logger.info("Executing registration command...")
         self.instance.execute(
             register_cmd,
             cwd=str(self.runner_application),
+            hide_cmd=True,
         )
 
     @retry(tries=5, delay=30, local_logger=logger)

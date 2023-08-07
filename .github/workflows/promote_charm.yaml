@@ -5,20 +5,22 @@ on:
     inputs:
       origin-channel:
         type: choice
-        description: "Origin Channel"
+        description: 'Origin Channel'
         options:
-          - latest/edge
+        - latest/edge
       destination-channel:
         type: choice
-        description: "Destination Channel"
+        description: 'Destination Channel'
         options:
-          - latest/stable
+        - latest/stable
     secrets:
       CHARMHUB_TOKEN:
-        required: false
+        required: true
 
 jobs:
-  test-workflow-dispatch:
-    runs-on: [self-hosted, runner]
-    steps:
-      - run: echo "TEST PASS"
+  promote-charm:
+    uses: canonical/operator-workflows/.github/workflows/promote_charm.yaml@promote-charm-base
+    with:
+      origin-channel: ${{ github.event.inputs.origin-channel }}
+      destination-channel: ${{ github.event.inputs.destination-channel }}
+    secrets: inherit

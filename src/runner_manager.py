@@ -20,6 +20,7 @@ import requests
 import requests.adapters
 import urllib3
 from ghapi.all import GhApi
+from ghapi.page import pages
 from typing_extensions import assert_never
 
 from errors import RunnerBinaryError, RunnerCreateError
@@ -34,7 +35,14 @@ from github_type import (
 from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
-from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
+from runner_type import (
+    GitHubOrg,
+    GitHubPath,
+    GitHubRepo,
+    ProxySetting,
+    RunnerByHealth,
+    VirtualMachineResources,
+)
 from utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
@@ -252,6 +260,26 @@ class RunnerManager:
         remote_runners = self._get_runner_github_info()
         return iter(RunnerInfo(runner.name, runner.status) for runner in remote_runners.values())
 
+    def _get_runner_health_states(self) -> RunnerByHealth:
+        local_runners = [
+            instance
+            # Pylint cannot find the `all` method.
+            for instance in self._clients.lxd.instances.all()  # pylint: disable=no-member
+            if instance.name.startswith(f"{self.instance_name}-")
+        ]
+
+        healthy = []
+        unhealthy = []
+
+        for runner in local_runners:
+            _, stdout, _ = runner.execute(["ps", "aux"])
+            if f"/bin/bash {Runner.runner_script}" in stdout.read().decode("utf-8"):
+                healthy.append(runner.name)
+            else:
+                unhealthy.append(runner.name)
+
+        return RunnerByHealth(healthy, unhealthy)
+
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
 
@@ -269,40 +297,38 @@ class RunnerManager:
             runner for runner in runners if runner.status.exist and runner.status.online
         ]
 
-        offline_runners = [runner for runner in runners if not runner.status.online]
-
-        local_runners = {
-            instance.name: instance
-            # Pylint cannot find the `all` method.
-            for instance in self._clients.lxd.instances.all()  # pylint: disable=no-member
-            if instance.name.startswith(f"{self.instance_name}-")
-        }
+        runner_states = self._get_runner_health_states()
 
         logger.info(
             (
-                "Expected runner count: %i, Online runner count: %i, Offline runner count: %i, "
-                "LXD instance count: %i"
+                "Expected runner count: %i, Online count: %i, Offline count: %i, "
+                "healthy count: %i, unhealthy count: %i"
             ),
             quantity,
             len(online_runners),
-            len(offline_runners),
-            len(local_runners),
+            len(runners) - len(online_runners),
+            len(runner_states.healthy),
+            len(runner_states.unhealthy),
         )
 
         # Clean up offline runners
-        if offline_runners:
-            logger.info("Cleaning up offline runners.")
+        if runner_states.unhealthy:
+            logger.info("Cleaning up unhealthy runners.")
 
             remove_token = self._get_github_remove_token()
 
-            for runner in offline_runners:
+            unhealthy_runners = [
+                runner for runner in runners if runner.config.name in set(runner_states.unhealthy)
+            ]
+
+            for runner in unhealthy_runners:
                 runner.remove(remove_token)
                 logger.info("Removed runner: %s", runner.config.name)
 
-        delta = quantity - len(online_runners)
+        delta = quantity - len(runner_states.healthy)
         # Spawn new runners
         if delta > 0:
-            if RunnerManager.runner_bin_path is None:
+            if not RunnerManager.runner_bin_path.exists():
                 raise RunnerCreateError("Unable to create runner due to missing runner binary.")
 
             logger.info("Getting registration token for GitHub runners.")
@@ -310,7 +336,7 @@ class RunnerManager:
             registration_token = self._get_github_registration_token()
             remove_token = self._get_github_remove_token()
 
-            logger.info("Adding %i additional runner(s).", delta)
+            logger.info("Attempting to add %i runner(s).", delta)
             for _ in range(delta):
                 config = RunnerConfig(
                     self.app_name,
@@ -335,6 +361,7 @@ class RunnerManager:
                     raise
 
         elif delta < 0:
+            logger.info("Attempting to remove %i runner(s).", -delta)
             # Idle runners are online runners that has not taken a job.
             idle_runners = [runner for runner in online_runners if not runner.status.busy]
             offset = min(-delta, len(idle_runners))
@@ -349,7 +376,6 @@ class RunnerManager:
                 for runner in remove_runners:
                     runner.remove(remove_token)
                     logger.info("Removed runner: %s", runner.config.name)
-
             else:
                 logger.info("There are no idle runner to remove.")
         else:
@@ -397,13 +423,40 @@ class RunnerManager:
     def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
         remote_runners_list: list[SelfHostedRunner] = []
         if isinstance(self.config.path, GitHubRepo):
-            remote_runners_list = self._clients.github.actions.list_self_hosted_runners_for_repo(
-                owner=self.config.path.owner, repo=self.config.path.repo
-            )["runners"]
+            # The documentation of ghapi for pagination is incorrect and examples will give errors.
+            # This workaround is a temp solution. Will be moving to PyGitHub in the future.
+            self._clients.github.actions.list_self_hosted_runners_for_repo(
+                owner=self.config.path.owner, repo=self.config.path.repo, per_page=100
+            )
+            num_of_pages = self._clients.github.last_page()
+            remote_runners_list = [
+                item
+                for page in pages(
+                    self._clients.github.actions.list_self_hosted_runners_for_repo,
+                    num_of_pages + 1,
+                    owner=self.config.path.owner,
+                    repo=self.config.path.repo,
+                    per_page=100,
+                )
+                for item in page["runners"]
+            ]
         if isinstance(self.config.path, GitHubOrg):
-            remote_runners_list = self._clients.github.actions.list_self_hosted_runners_for_org(
-                org=self.config.path.org
-            )["runners"]
+            # The documentation of ghapi for pagination is incorrect and examples will give errors.
+            # This workaround is a temp solution. Will be moving to PyGitHub in the future.
+            self._clients.github.actions.list_self_hosted_runners_for_org(
+                org=self.config.path.org, per_page=100
+            )
+            num_of_pages = self._clients.github.last_page()
+            remote_runners_list = [
+                item
+                for page in pages(
+                    self._clients.github.actions.list_self_hosted_runners_for_org,
+                    num_of_pages + 1,
+                    org=self.config.path.org,
+                    per_page=100,
+                )
+                for item in page["runners"]
+            ]
 
         logger.debug("List of runners found on GitHub:%s", remote_runners_list)
 

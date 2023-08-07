@@ -1,0 +1,17 @@
+name: Workflow Dispatch Tests
+
+on:
+  # Manually dispatched workflow action
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: 'Self hosted gh runner'
+        required: true
+
+jobs:
+  workflow-dispatch-tests:
+    runs-on: [self-hosted, linux, x64, "${{ inputs.runner }}"]
+    steps:
+      - name: Echo input variable and message
+        run: |
+          echo "Hello, runner: ${{ inputs.runner }}"

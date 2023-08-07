@@ -52,20 +52,17 @@ EventT = TypeVar("EventT")
 
 
 def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[CharmT, EventT], None]:
-    """Catch unexpected errors in charm.
-
-    This decorator is for unrecoverable errors and sets the charm to
-    `BlockedStatus`.
+    """Catch common errors in charm.
 
     Args:
         func: Charm function to be decorated.
 
     Returns:
-        Decorated charm function with catching unexpected errors.
+        Decorated charm function with catching common errors.
     """
 
     @functools.wraps(func)
-    def func_with_catch_unexpected_errors(self, event: EventT) -> None:
+    def func_with_catch_errors(self, event: EventT) -> None:
         # Safe guard against unexpected error.
         try:
             func(self, event)
@@ -75,19 +72,19 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
                 f"Missing required charm configuration: {err.configs}"
             )
 
-    return func_with_catch_unexpected_errors
+    return func_with_catch_errors
 
 
 def catch_action_errors(
     func: Callable[[CharmT, ActionEvent], None]
 ) -> Callable[[CharmT, ActionEvent], None]:
-    """Catch unexpected errors in actions.
+    """Catch common errors in actions.
 
     Args:
         func: Action function to be decorated.
 
     Returns:
-        Decorated charm function with catching unexpected errors.
+        Decorated charm function with catching common errors.
     """
 
     @functools.wraps(func)
@@ -130,6 +127,7 @@ class GithubRunnerCharm(CharmBase):
 
         self._stored.set_default(
             path=self.config["path"],  # for detecting changes
+            token=self.config["token"],  # for detecting changes
             runner_bin_url=None,
         )
 
@@ -171,6 +169,9 @@ class GithubRunnerCharm(CharmBase):
         Raises:
             RunnerError: Unable to setup storage for runner.
         """
+        if size <= 0:
+            return
+
         try:
             # Create tmpfs if not exists, else resize it.
             if not path.exists():
@@ -202,7 +203,7 @@ class GithubRunnerCharm(CharmBase):
         except SubprocessError:
             logger.exception("Found inactive repo-policy-compliance service")
             execute_command(["/usr/bin/systemctl", "restart", "repo-policy-compliance"])
-            logger.exception("Restart repo-policy-compliance service")
+            logger.info("Restart repo-policy-compliance service")
             raise
 
     def _get_runner_manager(
@@ -317,7 +318,7 @@ class GithubRunnerCharm(CharmBase):
     def _upgrade_kernel(self) -> None:
         """Upgrade the Linux kernel."""
         execute_command(["/usr/bin/apt-get", "update"])
-        execute_command(["/usr/bin/apt-get", "install", "-qy", "linux-generic-hwe-22.04"])
+        execute_command(["/usr/bin/apt-get", "install", "-qy", "linux-generic"])
 
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
         if exit_code == 0:
@@ -351,6 +352,10 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of configuration change.
         """
+        if self.config["token"] != self._stored.token:
+            self._start_services()
+            self._stored.token = None
+
         self._refresh_firewall()
         try:
             self._event_timer.ensure_event_timer(
@@ -371,14 +376,19 @@ class GithubRunnerCharm(CharmBase):
             )  # Casting for mypy checks.
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
-                prev_runner_manager.flush()
+                prev_runner_manager.flush(flush_busy=False)
             self._stored.path = self.config["path"]
 
         runner_manager = self._get_runner_manager()
         if runner_manager:
+            self._reconcile_runners(runner_manager)
             self.unit.status = ActiveStatus()
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
+
+        if self.config["token"] != self._stored.token:
+            runner_manager.flush(flush_busy=False)
+            self._stored.token = self.config["token"]
 
     @catch_charm_errors
     def _on_update_runner_bin(self, _event: UpdateRunnerBinEvent) -> None:
@@ -576,7 +586,15 @@ class GithubRunnerCharm(CharmBase):
         """Install dependencies."""
         logger.info("Installing charm dependencies.")
 
+        # Snap and Apt will use any proxies configured in the Juju model.
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
+        execute_command(["/usr/bin/apt-get", "update"])
+        # install dependencies used by repo-policy-compliance and the firewall
+        execute_command(
+            ["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip", "nftables"]
+        )
+
+        # Prepare environment for pip subprocess
         env = {}
         if "http" in self.proxies:
             env["HTTP_PROXY"] = self.proxies["http"]
@@ -588,15 +606,12 @@ class GithubRunnerCharm(CharmBase):
             env["NO_PROXY"] = self.proxies["no_proxy"]
             env["no_proxy"] = self.proxies["no_proxy"]
 
-        execute_command(["/usr/bin/apt-get", "update"])
-        # install dependencies used by repo-policy-compliance and the firewall
-        execute_command(
-            ["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip", "nftables"]
-        )
+        # Install repo-policy-compliance package
         execute_command(
             [
                 "/usr/bin/pip",
                 "install",
+                "--upgrade",
                 "git+https://github.com/canonical/repo-policy-compliance@main",
             ],
             env=env,
@@ -669,7 +684,8 @@ class GithubRunnerCharm(CharmBase):
         )
         self.repo_check_systemd_service.write_text(service_content, encoding="utf-8")
 
-        execute_command(["/usr/bin/systemctl", "start", "repo-policy-compliance"])
+        execute_command(["/usr/bin/systemctl", "daemon-reload"])
+        execute_command(["/usr/bin/systemctl", "restart", "repo-policy-compliance"])
         execute_command(["/usr/bin/systemctl", "enable", "repo-policy-compliance"])
 
         logger.info("Finished starting charm services")
