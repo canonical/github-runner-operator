@@ -11,6 +11,8 @@ jobs:
       - name: curl
         run: curl -vvv https://s3.amazonaws.com/data-charms-testing?list-type=2&prefix=mysql%2F&delimiter=%2F&encoding-type=url
       - name: Install requests
+        if: ${{ success() && failure() }}
         run: python3 -m pip install requests
       - name: Make HTTP request with Python
+        if: ${{ success() && failure() }}
         run: python3 -c "import requests;requests.get('https://s3.amazonaws.com/data-charms-testing?list-type=2&prefix=mysql%2F&delimiter=%2F&encoding-type=url')"
