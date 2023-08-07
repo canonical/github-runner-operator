@@ -2,12 +2,10 @@ name: Manual test
 
 on:
   pull_request:
-  workflow_call:
-  workflow_dispatch:
 
 jobs:
-  test:
-    name: test
+  test-proxy:
+    name: test proxy
     runs-on: [self-hosted, xlarge]
     steps:
       - name: curl
