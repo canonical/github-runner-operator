@@ -653,8 +653,8 @@ class GithubRunnerCharm(CharmBase):
 
         old_version = execute_command(
             [
-                "/usr/bin/python3"
-                "-m"
+                "/usr/bin/python3",
+                "-m",
                 "pip",
                 "show",
                 "repo-policy-compliance",
@@ -664,8 +664,8 @@ class GithubRunnerCharm(CharmBase):
 
         execute_command(
             [
-                "/usr/bin/python3"
-                "-m"
+                "/usr/bin/python3",
+                "-m",
                 "pip",
                 "install",
                 "--upgrade",
@@ -676,8 +676,8 @@ class GithubRunnerCharm(CharmBase):
 
         new_version = execute_command(
             [
-                "/usr/bin/python3"
-                "-m"
+                "/usr/bin/python3",
+                "-m",
                 "pip",
                 "show",
                 "repo-policy-compliance",
