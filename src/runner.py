@@ -536,6 +536,11 @@ class Runner:
                 ["/usr/bin/chown", "-R", "ubuntu:ubuntu", "/home/ubuntu/.docker"]
             )
 
+        # Ensure the no existing /usr/bin/python.
+        self.instance.execute(["rm", "/usr/bin/python"])
+        # Make python an alias of python3.
+        self.instance.execute(["ln", "-s", "/usr/bin/python3", "/usr/bin/python"])
+
     @retry(tries=5, delay=30, local_logger=logger)
     def _register_runner(self, registration_token: str, labels: Sequence[str]) -> None:
         """Register the runner on GitHub.

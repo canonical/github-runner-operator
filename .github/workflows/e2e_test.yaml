@@ -282,6 +282,8 @@ jobs:
         run: docker run python:3.10-slim apt update
       - name: Docker version
         run: docker version
+      - name: Check python alias for python3
+        run: python --version
       - name: pip version
         run: python3 -m pip --version
       - name: npm version

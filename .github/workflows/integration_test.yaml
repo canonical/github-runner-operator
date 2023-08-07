@@ -4,8 +4,8 @@ on:
   pull_request:
 
 jobs:
-  integration-test:
-    name: Integration test
+  integration-test-charm-no-runner:
+    name: Integration test charm with no runner
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,4 +22,26 @@ jobs:
             --keep-models \
             --path ${{secrets.E2E_TESTING_REPO}} \
             --token ${{secrets.E2E_TESTING_TOKEN}} \
-            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}}
+            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
+            tests/integration/test_charm_no_runner.py
+
+  integration-test-charm:
+    name: Integration test charm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup operator environment
+        uses: charmed-kubernetes/actions-operator@main
+        with:
+          juju-channel: 3.1/stable
+          provider: lxd
+      - name: Enable br_netfilter
+        run: sudo modprobe br_netfilter
+      - name: Run Integration tests
+        run: |
+          tox -e integration -- \
+            --keep-models \
+            --path ${{secrets.E2E_TESTING_REPO}} \
+            --token ${{secrets.E2E_TESTING_TOKEN}} \
+            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
+            tests/integration/test_charm.py

@@ -129,11 +129,12 @@ devices:
 
 
 @pytest_asyncio.fixture(scope="module")
-async def app_no_token(
+async def app_no_runner(
     model: Model,
     charm_path: Path,
     app_name: str,
     path: str,
+    token: str,
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
@@ -160,6 +161,7 @@ async def app_no_token(
         series="jammy",
         config={
             "path": path,
+            "token": token,
             "virtual-machines": 0,
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
@@ -171,32 +173,6 @@ async def app_no_token(
 
 
 @pytest_asyncio.fixture(scope="module")
-async def app_no_runner(
-    model: Model, app_no_token: Application, token: str
-) -> AsyncIterator[Application]:
-    """Application with no runner.
-
-    The application might not have runner binary downloaded.
-
-    Test should ensure it returns with the application in a good state and has
-    no runner.
-    """
-    unit = app_no_token.units[0]
-
-    await app_no_token.set_config({"token": token})
-    await model.wait_for_idle()
-    assert app_no_token.status == ACTIVE_STATUS_NAME
-
-    # Wait until there is no runner.
-    await assesrt_num_of_runners(unit, 0)
-
-    yield app_no_token
-
-    await app_no_token.set_config({"token": ""})
-    await model.wait_for_idle()
-
-
-@pytest_asyncio.fixture(scope="module")
 async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Application]:
     """Application with a single runner.
 
@@ -205,21 +181,12 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     """
     unit = app_no_runner.units[0]
 
-    action = await unit.run_action("update-runner-bin")
-    await action.wait()
-
     await app_no_runner.set_config({"virtual-machines": "1"})
     action = await unit.run_action("reconcile-runners")
     await action.wait()
-    await model.wait_for_idle()
-    assert app_no_runner.status == ACTIVE_STATUS_NAME
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # Wait until there is one runner.
     await assesrt_num_of_runners(unit, 1)
 
     yield app_no_runner
-
-    await app_no_runner.set_config({"virtual-machines": "0"})
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle()

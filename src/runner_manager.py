@@ -146,6 +146,14 @@ class RunnerManager:
             ),
         )
 
+    def check_runner_bin(self) -> bool:
+        """Check if runner binary exists.
+
+        Returns:
+            Whether runner bin exists.
+        """
+        return self.runner_bin_path.exists()
+
     @retry(tries=5, delay=30, local_logger=logger)
     def get_latest_runner_bin_url(
         self, os_name: str = "linux", arch_name: str = "x64"

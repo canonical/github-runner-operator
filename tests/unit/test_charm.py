@@ -252,7 +252,7 @@ class TestCharm(unittest.TestCase):
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_on_update_runner_bin(self, run, wt, mkdir, rm):
+    def test_on_update_dependencies(self, run, wt, mkdir, rm):
         rm.return_value = mock_rm = MagicMock()
         mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
 
@@ -260,10 +260,10 @@ class TestCharm(unittest.TestCase):
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
 
-        harness.charm.on.update_runner_bin.emit()
+        harness.charm.on.update_dependencies.emit()
 
         mock_rm.get_latest_runner_bin_url = raise_url_error
-        harness.charm.on.update_runner_bin.emit()
+        harness.charm.on.update_dependencies.emit()
         assert harness.charm.unit.status == MaintenanceStatus(
             "Failed to check for runner updates: <urlopen error mock error>"
         )

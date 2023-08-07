@@ -14,8 +14,43 @@ from runner_manager import RunnerManager
 from utilities import retry
 
 
-async def remove_runner_bin(unit: Unit):
-    """Remove runner binary."""
+async def get_repo_policy_compliance_pip_info(unit: Unit) -> None | str:
+    """Get pip info for repo-policy-compliance.
+
+    Args:
+        source: The git source to install the package. If none the package is removed.
+    """
+    action = await unit.run("python3 -m pip show repo-policy-compliance")
+    await action.wait()
+
+    if action.results["return-code"] == 0:
+        return action.results["stdout"]
+
+    return None
+
+
+async def install_repo_policy_compliance_from_git_source(unit: Unit, source: None | str) -> None:
+    """Install repo-policy-compliance pip package from the git source.
+
+    Args:
+        source: The git source to install the package. If none the package is removed.
+    """
+    action = await unit.run("python3 -m pip uninstall --yes repo-policy-compliance")
+    await action.wait()
+
+    if source:
+        action = await unit.run(f"python3 -m pip install {source}")
+        await action.wait()
+
+        assert action.results["return-code"] == 0
+
+
+async def remove_runner_bin(unit: Unit) -> None:
+    """Remove runner binary.
+
+    Args:
+        unit: Unit instance to check for the LXD profile.
+    """
     action = await unit.run(f"rm {RunnerManager.runner_bin_path}")
     await action.wait()
 
@@ -25,7 +60,7 @@ async def remove_runner_bin(unit: Unit):
     assert action.results["return-code"] != 0
 
 
-async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]):
+async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> None:
     """Check for LXD profile of the matching resource config.
 
     Args:
