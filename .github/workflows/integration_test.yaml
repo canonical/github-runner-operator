@@ -45,7 +45,7 @@ jobs:
             --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
             tests/integration/test_charm.py
   integration-test-unsigned-commit-repo:
-    name: Integration test charm
+    name: Integration test repo policy compliance
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -63,4 +63,4 @@ jobs:
             --path ${{secrets.E2E_TESTING_REPO}} \
             --token ${{secrets.E2E_TESTING_TOKEN}} \
             --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
-            tests/integration/test_unsigned_commit_repo.py
+            tests/integration/test_repo_policy_compliance.py
