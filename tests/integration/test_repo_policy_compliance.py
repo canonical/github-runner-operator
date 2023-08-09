@@ -1,6 +1,8 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+"""Integration tests for repo-policy-compliance with github-runner charm."""
+
 from time import sleep
 from typing import AsyncIterator, Iterator
 from uuid import uuid4
@@ -22,6 +24,7 @@ DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
 
 @pytest.fixture(scope="module")
 def github_client(token: str) -> Github:
+    """Returns the github client."""
     return Github(token)
 
 
@@ -36,7 +39,7 @@ def forked_github_repository(
     github_repository: Repository,
 ) -> Iterator[Repository]:
     """Create a fork for a GitHub repository."""
-    forked_repository = github_repository.create_fork()
+    forked_repository = github_repository.create_fork(f"{github_repository.name}/{uuid4()}")
 
     # Wait for repo to be ready
     for _ in range(10):
