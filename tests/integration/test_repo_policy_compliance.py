@@ -39,7 +39,7 @@ def forked_github_repository(
     github_repository: Repository,
 ) -> Iterator[Repository]:
     """Create a fork for a GitHub repository."""
-    forked_repository = github_repository.create_fork(f"{github_repository.name}/{uuid4()}")
+    forked_repository = github_repository.create_fork(name=f"{github_repository.name}/{uuid4()}")
 
     # Wait for repo to be ready
     for _ in range(10):
