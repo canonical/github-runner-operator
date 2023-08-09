@@ -18,7 +18,7 @@ async def get_repo_policy_compliance_pip_info(unit: Unit) -> None | str:
     """Get pip info for repo-policy-compliance.
 
     Args:
-        source: The git source to install the package. If none the package is removed.
+        unit: Unit instance to check for the LXD profile.
     """
     action = await unit.run("python3 -m pip show repo-policy-compliance")
     await action.wait()
@@ -33,6 +33,7 @@ async def install_repo_policy_compliance_from_git_source(unit: Unit, source: Non
     """Install repo-policy-compliance pip package from the git source.
 
     Args:
+        unit: Unit instance to check for the LXD profile.
         source: The git source to install the package. If none the package is removed.
     """
     action = await unit.run("python3 -m pip uninstall --yes repo-policy-compliance")
@@ -94,13 +95,31 @@ async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> No
     assert disk == profile_content["devices"]["root"]["size"]
 
 
+async def get_runner_names(unit: Unit) -> tuple[str, ...]:
+    """Get names of the runners in LXD.
+
+    Args:
+        unit: Unit instance to check for the LXD profile.
+
+    Returns:
+        Tuple of runner names.
+    """
+    action = await unit.run("lxc list --format json")
+    await action.wait()
+
+    assert action.results["return-code"] == 0
+
+    lxc_instance: list[dict[str, str]] = json.loads(action.results["stdout"])
+    return tuple(runner["name"] for runner in lxc_instance)
+
+
 @retry(tries=30, delay=30)
 async def assesrt_num_of_runners(unit: Unit, num: int) -> None:
     """Check if runner instances are ready.
 
     Args:
-      app: Application instance to check the runners.
-      num: Number of runner instances to check for.
+        unit: Unit instance to check for the LXD profile.
+        num: Number of runner instances to check for.
 
     Raises:
         AssertionError: Correct number of runners is not found within timeout
@@ -108,7 +127,6 @@ async def assesrt_num_of_runners(unit: Unit, num: int) -> None:
     """
     action = await unit.run("lxc list --format json")
     await action.wait()
-    assert action.status == "completed"
 
     assert action.results["return-code"] == 0
 
