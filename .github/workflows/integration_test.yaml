@@ -44,7 +44,7 @@ jobs:
             --token ${{secrets.E2E_TESTING_TOKEN}} \
             --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
             tests/integration/test_charm.py
-  integration-test-unsigned-commit-repo:
+  integration-test-repo-policy-compliance:
     name: Integration test repo policy compliance
     runs-on: ubuntu-latest
     steps:
@@ -72,7 +72,7 @@ jobs:
       - integration-test-charm
       - integration-test-unsigned-commit-repo
     if: always() && !cancelled()
-    timeout-minutes: 5
+    timeout-minutes: 30
     steps:
       - run: |
           [ '${{ needs.integration-test.result }}' = 'success' ] || (echo integration-test failed && false)
