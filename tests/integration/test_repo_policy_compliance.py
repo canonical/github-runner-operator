@@ -167,6 +167,7 @@ async def test_dispatch_workflow_failure(
         branch_with_unsigned_commit, {"runner": app_with_unsigned_commit_repo.name}
     )
 
+    # Wait until the runner is used up.
     for _ in range(30):
         runners = await get_runner_names(unit)
         if runner_to_be_used not in runners:
@@ -175,5 +176,7 @@ async def test_dispatch_workflow_failure(
     else:
         assert False, "Timeout wait for workflow to complete"
 
+    # The only job in the workflow is job that `echo` the runner name. If it fails then it should
+    # be the pre-run job that failed.
     run = workflow.get_runs()[0]
     assert run.jobs()[0].conclusion == "failure"
