@@ -75,6 +75,6 @@ jobs:
     timeout-minutes: 30
     steps:
       - run: |
-          [ '${{ needs.integration-test-charm-no-runner.result }}' = 'success' ] &&
-          [ '${{ needs.integration-test-charm.result }}' = 'success' ] &&
-          [ '${{ needs.integration-test-repo-policy-compliance.result }}' = 'success' ] || (echo integration-test failed && false)
+          [ '${{ needs.integration-test-charm-no-runner.result }}' = 'success' ] || (echo integration-test-charm-no-runner failed && false)
+          [ '${{ needs.integration-test-charm.result }}' = 'success' ] || (echo integration-test-charm failed && false)
+          [ '${{ needs.integration-test-repo-policy-compliance.result }}' = 'success' ] || (echo integration-test-repo-policy-compliance failed && false)
