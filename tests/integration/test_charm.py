@@ -7,7 +7,7 @@ import pytest
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import assert_resource_lxd_profile, assert_num_of_runners
+from tests.integration.helpers import assert_num_of_runners, assert_resource_lxd_profile
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
