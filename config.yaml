@@ -1,49 +1,67 @@
+# Copyright 2023 Canonical Ltd.
+# See LICENSE file for licensing details.
+
 options:
   path:
-      default: ""
-      type: string
-      description: "Either an organization name or repository in 'org/repo' format"
+    type: string
+    default: ""
+    description: >
+      The organization or the repository to register the self-hosted runners. For repository the
+      path should be in the "{owner}/{repo}" format.
+  group:
+    type: string
+    default: "default"
+    description: >
+      The organization runner group to register the self-hosted runner under. This has no effect on
+      runners under a repository.
   token:
-      default: ""
-      type: string
-      description: "Personal Access Token, required for auto registerting with the given url"
-  quantity:
-      default: 3
-      type: int
-      description: |
-        DEPRECATED: use `containers` and `virtual-machines`
-        Quantity of runners to maintain
-  containers:
-      default: 0
-      type: int
-      description: "Quantity of container runners to maintain"
+    type: string
+    default: ""
+    description: The GitHub Personal Access Token for registering the self-hosted runners.
   virtual-machines:
-      default: 0
-      type: int
-      description: "Quantity of virtual machine runners to maintain"
+    type: int
+    default: 0
+    description: >
+      The number of virtual machine runners. This charm will spawn or destroy virtual machines
+      runners to match this setting.
   vm-cpu:
-      default: 2
-      type: int
-      description: "Number of CPUs for VMs."
+    type: int
+    default: 2
+    description: >
+      The number of CPUs used per virtual machine runner.
   vm-memory:
+    type: string
     default: 7GiB
-    type: string
-    description: "VM memory size."
+    description: >
+      Amount of memory to allocate per virtual machine runner. Positive integers with KiB, MiB, GiB,
+      TiB, PiB, EiB suffix.
   vm-disk:
-    default: 10GiB
     type: string
-    description: "VM disk size."
+    default: 10GiB
+    description: >
+      Amount of disk space to allocate to root disk for virtual machine runner. Positive integers
+      with KiB, MiB, GiB, TiB, PiB, EiB suffix.
   reconcile-interval:
-      default: 5
-      type: int
-      description: "How frequently, in minutes, the runners should be reconciled"
+    type: int
+    default: 10
+    description: >
+      Minutes between each reconciliation between the current state and the target state of the
+      runners. On reconciliation the charm polls the state of runners, such as, the number of
+      container runners, and see if actions are needed.
   update-interval:
-      default: 60
-      type: int
-      description: "How frequently, in minutes, the charm should check for new versions of the runner binary"
-  virt-type:
-      default: "container"
-      type: string
-      description: |
-        DEPRECATED: both `containers` and `virtual-machines` are supported at the same time
-        Virtualization type for runners, either container or virtual-machine
+    type: int
+    default: 60
+    description: >
+      Minutes between each check for new versions of the runner binary.
+  test-mode:
+    type: string
+    description: >
+      When set to 'insecure', the charm test mode is activated, which may deactivate some security
+      hardening measures.
+  denylist:
+    type: string
+    default: ""
+    description: >
+      A comma separated list of IPv4 networks in CIDR notation that runners can not access.
+      The runner will always have access to essential services such as DHCP and DNS regardless 
+      of the denylist configuration.

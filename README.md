@@ -1,12 +1,16 @@
+[![CharmHub Badge](https://charmhub.io/github-runner-operator/badge.svg)](https://charmhub.io/github-runner-operator)
+[![Promote charm](https://github.com/canonical/github-runner-operator/actions/workflows/promote_charm.yaml/badge.svg)](https://github.com/canonical/github-runner-operator/actions/workflows/promote_charm.yaml)
+[![Discourse Status](https://img.shields.io/discourse/status?server=https%3A%2F%2Fdiscourse.charmhub.io&style=flat&label=CharmHub%20Discourse)](https://discourse.charmhub.io)
+
 # GitHub runner
 
 ## Description
 
-This charm creates self-hosted GitHub runners. Each unit of this charm will start a configurable number of LXD based containers and virtual 
-machines to host GitHub runners. Each runner performs only one job, after which it unregisters from GitHub to ensure that each job runs in
+This machine charm creates self-hosted GitHub runners. Each unit of this charm will start a configurable number of LXD based containers and virtual
+machines to host them. Each runner performs only one job, after which it unregisters from GitHub to ensure that each job runs in
 a clean environment.
 
-The charm will periodically check the number of idle runners and spawn or destroy runners as necessary to maintain the configured number of 
+The charm will periodically check the number of idle runners and spawn or destroy runners as necessary to match the number provided by configuration of
 runners. Both the reconciliation interval and the number of runners to maintain are configurable.
 
 ## Usage
@@ -25,9 +29,9 @@ The number of runners on a single unit is configured using two configuration opt
 For example, if the charm is deployed with 2 units `juju deploy <charm> -n 2` and the `containers` value of 3 is in use,
 there will be a total of 6 container based runners, three on each unit.
 
-## Reconcilation
+## Reconciliation
 
-Each unit will periodically check the number of idle runners at an interval that is configured using the `check-interval` setting to maintain the configured number of runners. During the check, all offline runners are unregistered from GitHub and corresponding containers or virtual machines are destroyed. 
+Each unit will periodically check the number of idle runners at the interval specified by `check-interval` to maintain the appropriate number. During the check, all the offline runners are unregistered from GitHub and corresponding containers or virtual machines are destroyed.
 
 If there are more idle runners than configured, the oldest idle runners are unregistered and destroyed. If there are less idle runners than configured, new runners are spawn and registered with GitHub.
 
@@ -44,4 +48,4 @@ Testing is run via tox and pytest. To run the full test run:
 
     tox
 
-Dependencies are installed in virtual environments. Integration testing requires a juju controller to execute. These tests will use the existing controller, creating an ephemeral model for the tests which is removed after the testing. If you do not already have a controller setup, you can configure a local instance via LXD, see the [upstream documentation][https://juju.is/docs/lxd-cloud] for details.
+Dependencies are installed in virtual environments. Integration testing requires a juju controller to execute. These tests will use the existing controller, creating an ephemeral model for the tests which is removed after the testing. If you do not already have a controller setup, you can configure a local instance via LXD, see the [upstream documentation](https://juju.is/docs/lxd-cloud) for details.

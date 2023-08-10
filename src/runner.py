@@ -1,420 +1,238 @@
-#!/usr/bin/env python3
+# Copyright 2023 Canonical Ltd.
+# See LICENSE file for licensing details.
 
+"""Manage the lifecycle of runners.
+
+The `Runner` class stores the information on the runners and manages the
+lifecycle of the runners on LXD and GitHub.
+
+The `RunnerManager` class from `runner_manager.py` creates and manages a
+collection of `Runner` instances.
+"""
+
+from __future__ import annotations
+
+import json
 import logging
-import os
-import subprocess
+import pathlib
 import time
-import urllib.error
-import urllib.request
-from collections import namedtuple
+from dataclasses import dataclass
 from pathlib import Path
-from random import choices
-from string import ascii_lowercase, digits
+from typing import Iterable, Optional, Sequence
 
-import requests
-from jinja2 import Environment, FileSystemLoader
+import yaml
 
-import fastcore.net
-import pylxd
-from ghapi.all import GhApi
-from pylxd.exceptions import LXDAPIException, NotFound
+from errors import LxdError, RunnerCreateError, RunnerError, RunnerFileLoadError, RunnerRemoveError
+from lxd import LxdInstance
+from lxd_type import LxdInstanceConfig
+from runner_type import (
+    GitHubOrg,
+    GitHubRepo,
+    RunnerClients,
+    RunnerConfig,
+    RunnerStatus,
+    VirtualMachineResources,
+)
+from utilities import retry
 
 logger = logging.getLogger(__name__)
-VMResources = namedtuple("VMResource", ["cpu", "memory", "disk"])
+LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
+if not LXD_PROFILE_YAML.exists():
+    LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
 
 
-class RunnerInfo:
-    def __init__(self, name, local, remote):
-        self.name = name
-        self.local = local
-        self.remote = remote
+@dataclass
+class WgetExecutable:
+    """The executable to be installed through wget.
 
-    @property
-    def is_idle(self):
-        return self.is_online and self.remote.busy is False
+    Args:
+        url: The URL of the executable binary.
+        cmd: Executable command name. E.g. yq_linux_amd64 -> yq
+    """
 
-    @property
-    def is_offline(self):
-        return self.remote and self.remote.status != "online"
-
-    @property
-    def is_online(self):
-        return self.remote and self.remote.status == "online"
-
-    @property
-    def is_local(self):
-        return self.local is not None
-
-    @property
-    def virt_type(self):
-        if self.is_local:
-            return self.local.type
-        elif self.remote:
-            remote_virt_type = (
-                label["name"]
-                for label in self.remote["labels"]
-                if label["name"] in {"container", "virtual-machine"}
-            )
-            return next(remote_virt_type, None)
+    url: str
+    cmd: str
 
 
-class RunnerError(Exception):
-    pass
+class Runner:
+    """Single instance of GitHub self-hosted runner.
 
+    Attrs:
+        app_name (str): Name of the charm.
+        path (GitHubPath): Path to GitHub repo or org.
+        proxies (ProxySetting): HTTP proxy setting for juju charm.
+        name (str): Name of the runner instance.
+        exist (bool): Whether the runner instance exists on LXD.
+        online (bool): Whether GitHub marks this runner as online.
+        busy (bool): Whether GitHub marks this runner as busy.
+    """
 
-class RunnerCreateFailed(RunnerError):
-    pass
+    runner_application = Path("/home/ubuntu/github-runner")
+    env_file = runner_application / ".env"
+    config_script = runner_application / "config.sh"
+    runner_script = runner_application / "start.sh"
+    pre_job_script = runner_application / "pre-job.sh"
 
+    def __init__(
+        self,
+        clients: RunnerClients,
+        runner_config: RunnerConfig,
+        runner_status: RunnerStatus,
+        instance: Optional[LxdInstance] = None,
+    ):
+        """Construct the runner instance.
 
-class RunnerRemoveFailed(RunnerError):
-    pass
+        Args:
+            clients: Clients to access various services.
+            runner_config: Configuration of the runner instance.
+            instance: LXD instance of the runner if already created.
+        """
+        # Dependency injection to share the instances across different `Runner` instance.
+        self._clients = clients
+        self.config = runner_config
+        self.status = runner_status
+        self.instance = instance
 
+    def create(
+        self,
+        image: str,
+        resources: VirtualMachineResources,
+        binary_path: Path,
+        registration_token: str,
+    ):
+        """Create the runner instance on LXD and register it on GitHub.
 
-class RunnerStartFailed(RunnerError):
-    pass
+        Args:
+            image: Name of the image to launch the LXD instance with.
+            resources: Resource setting for the LXD instance.
+            binary_path: Path to the runner binary.
+            registration_token: Token for registering the runner on GitHub.
 
-
-class RunnerManager:
-    runner_bin_path = Path("/var/cache/github-runner-operator/runner.tgz")
-    env_file = Path("/opt/github-runner/.env")
-
-    def __init__(self, path, token, app_name, reconcile_interval):
-        http_proxy = os.environ.get("JUJU_CHARM_HTTP_PROXY", None)
-        https_proxy = os.environ.get("JUJU_CHARM_HTTPS_PROXY", None)
-        no_proxy = os.environ.get("JUJU_CHARM_NO_PROXY", None)
-        self.proxies = {}
-        if http_proxy:
-            self.proxies["http"] = http_proxy
-        if https_proxy:
-            self.proxies["https"] = https_proxy
-        if no_proxy:
-            self.proxies["no_proxy"] = no_proxy
-        self.session = requests.Session()
-        if self.proxies:
-            # setup proxy for requests
-            self.session.proxies.update(self.proxies)
-            # add proxy to fastcore which ghapi uses
-            proxy = urllib.request.ProxyHandler(self.proxies)
-            opener = urllib.request.build_opener(proxy)
-            fastcore.net._opener = opener
-        self.jinja = Environment(loader=FileSystemLoader("templates"))
-        self.lxd = pylxd.Client()
-        self.path = path
-        self.api = GhApi(token=token)
-        self.app_name = app_name
-        self.reconcile_interval = reconcile_interval
-
-    @classmethod
-    def install_deps(cls):
-        """Install dependencies"""
-        subprocess.run(["snap", "install", "lxd"], check=True)
-        subprocess.run(["lxd", "init", "--auto"], check=True)
-        subprocess.run(
-            [
-                "apt",
-                "install",
-                "-qy",
-                "cpu-checker",
-                "libvirt-clients",
-                "libvirt-daemon-driver-qemu",
-            ],
-            check=True,
-        )
-        cls.runner_bin_path.parent.mkdir(parents=True, exist_ok=True)
-
-    def get_latest_runner_bin_url(self):
-        """Get the URL for the latest runner binary."""
-        # TODO: make these not hard-coded
-        os_name = "linux"
-        arch_name = "x64"
-
-        if "/" in self.path:
-            owner, repo = self.path.split("/")
-            runner_bins = self.api.actions.list_runner_applications_for_repo(
-                owner=owner, repo=repo
-            )
-        else:
-            runner_bins = self.api.actions.list_runner_applications_for_org(
-                org=self.path
-            )
-        for runner_bin in runner_bins:
-            if runner_bin.os == os_name and runner_bin.architecture == arch_name:
-                return runner_bin.download_url
-        return None
-
-    def update_runner_bin(self, download_url):
-        """Download a runner file, replacing the current copy"""
-        # Remove any existing runner bin file
-        if self.runner_bin_path.exists():
-            self.runner_bin_path.unlink()
-        # Download the new file
-        response = self.session.get(download_url)
-        with self.runner_bin_path.open(mode="wb") as runner_bin_file:
-            runner_bin_file.write(response.content)
-
-    def get_info(self):
-        """Return a list of RunnerInfo objects."""
-        local_runners = {
-            c.name: c
-            for c in self.lxd.instances.all()
-            if c.name.startswith(f"{self.app_name}-")
-        }
-        if "/" in self.path:
-            owner, repo = self.path.split("/")
-            remote_runners = self.api.actions.list_self_hosted_runners_for_repo(
-                owner=owner, repo=repo
-            )["runners"]
-        else:
-            remote_runners = self.api.actions.list_self_hosted_runners_for_org(
-                org=self.path
-            )["runners"]
-        remote_runners = {
-            r.name: r for r in remote_runners if r.name.startswith(f"{self.app_name}-")
-        }
-        runners = []
-        for name in set(local_runners.keys()) | set(remote_runners.keys()):
-            runners.append(
-                RunnerInfo(name, local_runners.get(name), remote_runners.get(name))
-            )
-        return runners
-
-    def reconcile(self, virt_type, quantity, vm_resources=None):
-        """Bring runners in line with target."""
-        runners = [r for r in self.get_info() if r.virt_type == virt_type]
-
-        # Clean up offline runners
-        offline_runners = [r for r in runners if r.is_offline]
-        if offline_runners:
-            runner_names = ", ".join(r.name for r in offline_runners)
-            logger.info(f"Cleaning up offline {virt_type} runners: {runner_names}")
-            for runner in offline_runners:
-                self._remove_runner(runner)
-
-        # Add/Remove runners to match the target quantity
-        local_online_runners = [r for r in runners if r.is_online and r.is_local]
-        delta = quantity - len(local_online_runners)
-        if delta > 0:
-            logger.info(f"Adding {delta} additional {virt_type} runner(s)")
-            for i in range(delta):
-                self.create(image="ubuntu", virt=virt_type, vm_resources=vm_resources)
-
-        if delta < 0:
-            local_idle_runners = [r for r in local_online_runners if r.is_idle]
-            local_idle_runners.sort(key=lambda r: r.local.created_at)
-            offset = min(abs(delta), len(local_idle_runners))
-            if offset == 0:
-                logger.info(f"There are no idle {virt_type} runners to remove.")
-            else:
-                old_runners = local_online_runners[:offset]
-                runner_names = ", ".join(r.name for r in old_runners)
-                logger.info(
-                    f"Removing extra {offset} idle {virt_type} runner(s): {runner_names}"
-                )
-                for runner in old_runners:
-                    self._remove_runner(runner)
-
-        return delta
-
-    def clear(self):
-        """Clear out existing local runners."""
-        runners = [r for r in self.get_info() if r.is_local]
-        runner_names = ", ".join(r.name for r in runners)
-        logger.info(f"Removing existing local runners: {runner_names}")
-        for runner in runners:
-            self._remove_runner(runner)
-
-        self._clean_unused_profiles()
-
-    def create(self, image, virt="container", vm_resources=None):
-        """Create a runner"""
-        instance = self._create_instance(
-            image=image, virt=virt, vm_resources=vm_resources
-        )
+        Raises:
+            RunnerCreateError: Unable to create a LXD instance for runner.
+        """
+        logger.info("Creating runner: %s", self.config.name)
 
         try:
-            self._start_instance(instance)
-            self._install_binary(instance)
-            self._configure_runner(instance)
-            self._register_runner(
-                instance,
-                labels=[
-                    self.app_name,
-                    image,
-                    virt,
+            self.instance = self._create_instance(image, resources)
+            self._start_instance()
+            # Wait some initial time for the instance to boot up
+            time.sleep(60)
+            self._wait_boot_up()
+            self._install_binary(binary_path)
+            self._configure_runner()
+            self._register_runner(registration_token, labels=[self.config.app_name, image])
+            self._start_runner()
+        except (RunnerError, LxdError) as err:
+            raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err
+
+    def remove(self, remove_token: str) -> None:
+        """Remove this runner instance from LXD and GitHub.
+
+        Args:
+            remove_token: Token for removing the runner on GitHub.
+
+        Raises:
+            RunnerRemoveError: Failure in removing runner.
+        """
+        logger.info("Removing runner: %s", self.config.name)
+
+        if self.instance:
+            logger.info("Executing command to removal of runner and clean up...")
+            self.instance.execute(
+                [
+                    "/usr/bin/sudo",
+                    "-u",
+                    "ubuntu",
+                    str(self.config_script),
+                    "remove",
+                    "--token",
+                    remove_token,
                 ],
+                hide_cmd=True,
             )
-            self._start_runner(instance)
-            if virt == "container":
-                self._load_aaprofile(instance)
-        except Exception as e:
-            instance.stop(wait=True)
-            try:
-                instance.delete(wait=True)
-            except Exception:
-                # Ephemeral containers should auto-delete when stopped;
-                # this is just a fall-back.
-                pass
-            raise RunnerCreateFailed(str(e)) from e
 
-    def _remove_runner(self, runner):
-        """Remove a runner"""
-        if runner.remote:
-            try:
-                if "/" in self.path:
-                    owner, repo = self.path.split("/")
-                    self.api.actions.delete_self_hosted_runner_from_repo(
-                        owner=owner, repo=repo, runner_id=runner.remote.id
+            if self.instance.status == "Running":
+                logger.info("Removing LXD instance of runner: %s", self.config.name)
+                try:
+                    self.instance.stop(wait=True, timeout=60)
+                except LxdError:
+                    logger.exception(
+                        "Unable to gracefully stop runner %s within timeout.", self.config.name
                     )
-                else:
-                    self.api.actions.delete_self_hosted_runner_from_org(
-                        org=self.path, runner_id=runner.remote.id
-                    )
-            except Exception as e:
-                raise RunnerRemoveFailed(
-                    f"Failed remove remote runner: {runner.name}"
-                ) from e
-
-        if runner.local:
-            try:
-                if runner.local.status == "Running":
-                    runner.local.stop(wait=True)
+                    logger.info("Force stopping of runner %s", self.config.name)
                     try:
-                        runner.local.delete(wait=True)
-                    except Exception:
-                        # Ephemeral containers should auto-delete when stopped;
-                        # this is just a fall-back.
-                        pass
-                else:
-                    # We somehow have a non-running instance which should have been
-                    # ephemeral. Try to delete it and allow any errors doing so to
-                    # surface.
-                    runner.local.delete(wait=True)
-            except Exception as e:
-                raise RunnerRemoveFailed(
-                    f"Failed remove local runner: {runner.name}"
-                ) from e
+                        self.instance.stop(force=True)
+                    except LxdError as err:
+                        raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
+            else:
+                # Delete ephemeral instances that are in error status or stopped status that LXD
+                # failed to clean up.
+                logger.warning(
+                    "Found runner %s in status %s, forcing deletion",
+                    self.config.name,
+                    self.instance.status,
+                )
+                try:
+                    self.instance.delete(wait=True)
+                except LxdError as err:
+                    raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
 
-        # remove profile
-        try:
-            profile = self.lxd.profiles.get(runner.name)
-            profile.delete()
-        except (LXDAPIException, NotFound):
-            pass
+        if self.status.runner_id is None:
+            return
 
-    def _clean_unused_profiles(self):
-        """Clean all unused profiles created with this manager."""
-        for profile in self.lxd.profiles.all():
-            if profile.name.startswith(self.app_name) and not profile.used_by:
-                profile.delete()
+        logger.info("Removing runner on GitHub: %s", self.config.name)
 
-    def _register_runner(self, instance, labels):
-        """Register a runner in an instance"""
-        api = self.api
-        if "/" in self.path:
-            owner, repo = self.path.split("/")
-            token = api.actions.create_registration_token_for_repo(
-                owner=owner, repo=repo
+        # The runner should cleanup itself.  Cleanup on GitHub in case of runner cleanup error.
+        if isinstance(self.config.path, GitHubRepo):
+            logger.debug(
+                "Ensure runner %s with id %s is removed from GitHub repo %s/%s",
+                self.config.name,
+                self.status.runner_id,
+                self.config.path.owner,
+                self.config.path.repo,
             )
-        else:
-            token = api.actions.create_registration_token_for_org(org=self.path)
-        cmd = (
-            "sudo -u ubuntu /opt/github-runner/config.sh "
-            f"--url https://github.com/{self.path} "
-            "--token "
-            f"{token.token} "
-            "--ephemeral "
-            "--name "
-            f"{instance.name} "
-            "--unattended "
-            "--labels "
-            f"{','.join(labels)}"
-        )
-        self._check_output(instance, cmd)
+            self._clients.github.actions.delete_self_hosted_runner_from_repo(
+                owner=self.config.path.owner,
+                repo=self.config.path.repo,
+                runner_id=self.status.runner_id,
+            )
+        if isinstance(self.config.path, GitHubOrg):
+            logger.debug(
+                "Ensure runner %s with id %s is removed from GitHub org %s",
+                self.config.name,
+                self.status.runner_id,
+                self.config.path.org,
+            )
+            self._clients.github.actions.delete_self_hosted_runner_from_org(
+                org=self.config.path.org,
+                runner_id=self.status.runner_id,
+            )
 
-    def _start_runner(self, instance):
-        """Start a runner that is already registered"""
-        script_contents = self.jinja.get_template("start.j2").render()
-        instance.files.put("/opt/github-runner/start.sh", script_contents, mode="0755")
-        self._check_output(
-            instance, "sudo chown ubuntu:ubuntu /opt/github-runner/start.sh"
-        )
-        self._check_output(instance, "sudo chmod u+x /opt/github-runner/start.sh")
-        self._check_output(instance, "sudo -u ubuntu /opt/github-runner/start.sh")
+    @retry(tries=5, delay=1, local_logger=logger)
+    def _create_instance(
+        self, image: str, resources: VirtualMachineResources, ephemeral: bool = True
+    ) -> LxdInstance:
+        """Create an instance of runner.
 
-    def _load_aaprofile(self, instance):
-        """Load the apparmor profile so classic snaps can run"""
-        self._check_output(
-            instance,
-            ["bash", "-c", "sudo apparmor_parser -r /etc/apparmor.d/*snap-confine*"],
-            False,
-        )
-        cmd = [
-            "bash",
-            "-c",
-            "sudo apparmor_parser /var/lib/snapd/apparmor/profiles/snap-confine*",
-        ]
-        exit_code, stdout, stderr = instance.execute(cmd)
-        logger.info(f"Apparmor exit_code: {exit_code}")
-        logger.info(f"Apparmor stdout: {stdout}")
-        logger.info(f"Apparmor stderr: {stderr}")
+        Args:
+            image: Image used to launch the instance hosting the runner.
+            resources: Configuration of the virtual machine resources.
+            ephemeral: Whether the instance is ephemeral.
 
-    def _configure_runner(self, instance):
-        """Configure the runner"""
-        # Render proxies if configured
-        if self.proxies:
-            contents = self.jinja.get_template("env.j2").render(proxies=self.proxies)
-            instance.files.put(self.env_file, contents, mode="0600")
-            self._check_output(instance, "chown ubuntu:ubuntu /opt/github-runner/.env")
+        Returns:
+            LXD instance of the runner.
+        """
+        logger.info("Creating an LXD instance for runner: %s", self.config.name)
 
-    def _install_binary(self, instance):
-        """Install the binary in a instance"""
-        instance.files.mk_dir("/opt/github-runner")
-        for attempt in range(10):
-            try:
-                instance.files.put("/tmp/runner.tgz", self.runner_bin_path.read_bytes())
-                self._check_output(
-                    instance, "tar -xzf /tmp/runner.tgz -C /opt/github-runner"
-                )
-                self._check_output(
-                    instance, "chown -R ubuntu:ubuntu /opt/github-runner"
-                )
-                break
-            except subprocess.CalledProcessError:
-                if attempt < 9:
-                    logger.warning("Failed to install runner, trying again")
-                    time.sleep(0.5)
-                else:
-                    logger.error("Failed to install runner, giving up")
-                    raise
+        self._ensure_runner_storage_pool()
+        self._ensure_runner_profile()
+        resource_profile = self._get_resource_profile(resources)
 
-    def _check_output(self, container, cmd, split=True):
-        """Check execution of a command in a container"""
-        if split:
-            cmd = cmd.split()
-        exit_code, stdout, stderr = container.execute(cmd)
-        logger.debug(f"Exit code {exit_code} from {cmd}")
-        subprocess.CompletedProcess(cmd, exit_code, stdout, stderr).check_returncode()
-        return stdout
-
-    def _create_instance(self, image="focal", virt="container", vm_resources=None):
-        """Create an instance"""
-        if virt == "container" and vm_resources is not None:
-            logger.warning("vm resources should be use only with virtual-machine")
-
-        suffix = "".join(choices(ascii_lowercase + digits, k=6))
-        name = f"{self.app_name}-{suffix}"
-        if not self.lxd.profiles.exists("runner"):
-            config = {
-                "security.nesting": "true",
-                "security.privileged": "true",
-                # "raw.lxc": "lxc.apparmor.profile=unconfined",
-            }
-            devices = {}
-            self.lxd.profiles.create("runner", config, devices)
-
-        config = {
-            "name": name,
-            "type": virt,
+        # Create runner instance.
+        instance_config: LxdInstanceConfig = {
+            "name": self.config.name,
+            "type": "container" if LXD_PROFILE_YAML.exists() else "virtual-machine",
             "source": {
                 "type": "image",
                 "mode": "pull",
@@ -422,61 +240,439 @@ class RunnerManager:
                 "protocol": "simplestreams",
                 "alias": image,
             },
-            "ephemeral": True,
-            "profiles": ["default", "runner"],
+            "ephemeral": ephemeral,
+            "profiles": ["default", "runner", resource_profile],
         }
-        # configure resources for VM via custom profile
-        if virt == "virtual-machine" and vm_resources is not None:
-            self._create_vm_profile(name, vm_resources)
-            config["profiles"].append(name)
 
-        return self.lxd.instances.create(config=config, wait=True)
+        instance = self._clients.lxd.instances.create(config=instance_config, wait=True)
+        self.status.exist = True
+        return instance
 
-    def _create_vm_profile(self, name, vm_resources):
-        """Create custom profile for VM."""
-        try:
-            vm_profile_config = {
-                "limits.cpu": str(vm_resources.cpu),
-                "limits.memory": vm_resources.memory,
+    @retry(tries=5, delay=1, local_logger=logger)
+    def _ensure_runner_profile(self) -> None:
+        """Ensure the runner profile is present on LXD.
+
+        Raises:
+            RunnerError: Unable to create the runner profile.
+        """
+        if self._clients.lxd.profiles.exists("runner"):
+            logger.info("Found existing runner LXD profile")
+            return
+
+        logger.info("Creating runner LXD profile")
+        profile_config = {}
+        profile_devices = {}
+        if LXD_PROFILE_YAML.exists():
+            additional_lxc_profile = yaml.safe_load(LXD_PROFILE_YAML.read_text())
+            profile_config = {
+                k: json.dumps(v) if isinstance(v, bool) else v
+                for k, v in additional_lxc_profile["config"].items()
             }
-            vm_profile_devices = {
-                "root": {
-                    "path": "/",
-                    "pool": "default",
-                    "type": "disk",
-                    "size": vm_resources.disk,
+            profile_devices = additional_lxc_profile["devices"]
+        self._clients.lxd.profiles.create("runner", profile_config, profile_devices)
+
+        # Verify the action is successful.
+        if not self._clients.lxd.profiles.exists("runner"):
+            raise RunnerError("Failed to create runner LXD profile")
+
+    @retry(tries=5, delay=5, local_logger=logger)
+    def _ensure_runner_storage_pool(self) -> None:
+        """Ensure the runner storage pool exists."""
+        if self._clients.lxd.storage_pools.exists("runner"):
+            logger.info("Found existing runner LXD storage pool.")
+            return
+
+        logger.info("Creating runner LXD storage pool.")
+        self._clients.lxd.storage_pools.create(
+            {
+                "name": "runner",
+                "driver": "dir",
+                "config": {"source": str(self.config.lxd_storage_path)},
+            }
+        )
+
+        # Verify the action is successful.
+        if not self._clients.lxd.storage_pools.exists("runner"):
+            raise RunnerError("Failed to create runner LXD storage pool")
+
+    @classmethod
+    def _get_resource_profile_name(cls, cpu: int, memory: str, disk: str) -> str:
+        """Get the LXD profile name for resource limit.
+
+        Args:
+            cpu: CPU resource limit.
+            memory: Memory resource limit.
+            disk: Disk resource limit.
+
+        Returns:
+            Name for the LXD profile of the given resource limits.
+        """
+        return f"cpu-{cpu}-mem-{memory}-disk-{disk}"
+
+    @retry(tries=5, delay=1, local_logger=logger)
+    def _get_resource_profile(self, resources: VirtualMachineResources) -> str:
+        """Get the LXD profile name of given resource limit.
+
+        Args:
+            resources: Resources limit of the runner instance.
+
+        Raises:
+            RunnerError: Unable to create the profile on LXD.
+
+        Returns:
+            str: Name of the profile for the given resource limit.
+        """
+        # Ensure the resource profile exists.
+        profile_name = self._get_resource_profile_name(
+            resources.cpu, resources.memory, resources.disk
+        )
+        if not self._clients.lxd.profiles.exists(profile_name):
+            logger.info("Creating LXD profile for resource usage.")
+            try:
+                resource_profile_config = {
+                    "limits.cpu": str(resources.cpu),
+                    "limits.memory": resources.memory,
+                }
+                resource_profile_devices = {
+                    "root": {
+                        "path": "/",
+                        "pool": "runner",
+                        "type": "disk",
+                        "size": resources.disk,
+                    }
+                }
+                # Temporary fix to allow tmpfs to work for LXD VM.
+                if not LXD_PROFILE_YAML.exists():
+                    resource_profile_devices["root"]["io.cache"] = "unsafe"
+
+                self._clients.lxd.profiles.create(
+                    profile_name, resource_profile_config, resource_profile_devices
+                )
+            except LxdError as error:
+                logger.error(error)
+                raise RunnerError(
+                    "Resources were not provided in the correct format, check the juju config for "
+                    "cpu, memory and disk."
+                ) from error
+
+            # Verify the action is successful.
+            if not self._clients.lxd.profiles.exists(profile_name):
+                raise RunnerError(f"Unable to create {profile_name} LXD profile")
+        else:
+            logger.info("Found existing LXD profile for resource usage.")
+
+        return profile_name
+
+    @retry(tries=5, delay=1, local_logger=logger)
+    def _start_instance(self) -> None:
+        """Start an instance and wait for it to boot.
+
+        Args:
+            reconcile_interval: Time in seconds of period between each reconciliation.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        logger.info("Starting LXD instance for runner: %s", self.config.name)
+
+        # Setting `wait=True` only ensure the instance has begin to boot up.
+        self.instance.start(wait=True)
+
+    @retry(tries=20, delay=30, local_logger=logger)
+    def _wait_boot_up(self) -> None:
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        # Wait for the instance to finish to boot up and network to be up.
+        if self.instance.execute(["/usr/bin/who"])[0] != 0:
+            raise RunnerError("Runner system is not ready")
+        if self.instance.execute(["/usr/bin/nslookup", "github.com"])[0] != 0:
+            raise RunnerError("Runner network is not ready")
+
+        logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
+
+    @retry(tries=5, delay=1, local_logger=logger)
+    def _install_binary(self, binary: Path) -> None:
+        """Load GitHub self-hosted runner binary on to the runner instance.
+
+        Args:
+            binary: Path to the compressed runner binary.
+
+        Raises:
+            RunnerFileLoadError: Unable to load the file into the runner instance.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        # TEMP: Install common tools used in GitHub Actions. This will be removed once virtual
+        # machines are created from custom images/GitHub runner image.
+
+        # Pre-create the microk8s group and add the user to it.
+        self.instance.execute(["/usr/sbin/groupadd", "microk8s"])
+        self.instance.execute(["/usr/sbin/usermod", "-aG", "microk8s", "ubuntu"])
+
+        self._apt_install(["docker.io", "npm", "python3-pip", "shellcheck", "jq", "wget"])
+        self._wget_install(
+            [
+                WgetExecutable(
+                    url="https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64",
+                    cmd="yq",
+                )
+            ]
+        )
+
+        # Add the user to docker group.
+        self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
+
+        # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
+        # be fine.
+        binary_path = "/tmp/runner.tgz"  # nosec B108
+
+        logger.info("Installing runner binary on LXD instance: %s", self.config.name)
+
+        # Creating directory and putting the file are idempotent, and can be retried.
+        self.instance.files.mk_dir(str(self.runner_application))
+        self.instance.files.push_file(str(binary), binary_path)
+
+        self.instance.execute(
+            ["/usr/bin/tar", "-xzf", binary_path, "-C", str(self.runner_application)]
+        )
+        self.instance.execute(
+            ["/usr/bin/chown", "-R", "ubuntu:ubuntu", str(self.runner_application)]
+        )
+
+        # Verify the config script is written to runner.
+        exit_code, _, stderr = self.instance.execute(["test", "-f", str(self.config_script)])
+        if exit_code == 0:
+            logger.info("Runner binary loaded on runner instance %s.", self.config.name)
+        else:
+            logger.error(
+                "Unable to load runner binary on runner instance %s: %s",
+                self.config.name,
+                stderr.read(),
+            )
+            raise RunnerFileLoadError(f"Failed to load runner binary on {self.config.name}")
+
+    @retry(tries=5, delay=10, max_delay=60, backoff=2, local_logger=logger)
+    def _configure_runner(self) -> None:
+        """Load configuration on to the runner.
+
+        Raises:
+            RunnerFileLoadError: Unable to load configuration file on the runner.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        # Load the runner startup script.
+        startup_contents = self._clients.jinja.get_template("start.j2").render()
+        self._put_file(str(self.runner_script), startup_contents, mode="0755")
+        self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
+        self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
+
+        # Load the runner pre-job script.
+        bridge_address_range = self._clients.lxd.networks.get("lxdbr0").config["ipv4.address"]
+        host_ip, _ = bridge_address_range.split("/")
+        one_time_token = self._clients.repo.get_one_time_token()
+        pre_job_contents = self._clients.jinja.get_template("pre-job.j2").render(
+            host_ip=host_ip, one_time_token=one_time_token
+        )
+        self._put_file(str(self.pre_job_script), pre_job_contents)
+        self.instance.execute(
+            ["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.pre_job_script)]
+        )
+        self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.pre_job_script)])
+
+        # Set permission to the same as GitHub-hosted runner for this directory.
+        # Some GitHub Actions require this permission setting to run.
+        # As the user already has sudo access, this does not give the user any additional access.
+        self.instance.execute(["/usr/bin/sudo", "chmod", "777", "/usr/local/bin"])
+
+        # Load `/etc/environment` file.
+        environment_contents = self._clients.jinja.get_template("environment.j2").render(
+            proxies=self.config.proxies
+        )
+        self._put_file("/etc/environment", environment_contents)
+
+        # Load `.env` config file for GitHub self-hosted runner.
+        env_contents = self._clients.jinja.get_template("env.j2").render(
+            proxies=self.config.proxies, pre_job_script=str(self.pre_job_script)
+        )
+        self._put_file(str(self.env_file), env_contents)
+        self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
+
+        if self.config.proxies:
+            # Creating directory and putting the file are idempotent, and can be retried.
+            logger.info("Adding proxy setting to the runner.")
+
+            docker_proxy_contents = self._clients.jinja.get_template(
+                "systemd-docker-proxy.j2"
+            ).render(proxies=self.config.proxies)
+
+            # Set docker daemon proxy config
+            docker_service_path = Path("/etc/systemd/system/docker.service.d")
+            docker_service_proxy = docker_service_path / "http-proxy.conf"
+
+            self.instance.files.mk_dir(str(docker_service_path))
+            self._put_file(str(docker_service_proxy), docker_proxy_contents)
+
+            self.instance.execute(["systemctl", "daemon-reload"])
+            self.instance.execute(["systemctl", "restart", "docker"])
+
+            # Set docker client proxy config
+            docker_client_proxy = {
+                "proxies": {
+                    "default": {
+                        "httpProxy": self.config.proxies["http"],
+                        "httpsProxy": self.config.proxies["https"],
+                        "noProxy": self.config.proxies["no_proxy"],
+                    }
                 }
             }
-            self.lxd.profiles.create(
-                name,
-                vm_profile_config,
-                vm_profile_devices,
+            docker_client_proxy_content = json.dumps(docker_client_proxy)
+            # Configure the docker client for root user and ubuntu user.
+            self._put_file("/root/.docker/config.json", docker_client_proxy_content)
+            self._put_file("/home/ubuntu/.docker/config.json", docker_client_proxy_content)
+            self.instance.execute(
+                ["/usr/bin/chown", "-R", "ubuntu:ubuntu", "/home/ubuntu/.docker"]
             )
-            logger.error(f"profile {vm_profile_config}")
-        except AttributeError as error:
-            raise RunnerError(
-                "vm_resources variable was not defined in the correct format"
-            ) from error
-        except LXDAPIException as error:
-            raise RunnerError(
-                "VM resources were not provided in the correct format, check the juju"
-                "config for vm-cpu, vm-memory and vm-disk."
-            ) from error
 
-    def _start_instance(self, instance):
-        """Start an instance and wait for it to boot"""
-        instance.start(wait=True)
+        # Ensure the no existing /usr/bin/python.
+        self.instance.execute(["rm", "/usr/bin/python"])
+        # Make python an alias of python3.
+        self.instance.execute(["ln", "-s", "/usr/bin/python3", "/usr/bin/python"])
 
-        # Wait for the instance to boot
-        wait_interval = 15  # seconds
-        attempts = int(self.reconcile_interval * 60 / wait_interval)
-        for attempt in range(attempts):
-            try:
-                self._check_output(instance, "who")
-                break
-            except Exception:
-                if attempt == attempts - 1:
-                    raise RunnerStartFailed()
-                else:
-                    time.sleep(wait_interval)
-                    pass
+    @retry(tries=5, delay=30, local_logger=logger)
+    def _register_runner(self, registration_token: str, labels: Sequence[str]) -> None:
+        """Register the runner on GitHub.
+
+        Args:
+            registration_token: Registration token request from GitHub.
+            labels: Labels to tag the runner with.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        logger.info("Registering runner %s", self.config.name)
+
+        register_cmd = [
+            "/usr/bin/sudo",
+            "-u",
+            "ubuntu",
+            str(self.config_script),
+            "--url",
+            f"https://github.com/{self.config.path.path()}",
+            "--token",
+            registration_token,
+            "--ephemeral",
+            "--unattended",
+            "--labels",
+            ",".join(labels),
+            "--name",
+            self.instance.name,
+        ]
+
+        if isinstance(self.config.path, GitHubOrg):
+            register_cmd += ["--runnergroup", self.config.path.group]
+
+        logger.info("Executing registration command...")
+        self.instance.execute(
+            register_cmd,
+            cwd=str(self.runner_application),
+            hide_cmd=True,
+        )
+
+    @retry(tries=5, delay=30, local_logger=logger)
+    def _start_runner(self) -> None:
+        """Start the GitHub runner."""
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        logger.info("Starting runner %s", self.config.name)
+
+        self.instance.execute(
+            [
+                "/usr/bin/sudo",
+                "-u",
+                "ubuntu",
+                str(self.runner_script),
+            ]
+        )
+
+        logger.info("Started runner %s", self.config.name)
+
+    def _put_file(self, filepath: str, content: str, mode: Optional[str] = None) -> None:
+        """Put a file into the runner instance.
+
+        Args:
+            filepath: Path to load the file in the runner instance.
+            content: Content of the file.
+
+        Raises:
+            RunnerFileLoadError: Failed to load the file into the runner instance.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        self.instance.files.write_file(filepath, content, mode)
+        content_on_runner = self.instance.files.read_file(filepath)
+        if content_on_runner != content:
+            logger.error(
+                "Loaded file %s in runner %s did not match expected content",
+                filepath,
+                self.instance.name,
+            )
+            logger.debug(
+                "Excepted file content for file %s on runner %s: %s\nFound: %s",
+                filepath,
+                self.instance.name,
+                content,
+                content_on_runner,
+            )
+            raise RunnerFileLoadError(
+                f"Failed to load file {filepath} to runner {self.instance.name}"
+            )
+
+    def _apt_install(self, packages: Iterable[str]) -> None:
+        """Installs the given APT packages.
+
+        This is a temporary solution to provide tools not offered by the base ubuntu image. Custom
+        images based on the GitHub action runner image will be used in the future.
+
+        Args:
+            packages: Packages to be install via apt.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        self.instance.execute(["/usr/bin/apt-get", "update"])
+
+        for pkg in packages:
+            logger.info("Installing %s via APT...", pkg)
+            self.instance.execute(["/usr/bin/apt-get", "install", "-yq", pkg])
+
+    def _wget_install(self, executables: Iterable[WgetExecutable]) -> None:
+        """Installs the given binaries.
+
+        This is a temporary solution to provide tools not offered by the base ubuntu image. Custom
+        images based on the GitHub action runner image will be used in the future.
+
+        Args:
+            executables: The executables to download.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        for executable in executables:
+            executable_path = f"/usr/bin/{executable.cmd}"
+            logger.info("Downloading %s via wget to %s...", executable.url, executable_path)
+            wget_cmd = ["/usr/bin/wget", executable.url, "-O", executable_path]
+            if self.config.proxies.get("http", None) or self.config.proxies.get("https", None):
+                wget_cmd += ["-e", "use_proxy=on"]
+            if self.config.proxies.get("http", None):
+                wget_cmd += ["-e", f"http_proxy={self.config.proxies['http']}"]
+            if self.config.proxies.get("https", None):
+                wget_cmd += ["-e", f"https_proxy={self.config.proxies['https']}"]
+            if self.config.proxies.get("no_proxy", None):
+                wget_cmd += ["-e", f"no_proxy={self.config.proxies['no_proxy']}"]
+            self.instance.execute(wget_cmd)
+            self.instance.execute(["/usr/bin/chmod", "+x", executable_path])

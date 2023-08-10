@@ -1,116 +1,242 @@
-#!/usr/bin/env python3
+# Copyright 2023 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+"""Test cases of Runner class."""
+
+import secrets
 import unittest
-from unittest import mock
+from pathlib import Path
+from unittest.mock import MagicMock
 
 import pytest
-from pylxd.exceptions import LXDAPIException
-from runner import RunnerError, RunnerInfo, RunnerManager, VMResources
+
+from errors import RunnerCreateError, RunnerRemoveError
+from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
+from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
+from tests.unit.mock import (
+    MockLxdClient,
+    MockRepoPolicyComplianceClient,
+    mock_lxd_error_func,
+    mock_runner_error_func,
+)
 
 
-class TestRunner(unittest.TestCase):
-    def setUp(self):
-        mocker_pylxd = mock.patch("runner.pylxd")
-        mock_pylxd = mocker_pylxd.start()
-        self.lxd = mock_pylxd.Client.return_value = mock.MagicMock()
-        self.addCleanup(mocker_pylxd.stop)
+@pytest.fixture(scope="module", name="vm_resources")
+def vm_resources_fixture():
+    return VirtualMachineResources(2, "7Gib", "10Gib")
 
-    @mock.patch("runner.choices", return_value="1234")
-    def test_create_instance(self, _):
-        """Test function for creating instances."""
-        # no runner profile exists, creating container
-        self.lxd.profiles.exists.return_value = False
 
-        rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
-        rm._create_instance(virt="container")
-        self.lxd.profiles.create.assert_called_once_with(
-            "runner", {"security.nesting": "true", "security.privileged": "true"}, {}
+@pytest.fixture(scope="function", name="token")
+def token_fixture():
+    return secrets.token_hex()
+
+
+@pytest.fixture(scope="function", name="binary_path")
+def binary_path_fixture(tmp_path: Path):
+    return tmp_path / "test_binary"
+
+
+@pytest.fixture(scope="module", name="instance", params=["Running", "Stopped", None])
+def instance_fixture(request):
+    if request.param[0] is None:
+        return None
+
+    attrs = {"status": request.param[0], "execute.return_value": (0, "", "")}
+    instance = unittest.mock.MagicMock(**attrs)
+    return instance
+
+
+@pytest.fixture(scope="function", name="lxd")
+def mock_lxd_client_fixture():
+    return MockLxdClient()
+
+
+@pytest.fixture(
+    scope="function",
+    name="runner",
+    params=[
+        (GitHubOrg("test_org", "test_group"), {}),
+        (
+            GitHubRepo("test_owner", "test_repo"),
+            {"no_proxy": "test_no_proxy", "http": "test_http", "https": "test_https"},
+        ),
+    ],
+)
+def runner_fixture(request, lxd: MockLxdClient, tmp_path: Path):
+    client = RunnerClients(
+        MagicMock(),
+        MagicMock(),
+        lxd,
+        MockRepoPolicyComplianceClient(),
+    )
+    pool_path = tmp_path / "test_storage"
+    pool_path.mkdir(exist_ok=True)
+    config = RunnerConfig("test_app", request.param[0], request.param[1], pool_path, "test_runner")
+    status = RunnerStatus()
+    return Runner(
+        client,
+        config,
+        status,
+    )
+
+
+def test_create(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    token: str,
+    binary_path: Path,
+    lxd: MockLxdClient,
+):
+    """
+    arrange: Nothing.
+    act: Create a runner.
+    assert: An lxd instance for the runner is created.
+    """
+
+    runner.create("test_image", vm_resources, binary_path, token)
+
+    instances = lxd.instances.all()
+    assert len(instances) == 1
+
+    if runner.config.proxies:
+        instance = instances[0]
+        env_proxy = instance.files.read_file("/home/ubuntu/github-runner/.env")
+        systemd_docker_proxy = instance.files.read_file(
+            "/etc/systemd/system/docker.service.d/http-proxy.conf"
         )
-        self.lxd.instances.create.assert_called_once_with(config=mock.ANY, wait=True)
-        self.lxd.reset_mock()
+        # Test the file has being written to.  This value does not contain the string as the
+        # jinja2.environment.Environment is mocked with MagicMock.
+        assert env_proxy is not None
+        assert systemd_docker_proxy is not None
 
-        # runner profile exists, creating container
-        self.lxd.profiles.exists.return_value = True
 
-        rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
-        rm._create_instance(virt="container")
-        self.lxd.profiles.create.assert_not_called()
-        self.lxd.instances.create.assert_called_once_with(config=mock.ANY, wait=True)
-        self.lxd.reset_mock()
+def test_create_lxd_fail(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    token: str,
+    binary_path: Path,
+    lxd: MockLxdClient,
+):
+    """
+    arrange: Setup the create runner to fail with lxd error.
+    act: Create a runner.
+    assert: Correct exception should be thrown. Any created instance should be
+        cleanup.
+    """
+    lxd.profiles.exists = mock_lxd_error_func
 
-        # runner profile exists, creating virtual-machine without vm-resources specify
-        self.lxd.profiles.exists.return_value = True
+    with pytest.raises(RunnerCreateError):
+        runner.create("test_image", vm_resources, binary_path, token)
 
-        rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
-        rm._create_instance(virt="virtual-machine")
-        self.lxd.profiles.create.assert_not_called()
-        self.lxd.instances.create.assert_called_once_with(config=mock.ANY, wait=True)
-        self.lxd.reset_mock()
+    assert len(lxd.instances.all()) == 0
 
-        # runner profile exists, creating virtual-machine with vm-resources specify
-        self.lxd.profiles.exists.return_value = True
 
-        rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
-        rm._create_instance(
-            virt="virtual-machine", vm_resources=VMResources(4, "7GiB", "10GiB")
-        )
-        self.lxd.profiles.create.assert_called_once_with(
-            "test-1234",
-            {"limits.cpu": "4", "limits.memory": "7GiB"},
-            {"root": {"path": "/", "pool": "default", "type": "disk", "size": "10GiB"}},
-        )
-        self.lxd.instances.create.assert_called_once_with(config=mock.ANY, wait=True)
-        self.lxd.reset_mock()
+def test_create_runner_fail(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    token: str,
+    binary_path: Path,
+    lxd: MockLxdClient,
+):
+    """
+    arrange: Setup the create runner to fail with runner error.
+    act: Create a runner.
+    assert: Correct exception should be thrown. Any created instance should be
+        cleanup.
+    """
+    runner._clients.lxd.instances.create = mock_runner_error_func
 
-    def test_create_vm_profile(self):
-        """Test creation of VM profile."""
-        rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
+    with pytest.raises(RunnerCreateError):
+        runner.create("test_image", vm_resources, binary_path, token)
 
-        # without any error
-        rm._create_vm_profile("test", vm_resources=VMResources(2, "4GiB", "20GiB"))
-        self.lxd.profiles.create.assert_called_once_with(
-            "test",
-            {"limits.cpu": "2", "limits.memory": "4GiB"},
-            {"root": {"path": "/", "pool": "default", "type": "disk", "size": "20GiB"}},
-        )
-        self.lxd.reset_mock()
 
-        # vm-resources not valid object
-        with pytest.raises(RunnerError):
-            rm._create_vm_profile("test", vm_resources=[2, "4GiB", "20GiB"])
+def test_remove(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    token: str,
+    binary_path: Path,
+    lxd: MockLxdClient,
+):
+    """
+    arrange: Create a runner.
+    act: Remove the runner.
+    assert: The lxd instance for the runner is removed.
+    """
 
-        self.lxd.profiles.create.assert_not_called()
+    runner.create("test_image", vm_resources, binary_path, token)
+    runner.remove("test_token")
+    assert len(lxd.instances.all()) == 0
 
-        # lxd profile creation failed
-        self.lxd.profiles.create.side_effect = LXDAPIException(
-            response=mock.MagicMock()
-        )
-        with pytest.raises(RunnerError):
-            rm._create_vm_profile("test", vm_resources=VMResources(2, "4GiB", "10GiB"))
 
-    def test_remove_runner(self):
-        """Test remove runner function.
+def test_remove_failed_instance(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    token: str,
+    binary_path: Path,
+    lxd: MockLxdClient,
+):
+    """
+    arrange: Create a stopped runner that failed to remove itself.
+    act: Remove the runner.
+    assert: The lxd instance for the runner is removed.
+    """
+    # Cases where the ephemeral instance encountered errors and the status was Stopped but not
+    # removed was found before.
+    runner.create("test_image", vm_resources, binary_path, token)
+    runner.instance.status = "Stopped"
+    runner.remove("test_token")
+    assert len(lxd.instances.all()) == 0
 
-        Note: This function is not completed, it tests only profile removal.
-        """
-        runner = RunnerInfo("test-1234", None, None)
-        profile = self.lxd.profiles.get.return_value = mock.MagicMock()
 
-        rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
-        rm._remove_runner(runner)
-        self.lxd.profiles.get.assert_called_once_with(runner.name)
-        profile.delete.assert_called_once()
+def test_remove_none(
+    runner: Runner,
+    token: str,
+    lxd: MockLxdClient,
+):
+    """
+    arrange: Not creating a runner.
+    act: Remove the runner.
+    assert: The lxd instance for the runner is removed.
+    """
 
-    def test_clean_unused_profiles(self):
-        """Test function to clean all unused LXD profiles."""
-        used_profile = mock.MagicMock()
-        used_profile.name = "test-1234"
-        used_profile.used_by = ["test-1234"]
-        unused_profile = mock.MagicMock()
-        unused_profile.name = "test-1235"
-        unused_profile.used_by = []
-        self.lxd.profiles.all.return_value = [used_profile, unused_profile]
+    runner.remove(token)
+    assert len(lxd.instances.all()) == 0
 
-        rm = RunnerManager("mockorg/repo", "mocktoken", "test", 5)
-        rm._clean_unused_profiles()
-        used_profile.delete.assert_not_called()
-        unused_profile.delete.assert_called_once()
+
+def test_remove_with_stop_error(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    token: str,
+    binary_path: Path,
+    lxd: MockLxdClient,
+):
+    """
+    arrange: Create a runner. Set up LXD stop fails with LxdError.
+    act: Remove the runner.
+    assert: RunnerRemoveError is raised.
+    """
+    runner.create("test_image", vm_resources, binary_path, token)
+    runner.instance.stop = mock_lxd_error_func
+
+    with pytest.raises(RunnerRemoveError):
+        runner.remove("test_token")
+
+
+def test_remove_with_delete_error(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    token: str,
+    binary_path: Path,
+    lxd: MockLxdClient,
+):
+    """
+    arrange: Create a runner. Set up LXD delete fails with LxdError.
+    act: Remove the runner.
+    assert: RunnerRemoveError is raised.
+    """
+    runner.create("test_image", vm_resources, binary_path, token)
+    runner.instance.status = "Stopped"
+    runner.instance.delete = mock_lxd_error_func
+
+    with pytest.raises(RunnerRemoveError):
+        runner.remove("test_token")

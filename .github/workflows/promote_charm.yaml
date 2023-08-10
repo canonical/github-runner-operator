@@ -1,0 +1,26 @@
+name: Promote charm
+
+on:
+  workflow_dispatch:
+    inputs:
+      origin-channel:
+        type: choice
+        description: 'Origin Channel'
+        options:
+        - latest/edge
+      destination-channel:
+        type: choice
+        description: 'Destination Channel'
+        options:
+        - latest/stable
+    secrets:
+      CHARMHUB_TOKEN:
+        required: true
+
+jobs:
+  promote-charm:
+    uses: canonical/operator-workflows/.github/workflows/promote_charm.yaml@promote-charm-base
+    with:
+      origin-channel: ${{ github.event.inputs.origin-channel }}
+      destination-channel: ${{ github.event.inputs.destination-channel }}
+    secrets: inherit
