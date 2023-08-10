@@ -1,7 +1,7 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Integration tests for github-runner charm."""
+"""Integration tests for github-runner charm with no runner."""
 
 import pytest
 from juju.application import Application

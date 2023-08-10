@@ -1,7 +1,10 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Integration tests for repo-policy-compliance with github-runner charm."""
+"""Integration tests for github-runner charm with a fork repo.
+
+The forked repo is configured to fail the repo-policy-compliance check.
+"""
 
 from time import sleep
 from typing import AsyncIterator, Iterator
