@@ -619,18 +619,10 @@ class GithubRunnerCharm(CharmBase):
 
         virtual_machines = self.config["virtual-machines"]
 
-        try:
-            delta_virtual_machines = runner_manager.reconcile(
-                virtual_machines, virtual_machines_resources
-            )
-            return {"delta": {"virtual-machines": delta_virtual_machines}}
-        # Safe guard against transient unexpected error.
-        except Exception as err:  # pylint: disable=broad-exception-caught
-            logger.exception("Failed to reconcile runners.")
-            # Failure to reconcile runners is a transient error.
-            # The charm automatically reconciles runners on a schedule.
-            self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
-            return {"delta": {"virtual-machines": 0}}
+        delta_virtual_machines = runner_manager.reconcile(
+            virtual_machines, virtual_machines_resources
+        )
+        return {"delta": {"virtual-machines": delta_virtual_machines}}
 
     def _install_repo_policy_compliance(self) -> bool:
         """Install latest version of repo_policy_compliance service.
