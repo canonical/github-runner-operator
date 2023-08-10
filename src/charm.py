@@ -486,8 +486,13 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
             return
         self.unit.status = MaintenanceStatus("Reconciling runners")
-
-        self._reconcile_runners(runner_manager)
+        try:
+            self._reconcile_runners(runner_manager)
+        # Safe guard against transient unexpected error.
+        except Exception as err:  # pylint: disable=broad-exception-caught
+            logger.exception("Failed to reconcile runners")
+            self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
+            return
 
         self.unit.status = ActiveStatus()
 
