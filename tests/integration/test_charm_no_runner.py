@@ -1,7 +1,7 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Integration tests for github-runner charm."""
+"""Integration tests for github-runner charm with no runner."""
 
 import pytest
 from juju.application import Application
@@ -9,7 +9,7 @@ from juju.model import Model
 
 from runner_manager import RunnerManager
 from tests.integration.helpers import (
-    assesrt_num_of_runners,
+    assert_num_of_runners,
     get_repo_policy_compliance_pip_info,
     install_repo_policy_compliance_from_git_source,
     remove_runner_bin,
@@ -190,7 +190,7 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    await assesrt_num_of_runners(unit, 1)
+    await assert_num_of_runners(unit, 1)
 
     # 2.
     await app.set_config({"virtual-machines": "0"})
@@ -199,4 +199,4 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    await assesrt_num_of_runners(unit, 0)
+    await assert_num_of_runners(unit, 0)
