@@ -9,7 +9,11 @@ import pytest
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import assert_resource_lxd_profile, assesrt_num_of_runners
+from tests.integration.helpers import (
+    assert_resource_lxd_profile,
+    assesrt_num_of_runners,
+    get_runner_names,
+)
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
@@ -19,27 +23,25 @@ async def test_reconcile_interval(model: Model, app: Application) -> None:
     """
     arrange: An working application with one runner.
     act:
-        1.  a. Change the virtual-machines configuration to 0.
-            b. Change the reconcile_interval configuration to 1 minute.
-        2. Wait for 2 minutes.
-        3. Change the virtual-machines configuration to 1.
-        4. Wait for 2 minutes.
+        1. Change the reconcile_interval configuration to 1 minute.
+        2. Crash the one runner
+        3. Wait for 2 minutes.
     assert:
         1. One runner exists.
         2. No runner exists.
-        3. No runner exists.
-        4. One runner exists.
+        3. One runner exists.
     """
     unit = app.units[0]
-
-    await app.set_config({"virtual-machines": "0", "reconcile-interval": "1"})
     await assesrt_num_of_runners(unit, 1)
 
-    await sleep(2 * 60)
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
-    await assesrt_num_of_runners(unit, 0)
+    await app.set_config({"reconcile-interval": "1"})
+    await assesrt_num_of_runners(unit, 1)
 
-    await app.set_config({"virtual-machines": "1"})
+    runner_names = await get_runner_names(unit)
+    assert len(runner_names) == 1
+    runner_name = runner_names[0]
+    action = await unit.run(f"lxc stop --force {runner_name}")
+    await action.wait()
     await assesrt_num_of_runners(unit, 0)
 
     await sleep(2 * 60)

@@ -131,7 +131,9 @@ async def assesrt_num_of_runners(unit: Unit, num: int) -> None:
     assert action.results["return-code"] == 0
 
     lxc_instance = json.loads(action.results["stdout"])
-    assert len(lxc_instance) == num
+    assert (
+        len(lxc_instance) == num
+    ), f"Current number of runners: {len(lxc_instance)} Expected number of runner: {num}"
 
     for instance in lxc_instance:
         action = await unit.run(f"lxc exec {instance['name']} -- ps aux")
