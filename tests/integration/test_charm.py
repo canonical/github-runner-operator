@@ -10,8 +10,8 @@ from juju.application import Application
 from juju.model import Model
 
 from tests.integration.helpers import (
+    assert_num_of_runners,
     assert_resource_lxd_profile,
-    assesrt_num_of_runners,
     get_runner_names,
 )
 from tests.status_name import ACTIVE_STATUS_NAME
@@ -30,18 +30,18 @@ async def test_reconcile_interval(model: Model, app: Application) -> None:
         2. One runner exists.
     """
     unit = app.units[0]
-    await assesrt_num_of_runners(unit, 1)
+    await assert_num_of_runners(unit, 1)
 
     runner_names = await get_runner_names(unit)
     assert len(runner_names) == 1
     runner_name = runner_names[0]
     action = await unit.run(f"lxc stop --force {runner_name}")
     await action.wait()
-    await assesrt_num_of_runners(unit, 0)
+    await assert_num_of_runners(unit, 0)
 
     await sleep(2 * 60)
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
-    await assesrt_num_of_runners(unit, 1)
+    await assert_num_of_runners(unit, 1)
 
 
 @pytest.mark.asyncio

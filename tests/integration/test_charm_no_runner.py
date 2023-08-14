@@ -4,6 +4,7 @@
 """Integration tests for github-runner charm with no runner."""
 
 from asyncio import sleep
+
 import pytest
 from juju.application import Application
 from juju.model import Model

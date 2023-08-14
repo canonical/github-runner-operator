@@ -94,7 +94,7 @@ class TestCharm(unittest.TestCase):
                 "path": "mockorg",
                 "token": "mocktoken",
                 "group": "mockgroup",
-                "reconcile-interval": 5,
+                "reconcile-interval": 5.0,
             }
         )
         harness.begin()
@@ -120,7 +120,7 @@ class TestCharm(unittest.TestCase):
     def test_repo_register(self, run, wt, mkdir, rm):
         harness = Harness(GithubRunnerCharm)
         harness.update_config(
-            {"path": "mockorg/repo", "token": "mocktoken", "reconcile-interval": 5}
+            {"path": "mockorg/repo", "token": "mocktoken", "reconcile-interval": 5.0}
         )
         harness.begin()
         harness.charm.on.config_changed.emit()

@@ -43,7 +43,7 @@ options:
       with KiB, MiB, GiB, TiB, PiB, EiB suffix.
   reconcile-interval:
     type: float
-    default: 10
+    default: 10.0
     description: >
       Minutes between each reconciliation between the current state and the target state of the
       runners. On reconciliation the charm polls the state of runners, such as, the number of
@@ -51,7 +51,7 @@ options:
       time interval will apply when next interval is triggered.
   update-interval:
     type: float
-    default: 60
+    default: 60.0
     description: >
       Minutes between each check for new versions of the runner binary and services the charm
       depends on. A jitter of 25% is added. Changes to the time interval will apply when next
