@@ -410,10 +410,13 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             Whether the runner binary or the services was updated.
         """
+        self.unit.status = MaintenanceStatus("Checking for updates")
+
         runner_manager = self._get_runner_manager()
         if not runner_manager:
             return False
 
+        self.unit.status = MaintenanceStatus("Checking for service updates")
         service_updated = self._install_repo_policy_compliance()
 
         # Check if the runner binary file exists.
@@ -421,7 +424,7 @@ class GithubRunnerCharm(CharmBase):
             self._stored.runner_bin_url = None
 
         try:
-            self.unit.status = MaintenanceStatus("Checking for runner updates")
+            self.unit.status = MaintenanceStatus("Checking for runner binary updates")
             runner_info = runner_manager.get_latest_runner_bin_url()
         except urllib.error.URLError as err:
             logger.exception("Failed to check for runner updates")
