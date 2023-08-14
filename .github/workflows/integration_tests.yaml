@@ -64,6 +64,66 @@ jobs:
             --token ${{secrets.E2E_TESTING_TOKEN}} \
             --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
             tests/integration/test_charm_fork_repo.py
+  integration-test-charm-no-runner-juju-2.9:
+    name: Integration test charm with no runner with juju 2.9
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup operator environment
+        uses: charmed-kubernetes/actions-operator@main
+        with:
+          juju-channel: 2.9/stable
+          provider: lxd
+      - name: Enable br_netfilter
+        run: sudo modprobe br_netfilter
+      - name: Run Integration tests
+        run: |
+          tox -e integration -- \
+            --keep-models \
+            --path ${{secrets.E2E_TESTING_REPO}} \
+            --token ${{secrets.E2E_TESTING_TOKEN}} \
+            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
+            tests/integration/test_charm_no_runner.py
+  integration-test-charm-juju-2.9:
+    name: Integration test charm with juju 2.9
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup operator environment
+        uses: charmed-kubernetes/actions-operator@main
+        with:
+          juju-channel: 2.9/stable
+          provider: lxd
+      - name: Enable br_netfilter
+        run: sudo modprobe br_netfilter
+      - name: Run Integration tests
+        run: |
+          tox -e integration -- \
+            --keep-models \
+            --path ${{secrets.E2E_TESTING_REPO}} \
+            --token ${{secrets.E2E_TESTING_TOKEN}} \
+            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
+            tests/integration/test_charm.py
+  integration-test-charm-fork-repo-juju-2.9:
+    name: Integration test charm with fork repo with juju 2.9
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup operator environment
+        uses: charmed-kubernetes/actions-operator@main
+        with:
+          juju-channel: 2.9/stable
+          provider: lxd
+      - name: Enable br_netfilter
+        run: sudo modprobe br_netfilter
+      - name: Run Integration tests
+        run: |
+          tox -e integration -- \
+            --keep-models \
+            --path ${{secrets.E2E_TESTING_REPO}} \
+            --token ${{secrets.E2E_TESTING_TOKEN}} \
+            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
+            tests/integration/test_charm_fork_repo.py
   required_status_checks:
     name: Required Integration Test Status Checks
     runs-on: ubuntu-latest
@@ -71,6 +131,9 @@ jobs:
       - integration-test-charm-no-runner
       - integration-test-charm
       - integration-test-charm-fork-repo
+      - integration-test-charm-no-runner-juju-2.9
+      - integration-test-charm-juju-2.9
+      - integration-test-charm-fork-repo-juju-2.9
     if: always() && !cancelled()
     timeout-minutes: 30
     steps:
@@ -78,3 +141,6 @@ jobs:
           [ '${{ needs.integration-test-charm-no-runner.result }}' = 'success' ] || (echo integration-test-charm-no-runner failed && false)
           [ '${{ needs.integration-test-charm.result }}' = 'success' ] || (echo integration-test-charm failed && false)
           [ '${{ needs.integration-test-charm-fork-repo.result }}' = 'success' ] || (echo integration-test-charm-fork-repo failed && false)
+          [ '${{ needs.integration-test-charm-no-runner-juju-2.9.result }}' = 'success' ] || (echo integration-test-charm-no-runner-juju-2.9 failed && false)
+          [ '${{ needs.integration-test-charm-juju-2.9.result }}' = 'success' ] || (echo integration-test-charm-juju-2.9 failed && false)
+          [ '${{ needs.integration-test-charm-fork-repo-juju-2.9.result }}' = 'success' ] || (echo integration-test-charm-fork-repo-juju-2.9 failed && false)
