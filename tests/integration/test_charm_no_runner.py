@@ -160,7 +160,7 @@ async def test_update_dependencies_action_on_runner_binary(
     # The runners should be flushed on update of runner binary.
     assert action.results["flush"] == "False"
 
-    assert not await check_runner_binary_exists(unit)
+    assert await check_runner_binary_exists(unit)
 
 
 @pytest.mark.asyncio
