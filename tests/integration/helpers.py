@@ -14,11 +14,28 @@ from runner_manager import RunnerManager
 from utilities import retry
 
 
+async def check_runner_binary_exists(unit: Unit) -> bool:
+    """Checks if runner binary exists in the charm.
+
+    Args:
+        unit: Unit instance to check for the LXD profile.
+
+    Returns:
+        Whether the runner binary file exists in the charm.
+    """
+    action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
+    await action.wait()
+    return action.results["return-code"] == 0
+
+
 async def get_repo_policy_compliance_pip_info(unit: Unit) -> None | str:
     """Get pip info for repo-policy-compliance.
 
     Args:
         unit: Unit instance to check for the LXD profile.
+
+    Returns:
+        If repo-policy-compliance is installed, returns the pip show output, else returns none.
     """
     action = await unit.run("python3 -m pip show repo-policy-compliance")
     await action.wait()

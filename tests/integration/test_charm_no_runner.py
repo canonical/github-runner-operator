@@ -3,6 +3,7 @@
 
 """Integration tests for github-runner charm."""
 
+from asyncio import sleep
 import pytest
 from juju.application import Application
 from juju.model import Model
@@ -10,6 +11,7 @@ from juju.model import Model
 from runner_manager import RunnerManager
 from tests.integration.helpers import (
     assesrt_num_of_runners,
+    check_runner_binary_exists,
     get_repo_policy_compliance_pip_info,
     install_repo_policy_compliance_from_git_source,
     remove_runner_bin,
@@ -20,6 +22,30 @@ REPO_POLICY_COMPLIANCE_VER_0_2_GIT_SOURCE = (
     "git+https://github.com/canonical/"
     "repo-policy-compliance@48b36c130b207278d20c3847ce651ac13fb9e9d7"
 )
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_update_interval(model: Model, app: Application) -> None:
+    """
+    arrange: An working application with one runner.
+    act:
+        1. Remove runner binary.
+        2. Wait for 2 minutes.
+    assert:
+        1. No runner binary exists.
+        3. Runner binary exists.
+    """
+    unit = app.units[0]
+    assert await check_runner_binary_exists(unit)
+
+    action = await unit.run(f"rm -f {RunnerManager.runner_bin_path}")
+    await action.wait()
+    assert not await check_runner_binary_exists(unit)
+
+    await sleep(2 * 60)
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    assert await check_runner_binary_exists(unit)
 
 
 @pytest.mark.asyncio
@@ -124,10 +150,7 @@ async def test_update_dependencies_action_on_runner_binary(
     # The runners should be flushed on update of runner binary.
     assert action.results["flush"] == "True"
 
-    # Check the runner bin does exist.
-    action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
-    await action.wait()
-    assert action.results["return-code"] == 0
+    assert await check_runner_binary_exists(unit)
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
@@ -136,10 +159,7 @@ async def test_update_dependencies_action_on_runner_binary(
     # The runners should be flushed on update of runner binary.
     assert action.results["flush"] == "False"
 
-    # Check the runner bin does exist.
-    action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
-    await action.wait()
-    assert action.results["return-code"] == 0
+    assert not await check_runner_binary_exists(unit)
 
 
 @pytest.mark.asyncio

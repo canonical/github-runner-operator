@@ -47,14 +47,15 @@ options:
     description: >
       Minutes between each reconciliation between the current state and the target state of the
       runners. On reconciliation the charm polls the state of runners, such as, the number of
-      container runners, and see if actions are needed. Changes to this time interval will apply
-      when next interval is triggered.
+      container runners, and see if actions are needed. A jitter of 25% is added. Changes to this
+      time interval will apply when next interval is triggered.
   update-interval:
     type: float
     default: 60
     description: >
-      Minutes between each check for new versions of the runner binary. Changes to the time interval
-      will apply when next interval is triggered.
+      Minutes between each check for new versions of the runner binary and services the charm
+      depends on. A jitter of 25% is added. Changes to the time interval will apply when next
+      interval is triggered.
   test-mode:
     type: string
     description: >
