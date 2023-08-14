@@ -477,6 +477,8 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of reconciling the runner state.
         """
+        self.unit.status = MaintenanceStatus("Reconciling runners")
+
         if not RunnerManager.runner_bin_path.is_file():
             logger.warning("Unable to reconcile due to missing runner binary")
             return
@@ -485,14 +487,8 @@ class GithubRunnerCharm(CharmBase):
         if not runner_manager:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
             return
-        self.unit.status = MaintenanceStatus("Reconciling runners")
-        try:
-            self._reconcile_runners(runner_manager)
-        # Safe guard against transient unexpected error.
-        except Exception as err:  # pylint: disable=broad-exception-caught
-            logger.exception("Failed to reconcile runners")
-            self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
-            return
+
+        self._reconcile_runners(runner_manager)
 
         self.unit.status = ActiveStatus()
 

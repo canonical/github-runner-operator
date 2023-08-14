@@ -42,17 +42,19 @@ options:
       Amount of disk space to allocate to root disk for virtual machine runner. Positive integers
       with KiB, MiB, GiB, TiB, PiB, EiB suffix.
   reconcile-interval:
-    type: int
+    type: float
     default: 10
     description: >
       Minutes between each reconciliation between the current state and the target state of the
       runners. On reconciliation the charm polls the state of runners, such as, the number of
-      container runners, and see if actions are needed.
+      container runners, and see if actions are needed. Changes to this time interval will apply
+      when next interval is triggered.
   update-interval:
-    type: int
+    type: float
     default: 60
     description: >
-      Minutes between each check for new versions of the runner binary.
+      Minutes between each check for new versions of the runner binary. Changes to the time interval
+      will apply when next interval is triggered.
   test-mode:
     type: string
     description: >
@@ -63,5 +65,5 @@ options:
     default: ""
     description: >
       A comma separated list of IPv4 networks in CIDR notation that runners can not access.
-      The runner will always have access to essential services such as DHCP and DNS regardless 
+      The runner will always have access to essential services such as DHCP and DNS regardless
       of the denylist configuration.

@@ -165,6 +165,8 @@ async def app_no_runner(
             "virtual-machines": 0,
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
+            "reconcile-interval": 1.0,
+            "update-interval": 1.0,
         },
     )
     await model.wait_for_idle()

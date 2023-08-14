@@ -23,18 +23,13 @@ async def test_reconcile_interval(model: Model, app: Application) -> None:
     """
     arrange: An working application with one runner.
     act:
-        1. Change the reconcile_interval configuration to 1 minute.
-        2. Crash the one runner
-        3. Wait for 2 minutes.
+        1. Crash the one runner
+        2. Wait for 2 minutes.
     assert:
-        1. One runner exists.
-        2. No runner exists.
-        3. One runner exists.
+        1. No runner exists.
+        2. One runner exists.
     """
     unit = app.units[0]
-    await assesrt_num_of_runners(unit, 1)
-
-    await app.set_config({"reconcile-interval": "1"})
     await assesrt_num_of_runners(unit, 1)
 
     runner_names = await get_runner_names(unit)
