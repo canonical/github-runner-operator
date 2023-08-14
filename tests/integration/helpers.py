@@ -131,7 +131,7 @@ async def get_runner_names(unit: Unit) -> tuple[str, ...]:
 
 
 @retry(tries=30, delay=30)
-async def assesrt_num_of_runners(unit: Unit, num: int) -> None:
+async def assert_num_of_runners(unit: Unit, num: int) -> None:
     """Check if runner instances are ready.
 
     Args:

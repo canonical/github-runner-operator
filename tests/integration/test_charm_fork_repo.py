@@ -1,7 +1,10 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Integration tests for repo-policy-compliance with github-runner charm."""
+"""Integration tests for github-runner charm with a fork repo.
+
+The forked repo is configured to fail the repo-policy-compliance check.
+"""
 
 import secrets
 from time import sleep
@@ -16,7 +19,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import assesrt_num_of_runners, get_runner_names
+from tests.integration.helpers import assert_num_of_runners, get_runner_names
 from tests.status_name import ACTIVE_STATUS_NAME
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
@@ -137,7 +140,7 @@ async def app_with_unsigned_commit_repo(
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # Wait until there is one runner.
-    await assesrt_num_of_runners(unit, 1)
+    await assert_num_of_runners(unit, 1)
 
     yield app_no_runner
 
@@ -176,9 +179,43 @@ async def test_dispatch_workflow_failure(
             break
         sleep(30)
     else:
-        assert False, "Timeout wait for workflow to complete"
+        assert False, "Timeout while waiting for workflow to complete"
 
     # The only job in the workflow is job that `echo` the runner name. If it fails then it should
     # be the pre-run job that failed.
     run = workflow.get_runs()[0]
     assert run.jobs()[0].conclusion == "failure"
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_path_config_change(
+    model: Model,
+    app_with_unsigned_commit_repo: Application,
+    github_repository: Repository,
+    path: str,
+) -> None:
+    """
+    arrange: A working application with one runner in a forked repoistory.
+    act: Change the path configuration to the main repository and reconcile runners.
+    assert: No runners connected to the forked repository and one runner in the main repository.
+    """
+    unit = app_with_unsigned_commit_repo.units[0]
+
+    await app_with_unsigned_commit_repo.set_config({"path": path})
+
+    action = await unit.run_action("reconcile-runners")
+    await action.wait()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+
+    runner_names = await get_runner_names(unit)
+    assert len(runner_names) == 1
+    runner_name = runner_names[0]
+
+    runners_in_repo = github_repository.get_self_hosted_runners()
+
+    runner_in_repo_with_same_name = tuple(
+        filter(lambda runner: runner.name == runner_name, runners_in_repo)
+    )
+
+    assert len(runner_in_repo_with_same_name) == 1

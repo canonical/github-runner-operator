@@ -92,7 +92,7 @@ async def test_flush_runner_and_resource_config(app: Application) -> None:
 
     configs = await app.get_config()
     await assert_resource_lxd_profile(unit, configs)
-    await assesrt_num_of_runners(unit, 1)
+    await assert_num_of_runners(unit, 1)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
