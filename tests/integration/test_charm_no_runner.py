@@ -27,7 +27,7 @@ REPO_POLICY_COMPLIANCE_VER_0_2_GIT_SOURCE = (
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_update_interval(model: Model, app: Application) -> None:
+async def test_update_interval(model: Model, app_no_runner: Application) -> None:
     """
     arrange: An working application with one runner.
     act:
@@ -37,7 +37,7 @@ async def test_update_interval(model: Model, app: Application) -> None:
         1. No runner binary exists.
         3. Runner binary exists.
     """
-    unit = app.units[0]
+    unit = app_no_runner.units[0]
     assert await check_runner_binary_exists(unit)
 
     action = await unit.run(f"rm -f {RunnerManager.runner_bin_path}")
