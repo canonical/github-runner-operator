@@ -44,8 +44,8 @@ jobs:
             --token ${{secrets.E2E_TESTING_TOKEN}} \
             --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
             tests/integration/test_charm.py
-  integration-test-repo-policy-compliance:
-    name: Integration test repo policy compliance
+  integration-test-charm-fork-repo:
+    name: Integration test charm with fork repo
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -63,18 +63,18 @@ jobs:
             --path ${{secrets.E2E_TESTING_REPO}} \
             --token ${{secrets.E2E_TESTING_TOKEN}} \
             --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
-            tests/integration/test_repo_policy_compliance.py
+            tests/integration/test_charm_fork_repo.py
   required_status_checks:
     name: Required Integration Test Status Checks
     runs-on: ubuntu-latest
     needs:
       - integration-test-charm-no-runner
       - integration-test-charm
-      - integration-test-repo-policy-compliance
+      - integration-test-charm-fork-repo
     if: always() && !cancelled()
     timeout-minutes: 30
     steps:
       - run: |
           [ '${{ needs.integration-test-charm-no-runner.result }}' = 'success' ] || (echo integration-test-charm-no-runner failed && false)
           [ '${{ needs.integration-test-charm.result }}' = 'success' ] || (echo integration-test-charm failed && false)
-          [ '${{ needs.integration-test-repo-policy-compliance.result }}' = 'success' ] || (echo integration-test-repo-policy-compliance failed && false)
+          [ '${{ needs.integration-test-charm-fork-repo.result }}' = 'success' ] || (echo integration-test-charm-fork-repo failed && false)

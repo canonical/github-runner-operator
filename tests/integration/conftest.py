@@ -15,7 +15,7 @@ from juju.application import Application
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-from tests.integration.helpers import assesrt_num_of_runners
+from tests.integration.helpers import assert_num_of_runners
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
@@ -187,6 +187,6 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # Wait until there is one runner.
-    await assesrt_num_of_runners(unit, 1)
+    await assert_num_of_runners(unit, 1)
 
     yield app_no_runner

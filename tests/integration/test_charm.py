@@ -7,7 +7,7 @@ import pytest
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import assert_resource_lxd_profile, assesrt_num_of_runners
+from tests.integration.helpers import assert_num_of_runners, assert_resource_lxd_profile
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
@@ -59,7 +59,7 @@ async def test_flush_runner_and_resource_config(app: Application) -> None:
 
     configs = await app.get_config()
     await assert_resource_lxd_profile(unit, configs)
-    await assesrt_num_of_runners(unit, 1)
+    await assert_num_of_runners(unit, 1)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()

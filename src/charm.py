@@ -435,15 +435,7 @@ class GithubRunnerCharm(CharmBase):
         runner_bin_updated = False
         if runner_info.download_url != self._stored.runner_bin_url:
             self.unit.status = MaintenanceStatus("Updating runner binary")
-            try:
-                runner_manager.update_runner_bin(runner_info)
-            # Safe guard against transient unexpected error.
-            except Exception as err:  # pylint: disable=broad-exception-caught
-                logger.exception("Failed to update runner binary")
-                # Failure to download runner binary is a transient error.
-                # The charm automatically update runner binary on a schedule.
-                self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
-                return False
+            runner_manager.update_runner_bin(runner_info)
             self._stored.runner_bin_url = runner_info.download_url
             runner_bin_updated = True
 
@@ -486,13 +478,7 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
             return
         self.unit.status = MaintenanceStatus("Reconciling runners")
-        try:
-            self._reconcile_runners(runner_manager)
-        # Safe guard against transient unexpected error.
-        except Exception as err:  # pylint: disable=broad-exception-caught
-            logger.exception("Failed to reconcile runners")
-            self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
-            return
+        self._reconcile_runners(runner_manager)
 
         self.unit.status = ActiveStatus()
 
