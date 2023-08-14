@@ -3,6 +3,7 @@
 
 """EventTimer for scheduling dispatch of juju event on regular intervals."""
 
+import os
 import subprocess  # nosec B404
 from pathlib import Path
 from typing import Optional, TypedDict
@@ -35,6 +36,8 @@ class EventTimer:
         unit_name (str): Name of the juju unit to emit events to.
     """
 
+    _juju_run_path = Path("/usr/bin/juju-run")
+    _juju_exec_path = Path("/usr/bin/juju-exec")
     _systemd_path = Path("/etc/systemd/system")
 
     def __init__(self, unit_name: str):
@@ -75,6 +78,10 @@ class EventTimer:
         Raises:
             TimerEnableError: Timer cannot be started. Events will be not emitted.
         """
+        # For juju 2.9 support. Juju 3.x renamed `juju_run` to `juju_exec`.
+        if self._juju_run_path.exists():
+            os.symlink(self._juju_run_path, self._juju_exec_path)
+
         context: EventConfig = {
             "event": event_name,
             "interval": interval,
