@@ -6,10 +6,12 @@ on:
 
 jobs:
   ssh:
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      with:
-        limit-access-to-actor: true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
   # test:
   #   runs-on: [self-hosted, large]
   #   steps:
