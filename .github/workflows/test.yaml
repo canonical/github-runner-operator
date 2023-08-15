@@ -12,4 +12,5 @@ jobs:
         with:
           path: mlserver-huggingface
           verbosity: trace
-      - run: sleep 10000
+      - if: failure()
+        run: sleep 10000
