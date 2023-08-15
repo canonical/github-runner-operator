@@ -3,13 +3,10 @@
 
 """Integration tests for github-runner charm with no runner."""
 
-from asyncio import sleep
-
 import pytest
 from juju.application import Application
 from juju.model import Model
 
-from runner_manager import RunnerManager
 from tests.integration.helpers import (
     assert_num_of_runners,
     check_runner_binary_exists,
@@ -23,30 +20,6 @@ REPO_POLICY_COMPLIANCE_VER_0_2_GIT_SOURCE = (
     "git+https://github.com/canonical/"
     "repo-policy-compliance@48b36c130b207278d20c3847ce651ac13fb9e9d7"
 )
-
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_update_interval(model: Model, app_no_runner: Application) -> None:
-    """
-    arrange: An working application with one runner.
-    act:
-        1. Remove runner binary.
-        2. Wait for 2 minutes.
-    assert:
-        1. No runner binary exists.
-        3. Runner binary exists.
-    """
-    unit = app_no_runner.units[0]
-    assert await check_runner_binary_exists(unit)
-
-    action = await unit.run(f"rm -f {RunnerManager.runner_bin_path}")
-    await action.wait()
-    assert not await check_runner_binary_exists(unit)
-
-    await sleep(2 * 60)
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
-    assert await check_runner_binary_exists(unit)
 
 
 @pytest.mark.asyncio

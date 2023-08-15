@@ -165,8 +165,9 @@ async def app_no_runner(
             "virtual-machines": 0,
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
-            "reconcile-interval": 1.0,
-            "update-interval": 1.0,
+            # Set the scheduled event to 1 hour to avoid interfering with the tests.
+            "reconcile-interval": 60.0,
+            "update-interval": 60.0,
         },
     )
     await model.wait_for_idle()
@@ -192,3 +193,53 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     await assert_num_of_runners(unit, 1)
 
     yield app_no_runner
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app_scheduled_events(
+    model: Model,
+    charm_path: Path,
+    app_name: str,
+    path: str,
+    token: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
+) -> AsyncIterator[Application]:
+    """Application with no token.
+
+    Test should ensure it returns with the application having one runner.
+
+    This fixture has to be it own deployment. The scheduled events are set to
+    one hour in other application to avoid conflicting with the tests. Changes
+    to the duration of scheduled interval only takes effect after the next
+    trigger. Therefore, it would take a hour for the change to take effect.
+    """
+    subprocess.run(["sudo", "modprobe", "br_netfilter"])
+
+    await model.set_config(
+        {
+            "juju-http-proxy": http_proxy,
+            "juju-https-proxy": https_proxy,
+            "juju-no-proxy": no_proxy,
+            "logging-config": "<root>=INFO;unit=DEBUG",
+        }
+    )
+
+    application = await model.deploy(
+        charm_path,
+        application_name=app_name,
+        series="jammy",
+        config={
+            "path": path,
+            "token": token,
+            "virtual-machines": 1,
+            "denylist": "10.10.0.0/16",
+            "test-mode": "insecure",
+            "reconcile-interval": 2.0,
+            "update-interval": 2.0,
+        },
+    )
+    await model.wait_for_idle()
+
+    yield application
