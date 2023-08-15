@@ -1,12 +1,15 @@
 name: Tests
 
 on:
-  # pull_request:
+  pull_request:
   workflow_dispatch:
 
 jobs:
-  unit-tests:
-    uses: canonical/operator-workflows/.github/workflows/test.yaml@main
-    secrets: inherit
-    with:
-      self-hosted-runner: false
+  test:
+    runs-on: [self-hosted, large]
+    steps:
+      - uses: canonical/craft-actions/rockcraft-pack@main
+        with:
+          path: mlserver-huggingface
+          verbosity: trace
+      - run: sleep 10000
