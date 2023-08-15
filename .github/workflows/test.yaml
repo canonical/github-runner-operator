@@ -5,12 +5,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
-    runs-on: [self-hosted, large]
-    steps:
-      - uses: canonical/craft-actions/rockcraft-pack@main
-        with:
-          path: mlserver-huggingface
-          verbosity: trace
-      - if: failure()
-        run: sleep 10000
+  ssh:
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      with:
+        limit-access-to-actor: true
+  # test:
+  #   runs-on: [self-hosted, large]
+  #   steps:
+  #     - uses: canonical/craft-actions/rockcraft-pack@main
+  #       with:
+  #         path: mlserver-huggingface
+  #         verbosity: trace
+  #     - if: failure()
+  #       run: sleep 10000
