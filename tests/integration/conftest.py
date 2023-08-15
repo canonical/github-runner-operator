@@ -15,7 +15,7 @@ from juju.application import Application
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-from tests.integration.helpers import assert_num_of_runners
+from tests.integration.helpers import assert_num_of_runners, wait_on_action
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
@@ -186,7 +186,7 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
 
     await app_no_runner.set_config({"virtual-machines": "1"})
     action = await unit.run_action("reconcile-runners")
-    await action.wait()
+    await wait_on_action(action)
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # Wait until there is one runner.
@@ -247,7 +247,7 @@ async def app_scheduled_events(
 
     await application.set_config({"virtual-machines": "1"})
     action = await unit.run_action("reconcile-runners")
-    await action.wait()
+    await wait_on_action(action)
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # Wait until there is one runner.

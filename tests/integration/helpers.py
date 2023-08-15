@@ -7,7 +7,9 @@ import json
 from typing import Any
 
 import yaml
+from juju.action import Action
 from juju.unit import Unit
+from juju.version import SUPPORTED_MAJOR_VERSION as JUJU_SUPPORTED_MAJOR_VERSION
 
 from runner import Runner
 from runner_manager import RunnerManager
@@ -24,7 +26,7 @@ async def check_runner_binary_exists(unit: Unit) -> bool:
         Whether the runner binary file exists in the charm.
     """
     action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
-    await action.wait()
+    await wait_on_action(action)
     return action.results["return-code"] == 0
 
 
@@ -38,7 +40,7 @@ async def get_repo_policy_compliance_pip_info(unit: Unit) -> None | str:
         If repo-policy-compliance is installed, returns the pip show output, else returns none.
     """
     action = await unit.run("python3 -m pip show repo-policy-compliance")
-    await action.wait()
+    await wait_on_action(action)
 
     if action.results["return-code"] == 0:
         return action.results["stdout"]
@@ -54,11 +56,11 @@ async def install_repo_policy_compliance_from_git_source(unit: Unit, source: Non
         source: The git source to install the package. If none the package is removed.
     """
     action = await unit.run("python3 -m pip uninstall --yes repo-policy-compliance")
-    await action.wait()
+    await wait_on_action(action)
 
     if source:
         action = await unit.run(f"python3 -m pip install {source}")
-        await action.wait()
+        await wait_on_action(action)
 
         assert action.results["return-code"] == 0
 
@@ -70,11 +72,11 @@ async def remove_runner_bin(unit: Unit) -> None:
         unit: Unit instance to check for the LXD profile.
     """
     action = await unit.run(f"rm {RunnerManager.runner_bin_path}")
-    await action.wait()
+    await wait_on_action(action)
 
     # No file should exists under with the filename.
     action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
-    await action.wait()
+    await wait_on_action(action)
     assert action.results["return-code"] != 0
 
 
@@ -96,7 +98,7 @@ async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> No
 
     # Verify the profile exists.
     action = await unit.run("lxc profile list --format json")
-    await action.wait()
+    await wait_on_action(action)
     assert action.results["return-code"] == 0
     profiles = json.loads(action.results["stdout"])
     profile_names = [profile["name"] for profile in profiles]
@@ -104,7 +106,7 @@ async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> No
 
     # Verify the profile contains the correct resource settings.
     action = await unit.run(f"lxc profile show {resource_profile_name}")
-    await action.wait()
+    await wait_on_action(action)
     assert action.results["return-code"] == 0
     profile_content = yaml.safe_load(action.results["stdout"])
     assert f"{cpu}" == profile_content["config"]["limits.cpu"]
@@ -122,7 +124,7 @@ async def get_runner_names(unit: Unit) -> tuple[str, ...]:
         Tuple of runner names.
     """
     action = await unit.run("lxc list --format json")
-    await action.wait()
+    await wait_on_action(action)
 
     assert action.results["return-code"] == 0
 
@@ -143,7 +145,7 @@ async def assert_num_of_runners(unit: Unit, num: int) -> None:
             limit.
     """
     action = await unit.run("lxc list --format json")
-    await action.wait()
+    await wait_on_action(action)
 
     assert action.results["return-code"] == 0
 
@@ -154,7 +156,16 @@ async def assert_num_of_runners(unit: Unit, num: int) -> None:
 
     for instance in lxc_instance:
         action = await unit.run(f"lxc exec {instance['name']} -- ps aux")
-        await action.wait()
+        await wait_on_action(action)
         assert action.status == "completed"
 
         assert f"/bin/bash {Runner.runner_script}" in action.results["stdout"]
+
+
+async def wait_on_action(action: Action) -> None:
+    """Wait on action if not juju 2.
+
+    Since juju 3, actions needs to be await on.
+    """
+    if JUJU_SUPPORTED_MAJOR_VERSION != "2":
+        await action.wait()

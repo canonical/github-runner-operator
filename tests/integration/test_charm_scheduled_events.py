@@ -18,6 +18,7 @@ from tests.integration.helpers import (
     assert_num_of_runners,
     check_runner_binary_exists,
     get_runner_names,
+    wait_on_action,
 )
 from tests.status_name import ACTIVE_STATUS_NAME
 
@@ -38,7 +39,7 @@ async def test_update_interval(model: Model, app_scheduled_events: Application) 
     assert await check_runner_binary_exists(unit)
 
     action = await unit.run(f"rm -f {RunnerManager.runner_bin_path}")
-    await action.wait()
+    await wait_on_action(action)
     assert not await check_runner_binary_exists(unit)
 
     await sleep(3 * 60)
@@ -64,7 +65,7 @@ async def test_reconcile_interval(model: Model, app_scheduled_events: Applicatio
     assert len(runner_names) == 1
     runner_name = runner_names[0]
     action = await unit.run(f"lxc stop --force {runner_name}")
-    await action.wait()
+    await wait_on_action(action)
     await assert_num_of_runners(unit, 0)
 
     await sleep(3 * 60)

@@ -13,6 +13,7 @@ from tests.integration.helpers import (
     get_repo_policy_compliance_pip_info,
     install_repo_policy_compliance_from_git_source,
     remove_runner_bin,
+    wait_on_action,
 )
 from tests.status_name import ACTIVE_STATUS_NAME
 
@@ -37,7 +38,7 @@ async def test_update_dependencies_action_latest_service(
     unit = app_no_runner.units[0]
 
     action = await unit.run_action("update-dependencies")
-    await action.wait()
+    await wait_on_action(action)
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     assert action.results["flush"] == "False"
@@ -62,7 +63,7 @@ async def test_update_dependencies_action_no_service(
     assert await get_repo_policy_compliance_pip_info(unit) is None
 
     action = await unit.run_action("update-dependencies")
-    await action.wait()
+    await wait_on_action(action)
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     assert action.results["flush"] == "True"
@@ -90,7 +91,7 @@ async def test_update_dependencies_action_old_service(
     assert await get_repo_policy_compliance_pip_info(unit) != latest_version_info
 
     action = await unit.run_action("update-dependencies")
-    await action.wait()
+    await wait_on_action(action)
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     assert action.results["flush"] == "True"
@@ -118,7 +119,7 @@ async def test_update_dependencies_action_on_runner_binary(
     await remove_runner_bin(unit)
 
     action = await unit.run_action("update-dependencies")
-    await action.wait()
+    await wait_on_action(action)
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # The runners should be flushed on update of runner binary.
@@ -127,7 +128,7 @@ async def test_update_dependencies_action_on_runner_binary(
     assert await check_runner_binary_exists(unit)
 
     action = await unit.run_action("update-dependencies")
-    await action.wait()
+    await wait_on_action(action)
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # The runners should be flushed on update of runner binary.
@@ -147,7 +148,7 @@ async def test_check_runners_no_runners(app_no_runner: Application) -> None:
     unit = app_no_runner.units[0]
 
     action = await unit.run_action("check-runners")
-    await action.wait()
+    await wait_on_action(action)
 
     assert action.results["online"] == "0"
     assert action.results["offline"] == "0"
@@ -181,7 +182,7 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     await app.set_config({"virtual-machines": "1"})
 
     action = await unit.run_action("reconcile-runners")
-    await action.wait()
+    await wait_on_action(action)
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     await assert_num_of_runners(unit, 1)
@@ -190,7 +191,7 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     await app.set_config({"virtual-machines": "0"})
 
     action = await unit.run_action("reconcile-runners")
-    await action.wait()
+    await wait_on_action(action)
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     await assert_num_of_runners(unit, 0)
