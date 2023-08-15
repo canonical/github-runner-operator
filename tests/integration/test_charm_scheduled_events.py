@@ -56,10 +56,9 @@ async def test_reconcile_interval(model: Model, app_scheduled_events: Applicatio
         2. Wait for 2 minutes.
     assert:
         1. No runner exists.
-        2. One runner exists.
+        2. One runner exists. The runner name should not be the same as the starting one.
     """
     unit = app_scheduled_events.units[0]
-    await assert_num_of_runners(unit, 1)
 
     runner_names = await get_runner_names(unit)
     assert len(runner_names) == 1
@@ -70,4 +69,7 @@ async def test_reconcile_interval(model: Model, app_scheduled_events: Applicatio
 
     await sleep(3 * 60)
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
-    await assert_num_of_runners(unit, 1)
+
+    runner_names = await get_runner_names(unit)
+    assert len(runner_names) == 1
+    assert runner_name != runner_names[0]
