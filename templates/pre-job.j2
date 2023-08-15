@@ -29,7 +29,6 @@ elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
   GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.repo.full_name')
 
   logger -s " \
-  GITHUB_SOURCE_REPOSITORY: ${GITHUB_SOURCE_REPOSITORY}, \
   GITHUB_SOURCE_REPOSITORY: ${GITHUB_SOURCE_REPOSITORY} \
   GITHUB_BASE_REF: ${GITHUB_BASE_REF}, \
   GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
