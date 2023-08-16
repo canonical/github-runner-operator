@@ -19,7 +19,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import assert_num_of_runners, get_runner_names, on_juju_2
+from tests.integration.helpers import assert_num_of_runners, get_runner_names
 from tests.status_name import ACTIVE_STATUS_NAME
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"

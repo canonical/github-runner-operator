@@ -30,8 +30,8 @@ def metadata() -> dict[str, Any]:
 @pytest.fixture(scope="module")
 def app_name() -> str:
     """Randomized application name."""
-    # Randomized app name to avoid collision when connecting to GitHub.
-    return f"integration-{secrets.token_hex(2)}"
+    # Randomized app name to avoid collision when runner is connecting to GitHub.
+    return f"integration-id{secrets.token_hex(2)}"
 
 
 @pytest_asyncio.fixture(scope="module")
