@@ -149,7 +149,7 @@ async def assert_num_of_runners(unit: Unit, num: int) -> None:
         assert f"/bin/bash {Runner.runner_script}" in stdout
 
 
-async def run_in_unit(unit: Unit, command: str, timeout=None) -> tuple[int, str]:
+async def run_in_unit(unit: Unit, command: str, timeout=None) -> tuple[int, str | None]:
     """Run command in juju unit.
 
     Compatible with juju 3 and juju 2.
@@ -166,7 +166,7 @@ async def run_in_unit(unit: Unit, command: str, timeout=None) -> tuple[int, str]
     # For compatibility with juju 2.
     # Prior to juju 3, the SUPPORTED_MAJOR_VERSION was not defined.
     if not hasattr(juju.version, "SUPPORTED_MAJOR_VERSION"):
-        return (action.results["Code"], action.results["Stdout"])
+        return (action.results["Code"], action.results.get("Stdout", None))
 
     await action.wait()
-    return (action.results["return-code"], action.results["stdout"])
+    return (action.results["return-code"], action.results.get("stdout", None))
