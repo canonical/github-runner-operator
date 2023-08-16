@@ -47,6 +47,9 @@ def forked_github_repository(
         name += "-juju2"
     forked_repository = github_repository.create_fork(name=name)
 
+    # TODO: Remove
+    print(f"===============FORK-REPO-NAME==============={forked_repository.name}=====================================")
+
     # Wait for repo to be ready
     for _ in range(10):
         try:
