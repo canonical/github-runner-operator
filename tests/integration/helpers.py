@@ -91,6 +91,7 @@ async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> No
     # Verify the profile exists.
     return_code, stdout = await run_in_unit(unit, "lxc profile list --format json")
     assert return_code == 0
+    assert stdout is not None
     profiles = json.loads(stdout)
     profile_names = [profile["name"] for profile in profiles]
     assert resource_profile_name in profile_names
@@ -98,6 +99,7 @@ async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> No
     # Verify the profile contains the correct resource settings.
     return_code, stdout = await run_in_unit(unit, f"lxc profile show {resource_profile_name}")
     assert return_code == 0
+    assert stdout is not None
     profile_content = yaml.safe_load(stdout)
     assert f"{cpu}" == profile_content["config"]["limits.cpu"]
     assert mem == profile_content["config"]["limits.memory"]
@@ -116,6 +118,7 @@ async def get_runner_names(unit: Unit) -> tuple[str, ...]:
     return_code, stdout = await run_in_unit(unit, "lxc list --format json")
 
     assert return_code == 0
+    assert stdout is not None
 
     lxc_instance: list[dict[str, str]] = json.loads(stdout)
     return tuple(runner["name"] for runner in lxc_instance)
@@ -135,6 +138,7 @@ async def assert_num_of_runners(unit: Unit, num: int) -> None:
     """
     return_code, stdout = await run_in_unit(unit, "lxc list --format json")
     assert return_code == 0
+    assert stdout is not None
 
     lxc_instance = json.loads(stdout)
     assert (
@@ -145,6 +149,7 @@ async def assert_num_of_runners(unit: Unit, num: int) -> None:
         return_code, stdout = await run_in_unit(unit, f"lxc exec {instance['name']} -- ps aux")
         assert return_code == 0
 
+        assert stdout is not None
         assert f"/bin/bash {Runner.runner_script}" in stdout
 
 
