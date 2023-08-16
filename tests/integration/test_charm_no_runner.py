@@ -38,9 +38,9 @@ async def test_update_dependencies_action_latest_service(
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
-
     assert action.results["flush"] == "False"
+
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
     assert await get_repo_policy_compliance_pip_info(unit) is not None
 
 

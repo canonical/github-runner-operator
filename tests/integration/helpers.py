@@ -134,7 +134,6 @@ async def assert_num_of_runners(unit: Unit, num: int) -> None:
             limit.
     """
     return_code, stdout = await run_in_unit(unit, "lxc list --format json")
-
     assert return_code == 0
 
     lxc_instance = json.loads(stdout)
@@ -166,7 +165,7 @@ async def run_in_unit(unit: Unit, command: str, timeout=None) -> tuple[int, str 
     # For compatibility with juju 2.
     # Prior to juju 3, the SUPPORTED_MAJOR_VERSION was not defined.
     if not hasattr(juju.version, "SUPPORTED_MAJOR_VERSION"):
-        return (action.results["Code"], action.results.get("Stdout", None))
+        return (int(action.results["Code"]), action.results.get("Stdout", None))
 
     await action.wait()
     return (action.results["return-code"], action.results.get("stdout", None))
