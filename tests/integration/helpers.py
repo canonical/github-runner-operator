@@ -69,7 +69,7 @@ async def remove_runner_bin(unit: Unit) -> None:
 
     # No file should exists under with the filename.
     return_code, _ = await run_in_unit(unit, f"test -f {RunnerManager.runner_bin_path}")
-    assert return_code == 0
+    assert return_code != 0
 
 
 async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> None:
