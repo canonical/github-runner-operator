@@ -42,13 +42,17 @@ def forked_github_repository(
     github_repository: Repository,
 ) -> Iterator[Repository]:
     """Create a fork for a GitHub repository."""
-    name = f"{github_repository.name}/{secrets.token_hex(8)}"
+    name = f"{github_repository.name}/{secrets.token_hex(4)}"
     if on_juju_2():
         name += "-juju2"
+
+    # TODO: Remove
+    print(f"==========================================={name}======================================================")
+
     forked_repository = github_repository.create_fork(name=name)
 
     # TODO: Remove
-    print(f"===============FORK-REPO-NAME==============={forked_repository.name}=====================================")
+    print(f"==========================================={forked_repository.name}======================================================")
 
     # Wait for repo to be ready
     for _ in range(10):
@@ -69,7 +73,7 @@ def forked_github_repository(
 @pytest.fixture(scope="module")
 def forked_github_branch(forked_github_repository: Repository) -> Iterator[Branch]:
     """Create a new forked branch for testing."""
-    branch_name = f"test/{secrets.token_hex(8)}"
+    branch_name = f"test/{secrets.token_hex(4)}"
 
     main_branch = forked_github_repository.get_branch(forked_github_repository.default_branch)
     branch_ref = forked_github_repository.create_git_ref(
