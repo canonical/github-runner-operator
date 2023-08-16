@@ -159,7 +159,7 @@ jobs:
     name: Integration test charm scheduled events with juju 2.9
     runs-on: ubuntu-latest
     needs:
-      - integration-test-charm-scheduled-events-juju-2-9
+      - integration-test-charm-scheduled-events
     steps:
       - uses: actions/checkout@v3
       - name: Setup operator environment
