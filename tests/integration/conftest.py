@@ -31,7 +31,7 @@ def metadata() -> dict[str, Any]:
 def app_name() -> str:
     """Randomized application name."""
     # Randomized app name to avoid collision when connecting to GitHub.
-    return f"integration-{secrets.token_hex(4)}"
+    return f"integration-{secrets.token_hex(2)}"
 
 
 @pytest_asyncio.fixture(scope="module")

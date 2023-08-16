@@ -42,17 +42,7 @@ def forked_github_repository(
     github_repository: Repository,
 ) -> Iterator[Repository]:
     """Create a fork for a GitHub repository."""
-    name = f"{github_repository.name}/{secrets.token_hex(4)}"
-    if on_juju_2():
-        name += "-juju2"
-
-    # TODO: Remove
-    print(f"==========================================={name}======================================================")
-
-    forked_repository = github_repository.create_fork(name=name)
-
-    # TODO: Remove
-    print(f"==========================================={forked_repository.name}======================================================")
+    forked_repository = github_repository.create_fork()
 
     # Wait for repo to be ready
     for _ in range(10):
