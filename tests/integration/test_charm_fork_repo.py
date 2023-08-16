@@ -19,7 +19,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import assert_num_of_runners, get_runner_names
+from tests.integration.helpers import assert_num_of_runners, get_runner_names, on_juju_2
 from tests.status_name import ACTIVE_STATUS_NAME
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
@@ -42,9 +42,10 @@ def forked_github_repository(
     github_repository: Repository,
 ) -> Iterator[Repository]:
     """Create a fork for a GitHub repository."""
-    forked_repository = github_repository.create_fork(
-        name=f"{github_repository.name}/{secrets.token_hex(8)}"
-    )
+    name = f"{github_repository.name}/{secrets.token_hex(8)}"
+    if on_juju_2():
+        name += "-juju2"
+    forked_repository = github_repository.create_fork(name=name)
 
     # Wait for repo to be ready
     for _ in range(10):
