@@ -168,7 +168,7 @@ async def wait_on_action(action: Action) -> None:
     Since juju 3, actions needs to be await on.
     """
     # Prior to juju 3, the SUPPORTED_MAJOR_VERSION was not defined.
-    if hasattr(juju.version, "SUPPORTED_MAJOR_VERSION"):
+    if not hasattr(juju.version, "SUPPORTED_MAJOR_VERSION"):
         action.wait()
         return
 
