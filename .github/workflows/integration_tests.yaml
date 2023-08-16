@@ -104,12 +104,6 @@ jobs:
             --token ${{secrets.E2E_TESTING_TOKEN}} \
             --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
             tests/integration/test_charm_no_runner.py
-      # TODO: Remove
-      - name: Setup tmate session
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: true
   integration-test-charm-juju-2-9:
     name: Integration test charm with juju 2.9
     runs-on: ubuntu-latest

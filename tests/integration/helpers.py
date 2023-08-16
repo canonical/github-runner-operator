@@ -6,10 +6,10 @@
 import json
 from typing import Any
 
+import juju.version
 import yaml
 from juju.action import Action
 from juju.unit import Unit
-import juju.version
 
 from runner import Runner
 from runner_manager import RunnerManager
@@ -167,6 +167,10 @@ async def wait_on_action(action: Action) -> None:
 
     Since juju 3, actions needs to be await on.
     """
-    # Prior to juju 3, the SUPPORTED_MAJOR_VERSION is not defined.
+    # Prior to juju 3, the SUPPORTED_MAJOR_VERSION was not defined.
     if hasattr(juju.version, "SUPPORTED_MAJOR_VERSION"):
-        await action.wait()
+        action.wait()
+        return
+
+    # Since juju 3, action.wait needs to be awaited on.
+    await action.wait()
