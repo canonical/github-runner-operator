@@ -8,7 +8,6 @@ from typing import Any
 
 import juju.version
 import yaml
-from juju.action import Action
 from juju.unit import Unit
 
 from runner import Runner
@@ -25,9 +24,8 @@ async def check_runner_binary_exists(unit: Unit) -> bool:
     Returns:
         Whether the runner binary file exists in the charm.
     """
-    action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
-    await wait_on_action(action)
-    return action.results["return-code"] == 0
+    return_code, _ = await run_in_unit(unit, f"test -f {RunnerManager.runner_bin_path}")
+    return return_code == 0
 
 
 async def get_repo_policy_compliance_pip_info(unit: Unit) -> None | str:
@@ -39,11 +37,10 @@ async def get_repo_policy_compliance_pip_info(unit: Unit) -> None | str:
     Returns:
         If repo-policy-compliance is installed, returns the pip show output, else returns none.
     """
-    action = await unit.run("python3 -m pip show repo-policy-compliance")
-    await wait_on_action(action)
+    return_code, stdout = await run_in_unit(unit, "python3 -m pip show repo-policy-compliance")
 
-    if action.results["return-code"] == 0:
-        return action.results["stdout"]
+    if return_code == 0:
+        return stdout
 
     return None
 
@@ -55,14 +52,11 @@ async def install_repo_policy_compliance_from_git_source(unit: Unit, source: Non
         unit: Unit instance to check for the LXD profile.
         source: The git source to install the package. If none the package is removed.
     """
-    action = await unit.run("python3 -m pip uninstall --yes repo-policy-compliance")
-    await wait_on_action(action)
+    await run_in_unit(unit, "python3 -m pip uninstall --yes repo-policy-compliance")
 
     if source:
-        action = await unit.run(f"python3 -m pip install {source}")
-        await wait_on_action(action)
-
-        assert action.results["return-code"] == 0
+        return_code, _ = await run_in_unit(unit, f"python3 -m pip install {source}")
+        assert return_code == 0
 
 
 async def remove_runner_bin(unit: Unit) -> None:
@@ -71,13 +65,11 @@ async def remove_runner_bin(unit: Unit) -> None:
     Args:
         unit: Unit instance to check for the LXD profile.
     """
-    action = await unit.run(f"rm {RunnerManager.runner_bin_path}")
-    await wait_on_action(action)
+    await run_in_unit(unit, f"rm {RunnerManager.runner_bin_path}")
 
     # No file should exists under with the filename.
-    action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
-    await wait_on_action(action)
-    assert action.results["return-code"] != 0
+    return_code, _ = await run_in_unit(unit, f"test -f {RunnerManager.runner_bin_path}")
+    assert return_code == 0
 
 
 async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> None:
@@ -97,18 +89,16 @@ async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> No
     resource_profile_name = Runner._get_resource_profile_name(cpu, mem, disk)
 
     # Verify the profile exists.
-    action = await unit.run("lxc profile list --format json")
-    await wait_on_action(action)
-    assert action.results["return-code"] == 0
-    profiles = json.loads(action.results["stdout"])
+    return_code, stdout = await run_in_unit(unit, "lxc profile list --format json")
+    assert return_code == 0
+    profiles = json.loads(stdout)
     profile_names = [profile["name"] for profile in profiles]
     assert resource_profile_name in profile_names
 
     # Verify the profile contains the correct resource settings.
-    action = await unit.run(f"lxc profile show {resource_profile_name}")
-    await wait_on_action(action)
-    assert action.results["return-code"] == 0
-    profile_content = yaml.safe_load(action.results["stdout"])
+    return_code, stdout = await run_in_unit(unit, f"lxc profile show {resource_profile_name}")
+    assert return_code == 0
+    profile_content = yaml.safe_load(stdout)
     assert f"{cpu}" == profile_content["config"]["limits.cpu"]
     assert mem == profile_content["config"]["limits.memory"]
     assert disk == profile_content["devices"]["root"]["size"]
@@ -123,12 +113,11 @@ async def get_runner_names(unit: Unit) -> tuple[str, ...]:
     Returns:
         Tuple of runner names.
     """
-    action = await unit.run("lxc list --format json")
-    await wait_on_action(action)
+    return_code, stdout = await run_in_unit(unit, "lxc list --format json")
 
-    assert action.results["return-code"] == 0
+    assert return_code == 0
 
-    lxc_instance: list[dict[str, str]] = json.loads(action.results["stdout"])
+    lxc_instance: list[dict[str, str]] = json.loads(stdout)
     return tuple(runner["name"] for runner in lxc_instance)
 
 
@@ -144,33 +133,40 @@ async def assert_num_of_runners(unit: Unit, num: int) -> None:
         AssertionError: Correct number of runners is not found within timeout
             limit.
     """
-    action = await unit.run("lxc list --format json")
-    await wait_on_action(action)
+    return_code, stdout = await run_in_unit(unit, "lxc list --format json")
 
-    assert action.results["return-code"] == 0
+    assert return_code == 0
 
-    lxc_instance = json.loads(action.results["stdout"])
+    lxc_instance = json.loads(stdout)
     assert (
         len(lxc_instance) == num
     ), f"Current number of runners: {len(lxc_instance)} Expected number of runner: {num}"
 
     for instance in lxc_instance:
-        action = await unit.run(f"lxc exec {instance['name']} -- ps aux")
-        await wait_on_action(action)
-        assert action.status == "completed"
+        return_code, stdout = await run_in_unit(unit, f"lxc exec {instance['name']} -- ps aux")
+        assert return_code == 0
 
-        assert f"/bin/bash {Runner.runner_script}" in action.results["stdout"]
+        assert f"/bin/bash {Runner.runner_script}" in stdout
 
 
-async def wait_on_action(action: Action) -> None:
-    """Wait on action if not juju 2.
+async def run_in_unit(unit: Unit, command: str, timeout=None) -> tuple[int, str]:
+    """Run command in juju unit.
 
-    Since juju 3, actions needs to be await on.
+    Compatible with juju 3 and juju 2.
+
+    Args:
+        unit: Juju unit to execute the command in.
+        command: Command to execute.
+
+    Returns:
+        Tuple of return code and stdout.
     """
+    action = await unit.run(command, timeout)
+
+    # For compatibility with juju 2.
     # Prior to juju 3, the SUPPORTED_MAJOR_VERSION was not defined.
     if not hasattr(juju.version, "SUPPORTED_MAJOR_VERSION"):
-        action.wait()
-        return
+        return (action.results["Code"], action.results["Stdout"])
 
-    # Since juju 3, action.wait needs to be awaited on.
     await action.wait()
+    return (action.results["return-code"], action.results["stdout"])

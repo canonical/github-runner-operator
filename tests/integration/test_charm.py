@@ -7,11 +7,7 @@ import pytest
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import (
-    assert_num_of_runners,
-    assert_resource_lxd_profile,
-    wait_on_action,
-)
+from tests.integration.helpers import assert_num_of_runners, assert_resource_lxd_profile
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
@@ -40,7 +36,7 @@ async def test_flush_runner_and_resource_config(app: Application) -> None:
 
     # 1.
     action = await app.units[0].run_action("check-runners")
-    await wait_on_action(action)
+    await action.wait()
 
     assert action.status == "completed"
     assert action.results["online"] == "1"
@@ -59,14 +55,14 @@ async def test_flush_runner_and_resource_config(app: Application) -> None:
 
     # 4.
     action = await app.units[0].run_action("flush-runners")
-    await wait_on_action(action)
+    await action.wait()
 
     configs = await app.get_config()
     await assert_resource_lxd_profile(unit, configs)
     await assert_num_of_runners(unit, 1)
 
     action = await app.units[0].run_action("check-runners")
-    await wait_on_action(action)
+    await action.wait()
 
     assert action.status == "completed"
     assert action.results["online"] == "1"
@@ -87,7 +83,7 @@ async def test_check_runner(app: Application) -> None:
     assert: Action returns result with one runner.
     """
     action = await app.units[0].run_action("check-runners")
-    await wait_on_action(action)
+    await action.wait()
 
     assert action.status == "completed"
     assert action.results["online"] == "1"
@@ -107,7 +103,7 @@ async def test_token_config_changed(model: Model, app: Application, token_alt: s
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     action = await app.units[0].run("cat /etc/systemd/system/repo-policy-compliance.service")
-    await wait_on_action(action)
+    await action.wait()
 
     assert action.status == "completed"
     assert f"GITHUB_TOKEN={token_alt}" in action.results["stdout"]

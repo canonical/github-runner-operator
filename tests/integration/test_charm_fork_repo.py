@@ -19,7 +19,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import assert_num_of_runners, get_runner_names, wait_on_action
+from tests.integration.helpers import assert_num_of_runners, get_runner_names
 from tests.status_name import ACTIVE_STATUS_NAME
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
@@ -136,7 +136,7 @@ async def app_with_unsigned_commit_repo(
         {"virtual-machines": "1", "path": forked_github_repository.full_name}
     )
     action = await unit.run_action("reconcile-runners")
-    await wait_on_action(action)
+    await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # Wait until there is one runner.
@@ -205,7 +205,7 @@ async def test_path_config_change(
     await app_with_unsigned_commit_repo.set_config({"path": path})
 
     action = await unit.run_action("reconcile-runners")
-    await wait_on_action(action)
+    await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     runner_names = await get_runner_names(unit)
