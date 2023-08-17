@@ -35,8 +35,6 @@ class EventTimer:
         unit_name (str): Name of the juju unit to emit events to.
     """
 
-    _juju_run_path = Path("/usr/bin/juju-run")
-    _juju_exec_path = Path("/usr/bin/juju-exec")
     _systemd_path = Path("/etc/systemd/system")
 
     def __init__(self, unit_name: str):
