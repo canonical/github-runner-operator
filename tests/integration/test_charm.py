@@ -8,7 +8,7 @@ from juju.application import Application
 from juju.model import Model
 
 from tests.integration.helpers import (
-    assert_num_of_runners,
+    wait_till_num_of_runners,
     assert_resource_lxd_profile,
     run_in_unit,
 )
@@ -63,7 +63,7 @@ async def test_flush_runner_and_resource_config(app: Application) -> None:
 
     configs = await app.get_config()
     await assert_resource_lxd_profile(unit, configs)
-    await assert_num_of_runners(unit, 1)
+    await wait_till_num_of_runners(unit, 1)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()

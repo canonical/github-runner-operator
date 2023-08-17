@@ -8,7 +8,7 @@ from juju.application import Application
 from juju.model import Model
 
 from tests.integration.helpers import (
-    assert_num_of_runners,
+    wait_till_num_of_runners,
     check_runner_binary_exists,
     get_repo_policy_compliance_pip_info,
     install_repo_policy_compliance_from_git_source,
@@ -184,7 +184,7 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    await assert_num_of_runners(unit, 1)
+    await wait_till_num_of_runners(unit, 1)
 
     # 2.
     await app.set_config({"virtual-machines": "0"})
@@ -193,4 +193,4 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    await assert_num_of_runners(unit, 0)
+    await wait_till_num_of_runners(unit, 0)

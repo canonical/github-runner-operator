@@ -19,7 +19,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import assert_num_of_runners, get_runner_names
+from tests.integration.helpers import wait_till_num_of_runners, get_runner_names
 from tests.status_name import ACTIVE_STATUS_NAME
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
@@ -138,7 +138,7 @@ async def app_with_unsigned_commit_repo(
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # Wait until there is one runner.
-    await assert_num_of_runners(unit, 1)
+    await wait_till_num_of_runners(unit, 1)
 
     yield app_no_runner
 

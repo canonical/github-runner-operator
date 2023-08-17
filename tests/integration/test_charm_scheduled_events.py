@@ -16,7 +16,7 @@ from juju.model import Model
 
 from runner_manager import RunnerManager
 from tests.integration.helpers import (
-    assert_num_of_runners,
+    wait_till_num_of_runners,
     check_runner_binary_exists,
     get_runner_names,
     run_in_unit,
@@ -65,7 +65,7 @@ async def test_reconcile_interval(model: Model, app_scheduled_events: Applicatio
     assert len(runner_names) == 1
     runner_name = runner_names[0]
     await run_in_unit(unit, f"lxc stop --force {runner_name}")
-    await assert_num_of_runners(unit, 0)
+    await wait_till_num_of_runners(unit, 0)
 
     await sleep(3 * 60)
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)

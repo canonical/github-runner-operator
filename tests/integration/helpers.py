@@ -125,8 +125,8 @@ async def get_runner_names(unit: Unit) -> tuple[str, ...]:
 
 
 @retry(tries=30, delay=30)
-async def assert_num_of_runners(unit: Unit, num: int) -> None:
-    """Check if runner instances are ready.
+async def wait_till_num_of_runners(unit: Unit, num: int) -> None:
+    """Wait and check the number of runners.
 
     Args:
         unit: Unit instance to check for the LXD profile.
