@@ -15,7 +15,7 @@ from juju.application import Application
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-from tests.integration.helpers import assert_num_of_runners
+from tests.integration.helpers import wait_till_num_of_runners
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
@@ -30,8 +30,8 @@ def metadata() -> dict[str, Any]:
 @pytest.fixture(scope="module")
 def app_name() -> str:
     """Randomized application name."""
-    # Randomized app name to avoid collision when connecting to GitHub.
-    return f"integration-{secrets.token_hex(4)}"
+    # Randomized app name to avoid collision when runner is connecting to GitHub.
+    return f"integration-id{secrets.token_hex(2)}"
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -165,6 +165,9 @@ async def app_no_runner(
             "virtual-machines": 0,
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
+            # Set the scheduled event to 1 hour to avoid interfering with the tests.
+            "reconcile-interval": 60,
+            "update-interval": 60,
         },
     )
     await model.wait_for_idle()
@@ -187,6 +190,68 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # Wait until there is one runner.
-    await assert_num_of_runners(unit, 1)
+    await wait_till_num_of_runners(unit, 1)
 
     yield app_no_runner
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app_scheduled_events(
+    model: Model,
+    charm_path: Path,
+    app_name: str,
+    path: str,
+    token: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
+) -> AsyncIterator[Application]:
+    """Application with no token.
+
+    Test should ensure it returns with the application having one runner.
+
+    This fixture has to deploy a new application. The scheduled events are set
+    to one hour in other application to avoid conflicting with the tests.
+    Changes to the duration of scheduled interval only takes effect after the
+    next trigger. Therefore, it would take a hour for the duration change to
+    take effect.
+    """
+    subprocess.run(["sudo", "modprobe", "br_netfilter"])
+
+    await model.set_config(
+        {
+            "juju-http-proxy": http_proxy,
+            "juju-https-proxy": https_proxy,
+            "juju-no-proxy": no_proxy,
+            "logging-config": "<root>=INFO;unit=DEBUG",
+        }
+    )
+
+    application = await model.deploy(
+        charm_path,
+        application_name=app_name,
+        series="jammy",
+        config={
+            "path": path,
+            "token": token,
+            "virtual-machines": 0,
+            "denylist": "10.10.0.0/16",
+            "test-mode": "insecure",
+            "reconcile-interval": 2,
+            "update-interval": 2,
+        },
+    )
+    await model.wait_for_idle()
+
+    # Spawn one runner. Spawning one runner during deployment will cause timeout waiting for model.
+    unit = application.units[0]
+
+    await application.set_config({"virtual-machines": "1"})
+    action = await unit.run_action("reconcile-runners")
+    await action.wait()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+
+    # Wait until there is one runner.
+    await wait_till_num_of_runners(unit, 1)
+
+    yield application

@@ -47,12 +47,15 @@ options:
     description: >
       Minutes between each reconciliation between the current state and the target state of the
       runners. On reconciliation the charm polls the state of runners, such as, the number of
-      container runners, and see if actions are needed.
+      container runners, and see if actions are needed. A random delay of 25% is added. Changes to
+      this time interval will apply when next interval is triggered.
   update-interval:
     type: int
     default: 60
     description: >
-      Minutes between each check for new versions of the runner binary.
+      Minutes between each check for new versions of the runner binary and services the charm
+      depends on. A random delay of 25% is added. Changes to the time interval will apply when next
+      interval is triggered.
   test-mode:
     type: string
     description: >
@@ -63,5 +66,5 @@ options:
     default: ""
     description: >
       A comma separated list of IPv4 networks in CIDR notation that runners can not access.
-      The runner will always have access to essential services such as DHCP and DNS regardless 
+      The runner will always have access to essential services such as DHCP and DNS regardless
       of the denylist configuration.
