@@ -154,14 +154,13 @@ async def assert_num_of_runners(unit: Unit, num: int) -> None:
 
 
 def on_juju_2() -> bool:
-    """Whether the tests are ran on juju 2.
-
-    The juju library does not support `__version__`.
-    Prior to juju 3, the SUPPORTED_MAJOR_VERSION was not defined.
+    """Check if juju 2 is used.
 
     Returns:
-        Whether the tests are ran on juju 2.
+        Whether juju 2 is used.
     """
+    # The juju library does not support `__version__`.
+    # Prior to juju 3, the SUPPORTED_MAJOR_VERSION was not defined.
     return not hasattr(juju.version, "SUPPORTED_MAJOR_VERSION")
 
 

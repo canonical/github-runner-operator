@@ -3,7 +3,8 @@
 
 """Integration tests for github-runner charm with scheduled events.
 
-Split into it own module, as scheduled events with interfere with most tests.
+Scheduled events can interfere with most tests. Therefore, an application with
+scheduled events are in its own module.
 """
 
 
@@ -30,7 +31,7 @@ async def test_update_interval(model: Model, app_scheduled_events: Application) 
     arrange: An working application with one runner.
     act:
         1. Remove runner binary.
-        2. Wait for 2 minutes.
+        2. Wait for 3 minutes.
     assert:
         1. No runner binary exists.
         3. Runner binary exists.
@@ -53,7 +54,7 @@ async def test_reconcile_interval(model: Model, app_scheduled_events: Applicatio
     arrange: An working application with one runner.
     act:
         1. Crash the one runner
-        2. Wait for 2 minutes.
+        2. Wait for 3 minutes, and then wait for ActiveStatus.
     assert:
         1. No runner exists.
         2. One runner exists. The runner name should not be the same as the starting one.

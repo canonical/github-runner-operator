@@ -210,10 +210,11 @@ async def app_scheduled_events(
 
     Test should ensure it returns with the application having one runner.
 
-    This fixture has to be it own deployment. The scheduled events are set to
-    one hour in other application to avoid conflicting with the tests. Changes
-    to the duration of scheduled interval only takes effect after the next
-    trigger. Therefore, it would take a hour for the change to take effect.
+    This fixture has to deploy an new application. The scheduled events are set
+    to one hour in other application to avoid conflicting with the tests.
+    Changes to the duration of scheduled interval only takes effect after the
+    next trigger. Therefore, it would take a hour for the duration change to
+    take effect.
     """
     subprocess.run(["sudo", "modprobe", "br_netfilter"])
 
