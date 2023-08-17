@@ -8,9 +8,9 @@ from juju.application import Application
 from juju.model import Model
 
 from tests.integration.helpers import (
-    wait_till_num_of_runners,
     assert_resource_lxd_profile,
     run_in_unit,
+    wait_till_num_of_runners,
 )
 from tests.status_name import ACTIVE_STATUS_NAME
 

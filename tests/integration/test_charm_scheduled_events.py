@@ -16,10 +16,10 @@ from juju.model import Model
 
 from runner_manager import RunnerManager
 from tests.integration.helpers import (
-    wait_till_num_of_runners,
     check_runner_binary_exists,
     get_runner_names,
     run_in_unit,
+    wait_till_num_of_runners,
 )
 from tests.status_name import ACTIVE_STATUS_NAME
 

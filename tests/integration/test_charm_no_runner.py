@@ -8,11 +8,11 @@ from juju.application import Application
 from juju.model import Model
 
 from tests.integration.helpers import (
-    wait_till_num_of_runners,
     check_runner_binary_exists,
     get_repo_policy_compliance_pip_info,
     install_repo_policy_compliance_from_git_source,
     remove_runner_bin,
+    wait_till_num_of_runners,
 )
 from tests.status_name import ACTIVE_STATUS_NAME
 
