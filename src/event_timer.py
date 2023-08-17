@@ -22,9 +22,9 @@ class EventConfig(TypedDict):
     """Configuration used by service and timer templates."""
 
     event: str
-    interval: float
-    jitter: float
-    timeout: float
+    interval: int
+    random_delay: int
+    timeout: int
     unit: str
 
 
@@ -60,9 +60,7 @@ class EventTimer:
         dest = self._systemd_path / f"ghro.{event_name}.{template_type}"
         dest.write_text(template.render(context))
 
-    def ensure_event_timer(
-        self, event_name: str, interval: float, timeout: Optional[float] = None
-    ):
+    def ensure_event_timer(self, event_name: str, interval: int, timeout: Optional[int] = None):
         """Ensure that a systemd service and timer are registered to dispatch the given event.
 
         The interval is how frequently, in minutes, that the event should be dispatched.
@@ -80,7 +78,7 @@ class EventTimer:
         context: EventConfig = {
             "event": event_name,
             "interval": interval,
-            "jitter": interval / 4,
+            "random_delay": interval // 4,
             "timeout": timeout or (interval * 30),
             "unit": self.unit_name,
         }

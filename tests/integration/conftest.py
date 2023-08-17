@@ -166,8 +166,8 @@ async def app_no_runner(
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
             # Set the scheduled event to 1 hour to avoid interfering with the tests.
-            "reconcile-interval": 60.0,
-            "update-interval": 60.0,
+            "reconcile-interval": 60,
+            "update-interval": 60,
         },
     )
     await model.wait_for_idle()
@@ -210,7 +210,7 @@ async def app_scheduled_events(
 
     Test should ensure it returns with the application having one runner.
 
-    This fixture has to deploy an new application. The scheduled events are set
+    This fixture has to deploy a new application. The scheduled events are set
     to one hour in other application to avoid conflicting with the tests.
     Changes to the duration of scheduled interval only takes effect after the
     next trigger. Therefore, it would take a hour for the duration change to
@@ -237,8 +237,8 @@ async def app_scheduled_events(
             "virtual-machines": 0,
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
-            "reconcile-interval": 2.0,
-            "update-interval": 2.0,
+            "reconcile-interval": 2,
+            "update-interval": 2,
         },
     )
     await model.wait_for_idle()
