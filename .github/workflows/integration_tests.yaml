@@ -23,7 +23,7 @@ jobs:
         run: sudo modprobe br_netfilter
       - name: Run Integration tests
         run: |
-          tox -e integration -- \
+          tox -e integration-juju3 -- \
             --keep-models \
             --path ${{secrets.E2E_TESTING_REPO}} \
             --token ${{secrets.E2E_TESTING_TOKEN}} \
@@ -43,7 +43,7 @@ jobs:
         run: sudo modprobe br_netfilter
       - name: Run Integration tests
         run: |
-          tox -e integration -- \
+          tox -e integration-juju3 -- \
             --keep-models \
             --path ${{secrets.E2E_TESTING_REPO}} \
             --token ${{secrets.E2E_TESTING_TOKEN}} \
@@ -63,7 +63,7 @@ jobs:
         run: sudo modprobe br_netfilter
       - name: Run Integration tests
         run: |
-          tox -e integration -- \
+          tox -e integration-juju3 -- \
             --keep-models \
             --path ${{secrets.E2E_TESTING_REPO}} \
             --token ${{secrets.E2E_TESTING_TOKEN}} \
@@ -83,7 +83,7 @@ jobs:
         run: sudo modprobe br_netfilter
       - name: Run Integration tests
         run: |
-          tox -e integration -- \
+          tox -e integration-juju3 -- \
             --keep-models \
             --path ${{secrets.E2E_TESTING_REPO}} \
             --token ${{secrets.E2E_TESTING_TOKEN}} \
@@ -105,7 +105,7 @@ jobs:
         run: sudo modprobe br_netfilter
       - name: Run Integration tests
         run: |
-          tox -e integration-juju-2-9 -- \
+          tox -e integration-juju2 -- \
             --keep-models \
             --path ${{secrets.E2E_TESTING_REPO}} \
             --token ${{secrets.E2E_TESTING_TOKEN}} \
@@ -127,7 +127,7 @@ jobs:
         run: sudo modprobe br_netfilter
       - name: Run Integration tests
         run: |
-          tox -e integration-juju-2-9 -- \
+          tox -e integration-juju2 -- \
             --keep-models \
             --path ${{secrets.E2E_TESTING_REPO}} \
             --token ${{secrets.E2E_TESTING_TOKEN}} \
@@ -149,7 +149,7 @@ jobs:
         run: sudo modprobe br_netfilter
       - name: Run Integration tests
         run: |
-          tox -e integration-juju-2-9 -- \
+          tox -e integration-juju2 -- \
             --keep-models \
             --path ${{secrets.E2E_TESTING_REPO}} \
             --token ${{secrets.E2E_TESTING_TOKEN}} \
@@ -171,7 +171,7 @@ jobs:
         run: sudo modprobe br_netfilter
       - name: Run Integration tests
         run: |
-          tox -e integration-juju-2-9 -- \
+          tox -e integration-juju2 -- \
             --keep-models \
             --path ${{secrets.E2E_TESTING_REPO}} \
             --token ${{secrets.E2E_TESTING_TOKEN}} \
