@@ -164,9 +164,8 @@ async def test_dispatch_workflow_failure(
 
     workflow = forked_github_repository.get_workflow(id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME)
 
-    assert not list(workflow.get_runs()), "Existing workflow runs in created fork repo"
-
-    workflow.create_dispatch(
+    # The `create_dispatch` returns True on success.
+    assert workflow.create_dispatch(
         branch_with_unsigned_commit, {"runner": app_with_unsigned_commit_repo.name}
     )
 
@@ -179,10 +178,15 @@ async def test_dispatch_workflow_failure(
     else:
         assert False, "Timeout while waiting for workflow to complete"
 
-    # The only job in the workflow is job that `echo` the runner name. If it fails then it should
-    # be the pre-run job that failed.
-    run = workflow.get_runs()[0]
-    assert run.jobs()[0].conclusion == "failure"
+    # If multiple instance of this test is ran in parallel, there multiple workflow runs can be
+    # present. The `create_dispatch` does not specify which run it creates. Since all runs should
+    # fail, we can check for that. However, this means one test that fails will cause all instance
+    # of this test to fail. GitHub Action for integration test runs test in different juju version
+    # in parallel.
+    for run in workflow.get_runs():
+        # The only job in the workflow is job that `echo` the runner name. If it fails then it
+        # should be the pre-run job that failed.
+        assert run.jobs()[0].conclusion == "failure"
 
 
 @pytest.mark.asyncio
