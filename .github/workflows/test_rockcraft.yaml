@@ -42,7 +42,7 @@ jobs:
       - name: Setup LXD
         run: |
           sudo lxd waitready || true
-          sudo lxd init --minimal
+          sudo lxd init --auto
           sudo chmod a+wr /var/snap/lxd/common/lxd/unix.socket
           lxc network set lxdbr0 ipv6.address none
           bash -c 'sudo usermod -a -G lxd $USER'
