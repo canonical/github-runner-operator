@@ -57,7 +57,7 @@ jobs:
       - name: Build ROCK and copy it to Docker
         id: rock_in_docker
         run: |
-          rockcraft pack --verbosity=debug
+          rockcraft pack
         working-directory: ./${{ matrix.rock }}
 
       - name: Cat rockcraft logs
