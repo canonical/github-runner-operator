@@ -57,8 +57,10 @@ jobs:
       - name: Build ROCK and copy it to Docker
         id: rock_in_docker
         run: |
-          sudo env
-          sudo rockcraft pack --verbosity=debug
+          sudo lxc launch ubuntu:22.04 testing
+          sudo lxc exec testing -- curl -x http://squid.internal:3128 ubuntu.com -vvv
+          sudo lxc exec testing -- apt install traceroute
+          sudo lxc exec testing -- traceroute squid.internal
         working-directory: ./${{ matrix.rock }}
 
       - name: Cat rockcraft logs
