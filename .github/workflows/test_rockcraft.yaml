@@ -12,7 +12,7 @@ on:
 jobs:
   build-scan-rocks:
     name: Build and scan ROCKs self-hosted
-    runs-on: [self-hosted, linux, X64, jammy, two-xlarge]
+    runs-on: [self-hosted, linux, X64, jammy, xlarge]
     # long timeout ensures heavy ROCKs have enoguh time to finish build/pack
     timeout-minutes: 2400
     strategy:
@@ -57,6 +57,7 @@ jobs:
         id: rock_in_docker
         run: |
           sudo lxc launch ubuntu:22.04 testing
+          sleep 60
           sudo lxc exec testing -- curl -x http://squid.internal:3128 ubuntu.com -vvv
           sudo lxc exec testing -- apt install traceroute
           sudo lxc exec testing -- traceroute squid.internal
