@@ -1,0 +1,83 @@
+#
+# On pull request workflow for ROCKs on self-hosted Github runners
+# - Build ROCK
+# - Scan using Trivy scanner
+# - Upload scan report
+#
+name: On pull request self-hosted
+
+on:
+  pull_request:
+
+jobs:
+  build-scan-rocks:
+    name: Build and scan ROCKs self-hosted
+    runs-on: [self-hosted, linux, X64, jammy, two-xlarge]
+    # long timeout ensures heavy ROCKs have enoguh time to finish build/pack
+    timeout-minutes: 2400
+    strategy:
+      matrix:
+        rock:
+          - mlserver-huggingface
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+        with:
+          repository: canonical/seldonio-rocks
+
+      - name: Install tools
+        run: |
+          sudo apt-get update -yqq
+          sudo apt install software-properties-common -yqq
+          sudo apt-get install -yqq python3-pip
+          sudo --preserve-env=http_proxy,https_proxy,no_proxy pip3 install tox pip-tools
+          sudo snap install jq
+          sudo snap install yq
+
+      - name: Install ROCK dev tools
+        run: |
+          sudo snap install rockcraft --classic --edge
+          sudo snap install skopeo --edge --devmode
+
+      - name: Setup LXD
+        run: |
+          sudo lxd waitready || true
+          sudo lxd init --minimal
+          sudo chmod a+wr /var/snap/lxd/common/lxd/unix.socket
+          lxc network set lxdbr0 ipv6.address none
+          bash -c 'sudo usermod -a -G lxd $USER'
+          bash -c 'sudo su $USER'
+
+      # TO-DO: use canonical/craft-actions/rockcraft-pack@main action when it is working in self-hosted runners
+      # - name: Build
+      #   uses: canonical/craft-actions/rockcraft-pack@main
+      #   with:
+      #     path: ${{ matrix.rock }}
+
+      - name: Build ROCK and copy it to Docker
+        id: rock_in_docker
+        run: |
+          sleep 30m
+          rockcraft pack --verbosity=debug
+        working-directory: ./${{ matrix.rock }}
+
+      - name: Scan for vulnerabilities
+        id: scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'image'
+          image-ref: '${{ steps.rock_in_docker.outputs.image }}'
+          format: 'json'
+          output: '${{ matrix.rock }}/trivy-report-${{ matrix.rock }}.json'
+          ignore-unfixed: true
+
+      - name: Prepare artifacts
+        run: |
+          tar zcvf trivy-report-${{ matrix.rock }}.tar.gz trivy-report-${{ matrix.rock }}.json
+        working-directory: ${{ matrix.rock }}
+
+      - name: Upload Trivy reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivy-report-${{ matrix.rock }}
+          path: ${{ matrix.rock }}/trivy-report-${{ matrix.rock }}.tar.gz
