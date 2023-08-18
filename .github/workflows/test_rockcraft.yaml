@@ -57,7 +57,8 @@ jobs:
       - name: Build ROCK and copy it to Docker
         id: rock_in_docker
         run: |
-          sudo lxc launch ubuntu:22.04
+          sudo rockcraft pack --verbosity=debug
+        working-directory: ./${{ matrix.rock }}
 
       - name: Cat rockcraft logs
         if: always()
