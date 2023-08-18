@@ -29,7 +29,7 @@ jobs:
         run: |
           sudo apt-get update -yqq
           sudo apt install software-properties-common -yqq
-          sudo apt-get install -yqq strace python3-pip bpfcc-tools
+          sudo apt-get install -yqq strace python3-pip
           sudo --preserve-env=http_proxy,https_proxy,no_proxy pip3 install tox pip-tools
           sudo snap install jq
           sudo snap install yq
@@ -57,7 +57,7 @@ jobs:
       - name: Build ROCK and copy it to Docker
         id: rock_in_docker
         run: |
-          dd if=/dev/urandom of=test bs=1G count=4 status=progress
+          sudo lxc launch ubuntu:22.04
 
       - name: Cat rockcraft logs
         if: always()
