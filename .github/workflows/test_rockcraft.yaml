@@ -29,7 +29,7 @@ jobs:
         run: |
           sudo apt-get update -yqq
           sudo apt install software-properties-common -yqq
-          sudo apt-get install -yqq strace python3-pip
+          sudo apt-get install -yqq strace python3-pip traceroute
           sudo --preserve-env=http_proxy,https_proxy,no_proxy pip3 install tox pip-tools
           sudo snap install jq
           sudo snap install yq
@@ -57,9 +57,10 @@ jobs:
         id: rock_in_docker
         run: |
           sudo lxc launch ubuntu:22.04 testing
+          curl -x http://squid.internal:3128 ubuntu.com -vvv
+          cp /bin/traceroute traceroute
+          sudo lxc file push ./traceroute testing/bin/traceroute
           sleep 60
-          sudo lxc exec testing -- curl -x http://squid.internal:3128 ubuntu.com -vvv
-          sudo lxc exec testing -- apt install traceroute
           sudo lxc exec testing -- traceroute squid.internal
         working-directory: ./${{ matrix.rock }}
 
