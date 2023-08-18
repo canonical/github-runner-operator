@@ -7,12 +7,12 @@ import pytest
 from juju.application import Application
 from juju.model import Model
 
-from runner_manager import RunnerManager
 from tests.integration.helpers import (
-    assert_num_of_runners,
+    check_runner_binary_exists,
     get_repo_policy_compliance_pip_info,
     install_repo_policy_compliance_from_git_source,
     remove_runner_bin,
+    wait_till_num_of_runners,
 )
 from tests.status_name import ACTIVE_STATUS_NAME
 
@@ -38,9 +38,9 @@ async def test_update_dependencies_action_latest_service(
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
-
     assert action.results["flush"] == "False"
+
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
     assert await get_repo_policy_compliance_pip_info(unit) is not None
 
 
@@ -124,10 +124,7 @@ async def test_update_dependencies_action_on_runner_binary(
     # The runners should be flushed on update of runner binary.
     assert action.results["flush"] == "True"
 
-    # Check the runner bin does exist.
-    action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
-    await action.wait()
-    assert action.results["return-code"] == 0
+    assert await check_runner_binary_exists(unit)
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
@@ -136,10 +133,7 @@ async def test_update_dependencies_action_on_runner_binary(
     # The runners should be flushed on update of runner binary.
     assert action.results["flush"] == "False"
 
-    # Check the runner bin does exist.
-    action = await unit.run(f"test -f {RunnerManager.runner_bin_path}")
-    await action.wait()
-    assert action.results["return-code"] == 0
+    assert await check_runner_binary_exists(unit)
 
 
 @pytest.mark.asyncio
@@ -190,7 +184,7 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    await assert_num_of_runners(unit, 1)
+    await wait_till_num_of_runners(unit, 1)
 
     # 2.
     await app.set_config({"virtual-machines": "0"})
@@ -199,4 +193,4 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    await assert_num_of_runners(unit, 0)
+    await wait_till_num_of_runners(unit, 0)

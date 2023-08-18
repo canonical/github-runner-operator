@@ -7,7 +7,11 @@ import pytest
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import assert_num_of_runners, assert_resource_lxd_profile
+from tests.integration.helpers import (
+    assert_resource_lxd_profile,
+    run_in_unit,
+    wait_till_num_of_runners,
+)
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
@@ -59,7 +63,7 @@ async def test_flush_runner_and_resource_config(app: Application) -> None:
 
     configs = await app.get_config()
     await assert_resource_lxd_profile(unit, configs)
-    await assert_num_of_runners(unit, 1)
+    await wait_till_num_of_runners(unit, 1)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
@@ -95,15 +99,19 @@ async def test_check_runner(app: Application) -> None:
 @pytest.mark.abort_on_fail
 async def test_token_config_changed(model: Model, app: Application, token_alt: str) -> None:
     """
-    arrange: An working application.
+    arrange: An working application with one runner.
     act: Change the token configuration.
     assert: The repo-policy-compliance using the new token.
     """
+    unit = app.units[0]
+
     await app.set_config({"token": token_alt})
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
-    action = await app.units[0].run("cat /etc/systemd/system/repo-policy-compliance.service")
-    await action.wait()
+    return_code, stdout = await run_in_unit(
+        unit, "cat /etc/systemd/system/repo-policy-compliance.service"
+    )
 
-    assert action.status == "completed"
-    assert f"GITHUB_TOKEN={token_alt}" in action.results["stdout"]
+    assert return_code == 0
+    assert stdout is not None
+    assert f"GITHUB_TOKEN={token_alt}" in stdout

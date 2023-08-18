@@ -410,10 +410,13 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             Whether the runner binary or the services was updated.
         """
+        self.unit.status = MaintenanceStatus("Checking for updates")
+
         runner_manager = self._get_runner_manager()
         if not runner_manager:
             return False
 
+        self.unit.status = MaintenanceStatus("Checking for service updates")
         service_updated = self._install_repo_policy_compliance()
 
         # Check if the runner binary file exists.
@@ -421,7 +424,7 @@ class GithubRunnerCharm(CharmBase):
             self._stored.runner_bin_url = None
 
         try:
-            self.unit.status = MaintenanceStatus("Checking for runner updates")
+            self.unit.status = MaintenanceStatus("Checking for runner binary updates")
             runner_info = runner_manager.get_latest_runner_bin_url()
         except urllib.error.URLError as err:
             logger.exception("Failed to check for runner updates")
@@ -430,7 +433,11 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus(f"Failed to check for runner updates: {err}")
             return False
 
-        logger.debug("Current runner binary URL: %s, Queried runner binary URL: %s")
+        logger.debug(
+            "Current runner binary URL: %s, Queried runner binary URL: %s",
+            self._stored.runner_bin_url,
+            runner_info.download_url,
+        )
 
         runner_bin_updated = False
         if runner_info.download_url != self._stored.runner_bin_url:
@@ -469,6 +476,8 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of reconciling the runner state.
         """
+        self.unit.status = MaintenanceStatus("Reconciling runners")
+
         if not RunnerManager.runner_bin_path.is_file():
             logger.warning("Unable to reconcile due to missing runner binary")
             return
@@ -477,7 +486,7 @@ class GithubRunnerCharm(CharmBase):
         if not runner_manager:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
             return
-        self.unit.status = MaintenanceStatus("Reconciling runners")
+
         self._reconcile_runners(runner_manager)
 
         self.unit.status = ActiveStatus()
@@ -605,18 +614,10 @@ class GithubRunnerCharm(CharmBase):
 
         virtual_machines = self.config["virtual-machines"]
 
-        try:
-            delta_virtual_machines = runner_manager.reconcile(
-                virtual_machines, virtual_machines_resources
-            )
-            return {"delta": {"virtual-machines": delta_virtual_machines}}
-        # Safe guard against transient unexpected error.
-        except Exception as err:  # pylint: disable=broad-exception-caught
-            logger.exception("Failed to reconcile runners.")
-            # Failure to reconcile runners is a transient error.
-            # The charm automatically reconciles runners on a schedule.
-            self.unit.status = MaintenanceStatus(f"Failed to reconcile runners: {err}")
-            return {"delta": {"virtual-machines": 0}}
+        delta_virtual_machines = runner_manager.reconcile(
+            virtual_machines, virtual_machines_resources
+        )
+        return {"delta": {"virtual-machines": delta_virtual_machines}}
 
     def _install_repo_policy_compliance(self) -> bool:
         """Install latest version of repo_policy_compliance service.

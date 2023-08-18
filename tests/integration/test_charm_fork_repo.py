@@ -6,9 +6,9 @@
 The forked repo is configured to fail the repo-policy-compliance check.
 """
 
+import secrets
 from time import sleep
 from typing import AsyncIterator, Iterator
-from uuid import uuid4
 
 import pytest
 import pytest_asyncio
@@ -19,7 +19,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import assert_num_of_runners, get_runner_names
+from tests.integration.helpers import get_runner_names, wait_till_num_of_runners
 from tests.status_name import ACTIVE_STATUS_NAME
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
@@ -42,7 +42,7 @@ def forked_github_repository(
     github_repository: Repository,
 ) -> Iterator[Repository]:
     """Create a fork for a GitHub repository."""
-    forked_repository = github_repository.create_fork(name=f"{github_repository.name}/{uuid4()}")
+    forked_repository = github_repository.create_fork()
 
     # Wait for repo to be ready
     for _ in range(10):
@@ -63,7 +63,7 @@ def forked_github_repository(
 @pytest.fixture(scope="module")
 def forked_github_branch(forked_github_repository: Repository) -> Iterator[Branch]:
     """Create a new forked branch for testing."""
-    branch_name = f"test/{uuid4()}"
+    branch_name = f"test/{secrets.token_hex(4)}"
 
     main_branch = forked_github_repository.get_branch(forked_github_repository.default_branch)
     branch_ref = forked_github_repository.create_git_ref(
@@ -138,7 +138,7 @@ async def app_with_unsigned_commit_repo(
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # Wait until there is one runner.
-    await assert_num_of_runners(unit, 1)
+    await wait_till_num_of_runners(unit, 1)
 
     yield app_no_runner
 

@@ -650,6 +650,8 @@ class Runner:
             logger.info("Installing %s via APT...", pkg)
             self.instance.execute(["/usr/bin/apt-get", "install", "-yq", pkg])
 
+        self.instance.execute(["/usr/bin/apt-get", "clean"])
+
     def _wget_install(self, executables: Iterable[WgetExecutable]) -> None:
         """Installs the given binaries.
 
