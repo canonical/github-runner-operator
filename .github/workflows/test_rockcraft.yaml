@@ -57,6 +57,7 @@ jobs:
       - name: Build ROCK and copy it to Docker
         id: rock_in_docker
         run: |
+          sudo env
           sudo rockcraft pack --verbosity=debug
         working-directory: ./${{ matrix.rock }}
 
