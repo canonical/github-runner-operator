@@ -57,6 +57,7 @@ jobs:
         id: rock_in_docker
         run: |
           sudo sysctl -w net.ipv4.ip_forward=1
+          sudo iptables -I DOCKER-USER  -j ACCEPT
           sudo lxc launch ubuntu:22.04 testing
           curl -x http://squid.internal:3128 ubuntu.com -vvv
           cp /bin/traceroute traceroute
