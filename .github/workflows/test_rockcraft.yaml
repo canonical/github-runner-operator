@@ -58,15 +58,12 @@ jobs:
         id: rock_in_docker
         run: |
           lxc launch ubuntu:22.04
-          git clone https://github.com/canonical/flask-k8s-operator.git
-          cd flask-k8s-operator/test_rock
-          rockcraft pack
-          sleep 10
-          sudo kill $(jobs -p)
 
       - name: Cat rockcraft logs
         if: always()
-        run: cat ~/.local/state/charmcraft/log/*
+        run: |
+          top -bn1
+          df -h
 
       - name: Scan for vulnerabilities
         id: scan
