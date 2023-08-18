@@ -57,9 +57,12 @@ jobs:
       - name: Build ROCK and copy it to Docker
         id: rock_in_docker
         run: |
-          sleep 30m
           rockcraft pack --verbosity=debug
         working-directory: ./${{ matrix.rock }}
+
+      - name: Cat rockcraft logs
+        if: always()
+        run: cat ~/.local/state/charmcraft/log/*
 
       - name: Scan for vulnerabilities
         id: scan
