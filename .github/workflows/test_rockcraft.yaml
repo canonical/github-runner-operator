@@ -12,13 +12,19 @@ on:
 jobs:
   build-scan-rocks:
     name: Build and scan ROCKs self-hosted
-    runs-on: [self-hosted, linux, X64, jammy, xlarge]
+    runs-on: [self-hosted, linux, X64, jammy, two-xlarge]
     # long timeout ensures heavy ROCKs have enoguh time to finish build/pack
     timeout-minutes: 2400
     strategy:
       matrix:
         rock:
           - mlserver-huggingface
+          - mlserver-mlflow
+          - mlserver-sklearn
+          - mlserver-xgboost
+          - seldon-core-operator
+          - sklearnserver
+          - tensorflow-serving
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
@@ -29,24 +35,23 @@ jobs:
         run: |
           sudo apt-get update -yqq
           sudo apt install software-properties-common -yqq
-          sudo apt-get install -yqq strace python3-pip traceroute
+          sudo apt-get install -yqq python3-pip
           sudo --preserve-env=http_proxy,https_proxy,no_proxy pip3 install tox pip-tools
           sudo snap install jq
           sudo snap install yq
-
       - name: Install ROCK dev tools
         run: |
           sudo snap install rockcraft --classic --edge
           sudo snap install skopeo --edge --devmode
-
       - name: Setup LXD
         run: |
           sudo lxd waitready || true
-          sudo lxd init --auto
+          sudo lxd init --minimal
           sudo chmod a+wr /var/snap/lxd/common/lxd/unix.socket
+          lxc network set lxdbr0 ipv6.address none
           bash -c 'sudo usermod -a -G lxd $USER'
           bash -c 'sudo su $USER'
-
+          sudo iptables -I DOCKER-USER -j ACCEPT
       # TO-DO: use canonical/craft-actions/rockcraft-pack@main action when it is working in self-hosted runners
       # - name: Build
       #   uses: canonical/craft-actions/rockcraft-pack@main
@@ -56,21 +61,8 @@ jobs:
       - name: Build ROCK and copy it to Docker
         id: rock_in_docker
         run: |
-          sudo sysctl -w net.ipv4.ip_forward=1
-          sudo iptables -I DOCKER-USER  -j ACCEPT
-          sudo lxc launch ubuntu:22.04 testing
-          cp /bin/traceroute traceroute
-          sudo lxc file push ./traceroute testing/bin/traceroute
-          sleep 60
-          sudo lxc exec testing -- traceroute squid.internal
-          sudo lxc exec testing -- curl -x http://squid.internal:3128 ubuntu.com -vvv
+          sudo rockcraft pack --verbosity=debug
         working-directory: ./${{ matrix.rock }}
-
-      - name: Cat rockcraft logs
-        if: always()
-        run: |
-          top -bn1
-          df -h
 
       - name: Scan for vulnerabilities
         id: scan
