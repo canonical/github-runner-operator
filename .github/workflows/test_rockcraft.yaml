@@ -57,6 +57,7 @@ jobs:
       - name: Build ROCK and copy it to Docker
         id: rock_in_docker
         run: |
+          sudo mount -t debugfs debugfs /sys/kernel/debug
           sudo killsnoop-bpfcc &
           git clone https://github.com/canonical/flask-k8s-operator.git
           cd flask-k8s-operator/test_rock
