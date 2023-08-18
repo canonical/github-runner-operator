@@ -56,8 +56,10 @@ jobs:
 
       - name: Build ROCK and copy it to Docker
         id: rock_in_docker
-        run: strace rockcraft pack
-        working-directory: ./${{ matrix.rock }}
+        run: |
+          git clone https://github.com/canonical/flask-k8s-operator.git
+          cd flask-k8s-operator/test_rock
+          rockcraft pack
 
       - name: Cat rockcraft logs
         if: always()
