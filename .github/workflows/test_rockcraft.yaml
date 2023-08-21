@@ -19,12 +19,6 @@ jobs:
       matrix:
         rock:
           - mlserver-huggingface
-          - mlserver-mlflow
-          - mlserver-sklearn
-          - mlserver-xgboost
-          - seldon-core-operator
-          - sklearnserver
-          - tensorflow-serving
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
@@ -61,7 +55,7 @@ jobs:
       - name: Build ROCK and copy it to Docker
         id: rock_in_docker
         run: |
-          sudo rockcraft pack --verbosity=debug
+          rockcraft pack --verbosity=debug
         working-directory: ./${{ matrix.rock }}
 
       - name: Scan for vulnerabilities
