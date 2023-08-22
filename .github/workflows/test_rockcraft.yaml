@@ -12,7 +12,7 @@ on:
 jobs:
   build-scan-rocks:
     name: Build and scan ROCKs self-hosted
-    runs-on: [self-hosted, linux, X64, jammy, test-xlarge]
+    runs-on: [self-hosted, linux, X64, jammy, xlarge]
     # long timeout ensures heavy ROCKs have enoguh time to finish build/pack
     timeout-minutes: 2400
     strategy:
@@ -39,7 +39,6 @@ jobs:
           sudo snap install skopeo --edge --devmode
       - name: Setup LXD
         run: |
-          sudo snap set lxd daemon.group=adm
           sudo lxd waitready || true
           sudo lxd init --minimal
           sudo chmod a+wr /var/snap/lxd/common/lxd/unix.socket
@@ -47,8 +46,7 @@ jobs:
           bash -c 'sudo usermod -a -G lxd $USER'
           bash -c 'sudo su $USER'
           sudo iptables -I DOCKER-USER -j ACCEPT
-      - run: sleep 10
       - run: lxc launch ubuntu:22.04
-      - name: sleep
+      - name: snap logs
         if: always()
-        run: sleep inf
+        run: sudo snap logs lxd.daemon
