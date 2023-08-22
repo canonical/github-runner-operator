@@ -12,7 +12,7 @@ on:
 jobs:
   build-scan-rocks:
     name: Build and scan ROCKs self-hosted
-    runs-on: [self-hosted, linux, X64, jammy, xlarge]
+    runs-on: [self-hosted, linux, X64, jammy, test-xlarge]
     # long timeout ensures heavy ROCKs have enoguh time to finish build/pack
     timeout-minutes: 2400
     strategy:
@@ -47,11 +47,5 @@ jobs:
           bash -c 'sudo usermod -a -G lxd $USER'
           bash -c 'sudo su $USER'
           sudo iptables -I DOCKER-USER -j ACCEPT
-      - name: launch lxc container
-        run: lxc launch ubuntu:22.04
-      - name: launch lxc container
-        if: always()
-        run: lxc launch ubuntu:22.04
-      - name: launch lxc container (root)
-        if: always()
-        run: sudo lxc launch ubuntu:22.04
+      - name: sleep
+        run: sleep inf
