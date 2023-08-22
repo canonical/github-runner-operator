@@ -49,9 +49,9 @@ jobs:
           sudo iptables -I DOCKER-USER -j ACCEPT
       - name: launch lxc container
         run: lxc launch ubuntu:22.04
-      - name: Print dmesg
+      - name: launch lxc container
         if: always()
-        run: sudo dmesg
+        run: lxc launch ubuntu:22.04
       - name: launch lxc container (root)
         if: always()
         run: sudo lxc launch ubuntu:22.04
