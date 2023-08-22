@@ -52,3 +52,4 @@ jobs:
         run: |
           sudo snap logs lxd.daemon
           sudo sudo snap changes
+          sudo journalctl -u snapd.seeded.service
