@@ -51,6 +51,7 @@ jobs:
       - name: snap logs
         if: always()
         run: |
+          sleep 10
           sudo snap logs lxd.daemon
           sudo sudo snap changes
           sudo journalctl --utc -u snapd.seeded.service
