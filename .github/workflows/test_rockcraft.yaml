@@ -50,6 +50,7 @@ jobs:
       - name: launch lxc container
         run: lxc launch ubuntu:22.04
       - name: Print dmesg
+        if: always()
         run: sudo dmesg
       - name: launch lxc container (root)
         if: always()
