@@ -339,6 +339,10 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of charm upgrade.
         """
+        logger.info("Upgrading kernel...")
+        self.unit.status = MaintenanceStatus("Upgrading kernel")
+        self._upgrade_kernel()
+
         logger.info("Reinstalling dependencies...")
         try:
             # The `_start_services`, `_install_deps` includes retry.
