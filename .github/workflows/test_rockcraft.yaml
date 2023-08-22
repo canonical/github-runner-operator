@@ -48,6 +48,7 @@ jobs:
           bash -c 'sudo su $USER'
           sudo iptables -I DOCKER-USER -j ACCEPT
       - run: lxc launch ubuntu:22.04
+        
       - name: sleep
         if: always()
         run: sleep inf
