@@ -319,6 +319,11 @@ class GithubRunnerCharm(CharmBase):
 
     def _upgrade_kernel(self) -> None:
         """Upgrade the Linux kernel."""
+        # TMP: Use proposed kernel version.
+        execute_command(
+            ["/usr/bin/apt-add-repository", "-y", "ppa:canonical-kernel-team/proposed"]
+        )
+
         execute_command(["/usr/bin/apt-get", "update"])
         execute_command(["/usr/bin/apt-get", "install", "-qy", "linux-generic"])
 
