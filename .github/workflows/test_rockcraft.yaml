@@ -39,10 +39,10 @@ jobs:
           bash -c 'sudo usermod -a -G lxd $USER'
           sudo iptables -I DOCKER-USER -j ACCEPT
       - run: |
-          su $USER
+          sudo su $USER
           sleep 15
       - run: |
-          su $USER
+          sudo su $USER
           lxc image export ubuntu:22.04 test
       - name: snap logs
         if: always()
