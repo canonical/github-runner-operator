@@ -29,6 +29,7 @@ jobs:
         run: |
           sudo apt-get update -yqq
           sudo apt install strace -yqq
+          sudo snap install node --classic
       - name: Setup LXD
         run: |
           sudo lxd waitready || true
@@ -41,7 +42,7 @@ jobs:
       - run: |
           sudo su $USER
       - run: |
-          lxc image export ubuntu:22.04 test
+          node -e "new Promise(resolve => setTimeout(resolve, 15000));"
       - name: snap logs
         if: always()
         run: |
