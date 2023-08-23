@@ -39,8 +39,8 @@ jobs:
           bash -c 'sudo usermod -a -G lxd $USER'
           sudo iptables -I DOCKER-USER -j ACCEPT
       - run: |
-          sudo  strace -u $USER -f sudo -k su $USER
-          lxc image export ubuntu:22.04 test
+          sudo su $USER
+          lxc monitor
       - name: snap logs
         if: always()
         run: |
