@@ -28,15 +28,7 @@ jobs:
       - name: Install tools
         run: |
           sudo apt-get update -yqq
-          sudo apt install software-properties-common -yqq
-          sudo apt-get install -yqq python3-pip
-          sudo --preserve-env=http_proxy,https_proxy,no_proxy pip3 install tox pip-tools
-          sudo snap install jq
-          sudo snap install yq
-      - name: Install ROCK dev tools
-        run: |
-          sudo snap install rockcraft --classic --edge
-          sudo snap install skopeo --edge --devmode
+          sudo apt install strace -yqq
       - name: Setup LXD
         run: |
           sudo lxd waitready || true
