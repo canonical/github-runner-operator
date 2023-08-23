@@ -78,6 +78,7 @@ class RunnerInfo:
 
     name: str
     status: GitHubRunnerStatus
+    busy: bool
 
 
 class RunnerManager:
@@ -266,7 +267,10 @@ class RunnerManager:
             List of information from GitHub on runners.
         """
         remote_runners = self._get_runner_github_info()
-        return iter(RunnerInfo(runner.name, runner.status) for runner in remote_runners.values())
+        return iter(
+            RunnerInfo(runner.name, runner.status, runner.busy)
+            for runner in remote_runners.values()
+        )
 
     def _get_runner_health_states(self) -> RunnerByHealth:
         local_runners = [

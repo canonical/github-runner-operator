@@ -43,10 +43,6 @@ class ReconcileRunnersEvent(EventBase):
     """Event representing a periodic check to ensure runners are ok."""
 
 
-class UpdateDependenciesEvent(EventBase):
-    """Event representing a periodic check for new versions of the runner binary and services."""
-
-
 CharmT = TypeVar("CharmT")
 EventT = TypeVar("EventT")
 
@@ -144,13 +140,11 @@ class GithubRunnerCharm(CharmBase):
         self.service_token = None
 
         self.on.define_event("reconcile_runners", ReconcileRunnersEvent)
-        self.on.define_event("update_dependencies", UpdateDependenciesEvent)
 
         self.framework.observe(self.on.install, self._on_install)
         self.framework.observe(self.on.upgrade_charm, self._on_upgrade_charm)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
-        self.framework.observe(self.on.update_dependencies, self._on_update_dependencies)
         self.framework.observe(self.on.stop, self._on_stop)
 
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
@@ -277,7 +271,7 @@ class GithubRunnerCharm(CharmBase):
         # not needed for container-based end-to-end tests.
         if not LXD_PROFILE_YAML.exists():
             self.unit.status = MaintenanceStatus("Upgrading kernel")
-            self._upgrade_kernel()
+            self._check_and_update_kernel()
 
         try:
             # The `_start_services`, `_install_deps` includes retry.
@@ -317,12 +311,13 @@ class GithubRunnerCharm(CharmBase):
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
-    def _upgrade_kernel(self) -> None:
-        """Upgrade the Linux kernel.
+    def _check_and_update_kernel(self) -> None:
+        """Update the Linux kernel if new version is available.
 
-        Upgrade the kernel if there is a newer version then reboot the machine.
-        If on newest version, then do nothing.
+        Do nothing if no new version is available, else update the kernel then reboot if needed.
         """
+        logger.info("Upgrading kernel")
+
         execute_command(["/usr/bin/apt-get", "update"])
         execute_command(["/usr/bin/apt-get", "install", "-qy", "linux-generic-hwe-22.04"])
 
@@ -338,10 +333,6 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of charm upgrade.
         """
-        logger.info("Upgrading kernel...")
-        self.unit.status = MaintenanceStatus("Upgrading kernel")
-        self._upgrade_kernel()
-
         logger.info("Reinstalling dependencies...")
         try:
             # The `_start_services`, `_install_deps` includes retry.
@@ -376,18 +367,12 @@ class GithubRunnerCharm(CharmBase):
         self._refresh_firewall()
         try:
             self._event_timer.ensure_event_timer(
-                "update-dependencies", self.config["update-interval"]
-            )
-            self._event_timer.ensure_event_timer(
                 "reconcile-runners", self.config["reconcile-interval"]
             )
         except TimerEnableError as ex:
             logger.exception("Failed to start the event timer")
             self.unit.status = BlockedStatus(
-                (
-                    f"Failed to start timer for regular reconciliation and dependencies update "
-                    f"checks: {ex}"
-                )
+                (f"Failed to start timer for regular reconciliation" f"checks: {ex}")
             )
 
         if self.config["path"] != self._stored.path:
@@ -469,23 +454,12 @@ class GithubRunnerCharm(CharmBase):
         return service_updated or runner_bin_updated
 
     @catch_charm_errors
-    def _on_update_dependencies(self, _event: UpdateDependenciesEvent) -> None:
-        """Handle checking update of dependencies event.
-
-        Args:
-            event: Event of checking update of runner binary and services.
-        """
-        self._check_and_update_dependencies()
-
-    @catch_charm_errors
     def _on_reconcile_runners(self, _event: ReconcileRunnersEvent) -> None:
         """Handle the reconciliation of runners.
 
         Args:
             event: Event of reconciling the runner state.
         """
-        self.unit.status = MaintenanceStatus("Reconciling runners")
-
         if not RunnerManager.runner_bin_path.is_file():
             logger.warning("Unable to reconcile due to missing runner binary")
             return
@@ -494,6 +468,12 @@ class GithubRunnerCharm(CharmBase):
         if not runner_manager:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
             return
+
+        runner_info = runner_manager.get_github_info()
+        if all(not info.busy for info in runner_info):
+            self._check_and_update_kernel()
+
+        self._check_and_update_dependencies()
 
         self._reconcile_runners(runner_manager)
 
@@ -616,6 +596,8 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             Changes in runner number due to reconciling runners.
         """
+        self.unit.status = MaintenanceStatus("Reconciling runners")
+
         virtual_machines_resources = VirtualMachineResources(
             self.config["vm-cpu"], self.config["vm-memory"], self.config["vm-disk"]
         )
