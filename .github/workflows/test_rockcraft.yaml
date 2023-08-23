@@ -39,11 +39,11 @@ jobs:
           sudo snap install skopeo --edge --devmode
       - name: Setup LXD
         run: |
-          sudo snap refresh lxd
           sudo lxd waitready || true
           sudo lxd init --minimal
           sudo chmod a+wr /var/snap/lxd/common/lxd/unix.socket
           lxc network set lxdbr0 ipv6.address none
+          sudo bash -c "echo 127.0.0.1 $(cat /etc/hostname) >> /etc/hosts"
           bash -c 'sudo usermod -a -G lxd $USER'
           bash -c 'sudo su $USER'
           sudo iptables -I DOCKER-USER -j ACCEPT
