@@ -55,3 +55,4 @@ jobs:
           sudo snap logs lxd.daemon
           sudo sudo snap changes
           sudo journalctl --utc -u snapd.seeded.service
+          sudo df -h
