@@ -42,7 +42,7 @@ jobs:
           sudo su $USER
           sleep 15
       - run: |
-          sudo su $USER
+          time sudo su $USER
           lxc image export ubuntu:22.04 test
       - name: snap logs
         if: always()
