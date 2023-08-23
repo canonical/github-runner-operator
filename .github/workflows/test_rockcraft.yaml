@@ -40,6 +40,9 @@ jobs:
           sudo iptables -I DOCKER-USER -j ACCEPT
       - run: |
           su $USER
+          sleep 15
+      - run: |
+          su $USER
           lxc image export ubuntu:22.04 test
       - name: snap logs
         if: always()
