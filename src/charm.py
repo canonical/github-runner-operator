@@ -318,7 +318,11 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
     def _upgrade_kernel(self) -> None:
-        """Upgrade the Linux kernel."""
+        """Upgrade the Linux kernel.
+
+        Upgrade the kernel if there is a newer version then reboot the machine.
+        If on newest version, then do nothing.
+        """
         # TMP: Use proposed kernel version.
         execute_command(
             ["/usr/bin/apt-add-repository", "-y", "ppa:canonical-kernel-team/proposed"]
