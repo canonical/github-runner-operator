@@ -40,6 +40,7 @@ jobs:
           sudo iptables -I DOCKER-USER -j ACCEPT
       - run: |
           sudo su $USER
+          sleep 5
           lxc monitor
       - name: snap logs
         if: always()
