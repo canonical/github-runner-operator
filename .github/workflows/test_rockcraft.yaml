@@ -39,12 +39,9 @@ jobs:
           bash -c 'sudo usermod -a -G lxd $USER'
           sudo iptables -I DOCKER-USER -j ACCEPT
       - run: |
-          groups
           bash -c 'sudo su $USER'
-          groups
       - run: |
-          groups
-          lxc launch ubuntu:22.04 || groups
+          strace lxc launch ubuntu:22.04
       - name: snap logs
         if: always()
         run: |
