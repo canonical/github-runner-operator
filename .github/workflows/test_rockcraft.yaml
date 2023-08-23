@@ -39,7 +39,7 @@ jobs:
           bash -c 'sudo usermod -a -G lxd $USER'
           sudo iptables -I DOCKER-USER -j ACCEPT
       - run: |
-          bash -c 'sudo su $USER'
+          sudo su $USER
       - run: |
           strace lxc launch ubuntu:22.04
       - name: snap logs
