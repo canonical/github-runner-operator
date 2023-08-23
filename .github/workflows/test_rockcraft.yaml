@@ -12,8 +12,7 @@ on:
 jobs:
   build-scan-rocks:
     name: Build and scan ROCKs self-hosted
-#    runs-on: [self-hosted, linux, X64, jammy, xlarge]
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, X64, jammy, xlarge]
     # long timeout ensures heavy ROCKs have enoguh time to finish build/pack
     timeout-minutes: 2400
     strategy:
