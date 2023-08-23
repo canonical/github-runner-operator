@@ -52,6 +52,7 @@ jobs:
         if: always()
         run: |
           sleep 10
+          sudo systemctl status snap.lxd.daemon
           sudo snap logs lxd.daemon
           sudo sudo snap changes
           sudo journalctl --utc -u snapd.seeded.service
