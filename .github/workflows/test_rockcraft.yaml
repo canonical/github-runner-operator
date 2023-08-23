@@ -15,33 +15,16 @@ jobs:
     runs-on: [self-hosted, linux, X64, jammy, xlarge]
     # long timeout ensures heavy ROCKs have enoguh time to finish build/pack
     timeout-minutes: 2400
-    strategy:
-      matrix:
-        rock:
-          - mlserver-huggingface
     steps:
-      - name: Checkout branch
-        uses: actions/checkout@v3
-        with:
-          repository: canonical/seldonio-rocks
-
-      - name: Install tools
-        run: |
-          sudo apt-get update -yqq
-          sudo apt install strace -yqq
       - name: Setup LXD
         run: |
           sudo lxd waitready || true
           sudo lxd init --minimal
           sudo chmod a+wr /var/snap/lxd/common/lxd/unix.socket
           lxc network set lxdbr0 ipv6.address none
-          sudo bash -c "echo 127.0.0.1 $(cat /etc/hostname) >> /etc/hosts"
           bash -c 'sudo usermod -a -G lxd $USER'
           sudo iptables -I DOCKER-USER -j ACCEPT
+          sleep 60
       - run: |
           sudo su $USER
-          node -e "new Promise(resolve => setTimeout(resolve, 15000));"
-      - name: snap logs
-        if: always()
-        run: |
-          cat /etc/hosts
+          lxc monitor
