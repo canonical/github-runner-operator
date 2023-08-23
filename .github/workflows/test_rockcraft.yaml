@@ -43,8 +43,8 @@ jobs:
           sudo lxd waitready || true
           sudo lxd init --minimal
           sudo chmod a+wr /var/snap/lxd/common/lxd/unix.socket
-          sleep 5
           lxc network set lxdbr0 ipv6.address none
+          sleep 5
           bash -c 'sudo usermod -a -G lxd $USER'
           bash -c 'sudo su $USER'
           sudo iptables -I DOCKER-USER -j ACCEPT
