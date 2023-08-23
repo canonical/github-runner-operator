@@ -46,8 +46,11 @@ jobs:
           sudo bash -c "echo 127.0.0.1 $(cat /etc/hostname) >> /etc/hosts"
           bash -c 'sudo usermod -a -G lxd $USER'
           sudo iptables -I DOCKER-USER -j ACCEPT
-      - run : bash -c 'sudo su $USER'
       - run: |
+          tail -n +1 /home/ubuntu/github-runner/_work/_temp/*
+          bash -c 'sudo su $USER'
+      - run: |
+          tail -n +1 /home/ubuntu/github-runner/_work/_temp/*
           lxc launch ubuntu:22.04
       - name: snap logs
         if: always()
