@@ -41,7 +41,7 @@ jobs:
       - run: |
           sudo su $USER
       - run: |
-          lxc launch ubuntu:22.04
+          lxc image export ubuntu:22.04 test
       - name: snap logs
         if: always()
         run: |
