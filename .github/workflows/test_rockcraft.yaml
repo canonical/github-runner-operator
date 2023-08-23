@@ -26,5 +26,4 @@ jobs:
           sudo iptables -I DOCKER-USER -j ACCEPT
           sleep 60
       - run: |
-          sudo su $USER
-          lxc monitor
+          lxc launch ubuntu:22.04
