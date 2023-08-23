@@ -39,11 +39,12 @@ jobs:
           bash -c 'sudo usermod -a -G lxd $USER'
           sudo iptables -I DOCKER-USER -j ACCEPT
       - run: |
-          tail -n +1 /home/ubuntu/github-runner/_work/_temp/*.sh
+          groups
           bash -c 'sudo su $USER'
+          groups
       - run: |
-          tail -n +1 /home/ubuntu/github-runner/_work/_temp/*.sh
-          lxc launch ubuntu:22.04
+          groups
+          lxc launch ubuntu:22.04 || groups
       - name: snap logs
         if: always()
         run: |
