@@ -319,13 +319,8 @@ class GithubRunnerCharm(CharmBase):
 
     def _upgrade_kernel(self) -> None:
         """Upgrade the Linux kernel."""
-        # TMP: Use proposed kernel version.
-        execute_command(
-            ["/usr/bin/apt-add-repository", "-y", "ppa:canonical-kernel-team/proposed"]
-        )
-
         execute_command(["/usr/bin/apt-get", "update"])
-        execute_command(["/usr/bin/apt-get", "install", "-qy", "linux-generic"])
+        execute_command(["/usr/bin/apt-get", "install", "-qy", "linux-generic-hwe-22.04"])
 
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
         if exit_code == 0:
