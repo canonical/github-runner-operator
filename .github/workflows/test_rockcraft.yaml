@@ -41,8 +41,8 @@ jobs:
         run: |
           sudo snap refresh lxd
           sudo lxd waitready || true
-          sleep 5
           sudo lxd init --minimal
+          sleep 5
           sudo chmod a+wr /var/snap/lxd/common/lxd/unix.socket
           lxc network set lxdbr0 ipv6.address none
           bash -c 'sudo usermod -a -G lxd $USER'
