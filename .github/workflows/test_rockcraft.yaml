@@ -41,7 +41,7 @@ jobs:
       - run: |
           sudo su $USER
       - run: |
-          strace lxc launch ubuntu:22.04
+          lxc launch ubuntu:22.04
       - name: snap logs
         if: always()
         run: |
