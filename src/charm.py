@@ -448,7 +448,6 @@ class GithubRunnerCharm(CharmBase):
 
             self._start_services()
             runner_manager.flush(flush_busy=False)
-            self._reconcile_runners(runner_manager)
 
         self.unit.status = ActiveStatus()
         return service_updated or runner_bin_updated
