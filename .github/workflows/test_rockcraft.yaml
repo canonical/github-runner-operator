@@ -45,6 +45,7 @@ jobs:
           sudo chmod a+wr /var/snap/lxd/common/lxd/unix.socket
           lxc network set lxdbr0 ipv6.address none
           bash -c 'sudo usermod -a -G lxd $USER'
+          bash -c 'sudo su $USER'
           sudo iptables -I DOCKER-USER -j ACCEPT
       - run: |
           lxc launch ubuntu:22.04
