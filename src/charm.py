@@ -12,7 +12,7 @@ import secrets
 import shutil
 import urllib.error
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional, TypeVar
+from typing import Any, Callable, Dict, Optional, Sequence, TypeVar
 
 import jinja2
 from ops.charm import (
@@ -317,9 +317,7 @@ class GithubRunnerCharm(CharmBase):
         Do nothing if no new version is available, else update the kernel then reboot if needed.
         """
         logger.info("Upgrading kernel")
-
-        execute_command(["/usr/bin/apt-get", "update"])
-        execute_command(["/usr/bin/apt-get", "install", "-qy", "linux-generic-hwe-22.04"])
+        self._apt_install(["linux-generic-hwe-22.04"])
 
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
         if exit_code == 0:
@@ -669,11 +667,8 @@ class GithubRunnerCharm(CharmBase):
 
         # Snap and Apt will use any proxies configured in the Juju model.
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
-        execute_command(["/usr/bin/apt-get", "update"])
         # Install dependencies used by repo-policy-compliance and the firewall
-        execute_command(
-            ["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip", "nftables"]
-        )
+        self._apt_install(["gunicorn", "python3-pip", "nftables"])
 
         # Install repo-policy-compliance package
         self._install_repo_policy_compliance()
@@ -681,11 +676,8 @@ class GithubRunnerCharm(CharmBase):
         execute_command(
             ["/usr/bin/apt-get", "remove", "-qy", "lxd", "lxd-client"], check_exit=False
         )
-        execute_command(
+        self._apt_install(
             [
-                "/usr/bin/apt-get",
-                "install",
-                "-qy",
                 "cpu-checker",
                 "libvirt-clients",
                 "libvirt-daemon-driver-qemu",
@@ -787,6 +779,17 @@ class GithubRunnerCharm(CharmBase):
             "firewall update, current firewall: %s",
             execute_command(["/usr/sbin/nft", "list", "ruleset"]),
         )
+
+    def _apt_install(self, packages: Sequence[str]) -> None:
+        execute_command(["/usr/bin/apt-get", "update"])
+
+        _, exit_code = execute_command(
+            ["/usr/bin/apt-get", "install", "-qy"] + list(packages), check_exit=False
+        )
+        if exit_code == 100:
+            logging.warning("Running 'dpkg --configure -a' as last apt install was interrupted")
+            execute_command(["dpkg", "--configure", "-a"])
+            execute_command(["/usr/bin/apt-get", "install", "-qy"] + list(packages))
 
 
 if __name__ == "__main__":
