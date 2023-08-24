@@ -725,6 +725,7 @@ class GithubRunnerCharm(CharmBase):
                 "security.port_isolation=true",
             ]
         )
+        execute_command(["/usr/sbin/service", "snapd.apparmor", "start"])
         logger.info("Finished installing charm dependencies.")
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
