@@ -404,8 +404,10 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Checking for updates")
 
         runner_manager = self._get_runner_manager()
-        if not runner_manager:
-            return False
+
+        runner_info = runner_manager.get_github_info()
+        if all(not info.busy for info in runner_info):
+            self._check_and_update_kernel()
 
         self.unit.status = MaintenanceStatus("Checking for service updates")
         service_updated = self._install_repo_policy_compliance()
@@ -457,6 +459,8 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of reconciling the runner state.
         """
+        self._check_and_update_dependencies()
+
         if not RunnerManager.runner_bin_path.is_file():
             logger.warning("Unable to reconcile due to missing runner binary")
             return
@@ -465,12 +469,6 @@ class GithubRunnerCharm(CharmBase):
         if not runner_manager:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
             return
-
-        runner_info = runner_manager.get_github_info()
-        if all(not info.busy for info in runner_info):
-            self._check_and_update_kernel()
-
-        self._check_and_update_dependencies()
 
         self._reconcile_runners(runner_manager)
 
@@ -524,9 +522,6 @@ class GithubRunnerCharm(CharmBase):
             event: Action event of reconciling the runner.
         """
         runner_manager = self._get_runner_manager()
-        if not runner_manager:
-            event.fail("Missing token or org/repo path config")
-            return
 
         delta = self._reconcile_runners(runner_manager)
 
@@ -541,9 +536,6 @@ class GithubRunnerCharm(CharmBase):
             event: Action event of flushing all runners.
         """
         runner_manager = self._get_runner_manager()
-        if not runner_manager:
-            event.fail("Missing token or org/repo path config")
-            return
 
         runner_manager.flush()
         delta = self._reconcile_runners(runner_manager)
@@ -576,13 +568,7 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = BlockedStatus(f"Failed to stop charm event timer: {ex}")
 
         runner_manager = self._get_runner_manager()
-        if runner_manager:
-            try:
-                runner_manager.flush()
-            # Safe guard against unexpected error.
-            except Exception:  # pylint: disable=broad-exception-caught
-                # Log but ignore error since we're stopping anyway.
-                logger.exception("Failed to clear runners")
+        runner_manager.flush()
 
     def _reconcile_runners(self, runner_manager: RunnerManager) -> Dict[str, Any]:
         """Reconcile the current runners state and intended runner state.
