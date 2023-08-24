@@ -12,6 +12,7 @@ from typing import AsyncIterator, Iterator
 
 import pytest
 import pytest_asyncio
+import requests
 from github import Consts, Github
 from github.Branch import Branch
 from github.GithubException import GithubException
@@ -42,7 +43,7 @@ def forked_github_repository(
     github_repository: Repository,
 ) -> Iterator[Repository]:
     """Create a fork for a GitHub repository."""
-    forked_repository = github_repository.create_fork()
+    forked_repository = github_repository.create_fork(name=f"test-{github_repository.name}")
 
     # Wait for repo to be ready
     for _ in range(10):
@@ -57,7 +58,7 @@ def forked_github_repository(
 
     yield forked_repository
 
-    forked_repository.delete()
+    # Parallel runs of this test module is allowed. Therefore, the forked repo is not removed.
 
 
 @pytest.fixture(scope="module")
@@ -178,15 +179,16 @@ async def test_dispatch_workflow_failure(
     else:
         assert False, "Timeout while waiting for workflow to complete"
 
-    # If multiple instance of this test is ran in parallel, there multiple workflow runs can be
-    # present. The `create_dispatch` does not specify which run it creates. Since all runs should
-    # fail, we can check for that. However, this means one test that fails will cause all instance
-    # of this test to fail. GitHub Action for integration test runs test in different juju version
-    # in parallel.
     for run in workflow.get_runs():
-        # The only job in the workflow is job that `echo` the runner name. If it fails then it
-        # should be the pre-run job that failed.
-        assert run.jobs()[0].conclusion == "failure"
+        logs_url = run.jobs()[0].logs_url()
+        logs = requests.get(logs_url).content.decode("utf-8")
+
+        if (
+            f"Job is about to start running on the runner: {app_with_unsigned_commit_repo.name}-"
+            in logs
+        ):
+            assert run.jobs()[0].conclusion == "failure"
+            assert "commit the job is running on is not signed" in logs
 
 
 @pytest.mark.asyncio
