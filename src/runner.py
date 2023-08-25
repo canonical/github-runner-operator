@@ -93,6 +93,10 @@ class Runner:
         self.status = runner_status
         self.instance = instance
 
+        # Add the LXD instance name to no_proxy if no_proxy setting is used.
+        if self.config.proxies["no_proxy"]:
+            self.config.proxies["no_proxy"] += f",{self.config.name}"
+
     def create(
         self,
         image: str,
