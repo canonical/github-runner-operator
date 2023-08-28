@@ -97,9 +97,11 @@ class Runner:
         if self.config.proxies.get("http") or self.config.proxies.get("https"):
             if self.config.proxies.get("no_proxy"):
                 self.config.proxies["no_proxy"] += ","
-            self.config.proxies[
-                "no_proxy"
-            ] += f"localhost,{self.config.name},.svc,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,::1"
+            self.config.proxies["no_proxy"] += (
+                "localhost,127.0.0.1,::1,"
+                "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,"
+                f"{self.config.name},.svc"
+            )
 
     def create(
         self,
