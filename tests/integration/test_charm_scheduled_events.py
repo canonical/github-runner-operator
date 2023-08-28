@@ -14,10 +14,7 @@ from juju.application import Application
 from juju.model import Model
 
 from runner_manager import RunnerManager
-from tests.integration.helpers import (
-    check_runner_binary_exists,
-    run_in_unit,
-)
+from tests.integration.helpers import check_runner_binary_exists, run_in_unit
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
