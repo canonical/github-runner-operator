@@ -507,7 +507,13 @@ class Runner:
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
 
         # Ensure the apparmor service is running.
-        self.instance.execute(["/usr/sbin/service", "snapd.apparmor", "start"])
+        self.instance.execute(["/usr/bin/systemctl", "start", "apparmor"])
+        self.instance.execute(
+            ["/usr/sbin/apparmor_parser", "-r", "/etc/apparmor.d/*snap-confine*"]
+        )
+        self.instance.execute(
+            ["/usr/sbin/apparmor_parser", "-r", "/var/lib/snapd/apparmor/profiles/snap-confine*"]
+        )
 
         if self.config.proxies:
             # Creating directory and putting the file are idempotent, and can be retried.
