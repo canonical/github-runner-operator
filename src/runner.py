@@ -506,6 +506,9 @@ class Runner:
         self._put_file(str(self.env_file), env_contents)
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
 
+        # Ensure the apparmor service is running.
+        self.instance.execute(["/usr/sbin/service", "snapd.apparmor", "start"])
+
         if self.config.proxies:
             # Creating directory and putting the file are idempotent, and can be retried.
             logger.info("Adding proxy setting to the runner.")
