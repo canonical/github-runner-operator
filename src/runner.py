@@ -93,6 +93,12 @@ class Runner:
         self.status = runner_status
         self.instance = instance
 
+        # If the proxy setting are set, then add NO_PROXY local variables.
+        if self.config.proxies.get("http") or self.config.proxies.get("https"):
+            if self.config.proxies.get("no_proxy"):
+                self.config.proxies["no_proxy"] += ","
+            self.config.proxies["no_proxy"] += f"{self.config.name},.svc"
+
     def create(
         self,
         image: str,
