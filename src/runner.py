@@ -94,8 +94,12 @@ class Runner:
         self.instance = instance
 
         # If the proxy setting are set, then add NO_PROXY local variables.
-        if self.config.proxies["no_proxy"]:
-            self.config.proxies["no_proxy"] += f",{self.config.name},.svc"
+        if self.config.proxies.get("http") or self.config.proxies.get("https"):
+            if self.config.proxies.get("no_proxy"):
+                self.config.proxies["no_proxy"] += ","
+            self.config.proxies[
+                "no_proxy"
+            ] += f"localhost,{self.config.name},.svc,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,::1"
 
     def create(
         self,
