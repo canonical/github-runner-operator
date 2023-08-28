@@ -429,6 +429,8 @@ class Runner:
 
         # Add the user to docker group.
         self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
+        # Allow traffic for docker user.
+        self.instance.execute(["/usr/sbin/iptables", "-I", "DOCKER-USER", "-j", "ACCEPT"])
 
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
