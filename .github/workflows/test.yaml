@@ -6,7 +6,7 @@ on:
 
 jobs:
   ssh:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, github-runner]
     steps:
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
