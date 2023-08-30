@@ -154,8 +154,8 @@ jobs:
             exit 1
           fi
 
-      - name: Watch github-runner (Workflow Dispatch)
-        if: matrix.event.name == 'workflow_dispatch'
+      - name: Watch github-runner (Workflow Dispatch and Push)
+        if: matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push'
         env:
           GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
@@ -169,6 +169,8 @@ jobs:
             --jq .object.sha)
 
           # Create a temporary reference/branch
+          # For push, this should trigger the "Push Event Tests" workflow automatically
+          # because the test is run for branches matching the pattern "push-e2e-*"
           gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
@@ -177,11 +179,13 @@ jobs:
             -f ref='refs/heads/${{ steps.runner-name.outputs.name }}' \
             -f sha=$REF_SHA
 
-          # Dispatch other workflow
-          gh workflow run workflow_dispatch_test.yaml \
-            -R ${{ secrets.E2E_TESTING_REPO }} \
-            --ref ${{ steps.runner-name.outputs.name }} \
-            -f runner=${{ steps.runner-name.outputs.name }}
+          # For workflow_dispatch, we need to trigger the "Workflow Dispatch Tests" workflow manually
+          if ${{ matrix.event.name == 'workflow_dispatch' }}; then
+            gh workflow run workflow_dispatch_test.yaml \
+              -R ${{ secrets.E2E_TESTING_REPO }} \
+              --ref ${{ steps.runner-name.outputs.name }} \
+              -f runner=${{ steps.runner-name.outputs.name }}
+          fi
 
           get-workflow-status() {
               # Search recent workflow runs for the one designated by the run-id ref
@@ -228,80 +232,12 @@ jobs:
             echo "Workflow completed with status: $status, conclusion: $conclusion, run-id: ${{ steps.runner-name.outputs.name }}"
             kill $(jobs -p)
           fi
-      - name: Watch github-runner (Push)
-        if: matrix.event.name == 'push'
-        env:
-          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
-        run: |
-          juju debug-log --replay --tail &
-
-          # Base any future branches on the current branch
-          REF_SHA=$(gh api \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            /repos/${{ secrets.E2E_TESTING_REPO }}/git/ref/heads/$GITHUB_HEAD_REF \
-            --jq .object.sha)
-
-          # Create a push-test-* branch, which should trigger the push test
-          gh api \
-            --method POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            /repos/${{ secrets.E2E_TESTING_REPO }}/git/refs \
-            -f ref='refs/heads/push-test-${{ steps.runner-name.outputs.name }}' \
-            -f sha=$REF_SHA
-
-          get-workflow-status() {
-              # Search recent workflow runs for the one designated by the run-id ref
-              output=$(gh run list \
-                        -R ${{ secrets.E2E_TESTING_REPO }} \
-                        -L 100 \
-                        --json headBranch,status \
-                        --jq '[.[] | select(.headBranch=="push-test-${{ steps.runner-name.outputs.name }}")]')
-
-              # Workflows that have not started have no status
-              if [ $(echo "$output" | jq 'length') -eq 0 ]
-              then
-                  echo "not_started"
-              else
-                  # Parse output with jq to get the status field of the first object
-                  status=$(echo "$output" | jq -r '.[0].status')
-                  echo "$status"
-              fi
-          }
-
-          # Wait for the workflow to start while checking its status
-          for i in {1..360}
-          do
-            status=$(get-workflow-status)
-            echo "workflow status: $status"
-            if [[ $status != "not_started" && $status != "queued" && $status != "in_progress" ]]; then
-              break
-            fi
-            sleep 10
-          done
-
-          # Make sure the workflow was completed or else consider it failed
-          conclusion=$(gh run list \
-            -R ${{ secrets.E2E_TESTING_REPO }} \
-            -L 100 \
-            --json headBranch,conclusion \
-            --jq '.[] | select(.headBranch=="push-test-${{ steps.runner-name.outputs.name }}") | .conclusion')
-
-          if [[ $status != "completed" || $conclusion != "success" ]]; then
-            echo "test workflow failed with status: $status, conclusion: $conclusion"
-            kill $(jobs -p)
-            exit 1
-          else
-            echo "Workflow completed with status: $status, conclusion: $conclusion, run-id: ${{ steps.runner-name.outputs.name }}"
-            kill $(jobs -p)
-          fi
       - name: Show Firewall Rules
         run: |
           juju ssh ${{ steps.runner-name.outputs.name }}/0 sudo nft list ruleset
 
-      - name: Clean Up (Workflow Dispatch)
-        if: always() && matrix.event.name == 'workflow_dispatch'
+      - name: Clean Up (Workflow Dispatch and Push)
+        if: always() && (matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -311,18 +247,6 @@ jobs:
           -H "X-GitHub-Api-Version: 2022-11-28" \
           "/repos/${{ secrets.E2E_TESTING_REPO }}/git/refs/heads/${{ steps.runner-name.outputs.name }}"
           echo "Deleted ref ${{ steps.runner-name.outputs.name }}"
-
-      - name: Clean Up (Push)
-        if: always() && matrix.event.name == 'push'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-            gh api \
-            --method DELETE \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "/repos/${{ secrets.E2E_TESTING_REPO }}/git/refs/heads/push-test-${{ steps.runner-name.outputs.name }}"
-            echo "Deleted ref push-test-${{ steps.runner-name.outputs.name }}"
 
   e2e-test:
     name: End-to-End Test

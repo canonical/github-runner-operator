@@ -3,25 +3,12 @@ name: Push Event Tests
 on:
   push:
     branches:
-      - push-test-*
+      - push-e2e-*
 
 jobs:
-  runner-name:
-    name: Extract runner name
-    runs-on: ubuntu-latest
-    outputs:
-      runner-name: ${{ steps.runner-name.outputs.name }}
-    steps:
-      - name: Extract runner name
-        id: runner-name
-        run: |
-          echo "Extracting runner name from branch: ${{ github.ref_name }}"
-          echo name=$(echo ${{ github.ref_name }} | cut -c 11-) >> $GITHUB_OUTPUT
-
   push-event-tests:
-    runs-on: [self-hosted, linux, x64, "${{ needs.runner-name.outputs.runner-name }}"]
-    needs: runner-name
+    runs-on: [self-hosted, linux, x64, "${{ github.ref_name }}"]
     steps:
       - name: Echo runner name
         run: |
-          echo "Hello, runner: ${{ needs.runner-name.outputs.runner-name }}"
+          echo "Hello, runner: ${{ github.ref_name }}"
