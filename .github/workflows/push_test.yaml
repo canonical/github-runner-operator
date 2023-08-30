@@ -9,12 +9,15 @@ jobs:
   runner-name:
     name: Extract runner name
     runs-on: ubuntu-latest
+    outputs:
+      runner-name: ${{ steps.runner-name.outputs.name }}
     steps:
       - name: Extract runner name
         id: runner-name
         run: |
           echo "Extracting runner name from branch: ${{ github.ref_name }}"
           echo name=$(echo ${{ github.ref_name }} | cut -c 11-) >> $GITHUB_OUTPUT
+
   push-event-tests:
     runs-on: [self-hosted, linux, x64, "${{ needs.runner-name.outputs.runner-name }}"]
     steps:
