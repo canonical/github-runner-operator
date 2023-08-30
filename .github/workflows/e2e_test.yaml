@@ -80,8 +80,6 @@ jobs:
             abbreviation: pr
           - name: workflow_dispatch
             abbreviation: wd
-          - name: push
-            abbreviation: pu
     steps:
       - name: Setup Lxd Juju Controller
         uses: charmed-kubernetes/actions-operator@main
@@ -128,8 +126,8 @@ jobs:
             --config denylist=10.0.0.0/8 \
             --config test-mode=insecure
 
-      - name: Watch github-runner (Pull Request or Push)
-        if: matrix.event.name == 'pull_request' || matrix.event.name == 'push'
+      - name: Watch github-runner (Pull Request)
+        if: matrix.event.name == 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         timeout-minutes: 30
