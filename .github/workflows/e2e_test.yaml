@@ -271,7 +271,9 @@ jobs:
           [[ -z "${http_proxy}" && -z "${HTTP_PROXY}" ]] \
             || cat /home/ubuntu/.docker/config.json | grep httpProxy
       - name: Install microk8s
-        run: sudo snap install microk8s --classic
+        # TMP: Pin version of microk8s to older version due to issues with running microk8s in LXD
+        # containers. Currently, in discussion with microk8s developer on the issue.
+        run: sudo snap install microk8s --classic --channel=1.24/stable
       - name: Wait for microk8s
         timeout-minutes: 10
         run: microk8s status --wait-ready
