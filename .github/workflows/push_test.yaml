@@ -1,0 +1,14 @@
+name: Push Tests
+
+on:
+  push:
+    branches:
+      - 'e2e/push/**'
+
+jobs:
+  push_test:
+    runs-on: [self-hosted, linux, x64, e2e-push]
+    steps:
+      - name: Echo Hello
+        run: |
+          echo "Hello, self-hosted runner"
