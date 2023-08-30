@@ -8,10 +8,9 @@ jobs:
   ssh:
     runs-on: [self-hosted, github-runner]
     steps:
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: true
+      - run: echo Hello
+      - if: always()
+        run: echo world
   # test:
   #   runs-on: [self-hosted, large]
   #   steps:
@@ -21,3 +20,7 @@ jobs:
   #         verbosity: trace
   #     - if: failure()
   #       run: sleep 10000
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+      #   with:
+      #     limit-access-to-actor: true
