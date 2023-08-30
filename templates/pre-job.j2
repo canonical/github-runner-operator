@@ -7,6 +7,8 @@ logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
 
 # Prepare curl arguments
 CURL_ARGS=(
+  --silent
+  --show-error
   --max-time 60
   --noproxy '*'
   --fail-with-body
@@ -19,9 +21,9 @@ if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
 
   logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
 
-  curl "${CURL_ARGS[@]}" \
+  REPO_CHECK=$(curl "${CURL_ARGS[@]}" \
       -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"branch_name\": \"${GITHUB_REF_NAME}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
-      http://{{host_ip}}:8080/workflow_dispatch/check-run
+      http://{{host_ip}}:8080/workflow_dispatch/check-run)
 
 # Pull request - Request repo-policy-compliance service check:
 elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
@@ -33,9 +35,9 @@ elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
   GITHUB_BASE_REF: ${GITHUB_BASE_REF}, \
   GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
 
-  curl "${CURL_ARGS[@]}" \
+  REPO_CHECK=$(curl "${CURL_ARGS[@]}" \
       -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_HEAD_REF}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
-      http://{{host_ip}}:8080/pull_request/check-run
+      http://{{host_ip}}:8080/pull_request/check-run)
 
 else
 
@@ -43,4 +45,11 @@ else
 
   return 1
 
+fi
+
+if [[ -z $REPO_CHECK ]]; then
+  echo "The repo-policy-compliance check failed with $REPO_CHECK exit code"
+  echo "Shutting down due to repo-policy-compliance failure"
+  echo "This runner will be become lost"
+  sudo systemctl poweroff -i
 fi
