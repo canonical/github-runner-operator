@@ -1,8 +1,7 @@
 name: End-to-End Test
 
 on:
-  # pull_request:
-  workflow_dispatch:
+  pull_request:
 
 jobs:
   build-charm:
@@ -23,7 +22,6 @@ jobs:
             security.nesting: true
             security.privileged: true
             raw.lxc: |
-              lxc.apparmor.profile=unconfined
               lxc.mount.auto=proc:rw sys:rw cgroup:rw
               lxc.cgroup.devices.allow=a
               lxc.cap.drop=
@@ -270,6 +268,8 @@ jobs:
         run: |
           [[ -z "${http_proxy}" && -z "${HTTP_PROXY}" ]] \
             || cat /home/ubuntu/.docker/config.json | grep httpProxy
+      - name: Get status of snapd
+        run: sudo systemctl status snapd
       - name: Install microk8s
         # TMP: Pin version of microk8s to older version due to issues with running microk8s in LXD
         # containers. Currently, in discussion with microk8s developer on the issue.
