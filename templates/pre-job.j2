@@ -26,15 +26,6 @@ if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
       http://{{host_ip}}:8080/workflow_dispatch/check-run
   REPO_CHECK=$?
 
-# Push - Request repo-policy-compliance service check:
-elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
-  logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
-
-  curl "${CURL_ARGS[@]}" \
-      -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"branch_name\": \"${GITHUB_REF_NAME}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
-      http://{{host_ip}}:8080/push/check-run
-  REPO_CHECK=$?
-
 # Pull request - Request repo-policy-compliance service check:
 elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
 
