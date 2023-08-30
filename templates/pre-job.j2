@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Disable exit-on-error, due the need for error handling.
+set +e
+
 # Log common env variables.
 logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
   GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}, \
