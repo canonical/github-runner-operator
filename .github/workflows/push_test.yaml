@@ -20,6 +20,7 @@ jobs:
 
   push-event-tests:
     runs-on: [self-hosted, linux, x64, "${{ needs.runner-name.outputs.runner-name }}"]
+    needs: runner-name
     steps:
       - name: Echo runner name
         run: |
