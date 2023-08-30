@@ -47,9 +47,10 @@ else
 
 fi
 
-if [[ -z $REPO_CHECK ]]; then
+if ! $REPO_CHECK; then
   echo "The repo-policy-compliance check failed with $REPO_CHECK exit code"
   echo "Shutting down due to repo-policy-compliance failure"
   echo "This runner will be become lost"
+  sleep 300
   sudo systemctl poweroff -i
 fi
