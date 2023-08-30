@@ -56,8 +56,7 @@ if [[ $REPO_CHECK -ne 0 ]]; then
   echo "The repo-policy-compliance check failed with $REPO_CHECK exit code"
   echo "Shutting down due to repo-policy-compliance failure"
   echo "This runner will be become lost"
-  sleep 180
-  sudo systemctl poweroff -i
+  sudo systemctl poweroff -i +s 30
 fi
 
 echo "The repo-policy-compliance check has passed, proceeding to execute jobs"
