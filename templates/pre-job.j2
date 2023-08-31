@@ -19,6 +19,9 @@ CURL_ARGS=(
   -H 'Content-Type: application/json'
 )
 
+# Set REPO_CHECK to a failure code as a safe guard.
+REPO_CHECK=1
+
 # Workflow dispatch and Push - Request repo-policy-compliance service check:
 if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
 
