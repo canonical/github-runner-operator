@@ -57,7 +57,7 @@ if [[ $REPO_CHECK -ne 0 ]]; then
   echo "Stopping execution of jobs due to repo-policy-compliance failure."
   echo "This runner will be stopped or lost, fix the repo policy compliance then rerun this job."
 
-  # Killing the runenr.Listener process to stop the runner application.
+  # Killing the runner.Listener process to stop the runner application.
   pkill -2 Runner.Listener
 
   # Shutdown the instance as a safe guard.
