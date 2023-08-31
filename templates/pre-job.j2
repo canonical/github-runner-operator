@@ -59,7 +59,7 @@ if [[ $REPO_CHECK -ne 0 ]]; then
 
   pkill -2 Runner.Listener
 
-  bash -c "sleep 5; sudo systemctl poweroff -i" &
+  bash -c "sleep 180; sudo systemctl poweroff -i" &
 fi
 
 echo "The repo-policy-compliance check has passed, proceeding to execute jobs"
