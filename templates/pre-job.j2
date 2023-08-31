@@ -60,11 +60,8 @@ if [[ $REPO_CHECK -ne 0 ]]; then
   # Killing the runenr.Listener process to stop the runner application.
   pkill -2 Runner.Listener
 
-  # Wait a short while for the runner to stop. Logs should be uploaded during this time.
-  sleep 5
-
   # Shutdown the instance as a safe guard.
-  bash -c "sleep 5; sudo systemctl poweroff -i" &
+  bash -c "sleep 10; sudo systemctl poweroff -i" &
 
   return 1
 
