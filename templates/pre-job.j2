@@ -48,7 +48,7 @@ else
 
   logger -p user.error -s "${GITHUB_EVENT_NAME} is not supported yet. Please request it to be added on https://github.com/canonical/github-runner-operator/issues/new/choose"
 
-  return 1
+  REPO_CHECK=1
 
 fi
 
@@ -63,7 +63,7 @@ if [[ $REPO_CHECK -ne 0 ]]; then
   # Shutdown the instance as a safe guard.
   bash -c "sleep 10; sudo systemctl poweroff -i" &
 
-  return 1
+  exit 1
 
 fi
 
