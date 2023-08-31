@@ -14,14 +14,14 @@ CURL_ARGS=(
   -H 'Content-Type: application/json'
 )
 
-# Workflow dispatch - Request repo-policy-compliance service check:
-if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+# Workflow dispatch and Push - Request repo-policy-compliance service check:
+if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
 
   logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
 
   curl "${CURL_ARGS[@]}" \
       -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"branch_name\": \"${GITHUB_REF_NAME}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
-      http://{{host_ip}}:8080/workflow_dispatch/check-run
+      http://{{host_ip}}:8080/${GITHUB_EVENT_NAME}/check-run
 
 # Pull request - Request repo-policy-compliance service check:
 elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
