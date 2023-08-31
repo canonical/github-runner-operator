@@ -27,6 +27,7 @@ if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAM
   curl "${CURL_ARGS[@]}" \
       -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"branch_name\": \"${GITHUB_REF_NAME}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
       http://{{host_ip}}:8080/${GITHUB_EVENT_NAME}/check-run
+  REPO_CHECK=$?
 
 # Pull request - Request repo-policy-compliance service check:
 elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
