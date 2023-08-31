@@ -305,3 +305,10 @@ jobs:
         run: |
           HOST_IP=$(ip route | grep default | cut -f 3 -d" ")
           [ $((ping $HOST_IP -c 5 || :) | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
+      # TODO: Remove
+      - name: TEST ONLY FAILURE
+        if: failure()
+        run: echo "SHOULD NOT BE RAN"
+      - name: TEST ONLY ALWAYS
+        if: always()
+        run: echo "SHOULD NOT BE RAN"
