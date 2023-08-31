@@ -189,6 +189,7 @@ async def test_dispatch_workflow_failure(
         ):
             assert run.jobs()[0].conclusion == "failure"
             assert "commit the job is running on is not signed" in logs
+            assert "Should not echo if pre-job script failed" not in logs
 
 
 @pytest.mark.asyncio
