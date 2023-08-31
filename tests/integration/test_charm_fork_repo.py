@@ -12,6 +12,7 @@ from typing import AsyncIterator, Iterator
 
 import pytest
 import pytest_asyncio
+import requests
 from github import Consts, Github
 from github.Branch import Branch
 from github.GithubException import GithubException
@@ -42,7 +43,7 @@ def forked_github_repository(
     github_repository: Repository,
 ) -> Iterator[Repository]:
     """Create a fork for a GitHub repository."""
-    forked_repository = github_repository.create_fork()
+    forked_repository = github_repository.create_fork(name=f"test-{github_repository.name}")
 
     # Wait for repo to be ready
     for _ in range(10):
@@ -57,7 +58,7 @@ def forked_github_repository(
 
     yield forked_repository
 
-    forked_repository.delete()
+    # Parallel runs of this test module is allowed. Therefore, the forked repo is not removed.
 
 
 @pytest.fixture(scope="module")
@@ -164,9 +165,8 @@ async def test_dispatch_workflow_failure(
 
     workflow = forked_github_repository.get_workflow(id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME)
 
-    assert not list(workflow.get_runs()), "Existing workflow runs in created fork repo"
-
-    workflow.create_dispatch(
+    # The `create_dispatch` returns True on success.
+    assert workflow.create_dispatch(
         branch_with_unsigned_commit, {"runner": app_with_unsigned_commit_repo.name}
     )
 
@@ -179,10 +179,16 @@ async def test_dispatch_workflow_failure(
     else:
         assert False, "Timeout while waiting for workflow to complete"
 
-    # The only job in the workflow is job that `echo` the runner name. If it fails then it should
-    # be the pre-run job that failed.
-    run = workflow.get_runs()[0]
-    assert run.jobs()[0].conclusion == "failure"
+    for run in workflow.get_runs():
+        logs_url = run.jobs()[0].logs_url()
+        logs = requests.get(logs_url).content.decode("utf-8")
+
+        if (
+            f"Job is about to start running on the runner: {app_with_unsigned_commit_repo.name}-"
+            in logs
+        ):
+            assert run.jobs()[0].conclusion == "failure"
+            assert "commit the job is running on is not signed" in logs
 
 
 @pytest.mark.asyncio
