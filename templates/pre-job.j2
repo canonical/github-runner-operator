@@ -53,9 +53,9 @@ else
 fi
 
 if [[ $REPO_CHECK -ne 0 ]]; then
-  echo "The repo-policy-compliance check failed with $REPO_CHECK exit code.\n"
-  echo "Stopping execution of jobs due to repo-policy-compliance failure.\n"
-  echo "This runner will be stopped or lost, fix the repo policy compliance then rerun this job.\n"
+  echo "The repo-policy-compliance check failed with $REPO_CHECK exit code."
+  echo "Stopping execution of jobs due to repo-policy-compliance failure."
+  echo "This runner will be stopped or lost, fix the repo policy compliance then rerun this job."
 
   # Killing the runenr.Listener process to stop the runner application.
   pkill -2 Runner.Listener
