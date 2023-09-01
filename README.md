@@ -52,6 +52,6 @@ Dependencies are installed in virtual environments. Integration testing requires
 Run the following command:
 
 ```bash
-echo -e "tox -e src-docs\ngit add src-docs\n" > .git/hooks/pre-commit
+echo -e "tox -e src-docs\ngit add src-docs\n" >> .git/hooks/pre-commit
 chmod +x .git/hooks/pre-commit
 ```
