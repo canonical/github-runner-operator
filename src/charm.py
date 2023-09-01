@@ -22,6 +22,7 @@ from ops.charm import (
     InstallEvent,
     StopEvent,
     UpgradeCharmEvent,
+    StartEvent,
 )
 from ops.framework import EventBase, StoredState
 from ops.main import main
@@ -59,7 +60,6 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
 
     @functools.wraps(func)
     def func_with_catch_errors(self, event: EventT) -> None:
-        # Safe guard against unexpected error.
         try:
             func(self, event)
         except MissingConfigurationError as err:
@@ -85,7 +85,6 @@ def catch_action_errors(
 
     @functools.wraps(func)
     def func_with_catch_errors(self, event: ActionEvent) -> None:
-        # Safe guard against unexpected error.
         try:
             func(self, event)
         except MissingConfigurationError as err:
@@ -144,8 +143,10 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.install, self._on_install)
         self.framework.observe(self.on.upgrade_charm, self._on_upgrade_charm)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
-        self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
+        self.framework.observe(self.on.start, self._on_start)
         self.framework.observe(self.on.stop, self._on_stop)
+
+        self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
 
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.reconcile_runners_action, self._on_reconcile_runners_action)
@@ -267,11 +268,7 @@ class GithubRunnerCharm(CharmBase):
         """
         self.unit.status = MaintenanceStatus("Installing packages")
 
-        # Temporary solution: Upgrade the kernel due to a kernel bug in 5.15. Kernel upgrade
-        # not needed for container-based end-to-end tests.
-        if not LXD_PROFILE_YAML.exists():
-            self.unit.status = MaintenanceStatus("Upgrading kernel")
-            self._check_and_update_kernel()
+        self._check_and_update_kernel()
 
         try:
             # The `_start_services`, `_install_deps` includes retry.
@@ -285,41 +282,45 @@ class GithubRunnerCharm(CharmBase):
 
         self._refresh_firewall()
         runner_manager = self._get_runner_manager()
-        if runner_manager:
-            self.unit.status = MaintenanceStatus("Downloading runner binary")
-            try:
-                runner_info = runner_manager.get_latest_runner_bin_url()
-                logger.info(
-                    "Downloading %s from: %s", runner_info.filename, runner_info.download_url
-                )
-                self._stored.runner_bin_url = runner_info.download_url
-                runner_manager.update_runner_bin(runner_info)
-            # Safe guard against transient unexpected error.
-            except RunnerBinaryError as err:
-                logger.exception("Failed to update runner binary")
-                # Failure to download runner binary is a transient error.
-                # The charm automatically update runner binary on a schedule.
-                self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
-                return
+        self.unit.status = MaintenanceStatus("Downloading runner binary")
+        try:
+            runner_info = runner_manager.get_latest_runner_bin_url()
+            logger.info(
+                "Downloading %s from: %s", runner_info.filename, runner_info.download_url
+            )
+            self._stored.runner_bin_url = runner_info.download_url
+            runner_manager.update_runner_bin(runner_info)
+        # Safe guard against transient unexpected error.
+        except RunnerBinaryError as err:
+            logger.exception("Failed to update runner binary")
+            # Failure to download runner binary is a transient error.
+            # The charm automatically update runner binary on a schedule.
+            self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
+            return
 
-            self.unit.status = MaintenanceStatus("Starting runners")
-            try:
-                # TMP: Juju install event can be emitted multiple times after rebooting the juju
-                # machine. This results install event can be fired while runners exists. Flushing
-                # these runners as temp solution.
-                runner_manager.flush()
-                self._reconcile_runners(runner_manager)
-                self.unit.status = ActiveStatus()
-            except RunnerError as err:
-                logger.exception("Failed to start runners")
-                self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")
-        else:
-            self.unit.status = BlockedStatus("Missing token or org/repo path config")
+    @catch_charm_errors
+    def _on_start(self, _event: StartEvent) -> None:
+        """Handle the start of charm.
+
+        Args:
+            event: Event of start of charm.
+        """
+        runner_manager = self._get_runner_manager()
+        self.unit.status = MaintenanceStatus("Starting runners")
+        try:
+            self._reconcile_runners(runner_manager)
+            self.unit.status = ActiveStatus()
+        except RunnerError as err:
+            logger.exception("Failed to start runners")
+            self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")
 
     def _check_and_update_kernel(self) -> None:
         """Update the Linux kernel if new version is available.
 
-        Do nothing if no new version is available, else update the kernel then reboot if needed.
+        Do nothing if no new version is available, else update the kernel.
+
+        Kernel updates often requires reboot. The event handler that call this function should use
+        juju-reboot to reboot the machine at the end of the event handling.
         """
         logger.info("Upgrading kernel")
         self._apt_install(["linux-generic-hwe-22.04"])
@@ -327,7 +328,8 @@ class GithubRunnerCharm(CharmBase):
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
         if exit_code == 0:
             logger.info("Rebooting system...")
-            execute_command(["reboot"])
+            # The juju-reboot is inject to PATH by juju.
+            execute_command(["juju-reboot", "--now"])
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
