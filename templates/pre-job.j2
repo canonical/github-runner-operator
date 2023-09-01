@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Disable exit-on-error, due the need for error handling.
+set +e
+
 # Log common env variables.
 logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
   GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}, \
@@ -7,12 +10,17 @@ logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
 
 # Prepare curl arguments
 CURL_ARGS=(
+  --silent
+  --show-error
   --max-time 60
   --noproxy '*'
   --fail-with-body
   -H 'Authorization: Bearer {{one_time_token}}'
   -H 'Content-Type: application/json'
 )
+
+# Set REPO_CHECK to a failure code as a safe guard.
+REPO_CHECK=1
 
 # Workflow dispatch and Push - Request repo-policy-compliance service check:
 if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
@@ -22,6 +30,7 @@ if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAM
   curl "${CURL_ARGS[@]}" \
       -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"branch_name\": \"${GITHUB_REF_NAME}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
       http://{{host_ip}}:8080/${GITHUB_EVENT_NAME}/check-run
+  REPO_CHECK=$?
 
 # Pull request - Request repo-policy-compliance service check:
 elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
@@ -36,11 +45,28 @@ elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
   curl "${CURL_ARGS[@]}" \
       -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_HEAD_REF}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
       http://{{host_ip}}:8080/pull_request/check-run
+  REPO_CHECK=$?
 
 else
 
   logger -p user.error -s "${GITHUB_EVENT_NAME} is not supported yet. Please request it to be added on https://github.com/canonical/github-runner-operator/issues/new/choose"
 
-  return 1
+  REPO_CHECK=1
 
 fi
+
+if [[ $REPO_CHECK -ne 0 ]]; then
+  logger -p user.error -s "Stopping execution of jobs due to repository setup is not compliant with policies."
+  logger -p user.error -s "This runner will be stopped or lost, please fix the setup of the repository, then rerun this job."
+
+  # Killing the runner.Listener process to stop the runner application. This will prevent jobs from being executed.
+  pkill -2 Runner.Listener
+
+  # Shutdown the instance as a safe guard. The time delay is needed for the runner application to upload the logs.
+  bash -c "sleep 10; sudo systemctl poweroff -i" &
+
+  exit 1
+
+fi
+
+logger -s "The repository setup check has passed, proceeding to execute jobs"
