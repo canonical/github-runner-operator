@@ -10,8 +10,6 @@ The `RunnerManager` class from `runner_manager.py` creates and manages a
 collection of `Runner` instances.
 """
 
-from __future__ import annotations
-
 import json
 import logging
 import pathlib
