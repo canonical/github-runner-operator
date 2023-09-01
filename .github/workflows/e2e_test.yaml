@@ -80,6 +80,8 @@ jobs:
             abbreviation: pr
           - name: workflow_dispatch
             abbreviation: wd
+          - name: push
+            abbreviation: push
     steps:
       - name: Setup Lxd Juju Controller
         uses: charmed-kubernetes/actions-operator@main
@@ -152,8 +154,8 @@ jobs:
             exit 1
           fi
 
-      - name: Watch github-runner (Workflow Dispatch)
-        if: matrix.event.name == 'workflow_dispatch'
+      - name: Watch github-runner (Workflow Dispatch and Push)
+        if: matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push'
         env:
           GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
@@ -167,6 +169,8 @@ jobs:
             --jq .object.sha)
 
           # Create a temporary reference/branch
+          # For push, this should trigger the "Push Event Tests" workflow automatically
+          # because the test is run for branches matching the pattern "push-e2e-*"
           gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
@@ -175,11 +179,13 @@ jobs:
             -f ref='refs/heads/${{ steps.runner-name.outputs.name }}' \
             -f sha=$REF_SHA
 
-          # Dispatch other workflow
-          gh workflow run workflow_dispatch_test.yaml \
-            -R ${{ secrets.E2E_TESTING_REPO }} \
-            --ref ${{ steps.runner-name.outputs.name }} \
-            -f runner=${{ steps.runner-name.outputs.name }}
+          # For workflow_dispatch, we need to trigger the "Workflow Dispatch Tests" workflow manually
+          if ${{ matrix.event.name == 'workflow_dispatch' }}; then
+            gh workflow run workflow_dispatch_test.yaml \
+              -R ${{ secrets.E2E_TESTING_REPO }} \
+              --ref ${{ steps.runner-name.outputs.name }} \
+              -f runner=${{ steps.runner-name.outputs.name }}
+          fi
 
           get-workflow-status() {
               # Search recent workflow runs for the one designated by the run-id ref
@@ -226,13 +232,12 @@ jobs:
             echo "Workflow completed with status: $status, conclusion: $conclusion, run-id: ${{ steps.runner-name.outputs.name }}"
             kill $(jobs -p)
           fi
-
       - name: Show Firewall Rules
         run: |
           juju ssh ${{ steps.runner-name.outputs.name }}/0 sudo nft list ruleset
 
-      - name: Clean Up
-        if: always() && matrix.event.name == 'workflow_dispatch'
+      - name: Clean Up (Workflow Dispatch and Push)
+        if: always() && (matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -270,7 +275,9 @@ jobs:
           [[ -z "${http_proxy}" && -z "${HTTP_PROXY}" ]] \
             || cat /home/ubuntu/.docker/config.json | grep httpProxy
       - name: Install microk8s
-        run: sudo snap install microk8s --classic
+        # TMP: Pin version of microk8s to older version due to issues with running microk8s in LXD
+        # containers. Currently, in discussion with microk8s developer on the issue.
+        run: sudo snap install microk8s --classic --channel=1.24/stable
       - name: Wait for microk8s
         timeout-minutes: 10
         run: microk8s status --wait-ready

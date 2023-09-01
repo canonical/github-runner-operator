@@ -288,6 +288,7 @@ class GithubRunnerCharm(CharmBase):
             # The charm cannot proceed without dependencies.
             self.unit.status = BlockedStatus("Failed to install dependencies")
             return
+
         self._refresh_firewall()
         runner_manager = self._get_runner_manager()
         if runner_manager:
@@ -309,6 +310,10 @@ class GithubRunnerCharm(CharmBase):
 
             self.unit.status = MaintenanceStatus("Starting runners")
             try:
+                # TMP: Juju install event can be emitted multiple times after rebooting the juju
+                # machine. This results install event can be fired while runners exists. Flushing
+                # these runners as temp solution.
+                runner_manager.flush()
                 self._reconcile_runners(runner_manager)
                 self.unit.status = ActiveStatus()
             except RunnerError as err:
@@ -320,7 +325,7 @@ class GithubRunnerCharm(CharmBase):
     def _upgrade_kernel(self) -> None:
         """Upgrade the Linux kernel."""
         execute_command(["/usr/bin/apt-get", "update"])
-        execute_command(["/usr/bin/apt-get", "install", "-qy", "linux-generic"])
+        execute_command(["/usr/bin/apt-get", "install", "-qy", "linux-generic-hwe-22.04"])
 
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
         if exit_code == 0:
@@ -416,9 +421,6 @@ class GithubRunnerCharm(CharmBase):
         if not runner_manager:
             return False
 
-        self.unit.status = MaintenanceStatus("Checking for service updates")
-        service_updated = self._install_repo_policy_compliance()
-
         # Check if the runner binary file exists.
         if not runner_manager.check_runner_bin():
             self._stored.runner_bin_url = None
@@ -446,12 +448,17 @@ class GithubRunnerCharm(CharmBase):
             self._stored.runner_bin_url = runner_info.download_url
             runner_bin_updated = True
 
+        self.unit.status = MaintenanceStatus("Checking for service updates")
+        service_updated = self._install_repo_policy_compliance()
+
         if service_updated or runner_bin_updated:
             logger.info(
                 "Flushing runner due to: service updated=%s, runner binary update=%s",
                 service_updated,
                 runner_bin_updated,
             )
+
+            self.unit.status = MaintenanceStatus("Flushing runners due to updated deps")
 
             self._start_services()
             runner_manager.flush(flush_busy=False)
@@ -608,6 +615,8 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             Changes in runner number due to reconciling runners.
         """
+        self.unit.status = MaintenanceStatus("Reconciling runners")
+
         virtual_machines_resources = VirtualMachineResources(
             self.config["vm-cpu"], self.config["vm-memory"], self.config["vm-disk"]
         )
