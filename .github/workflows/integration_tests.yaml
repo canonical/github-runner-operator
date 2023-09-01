@@ -3,11 +3,6 @@ name: Integration tests
 on:
   pull_request:
 
-# Needed to prevent concurrency due to only one fork can exist under the same owner on GitHub.
-concurrency:
-  group: github-runner-operator-${{ github.workflow }}-integration-tests-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   integration-test-charm-no-runner:
     name: Integration test charm with no runner
