@@ -13,4 +13,4 @@ jobs:
     runs-on: [self-hosted, xlarge]
     steps:
       - name: Echo
-        runs: echo "Hello number ${{ matrix.num }}"
+        run: echo "Hello number ${{ matrix.num }}"
