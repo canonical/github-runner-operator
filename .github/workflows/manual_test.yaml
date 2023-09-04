@@ -1,14 +1,14 @@
 name: Manual test
 
 on:
-  # push:
+  push:
   # pull_request:
   workflow_dispatch:
 
 jobs:
   test:
     name: test
-    runs-on: [self-hosted, github-runner]
+    runs-on: [self-hosted, large]
     steps:
       - name: Echo
         run: echo "Hello push"
