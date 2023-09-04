@@ -1,0 +1,14 @@
+name: Push Event Tests
+
+on:
+  push:
+    branches:
+      - push-e2e-*
+
+jobs:
+  push-event-tests:
+    runs-on: [self-hosted, linux, x64, "${{ github.ref_name }}"]
+    steps:
+      - name: Echo runner name
+        run: |
+          echo "Hello, runner: ${{ github.ref_name }}"
