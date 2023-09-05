@@ -3,8 +3,6 @@
 
 """Runner Manager manages the runners on LXD and GitHub."""
 
-from __future__ import annotations
-
 import hashlib
 import logging
 import tarfile
