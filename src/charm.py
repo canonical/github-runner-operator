@@ -296,6 +296,8 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
             return
 
+        self.unit.status = ActiveStatus()
+
     @catch_charm_errors
     def _on_start(self, _event: StartEvent) -> None:
         """Handle the start of charm.
