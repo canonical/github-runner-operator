@@ -20,9 +20,9 @@ from ops.charm import (
     CharmBase,
     ConfigChangedEvent,
     InstallEvent,
+    StartEvent,
     StopEvent,
     UpgradeCharmEvent,
-    StartEvent,
 )
 from ops.framework import EventBase, StoredState
 from ops.main import main
@@ -268,7 +268,7 @@ class GithubRunnerCharm(CharmBase):
         """
         self.unit.status = MaintenanceStatus("Installing packages")
 
-        self._check_and_update_kernel()
+        self._update_kernel()
 
         try:
             # The `_start_services`, `_install_deps` includes retry.
@@ -285,9 +285,7 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Downloading runner binary")
         try:
             runner_info = runner_manager.get_latest_runner_bin_url()
-            logger.info(
-                "Downloading %s from: %s", runner_info.filename, runner_info.download_url
-            )
+            logger.info("Downloading %s from: %s", runner_info.filename, runner_info.download_url)
             self._stored.runner_bin_url = runner_info.download_url
             runner_manager.update_runner_bin(runner_info)
         # Safe guard against transient unexpected error.
@@ -314,13 +312,15 @@ class GithubRunnerCharm(CharmBase):
             logger.exception("Failed to start runners")
             self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")
 
-    def _check_and_update_kernel(self) -> None:
+    def _update_kernel(self, now: bool = False) -> None:
         """Update the Linux kernel if new version is available.
 
-        Do nothing if no new version is available, else update the kernel.
+        Do nothing if no new version is available, else update the kernel and reboot.
+        This method should only call by event handlers, and not action handlers. As juju-reboot
+        only works with events.
 
-        Kernel updates often requires reboot. The event handler that call this function should use
-        juju-reboot to reboot the machine at the end of the event handling.
+        Args:
+            now: Whether the reboot should trigger at end of event handler or now.
         """
         logger.info("Upgrading kernel")
         self._apt_install(["linux-generic-hwe-22.04"])
@@ -328,8 +328,12 @@ class GithubRunnerCharm(CharmBase):
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
         if exit_code == 0:
             logger.info("Rebooting system...")
+
             # The juju-reboot is inject to PATH by juju.
-            execute_command(["juju-reboot", "--now"])
+            cmd = ["juju-reboot"]
+            if now:
+                cmd += ["--now"]
+            execute_command(cmd)
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
@@ -412,10 +416,6 @@ class GithubRunnerCharm(CharmBase):
 
         runner_manager = self._get_runner_manager()
 
-        runner_info = runner_manager.get_github_info()
-        if all(not info.busy for info in runner_info):
-            self._check_and_update_kernel()
-
         # Check if the runner binary file exists.
         if not runner_manager.check_runner_bin():
             self._stored.runner_bin_url = None
@@ -468,13 +468,18 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of reconciling the runner state.
         """
+        runner_manager = self._get_runner_manager()
+
+        runner_info = runner_manager.get_github_info()
+        if all(not info.busy for info in runner_info):
+            self._update_kernel(now=True)
+
         self._check_and_update_dependencies()
 
         if not RunnerManager.runner_bin_path.is_file():
             logger.warning("Unable to reconcile due to missing runner binary")
             return
 
-        runner_manager = self._get_runner_manager()
         if not runner_manager:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
             return
