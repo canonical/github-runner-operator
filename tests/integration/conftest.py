@@ -239,7 +239,7 @@ async def app_scheduled_events(
             "reconcile-interval": 2,
         },
     )
-    await model.wait_for_idle()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=30 * 60)
 
     # Spawn one runner. Spawning one runner during deployment will cause timeout waiting for model.
     unit = application.units[0]

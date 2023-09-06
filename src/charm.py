@@ -20,7 +20,6 @@ from ops.charm import (
     CharmBase,
     ConfigChangedEvent,
     InstallEvent,
-    StartEvent,
     StopEvent,
     UpgradeCharmEvent,
 )
@@ -159,7 +158,6 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.install, self._on_install)
         self.framework.observe(self.on.upgrade_charm, self._on_upgrade_charm)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
-        self.framework.observe(self.on.start, self._on_start)
         self.framework.observe(self.on.stop, self._on_stop)
 
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
@@ -312,16 +310,6 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
             return
 
-        self.unit.status = ActiveStatus()
-
-    @catch_charm_errors
-    def _on_start(self, _event: StartEvent) -> None:
-        """Handle the start of charm.
-
-        Args:
-            event: Event of start of charm.
-        """
-        runner_manager = self._get_runner_manager()
         self.unit.status = MaintenanceStatus("Starting runners")
         try:
             self._reconcile_runners(runner_manager)
