@@ -45,6 +45,7 @@ async def test_update_interval(model: Model, app_scheduled_events: Application) 
     assert not await check_runner_binary_exists(unit)
 
     await sleep(3 * 60)
+
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
     assert await check_runner_binary_exists(unit)
 
@@ -70,6 +71,7 @@ async def test_reconcile_interval(model: Model, app_scheduled_events: Applicatio
     await wait_till_num_of_runners(unit, 0)
 
     await sleep(3 * 60)
+
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     runner_names = await get_runner_names(unit)

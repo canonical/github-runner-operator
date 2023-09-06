@@ -233,21 +233,13 @@ async def app_scheduled_events(
         config={
             "path": path,
             "token": token,
-            "virtual-machines": 0,
+            "virtual-machines": 1,
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
             "reconcile-interval": 2,
         },
     )
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=30 * 60)
-
-    # Spawn one runner. Spawning one runner during deployment will cause timeout waiting for model.
     unit = application.units[0]
-
-    await application.set_config({"virtual-machines": "1"})
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     # Wait until there is one runner.
     await wait_till_num_of_runners(unit, 1)
