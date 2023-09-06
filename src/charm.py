@@ -28,7 +28,13 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-from errors import MissingConfigurationError, RunnerBinaryError, RunnerError, SubprocessError
+from errors import (
+    MissingConfigurationError,
+    MissingRunnerBinaryError,
+    RunnerBinaryError,
+    RunnerError,
+    SubprocessError,
+)
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
@@ -67,6 +73,11 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
             self.unit.status = BlockedStatus(
                 f"Missing required charm configuration: {err.configs}"
             )
+        except MissingRunnerBinaryError:
+            logger.exception("Missing runner binary")
+            self.unit.status = MaintenanceStatus(
+                "Missing runner binary, automatic retry will be attempted"
+            )
 
     return func_with_catch_errors
 
@@ -90,6 +101,11 @@ def catch_action_errors(
         except MissingConfigurationError as err:
             logger.exception("Missing required charm configuration")
             event.fail(f"Missing required charm configuration: {err.configs}")
+        except MissingRunnerBinaryError:
+            logger.exception("Missing runner binary")
+            self.unit.status = MaintenanceStatus(
+                "Missing runner binary, automatic retry will be attempted"
+            )
 
     return func_with_catch_errors
 
@@ -478,14 +494,6 @@ class GithubRunnerCharm(CharmBase):
 
         self._check_and_update_dependencies()
 
-        if not RunnerManager.runner_bin_path.is_file():
-            logger.warning("Unable to reconcile due to missing runner binary")
-            return
-
-        if not runner_manager:
-            self.unit.status = BlockedStatus("Missing token or org/repo path config")
-            return
-
         self._reconcile_runners(runner_manager)
 
         self.unit.status = ActiveStatus()
@@ -537,6 +545,8 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Action event of reconciling the runner.
         """
+        self._check_and_update_dependencies()
+
         runner_manager = self._get_runner_manager()
 
         delta = self._reconcile_runners(runner_manager)
@@ -595,6 +605,10 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             Changes in runner number due to reconciling runners.
         """
+        if not RunnerManager.runner_bin_path.is_file():
+            logger.warning("Unable to reconcile due to missing runner binary")
+            raise MissingRunnerBinaryError()
+
         self.unit.status = MaintenanceStatus("Reconciling runners")
 
         virtual_machines_resources = VirtualMachineResources(
