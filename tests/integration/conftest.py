@@ -233,15 +233,18 @@ async def app_scheduled_events(
         config={
             "path": path,
             "token": token,
-            "virtual-machines": 1,
+            "virtual-machines": 0,
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
             "reconcile-interval": 2,
         },
     )
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
     unit = application.units[0]
 
-    # Wait until there is one runner.
-    await wait_till_num_of_runners(unit, 1)
+    await app_no_runner.set_config({"virtual-machines": "1"})
+    action = await unit.run_action("reconcile-runners")
+    await action.wait()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     yield application
