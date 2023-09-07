@@ -1,4 +1,4 @@
-name: Integration tests
+name: integration-tests
 
 on:
   pull_request:
@@ -12,7 +12,7 @@ jobs:
       matrix:
         juju: [3.1, 2.9]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup operator environment
         uses: charmed-kubernetes/actions-operator@main
         with:
@@ -36,7 +36,7 @@ jobs:
       matrix:
         juju: [3.1, 2.9]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup operator environment
         uses: charmed-kubernetes/actions-operator@main
         with:
@@ -60,7 +60,7 @@ jobs:
       matrix:
         juju: [3.1, 2.9]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup operator environment
         uses: charmed-kubernetes/actions-operator@main
         with:
@@ -84,7 +84,7 @@ jobs:
       matrix:
         juju: [3.1, 2.9]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup operator environment
         uses: charmed-kubernetes/actions-operator@main
         with:
