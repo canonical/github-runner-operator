@@ -13,8 +13,6 @@ The unit of storage and network limits can be found here:
 https://linuxcontainers.org/lxd/docs/latest/reference/instance_units/#instances-limit-units
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import TypedDict
 
