@@ -53,7 +53,7 @@ async def test_update_interval(model: Model, app_scheduled_events: Application) 
     await run_in_unit(unit, f"lxc stop --force {runner_name}")
     await wait_till_num_of_runners(unit, 0)
 
-    await sleep(6 * 60)
+    await sleep(10 * 60)
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     assert await check_runner_binary_exists(unit)
