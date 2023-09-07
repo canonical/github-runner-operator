@@ -97,7 +97,7 @@ jobs:
             --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
             tests/integration/test_charm_scheduled_events.py
   required_status_checks:
-    name: Required Integration Test Status Checks
+    name: integration-tests / Required Integration Test Status Checks
     runs-on: ubuntu-latest
     needs:
       - integration-test-charm-no-runner
