@@ -239,15 +239,15 @@ class TestCharm(unittest.TestCase):
         harness.charm.on.install.emit()
         assert harness.charm.unit.status == ActiveStatus()
 
-        GithubRunnerCharm._install_deps = raise_subprocess_error
-        harness.charm.on.install.emit()
-        assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")
-
         harness.charm._reconcile_runners = raise_runner_error
-        harness.charm.on.start.emit()
+        harness.charm.on.install.emit()
         assert harness.charm.unit.status == MaintenanceStatus(
             "Failed to start runners: mock error"
         )
+
+        GithubRunnerCharm._install_deps = raise_subprocess_error
+        harness.charm.on.install.emit()
+        assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")
 
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")
