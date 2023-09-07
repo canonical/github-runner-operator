@@ -2,13 +2,16 @@ name: Manual test
 
 on:
   # push:
-  # pull_request:
+  pull_request:
   workflow_dispatch:
 
 jobs:
   test:
     name: test
-    runs-on: [self-hosted, large]
+    runs-on: [self-hosted, kernel]
+    strategy:
+      matrix:
+        num: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     steps:
       - name: Echo
-        run: echo "Hello push"
+        run: echo "Hello runner number ${{ matrix.num }}"

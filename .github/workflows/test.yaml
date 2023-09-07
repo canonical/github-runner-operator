@@ -1,16 +1,15 @@
 name: Tests
 
 on:
-  # pull_request:
+  pull_request:
   workflow_dispatch:
 
 jobs:
   ssh:
-    runs-on: [self-hosted, github-runner]
+    runs-on: ubuntu-latest
     steps:
-      - run: echo Hello
-      - if: always()
-        run: echo world
+      - run: Disk usage
+        run: df -h
   # test:
   #   runs-on: [self-hosted, large]
   #   steps:
