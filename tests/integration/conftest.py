@@ -236,7 +236,7 @@ async def app_scheduled_events(
             "virtual-machines": 0,
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
-            "reconcile-interval": 10,
+            "reconcile-interval": 5,
         },
     )
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)

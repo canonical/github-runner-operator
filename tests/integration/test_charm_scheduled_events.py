@@ -31,7 +31,7 @@ async def test_update_interval(model: Model, app_scheduled_events: Application) 
     act:
         1.  a. Remove runner binary.
             b. Crash the one runner
-        2.  Wait for 3 minutes, and then wait for ActiveStatus.
+        2.  Wait for 6 minutes, and then wait for ActiveStatus.
     assert:
         1. a. No runner binary exists.
            b. No runner exists.
@@ -53,9 +53,9 @@ async def test_update_interval(model: Model, app_scheduled_events: Application) 
     await run_in_unit(unit, f"lxc stop --force {runner_name}")
     await wait_till_num_of_runners(unit, 0)
 
-    await sleep(10 * 60 + 5)
-
+    await sleep(6 * 60)
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+
     assert await check_runner_binary_exists(unit)
 
     runner_names = await get_runner_names(unit)
