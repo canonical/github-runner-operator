@@ -20,6 +20,7 @@ from ops.charm import (
     CharmBase,
     ConfigChangedEvent,
     InstallEvent,
+    StartEvent,
     StopEvent,
     UpgradeCharmEvent,
 )
@@ -158,6 +159,7 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.install, self._on_install)
         self.framework.observe(self.on.upgrade_charm, self._on_upgrade_charm)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
+        self.framework.observe(self.on.start, self._on_start)
         self.framework.observe(self.on.stop, self._on_stop)
 
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
@@ -278,7 +280,7 @@ class GithubRunnerCharm(CharmBase):
         """Handle the installation of charm.
 
         Args:
-            event: Event of installing charm.
+            event: Event of installing the charm.
         """
         self.unit.status = MaintenanceStatus("Installing packages")
 
@@ -310,13 +312,26 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
             return
 
+        self.unit.status = ActiveStatus()
+
+    def _on_start(self, _event: StartEvent) -> None:
+        """Handle the start of the charm.
+
+        Args:
+            event: Event of starting the charm.
+        """
+        runner_manager = self._get_runner_manager()
+
         self.unit.status = MaintenanceStatus("Starting runners")
         try:
+            runner_manager.flush(flush_busy=False)
             self._reconcile_runners(runner_manager)
-            self.unit.status = ActiveStatus()
         except RunnerError as err:
             logger.exception("Failed to start runners")
             self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")
+            return
+
+        self.unit.status = ActiveStatus()
 
     def _update_kernel(self, now: bool = False) -> None:
         """Update the Linux kernel if new version is available.

@@ -239,15 +239,28 @@ class TestCharm(unittest.TestCase):
         harness.charm.on.install.emit()
         assert harness.charm.unit.status == ActiveStatus()
 
-        harness.charm._reconcile_runners = raise_runner_error
-        harness.charm.on.install.emit()
-        assert harness.charm.unit.status == MaintenanceStatus(
-            "Failed to start runners: mock error"
-        )
-
         GithubRunnerCharm._install_deps = raise_subprocess_error
         harness.charm.on.install.emit()
         assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")
+
+    @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
+    @patch("pathlib.Path.write_text")
+    @patch("subprocess.run")
+    def test_on_start_failure(self, run, wt, mkdir, rm):
+        """Test various error thrown during install."""
+        rm.return_value = mock_rm = MagicMock()
+        mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
+
+        harness = Harness(GithubRunnerCharm)
+        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+        harness.begin()
+
+        harness.charm._reconcile_runners = raise_runner_error
+        harness.charm.on.start.emit()
+        assert harness.charm.unit.status == MaintenanceStatus(
+            "Failed to start runners: mock error"
+        )
 
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")
