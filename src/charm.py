@@ -318,10 +318,15 @@ class GithubRunnerCharm(CharmBase):
             logger.exception("Failed to start runners")
             self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")
 
-    def _update_kernel(self) -> None:
+    def _update_kernel(self, now: bool = False) -> None:
         """Update the Linux kernel if new version is available.
 
         Do nothing if no new version is available, else update the kernel and reboot.
+        This method should only call by event handlers, and not action handlers. As juju-reboot
+        only works with events.
+
+        Args:
+            now: Whether the reboot should trigger at end of event handler or now.
         """
         logger.info("Upgrading kernel")
         self._apt_install(["linux-generic-hwe-22.04"])
@@ -329,7 +334,12 @@ class GithubRunnerCharm(CharmBase):
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
         if exit_code == 0:
             logger.info("Rebooting system...")
-            execute_command(["reboot"])
+
+            # The juju-reboot is inject to PATH by juju.
+            cmd = ["juju-reboot"]
+            if now:
+                cmd += ["--now"]
+            execute_command(cmd)
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
@@ -468,7 +478,7 @@ class GithubRunnerCharm(CharmBase):
 
         runner_info = runner_manager.get_github_info()
         if all(not info.busy for info in runner_info):
-            self._update_kernel()
+            self._update_kernel(now=True)
 
         self._check_and_update_dependencies()
 
@@ -523,13 +533,9 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Action event of reconciling the runner.
         """
-        runner_manager = self._get_runner_manager()
-
-        runner_info = runner_manager.get_github_info()
-        if all(not info.busy for info in runner_info):
-            self._update_kernel()
-
         self._check_and_update_dependencies()
+
+        runner_manager = self._get_runner_manager()
 
         delta = self._reconcile_runners(runner_manager)
 
