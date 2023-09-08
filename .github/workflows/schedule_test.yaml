@@ -1,49 +1,26 @@
 name: Schedule Event Tests
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'
+  workflow_dispatch:  # Replaced by end-to-end test to match 'schedule'
 
 jobs:
-  retrieve-branches:
+
+  extract-runner-name:
     runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
-      names: ${{ steps.sd-e2e-branches.outputs.names }}
+      name: ${{ steps.extract-runner-name.outputs.name }}
     steps:
-      - name: Get sd-e2e-branches
-        id: sd-e2e-branches
+      - name: Extract runner name
+        id: extract-runner-name
         run: |
-         BRANCHES=$(gh api \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            /repos/${{ secrets.E2E_TESTING_REPO }}/branches \
-            --jq '.[].name')
-
-          FILTERED_BRANCHES=$(echo $BRANCHES | tr " " "\n" |  grep -E '^sd-e2e-.+') || true
-
-          if [ -z "$FILTERED_BRANCHES" ]; then
-            echo "No branches found"
-            FILTERED_BRANCHES_JSON="[]"
-          else
-            echo "Found branches: $FILTERED_BRANCHES"
-            FILTERED_BRANCHES_JSON=$(echo $FILTERED_BRANCHES | tr " " "\n" | jq -R . | jq -s .)
-          fi          
-          echo names=$FILTERED_BRANCHES_JSON >> $GITHUB_OUTPUT
+          REPO=${{ github.repository }}
+          RUNNER_NAME=${REPO#${{ github.repository_owner }}/}
+          echo name=$RUNNER_NAME >> $GITHUB_OUTPUT
 
   schedule-event-tests:
-    needs: [ retrieve-branches ]
-    runs-on: [ self-hosted, linux, x64, "${{ matrix.branch }}" ]
-    if: needs.retrieve-branches.outputs.names != '[]'
-    strategy:
-      fail-fast: false
-      matrix:
-        branch: ${{ fromJSON(needs.retrieve-branches.outputs.names) }}
+    needs: [ extract-runner-name ]
+    runs-on: [ self-hosted, linux, x64, "${{ needs.extract-runner-name.outputs.name }}" ]
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ matrix.branch }}
       - name: Echo runner name
         run: |
-          echo "Hello, runner:  ${{ matrix.branch }}"
+          echo "Hello, runner:  ${{ needs.extract-runner-name.outputs.name }}"
