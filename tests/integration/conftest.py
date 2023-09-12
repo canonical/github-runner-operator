@@ -167,7 +167,6 @@ async def app_no_runner(
             "test-mode": "insecure",
             # Set the scheduled event to 1 hour to avoid interfering with the tests.
             "reconcile-interval": 60,
-            "update-interval": 60,
         },
     )
     await model.wait_for_idle()
@@ -237,21 +236,15 @@ async def app_scheduled_events(
             "virtual-machines": 0,
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
-            "reconcile-interval": 2,
-            "update-interval": 2,
+            "reconcile-interval": 8,
         },
     )
-    await model.wait_for_idle()
-
-    # Spawn one runner. Spawning one runner during deployment will cause timeout waiting for model.
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
     unit = application.units[0]
 
     await application.set_config({"virtual-machines": "1"})
     action = await unit.run_action("reconcile-runners")
     await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
-
-    # Wait until there is one runner.
-    await wait_till_num_of_runners(unit, 1)
 
     yield application
