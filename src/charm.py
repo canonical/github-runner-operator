@@ -106,7 +106,7 @@ class GithubRunnerCharm(CharmBase):
 
     service_token_path = Path("service_token")
     repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
-    repo_check_web_service_script = Path("src/repo_policy_compliance_service.py")
+    repo_check_web_service_script = Path("templates/repo_policy_compliance_service.py")
     repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
     ram_pool_path = Path("/storage/ram")
 
@@ -615,6 +615,8 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             Changes in runner number due to reconciling runners.
         """
+        self.unit.status = MaintenanceStatus("Reconciling runners")
+
         virtual_machines_resources = VirtualMachineResources(
             self.config["vm-cpu"], self.config["vm-memory"], self.config["vm-disk"]
         )

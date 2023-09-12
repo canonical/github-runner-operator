@@ -15,3 +15,6 @@ jobs:
       - name: Echo input variable and message
         run: |
           echo "Hello, runner: ${{ inputs.runner }}"
+      - name: Always echo a message
+        if: always()
+        run: echo "Should not echo if pre-job script failed"

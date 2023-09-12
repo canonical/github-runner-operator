@@ -1,12 +1,7 @@
-name: Integration tests
+name: integration-tests
 
 on:
   pull_request:
-
-# Needed to prevent concurrency due to only one fork can exist under the same owner on GitHub.
-concurrency:
-  group: github-runner-operator-${{ github.workflow }}-integration-tests-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   integration-test-charm-no-runner:
@@ -16,7 +11,7 @@ jobs:
       matrix:
         juju: [3.1, 2.9]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup operator environment
         uses: charmed-kubernetes/actions-operator@main
         with:
@@ -39,7 +34,7 @@ jobs:
       matrix:
         juju: [3.1, 2.9]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup operator environment
         uses: charmed-kubernetes/actions-operator@main
         with:
@@ -59,11 +54,10 @@ jobs:
     name: Integration test charm with fork repo
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 1
       matrix:
         juju: [3.1, 2.9]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup operator environment
         uses: charmed-kubernetes/actions-operator@main
         with:
@@ -86,7 +80,7 @@ jobs:
       matrix:
         juju: [3.1, 2.9]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup operator environment
         uses: charmed-kubernetes/actions-operator@main
         with:
