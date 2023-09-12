@@ -10,7 +10,7 @@ import urllib.request
 import uuid
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Generator, Optional
+from typing import Dict, Iterator, Optional
 
 import fastcore.net
 import jinja2
@@ -258,7 +258,7 @@ class RunnerManager:
 
         logger.info("Validated newly downloaded runner binary and enabled it.")
 
-    def get_github_info(self) -> Generator[RunnerInfo, None, None]:
+    def get_github_info(self) -> Iterator[RunnerInfo]:
         """Get information on the runners from GitHub.
 
         Returns:

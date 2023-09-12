@@ -97,7 +97,7 @@ Remove existing runners.
 ### <kbd>function</kbd> `get_github_info`
 
 ```python
-get_github_info() → Generator[RunnerInfo, NoneType, NoneType]
+get_github_info() → Iterator[RunnerInfo]
 ```
 
 Get information on the runners from GitHub. 
