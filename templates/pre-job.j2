@@ -10,8 +10,6 @@ logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
 
 # Prepare curl arguments
 CURL_ARGS=(
-  --silent
-  --show-error
   --max-time 60
   --noproxy '*'
   --fail-with-body
@@ -36,14 +34,16 @@ if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAM
 elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
 
   GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.repo.full_name')
+  COMMIT_SHA=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.sha')
 
   logger -s " \
   GITHUB_SOURCE_REPOSITORY: ${GITHUB_SOURCE_REPOSITORY} \
   GITHUB_BASE_REF: ${GITHUB_BASE_REF}, \
-  GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
+  GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}, \
+  COMMIT_SHA: ${COMMIT_SHA}"
 
   curl "${CURL_ARGS[@]}" \
-      -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_HEAD_REF}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
+      -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_HEAD_REF}\", \"commit_sha\": \"${COMMIT_SHA}\"}" \
       http://{{host_ip}}:8080/pull_request/check-run
   REPO_CHECK=$?
 
