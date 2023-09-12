@@ -4,6 +4,7 @@ on:
   pull_request:
 
 jobs:
-  unit-tests:
-    uses: canonical/operator-workflows/.github/workflows/test.yaml@main
-    secrets: inherit
+  test:
+    runs-on: [self-hosted, github-runner]
+    steps:
+      - run: echo hello
