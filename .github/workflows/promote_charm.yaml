@@ -19,7 +19,7 @@ on:
 
 jobs:
   promote-charm:
-    uses: canonical/operator-workflows/.github/workflows/promote_charm.yaml@promote-charm-base
+    uses: canonical/operator-workflows/.github/workflows/promote_charm.yaml@main
     with:
       origin-channel: ${{ github.event.inputs.origin-channel }}
       destination-channel: ${{ github.event.inputs.destination-channel }}
