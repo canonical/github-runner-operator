@@ -265,7 +265,7 @@ class RunnerManager:
             List of information from GitHub on runners.
         """
         remote_runners = self._get_runner_github_info()
-        return iter(
+        return (
             RunnerInfo(runner.name, runner.status, runner.busy)
             for runner in remote_runners.values()
         )
