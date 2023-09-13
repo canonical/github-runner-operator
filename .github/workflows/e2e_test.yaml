@@ -383,7 +383,8 @@ jobs:
           gh api \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            /repos/${TESTING_REPO}/actions/runs/${wf_run_id}/logs > schedule-workflow-logs.zip || echo "Failed to retrieve logs from schedule tests"
+            /repos/${TESTING_REPO}/actions/runs/${wf_run_id}/logs > schedule-workflow-logs.zip \
+              || (echo "Failed to retrieve logs from schedule tests" && rm schedule-workflow-logs.zip)
 
 
           if [[ $status != "completed" || $conclusion != "success" ]]; then
