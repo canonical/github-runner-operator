@@ -37,11 +37,11 @@ def mock_get_latest_runner_bin_url():
 
 def mock_get_github_info():
     return [
-        RunnerInfo("test runner 0", GitHubRunnerStatus.ONLINE.value),
-        RunnerInfo("test runner 1", GitHubRunnerStatus.ONLINE.value),
-        RunnerInfo("test runner 2", GitHubRunnerStatus.OFFLINE.value),
-        RunnerInfo("test runner 3", GitHubRunnerStatus.OFFLINE.value),
-        RunnerInfo("test runner 4", "unknown"),
+        RunnerInfo("test runner 0", GitHubRunnerStatus.ONLINE.value, True),
+        RunnerInfo("test runner 1", GitHubRunnerStatus.ONLINE.value, False),
+        RunnerInfo("test runner 2", GitHubRunnerStatus.OFFLINE.value, False),
+        RunnerInfo("test runner 3", GitHubRunnerStatus.OFFLINE.value, False),
+        RunnerInfo("test runner 4", "unknown", False),
     ]
 
 
@@ -144,6 +144,7 @@ class TestCharm(unittest.TestCase):
     @patch("subprocess.run")
     def test_update_config(self, run, wt, mkdir, rm):
         rm.return_value = mock_rm = MagicMock()
+        mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
@@ -238,12 +239,6 @@ class TestCharm(unittest.TestCase):
         harness.charm.on.install.emit()
         assert harness.charm.unit.status == ActiveStatus()
 
-        harness.charm._reconcile_runners = raise_runner_error
-        harness.charm.on.install.emit()
-        assert harness.charm.unit.status == MaintenanceStatus(
-            "Failed to start runners: mock error"
-        )
-
         GithubRunnerCharm._install_deps = raise_subprocess_error
         harness.charm.on.install.emit()
         assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")
@@ -252,7 +247,8 @@ class TestCharm(unittest.TestCase):
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_on_update_dependencies(self, run, wt, mkdir, rm):
+    def test_on_start_failure(self, run, wt, mkdir, rm):
+        """Test various error thrown during install."""
         rm.return_value = mock_rm = MagicMock()
         mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
 
@@ -260,12 +256,10 @@ class TestCharm(unittest.TestCase):
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
 
-        harness.charm.on.update_dependencies.emit()
-
-        mock_rm.get_latest_runner_bin_url = raise_url_error
-        harness.charm.on.update_dependencies.emit()
+        harness.charm._reconcile_runners = raise_runner_error
+        harness.charm.on.start.emit()
         assert harness.charm.unit.status == MaintenanceStatus(
-            "Failed to check for runner updates: <urlopen error mock error>"
+            "Failed to start runners: mock error"
         )
 
     @patch("charm.RunnerManager")

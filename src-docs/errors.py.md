@@ -23,7 +23,7 @@ Error for missing juju configuration.
 
 Attrs:  configs: The missing configurations. 
 
-<a href="../src/errors.py#L45"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L49"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -38,6 +38,15 @@ Construct the MissingConfigurationError.
 **Args:**
  
  - <b>`configs`</b>:  The missing configurations. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `MissingRunnerBinaryError`
+Error for missing runner binary. 
 
 
 
@@ -113,7 +122,7 @@ Error for Subprocess calls.
 
 Attrs:  cmd: Command in list form.  return_code: Return code of the subprocess.  stdout: Content of stdout of the subprocess.  stderr: Content of stderr of the subprocess. 
 
-<a href="../src/errors.py#L70"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L74"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
