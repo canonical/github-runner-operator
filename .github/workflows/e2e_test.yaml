@@ -345,8 +345,8 @@ jobs:
               output=$(gh run list \
                         -R ${TESTING_REPO} \
                         -L 100 \
-                        --json headBranch,status \
-                        --jq '[.[] | select(.headBranch=="main")]')
+                        --json headBranch,status,createdAt \
+                        --jq '[.[] | select(.headBranch=="main")] | sort_by(.createdAt)'
 
               # Workflows that have not started have no status
               if [ $(echo "$output" | jq 'length') -eq 0 ]
@@ -375,10 +375,10 @@ jobs:
               -H "Accept: application/vnd.github+json" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
             /repos/${TESTING_REPO}/actions/runs \
-            --jq '[.workflow_runs[] | select(.head_branch=="main")]')
+            --jq '[.workflow_runs[] | select(.head_branch=="main")] | sort_by(.created_at)')
           conclusion=$(echo $runs | jq -r '.[0].conclusion')
           wf_run_id=$(echo $runs | jq -r '.[0].id')
-          
+
           # We retrieve the logs because the testing repo is deleted at the end of the test
           gh api \
             -H "Accept: application/vnd.github+json" \
@@ -433,7 +433,7 @@ jobs:
           && echo "Deleted ref ${{ steps.runner-name.outputs.name }}"
 
           TESTING_REPO=${{ secrets.E2E_TESTING_TOKEN_ORG }}/${{ steps.runner-name.outputs.name }}
-          
+
           set -e
 
           gh api \
