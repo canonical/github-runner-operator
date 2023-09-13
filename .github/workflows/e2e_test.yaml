@@ -346,7 +346,7 @@ jobs:
                         -R ${TESTING_REPO} \
                         -L 100 \
                         --json headBranch,status,createdAt \
-                        --jq '[.[] | select(.headBranch=="main")] | sort_by(.createdAt)'
+                        --jq '[.[] | select(.headBranch=="main")] | sort_by(.createdAt)')
 
               # Workflows that have not started have no status
               if [ $(echo "$output" | jq 'length') -eq 0 ]
