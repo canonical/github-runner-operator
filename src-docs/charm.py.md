@@ -119,6 +119,18 @@ Unit that this execution is responsible for.
 
 
 
+---
+
+<a href="../src/charm.py#L682"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `enable_kernel_modules`
+
+```python
+enable_kernel_modules() → None
+```
+
+Enable kernel modules needed by the charm. 
+
 
 ---
 
