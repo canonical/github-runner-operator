@@ -188,7 +188,7 @@ async def test_dispatch_workflow_failure(
             in logs
         ):
             assert run.jobs()[0].conclusion == "failure"
-            assert "branch protection not enabled" in logs
+            assert "commit the job is running on is not signed" in logs
             assert "Should not echo if pre-job script failed" not in logs
 
 

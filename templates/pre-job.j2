@@ -10,6 +10,8 @@ logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
 
 # Prepare curl arguments
 CURL_ARGS=(
+  --silent
+  --show-error
   --max-time 60
   --noproxy '*'
   --fail-with-body
@@ -55,18 +57,18 @@ else
 
 fi
 
-# if [[ $REPO_CHECK -ne 0 ]]; then
+if [[ $REPO_CHECK -ne 0 ]]; then
   # logger -p user.error -s "Stopping execution of jobs due to repository setup is not compliant with policies."
   # logger -p user.error -s "This runner will be stopped or lost, please fix the setup of the repository, then rerun this job."
 
   # Killing the runner.Listener process to stop the runner application. This will prevent jobs from being executed.
-  # pkill -2 Runner.Listener
+  pkill -2 Runner.Listener
 
   # Shutdown the instance as a safe guard. The time delay is needed for the runner application to upload the logs.
-  # bash -c "sleep 10; sudo systemctl poweroff -i" &
+  bash -c "sleep 10; sudo systemctl poweroff -i" &
 
-  # exit 1
+  exit 1
 
-# fi
+fi
 
-# logger -s "The repository setup check has passed, proceeding to execute jobs"
+logger -s "The repository setup check has passed, proceeding to execute jobs"
