@@ -27,9 +27,9 @@ if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAM
 
   logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
 
-  curl "${CURL_ARGS[@]}" \
+  logger -p user.error -s `curl "${CURL_ARGS[@]}" \
       -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"branch_name\": \"${GITHUB_REF_NAME}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
-      http://{{host_ip}}:8080/${GITHUB_EVENT_NAME}/check-run
+      http://{{host_ip}}:8080/${GITHUB_EVENT_NAME}/check-run`
   REPO_CHECK=$?
 
 # Pull request - Request repo-policy-compliance service check:
@@ -44,9 +44,9 @@ elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
   GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}, \
   COMMIT_SHA: ${COMMIT_SHA}"
 
-  curl "${CURL_ARGS[@]}" \
+  logger -p user.error -s `curl "${CURL_ARGS[@]}" \
       -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_HEAD_REF}\", \"commit_sha\": \"${COMMIT_SHA}\"}" \
-      http://{{host_ip}}:8080/pull_request/check-run
+      http://{{host_ip}}:8080/pull_request/check-run`
   REPO_CHECK=$?
 
 else
@@ -62,12 +62,12 @@ if [[ $REPO_CHECK -ne 0 ]]; then
   logger -p user.error -s "This runner will be stopped or lost, please fix the setup of the repository, then rerun this job."
 
   # Killing the runner.Listener process to stop the runner application. This will prevent jobs from being executed.
-  # pkill -2 Runner.Listener
+  pkill -2 Runner.Listener
 
   # Shutdown the instance as a safe guard. The time delay is needed for the runner application to upload the logs.
-  # bash -c "sleep 10; sudo systemctl poweroff -i" &
+  bash -c "sleep 10; sudo systemctl poweroff -i" &
 
-  # exit 1
+  exit 1
 
 fi
 
