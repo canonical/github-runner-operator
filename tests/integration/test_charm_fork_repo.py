@@ -188,10 +188,7 @@ async def test_dispatch_workflow_failure(
             in logs
         ):
             assert run.jobs()[0].conclusion == "failure"
-            assert (
-                "Stopping execution of jobs due to repository setup is not compliant with policies"
-                in logs
-            )
+            assert "branch protection not enabled" in logs
             assert "Should not echo if pre-job script failed" not in logs
 
 
