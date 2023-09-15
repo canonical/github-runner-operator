@@ -679,6 +679,13 @@ class GithubRunnerCharm(CharmBase):
         )
         return old_version != new_version
 
+    def _enable_kernel_modules(self) -> None:
+        """Enable kernel modules needed by the charm."""
+        execute_command(["/usr/sbin/modprobe", "br_netfilter"])
+
+        with open("/etc/modules", "a", encoding="utf-8") as modules_file:
+            modules_file.write("br_netfilter\n")
+
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _install_deps(self) -> None:
         """Install dependencies."""
@@ -710,7 +717,7 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
         execute_command(["/snap/bin/lxd", "waitready"])
         if not LXD_PROFILE_YAML.exists():
-            execute_command(["/usr/sbin/modprobe", "br_netfilter"])
+            self._enable_kernel_modules()
         execute_command(
             [
                 "/snap/bin/lxc",
