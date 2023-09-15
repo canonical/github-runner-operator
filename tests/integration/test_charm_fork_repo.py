@@ -70,7 +70,20 @@ def forked_github_branch(forked_github_repository: Repository) -> Iterator[Branc
     branch_ref = forked_github_repository.create_git_ref(
         ref=f"refs/heads/{branch_name}", sha=main_branch.commit.sha
     )
-    branch = forked_github_repository.get_branch(branch_name)
+
+    for _ in range(10):
+        try:
+            branch = forked_github_repository.get_branch(branch_name)
+            break
+        except GithubException as err:
+            if err.status == 404:
+                sleep(5)
+                continue
+            raise
+    else:
+        assert (
+            False
+        ), "Failed to get created branch in fork repo, the issue with GitHub or network."
 
     yield branch
 
