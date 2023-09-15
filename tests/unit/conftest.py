@@ -20,6 +20,10 @@ def mocks(monkeypatch, tmp_path):
     monkeypatch.setattr("charm.os", unittest.mock.MagicMock())
     monkeypatch.setattr("charm.shutil", unittest.mock.MagicMock())
     monkeypatch.setattr("charm.jinja2", unittest.mock.MagicMock())
+    monkeypatch.setattr(
+        "firewall.Firewall.get_host_ip", unittest.mock.MagicMock(return_value="10.0.0.1")
+    )
+    monkeypatch.setattr("firewall.Firewall.refresh_firewall", unittest.mock.MagicMock())
     monkeypatch.setattr("runner.time", unittest.mock.MagicMock())
     monkeypatch.setattr("runner_manager.GhApi", MockGhapiClient)
     monkeypatch.setattr("runner_manager.jinja2", unittest.mock.MagicMock())

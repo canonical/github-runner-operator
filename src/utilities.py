@@ -95,7 +95,9 @@ def retry(  # pylint: disable=too-many-arguments
     return retry_decorator
 
 
-def secure_run_subprocess(cmd: Sequence[str], **kwargs) -> subprocess.CompletedProcess[bytes]:
+def secure_run_subprocess(
+    cmd: Sequence[str], hide_cmd: bool = False, **kwargs
+) -> subprocess.CompletedProcess[bytes]:
     """Run command in subprocess according to security recommendations.
 
     The argument `shell` is set to `False` for security reasons.
@@ -105,12 +107,17 @@ def secure_run_subprocess(cmd: Sequence[str], **kwargs) -> subprocess.CompletedP
 
     Args:
         cmd: Command in a list.
+        hide_cmd: Hide logging of cmd.
         kwargs: Additional keyword arguments for the `subprocess.run` call.
 
     Returns:
         Object representing the completed process. The outputs subprocess can accessed.
     """
-    logger.info("Executing command %s", cmd)
+    if not hide_cmd:
+        logger.info("Executing command %s", cmd)
+    else:
+        logger.info("Executing sensitive command")
+
     result = subprocess.run(  # nosec B603
         cmd,
         capture_output=True,
@@ -119,11 +126,14 @@ def secure_run_subprocess(cmd: Sequence[str], **kwargs) -> subprocess.CompletedP
         # Disable type check due to the support for unpacking arguments in mypy is experimental.
         **kwargs,  # type: ignore
     )
-    logger.debug("Command %s returns: %s", cmd, result.stdout)
+    if not hide_cmd:
+        logger.debug("Command %s returns: %s", cmd, result.stdout)
+    else:
+        logger.debug("Command returns: %s", result.stdout)
     return result
 
 
-def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> str:
+def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> tuple[str, int]:
     """Execute a command on a subprocess.
 
     The command is executed with `subprocess.run`, additional arguments can be passed to it as
@@ -136,7 +146,7 @@ def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> st
         kwargs: Additional keyword arguments for the `subprocess.run` call.
 
     Returns:
-        Output on stdout.
+        Output on stdout, and the exit code.
     """
     result = secure_run_subprocess(cmd, **kwargs)
 
@@ -153,7 +163,10 @@ def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> st
 
             raise SubprocessError(cmd, err.returncode, err.stdout, err.stderr) from err
 
-    return str(result.stdout)
+    if isinstance(result.stdout, str):
+        return (result.stdout, result.returncode)
+
+    return (result.stdout.decode(kwargs.get("encoding", "utf-8")), result.returncode)
 
 
 def get_env_var(env_var: str) -> Optional[str]:
@@ -181,3 +194,31 @@ def set_env_var(env_var: str, value: str) -> None:
     """
     os.environ[env_var.upper()] = value
     os.environ[env_var.lower()] = value
+
+
+def bytes_with_unit_to_kib(num_bytes: str) -> int:
+    """Convert a positive integer followed by a unit to number of kibibytes.
+
+    Args:
+        num_bytes: A positive integer followed by one of the following unit: KiB, MiB, GiB, TiB,
+            PiB, EiB.
+    Returns:
+        Number of kilobytes.
+    """
+    num_of_kib = {
+        "KiB": 1024**0,
+        "MiB": 1024**1,
+        "GiB": 1024**2,
+        "TiB": 1024**3,
+        "PiB": 1024**4,
+        "EiB": 1024**5,
+    }
+
+    num = num_bytes[:-3]
+    unit = num_bytes[-3:]
+    if unit not in num_of_kib:
+        raise ValueError(
+            "Must be a positive integer followed by a unit",
+        )
+
+    return num_of_kib[unit] * int(num)

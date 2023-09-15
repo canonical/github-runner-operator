@@ -3,8 +3,6 @@
 
 """Runner Manager manages the runners on LXD and GitHub."""
 
-from __future__ import annotations
-
 import hashlib
 import logging
 import tarfile
@@ -20,6 +18,7 @@ import requests
 import requests.adapters
 import urllib3
 from ghapi.all import GhApi
+from ghapi.page import pages
 from typing_extensions import assert_never
 
 from errors import RunnerBinaryError, RunnerCreateError
@@ -34,7 +33,14 @@ from github_type import (
 from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
-from runner_type import GitHubOrg, GitHubPath, GitHubRepo, ProxySetting, VirtualMachineResources
+from runner_type import (
+    GitHubOrg,
+    GitHubPath,
+    GitHubRepo,
+    ProxySetting,
+    RunnerByHealth,
+    VirtualMachineResources,
+)
 from utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
@@ -49,12 +55,16 @@ class RunnerManagerConfig:
             name.
         token: GitHub personal access token to register runner to the repository or
             organization.
+        image: Name of the image for creating LXD instance.
+        service_token: Token for accessing local service.
+        lxd_storage_path: Path to be used as LXD storage.
     """
 
     path: GitHubPath
     token: str
     image: str
     service_token: str
+    lxd_storage_path: Path
 
 
 @dataclass
@@ -66,12 +76,13 @@ class RunnerInfo:
 
     name: str
     status: GitHubRunnerStatus
+    busy: bool
 
 
 class RunnerManager:
     """Manage a group of runners according to configuration."""
 
-    runner_bin_path = Path("/opt/github-runner-app")
+    runner_bin_path = Path("/home/ubuntu/github-runner-app")
 
     def __init__(
         self,
@@ -104,7 +115,7 @@ class RunnerManager:
         self.session = requests.Session()
         adapter = requests.adapters.HTTPAdapter(
             max_retries=urllib3.Retry(
-                total=10, backoff_factor=0.3, status_forcelist=[500, 502, 503, 504]
+                total=3, backoff_factor=0.3, status_forcelist=[500, 502, 503, 504]
             )
         )
         self.session.mount("http://", adapter)
@@ -123,6 +134,7 @@ class RunnerManager:
         local_session = requests.Session()
         local_session.mount("http://", adapter)
         local_session.mount("https://", adapter)
+        local_session.trust_env = False
 
         self._clients = RunnerClients(
             GhApi(token=self.config.token),
@@ -132,6 +144,14 @@ class RunnerManager:
                 local_session, "http://127.0.0.1:8080", self.config.service_token
             ),
         )
+
+    def check_runner_bin(self) -> bool:
+        """Check if runner binary exists.
+
+        Returns:
+            Whether runner bin exists.
+        """
+        return self.runner_bin_path.exists()
 
     @retry(tries=5, delay=30, local_logger=logger)
     def get_latest_runner_bin_url(
@@ -185,29 +205,40 @@ class RunnerManager:
         """
         logger.info("Downloading runner binary from: %s", binary["download_url"])
 
-        # Delete old version of runner binary.
-        RunnerManager.runner_bin_path.unlink(missing_ok=True)
+        try:
+            # Delete old version of runner binary.
+            RunnerManager.runner_bin_path.unlink(missing_ok=True)
+        except OSError as err:
+            logger.exception("Unable to perform file operation on the runner binary path")
+            raise RunnerBinaryError("File operation failed on the runner binary path") from err
 
-        # Download the new file
-        response = self.session.get(binary["download_url"], stream=True)
+        try:
+            # Download the new file
+            response = self.session.get(binary["download_url"], stream=True)
 
-        logger.info(
-            "Download of runner binary from %s return status code: %i",
-            binary["download_url"],
-            response.status_code,
-        )
+            logger.info(
+                "Download of runner binary from %s return status code: %i",
+                binary["download_url"],
+                response.status_code,
+            )
 
-        if not binary["sha256_checksum"]:
-            logger.error("Checksum for runner binary is not found, unable to verify download.")
-            raise RunnerBinaryError("Checksum for runner binary is not found in GitHub response.")
+            if not binary["sha256_checksum"]:
+                logger.error("Checksum for runner binary is not found, unable to verify download.")
+                raise RunnerBinaryError(
+                    "Checksum for runner binary is not found in GitHub response."
+                )
 
-        sha256 = hashlib.sha256()
+            sha256 = hashlib.sha256()
 
-        with RunnerManager.runner_bin_path.open(mode="wb") as file:
-            for chunk in response.iter_content(decode_unicode=False):
-                file.write(chunk)
+            with RunnerManager.runner_bin_path.open(mode="wb") as file:
+                # Process with chunk_size of 128 KiB.
+                for chunk in response.iter_content(chunk_size=128 * 1024, decode_unicode=False):
+                    file.write(chunk)
 
-                sha256.update(chunk)
+                    sha256.update(chunk)
+        except requests.RequestException as err:
+            logger.exception("Failed to download of runner binary")
+            raise RunnerBinaryError("Failed to download runner binary") from err
 
         logger.info("Finished download of runner binary.")
 
@@ -218,13 +249,11 @@ class RunnerManager:
                 binary["sha256_checksum"],
                 sha256,
             )
-            RunnerManager.runner_bin_path.unlink(missing_ok=True)
             raise RunnerBinaryError("Checksum mismatch for downloaded runner binary")
 
         # Verify the file integrity.
         if not tarfile.is_tarfile(file.name):
             logger.error("Failed to decompress downloaded GitHub runner binary.")
-            RunnerManager.runner_bin_path.unlink(missing_ok=True)
             raise RunnerBinaryError("Downloaded runner binary cannot be decompressed.")
 
         logger.info("Validated newly downloaded runner binary and enabled it.")
@@ -236,7 +265,30 @@ class RunnerManager:
             List of information from GitHub on runners.
         """
         remote_runners = self._get_runner_github_info()
-        return iter(RunnerInfo(runner.name, runner.status) for runner in remote_runners.values())
+        return (
+            RunnerInfo(runner.name, runner.status, runner.busy)
+            for runner in remote_runners.values()
+        )
+
+    def _get_runner_health_states(self) -> RunnerByHealth:
+        local_runners = [
+            instance
+            # Pylint cannot find the `all` method.
+            for instance in self._clients.lxd.instances.all()  # pylint: disable=no-member
+            if instance.name.startswith(f"{self.instance_name}-")
+        ]
+
+        healthy = []
+        unhealthy = []
+
+        for runner in local_runners:
+            _, stdout, _ = runner.execute(["ps", "aux"])
+            if f"/bin/bash {Runner.runner_script}" in stdout.read().decode("utf-8"):
+                healthy.append(runner.name)
+            else:
+                unhealthy.append(runner.name)
+
+        return RunnerByHealth(healthy, unhealthy)
 
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
@@ -255,40 +307,38 @@ class RunnerManager:
             runner for runner in runners if runner.status.exist and runner.status.online
         ]
 
-        offline_runners = [runner for runner in runners if not runner.status.online]
-
-        local_runners = {
-            instance.name: instance
-            # Pylint cannot find the `all` method.
-            for instance in self._clients.lxd.instances.all()  # pylint: disable=no-member
-            if instance.name.startswith(f"{self.instance_name}-")
-        }
+        runner_states = self._get_runner_health_states()
 
         logger.info(
             (
-                "Expected runner count: %i, Online runner count: %i, Offline runner count: %i, "
-                "LXD instance count: %i"
+                "Expected runner count: %i, Online count: %i, Offline count: %i, "
+                "healthy count: %i, unhealthy count: %i"
             ),
             quantity,
             len(online_runners),
-            len(offline_runners),
-            len(local_runners),
+            len(runners) - len(online_runners),
+            len(runner_states.healthy),
+            len(runner_states.unhealthy),
         )
 
         # Clean up offline runners
-        if offline_runners:
-            logger.info("Cleaning up offline runners.")
+        if runner_states.unhealthy:
+            logger.info("Cleaning up unhealthy runners.")
 
             remove_token = self._get_github_remove_token()
 
-            for runner in offline_runners:
+            unhealthy_runners = [
+                runner for runner in runners if runner.config.name in set(runner_states.unhealthy)
+            ]
+
+            for runner in unhealthy_runners:
                 runner.remove(remove_token)
                 logger.info("Removed runner: %s", runner.config.name)
 
-        delta = quantity - len(online_runners)
+        delta = quantity - len(runner_states.healthy)
         # Spawn new runners
         if delta > 0:
-            if RunnerManager.runner_bin_path is None:
+            if not RunnerManager.runner_bin_path.exists():
                 raise RunnerCreateError("Unable to create runner due to missing runner binary.")
 
             logger.info("Getting registration token for GitHub runners.")
@@ -296,12 +346,13 @@ class RunnerManager:
             registration_token = self._get_github_registration_token()
             remove_token = self._get_github_remove_token()
 
-            logger.info("Adding %i additional runner(s).", delta)
+            logger.info("Attempting to add %i runner(s).", delta)
             for _ in range(delta):
                 config = RunnerConfig(
                     self.app_name,
                     self.config.path,
                     self.proxies,
+                    self.config.lxd_storage_path,
                     self._generate_runner_name(),
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
@@ -320,6 +371,7 @@ class RunnerManager:
                     raise
 
         elif delta < 0:
+            logger.info("Attempting to remove %i runner(s).", -delta)
             # Idle runners are online runners that has not taken a job.
             idle_runners = [runner for runner in online_runners if not runner.status.busy]
             offset = min(-delta, len(idle_runners))
@@ -334,7 +386,6 @@ class RunnerManager:
                 for runner in remove_runners:
                     runner.remove(remove_token)
                     logger.info("Removed runner: %s", runner.config.name)
-
             else:
                 logger.info("There are no idle runner to remove.")
         else:
@@ -382,13 +433,40 @@ class RunnerManager:
     def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
         remote_runners_list: list[SelfHostedRunner] = []
         if isinstance(self.config.path, GitHubRepo):
-            remote_runners_list = self._clients.github.actions.list_self_hosted_runners_for_repo(
-                owner=self.config.path.owner, repo=self.config.path.repo
-            )["runners"]
+            # The documentation of ghapi for pagination is incorrect and examples will give errors.
+            # This workaround is a temp solution. Will be moving to PyGitHub in the future.
+            self._clients.github.actions.list_self_hosted_runners_for_repo(
+                owner=self.config.path.owner, repo=self.config.path.repo, per_page=100
+            )
+            num_of_pages = self._clients.github.last_page()
+            remote_runners_list = [
+                item
+                for page in pages(
+                    self._clients.github.actions.list_self_hosted_runners_for_repo,
+                    num_of_pages + 1,
+                    owner=self.config.path.owner,
+                    repo=self.config.path.repo,
+                    per_page=100,
+                )
+                for item in page["runners"]
+            ]
         if isinstance(self.config.path, GitHubOrg):
-            remote_runners_list = self._clients.github.actions.list_self_hosted_runners_for_org(
-                org=self.config.path.org
-            )["runners"]
+            # The documentation of ghapi for pagination is incorrect and examples will give errors.
+            # This workaround is a temp solution. Will be moving to PyGitHub in the future.
+            self._clients.github.actions.list_self_hosted_runners_for_org(
+                org=self.config.path.org, per_page=100
+            )
+            num_of_pages = self._clients.github.last_page()
+            remote_runners_list = [
+                item
+                for page in pages(
+                    self._clients.github.actions.list_self_hosted_runners_for_org,
+                    num_of_pages + 1,
+                    org=self.config.path.org,
+                    per_page=100,
+                )
+                for item in page["runners"]
+            ]
 
         logger.debug("List of runners found on GitHub:%s", remote_runners_list)
 
@@ -428,7 +506,9 @@ class RunnerManager:
             online = getattr(remote_runner, "status", None) == "online"
             busy = getattr(remote_runner, "busy", None)
 
-            config = RunnerConfig(self.app_name, self.config.path, self.proxies, name)
+            config = RunnerConfig(
+                self.app_name, self.config.path, self.proxies, self.config.lxd_storage_path, name
+            )
             return Runner(
                 self._clients,
                 config,

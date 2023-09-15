@@ -6,9 +6,10 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import logging
 import secrets
-from typing import Optional, Sequence, Union
+from typing import IO, Optional, Sequence, Union
 
 from errors import LxdError, RunnerError
 from github_type import RegistrationToken, RemoveToken, RunnerApplication
@@ -30,16 +31,17 @@ TEST_BINARY = (
 
 
 class MockLxdClient:
-    """Mock the behavior of the lxd client."""
+    """Mock the behavior of the LXD client."""
 
     def __init__(self):
         self.instances = MockLxdInstanceManager()
         self.profiles = MockLxdProfileManager()
         self.networks = MockLxdNetworkManager()
+        self.storage_pools = MockLxdStoragePoolManager()
 
 
 class MockLxdInstanceManager:
-    """Mock the behavior of the lxd Instances."""
+    """Mock the behavior of the LXD Instances."""
 
     def __init__(self):
         self.instances = {}
@@ -56,7 +58,7 @@ class MockLxdInstanceManager:
 
 
 class MockLxdProfileManager:
-    """Mock the behavior of the lxd Profiles."""
+    """Mock the behavior of the LXD Profiles."""
 
     def __init__(self):
         self.profiles = set()
@@ -69,7 +71,7 @@ class MockLxdProfileManager:
 
 
 class MockLxdNetworkManager:
-    """Mock the behavior of the lxd networks"""
+    """Mock the behavior of the LXD networks"""
 
     def __init__(self):
         pass
@@ -81,7 +83,7 @@ class MockLxdNetworkManager:
 
 
 class MockLxdInstance:
-    """Mock the behavior of a lxd Instance."""
+    """Mock the behavior of a LXD Instance."""
 
     def __init__(self, name: str):
         self.name = name
@@ -101,12 +103,14 @@ class MockLxdInstance:
     def delete(self, wait: bool = True):
         self.deleted = True
 
-    def execute(self, cmd: Sequence[str], cwd: Optional[str] = None) -> tuple[int, str, str]:
-        return 0, "", ""
+    def execute(
+        self, cmd: Sequence[str], cwd: Optional[str] = None, hide_cmd: bool = False
+    ) -> tuple[int, IO, IO]:
+        return 0, io.BytesIO(b""), io.BytesIO(b"")
 
 
 class MockLxdInstanceFileManager:
-    """Mock the behavior of a lxd Instance files."""
+    """Mock the behavior of a LXD Instance files."""
 
     def __init__(self):
         self.files = {}
@@ -122,6 +126,42 @@ class MockLxdInstanceFileManager:
 
     def read_file(self, filepath: str):
         return self.files.get(str(filepath), None)
+
+
+class MockLxdStoragePoolManager:
+    """Mock the behavior of LXD storage pools."""
+
+    def __init__(self):
+        self.pools = {}
+
+    def all(self):
+        return [pool for pool in self.pools.values() if not pool.delete]
+
+    def get(self, name):
+        return self.pools[name]
+
+    def exists(self, name):
+        if name in self.pools:
+            return not self.pools[name].delete
+        else:
+            return False
+
+    def create(self, config):
+        self.pools[config["name"]] = MockLxdStoragePool()
+        return self.pools[config["name"]]
+
+
+class MockLxdStoragePool:
+    """Mock the behavior of a LXD storage pool."""
+
+    def __init__(self):
+        self.delete = False
+
+    def save(self):
+        pass
+
+    def delete(self):
+        self.delete = True
 
 
 class MockErrorResponse:
@@ -148,6 +188,9 @@ class MockGhapiClient:
     def __init__(self, token: str):
         self.token = token
         self.actions = MockGhapiActions()
+
+    def last_page(self) -> int:
+        return 0
 
 
 class MockGhapiActions:
@@ -201,10 +244,12 @@ class MockGhapiActions:
             {"token": self.remove_token_org, "expires_at": "2020-01-22T12:13:35.123-08:00"}
         )
 
-    def list_self_hosted_runners_for_repo(self, owner: str, repo: str):
+    def list_self_hosted_runners_for_repo(
+        self, owner: str, repo: str, per_page: int, page: int = 0
+    ):
         return {"runners": []}
 
-    def list_self_hosted_runners_for_org(self, org: str):
+    def list_self_hosted_runners_for_org(self, org: str, per_page: int, page: int = 0):
         return {"runners": []}
 
     def delete_self_hosted_runner_from_repo(self, owner: str, repo: str, runner_id: str):

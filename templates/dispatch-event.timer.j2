@@ -5,7 +5,7 @@ Requires=ghro.{{event}}.service
 [Timer]
 Unit=ghro.{{event}}.service
 OnUnitInactiveSec={{interval}}m
-RandomizedDelaySec={{jitter}}m
+RandomizedDelaySec={{random_delay}}m
 
 [Install]
 WantedBy=timers.target
