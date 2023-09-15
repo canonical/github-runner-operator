@@ -66,7 +66,8 @@ class TestCharm(unittest.TestCase):
 
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_install(self, run, wt):
+    @patch("builtins.open")
+    def test_install(self, open, run, wt):
         harness = Harness(GithubRunnerCharm)
         harness.begin()
         harness.charm.on.install.emit()
@@ -225,7 +226,8 @@ class TestCharm(unittest.TestCase):
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_on_install_failure(self, run, wt, mkdir, rm):
+    @patch("builtins.open")
+    def test_on_install_failure(self, open, run, wt, mkdir, rm):
         """Test various error thrown during install."""
 
         rm.return_value = mock_rm = MagicMock()
