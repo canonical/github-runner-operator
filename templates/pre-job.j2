@@ -20,8 +20,8 @@ CURL_ARGS=(
 # Set REPO_CHECK to a failure code as a safe guard.
 REPO_CHECK=1
 
-# Workflow dispatch and Push - Request repo-policy-compliance service check:
-if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+# Workflow dispatch, Push and Schedule - Request repo-policy-compliance service check:
+if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "push" ]] || [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
 
   logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
 
