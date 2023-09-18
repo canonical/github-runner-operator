@@ -169,7 +169,7 @@ async def test_dispatch_workflow_failure(
         1. A forked repository with unsigned commit in default branch.
         2. A working application with one runner on the forked repository.
     act: Trigger a workflow dispatch on a branch in the forked repository.
-    assert: The workflow that was dispatched failed.
+    assert: The workflow that was dispatched failed and the reason is logged.
     """
     unit = app_with_unsigned_commit_repo.units[0]
     runners = await get_runner_names(unit)
@@ -201,6 +201,10 @@ async def test_dispatch_workflow_failure(
             in logs
         ):
             assert run.jobs()[0].conclusion == "failure"
+            assert (
+                "Stopping execution of jobs due to repository setup is not compliant with policies"
+                in logs
+            )
             assert "commit the job is running on is not signed" in logs
             assert "Should not echo if pre-job script failed" not in logs
 
