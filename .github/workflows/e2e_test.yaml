@@ -78,10 +78,6 @@ jobs:
         event:
           - name: pull_request
             abbreviation: pr
-          - name: workflow_dispatch
-            abbreviation: wd
-          - name: push
-            abbreviation: push
     steps:
       - name: Setup Lxd Juju Controller
         uses: charmed-kubernetes/actions-operator@main
