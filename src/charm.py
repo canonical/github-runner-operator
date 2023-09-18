@@ -12,7 +12,7 @@ import secrets
 import shutil
 import urllib.error
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional, TypeVar
+from typing import Any, Callable, Dict, Optional, Sequence, TypeVar
 
 import jinja2
 from ops.charm import (
@@ -20,6 +20,7 @@ from ops.charm import (
     CharmBase,
     ConfigChangedEvent,
     InstallEvent,
+    StartEvent,
     StopEvent,
     UpgradeCharmEvent,
 )
@@ -27,7 +28,13 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-from errors import MissingConfigurationError, RunnerBinaryError, RunnerError, SubprocessError
+from errors import (
+    MissingConfigurationError,
+    MissingRunnerBinaryError,
+    RunnerBinaryError,
+    RunnerError,
+    SubprocessError,
+)
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
 from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
@@ -41,10 +48,6 @@ logger = logging.getLogger(__name__)
 
 class ReconcileRunnersEvent(EventBase):
     """Event representing a periodic check to ensure runners are ok."""
-
-
-class UpdateDependenciesEvent(EventBase):
-    """Event representing a periodic check for new versions of the runner binary and services."""
 
 
 CharmT = TypeVar("CharmT")
@@ -63,13 +66,17 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
 
     @functools.wraps(func)
     def func_with_catch_errors(self, event: EventT) -> None:
-        # Safe guard against unexpected error.
         try:
             func(self, event)
         except MissingConfigurationError as err:
             logger.exception("Missing required charm configuration")
             self.unit.status = BlockedStatus(
                 f"Missing required charm configuration: {err.configs}"
+            )
+        except MissingRunnerBinaryError:
+            logger.exception("Missing runner binary")
+            self.unit.status = MaintenanceStatus(
+                "Missing runner binary, automatic retry will be attempted"
             )
 
     return func_with_catch_errors
@@ -89,12 +96,16 @@ def catch_action_errors(
 
     @functools.wraps(func)
     def func_with_catch_errors(self, event: ActionEvent) -> None:
-        # Safe guard against unexpected error.
         try:
             func(self, event)
         except MissingConfigurationError as err:
             logger.exception("Missing required charm configuration")
             event.fail(f"Missing required charm configuration: {err.configs}")
+        except MissingRunnerBinaryError:
+            logger.exception("Missing runner binary")
+            self.unit.status = MaintenanceStatus(
+                "Missing runner binary, automatic retry will be attempted"
+            )
 
     return func_with_catch_errors
 
@@ -106,7 +117,7 @@ class GithubRunnerCharm(CharmBase):
 
     service_token_path = Path("service_token")
     repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
-    repo_check_web_service_script = Path("src/repo_policy_compliance_service.py")
+    repo_check_web_service_script = Path("templates/repo_policy_compliance_service.py")
     repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
     ram_pool_path = Path("/storage/ram")
 
@@ -144,14 +155,14 @@ class GithubRunnerCharm(CharmBase):
         self.service_token = None
 
         self.on.define_event("reconcile_runners", ReconcileRunnersEvent)
-        self.on.define_event("update_dependencies", UpdateDependenciesEvent)
 
         self.framework.observe(self.on.install, self._on_install)
         self.framework.observe(self.on.upgrade_charm, self._on_upgrade_charm)
         self.framework.observe(self.on.config_changed, self._on_config_changed)
-        self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
-        self.framework.observe(self.on.update_dependencies, self._on_update_dependencies)
+        self.framework.observe(self.on.start, self._on_start)
         self.framework.observe(self.on.stop, self._on_stop)
+
+        self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
 
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.reconcile_runners_action, self._on_reconcile_runners_action)
@@ -269,15 +280,11 @@ class GithubRunnerCharm(CharmBase):
         """Handle the installation of charm.
 
         Args:
-            event: Event of installing charm.
+            event: Event of installing the charm.
         """
         self.unit.status = MaintenanceStatus("Installing packages")
 
-        # Temporary solution: Upgrade the kernel due to a kernel bug in 5.15. Kernel upgrade
-        # not needed for container-based end-to-end tests.
-        if not LXD_PROFILE_YAML.exists():
-            self.unit.status = MaintenanceStatus("Upgrading kernel")
-            self._upgrade_kernel()
+        self._update_kernel()
 
         try:
             # The `_start_services`, `_install_deps` includes retry.
@@ -288,44 +295,66 @@ class GithubRunnerCharm(CharmBase):
             # The charm cannot proceed without dependencies.
             self.unit.status = BlockedStatus("Failed to install dependencies")
             return
+
         self._refresh_firewall()
         runner_manager = self._get_runner_manager()
-        if runner_manager:
-            self.unit.status = MaintenanceStatus("Downloading runner binary")
-            try:
-                runner_info = runner_manager.get_latest_runner_bin_url()
-                logger.info(
-                    "Downloading %s from: %s", runner_info.filename, runner_info.download_url
-                )
-                self._stored.runner_bin_url = runner_info.download_url
-                runner_manager.update_runner_bin(runner_info)
-            # Safe guard against transient unexpected error.
-            except RunnerBinaryError as err:
-                logger.exception("Failed to update runner binary")
-                # Failure to download runner binary is a transient error.
-                # The charm automatically update runner binary on a schedule.
-                self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
-                return
+        self.unit.status = MaintenanceStatus("Downloading runner binary")
+        try:
+            runner_info = runner_manager.get_latest_runner_bin_url()
+            logger.info("Downloading %s from: %s", runner_info.filename, runner_info.download_url)
+            self._stored.runner_bin_url = runner_info.download_url
+            runner_manager.update_runner_bin(runner_info)
+        # Safe guard against transient unexpected error.
+        except RunnerBinaryError as err:
+            logger.exception("Failed to update runner binary")
+            # Failure to download runner binary is a transient error.
+            # The charm automatically update runner binary on a schedule.
+            self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
+            return
 
-            self.unit.status = MaintenanceStatus("Starting runners")
-            try:
-                self._reconcile_runners(runner_manager)
-                self.unit.status = ActiveStatus()
-            except RunnerError as err:
-                logger.exception("Failed to start runners")
-                self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")
-        else:
-            self.unit.status = BlockedStatus("Missing token or org/repo path config")
+        self.unit.status = ActiveStatus()
 
-    def _upgrade_kernel(self) -> None:
-        """Upgrade the Linux kernel."""
-        execute_command(["/usr/bin/apt-get", "update"])
-        execute_command(["/usr/bin/apt-get", "install", "-qy", "linux-generic"])
+    def _on_start(self, _event: StartEvent) -> None:
+        """Handle the start of the charm.
+
+        Args:
+            event: Event of starting the charm.
+        """
+        runner_manager = self._get_runner_manager()
+
+        self.unit.status = MaintenanceStatus("Starting runners")
+        try:
+            runner_manager.flush(flush_busy=False)
+            self._reconcile_runners(runner_manager)
+        except RunnerError as err:
+            logger.exception("Failed to start runners")
+            self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")
+            return
+
+        self.unit.status = ActiveStatus()
+
+    def _update_kernel(self, now: bool = False) -> None:
+        """Update the Linux kernel if new version is available.
+
+        Do nothing if no new version is available, else update the kernel and reboot.
+        This method should only call by event handlers, and not action handlers. As juju-reboot
+        only works with events.
+
+        Args:
+            now: Whether the reboot should trigger at end of event handler or now.
+        """
+        logger.info("Upgrading kernel")
+        self._apt_install(["linux-generic-hwe-22.04"])
 
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
         if exit_code == 0:
             logger.info("Rebooting system...")
-            execute_command(["reboot"])
+
+            # The juju-reboot is inject to PATH by juju.
+            cmd = ["juju-reboot"]
+            if now:
+                cmd += ["--now"]
+            execute_command(cmd)
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
@@ -368,18 +397,12 @@ class GithubRunnerCharm(CharmBase):
         self._refresh_firewall()
         try:
             self._event_timer.ensure_event_timer(
-                "update-dependencies", self.config["update-interval"]
-            )
-            self._event_timer.ensure_event_timer(
                 "reconcile-runners", self.config["reconcile-interval"]
             )
         except TimerEnableError as ex:
             logger.exception("Failed to start the event timer")
             self.unit.status = BlockedStatus(
-                (
-                    f"Failed to start timer for regular reconciliation and dependencies update "
-                    f"checks: {ex}"
-                )
+                (f"Failed to start timer for regular reconciliation" f"checks: {ex}")
             )
 
         if self.config["path"] != self._stored.path:
@@ -413,11 +436,6 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Checking for updates")
 
         runner_manager = self._get_runner_manager()
-        if not runner_manager:
-            return False
-
-        self.unit.status = MaintenanceStatus("Checking for service updates")
-        service_updated = self._install_repo_policy_compliance()
 
         # Check if the runner binary file exists.
         if not runner_manager.check_runner_bin():
@@ -446,6 +464,9 @@ class GithubRunnerCharm(CharmBase):
             self._stored.runner_bin_url = runner_info.download_url
             runner_bin_updated = True
 
+        self.unit.status = MaintenanceStatus("Checking for service updates")
+        service_updated = self._install_repo_policy_compliance()
+
         if service_updated or runner_bin_updated:
             logger.info(
                 "Flushing runner due to: service updated=%s, runner binary update=%s",
@@ -453,21 +474,13 @@ class GithubRunnerCharm(CharmBase):
                 runner_bin_updated,
             )
 
+            self.unit.status = MaintenanceStatus("Flushing runners due to updated deps")
+
             self._start_services()
             runner_manager.flush(flush_busy=False)
-            self._reconcile_runners(runner_manager)
 
         self.unit.status = ActiveStatus()
         return service_updated or runner_bin_updated
-
-    @catch_charm_errors
-    def _on_update_dependencies(self, _event: UpdateDependenciesEvent) -> None:
-        """Handle checking update of dependencies event.
-
-        Args:
-            event: Event of checking update of runner binary and services.
-        """
-        self._check_and_update_dependencies()
 
     @catch_charm_errors
     def _on_reconcile_runners(self, _event: ReconcileRunnersEvent) -> None:
@@ -476,16 +489,13 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of reconciling the runner state.
         """
-        self.unit.status = MaintenanceStatus("Reconciling runners")
-
-        if not RunnerManager.runner_bin_path.is_file():
-            logger.warning("Unable to reconcile due to missing runner binary")
-            return
+        self._check_and_update_dependencies()
 
         runner_manager = self._get_runner_manager()
-        if not runner_manager:
-            self.unit.status = BlockedStatus("Missing token or org/repo path config")
-            return
+
+        runner_info = runner_manager.get_github_info()
+        if all(not info.busy for info in runner_info):
+            self._update_kernel(now=True)
 
         self._reconcile_runners(runner_manager)
 
@@ -538,10 +548,9 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Action event of reconciling the runner.
         """
+        self._check_and_update_dependencies()
+
         runner_manager = self._get_runner_manager()
-        if not runner_manager:
-            event.fail("Missing token or org/repo path config")
-            return
 
         delta = self._reconcile_runners(runner_manager)
 
@@ -556,9 +565,6 @@ class GithubRunnerCharm(CharmBase):
             event: Action event of flushing all runners.
         """
         runner_manager = self._get_runner_manager()
-        if not runner_manager:
-            event.fail("Missing token or org/repo path config")
-            return
 
         runner_manager.flush()
         delta = self._reconcile_runners(runner_manager)
@@ -591,13 +597,7 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = BlockedStatus(f"Failed to stop charm event timer: {ex}")
 
         runner_manager = self._get_runner_manager()
-        if runner_manager:
-            try:
-                runner_manager.flush()
-            # Safe guard against unexpected error.
-            except Exception:  # pylint: disable=broad-exception-caught
-                # Log but ignore error since we're stopping anyway.
-                logger.exception("Failed to clear runners")
+        runner_manager.flush()
 
     def _reconcile_runners(self, runner_manager: RunnerManager) -> Dict[str, Any]:
         """Reconcile the current runners state and intended runner state.
@@ -608,6 +608,10 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             Changes in runner number due to reconciling runners.
         """
+        if not RunnerManager.runner_bin_path.is_file():
+            logger.warning("Unable to reconcile due to missing runner binary")
+            raise MissingRunnerBinaryError()
+
         self.unit.status = MaintenanceStatus("Reconciling runners")
 
         virtual_machines_resources = VirtualMachineResources(
@@ -675,6 +679,13 @@ class GithubRunnerCharm(CharmBase):
         )
         return old_version != new_version
 
+    def _enable_kernel_modules(self) -> None:
+        """Enable kernel modules needed by the charm."""
+        execute_command(["/usr/sbin/modprobe", "br_netfilter"])
+
+        with open("/etc/modules", "a", encoding="utf-8") as modules_file:
+            modules_file.write("br_netfilter\n")
+
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _install_deps(self) -> None:
         """Install dependencies."""
@@ -682,11 +693,8 @@ class GithubRunnerCharm(CharmBase):
 
         # Snap and Apt will use any proxies configured in the Juju model.
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
-        execute_command(["/usr/bin/apt-get", "update"])
         # Install dependencies used by repo-policy-compliance and the firewall
-        execute_command(
-            ["/usr/bin/apt-get", "install", "-qy", "gunicorn", "python3-pip", "nftables"]
-        )
+        self._apt_install(["gunicorn", "python3-pip", "nftables"])
 
         # Install repo-policy-compliance package
         self._install_repo_policy_compliance()
@@ -694,11 +702,8 @@ class GithubRunnerCharm(CharmBase):
         execute_command(
             ["/usr/bin/apt-get", "remove", "-qy", "lxd", "lxd-client"], check_exit=False
         )
-        execute_command(
+        self._apt_install(
             [
-                "/usr/bin/apt-get",
-                "install",
-                "-qy",
                 "cpu-checker",
                 "libvirt-clients",
                 "libvirt-daemon-driver-qemu",
@@ -712,7 +717,7 @@ class GithubRunnerCharm(CharmBase):
         execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])
         execute_command(["/snap/bin/lxd", "waitready"])
         if not LXD_PROFILE_YAML.exists():
-            execute_command(["/usr/sbin/modprobe", "br_netfilter"])
+            self._enable_kernel_modules()
         execute_command(
             [
                 "/snap/bin/lxc",
@@ -800,6 +805,17 @@ class GithubRunnerCharm(CharmBase):
             "firewall update, current firewall: %s",
             execute_command(["/usr/sbin/nft", "list", "ruleset"]),
         )
+
+    def _apt_install(self, packages: Sequence[str]) -> None:
+        execute_command(["/usr/bin/apt-get", "update"])
+
+        _, exit_code = execute_command(
+            ["/usr/bin/apt-get", "install", "-qy"] + list(packages), check_exit=False
+        )
+        if exit_code == 100:
+            logging.warning("Running 'dpkg --configure -a' as last apt install was interrupted")
+            execute_command(["dpkg", "--configure", "-a"])
+            execute_command(["/usr/bin/apt-get", "install", "-qy"] + list(packages))
 
 
 if __name__ == "__main__":

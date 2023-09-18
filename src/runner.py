@@ -10,8 +10,6 @@ The `RunnerManager` class from `runner_manager.py` creates and manages a
 collection of `Runner` instances.
 """
 
-from __future__ import annotations
-
 import json
 import logging
 import pathlib
@@ -92,6 +90,12 @@ class Runner:
         self.config = runner_config
         self.status = runner_status
         self.instance = instance
+
+        # If the proxy setting are set, then add NO_PROXY local variables.
+        if self.config.proxies.get("http") or self.config.proxies.get("https"):
+            if self.config.proxies.get("no_proxy"):
+                self.config.proxies["no_proxy"] += ","
+            self.config.proxies["no_proxy"] += f"{self.config.name},.svc"
 
     def create(
         self,
@@ -423,6 +427,8 @@ class Runner:
 
         # Add the user to docker group.
         self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
+        # Allow traffic for docker user.
+        self.instance.execute(["/usr/sbin/iptables", "-I", "DOCKER-USER", "-j", "ACCEPT"])
 
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.

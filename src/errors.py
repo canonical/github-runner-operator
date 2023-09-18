@@ -35,6 +35,10 @@ class RunnerBinaryError(RunnerError):
     """Error of getting runner binary."""
 
 
+class MissingRunnerBinaryError(Exception):
+    """Error for missing runner binary."""
+
+
 class MissingConfigurationError(Exception):
     """Error for missing juju configuration.
 
