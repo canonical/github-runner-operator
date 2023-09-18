@@ -1,7 +1,7 @@
 name: End-to-End Test
 
 on:
-  # pull_request:
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -276,6 +276,10 @@ jobs:
             || cat /home/ubuntu/.docker/config.json | grep httpProxy
       - name: Get status of snapd
         run: sudo systemctl status snapd
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
       - name: Install microk8s
         # TMP: Pin version of microk8s to older version due to issues with running microk8s in LXD
         # containers. Currently, in discussion with microk8s developer on the issue.
