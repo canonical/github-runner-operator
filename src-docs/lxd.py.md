@@ -5,7 +5,7 @@
 # <kbd>module</kbd> `lxd.py`
 Low-level LXD client interface. 
 
-The LxdClient class offers a low-level interface to isolate the underlying  implementation of LXD. 
+The LxdClient class offers a low-level interface to isolate the underlying implementation of LXD. 
 
 
 

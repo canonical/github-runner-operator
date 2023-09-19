@@ -3,7 +3,7 @@
 
 """Low-level LXD client interface.
 
-The LxdClient class offers a low-level interface to isolate the underlying 
+The LxdClient class offers a low-level interface to isolate the underlying
 implementation of LXD.
 """
 from __future__ import annotations
