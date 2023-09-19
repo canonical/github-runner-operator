@@ -107,7 +107,7 @@ class EventTimer:
         """
         try:
             # Don't check for errors in case the timer wasn't registered.
-            # Binding for systemctl do no exist, so `subprocess.run` used.
+            # Binding for systemctl does no exist, so `subprocess.run` used.
             subprocess.run(  # nosec B603
                 ["/usr/bin/systemctl", "stop", f"ghro.{event_name}.timer"], check=False
             )
