@@ -112,13 +112,91 @@ jobs:
         id: runner-name
         run: echo name=${{ matrix.event.abbreviation }}-${{ needs.run-id.outputs.run-id }} >> $GITHUB_OUTPUT
 
-      - name: Deploy github-runner Charm
+      - name: Copy github-runner Charm
         run: |
           cp github-runner_ubuntu-22.04-amd64.charm /home/$USER/github-runner_ubuntu-22.04-amd64.charm
+
+      - name: Deploy github-runner Charm (Pull Request, Workflow Dispatch and Push)
+        if: matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push' || matrix.event.name == 'pull_request'
+        run: |
           juju deploy /home/$USER/github-runner_ubuntu-22.04-amd64.charm \
             ${{ steps.runner-name.outputs.name }} \
             --base ubuntu@22.04 \
             --config path=${{ secrets.E2E_TESTING_REPO }} \
+            --config token=${{ secrets.E2E_TESTING_TOKEN }} \
+            --config virtual-machines=1 \
+            --config denylist=10.0.0.0/8 \
+            --config test-mode=insecure
+
+      - name: Checkout branch (Schedule)
+        if: matrix.event.name == 'schedule'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.E2E_TESTING_TOKEN }}
+      - name: Create temporary orphan branch (Schedule)
+        if: matrix.event.name == 'schedule'
+        run: |
+          # We dont need all content for schedule test, so create an orphan branch.
+          git checkout --orphan ${{ steps.runner-name.outputs.name }}
+          git reset
+          
+          # Create schedule test workflow
+          SCHEDULE_WF_FILE=".github/workflows/schedule_test.yaml"
+          sed -i "s/workflow_dispatch:/schedule:\n  - cron: '*\/5 * * * *'/" $SCHEDULE_WF_FILE
+          git add $SCHEDULE_WF_FILE
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit -m"Add schedule workflow"
+          git push origin ${{ steps.runner-name.outputs.name }}
+      - name: Create signed commit (Schedule)
+        if: matrix.event.name == 'schedule'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # The last commit on the branch is required to be signed in order to pass the repo policy check.
+          # We create an unused file and commit it using the GH API in order to create a signed commit.
+          # We need to use the GITHUB_TOKEN because the E2E_TESTING_TOKEN is user-bound and would 
+          # create an an unsigned commit.
+          CONTENT=$(echo "Hello world" | base64) 
+          gh api \
+            --method PUT \
+            /repos/${{ github.repository }}/contents/helloworld.txt \
+            --field message="Add schedule workflow" \
+            --field content="$CONTENT"  \
+            --field branch="${{ steps.runner-name.outputs.name }}"
+      - name: Deploy github-runner Charm (Schedule)
+        if: matrix.event.name == 'schedule'
+        env:
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+        run: |
+          # GitHub does not allow to create multiple forks of the same repo under the same user,
+          # so we need to create a new repository and push the branch to it.
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /user/repos \
+            -f name=${{ steps.runner-name.outputs.name }}
+
+          TESTING_REPO=${{ secrets.E2E_TESTING_TOKEN_ORG }}/${{ steps.runner-name.outputs.name }}
+
+          # Create registration token in order to allow listing of runner binaries
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            repos/${TESTING_REPO}/actions/runners/registration-token
+
+          # Push the orphan branch to the newly created repo.
+          git pull origin ${{ steps.runner-name.outputs.name }}
+          git remote add testing https://github.com/${TESTING_REPO}.git
+          git push testing ${{ steps.runner-name.outputs.name }}:main
+
+          juju deploy /home/$USER/github-runner_ubuntu-22.04-amd64.charm \
+            ${{ steps.runner-name.outputs.name }} \
+            --base ubuntu@22.04 \
+            --config path=$TESTING_REPO \
             --config token=${{ secrets.E2E_TESTING_TOKEN }} \
             --config virtual-machines=1 \
             --config denylist=10.0.0.0/8 \
@@ -228,6 +306,97 @@ jobs:
             echo "Workflow completed with status: $status, conclusion: $conclusion, run-id: ${{ steps.runner-name.outputs.name }}"
             kill $(jobs -p)
           fi
+
+      - name: Watch github-runner (Schedule)
+        if: matrix.event.name == 'schedule'
+        env:
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+        run: |
+          juju debug-log --replay --tail &
+
+          TESTING_REPO=${{ secrets.E2E_TESTING_TOKEN_ORG }}/${{ steps.runner-name.outputs.name }}
+
+          # Create branch protection rule in order to be able to let schedule test pass repo policy check
+          gh api \
+            --method PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${TESTING_REPO}/branches/main/protection \
+            -F required_status_checks=null \
+            -F enforce_admins=null \
+            -F required_pull_request_reviews=null \
+            -F restrictions=null
+
+          # Create signed commit protected branch in order to be able to let schedule test pass repo policy check
+          gh api \
+              --method POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              /repos/${TESTING_REPO}/branches/main/protection/required_signatures
+
+          get-workflow-status() {
+              # Search recent workflow runs for the one designated by the run-id ref
+              output=$(gh run list \
+                        -R ${TESTING_REPO} \
+                        -L 100 \
+                        --json headBranch,status,createdAt \
+                        --jq '[.[] | select(.headBranch=="main")] | sort_by(.createdAt)')
+
+              # Workflows that have not started have no status
+              if [ $(echo "$output" | jq 'length') -eq 0 ]
+              then
+                  echo "not_started"
+              else
+                  # Parse output with jq to get the status field of the first object
+                  status=$(echo "$output" | jq -r '.[0].status')
+                  echo "$status"
+              fi
+          }
+
+          # Wait for the workflow to start while checking its status
+          for i in {1..360}
+          do
+            status=$(get-workflow-status)
+            echo "workflow status: $status"
+            if [[ $status != "not_started" && $status != "queued" && $status != "in_progress" ]]; then
+              break
+            fi
+            sleep 10
+          done
+
+          # Make sure the workflow was completed or else consider it failed
+          runs=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${TESTING_REPO}/actions/runs \
+            --jq '[.workflow_runs[] | select(.head_branch=="main")] | sort_by(.created_at)')
+          conclusion=$(echo $runs | jq -r '.[0].conclusion')
+          wf_run_id=$(echo $runs | jq -r '.[0].id')
+
+          # We retrieve the logs because the testing repo is deleted at the end of the test
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${TESTING_REPO}/actions/runs/${wf_run_id}/logs > schedule-workflow-logs.zip \
+              || (echo "Failed to retrieve logs from schedule tests" && rm schedule-workflow-logs.zip)
+
+
+          if [[ $status != "completed" || $conclusion != "success" ]]; then
+            echo "test workflow failed with status: $status, conclusion: $conclusion"
+            kill $(jobs -p)
+            exit 1
+          else
+            echo "Workflow completed with status: $status, conclusion: $conclusion, run-id: ${{ steps.runner-name.outputs.name }}"
+            kill $(jobs -p)
+          fi
+      - name: Upload schedule test logs (Schedule)
+        if: always() && matrix.event.name == 'schedule'
+        uses: actions/upload-artifact@v3
+        with:
+          name: schedule-workflow-logs.zip
+          path: schedule-workflow-logs.zip
+          if-no-files-found: ignore
+
       - name: Show Firewall Rules
         run: |
           juju ssh ${{ steps.runner-name.outputs.name }}/0 sudo nft list ruleset
@@ -243,6 +412,32 @@ jobs:
           -H "X-GitHub-Api-Version: 2022-11-28" \
           "/repos/${{ secrets.E2E_TESTING_REPO }}/git/refs/heads/${{ steps.runner-name.outputs.name }}"
           echo "Deleted ref ${{ steps.runner-name.outputs.name }}"
+
+      - name: Clean Up (Schedule)
+        if: always() && (matrix.event.name == 'schedule')
+        env:
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+        run: |
+          set +e
+
+          gh api \
+          --method DELETE \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          "/repos/${{ secrets.E2E_TESTING_REPO }}/git/refs/heads/${{ steps.runner-name.outputs.name }}" \
+          && echo "Deleted ref ${{ steps.runner-name.outputs.name }}"
+
+          TESTING_REPO=${{ secrets.E2E_TESTING_TOKEN_ORG }}/${{ steps.runner-name.outputs.name }}
+
+          set -e
+
+          gh api \
+          --method DELETE \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          "/repos/${TESTING_REPO}"
+
+          echo "Deleted repo ${TESTING_REPO}"
 
   e2e-test:
     name: End-to-End Test

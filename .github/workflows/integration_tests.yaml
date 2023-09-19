@@ -9,6 +9,7 @@ jobs:
     name: Integration test charm with no runner
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         juju: [3.1, 2.9]
     steps:
@@ -32,6 +33,7 @@ jobs:
     name: Integration test charm
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         juju: [3.1, 2.9]
     steps:
@@ -55,6 +57,7 @@ jobs:
     name: Integration test charm with fork repo
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         juju: [3.1, 2.9]
     steps:
@@ -78,6 +81,7 @@ jobs:
     name: Integration test charm scheduled events
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         juju: [3.1, 2.9]
     steps:

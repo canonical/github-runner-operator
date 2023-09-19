@@ -10,6 +10,8 @@ logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
 
 # Prepare curl arguments
 CURL_ARGS=(
+  --silent
+  --show-error
   --max-time 60
   --noproxy '*'
   --fail-with-body
@@ -20,14 +22,14 @@ CURL_ARGS=(
 # Set REPO_CHECK to a failure code as a safe guard.
 REPO_CHECK=1
 
-# Workflow dispatch and Push - Request repo-policy-compliance service check:
-if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+# Workflow dispatch, Push and Schedule - Request repo-policy-compliance service check:
+if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "push" ]] || [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
 
   logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
 
   curl "${CURL_ARGS[@]}" \
       -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"branch_name\": \"${GITHUB_REF_NAME}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
-      http://{{host_ip}}:8080/${GITHUB_EVENT_NAME}/check-run
+      http://{{host_ip}}:8080/${GITHUB_EVENT_NAME}/check-run &> repo_check_output.txt
   REPO_CHECK=$?
 
 # Pull request - Request repo-policy-compliance service check:
@@ -44,7 +46,7 @@ elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
 
   curl "${CURL_ARGS[@]}" \
       -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_HEAD_REF}\", \"commit_sha\": \"${COMMIT_SHA}\"}" \
-      http://{{host_ip}}:8080/pull_request/check-run
+      http://{{host_ip}}:8080/pull_request/check-run &> repo_check_output.txt
   REPO_CHECK=$?
 
 else
@@ -56,6 +58,7 @@ else
 fi
 
 if [[ $REPO_CHECK -ne 0 ]]; then
+  logger -p user.error -s -f repo_check_output.txt
   logger -p user.error -s "Stopping execution of jobs due to repository setup is not compliant with policies."
   logger -p user.error -s "This runner will be stopped or lost, please fix the setup of the repository, then rerun this job."
 
