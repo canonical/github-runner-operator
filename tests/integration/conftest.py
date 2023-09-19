@@ -139,11 +139,7 @@ async def app_no_runner(
     https_proxy: str,
     no_proxy: str,
 ) -> AsyncIterator[Application]:
-    """Application with no token.
-
-    Test should ensure it returns with the application having no token and no
-    runner.
-    """
+    """Application with no runner."""
     subprocess.run(["sudo", "modprobe", "br_netfilter"])
 
     await model.set_config(
@@ -169,7 +165,7 @@ async def app_no_runner(
             "reconcile-interval": 60,
         },
     )
-    await model.wait_for_idle()
+    await model.wait_for_idle(timeout=60 * 30)
 
     yield application
 

@@ -28,6 +28,8 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
+import cos
+from charm_state import State
 from errors import (
     MissingConfigurationError,
     MissingRunnerBinaryError,
@@ -130,6 +132,10 @@ class GithubRunnerCharm(CharmBase):
                 class.
         """
         super().__init__(*args, **kargs)
+
+        self.state = State.from_charm()
+        self.cos_observer = cos.Observer(self, self.state)
+
         if LXD_PROFILE_YAML.exists():
             if self.config.get("test-mode") != "insecure":
                 raise RuntimeError("lxd-profile.yaml detected outside test mode")
@@ -273,6 +279,7 @@ class GithubRunnerCharm(CharmBase):
             unit,
             RunnerManagerConfig(path, token, "jammy", self.service_token, self.ram_pool_path),
             proxies=self.proxies,
+            issue_metrics=self.cos_observer.metrics_logging_available(),
         )
 
     @catch_charm_errors

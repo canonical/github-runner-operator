@@ -6,6 +6,7 @@
 import hashlib
 import logging
 import tarfile
+import time
 import urllib.request
 import uuid
 from dataclasses import dataclass
@@ -21,6 +22,7 @@ from ghapi.all import GhApi
 from ghapi.page import pages
 from typing_extensions import assert_never
 
+import metrics
 from errors import RunnerBinaryError, RunnerCreateError
 from github_type import (
     GitHubRunnerStatus,
@@ -84,12 +86,13 @@ class RunnerManager:
 
     runner_bin_path = Path("/home/ubuntu/github-runner-app")
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         app_name: str,
         unit: int,
         runner_manager_config: RunnerManagerConfig,
         proxies: ProxySetting = ProxySetting(),
+        issue_metrics: bool = False,
     ) -> None:
         """Construct RunnerManager object for creating and managing runners.
 
@@ -98,11 +101,13 @@ class RunnerManager:
             unit: Unit number of the set of runners.
             runner_manager_config: Configuration for the runner manager.
             proxies: HTTP proxy settings.
+            issue_metrics: Whether to issue metrics.
         """
         self.app_name = app_name
         self.instance_name = f"{app_name}-{unit}"
         self.config = runner_manager_config
         self.proxies = proxies
+        self.issue_metrics = issue_metrics
 
         # Setting the env var to this process and any child process spawned.
         if "no_proxy" in self.proxies:
@@ -290,6 +295,40 @@ class RunnerManager:
 
         return RunnerByHealth(healthy, unhealthy)
 
+    def _create_runner(
+        self, registration_token: str, resources: VirtualMachineResources, runner: Runner
+    ):
+        """Create a runner.
+
+        Issues RunnerInstalled metric if issue_metrics is set to True.
+
+        Args:
+            registration_token: Token for registering runner to GitHub.
+            resources: Configuration of the virtual machine resources.
+            runner: Runner to be created.
+        """
+        ts_now = time.time()
+        runner.create(
+            self.config.image,
+            resources,
+            RunnerManager.runner_bin_path,
+            registration_token,
+        )
+        ts_after = time.time()
+        if self.issue_metrics:
+            try:
+                metrics.issue_event(
+                    metrics.RunnerInstalled(
+                        timestamp=ts_after,
+                        flavor=self.app_name,
+                        duration=ts_after - ts_now,
+                    )
+                )
+            # We explicitly catch all exceptions here as we do not want to fail the
+            # runner creation process due to metrics issuing failure.
+            except Exception:  # pylint: disable=broad-except
+                logger.exception("Failed to issue metrics")
+
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
 
@@ -357,12 +396,7 @@ class RunnerManager:
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
                 try:
-                    runner.create(
-                        self.config.image,
-                        resources,
-                        RunnerManager.runner_bin_path,
-                        registration_token,
-                    )
+                    self._create_runner(registration_token, resources, runner)
                     logger.info("Created runner: %s", runner.config.name)
                 except RunnerCreateError:
                     logger.error("Unable to create runner: %s", runner.config.name)

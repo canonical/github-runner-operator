@@ -5,10 +5,14 @@
 # <kbd>module</kbd> `metrics.py`
 Models and functions for the metric events. 
 
+**Global Variables**
+---------------
+- **PROMTAIL_PUSH_API_URL**
+- **requests_session**
 
 ---
 
-<a href="../src/metrics.py#L32"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L85"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 

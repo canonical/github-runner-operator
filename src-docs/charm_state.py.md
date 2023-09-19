@@ -10,7 +10,7 @@ State of the Charm.
 ---
 
 ## <kbd>class</kbd> `ProxyConfig`
-Configuration for proxy. 
+Represent HTTP-related proxy settings. 
 
 
 
@@ -58,7 +58,7 @@ Returns the set of fields that have been set on this model instance.
 
 ---
 
-<a href="../src/charm_state.py#L26"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_env`
 
@@ -86,25 +86,19 @@ Attrs:  proxy_config: Proxy configuration.
 
 ---
 
-<a href="../src/charm_state.py#L45"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L56"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
 ```python
-from_charm(charm: CharmBase) → State
+from_charm() → State
 ```
 
 Initialize the state from charm. 
 
 
 
-**Args:**
- 
- - <b>`charm`</b>:  The charm root GithubRunnerCharm. 
-
-
-
 **Returns:**
- Current state of the charm. 
+  Current state of the charm. 
 
 

@@ -23,7 +23,7 @@ Used as a returned type to method querying runner information.
 ## <kbd>class</kbd> `RunnerManager`
 Manage a group of runners according to configuration. 
 
-<a href="../src/runner_manager.py#L87"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L89"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -32,7 +32,8 @@ __init__(
     app_name: str,
     unit: int,
     runner_manager_config: RunnerManagerConfig,
-    proxies: ProxySetting = {}
+    proxies: ProxySetting = {},
+    issue_metrics: bool = False
 ) → None
 ```
 
@@ -46,13 +47,14 @@ Construct RunnerManager object for creating and managing runners.
  - <b>`unit`</b>:  Unit number of the set of runners. 
  - <b>`runner_manager_config`</b>:  Configuration for the runner manager. 
  - <b>`proxies`</b>:  HTTP proxy settings. 
+ - <b>`issue_metrics`</b>:  Whether to issue metrics. 
 
 
 
 
 ---
 
-<a href="../src/runner_manager.py#L148"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L153"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `check_runner_bin`
 
@@ -69,7 +71,7 @@ Check if runner binary exists.
 
 ---
 
-<a href="../src/runner_manager.py#L396"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L430"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `flush`
 
@@ -92,7 +94,7 @@ Remove existing runners.
 
 ---
 
-<a href="../src/runner_manager.py#L261"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L266"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_github_info`
 
@@ -109,7 +111,7 @@ Get information on the runners from GitHub.
 
 ---
 
-<a href="../src/utilities.py#L156"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L161"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_latest_runner_bin_url`
 
@@ -138,7 +140,7 @@ The runner binary URL changes when a new version is available.
 
 ---
 
-<a href="../src/runner_manager.py#L293"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L332"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `reconcile`
 
@@ -162,7 +164,7 @@ Bring runners in line with target.
 
 ---
 
-<a href="../src/utilities.py#L194"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L199"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `update_runner_bin`
 

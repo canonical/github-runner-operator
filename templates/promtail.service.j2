@@ -1,0 +1,15 @@
+[Unit]
+Description=Promtail Service collecting metric logs
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory={{working_directory}}
+Environment="HTTP_PROXY={{proxies['http']}}"
+Environment="HTTPS_PROXY={{proxies['https']}}"
+Environment="NO_PROXY={{proxies['no_proxy']}}"
+Environment="http_proxy={{proxies['http']}}"
+Environment="https_proxy={{proxies['https']}}"
+Environment="no_proxy={{proxies['no_proxy']}}"
+ExecStart=/usr/local/bin/promtail-linux-amd64 -config.file /etc/promtail.yaml

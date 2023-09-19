@@ -100,6 +100,50 @@ jobs:
             --token ${{secrets.E2E_TESTING_TOKEN}} \
             --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
             tests/integration/test_charm_scheduled_events.py
+  integration-test-charm-metrics:
+    name: Integration test charm metrics
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        juju: [ 3.1, 2.9 ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup lxd controller
+        # We have to setup LXD first as there is a bug when setting up microk8s and afterwards
+        # bootstraping a lxd controller with Juju 2.9
+        # https://bugs.launchpad.net/juju/+bug/2003582
+        uses: charmed-kubernetes/actions-operator@main
+        with:
+          juju-channel: ${{ matrix.juju }}/stable
+          provider: lxd
+      - name: Save lxd controller name
+        id: lxd-controller
+        run: echo "name=$CONTROLLER_NAME" >> $GITHUB_OUTPUT
+      - name: Setup k8s controller
+        uses: charmed-kubernetes/actions-operator@main
+        with:
+          juju-channel: ${{ matrix.juju }}/stable
+          provider: microk8s
+          channel: 1.27-strict/stable
+      - name: Save k8s controller name
+        id: k8s-controller
+        run: echo "name=$CONTROLLER_NAME" >> $GITHUB_OUTPUT
+      - name: Enable metallb  # for traefik
+        run: sudo microk8s enable metallb 192.168.0.10-192.168.0.100
+      - name: Enable br_netfilter
+        run: sudo modprobe br_netfilter
+      - name: Switch to LXD controller for tests
+        run: juju switch ${{ steps.lxd-controller.outputs.name }}
+      - name: Run Integration tests
+        run: |
+          tox -e integration-juju${{ matrix.juju }} -- \
+            --keep-models \
+            --path ${{secrets.E2E_TESTING_REPO}} \
+            --token ${{secrets.E2E_TESTING_TOKEN}} \
+            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
+            --k8s-controller ${{ steps.k8s-controller.outputs.name }} \
+            tests/integration/test_charm_metrics.py
   required_status_checks:
     name: Required Integration Test Status Checks
     runs-on: ubuntu-latest
@@ -108,6 +152,7 @@ jobs:
       - integration-test-charm
       - integration-test-charm-fork-repo
       - integration-test-charm-scheduled-events
+      - integration-test-charm-metrics
     if: always() && !cancelled()
     timeout-minutes: 30
     steps:
@@ -116,3 +161,4 @@ jobs:
           [ '${{ needs.integration-test-charm.result }}' = 'success' ] || (echo integration-test-charm failed && false)
           [ '${{ needs.integration-test-charm-fork-repo.result }}' = 'success' ] || (echo integration-test-charm-fork-repo failed && false)
           [ '${{ needs.integration-test-charm-scheduled-events.result }}' = 'success' ] || (echo integration-test-charm-schedule-events failed && false)
+          [ '${{ needs.integration-test-charm-metrics.result }}' = 'success' ] || (echo integration-test-charm-metrics failed && false)

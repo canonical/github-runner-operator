@@ -51,18 +51,18 @@ class TestCharm(unittest.TestCase):
     @patch.dict(
         os.environ,
         {
-            "JUJU_CHARM_HTTPS_PROXY": "mock_https_proxy",
-            "JUJU_CHARM_HTTP_PROXY": "mock_http_proxy",
-            "JUJU_CHARM_NO_PROXY": "mock_no_proxy",
+            "JUJU_CHARM_HTTPS_PROXY": "http://squid.internal:3128",
+            "JUJU_CHARM_HTTP_PROXY": "http://squid.internal:3128",
+            "JUJU_CHARM_NO_PROXY": "127.0.0.1,localhost",
         },
     )
     def test_proxy_setting(self):
         harness = Harness(GithubRunnerCharm)
         harness.begin()
 
-        assert harness.charm.proxies["https"] == "mock_https_proxy"
-        assert harness.charm.proxies["http"] == "mock_http_proxy"
-        assert harness.charm.proxies["no_proxy"] == "mock_no_proxy"
+        assert harness.charm.proxies["https"] == "http://squid.internal:3128"
+        assert harness.charm.proxies["http"] == "http://squid.internal:3128"
+        assert harness.charm.proxies["no_proxy"] == "127.0.0.1,localhost"
 
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -112,6 +112,7 @@ class TestCharm(unittest.TestCase):
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
             ),
             proxies={},
+            issue_metrics=False,
         )
 
     @patch("charm.RunnerManager")
@@ -137,6 +138,7 @@ class TestCharm(unittest.TestCase):
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
             ),
             proxies={},
+            issue_metrics=False,
         )
 
     @patch("charm.RunnerManager")
@@ -165,6 +167,7 @@ class TestCharm(unittest.TestCase):
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
             ),
             proxies={},
+            issue_metrics=False,
         )
         mock_rm.reconcile.assert_called_with(0, VirtualMachineResources(2, "7GiB", "10GiB")),
         mock_rm.reset_mock()
@@ -184,6 +187,7 @@ class TestCharm(unittest.TestCase):
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
             ),
             proxies={},
+            issue_metrics=False,
         )
         mock_rm.reconcile.assert_called_with(
             10, VirtualMachineResources(cpu=4, memory="7GiB", disk="10GiB")

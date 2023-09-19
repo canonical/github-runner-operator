@@ -39,6 +39,34 @@ If there are more idle runners than configured, the oldest idle runners are unre
 
 During each time period, every unit will make one or more API calls to GitHub. The interval may need to be adjusted if the number of units is large enough to trigger [Rate Limiting](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting).
 
+
+## COS
+The charm is designed to provide comprehensive metrics and monitoring capabilities for both the Runners and the Charm itself. These metrics are made available through the `metrics-logging` integration with the `loki_push_api` interface. Additionally, a Grafana Dashboard is included to help visualize these metrics effectively.
+
+### Loki Integration
+#### Loki Push API
+The charm seamlessly integrates with Loki, a powerful log aggregation system, through the `loki_push_api` interface. This integration allows the charm to push various metrics and logs related to the Runners and the Charm itself to a Loki instance. This provides valuable insights into the performance and behavior of your deployment.
+
+### Grafana Dashboard
+To make monitoring even more accessible, the charm comes with a pre-configured Grafana Dashboard. This dashboard is designed to visualize the metrics collected by the charm, making it easier for operators to track the health and performance of the system.
+
+#### Automated Dashboard Deployment
+You can automate the deployment of the Grafana Dashboard using the [cos-integration-k8s](https://charmhub.io/cos-configuration-k8s) charm. This simplifies the setup process and ensures that your monitoring infrastructure is ready to go with minimal manual intervention.
+
+#### Configuration Options
+To enable the automated deployment of the Grafana Dashboard, you can provide the following configuration options when deploying the `cos-integration-k8s` charm:
+
+```ini
+git_repo=https://https://github.com/canonical/github-runner-operator
+git_branch=main
+git_depth=1
+grafana_dashboards_path=src/grafana_dashboard_metrics
+```
+
+
+
+
+
 ## Development
 
 This charm uses black and flake8 for formatting. Both run with the lint stage of tox.
