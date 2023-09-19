@@ -10,7 +10,7 @@ This machine charm creates [self-hosted runners for running GitHub Actions](http
 machines to host them. Every runner performs only one job, after which it unregisters from GitHub to ensure that each job runs in
 a clean environment.
 
-The charm will periodically check the number of idle runners and spawn or destroy runners as necessary to match the number provided by configuration of
+The charm will periodically check the number of runners and spawn or destroy runners as necessary to match the number provided by configuration of
 runners. Both the reconciliation interval and the number of runners to maintain are configurable.
 
 ## Usage
@@ -31,7 +31,7 @@ there will be a total of 6 container based runners, three on each unit.
 
 ## Reconciliation
 
-Each unit will periodically check the number of idle runners at the interval specified by `check-interval` to maintain the appropriate number. During the check, all the offline runners are unregistered from GitHub and corresponding containers or virtual machines are destroyed.
+Each unit will periodically check the number of runners at the interval specified by `check-interval` to maintain the appropriate number. During the check, all the offline runners are unregistered from GitHub.
 
 If there are more idle runners than configured, the oldest idle runners are unregistered and destroyed. If there are less idle runners than configured, new runners are spawned and registered with GitHub.
 
