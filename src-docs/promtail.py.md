@@ -10,10 +10,10 @@ Functions for operating Promtail.
 
 <a href="../src/promtail.py#L7"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>function</kbd> `install_promtail`
+## <kbd>function</kbd> `install`
 
 ```python
-install_promtail() → None
+install() → None
 ```
 
 Install Promtail. 
@@ -23,10 +23,10 @@ Install Promtail.
 
 <a href="../src/promtail.py#L11"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>function</kbd> `config_promtail`
+## <kbd>function</kbd> `config`
 
 ```python
-config_promtail(loki_endpoint: str) → None
+config(loki_endpoint: str) → None
 ```
 
 Configure Promtail. 
@@ -42,10 +42,10 @@ Configure Promtail.
 
 <a href="../src/promtail.py#L19"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>function</kbd> `start_promtail`
+## <kbd>function</kbd> `start`
 
 ```python
-start_promtail() → None
+start() → None
 ```
 
 Start Promtail. 
@@ -55,10 +55,10 @@ Start Promtail.
 
 <a href="../src/promtail.py#L23"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>function</kbd> `stop_promtail`
+## <kbd>function</kbd> `stop`
 
 ```python
-stop_promtail()
+stop() → None
 ```
 
 Stop Promtail. 

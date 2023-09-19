@@ -4,11 +4,11 @@
 """Functions for operating Promtail."""
 
 
-def install_promtail() -> None:
+def install() -> None:
     """Install Promtail."""
 
 
-def config_promtail(loki_endpoint: str) -> None:
+def config(loki_endpoint: str) -> None:
     """Configure Promtail.
 
     Args:
@@ -16,9 +16,9 @@ def config_promtail(loki_endpoint: str) -> None:
     """
 
 
-def start_promtail() -> None:
+def start() -> None:
     """Start Promtail."""
 
 
-def stop_promtail():
+def stop() -> None:
     """Stop Promtail."""
