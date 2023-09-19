@@ -68,7 +68,7 @@ class VirtualMachineResources(NamedTuple):
 
 @dataclass
 class RunnerClients:
-    """Clients for access various services.
+    """Clients for accessing various services.
 
     Attrs:
         github: Used to query GitHub API.

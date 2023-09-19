@@ -16,6 +16,7 @@ runners. Both the reconciliation interval and the number of runners to maintain 
 ## Usage
 
 There are two mandatory configuration options - `path` and `token`.
+
 * `path` determines the organization or repository that the runner will be registered with;
 * `token` is a [GitHub Personal Access Token (PAT)](https://github.com/settings/tokens) (note: this is not the same as the token given in the Add a Runner instructions). The PAT token requires either:
   * the **`repo`** ("Full control of private repositories") permission for
@@ -23,6 +24,7 @@ use with repositories or;
   * both the **`repo`** and **`admin:org`** ("Full control of orgs and teams, read and write org projects") permissions for use with an organization. This is necessary because the charm will create and remove runners as needed to ensure that each runner executes only one job to protect jobs from leaking information to other jobs running on the same runner.
 
 The number of runners on a single unit is configured using two configuration options that can be both used at the same time:
+
 * the `containers` option configures the number of LXD container runners;
 * the `virtual-machines` option configures the number of LXD virtual machine runners.
 
@@ -45,7 +47,7 @@ This charm uses black and flake8 for formatting. Both run with the lint stage of
 
 Testing is run via tox and pytest. The unit test can be ran with `tox -e unit` and the integration test on juju 3.1 with `tox -e integration-juju3.1`.
 
-Dependencies are installed in virtual environments. Integration testing requires a juju controller to execute. These tests will use the existing controller, creating an ephemeral model for the tests which is removed after the testing. If you do not already have a controller setup, you can configure a local instance via LXD, see the [upstream documentation](https://juju.is/docs/lxd-cloud) for details.
+Dependencies are installed in virtual environments. Integration testing requires a juju controller to execute. These tests will use the existing controller, creating an ephemeral model for the tests which is removed after testing. If you do not already have a controller setup, you can configure a local instance via LXD, see the [upstream documentation](https://juju.is/docs/lxd-cloud) for details.
 
 ## Generating src docs for every commit
 

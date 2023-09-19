@@ -6,8 +6,9 @@ options:
     type: string
     default: ""
     description: |
-      The organization or the repository to register the self-hosted runners. For repository the
-      path should be in the "{owner}/{repo}" format.
+      The organization or the repository to register the self-hosted runners. For organization the 
+      path would be the name of the organization. For repository the path should be in the 
+      "{owner}/{repo}" format.
   group:
     type: string
     default: "default"
@@ -20,7 +21,7 @@ options:
     description: The GitHub Personal Access Token for registering the self-hosted runners.
   virtual-machines:
     type: int
-    default: 0
+    default: 1
     description: |
       The number of virtual machine runners. This charm will spawn or destroy virtual machines
       runners to match this setting.
@@ -45,11 +46,11 @@ options:
     type: int
     default: 10
     description: |
-      Minutes between each reconciliation between the current state and the target state of the
-      runners. On reconciliation the charm polls the state of runners, such as, the number of
-      container runners, and see if actions are needed. A random delay of 25% is added. Changes to
-      this time interval will apply when next interval is triggered. Update will be applied to
-      packages and services used by the software.
+      Minutes between each reconciliation of the current runners state and their targeted state. 
+      On reconciliation, the charm polls the state of runners and see if actions are needed. A 
+      random delay of 25% is added. Changes to this time interval will apply when next interval is 
+      triggered. Prior to reconciliation, any packages, and services used by the software will be 
+      updated.
   test-mode:
     type: string
     description: |

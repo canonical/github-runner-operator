@@ -70,7 +70,7 @@ Set of runners LXD instance by health state.
 ---
 
 ## <kbd>class</kbd> `RunnerClients`
-Clients for access various services. 
+Clients for accessing various services. 
 
 Attrs:  github: Used to query GitHub API.  jinja: Used for templating.  lxd: Used to interact with LXD API. 
 

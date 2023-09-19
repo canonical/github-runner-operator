@@ -74,7 +74,7 @@ Create the runner instance on LXD and register it on GitHub.
 
 **Raises:**
  
- - <b>`RunnerCreateError`</b>:  Unable to create a LXD instance for runner. 
+ - <b>`RunnerCreateError`</b>:  Unable to create an LXD instance for runner. 
 
 ---
 
