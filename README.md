@@ -6,8 +6,8 @@
 
 ## Description
 
-This machine charm creates self-hosted GitHub runners. Each unit of this charm will start a configurable number of LXD based containers and virtual
-machines to host them. Each runner performs only one job, after which it unregisters from GitHub to ensure that each job runs in
+This machine charm creates [self-hosted runners for running GitHub Actions](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners). Each unit of this charm will start a configurable number of LXD based containers and virtual
+machines to host them. Every runner performs only one job, after which it unregisters from GitHub to ensure that each job runs in
 a clean environment.
 
 The charm will periodically check the number of idle runners and spawn or destroy runners as necessary to match the number provided by configuration of
@@ -35,7 +35,7 @@ Each unit will periodically check the number of idle runners at the interval spe
 
 If there are more idle runners than configured, the oldest idle runners are unregistered and destroyed. If there are less idle runners than configured, new runners are spawned and registered with GitHub.
 
-This means that each interval, each unit will make one or more API calls to GitHub. The interval may need to be adjusted if the number of units is large enough to trigger [Rate Limiting](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting).
+During each time period, every unit will make one or more API calls to GitHub. The interval may need to be adjusted if the number of units is large enough to trigger [Rate Limiting](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting).
 
 ## Development
 
