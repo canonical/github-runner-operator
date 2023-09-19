@@ -33,7 +33,7 @@ there will be a total of 6 container based runners, three on each unit.
 
 Each unit will periodically check the number of idle runners at the interval specified by `check-interval` to maintain the appropriate number. During the check, all the offline runners are unregistered from GitHub and corresponding containers or virtual machines are destroyed.
 
-If there are more idle runners than configured, the oldest idle runners are unregistered and destroyed. If there are less idle runners than configured, new runners are spawn and registered with GitHub.
+If there are more idle runners than configured, the oldest idle runners are unregistered and destroyed. If there are less idle runners than configured, new runners are spawned and registered with GitHub.
 
 This means that each interval, each unit will make one or more API calls to GitHub. The interval may need to be adjusted if the number of units is large enough to trigger [Rate Limiting](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting).
 
