@@ -7,21 +7,26 @@ from pydantic import BaseModel, conint
 
 
 class Event(BaseModel):
-    """Base class for metric events."""
+    """Base class for metric events.
+
+    Attrs:
+         timestamp: The UNIX time stamp of the time at which the event was originally issued.
+    """
 
     timestamp: conint(ge=0)
-    """The UNIX timestamp of the event."""
 
 
 class RunnerInstalled(Event):
-    """Metric event for when a runner is installed."""
+    """Metric event for when a runner is installed.
 
-    name: str = "runner_installed"
-    """The name of the event."""
+    Attrs:
+        flavor: Describes the characteristics of the runner.
+          The flavour could be for example "small".
+        duration: The duration of the installation in seconds.
+    """
+
     flavor: str
-    """The flavor of the runner."""
     duration: conint(ge=0)
-    """The duration of the installation in seconds."""
 
 
 def issue_event(event: Event) -> None:

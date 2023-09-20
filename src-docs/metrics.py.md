@@ -8,7 +8,7 @@ Models and functions for the metric events.
 
 ---
 
-<a href="../src/metrics.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L32"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 
@@ -29,6 +29,8 @@ Transmit an event to Promtail.
 
 ## <kbd>class</kbd> `Event`
 Base class for metric events. 
+
+Attrs:  timestamp: The UNIX time stamp of the time at which the event was originally issued. 
 
 
 ---
@@ -71,6 +73,8 @@ Returns the set of fields that have been set on this model instance.
 
 ## <kbd>class</kbd> `RunnerInstalled`
 Metric event for when a runner is installed. 
+
+Attrs:  flavor: Describes the characteristics of the runner.  The flavour could be for example "small".  duration: The duration of the installation in seconds. 
 
 
 ---
