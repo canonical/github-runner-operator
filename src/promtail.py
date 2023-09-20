@@ -5,7 +5,6 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from metrics import Event
 from runner_type import ProxySetting
 
 
@@ -33,19 +32,3 @@ def start(config: Config) -> None:
 
 def stop() -> None:
     """Stop Promtail."""
-
-
-def setup_logging() -> None:
-    """Set up metric logging for the application.
-
-    Creates the logs directory if it does not exist.
-    Setups logrotate to rotate the logs.
-    """
-
-
-def log_event(event: Event) -> None:
-    """Log a metric event to be picked up by Promtail.
-
-    Args:
-        event: The metric event to log.
-    """
