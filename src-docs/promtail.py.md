@@ -8,52 +8,28 @@ Functions for operating Promtail.
 
 ---
 
-<a href="../src/promtail.py#L7"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/promtail.py#L21"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>function</kbd> `install`
-
-```python
-install() → None
-```
-
-Install Promtail. 
-
-
----
-
-<a href="../src/promtail.py#L11"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>function</kbd> `config`
+## <kbd>function</kbd> `start`
 
 ```python
-config(loki_endpoint: str) → None
+start(config: PromtailConfig) → None
 ```
 
-Configure Promtail. 
+Start Promtail. 
+
+If Promtail has not already been installed, it will be installed and configured to send logs to Loki. If Promtail is already running, it will be reconfigured and restarted. 
 
 
 
 **Args:**
  
- - <b>`loki_endpoint`</b>:  The Loki endpoint to send logs to. 
+ - <b>`config`</b>:  The configuration for Promtail. 
 
 
 ---
 
-<a href="../src/promtail.py#L19"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>function</kbd> `start`
-
-```python
-start() → None
-```
-
-Start Promtail. 
-
-
----
-
-<a href="../src/promtail.py#L23"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/promtail.py#L33"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `stop`
 
@@ -62,5 +38,14 @@ stop() → None
 ```
 
 Stop Promtail. 
+
+
+---
+
+## <kbd>class</kbd> `PromtailConfig`
+Configuration options for Promtail. 
+
+
+
 
 
