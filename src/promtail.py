@@ -5,7 +5,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from runner_type import ProxySetting
+from charm_state import ProxyConfig
 
 
 @dataclass
@@ -14,7 +14,7 @@ class Config:
 
     loki_endpoint: str
     """The Loki endpoint to send logs to."""
-    proxies: Optional[ProxySetting]
+    proxies: Optional[ProxyConfig]
     """Proxy settings."""
 
 
