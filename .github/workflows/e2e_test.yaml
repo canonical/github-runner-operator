@@ -444,6 +444,8 @@ jobs:
     needs: [build-charm, run-id]
     runs-on: [self-hosted, linux, x64, "pr-${{ needs.run-id.outputs.run-id }}"]
     steps:
+      - name: Fix snap issue in privileged LXD containers
+        run: ln -s /bin/true /usr/local/bin/udevadm
       # below is a series of simple tests to assess the functionality of the newly spawned runner.
       - name: Echo hello world
         run: echo "hello world"
