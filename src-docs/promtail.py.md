@@ -13,7 +13,7 @@ Functions for operating Promtail.
 ## <kbd>function</kbd> `start`
 
 ```python
-start(config: PromtailConfig) → None
+start(config: Config) → None
 ```
 
 Start Promtail. 
@@ -42,7 +42,7 @@ Stop Promtail.
 
 ---
 
-## <kbd>class</kbd> `PromtailConfig`
+## <kbd>class</kbd> `Config`
 Configuration options for Promtail. 
 
 
