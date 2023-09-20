@@ -23,6 +23,7 @@ jobs:
             security.nesting: true
             security.privileged: true
             raw.lxc: |
+              lxc.apparmor.profile=unconfined
               lxc.mount.auto=proc:rw sys:rw cgroup:rw
               lxc.cgroup.devices.allow=a
               lxc.cap.drop=
@@ -467,16 +468,12 @@ jobs:
         run: |
           [[ -z "${http_proxy}" && -z "${HTTP_PROXY}" ]] \
             || cat /home/ubuntu/.docker/config.json | grep httpProxy
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: true
       - name: Get status of snapd
         run: sudo systemctl status snapd
       - name: Install microk8s
         # TMP: Pin version of microk8s to older version due to issues with running microk8s in LXD
         # containers. Currently, in discussion with microk8s developer on the issue.
-        run: sudo snap install microk8s --classic --channel=1.24/stable
+        run: sudo snap install microk8s --classic
       - name: Wait for microk8s
         timeout-minutes: 10
         run: microk8s status --wait-ready
@@ -509,3 +506,8 @@ jobs:
         run: |
           HOST_IP=$(ip route | grep default | cut -f 3 -d" ")
           [ $((ping $HOST_IP -c 5 || :) | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: failure()
+        with:
+          limit-access-to-actor: true
