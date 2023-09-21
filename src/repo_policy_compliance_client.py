@@ -11,7 +11,7 @@ import requests
 logger = logging.getLogger(__name__)
 
 
-# Disable pylint as other method of this class can be extended in the future.
+# Disable pylint public method number check as this class can be extended in the future.
 class RepoPolicyComplianceClient:  # pylint: disable=too-few-public-methods
     """Client for repo policy compliance service.
 
