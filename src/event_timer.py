@@ -61,9 +61,9 @@ class EventTimer:
     def ensure_event_timer(self, event_name: str, interval: int, timeout: Optional[int] = None):
         """Ensure that a systemd service and timer are registered to dispatch the given event.
 
-        The interval is how frequently, in minutes, that the event should be dispatched.
+        The interval is how frequently, in minutes, the event should be dispatched.
 
-        The timeout is the number of seconds before an event is timed out. If not given or 0,
+        The timeout is the number of seconds before an event is timed out. If not set or 0,
         it defaults to half the interval period.
 
         Args:
@@ -107,7 +107,7 @@ class EventTimer:
         """
         try:
             # Don't check for errors in case the timer wasn't registered.
-            # Binding for systemctl do no exist, so `subprocess.run` used.
+            # Binding for systemctl does no exist, so `subprocess.run` used.
             subprocess.run(  # nosec B603
                 ["/usr/bin/systemctl", "stop", f"ghro.{event_name}.timer"], check=False
             )

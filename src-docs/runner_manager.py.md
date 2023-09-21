@@ -88,7 +88,7 @@ Remove existing runners.
 
 
 **Returns:**
- Number of runner removed. 
+ Number of runners removed. 
 
 ---
 
@@ -172,7 +172,7 @@ update_runner_bin(binary: RunnerApplication) → None
 
 Download a runner file, replacing the current copy. 
 
-Remove the existing runner binary to prevent it from being used. This is done to prevent security issues arising from outdated runner binary containing security flaws. The newest version of runner binary should always be used. 
+Remove the existing runner binary to prevent it from being used. This is done to prevent security issues arising from outdated runner binaries containing security flaws. The newest version of runner binary should always be used. 
 
 
 
@@ -186,7 +186,7 @@ Remove the existing runner binary to prevent it from being used. This is done to
 ## <kbd>class</kbd> `RunnerManagerConfig`
 Configuration of runner manager. 
 
-Attrs:  path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name.  token: GitHub personal access token to register runner to the repository or  organization.  image: Name of the image for creating LXD instance.  service_token: Token for accessing local service.  lxd_storage_path: Path to be used as LXD storage. 
+Attrs:  path: GitHub repository path in the format '<owner>/<repo>', or the  GitHub organization name.  token: GitHub personal access token to register runner to the  repository or organization.  image: Name of the image for creating LXD instance.  service_token: Token for accessing local service.  lxd_storage_path: Path to be used as LXD storage. 
 
 
 
