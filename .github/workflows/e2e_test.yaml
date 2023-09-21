@@ -450,7 +450,11 @@ jobs:
     needs: [build-charm, run-id]
     runs-on: [self-hosted, linux, x64, "pr-${{ needs.run-id.outputs.run-id }}"]
     steps:
-      # below is a series of simple tests to assess the functionality of the newly spawned runner.
+      # Snapd can have some issues in privileged LXD containers without setting 
+      # security.nesting=True and this.
+      - name: Fix snap issue in privileged LXD containers
+        run: ln -s /bin/true /usr/local/bin/udevadm
+      # Below is a series of simple tests to assess the functionality of the newly spawned runner.
       - name: Echo hello world
         run: echo "hello world"
       - name: File permission for /usr/local/bin
@@ -472,9 +476,7 @@ jobs:
           [[ -z "${http_proxy}" && -z "${HTTP_PROXY}" ]] \
             || cat /home/ubuntu/.docker/config.json | grep httpProxy
       - name: Install microk8s
-        # TMP: Pin version of microk8s to older version due to issues with running microk8s in LXD
-        # containers. Currently, in discussion with microk8s developer on the issue.
-        run: sudo snap install microk8s --classic --channel=1.24/stable
+        run: sudo snap install microk8s --classic
       - name: Wait for microk8s
         timeout-minutes: 10
         run: microk8s status --wait-ready
