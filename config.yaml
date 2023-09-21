@@ -5,13 +5,14 @@ options:
   path:
     type: string
     default: ""
-    description: >
-      The organization or the repository to register the self-hosted runners. For repository the
-      path should be in the "{owner}/{repo}" format.
+    description: |
+      The organization or the repository to register the self-hosted runners. For organization the 
+      path would be the name of the organization. For repository the path should be in the 
+      "{owner}/{repo}" format.
   group:
     type: string
     default: "default"
-    description: >
+    description: |
       The organization runner group to register the self-hosted runner under. This has no effect on
       runners under a repository.
   token:
@@ -20,45 +21,45 @@ options:
     description: The GitHub Personal Access Token for registering the self-hosted runners.
   virtual-machines:
     type: int
-    default: 0
-    description: >
+    default: 1
+    description: |
       The number of virtual machine runners. This charm will spawn or destroy virtual machines
       runners to match this setting.
   vm-cpu:
     type: int
     default: 2
-    description: >
+    description: |
       The number of CPUs used per virtual machine runner.
   vm-memory:
     type: string
     default: 7GiB
-    description: >
+    description: |
       Amount of memory to allocate per virtual machine runner. Positive integers with KiB, MiB, GiB,
       TiB, PiB, EiB suffix.
   vm-disk:
     type: string
     default: 10GiB
-    description: >
+    description: |
       Amount of disk space to allocate to root disk for virtual machine runner. Positive integers
       with KiB, MiB, GiB, TiB, PiB, EiB suffix.
   reconcile-interval:
     type: int
     default: 10
-    description: >
-      Minutes between each reconciliation between the current state and the target state of the
-      runners. On reconciliation the charm polls the state of runners, such as, the number of
-      container runners, and see if actions are needed. A random delay of 25% is added. Changes to
-      this time interval will apply when next interval is triggered. Update will be applied to
-      packages and services used by the software.
+    description: |
+      Minutes between each reconciliation of the current runners state and their targeted state. 
+      On reconciliation, the charm polls the state of runners and see if actions are needed. A 
+      random delay of 25% is added. Changes to this time interval will apply when next interval is 
+      triggered. Prior to reconciliation, any packages, and services used by the software will be 
+      updated.
   test-mode:
     type: string
-    description: >
+    description: |
       When set to 'insecure', the charm test mode is activated, which may deactivate some security
       hardening measures.
   denylist:
     type: string
     default: ""
-    description: >
+    description: |
       A comma separated list of IPv4 networks in CIDR notation that runners can not access.
       The runner will always have access to essential services such as DHCP and DNS regardless
       of the denylist configuration.

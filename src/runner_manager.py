@@ -51,10 +51,10 @@ class RunnerManagerConfig:
     """Configuration of runner manager.
 
     Attrs:
-        path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
-            name.
-        token: GitHub personal access token to register runner to the repository or
-            organization.
+        path: GitHub repository path in the format '<owner>/<repo>', or the
+            GitHub organization name.
+        token: GitHub personal access token to register runner to the
+            repository or organization.
         image: Name of the image for creating LXD instance.
         service_token: Token for accessing local service.
         lxd_storage_path: Path to be used as LXD storage.
@@ -196,9 +196,9 @@ class RunnerManager:
         """Download a runner file, replacing the current copy.
 
         Remove the existing runner binary to prevent it from being used. This
-        is done to prevent security issues arising from outdated runner binary
-        containing security flaws. The newest version of runner binary should
-        always be used.
+        is done to prevent security issues arising from outdated runner
+        binaries containing security flaws. The newest version of runner binary
+        should always be used.
 
         Args:
             binary: Information on the runner binary to download.
@@ -372,7 +372,7 @@ class RunnerManager:
 
         elif delta < 0:
             logger.info("Attempting to remove %i runner(s).", -delta)
-            # Idle runners are online runners that has not taken a job.
+            # Idle runners are online runners that have not taken a job.
             idle_runners = [runner for runner in online_runners if not runner.status.busy]
             offset = min(-delta, len(idle_runners))
             if offset != 0:
@@ -387,9 +387,9 @@ class RunnerManager:
                     runner.remove(remove_token)
                     logger.info("Removed runner: %s", runner.config.name)
             else:
-                logger.info("There are no idle runner to remove.")
+                logger.info("There are no idle runners to remove.")
         else:
-            logger.info("No changes to number of runner needed.")
+            logger.info("No changes to number of runners needed.")
 
         return delta
 
@@ -400,7 +400,7 @@ class RunnerManager:
             flush_busy: Whether to flush busy runners as well.
 
         Returns:
-            Number of runner removed.
+            Number of runners removed.
         """
         if flush_busy:
             runners = [runner for runner in self._get_runners() if runner.status.exist]

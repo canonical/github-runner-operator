@@ -86,9 +86,9 @@ ensure_event_timer(
 
 Ensure that a systemd service and timer are registered to dispatch the given event. 
 
-The interval is how frequently, in minutes, that the event should be dispatched. 
+The interval is how frequently, in minutes, the event should be dispatched. 
 
-The timeout is the number of seconds before an event is timed out. If not given or 0, it defaults to half the interval period. 
+The timeout is the number of seconds before an event is timed out. If not set or 0, it defaults to half the interval period. 
 
 
 

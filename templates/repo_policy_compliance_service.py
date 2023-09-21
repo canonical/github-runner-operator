@@ -3,10 +3,9 @@
 
 """Flask application for repo policy compliance.
 
-This module is loaded into juju unit and run with gunicorn.
+This module is loaded into juju unit and run on top of gunicorn.
 """
 
-# This module is executed in a different environment.
 from flask import Flask  # pylint: disable=import-error
 from repo_policy_compliance.blueprint import repo_policy_compliance  # pylint: disable=import-error
 
