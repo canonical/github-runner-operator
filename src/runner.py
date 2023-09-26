@@ -248,7 +248,22 @@ class Runner:
             "profiles": ["default", "runner", resource_profile],
         }
 
-        instance = self._clients.lxd.instances.create(config=instance_config, wait=True)
+        try:
+            instance = self._clients.lxd.instances.create(config=instance_config, wait=True)
+        except LxdError:
+            logger.exception(
+                "Removing resource profile and storage profile due to LXD instance create failure"
+            )
+
+            # LxdError on creating LXD instance could be caused by improper initialization of
+            # storage pool. If other runner LXD instance exists then it cannot be the cause.
+            if self._clients.lxd.instances.all():
+                # Removing the storage pool and retry can solve the problem. The resource profile
+                # needs to be removed first as it uses the storage pool.
+                self._remove_resource_profile(resources)
+                self._remove_runner_storage_pool()
+            raise
+
         self.status.exist = True
         return instance
 
@@ -298,6 +313,13 @@ class Runner:
         # Verify the action is successful.
         if not self._clients.lxd.storage_pools.exists("runner"):
             raise RunnerError("Failed to create runner LXD storage pool")
+
+    def _remove_runner_storage_pool(self) -> None:
+        """Remove the runner storage pool if exists."""
+        if self._clients.lxd.storage_pools.exists("runner"):
+            logger.info("Removing existing runner LXD storage pool.")
+            runner_storage_pool = self._clients.lxd.storage_pools.get("runner")
+            runner_storage_pool.delete()
 
     @classmethod
     def _get_resource_profile_name(cls, cpu: int, memory: str, disk: str) -> str:
@@ -366,6 +388,20 @@ class Runner:
             logger.info("Found existing LXD profile for resource usage.")
 
         return profile_name
+
+    def _remove_resource_profile(self, resources: VirtualMachineResources) -> None:
+        """Remove the LXD profile for resource limit if exists.
+
+        Args:
+            resources: Resources limit of the runner instance.
+        """
+        profile_name = self._get_resource_profile_name(
+            resources.cpu, resources.memory, resources.disk
+        )
+
+        if not self._clients.lxd.profiles.exists(profile_name):
+            resource_profile = self._clients.lxd.profiles.get(profile_name)
+            resource_profile.delete()
 
     @retry(tries=5, delay=1, local_logger=logger)
     def _start_instance(self) -> None:
