@@ -2,7 +2,7 @@ name: Manual test
 
 on:
   # push:
-  # pull_request:
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -10,7 +10,9 @@ jobs:
     name: test
     runs-on: [self-hosted, large]
     steps:
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: true
+      - name: test
+        run: echo "hello world"
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+      #   with:
+      #     limit-access-to-actor: true
