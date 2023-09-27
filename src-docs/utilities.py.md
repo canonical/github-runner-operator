@@ -58,9 +58,7 @@ secure_run_subprocess(
 
 Run command in subprocess according to security recommendations. 
 
-The argument `shell` is set to `False` for security reasons. 
-
-The argument `check` is set to `False`, therefore, CalledProcessError will not be raised. Errors are handled by the caller by checking the exit code. 
+CalledProcessError will not be raised on error of the command executed. Errors should be handled by the caller by checking the exit code. 
 
 
 
@@ -78,7 +76,7 @@ The argument `check` is set to `False`, therefore, CalledProcessError will not b
 
 ---
 
-<a href="../src/utilities.py#L136"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L135"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `execute_command`
 
@@ -110,7 +108,7 @@ The command is executed with `subprocess.run`, additional arguments can be passe
 
 ---
 
-<a href="../src/utilities.py#L172"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L171"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `get_env_var`
 
@@ -136,7 +134,7 @@ Looks for all upper-case and all low-case of the `env_var`.
 
 ---
 
-<a href="../src/utilities.py#L186"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L185"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `set_env_var`
 
@@ -158,7 +156,7 @@ Set the all upper case and all low case of the `env_var`.
 
 ---
 
-<a href="../src/utilities.py#L199"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L198"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `bytes_with_unit_to_kib`
 

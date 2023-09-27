@@ -35,7 +35,7 @@ LxdResourceProfileDevices = dict[str, LxdResourceProfileDevicesDisk]
 
 
 class LxdInstanceConfigSource(TypedDict):
-    """Configuration for source image in LXD instance."""
+    """Configuration for source image in the LXD instance."""
 
     type: str
     mode: str
@@ -45,7 +45,7 @@ class LxdInstanceConfigSource(TypedDict):
 
 
 class LxdInstanceConfig(TypedDict):
-    """Configuration for LXD instance."""
+    """Configuration for the LXD instance."""
 
     name: str
     type: str
