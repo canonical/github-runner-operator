@@ -352,6 +352,14 @@ class LxdProfileManager:
             raise LxdError(f"Unable to create LXD profile {name}") from err
 
     def get(self, name: str) -> LxdProfile:
+        """Get an LXD profile.
+
+        Args:
+            name: Name of the LXD profile to create.
+
+        Raises:
+            LxdError: Unable to get the LXD profile with the name.
+        """
         try:
             return self._pylxd_client.profiles.get(name)
         except pylxd.exceptions.LXDAPIException as err:
