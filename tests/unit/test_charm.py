@@ -51,8 +51,8 @@ class TestCharm(unittest.TestCase):
     @patch.dict(
         os.environ,
         {
-            "JUJU_CHARM_HTTPS_PROXY": "http://squid.internal:3128",
-            "JUJU_CHARM_HTTP_PROXY": "http://squid.internal:3128",
+            "JUJU_CHARM_HTTPS_PROXY": "http://proxy.server:1234",
+            "JUJU_CHARM_HTTP_PROXY": "http://proxy.server:1234",
             "JUJU_CHARM_NO_PROXY": "127.0.0.1,localhost",
         },
     )
@@ -60,8 +60,8 @@ class TestCharm(unittest.TestCase):
         harness = Harness(GithubRunnerCharm)
         harness.begin()
 
-        assert harness.charm.proxies["https"] == "http://squid.internal:3128"
-        assert harness.charm.proxies["http"] == "http://squid.internal:3128"
+        assert harness.charm.proxies["https"] == "http://proxy.server:1234"
+        assert harness.charm.proxies["http"] == "http://proxy.server:1234"
         assert harness.charm.proxies["no_proxy"] == "127.0.0.1,localhost"
 
     @patch("pathlib.Path.write_text")
