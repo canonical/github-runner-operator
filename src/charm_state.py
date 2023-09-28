@@ -25,11 +25,11 @@ class ProxyConfig(BaseModel):
     no_proxy: Optional[str]
 
     @classmethod
-    def from_env(cls) -> Optional["ProxyConfig"]:
+    def from_env(cls) -> "ProxyConfig":
         """Instantiate ProxyConfig from juju charm environment.
 
         Returns:
-            ProxyConfig if proxy configuration is provided, None otherwise.
+            The proxy configuration.
         """
         http = https = no_proxy = None
         if http_proxy := get_env_var("JUJU_CHARM_HTTP_PROXY"):

@@ -63,7 +63,7 @@ Returns the set of fields that have been set on this model instance.
 ### <kbd>classmethod</kbd> `from_env`
 
 ```python
-from_env() → Optional[ForwardRef('ProxyConfig')]
+from_env() → ProxyConfig
 ```
 
 Instantiate ProxyConfig from juju charm environment. 
@@ -71,7 +71,7 @@ Instantiate ProxyConfig from juju charm environment.
 
 
 **Returns:**
-  ProxyConfig if proxy configuration is provided, None otherwise. 
+  The proxy configuration. 
 
 
 ---
