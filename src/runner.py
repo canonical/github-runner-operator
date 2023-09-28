@@ -257,7 +257,7 @@ class Runner:
 
             # LxdError on creating LXD instance could be caused by improper initialization of
             # storage pool. If other runner LXD instance exists then it cannot be the cause.
-            if self._clients.lxd.instances.all():
+            if not self._clients.lxd.instances.all():
                 # Removing the storage pool and retry can solve the problem. The resource profile
                 # needs to be removed first as it uses the storage pool.
                 self._remove_resource_profile(resources)

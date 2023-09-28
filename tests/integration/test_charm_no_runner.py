@@ -224,7 +224,7 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
     unit = app.units[0]
 
     # 1.
-    exit_code, _ = run_in_unit(unit, f"rm -rf {GithubRunnerCharm.ram_pool_path}")
+    exit_code, _ = await run_in_unit(unit, f"rm -rf {GithubRunnerCharm.ram_pool_path}")
     assert exit_code == 0
 
     await app.set_config({"virtual-machines": "1"})
