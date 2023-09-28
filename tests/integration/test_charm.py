@@ -6,6 +6,7 @@
 import pytest
 from juju.application import Application
 from juju.model import Model
+from charm import GithubRunnerCharm
 
 from tests.integration.helpers import (
     assert_resource_lxd_profile,
@@ -115,3 +116,44 @@ async def test_token_config_changed(model: Model, app: Application, token_alt: s
     assert return_code == 0
     assert stdout is not None
     assert f"GITHUB_TOKEN={token_alt}" in stdout
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_reconcile_runners_with_lxd_storage_pool_failure(
+    model: Model, app: Application
+) -> None:
+    """
+    arrange: An working application with no runners.
+    act:
+        1.  a. Set virtual-machines config to 0.
+            b. Run reconcile_runners action.
+            c. Delete content in the runner LXD storage directory.
+        2.  a. Set virtual-machines config to 1.
+            b. Run reconcile_runners action.
+    assert:
+        1. No runner should exist.
+        2. One runner should exist.
+    """
+    unit = app.units[0]
+
+    # 1.
+    await app.set_config({"virtual-machines": "0"})
+
+    action = await unit.run_action("reconcile-runners")
+    await action.wait()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+
+    exit_code, _ = await run_in_unit(unit, f"rm -rf {GithubRunnerCharm.ram_pool_path}/*")
+    assert exit_code == 0
+
+    await wait_till_num_of_runners(unit, 0)
+
+    # 2.
+    await app.set_config({"virtual-machines": "1"})
+
+    action = await unit.run_action("reconcile-runners")
+    await action.wait()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+
+    await wait_till_num_of_runners(unit, 1)
