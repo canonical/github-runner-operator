@@ -471,13 +471,13 @@ LXD profile.
 __init__(pylxd_profile: 'Profile')
 ```
 
-Instantiate the LXD storage pool. 
+Instantiate the LXD profile. 
 
 
 
 **Args:**
  
- - <b>`pylxd_storage_pool`</b>:  Instance of the pylxd.models.StoragePool. 
+ - <b>`pylxd_profile`</b>:  Instance of the pylxd.models.Profile. 
 
 
 
@@ -605,7 +605,7 @@ Get an LXD profile.
 
 **Args:**
  
- - <b>`name`</b>:  Name of the LXD profile to create. 
+ - <b>`name`</b>:  Name of the LXD profile. 
 
 
 

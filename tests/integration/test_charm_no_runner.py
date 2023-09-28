@@ -7,11 +7,13 @@ import pytest
 from juju.application import Application
 from juju.model import Model
 
+from charm import GithubRunnerCharm
 from tests.integration.helpers import (
     check_runner_binary_exists,
     get_repo_policy_compliance_pip_info,
     install_repo_policy_compliance_from_git_source,
     remove_runner_bin,
+    run_in_unit,
     wait_till_num_of_runners,
 )
 from tests.status_name import ACTIVE_STATUS_NAME
@@ -178,6 +180,53 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     unit = app.units[0]
 
     # 1.
+    await app.set_config({"virtual-machines": "1"})
+
+    action = await unit.run_action("reconcile-runners")
+    await action.wait()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+
+    await wait_till_num_of_runners(unit, 1)
+
+    # 2.
+    await app.set_config({"virtual-machines": "0"})
+
+    action = await unit.run_action("reconcile-runners")
+    await action.wait()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+
+    await wait_till_num_of_runners(unit, 0)
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_reconcile_runners_with_lxd_storage_pool_failure(
+    model: Model, app_no_runner: Application
+) -> None:
+    """
+    arrange: An working application with no runners.
+    act:
+        1.  a. Delete content in the runner LXD storage directory.
+            b. Set virtual-machines config to 1.
+            c. Run reconcile_runners action.
+        2.  a. Set virtual-machiens config to 0.
+            b. Run reconcile_runners action.
+    assert:
+        1. One runner should exist.
+        2. No runner should exist.
+
+    The two test is combine to maintain no runners in the application after the
+    test.
+    """
+    # Rename since the app will have a runner.
+    app = app_no_runner
+
+    unit = app.units[0]
+
+    # 1.
+    exit_code, _ = run_in_unit(unit, f"rm -rf {GithubRunnerCharm.ram_pool_path}")
+    assert exit_code == 0
+
     await app.set_config({"virtual-machines": "1"})
 
     action = await unit.run_action("reconcile-runners")

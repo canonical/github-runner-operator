@@ -355,7 +355,7 @@ class LxdProfileManager:
         """Get an LXD profile.
 
         Args:
-            name: Name of the LXD profile to create.
+            name: Name of the LXD profile.
 
         Raises:
             LxdError: Unable to get the LXD profile with the name.
@@ -374,10 +374,10 @@ class LxdProfile:
         self,
         pylxd_profile: pylxd.models.Profile,
     ):
-        """Instantiate the LXD storage pool.
+        """Instantiate the LXD profile.
 
         Args:
-            pylxd_storage_pool: Instance of the pylxd.models.StoragePool.
+            pylxd_profile: Instance of the pylxd.models.Profile.
         """
         self._pylxd_profile = pylxd_profile
 
