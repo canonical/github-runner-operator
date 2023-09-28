@@ -267,11 +267,17 @@ class GithubRunnerCharm(CharmBase):
         else:
             path = GitHubOrg(org=path, group=self.config["group"])
 
+        docker_registry = (
+            self.config["docker-registry"] if self.config["docker-registry"] else None
+        )
+
         app_name, unit = self.unit.name.rsplit("/", 1)
         return RunnerManager(
             app_name,
             unit,
-            RunnerManagerConfig(path, token, "jammy", self.service_token, self.ram_pool_path),
+            RunnerManagerConfig(
+                path, token, "jammy", self.service_token, self.ram_pool_path, docker_registry
+            ),
             proxies=self.proxies,
         )
 

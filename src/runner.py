@@ -501,7 +501,9 @@ class Runner:
 
         # Load `.env` config file for GitHub self-hosted runner.
         env_contents = self._clients.jinja.get_template("env.j2").render(
-            proxies=self.config.proxies, pre_job_script=str(self.pre_job_script)
+            proxies=self.config.proxies,
+            pre_job_script=str(self.pre_job_script),
+            docker_registry=self.config.docker_registry,
         )
         self._put_file(str(self.env_file), env_contents)
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])

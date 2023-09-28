@@ -58,6 +58,7 @@ class RunnerManagerConfig:
         image: Name of the image for creating LXD instance.
         service_token: Token for accessing local service.
         lxd_storage_path: Path to be used as LXD storage.
+        docker_registry: URL to the docker registry for runner to use.
     """
 
     path: GitHubPath
@@ -65,6 +66,7 @@ class RunnerManagerConfig:
     image: str
     service_token: str
     lxd_storage_path: Path
+    docker_registry: str | None
 
 
 @dataclass
@@ -353,6 +355,7 @@ class RunnerManager:
                     self.config.path,
                     self.proxies,
                     self.config.lxd_storage_path,
+                    self.config.docker_registry,
                     self._generate_runner_name(),
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
@@ -507,7 +510,12 @@ class RunnerManager:
             busy = getattr(remote_runner, "busy", None)
 
             config = RunnerConfig(
-                self.app_name, self.config.path, self.proxies, self.config.lxd_storage_path, name
+                self.app_name,
+                self.config.path,
+                self.proxies,
+                self.config.lxd_storage_path,
+                self.config.docker_registry,
+                name,
             )
             return Runner(
                 self._clients,

@@ -23,7 +23,7 @@ Used as a returned type to method querying runner information.
 ## <kbd>class</kbd> `RunnerManager`
 Manage a group of runners according to configuration. 
 
-<a href="../src/runner_manager.py#L87"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L89"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -52,7 +52,7 @@ Construct RunnerManager object for creating and managing runners.
 
 ---
 
-<a href="../src/runner_manager.py#L148"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L150"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `check_runner_bin`
 
@@ -69,7 +69,7 @@ Check if runner binary exists.
 
 ---
 
-<a href="../src/runner_manager.py#L396"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L399"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `flush`
 
@@ -92,7 +92,7 @@ Remove existing runners.
 
 ---
 
-<a href="../src/runner_manager.py#L261"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L263"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_github_info`
 
@@ -109,7 +109,7 @@ Get information on the runners from GitHub.
 
 ---
 
-<a href="../src/utilities.py#L156"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L158"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_latest_runner_bin_url`
 
@@ -138,7 +138,7 @@ The runner binary URL changes when a new version is available.
 
 ---
 
-<a href="../src/runner_manager.py#L293"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L295"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `reconcile`
 
@@ -162,7 +162,7 @@ Bring runners in line with target.
 
 ---
 
-<a href="../src/utilities.py#L194"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L196"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `update_runner_bin`
 
@@ -186,7 +186,7 @@ Remove the existing runner binary to prevent it from being used. This is done to
 ## <kbd>class</kbd> `RunnerManagerConfig`
 Configuration of runner manager. 
 
-Attrs:  path: GitHub repository path in the format '<owner>/<repo>', or the  GitHub organization name.  token: GitHub personal access token to register runner to the  repository or organization.  image: Name of the image for creating LXD instance.  service_token: Token for accessing local service.  lxd_storage_path: Path to be used as LXD storage. 
+Attrs:  path: GitHub repository path in the format '<owner>/<repo>', or the  GitHub organization name.  token: GitHub personal access token to register runner to the  repository or organization.  image: Name of the image for creating LXD instance.  service_token: Token for accessing local service.  lxd_storage_path: Path to be used as LXD storage.  docker_registry: URL to the docker registry for runner to use. 
 
 
 

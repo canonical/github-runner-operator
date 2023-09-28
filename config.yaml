@@ -63,3 +63,9 @@ options:
       A comma separated list of IPv4 networks in CIDR notation that runners can not access.
       The runner will always have access to essential services such as DHCP and DNS regardless
       of the denylist configuration.
+  docker-registry:
+    type: string
+    default: ""
+    description: |
+      The docker registry to be used by the runners. If set a message will be displayed prior to 
+      job execution on self-hosted runner informing users to use the docker registry.
