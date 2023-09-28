@@ -13,7 +13,6 @@ import promtail
 
 PROMTAIL_PUSH_API_URL = "http://localhost:3100/loki/api/v1/push"
 
-requests_session = None  # pylint: disable=invalid-name
 logger = logging.getLogger(__name__)
 
 
@@ -38,20 +37,6 @@ class RunnerInstalled(Event):
 
     flavor: str
     duration: NonNegativeInt
-
-
-def _get_session() -> requests.Session:
-    """Get a requests session.
-
-    Returns:
-        A requests session.
-    """
-    # We try to avoid capsuling the session in an object to be passed to issue_event,
-    # therefore we use the singleton pattern with a global variable.
-    global requests_session  # pylint: disable=global-statement
-    if requests_session is None:
-        requests_session = requests.Session()
-    return requests_session
 
 
 def _camel_to_snake(camel_case_string: str) -> str:
@@ -89,11 +74,10 @@ def issue_event(event: Event) -> None:
         event: The metric event to log.
     """
     if promtail.is_running():
-        session = _get_session()
         event_dict = event.dict()
         event_dict["event"] = _get_event_name(event)
 
-        resp = session.post(
+        resp = requests.post(
             PROMTAIL_PUSH_API_URL,
             json={
                 "streams": [
@@ -105,6 +89,7 @@ def issue_event(event: Event) -> None:
                     }
                 ]
             },
+            timeout=5,
         )
         resp.raise_for_status()
     else:
