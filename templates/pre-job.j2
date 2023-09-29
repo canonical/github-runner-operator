@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
 
+timestamp=$(date +%s)
+
+jq -n \
+  --arg workflow "$GITHUB_WORKFLOW" \
+  --arg repository "$GITHUB_REPOSITORY" \
+  --arg event "$GITHUB_EVENT_NAME" \
+  --argjson timestamp "$timestamp" \
+  --arg workflow_run_id "$GITHUB_RUN_ID" \
+  '{
+    "workflow": $workflow,
+    "repository": $repository,
+    "event": $event,
+    "timestamp": $timestamp,
+    "workflow_run_id": $workflow_run_id
+  }' > /metrics-exchange/pre-job-metrics.json
+
 # Disable exit-on-error, due the need for error handling.
 set +e
 

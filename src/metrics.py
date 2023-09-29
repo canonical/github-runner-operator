@@ -44,6 +44,25 @@ class RunnerInstalled(Event):
     duration: NonNegativeInt
 
 
+class RunnerStart(Event):
+    """Metric event for when a runner is started.
+
+    Attrs:
+        flavor: Describes the characteristics of the runner.
+          The flavour could be for example "small".
+        workflow: The workflow name.
+        repo: The repository name.
+        github_event: The github event.
+        idle: The idle time in seconds.
+    """
+
+    flavor: str
+    workflow: str
+    repo: str
+    github_event: str
+    idle: NonNegativeInt
+
+
 def _camel_to_snake(camel_case_string: str) -> str:
     """Convert a camel case string to snake case.
 

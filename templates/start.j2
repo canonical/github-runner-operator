@@ -1,3 +1,17 @@
 #!/bin/bash
 
-(/home/ubuntu/github-runner/run.sh; sudo systemctl poweroff -i) &>/dev/null &
+# Don't exit on error to make sure the machine gets powered off.
+set +e
+
+write_post_metrics(){
+    timestamp=$(date +%s)
+
+    jq -n \
+      --argjson timestamp "$timestamp" \
+      '{
+        "timestamp": $timestamp,
+        "status": "normal"
+      }' > /metrics-exchange/post-job-metrics.json
+}
+
+(/home/ubuntu/github-runner/run.sh; write_post_metrics; sudo systemctl poweroff -i) &>/dev/null &

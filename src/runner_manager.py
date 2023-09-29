@@ -44,7 +44,7 @@ from runner_type import (
     RunnerByHealth,
     VirtualMachineResources,
 )
-from utilities import retry, set_env_var
+from utilities import retry, set_env_var, execute_command
 
 logger = logging.getLogger(__name__)
 
@@ -333,6 +333,21 @@ class RunnerManager:
                 RunnerManager.runner_bin_path,
                 registration_token,
             )
+
+        # dd if=/dev/zero of=runner-xy-fs.img bs=20M count=1
+        execute_command(["dd", "if=/dev/zero", f"of=/home/ubuntu/runner-{runner.config.name}-fs.img", "bs=1M", "count=1"], check_exit=True)
+        # mkfs.ext4 runner-xy-fs.img
+        execute_command(["mkfs.ext4", f"/home/ubuntu/runner-{runner.config.name}-fs.img"], check_exit=True)
+        # mkdir /path/to/mount
+        execute_command(["mkdir", f"/home/ubuntu/runner-{runner.config.name}-fs"], check_exit=True)
+        # mount -o loop runner-xy-fs.img /path/to/mount
+        execute_command(["sudo", "mount", "-o", "loop", f"/home/ubuntu/runner-{runner.config.name}-fs.img", f"/home/ubuntu/runner-{runner.config.name}-fs"], check_exit=True)
+        # sudo chown ubuntu:ubuntu /path/to/mount
+        execute_command(["sudo", "chown", "ubuntu:ubuntu", f"/home/ubuntu/runner-{runner.config.name}-fs"], check_exit=True)
+        # lxc config device add runner-xy-fs-vm home disk source=/path/to/mount path=/metrics-exchange
+        execute_command(["sudo", "lxc", "config", "device", "add", runner.instance.name, "home", "disk", f"source=/home/ubuntu/runner-{runner.config.name}-fs", "path=/metrics-exchange"], check_exit=True)
+        # write ts_after in /path/to/mount using Path
+        Path(f"/home/ubuntu/runner-{runner.config.name}-fs/runner-installed.timestamp").write_text(str(ts_after), encoding="utf-8")
 
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
