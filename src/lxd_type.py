@@ -52,6 +52,7 @@ class LxdInstanceConfig(TypedDict):
     source: LxdInstanceConfigSource
     ephemeral: bool
     profiles: list[str]
+    devices: LxdResourceProfileDevices
 
 
 # The keys are not valid identifiers, hence this is defined with function-based syntax.

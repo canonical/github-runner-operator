@@ -31,6 +31,7 @@ from runner_type import (
     RunnerStatus,
     VirtualMachineResources,
 )
+import shared_fs
 from utilities import retry
 
 logger = logging.getLogger(__name__)
@@ -77,6 +78,7 @@ class Runner:
         runner_config: RunnerConfig,
         runner_status: RunnerStatus,
         instance: Optional[LxdInstance] = None,
+        issue_metrics: bool = True, # Todo change that to false
     ):
         """Construct the runner instance.
 
@@ -84,12 +86,14 @@ class Runner:
             clients: Clients to access various services.
             runner_config: Configuration of the runner instance.
             instance: LXD instance of the runner if already created.
+            issue_metrics: Whether to issue metrics on runner start and stop.
         """
         # Dependency injection to share the instances across different `Runner` instance.
         self._clients = clients
         self.config = runner_config
         self.status = runner_status
         self.instance = instance
+        self.issue_metrics = issue_metrics
 
         # If the proxy setting are set, then add NO_PROXY local variables.
         if self.config.proxies.get("http") or self.config.proxies.get("https"):
@@ -118,6 +122,12 @@ class Runner:
         logger.info("Creating runner: %s", self.config.name)
 
         try:
+            if self.issue_metrics:
+                try:
+                    shared_fs.create(self.config.name)
+                except Exception:
+                    logger.exception("Unable to create shared filesystem for runner.")
+
             self.instance = self._create_instance(image, resources)
             self._start_instance()
             # Wait some initial time for the instance to boot up
@@ -125,6 +135,7 @@ class Runner:
             self._wait_boot_up()
             self._install_binary(binary_path)
             self._configure_runner()
+
             self._register_runner(registration_token, labels=[self.config.app_name, image])
             self._start_runner()
         except (RunnerError, LxdError) as err:
@@ -247,6 +258,14 @@ class Runner:
             "ephemeral": ephemeral,
             "profiles": ["default", "runner", resource_profile],
         }
+        if self.issue_metrics:
+            instance_config["devices"] = {
+                "runner-fs": {
+                    "path": "/metrics-exchange",
+                    "source": str(shared_fs.get(self.config.name).path),
+                    "type": "disk",
+                }
+            }
 
         instance = self._clients.lxd.instances.create(config=instance_config, wait=True)
         self.status.exist = True
@@ -684,3 +703,8 @@ class Runner:
                 wget_cmd += ["-e", f"no_proxy={self.config.proxies['no_proxy']}"]
             self.instance.execute(wget_cmd)
             self.instance.execute(["/usr/bin/chmod", "+x", executable_path])
+
+    def _setup_shared_fs(self):
+        """Setup shared file system between host and runner."""
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")

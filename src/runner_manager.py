@@ -24,6 +24,7 @@ from typing_extensions import assert_never
 
 import metrics
 from charm_state import State as CharmState
+import shared_fs
 from errors import RunnerBinaryError, RunnerCreateError
 from github_type import (
     GitHubRunnerStatus,
@@ -82,6 +83,14 @@ class RunnerInfo:
     name: str
     status: GitHubRunnerStatus
     busy: bool
+
+def _extract_runner_metrics() -> None:
+    """Extract metrics from runners.
+
+    The metrics are extracted from the shared filesystem and issued to Promtail.
+    Orphan shared filesystems are cleaned up.
+    """
+    pass
 
 
 class RunnerManager:
@@ -325,6 +334,13 @@ class RunnerManager:
                     ),
                 )
             except OSError:
+                fs = shared_fs.get(runner.config.name)
+                (fs.path / "runner-installed.timestamp").write_text(str(ts_after),
+                                                                    encoding="utf-8")
+
+            # We explicitly catch all exceptions here as we do not want to fail the
+            # runner creation process due to metrics issuing failure.
+            except Exception:  # pylint: disable=broad-except
                 logger.exception("Failed to issue metrics")
         else:
             runner.create(
@@ -334,20 +350,7 @@ class RunnerManager:
                 registration_token,
             )
 
-        # dd if=/dev/zero of=runner-xy-fs.img bs=20M count=1
-        execute_command(["dd", "if=/dev/zero", f"of=/home/ubuntu/runner-{runner.config.name}-fs.img", "bs=1M", "count=1"], check_exit=True)
-        # mkfs.ext4 runner-xy-fs.img
-        execute_command(["mkfs.ext4", f"/home/ubuntu/runner-{runner.config.name}-fs.img"], check_exit=True)
-        # mkdir /path/to/mount
-        execute_command(["mkdir", f"/home/ubuntu/runner-{runner.config.name}-fs"], check_exit=True)
-        # mount -o loop runner-xy-fs.img /path/to/mount
-        execute_command(["sudo", "mount", "-o", "loop", f"/home/ubuntu/runner-{runner.config.name}-fs.img", f"/home/ubuntu/runner-{runner.config.name}-fs"], check_exit=True)
-        # sudo chown ubuntu:ubuntu /path/to/mount
-        execute_command(["sudo", "chown", "ubuntu:ubuntu", f"/home/ubuntu/runner-{runner.config.name}-fs"], check_exit=True)
-        # lxc config device add runner-xy-fs-vm home disk source=/path/to/mount path=/metrics-exchange
-        execute_command(["sudo", "lxc", "config", "device", "add", runner.instance.name, "home", "disk", f"source=/home/ubuntu/runner-{runner.config.name}-fs", "path=/metrics-exchange"], check_exit=True)
-        # write ts_after in /path/to/mount using Path
-        Path(f"/home/ubuntu/runner-{runner.config.name}-fs/runner-installed.timestamp").write_text(str(ts_after), encoding="utf-8")
+
 
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
@@ -379,7 +382,7 @@ class RunnerManager:
             len(runner_states.healthy),
             len(runner_states.unhealthy),
         )
-
+        _extract_runner_metrics()
         # Clean up offline runners
         if runner_states.unhealthy:
             logger.info("Cleaning up unhealthy runners.")
@@ -414,7 +417,7 @@ class RunnerManager:
                     self.config.lxd_storage_path,
                     self._generate_runner_name(),
                 )
-                runner = Runner(self._clients, config, RunnerStatus())
+                runner = Runner(self._clients, config, RunnerStatus(), issue_metrics=True)#self.issue_metrics)
                 try:
                     self._create_runner(registration_token, resources, runner)
                     logger.info("Created runner: %s", runner.config.name)
@@ -568,6 +571,7 @@ class RunnerManager:
                 config,
                 RunnerStatus(runner_id, running, online, busy),
                 local_runner,
+                issue_metrics=True #self.issue_metrics,
             )
 
         remote_runners = self._get_runner_github_info()
