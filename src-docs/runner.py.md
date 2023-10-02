@@ -28,7 +28,7 @@ __init__(
     runner_config: RunnerConfig,
     runner_status: RunnerStatus,
     instance: Optional[LxdInstance] = None,
-    issue_metrics: bool = True
+    issue_metrics: bool = False
 )
 ```
 
@@ -48,7 +48,7 @@ Construct the runner instance.
 
 ---
 
-<a href="../src/runner.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L106"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `create`
 
@@ -80,7 +80,7 @@ Create the runner instance on LXD and register it on GitHub.
 
 ---
 
-<a href="../src/runner.py#L144"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L146"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `remove`
 

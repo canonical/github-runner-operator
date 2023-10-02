@@ -7,7 +7,7 @@ from unittest.mock import Mock
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
-from shared_fs import create
+import shared_fs
 
 
 @pytest.fixture(autouse=True, name="filesystems_paths")
@@ -32,13 +32,13 @@ def test_create_shared_filesystem(filesystems_paths: Path):
     """
     arrange: Given a runner name and a path for the filesystems and a mocked execute_command
     act: Call create
-    assert: The shared filesystem path is created and the shared filesystem is returned
+    assert: The shared filesystem path is created
     """
     runner_name = secrets.token_hex(16)
 
-    shared_fs = create(runner_name)
+    fs = shared_fs.create(runner_name)
 
-    assert False
+    assert fs.path.exists()
 
 
 def test_create_raises_exception(exc_cmd_mock):
@@ -51,4 +51,18 @@ def test_create_raises_exception(exc_cmd_mock):
     exc_cmd_mock.side_effect = Exception()
 
     with pytest.raises(Exception):
-        create(runner_name)
+        shared_fs.create(runner_name)
+
+
+def test_get_shared_filesystem(filesystems_paths: Path):
+    """
+    arrange: Given a runner name and a path for the filesystems and a mocked execute_command
+    act: Call get
+    assert: A shared filesystem object is returned
+    """
+    runner_name = secrets.token_hex(16)
+
+    fs = shared_fs.get(runner_name)
+
+    assert isinstance(fs, shared_fs.SharedFilesystem)
+    assert fs.runner_name == runner_name

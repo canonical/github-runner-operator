@@ -32,7 +32,7 @@ from runner_type import (
     VirtualMachineResources,
 )
 import shared_fs
-from utilities import retry
+from utilities import retry, execute_command
 
 logger = logging.getLogger(__name__)
 LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
@@ -78,7 +78,7 @@ class Runner:
         runner_config: RunnerConfig,
         runner_status: RunnerStatus,
         instance: Optional[LxdInstance] = None,
-        issue_metrics: bool = True, # Todo change that to false
+        issue_metrics: bool = False,
     ):
         """Construct the runner instance.
 
@@ -94,6 +94,8 @@ class Runner:
         self.status = runner_status
         self.instance = instance
         self.issue_metrics = issue_metrics
+
+        self._shared_fs: Optional[shared_fs.SharedFilesystem] = None
 
         # If the proxy setting are set, then add NO_PROXY local variables.
         if self.config.proxies.get("http") or self.config.proxies.get("https"):
@@ -124,9 +126,9 @@ class Runner:
         try:
             if self.issue_metrics:
                 try:
-                    shared_fs.create(self.config.name)
+                    self._shared_fs = shared_fs.create(self.config.name)
                 except Exception:
-                    logger.exception("Unable to create shared filesystem for runner.")
+                    logger.exception("Unable to create shared filesystem for runner %s. Will not create metrics for this runner.", self.config.name)
 
             self.instance = self._create_instance(image, resources)
             self._start_instance()
@@ -258,17 +260,19 @@ class Runner:
             "ephemeral": ephemeral,
             "profiles": ["default", "runner", resource_profile],
         }
-        if self.issue_metrics:
-            instance_config["devices"] = {
-                "runner-fs": {
-                    "path": "/metrics-exchange",
-                    "source": str(shared_fs.get(self.config.name).path),
-                    "type": "disk",
-                }
-            }
 
         instance = self._clients.lxd.instances.create(config=instance_config, wait=True)
         self.status.exist = True
+
+        if self.issue_metrics and self._shared_fs:
+            try:
+                execute_command(
+                    ["sudo", "lxc", "config", "device", "add", instance.name, "metrics", "disk",
+                     f"source={self._shared_fs.path}", "path=/metrics-exchange"],
+                    check_exit=True)
+            except Exception:
+                logger.exception("Unable to add shared filesystem to runner %s. Will not issue metrics for this runner.", instance.name)
+
         return instance
 
     @retry(tries=5, delay=1, local_logger=logger)

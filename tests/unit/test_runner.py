@@ -9,10 +9,12 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
+from _pytest.monkeypatch import MonkeyPatch
 
 from errors import RunnerCreateError, RunnerRemoveError
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
+from shared_fs import SharedFilesystem
 from tests.unit.mock import (
     MockLxdClient,
     MockRepoPolicyComplianceClient,
@@ -49,6 +51,22 @@ def instance_fixture(request):
 @pytest.fixture(scope="function", name="lxd")
 def mock_lxd_client_fixture():
     return MockLxdClient()
+
+
+@pytest.fixture(autouse=True, scope="function", name="shared_fs")
+def shared_fs_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
+    """Mock the module for handling the Shared Filesystem."""
+    mock = MagicMock()
+    monkeypatch.setattr("runner.shared_fs", mock)
+    return mock
+
+
+@pytest.fixture(autouse=True, scope="function", name="exc_cmd_mock")
+def exc_command_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
+    """Mock the execution of a command."""
+    exc_cmd_mock = MagicMock()
+    monkeypatch.setattr("runner.execute_command", exc_cmd_mock)
+    return exc_cmd_mock
 
 
 @pytest.fixture(
@@ -148,6 +166,51 @@ def test_create_runner_fail(
 
     with pytest.raises(RunnerCreateError):
         runner.create("test_image", vm_resources, binary_path, token)
+
+
+def test_create_with_metrics(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    token: str,
+    binary_path: Path,
+    lxd: MockLxdClient,
+    shared_fs: MagicMock,
+    exc_cmd_mock: MagicMock,
+):
+    """
+    arrange: Config the runner to issue metrics and mock the shared filesystem.
+    act: Create a runner.
+    assert: The command for adding a device has been executed.
+    """
+
+    runner.issue_metrics = True
+    shared_fs.create.return_value = SharedFilesystem(path=Path("/home/ubuntu/shared_fs"), runner_name="test_runner")
+    runner.create("test_image", vm_resources, binary_path, token)
+
+    exc_cmd_mock.assert_called_once_with(
+        ["sudo", "lxc", "config", "device", "add", "test_runner", "metrics", "disk", "source=/home/ubuntu/shared_fs", "path=/metrics-exchange"], check_exit=True)
+
+
+def test_create_with_metrics_and_shared_fs_error(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    token: str,
+    binary_path: Path,
+    lxd: MockLxdClient,
+    shared_fs: MagicMock,
+):
+    """
+    arrange: Config the runner to issue metrics and mock the shared filesystem module to throw an error.
+    act: Create a runner.
+    assert: The runner is created despite the error on the shared filesystem.
+    """
+    runner.issue_metrics = True
+    shared_fs.create.side_effect = Exception()
+
+    runner.create("test_image", vm_resources, binary_path, token)
+
+    instances = lxd.instances.all()
+    assert len(instances) == 1
 
 
 def test_remove(
