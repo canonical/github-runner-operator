@@ -1,7 +1,7 @@
 name: integration-tests
 
 on:
-  pull_request:
+  push:
 
 jobs:
   integration-test-charm-no-runner:

@@ -334,14 +334,12 @@ class RunnerManager:
                     ),
                 )
             except OSError:
-                fs = shared_fs.get(runner.config.name)
-                (fs.path / "runner-installed.timestamp").write_text(str(ts_after),
-                                                                    encoding="utf-8")
-
-            # We explicitly catch all exceptions here as we do not want to fail the
-            # runner creation process due to metrics issuing failure.
-            except Exception:  # pylint: disable=broad-except
                 logger.exception("Failed to issue metrics")
+
+            fs = shared_fs.get(runner.config.name)
+            (fs.path / "runner-installed.timestamp").write_text(str(ts_after),
+                                                                encoding="utf-8")
+
         else:
             runner.create(
                 self.config.image,
@@ -417,7 +415,7 @@ class RunnerManager:
                     self.config.lxd_storage_path,
                     self._generate_runner_name(),
                 )
-                runner = Runner(self._clients, config, RunnerStatus(), issue_metrics=True)#self.issue_metrics)
+                runner = Runner(self._clients, config, RunnerStatus(), issue_metrics=self.issue_metrics)
                 try:
                     self._create_runner(registration_token, resources, runner)
                     logger.info("Created runner: %s", runner.config.name)
@@ -571,7 +569,7 @@ class RunnerManager:
                 config,
                 RunnerStatus(runner_id, running, online, busy),
                 local_runner,
-                issue_metrics=True #self.issue_metrics,
+                issue_metrics=self.issue_metrics,
             )
 
         remote_runners = self._get_runner_github_info()
