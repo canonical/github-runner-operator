@@ -3,6 +3,8 @@
 # Don't exit on error to make sure the machine gets powered off.
 set +e
 
+{% if issue_metrics %}
+
 write_post_metrics(){
     timestamp=$(date +%s)
 
@@ -15,3 +17,6 @@ write_post_metrics(){
 }
 
 (/home/ubuntu/github-runner/run.sh; write_post_metrics; sudo systemctl poweroff -i) &>/dev/null &
+{% else %}
+(/home/ubuntu/github-runner/run.sh; sudo systemctl poweroff -i) &>/dev/null &
+{% endif %}

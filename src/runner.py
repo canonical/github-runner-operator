@@ -493,7 +493,7 @@ class Runner:
             raise RunnerError("Runner operation called prior to runner creation.")
 
         # Load the runner startup script.
-        startup_contents = self._clients.jinja.get_template("start.j2").render()
+        startup_contents = self._clients.jinja.get_template("start.j2").render(issue_metrics=self.issue_metrics)
         self._put_file(str(self.runner_script), startup_contents, mode="0755")
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
@@ -503,7 +503,7 @@ class Runner:
         host_ip, _ = bridge_address_range.split("/")
         one_time_token = self._clients.repo.get_one_time_token()
         pre_job_contents = self._clients.jinja.get_template("pre-job.j2").render(
-            host_ip=host_ip, one_time_token=one_time_token
+            host_ip=host_ip, one_time_token=one_time_token, issue_metrics=self.issue_metrics
         )
         self._put_file(str(self.pre_job_script), pre_job_contents)
         self.instance.execute(

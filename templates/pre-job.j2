@@ -2,6 +2,7 @@
 
 timestamp=$(date +%s)
 
+{% if issue_metrics %}
 jq -n \
   --arg workflow "$GITHUB_WORKFLOW" \
   --arg repository "$GITHUB_REPOSITORY" \
@@ -15,6 +16,7 @@ jq -n \
     "timestamp": $timestamp,
     "workflow_run_id": $workflow_run_id
   }' > /metrics-exchange/pre-job-metrics.json
+{% endif %}
 
 # Disable exit-on-error, due the need for error handling.
 set +e
