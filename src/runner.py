@@ -314,6 +314,7 @@ class Runner:
         if not self._clients.lxd.storage_pools.exists("runner"):
             raise RunnerError("Failed to create runner LXD storage pool")
 
+    @retry(tries=5, delay=1, local_logger=logger)
     def _remove_runner_storage_pool(self) -> None:
         """Remove the runner storage pool if exists."""
         if self._clients.lxd.storage_pools.exists("runner"):
@@ -389,6 +390,7 @@ class Runner:
 
         return profile_name
 
+    @retry(tries=5, delay=1, local_logger=logger)
     def _remove_resource_profile(self, resources: VirtualMachineResources) -> None:
         """Remove the LXD profile for resource limit if exists.
 
