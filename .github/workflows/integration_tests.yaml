@@ -53,6 +53,7 @@ jobs:
             --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
             tests/integration/test_charm.py
       - name: Setup tmate session
+        if: failure()
         uses: mxschmitt/action-tmate@v3
         with:
           limit-access-to-actor: true
