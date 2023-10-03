@@ -112,9 +112,9 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
+                issue_metrics=False,
             ),
             proxies={},
-            issue_metrics=False,
         )
 
     @patch("charm.RunnerManager")
@@ -138,9 +138,9 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
+                issue_metrics=False,
             ),
             proxies={},
-            issue_metrics=False,
         )
 
     @patch("charm.RunnerManager")
@@ -167,9 +167,9 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
+                issue_metrics=False,
             ),
             proxies={},
-            issue_metrics=False,
         )
         mock_rm.reconcile.assert_called_with(0, VirtualMachineResources(2, "7GiB", "10GiB")),
         mock_rm.reset_mock()
@@ -187,9 +187,9 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
+                issue_metrics=False,
             ),
             proxies={},
-            issue_metrics=False,
         )
         mock_rm.reconcile.assert_called_with(
             10, VirtualMachineResources(cpu=4, memory="7GiB", disk="10GiB")

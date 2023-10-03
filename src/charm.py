@@ -277,9 +277,15 @@ class GithubRunnerCharm(CharmBase):
         return RunnerManager(
             app_name,
             unit,
-            RunnerManagerConfig(path, token, "jammy", self.service_token, self.ram_pool_path),
+            RunnerManagerConfig(
+                path=path,
+                token=token,
+                image="jammy",
+                service_token=self.service_token,
+                lxd_storage_path=self.ram_pool_path,
+                issue_metrics=self.cos_observer.metrics_logging_available(),
+            ),
             proxies=self.proxies,
-            issue_metrics=self.cos_observer.metrics_logging_available(),
         )
 
     @catch_charm_errors

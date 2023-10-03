@@ -60,6 +60,7 @@ class RunnerManagerConfig:
         image: Name of the image for creating LXD instance.
         service_token: Token for accessing local service.
         lxd_storage_path: Path to be used as LXD storage.
+        issue_metrics: Whether to issue metrics.
     """
 
     path: GitHubPath
@@ -67,6 +68,7 @@ class RunnerManagerConfig:
     image: str
     service_token: str
     lxd_storage_path: Path
+    issue_metrics: bool
 
 
 @dataclass
@@ -92,7 +94,6 @@ class RunnerManager:
         unit: int,
         runner_manager_config: RunnerManagerConfig,
         proxies: ProxySetting = ProxySetting(),
-        issue_metrics: bool = False,
     ) -> None:
         """Construct RunnerManager object for creating and managing runners.
 
@@ -101,13 +102,11 @@ class RunnerManager:
             unit: Unit number of the set of runners.
             runner_manager_config: Configuration for the runner manager.
             proxies: HTTP proxy settings.
-            issue_metrics: Whether to issue metrics.
         """
         self.app_name = app_name
         self.instance_name = f"{app_name}-{unit}"
         self.config = runner_manager_config
         self.proxies = proxies
-        self.issue_metrics = issue_metrics
 
         # Setting the env var to this process and any child process spawned.
         if "no_proxy" in self.proxies:
@@ -300,7 +299,7 @@ class RunnerManager:
     ):
         """Create a runner.
 
-        Issues RunnerInstalled metric if issue_metrics is set to True.
+        Issues RunnerInstalled metric if config.issue_metrics is set to True.
 
         Args:
             registration_token: Token for registering runner to GitHub.
@@ -315,7 +314,7 @@ class RunnerManager:
             registration_token,
         )
         ts_after = time.time()
-        if self.issue_metrics:
+        if self.config.issue_metrics:
             try:
                 metrics.issue_event(
                     metrics.RunnerInstalled(

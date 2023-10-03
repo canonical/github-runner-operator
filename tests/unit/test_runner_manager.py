@@ -44,7 +44,9 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token):
     runner_manager = RunnerManager(
         "test app",
         "0",
-        RunnerManagerConfig(request.param[0], token, "jammy", secrets.token_hex(16), pool_path),
+        RunnerManagerConfig(
+            request.param[0], token, "jammy", secrets.token_hex(16), pool_path, False
+        ),
         proxies=request.param[1],
     )
     runner_manager.runner_bin_path.write_bytes(TEST_BINARY)
@@ -206,7 +208,7 @@ def test_reconcile_issues_runner_installed_event(
     act: Reconcile to create a runner.
     assert: The expected event is issued.
     """
-    runner_manager.issue_metrics = True
+    runner_manager.config.issue_metrics = True
     t_mock = MagicMock(return_value=12345)
     monkeypatch.setattr("metrics.time.time", t_mock)
 
@@ -225,7 +227,7 @@ def test_reconcile_issues_no_runner_installed_event_if_metrics_disabled(
     act: Reconcile to create a runner.
     assert: The expected event is not issued.
     """
-    runner_manager.issue_metrics = False
+    runner_manager.config.issue_metrics = False
 
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 
@@ -241,7 +243,7 @@ def test_reconcile_error_on_runner_installed_event_are_ignored(
     act: Reconcile to create a runner.
     assert: No error is raised.
     """
-    runner_manager.issue_metrics = True
+    runner_manager.config.issue_metrics = True
     issue_event_mock.side_effect = Exception("Test exception")
 
     delta = runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
