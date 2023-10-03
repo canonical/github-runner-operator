@@ -11,4 +11,4 @@ Environment="NO_PROXY={{proxies['no_proxy']}}"
 Environment="http_proxy={{proxies['http']}}"
 Environment="https_proxy={{proxies['https']}}"
 Environment="no_proxy={{proxies['no_proxy']}}"
-ExecStart=/usr/local/bin/promtail-linux-amd64 -config.file /etc/promtail.yaml
+ExecStart=/usr/local/bin/promtail -config.file /etc/promtail.yaml
