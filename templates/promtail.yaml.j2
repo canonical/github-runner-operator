@@ -4,13 +4,11 @@ server:
 clients:
   - url: {{loki_endpoint}}
 
-positions:
-  filename: /tmp/positions.yaml
 scrape_configs:
   - job_name: metrics
     loki_push_api:
       server:
-        http_listen_address: 0.0.0.0
+        http_listen_address: 127.0.0.1
         http_listen_port: 3100
     pipeline_stages:
       - json:
