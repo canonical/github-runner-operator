@@ -2,7 +2,6 @@
 #  See LICENSE file for licensing details.
 import json
 import logging
-import platform
 from typing import Generator
 from unittest.mock import MagicMock, Mock
 
@@ -19,11 +18,13 @@ from event_timer import EventTimer
 from promtail import Config, PromtailDownloadInfo
 
 TEST_PROMTAIL_BINARY_ZIP_INFO = {
-        "url": "http://promtail/promtail-linux-amd64.zip",
-        "zipsha": "a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447",
-        "binsha": "a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447",
+    "url": "http://promtail/promtail-linux-amd64.zip",
+    "zipsha": "a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447",
+    "binsha": "a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447",
 }
 TEST_REMOTE_APP = "loki"
+TEST_PLATFORM = "x86_64"
+TEST_PROMTAIL_PLATFORM = "amd64"  # x86_64 is translated to amd64
 
 
 class FakeCharm(CharmBase):
@@ -76,6 +77,19 @@ def patched_event_timer_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     return mock_event_timer
 
 
+@pytest.fixture(autouse=True, name="platform")
+def patched_platform_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
+    """Patch platform.processor to return the test platform.
+
+    We need to patch this because platform.processor uses a cache internally,
+    and depending on the order of the tests, a mock would be returned
+    (e.g. if test_charm is executed before test_cos).
+    """
+    mock_promtail_arch = MagicMock(return_value=TEST_PLATFORM)
+    monkeypatch.setattr("cos.platform.processor", mock_promtail_arch)
+    return mock_promtail_arch
+
+
 def _update_integration_with_promtail_binary(harness: Harness, integration_id: int) -> None:
     """Update integration with promtail binary info.
 
@@ -83,12 +97,14 @@ def _update_integration_with_promtail_binary(harness: Harness, integration_id: i
         harness: The harness to update the integration on.
         integration_id: The integration id.
     """
-    arch = platform.processor()
-    promtail_arch = "amd64" if arch == "x86_64" else arch
     harness.update_relation_data(
         integration_id,
         TEST_REMOTE_APP,
-        {"promtail_binary_zip_url": json.dumps({promtail_arch: TEST_PROMTAIL_BINARY_ZIP_INFO})},
+        {
+            "promtail_binary_zip_url": json.dumps(
+                {TEST_PROMTAIL_PLATFORM: TEST_PROMTAIL_BINARY_ZIP_INFO}
+            )
+        },
     )
 
 

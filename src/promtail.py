@@ -18,8 +18,8 @@ from utilities import execute_command
 
 SYSTEMCTL_PATH_STR = "/usr/bin/systemctl"
 
-PROMTAIL_BINARY_PATH = Path("/usr/local/bin/promtail-linux-amd64")
-PROMTAIL_BINARY_SHA_PATH = Path("/usr/local/bin/promtail-linux-amd64.sha256")
+PROMTAIL_BINARY_PATH = Path("/usr/local/bin/promtail")
+PROMTAIL_BINARY_SHA_PATH = Path("/usr/local/bin/promtail.sha256")
 PROMTAIL_CONFIG_PATH = Path("/etc/promtail.yaml")
 JINJA2_TEMPLATE_PATH = "templates"
 SYSTEMD_SERVICE_PATH = Path("/etc/systemd/system/promtail.service")
