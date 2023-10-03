@@ -4,6 +4,7 @@
 """The COS integration observer."""
 import json
 import logging
+import platform
 
 import ops
 from charms.loki_k8s.v0.loki_push_api import (
@@ -91,6 +92,8 @@ class Observer(ops.Object):
         self.state = state
         self.charm = charm
         self._event_timer = EventTimer(charm.unit.name)
+        arch = platform.processor()
+        self._promtail_arch = "amd64" if arch == "x86_64" else arch
 
         self._loki_consumer = LokiPushApiConsumer(
             charm=charm, relation_name=METRICS_LOGGING_INTEGRATION_NAME
@@ -145,9 +148,9 @@ class Observer(ops.Object):
         """
         if not loki_integration_data.endpoints:
             raise LokiIntegrationDataIncompleteError("No Loki endpoint found.")
-        if not loki_integration_data.promtail_binaries.get("amd64"):
+        if not loki_integration_data.promtail_binaries.get(self._promtail_arch):
             raise LokiIntegrationDataIncompleteError(
-                "No Promtail binary information for amd64 architecture found."
+                f"No Promtail binary information for {self._promtail_arch} architecture found."
             )
 
     def metrics_logging_available(self) -> bool:
@@ -164,7 +167,7 @@ class Observer(ops.Object):
         Args:
             loki_integration_data: The Loki integration data.
         """
-        promtail_binary = loki_integration_data.promtail_binaries["amd64"]
+        promtail_binary = loki_integration_data.promtail_binaries[self._promtail_arch]
         dl_info = promtail.PromtailDownloadInfo(
             url=promtail_binary.url,
             zip_sha256=promtail_binary.zipsha,

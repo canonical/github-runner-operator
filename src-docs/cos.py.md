@@ -104,7 +104,7 @@ Returns the set of fields that have been set on this model instance.
 ## <kbd>class</kbd> `LokiIntegrationDataIncompleteError`
 Indicates an error if the Loki integration data is not complete for Promtail startup. 
 
-<a href="../src/cos.py#L67"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/cos.py#L68"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -129,7 +129,7 @@ Initialize a new instance of the LokiIntegrationDataNotComplete exception.
 ## <kbd>class</kbd> `Observer`
 COS integration observer. 
 
-<a href="../src/cos.py#L83"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/cos.py#L84"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -157,7 +157,7 @@ Shortcut for more simple access the model.
 
 ---
 
-<a href="../src/cos.py#L153"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/cos.py#L156"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `metrics_logging_available`
 

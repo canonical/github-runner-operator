@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 import json
 import logging
+import platform
 from typing import Generator
 from unittest.mock import MagicMock, Mock
 
@@ -18,11 +19,9 @@ from event_timer import EventTimer
 from promtail import Config, PromtailDownloadInfo
 
 TEST_PROMTAIL_BINARY_ZIP_INFO = {
-    "amd64": {
         "url": "http://promtail/promtail-linux-amd64.zip",
         "zipsha": "a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447",
         "binsha": "a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447",
-    }
 }
 TEST_REMOTE_APP = "loki"
 
@@ -84,10 +83,12 @@ def _update_integration_with_promtail_binary(harness: Harness, integration_id: i
         harness: The harness to update the integration on.
         integration_id: The integration id.
     """
+    arch = platform.processor()
+    promtail_arch = "amd64" if arch == "x86_64" else arch
     harness.update_relation_data(
         integration_id,
         TEST_REMOTE_APP,
-        {"promtail_binary_zip_url": json.dumps(TEST_PROMTAIL_BINARY_ZIP_INFO)},
+        {"promtail_binary_zip_url": json.dumps({promtail_arch: TEST_PROMTAIL_BINARY_ZIP_INFO})},
     )
 
 
@@ -150,9 +151,9 @@ def test_push_api_endpoint_joined_starts_promtail(harness: Harness, promtail: Ma
                         f"http://loki{i}:3100/loki/api/v1/push",
                         ProxyConfig(),
                         PromtailDownloadInfo(
-                            url=TEST_PROMTAIL_BINARY_ZIP_INFO["amd64"]["url"],
-                            zip_sha256=TEST_PROMTAIL_BINARY_ZIP_INFO["amd64"]["zipsha"],
-                            bin_sha256=TEST_PROMTAIL_BINARY_ZIP_INFO["amd64"]["binsha"],
+                            url=TEST_PROMTAIL_BINARY_ZIP_INFO["url"],
+                            zip_sha256=TEST_PROMTAIL_BINARY_ZIP_INFO["zipsha"],
+                            bin_sha256=TEST_PROMTAIL_BINARY_ZIP_INFO["binsha"],
                         ),
                     ),
                 ),
@@ -182,13 +183,25 @@ def test_push_api_endpoint_joined_does_not_start_promtail_if_no_binary_found(
 ):
     """
     arrange: Setup harness and a mocked promtail.
-    act: Add integration without promtail binary info.
-    assert: Promtail has not been started.
+    act:
+        1. Add integration without promtail binary info.
+        2. Add integration with promtail binary info but wrong architecture.
+    assert: Promtail has not been started in both cases.
     """
     harness.begin()
 
+    # 1. Add integration without promtail binary info.
     int_id = _add_integration(harness, units=1)
     _update_integration_data_with_endpoint(harness, int_id)
+
+    assert promtail.start.call_count == 0
+
+    # 2. Add integration with promtail binary info but wrong architecture.
+    harness.update_relation_data(
+        int_id,
+        TEST_REMOTE_APP,
+        {"promtail_binary_zip_url": json.dumps({"wrong_arch": TEST_PROMTAIL_BINARY_ZIP_INFO})},
+    )
 
     assert promtail.start.call_count == 0
 
@@ -289,9 +302,9 @@ def test_push_api_endpoint_departed_endpoints_still_existing(
             "http://loki1:3100/loki/api/v1/push",
             ProxyConfig(),
             PromtailDownloadInfo(
-                url=TEST_PROMTAIL_BINARY_ZIP_INFO["amd64"]["url"],
-                zip_sha256=TEST_PROMTAIL_BINARY_ZIP_INFO["amd64"]["zipsha"],
-                bin_sha256=TEST_PROMTAIL_BINARY_ZIP_INFO["amd64"]["binsha"],
+                url=TEST_PROMTAIL_BINARY_ZIP_INFO["url"],
+                zip_sha256=TEST_PROMTAIL_BINARY_ZIP_INFO["zipsha"],
+                bin_sha256=TEST_PROMTAIL_BINARY_ZIP_INFO["binsha"],
             ),
         )
     )
