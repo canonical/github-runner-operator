@@ -73,24 +73,25 @@ def issue_event(event: Event) -> None:
     Args:
         event: The metric event to log.
     """
-    if promtail.is_running():
-        event_dict = event.dict()
-        event_dict["event"] = _get_event_name(event)
-
-        resp = requests.post(
-            PROMTAIL_PUSH_API_URL,
-            json={
-                "streams": [
-                    {
-                        "stream": {"job": "metrics"},
-                        "values": [
-                            [str(time.time_ns()), json.dumps(event_dict)],
-                        ],
-                    }
-                ]
-            },
-            timeout=5,
-        )
-        resp.raise_for_status()
-    else:
+    if not promtail.is_running():
         logger.warning("Promtail is not running, skipping event transmission")
+        return
+
+    event_dict = event.dict()
+    event_dict["event"] = _get_event_name(event)
+
+    resp = requests.post(
+        PROMTAIL_PUSH_API_URL,
+        json={
+            "streams": [
+                {
+                    "stream": {"job": "metrics"},
+                    "values": [
+                        [str(time.time_ns()), json.dumps(event_dict)],
+                    ],
+                }
+            ]
+        },
+        timeout=5,
+    )
+    resp.raise_for_status()
