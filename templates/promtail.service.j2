@@ -4,7 +4,6 @@ After=network.target
 
 [Service]
 User=ubuntu
-Group=www-data
 WorkingDirectory={{working_directory}}
 Environment="HTTP_PROXY={{proxies['http']}}"
 Environment="HTTPS_PROXY={{proxies['https']}}"
