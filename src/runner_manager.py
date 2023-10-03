@@ -20,6 +20,7 @@ import requests.adapters
 import urllib3
 from ghapi.all import GhApi
 from ghapi.page import pages
+from requests import HTTPError
 from typing_extensions import assert_never
 
 import metrics
@@ -324,9 +325,7 @@ class RunnerManager:
                         duration=ts_after - ts_now,
                     )
                 )
-            # We explicitly catch all exceptions here as we do not want to fail the
-            # runner creation process due to metrics issuing failure.
-            except Exception:  # pylint: disable=broad-except
+            except HTTPError:
                 logger.exception("Failed to issue metrics")
         else:
             runner.create(

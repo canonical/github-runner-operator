@@ -27,6 +27,10 @@ Transmit an event to Promtail.
  
  - <b>`event`</b>:  The metric event to log. 
 
+**Raises:**
+ 
+ - <b>`requests.HTTPError`</b>:  If the HTTP request to Promtail fails. 
+
 
 ---
 

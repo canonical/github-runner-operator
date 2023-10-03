@@ -9,6 +9,7 @@ from unittest.mock import MagicMock
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
+from requests import HTTPError
 
 from errors import RunnerBinaryError
 from metrics import RunnerInstalled
@@ -239,12 +240,12 @@ def test_reconcile_error_on_runner_installed_event_are_ignored(
     issue_event_mock: MagicMock,
 ):
     """
-    arrange: Enable issuing of metrics and mock the issuing to raise an error.
+    arrange: Enable issuing of metrics and mock the issuing to raise an expected error.
     act: Reconcile to create a runner.
     assert: No error is raised.
     """
     runner_manager.config.issue_metrics = True
-    issue_event_mock.side_effect = Exception("Test exception")
+    issue_event_mock.side_effect = HTTPError("Test exception")
 
     delta = runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 

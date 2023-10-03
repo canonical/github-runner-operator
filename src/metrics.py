@@ -72,6 +72,8 @@ def issue_event(event: Event) -> None:
 
     Args:
         event: The metric event to log.
+    Raises:
+        requests.HTTPError: If the HTTP request to Promtail fails.
     """
     if not promtail.is_running():
         logger.warning("Promtail is not running, skipping event transmission")
