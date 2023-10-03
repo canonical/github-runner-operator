@@ -259,18 +259,34 @@ def test_push_api_endpoint_joined_without_integration_data_does_not_create_event
 
 def test_on_promtail_health(harness: Harness, promtail: MagicMock, caplog: LogCaptureFixture):
     """
-    arrange: Setup harness and an unhealthy promtail.
+    arrange: Setup harness and an unhealthy Promtail which turns healthy after restart.
     act: Trigger update_status event.
     assert: The Observer logs an error and restarts Promtail.
     """
-    promtail.is_running.return_value = False
+    promtail.is_running.side_effect = [False, True]
 
     harness.begin()
 
     harness.charm.on.promtail_health.emit()
 
     promtail.restart.assert_called_once()
-    assert caplog.record_tuples == [("cos", logging.ERROR, "Promtail is not running, restarting")]
+    assert ("cos", logging.ERROR, "Promtail is not running, restarting") in caplog.record_tuples
+
+
+def test_on_promtail_health_raises_error(
+    harness: Harness, promtail: MagicMock, caplog: LogCaptureFixture
+):
+    """
+    arrange: Setup harness and a permanent unhealthy Promtail.
+    act: Trigger update_status event.
+    assert: The Observer raises an error.
+    """
+    promtail.is_running.return_value = False
+
+    harness.begin()
+
+    with pytest.raises(cos.PromtailNotRunningError):
+        harness.charm.on.promtail_health.emit()
 
 
 def test_push_api_endpoint_departed_integration_removed(harness: Harness, promtail: MagicMock):

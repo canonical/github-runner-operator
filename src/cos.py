@@ -18,10 +18,11 @@ from pydantic import AnyHttpUrl, BaseModel
 import promtail
 from charm_state import State
 from event_timer import EventTimer
+from utilities import retry
 
 METRICS_LOGGING_INTEGRATION_NAME = "metrics-logging"
 
-PROMTAIL_HEALTH_CHECK_INTERVAL_MINUTES = 5
+PROMTAIL_HEALTH_CHECK_INTERVAL_MINUTES = 10
 
 logger = logging.getLogger(__name__)
 
@@ -76,6 +77,18 @@ class LokiIntegrationDataIncompleteError(Exception):
 
 class PromtailHealthCheckEvent(EventBase):
     """Event representing a periodic check to ensure Promtail is running."""
+
+
+class PromtailNotRunningError(Exception):
+    """Indicates an error if Promtail is not running."""
+
+    def __init__(self, msg: str):
+        """Initialize a new instance of the PromtailNotRunningError exception.
+
+        Args:
+            msg: Explanation of the error.
+        """
+        self.msg = msg
 
 
 class Observer(ops.Object):
@@ -180,6 +193,19 @@ class Observer(ops.Object):
         logger.info("Setting up Promtail...")
         promtail.setup(config)
 
+    @retry(tries=5, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
+    def _ensure_promtail_is_running(self) -> None:
+        """Ensure Promtail is running.
+
+        Restarts Promtail if it is not running.
+        """
+        logger.info("Checking health of Promtail")
+
+        if not promtail.is_running():
+            logger.error("Promtail is not running, restarting")
+            promtail.restart()
+            raise PromtailNotRunningError("Promtail is not running")
+
     def _on_loki_push_api_endpoint_joined(
         self, event: LokiPushApiEndpointJoined  # pylint: disable=unused-argument
     ) -> None:
@@ -239,6 +265,4 @@ class Observer(ops.Object):
         Args:
             event: The event object
         """
-        if not promtail.is_running():
-            logger.error("Promtail is not running, restarting")
-            promtail.restart()
+        self._ensure_promtail_is_running()
