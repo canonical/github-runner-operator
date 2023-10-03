@@ -82,14 +82,6 @@ class PromtailHealthCheckEvent(EventBase):
 class PromtailNotRunningError(Exception):
     """Indicates an error if Promtail is not running."""
 
-    def __init__(self, msg: str):
-        """Initialize a new instance of the PromtailNotRunningError exception.
-
-        Args:
-            msg: Explanation of the error.
-        """
-        self.msg = msg
-
 
 class Observer(ops.Object):
     """COS integration observer."""
@@ -204,7 +196,7 @@ class Observer(ops.Object):
         if not promtail.is_running():
             logger.error("Promtail is not running, restarting")
             promtail.restart()
-            raise PromtailNotRunningError("Promtail is not running")
+            raise PromtailNotRunningError()
 
     def _on_loki_push_api_endpoint_joined(
         self, event: LokiPushApiEndpointJoined  # pylint: disable=unused-argument
@@ -265,4 +257,9 @@ class Observer(ops.Object):
         Args:
             event: The event object
         """
-        self._ensure_promtail_is_running()
+        try:
+            self._ensure_promtail_is_running()
+        except PromtailNotRunningError:
+            self.charm.unit.status = ops.model.BlockedStatus(
+                "Promtail is not running. Cannot collect metrics."
+            )

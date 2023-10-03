@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, Mock, create_autospec
 import pytest
 from _pytest.logging import LogCaptureFixture
 from _pytest.monkeypatch import MonkeyPatch
-from ops import CharmBase
+from ops import BlockedStatus, CharmBase
 from ops.testing import Harness
 from pydantic import ValidationError
 
@@ -273,7 +273,7 @@ def test_on_promtail_health(harness: Harness, promtail: MagicMock, caplog: LogCa
     assert ("cos", logging.ERROR, "Promtail is not running, restarting") in caplog.record_tuples
 
 
-def test_on_promtail_health_raises_error(
+def test_on_promtail_health_blockstatus(
     harness: Harness, promtail: MagicMock, caplog: LogCaptureFixture
 ):
     """
@@ -285,8 +285,11 @@ def test_on_promtail_health_raises_error(
 
     harness.begin()
 
-    with pytest.raises(cos.PromtailNotRunningError):
-        harness.charm.on.promtail_health.emit()
+    harness.charm.on.promtail_health.emit()
+
+    assert harness.charm.unit.status == BlockedStatus(
+        "Promtail is not running. Cannot collect metrics."
+    )
 
 
 def test_push_api_endpoint_departed_integration_removed(harness: Harness, promtail: MagicMock):

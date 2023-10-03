@@ -129,7 +129,7 @@ Initialize a new instance of the LokiIntegrationDataNotComplete exception.
 ## <kbd>class</kbd> `Observer`
 COS integration observer. 
 
-<a href="../src/cos.py#L97"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/cos.py#L89"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -157,7 +157,7 @@ Shortcut for more simple access the model.
 
 ---
 
-<a href="../src/cos.py#L169"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/cos.py#L161"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `metrics_logging_available`
 
@@ -230,22 +230,6 @@ Event representing a periodic check to ensure Promtail is running.
 
 ## <kbd>class</kbd> `PromtailNotRunningError`
 Indicates an error if Promtail is not running. 
-
-<a href="../src/cos.py#L85"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>function</kbd> `__init__`
-
-```python
-__init__(msg: str)
-```
-
-Initialize a new instance of the PromtailNotRunningError exception. 
-
-
-
-**Args:**
- 
- - <b>`msg`</b>:  Explanation of the error. 
 
 
 
