@@ -101,7 +101,7 @@ Returns the set of fields that have been set on this model instance.
 
 ---
 
-## <kbd>class</kbd> `LokiIntegrationDataNotCompleteError`
+## <kbd>class</kbd> `LokiIntegrationDataIncompleteError`
 Indicates an error if the Loki integration data is not complete for Promtail startup. 
 
 <a href="../src/cos.py#L67"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>

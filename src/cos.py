@@ -61,7 +61,7 @@ class LokiIntegrationData(BaseModel):
     promtail_binaries: dict[str, PromtailBinary]
 
 
-class LokiIntegrationDataNotCompleteError(Exception):
+class LokiIntegrationDataIncompleteError(Exception):
     """Indicates an error if the Loki integration data is not complete for Promtail startup."""
 
     def __init__(self, msg: str):
@@ -121,6 +121,8 @@ class Observer(ops.Object):
         logger.debug("Found following Loki endpoints: %s", loki_endpoints)
 
         relations: list[Relation] = self.charm.model.relations["metrics-logging"]
+        promtail_binaries = {}
+
         if relations and (relation := relations[0]).app:
             promtail_binaries_json = json.loads(
                 relation.data[relation.app].get("promtail_binary_zip_url", "{}")
@@ -129,8 +131,6 @@ class Observer(ops.Object):
                 arch: PromtailBinary(**info) for arch, info in promtail_binaries_json.items()
             }
             logger.debug("Found following promtail binaries: %s", promtail_binaries)
-        else:
-            promtail_binaries = {}
 
         return LokiIntegrationData(endpoints=loki_endpoints, promtail_binaries=promtail_binaries)
 
@@ -144,9 +144,9 @@ class Observer(ops.Object):
             LokiIntegrationDataNotComplete: If the integration data is not complete.
         """
         if not loki_integration_data.endpoints:
-            raise LokiIntegrationDataNotCompleteError("No Loki endpoint found.")
+            raise LokiIntegrationDataIncompleteError("No Loki endpoint found.")
         if not loki_integration_data.promtail_binaries.get("amd64"):
-            raise LokiIntegrationDataNotCompleteError(
+            raise LokiIntegrationDataIncompleteError(
                 "No Promtail binary information for amd64 architecture found."
             )
 
@@ -191,7 +191,7 @@ class Observer(ops.Object):
         loki_integration_data = self._retrieve_loki_integration_data()
         try:
             self._validate_for_start(loki_integration_data)
-        except LokiIntegrationDataNotCompleteError as exc:
+        except LokiIntegrationDataIncompleteError as exc:
             logger.info("Loki integration data not complete: %s Will not start Promtail", exc.msg)
             return
 
@@ -218,7 +218,7 @@ class Observer(ops.Object):
         else:
             try:
                 self._validate_for_start(loki_integration_data)
-            except LokiIntegrationDataNotCompleteError as exc:
+            except LokiIntegrationDataIncompleteError as exc:
                 logger.warning(
                     "Loki integration data not complete: %s . Will not start Promtail", exc.msg
                 )
