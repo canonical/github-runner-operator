@@ -168,14 +168,14 @@ class Observer(ops.Object):
             loki_integration_data: The Loki integration data.
         """
         promtail_binary = loki_integration_data.promtail_binaries[self._promtail_arch]
-        dl_info = promtail.PromtailDownloadInfo(
+        download_info = promtail.PromtailDownloadInfo(
             url=promtail_binary.url,
             zip_sha256=promtail_binary.zipsha,
             bin_sha256=promtail_binary.binsha,
         )
 
         config = promtail.Config(
-            loki_integration_data.endpoints[0].url, self.state.proxy_config, dl_info
+            loki_integration_data.endpoints[0].url, self.state.proxy_config, download_info
         )
         logger.info("Starting Promtail")
         promtail.start(config)

@@ -15,13 +15,15 @@ Functions for operating Promtail.
 
 <a href="../src/promtail.py#L163"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>function</kbd> `start`
+## <kbd>function</kbd> `setup`
 
 ```python
-start(config: Config) → None
+setup(config: Config) → None
 ```
 
-Start Promtail. 
+Set up Promtail. 
+
+Installs, configures and starts Promtail. 
 
 If Promtail has not already been installed, it will be installed and configured to send logs to Loki. If Promtail is already running, it will be reconfigured and restarted. 
 
@@ -34,7 +36,7 @@ If Promtail has not already been installed, it will be installed and configured 
 
 ---
 
-<a href="../src/promtail.py#L188"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/promtail.py#L190"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `restart`
 
@@ -47,7 +49,7 @@ Restart Promtail.
 
 ---
 
-<a href="../src/promtail.py#L193"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/promtail.py#L195"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `stop`
 
@@ -60,7 +62,7 @@ Stop Promtail.
 
 ---
 
-<a href="../src/promtail.py#L198"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/promtail.py#L200"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `is_running`
 
