@@ -306,15 +306,16 @@ class RunnerManager:
             resources: Configuration of the virtual machine resources.
             runner: Runner to be created.
         """
-        ts_now = time.time()
-        runner.create(
-            self.config.image,
-            resources,
-            RunnerManager.runner_bin_path,
-            registration_token,
-        )
-        ts_after = time.time()
+
         if self.config.issue_metrics:
+            ts_now = time.time()
+            runner.create(
+                self.config.image,
+                resources,
+                RunnerManager.runner_bin_path,
+                registration_token,
+            )
+            ts_after = time.time()
             try:
                 metrics.issue_event(
                     metrics.RunnerInstalled(
@@ -327,6 +328,13 @@ class RunnerManager:
             # runner creation process due to metrics issuing failure.
             except Exception:  # pylint: disable=broad-except
                 logger.exception("Failed to issue metrics")
+        else:
+            runner.create(
+                self.config.image,
+                resources,
+                RunnerManager.runner_bin_path,
+                registration_token,
+            )
 
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
