@@ -161,7 +161,7 @@ class Observer(ops.Object):
         """
         return bool(self._retrieve_loki_integration_data().endpoints)
 
-    def _start_promtail(self, loki_integration_data: LokiIntegrationData) -> None:
+    def _setup_promtail(self, loki_integration_data: LokiIntegrationData) -> None:
         """Start Promtail.
 
         Args:
@@ -177,8 +177,8 @@ class Observer(ops.Object):
         config = promtail.Config(
             loki_integration_data.endpoints[0].url, self.state.proxy_config, download_info
         )
-        logger.info("Starting Promtail")
-        promtail.start(config)
+        logger.info("Setting up Promtail...")
+        promtail.setup(config)
 
     def _on_loki_push_api_endpoint_joined(
         self, event: LokiPushApiEndpointJoined  # pylint: disable=unused-argument
@@ -198,7 +198,7 @@ class Observer(ops.Object):
             logger.info("Loki integration data not complete: %s Will not start Promtail", exc.msg)
             return
 
-        self._start_promtail(loki_integration_data)
+        self._setup_promtail(loki_integration_data)
         self._event_timer.ensure_event_timer(
             "promtail-health", PROMTAIL_HEALTH_CHECK_INTERVAL_MINUTES
         )
@@ -218,15 +218,16 @@ class Observer(ops.Object):
             logger.info("No Loki endpoints found. Stopping Promtail...")
             promtail.stop()
             self._event_timer.disable_event_timer("promtail-health")
-        else:
-            try:
-                self._validate_for_start(loki_integration_data)
-            except LokiIntegrationDataIncompleteError as exc:
-                logger.warning(
-                    "Loki integration data not complete: %s . Will not start Promtail", exc.msg
-                )
-                return
-            self._start_promtail(loki_integration_data)
+            return
+
+        try:
+            self._validate_for_start(loki_integration_data)
+        except LokiIntegrationDataIncompleteError as exc:
+            logger.warning(
+                "Loki integration data not complete: %s . Will not start Promtail", exc.msg
+            )
+            return
+        self._setup_promtail(loki_integration_data)
 
     def _on_promtail_health(
         self, event: PromtailHealthCheckEvent  # pylint: disable=unused-argument

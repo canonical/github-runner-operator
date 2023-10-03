@@ -74,9 +74,9 @@ def mock_download_fixture(requests_mock):
     requests_mock.get(TEST_DOWNLOAD_URL, content=TEST_PROMTAIL_ZIP)
 
 
-def _call_promtail_start():
-    """Call promtail.start with the test config."""
-    promtail.start(
+def _call_promtail_setup():
+    """Call promtail.setup with the test config."""
+    promtail.setup(
         promtail.Config(
             loki_endpoint=secrets.token_hex(16),
             proxies=None,
@@ -85,42 +85,42 @@ def _call_promtail_start():
     )
 
 
-def test_start_installs_promtail(promtail_paths: dict[str, Path]):
+def test_setup_installs_promtail(promtail_paths: dict[str, Path]):
     """
     arrange: Mock requests and the binary path.
-    act: Call start.
+    act: Call setup.
     assert: The mocked promtail binary is installed in the expected location.
     """
-    _call_promtail_start()
+    _call_promtail_setup()
 
     assert promtail_paths["binary"].read_bytes() == TEST_PROMTAIL_BINARY
 
 
-def test_start_does_not_install_promtail_if_already_installed(promtail_paths: dict[str, Path]):
+def test_setup_does_not_install_promtail_if_already_installed(promtail_paths: dict[str, Path]):
     """
     arrange: Place a fake file with different content than the test binary in the binary path.
-    act: Call start.
+    act: Call setup.
     assert: The mocked promtail binary is not installed in the expected location.
     """
     promtail_paths["binary"].write_text("fake")
     promtail_paths["binary_sha256"].write_text(TEST_PROMTAIL_BINARY_SHA256)
 
-    _call_promtail_start()
+    _call_promtail_setup()
 
     assert promtail_paths["binary"].read_text() == "fake"
 
 
-def test_start_reinstalls_promtail_if_sha_differs(promtail_paths: dict[str, Path]):
+def test_setup_reinstalls_promtail_if_sha_differs(promtail_paths: dict[str, Path]):
     """
     arrange: Place a fake promtail and a sha256 file with different content than the expected
         sha256 in the binary path.
-    act: Call start.
+    act: Call setup.
     assert: The mocked promtail binary is reinstalled in the expected location.
     """
     promtail_paths["binary"].write_text("fake")
     promtail_paths["binary_sha256"].write_text(TEST_PROMTAIL_BINARY_SHA256 + "fake")
 
-    _call_promtail_start()
+    _call_promtail_setup()
 
     assert promtail_paths["binary"].read_bytes() == TEST_PROMTAIL_BINARY
 
@@ -128,22 +128,22 @@ def test_start_reinstalls_promtail_if_sha_differs(promtail_paths: dict[str, Path
 def test_install_raises_requests_error(requests_mock):
     """
     arrange: Mock requests to raise a HTTPError.
-    act: Call start.
+    act: Call setup.
     assert: The expected exception is raised.
     """
     requests_mock.get(TEST_DOWNLOAD_URL, status_code=404)
 
     with pytest.raises(HTTPError):
-        _call_promtail_start()
+        _call_promtail_setup()
 
 
 def test_install_security_measurements(requests_mock):
     """
     arrange: Mock requests.
     act:
-        1. Call start with a different base url than expected.
-        2. Call start with a zip file that has a different hash than expected.
-        3. Call start with a binary file that has a different hash than expected.
+        1. Call setup with a different base url than expected.
+        2. Call setup with a zip file that has a different hash than expected.
+        3. Call setup with a binary file that has a different hash than expected.
     assert: PromtailInstallationError is raised in all cases.
     """
 
@@ -155,7 +155,7 @@ def test_install_security_measurements(requests_mock):
     )
 
     with pytest.raises(promtail.PromtailInstallationError):
-        promtail.start(
+        promtail.setup(
             promtail.Config(
                 loki_endpoint=secrets.token_hex(16),
                 proxies=None,
@@ -170,7 +170,7 @@ def test_install_security_measurements(requests_mock):
     )
     requests_mock.get(TEST_DOWNLOAD_URL, content=different_zip)
     with pytest.raises(promtail.PromtailInstallationError):
-        _call_promtail_start()
+        _call_promtail_setup()
 
     # 3. binary has differing hash
     # we adapt the zip hash to match the different zip but make sure the binary hash is different
@@ -183,7 +183,7 @@ def test_install_security_measurements(requests_mock):
     )
 
     with pytest.raises(promtail.PromtailInstallationError):
-        promtail.start(
+        promtail.setup(
             promtail.Config(
                 loki_endpoint=secrets.token_hex(16),
                 proxies=None,
@@ -206,7 +206,7 @@ def test_install_writes_config_file(
         proxies=None,
         promtail_download_info=TEST_PROMTAIL_DOWNLOAD_INFO,
     )
-    promtail.start(promtail_config)
+    promtail.setup(promtail_config)
 
     assert promtail_paths["config"].read_text() == jinja2_environment.get_template(
         "promtail.yaml.j2"
@@ -215,15 +215,15 @@ def test_install_writes_config_file(
     )
 
 
-def test_start_starts_a_systemd_service(
+def test_setup_starts_a_systemd_service(
     promtail_paths: dict[str, Path], exc_cmd_mock: Mock, jinja2_environment: jinja2.Environment
 ):
     """
     arrange: Mock the systemd service file location and executions of execute_command.
-    act: Call start.
+    act: Call setup.
     assert: The systemd service file has been created and the expected command has been executed.
     """
-    _call_promtail_start()
+    _call_promtail_setup()
 
     assert promtail_paths["systemd_service"].read_text() == jinja2_environment.get_template(
         "promtail.service.j2"
@@ -287,7 +287,7 @@ def test_is_running_returns_false_for_non_zero_exit_code(exc_cmd_mock: Mock):
     "promtail_fct",
     [
         (
-            "start",
+            "setup",
             [
                 promtail.Config(
                     loki_endpoint=secrets.token_hex(16),

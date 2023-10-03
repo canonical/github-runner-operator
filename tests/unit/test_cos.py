@@ -3,7 +3,7 @@
 import json
 import logging
 from typing import Generator
-from unittest.mock import MagicMock, Mock
+from unittest.mock import MagicMock, Mock, create_autospec
 
 import pytest
 from _pytest.logging import LogCaptureFixture
@@ -62,7 +62,7 @@ def patched_promtail_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
 
     Preserve Config and PromtailDownloadInfo classes in order to be testable.
     """
-    mock_promtail = MagicMock()
+    mock_promtail = create_autospec(cos.promtail)
     monkeypatch.setattr("cos.promtail", mock_promtail)
     mock_promtail.Config = Config
     mock_promtail.PromtailDownloadInfo = PromtailDownloadInfo
@@ -139,11 +139,11 @@ def _add_integration(harness: Harness, units: int) -> int:
     return int_id
 
 
-def test_push_api_endpoint_joined_starts_promtail(harness: Harness, promtail: MagicMock):
+def test_push_api_endpoint_joined_setups_promtail(harness: Harness, promtail: MagicMock):
     """
     arrange: Setup harness and a mocked promtail.
     act: Add integration and update integration data twice.
-    assert: Promtail has been started with any of the Loki endpoint found and the Promtail binary.
+    assert: Promtail has been set up with one of the Loki endpoints found and the Promtail binary.
     """
     harness.begin()
 
@@ -158,8 +158,8 @@ def test_push_api_endpoint_joined_starts_promtail(harness: Harness, promtail: Ma
         )
     _update_integration_with_promtail_binary(harness, int_id)
 
-    promtail.start.assert_called()
-    for call in promtail.start.call_args_list:
+    promtail.setup.assert_called()
+    for call in promtail.setup.call_args_list:
         assert call in [
             (
                 (
@@ -178,7 +178,7 @@ def test_push_api_endpoint_joined_starts_promtail(harness: Harness, promtail: Ma
         ]
 
 
-def test_push_api_endpoint_joined_does_not_start_promtail_if_no_endpoint_found(
+def test_push_api_endpoint_joined_does_not_setup_promtail_if_no_endpoint_found(
     harness: Harness, promtail: MagicMock
 ):
     """
@@ -191,7 +191,7 @@ def test_push_api_endpoint_joined_does_not_start_promtail_if_no_endpoint_found(
     int_id = _add_integration(harness, units=0)
     _update_integration_with_promtail_binary(harness, int_id)
 
-    assert promtail.start.call_count == 0
+    assert promtail.setup.call_count == 0
 
 
 def test_push_api_endpoint_joined_does_not_start_promtail_if_no_binary_found(
@@ -210,7 +210,7 @@ def test_push_api_endpoint_joined_does_not_start_promtail_if_no_binary_found(
     int_id = _add_integration(harness, units=1)
     _update_integration_data_with_endpoint(harness, int_id)
 
-    assert promtail.start.call_count == 0
+    assert promtail.setup.call_count == 0
 
     # 2. Add integration with promtail binary info but wrong architecture.
     harness.update_relation_data(
@@ -219,7 +219,7 @@ def test_push_api_endpoint_joined_does_not_start_promtail_if_no_binary_found(
         {"promtail_binary_zip_url": json.dumps({"wrong_arch": TEST_PROMTAIL_BINARY_ZIP_INFO})},
     )
 
-    assert promtail.start.call_count == 0
+    assert promtail.setup.call_count == 0
 
 
 def test_push_api_endpoint_joined_creates_event_timer(harness: Harness):
@@ -308,12 +308,12 @@ def test_push_api_endpoint_departed_endpoints_still_existing(
     _update_integration_with_promtail_binary(harness, int_id)
 
     # We clear the calls to the mock to make sure we only check the last start from this test.
-    promtail.start.reset_mock()
+    promtail.setup.reset_mock()
 
     harness.remove_relation_unit(int_id, f"{TEST_REMOTE_APP}/0")
 
     assert promtail.stop.call_count == 0
-    promtail.start.assert_called_once_with(
+    promtail.setup.assert_called_once_with(
         Config(
             "http://loki1:3100/loki/api/v1/push",
             ProxyConfig(),

@@ -160,8 +160,10 @@ def _start(config: Config, environment: jinja2.Environment) -> None:
     execute_command([SYSTEMCTL_PATH_STR, "enable", "promtail"], check_exit=True)
 
 
-def start(config: Config) -> None:
-    """Start Promtail.
+def setup(config: Config) -> None:
+    """Set up Promtail.
+
+    Installs, configures and starts Promtail.
 
     If Promtail has not already been installed, it will be installed
     and configured to send logs to Loki.
