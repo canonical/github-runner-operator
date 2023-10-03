@@ -237,7 +237,7 @@ def test_push_api_endpoint_joined_creates_event_timer(harness: Harness):
     _update_integration_data_with_endpoint(harness, int_id)
     _update_integration_with_promtail_binary(harness, int_id)
 
-    et_mock.ensure_event_timer.assert_called_once_with("promtail-health", 5)
+    et_mock.ensure_event_timer.assert_called_once_with("promtail-health", 10)
 
 
 def test_push_api_endpoint_joined_without_integration_data_does_not_create_event_timer(

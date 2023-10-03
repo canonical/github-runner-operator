@@ -121,9 +121,8 @@ def _install(promtail_download_info: PromtailDownloadInfo) -> None:
     response = requests.get(promtail_download_info.url, timeout=300)
     response.raise_for_status()
 
-    with open(PROMTAIL_GZIP_PATH, "wb") as file:
-        logger.info("Writing Promtail binary gzip to %s", PROMTAIL_GZIP_PATH)
-        file.write(response.content)
+    logger.info("Writing Promtail binary gzip to %s", PROMTAIL_GZIP_PATH)
+    PROMTAIL_GZIP_PATH.write_bytes(response.content)
     if not _sha256sums_matches(PROMTAIL_GZIP_PATH, promtail_download_info.zip_sha256):
         raise PromtailInstallationError(
             f"Promtail zip file sha256sum mismatch, expected: {promtail_download_info.zip_sha256}"
