@@ -307,7 +307,6 @@ class RunnerManager:
             resources: Configuration of the virtual machine resources.
             runner: Runner to be created.
         """
-
         if self.config.issue_metrics:
             ts_now = time.time()
             runner.create(

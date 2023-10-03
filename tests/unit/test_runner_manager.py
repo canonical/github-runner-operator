@@ -245,7 +245,7 @@ def test_reconcile_error_on_runner_installed_event_are_ignored(
     assert: No error is raised.
     """
     runner_manager.config.issue_metrics = True
-    issue_event_mock.side_effect = HTTPError("Test exception")
+    issue_event_mock.side_effect = HTTPError
 
     delta = runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 

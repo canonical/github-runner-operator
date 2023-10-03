@@ -34,8 +34,10 @@ def promtail_paths_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> dict[str
     """
     Mock the hardcoded promtail paths.
     """
-    binary_path = tmp_path / "promtail-linux-amd64"
+    binary_path = tmp_path / "promtail"
     monkeypatch.setattr("promtail.PROMTAIL_BINARY_PATH", binary_path)
+    gzip_path = binary_path.with_suffix(".gz")
+    monkeypatch.setattr("promtail.PROMTAIL_GZIP_PATH", gzip_path)
     sha_path = binary_path.with_suffix(".sha256")
     monkeypatch.setattr("promtail.PROMTAIL_BINARY_SHA_PATH", sha_path)
     config_path = tmp_path / "promtail.yaml"
@@ -45,6 +47,7 @@ def promtail_paths_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> dict[str
     return {
         "binary": binary_path,
         "binary_sha256": sha_path,
+        "gzip": gzip_path,
         "config": config_path,
         "systemd_service": systemd_service_path,
     }

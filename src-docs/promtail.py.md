@@ -9,6 +9,7 @@ Functions for operating Promtail.
 ---------------
 - **PROMTAIL_BASE_URL**
 - **SYSTEMCTL_PATH_STR**
+- **PROMTAIL_BINARY_FILE_MODE**
 - **JINJA2_TEMPLATE_PATH**
 
 ---
@@ -105,7 +106,7 @@ Attrs:  url: The URL to download Promtail from.  zip_sha256: The SHA256 hash of 
 ## <kbd>class</kbd> `PromtailInstallationError`
 Represents an error during installation of Promtail. 
 
-<a href="../src/promtail.py#L34"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/promtail.py#L36"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

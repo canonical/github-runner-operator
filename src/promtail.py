@@ -18,7 +18,9 @@ from utilities import execute_command
 
 SYSTEMCTL_PATH_STR = "/usr/bin/systemctl"
 
+PROMTAIL_BINARY_FILE_MODE = 0o551
 PROMTAIL_BINARY_PATH = Path("/usr/local/bin/promtail")
+PROMTAIL_GZIP_PATH = PROMTAIL_BINARY_PATH.with_suffix(".gz")
 PROMTAIL_BINARY_SHA_PATH = Path("/usr/local/bin/promtail.sha256")
 PROMTAIL_CONFIG_PATH = Path("/etc/promtail.yaml")
 JINJA2_TEMPLATE_PATH = "templates"
@@ -119,19 +121,17 @@ def _install(promtail_download_info: PromtailDownloadInfo) -> None:
     response = requests.get(promtail_download_info.url, timeout=300)
     response.raise_for_status()
 
-    with open(PROMTAIL_BINARY_PATH.with_suffix(".gz"), "wb") as file:
-        logger.info("Writing Promtail binary zip to %s", PROMTAIL_BINARY_PATH.with_suffix(".gz"))
+    with open(PROMTAIL_GZIP_PATH, "wb") as file:
+        logger.info("Writing Promtail binary gzip to %s", PROMTAIL_GZIP_PATH)
         file.write(response.content)
-    if not _sha256sums_matches(
-        PROMTAIL_BINARY_PATH.with_suffix(".gz"), promtail_download_info.zip_sha256
-    ):
+    if not _sha256sums_matches(PROMTAIL_GZIP_PATH, promtail_download_info.zip_sha256):
         raise PromtailInstallationError(
             f"Promtail zip file sha256sum mismatch, expected: {promtail_download_info.zip_sha256}"
         )
-    with gzip.open(PROMTAIL_BINARY_PATH.with_suffix(".gz"), "rb") as file:
+    with gzip.open(PROMTAIL_GZIP_PATH, "rb") as file:
         logger.info("Writing Promtail binary to %s", PROMTAIL_BINARY_PATH)
         PROMTAIL_BINARY_PATH.write_bytes(file.read())
-        PROMTAIL_BINARY_PATH.chmod(0o551)
+        PROMTAIL_BINARY_PATH.chmod(PROMTAIL_BINARY_FILE_MODE)
         if not _sha256sums_matches(PROMTAIL_BINARY_PATH, promtail_download_info.bin_sha256):
             try:
                 PROMTAIL_BINARY_PATH.unlink()
