@@ -14,7 +14,7 @@ Classes and function to extract the metrics from a shared filesystem.
 
 ---
 
-<a href="../src/runner_metrics.py#L157"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_metrics.py#L160"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `extract`
 

@@ -85,7 +85,6 @@ class Runner:
         runner_config: RunnerConfig,
         runner_status: RunnerStatus,
         instance: Optional[LxdInstance] = None,
-        issue_metrics: bool = False,
     ):
         """Construct the runner instance.
 
@@ -93,14 +92,12 @@ class Runner:
             clients: Clients to access various services.
             runner_config: Configuration of the runner instance.
             instance: LXD instance of the runner if already created.
-            issue_metrics: Whether to issue metrics on runner start and stop.
         """
         # Dependency injection to share the instances across different `Runner` instance.
         self._clients = clients
         self.config = runner_config
         self.status = runner_status
         self.instance = instance
-        self.issue_metrics = issue_metrics
 
         self._shared_fs: Optional[shared_fs.SharedFilesystem] = None
 
@@ -131,7 +128,7 @@ class Runner:
         logger.info("Creating runner: %s", self.config.name)
 
         try:
-            if self.issue_metrics:
+            if self.config.issue_metrics:
                 try:
                     self._shared_fs = shared_fs.create(self.config.name)
                 except SubprocessError:

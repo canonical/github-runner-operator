@@ -93,6 +93,7 @@ class RunnerConfig:
         proxies: HTTP(S) proxy settings.
         lxd_storage_path: Path to be used as LXD storage.
         name: Name of the runner.
+        issue_metrics: Whether to issue metrics.
     """
 
     app_name: str
@@ -100,6 +101,7 @@ class RunnerConfig:
     proxies: ProxySetting
     lxd_storage_path: Path
     name: str
+    issue_metrics: bool
 
 
 @dataclass

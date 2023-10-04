@@ -415,10 +415,9 @@ class RunnerManager:
                     self.proxies,
                     self.config.lxd_storage_path,
                     self._generate_runner_name(),
+                    self.config.issue_metrics,
                 )
-                runner = Runner(
-                    self._clients, config, RunnerStatus(), issue_metrics=self.config.issue_metrics
-                )
+                runner = Runner(self._clients, config, RunnerStatus())
                 try:
                     self._create_runner(registration_token, resources, runner)
                     logger.info("Created runner: %s", runner.config.name)
@@ -565,14 +564,18 @@ class RunnerManager:
             busy = getattr(remote_runner, "busy", None)
 
             config = RunnerConfig(
-                self.app_name, self.config.path, self.proxies, self.config.lxd_storage_path, name
+                self.app_name,
+                self.config.path,
+                self.proxies,
+                self.config.lxd_storage_path,
+                name,
+                self.config.issue_metrics,
             )
             return Runner(
                 self._clients,
                 config,
                 RunnerStatus(runner_id, running, online, busy),
                 local_runner,
-                issue_metrics=self.config.issue_metrics,
             )
 
         remote_runners = self._get_runner_github_info()

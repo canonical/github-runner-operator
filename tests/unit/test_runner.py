@@ -108,7 +108,9 @@ def runner_fixture(request, lxd: MockLxdClient, jinja: MagicMock, tmp_path: Path
     )
     pool_path = tmp_path / "test_storage"
     pool_path.mkdir(exist_ok=True)
-    config = RunnerConfig("test_app", request.param[0], request.param[1], pool_path, "test_runner")
+    config = RunnerConfig(
+        "test_app", request.param[0], request.param[1], pool_path, "test_runner", False
+    )
     status = RunnerStatus()
     return Runner(
         client,
@@ -204,7 +206,7 @@ def test_create_with_metrics(
         rendered to issue metrics.
     """
 
-    runner.issue_metrics = True
+    runner.config.issue_metrics = True
     shared_fs.create.return_value = SharedFilesystem(
         path=Path("/home/ubuntu/shared_fs"), runner_name="test_runner"
     )
