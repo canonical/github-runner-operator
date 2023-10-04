@@ -3,7 +3,7 @@
 <a href="../src/shared_fs.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `shared_fs.py`
-Classes and functions to operate on the shared fileystem between the charm and the runners. 
+Classes and functions to operate on the shared filesystem between the charm and the runners. 
 
 **Global Variables**
 ---------------
@@ -33,9 +33,15 @@ Create a shared filesystem for the runner.
  The shared filesystem object. 
 
 
+
+**Raises:**
+ 
+ - <b>`SubprocessError`</b>:  If the command fails. 
+
+
 ---
 
-<a href="../src/shared_fs.py#L54"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L60"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `list`
 
@@ -48,7 +54,7 @@ List the shared filesystems.
 
 ---
 
-<a href="../src/shared_fs.py#L59"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L65"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `delete`
 
@@ -67,7 +73,7 @@ Delete the shared filesystem for the runner.
 
 ---
 
-<a href="../src/shared_fs.py#L68"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L74"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `get`
 

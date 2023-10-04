@@ -20,7 +20,9 @@ from typing import Iterable, Optional, Sequence
 
 import yaml
 
-from errors import LxdError, RunnerCreateError, RunnerError, RunnerFileLoadError, RunnerRemoveError
+import shared_fs
+from errors import LxdError, RunnerCreateError, RunnerError, RunnerFileLoadError, \
+    RunnerRemoveError, SubprocessError
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
 from runner_type import (
@@ -31,8 +33,7 @@ from runner_type import (
     RunnerStatus,
     VirtualMachineResources,
 )
-import shared_fs
-from utilities import retry, execute_command
+from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
 LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
@@ -127,8 +128,11 @@ class Runner:
             if self.issue_metrics:
                 try:
                     self._shared_fs = shared_fs.create(self.config.name)
-                except Exception:
-                    logger.exception("Unable to create shared filesystem for runner %s. Will not create metrics for this runner.", self.config.name)
+                except SubprocessError:
+                    logger.exception(
+                        "Unable to create shared filesystem for runner %s. Will not create metrics for this runner.",
+                        self.config.name,
+                    )
 
             self.instance = self._create_instance(image, resources)
             self._start_instance()
@@ -226,6 +230,30 @@ class Runner:
                 runner_id=self.status.runner_id,
             )
 
+    def _add_shared_filesystem(self):
+        """Add the shared filesystem to the runner instance."""
+        try:
+            execute_command(
+                [
+                    "sudo",
+                    "lxc",
+                    "config",
+                    "device",
+                    "add",
+                    self.config.name,
+                    "metrics",
+                    "disk",
+                    f"source={self._shared_fs.path}",
+                    "path=/metrics-exchange",
+                ],
+                check_exit=True,
+            )
+        except SubprocessError:
+            logger.exception(
+                "Unable to add shared filesystem to runner %s. Will not issue metrics for this runner.",
+                self.config.name,
+            )
+
     @retry(tries=5, delay=1, local_logger=logger)
     def _create_instance(
         self, image: str, resources: VirtualMachineResources, ephemeral: bool = True
@@ -264,14 +292,8 @@ class Runner:
         instance = self._clients.lxd.instances.create(config=instance_config, wait=True)
         self.status.exist = True
 
-        if self.issue_metrics and self._shared_fs:
-            try:
-                execute_command(
-                    ["sudo", "lxc", "config", "device", "add", instance.name, "metrics", "disk",
-                     f"source={self._shared_fs.path}", "path=/metrics-exchange"],
-                    check_exit=True)
-            except Exception:
-                logger.exception("Unable to add shared filesystem to runner %s. Will not issue metrics for this runner.", instance.name)
+        if self._shared_fs:
+            self._add_shared_filesystem()
 
         return instance
 
@@ -482,6 +504,14 @@ class Runner:
             )
             raise RunnerFileLoadError(f"Failed to load runner binary on {self.config.name}")
 
+    def _should_render_templates_with_metrics(self) -> bool:
+        """Whether to render templates with metrics.
+
+        Returns:
+            Whether to render templates with metrics.
+        """
+        return self._shared_fs is not None
+
     @retry(tries=5, delay=10, max_delay=60, backoff=2, local_logger=logger)
     def _configure_runner(self) -> None:
         """Load configuration on to the runner.
@@ -493,7 +523,9 @@ class Runner:
             raise RunnerError("Runner operation called prior to runner creation.")
 
         # Load the runner startup script.
-        startup_contents = self._clients.jinja.get_template("start.j2").render(issue_metrics=self.issue_metrics)
+        startup_contents = self._clients.jinja.get_template("start.j2").render(
+            issue_metrics=self._should_render_templates_with_metrics()
+        )
         self._put_file(str(self.runner_script), startup_contents, mode="0755")
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
@@ -503,7 +535,9 @@ class Runner:
         host_ip, _ = bridge_address_range.split("/")
         one_time_token = self._clients.repo.get_one_time_token()
         pre_job_contents = self._clients.jinja.get_template("pre-job.j2").render(
-            host_ip=host_ip, one_time_token=one_time_token, issue_metrics=self.issue_metrics
+            host_ip=host_ip,
+            one_time_token=one_time_token,
+            issue_metrics=self._should_render_templates_with_metrics(),
         )
         self._put_file(str(self.pre_job_script), pre_job_contents)
         self.instance.execute(
@@ -707,8 +741,3 @@ class Runner:
                 wget_cmd += ["-e", f"no_proxy={self.config.proxies['no_proxy']}"]
             self.instance.execute(wget_cmd)
             self.instance.execute(["/usr/bin/chmod", "+x", executable_path])
-
-    def _setup_shared_fs(self):
-        """Setup shared file system between host and runner."""
-        if self.instance is None:
-            raise RunnerError("Runner operation called prior to runner creation.")

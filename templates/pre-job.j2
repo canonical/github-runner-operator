@@ -2,6 +2,9 @@
 
 timestamp=$(date +%s)
 
+# Disable exit-on-error, due the need for error handling.
+set +e
+
 {% if issue_metrics %}
 jq -n \
   --arg workflow "$GITHUB_WORKFLOW" \
@@ -15,11 +18,9 @@ jq -n \
     "event": $event,
     "timestamp": $timestamp,
     "workflow_run_id": $workflow_run_id
-  }' > /metrics-exchange/pre-job-metrics.json
+  }' > /metrics-exchange/pre-job-metrics.json || true
 {% endif %}
 
-# Disable exit-on-error, due the need for error handling.
-set +e
 
 # Log common env variables.
 logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \

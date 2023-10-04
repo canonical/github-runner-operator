@@ -45,7 +45,7 @@ from runner_type import (
     RunnerByHealth,
     VirtualMachineResources,
 )
-from utilities import retry, set_env_var, execute_command
+from utilities import execute_command, retry, set_env_var
 
 logger = logging.getLogger(__name__)
 
@@ -83,6 +83,7 @@ class RunnerInfo:
     name: str
     status: GitHubRunnerStatus
     busy: bool
+
 
 def _extract_runner_metrics() -> None:
     """Extract metrics from runners.
@@ -348,8 +349,6 @@ class RunnerManager:
                 registration_token,
             )
 
-
-
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
 
@@ -415,7 +414,9 @@ class RunnerManager:
                     self.config.lxd_storage_path,
                     self._generate_runner_name(),
                 )
-                runner = Runner(self._clients, config, RunnerStatus(), issue_metrics=self.issue_metrics)
+                runner = Runner(
+                    self._clients, config, RunnerStatus(), issue_metrics=self.config.issue_metrics
+                )
                 try:
                     self._create_runner(registration_token, resources, runner)
                     logger.info("Created runner: %s", runner.config.name)
@@ -569,7 +570,7 @@ class RunnerManager:
                 config,
                 RunnerStatus(runner_id, running, online, busy),
                 local_runner,
-                issue_metrics=self.issue_metrics,
+                issue_metrics=self.config.issue_metrics,
             )
 
         remote_runners = self._get_runner_github_info()
