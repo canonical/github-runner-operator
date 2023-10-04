@@ -21,8 +21,14 @@ from typing import Iterable, Optional, Sequence
 import yaml
 
 import shared_fs
-from errors import LxdError, RunnerCreateError, RunnerError, RunnerFileLoadError, \
-    RunnerRemoveError, SubprocessError
+from errors import (
+    LxdError,
+    RunnerCreateError,
+    RunnerError,
+    RunnerFileLoadError,
+    RunnerRemoveError,
+    SubprocessError,
+)
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
 from runner_type import (
@@ -130,7 +136,8 @@ class Runner:
                     self._shared_fs = shared_fs.create(self.config.name)
                 except SubprocessError:
                     logger.exception(
-                        "Unable to create shared filesystem for runner %s. Will not create metrics for this runner.",
+                        "Unable to create shared filesystem for runner %s. "
+                        "Will not create metrics for this runner.",
                         self.config.name,
                     )
 
@@ -250,7 +257,8 @@ class Runner:
             )
         except SubprocessError:
             logger.exception(
-                "Unable to add shared filesystem to runner %s. Will not issue metrics for this runner.",
+                "Unable to add shared filesystem to runner %s. "
+                "Will not create metrics for this runner.",
                 self.config.name,
             )
 

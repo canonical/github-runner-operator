@@ -200,7 +200,8 @@ def test_create_with_metrics(
     """
     arrange: Config the runner to issue metrics and mock the shared filesystem.
     act: Create a runner.
-    assert: The command for adding a device has been executed and the templates are rendered to issue metrics.
+    assert: The command for adding a device has been executed and the templates are
+        rendered to issue metrics.
     """
 
     runner.issue_metrics = True
@@ -239,7 +240,8 @@ def test_create_with_metrics_and_shared_fs_error(
     shared_fs: MagicMock,
 ):
     """
-    arrange: Config the runner to issue metrics and mock the shared filesystem module to throw an error.
+    arrange: Config the runner to issue metrics and mock the shared filesystem module
+     to throw an error.
     act: Create a runner.
     assert: The runner is created despite the error on the shared filesystem.
     """

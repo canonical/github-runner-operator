@@ -11,14 +11,14 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 from charm_state import State
+import shared_fs
 from errors import RunnerBinaryError
 from metrics import RunnerInstalled
 from runner import Runner, RunnerStatus
-from runner_manager import RunnerManager, RunnerManagerConfig
+from runner_manager import RUNNER_INSTALLED_TS_FILE_NAME, RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, RunnerByHealth, VirtualMachineResources
+from shared_fs import SharedFilesystem
 from tests.unit.mock import TEST_BINARY
-
-TEST_LOKI_ENDPOINT = "http://test.loki"
 
 
 @pytest.fixture(scope="function", name="token")
@@ -74,6 +74,15 @@ def issue_event_mock_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     issue_event_mock = MagicMock()
     monkeypatch.setattr("metrics.issue_event", issue_event_mock)
     return issue_event_mock
+
+
+@pytest.fixture(autouse=True, name="shared_fs")
+def shared_fs_fixture(tmp_path: Path, monkeypatch: MonkeyPatch) -> MagicMock:
+    """Mock the shared filesystem module."""
+    shared_fs_mock = MagicMock(spec=shared_fs)
+    monkeypatch.setattr("runner_manager.shared_fs", shared_fs_mock)
+    monkeypatch.setattr("runner.shared_fs", shared_fs_mock)
+    return shared_fs_mock
 
 
 def test_get_latest_runner_bin_url(runner_manager: RunnerManager):
@@ -252,7 +261,7 @@ def test_reconcile_issues_no_runner_installed_event_if_metrics_disabled(
     issue_event_mock.assert_not_called()
 
 
-def test_reconcile_error_on_runner_installed_event_are_ignored(
+def test_reconcile_error_on_runner_installed_event_is_ignored(
     runner_manager: RunnerManager,
     issue_event_mock: MagicMock,
     charm_state: MagicMock,
@@ -269,3 +278,62 @@ def test_reconcile_error_on_runner_installed_event_are_ignored(
     delta = runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 
     assert delta == 1
+
+
+def test_reconcile_places_timestamp_in_newly_created_runner(
+    runner_manager: RunnerManager, monkeypatch: MonkeyPatch, shared_fs: MagicMock, tmp_path: Path
+):
+    """
+    arrange: Enable issuing of metrics, mock timestamps and
+        create the directory for the shared filesystem.
+    act: Reconcile to create a runner.
+    assert: The expected timestamp is placed in the shared filesystem.
+    """
+    runner_manager.config.issue_metrics = True
+    t_mock = MagicMock(return_value=12345)
+    monkeypatch.setattr("metrics.time.time", t_mock)
+    runner_shared_fs = tmp_path / "runner_fs"
+    runner_shared_fs.mkdir()
+    fs = SharedFilesystem(path=runner_shared_fs, runner_name="test_runner")
+    shared_fs.get.return_value = fs
+
+    runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
+
+    assert (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).exists()
+    assert (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).read_text() == "12345"
+
+
+def test_reconcile_error_on_placing_timestamp_is_ignored(
+    runner_manager: RunnerManager, shared_fs: MagicMock, tmp_path: Path
+):
+    """
+    arrange: Enable issuing of metrics and do not create the directory for the shared filesystem
+        in order to let a FileNotFoundError to be raised inside the RunnerManager.
+    act: Reconcile to create a runner.
+    assert: No exception is raised.
+    """
+    runner_manager.config.issue_metrics = True
+    runner_shared_fs = tmp_path / "runner_fs"
+    fs = SharedFilesystem(path=runner_shared_fs, runner_name="test_runner")
+    shared_fs.get.return_value = fs
+
+    runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
+
+    assert not (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).exists()
+
+
+def test_reconcile_places_no_timestamp_in_newly_created_runner_if_metrics_disabled(
+    runner_manager: RunnerManager, shared_fs: MagicMock, tmp_path: Path
+):
+    """
+    arrange: Disable issuing of metrics, mock timestamps and the shared filesystem module
+    act: Reconcile to create a runner.
+    assert: No timestamp is placed in the shared filesystem.
+    """
+    runner_manager.config.issue_metrics = False
+    fs = SharedFilesystem(path=tmp_path, runner_name="test_runner")
+    shared_fs.get.return_value = fs
+
+    runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
+
+    assert not (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).exists()

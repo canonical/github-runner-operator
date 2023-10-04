@@ -45,7 +45,9 @@ from runner_type import (
     RunnerByHealth,
     VirtualMachineResources,
 )
-from utilities import execute_command, retry, set_env_var
+from utilities import retry, set_env_var
+
+RUNNER_INSTALLED_TS_FILE_NAME = "runner-installed.timestamp"
 
 logger = logging.getLogger(__name__)
 
@@ -338,9 +340,15 @@ class RunnerManager:
                 logger.exception("Failed to issue metrics")
 
             fs = shared_fs.get(runner.config.name)
-            (fs.path / "runner-installed.timestamp").write_text(str(ts_after),
-                                                                encoding="utf-8")
-
+            try:
+                (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).write_text(
+                    str(ts_after), encoding="utf-8"
+                )
+            except FileNotFoundError:
+                logger.exception(
+                    "Failed to write runner-installed.timestamp, "
+                    "will not be able to issue all metrics."
+                )
         else:
             runner.create(
                 self.config.image,

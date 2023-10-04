@@ -18,7 +18,7 @@ Single instance of GitHub self-hosted runner.
 
 Attrs:  app_name (str): Name of the charm.  path (GitHubPath): Path to GitHub repo or org.  proxies (ProxySetting): HTTP proxy setting for juju charm.  name (str): Name of the runner instance.  exist (bool): Whether the runner instance exists on LXD.  online (bool): Whether GitHub marks this runner as online.  busy (bool): Whether GitHub marks this runner as busy. 
 
-<a href="../src/runner.py#L76"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L82"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -48,7 +48,7 @@ Construct the runner instance.
 
 ---
 
-<a href="../src/runner.py#L107"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L113"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `create`
 
@@ -80,7 +80,7 @@ Create the runner instance on LXD and register it on GitHub.
 
 ---
 
-<a href="../src/runner.py#L150"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L157"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `remove`
 
