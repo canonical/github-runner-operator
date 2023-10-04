@@ -12,6 +12,7 @@ from tests.integration.helpers import (
     get_runner_names,
     run_in_lxd_instance,
     run_in_unit,
+    start_test_http_server,
     wait_till_num_of_runners,
 )
 from tests.status_name import ACTIVE_STATUS_NAME
@@ -26,13 +27,9 @@ async def test_network_access(app: Application) -> None:
     assert: The HTTP call failed.
     """
     unit = app.units[0]
+    port = 4040
 
-    await unit.run("python -m http.server 8000")
-
-    # Test the HTTP server
-    return_code, stdout = await run_in_unit(unit, "curl http://localhost:8000")
-    assert return_code == 0
-    assert stdout
+    await start_test_http_server(unit, port)
 
     names = await get_runner_names(unit)
     assert names
@@ -41,7 +38,9 @@ async def test_network_access(app: Application) -> None:
     assert return_code == 0
     host_ip, _ = stdout.split("/")
 
-    return_code, stdout = await run_in_lxd_instance(unit, names[0], f"curl http://{host_ip}:8000")
+    return_code, stdout = await run_in_lxd_instance(
+        unit, names[0], f"curl http://{host_ip}:{port}"
+    )
 
     assert return_code != 0
     # TODO: Test stdout as well.

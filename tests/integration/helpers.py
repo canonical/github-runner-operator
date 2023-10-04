@@ -4,6 +4,7 @@
 """Utilities for integration test."""
 
 import json
+from asyncio import sleep
 from typing import Any
 
 import juju.version
@@ -207,3 +208,16 @@ async def run_in_lxd_instance(
         lxc_cmd += ["--cwd", cwd]
     lxc_cmd += "--" + command
     return await run_in_unit(unit, lxc_cmd, timeout)
+
+
+async def start_test_http_server(unit: Unit, port: int):
+    await unit.run(f"python -m http.server {port}")
+
+    # Test the HTTP server
+    for _ in range(10):
+        return_code, stdout = await run_in_unit(unit, f"curl http://localhost:{port}")
+        if return_code == 0 and stdout:
+            break
+        await sleep(3)
+    else:
+        assert False, "Timeout waiting for HTTP server to start up"
