@@ -15,7 +15,8 @@ import shared_fs
 from errors import RunnerBinaryError
 from metrics import RunnerInstalled
 from runner import Runner, RunnerStatus
-from runner_manager import RUNNER_INSTALLED_TS_FILE_NAME, RunnerManager, RunnerManagerConfig
+from runner_manager import RunnerManager, RunnerManagerConfig
+from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import GitHubOrg, GitHubRepo, RunnerByHealth, VirtualMachineResources
 from shared_fs import SharedFilesystem
 from tests.unit.mock import TEST_BINARY

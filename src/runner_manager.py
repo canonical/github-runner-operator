@@ -24,6 +24,7 @@ from typing_extensions import assert_never
 
 import metrics
 from charm_state import State as CharmState
+import runner_metrics
 import shared_fs
 from errors import RunnerBinaryError, RunnerCreateError
 from github_type import (
@@ -37,6 +38,7 @@ from github_type import (
 from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
+from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import (
     GitHubOrg,
     GitHubPath,
@@ -46,8 +48,6 @@ from runner_type import (
     VirtualMachineResources,
 )
 from utilities import retry, set_env_var
-
-RUNNER_INSTALLED_TS_FILE_NAME = "runner-installed.timestamp"
 
 logger = logging.getLogger(__name__)
 
@@ -85,15 +85,6 @@ class RunnerInfo:
     name: str
     status: GitHubRunnerStatus
     busy: bool
-
-
-def _extract_runner_metrics() -> None:
-    """Extract metrics from runners.
-
-    The metrics are extracted from the shared filesystem and issued to Promtail.
-    Orphan shared filesystems are cleaned up.
-    """
-    pass
 
 
 class RunnerManager:
@@ -387,7 +378,10 @@ class RunnerManager:
             len(runner_states.healthy),
             len(runner_states.unhealthy),
         )
-        _extract_runner_metrics()
+
+        if self.config.issue_metrics:
+            runner_metrics.extract(flavor=self.app_name, ignore_runners=set(runner_states.healthy))
+
         # Clean up offline runners
         if runner_states.unhealthy:
             logger.info("Cleaning up unhealthy runners.")
