@@ -54,6 +54,62 @@ def test_create_raises_exception(exc_cmd_mock):
         shared_fs.create(runner_name)
 
 
+def test_list_shared_filesystems(filesystems_paths: Path):
+    """
+    arrange: Create shared filesystems for multiple runners.
+    act: Call list
+    assert: A generator listing all the shared filesystems is returned.
+    """
+    runner_names = [secrets.token_hex(16) for _ in range(3)]
+    for runner_name in runner_names:
+        shared_fs.create(runner_name)
+
+    fs_list = list(shared_fs.list_all())
+
+    assert len(fs_list) == 3
+    for fs in fs_list:
+        assert isinstance(fs, shared_fs.SharedFilesystem)
+        assert fs.runner_name in runner_names
+
+
+def test_list_shared_filesystems_empty(filesystems_paths: Path):
+    """
+    arrange: Nothing
+    act: Call list
+    assert: An empty generator is returned.
+    """
+    fs_list = list(shared_fs.list_all())
+
+    assert len(fs_list) == 0
+
+
+def test_delete_filesystem(filesystems_paths: Path):
+    """
+    arrange: Create a shared filesystem for a runner.
+    act: Call delete
+    assert: The shared filesystem is deleted.
+    """
+    runner_name = secrets.token_hex(16)
+    shared_fs.create(runner_name)
+
+    shared_fs.delete(runner_name)
+
+    with pytest.raises(shared_fs.NotFoundError):
+        shared_fs.get(runner_name)
+
+
+def test_delete_raises_not_found_error(filesystems_paths: Path):
+    """
+    arrange: Nothing
+    act: Call delete
+    assert: A NotFoundError is raised.
+    """
+    runner_name = secrets.token_hex(16)
+
+    with pytest.raises(shared_fs.NotFoundError):
+        shared_fs.delete(runner_name)
+
+
 def test_get_shared_filesystem(filesystems_paths: Path):
     """
     arrange: Given a runner name and a path for the filesystems and a mocked execute_command
@@ -66,3 +122,15 @@ def test_get_shared_filesystem(filesystems_paths: Path):
 
     assert isinstance(fs, shared_fs.SharedFilesystem)
     assert fs.runner_name == runner_name
+
+
+def test_get_raises_not_found_error(filesystems_paths: Path):
+    """
+    arrange: Nothing
+    act: Call get
+    assert: A NotFoundError is raised.
+    """
+    runner_name = secrets.token_hex(16)
+
+    with pytest.raises(shared_fs.NotFoundError):
+        shared_fs.get(runner_name)

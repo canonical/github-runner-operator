@@ -176,11 +176,11 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
         FileSizeTooLargeError: If one of the files is too large.
         FileNotFoundError: If installed_timestamp is not found inside a shared filesystem.
     """
-    for fs in shared_fs.list():
+    for fs in shared_fs.list_all():
         if fs.runner_name not in ignore_runners:
-            metrics = _extract_metrics_from_fs(fs)
-            if metrics:
-                _issue_runner_metrics(runner_metrics=metrics, flavor=flavor)
+            metrics_from_fs = _extract_metrics_from_fs(fs)
+            if metrics_from_fs:
+                _issue_runner_metrics(runner_metrics=metrics_from_fs, flavor=flavor)
             else:
                 logger.warning("Not able to issue metrics for runner %s", fs.runner_name)
             shared_fs.delete(fs.runner_name)

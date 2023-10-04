@@ -2,8 +2,10 @@
 #  See LICENSE file for licensing details.
 
 """Classes and functions to operate on the shared filesystem between the charm and the runners."""
+import shutil
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Generator
 
 from utilities import execute_command
 
@@ -24,6 +26,18 @@ class SharedFilesystem:
 
     path: Path
     runner_name: str
+
+
+class NotFoundError(Exception):
+    """Represents an error when the shared filesystem is not found."""
+
+    def __init__(self, msg: str):
+        """Initialize a new instance of the NotFoundError exception.
+
+        Args:
+            msg: Explanation of the error.
+        """
+        self.msg = msg
 
 
 def create(runner_name: str) -> SharedFilesystem:
@@ -57,9 +71,18 @@ def create(runner_name: str) -> SharedFilesystem:
     return SharedFilesystem(runner_fs_path, runner_name)
 
 
-def list() -> list[SharedFilesystem]:
-    """List the shared filesystems."""
-    pass
+def list_all() -> Generator[SharedFilesystem, None, None]:
+    """List the shared filesystems.
+
+    Returns:
+        A generator of shared filesystems.
+    """
+    if not FILESYSTEM_PATH.exists():
+        return
+
+    directories = (entry for entry in FILESYSTEM_PATH.iterdir() if entry.is_dir())
+    for directory in directories:
+        yield SharedFilesystem(path=directory, runner_name=directory.name)
 
 
 def delete(runner_name: str) -> None:
@@ -67,8 +90,12 @@ def delete(runner_name: str) -> None:
 
     Args:
         runner_name: The name of the runner.
+
+    Raises:
+        NotFoundError: If the shared filesystem is not found.
     """
-    pass
+    runner_fs = get(runner_name)
+    shutil.rmtree(runner_fs.path)
 
 
 def get(runner_name: str) -> SharedFilesystem:
@@ -81,5 +108,10 @@ def get(runner_name: str) -> SharedFilesystem:
 
     Returns:
         The shared filesystem object.
+
+    Raises:
+        NotFoundError: If the shared filesystem is not found.
     """
-    return SharedFilesystem(FILESYSTEM_PATH / runner_name, runner_name)
+    if not (runner_fs := FILESYSTEM_PATH.joinpath(runner_name)).exists():
+        raise NotFoundError(f"Shared filesystem for runner {runner_name} not found.")
+    return SharedFilesystem(runner_fs, runner_name)
