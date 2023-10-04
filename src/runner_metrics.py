@@ -157,6 +157,20 @@ def _issue_runner_metrics(runner_metrics: RunnerMetrics, flavor: str) -> None:
     metrics.issue_event(event)
 
 
+def _clean_up_shared_fs(fs: shared_fs.SharedFilesystem) -> None:
+    """Clean up the shared filesystem.
+
+    Remove all metric files and afterwards the shared filesystem.
+    Args:
+        fs: The shared filesystem for a specific runner.
+    """
+    fs.path.joinpath(PRE_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
+    fs.path.joinpath(POST_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
+    fs.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).unlink(missing_ok=True)
+
+    shared_fs.delete(fs.runner_name)
+
+
 def extract(flavor: str, ignore_runners: set[str]) -> None:
     """Extract and issue metrics from runners.
 
@@ -186,4 +200,6 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
                 _issue_runner_metrics(runner_metrics=metrics_from_fs, flavor=flavor)
             else:
                 logger.warning("Not able to issue metrics for runner %s", fs.runner_name)
-            shared_fs.delete(fs.runner_name)
+
+            logger.debug("Cleaning up shared filesystem for runner %s", fs.runner_name)
+            _clean_up_shared_fs(fs)

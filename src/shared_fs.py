@@ -95,6 +95,13 @@ def delete(runner_name: str) -> None:
         NotFoundError: If the shared filesystem is not found.
     """
     runner_fs = get(runner_name)
+    runner_image_path = FILESYSTEM_PATH / f"{runner_name}.img"
+
+    execute_command(
+        ["sudo", "umount", str(runner_fs.path)],
+        check_exit=True,
+    )
+    runner_image_path.unlink(missing_ok=True)
     shutil.rmtree(runner_fs.path)
 
 
