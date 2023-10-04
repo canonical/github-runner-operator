@@ -7,7 +7,7 @@ import json
 import logging
 from typing import Optional
 
-from pydantic import BaseModel, NonNegativeInt
+from pydantic import BaseModel, NonNegativeFloat
 
 import metrics
 import shared_fs
@@ -43,7 +43,7 @@ class PreJobMetrics(BaseModel):
         event: The github event.
     """
 
-    timestamp: NonNegativeInt
+    timestamp: NonNegativeFloat
     workflow: str
     workflow_run_id: str
     repository: str
@@ -58,7 +58,7 @@ class PostJobMetrics(BaseModel):
         status: The status of the job.
     """
 
-    timestamp: NonNegativeInt
+    timestamp: NonNegativeFloat
     status: str
 
 
@@ -71,7 +71,7 @@ class RunnerMetrics(BaseModel):
         post_job: The metrics for the post-job phase.
     """
 
-    installed_timestamp: NonNegativeInt
+    installed_timestamp: NonNegativeFloat
     pre_job: PreJobMetrics
     post_job: Optional[PostJobMetrics]
 
@@ -115,14 +115,17 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
     _inspect_file_sizes(fs)
 
     installed_timestamp = fs.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).read_text()
+    logger.debug("Runner %s installed at %s", fs.runner_name, installed_timestamp)
     try:
         pre_job_metrics = json.loads(fs.path.joinpath(PRE_JOB_METRICS_FILE_NAME).read_text())
+        logger.debug("Pre-job metrics for runner %s: %s", fs.runner_name, pre_job_metrics)
     except FileNotFoundError:
         logger.warning("%s not found for runner %s.", PRE_JOB_METRICS_FILE_NAME, fs.runner_name)
         return None
 
     try:
         post_job_metrics = json.loads(fs.path.joinpath(POST_JOB_METRICS_FILE_NAME).read_text())
+        logger.debug("Post-job metrics for runner %s: %s", fs.runner_name, post_job_metrics)
     except FileNotFoundError:
         logger.warning("%s not found for runner %s", POST_JOB_METRICS_FILE_NAME, fs.runner_name)
         post_job_metrics = None

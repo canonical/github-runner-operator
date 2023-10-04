@@ -6,7 +6,8 @@ import json
 import logging
 from pathlib import Path
 
-from pydantic import BaseModel, NonNegativeInt
+import requests
+from pydantic import BaseModel, NonNegativeFloat
 
 from utilities import execute_command
 
@@ -28,7 +29,7 @@ class Event(BaseModel):
          timestamp: The UNIX time stamp of the time at which the event was originally issued.
     """
 
-    timestamp: NonNegativeInt
+    timestamp: NonNegativeFloat
 
 
 class RunnerInstalled(Event):
@@ -41,7 +42,7 @@ class RunnerInstalled(Event):
     """
 
     flavor: str
-    duration: NonNegativeInt
+    duration: NonNegativeFloat
 
 
 class RunnerStart(Event):
@@ -60,7 +61,7 @@ class RunnerStart(Event):
     workflow: str
     repo: str
     github_event: str
-    idle: NonNegativeInt
+    idle: NonNegativeFloat
 
 
 def _camel_to_snake(camel_case_string: str) -> str:

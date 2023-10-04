@@ -58,24 +58,21 @@ def _create_runner_files(
     runner_fs.mkdir()
     if pre_job_data:
         if isinstance(pre_job_data, bytes):
-            fct = "write_bytes"
+            runner_fs.joinpath(runner_metrics.PRE_JOB_METRICS_FILE_NAME).write_bytes(pre_job_data)
         else:
-            fct = "write_text"
-        getattr(runner_fs.joinpath(runner_metrics.PRE_JOB_METRICS_FILE_NAME), fct)(pre_job_data)
+            runner_fs.joinpath(runner_metrics.PRE_JOB_METRICS_FILE_NAME).write_text(pre_job_data, "utf-8")
 
     if post_job_data:
         if isinstance(post_job_data, bytes):
-            fct = "write_bytes"
+            runner_fs.joinpath(runner_metrics.POST_JOB_METRICS_FILE_NAME).write_bytes(post_job_data)
         else:
-            fct = "write_text"
-        getattr(runner_fs.joinpath(runner_metrics.POST_JOB_METRICS_FILE_NAME), fct)(post_job_data)
+            runner_fs.joinpath(runner_metrics.POST_JOB_METRICS_FILE_NAME).write_text(post_job_data, "utf-8")
 
     if installed_timestamp:
         if isinstance(installed_timestamp, bytes):
-            fct = "write_bytes"
+            runner_fs.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).write_bytes(installed_timestamp)
         else:
-            fct = "write_text"
-        getattr(runner_fs.joinpath(RUNNER_INSTALLED_TS_FILE_NAME), fct)(installed_timestamp)
+            runner_fs.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).write_text(installed_timestamp, "utf-8")
     return shared_fs.SharedFilesystem(path=runner_fs, runner_name=runner_name)
 
 
@@ -90,9 +87,9 @@ def test_extract(shared_fs_mock: MagicMock, issue_event_mock: MagicMock, tmp_pat
     assert: For runners 1 & 2 RunnerStart events are issued and all shared filesystems are removed.
     """
     runner_with_all_metrics = RunnerMetrics(
-        installed_timestamp=1,
+        installed_timestamp=1696427232.2253454,
         pre_job=PreJobMetrics(
-            timestamp=2,
+            timestamp=1796427232.2253454,
             workflow="workflow1",
             workflow_run_id="workflow_run_id1",
             repository="repository1",
@@ -133,7 +130,7 @@ def test_extract(shared_fs_mock: MagicMock, issue_event_mock: MagicMock, tmp_pat
     # 3. Runner has no metrics except installed_timestamp inside shared fs
     runner3_fs = _create_runner_files(runner_fs_base, None, None, "5")
 
-    shared_fs_mock.list.return_value = [runner1_fs, runner2_fs, runner3_fs]
+    shared_fs_mock.list_all.return_value = [runner1_fs, runner2_fs, runner3_fs]
 
     flavor = secrets.token_hex(16)
     runner_metrics.extract(flavor, set())
@@ -187,7 +184,7 @@ def test_extract_ignores_runners(
     runner_metrics_data = RunnerMetrics(
         installed_timestamp=1,
         pre_job=PreJobMetrics(
-            timestamp=2,
+            timestamp=2.3,
             workflow="workflow1",
             workflow_run_id="workflow_run_id1",
             repository="repository1",
@@ -211,7 +208,7 @@ def test_extract_ignores_runners(
         )
         runner_filesystems.append(runner_fs)
 
-    shared_fs_mock.list.return_value = runner_filesystems
+    shared_fs_mock.list_all.return_value = runner_filesystems
 
     flavor = secrets.token_hex(16)
     runner_metrics.extract(
@@ -271,7 +268,7 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
         runner_metrics_data.post_job.json(),
         str(runner_metrics_data.installed_timestamp),
     )
-    shared_fs_mock.list.return_value = [runner_fs]
+    shared_fs_mock.list_all.return_value = [runner_fs]
 
     flavor = secrets.token_hex(16)
 
@@ -285,7 +282,7 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
         b"\x00",
         str(runner_metrics_data.installed_timestamp),
     )
-    shared_fs_mock.list.return_value = [runner_fs]
+    shared_fs_mock.list_all.return_value = [runner_fs]
 
     with pytest.raises(JSONDecodeError):
         runner_metrics.extract(flavor, set())
@@ -297,7 +294,7 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
         runner_metrics_data.post_job.json(),
         b"\x00",
     )
-    shared_fs_mock.list.return_value = [runner_fs]
+    shared_fs_mock.list_all.return_value = [runner_fs]
 
     with pytest.raises(ValidationError):
         runner_metrics.extract(flavor, set())
@@ -309,7 +306,7 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
         runner_metrics_data.post_job.json(),
         None,
     )
-    shared_fs_mock.list.return_value = [runner_fs]
+    shared_fs_mock.list_all.return_value = [runner_fs]
 
     with pytest.raises(FileNotFoundError):
         runner_metrics.extract(flavor, set())
@@ -342,7 +339,7 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
         runner_metrics_data.post_job.json(),
         str(runner_metrics_data.installed_timestamp),
     )
-    shared_fs_mock.list.return_value = [runner_fs]
+    shared_fs_mock.list_all.return_value = [runner_fs]
 
     flavor = secrets.token_hex(16)
 
@@ -359,7 +356,7 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
         invalid_post_job_data.json(),
         str(runner_metrics_data.installed_timestamp),
     )
-    shared_fs_mock.list.return_value = [runner_fs]
+    shared_fs_mock.list_all.return_value = [runner_fs]
 
     with pytest.raises(runner_metrics.FileSizeTooLargeError):
         runner_metrics.extract(flavor, set())
@@ -373,7 +370,7 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
         runner_metrics_data.post_job.json(),
         invalid_ts,
     )
-    shared_fs_mock.list.return_value = [runner_fs]
+    shared_fs_mock.list_all.return_value = [runner_fs]
 
     with pytest.raises(runner_metrics.FileSizeTooLargeError):
         runner_metrics.extract(flavor, set())
