@@ -163,7 +163,7 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     act:
         1.  a. Set virtual-machines config to 1.
             b. Run reconcile_runners action.
-        2.  a. Set virtual-machiens config to 0.
+        2.  a. Set virtual-machines config to 0.
             b. Run reconcile_runners action.
     assert:
         1. One runner should exist.

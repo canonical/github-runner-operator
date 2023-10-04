@@ -172,6 +172,7 @@ async def run_in_unit(unit: Unit, command: str, timeout=None) -> tuple[int, str 
     Args:
         unit: Juju unit to execute the command in.
         command: Command to execute.
+        timeout: Amount of time to wait for the execution.
 
     Returns:
         Tuple of return code and stdout.
@@ -184,3 +185,25 @@ async def run_in_unit(unit: Unit, command: str, timeout=None) -> tuple[int, str 
 
     await action.wait()
     return (action.results["return-code"], action.results.get("stdout", None))
+
+
+async def run_in_lxd_instance(
+    unit: Unit, name: str, command: str, cwd=None, timeout=None
+) -> tuple[int, str | None]:
+    """Run command in LXD instance of a juju unit.
+
+    Args:
+        unit: Juju unit to execute the command in.
+        name: Name of LXD instance.
+        command: Command to execute.
+        cwd: Work directory of the command.
+        timeout: Amount of time to wait for the execution.
+
+    Returns:
+        Tuple of return code and stdout.
+    """
+    lxc_cmd = ["/snap/bin/lxc", "exec", name]
+    if cwd:
+        lxc_cmd += ["--cwd", cwd]
+    lxc_cmd += "--" + command
+    return await run_in_unit(unit, lxc_cmd, timeout)
