@@ -28,7 +28,7 @@ def exc_command_fixture(monkeypatch: MonkeyPatch) -> Mock:
     return exc_cmd_mock
 
 
-def test_create_shared_filesystem(filesystems_paths: Path):
+def test_create_creates_directory(filesystems_paths: Path):
     """
     arrange: Given a runner name and a path for the filesystems and a mocked execute_command
     act: Call create
@@ -39,6 +39,7 @@ def test_create_shared_filesystem(filesystems_paths: Path):
     fs = shared_fs.create(runner_name)
 
     assert fs.path.exists()
+    assert fs.path.is_dir()
 
 
 def test_create_raises_exception(exc_cmd_mock):
@@ -113,11 +114,12 @@ def test_delete_raises_not_found_error(filesystems_paths: Path):
 def test_get_shared_filesystem(filesystems_paths: Path):
     """
     arrange: Given a runner name and a path for the filesystems and a mocked execute_command
-    act: Call get
+    act: Call create and get
     assert: A shared filesystem object is returned
     """
     runner_name = secrets.token_hex(16)
 
+    shared_fs.create(runner_name)
     fs = shared_fs.get(runner_name)
 
     assert isinstance(fs, shared_fs.SharedFilesystem)

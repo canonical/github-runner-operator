@@ -60,19 +60,27 @@ def _create_runner_files(
         if isinstance(pre_job_data, bytes):
             runner_fs.joinpath(runner_metrics.PRE_JOB_METRICS_FILE_NAME).write_bytes(pre_job_data)
         else:
-            runner_fs.joinpath(runner_metrics.PRE_JOB_METRICS_FILE_NAME).write_text(pre_job_data, "utf-8")
+            runner_fs.joinpath(runner_metrics.PRE_JOB_METRICS_FILE_NAME).write_text(
+                pre_job_data, encoding="utf-8"
+            )
 
     if post_job_data:
         if isinstance(post_job_data, bytes):
-            runner_fs.joinpath(runner_metrics.POST_JOB_METRICS_FILE_NAME).write_bytes(post_job_data)
+            runner_fs.joinpath(runner_metrics.POST_JOB_METRICS_FILE_NAME).write_bytes(
+                post_job_data
+            )
         else:
-            runner_fs.joinpath(runner_metrics.POST_JOB_METRICS_FILE_NAME).write_text(post_job_data, "utf-8")
+            runner_fs.joinpath(runner_metrics.POST_JOB_METRICS_FILE_NAME).write_text(
+                post_job_data, encoding="utf-8"
+            )
 
     if installed_timestamp:
         if isinstance(installed_timestamp, bytes):
             runner_fs.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).write_bytes(installed_timestamp)
         else:
-            runner_fs.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).write_text(installed_timestamp, "utf-8")
+            runner_fs.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).write_text(
+                installed_timestamp, encoding="utf-8"
+            )
     return shared_fs.SharedFilesystem(path=runner_fs, runner_name=runner_name)
 
 
