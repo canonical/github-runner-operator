@@ -211,7 +211,22 @@ async def run_in_lxd_instance(
 
 
 async def start_test_http_server(unit: Unit, port: int):
-    await unit.run(f"python -m http.server {port}")
+    await run_in_unit(
+        unit,
+        f"""cat <<EOT >> /etc/systemd/system/test-http-server.service
+[Unit]
+Description=Simple HTTP server for testing
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu
+ExecStart=python3 -m http.server {port}
+EOT""",
+    )
+    await run_in_unit(unit, "/usr/bin/systemctl daemon-reload")
+    await run_in_unit(unit, "/usr/bin/systemctl start test-http-server")
 
     # Test the HTTP server
     for _ in range(10):
