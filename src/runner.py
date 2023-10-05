@@ -319,9 +319,8 @@ class Runner:
             runner_storage_pool = self._clients.lxd.storage_pools.get("runner")
 
             # The resource profile needs to be removed first as it uses the storage pool.
-            logger.debug(runner_storage_pool.config)
-            for used_by in runner_storage_pool.config["used_by"]:
-                _, profile_name = used_by.rsplit("/")
+            for used_by in runner_storage_pool.used_by:
+                _, profile_name = used_by.rsplit("/", 1)
                 profile = self._clients.lxd.profiles.get(profile_name)
                 profile.delete()
 
