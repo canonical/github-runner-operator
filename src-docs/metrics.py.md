@@ -29,7 +29,7 @@ Transmit an event to Promtail.
 
 **Raises:**
  
- - <b>`requests.HTTPError`</b>:  If the HTTP request to Promtail fails. 
+ - <b>`requests.RequestException`</b>:  If the HTTP request to Promtail fails. 
 
 
 ---
