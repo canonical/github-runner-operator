@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Optional, Sequence, TypeVar
 
 import jinja2
-from charms.loki_k8s.v0.loki_push_api import LokiPushApiConsumer
+from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -46,8 +46,6 @@ from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResou
 from utilities import bytes_with_unit_to_kib, execute_command, get_env_var, retry
 
 logger = logging.getLogger(__name__)
-
-METRICS_LOGGING_INTEGRATION_NAME = "metrics-logging"
 
 
 class ReconcileRunnersEvent(EventBase):
@@ -135,10 +133,8 @@ class GithubRunnerCharm(CharmBase):
         """
         super().__init__(*args, **kargs)
 
-        loki_push_api_consumer = LokiPushApiConsumer(
-            charm=self, relation_name=METRICS_LOGGING_INTEGRATION_NAME
-        )
-        self._state = State.from_charm(loki_consumer=loki_push_api_consumer)
+        self._grafana_agent = COSAgentProvider(self)
+        self._state = State.from_charm(self)
 
         if LXD_PROFILE_YAML.exists():
             if self.config.get("test-mode") != "insecure":

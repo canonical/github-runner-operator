@@ -4,10 +4,11 @@
 """Models and functions for the metric events."""
 import json
 import logging
-import time
+from pathlib import Path
 
-import requests
 from pydantic import BaseModel, NonNegativeInt
+
+METRICS_LOG_PATH = Path("/var/log/github-runner-metrics.log")
 
 logger = logging.getLogger(__name__)
 
@@ -63,12 +64,11 @@ def _get_event_name(event: Event) -> str:
     return _camel_to_snake(event.__class__.__name__)
 
 
-def issue_event(event: Event, loki_endpoint: str) -> None:
+def issue_event(event: Event) -> None:
     """Transmit an event to Promtail.
 
     Args:
         event: The metric event to log.
-        loki_endpoint: The URL of the Loki endpoint.
     Raises:
         requests.RequestException: If the HTTP request to Promtail fails.
     """
@@ -76,18 +76,5 @@ def issue_event(event: Event, loki_endpoint: str) -> None:
     event_name = _get_event_name(event)
     event_dict["event"] = event_name
 
-    resp = requests.post(
-        loki_endpoint,
-        json={
-            "streams": [
-                {
-                    "stream": {"job": "metrics", "event": event_name},
-                    "values": [
-                        [str(time.time_ns()), json.dumps(event_dict)],
-                    ],
-                }
-            ]
-        },
-        timeout=5,
-    )
-    resp.raise_for_status()
+    with METRICS_LOG_PATH.open(mode="a", encoding="utf-8") as metrics_file:
+        metrics_file.write(f"{json.dumps(event_dict)}\n")

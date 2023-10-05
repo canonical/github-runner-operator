@@ -20,7 +20,7 @@ description: |
   the reconciliation interval and the number of runners to maintain are configurable.
 series:
   - jammy
-requires:
-  metrics-logging:
-    interface: loki_push_api
-    optional: true
+
+provides:
+  cos-agent:
+    interface: cos_agent

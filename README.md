@@ -41,11 +41,11 @@ During each time period, every unit will make one or more API calls to GitHub. T
 
 
 ## COS
-The charm is designed to provide comprehensive metrics and monitoring capabilities for both the Runners and the Charm itself. These metrics are made available through the `metrics-logging` integration with the `loki_push_api` interface. Additionally, a Grafana Dashboard is included to help visualize these metrics effectively.
+The charm is designed to provide comprehensive metrics and monitoring capabilities for both the Runners and the Charm itself. These metrics are made available through the `cos-agent` integration with the `cos_agent` interface. Additionally, a Grafana Dashboard is included to help visualize these metrics effectively.
 
 ### Loki Integration
 #### Loki Push API
-The charm seamlessly integrates with Loki, a powerful log aggregation system, through the `loki_push_api` interface. This integration allows the charm to push various metrics and logs related to the Runners and the Charm itself to a Loki instance. This provides valuable insights into the performance and behavior of your deployment.
+The charm seamlessly integrates with Loki, a powerful log aggregation system, through the `cos_agent` interface. This integration allows the charm to push various metrics and logs related to the Runners and the Charm itself to a Loki instance. This provides valuable insights into the performance and behavior of your deployment.
 
 ### Grafana Dashboard
 To make monitoring even more accessible, the charm comes with a pre-configured Grafana Dashboard. This dashboard is designed to visualize the metrics collected by the charm, making it easier for operators to track the health and performance of the system.

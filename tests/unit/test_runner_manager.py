@@ -230,13 +230,12 @@ def test_reconcile_issues_runner_installed_event(
     """
     charm_state.is_metrics_logging_available = True
     t_mock = MagicMock(return_value=12345)
-    monkeypatch.setattr("metrics.time.time", t_mock)
+    monkeypatch.setattr("runner_manager.time.time", t_mock)
 
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 
     issue_event_mock.assert_called_once_with(
-        event=RunnerInstalled(timestamp=12345, flavor=runner_manager.app_name, duration=0),
-        loki_endpoint=TEST_LOKI_ENDPOINT,
+        event=RunnerInstalled(timestamp=12345, flavor=runner_manager.app_name, duration=0)
     )
 
 

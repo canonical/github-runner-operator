@@ -323,7 +323,6 @@ class RunnerManager:
                         flavor=self.app_name,
                         duration=ts_after - ts_now,
                     ),
-                    loki_endpoint=self.config.charm_state.loki_endpoint.url,
                 )
             except requests.RequestException:
                 logger.exception("Failed to issue metrics")
