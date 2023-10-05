@@ -96,12 +96,14 @@ async def _integrate_apps(
     model: Model,
     loki: Application,
     traefik: Application,
+    grafana_agent: Application,
 ) -> None:
     """Integrate all the apps together.
 
     1. traefik is integrated with loki.
     2. An offer for a cmr is created for loki:logging.
-    3. The charm is integrated with loki:logging.
+    3. The grafana-agent is integrated with the loki:logging offer.
+    3. The charm is integrated with grafana-agent.
 
     Args:
         app: The GitHub Runner charm app to test.
@@ -110,18 +112,24 @@ async def _integrate_apps(
         model: The model.
         loki: The loki app.
         traefik: The traefik app.
+        grafana_agent: The grafana-agent app.
     """
     await k8s_model.relate(traefik.name, f"{loki.name}:ingress")
+
     await k8s_model.create_offer(f"{loki.name}:logging")
     await k8s_model.wait_for_idle(
         apps=[loki.name], wait_for_active=True, idle_period=30, timeout=1200, check_freq=5
     )
+
     await model.relate(
-        f"{app.name}:metrics-logging",
+        f"{grafana_agent}:logging-consumer",
         f"{k8s_controller_name}:admin/{k8s_model.name}.{loki.name}",
     )
     await model.wait_for_idle(apps=[app.name], wait_for_active=True)
     await k8s_model.wait_for_idle(apps=[loki.name], wait_for_active=True)
+
+    await model.relate(f"{app.name}:cos-agent", f"{grafana_agent}:cos-agent")
+    await model.wait_for_idle(apps=[app.name], wait_for_active=True)
 
 
 async def test_charm_issues_runner_installed_metric(
@@ -135,8 +143,9 @@ async def test_charm_issues_runner_installed_metric(
     act: Config the charm to contain one runner.
     assert: The RunnerInstalled metric is issued.
     """
-    loki: Application = await k8s_model.deploy("loki-k8s", channel="latest/edge", trust=True)
-    traefik: Application = await k8s_model.deploy("traefik-k8s", channel="latest/edge", trust=True)
+    loki = await k8s_model.deploy("loki-k8s", channel="latest/edge", trust=True)
+    traefik = await k8s_model.deploy("traefik-k8s", channel="latest/edge", trust=True)
+    grafana_agent = await model.deploy("grafana-agent", channel="latest/edge")
     await _integrate_apps(
         app=app_no_runner,
         k8s_controller_name=k8s_controller_name,
@@ -144,6 +153,7 @@ async def test_charm_issues_runner_installed_metric(
         model=model,
         loki=loki,
         traefik=traefik,
+        grafana_agent=grafana_agent,
     )
 
     await _create_runner(app=app_no_runner, model=model)
