@@ -15,4 +15,3 @@ def pytest_addoption(parser: Parser):
     parser.addoption("--http-proxy", action="store")
     parser.addoption("--https-proxy", action="store")
     parser.addoption("--no-proxy", action="store")
-    parser.addoption("--k8s-controller", action="store")
