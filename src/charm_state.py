@@ -81,10 +81,14 @@ class State:
 
     @property
     def loki_endpoint(self) -> Optional[LokiEndpoint]:
-        """Return the Loki endpoint.
+        """Return a Loki endpoint.
 
         Returns:
-            The Loki endpoint if available, None otherwise.
+            A Loki endpoint if available, None otherwise.
+
+        Raises:
+            pydantic.ValidationError: If one of the Loki endpoints is invalid,
+            as this is a sign of a corrupt integration.
         """
         loki_endpoints = []
         for endpoint in self._loki_consumer.loki_endpoints:

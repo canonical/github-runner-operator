@@ -141,18 +141,24 @@ Return whether metric logging is available.
 
 #### <kbd>property</kbd> loki_endpoint
 
-Return the Loki endpoint. 
+Return a Loki endpoint. 
 
 
 
 **Returns:**
-  The Loki endpoint if available, None otherwise. 
+  A Loki endpoint if available, None otherwise. 
+
+
+
+**Raises:**
+ 
+ - <b>`pydantic.ValidationError`</b>:  If one of the Loki endpoints is invalid, as this is a sign of a corrupt integration. 
 
 
 
 ---
 
-<a href="../src/charm_state.py#L95"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L99"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
