@@ -122,13 +122,13 @@ async def _integrate_apps(
     )
 
     await model.relate(
-        f"{grafana_agent}:logging-consumer",
+        f"{grafana_agent.name}:logging-consumer",
         f"{k8s_controller_name}:admin/{k8s_model.name}.{loki.name}",
     )
-    await model.wait_for_idle(apps=[app.name], wait_for_active=True)
+    await model.wait_for_idle(apps=[grafana_agent.name], wait_for_active=True)
     await k8s_model.wait_for_idle(apps=[loki.name], wait_for_active=True)
 
-    await model.relate(f"{app.name}:cos-agent", f"{grafana_agent}:cos-agent")
+    await model.relate(f"{app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
     await model.wait_for_idle(apps=[app.name], wait_for_active=True)
 
 
