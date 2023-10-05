@@ -112,7 +112,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
-                issue_metrics=False,
+                charm_state=harness.charm._state,
             ),
             proxies={},
         )
@@ -138,7 +138,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
-                issue_metrics=False,
+                charm_state=harness.charm._state,
             ),
             proxies={},
         )
@@ -167,7 +167,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
-                issue_metrics=False,
+                charm_state=harness.charm._state,
             ),
             proxies={},
         )
@@ -187,7 +187,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
-                issue_metrics=False,
+                charm_state=harness.charm._state,
             ),
             proxies={},
         )

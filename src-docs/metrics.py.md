@@ -5,18 +5,15 @@
 # <kbd>module</kbd> `metrics.py`
 Models and functions for the metric events. 
 
-**Global Variables**
----------------
-- **PROMTAIL_PUSH_API_URL**
 
 ---
 
-<a href="../src/metrics.py#L70"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L66"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 
 ```python
-issue_event(event: Event) → None
+issue_event(event: Event, loki_endpoint: str) → None
 ```
 
 Transmit an event to Promtail. 
@@ -26,6 +23,7 @@ Transmit an event to Promtail.
 **Args:**
  
  - <b>`event`</b>:  The metric event to log. 
+ - <b>`loki_endpoint`</b>:  The URL of the Loki endpoint. 
 
 **Raises:**
  

@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Optional, Sequence, TypeVar
 
 import jinja2
+from charms.loki_k8s.v0.loki_push_api import LokiPushApiConsumer
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -28,7 +29,6 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-import cos
 from charm_state import State
 from errors import (
     MissingConfigurationError,
@@ -46,6 +46,8 @@ from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResou
 from utilities import bytes_with_unit_to_kib, execute_command, get_env_var, retry
 
 logger = logging.getLogger(__name__)
+
+METRICS_LOGGING_INTEGRATION_NAME = "metrics-logging"
 
 
 class ReconcileRunnersEvent(EventBase):
@@ -133,8 +135,10 @@ class GithubRunnerCharm(CharmBase):
         """
         super().__init__(*args, **kargs)
 
-        self.state = State.from_charm()
-        self.cos_observer = cos.Observer(self, self.state)
+        loki_push_api_consumer = LokiPushApiConsumer(
+            charm=self, relation_name=METRICS_LOGGING_INTEGRATION_NAME
+        )
+        self._state = State.from_charm(loki_consumer=loki_push_api_consumer)
 
         if LXD_PROFILE_YAML.exists():
             if self.config.get("test-mode") != "insecure":
@@ -283,7 +287,7 @@ class GithubRunnerCharm(CharmBase):
                 image="jammy",
                 service_token=self.service_token,
                 lxd_storage_path=self.ram_pool_path,
-                issue_metrics=self.cos_observer.metrics_logging_available(),
+                charm_state=self._state,
             ),
             proxies=self.proxies,
         )

@@ -9,10 +9,6 @@ import time
 import requests
 from pydantic import BaseModel, NonNegativeInt
 
-import promtail
-
-PROMTAIL_PUSH_API_URL = "http://localhost:3100/loki/api/v1/push"
-
 logger = logging.getLogger(__name__)
 
 
@@ -67,27 +63,25 @@ def _get_event_name(event: Event) -> str:
     return _camel_to_snake(event.__class__.__name__)
 
 
-def issue_event(event: Event) -> None:
+def issue_event(event: Event, loki_endpoint: str) -> None:
     """Transmit an event to Promtail.
 
     Args:
         event: The metric event to log.
+        loki_endpoint: The URL of the Loki endpoint.
     Raises:
         requests.RequestException: If the HTTP request to Promtail fails.
     """
-    if not promtail.is_running():
-        logger.warning("Promtail is not running, skipping event transmission")
-        return
-
     event_dict = event.dict()
-    event_dict["event"] = _get_event_name(event)
+    event_name = _get_event_name(event)
+    event_dict["event"] = event_name
 
     resp = requests.post(
-        PROMTAIL_PUSH_API_URL,
+        loki_endpoint,
         json={
             "streams": [
                 {
-                    "stream": {"job": "metrics"},
+                    "stream": {"job": "metrics", "event": event_name},
                     "values": [
                         [str(time.time_ns()), json.dumps(event_dict)],
                     ],

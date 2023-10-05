@@ -23,6 +23,7 @@ from ghapi.page import pages
 from typing_extensions import assert_never
 
 import metrics
+from charm_state import State as CharmState
 from errors import RunnerBinaryError, RunnerCreateError
 from github_type import (
     GitHubRunnerStatus,
@@ -68,7 +69,7 @@ class RunnerManagerConfig:
     image: str
     service_token: str
     lxd_storage_path: Path
-    issue_metrics: bool
+    charm_state: CharmState
 
 
 @dataclass
@@ -299,14 +300,14 @@ class RunnerManager:
     ):
         """Create a runner.
 
-        Issues RunnerInstalled metric if config.issue_metrics is set to True.
+        Issues RunnerInstalled metric if metrics_logging is enabled.
 
         Args:
             registration_token: Token for registering runner to GitHub.
             resources: Configuration of the virtual machine resources.
             runner: Runner to be created.
         """
-        if self.config.issue_metrics:
+        if self.config.charm_state.is_metrics_logging_available:
             ts_now = time.time()
             runner.create(
                 self.config.image,
@@ -317,11 +318,12 @@ class RunnerManager:
             ts_after = time.time()
             try:
                 metrics.issue_event(
-                    metrics.RunnerInstalled(
+                    event=metrics.RunnerInstalled(
                         timestamp=ts_after,
                         flavor=self.app_name,
                         duration=ts_after - ts_now,
-                    )
+                    ),
+                    loki_endpoint=self.config.charm_state.loki_endpoint.url,
                 )
             except requests.RequestException:
                 logger.exception("Failed to issue metrics")

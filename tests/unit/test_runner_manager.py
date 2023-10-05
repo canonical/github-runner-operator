@@ -11,6 +11,7 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from requests import HTTPError
 
+from charm_state import LokiEndpoint, State
 from errors import RunnerBinaryError
 from metrics import RunnerInstalled
 from runner import Runner, RunnerStatus
@@ -18,10 +19,20 @@ from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, RunnerByHealth, VirtualMachineResources
 from tests.unit.mock import TEST_BINARY
 
+TEST_LOKI_ENDPOINT = "http://test.loki"
+
 
 @pytest.fixture(scope="function", name="token")
 def token_fixture():
     return secrets.token_hex()
+
+
+@pytest.fixture(scope="function", name="charm_state")
+def charm_state_fixture():
+    mock = MagicMock(spec=State)
+    mock.is_metric_logging_enabled = False
+    mock.loki_endpoint = LokiEndpoint(url=TEST_LOKI_ENDPOINT)
+    return mock
 
 
 @pytest.fixture(
@@ -35,7 +46,7 @@ def token_fixture():
         ),
     ],
 )
-def runner_manager_fixture(request, tmp_path, monkeypatch, token):
+def runner_manager_fixture(request, tmp_path, monkeypatch, token, charm_state):
     monkeypatch.setattr(
         "runner_manager.RunnerManager.runner_bin_path", tmp_path / "mock_runner_binary"
     )
@@ -46,7 +57,12 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token):
         "test app",
         "0",
         RunnerManagerConfig(
-            request.param[0], token, "jammy", secrets.token_hex(16), pool_path, False
+            request.param[0],
+            token,
+            "jammy",
+            secrets.token_hex(16),
+            pool_path,
+            charm_state=charm_state,
         ),
         proxies=request.param[1],
     )
@@ -202,33 +218,37 @@ def test_flush(runner_manager: RunnerManager, tmp_path: Path):
 
 
 def test_reconcile_issues_runner_installed_event(
-    runner_manager: RunnerManager, monkeypatch: MonkeyPatch, issue_event_mock: MagicMock
+    runner_manager: RunnerManager,
+    monkeypatch: MonkeyPatch,
+    issue_event_mock: MagicMock,
+    charm_state: MagicMock,
 ):
     """
-    arrange: Enable issuing of metrics, mock the issuing and timestamps.
+    arrange: Enable issuing of metrics and mock timestamps.
     act: Reconcile to create a runner.
     assert: The expected event is issued.
     """
-    runner_manager.config.issue_metrics = True
+    charm_state.is_metrics_logging_available = True
     t_mock = MagicMock(return_value=12345)
     monkeypatch.setattr("metrics.time.time", t_mock)
 
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 
     issue_event_mock.assert_called_once_with(
-        RunnerInstalled(timestamp=12345, flavor=runner_manager.app_name, duration=0)
+        event=RunnerInstalled(timestamp=12345, flavor=runner_manager.app_name, duration=0),
+        loki_endpoint=TEST_LOKI_ENDPOINT,
     )
 
 
 def test_reconcile_issues_no_runner_installed_event_if_metrics_disabled(
-    runner_manager: RunnerManager, issue_event_mock: MagicMock
+    runner_manager: RunnerManager, issue_event_mock: MagicMock, charm_state: MagicMock
 ):
     """
-    arrange: Disable issuing of metrics, mock the issuing and timestamps.
+    arrange: Disable issuing of metrics.
     act: Reconcile to create a runner.
     assert: The expected event is not issued.
     """
-    runner_manager.config.issue_metrics = False
+    charm_state.is_metrics_logging_available = False
 
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 
@@ -238,13 +258,15 @@ def test_reconcile_issues_no_runner_installed_event_if_metrics_disabled(
 def test_reconcile_error_on_runner_installed_event_are_ignored(
     runner_manager: RunnerManager,
     issue_event_mock: MagicMock,
+    charm_state: MagicMock,
 ):
     """
-    arrange: Enable issuing of metrics and mock the issuing to raise an expected error.
+    arrange: Enable issuing of metrics and mock the metric issuing to raise an expected error.
     act: Reconcile to create a runner.
     assert: No error is raised.
     """
-    runner_manager.config.issue_metrics = True
+    charm_state.is_metrics_logging_available = True
+
     issue_event_mock.side_effect = HTTPError
 
     delta = runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
