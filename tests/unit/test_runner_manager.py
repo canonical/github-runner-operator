@@ -9,7 +9,6 @@ from unittest.mock import MagicMock
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
-from requests import HTTPError
 
 from charm_state import LokiEndpoint, State
 from errors import RunnerBinaryError
@@ -266,7 +265,7 @@ def test_reconcile_error_on_runner_installed_event_are_ignored(
     """
     charm_state.is_metrics_logging_available = True
 
-    issue_event_mock.side_effect = HTTPError
+    issue_event_mock.side_effect = OSError
 
     delta = runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 

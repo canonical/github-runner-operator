@@ -324,7 +324,7 @@ class RunnerManager:
                         duration=ts_after - ts_now,
                     ),
                 )
-            except requests.RequestException:
+            except OSError:
                 logger.exception("Failed to issue metrics")
         else:
             runner.create(

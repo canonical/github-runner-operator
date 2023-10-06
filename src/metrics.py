@@ -65,12 +65,14 @@ def _get_event_name(event: Event) -> str:
 
 
 def issue_event(event: Event) -> None:
-    """Transmit an event to Promtail.
+    """Issue a metric event.
+
+    The metric event is logged to the metrics log.
 
     Args:
         event: The metric event to log.
     Raises:
-        requests.RequestException: If the HTTP request to Promtail fails.
+        OSError: If an error occurs while writing the metrics log.
     """
     event_dict = event.dict()
     event_name = _get_event_name(event)
