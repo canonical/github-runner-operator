@@ -54,9 +54,7 @@ async def test_charm_issues_runner_installed_metric(
     grafana_agent = await model.deploy("grafana-agent", channel="latest/edge")
     await model.relate(f"{app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
     await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
-    # Grafana-Agent will block because it requires an additional integration like logging-consumer,
-    # but we don't need it for this test.
-    await model.wait_for_idle(apps=[grafana_agent.name], status=BLOCKED_STATUS_NAME)
+    await model.wait_for_idle(apps=[grafana_agent.name])
 
     await _create_runner(app=app, model=model)
 
