@@ -9,10 +9,42 @@ from juju.model import Model
 
 from tests.integration.helpers import (
     assert_resource_lxd_profile,
+    get_runner_names,
+    run_in_lxd_instance,
     run_in_unit,
+    start_test_http_server,
     wait_till_num_of_runners,
 )
 from tests.status_name import ACTIVE_STATUS_NAME
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_network_access(app: Application) -> None:
+    """
+    arrange: An working application with one runner. Setup a HTTP server in the juju unit.
+    act: Make HTTP call to the HTTP server from inside a runner.
+    assert: The HTTP call failed.
+    """
+    unit = app.units[0]
+    port = 4040
+
+    await start_test_http_server(unit, port)
+
+    names = await get_runner_names(unit)
+    assert names
+
+    return_code, stdout = await run_in_unit(unit, "lxc network get lxdbr0 ipv4.address")
+    assert return_code == 0
+    assert stdout is not None
+    host_ip, _ = stdout.split("/", 1)
+
+    return_code, stdout = await run_in_lxd_instance(
+        unit, names[0], f"curl http://{host_ip}:{port}"
+    )
+
+    assert return_code == 7
+    assert stdout is None
 
 
 @pytest.mark.asyncio
