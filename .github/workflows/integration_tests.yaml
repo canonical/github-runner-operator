@@ -4,75 +4,21 @@ on:
   pull_request:
 
 jobs:
-  integration-test-charm-no-runner:
-    name: Integration test charm with no runner
-    strategy:
-      fail-fast: false
-      matrix:
-        juju: [3.1, 2.9]
+  integration-test-juju3:
+    name: Integration test
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
-      juju-channel: ${{ matrix.juju }}/stable
+      juju-channel: 3.1/stable
       pre-run-script: scripts/pre-integration-test.sh
       provider: lxd
-      test-tox-env: intergration-juju${{ matrix.juju }}
-      extra-arguments: tests/integration/test_charm_no_runner.py
-  integration-test-charm:
-    name: Integration test charm
-    strategy:
-      fail-fast: false
-      matrix:
-        juju: [3.1, 2.9]
+      test-tox-env: intergration-juju3.1
+  integration-test-juju2:
+    name: Integration test
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
-      juju-channel: ${{ matrix.juju }}/stable
+      juju-channel: 2.9/stable
       pre-run-script: scripts/pre-integration-test.sh
       provider: lxd
-      test-tox-env: intergration-juju${{ matrix.juju }}
-      extra-arguments: tests/integration/test_charm.py
-  integration-test-charm-fork-repo:
-    name: Integration test charm with fork repo
-    strategy:
-      fail-fast: false
-      matrix:
-        juju: [3.1, 2.9]
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-    secrets: inherit
-    with:
-      juju-channel: ${{ matrix.juju }}/stable
-      pre-run-script: scripts/pre-integration-test.sh
-      provider: lxd
-      test-tox-env: intergration-juju${{ matrix.juju }}
-      extra-arguments: tests/integration/test_charm_fork_repo.py
-  integration-test-charm-scheduled-events:
-    name: Integration test charm scheduled events
-    strategy:
-      fail-fast: false
-      matrix:
-        juju: [3.1, 2.9]
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-    secrets: inherit
-    with:
-      juju-channel: ${{ matrix.juju }}/stable
-      pre-run-script: scripts/pre-integration-test.sh
-      provider: lxd
-      test-tox-env: intergration-juju${{ matrix.juju }}
-      extra-arguments: tests/integration/test_charm_scheduled_events.py
-  required_status_checks:
-    name: Required Integration Test Status Checks
-    runs-on: ubuntu-latest
-    needs:
-      - integration-test-charm-no-runner
-      - integration-test-charm
-      - integration-test-charm-fork-repo
-      - integration-test-charm-scheduled-events
-    if: always() && !cancelled()
-    timeout-minutes: 30
-    steps:
-      - run: |
-          [ '${{ needs.integration-test-charm-no-runner.result }}' = 'success' ] || (echo integration-test-charm-no-runner failed && false)
-          [ '${{ needs.integration-test-charm.result }}' = 'success' ] || (echo integration-test-charm failed && false)
-          [ '${{ needs.integration-test-charm-fork-repo.result }}' = 'success' ] || (echo integration-test-charm-fork-repo failed && false)
-          [ '${{ needs.integration-test-charm-scheduled-events.result }}' = 'success' ] || (echo integration-test-charm-schedule-events failed && false)
+      test-tox-env: intergration-juju2.9
