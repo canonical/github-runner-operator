@@ -8,7 +8,11 @@ from pathlib import Path
 
 from pydantic import BaseModel, NonNegativeInt
 
+from utilities import execute_command
+
+LOGROTATE_CONFIG = Path("/etc/logrotate.d/github-runner-metrics")
 METRICS_LOG_PATH = Path("/var/log/github-runner-metrics.log")
+
 
 logger = logging.getLogger(__name__)
 
@@ -80,3 +84,30 @@ def issue_event(event: Event) -> None:
 
     with METRICS_LOG_PATH.open(mode="a", encoding="utf-8") as metrics_file:
         metrics_file.write(f"{json.dumps(event_dict)}\n")
+
+
+def setup_logrotate():
+    """Configure logrotate for the metrics log.
+
+    Raises:
+        SubprocessError: If the logrotate.timer cannot be enabled.
+    """
+    # Ensure logrotate.timer is active
+    _, retcode = execute_command(["/usr/bin/systemctl", "is-active", "--quiet", "logrotate.timer"])
+    if retcode != 0:
+        # enable it
+        execute_command(["/usr/bin/systemctl", "enable", "logrotate.timer"], check_exit=True)
+
+    # Configure logrotate for the metrics log
+    # Do not keep the old metrics log file to avoid sending the metrics to Loki twice,
+    # which may happen if there is a corrupt log scrape configuration.
+    LOGROTATE_CONFIG.write_text(
+        f"""{str(METRICS_LOG_PATH)} {{
+    rotate 0
+    missingok
+    notifempty
+    create
+}}
+""",
+        encoding="utf-8",
+    )

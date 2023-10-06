@@ -29,6 +29,7 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
+import metrics
 from charm_state import State
 from errors import (
     MissingConfigurationError,
@@ -303,6 +304,7 @@ class GithubRunnerCharm(CharmBase):
             # The `_start_services`, `_install_deps` includes retry.
             self._install_deps()
             self._start_services()
+            metrics.setup_logrotate()
         except SubprocessError as err:
             logger.exception(err)
             # The charm cannot proceed without dependencies.
@@ -381,6 +383,7 @@ class GithubRunnerCharm(CharmBase):
             # The `_start_services`, `_install_deps` includes retry.
             self._install_deps()
             self._start_services()
+            metrics.setup_logrotate()
         except SubprocessError as err:
             logger.exception(err)
             # The charm cannot proceed without dependencies.

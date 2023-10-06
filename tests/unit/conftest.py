@@ -9,8 +9,13 @@ import pytest
 from tests.unit.mock import MockGhapiClient, MockLxdClient, MockRepoPolicyComplianceClient
 
 
+@pytest.fixture(name="exec_command")
+def exec_command_fixture():
+    return unittest.mock.MagicMock(return_value=("", 0))
+
+
 @pytest.fixture(autouse=True)
-def mocks(monkeypatch, tmp_path):
+def mocks(monkeypatch, tmp_path, exec_command):
     monkeypatch.setattr(
         "charm.GithubRunnerCharm.service_token_path", Path(tmp_path / "mock_service_token")
     )
@@ -24,7 +29,10 @@ def mocks(monkeypatch, tmp_path):
         "firewall.Firewall.get_host_ip", unittest.mock.MagicMock(return_value="10.0.0.1")
     )
     monkeypatch.setattr("firewall.Firewall.refresh_firewall", unittest.mock.MagicMock())
+    monkeypatch.setattr("metrics.execute_command", exec_command)
     monkeypatch.setattr("metrics.METRICS_LOG_PATH", Path(tmp_path / "metrics.log"))
+    monkeypatch.setattr("metrics.LOGROTATE_CONFIG", Path(tmp_path / "github-runner-metrics"))
+
     monkeypatch.setattr("runner.time", unittest.mock.MagicMock())
     monkeypatch.setattr("runner_manager.GhApi", MockGhapiClient)
     monkeypatch.setattr("runner_manager.jinja2", unittest.mock.MagicMock())
