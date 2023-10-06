@@ -203,10 +203,10 @@ async def run_in_lxd_instance(
     Returns:
         Tuple of return code and stdout.
     """
-    lxc_cmd = ["/snap/bin/lxc", "exec", name]
+    lxc_cmd = f"/snap/bin/lxc exec {name}"
     if cwd:
-        lxc_cmd += ["--cwd", cwd]
-    lxc_cmd += "--" + command
+        lxc_cmd += f" --cwd {cwd}"
+    lxc_cmd += f" -- {command}"
     return await run_in_unit(unit, lxc_cmd, timeout)
 
 
