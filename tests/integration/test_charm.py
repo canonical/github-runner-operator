@@ -36,7 +36,8 @@ async def test_network_access(app: Application) -> None:
 
     return_code, stdout = await run_in_unit(unit, "lxc network get lxdbr0 ipv4.address")
     assert return_code == 0
-    host_ip, _ = stdout.split("/")
+    assert stdout is not None
+    host_ip, _ = stdout.split("/", 1)
 
     return_code, stdout = await run_in_lxd_instance(
         unit, names[0], f"curl http://{host_ip}:{port}"
