@@ -2,7 +2,7 @@
 #  See LICENSE file for licensing details.
 import json
 from pathlib import Path
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, call
 
 from metrics import RunnerInstalled, issue_event, setup_logrotate
 
@@ -11,7 +11,7 @@ TEST_LOKI_PUSH_API_URL = "http://loki:3100/api/prom/push"
 
 def test_issue_metrics_logs_events(tmp_path: Path):
     """
-    arrange: Mock
+    arrange: Change path of the metrics log
     act: Issue a metric event
     assert: The expected metric log is created
     """
@@ -29,7 +29,7 @@ def test_issue_metrics_logs_events(tmp_path: Path):
 
 def test_setup_logrotate(tmp_path: Path):
     """
-    arrange: Changed paths for the logrotate config and the log file.
+    arrange: Change paths for the logrotate config and the log file
     act: Setup logrotate
     assert: The expected logrotate config is created
     """
@@ -49,17 +49,28 @@ def test_setup_logrotate(tmp_path: Path):
     assert logrotate_path.read_text() == expected_logrotate_config
 
 
-def test_setup_logrotate_enables_logrotate_timer(tmp_path: Path, exec_command: MagicMock):
+def test_setup_logrotate_enables_logrotate_timer(exec_command: MagicMock):
     """
-    arrange: Mock execute command to return error for the first call and
-     non-error for the second call.
+    arrange: Mock execute command to return error for the is-active call and
+     non-error for the remaining calls.
     act: Setup logrotate
-    assert: The expected logrotate config is created
+    assert: The commands to enable and start the logrotate timer are called
     """
-    exec_command.side_effect = [("", 1), ("", 0)]
+
+    def side_effect(*args, **kwargs):
+        if "is-active" in args[0]:
+            return "", 1
+        return "", 0
+
+    exec_command.side_effect = side_effect
 
     setup_logrotate()
 
-    exec_command.assert_called_with(
-        ["/usr/bin/systemctl", "enable", "logrotate.timer"], check_exit=True
+    assert (
+        call(["/usr/bin/systemctl", "enable", "logrotate.timer"], check_exit=True)
+        in exec_command.mock_calls
+    )
+    assert (
+        call(["/usr/bin/systemctl", "start", "logrotate.timer"], check_exit=True)
+        in exec_command.mock_calls
     )

@@ -10,6 +10,10 @@ from pydantic import BaseModel, NonNegativeInt
 
 from utilities import execute_command
 
+LOG_ROTATE_TIMER_SYSTEMD_SERVICE = "logrotate.timer"
+
+SYSTEMCTL_PATH = "/usr/bin/systemctl"
+
 LOGROTATE_CONFIG = Path("/etc/logrotate.d/github-runner-metrics")
 METRICS_LOG_PATH = Path("/var/log/github-runner-metrics.log")
 
@@ -86,21 +90,27 @@ def issue_event(event: Event) -> None:
         metrics_file.write(f"{json.dumps(event_dict)}\n")
 
 
-def setup_logrotate():
-    """Configure logrotate for the metrics log.
+def _enable_logrotate() -> None:
+    """Enable and start the logrotate timer if it is not active.
 
     Raises:
-        SubprocessError: If the logrotate.timer cannot be enabled.
+        SubprocessError: If the logrotate.timer cannot be enabled and started.
     """
-    # Ensure logrotate.timer is active
-    _, retcode = execute_command(["/usr/bin/systemctl", "is-active", "--quiet", "logrotate.timer"])
-    if retcode != 0:
-        # enable it
-        execute_command(["/usr/bin/systemctl", "enable", "logrotate.timer"], check_exit=True)
+    execute_command([SYSTEMCTL_PATH, "enable", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True)
 
-    # Configure logrotate for the metrics log
-    # Do not keep the old metrics log file to avoid sending the metrics to Loki twice,
-    # which may happen if there is a corrupt log scrape configuration.
+    _, retcode = execute_command(
+        [SYSTEMCTL_PATH, "is-active", "--quiet", LOG_ROTATE_TIMER_SYSTEMD_SERVICE]
+    )
+    if retcode != 0:
+        execute_command(
+            [SYSTEMCTL_PATH, "start", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True
+        )
+
+
+def _configure_logrotate() -> None:
+    """Configure logrotate for the metrics log."""
+    # Set rotate to 0 to not keep the old metrics log file to avoid sending the
+    # metrics to Loki twice, which may happen if there is a corrupt log scrape configuration.
     LOGROTATE_CONFIG.write_text(
         f"""{str(METRICS_LOG_PATH)} {{
     rotate 0
@@ -111,3 +121,13 @@ def setup_logrotate():
 """,
         encoding="utf-8",
     )
+
+
+def setup_logrotate():
+    """Configure logrotate for the metrics log.
+
+    Raises:
+        SubprocessError: If the logrotate.timer cannot be enabled.
+    """
+    _enable_logrotate()
+    _configure_logrotate()

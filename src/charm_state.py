@@ -7,21 +7,10 @@ import dataclasses
 import logging
 
 from ops import CharmBase
-from pydantic import AnyHttpUrl, BaseModel
 
 logger = logging.getLogger(__name__)
 
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
-
-
-class LokiEndpoint(BaseModel):
-    """Information about the Loki endpoint.
-
-    Attrs:
-        url: The URL of the Loki endpoint.
-    """
-
-    url: AnyHttpUrl
 
 
 @dataclasses.dataclass(frozen=True)

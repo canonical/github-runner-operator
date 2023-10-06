@@ -10,7 +10,7 @@ from unittest.mock import MagicMock
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
-from charm_state import LokiEndpoint, State
+from charm_state import State
 from errors import RunnerBinaryError
 from metrics import RunnerInstalled
 from runner import Runner, RunnerStatus
@@ -30,7 +30,6 @@ def token_fixture():
 def charm_state_fixture():
     mock = MagicMock(spec=State)
     mock.is_metric_logging_enabled = False
-    mock.loki_endpoint = LokiEndpoint(url=TEST_LOKI_ENDPOINT)
     return mock
 
 
