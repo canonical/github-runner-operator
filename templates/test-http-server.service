@@ -1,9 +1,0 @@
-[Unit]
-Description=Simple HTTP server for testing
-After=network.target
-
-[Service]
-User=ubuntu
-Group=www-data
-WorkingDirectory=/home/ubuntu
-ExecStart=python3 -m http.server 4040
