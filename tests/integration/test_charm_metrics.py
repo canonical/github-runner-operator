@@ -11,7 +11,7 @@ from juju.unit import Unit
 
 from metrics import METRICS_LOG_PATH
 from tests.integration.helpers import wait_till_num_of_runners
-from tests.status_name import ACTIVE_STATUS_NAME, BLOCKED_STATUS_NAME
+from tests.status_name import ACTIVE_STATUS_NAME
 
 
 async def _create_runner(app: Application, model: Model) -> None:
