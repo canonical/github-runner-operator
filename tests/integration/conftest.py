@@ -45,6 +45,13 @@ async def charm_path(ops_test: OpsTest, lxd_profile: Path) -> AsyncIterator[Path
 
 
 @pytest.fixture(scope="module")
+def charm(pytestconfig: pytest.Config) -> Path:
+    charm = pytestconfig.getoption("--charm")
+    # This is not used due to needing injection of lxd_profile.
+    return Path(charm)
+
+
+@pytest.fixture(scope="module")
 def path(pytestconfig: pytest.Config) -> str:
     """Configured path setting."""
     path = pytestconfig.getoption("--path")
