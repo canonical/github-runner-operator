@@ -81,7 +81,7 @@ async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> No
         configs: Configs of the application.
 
     Raises:
-        AssertionError: Unable to find a LXD profile with matching resource
+        AssertionError: Unable to find an LXD profile with matching resource
             config.
     """
     cpu = configs["vm-cpu"]["value"]

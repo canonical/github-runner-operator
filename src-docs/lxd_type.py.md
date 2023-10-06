@@ -16,7 +16,7 @@ The unit of storage and network limits can be found here: https://linuxcontainer
 ---
 
 ## <kbd>class</kbd> `LxdInstanceConfig`
-Configuration for LXD instance. 
+Configuration for the LXD instance. 
 
 
 
@@ -25,7 +25,7 @@ Configuration for LXD instance.
 ---
 
 ## <kbd>class</kbd> `LxdInstanceConfigSource`
-Configuration for source image in LXD instance. 
+Configuration for source image in the LXD instance. 
 
 
 

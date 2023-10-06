@@ -1,7 +1,6 @@
 # How to contribute
 
 ## Overview
-
 This document explains the processes and practices recommended for contributing enhancements to the GitHub Runner operator.
 
 * Generally, before developing enhancements to this charm, you should consider [opening an issue](https://github.com/canonical/github-runner-operator/issues) explaining your use case.
@@ -23,18 +22,20 @@ The code for this charm can be downloaded as follows:
 git clone https://github.com/canonical/github-runner-operator.git
 ```
 
-To run tests, run `tox` from within the charm code directory.
+Prior to working on the charm ensure juju is connected to an LXD cloud,  see the [upstream documentation](https://juju.is/docs/lxd-cloud) for details.
 
 To build and deploy a local version of the charm, simply run:
 
 ```
 charmcraft pack
-# Ensure you're connected to a juju k8s model
+# Ensure you're connected to a juju LXD model.
 # Configure the machine resource created by the model
-juju set-model-constraints mem=8G cores=2 root-disk=50G
+juju set-model-constraints mem=22G cores=2 root-disk=20G
 # Assuming you're on amd64
-juju deploy ./github-runner_ubuntu-22.04-amd64_ubuntu-20.04-amd64.charm
+juju deploy ./github-runner_ubuntu-22.04-amd64.charm
 ```
+
+To test the charm, unit test can be ran with `tox -e unit` and the integration test on juju 3.1 can be ran with `tox -e integration-juju3.1`.
 
 ## Canonical Contributor Agreement
 

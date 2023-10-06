@@ -83,7 +83,7 @@ class MockLxdNetworkManager:
 
 
 class MockLxdInstance:
-    """Mock the behavior of a LXD Instance."""
+    """Mock the behavior of an LXD Instance."""
 
     def __init__(self, name: str):
         self.name = name
@@ -110,7 +110,7 @@ class MockLxdInstance:
 
 
 class MockLxdInstanceFileManager:
-    """Mock the behavior of a LXD Instance files."""
+    """Mock the behavior of an LXD Instance's files."""
 
     def __init__(self):
         self.files = {}
@@ -152,7 +152,7 @@ class MockLxdStoragePoolManager:
 
 
 class MockLxdStoragePool:
-    """Mock the behavior of a LXD storage pool."""
+    """Mock the behavior of an LXD storage pool."""
 
     def __init__(self):
         self.delete = False
