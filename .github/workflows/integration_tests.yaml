@@ -12,7 +12,7 @@ jobs:
       juju-channel: 3.1/stable
       pre-run-script: scripts/pre-integration-test.sh
       provider: lxd
-      test-tox-env: intergration-juju3.1
+      test-tox-env: integration-juju3.1
       extra-test-matrix: '{"test": ["tests/integration/test_charm_fork_repo.py", "tests/integration/test_charm_no_runner.py", "tests/integration/test_charm_scheduled_events.py", "tests/integration/test_charm.py"]}'
   integration-test-juju2:
     name: Integration test
@@ -22,5 +22,5 @@ jobs:
       juju-channel: 2.9/stable
       pre-run-script: scripts/pre-integration-test.sh
       provider: lxd
-      test-tox-env: intergration-juju2.9
+      test-tox-env: integration-juju2.9
       extra-test-matrix: '{"test": ["tests/integration/test_charm_fork_repo.py", "tests/integration/test_charm_no_runner.py", "tests/integration/test_charm_scheduled_events.py", "tests/integration/test_charm.py"]}'
