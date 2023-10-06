@@ -176,7 +176,9 @@ async def test_dispatch_workflow_failure(
     assert len(runners) == 1
     runner_to_be_used = runners[0]
 
-    workflow = forked_github_repository.get_workflow(id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME)
+    workflow = forked_github_repository.get_workflow(
+        id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME
+    )
 
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(
