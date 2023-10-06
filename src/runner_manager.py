@@ -379,7 +379,7 @@ class RunnerManager:
             len(runner_states.unhealthy),
         )
 
-        if self.config.issue_metrics:
+        if self.config.charm_state.is_metrics_logging_available:
             runner_metrics.extract(flavor=self.app_name, ignore_runners=set(runner_states.healthy))
 
         # Clean up offline runners
@@ -415,7 +415,7 @@ class RunnerManager:
                     self.proxies,
                     self.config.lxd_storage_path,
                     self._generate_runner_name(),
-                    self.config.issue_metrics,
+                    self.config.charm_state.is_metrics_logging_available,
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
                 try:
@@ -569,7 +569,7 @@ class RunnerManager:
                 self.proxies,
                 self.config.lxd_storage_path,
                 name,
-                self.config.issue_metrics,
+                self.config.charm_state.is_metrics_logging_available,
             )
             return Runner(
                 self._clients,

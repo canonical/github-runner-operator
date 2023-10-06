@@ -282,7 +282,9 @@ def test_reconcile_error_on_runner_installed_event_is_ignored(
 
 
 def test_reconcile_places_timestamp_in_newly_created_runner(
-    runner_manager: RunnerManager, monkeypatch: MonkeyPatch, shared_fs: MagicMock, tmp_path: Path
+    runner_manager: RunnerManager, monkeypatch: MonkeyPatch, shared_fs: MagicMock, tmp_path: Path,
+        charm_state: MagicMock,
+
 ):
     """
     arrange: Enable issuing of metrics, mock timestamps and
@@ -290,9 +292,9 @@ def test_reconcile_places_timestamp_in_newly_created_runner(
     act: Reconcile to create a runner.
     assert: The expected timestamp is placed in the shared filesystem.
     """
-    runner_manager.config.issue_metrics = True
+    charm_state.is_metrics_logging_available = True
     t_mock = MagicMock(return_value=12345)
-    monkeypatch.setattr("metrics.time.time", t_mock)
+    monkeypatch.setattr("runner_manager.time.time", t_mock)
     runner_shared_fs = tmp_path / "runner_fs"
     runner_shared_fs.mkdir()
     fs = SharedFilesystem(path=runner_shared_fs, runner_name="test_runner")
@@ -305,7 +307,7 @@ def test_reconcile_places_timestamp_in_newly_created_runner(
 
 
 def test_reconcile_error_on_placing_timestamp_is_ignored(
-    runner_manager: RunnerManager, shared_fs: MagicMock, tmp_path: Path
+    runner_manager: RunnerManager, shared_fs: MagicMock, tmp_path: Path, charm_state: MagicMock
 ):
     """
     arrange: Enable issuing of metrics and do not create the directory for the shared filesystem
@@ -313,7 +315,7 @@ def test_reconcile_error_on_placing_timestamp_is_ignored(
     act: Reconcile to create a runner.
     assert: No exception is raised.
     """
-    runner_manager.config.issue_metrics = True
+    charm_state.is_metrics_logging_available = True
     runner_shared_fs = tmp_path / "runner_fs"
     fs = SharedFilesystem(path=runner_shared_fs, runner_name="test_runner")
     shared_fs.get.return_value = fs
