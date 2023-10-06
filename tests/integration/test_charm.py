@@ -43,9 +43,8 @@ async def test_network_access(app: Application) -> None:
         unit, names[0], f"curl http://{host_ip}:{port}"
     )
 
-    assert return_code != 0
-    # TODO: Test stdout as well.
-    assert stdout == ""
+    assert return_code == 7
+    assert stdout is None
 
 
 @pytest.mark.asyncio
