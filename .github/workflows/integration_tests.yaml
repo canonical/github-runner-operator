@@ -16,6 +16,7 @@ jobs:
       extra-test-matrix: '{"test": ["tests/integration/test_charm_fork_repo.py", "tests/integration/test_charm_no_runner.py", "tests/integration/test_charm_scheduled_events.py", "tests/integration/test_charm.py"]}'
   integration-test-juju2:
     name: Integration test
+    needs: integration-test-juju3
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
