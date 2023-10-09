@@ -351,6 +351,51 @@ class LxdProfileManager:
             logger.exception("Failed to create LXD profile")
             raise LxdError(f"Unable to create LXD profile {name}") from err
 
+    def get(self, name: str) -> LxdProfile:
+        """Get an LXD profile.
+
+        Args:
+            name: Name of the LXD profile.
+
+        Raises:
+            LxdError: Unable to get the LXD profile with the name.
+        """
+        try:
+            return self._pylxd_client.profiles.get(name)
+        except pylxd.exceptions.LXDAPIException as err:
+            logger.exception("Failed to get LXD profile")
+            raise LxdError(f"Unable to get LXD profile {name}") from err
+
+
+class LxdProfile:
+    """LXD profile."""
+
+    def __init__(
+        self,
+        pylxd_profile: pylxd.models.Profile,
+    ):
+        """Instantiate the LXD profile.
+
+        Args:
+            pylxd_profile: Instance of the pylxd.models.Profile.
+        """
+        self._pylxd_profile = pylxd_profile
+
+        self.name = self._pylxd_profile.name
+        self.description = self._pylxd_profile.description
+        self.config = self._pylxd_profile.config
+        self.devices = self._pylxd_profile.devices
+        self.used_by = self._pylxd_profile.used_by
+
+    def save(self):
+        """Save the current configuration of profile."""
+        self._pylxd_profile.config = self.config
+        self._pylxd_profile.save()
+
+    def delete(self):
+        """Delete the profile."""
+        self._pylxd_profile.delete()
+
 
 # Disable pylint as public method number check as this class can be extended in the future.
 class LxdNetworkManager:  # pylint: disable=too-few-public-methods
