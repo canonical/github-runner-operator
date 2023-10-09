@@ -15,7 +15,7 @@ from juju.unit import Unit
 
 from metrics import METRICS_LOG_PATH
 from tests.integration.helpers import create_runner, DISPATCH_TEST_WORKFLOW_FILENAME, \
-    get_runner_names
+    get_runner_names, run_in_unit
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
@@ -28,11 +28,11 @@ async def _get_metrics_log(unit: Unit) -> str:
     Returns:
         The metrics log.
     """
-    return (
-        await unit.ssh(
-            f"if [ -f {METRICS_LOG_PATH} ]; then cat {METRICS_LOG_PATH}; else echo ''; fi"
+    retcode, stdout = await run_in_unit(
+            unit=unit, command=f"if [ -f {METRICS_LOG_PATH} ]; then cat {METRICS_LOG_PATH}; else echo ''; fi"
         )
-    ).strip()
+    assert retcode == 0
+    return stdout
 
 
 # async def test_charm_issues_runner_installed_metric(
@@ -111,6 +111,10 @@ async def test_charm_issues_runner_metrics(
             in logs
         ):
             assert run.jobs()[0].conclusion == "success"
+            action = await unit.run_action("reconcile-runners")
+            await action.wait()
+            await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
+
             metrics_log = await _get_metrics_log(unit=unit)
             logging.info("Metric log: %s", metrics_log)
             log_lines = map(lambda line: json.loads(line), metrics_log.splitlines())

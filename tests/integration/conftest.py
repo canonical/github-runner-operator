@@ -124,6 +124,12 @@ devices:
         path: /dev/kmsg
         source: /dev/kmsg
         type: unix-char
+    loop-control:
+        path: /dev/loop-control
+        type: unix-char
+    loop14:
+        path: /dev/loop14
+        type: unix-block
 """
     )
 
