@@ -92,3 +92,7 @@ class SubprocessError(Exception):
         self.return_code = return_code
         self.stdout = stdout
         self.stderr = stderr
+
+
+class LogrotateSetupError(Exception):
+    """Error raised when logrotate cannot be setup."""

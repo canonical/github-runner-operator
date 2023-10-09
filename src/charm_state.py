@@ -22,16 +22,7 @@ class State:
         _charm: The charm instance.
     """
 
-    _charm: CharmBase
-
-    @property
-    def is_metrics_logging_available(self) -> bool:
-        """Return whether metric logging is available.
-
-        Returns:
-            True if metric logging is available, False otherwise.
-        """
-        return bool(self._charm.model.relations[COS_AGENT_INTEGRATION_NAME])
+    is_metrics_logging_available: bool
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "State":
@@ -40,4 +31,6 @@ class State:
         Returns:
             Current state of the charm.
         """
-        return cls(_charm=charm)
+        return cls(
+            is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME])
+        )

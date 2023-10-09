@@ -5,29 +5,53 @@
 # <kbd>module</kbd> `metrics.py`
 Models and functions for the metric events. 
 
+**Global Variables**
+---------------
+- **LOG_ROTATE_TIMER_SYSTEMD_SERVICE**
+- **SYSTEMCTL_PATH**
 
 ---
 
-<a href="../src/metrics.py#L66"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L99"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 
 ```python
-issue_event(event: Event, loki_endpoint: str) → None
+issue_event(event: Event) → None
 ```
 
-Transmit an event to Promtail. 
+Issue a metric event. 
+
+The metric event is logged to the metrics log. 
 
 
 
 **Args:**
  
  - <b>`event`</b>:  The metric event to log. 
- - <b>`loki_endpoint`</b>:  The URL of the Loki endpoint. 
 
 **Raises:**
  
- - <b>`requests.RequestException`</b>:  If the HTTP request to Promtail fails. 
+ - <b>`OSError`</b>:  If an error occurs while writing the metrics log. 
+
+
+---
+
+<a href="../src/metrics.py#L146"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>function</kbd> `setup_logrotate`
+
+```python
+setup_logrotate()
+```
+
+Configure logrotate for the metrics log. 
+
+
+
+**Raises:**
+ 
+ - <b>`LogrotateSetupError`</b>:  If the logrotate.timer cannot be enabled. 
 
 
 ---
@@ -35,41 +59,25 @@ Transmit an event to Promtail.
 ## <kbd>class</kbd> `Event`
 Base class for metric events. 
 
-Attrs:  timestamp: The UNIX time stamp of the time at which the event was originally issued. 
+Attrs:  timestamp: The UNIX time stamp of the time at which the event was originally issued.  event: The name of the event. Will be set to the class name in snake case if not provided. 
 
+<a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
----
+### <kbd>function</kbd> `__init__`
 
-#### <kbd>property</kbd> model_computed_fields
+```python
+__init__(*args, **kwargs)
+```
 
-Get the computed fields of this model instance. 
-
-
-
-**Returns:**
-  A dictionary of computed field names and their corresponding `ComputedFieldInfo` objects. 
-
----
-
-#### <kbd>property</kbd> model_extra
-
-Get extra fields set during validation. 
+Initialize the event. 
 
 
 
-**Returns:**
-  A dictionary of extra fields, or `None` if `config.extra` is not set to `"allow"`. 
+**Args:**
+ 
+ - <b>`*args`</b>:  The positional arguments to pass to the base class. 
+ - <b>`**kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
 
----
-
-#### <kbd>property</kbd> model_fields_set
-
-Returns the set of fields that have been set on this model instance. 
-
-
-
-**Returns:**
-  A set of strings representing the fields that have been set,  i.e. that were not filled from defaults. 
 
 
 
@@ -81,39 +89,51 @@ Metric event for when a runner is installed.
 
 Attrs:  flavor: Describes the characteristics of the runner.  The flavour could be for example "small".  duration: The duration of the installation in seconds. 
 
+<a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(*args, **kwargs)
+```
+
+Initialize the event. 
+
+
+
+**Args:**
+ 
+ - <b>`*args`</b>:  The positional arguments to pass to the base class. 
+ - <b>`**kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
+
+
+
+
 
 ---
 
-#### <kbd>property</kbd> model_computed_fields
+## <kbd>class</kbd> `RunnerStart`
+Metric event for when a runner is started. 
 
-Get the computed fields of this model instance. 
+Attrs:  flavor: Describes the characteristics of the runner.  The flavour could be for example "small".  workflow: The workflow name.  repo: The repository name.  github_event: The github event.  idle: The idle time in seconds. 
 
+<a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
+### <kbd>function</kbd> `__init__`
 
-**Returns:**
-  A dictionary of computed field names and their corresponding `ComputedFieldInfo` objects. 
+```python
+__init__(*args, **kwargs)
+```
 
----
-
-#### <kbd>property</kbd> model_extra
-
-Get extra fields set during validation. 
-
-
-
-**Returns:**
-  A dictionary of extra fields, or `None` if `config.extra` is not set to `"allow"`. 
-
----
-
-#### <kbd>property</kbd> model_fields_set
-
-Returns the set of fields that have been set on this model instance. 
+Initialize the event. 
 
 
 
-**Returns:**
-  A set of strings representing the fields that have been set,  i.e. that were not filled from defaults. 
+**Args:**
+ 
+ - <b>`*args`</b>:  The positional arguments to pass to the base class. 
+ - <b>`**kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
+
 
 
 

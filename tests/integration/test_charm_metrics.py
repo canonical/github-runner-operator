@@ -10,23 +10,8 @@ from juju.model import Model
 from juju.unit import Unit
 
 from metrics import METRICS_LOG_PATH
-from tests.integration.helpers import wait_till_num_of_runners
-from tests.status_name import ACTIVE_STATUS_NAME, BLOCKED_STATUS_NAME
-
-
-async def _create_runner(app: Application, model: Model) -> None:
-    """Let the charm create a runner.
-
-    Args:
-        app: The GitHub Runner Charm app to create the runner for.
-        model: The marchine charm model.
-    """
-    await app.set_config({"virtual-machines": "1"})
-    unit = app.units[0]
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
-    await wait_till_num_of_runners(unit, 1)
+from tests.integration.helpers import create_runner
+from tests.status_name import ACTIVE_STATUS_NAME
 
 
 async def _get_metrics_log(unit: Unit) -> str:
@@ -38,7 +23,11 @@ async def _get_metrics_log(unit: Unit) -> str:
     Returns:
         The metrics log.
     """
-    return await unit.ssh(f"cat {METRICS_LOG_PATH}")
+    return (
+        await unit.ssh(
+            f"if [ -f {METRICS_LOG_PATH} ]; then cat {METRICS_LOG_PATH}; else echo ''; fi"
+        )
+    ).strip()
 
 
 async def test_charm_issues_runner_installed_metric(
@@ -55,8 +44,10 @@ async def test_charm_issues_runner_installed_metric(
     await model.relate(f"{app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
     await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
     await model.wait_for_idle(apps=[grafana_agent.name])
+    metrics_log = await _get_metrics_log(app.units[0])
+    assert metrics_log == "".strip()
 
-    await _create_runner(app=app, model=model)
+    await create_runner(app=app, model=model)
 
     metrics_log = await _get_metrics_log(app.units[0])
     logging.info("Metric log: %s", metrics_log)

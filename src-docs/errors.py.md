@@ -9,6 +9,15 @@ Errors used by the charm.
 
 ---
 
+## <kbd>class</kbd> `LogrotateSetupError`
+Error raised when logrotate cannot be setup. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `LxdError`
 Error for executing LXD actions. 
 

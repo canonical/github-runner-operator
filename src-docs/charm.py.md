@@ -5,9 +5,6 @@
 # <kbd>module</kbd> `charm.py`
 Charm for creating and managing GitHub self-hosted runner instances. 
 
-**Global Variables**
----------------
-- **METRICS_LOGGING_INTEGRATION_NAME**
 
 ---
 

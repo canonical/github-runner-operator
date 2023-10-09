@@ -30,7 +30,7 @@ def token_fixture():
 @pytest.fixture(scope="function", name="charm_state")
 def charm_state_fixture():
     mock = MagicMock(spec=State)
-    mock.is_metric_logging_enabled = False
+    mock.is_metrics_logging_available = False
     return mock
 
 
