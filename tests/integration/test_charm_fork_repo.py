@@ -78,9 +78,9 @@ async def app_with_unsigned_commit_repo(
     app = app_no_runner  # alias for readability as the app will have a runner during the test
 
     await app.set_config({"path": forked_github_repository.full_name})
-    await create_runner(app=app_no_runner, model=model)
+    await create_runner(app=app, model=model)
 
-    yield app_no_runner
+    yield app
 
 
 @pytest.mark.asyncio
