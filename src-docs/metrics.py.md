@@ -5,29 +5,53 @@
 # <kbd>module</kbd> `metrics.py`
 Models and functions for the metric events. 
 
+**Global Variables**
+---------------
+- **LOG_ROTATE_TIMER_SYSTEMD_SERVICE**
+- **SYSTEMCTL_PATH**
 
 ---
 
-<a href="../src/metrics.py#L66"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L75"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 
 ```python
-issue_event(event: Event, loki_endpoint: str) → None
+issue_event(event: Event) → None
 ```
 
-Transmit an event to Promtail. 
+Issue a metric event. 
+
+The metric event is logged to the metrics log. 
 
 
 
 **Args:**
  
  - <b>`event`</b>:  The metric event to log. 
- - <b>`loki_endpoint`</b>:  The URL of the Loki endpoint. 
 
 **Raises:**
  
- - <b>`requests.RequestException`</b>:  If the HTTP request to Promtail fails. 
+ - <b>`OSError`</b>:  If an error occurs while writing the metrics log. 
+
+
+---
+
+<a href="../src/metrics.py#L126"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>function</kbd> `setup_logrotate`
+
+```python
+setup_logrotate()
+```
+
+Configure logrotate for the metrics log. 
+
+
+
+**Raises:**
+ 
+ - <b>`SubprocessError`</b>:  If the logrotate.timer cannot be enabled. 
 
 
 ---
@@ -37,39 +61,6 @@ Base class for metric events.
 
 Attrs:  timestamp: The UNIX time stamp of the time at which the event was originally issued. 
 
-
----
-
-#### <kbd>property</kbd> model_computed_fields
-
-Get the computed fields of this model instance. 
-
-
-
-**Returns:**
-  A dictionary of computed field names and their corresponding `ComputedFieldInfo` objects. 
-
----
-
-#### <kbd>property</kbd> model_extra
-
-Get extra fields set during validation. 
-
-
-
-**Returns:**
-  A dictionary of extra fields, or `None` if `config.extra` is not set to `"allow"`. 
-
----
-
-#### <kbd>property</kbd> model_fields_set
-
-Returns the set of fields that have been set on this model instance. 
-
-
-
-**Returns:**
-  A set of strings representing the fields that have been set,  i.e. that were not filled from defaults. 
 
 
 
@@ -81,39 +72,6 @@ Metric event for when a runner is installed.
 
 Attrs:  flavor: Describes the characteristics of the runner.  The flavour could be for example "small".  duration: The duration of the installation in seconds. 
 
-
----
-
-#### <kbd>property</kbd> model_computed_fields
-
-Get the computed fields of this model instance. 
-
-
-
-**Returns:**
-  A dictionary of computed field names and their corresponding `ComputedFieldInfo` objects. 
-
----
-
-#### <kbd>property</kbd> model_extra
-
-Get extra fields set during validation. 
-
-
-
-**Returns:**
-  A dictionary of extra fields, or `None` if `config.extra` is not set to `"allow"`. 
-
----
-
-#### <kbd>property</kbd> model_fields_set
-
-Returns the set of fields that have been set on this model instance. 
-
-
-
-**Returns:**
-  A set of strings representing the fields that have been set,  i.e. that were not filled from defaults. 
 
 
 
