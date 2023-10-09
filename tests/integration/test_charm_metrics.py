@@ -23,9 +23,11 @@ async def _get_metrics_log(unit: Unit) -> str:
     Returns:
         The metrics log.
     """
-    return (await unit.ssh(
-        f"if [ -f {METRICS_LOG_PATH} ]; then cat {METRICS_LOG_PATH}; else echo ''; fi"
-    )).strip()
+    return (
+        await unit.ssh(
+            f"if [ -f {METRICS_LOG_PATH} ]; then cat {METRICS_LOG_PATH}; else echo ''; fi"
+        )
+    ).strip()
 
 
 async def test_charm_issues_runner_installed_metric(
