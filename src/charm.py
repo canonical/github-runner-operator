@@ -32,6 +32,7 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 import metrics
 from charm_state import State
 from errors import (
+    LogrotateSetupError,
     MissingConfigurationError,
     MissingRunnerBinaryError,
     RunnerBinaryError,
@@ -305,10 +306,14 @@ class GithubRunnerCharm(CharmBase):
             self._install_deps()
             self._start_services()
             metrics.setup_logrotate()
-        except SubprocessError as err:
+        except (LogrotateSetupError, SubprocessError) as err:
             logger.exception(err)
-            # The charm cannot proceed without dependencies.
-            self.unit.status = BlockedStatus("Failed to install dependencies")
+
+            if isinstance(err, LogrotateSetupError):
+                msg = "Failed to setup logrotate"
+            else:
+                msg = "Failed to install dependencies"
+            self.unit.status = BlockedStatus(msg)
             return
 
         self._refresh_firewall()
@@ -384,10 +389,14 @@ class GithubRunnerCharm(CharmBase):
             self._install_deps()
             self._start_services()
             metrics.setup_logrotate()
-        except SubprocessError as err:
+        except (LogrotateSetupError, SubprocessError) as err:
             logger.exception(err)
-            # The charm cannot proceed without dependencies.
-            self.unit.status = BlockedStatus("Failed to install dependencies")
+
+            if isinstance(err, LogrotateSetupError):
+                msg = "Failed to setup logrotate"
+            else:
+                msg = "Failed to install dependencies"
+            self.unit.status = BlockedStatus(msg)
             return
         self._refresh_firewall()
 

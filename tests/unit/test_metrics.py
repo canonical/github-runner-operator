@@ -4,6 +4,9 @@ import json
 from pathlib import Path
 from unittest.mock import MagicMock, call
 
+import pytest
+
+from errors import LogrotateSetupError, SubprocessError
 from metrics import RunnerInstalled, issue_event, setup_logrotate
 
 TEST_LOKI_PUSH_API_URL = "http://loki:3100/api/prom/push"
@@ -74,3 +77,17 @@ def test_setup_logrotate_enables_logrotate_timer(exec_command: MagicMock):
         call(["/usr/bin/systemctl", "start", "logrotate.timer"], check_exit=True)
         in exec_command.mock_calls
     )
+
+
+def test_setup_logrotate_raises_error(exec_command: MagicMock):
+    """
+    arrange: Mock execute command to raise a SubprocessError
+    act: Setup logrotate
+    assert: The expected error is raised.
+    """
+    exec_command.side_effect = SubprocessError(
+        cmd=["mock"], return_code=1, stdout="mock stdout", stderr="mock stderr"
+    )
+
+    with pytest.raises(LogrotateSetupError):
+        setup_logrotate()

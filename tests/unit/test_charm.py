@@ -11,7 +11,7 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
-from errors import MissingConfigurationError, RunnerError, SubprocessError
+from errors import LogrotateSetupError, MissingConfigurationError, RunnerError, SubprocessError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
@@ -228,12 +228,13 @@ class TestCharm(unittest.TestCase):
         # With invalid path.
         assert harness.charm._get_runner_manager("mocktoken", "mock/invalid/path") is None
 
+    @patch("charm.metrics.setup_logrotate")
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
     @patch("builtins.open")
-    def test_on_install_failure(self, open, run, wt, mkdir, rm):
+    def test_on_install_failure(self, open, run, wt, mkdir, rm, sr):
         """Test various error thrown during install."""
 
         rm.return_value = mock_rm = MagicMock()
@@ -247,6 +248,11 @@ class TestCharm(unittest.TestCase):
         harness.charm.on.install.emit()
         assert harness.charm.unit.status == ActiveStatus()
 
+        sr.side_effect = LogrotateSetupError
+        harness.charm.on.install.emit()
+        assert harness.charm.unit.status == BlockedStatus("Failed to setup logrotate")
+
+        sr.side_effect = None
         GithubRunnerCharm._install_deps = raise_subprocess_error
         harness.charm.on.install.emit()
         assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")

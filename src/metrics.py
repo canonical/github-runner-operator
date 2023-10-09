@@ -7,6 +7,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, NonNegativeInt
 
+from errors import LogrotateSetupError, SubprocessError
 from utilities import execute_command
 
 LOG_ROTATE_TIMER_SYSTEMD_SERVICE = "logrotate.timer"
@@ -124,7 +125,11 @@ def setup_logrotate():
     """Configure logrotate for the metrics log.
 
     Raises:
-        SubprocessError: If the logrotate.timer cannot be enabled.
+        LogrotateSetupError: If the logrotate.timer cannot be enabled.
     """
-    _enable_logrotate()
     _configure_logrotate()
+
+    try:
+        _enable_logrotate()
+    except SubprocessError as error:
+        raise LogrotateSetupError() from error
