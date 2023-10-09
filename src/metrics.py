@@ -5,7 +5,6 @@
 import logging
 from pathlib import Path
 
-import requests
 from pydantic import BaseModel, NonNegativeFloat
 
 from errors import LogrotateSetupError, SubprocessError

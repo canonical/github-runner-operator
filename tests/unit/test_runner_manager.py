@@ -10,8 +10,8 @@ from unittest.mock import MagicMock
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
-from charm_state import State
 import shared_fs
+from charm_state import State
 from errors import RunnerBinaryError
 from metrics import RunnerInstalled
 from runner import Runner, RunnerStatus
@@ -282,9 +282,11 @@ def test_reconcile_error_on_runner_installed_event_is_ignored(
 
 
 def test_reconcile_places_timestamp_in_newly_created_runner(
-    runner_manager: RunnerManager, monkeypatch: MonkeyPatch, shared_fs: MagicMock, tmp_path: Path,
-        charm_state: MagicMock,
-
+    runner_manager: RunnerManager,
+    monkeypatch: MonkeyPatch,
+    shared_fs: MagicMock,
+    tmp_path: Path,
+    charm_state: MagicMock,
 ):
     """
     arrange: Enable issuing of metrics, mock timestamps and

@@ -23,9 +23,9 @@ from ghapi.page import pages
 from typing_extensions import assert_never
 
 import metrics
-from charm_state import State as CharmState
 import runner_metrics
 import shared_fs
+from charm_state import State as CharmState
 from errors import RunnerBinaryError, RunnerCreateError
 from github_type import (
     GitHubRunnerStatus,
