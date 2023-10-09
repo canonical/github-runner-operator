@@ -94,7 +94,7 @@ class RunnerManager:
         app_name: str,
         unit: int,
         runner_manager_config: RunnerManagerConfig,
-        proxies: ProxySetting = ProxySetting(),
+        proxies: Optional[ProxySetting] = None,
     ) -> None:
         """Construct RunnerManager object for creating and managing runners.
 
@@ -107,7 +107,7 @@ class RunnerManager:
         self.app_name = app_name
         self.instance_name = f"{app_name}-{unit}"
         self.config = runner_manager_config
-        self.proxies = proxies
+        self.proxies = proxies if proxies else ProxySetting()
 
         # Setting the env var to this process and any child process spawned.
         if "no_proxy" in self.proxies:

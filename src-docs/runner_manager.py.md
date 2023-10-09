@@ -32,7 +32,7 @@ __init__(
     app_name: str,
     unit: int,
     runner_manager_config: RunnerManagerConfig,
-    proxies: ProxySetting = {}
+    proxies: Optional[ProxySetting] = None
 ) → None
 ```
 
