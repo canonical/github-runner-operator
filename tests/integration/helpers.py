@@ -18,6 +18,8 @@ from runner_manager import RunnerManager
 from tests.status_name import ACTIVE_STATUS_NAME
 from utilities import retry
 
+DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
+
 
 async def check_runner_binary_exists(unit: Unit) -> bool:
     """Checks if runner binary exists in the charm.
