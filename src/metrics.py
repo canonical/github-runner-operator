@@ -53,7 +53,9 @@ class Event(BaseModel):
         """Initialize the event.
 
         Args:
-            **data: The data to initialize the event with.
+            *args: The positional arguments to pass to the base class.
+            **kwargs: The keyword arguments to pass to the base class. These are used to set the
+                specific fields. E.g. timestamp=12345 will set the timestamp field to 12345.
         """
         if "event" not in kwargs:
             event = self._camel_to_snake(self.__class__.__name__)
