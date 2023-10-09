@@ -12,7 +12,7 @@ Models and functions for the metric events.
 
 ---
 
-<a href="../src/metrics.py#L77"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L79"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 
@@ -37,7 +37,7 @@ The metric event is logged to the metrics log.
 
 ---
 
-<a href="../src/metrics.py#L124"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L126"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `setup_logrotate`
 
@@ -75,7 +75,8 @@ Initialize the event.
 
 **Args:**
  
- - <b>`**data`</b>:  The data to initialize the event with. 
+ - <b>`*args`</b>:  The positional arguments to pass to the base class. 
+ - <b>`**kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
 
 
 
@@ -102,7 +103,8 @@ Initialize the event.
 
 **Args:**
  
- - <b>`**data`</b>:  The data to initialize the event with. 
+ - <b>`*args`</b>:  The positional arguments to pass to the base class. 
+ - <b>`**kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
 
 
 

@@ -23,7 +23,9 @@ async def _get_metrics_log(unit: Unit) -> str:
     Returns:
         The metrics log.
     """
-    return await unit.ssh(f"cat {METRICS_LOG_PATH}")
+    return (await unit.ssh(
+        f"if [ -f {METRICS_LOG_PATH} ]; then cat {METRICS_LOG_PATH}; else echo ''; fi"
+    )).strip()
 
 
 async def test_charm_issues_runner_installed_metric(
@@ -40,6 +42,8 @@ async def test_charm_issues_runner_installed_metric(
     await model.relate(f"{app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
     await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
     await model.wait_for_idle(apps=[grafana_agent.name])
+    metrics_log = await _get_metrics_log(app.units[0])
+    assert metrics_log == "".strip()
 
     await create_runner(app=app, model=model)
 
