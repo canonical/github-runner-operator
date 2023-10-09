@@ -12,7 +12,7 @@ Models and functions for the metric events.
 
 ---
 
-<a href="../src/metrics.py#L75"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L76"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 
@@ -37,7 +37,7 @@ The metric event is logged to the metrics log.
 
 ---
 
-<a href="../src/metrics.py#L126"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L123"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `setup_logrotate`
 
@@ -59,7 +59,23 @@ Configure logrotate for the metrics log.
 ## <kbd>class</kbd> `Event`
 Base class for metric events. 
 
-Attrs:  timestamp: The UNIX time stamp of the time at which the event was originally issued. 
+Attrs:  timestamp: The UNIX time stamp of the time at which the event was originally issued.  event: The name of the event. Will be set to the class name in snake case if not provided. 
+
+<a href="../src/metrics.py#L51"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(*args, **kwargs)
+```
+
+Initialize the event. 
+
+
+
+**Args:**
+ 
+ - <b>`**data`</b>:  The data to initialize the event with. 
 
 
 
@@ -71,6 +87,22 @@ Attrs:  timestamp: The UNIX time stamp of the time at which the event was origin
 Metric event for when a runner is installed. 
 
 Attrs:  flavor: Describes the characteristics of the runner.  The flavour could be for example "small".  duration: The duration of the installation in seconds. 
+
+<a href="../src/metrics.py#L51"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(*args, **kwargs)
+```
+
+Initialize the event. 
+
+
+
+**Args:**
+ 
+ - <b>`**data`</b>:  The data to initialize the event with. 
 
 
 

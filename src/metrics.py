@@ -2,7 +2,6 @@
 #  See LICENSE file for licensing details.
 
 """Models and functions for the metric events."""
-import json
 import logging
 from pathlib import Path
 
@@ -26,9 +25,39 @@ class Event(BaseModel):
 
     Attrs:
          timestamp: The UNIX time stamp of the time at which the event was originally issued.
+         event: The name of the event. Will be set to the class name in snake case if not provided.
     """
 
     timestamp: NonNegativeInt
+    event: str
+
+    @staticmethod
+    def _camel_to_snake(camel_case_string: str) -> str:
+        """Convert a camel case string to snake case.
+
+        Args:
+            camel_case_string: The string to convert.
+        Returns:
+            The converted string.
+        """
+        snake_case_string = camel_case_string[0].lower()
+        for char in camel_case_string[1:]:
+            if char.isupper():
+                snake_case_string += "_" + char.lower()
+            else:
+                snake_case_string += char
+        return snake_case_string
+
+    def __init__(self, *args, **kwargs):
+        """Initialize the event.
+
+        Args:
+            **data: The data to initialize the event with.
+        """
+        if "event" not in kwargs:
+            event = self._camel_to_snake(self.__class__.__name__)
+            kwargs["event"] = event
+        super().__init__(*args, **kwargs)
 
 
 class RunnerInstalled(Event):
@@ -44,34 +73,6 @@ class RunnerInstalled(Event):
     duration: NonNegativeInt
 
 
-def _camel_to_snake(camel_case_string: str) -> str:
-    """Convert a camel case string to snake case.
-
-    Args:
-        camel_case_string: The string to convert.
-    Returns:
-        The converted string.
-    """
-    snake_case_string = camel_case_string[0].lower()
-    for char in camel_case_string[1:]:
-        if char.isupper():
-            snake_case_string += "_" + char.lower()
-        else:
-            snake_case_string += char
-    return snake_case_string
-
-
-def _get_event_name(event: Event) -> str:
-    """Get the name of the event.
-
-    Args:
-        event: The event to get the name of.
-    Returns:
-        The name of the event.
-    """
-    return _camel_to_snake(event.__class__.__name__)
-
-
 def issue_event(event: Event) -> None:
     """Issue a metric event.
 
@@ -82,12 +83,8 @@ def issue_event(event: Event) -> None:
     Raises:
         OSError: If an error occurs while writing the metrics log.
     """
-    event_dict = event.dict()
-    event_name = _get_event_name(event)
-    event_dict["event"] = event_name
-
     with METRICS_LOG_PATH.open(mode="a", encoding="utf-8") as metrics_file:
-        metrics_file.write(f"{json.dumps(event_dict)}\n")
+        metrics_file.write(f"{event.json()}\n")
 
 
 def _enable_logrotate() -> None:
