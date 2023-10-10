@@ -106,9 +106,7 @@ def delete(runner_name: str) -> None:
 
 
 def get(runner_name: str) -> SharedFilesystem:
-    """Get the shared filesystem object for the runner.
-
-    The method does not check if the filesystem exists.
+    """Get the shared filesystem for the runner.
 
     Args:
         runner_name: The name of the runner.

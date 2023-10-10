@@ -288,7 +288,9 @@ def forked_github_repository(
 
 
 @pytest.fixture(scope="module")
-def forked_github_branch(github_repository: Repository, forked_github_repository: Repository) -> Iterator[Branch]:
+def forked_github_branch(
+    github_repository: Repository, forked_github_repository: Repository
+) -> Iterator[Branch]:
     """Create a new forked branch for testing."""
     branch_name = f"test/{secrets.token_hex(4)}"
 

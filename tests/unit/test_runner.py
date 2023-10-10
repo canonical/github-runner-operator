@@ -12,7 +12,7 @@ import jinja2
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
-from errors import RunnerCreateError, RunnerRemoveError
+from errors import RunnerCreateError, RunnerRemoveError, SubprocessError
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
 from shared_fs import SharedFilesystem
@@ -243,12 +243,14 @@ def test_create_with_metrics_and_shared_fs_error(
 ):
     """
     arrange: Config the runner to issue metrics and mock the shared filesystem module
-     to throw an error.
+     to throw an expected error.
     act: Create a runner.
     assert: The runner is created despite the error on the shared filesystem.
     """
-    runner.issue_metrics = True
-    shared_fs.create.side_effect = Exception()
+    runner.config.issue_metrics = True
+    shared_fs.create.side_effect = SubprocessError(
+        cmd=["mock"], return_code=1, stdout="mock stdout", stderr="mock stderr"
+    )
 
     runner.create("test_image", vm_resources, binary_path, token)
 

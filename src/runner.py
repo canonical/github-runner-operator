@@ -540,7 +540,7 @@ class Runner:
         """Whether to render templates with metrics.
 
         Returns:
-            Whether to render templates with metrics.
+            True if the runner should render templates with metrics.
         """
         return self._shared_fs is not None
 

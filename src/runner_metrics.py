@@ -138,9 +138,9 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
 
 
 def _issue_runner_metrics(runner_metrics: RunnerMetrics, flavor: str) -> None:
-    """Issue metrics to Promtail.
+    """Issue metrics.
 
-    Converts the metrics into respective metric events and transmits it to Promtail.
+    Converts the metrics into respective metric events and issues them.
 
     Args:
         runner_metrics: The metrics to be issued.
@@ -175,7 +175,7 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
     """Extract and issue metrics from runners.
 
     The metrics are extracted from the shared filesystem of given runners
-    and issued to Promtail.
+    and respective metric events are issued.
     Orphan shared filesystems are cleaned up.
 
     If corrupt data is found, an error is raised immediately, as this may indicate that a malicious

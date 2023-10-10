@@ -99,27 +99,27 @@ async def _wait_for_workflow_to_complete(app: Application, workflow: Workflow, c
             assert run.jobs()[0].conclusion == conclusion
 
 
-# async def test_charm_issues_runner_installed_metric(
-#     model: Model,
-#     app_no_runner: Application,
-# ):
-#     """
-#     arrange: A charm without runners integrated with grafana-agent using the cos-agent integration.
-#     act: Config the charm to contain one runner.
-#     assert: The RunnerInstalled metric is logged.
-#     """
-#     app = app_no_runner  # alias for readability as the app will have a runner during the test
-#     metrics_log = await _get_metrics_log(app.units[0])
-#     assert metrics_log == ""
-#     await _integrate_apps(app, model)
-#
-#     await create_runner(app=app, model=model)
-#
-#     metrics_log = await _get_metrics_log(app.units[0])
-#     metric_log = json.loads(metrics_log)
-#     assert metric_log.get("flavor") == app.name
-#     assert metric_log.get("event") == "runner_installed"
-#     assert metric_log.get("duration") >= 0
+async def test_charm_issues_runner_installed_metric(
+    model: Model,
+    app_no_runner: Application,
+):
+    """
+    arrange: A charm without runners integrated with grafana-agent using the cos-agent integration.
+    act: Config the charm to contain one runner.
+    assert: The RunnerInstalled metric is logged.
+    """
+    app = app_no_runner  # alias for readability as the app will have a runner during the test
+    metrics_log = await _get_metrics_log(app.units[0])
+    assert metrics_log == ""
+    await _integrate_apps(app, model)
+
+    await create_runner(app=app, model=model)
+
+    metrics_log = await _get_metrics_log(app.units[0])
+    metric_log = json.loads(metrics_log)
+    assert metric_log.get("flavor") == app.name
+    assert metric_log.get("event") == "runner_installed"
+    assert metric_log.get("duration") >= 0
 
 
 async def test_charm_issues_runner_metrics_during_reconciliation(

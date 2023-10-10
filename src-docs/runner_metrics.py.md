@@ -24,7 +24,7 @@ extract(flavor: str, ignore_runners: set[str]) → None
 
 Extract and issue metrics from runners. 
 
-The metrics are extracted from the shared filesystem of given runners and issued to Promtail. Orphan shared filesystems are cleaned up. 
+The metrics are extracted from the shared filesystem of given runners and respective metric events are issued. Orphan shared filesystems are cleaned up. 
 
 If corrupt data is found, an error is raised immediately, as this may indicate that a malicious runner is trying to manipulate the shared file system. In order to avoid DoS attacks, the file size is also checked. 
 
