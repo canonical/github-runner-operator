@@ -64,7 +64,7 @@ class RunnerManagerConfig:
         image: Name of the image for creating LXD instance.
         service_token: Token for accessing local service.
         lxd_storage_path: Path to be used as LXD storage.
-        issue_metrics: Whether to issue metrics.
+        charm_state: The state of the charm.
     """
 
     path: GitHubPath
@@ -92,7 +92,7 @@ class RunnerManager:
 
     runner_bin_path = Path("/home/ubuntu/github-runner-app")
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         app_name: str,
         unit: int,
