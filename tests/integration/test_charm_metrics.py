@@ -6,6 +6,7 @@ import json
 import logging
 from time import sleep
 
+import pytest
 import requests
 from github.Branch import Branch
 from github.Repository import Repository
@@ -34,6 +35,18 @@ async def _get_metrics_log(unit: Unit) -> str:
     assert retcode == 0, f"Failed to get metrics log: {stdout}"
     assert stdout is not None, "Failed to get metrics log, no stdout message"
     return stdout.strip()
+
+
+@pytest.fixture(scope="module")
+def branch_with_protection(forked_github_branch: Branch):
+    """Add required branch protection to the branch."""
+
+    forked_github_branch.edit_protection()
+    forked_github_branch.add_required_signatures()
+
+    yield forked_github_branch
+
+    forked_github_branch.remove_protection()
 
 
 # async def test_charm_issues_runner_installed_metric(
@@ -67,7 +80,7 @@ async def test_charm_issues_runner_metrics(
         model: Model,
         app_no_runner: Application,
         forked_github_repository: Repository,
-        forked_github_branch: Branch
+        branch_with_protection: Branch
 ):
     app = app_no_runner  # alias for readability as the app will have a runner during the test
     grafana_agent = await model.deploy("grafana-agent", channel="latest/edge")
@@ -86,7 +99,7 @@ async def test_charm_issues_runner_metrics(
 
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(
-        forked_github_branch, {"runner": app.name}
+        branch_with_protection, {"runner": app.name}
     )
 
     # Wait until the runner is used up.
