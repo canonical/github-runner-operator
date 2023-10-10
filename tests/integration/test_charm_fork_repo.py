@@ -18,9 +18,12 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import create_runner, get_runner_names, \
-    DISPATCH_TEST_WORKFLOW_FILENAME
-from tests.status_name import ACTIVE_STATUS_NAME
+from tests.integration.helpers import (
+    DISPATCH_TEST_WORKFLOW_FILENAME,
+    create_runner,
+    get_runner_names,
+    reconcile,
+)
 
 
 @pytest.fixture(scope="module")
@@ -154,9 +157,7 @@ async def test_path_config_change(
 
     await app_with_unsigned_commit_repo.set_config({"path": path})
 
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await reconcile(app=app_with_unsigned_commit_repo, model=model)
 
     runner_names = await get_runner_names(unit)
     assert len(runner_names) == 1

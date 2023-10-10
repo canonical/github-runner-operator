@@ -19,7 +19,7 @@ from juju.application import Application
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-from tests.integration.helpers import create_runner
+from tests.integration.helpers import create_runner, reconcile
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
@@ -245,12 +245,9 @@ async def app_scheduled_events(
         },
     )
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
-    unit = application.units[0]
 
     await application.set_config({"virtual-machines": "1"})
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await reconcile(app=application, model=model)
 
     yield application
 

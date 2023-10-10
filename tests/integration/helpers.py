@@ -251,11 +251,8 @@ async def create_runner(app: Application, model: Model) -> None:
         model: The machine charm model.
     """
     await app.set_config({"virtual-machines": "1"})
-    unit = app.units[0]
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
-    await wait_till_num_of_runners(unit, 1)
+    await reconcile(app=app, model=model)
+    await wait_till_num_of_runners(unit=app.units[0], num=1)
 
 
 async def get_runner_name(unit: Unit) -> str:
@@ -271,3 +268,15 @@ async def get_runner_name(unit: Unit) -> str:
     return runners[0]
 
 
+async def reconcile(app: Application, model: Model) -> None:
+    """Reconcile the runners.
+
+    Uses the first unit found in the application for the reconciliation.
+
+    Args:
+        app: The GitHub Runner Charm app to reconcile the runners for.
+        model: The machine charm model.
+    """
+    action = await app.units[0].run_action("reconcile-runners")
+    await action.wait()
+    await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
