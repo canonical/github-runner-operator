@@ -5,7 +5,7 @@
 import json
 import logging
 from time import sleep
-from typing import AsyncGenerator
+from typing import AsyncIterator
 
 import pytest
 import requests
@@ -51,7 +51,7 @@ async def _clear_metrics_log(unit: Unit):
 @pytest.fixture(scope="function", name="app")
 async def app_fixture(
     model: Model, app_no_runner: Application
-) -> AsyncGenerator[Application, None]:
+) -> AsyncIterator[Application]:
     """Setup the charm to be integrated with grafana-agent using the cos-agent integration."""
     app = app_no_runner  # alias for readability as the app will have a runner during the test
     metrics_log = await _get_metrics_log(app.units[0])
