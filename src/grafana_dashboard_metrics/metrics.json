@@ -228,7 +228,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\"} | json event=\"event\", idle=\"idle\" | event = `runner_start` | unwrap duration [1h])",
+          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\"} | json event=\"event\", idle=\"idle\" | event = `runner_start` | unwrap idle [1h])",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Max",
           "queryType": "range",
@@ -240,7 +240,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "min_over_time({filename=\"/var/log/github-runner-metrics.log\"} | json event=\"event\", idle=\"idle\" | event = `runner_start` | unwrap duration [1h])",
+          "expr": "min_over_time({filename=\"/var/log/github-runner-metrics.log\"} | json event=\"event\", idle=\"idle\" | event = `runner_start` | unwrap idle [1h])",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Max",
           "queryType": "range",
