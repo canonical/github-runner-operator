@@ -121,15 +121,15 @@ async def test_charm_issues_runner_metrics_during_reconciliation(
     assert: The RunnerStart metric is logged.
     """
     app = app_no_runner  # alias for readability as the app will have a runner during the test
-    await app.set_config({"path": forked_github_repository.full_name})
-    await create_runner(app=app_no_runner, model=model)
-    await _integrate_apps(app, model)
     metrics_log = await _get_metrics_log(app.units[0])
     assert metrics_log == ""
+    await app.set_config({"path": forked_github_repository.full_name})
+    await _integrate_apps(app, model)
+    await create_runner(app=app_no_runner, model=model)
+
     workflow = forked_github_repository.get_workflow(
         id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME
     )
-
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(
         branch_with_protection, {"runner": app.name}
