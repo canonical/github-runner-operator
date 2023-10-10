@@ -5,6 +5,7 @@
 import json
 import logging
 from time import sleep
+from typing import AsyncGenerator
 
 import pytest
 import requests
@@ -27,8 +28,8 @@ from tests.integration.helpers import (
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
-@pytest.fixture(scope="module")
-def branch_with_protection(forked_github_branch: Branch):
+@pytest.fixture(scope="module", name="branch_with_protection")
+def branch_with_protection_fixture(forked_github_branch: Branch):
     """Add required branch protection to the branch."""
 
     forked_github_branch.edit_protection()
@@ -37,6 +38,31 @@ def branch_with_protection(forked_github_branch: Branch):
     yield forked_github_branch
 
     forked_github_branch.remove_protection()
+
+
+async def _clear_metrics_log(unit: Unit):
+    retcode, _ = await run_in_unit(
+        unit=unit,
+        command=f"if [ -f {METRICS_LOG_PATH} ]; then rm {METRICS_LOG_PATH}; fi",
+    )
+    assert retcode == 0, "Failed to clear metrics log"
+
+
+@pytest.fixture(scope="function", name="app")
+async def app_fixture(
+    model: Model, app_no_runner: Application
+) -> AsyncGenerator[Application, None]:
+    """Setup the charm to be integrated with grafana-agent using the cos-agent integration."""
+    app = app_no_runner  # alias for readability as the app will have a runner during the test
+    metrics_log = await _get_metrics_log(app.units[0])
+    assert metrics_log == ""
+    await _integrate_apps(app, model)
+
+    yield app
+
+    await app.set_config({"virtual-machines": "0"})
+    await reconcile(app=app, model=model)
+    await _clear_metrics_log(app.units[0])
 
 
 async def _get_metrics_log(unit: Unit) -> str:
@@ -99,19 +125,13 @@ async def _wait_for_workflow_to_complete(app: Application, workflow: Workflow, c
             assert run.jobs()[0].conclusion == conclusion
 
 
-async def test_charm_issues_runner_installed_metric(
-    model: Model,
-    app_no_runner: Application,
-):
+@pytest.mark.abort_on_fail
+async def test_charm_issues_runner_installed_metric(app: Application, model: Model):
     """
     arrange: A charm without runners integrated with grafana-agent using the cos-agent integration.
     act: Config the charm to contain one runner.
     assert: The RunnerInstalled metric is logged.
     """
-    app = app_no_runner  # alias for readability as the app will have a runner during the test
-    metrics_log = await _get_metrics_log(app.units[0])
-    assert metrics_log == ""
-    await _integrate_apps(app, model)
 
     await create_runner(app=app, model=model)
 
@@ -122,9 +142,10 @@ async def test_charm_issues_runner_installed_metric(
     assert metric_log.get("duration") >= 0
 
 
+@pytest.mark.abort_on_fail
 async def test_charm_issues_runner_metrics_during_reconciliation(
     model: Model,
-    app_no_runner: Application,
+    app: Application,
     forked_github_repository: Repository,
     branch_with_protection: Branch,
 ):
@@ -133,12 +154,7 @@ async def test_charm_issues_runner_metrics_during_reconciliation(
     act: Dispatch a workflow on a branch for the runner to run. After completion, reconcile.
     assert: The RunnerStart metric is logged.
     """
-    app = app_no_runner  # alias for readability as the app will have a runner during the test
-    metrics_log = await _get_metrics_log(app.units[0])
-    assert metrics_log == ""
-    await app.set_config({"path": forked_github_repository.full_name})
-    await _integrate_apps(app, model)
-    await create_runner(app=app_no_runner, model=model)
+    await create_runner(app=app, model=model)
 
     workflow = forked_github_repository.get_workflow(
         id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME

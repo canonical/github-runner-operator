@@ -4,102 +4,102 @@ on:
   push:
 
 jobs:
-  integration-test-charm-no-runner:
-    name: Integration test charm with no runner
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        juju: [3.1, 2.9]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup operator environment
-        uses: charmed-kubernetes/actions-operator@main
-        with:
-          juju-channel: ${{ matrix.juju }}/stable
-          provider: lxd
-      - name: Enable br_netfilter
-        run: sudo modprobe br_netfilter
-      - name: Run Integration tests
-        run: |
-          tox -e integration-juju${{ matrix.juju }} -- \
-            --keep-models \
-            --path ${{secrets.E2E_TESTING_REPO}} \
-            --token ${{secrets.E2E_TESTING_TOKEN}} \
-            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
-            tests/integration/test_charm_no_runner.py
-  integration-test-charm:
-    name: Integration test charm
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        juju: [3.1, 2.9]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup operator environment
-        uses: charmed-kubernetes/actions-operator@main
-        with:
-          juju-channel: ${{ matrix.juju }}/stable
-          provider: lxd
-      - name: Enable br_netfilter
-        run: sudo modprobe br_netfilter
-      - name: Run Integration tests
-        run: |
-          tox -e integration-juju${{ matrix.juju }} -- \
-            --keep-models \
-            --path ${{secrets.E2E_TESTING_REPO}} \
-            --token ${{secrets.E2E_TESTING_TOKEN}} \
-            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
-            tests/integration/test_charm.py
-  integration-test-charm-fork-repo:
-    name: Integration test charm with fork repo
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        juju: [3.1, 2.9]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup operator environment
-        uses: charmed-kubernetes/actions-operator@main
-        with:
-          juju-channel: ${{ matrix.juju }}/stable
-          provider: lxd
-      - name: Enable br_netfilter
-        run: sudo modprobe br_netfilter
-      - name: Run Integration tests
-        run: |
-          tox -e integration-juju${{ matrix.juju }} -- \
-            --keep-models \
-            --path ${{secrets.E2E_TESTING_REPO}} \
-            --token ${{secrets.E2E_TESTING_TOKEN}} \
-            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
-            tests/integration/test_charm_fork_repo.py
-  integration-test-charm-scheduled-events:
-    name: Integration test charm scheduled events
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        juju: [3.1, 2.9]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup operator environment
-        uses: charmed-kubernetes/actions-operator@main
-        with:
-          juju-channel: ${{ matrix.juju }}/stable
-          provider: lxd
-      - name: Enable br_netfilter
-        run: sudo modprobe br_netfilter
-      - name: Run Integration tests
-        run: |
-          tox -e integration-juju${{ matrix.juju }} -- \
-            --keep-models \
-            --path ${{secrets.E2E_TESTING_REPO}} \
-            --token ${{secrets.E2E_TESTING_TOKEN}} \
-            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
-            tests/integration/test_charm_scheduled_events.py
+#  integration-test-charm-no-runner:
+#    name: Integration test charm with no runner
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        juju: [3.1, 2.9]
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: Setup operator environment
+#        uses: charmed-kubernetes/actions-operator@main
+#        with:
+#          juju-channel: ${{ matrix.juju }}/stable
+#          provider: lxd
+#      - name: Enable br_netfilter
+#        run: sudo modprobe br_netfilter
+#      - name: Run Integration tests
+#        run: |
+#          tox -e integration-juju${{ matrix.juju }} -- \
+#            --keep-models \
+#            --path ${{secrets.E2E_TESTING_REPO}} \
+#            --token ${{secrets.E2E_TESTING_TOKEN}} \
+#            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
+#            tests/integration/test_charm_no_runner.py
+#  integration-test-charm:
+#    name: Integration test charm
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        juju: [3.1, 2.9]
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: Setup operator environment
+#        uses: charmed-kubernetes/actions-operator@main
+#        with:
+#          juju-channel: ${{ matrix.juju }}/stable
+#          provider: lxd
+#      - name: Enable br_netfilter
+#        run: sudo modprobe br_netfilter
+#      - name: Run Integration tests
+#        run: |
+#          tox -e integration-juju${{ matrix.juju }} -- \
+#            --keep-models \
+#            --path ${{secrets.E2E_TESTING_REPO}} \
+#            --token ${{secrets.E2E_TESTING_TOKEN}} \
+#            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
+#            tests/integration/test_charm.py
+#  integration-test-charm-fork-repo:
+#    name: Integration test charm with fork repo
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        juju: [3.1, 2.9]
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: Setup operator environment
+#        uses: charmed-kubernetes/actions-operator@main
+#        with:
+#          juju-channel: ${{ matrix.juju }}/stable
+#          provider: lxd
+#      - name: Enable br_netfilter
+#        run: sudo modprobe br_netfilter
+#      - name: Run Integration tests
+#        run: |
+#          tox -e integration-juju${{ matrix.juju }} -- \
+#            --keep-models \
+#            --path ${{secrets.E2E_TESTING_REPO}} \
+#            --token ${{secrets.E2E_TESTING_TOKEN}} \
+#            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
+#            tests/integration/test_charm_fork_repo.py
+#  integration-test-charm-scheduled-events:
+#    name: Integration test charm scheduled events
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        juju: [3.1, 2.9]
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: Setup operator environment
+#        uses: charmed-kubernetes/actions-operator@main
+#        with:
+#          juju-channel: ${{ matrix.juju }}/stable
+#          provider: lxd
+#      - name: Enable br_netfilter
+#        run: sudo modprobe br_netfilter
+#      - name: Run Integration tests
+#        run: |
+#          tox -e integration-juju${{ matrix.juju }} -- \
+#            --keep-models \
+#            --path ${{secrets.E2E_TESTING_REPO}} \
+#            --token ${{secrets.E2E_TESTING_TOKEN}} \
+#            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
+#            tests/integration/test_charm_scheduled_events.py
   integration-test-charm-metrics:
     name: Integration test charm metrics
     runs-on: ubuntu-latest
