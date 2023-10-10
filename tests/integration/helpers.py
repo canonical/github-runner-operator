@@ -256,3 +256,18 @@ async def create_runner(app: Application, model: Model) -> None:
     await action.wait()
     await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
     await wait_till_num_of_runners(unit, 1)
+
+
+async def get_runner_name(unit: Unit) -> str:
+    """Get the name of the runner.
+
+    Expects only one runner to be present.
+
+    Args:
+        unit: The GitHub Runner Charm unit to get the runner name for.
+    """
+    runners = await get_runner_names(unit)
+    assert len(runners) == 1
+    return runners[0]
+
+
