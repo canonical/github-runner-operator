@@ -8,6 +8,7 @@ from time import sleep
 from typing import AsyncIterator
 
 import pytest
+import pytest_asyncio
 import requests
 from github.Branch import Branch
 from github.Repository import Repository
@@ -48,10 +49,8 @@ async def _clear_metrics_log(unit: Unit):
     assert retcode == 0, "Failed to clear metrics log"
 
 
-@pytest.fixture(scope="function", name="app")
-async def app_fixture(
-    model: Model, app_no_runner: Application
-) -> AsyncIterator[Application]:
+@pytest_asyncio.fixture(scope="function", name="app")
+async def app_fixture(model: Model, app_no_runner: Application) -> AsyncIterator[Application]:
     """Setup the charm to be integrated with grafana-agent using the cos-agent integration."""
     app = app_no_runner  # alias for readability as the app will have a runner during the test
     metrics_log = await _get_metrics_log(app.units[0])
