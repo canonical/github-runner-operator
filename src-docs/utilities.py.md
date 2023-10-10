@@ -106,9 +106,15 @@ The command is executed with `subprocess.run`, additional arguments can be passe
  Output on stdout, and the exit code. 
 
 
+
+**Raises:**
+ 
+ - <b>`SubprocessError`</b>:  If `check_exit` is set and the exit code is non-zero. 
+
+
 ---
 
-<a href="../src/utilities.py#L171"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L174"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `get_env_var`
 
@@ -134,7 +140,7 @@ Looks for all upper-case and all low-case of the `env_var`.
 
 ---
 
-<a href="../src/utilities.py#L185"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L188"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `set_env_var`
 
@@ -156,7 +162,7 @@ Set the all upper case and all low case of the `env_var`.
 
 ---
 
-<a href="../src/utilities.py#L198"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L201"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `bytes_with_unit_to_kib`
 

@@ -20,7 +20,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import get_runner_names, wait_till_num_of_runners
+from tests.integration.helpers import create_runner, get_runner_names
 from tests.status_name import ACTIVE_STATUS_NAME
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
@@ -142,19 +142,12 @@ async def app_with_unsigned_commit_repo(
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
-    unit = app_no_runner.units[0]
+    app = app_no_runner  # alias for readability as the app will have a runner during the test
 
-    await app_no_runner.set_config(
-        {"virtual-machines": "1", "path": forked_github_repository.full_name}
-    )
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await app.set_config({"path": forked_github_repository.full_name})
+    await create_runner(app=app, model=model)
 
-    # Wait until there is one runner.
-    await wait_till_num_of_runners(unit, 1)
-
-    yield app_no_runner
+    yield app
 
 
 @pytest.mark.asyncio

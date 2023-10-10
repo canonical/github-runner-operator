@@ -146,6 +146,9 @@ def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> tu
 
     Returns:
         Output on stdout, and the exit code.
+
+    Raises:
+        SubprocessError: If `check_exit` is set and the exit code is non-zero.
     """
     result = secure_run_subprocess(cmd, **kwargs)
 

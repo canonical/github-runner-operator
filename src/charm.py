@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Optional, Sequence, TypeVar
 
 import jinja2
+from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -28,7 +29,10 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
+import metrics
+from charm_state import State
 from errors import (
+    LogrotateSetupError,
     MissingConfigurationError,
     MissingRunnerBinaryError,
     RunnerBinaryError,
@@ -130,6 +134,10 @@ class GithubRunnerCharm(CharmBase):
                 class.
         """
         super().__init__(*args, **kargs)
+
+        self._grafana_agent = COSAgentProvider(self)
+        self._state = State.from_charm(self)
+
         if LXD_PROFILE_YAML.exists():
             if self.config.get("test-mode") != "insecure":
                 raise RuntimeError("lxd-profile.yaml detected outside test mode")
@@ -271,7 +279,14 @@ class GithubRunnerCharm(CharmBase):
         return RunnerManager(
             app_name,
             unit,
-            RunnerManagerConfig(path, token, "jammy", self.service_token, self.ram_pool_path),
+            RunnerManagerConfig(
+                path=path,
+                token=token,
+                image="jammy",
+                service_token=self.service_token,
+                lxd_storage_path=self.ram_pool_path,
+                charm_state=self._state,
+            ),
             proxies=self.proxies,
         )
 
@@ -290,10 +305,15 @@ class GithubRunnerCharm(CharmBase):
             # The `_start_services`, `_install_deps` includes retry.
             self._install_deps()
             self._start_services()
-        except SubprocessError as err:
+            metrics.setup_logrotate()
+        except (LogrotateSetupError, SubprocessError) as err:
             logger.exception(err)
-            # The charm cannot proceed without dependencies.
-            self.unit.status = BlockedStatus("Failed to install dependencies")
+
+            if isinstance(err, LogrotateSetupError):
+                msg = "Failed to setup logrotate"
+            else:
+                msg = "Failed to install dependencies"
+            self.unit.status = BlockedStatus(msg)
             return
 
         self._refresh_firewall()
@@ -368,10 +388,15 @@ class GithubRunnerCharm(CharmBase):
             # The `_start_services`, `_install_deps` includes retry.
             self._install_deps()
             self._start_services()
-        except SubprocessError as err:
+            metrics.setup_logrotate()
+        except (LogrotateSetupError, SubprocessError) as err:
             logger.exception(err)
-            # The charm cannot proceed without dependencies.
-            self.unit.status = BlockedStatus("Failed to install dependencies")
+
+            if isinstance(err, LogrotateSetupError):
+                msg = "Failed to setup logrotate"
+            else:
+                msg = "Failed to install dependencies"
+            self.unit.status = BlockedStatus(msg)
             return
         self._refresh_firewall()
 
