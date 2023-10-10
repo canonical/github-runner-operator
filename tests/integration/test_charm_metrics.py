@@ -31,8 +31,9 @@ async def _get_metrics_log(unit: Unit) -> str:
     retcode, stdout = await run_in_unit(
             unit=unit, command=f"if [ -f {METRICS_LOG_PATH} ]; then cat {METRICS_LOG_PATH}; else echo ''; fi"
         )
-    assert retcode == 0
-    return stdout
+    assert retcode == 0, f"Failed to get metrics log: {stdout}"
+    assert stdout is not None, "Failed to get metrics log, no stdout message"
+    return stdout.strip()
 
 
 # async def test_charm_issues_runner_installed_metric(
@@ -111,6 +112,9 @@ async def test_charm_issues_runner_metrics(
             in logs
         ):
             assert run.jobs()[0].conclusion == "success"
+
+            # Set the number of virtual machines to 0 to speedup reconciliation
+            await app.set_config({"virtual-machines": "0"})
             action = await unit.run_action("reconcile-runners")
             await action.wait()
             await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)

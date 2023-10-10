@@ -7,7 +7,7 @@ import secrets
 import subprocess
 from pathlib import Path
 from time import sleep
-from typing import Any, AsyncIterator, Iterator
+from typing import Any, AsyncIterator, Iterator, Optional
 
 import pytest
 import pytest_asyncio
@@ -95,6 +95,12 @@ def no_proxy(pytestconfig: pytest.Config) -> str:
 
 
 @pytest.fixture(scope="module")
+def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
+    """Configured loop_device setting."""
+    return pytestconfig.getoption("--loop-device")
+
+
+@pytest.fixture(scope="module")
 def model(ops_test: OpsTest) -> Model:
     """Juju model used in the test."""
     assert ops_test.model is not None
@@ -102,7 +108,7 @@ def model(ops_test: OpsTest) -> Model:
 
 
 @pytest_asyncio.fixture(scope="module")
-async def lxd_profile() -> AsyncIterator[Path]:
+async def lxd_profile(loop_device: Optional[str]) -> AsyncIterator[Path]:
     """File containing LXD profile for test mode.
 
     The file needs to be in the charm directory while building a test version
@@ -110,8 +116,7 @@ async def lxd_profile() -> AsyncIterator[Path]:
     """
     lxd_profile_path = Path("lxd-profile.yaml")
 
-    lxd_profile_path.write_text(
-        """config:
+    lxd_profile_str = """config:
     security.nesting: true
     security.privileged: true
     raw.lxc: |
@@ -124,14 +129,16 @@ devices:
         path: /dev/kmsg
         source: /dev/kmsg
         type: unix-char
-    loop-control:
+"""
+    if loop_device:
+        lxd_profile_str += f"""    loop-control:
         path: /dev/loop-control
         type: unix-char
     loop14:
-        path: /dev/loop14
+        path: {loop_device}
         type: unix-block
 """
-    )
+    lxd_profile_path.write_text(lxd_profile_str)
 
     yield lxd_profile_path
 
