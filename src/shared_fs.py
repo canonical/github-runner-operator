@@ -9,7 +9,7 @@ from typing import Generator
 
 from utilities import execute_command
 
-FILESYSTEM_PATH = Path("/home/ubuntu/runner-fs")
+FILESYSTEM_BASE_PATH = Path("/home/ubuntu/runner-fs")
 FILESYSTEM_SIZE = "1M"
 
 
@@ -52,10 +52,10 @@ def create(runner_name: str) -> SharedFilesystem:
     Raises:
         SubprocessError: If the command fails.
     """
-    FILESYSTEM_PATH.mkdir(exist_ok=True)
-    runner_fs_path = FILESYSTEM_PATH / runner_name
+    FILESYSTEM_BASE_PATH.mkdir(exist_ok=True)
+    runner_fs_path = FILESYSTEM_BASE_PATH / runner_name
     runner_fs_path.mkdir()
-    runner_image_path = FILESYSTEM_PATH / f"{runner_name}.img"
+    runner_image_path = FILESYSTEM_BASE_PATH / f"{runner_name}.img"
 
     execute_command(
         ["dd", "if=/dev/zero", f"of={runner_image_path}", f"bs={FILESYSTEM_SIZE}", "count=1"],
@@ -77,10 +77,10 @@ def list_all() -> Generator[SharedFilesystem, None, None]:
     Returns:
         A generator of shared filesystems.
     """
-    if not FILESYSTEM_PATH.exists():
+    if not FILESYSTEM_BASE_PATH.exists():
         return
 
-    directories = (entry for entry in FILESYSTEM_PATH.iterdir() if entry.is_dir())
+    directories = (entry for entry in FILESYSTEM_BASE_PATH.iterdir() if entry.is_dir())
     for directory in directories:
         yield SharedFilesystem(path=directory, runner_name=directory.name)
 
@@ -95,7 +95,7 @@ def delete(runner_name: str) -> None:
         NotFoundError: If the shared filesystem is not found.
     """
     runner_fs = get(runner_name)
-    runner_image_path = FILESYSTEM_PATH / f"{runner_name}.img"
+    runner_image_path = FILESYSTEM_BASE_PATH / f"{runner_name}.img"
 
     execute_command(
         ["sudo", "umount", str(runner_fs.path)],
@@ -117,6 +117,6 @@ def get(runner_name: str) -> SharedFilesystem:
     Raises:
         NotFoundError: If the shared filesystem is not found.
     """
-    if not (runner_fs := FILESYSTEM_PATH.joinpath(runner_name)).exists():
+    if not (runner_fs := FILESYSTEM_BASE_PATH.joinpath(runner_name)).exists():
         raise NotFoundError(f"Shared filesystem for runner {runner_name} not found.")
     return SharedFilesystem(runner_fs, runner_name)

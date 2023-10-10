@@ -90,7 +90,6 @@ def test_extract(shared_fs_mock: MagicMock, issue_event_mock: MagicMock, tmp_pat
         1. A runner with all metrics inside shared fs
         2. A runner with only pre-job metrics inside shared fs
         3. A runner with no metrics except installed_timestamp inside shared fs
-
     act: Call extract
     assert: For runners 1 & 2 RunnerStart events are issued and all shared filesystems are removed.
     """
@@ -251,7 +250,7 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
         4. A runner with no installed_timestamp file inside shared fs
     act: Call extract
     assert:
-        ValidationErrors for 1. + 3. , JSONDecodeError for 2. FileNotFoundError for 4. are raised.
+        ValidationErrors for 1. + 3., JSONDecodeError for 2. FileNotFoundError for 4. are raised.
     """
     runner_metrics_data = RunnerMetrics(
         installed_timestamp=1,

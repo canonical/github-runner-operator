@@ -328,14 +328,15 @@ def test_reconcile_error_on_placing_timestamp_is_ignored(
 
 
 def test_reconcile_places_no_timestamp_in_newly_created_runner_if_metrics_disabled(
-    runner_manager: RunnerManager, shared_fs: MagicMock, tmp_path: Path
+    runner_manager: RunnerManager, shared_fs: MagicMock, tmp_path: Path, charm_state: MagicMock
 ):
     """
-    arrange: Disable issuing of metrics, mock timestamps and the shared filesystem module
+    arrange: Disable issuing of metrics, mock timestamps and the shared filesystem module.
     act: Reconcile to create a runner.
     assert: No timestamp is placed in the shared filesystem.
     """
-    runner_manager.config.issue_metrics = False
+    charm_state.is_metrics_logging_available = False
+
     fs = SharedFilesystem(path=tmp_path, runner_name="test_runner")
     shared_fs.get.return_value = fs
 
