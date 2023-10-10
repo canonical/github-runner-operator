@@ -49,19 +49,31 @@ async def _clear_metrics_log(unit: Unit):
     assert retcode == 0, "Failed to clear metrics log"
 
 
-@pytest_asyncio.fixture(scope="function", name="app")
-async def app_fixture(model: Model, app_no_runner: Application) -> AsyncIterator[Application]:
+@pytest_asyncio.fixture(scope="module", name="app_integrated")
+async def app_integrated_fixture(
+    model: Model, app_no_runner: Application
+) -> AsyncIterator[Application]:
     """Setup the charm to be integrated with grafana-agent using the cos-agent integration."""
-    app = app_no_runner  # alias for readability as the app will have a runner during the test
-    metrics_log = await _get_metrics_log(app.units[0])
+    await _integrate_apps(app_no_runner, model)
+
+    yield app_no_runner
+
+
+@pytest_asyncio.fixture(scope="function", name="app")
+async def app_fixture(model: Model, app_integrated: Application) -> AsyncIterator[Application]:
+    """Setup and teardown the charm after each test.
+
+    Ensure that the metrics log is empty and cleared after each test.
+    Ensure that the number of runners is set to 0 after each test.
+    """
+    metrics_log = await _get_metrics_log(app_integrated.units[0])
     assert metrics_log == ""
-    await _integrate_apps(app, model)
 
-    yield app
+    yield app_integrated
 
-    await app.set_config({"virtual-machines": "0"})
-    await reconcile(app=app, model=model)
-    await _clear_metrics_log(app.units[0])
+    await app_integrated.set_config({"virtual-machines": "0"})
+    await reconcile(app=app_integrated, model=model)
+    await _clear_metrics_log(app_integrated.units[0])
 
 
 async def _get_metrics_log(unit: Unit) -> str:
@@ -124,6 +136,7 @@ async def _wait_for_workflow_to_complete(app: Application, workflow: Workflow, c
             assert run.jobs()[0].conclusion == conclusion
 
 
+@pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_runner_installed_metric(app: Application, model: Model):
     """
@@ -141,6 +154,7 @@ async def test_charm_issues_runner_installed_metric(app: Application, model: Mod
     assert metric_log.get("duration") >= 0
 
 
+@pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_runner_metrics_during_reconciliation(
     model: Model,
