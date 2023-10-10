@@ -15,7 +15,7 @@ from juju.application import Application
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-from tests.integration.helpers import wait_till_num_of_runners
+from tests.integration.helpers import create_runner
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
@@ -146,11 +146,7 @@ async def app_no_runner(
     https_proxy: str,
     no_proxy: str,
 ) -> AsyncIterator[Application]:
-    """Application with no token.
-
-    Test should ensure it returns with the application having no token and no
-    runner.
-    """
+    """Application with no runner."""
     subprocess.run(["sudo", "modprobe", "br_netfilter"])
 
     await model.set_config(
@@ -176,7 +172,7 @@ async def app_no_runner(
             "reconcile-interval": 60,
         },
     )
-    await model.wait_for_idle()
+    await model.wait_for_idle(timeout=60 * 30)
 
     yield application
 
@@ -188,15 +184,7 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
-    unit = app_no_runner.units[0]
-
-    await app_no_runner.set_config({"virtual-machines": "1"})
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
-
-    # Wait until there is one runner.
-    await wait_till_num_of_runners(unit, 1)
+    await create_runner(app=app_no_runner, model=model)
 
     yield app_no_runner
 

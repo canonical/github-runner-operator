@@ -9,10 +9,13 @@ from typing import Any
 
 import juju.version
 import yaml
+from juju.application import Application
+from juju.model import Model
 from juju.unit import Unit
 
 from runner import Runner
 from runner_manager import RunnerManager
+from tests.status_name import ACTIVE_STATUS_NAME
 from utilities import retry
 
 
@@ -236,3 +239,18 @@ EOT""",
         await sleep(3)
     else:
         assert False, "Timeout waiting for HTTP server to start up"
+
+
+async def create_runner(app: Application, model: Model) -> None:
+    """Let the charm create a runner.
+
+    Args:
+        app: The GitHub Runner Charm app to create the runner for.
+        model: The machine charm model.
+    """
+    await app.set_config({"virtual-machines": "1"})
+    unit = app.units[0]
+    action = await unit.run_action("reconcile-runners")
+    await action.wait()
+    await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
+    await wait_till_num_of_runners(unit, 1)
