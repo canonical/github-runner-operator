@@ -19,7 +19,7 @@ from juju.application import Application
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-from tests.integration.helpers import create_runner, reconcile
+from tests.integration.helpers import ensure_charm_has_runner, reconcile
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
@@ -194,7 +194,7 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
-    await create_runner(app=app_no_runner, model=model)
+    await ensure_charm_has_runner(app=app_no_runner, model=model)
 
     yield app_no_runner
 

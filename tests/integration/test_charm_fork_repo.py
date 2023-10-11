@@ -20,7 +20,7 @@ from juju.model import Model
 
 from tests.integration.helpers import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
-    create_runner,
+    ensure_charm_has_runner,
     get_runner_names,
     reconcile,
 )
@@ -81,7 +81,7 @@ async def app_with_unsigned_commit_repo(
     app = app_no_runner  # alias for readability as the app will have a runner during the test
 
     await app.set_config({"path": forked_github_repository.full_name})
-    await create_runner(app=app, model=model)
+    await ensure_charm_has_runner(app=app, model=model)
 
     yield app
 

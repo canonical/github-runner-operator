@@ -20,7 +20,7 @@ from juju.unit import Unit
 from metrics import METRICS_LOG_PATH
 from tests.integration.helpers import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
-    create_runner,
+    ensure_charm_has_runner,
     get_runner_name,
     get_runner_names,
     reconcile,
@@ -64,15 +64,12 @@ async def app_fixture(model: Model, app_integrated: Application) -> AsyncIterato
     """Setup and teardown the charm after each test.
 
     Ensure that the metrics log is empty and cleared after each test.
-    Ensure that the number of runners is set to 0 after each test.
     """
     metrics_log = await _get_metrics_log(app_integrated.units[0])
     assert metrics_log == ""
 
     yield app_integrated
 
-    await app_integrated.set_config({"virtual-machines": "0"})
-    await reconcile(app=app_integrated, model=model)
     await _clear_metrics_log(app_integrated.units[0])
 
 
@@ -145,7 +142,7 @@ async def test_charm_issues_runner_installed_metric(app: Application, model: Mod
     assert: The RunnerInstalled metric is logged.
     """
 
-    await create_runner(app=app, model=model)
+    await ensure_charm_has_runner(app=app, model=model)
 
     metrics_log = await _get_metrics_log(app.units[0])
     metric_log = json.loads(metrics_log)
@@ -167,7 +164,7 @@ async def test_charm_issues_runner_metrics_during_reconciliation(
     act: Dispatch a workflow on a branch for the runner to run. After completion, reconcile.
     assert: The RunnerStart metric is logged.
     """
-    await create_runner(app=app, model=model)
+    await ensure_charm_has_runner(app=app, model=model)
 
     workflow = forked_github_repository.get_workflow(
         id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME

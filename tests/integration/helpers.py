@@ -243,8 +243,8 @@ EOT""",
         assert False, "Timeout waiting for HTTP server to start up"
 
 
-async def create_runner(app: Application, model: Model) -> None:
-    """Let the charm create a runner.
+async def ensure_charm_has_runner(app: Application, model: Model) -> None:
+    """Reconcile the charm to contain one runner.
 
     Args:
         app: The GitHub Runner Charm app to create the runner for.
