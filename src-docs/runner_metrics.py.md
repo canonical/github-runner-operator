@@ -14,7 +14,7 @@ Classes and function to extract the metrics from a shared filesystem.
 
 ---
 
-<a href="../src/runner_metrics.py#L174"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_metrics.py#L183"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `extract`
 
@@ -39,18 +39,16 @@ If corrupt data is found, an error is raised immediately, as this may indicate t
 
 **Raises:**
  
- - <b>`JSONDecodeError`</b>:  If one of the JSON files inside a shared filesystem does  not contain valid JSON. 
- - <b>`pydantic.ValidationError`</b>:  If one of the files inside a shared filesystem is not valid. 
- - <b>`FileSizeTooLargeError`</b>:  If one of the files is too large. 
+ - <b>`CorruptDataError`</b>:  If one of the JSON files inside a shared filesystem is not valid. 
  - <b>`FileNotFoundError`</b>:  If installed_timestamp is not found inside a shared filesystem. 
 
 
 ---
 
-## <kbd>class</kbd> `FileSizeTooLargeError`
-Represents an error with the file size being too large. 
+## <kbd>class</kbd> `CorruptDataError`
+Represents an error with the data being corrupt. 
 
-<a href="../src/runner_metrics.py#L26"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_metrics.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -58,7 +56,32 @@ Represents an error with the file size being too large.
 __init__(msg: str)
 ```
 
-Initialize a new instance of the FileSizeTooLargeError exception. 
+Initialize a new instance of the RunnerMetricsError exception. 
+
+
+
+**Args:**
+ 
+ - <b>`msg`</b>:  Explanation of the error. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `FileSizeTooLargeError`
+Represents an error with the file size being too large. 
+
+<a href="../src/runner_metrics.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(msg: str)
+```
+
+Initialize a new instance of the RunnerMetricsError exception. 
 
 
 
@@ -117,6 +140,31 @@ Metrics for a runner.
  - <b>`installed_timestamp`</b>:  The UNIX time stamp of the time at which the runner was installed. 
  - <b>`pre_job`</b>:  The metrics for the pre-job phase. 
  - <b>`post_job`</b>:  The metrics for the post-job phase. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `RunnerMetricsError`
+Base class for all runner metrics errors. 
+
+<a href="../src/runner_metrics.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(msg: str)
+```
+
+Initialize a new instance of the RunnerMetricsError exception. 
+
+
+
+**Args:**
+ 
+ - <b>`msg`</b>:  Explanation of the error. 
 
 
 

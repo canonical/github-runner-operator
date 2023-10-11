@@ -64,15 +64,12 @@ async def app_fixture(model: Model, app_integrated: Application) -> AsyncIterato
     """Setup and teardown the charm after each test.
 
     Ensure that the metrics log is empty and cleared after each test.
-    Ensure that the number of runners is set to 0 after each test.
     """
     metrics_log = await _get_metrics_log(app_integrated.units[0])
     assert metrics_log == ""
 
     yield app_integrated
 
-    await app_integrated.set_config({"virtual-machines": "0"})
-    await reconcile(app=app_integrated, model=model)
     await _clear_metrics_log(app_integrated.units[0])
 
 
