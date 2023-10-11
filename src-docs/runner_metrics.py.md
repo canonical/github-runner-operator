@@ -39,8 +39,7 @@ If corrupt data is found, an error is raised immediately, as this may indicate t
 
 **Raises:**
  
- - <b>`CorruptDataError`</b>:  If one of the JSON files inside a shared filesystem is not valid. 
- - <b>`FileNotFoundError`</b>:  If installed_timestamp is not found inside a shared filesystem. 
+ - <b>`CorruptDataError`</b>:  If one of the files inside the shared filesystem is not valid. 
 
 
 ---

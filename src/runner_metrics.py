@@ -5,9 +5,10 @@
 
 import json
 import logging
+from json import JSONDecodeError
 from typing import Optional
 
-from pydantic import BaseModel, NonNegativeFloat
+from pydantic import BaseModel, NonNegativeFloat, ValidationError
 
 import metrics
 import shared_fs
@@ -20,16 +21,24 @@ POST_JOB_METRICS_FILE_NAME = "post-job-metrics.json"
 RUNNER_INSTALLED_TS_FILE_NAME = "runner-installed.timestamp"
 
 
-class FileSizeTooLargeError(Exception):
-    """Represents an error with the file size being too large."""
+class RunnerMetricsError(Exception):
+    """Base class for all runner metrics errors."""
 
     def __init__(self, msg: str):
-        """Initialize a new instance of the FileSizeTooLargeError exception.
+        """Initialize a new instance of the RunnerMetricsError exception.
 
         Args:
             msg: Explanation of the error.
         """
         self.msg = msg
+
+
+class CorruptDataError(RunnerMetricsError):
+    """Represents an error with the data being corrupt."""
+
+
+class FileSizeTooLargeError(RunnerMetricsError):
+    """Represents an error with the file size being too large."""
 
 
 class PreJobMetrics(BaseModel):
@@ -187,15 +196,18 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
         ignore_runners: The set of runners to ignore.
 
     Raises:
-        JSONDecodeError: If one of the JSON files inside a shared filesystem does
-         not contain valid JSON.
-        pydantic.ValidationError: If one of the files inside a shared filesystem is not valid.
-        FileSizeTooLargeError: If one of the files is too large.
-        FileNotFoundError: If installed_timestamp is not found inside a shared filesystem.
+        CorruptDataError: If one of the files inside the shared filesystem is not valid.
     """
     for fs in shared_fs.list_all():
         if fs.runner_name not in ignore_runners:
-            metrics_from_fs = _extract_metrics_from_fs(fs)
+            try:
+                metrics_from_fs = _extract_metrics_from_fs(fs)
+            except (JSONDecodeError, ValidationError, FileSizeTooLargeError) as exc:
+                raise CorruptDataError(str(exc)) from exc
+            except FileNotFoundError:
+                logger.exception("installed_timestamp not found for runner %s", fs.runner_name)
+                metrics_from_fs = None
+
             if metrics_from_fs:
                 _issue_runner_metrics(runner_metrics=metrics_from_fs, flavor=flavor)
             else:

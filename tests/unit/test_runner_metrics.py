@@ -1,13 +1,11 @@
 #  Copyright 2023 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import secrets
-from json import JSONDecodeError
 from pathlib import Path
 from unittest.mock import MagicMock, call
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
-from pydantic import ValidationError
 
 import runner_metrics
 import shared_fs
@@ -247,10 +245,8 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
         1. A runner with non-compliant pre-job metrics inside shared fs
         2. A runner with non-json post-job metrics inside shared fs
         3. A runner with no real timestamp in installed_timestamp file inside shared fs
-        4. A runner with no installed_timestamp file inside shared fs
     act: Call extract
-    assert:
-        ValidationErrors for 1. + 3., JSONDecodeError for 2. FileNotFoundError for 4. are raised.
+    assert: CorruptDataError raised in all cases.
     """
     runner_metrics_data = RunnerMetrics(
         installed_timestamp=1,
@@ -279,7 +275,7 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
 
     flavor = secrets.token_hex(16)
 
-    with pytest.raises(ValidationError):
+    with pytest.raises(runner_metrics.CorruptDataError):
         runner_metrics.extract(flavor, set())
 
     # 2. Runner has non-json post-job metrics inside shared fs
@@ -291,7 +287,7 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    with pytest.raises(JSONDecodeError):
+    with pytest.raises(runner_metrics.CorruptDataError):
         runner_metrics.extract(flavor, set())
 
     # 3. Runner has not a timestamp in installed_timestamp file inside shared fs
@@ -303,24 +299,17 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    with pytest.raises(ValidationError):
-        runner_metrics.extract(flavor, set())
-
-    # 4. Runner has no installed_timestamp file inside shared fs
-    runner_fs = _create_runner_files(
-        runner_fs_base,
-        runner_metrics_data.pre_job.json(),
-        runner_metrics_data.post_job.json(),
-        None,
-    )
-    shared_fs_mock.list_all.return_value = [runner_fs]
-
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(runner_metrics.CorruptDataError):
         runner_metrics.extract(flavor, set())
 
 
 def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock: MagicMock):
-    runner_metrics_data = RunnerMetrics.construct(
+    """
+    arrange: Runners with too large metric and timestamp files.
+    act: Call extract.
+    assert: CorruptDataError raised  in all cases.
+    """
+    runner_metrics_data = RunnerMetrics(
         installed_timestamp=1,
         pre_job=PreJobMetrics(
             timestamp=1,
@@ -350,7 +339,7 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
 
     flavor = secrets.token_hex(16)
 
-    with pytest.raises(runner_metrics.FileSizeTooLargeError):
+    with pytest.raises(runner_metrics.CorruptDataError):
         runner_metrics.extract(flavor, set())
 
     # 2. Runner has a post-job metrics file that is too large
@@ -365,7 +354,7 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    with pytest.raises(runner_metrics.FileSizeTooLargeError):
+    with pytest.raises(runner_metrics.CorruptDataError):
         runner_metrics.extract(flavor, set())
 
     # 3. Runner has an installed_timestamp file that is too large
@@ -379,5 +368,44 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    with pytest.raises(runner_metrics.FileSizeTooLargeError):
+    with pytest.raises(runner_metrics.CorruptDataError):
         runner_metrics.extract(flavor, set())
+
+
+def test_extract_ignores_filesystems_without_ts(
+    issue_event_mock: MagicMock, tmp_path: Path, shared_fs_mock: MagicMock
+):
+    """
+    arrange: A runner without installed_timestamp file inside shared fs.
+    act: Call extract.
+    assert: No event is issued and shared filesystem is removed.
+    """
+    runner_metrics_data = RunnerMetrics.construct(
+        installed_timestamp=1,
+        pre_job=PreJobMetrics(
+            timestamp=1,
+            workflow="workflow1",
+            workflow_run_id="workflow_run_id1",
+            repository="repository1",
+            event="push",
+        ),
+        post_job=PostJobMetrics(timestamp=3, status="status1"),
+    )
+
+    runner_fs_base = tmp_path / "runner-fs"
+    runner_fs_base.mkdir()
+
+    runner_fs = _create_runner_files(
+        runner_fs_base,
+        runner_metrics_data.pre_job.json(),
+        runner_metrics_data.post_job.json(),
+        None,
+    )
+    shared_fs_mock.list_all.return_value = [runner_fs]
+
+    flavor = secrets.token_hex(16)
+
+    runner_metrics.extract(flavor, set())
+
+    issue_event_mock.assert_not_called()
+    shared_fs_mock.delete.assert_called_once_with(runner_fs.runner_name)
