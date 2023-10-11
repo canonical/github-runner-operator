@@ -64,12 +64,15 @@ async def app_fixture(model: Model, app_integrated: Application) -> AsyncIterato
     """Setup and teardown the charm after each test.
 
     Ensure that the metrics log is empty and cleared after each test.
+    Ensure that the number of runners is set to 0 after each test.
     """
     metrics_log = await _get_metrics_log(app_integrated.units[0])
     assert metrics_log == ""
 
     yield app_integrated
 
+    await app_integrated.set_config({"virtual-machines": "0"})
+    await reconcile(app=app_integrated, model=model)
     await _clear_metrics_log(app_integrated.units[0])
 
 
@@ -160,10 +163,11 @@ async def test_charm_issues_runner_metrics_during_reconciliation(
     branch_with_protection: Branch,
 ):
     """
-    arrange: A charm with one runner integrated with grafana-agent using the cos-agent integration.
+    arrange: A properly integrated charm with a runner registered on the fork repo.
     act: Dispatch a workflow on a branch for the runner to run. After completion, reconcile.
     assert: The RunnerStart metric is logged.
     """
+    await app.set_config({"path": forked_github_repository.full_name})
     await ensure_charm_has_runner(app=app, model=model)
 
     workflow = forked_github_repository.get_workflow(
