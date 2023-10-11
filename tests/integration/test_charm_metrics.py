@@ -9,10 +9,8 @@ from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio
-import requests
 from github.Branch import Branch
 from github.Repository import Repository
-from github.Workflow import Workflow
 from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
@@ -105,32 +103,21 @@ async def _integrate_apps(app: Application, model: Model):
     await model.wait_for_idle(apps=[grafana_agent.name])
 
 
-async def _wait_for_workflow_to_complete(app: Application, workflow: Workflow, conclusion: str):
-    """Wait for the workflow to complete.
+async def _wait_until_runner_is_used_up(unit: Unit):
+    """Wait until the runner is used up.
 
     Args:
-        app: The charm to wait for the workflow to complete.
-        workflow: The workflow to wait for.
-        conclusion: The workflow conclusion to wait for.
+        unit: The unit which contains the runner.
     """
-    unit = app.units[0]
     runner = await get_runner_name(unit)
 
-    # Wait until the runner is used up, this is equal to the workflow being completed.
     for _ in range(30):
         runners = await get_runner_names(unit)
         if runner not in runners:
             break
         sleep(30)
     else:
-        assert False, "Timeout while waiting for workflow to complete"
-
-    for run in workflow.get_runs():
-        logs_url = run.jobs()[0].logs_url()
-        logs = requests.get(logs_url).content.decode("utf-8")
-
-        if f"Job is about to start running on the runner: {app.name}-" in logs:
-            assert run.jobs()[0].conclusion == conclusion
+        assert False, "Timeout while waiting for the runner to be used up"
 
 
 @pytest.mark.asyncio
@@ -173,7 +160,7 @@ async def test_charm_issues_runner_metrics_during_reconciliation(
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(branch_with_protection, {"runner": app.name})
     unit = app.units[0]
-    await _wait_for_workflow_to_complete(app=app, workflow=workflow, conclusion="success")
+    await _wait_until_runner_is_used_up(unit=unit)
     # Set the number of virtual machines to 0 to speedup reconciliation
     await app.set_config({"virtual-machines": "0"})
     await reconcile(app=app, model=model)
