@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Generator
 
+from errors import CreateSharedFilesystemError, SharedFilesystemNotFoundError, SubprocessError
 from utilities import execute_command
 
 FILESYSTEM_BASE_PATH = Path("/home/ubuntu/runner-fs")
@@ -28,18 +29,6 @@ class SharedFilesystem:
     runner_name: str
 
 
-class NotFoundError(Exception):
-    """Represents an error when the shared filesystem is not found."""
-
-    def __init__(self, msg: str):
-        """Initialize a new instance of the NotFoundError exception.
-
-        Args:
-            msg: Explanation of the error.
-        """
-        self.msg = msg
-
-
 def create(runner_name: str) -> SharedFilesystem:
     """Create a shared filesystem for the runner.
 
@@ -50,24 +39,28 @@ def create(runner_name: str) -> SharedFilesystem:
         The shared filesystem object.
 
     Raises:
-        SubprocessError: If the command fails.
+        CreateSharedFilesystemError: If the command fails.
     """
     FILESYSTEM_BASE_PATH.mkdir(exist_ok=True)
     runner_fs_path = FILESYSTEM_BASE_PATH / runner_name
     runner_fs_path.mkdir()
     runner_image_path = FILESYSTEM_BASE_PATH / f"{runner_name}.img"
 
-    execute_command(
-        ["dd", "if=/dev/zero", f"of={runner_image_path}", f"bs={FILESYSTEM_SIZE}", "count=1"],
-        check_exit=True,
-    )
-    execute_command(["mkfs.ext4", f"{runner_image_path}"], check_exit=True)
-    execute_command(
-        ["sudo", "mount", "-o", "loop", str(runner_image_path), str(runner_fs_path)],
-        check_exit=True,
-    )
-    execute_command(["sudo", "chown", "ubuntu:ubuntu", str(runner_fs_path)], check_exit=True)
-
+    try:
+        execute_command(
+            ["dd", "if=/dev/zero", f"of={runner_image_path}", f"bs={FILESYSTEM_SIZE}", "count=1"],
+            check_exit=True,
+        )
+        execute_command(["mkfs.ext4", f"{runner_image_path}"], check_exit=True)
+        execute_command(
+            ["sudo", "mount", "-o", "loop", str(runner_image_path), str(runner_fs_path)],
+            check_exit=True,
+        )
+        execute_command(["sudo", "chown", "ubuntu:ubuntu", str(runner_fs_path)], check_exit=True)
+    except SubprocessError as exc:
+        raise CreateSharedFilesystemError(
+            f"Failed to create shared filesystem for runner {runner_name}"
+        ) from exc
     return SharedFilesystem(runner_fs_path, runner_name)
 
 
@@ -115,8 +108,10 @@ def get(runner_name: str) -> SharedFilesystem:
         The shared filesystem object.
 
     Raises:
-        NotFoundError: If the shared filesystem is not found.
+        SharedFilesystemNotFoundError: If the shared filesystem is not found.
     """
     if not (runner_fs := FILESYSTEM_BASE_PATH.joinpath(runner_name)).exists():
-        raise NotFoundError(f"Shared filesystem for runner {runner_name} not found.")
+        raise SharedFilesystemNotFoundError(
+            f"Shared filesystem for runner {runner_name} not found."
+        )
     return SharedFilesystem(runner_fs, runner_name)

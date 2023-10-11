@@ -7,6 +7,7 @@ from unittest.mock import MagicMock, call
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
+import errors
 import runner_metrics
 import shared_fs
 from metrics import RunnerStart
@@ -275,7 +276,7 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
 
     flavor = secrets.token_hex(16)
 
-    with pytest.raises(runner_metrics.CorruptDataError):
+    with pytest.raises(errors.CorruptMetricDataError):
         runner_metrics.extract(flavor, set())
 
     # 2. Runner has non-json post-job metrics inside shared fs
@@ -287,7 +288,7 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    with pytest.raises(runner_metrics.CorruptDataError):
+    with pytest.raises(errors.CorruptMetricDataError):
         runner_metrics.extract(flavor, set())
 
     # 3. Runner has not a timestamp in installed_timestamp file inside shared fs
@@ -299,7 +300,7 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    with pytest.raises(runner_metrics.CorruptDataError):
+    with pytest.raises(errors.CorruptMetricDataError):
         runner_metrics.extract(flavor, set())
 
 
@@ -339,7 +340,7 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
 
     flavor = secrets.token_hex(16)
 
-    with pytest.raises(runner_metrics.CorruptDataError):
+    with pytest.raises(errors.CorruptMetricDataError):
         runner_metrics.extract(flavor, set())
 
     # 2. Runner has a post-job metrics file that is too large
@@ -354,7 +355,7 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    with pytest.raises(runner_metrics.CorruptDataError):
+    with pytest.raises(errors.CorruptMetricDataError):
         runner_metrics.extract(flavor, set())
 
     # 3. Runner has an installed_timestamp file that is too large
@@ -368,7 +369,7 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    with pytest.raises(runner_metrics.CorruptDataError):
+    with pytest.raises(errors.CorruptMetricDataError):
         runner_metrics.extract(flavor, set())
 
 

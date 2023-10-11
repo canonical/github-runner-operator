@@ -96,3 +96,43 @@ class SubprocessError(Exception):
 
 class LogrotateSetupError(Exception):
     """Error raised when logrotate cannot be setup."""
+
+
+class SharedFilesystemError(Exception):
+    """Base class for all shared filesystem errors."""
+
+    def __init__(self, msg: str):
+        """Initialize a new instance of the SharedFilesystemError exception.
+
+        Args:
+            msg: Explanation of the error.
+        """
+        self.msg = msg
+
+
+class CreateSharedFilesystemError(SharedFilesystemError):
+    """Represents an error when the shared filesystem could not be created."""
+
+
+class SharedFilesystemNotFoundError(SharedFilesystemError):
+    """Represents an error when the shared filesystem is not found."""
+
+
+class RunnerMetricsError(Exception):
+    """Base class for all runner metrics errors."""
+
+    def __init__(self, msg: str):
+        """Initialize a new instance of the RunnerMetricsError exception.
+
+        Args:
+            msg: Explanation of the error.
+        """
+        self.msg = msg
+
+
+class CorruptMetricDataError(RunnerMetricsError):
+    """Represents an error with the data being corrupt."""
+
+
+class MetricFileSizeTooLargeError(RunnerMetricsError):
+    """Represents an error with the file size being too large."""

@@ -20,6 +20,7 @@ from typing import Iterable, Optional, Sequence
 
 import yaml
 
+import errors
 import shared_fs
 from errors import (
     LxdError,
@@ -131,7 +132,7 @@ class Runner:
             if self.config.issue_metrics:
                 try:
                     self._shared_fs = shared_fs.create(self.config.name)
-                except SubprocessError:
+                except errors.CreateSharedFilesystemError:
                     logger.exception(
                         "Unable to create shared filesystem for runner %s. "
                         "Will not create metrics for this runner.",

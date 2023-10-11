@@ -9,6 +9,56 @@ Errors used by the charm.
 
 ---
 
+## <kbd>class</kbd> `CorruptMetricDataError`
+Represents an error with the data being corrupt. 
+
+<a href="../src/errors.py#L124"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(msg: 'str')
+```
+
+Initialize a new instance of the RunnerMetricsError exception. 
+
+
+
+**Args:**
+ 
+ - <b>`msg`</b>:  Explanation of the error. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `CreateSharedFilesystemError`
+Represents an error when the shared filesystem could not be created. 
+
+<a href="../src/errors.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(msg: 'str')
+```
+
+Initialize a new instance of the SharedFilesystemError exception. 
+
+
+
+**Args:**
+ 
+ - <b>`msg`</b>:  Explanation of the error. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `LogrotateSetupError`
 Error raised when logrotate cannot be setup. 
 
@@ -20,6 +70,31 @@ Error raised when logrotate cannot be setup.
 
 ## <kbd>class</kbd> `LxdError`
 Error for executing LXD actions. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `MetricFileSizeTooLargeError`
+Represents an error with the file size being too large. 
+
+<a href="../src/errors.py#L124"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(msg: 'str')
+```
+
+Initialize a new instance of the RunnerMetricsError exception. 
+
+
+
+**Args:**
+ 
+ - <b>`msg`</b>:  Explanation of the error. 
 
 
 
@@ -108,6 +183,31 @@ Error for loading file on runner.
 
 ---
 
+## <kbd>class</kbd> `RunnerMetricsError`
+Base class for all runner metrics errors. 
+
+<a href="../src/errors.py#L124"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(msg: 'str')
+```
+
+Initialize a new instance of the RunnerMetricsError exception. 
+
+
+
+**Args:**
+ 
+ - <b>`msg`</b>:  Explanation of the error. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `RunnerRemoveError`
 Error for runner removal failure. 
 
@@ -119,6 +219,56 @@ Error for runner removal failure.
 
 ## <kbd>class</kbd> `RunnerStartError`
 Error for runner start failure. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `SharedFilesystemError`
+Base class for all shared filesystem errors. 
+
+<a href="../src/errors.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(msg: 'str')
+```
+
+Initialize a new instance of the SharedFilesystemError exception. 
+
+
+
+**Args:**
+ 
+ - <b>`msg`</b>:  Explanation of the error. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `SharedFilesystemNotFoundError`
+Represents an error when the shared filesystem is not found. 
+
+<a href="../src/errors.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(msg: 'str')
+```
+
+Initialize a new instance of the SharedFilesystemError exception. 
+
+
+
+**Args:**
+ 
+ - <b>`msg`</b>:  Explanation of the error. 
 
 
 

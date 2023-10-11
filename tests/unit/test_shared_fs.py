@@ -7,7 +7,9 @@ from unittest.mock import Mock
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
+import errors
 import shared_fs
+from errors import SubprocessError
 
 
 @pytest.fixture(autouse=True, name="filesystem_base_path")
@@ -44,14 +46,16 @@ def test_create_creates_directory(filesystem_base_path: Path):
 
 def test_create_raises_exception(exc_cmd_mock):
     """
-    arrange: Given a runner name and a mocked execute_command which raises an exception.
+    arrange: Given a runner name and a mocked execute_command which raises an expected exception.
     act: Call create.
-    assert: The exception is raised.
+    assert: The expected exception is raised.
     """
     runner_name = secrets.token_hex(16)
-    exc_cmd_mock.side_effect = Exception()
+    exc_cmd_mock.side_effect = SubprocessError(
+        cmd=["mock"], return_code=1, stdout="mock stdout", stderr="mock stderr"
+    )
 
-    with pytest.raises(Exception):
+    with pytest.raises(errors.CreateSharedFilesystemError):
         shared_fs.create(runner_name)
 
 
@@ -95,7 +99,7 @@ def test_delete_filesystem():
 
     shared_fs.delete(runner_name)
 
-    with pytest.raises(shared_fs.NotFoundError):
+    with pytest.raises(errors.SharedFilesystemNotFoundError):
         shared_fs.get(runner_name)
 
 
@@ -107,7 +111,7 @@ def test_delete_raises_not_found_error():
     """
     runner_name = secrets.token_hex(16)
 
-    with pytest.raises(shared_fs.NotFoundError):
+    with pytest.raises(errors.SharedFilesystemNotFoundError):
         shared_fs.delete(runner_name)
 
 
@@ -134,5 +138,5 @@ def test_get_raises_not_found_error():
     """
     runner_name = secrets.token_hex(16)
 
-    with pytest.raises(shared_fs.NotFoundError):
+    with pytest.raises(errors.SharedFilesystemNotFoundError):
         shared_fs.get(runner_name)

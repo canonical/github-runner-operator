@@ -12,6 +12,7 @@ from pydantic import BaseModel, NonNegativeFloat, ValidationError
 
 import metrics
 import shared_fs
+from errors import CorruptMetricDataError, MetricFileSizeTooLargeError
 
 logger = logging.getLogger(__name__)
 
@@ -19,26 +20,6 @@ FILE_SIZE_BYTES_LIMIT = 1024
 PRE_JOB_METRICS_FILE_NAME = "pre-job-metrics.json"
 POST_JOB_METRICS_FILE_NAME = "post-job-metrics.json"
 RUNNER_INSTALLED_TS_FILE_NAME = "runner-installed.timestamp"
-
-
-class RunnerMetricsError(Exception):
-    """Base class for all runner metrics errors."""
-
-    def __init__(self, msg: str):
-        """Initialize a new instance of the RunnerMetricsError exception.
-
-        Args:
-            msg: Explanation of the error.
-        """
-        self.msg = msg
-
-
-class CorruptDataError(RunnerMetricsError):
-    """Represents an error with the data being corrupt."""
-
-
-class FileSizeTooLargeError(RunnerMetricsError):
-    """Represents an error with the file size being too large."""
 
 
 class PreJobMetrics(BaseModel):
@@ -101,7 +82,7 @@ def _inspect_file_sizes(fs: shared_fs.SharedFilesystem) -> None:
     ]
     for file in files:
         if file.exists() and file.stat().st_size > FILE_SIZE_BYTES_LIMIT:
-            raise FileSizeTooLargeError(
+            raise MetricFileSizeTooLargeError(
                 f"File {file} is too large. The limit is {FILE_SIZE_BYTES_LIMIT} bytes."
             )
 
@@ -202,8 +183,8 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
         if fs.runner_name not in ignore_runners:
             try:
                 metrics_from_fs = _extract_metrics_from_fs(fs)
-            except (JSONDecodeError, ValidationError, FileSizeTooLargeError) as exc:
-                raise CorruptDataError(str(exc)) from exc
+            except (JSONDecodeError, ValidationError, MetricFileSizeTooLargeError) as exc:
+                raise CorruptMetricDataError(str(exc)) from exc
             except FileNotFoundError:
                 logger.exception("installed_timestamp not found for runner %s", fs.runner_name)
                 metrics_from_fs = None
