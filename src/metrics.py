@@ -68,7 +68,7 @@ class RunnerInstalled(Event):
 
     Attrs:
         flavor: Describes the characteristics of the runner.
-          The flavour could be for example "small".
+          The flavor could be for example "small".
         duration: The duration of the installation in seconds.
     """
 
@@ -81,7 +81,7 @@ class RunnerStart(Event):
 
     Attrs:
         flavor: Describes the characteristics of the runner.
-          The flavour could be for example "small".
+          The flavor could be for example "small".
         workflow: The workflow name.
         repo: The repository name.
         github_event: The github event.

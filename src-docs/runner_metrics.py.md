@@ -32,7 +32,7 @@ If corrupt data is found, an error is raised immediately, as this may indicate t
 
 **Args:**
  
- - <b>`flavor`</b>:  The flavour of the runners to extract metrics from. 
+ - <b>`flavor`</b>:  The flavor of the runners to extract metrics from. 
  - <b>`ignore_runners`</b>:  The set of runners to ignore. 
 
 

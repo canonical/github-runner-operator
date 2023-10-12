@@ -87,7 +87,7 @@ Initialize the event.
 ## <kbd>class</kbd> `RunnerInstalled`
 Metric event for when a runner is installed. 
 
-Attrs:  flavor: Describes the characteristics of the runner.  The flavour could be for example "small".  duration: The duration of the installation in seconds. 
+Attrs:  flavor: Describes the characteristics of the runner.  The flavor could be for example "small".  duration: The duration of the installation in seconds. 
 
 <a href="../src/metrics.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
@@ -115,7 +115,7 @@ Initialize the event.
 ## <kbd>class</kbd> `RunnerStart`
 Metric event for when a runner is started. 
 
-Attrs:  flavor: Describes the characteristics of the runner.  The flavour could be for example "small".  workflow: The workflow name.  repo: The repository name.  github_event: The github event.  idle: The idle time in seconds. 
+Attrs:  flavor: Describes the characteristics of the runner.  The flavor could be for example "small".  workflow: The workflow name.  repo: The repository name.  github_event: The github event.  idle: The idle time in seconds. 
 
 <a href="../src/metrics.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 

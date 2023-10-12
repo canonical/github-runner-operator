@@ -134,7 +134,7 @@ def _issue_runner_metrics(runner_metrics: RunnerMetrics, flavor: str) -> None:
 
     Args:
         runner_metrics: The metrics to be issued.
-        flavor: The flavour of the runners.
+        flavor: The flavor of the runners.
     """
     event = metrics.RunnerStart(
         timestamp=runner_metrics.pre_job.timestamp,
@@ -173,7 +173,7 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
     In order to avoid DoS attacks, the file size is also checked.
 
     Args:
-        flavor: The flavour of the runners to extract metrics from.
+        flavor: The flavor of the runners to extract metrics from.
         ignore_runners: The set of runners to ignore.
 
     Raises:
