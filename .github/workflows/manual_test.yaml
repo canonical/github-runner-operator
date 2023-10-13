@@ -8,7 +8,7 @@ on:
 jobs:
   test:
     name: test
-    runs-on: [self-hosted, large]
+    runs-on: [self-hosted, github-runner]
     steps:
       - name: test
         run: echo "hello world"
