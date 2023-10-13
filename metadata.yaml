@@ -8,15 +8,19 @@ maintainers:
 docs: https://discourse.charmhub.io/t/github-runner-documentation-overview/7817
 issues: https://github.com/canonical/github-runner-operator/issues
 source: https://github.com/canonical/github-runner-operator
-summary: Creates a cluster of self-hosted github runners.
+summary: Creates a group of self-hosted github runners.
 description: |
-  A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) deploying
-  self-hosted GitHub runners.
+  A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) managing
+  [self-hosted runners for GitHub Actions](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners).
 
   Each unit of this charm will start a configurable number of LXD based virtual machines to host
-  them. Each runner performs only one job, after which it unregisters from GitHub to ensure that
-  each job runs in a clean environment. The charm will periodically check the number of idle runners
-  and spawn or destroy them as necessary to maintain the configured number of runners. Both the
-  reconciliation interval and the number of runners to maintain are configurable.
+  self-hosted runners. Each runner performs only one job, after which it unregisters from GitHub to 
+  ensure that each job runs in a clean environment. The charm will periodically check the number of 
+  runners and spawn or destroy them as necessary to maintain the configured number of runners. Both 
+  the reconciliation interval and the number of runners to maintain are configurable.
 series:
   - jammy
+
+provides:
+  cos-agent:
+    interface: cos_agent

@@ -6,6 +6,7 @@
 import hashlib
 import logging
 import tarfile
+import time
 import urllib.request
 import uuid
 from dataclasses import dataclass
@@ -21,6 +22,8 @@ from ghapi.all import GhApi
 from ghapi.page import pages
 from typing_extensions import assert_never
 
+import metrics
+from charm_state import State as CharmState
 from errors import RunnerBinaryError, RunnerCreateError
 from github_type import (
     GitHubRunnerStatus,
@@ -51,13 +54,14 @@ class RunnerManagerConfig:
     """Configuration of runner manager.
 
     Attrs:
-        path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
-            name.
-        token: GitHub personal access token to register runner to the repository or
-            organization.
+        path: GitHub repository path in the format '<owner>/<repo>', or the
+            GitHub organization name.
+        token: GitHub personal access token to register runner to the
+            repository or organization.
         image: Name of the image for creating LXD instance.
         service_token: Token for accessing local service.
         lxd_storage_path: Path to be used as LXD storage.
+        issue_metrics: Whether to issue metrics.
     """
 
     path: GitHubPath
@@ -65,6 +69,7 @@ class RunnerManagerConfig:
     image: str
     service_token: str
     lxd_storage_path: Path
+    charm_state: CharmState
 
 
 @dataclass
@@ -84,12 +89,12 @@ class RunnerManager:
 
     runner_bin_path = Path("/home/ubuntu/github-runner-app")
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         app_name: str,
         unit: int,
         runner_manager_config: RunnerManagerConfig,
-        proxies: ProxySetting = ProxySetting(),
+        proxies: Optional[ProxySetting] = None,
     ) -> None:
         """Construct RunnerManager object for creating and managing runners.
 
@@ -102,7 +107,7 @@ class RunnerManager:
         self.app_name = app_name
         self.instance_name = f"{app_name}-{unit}"
         self.config = runner_manager_config
-        self.proxies = proxies
+        self.proxies = proxies if proxies else ProxySetting()
 
         # Setting the env var to this process and any child process spawned.
         if "no_proxy" in self.proxies:
@@ -196,9 +201,9 @@ class RunnerManager:
         """Download a runner file, replacing the current copy.
 
         Remove the existing runner binary to prevent it from being used. This
-        is done to prevent security issues arising from outdated runner binary
-        containing security flaws. The newest version of runner binary should
-        always be used.
+        is done to prevent security issues arising from outdated runner
+        binaries containing security flaws. The newest version of runner binary
+        should always be used.
 
         Args:
             binary: Information on the runner binary to download.
@@ -290,6 +295,45 @@ class RunnerManager:
 
         return RunnerByHealth(healthy, unhealthy)
 
+    def _create_runner(
+        self, registration_token: str, resources: VirtualMachineResources, runner: Runner
+    ):
+        """Create a runner.
+
+        Issues RunnerInstalled metric if metrics_logging is enabled.
+
+        Args:
+            registration_token: Token for registering runner to GitHub.
+            resources: Configuration of the virtual machine resources.
+            runner: Runner to be created.
+        """
+        if self.config.charm_state.is_metrics_logging_available:
+            ts_now = time.time()
+            runner.create(
+                self.config.image,
+                resources,
+                RunnerManager.runner_bin_path,
+                registration_token,
+            )
+            ts_after = time.time()
+            try:
+                metrics.issue_event(
+                    event=metrics.RunnerInstalled(
+                        timestamp=ts_after,
+                        flavor=self.app_name,
+                        duration=ts_after - ts_now,
+                    ),
+                )
+            except OSError:
+                logger.exception("Failed to issue metrics")
+        else:
+            runner.create(
+                self.config.image,
+                resources,
+                RunnerManager.runner_bin_path,
+                registration_token,
+            )
+
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
 
@@ -357,12 +401,7 @@ class RunnerManager:
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
                 try:
-                    runner.create(
-                        self.config.image,
-                        resources,
-                        RunnerManager.runner_bin_path,
-                        registration_token,
-                    )
+                    self._create_runner(registration_token, resources, runner)
                     logger.info("Created runner: %s", runner.config.name)
                 except RunnerCreateError:
                     logger.error("Unable to create runner: %s", runner.config.name)
@@ -372,7 +411,7 @@ class RunnerManager:
 
         elif delta < 0:
             logger.info("Attempting to remove %i runner(s).", -delta)
-            # Idle runners are online runners that has not taken a job.
+            # Idle runners are online runners that have not taken a job.
             idle_runners = [runner for runner in online_runners if not runner.status.busy]
             offset = min(-delta, len(idle_runners))
             if offset != 0:
@@ -387,9 +426,9 @@ class RunnerManager:
                     runner.remove(remove_token)
                     logger.info("Removed runner: %s", runner.config.name)
             else:
-                logger.info("There are no idle runner to remove.")
+                logger.info("There are no idle runners to remove.")
         else:
-            logger.info("No changes to number of runner needed.")
+            logger.info("No changes to number of runners needed.")
 
         return delta
 
@@ -400,7 +439,7 @@ class RunnerManager:
             flush_busy: Whether to flush busy runners as well.
 
         Returns:
-            Number of runner removed.
+            Number of runners removed.
         """
         if flush_busy:
             runners = [runner for runner in self._get_runners() if runner.status.exist]

@@ -100,10 +100,8 @@ def secure_run_subprocess(
 ) -> subprocess.CompletedProcess[bytes]:
     """Run command in subprocess according to security recommendations.
 
-    The argument `shell` is set to `False` for security reasons.
-
-    The argument `check` is set to `False`, therefore, CalledProcessError will not be raised.
-    Errors are handled by the caller by checking the exit code.
+    CalledProcessError will not be raised on error of the command executed.
+    Errors should be handled by the caller by checking the exit code.
 
     Args:
         cmd: Command in a list.
@@ -121,6 +119,7 @@ def secure_run_subprocess(
     result = subprocess.run(  # nosec B603
         cmd,
         capture_output=True,
+        # Not running in shell to avoid security problems.
         shell=False,
         check=False,
         # Disable type check due to the support for unpacking arguments in mypy is experimental.
@@ -147,6 +146,9 @@ def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> tu
 
     Returns:
         Output on stdout, and the exit code.
+
+    Raises:
+        SubprocessError: If `check_exit` is set and the exit code is non-zero.
     """
     result = secure_run_subprocess(cmd, **kwargs)
 

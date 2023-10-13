@@ -11,10 +11,12 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
-from errors import MissingConfigurationError, RunnerError, SubprocessError
+from errors import LogrotateSetupError, MissingConfigurationError, RunnerError, SubprocessError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
+
+TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
 
 def raise_runner_error(*args, **kargs):
@@ -51,18 +53,18 @@ class TestCharm(unittest.TestCase):
     @patch.dict(
         os.environ,
         {
-            "JUJU_CHARM_HTTPS_PROXY": "mock_https_proxy",
-            "JUJU_CHARM_HTTP_PROXY": "mock_http_proxy",
-            "JUJU_CHARM_NO_PROXY": "mock_no_proxy",
+            "JUJU_CHARM_HTTPS_PROXY": TEST_PROXY_SERVER_URL,
+            "JUJU_CHARM_HTTP_PROXY": TEST_PROXY_SERVER_URL,
+            "JUJU_CHARM_NO_PROXY": "127.0.0.1,localhost",
         },
     )
     def test_proxy_setting(self):
         harness = Harness(GithubRunnerCharm)
         harness.begin()
 
-        assert harness.charm.proxies["https"] == "mock_https_proxy"
-        assert harness.charm.proxies["http"] == "mock_http_proxy"
-        assert harness.charm.proxies["no_proxy"] == "mock_no_proxy"
+        assert harness.charm.proxies["https"] == TEST_PROXY_SERVER_URL
+        assert harness.charm.proxies["http"] == TEST_PROXY_SERVER_URL
+        assert harness.charm.proxies["no_proxy"] == "127.0.0.1,localhost"
 
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -110,6 +112,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
+                charm_state=harness.charm._state,
             ),
             proxies={},
         )
@@ -135,6 +138,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
+                charm_state=harness.charm._state,
             ),
             proxies={},
         )
@@ -163,6 +167,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
+                charm_state=harness.charm._state,
             ),
             proxies={},
         )
@@ -182,6 +187,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
+                charm_state=harness.charm._state,
             ),
             proxies={},
         )
@@ -222,12 +228,13 @@ class TestCharm(unittest.TestCase):
         # With invalid path.
         assert harness.charm._get_runner_manager("mocktoken", "mock/invalid/path") is None
 
+    @patch("charm.metrics.setup_logrotate")
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
     @patch("builtins.open")
-    def test_on_install_failure(self, open, run, wt, mkdir, rm):
+    def test_on_install_failure(self, open, run, wt, mkdir, rm, sr):
         """Test various error thrown during install."""
 
         rm.return_value = mock_rm = MagicMock()
@@ -241,6 +248,11 @@ class TestCharm(unittest.TestCase):
         harness.charm.on.install.emit()
         assert harness.charm.unit.status == ActiveStatus()
 
+        sr.side_effect = LogrotateSetupError
+        harness.charm.on.install.emit()
+        assert harness.charm.unit.status == BlockedStatus("Failed to setup logrotate")
+
+        sr.side_effect = None
         GithubRunnerCharm._install_deps = raise_subprocess_error
         harness.charm.on.install.emit()
         assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")
