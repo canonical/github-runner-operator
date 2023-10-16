@@ -139,7 +139,7 @@ async def app_no_runner(
     )
 
     application = await model.deploy(
-        charm_path,
+        charm_file,
         application_name=app_name,
         series="jammy",
         config={
@@ -172,7 +172,7 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
 @pytest_asyncio.fixture(scope="module")
 async def app_scheduled_events(
     model: Model,
-    charm_path: Path,
+    charm_file: Path,
     app_name: str,
     path: str,
     token: str,
@@ -202,7 +202,7 @@ async def app_scheduled_events(
     )
 
     application = await model.deploy(
-        charm_path,
+        charm_file,
         application_name=app_name,
         series="jammy",
         config={
