@@ -5,6 +5,7 @@
 
 import secrets
 import subprocess
+import zipfile
 from pathlib import Path
 from typing import Any, AsyncIterator
 
@@ -34,20 +35,30 @@ def app_name() -> str:
     return f"integration-id{secrets.token_hex(2)}"
 
 
-@pytest_asyncio.fixture(scope="module")
-async def charm_path(ops_test: OpsTest, lxd_profile: Path) -> AsyncIterator[Path]:
-    """Path to the built charm.
-
-    Including lxd_profile fixture as an argument, will make lxd_profile.yaml
-    file present under the charm directory during the building of the charm.
-    """
-    yield await ops_test.build_charm(".")
-
-
 @pytest.fixture(scope="module")
 def charm_file(pytestconfig: pytest.Config) -> Path:
+    """Path to the built charm."""
     charm = pytestconfig.getoption("--charm-file")
-    # This is not used due to needing injection of lxd_profile.
+
+    with zipfile.ZipFile(charm, mode="a") as charm_file:
+        charm_file.writestr(
+            "lxd-profile.yaml",
+            """config:
+    security.nesting: true
+    security.privileged: true
+    raw.lxc: |
+        lxc.apparmor.profile=unconfined
+        lxc.mount.auto=proc:rw sys:rw cgroup:rw
+        lxc.cgroup.devices.allow=a
+        lxc.cap.drop=
+devices:
+    kmsg:
+        path: /dev/kmsg
+        source: /dev/kmsg
+        type: unix-char
+""",
+        )
+
     return Path(charm)
 
 
@@ -105,40 +116,9 @@ def model(ops_test: OpsTest) -> Model:
 
 
 @pytest_asyncio.fixture(scope="module")
-async def lxd_profile() -> AsyncIterator[Path]:
-    """File containing LXD profile for test mode.
-
-    The file needs to be in the charm directory while building a test version
-    of the charm.
-    """
-    lxd_profile_path = Path("lxd-profile.yaml")
-
-    lxd_profile_path.write_text(
-        """config:
-    security.nesting: true
-    security.privileged: true
-    raw.lxc: |
-        lxc.apparmor.profile=unconfined
-        lxc.mount.auto=proc:rw sys:rw cgroup:rw
-        lxc.cgroup.devices.allow=a
-        lxc.cap.drop=
-devices:
-    kmsg:
-        path: /dev/kmsg
-        source: /dev/kmsg
-        type: unix-char
-"""
-    )
-
-    yield lxd_profile_path
-
-    lxd_profile_path.unlink(missing_ok=True)
-
-
-@pytest_asyncio.fixture(scope="module")
 async def app_no_runner(
     model: Model,
-    charm_path: Path,
+    charm_file: Path,
     app_name: str,
     path: str,
     token: str,
