@@ -36,7 +36,7 @@ def app_name() -> str:
 
 
 @pytest.fixture(scope="module")
-def charm_file(pytestconfig: pytest.Config) -> Path:
+def charm_file(pytestconfig: pytest.Config) -> str:
     """Path to the built charm."""
     charm = pytestconfig.getoption("--charm-file")
     assert charm, "Please specify the --charm-file command line option"
