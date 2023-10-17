@@ -39,6 +39,7 @@ def app_name() -> str:
 def charm_file(pytestconfig: pytest.Config) -> Path:
     """Path to the built charm."""
     charm = pytestconfig.getoption("--charm-file")
+    assert charm, "Please specify the --charm-file command line option"
 
     with zipfile.ZipFile(charm, mode="a") as charm_file:
         charm_file.writestr(
@@ -58,8 +59,7 @@ devices:
         type: unix-char
 """,
         )
-
-    return Path(charm)
+    return f"./{charm}"
 
 
 @pytest.fixture(scope="module")
@@ -118,7 +118,7 @@ def model(ops_test: OpsTest) -> Model:
 @pytest_asyncio.fixture(scope="module")
 async def app_no_runner(
     model: Model,
-    charm_file: Path,
+    charm_file: str,
     app_name: str,
     path: str,
     token: str,
@@ -172,7 +172,7 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
 @pytest_asyncio.fixture(scope="module")
 async def app_scheduled_events(
     model: Model,
-    charm_file: Path,
+    charm_file: str,
     app_name: str,
     path: str,
     token: str,
