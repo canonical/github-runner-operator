@@ -535,6 +535,10 @@ class Runner:
         self._put_file(str(self.env_file), env_contents)
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
 
+        if self.config.docker_registry:
+            docker_daemon_config = {"registry-mirrors": [self.config.docker_registry]}
+            self._put_file("/etc/docker/daemon.json", json.dumps(docker_daemon_config))
+
         if self.config.proxies:
             # Creating directory and putting the file are idempotent, and can be retried.
             logger.info("Adding proxy setting to the runner.")
