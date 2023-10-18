@@ -4,14 +4,18 @@
 """Utilities for integration test."""
 
 import json
+from asyncio import sleep
 from typing import Any
 
 import juju.version
 import yaml
+from juju.application import Application
+from juju.model import Model
 from juju.unit import Unit
 
 from runner import Runner
 from runner_manager import RunnerManager
+from tests.status_name import ACTIVE_STATUS_NAME
 from utilities import retry
 
 
@@ -172,6 +176,7 @@ async def run_in_unit(unit: Unit, command: str, timeout=None) -> tuple[int, str 
     Args:
         unit: Juju unit to execute the command in.
         command: Command to execute.
+        timeout: Amount of time to wait for the execution.
 
     Returns:
         Tuple of return code and stdout.
@@ -184,3 +189,68 @@ async def run_in_unit(unit: Unit, command: str, timeout=None) -> tuple[int, str 
 
     await action.wait()
     return (action.results["return-code"], action.results.get("stdout", None))
+
+
+async def run_in_lxd_instance(
+    unit: Unit, name: str, command: str, cwd=None, timeout=None
+) -> tuple[int, str | None]:
+    """Run command in LXD instance of a juju unit.
+
+    Args:
+        unit: Juju unit to execute the command in.
+        name: Name of LXD instance.
+        command: Command to execute.
+        cwd: Work directory of the command.
+        timeout: Amount of time to wait for the execution.
+
+    Returns:
+        Tuple of return code and stdout.
+    """
+    lxc_cmd = f"/snap/bin/lxc exec {name}"
+    if cwd:
+        lxc_cmd += f" --cwd {cwd}"
+    lxc_cmd += f" -- {command}"
+    return await run_in_unit(unit, lxc_cmd, timeout)
+
+
+async def start_test_http_server(unit: Unit, port: int):
+    await run_in_unit(
+        unit,
+        f"""cat <<EOT >> /etc/systemd/system/test-http-server.service
+[Unit]
+Description=Simple HTTP server for testing
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu
+ExecStart=python3 -m http.server {port}
+EOT""",
+    )
+    await run_in_unit(unit, "/usr/bin/systemctl daemon-reload")
+    await run_in_unit(unit, "/usr/bin/systemctl start test-http-server")
+
+    # Test the HTTP server
+    for _ in range(10):
+        return_code, stdout = await run_in_unit(unit, f"curl http://localhost:{port}")
+        if return_code == 0 and stdout:
+            break
+        await sleep(3)
+    else:
+        assert False, "Timeout waiting for HTTP server to start up"
+
+
+async def create_runner(app: Application, model: Model) -> None:
+    """Let the charm create a runner.
+
+    Args:
+        app: The GitHub Runner Charm app to create the runner for.
+        model: The machine charm model.
+    """
+    await app.set_config({"virtual-machines": "1"})
+    unit = app.units[0]
+    action = await unit.run_action("reconcile-runners")
+    await action.wait()
+    await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
+    await wait_till_num_of_runners(unit, 1)

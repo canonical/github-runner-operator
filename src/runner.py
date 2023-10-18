@@ -248,7 +248,20 @@ class Runner:
             "profiles": ["default", "runner", resource_profile],
         }
 
-        instance = self._clients.lxd.instances.create(config=instance_config, wait=True)
+        try:
+            instance = self._clients.lxd.instances.create(config=instance_config, wait=True)
+        except LxdError:
+            logger.exception(
+                "Removing resource profile and storage profile due to LXD instance create failure"
+            )
+
+            # LxdError on creating LXD instance could be caused by improper initialization of
+            # storage pool. If other runner LXD instance exists then it cannot be the cause.
+            if not self._clients.lxd.instances.all():
+                # Removing the storage pool and retry can solve the problem.
+                self._remove_runner_storage_pool()
+            raise
+
         self.status.exist = True
         return instance
 
@@ -298,6 +311,20 @@ class Runner:
         # Verify the action is successful.
         if not self._clients.lxd.storage_pools.exists("runner"):
             raise RunnerError("Failed to create runner LXD storage pool")
+
+    def _remove_runner_storage_pool(self) -> None:
+        """Remove the runner storage pool if exists."""
+        if self._clients.lxd.storage_pools.exists("runner"):
+            logger.info("Removing existing runner LXD storage pool.")
+            runner_storage_pool = self._clients.lxd.storage_pools.get("runner")
+
+            # The resource profile needs to be removed first as it uses the storage pool.
+            for used_by in runner_storage_pool.used_by:
+                _, profile_name = used_by.rsplit("/", 1)
+                profile = self._clients.lxd.profiles.get(profile_name)
+                profile.delete()
+
+            runner_storage_pool.delete()
 
     @classmethod
     def _get_resource_profile_name(cls, cpu: int, memory: str, disk: str) -> str:
