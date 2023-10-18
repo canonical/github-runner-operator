@@ -87,21 +87,21 @@ class RunnerConfig:
     """Configuration for runner.
 
     Attrs:
+        name: Name of the runner.
         app_name: Application name of the charm.
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
             name.
         proxies: HTTP(S) proxy settings.
         lxd_storage_path: Path to be used as LXD storage.
         docker_registry: URL to the docker registry for runner to use.
-        name: Name of the runner.
     """
 
+    name: str
     app_name: str
     path: GitHubPath
     proxies: ProxySetting
     lxd_storage_path: Path
-    docker_registry: str | None
-    name: str
+    docker_registry: str | None = None
 
 
 @dataclass

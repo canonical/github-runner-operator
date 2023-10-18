@@ -71,7 +71,7 @@ class RunnerManagerConfig:
     service_token: str
     lxd_storage_path: Path
     charm_state: CharmState
-    docker_registry: str | None
+    docker_registry: str | None = None
 
 
 @dataclass
@@ -395,12 +395,12 @@ class RunnerManager:
             logger.info("Attempting to add %i runner(s).", delta)
             for _ in range(delta):
                 config = RunnerConfig(
-                    self.app_name,
-                    self.config.path,
-                    self.proxies,
-                    self.config.lxd_storage_path,
-                    self.config.docker_registry,
-                    self._generate_runner_name(),
+                    name=self._generate_runner_name(),
+                    app_name=self.app_name,
+                    path=self.config.path,
+                    proxies=self.proxies,
+                    lxd_storage_path=self.config.lxd_storage_path,
+                    docker_registry=self.config.docker_registry,
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
                 try:
@@ -549,12 +549,12 @@ class RunnerManager:
             busy = getattr(remote_runner, "busy", None)
 
             config = RunnerConfig(
-                self.app_name,
-                self.config.path,
-                self.proxies,
-                self.config.lxd_storage_path,
-                self.config.docker_registry,
-                name,
+                name=name,
+                app_name=self.app_name,
+                path=self.config.path,
+                proxies=self.proxies,
+                lxd_storage_path=self.config.lxd_storage_path,
+                docker_registry=self.config.docker_registry,
             )
             return Runner(
                 self._clients,

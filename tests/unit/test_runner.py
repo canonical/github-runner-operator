@@ -71,7 +71,14 @@ def runner_fixture(request, lxd: MockLxdClient, tmp_path: Path):
     )
     pool_path = tmp_path / "test_storage"
     pool_path.mkdir(exist_ok=True)
-    config = RunnerConfig("test_app", request.param[0], request.param[1], pool_path, "test_runner")
+    config = RunnerConfig(
+        name="test_runner",
+        app_name="test_app",
+        path=request.param[0],
+        proxies=request.param[1],
+        lxd_storage_path=pool_path,
+        docker_registry=None,
+    )
     status = RunnerStatus()
     return Runner(
         client,
