@@ -530,13 +530,13 @@ class Runner:
         env_contents = self._clients.jinja.get_template("env.j2").render(
             proxies=self.config.proxies,
             pre_job_script=str(self.pre_job_script),
-            docker_registry=self.config.docker_registry,
+            dockerhub_mirror=self.config.dockerhub_mirror,
         )
         self._put_file(str(self.env_file), env_contents)
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
 
-        if self.config.docker_registry:
-            docker_daemon_config = {"registry-mirrors": [self.config.docker_registry]}
+        if self.config.dockerhub_mirror:
+            docker_daemon_config = {"registry-mirrors": [self.config.dockerhub_mirror]}
             self._put_file("/etc/docker/daemon.json", json.dumps(docker_daemon_config))
 
         if self.config.proxies:

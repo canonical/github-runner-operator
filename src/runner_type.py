@@ -93,7 +93,7 @@ class RunnerConfig:
             name.
         proxies: HTTP(S) proxy settings.
         lxd_storage_path: Path to be used as LXD storage.
-        docker_registry: URL to the docker registry for runner to use.
+        dockerhub_mirror: URL of dockerhub mirror to use.
     """
 
     name: str
@@ -101,7 +101,7 @@ class RunnerConfig:
     path: GitHubPath
     proxies: ProxySetting
     lxd_storage_path: Path
-    docker_registry: str | None = None
+    dockerhub_mirror: str | None = None
 
 
 @dataclass

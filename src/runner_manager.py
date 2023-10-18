@@ -62,7 +62,7 @@ class RunnerManagerConfig:
         service_token: Token for accessing local service.
         lxd_storage_path: Path to be used as LXD storage.
         issue_metrics: Whether to issue metrics.
-        docker_registry: URL to the docker registry for runner to use.
+        dockerhub_mirror: URL of dockerhub mirror to use.
     """
 
     path: GitHubPath
@@ -71,7 +71,7 @@ class RunnerManagerConfig:
     service_token: str
     lxd_storage_path: Path
     charm_state: CharmState
-    docker_registry: str | None = None
+    dockerhub_mirror: str | None = None
 
 
 @dataclass
@@ -400,7 +400,7 @@ class RunnerManager:
                     path=self.config.path,
                     proxies=self.proxies,
                     lxd_storage_path=self.config.lxd_storage_path,
-                    docker_registry=self.config.docker_registry,
+                    dockerhub_mirror=self.config.dockerhub_mirror,
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
                 try:
@@ -554,7 +554,7 @@ class RunnerManager:
                 path=self.config.path,
                 proxies=self.proxies,
                 lxd_storage_path=self.config.lxd_storage_path,
-                docker_registry=self.config.docker_registry,
+                dockerhub_mirror=self.config.dockerhub_mirror,
             )
             return Runner(
                 self._clients,

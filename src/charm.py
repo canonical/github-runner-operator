@@ -275,8 +275,8 @@ class GithubRunnerCharm(CharmBase):
         else:
             path = GitHubOrg(org=path, group=self.config["group"])
 
-        docker_registry = (
-            self.config["docker-registry"] if self.config["docker-registry"] else None
+        dockerhub_mirror = (
+            self.config["dockerhub-mirror"] if self.config["dockerhub-mirror"] else None
         )
 
         app_name, unit = self.unit.name.rsplit("/", 1)
@@ -290,7 +290,7 @@ class GithubRunnerCharm(CharmBase):
                 service_token=self.service_token,
                 lxd_storage_path=self.ram_pool_path,
                 charm_state=self._state,
-                docker_registry=docker_registry,
+                dockerhub_mirror=dockerhub_mirror,
             ),
             proxies=self.proxies,
         )

@@ -83,7 +83,7 @@ Attrs:  github: Used to query GitHub API.  jinja: Used for templating.  lxd: Use
 ## <kbd>class</kbd> `RunnerConfig`
 Configuration for runner. 
 
-Attrs:  name: Name of the runner.  app_name: Application name of the charm.  path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name.  proxies: HTTP(S) proxy settings.  lxd_storage_path: Path to be used as LXD storage.  docker_registry: URL to the docker registry for runner to use. 
+Attrs:  name: Name of the runner.  app_name: Application name of the charm.  path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name.  proxies: HTTP(S) proxy settings.  lxd_storage_path: Path to be used as LXD storage.  dockerhub_mirror: URL of dockerhub mirror to use. 
 
 
 

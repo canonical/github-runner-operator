@@ -77,7 +77,7 @@ def runner_fixture(request, lxd: MockLxdClient, tmp_path: Path):
         path=request.param[0],
         proxies=request.param[1],
         lxd_storage_path=pool_path,
-        docker_registry=None,
+        dockerhub_mirror=None,
     )
     status = RunnerStatus()
     return Runner(
