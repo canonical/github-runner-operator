@@ -142,3 +142,4 @@ jobs:
           [ '${{ needs.integration-test-charm-fork-repo.result }}' = 'success' ] || (echo integration-test-charm-fork-repo failed && false)
           [ '${{ needs.integration-test-charm-scheduled-events.result }}' = 'success' ] || (echo integration-test-charm-schedule-events failed && false)
           [ '${{ needs.integration-test-charm-metrics.result }}' = 'success' ] || (echo integration-test-charm-metrics failed && false)
+# TODO: Add running of test_runner module for integration tests

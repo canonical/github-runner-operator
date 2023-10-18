@@ -156,7 +156,7 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
     model: Model, app: Application
 ) -> None:
     """
-    arrange: An working application with no runners.
+    arrange: An working application with one runners.
     act:
         1.  a. Set virtual-machines config to 0.
             b. Run reconcile_runners action.

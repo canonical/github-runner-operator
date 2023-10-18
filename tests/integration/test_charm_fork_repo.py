@@ -13,29 +13,16 @@ from typing import AsyncIterator, Iterator
 import pytest
 import pytest_asyncio
 import requests
-from github import Consts, Github
+from github import Consts
 from github.Branch import Branch
 from github.GithubException import GithubException
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
+from tests.integration.conftest import DISPATCH_TEST_WORKFLOW_FILENAME
 from tests.integration.helpers import create_runner, get_runner_names
 from tests.status_name import ACTIVE_STATUS_NAME
-
-DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
-
-
-@pytest.fixture(scope="module")
-def github_client(token: str) -> Github:
-    """Returns the github client."""
-    return Github(token)
-
-
-@pytest.fixture(scope="module")
-def github_repository(github_client: Github, path: str) -> Repository:
-    """Returns client to the Github repository."""
-    return github_client.get_repo(path)
 
 
 @pytest.fixture(scope="module")

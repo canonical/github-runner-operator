@@ -11,12 +11,16 @@ from typing import Any, AsyncIterator
 import pytest
 import pytest_asyncio
 import yaml
+from github import Github
+from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
 from tests.integration.helpers import create_runner
 from tests.status_name import ACTIVE_STATUS_NAME
+
+DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
 
 
 @pytest.fixture(scope="module")
@@ -128,6 +132,18 @@ devices:
     lxd_profile_path.unlink(missing_ok=True)
 
 
+@pytest.fixture(scope="module")
+def github_client(token: str) -> Github:
+    """Returns the github client."""
+    return Github(token)
+
+
+@pytest.fixture(scope="module")
+def github_repository(github_client: Github, path: str) -> Repository:
+    """Returns client to the Github repository."""
+    return github_client.get_repo(path)
+
+
 @pytest_asyncio.fixture(scope="module")
 async def app_no_runner(
     model: Model,
@@ -233,6 +249,48 @@ async def app_scheduled_events(
     await application.set_config({"virtual-machines": "1"})
     action = await unit.run_action("reconcile-runners")
     await action.wait()
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+
+    yield application
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app_runner(
+    model: Model,
+    charm_path: Path,
+    app_name: str,
+    path: str,
+    token: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
+) -> AsyncIterator[Application]:
+    """Application to test runners."""
+    # TODO: Create function that deploys application, once a pending PR is merged.
+    subprocess.run(["sudo", "modprobe", "br_netfilter"])
+
+    await model.set_config(
+        {
+            "juju-http-proxy": http_proxy,
+            "juju-https-proxy": https_proxy,
+            "juju-no-proxy": no_proxy,
+            "logging-config": "<root>=INFO;unit=DEBUG",
+        }
+    )
+
+    application = await model.deploy(
+        charm_path,
+        application_name=f"{app_name}-runner",
+        series="jammy",
+        config={
+            "path": path,
+            "token": token,
+            "virtual-machines": 0,
+            "denylist": "10.10.0.0/16",
+            "test-mode": "insecure",
+            "reconcile-interval": 8,
+        },
+    )
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     yield application
