@@ -5,7 +5,7 @@
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Generator
+from typing import Iterator
 
 from errors import CreateSharedFilesystemError, SharedFilesystemNotFoundError, SubprocessError
 from utilities import execute_command
@@ -64,11 +64,11 @@ def create(runner_name: str) -> SharedFilesystem:
     return SharedFilesystem(runner_fs_path, runner_name)
 
 
-def list_all() -> Generator[SharedFilesystem, None, None]:
+def list_all() -> Iterator[SharedFilesystem]:
     """List the shared filesystems.
 
     Returns:
-        A generator of shared filesystems.
+        An iterator over shared filesystems.
     """
     if not FILESYSTEM_BASE_PATH.exists():
         return

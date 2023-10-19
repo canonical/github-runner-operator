@@ -46,7 +46,7 @@ Create a shared filesystem for the runner.
 ## <kbd>function</kbd> `list_all`
 
 ```python
-list_all() → Generator[SharedFilesystem, NoneType, NoneType]
+list_all() → Iterator[SharedFilesystem]
 ```
 
 List the shared filesystems. 
@@ -54,7 +54,7 @@ List the shared filesystems.
 
 
 **Returns:**
-  A generator of shared filesystems. 
+  An iterator over shared filesystems. 
 
 
 ---
