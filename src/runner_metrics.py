@@ -130,11 +130,24 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
     except JSONDecodeError as exc:
         raise CorruptMetricDataError(str(exc)) from exc
 
-    return RunnerMetrics(
-        installed_timestamp=installed_timestamp,
-        pre_job=PreJobMetrics(**pre_job_metrics),
-        post_job=PostJobMetrics(**post_job_metrics) if post_job_metrics else None,
-    )
+    if not isinstance(pre_job_metrics, dict):
+        raise CorruptMetricDataError(
+            f"Pre-job metrics for runner {fs.runner_name} is not a JSON object."
+        )
+
+    if not isinstance(post_job_metrics, dict) and post_job_metrics is not None:
+        raise CorruptMetricDataError(
+            f"Post-job metrics for runner {fs.runner_name} is not a JSON object."
+        )
+
+    try:
+        return RunnerMetrics(
+            installed_timestamp=installed_timestamp,
+            pre_job=PreJobMetrics(**pre_job_metrics),
+            post_job=PostJobMetrics(**post_job_metrics) if post_job_metrics else None,
+        )
+    except ValidationError as exc:
+        raise CorruptMetricDataError(str(exc)) from exc
 
 
 def _issue_runner_metrics(runner_metrics: RunnerMetrics, flavor: str) -> None:
@@ -191,10 +204,7 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
     """
     for fs in shared_fs.list_all():
         if fs.runner_name not in ignore_runners:
-            try:
-                metrics_from_fs = _extract_metrics_from_fs(fs)
-            except ValidationError as exc:
-                raise CorruptMetricDataError(str(exc)) from exc
+            metrics_from_fs = _extract_metrics_from_fs(fs)
 
             if metrics_from_fs:
                 _issue_runner_metrics(runner_metrics=metrics_from_fs, flavor=flavor)

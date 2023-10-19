@@ -1,5 +1,6 @@
 #  Copyright 2023 Canonical Ltd.
 #  See LICENSE file for licensing details.
+import json
 import secrets
 from pathlib import Path
 from unittest.mock import MagicMock, call
@@ -245,7 +246,8 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
     arrange:
         1. A runner with non-compliant pre-job metrics inside shared fs
         2. A runner with non-json post-job metrics inside shared fs
-        3. A runner with no real timestamp in installed_timestamp file inside shared fs
+        3. A runner with json array post-job metrics inside shared fs
+        4. A runner with no real timestamp in installed_timestamp file inside shared fs
     act: Call extract
     assert: CorruptDataError raised in all cases.
     """
@@ -291,7 +293,19 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
     with pytest.raises(errors.CorruptMetricDataError):
         runner_metrics.extract(flavor, set())
 
-    # 3. Runner has not a timestamp in installed_timestamp file inside shared fs
+    # 3. Runner has json post-job metrics but a json array (not object) inside shared fs.
+    runner_fs = _create_runner_files(
+        runner_fs_base,
+        runner_metrics_data.pre_job.json(),
+        json.dumps([runner_metrics_data.post_job.dict()]),
+        str(runner_metrics_data.installed_timestamp),
+    )
+    shared_fs_mock.list_all.return_value = [runner_fs]
+
+    with pytest.raises(errors.CorruptMetricDataError):
+        runner_metrics.extract(flavor, set())
+
+    # 4. Runner has not a timestamp in installed_timestamp file inside shared fs
     runner_fs = _create_runner_files(
         runner_fs_base,
         runner_metrics_data.pre_job.json(),
