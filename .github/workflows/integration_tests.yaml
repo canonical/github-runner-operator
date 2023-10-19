@@ -1,149 +1,26 @@
-name: integration-tests
+name: Integration tests
 
 on:
   pull_request:
 
 jobs:
-  integration-test-charm-no-runner:
-    name: Integration test charm with no runner
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        juju: [3.1, 2.9]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup operator environment
-        uses: charmed-kubernetes/actions-operator@main
-        with:
-          juju-channel: ${{ matrix.juju }}/stable
-          provider: lxd
-      - name: Enable br_netfilter
-        run: sudo modprobe br_netfilter
-      - name: Run Integration tests
-        run: |
-          tox -e integration-juju${{ matrix.juju }} -- \
-            --keep-models \
-            --path ${{secrets.E2E_TESTING_REPO}} \
-            --token ${{secrets.E2E_TESTING_TOKEN}} \
-            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
-            tests/integration/test_charm_no_runner.py
-  integration-test-charm:
-    name: Integration test charm
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        juju: [3.1, 2.9]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup operator environment
-        uses: charmed-kubernetes/actions-operator@main
-        with:
-          juju-channel: ${{ matrix.juju }}/stable
-          provider: lxd
-      - name: Enable br_netfilter
-        run: sudo modprobe br_netfilter
-      - name: Run Integration tests
-        run: |
-          tox -e integration-juju${{ matrix.juju }} -- \
-            --keep-models \
-            --path ${{secrets.E2E_TESTING_REPO}} \
-            --token ${{secrets.E2E_TESTING_TOKEN}} \
-            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
-            tests/integration/test_charm.py
-  integration-test-charm-fork-repo:
-    name: Integration test charm with fork repo
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        juju: [3.1, 2.9]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup operator environment
-        uses: charmed-kubernetes/actions-operator@main
-        with:
-          juju-channel: ${{ matrix.juju }}/stable
-          provider: lxd
-      - name: Enable br_netfilter
-        run: sudo modprobe br_netfilter
-      - name: Run Integration tests
-        run: |
-          tox -e integration-juju${{ matrix.juju }} -- \
-            --keep-models \
-            --path ${{secrets.E2E_TESTING_REPO}} \
-            --token ${{secrets.E2E_TESTING_TOKEN}} \
-            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
-            tests/integration/test_charm_fork_repo.py
-  integration-test-charm-scheduled-events:
-    name: Integration test charm scheduled events
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        juju: [3.1, 2.9]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup operator environment
-        uses: charmed-kubernetes/actions-operator@main
-        with:
-          juju-channel: ${{ matrix.juju }}/stable
-          provider: lxd
-      - name: Enable br_netfilter
-        run: sudo modprobe br_netfilter
-      - name: Run Integration tests
-        run: |
-          tox -e integration-juju${{ matrix.juju }} -- \
-            --keep-models \
-            --path ${{secrets.E2E_TESTING_REPO}} \
-            --token ${{secrets.E2E_TESTING_TOKEN}} \
-            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
-            tests/integration/test_charm_scheduled_events.py
-  integration-test-charm-metrics:
-    name: Integration test charm metrics
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        juju: [3.1, 2.9]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup operator environment
-        uses: charmed-kubernetes/actions-operator@main
-        with:
-          juju-channel: ${{ matrix.juju }}/stable
-          provider: lxd
-      - name: Enable br_netfilter
-        run: sudo modprobe br_netfilter
-      - name: Find available loop device
-        id: loop-device
-        run: |
-          echo "device=$(sudo losetup -f)" >> $GITHUB_OUTPUT
-      - name: Run Integration tests
-        run: |
-          tox -e integration-juju${{ matrix.juju }} -- \
-            --keep-models \
-            --path ${{secrets.E2E_TESTING_REPO}} \
-            --token ${{secrets.E2E_TESTING_TOKEN}} \
-            --token-alt ${{secrets.E2E_TESTING_TOKEN_ALT}} \
-            --loop-device ${{ steps.loop-device.outputs.device }} \
-            tests/integration/test_charm_metrics.py
-  required_status_checks:
-    name: Required Integration Test Status Checks
-    runs-on: ubuntu-latest
-    needs:
-      - integration-test-charm-no-runner
-      - integration-test-charm
-      - integration-test-charm-fork-repo
-      - integration-test-charm-scheduled-events
-      - integration-test-charm-metrics
-    if: always() && !cancelled()
-    timeout-minutes: 30
-    steps:
-      - run: |
-          [ '${{ needs.integration-test-charm-no-runner.result }}' = 'success' ] || (echo integration-test-charm-no-runner failed && false)
-          [ '${{ needs.integration-test-charm.result }}' = 'success' ] || (echo integration-test-charm failed && false)
-          [ '${{ needs.integration-test-charm-fork-repo.result }}' = 'success' ] || (echo integration-test-charm-fork-repo failed && false)
-          [ '${{ needs.integration-test-charm-scheduled-events.result }}' = 'success' ] || (echo integration-test-charm-schedule-events failed && false)
-          [ '${{ needs.integration-test-charm-metrics.result }}' = 'success' ] || (echo integration-test-charm-metrics failed && false)
+  integration-tests-juju2:
+    name: Integration test with juju 2.9
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    secrets: inherit
+    with:
+      juju-channel: 2.9/stable
+      pre-run-script: scripts/pre-integration-test.sh
+      provider: lxd
+      test-tox-env: integration-juju2.9
+      modules: '["test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics"]'
+  integration-tests-juju3:
+    name: Integration test with juju 3.1
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    secrets: inherit
+    with:
+      juju-channel: 3.1/stable
+      pre-run-script: scripts/pre-integration-test.sh
+      provider: lxd
+      test-tox-env: integration-juju3.1
+      modules: '["test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics"]'
