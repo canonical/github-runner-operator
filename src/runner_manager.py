@@ -56,7 +56,7 @@ logger = logging.getLogger(__name__)
 class RunnerManagerConfig:
     """Configuration of runner manager.
 
-    Attrs:
+    Attributes:
         path: GitHub repository path in the format '<owner>/<repo>', or the
             GitHub organization name.
         token: GitHub personal access token to register runner to the

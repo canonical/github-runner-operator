@@ -18,7 +18,7 @@ FILESYSTEM_SIZE = "1M"
 class SharedFilesystem:
     """Shared filesystem between the charm and the runners.
 
-    Attrs:
+    Attributes:
         path: The path of the shared filesystem inside the charm.
         runner_name: The name of the associated runner.
     Returns:

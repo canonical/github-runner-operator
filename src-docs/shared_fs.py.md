@@ -117,10 +117,15 @@ Get the shared filesystem for the runner.
 ## <kbd>class</kbd> `SharedFilesystem`
 Shared filesystem between the charm and the runners. 
 
-Attrs:  path: The path of the shared filesystem inside the charm.  runner_name: The name of the associated runner. 
+
+
+**Attributes:**
+ 
+ - <b>`path`</b>:  The path of the shared filesystem inside the charm. 
+ - <b>`runner_name`</b>:  The name of the associated runner. 
 
 **Returns:**
-  The shared filesystem. 
+ The shared filesystem. 
 
 
 
