@@ -48,6 +48,7 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
         unit, runner_to_be_used, "cat /etc/docker/daemon.json"
     )
     assert return_code == 0
+    assert stdout is not None
     assert "registry-mirrors" in stdout
     assert fake_url in stdout
 

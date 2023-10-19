@@ -63,7 +63,7 @@ options:
       A comma separated list of IPv4 networks in CIDR notation that runners can not access.
       The runner will always have access to essential services such as DHCP and DNS regardless
       of the denylist configuration.
-  dockerhub_mirror:
+  dockerhub-mirror:
     type: string
     default: ""
     description: |

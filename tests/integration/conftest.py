@@ -4,7 +4,6 @@
 """Fixtures for github runner charm integration tests."""
 
 import secrets
-import subprocess
 import zipfile
 from pathlib import Path
 from typing import Any, AsyncIterator
@@ -18,7 +17,7 @@ from juju.application import Application
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-from tests.integration.helpers import create_runner
+from tests.integration.helpers import create_runner, deploy_github_runner_charm
 from tests.status_name import ACTIVE_STATUS_NAME
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
@@ -143,34 +142,18 @@ async def app_no_runner(
     no_proxy: str,
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
-    subprocess.run(["sudo", "modprobe", "br_netfilter"])
-
-    await model.set_config(
-        {
-            "juju-http-proxy": http_proxy,
-            "juju-https-proxy": https_proxy,
-            "juju-no-proxy": no_proxy,
-            "logging-config": "<root>=INFO;unit=DEBUG",
-        }
+    # Set the scheduled event to 1 hour to avoid interfering with the tests.
+    yield await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=app_name,
+        path=path,
+        token=token,
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=60,
     )
-
-    application = await model.deploy(
-        charm_file,
-        application_name=app_name,
-        series="jammy",
-        config={
-            "path": path,
-            "token": token,
-            "virtual-machines": 0,
-            "denylist": "10.10.0.0/16",
-            "test-mode": "insecure",
-            # Set the scheduled event to 1 hour to avoid interfering with the tests.
-            "reconcile-interval": 60,
-        },
-    )
-    await model.wait_for_idle(timeout=60 * 30)
-
-    yield application
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -206,31 +189,17 @@ async def app_scheduled_events(
     next trigger. Therefore, it would take a hour for the duration change to
     take effect.
     """
-    subprocess.run(["sudo", "modprobe", "br_netfilter"])
-
-    await model.set_config(
-        {
-            "juju-http-proxy": http_proxy,
-            "juju-https-proxy": https_proxy,
-            "juju-no-proxy": no_proxy,
-            "logging-config": "<root>=INFO;unit=DEBUG",
-        }
+    application = await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=app_name,
+        path=path,
+        token=token,
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=8,
     )
-
-    application = await model.deploy(
-        charm_file,
-        application_name=app_name,
-        series="jammy",
-        config={
-            "path": path,
-            "token": token,
-            "virtual-machines": 0,
-            "denylist": "10.10.0.0/16",
-            "test-mode": "insecure",
-            "reconcile-interval": 8,
-        },
-    )
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
     unit = application.units[0]
 
     await application.set_config({"virtual-machines": "1"})
@@ -244,7 +213,7 @@ async def app_scheduled_events(
 @pytest_asyncio.fixture(scope="module")
 async def app_runner(
     model: Model,
-    charm_path: Path,
+    charm_file: str,
     app_name: str,
     path: str,
     token: str,
@@ -253,31 +222,15 @@ async def app_runner(
     no_proxy: str,
 ) -> AsyncIterator[Application]:
     """Application to test runners."""
-    # TODO: Create function that deploys application, once a pending PR is merged.
-    subprocess.run(["sudo", "modprobe", "br_netfilter"])
-
-    await model.set_config(
-        {
-            "juju-http-proxy": http_proxy,
-            "juju-https-proxy": https_proxy,
-            "juju-no-proxy": no_proxy,
-            "logging-config": "<root>=INFO;unit=DEBUG",
-        }
+    # Use a different app_name so workflows can select runners from this deployment.
+    yield await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=f"{app_name}-test",
+        path=path,
+        token=token,
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=60,
     )
-
-    application = await model.deploy(
-        charm_path,
-        application_name=f"{app_name}-runner",
-        series="jammy",
-        config={
-            "path": path,
-            "token": token,
-            "virtual-machines": 0,
-            "denylist": "10.10.0.0/16",
-            "test-mode": "insecure",
-            "reconcile-interval": 8,
-        },
-    )
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
-
-    yield application
