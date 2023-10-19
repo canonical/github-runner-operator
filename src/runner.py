@@ -128,17 +128,16 @@ class Runner:
         """
         logger.info("Creating runner: %s", self.config.name)
 
+        if self.config.issue_metrics:
+            try:
+                self._shared_fs = shared_fs.create(self.config.name)
+            except errors.CreateSharedFilesystemError:
+                logger.exception(
+                    "Unable to create shared filesystem for runner %s. "
+                    "Will not create metrics for this runner.",
+                    self.config.name,
+                )
         try:
-            if self.config.issue_metrics:
-                try:
-                    self._shared_fs = shared_fs.create(self.config.name)
-                except errors.CreateSharedFilesystemError:
-                    logger.exception(
-                        "Unable to create shared filesystem for runner %s. "
-                        "Will not create metrics for this runner.",
-                        self.config.name,
-                    )
-
             self.instance = self._create_instance(image, resources)
             self._start_instance()
             # Wait some initial time for the instance to boot up
