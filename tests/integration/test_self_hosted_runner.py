@@ -12,7 +12,7 @@ from juju.application import Application
 from juju.model import Model
 
 from tests.integration.conftest import DISPATCH_TEST_WORKFLOW_FILENAME
-from tests.integration.helpers import get_runner_names, run_in_lxd_instance, run_in_unit
+from tests.integration.helpers import get_runner_names, run_in_lxd_instance
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
@@ -73,6 +73,6 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
         if f"Job is about to start running on the runner: {app_runner.name}-" in logs:
             assert run.jobs()[0].conclusion == "success"
             assert (
-                "A private docker registry is setup as a dockerhub mirror for this self-hosted runner."
-                in logs
-            )
+                "A private docker registry is setup as a dockerhub mirror for this self-hosted"
+                " runner."
+            ) in logs
