@@ -132,7 +132,3 @@ class RunnerMetricsError(Exception):
 
 class CorruptMetricDataError(RunnerMetricsError):
     """Represents an error with the data being corrupt."""
-
-
-class MetricFileSizeTooLargeError(RunnerMetricsError):
-    """Represents an error with the file size being too large."""

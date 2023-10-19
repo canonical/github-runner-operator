@@ -77,31 +77,6 @@ Error for executing LXD actions.
 
 ---
 
-## <kbd>class</kbd> `MetricFileSizeTooLargeError`
-Represents an error with the file size being too large. 
-
-<a href="../src/errors.py#L124"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>function</kbd> `__init__`
-
-```python
-__init__(msg: 'str')
-```
-
-Initialize a new instance of the RunnerMetricsError exception. 
-
-
-
-**Args:**
- 
- - <b>`msg`</b>:  Explanation of the error. 
-
-
-
-
-
----
-
 ## <kbd>class</kbd> `MissingConfigurationError`
 Error for missing juju configuration. 
 

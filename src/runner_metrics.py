@@ -6,13 +6,14 @@
 import json
 import logging
 from json import JSONDecodeError
+from pathlib import Path
 from typing import Optional
 
 from pydantic import BaseModel, NonNegativeFloat, ValidationError
 
 import metrics
 import shared_fs
-from errors import CorruptMetricDataError, MetricFileSizeTooLargeError
+from errors import CorruptMetricDataError
 
 logger = logging.getLogger(__name__)
 
@@ -66,25 +67,24 @@ class RunnerMetrics(BaseModel):
     post_job: Optional[PostJobMetrics]
 
 
-def _inspect_file_sizes(fs: shared_fs.SharedFilesystem) -> None:
+def _inspect_file_sizes(fs: shared_fs.SharedFilesystem) -> tuple[Path, ...]:
     """Inspect the file sizes of the shared filesystem.
 
     Args:
         fs: The path to the shared filesystem for a specific runner.
 
-    Raises:
-        FileSizeTooLargeError: If one of the files is too large.
+    Returns:
+        A tuple of files whose size is larger than the limit.
     """
-    files = [
+    files: list[Path] = [
         fs.path.joinpath(PRE_JOB_METRICS_FILE_NAME),
         fs.path.joinpath(POST_JOB_METRICS_FILE_NAME),
         fs.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME),
     ]
-    for file in files:
-        if file.exists() and file.stat().st_size > FILE_SIZE_BYTES_LIMIT:
-            raise MetricFileSizeTooLargeError(
-                f"File {file} is too large. The limit is {FILE_SIZE_BYTES_LIMIT} bytes."
-            )
+
+    return tuple(
+        filter(lambda file: file.exists() and file.stat().st_size > FILE_SIZE_BYTES_LIMIT, files)
+    )
 
 
 def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerMetrics]:
@@ -99,7 +99,11 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
     Raises:
         CorruptMetricDataError: Raised if one of the files is not valid or too large.
     """
-    _inspect_file_sizes(fs)
+    if too_large_files := _inspect_file_sizes(fs):
+        raise CorruptMetricDataError(
+            f"File size of {too_large_files} is too large. "
+            f"The limit is {FILE_SIZE_BYTES_LIMIT} bytes."
+        )
 
     try:
         installed_timestamp = fs.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).read_text()
@@ -189,7 +193,7 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
         if fs.runner_name not in ignore_runners:
             try:
                 metrics_from_fs = _extract_metrics_from_fs(fs)
-            except (ValidationError, MetricFileSizeTooLargeError) as exc:
+            except ValidationError as exc:
                 raise CorruptMetricDataError(str(exc)) from exc
 
             if metrics_from_fs:
