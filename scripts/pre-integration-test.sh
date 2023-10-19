@@ -8,4 +8,4 @@ sudo modprobe br_netfilter
 
 # Find a loop-device
 loop_device=$(sudo losetup -f)
-echo "PYTEST_ADDOPTS=--loop-device=$loop_device" >> $GITHUB_ENV
+echo "PYTEST_ADDOPTS=--loop-device=$loop_device" >> "$GITHUB_ENV"
