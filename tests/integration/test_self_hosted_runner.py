@@ -35,7 +35,7 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
     fake_url = "https://example.com:5000"
 
     # 1.
-    await app_runner.set_config({"virtual-machines": 1, "dockerhub-mirror": fake_url})
+    await app_runner.set_config({"virtual-machines": "1", "dockerhub-mirror": fake_url})
     action = await unit.run_action("reconcile-runners")
     await action.wait()
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
