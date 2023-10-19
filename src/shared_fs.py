@@ -29,6 +29,18 @@ class SharedFilesystem:
     runner_name: str
 
 
+def _get_runner_image_path(runner_name: str) -> Path:
+    """Get the path of the runner image.
+
+    Args:
+        runner_name: The name of the runner.
+
+    Returns:
+        The path of the runner image.
+    """
+    return FILESYSTEM_BASE_PATH / f"{runner_name}.img"
+
+
 def create(runner_name: str) -> SharedFilesystem:
     """Create a shared filesystem for the runner.
 
@@ -44,7 +56,7 @@ def create(runner_name: str) -> SharedFilesystem:
     FILESYSTEM_BASE_PATH.mkdir(exist_ok=True)
     runner_fs_path = FILESYSTEM_BASE_PATH / runner_name
     runner_fs_path.mkdir()
-    runner_image_path = FILESYSTEM_BASE_PATH / f"{runner_name}.img"
+    runner_image_path = _get_runner_image_path(runner_name)
 
     try:
         execute_command(
@@ -88,7 +100,7 @@ def delete(runner_name: str) -> None:
         NotFoundError: If the shared filesystem is not found.
     """
     runner_fs = get(runner_name)
-    runner_image_path = FILESYSTEM_BASE_PATH / f"{runner_name}.img"
+    runner_image_path = _get_runner_image_path(runner_name)
 
     execute_command(
         ["sudo", "umount", str(runner_fs.path)],
