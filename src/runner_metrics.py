@@ -97,14 +97,16 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
         The extracted metrics if at least the pre-job metrics are present.
 
     Raises:
-        JSONDecodeError: If the pre-job or post-job metrics file is not valid JSON.
-        pydantic.ValidationError: If one of the files is not valid.
-        FileSizeTooLargeError: If one of the files is too large.
-        FileNotFoundError: If installed_timestamp is not found.
+        CorruptMetricDataError: Raised if one of the files is not valid or too large.
     """
     _inspect_file_sizes(fs)
 
-    installed_timestamp = fs.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).read_text()
+    try:
+        installed_timestamp = fs.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).read_text()
+    except FileNotFoundError:
+        logger.exception("installed_timestamp not found for runner %s", fs.runner_name)
+        return None
+
     logger.debug("Runner %s installed at %s", fs.runner_name, installed_timestamp)
     try:
         pre_job_metrics = json.loads(fs.path.joinpath(PRE_JOB_METRICS_FILE_NAME).read_text())
@@ -112,6 +114,8 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
     except FileNotFoundError:
         logger.warning("%s not found for runner %s.", PRE_JOB_METRICS_FILE_NAME, fs.runner_name)
         return None
+    except JSONDecodeError as exc:
+        raise CorruptMetricDataError(str(exc)) from exc
 
     try:
         post_job_metrics = json.loads(fs.path.joinpath(POST_JOB_METRICS_FILE_NAME).read_text())
@@ -119,6 +123,8 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
     except FileNotFoundError:
         logger.warning("%s not found for runner %s", POST_JOB_METRICS_FILE_NAME, fs.runner_name)
         post_job_metrics = None
+    except JSONDecodeError as exc:
+        raise CorruptMetricDataError(str(exc)) from exc
 
     return RunnerMetrics(
         installed_timestamp=installed_timestamp,
@@ -177,17 +183,14 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
         ignore_runners: The set of runners to ignore.
 
     Raises:
-        CorruptDataError: If one of the files inside the shared filesystem is not valid.
+        CorruptMetricDataError: If one of the files inside the shared filesystem is not valid.
     """
     for fs in shared_fs.list_all():
         if fs.runner_name not in ignore_runners:
             try:
                 metrics_from_fs = _extract_metrics_from_fs(fs)
-            except (JSONDecodeError, ValidationError, MetricFileSizeTooLargeError) as exc:
+            except (ValidationError, MetricFileSizeTooLargeError) as exc:
                 raise CorruptMetricDataError(str(exc)) from exc
-            except FileNotFoundError:
-                logger.exception("installed_timestamp not found for runner %s", fs.runner_name)
-                metrics_from_fs = None
 
             if metrics_from_fs:
                 _issue_runner_metrics(runner_metrics=metrics_from_fs, flavor=flavor)
