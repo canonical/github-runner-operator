@@ -21,6 +21,8 @@ create(runner_name: str) → SharedFilesystem
 
 Create a shared filesystem for the runner. 
 
+The method is not idempotent and will raise an exception if the shared filesystem already exists. 
+
 
 
 **Args:**
@@ -36,12 +38,12 @@ Create a shared filesystem for the runner.
 
 **Raises:**
  
- - <b>`CreateSharedFilesystemError`</b>:  If the command fails. 
+ - <b>`CreateSharedFilesystemError`</b>:  If the creation of the shared filesystem fails. 
 
 
 ---
 
-<a href="../src/shared_fs.py#L79"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L89"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `list_all`
 
@@ -59,7 +61,7 @@ List the shared filesystems.
 
 ---
 
-<a href="../src/shared_fs.py#L93"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L103"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `delete`
 
@@ -84,7 +86,7 @@ Delete the shared filesystem for the runner.
 
 ---
 
-<a href="../src/shared_fs.py#L113"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L123"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `get`
 

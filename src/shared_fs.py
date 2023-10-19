@@ -44,6 +44,9 @@ def _get_runner_image_path(runner_name: str) -> Path:
 def create(runner_name: str) -> SharedFilesystem:
     """Create a shared filesystem for the runner.
 
+    The method is not idempotent and will raise an exception
+    if the shared filesystem already exists.
+
     Args:
         runner_name: The name of the runner.
 
@@ -51,11 +54,18 @@ def create(runner_name: str) -> SharedFilesystem:
         The shared filesystem object.
 
     Raises:
-        CreateSharedFilesystemError: If the command fails.
+        CreateSharedFilesystemError: If the creation of the shared filesystem fails.
     """
     FILESYSTEM_BASE_PATH.mkdir(exist_ok=True)
     runner_fs_path = FILESYSTEM_BASE_PATH / runner_name
-    runner_fs_path.mkdir()
+
+    try:
+        runner_fs_path.mkdir()
+    except FileExistsError as exc:
+        raise CreateSharedFilesystemError(
+            f"Shared filesystem for runner {runner_name} already exists."
+        ) from exc
+
     runner_image_path = _get_runner_image_path(runner_name)
 
     try:

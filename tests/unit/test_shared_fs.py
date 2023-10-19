@@ -2,7 +2,7 @@
 #  See LICENSE file for licensing details.
 import secrets
 from pathlib import Path
-from unittest.mock import Mock
+from unittest.mock import MagicMock, Mock
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
@@ -30,7 +30,7 @@ def exc_command_fixture(monkeypatch: MonkeyPatch) -> Mock:
     return exc_cmd_mock
 
 
-def test_create_creates_directory(filesystem_base_path: Path):
+def test_create_creates_directory():
     """
     arrange: Given a runner name and a path for the filesystems.
     act: Call create.
@@ -44,7 +44,7 @@ def test_create_creates_directory(filesystem_base_path: Path):
     assert fs.path.is_dir()
 
 
-def test_create_raises_exception(exc_cmd_mock):
+def test_create_raises_exception(exc_cmd_mock: MagicMock):
     """
     arrange: Given a runner name and a mocked execute_command which raises an expected exception.
     act: Call create.
@@ -59,7 +59,20 @@ def test_create_raises_exception(exc_cmd_mock):
         shared_fs.create(runner_name)
 
 
-def test_list_shared_filesystems(filesystem_base_path: Path):
+def test_create_raises_exception_if_already_exists():
+    """
+    arrange: Given a runner name and an already existing shared filesystem.
+    act: Call create.
+    assert: The expected exception is raised.
+    """
+    runner_name = secrets.token_hex(16)
+    shared_fs.create(runner_name)
+
+    with pytest.raises(errors.CreateSharedFilesystemError):
+        shared_fs.create(runner_name)
+
+
+def test_list_shared_filesystems():
     """
     arrange: Create shared filesystems for multiple runners.
     act: Call list.
