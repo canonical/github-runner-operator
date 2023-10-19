@@ -143,7 +143,7 @@ async def app_no_runner(
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
     # Set the scheduled event to 1 hour to avoid interfering with the tests.
-    yield await deploy_github_runner_charm(
+    application = await deploy_github_runner_charm(
         model=model,
         charm_file=charm_file,
         app_name=app_name,
@@ -154,6 +154,7 @@ async def app_no_runner(
         no_proxy=no_proxy,
         reconcile_interval=60,
     )
+    yield application
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -223,7 +224,7 @@ async def app_runner(
 ) -> AsyncIterator[Application]:
     """Application to test runners."""
     # Use a different app_name so workflows can select runners from this deployment.
-    yield await deploy_github_runner_charm(
+    application = await deploy_github_runner_charm(
         model=model,
         charm_file=charm_file,
         app_name=f"{app_name}-test",
@@ -234,3 +235,4 @@ async def app_runner(
         no_proxy=no_proxy,
         reconcile_interval=60,
     )
+    yield application
