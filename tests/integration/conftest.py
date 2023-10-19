@@ -40,28 +40,38 @@ def app_name() -> str:
 
 
 @pytest.fixture(scope="module")
-def charm_file(pytestconfig: pytest.Config) -> str:
+def charm_file(pytestconfig: pytest.Config, loop_device: Optional[str]) -> str:
     """Path to the built charm."""
     charm = pytestconfig.getoption("--charm-file")
     assert charm, "Please specify the --charm-file command line option"
 
+    lxd_profile_str = """config:
+        security.nesting: true
+        security.privileged: true
+        raw.lxc: |
+            lxc.apparmor.profile=unconfined
+            lxc.mount.auto=proc:rw sys:rw cgroup:rw
+            lxc.cgroup.devices.allow=a
+            lxc.cap.drop=
+    devices:
+        kmsg:
+            path: /dev/kmsg
+            source: /dev/kmsg
+            type: unix-char
+    """
+    if loop_device:
+        lxd_profile_str += f"""    loop-control:
+            path: /dev/loop-control
+            type: unix-char
+        loop14:
+            path: {loop_device}
+            type: unix-block
+    """
+
     with zipfile.ZipFile(charm, mode="a") as charm_file:
         charm_file.writestr(
             "lxd-profile.yaml",
-            """config:
-    security.nesting: true
-    security.privileged: true
-    raw.lxc: |
-        lxc.apparmor.profile=unconfined
-        lxc.mount.auto=proc:rw sys:rw cgroup:rw
-        lxc.cgroup.devices.allow=a
-        lxc.cap.drop=
-devices:
-    kmsg:
-        path: /dev/kmsg
-        source: /dev/kmsg
-        type: unix-char
-""",
+            lxd_profile_str,
         )
     return f"./{charm}"
 
@@ -123,44 +133,6 @@ def model(ops_test: OpsTest) -> Model:
     """Juju model used in the test."""
     assert ops_test.model is not None
     return ops_test.model
-
-
-@pytest_asyncio.fixture(scope="module")
-async def lxd_profile(loop_device: Optional[str]) -> AsyncIterator[Path]:
-    """File containing LXD profile for test mode.
-
-    The file needs to be in the charm directory while building a test version
-    of the charm.
-    """
-    lxd_profile_path = Path("lxd-profile.yaml")
-
-    lxd_profile_str = """config:
-    security.nesting: true
-    security.privileged: true
-    raw.lxc: |
-        lxc.apparmor.profile=unconfined
-        lxc.mount.auto=proc:rw sys:rw cgroup:rw
-        lxc.cgroup.devices.allow=a
-        lxc.cap.drop=
-devices:
-    kmsg:
-        path: /dev/kmsg
-        source: /dev/kmsg
-        type: unix-char
-"""
-    if loop_device:
-        lxd_profile_str += f"""    loop-control:
-        path: /dev/loop-control
-        type: unix-char
-    loop14:
-        path: {loop_device}
-        type: unix-block
-"""
-    lxd_profile_path.write_text(lxd_profile_str)
-
-    yield lxd_profile_path
-
-    lxd_profile_path.unlink(missing_ok=True)
 
 
 @pytest_asyncio.fixture(scope="module")

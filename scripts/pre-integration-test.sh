@@ -5,3 +5,7 @@
 
 # Enable kernel module br_netfilter
 sudo modprobe br_netfilter
+
+# Find a loop-device
+loop_device=$(sudo losetup -f)
+echo "PYTEST_ADDOPTS=--loop-device=$loop_device" >> $GITHUB_ENV
