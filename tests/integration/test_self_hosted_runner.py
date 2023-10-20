@@ -4,6 +4,8 @@
 """Integration tests for self-hosted runner managed by the github-runner charm."""
 
 from time import sleep
+from datetime import datetime, timezone
+import github
 
 import pytest
 import requests
@@ -30,6 +32,8 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
         1. registry-mirrors is setup in /etc/docker/daemon.json of runner.
         2. Message about in dockerhub_mirror appears in logs.
     """
+    start_time = datetime.now(timezone.utc)
+
     unit = app_runner.units[0]
 
     fake_url = "https://example.com:5000"
@@ -67,9 +71,17 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
     else:
         assert False, "Timeout while waiting for workflow to complete"
 
-    for run in workflow.get_runs():
-        logs_url = run.jobs()[0].logs_url()
-        logs = requests.get(logs_url).content.decode("utf-8")
+    valid = False
+    for run in workflow.get_runs()[:100]:
+        if start_time > datetime.fromisoformat(run.created_at):
+            valid = True
+            continue
+
+        try:
+            logs_url = run.jobs()[0].logs_url()
+            logs = requests.get(logs_url).content.decode("utf-8")
+        except github.GithubException.GithubException:
+            continue
 
         if f"Job is about to start running on the runner: {app_runner.name}-" in logs:
             assert run.jobs()[0].conclusion == "success"
@@ -77,3 +89,4 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
                 "A private docker registry is setup as a dockerhub mirror for this self-hosted"
                 " runner."
             ) in logs
+    assert valid

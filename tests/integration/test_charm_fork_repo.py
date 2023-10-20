@@ -6,6 +6,7 @@
 The forked repo is configured to fail the repo-policy-compliance check.
 """
 
+from datetime import datetime, timezone
 import secrets
 from time import sleep
 from typing import AsyncIterator, Iterator
@@ -151,6 +152,8 @@ async def test_dispatch_workflow_failure(
     act: Trigger a workflow dispatch on a branch in the forked repository.
     assert: The workflow that was dispatched failed and the reason is logged.
     """
+    start_time = datetime.now(timezone.utc)
+
     unit = app_with_unsigned_commit_repo.units[0]
     runners = await get_runner_names(unit)
     assert len(runners) == 1
@@ -174,7 +177,13 @@ async def test_dispatch_workflow_failure(
     else:
         assert False, "Timeout while waiting for workflow to complete"
 
-    for run in workflow.get_runs():
+    # Unable to find the run id of the workflow that was dispatched.
+    valid = False
+    for run in workflow.get_runs()[:100]:
+        if start_time > datetime.fromisoformat(run.created_at):
+            valid = True
+            continue
+
         logs_url = run.jobs()[0].logs_url()
         logs = requests.get(logs_url).content.decode("utf-8")
 
@@ -189,6 +198,7 @@ async def test_dispatch_workflow_failure(
             )
             assert "commit the job is running on is not signed" in logs
             assert "Should not echo if pre-job script failed" not in logs
+    assert valid
 
 
 @pytest.mark.asyncio
