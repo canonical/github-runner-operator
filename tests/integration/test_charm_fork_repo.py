@@ -6,8 +6,8 @@
 The forked repo is configured to fail the repo-policy-compliance check.
 """
 
-from datetime import datetime, timezone
 import secrets
+from datetime import datetime, timezone
 from time import sleep
 from typing import AsyncIterator, Iterator
 
@@ -28,10 +28,12 @@ from tests.status_name import ACTIVE_STATUS_NAME
 
 @pytest.fixture(scope="module")
 def forked_github_repository(
-    github_repository: Repository,
+    forked_github_repository: Repository,
 ) -> Iterator[Repository]:
     """Create a fork for a GitHub repository."""
-    forked_repository = github_repository.create_fork(name=f"test-{github_repository.name}")
+    forked_repository = forked_github_repository.create_fork(
+        name=f"test-{forked_github_repository.name}"
+    )
 
     # Wait for repo to be ready
     for _ in range(10):
@@ -178,10 +180,12 @@ async def test_dispatch_workflow_failure(
         assert False, "Timeout while waiting for workflow to complete"
 
     # Unable to find the run id of the workflow that was dispatched.
-    valid = False
-    for run in workflow.get_runs()[:100]:
+    # Therefore find the last few workflow runs, and ensure:
+    # 1. The last run check should start before this test.
+    # 2. All runs after this test start should pass the conditions.
+    assert start_time > workflow.get_runs()[10].created_at
+    for run in workflow.get_runs()[:10]:
         if start_time > datetime.fromisoformat(run.created_at):
-            valid = True
             continue
 
         logs_url = run.jobs()[0].logs_url()
@@ -198,7 +202,6 @@ async def test_dispatch_workflow_failure(
             )
             assert "commit the job is running on is not signed" in logs
             assert "Should not echo if pre-job script failed" not in logs
-    assert valid
 
 
 @pytest.mark.asyncio
@@ -206,7 +209,7 @@ async def test_dispatch_workflow_failure(
 async def test_path_config_change(
     model: Model,
     app_with_unsigned_commit_repo: Application,
-    github_repository: Repository,
+    forked_github_repository: Repository,
     path: str,
 ) -> None:
     """
@@ -226,7 +229,7 @@ async def test_path_config_change(
     assert len(runner_names) == 1
     runner_name = runner_names[0]
 
-    runners_in_repo = github_repository.get_self_hosted_runners()
+    runners_in_repo = forked_github_repository.get_self_hosted_runners()
 
     runner_in_repo_with_same_name = tuple(
         filter(lambda runner: runner.name == runner_name, runners_in_repo)

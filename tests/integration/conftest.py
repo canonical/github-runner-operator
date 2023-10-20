@@ -125,7 +125,7 @@ def github_client(token: str) -> Github:
 
 
 @pytest.fixture(scope="module")
-def github_repository(github_client: Github, path: str) -> Repository:
+def forked_github_repository(github_client: Github, path: str) -> Repository:
     """Returns client to the Github repository."""
     return github_client.get_repo(path)
 

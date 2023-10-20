@@ -3,10 +3,10 @@
 
 """Integration tests for self-hosted runner managed by the github-runner charm."""
 
-from time import sleep
 from datetime import datetime, timezone
-import github
+from time import sleep
 
+import github
 import pytest
 import requests
 from github.Repository import Repository
@@ -71,10 +71,13 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
     else:
         assert False, "Timeout while waiting for workflow to complete"
 
-    valid = False
-    for run in workflow.get_runs()[:100]:
-        if start_time > datetime.fromisoformat(run.created_at):
-            valid = True
+    # Unable to find the run id of the workflow that was dispatched.
+    # Therefore find the last few workflow runs, and ensure:
+    # 1. The last run check should start before this test.
+    # 2. All runs after this test start should pass the conditions.
+    assert start_time > workflow.get_runs()[10].created_at
+    for run in workflow.get_runs()[:10]:
+        if start_time > run.created_at:
             continue
 
         try:
@@ -89,4 +92,3 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
                 "A private docker registry is setup as a dockerhub mirror for this self-hosted"
                 " runner."
             ) in logs
-    assert valid
