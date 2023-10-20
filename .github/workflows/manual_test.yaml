@@ -8,11 +8,13 @@ on:
 jobs:
   test:
     name: test
-    runs-on: [self-hosted, large]
+    runs-on: [self-hosted, test]
     steps:
-      - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> rustup.sh
-      - run: sh rustup.sh -y
-      - run: $HOME/.cargo/bin/cargo install ripgrep
+      - run: echo $DOCKERHUB_MIRROR
+      - run: docker run hello-world
+      # - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> rustup.sh
+      # - run: sh rustup.sh -y
+      # - run: $HOME/.cargo/bin/cargo install ripgrep
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v3
       #   with:
