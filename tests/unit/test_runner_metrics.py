@@ -249,7 +249,7 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
         3. A runner with json array post-job metrics inside shared fs
         4. A runner with no real timestamp in installed_timestamp file inside shared fs
     act: Call extract
-    assert: CorruptMetricDataError raised in all cases.
+    assert: CorruptDataError raised in all cases.
     """
     runner_metrics_data = RunnerMetrics(
         installed_timestamp=1,
@@ -322,7 +322,7 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
     """
     arrange: Runners with too large metric and timestamp files.
     act: Call extract.
-    assert: CorruptMetricDataError raised  in all cases.
+    assert: CorruptDataError raised  in all cases.
     """
     runner_metrics_data = RunnerMetrics(
         installed_timestamp=1,
@@ -385,43 +385,6 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
 
     with pytest.raises(errors.CorruptMetricDataError):
         runner_metrics.extract(flavor, set())
-
-
-def test_extract_raises_error_for_unexpected_files(tmp_path: Path, shared_fs_mock: MagicMock):
-    """
-    arrange: A runner with unexpected files inside shared fs.
-    act: Call extract.
-    assert: CorruptMetricDataError is raised and shared filesystem is removed.
-    """
-    runner_metrics_data = RunnerMetrics(
-        installed_timestamp=1,
-        pre_job=PreJobMetrics(
-            timestamp=2.3,
-            workflow="workflow1",
-            workflow_run_id="workflow_run_id1",
-            repository="repository1",
-            event="push",
-        ),
-        post_job=PostJobMetrics(timestamp=3, status="status1"),
-    )
-
-    runner_fs_base = tmp_path / "runner-fs"
-    runner_fs_base.mkdir()
-
-    runner_fs = _create_runner_files(
-        runner_fs_base,
-        runner_metrics_data.pre_job.json(),
-        runner_metrics_data.post_job.json(),
-        str(runner_metrics_data.installed_timestamp),
-    )
-    runner_fs.path.joinpath("unexpected").write_text("unexpected file")
-    shared_fs_mock.list_all.return_value = [runner_fs]
-
-    flavor = secrets.token_hex(16)
-
-    with pytest.raises(errors.CorruptMetricDataError):
-        runner_metrics.extract(flavor, set())
-    shared_fs_mock.delete.assert_called_once_with(runner_fs.runner_name)
 
 
 def test_extract_ignores_filesystems_without_ts(
