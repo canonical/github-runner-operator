@@ -11,7 +11,7 @@ jobs:
     runs-on: [self-hosted, large]
     steps:
       - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-      - run: cargo install hello-world
+      - run: cargo install ripgrep
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v3
       #   with:
