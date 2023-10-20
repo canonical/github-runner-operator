@@ -8,12 +8,10 @@ on:
 jobs:
   test:
     name: test
-    runs-on: [self-hosted, test]
+    runs-on: [self-hosted, large]
     steps:
-      - name: env
-        run: echo $DOCKERHUB_MIRROR
-      - name: test
-        run: echo "hello world"
+      - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+      - run: cargo install hello-world
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v3
       #   with:
