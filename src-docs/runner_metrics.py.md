@@ -14,7 +14,7 @@ Classes and function to extract the metrics from a shared filesystem.
 
 ---
 
-<a href="../src/runner_metrics.py#L187"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_metrics.py#L197"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `extract`
 
@@ -39,7 +39,7 @@ If corrupt data is found, an error is raised immediately, as this may indicate t
 
 **Raises:**
  
- - <b>`CorruptMetricDataError`</b>:  If one of the files inside the shared filesystem is not valid. 
+ - <b>`CorruptMetricDataError`</b>:  If any validation of a shared filesystem fails. 
 
 
 ---

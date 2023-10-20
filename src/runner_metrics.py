@@ -6,7 +6,6 @@
 import json
 import logging
 from json import JSONDecodeError
-from pathlib import Path
 from typing import Optional
 
 from pydantic import BaseModel, NonNegativeFloat, ValidationError
@@ -67,24 +66,39 @@ class RunnerMetrics(BaseModel):
     post_job: Optional[PostJobMetrics]
 
 
-def _inspect_file_sizes(fs: shared_fs.SharedFilesystem) -> tuple[Path, ...]:
-    """Inspect the file sizes of the shared filesystem.
+def _validate_fs(fs: shared_fs.SharedFilesystem):
+    """Validate the shared filesystem.
+
+    Check if the shared filesystem contains the expected files and if the file sizes are within
+    the limit. If any unexpected files are found, the shared filesystem is removed.
 
     Args:
-        fs: The path to the shared filesystem for a specific runner.
+        fs: The shared filesystem for a specific runner.
 
-    Returns:
-        A tuple of files whose size is larger than the limit.
+    Raises:
+        CorruptMetricDataError: If unexpected files are found or if the file size is too large.
     """
-    files: list[Path] = [
+    files = {
         fs.path.joinpath(PRE_JOB_METRICS_FILE_NAME),
         fs.path.joinpath(POST_JOB_METRICS_FILE_NAME),
         fs.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME),
-    ]
+    }
+    unexpected_files = set(fs.path.iterdir()) - files
+    if unexpected_files:
+        shared_fs.delete(fs.runner_name)
+        raise CorruptMetricDataError(
+            f"Unexpected files found in shared filesystem for runner {fs.runner_name}: "
+            f"{unexpected_files}\nHave removed the shared filesystem for security reasons."
+        )
 
-    return tuple(
+    too_large_files = set(
         filter(lambda file: file.exists() and file.stat().st_size > FILE_SIZE_BYTES_LIMIT, files)
     )
+    if too_large_files:
+        raise CorruptMetricDataError(
+            f"File size of {too_large_files} is too large. "
+            f"The limit is {FILE_SIZE_BYTES_LIMIT} bytes."
+        )
 
 
 def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerMetrics]:
@@ -97,13 +111,9 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
         The extracted metrics if at least the pre-job metrics are present.
 
     Raises:
-        CorruptMetricDataError: Raised if one of the files is not valid or too large.
+        CorruptMetricDataError: If any validation of the shared filesystem fails.
     """
-    if too_large_files := _inspect_file_sizes(fs):
-        raise CorruptMetricDataError(
-            f"File size of {too_large_files} is too large. "
-            f"The limit is {FILE_SIZE_BYTES_LIMIT} bytes."
-        )
+    _validate_fs(fs)
 
     try:
         installed_timestamp = fs.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).read_text()
@@ -200,7 +210,7 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
         ignore_runners: The set of runners to ignore.
 
     Raises:
-        CorruptMetricDataError: If one of the files inside the shared filesystem is not valid.
+        CorruptMetricDataError: If any validation of a shared filesystem fails.
     """
     for fs in shared_fs.list_all():
         if fs.runner_name not in ignore_runners:
