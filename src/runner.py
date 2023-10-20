@@ -538,6 +538,7 @@ class Runner:
         if self.config.dockerhub_mirror:
             docker_daemon_config = {"registry-mirrors": [self.config.dockerhub_mirror]}
             self._put_file("/etc/docker/daemon.json", json.dumps(docker_daemon_config))
+            self.instance.execute(["systemctl", "restart", "docker"])
 
         if self.config.proxies:
             # Creating directory and putting the file are idempotent, and can be retried.
