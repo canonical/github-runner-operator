@@ -71,7 +71,7 @@ def _inspect_file_sizes(fs: shared_fs.SharedFilesystem) -> tuple[Path, ...]:
     """Inspect the file sizes of the shared filesystem.
 
     Args:
-        fs: The path to the shared filesystem for a specific runner.
+        fs: The shared filesystem for a specific runner.
 
     Returns:
         A tuple of files whose size is larger than the limit.
@@ -91,7 +91,7 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
     """Extract metrics from a shared filesystem.
 
     Args:
-        fs: The path to the shared filesystem for a specific runner.
+        fs: The shared filesystem for a specific runner.
 
     Returns:
         The extracted metrics if at least the pre-job metrics are present.
