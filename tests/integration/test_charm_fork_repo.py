@@ -183,7 +183,7 @@ async def test_dispatch_workflow_failure(
     # Therefore find the last few workflow runs, and ensure:
     # 1. The last run check should start before this test.
     # 2. All runs after this test start should pass the conditions.
-    assert start_time > workflow.get_runs()[10].created_at
+    assert start_time > workflow.get_runs()[9].created_at
     for run in workflow.get_runs()[:10]:
         if start_time > datetime.fromisoformat(run.created_at):
             continue
