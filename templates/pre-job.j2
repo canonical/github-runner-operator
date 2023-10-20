@@ -74,7 +74,7 @@ fi
 
 logger -s "The repository setup check has passed, proceeding to execute jobs"
 
-if [[ -z "$DOCKERHUB_MIRROR" ]]; then
+if [[ -n "$DOCKERHUB_MIRROR" ]]; then
   logger -s "A private docker registry is setup as a dockerhub mirror for this self-hosted runner."
   logger -s "The docker daemon on this self-hosted runner is configured to use the dockerhub mirror."
   logger -s "The URL to the private docker registry is in the DOCKERHUB_MIRROR environment variable."
