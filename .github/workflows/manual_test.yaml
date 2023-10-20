@@ -10,7 +10,8 @@ jobs:
     name: test
     runs-on: [self-hosted, large]
     steps:
-      - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+      - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> rustup.sh
+      - run: sh rustup.sh -y
       - run: cargo install ripgrep
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v3
