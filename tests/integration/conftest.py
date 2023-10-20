@@ -46,27 +46,27 @@ def charm_file(pytestconfig: pytest.Config, loop_device: Optional[str]) -> str:
     assert charm, "Please specify the --charm-file command line option"
 
     lxd_profile_str = """config:
-        security.nesting: true
-        security.privileged: true
-        raw.lxc: |
-            lxc.apparmor.profile=unconfined
-            lxc.mount.auto=proc:rw sys:rw cgroup:rw
-            lxc.cgroup.devices.allow=a
-            lxc.cap.drop=
-    devices:
-        kmsg:
-            path: /dev/kmsg
-            source: /dev/kmsg
-            type: unix-char
-    """
+    security.nesting: true
+    security.privileged: true
+    raw.lxc: |
+        lxc.apparmor.profile=unconfined
+        lxc.mount.auto=proc:rw sys:rw cgroup:rw
+        lxc.cgroup.devices.allow=a
+        lxc.cap.drop=
+devices:
+    kmsg:
+        path: /dev/kmsg
+        source: /dev/kmsg
+        type: unix-char
+"""
     if loop_device:
         lxd_profile_str += f"""    loop-control:
-            path: /dev/loop-control
-            type: unix-char
-        loop14:
-            path: {loop_device}
-            type: unix-block
-    """
+        path: /dev/loop-control
+        type: unix-char
+    loop14:
+        path: {loop_device}
+        type: unix-block
+"""
 
     with zipfile.ZipFile(charm, mode="a") as charm_file:
         charm_file.writestr(
