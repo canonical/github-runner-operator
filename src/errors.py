@@ -114,6 +114,10 @@ class CreateSharedFilesystemError(SharedFilesystemError):
     """Represents an error when the shared filesystem could not be created."""
 
 
+class DeleteSharedFilesystemError(SharedFilesystemError):
+    """Represents an error when the shared filesystem could not be deleted."""
+
+
 class SharedFilesystemNotFoundError(SharedFilesystemError):
     """Represents an error when the shared filesystem is not found."""
 

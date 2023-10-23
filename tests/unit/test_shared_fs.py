@@ -116,15 +116,15 @@ def test_delete_filesystem():
         shared_fs.get(runner_name)
 
 
-def test_delete_raises_not_found_error():
+def test_delete_raises_error():
     """
     arrange: Nothing.
     act: Call delete.
-    assert: A NotFoundError is raised.
+    assert: A DeleteSharedFileSystemError is raised.
     """
     runner_name = secrets.token_hex(16)
 
-    with pytest.raises(errors.SharedFilesystemNotFoundError):
+    with pytest.raises(errors.DeleteSharedFilesystemError):
         shared_fs.delete(runner_name)
 
 
@@ -147,7 +147,7 @@ def test_get_raises_not_found_error():
     """
     arrange: Nothing.
     act: Call get.
-    assert: A NotFoundError is raised.
+    assert: A SharedFilesystemNotFoundError is raised.
     """
     runner_name = secrets.token_hex(16)
 

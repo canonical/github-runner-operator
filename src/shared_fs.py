@@ -7,7 +7,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterator
 
-from errors import CreateSharedFilesystemError, SharedFilesystemNotFoundError, SubprocessError
+from errors import (
+    CreateSharedFilesystemError,
+    DeleteSharedFilesystemError,
+    SharedFilesystemNotFoundError,
+    SubprocessError,
+)
 from utilities import execute_command
 
 FILESYSTEM_BASE_PATH = Path("/home/ubuntu/runner-fs")
@@ -107,15 +112,25 @@ def delete(runner_name: str) -> None:
         runner_name: The name of the runner.
 
     Raises:
-        SharedFilesystemNotFoundError: If the shared filesystem is not found.
+        DeleteSharedFilesystemError: If the shared filesystem could not be deleted.
     """
-    runner_fs = get(runner_name)
+    try:
+        runner_fs = get(runner_name)
+    except SharedFilesystemNotFoundError as exc:
+        raise DeleteSharedFilesystemError(
+            f"Shared filesystem for runner {runner_name} not found."
+        ) from exc
     runner_image_path = _get_runner_image_path(runner_name)
 
-    execute_command(
-        ["sudo", "umount", str(runner_fs.path)],
-        check_exit=True,
-    )
+    try:
+        execute_command(
+            ["sudo", "umount", str(runner_fs.path)],
+            check_exit=True,
+        )
+    except SubprocessError as exc:
+        raise DeleteSharedFilesystemError(
+            f"Failed to unmount shared filesystem for runner {runner_name}"
+        ) from exc
     runner_image_path.unlink(missing_ok=True)
     shutil.rmtree(runner_fs.path)
 

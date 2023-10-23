@@ -6,6 +6,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, call
 
 import pytest
+from _pytest.logging import LogCaptureFixture
 from _pytest.monkeypatch import MonkeyPatch
 
 import errors
@@ -424,3 +425,44 @@ def test_extract_ignores_filesystems_without_ts(
 
     issue_event_mock.assert_not_called()
     shared_fs_mock.delete.assert_called_once_with(runner_fs.runner_name)
+
+
+def test_extract_ignores_failure_on_shared_fs_cleanup(
+    tmp_path: Path, shared_fs_mock: MagicMock, caplog: LogCaptureFixture
+):
+    """
+    arrange: Mock the shared_fs.delete to raise an exception.
+    act: Call extract.
+    assert: The exception is caught and logged.
+    """
+    runner_metrics_data = RunnerMetrics(
+        installed_timestamp=1,
+        pre_job=PreJobMetrics(
+            timestamp=1,
+            workflow="workflow1",
+            workflow_run_id="workflow_run_id1",
+            repository="repository1",
+            event="push",
+        ),
+        post_job=PostJobMetrics(timestamp=3, status="status1"),
+    )
+
+    runner_fs_base = tmp_path / "runner-fs"
+    runner_fs_base.mkdir()
+
+    runner_fs = _create_runner_files(
+        runner_fs_base,
+        runner_metrics_data.pre_job.json(),
+        runner_metrics_data.post_job.json(),
+        str(runner_metrics_data.installed_timestamp),
+    )
+    shared_fs_mock.list_all.return_value = [runner_fs]
+    shared_fs_mock.delete.side_effect = errors.DeleteSharedFilesystemError(
+        "Failed to delete shared filesystem"
+    )
+
+    flavor = secrets.token_hex(16)
+
+    runner_metrics.extract(flavor, set())
+
+    assert "Failed to delete shared filesystem" in caplog.text

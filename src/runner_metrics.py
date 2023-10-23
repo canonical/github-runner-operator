@@ -11,6 +11,7 @@ from typing import Optional
 
 from pydantic import BaseModel, NonNegativeFloat, ValidationError
 
+import errors
 import metrics
 import shared_fs
 from errors import CorruptMetricDataError
@@ -183,10 +184,8 @@ def _clean_up_shared_fs(fs: shared_fs.SharedFilesystem) -> None:
 
     try:
         shared_fs.delete(fs.runner_name)
-    except shared_fs.SharedFilesystemNotFoundError:
-        logger.exception(
-            "Shared filesystem for runner %s not found. Could not remove it", fs.runner_name
-        )
+    except errors.DeleteSharedFilesystemError:
+        logger.exception("Could not delete shared filesystem for runner %s.", fs.runner_name)
 
 
 def extract(flavor: str, ignore_runners: set[str]) -> None:

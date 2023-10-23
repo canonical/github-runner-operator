@@ -12,7 +12,7 @@ Errors used by the charm.
 ## <kbd>class</kbd> `CorruptMetricDataError`
 Represents an error with the data being corrupt. 
 
-<a href="../src/errors.py#L124"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L128"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -36,6 +36,31 @@ Initialize a new instance of the RunnerMetricsError exception.
 
 ## <kbd>class</kbd> `CreateSharedFilesystemError`
 Represents an error when the shared filesystem could not be created. 
+
+<a href="../src/errors.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(msg: 'str')
+```
+
+Initialize a new instance of the SharedFilesystemError exception. 
+
+
+
+**Args:**
+ 
+ - <b>`msg`</b>:  Explanation of the error. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `DeleteSharedFilesystemError`
+Represents an error when the shared filesystem could not be deleted. 
 
 <a href="../src/errors.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
@@ -161,7 +186,7 @@ Error for loading file on runner.
 ## <kbd>class</kbd> `RunnerMetricsError`
 Base class for all runner metrics errors. 
 
-<a href="../src/errors.py#L124"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L128"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
