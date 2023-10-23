@@ -79,9 +79,7 @@ def forked_github_branch(github_repository: Repository) -> Iterator[Branch]:
 
 
 @pytest.fixture(scope="module")
-def branch_with_unsigned_commit(
-    forked_github_branch: Branch, github_repository: Repository
-):
+def branch_with_unsigned_commit(forked_github_branch: Branch, github_repository: Repository):
     """Create branch that would fail the branch protection check.
 
     Makes the branch the default branch for the repository and makes the latest commit unsigned.
@@ -159,9 +157,7 @@ async def test_dispatch_workflow_failure(
     assert len(runners) == 1
     runner_to_be_used = runners[0]
 
-    workflow = github_repository.get_workflow(
-        id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME
-    )
+    workflow = github_repository.get_workflow(id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME)
 
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(
