@@ -102,8 +102,6 @@ def issue_event(event: Event) -> None:
 
     Args:
         event: The metric event to log.
-    Raises:
-        OSError: If an error occurs while writing the metrics log.
     """
     with METRICS_LOG_PATH.open(mode="a", encoding="utf-8") as metrics_file:
         metrics_file.write(f"{event.json()}\n")

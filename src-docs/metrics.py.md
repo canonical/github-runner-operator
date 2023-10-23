@@ -30,14 +30,10 @@ The metric event is logged to the metrics log.
  
  - <b>`event`</b>:  The metric event to log. 
 
-**Raises:**
- 
- - <b>`OSError`</b>:  If an error occurs while writing the metrics log. 
-
 
 ---
 
-<a href="../src/metrics.py#L145"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L143"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `setup_logrotate`
 
