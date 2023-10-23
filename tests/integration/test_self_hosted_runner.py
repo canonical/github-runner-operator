@@ -24,13 +24,13 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
     model: Model, app_runner: Application, github_repository: Repository
 ) -> None:
     """
-    arrange: An working application with no runners.
+    arrange: A working application with no runners.
     act:
         1. Set dockerhub-mirror config and spawn one runner.
         2. Dispatch a workflow.
     assert:
         1. registry-mirrors is setup in /etc/docker/daemon.json of runner.
-        2. Message about in dockerhub_mirror appears in logs.
+        2. Message about dockerhub_mirror appears in logs.
     """
     start_time = datetime.now(timezone.utc)
 
