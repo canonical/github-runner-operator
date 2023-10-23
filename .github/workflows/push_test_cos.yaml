@@ -1,0 +1,20 @@
+name: Push Event Tests
+
+on:
+  push:
+
+
+jobs:
+  tests-stg-small:
+    runs-on: [self-hosted, linux, x64, "stg-small"]
+    steps:
+      - name: Echo Hello world
+        run: |
+          echo "Hello, world stg-small!"
+
+  tests-stg-small2:
+    runs-on: [self-hosted, linux, x64, "stg-small2"]
+    steps:
+      - name: Echo Hello world
+        run: |
+          echo "Hello, world stg-small2!"
