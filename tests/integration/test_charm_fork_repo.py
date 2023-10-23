@@ -28,12 +28,10 @@ from tests.status_name import ACTIVE_STATUS_NAME
 
 @pytest.fixture(scope="module")
 def forked_github_repository(
-    forked_github_repository: Repository,
+    github_repository: Repository,
 ) -> Iterator[Repository]:
     """Create a fork for a GitHub repository."""
-    forked_repository = forked_github_repository.create_fork(
-        name=f"test-{forked_github_repository.name}"
-    )
+    forked_repository = github_repository.create_fork(name=f"test-{github_repository.name}")
 
     # Wait for repo to be ready
     for _ in range(10):
@@ -185,7 +183,7 @@ async def test_dispatch_workflow_failure(
     # 2. All runs after this test start should pass the conditions.
     assert start_time > workflow.get_runs()[9].created_at
     for run in workflow.get_runs()[:10]:
-        if start_time > datetime.fromisoformat(run.created_at):
+        if start_time > run.created_at:
             continue
 
         logs_url = run.jobs()[0].logs_url()
