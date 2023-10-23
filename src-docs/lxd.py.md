@@ -33,7 +33,13 @@ Instantiate the LXD client.
 ## <kbd>class</kbd> `LxdInstance`
 An LXD instance. 
 
-Attrs:  name (str): Name of the LXD instance.  files (LxdInstanceFiles): Manager for the files on the LXD instance.  status (str): Status of the LXD instance. 
+
+
+**Attributes:**
+ 
+ - <b>`name`</b> (str):  Name of the LXD instance. 
+ - <b>`files`</b> (LxdInstanceFiles):  Manager for the files on the LXD instance. 
+ - <b>`status`</b> (str):  Status of the LXD instance. 
 
 <a href="../src/lxd.py#L160"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
@@ -178,7 +184,11 @@ Stop the LXD instance.
 ## <kbd>class</kbd> `LxdInstanceFileManager`
 File manager of an LXD instance. 
 
-Attrs:  instance (LxdInstance): LXD instance where the files are located in. 
+
+
+**Attributes:**
+ 
+ - <b>`instance`</b> (LxdInstance):  LXD instance where the files are located in. 
 
 <a href="../src/lxd.py#L38"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
@@ -619,7 +629,15 @@ Get an LXD profile.
 ## <kbd>class</kbd> `LxdStoragePool`
 An LXD storage pool. 
 
-Attrs:  name (str): Name of the storage pool.  driver (str): Type of driver of the storage pool.  used_by (list[str]): LXD instances using the storage pool.  config (dict[str, any]): Dictionary of the configuration of the  storage pool.  managed (bool): Whether LXD manages the storage pool. 
+
+
+**Attributes:**
+ 
+ - <b>`name`</b> (str):  Name of the storage pool. 
+ - <b>`driver`</b> (str):  Type of driver of the storage pool. 
+ - <b>`used_by`</b> (list[str]):  LXD instances using the storage pool. 
+ - <b>`config`</b> (dict[str, any]):  Dictionary of the configuration of the  storage pool. 
+ - <b>`managed`</b> (bool):  Whether LXD manages the storage pool. 
 
 <a href="../src/lxd.py#L501"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 

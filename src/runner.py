@@ -55,7 +55,7 @@ class WgetExecutable:
 class Runner:
     """Single instance of GitHub self-hosted runner.
 
-    Attrs:
+    Attributes:
         app_name (str): Name of the charm.
         path (GitHubPath): Path to GitHub repo or org.
         proxies (ProxySetting): HTTP proxy setting for juju charm.

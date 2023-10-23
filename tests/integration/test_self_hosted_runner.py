@@ -72,11 +72,8 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
         assert False, "Timeout while waiting for workflow to complete"
 
     # Unable to find the run id of the workflow that was dispatched.
-    # Therefore find the last few workflow runs, and ensure:
-    # 1. The last run check should start before this test.
-    # 2. All runs after this test start should pass the conditions.
-    assert start_time > workflow.get_runs()[9].created_at
-    for run in workflow.get_runs()[:10]:
+    # Therefore, all runs after this test start should pass the conditions.
+    for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
         if start_time > run.created_at:
             continue
 

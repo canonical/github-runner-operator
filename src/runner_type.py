@@ -70,7 +70,7 @@ class VirtualMachineResources(NamedTuple):
 class RunnerClients:
     """Clients for accessing various services.
 
-    Attrs:
+    Attributes:
         github: Used to query GitHub API.
         jinja: Used for templating.
         lxd: Used to interact with LXD API.
@@ -86,7 +86,7 @@ class RunnerClients:
 class RunnerConfig:
     """Configuration for runner.
 
-    Attrs:
+    Attributes:
         name: Name of the runner.
         app_name: Application name of the charm.
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
@@ -108,7 +108,7 @@ class RunnerConfig:
 class RunnerStatus:
     """Status of runner.
 
-    Attrs:
+    Attributes:
         exist: Whether the runner instance exists on LXD.
         online: Whether GitHub marks this runner as online.
         busy: Whether GitHub marks this runner as busy.

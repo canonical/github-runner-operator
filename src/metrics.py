@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class Event(BaseModel):
     """Base class for metric events.
 
-    Attrs:
+    Attributes:
          timestamp: The UNIX time stamp of the time at which the event was originally issued.
          event: The name of the event. Will be set to the class name in snake case if not provided.
     """
@@ -66,7 +66,7 @@ class Event(BaseModel):
 class RunnerInstalled(Event):
     """Metric event for when a runner is installed.
 
-    Attrs:
+    Attributes:
         flavor: Describes the characteristics of the runner.
           The flavour could be for example "small".
         duration: The duration of the installation in seconds.

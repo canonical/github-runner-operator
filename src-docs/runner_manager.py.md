@@ -186,7 +186,17 @@ Remove the existing runner binary to prevent it from being used. This is done to
 ## <kbd>class</kbd> `RunnerManagerConfig`
 Configuration of runner manager. 
 
-Attrs:  path: GitHub repository path in the format '<owner>/<repo>', or the  GitHub organization name.  token: GitHub personal access token to register runner to the  repository or organization.  image: Name of the image for creating LXD instance.  service_token: Token for accessing local service.  lxd_storage_path: Path to be used as LXD storage.  issue_metrics: Whether to issue metrics.  dockerhub_mirror: URL of dockerhub mirror to use. 
+
+
+**Attributes:**
+ 
+ - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the  GitHub organization name. 
+ - <b>`token`</b>:  GitHub personal access token to register runner to the  repository or organization. 
+ - <b>`image`</b>:  Name of the image for creating LXD instance. 
+ - <b>`service_token`</b>:  Token for accessing local service. 
+ - <b>`lxd_storage_path`</b>:  Path to be used as LXD storage. 
+ - <b>`issue_metrics`</b>:  Whether to issue metrics. 
+ - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
 
 
 

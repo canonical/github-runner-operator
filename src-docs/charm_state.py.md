@@ -15,7 +15,12 @@ State of the Charm.
 ## <kbd>class</kbd> `State`
 The charm state. 
 
-Attrs:  proxy_config: Proxy configuration.  _charm: The charm instance. 
+
+
+**Attributes:**
+ 
+ - <b>`proxy_config`</b>:  Proxy configuration. 
+ - <b>`_charm`</b>:  The charm instance. 
 
 
 

@@ -42,7 +42,7 @@ class MissingRunnerBinaryError(Exception):
 class MissingConfigurationError(Exception):
     """Error for missing juju configuration.
 
-    Attrs:
+    Attributes:
         configs: The missing configurations.
     """
 
@@ -64,7 +64,7 @@ class LxdError(Exception):
 class SubprocessError(Exception):
     """Error for Subprocess calls.
 
-    Attrs:
+    Attributes:
         cmd: Command in list form.
         return_code: Return code of the subprocess.
         stdout: Content of stdout of the subprocess.

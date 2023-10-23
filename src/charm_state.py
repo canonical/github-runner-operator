@@ -17,7 +17,7 @@ COS_AGENT_INTEGRATION_NAME = "cos-agent"
 class State:
     """The charm state.
 
-    Attrs:
+    Attributes:
         proxy_config: Proxy configuration.
         _charm: The charm instance.
     """

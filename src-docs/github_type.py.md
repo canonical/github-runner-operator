@@ -21,7 +21,12 @@ Status of runner on GitHub.
 ## <kbd>class</kbd> `RegistrationToken`
 Token used for registering GitHub runners. 
 
-Attrs:  token: Token for registering GitHub runners.  expires_at: Time the token expires at. 
+
+
+**Attributes:**
+ 
+ - <b>`token`</b>:  Token for registering GitHub runners. 
+ - <b>`expires_at`</b>:  Time the token expires at. 
 
 
 
@@ -32,7 +37,12 @@ Attrs:  token: Token for registering GitHub runners.  expires_at: Time the token
 ## <kbd>class</kbd> `RemoveToken`
 Token used for removing GitHub runners. 
 
-Attrs:  token: Token for removing GitHub runners.  expires_at: Time the token expires at. 
+
+
+**Attributes:**
+ 
+ - <b>`token`</b>:  Token for removing GitHub runners. 
+ - <b>`expires_at`</b>:  Time the token expires at. 
 
 
 
@@ -43,7 +53,16 @@ Attrs:  token: Token for removing GitHub runners.  expires_at: Time the token ex
 ## <kbd>class</kbd> `RunnerApplication`
 Information on the runner application. 
 
-Attrs:  os: Operating system to run the runner application on.  architecture: Computer Architecture to run the runner application on.  download_url: URL to download the runner application.  filename: Filename of the runner application.  temp_download_token: A short lived bearer token used to download the  runner, if needed.  sha256_check_sum: SHA256 Checksum of the runner application. 
+
+
+**Attributes:**
+ 
+ - <b>`os`</b>:  Operating system to run the runner application on. 
+ - <b>`architecture`</b>:  Computer Architecture to run the runner application on. 
+ - <b>`download_url`</b>:  URL to download the runner application. 
+ - <b>`filename`</b>:  Filename of the runner application. 
+ - <b>`temp_download_token`</b>:  A short lived bearer token used to download the  runner, if needed. 
+ - <b>`sha256_check_sum`</b>:  SHA256 Checksum of the runner application. 
 
 
 
@@ -54,7 +73,15 @@ Attrs:  os: Operating system to run the runner application on.  architecture: Co
 ## <kbd>class</kbd> `SelfHostedRunner`
 Information on a single self-hosted runner. 
 
-Attrs:  id: Unique identifier of the runner.  name: Name of the runner.  os: Operation system of the runner.  busy: Whether the runner is executing a job.  labels: Labels of the runner. 
+
+
+**Attributes:**
+ 
+ - <b>`id`</b>:  Unique identifier of the runner. 
+ - <b>`name`</b>:  Name of the runner. 
+ - <b>`os`</b>:  Operation system of the runner. 
+ - <b>`busy`</b>:  Whether the runner is executing a job. 
+ - <b>`labels`</b>:  Labels of the runner. 
 
 
 
@@ -65,7 +92,13 @@ Attrs:  id: Unique identifier of the runner.  name: Name of the runner.  os: Ope
 ## <kbd>class</kbd> `SelfHostedRunnerLabel`
 A single label of self-hosted runners. 
 
-Attrs:  id: Unique identifier of the label.  name: Name of the label.  type: Type of label. Read-only labels are applied automatically when  the runner is configured. 
+
+
+**Attributes:**
+ 
+ - <b>`id`</b>:  Unique identifier of the label. 
+ - <b>`name`</b>:  Name of the label. 
+ - <b>`type`</b>:  Type of label. Read-only labels are applied automatically when  the runner is configured. 
 
 
 
@@ -76,7 +109,12 @@ Attrs:  id: Unique identifier of the label.  name: Name of the label.  type: Typ
 ## <kbd>class</kbd> `SelfHostedRunnerList`
 Information on a collection of self-hosted runners. 
 
-Attrs:  total_count: Total number of runners.  runners: List of runners. 
+
+
+**Attributes:**
+ 
+ - <b>`total_count`</b>:  Total number of runners. 
+ - <b>`runners`</b>:  List of runners. 
 
 
 

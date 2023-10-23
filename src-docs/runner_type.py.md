@@ -72,7 +72,13 @@ Set of runners LXD instance by health state.
 ## <kbd>class</kbd> `RunnerClients`
 Clients for accessing various services. 
 
-Attrs:  github: Used to query GitHub API.  jinja: Used for templating.  lxd: Used to interact with LXD API. 
+
+
+**Attributes:**
+ 
+ - <b>`github`</b>:  Used to query GitHub API. 
+ - <b>`jinja`</b>:  Used for templating. 
+ - <b>`lxd`</b>:  Used to interact with LXD API. 
 
 
 
@@ -83,7 +89,16 @@ Attrs:  github: Used to query GitHub API.  jinja: Used for templating.  lxd: Use
 ## <kbd>class</kbd> `RunnerConfig`
 Configuration for runner. 
 
-Attrs:  name: Name of the runner.  app_name: Application name of the charm.  path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name.  proxies: HTTP(S) proxy settings.  lxd_storage_path: Path to be used as LXD storage.  dockerhub_mirror: URL of dockerhub mirror to use. 
+
+
+**Attributes:**
+ 
+ - <b>`name`</b>:  Name of the runner. 
+ - <b>`app_name`</b>:  Application name of the charm. 
+ - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name. 
+ - <b>`proxies`</b>:  HTTP(S) proxy settings. 
+ - <b>`lxd_storage_path`</b>:  Path to be used as LXD storage. 
+ - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
 
 
 
@@ -94,7 +109,13 @@ Attrs:  name: Name of the runner.  app_name: Application name of the charm.  pat
 ## <kbd>class</kbd> `RunnerStatus`
 Status of runner. 
 
-Attrs:  exist: Whether the runner instance exists on LXD.  online: Whether GitHub marks this runner as online.  busy: Whether GitHub marks this runner as busy. 
+
+
+**Attributes:**
+ 
+ - <b>`exist`</b>:  Whether the runner instance exists on LXD. 
+ - <b>`online`</b>:  Whether GitHub marks this runner as online. 
+ - <b>`busy`</b>:  Whether GitHub marks this runner as busy. 
 
 
 

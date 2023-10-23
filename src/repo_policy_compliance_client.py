@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class RepoPolicyComplianceClient:  # pylint: disable=too-few-public-methods
     """Client for repo policy compliance service.
 
-    Attrs:
+    Attributes:
         base_url: Base url to the repo policy compliance service.
         token: Charm token configured for the repo policy compliance service.
     """

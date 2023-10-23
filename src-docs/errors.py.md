@@ -30,7 +30,11 @@ Error for executing LXD actions.
 ## <kbd>class</kbd> `MissingConfigurationError`
 Error for missing juju configuration. 
 
-Attrs:  configs: The missing configurations. 
+
+
+**Attributes:**
+ 
+ - <b>`configs`</b>:  The missing configurations. 
 
 <a href="../src/errors.py#L49"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
@@ -129,7 +133,14 @@ Error for runner start failure.
 ## <kbd>class</kbd> `SubprocessError`
 Error for Subprocess calls. 
 
-Attrs:  cmd: Command in list form.  return_code: Return code of the subprocess.  stdout: Content of stdout of the subprocess.  stderr: Content of stderr of the subprocess. 
+
+
+**Attributes:**
+ 
+ - <b>`cmd`</b>:  Command in list form. 
+ - <b>`return_code`</b>:  Return code of the subprocess. 
+ - <b>`stdout`</b>:  Content of stdout of the subprocess. 
+ - <b>`stderr`</b>:  Content of stderr of the subprocess. 
 
 <a href="../src/errors.py#L74"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
