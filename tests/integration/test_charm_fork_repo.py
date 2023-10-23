@@ -27,7 +27,7 @@ from tests.status_name import ACTIVE_STATUS_NAME
 
 
 @pytest.fixture(scope="module")
-def github_repository(
+def forked_github_repository(
     github_repository: Repository,
 ) -> Iterator[Repository]:
     """Create a fork for a GitHub repository."""
@@ -50,18 +50,18 @@ def github_repository(
 
 
 @pytest.fixture(scope="module")
-def forked_github_branch(github_repository: Repository) -> Iterator[Branch]:
+def forked_github_branch(forked_github_repository: Repository) -> Iterator[Branch]:
     """Create a new forked branch for testing."""
     branch_name = f"test/{secrets.token_hex(4)}"
 
-    main_branch = github_repository.get_branch(github_repository.default_branch)
-    branch_ref = github_repository.create_git_ref(
+    main_branch = forked_github_repository.get_branch(forked_github_repository.default_branch)
+    branch_ref = forked_github_repository.create_git_ref(
         ref=f"refs/heads/{branch_name}", sha=main_branch.commit.sha
     )
 
     for _ in range(10):
         try:
-            branch = github_repository.get_branch(branch_name)
+            branch = forked_github_repository.get_branch(branch_name)
             break
         except GithubException as err:
             if err.status == 404:
@@ -79,19 +79,21 @@ def forked_github_branch(github_repository: Repository) -> Iterator[Branch]:
 
 
 @pytest.fixture(scope="module")
-def branch_with_unsigned_commit(forked_github_branch: Branch, github_repository: Repository):
+def branch_with_unsigned_commit(
+    forked_github_branch: Branch, forked_github_repository: Repository
+):
     """Create branch that would fail the branch protection check.
 
     Makes the branch the default branch for the repository and makes the latest commit unsigned.
     """
     # Make an unsigned commit
-    github_repository.create_file(
+    forked_github_repository.create_file(
         "test.txt", "testing", "some content", branch=forked_github_branch.name
     )
 
     # Change default branch so that the commit is ignored by the check for unique commits being
     # signed
-    github_repository.edit(default_branch=forked_github_branch.name)
+    forked_github_repository.edit(default_branch=forked_github_branch.name)
 
     # forked_github_branch.edit_protection seems to be broken as of version 1.59 of PyGithub.
     # Without passing the users_bypass_pull_request_allowances the API returns a 422 indicating
@@ -140,7 +142,7 @@ async def app_with_unsigned_commit_repo(
 @pytest.mark.abort_on_fail
 async def test_dispatch_workflow_failure(
     app_with_unsigned_commit_repo: Application,
-    github_repository: Repository,
+    forked_github_repository: Repository,
     branch_with_unsigned_commit: Branch,
 ) -> None:
     """
@@ -157,7 +159,9 @@ async def test_dispatch_workflow_failure(
     assert len(runners) == 1
     runner_to_be_used = runners[0]
 
-    workflow = github_repository.get_workflow(id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME)
+    workflow = forked_github_repository.get_workflow(
+        id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME
+    )
 
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(
@@ -207,7 +211,7 @@ async def test_path_config_change(
     path: str,
 ) -> None:
     """
-    arrange: A working application with one runner in a forked repoistory.
+    arrange: A working application with one runner in a forked repository.
     act: Change the path configuration to the main repository and reconcile runners.
     assert: No runners connected to the forked repository and one runner in the main repository.
     """
