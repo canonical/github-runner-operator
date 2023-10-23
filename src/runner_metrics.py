@@ -181,7 +181,12 @@ def _clean_up_shared_fs(fs: shared_fs.SharedFilesystem) -> None:
     fs.path.joinpath(POST_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
     fs.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).unlink(missing_ok=True)
 
-    shared_fs.delete(fs.runner_name)
+    try:
+        shared_fs.delete(fs.runner_name)
+    except shared_fs.SharedFilesystemNotFoundError:
+        logger.exception(
+            "Shared filesystem for runner %s not found. Could not remove it", fs.runner_name
+        )
 
 
 def extract(flavor: str, ignore_runners: set[str]) -> None:

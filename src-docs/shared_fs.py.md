@@ -81,7 +81,7 @@ Delete the shared filesystem for the runner.
 
 **Raises:**
  
- - <b>`NotFoundError`</b>:  If the shared filesystem is not found. 
+ - <b>`SharedFilesystemNotFoundError`</b>:  If the shared filesystem is not found. 
 
 
 ---

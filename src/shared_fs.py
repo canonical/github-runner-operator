@@ -107,7 +107,7 @@ def delete(runner_name: str) -> None:
         runner_name: The name of the runner.
 
     Raises:
-        NotFoundError: If the shared filesystem is not found.
+        SharedFilesystemNotFoundError: If the shared filesystem is not found.
     """
     runner_fs = get(runner_name)
     runner_image_path = _get_runner_image_path(runner_name)
