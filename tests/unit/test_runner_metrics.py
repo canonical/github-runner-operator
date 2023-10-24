@@ -37,6 +37,13 @@ def shared_fs_mock_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     return shared_fs_mock
 
 
+def _create_runner_fs_base(tmp_path: Path):
+    """Create a runner filesystem base."""
+    runner_fs_base = tmp_path / "runner-fs"
+    runner_fs_base.mkdir()
+    return runner_fs_base
+
+
 def _create_runner_files(
     runner_fs_base: Path,
     pre_job_data: str | bytes | None,
@@ -116,8 +123,7 @@ def test_extract(shared_fs_mock: MagicMock, issue_event_mock: MagicMock, tmp_pat
         ),
     )
 
-    runner_fs_base = tmp_path / "runner-fs"
-    runner_fs_base.mkdir()
+    runner_fs_base = _create_runner_fs_base(tmp_path)
 
     # 1. Runner has all metrics inside shared fs
     runner1_fs = _create_runner_files(
@@ -201,8 +207,7 @@ def test_extract_ignores_runners(
         post_job=PostJobMetrics(timestamp=3, status="status1"),
     )
 
-    runner_fs_base = tmp_path / "runner-fs"
-    runner_fs_base.mkdir()
+    runner_fs_base = _create_runner_fs_base(tmp_path)
 
     runner_filesystems = []
     for i in range(5):
@@ -264,8 +269,7 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
         post_job=PostJobMetrics(timestamp=3, status="status1"),
     )
 
-    runner_fs_base = tmp_path / "runner-fs"
-    runner_fs_base.mkdir()
+    runner_fs_base = _create_runner_fs_base(tmp_path)
 
     # 1. Runner has noncompliant pre-job metrics inside shared fs
     invalid_pre_job_data = runner_metrics_data.pre_job.copy(update={"timestamp": -1})
@@ -337,8 +341,7 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
         post_job=PostJobMetrics(timestamp=3, status="status1"),
     )
 
-    runner_fs_base = tmp_path / "runner-fs"
-    runner_fs_base.mkdir()
+    runner_fs_base = _create_runner_fs_base(tmp_path)
 
     # 1. Runner has a pre-job metrics file that is too large
     invalid_pre_job_data = runner_metrics_data.pre_job.copy(
@@ -408,8 +411,7 @@ def test_extract_ignores_filesystems_without_ts(
         post_job=PostJobMetrics(timestamp=3, status="status1"),
     )
 
-    runner_fs_base = tmp_path / "runner-fs"
-    runner_fs_base.mkdir()
+    runner_fs_base = _create_runner_fs_base(tmp_path)
 
     runner_fs = _create_runner_files(
         runner_fs_base,
@@ -447,8 +449,7 @@ def test_extract_ignores_failure_on_shared_fs_cleanup(
         post_job=PostJobMetrics(timestamp=3, status="status1"),
     )
 
-    runner_fs_base = tmp_path / "runner-fs"
-    runner_fs_base.mkdir()
+    runner_fs_base = _create_runner_fs_base(tmp_path)
 
     runner_fs = _create_runner_files(
         runner_fs_base,
@@ -466,3 +467,45 @@ def test_extract_ignores_failure_on_shared_fs_cleanup(
     runner_metrics.extract(flavor, set())
 
     assert "Failed to delete shared filesystem" in caplog.text
+
+
+def test_extract_ignores_failure_on_issue_event(
+    tmp_path: Path,
+    shared_fs_mock: MagicMock,
+    issue_event_mock: MagicMock,
+    caplog: LogCaptureFixture,
+):
+    """
+    arrange: Mock the issue_event_mock to raise an exception.
+    act: Call extract.
+    assert: The exception is caught and logged. The shared fs is deleted.
+    """
+    runner_metrics_data = RunnerMetrics(
+        installed_timestamp=1,
+        pre_job=PreJobMetrics(
+            timestamp=1,
+            workflow="workflow1",
+            workflow_run_id="workflow_run_id1",
+            repository="repository1",
+            event="push",
+        ),
+        post_job=PostJobMetrics(timestamp=3, status="status1"),
+    )
+
+    runner_fs_base = _create_runner_fs_base(tmp_path)
+
+    runner_fs = _create_runner_files(
+        runner_fs_base,
+        runner_metrics_data.pre_job.json(),
+        runner_metrics_data.post_job.json(),
+        str(runner_metrics_data.installed_timestamp),
+    )
+    shared_fs_mock.list_all.return_value = [runner_fs]
+    issue_event_mock.side_effect = errors.IssueMetricEventError("Failed to issue metric")
+
+    flavor = secrets.token_hex(16)
+
+    runner_metrics.extract(flavor, set())
+
+    assert "Failed to issue metric" in caplog.text
+    shared_fs_mock.delete.assert_called_once_with(runner_fs.runner_name)

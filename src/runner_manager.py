@@ -26,7 +26,7 @@ import metrics
 import runner_metrics
 import shared_fs
 from charm_state import State as CharmState
-from errors import RunnerBinaryError, RunnerCreateError
+from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
 from github_type import (
     GitHubRunnerStatus,
     RegistrationToken,
@@ -327,7 +327,7 @@ class RunnerManager:
                         duration=ts_after - ts_now,
                     ),
                 )
-            except OSError:
+            except IssueMetricEventError:
                 logger.exception("Failed to issue metrics")
 
             fs = shared_fs.get(runner.config.name)

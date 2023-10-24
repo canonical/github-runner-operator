@@ -31,9 +31,15 @@ The metric event is logged to the metrics log.
  - <b>`event`</b>:  The metric event to log. 
 
 
+
+**Raises:**
+ 
+ - <b>`IssueMetricEventError`</b>:  If the event cannot be logged. 
+
+
 ---
 
-<a href="../src/metrics.py#L143"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L149"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `setup_logrotate`
 

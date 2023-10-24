@@ -12,7 +12,7 @@ Errors used by the charm.
 ## <kbd>class</kbd> `CorruptMetricDataError`
 Represents an error with the data being corrupt. 
 
-<a href="../src/errors.py#L128"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L132"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -37,7 +37,7 @@ Initialize a new instance of the RunnerMetricsError exception.
 ## <kbd>class</kbd> `CreateSharedFilesystemError`
 Represents an error when the shared filesystem could not be created. 
 
-<a href="../src/errors.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L108"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -62,7 +62,7 @@ Initialize a new instance of the SharedFilesystemError exception.
 ## <kbd>class</kbd> `DeleteSharedFilesystemError`
 Represents an error when the shared filesystem could not be deleted. 
 
-<a href="../src/errors.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L108"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -77,6 +77,15 @@ Initialize a new instance of the SharedFilesystemError exception.
 **Args:**
  
  - <b>`msg`</b>:  Explanation of the error. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `IssueMetricEventError`
+Error when issuing a metric event. 
 
 
 
@@ -186,7 +195,7 @@ Error for loading file on runner.
 ## <kbd>class</kbd> `RunnerMetricsError`
 Base class for all runner metrics errors. 
 
-<a href="../src/errors.py#L128"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L132"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -229,7 +238,7 @@ Error for runner start failure.
 ## <kbd>class</kbd> `SharedFilesystemError`
 Base class for all shared filesystem errors. 
 
-<a href="../src/errors.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L108"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -254,7 +263,7 @@ Initialize a new instance of the SharedFilesystemError exception.
 ## <kbd>class</kbd> `SharedFilesystemNotFoundError`
 Represents an error when the shared filesystem is not found. 
 
-<a href="../src/errors.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L108"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

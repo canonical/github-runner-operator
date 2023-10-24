@@ -12,7 +12,7 @@ from _pytest.monkeypatch import MonkeyPatch
 
 import shared_fs
 from charm_state import State
-from errors import RunnerBinaryError
+from errors import IssueMetricEventError, RunnerBinaryError
 from metrics import RunnerInstalled
 from runner import Runner, RunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
@@ -274,7 +274,7 @@ def test_reconcile_error_on_runner_installed_event_is_ignored(
     """
     charm_state.is_metrics_logging_available = True
 
-    issue_event_mock.side_effect = OSError
+    issue_event_mock.side_effect = IssueMetricEventError("test error")
 
     delta = runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 

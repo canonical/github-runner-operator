@@ -7,7 +7,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, NonNegativeFloat
 
-from errors import LogrotateSetupError, SubprocessError
+from errors import IssueMetricEventError, LogrotateSetupError, SubprocessError
 from utilities import execute_command
 
 LOG_ROTATE_TIMER_SYSTEMD_SERVICE = "logrotate.timer"
@@ -102,9 +102,15 @@ def issue_event(event: Event) -> None:
 
     Args:
         event: The metric event to log.
+
+    Raises:
+        IssueMetricEventError: If the event cannot be logged.
     """
-    with METRICS_LOG_PATH.open(mode="a", encoding="utf-8") as metrics_file:
-        metrics_file.write(f"{event.json()}\n")
+    try:
+        with METRICS_LOG_PATH.open(mode="a", encoding="utf-8") as metrics_file:
+            metrics_file.write(f"{event.json()}\n")
+    except OSError as exc:
+        raise IssueMetricEventError(f"Cannot write to {METRICS_LOG_PATH}") from exc
 
 
 def _enable_logrotate() -> None:

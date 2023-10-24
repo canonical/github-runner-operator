@@ -211,7 +211,10 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
             metrics_from_fs = _extract_metrics_from_fs(fs)
 
             if metrics_from_fs:
-                _issue_runner_metrics(runner_metrics=metrics_from_fs, flavor=flavor)
+                try:
+                    _issue_runner_metrics(runner_metrics=metrics_from_fs, flavor=flavor)
+                except errors.IssueMetricEventError:
+                    logger.exception("Not able to issue metrics for runner %s", fs.runner_name)
             else:
                 logger.warning("Not able to issue metrics for runner %s", fs.runner_name)
 

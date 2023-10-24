@@ -94,6 +94,10 @@ class SubprocessError(Exception):
         self.stderr = stderr
 
 
+class IssueMetricEventError(Exception):
+    """Error when issuing a metric event."""
+
+
 class LogrotateSetupError(Exception):
     """Error raised when logrotate cannot be setup."""
 
