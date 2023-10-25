@@ -20,9 +20,9 @@ from typing import Iterable, Optional, Sequence
 
 import yaml
 
-import errors
 import shared_fs
 from errors import (
+    CreateSharedFilesystemError,
     LxdError,
     RunnerCreateError,
     RunnerError,
@@ -131,7 +131,7 @@ class Runner:
         if self.config.issue_metrics:
             try:
                 self._shared_fs = shared_fs.create(self.config.name)
-            except errors.CreateSharedFilesystemError:
+            except CreateSharedFilesystemError:
                 logger.exception(
                     "Unable to create shared filesystem for runner %s. "
                     "Will not create metrics for this runner.",
@@ -234,8 +234,12 @@ class Runner:
                 runner_id=self.status.runner_id,
             )
 
-    def _add_shared_filesystem(self):
-        """Add the shared filesystem to the runner instance."""
+    def _add_shared_filesystem(self, path: Path) -> None:
+        """Add the shared filesystem to the runner instance.
+
+        Args:
+            path: Path to the shared filesystem.
+        """
         try:
             execute_command(
                 [
@@ -247,7 +251,7 @@ class Runner:
                     self.config.name,
                     "metrics",
                     "disk",
-                    f"source={self._shared_fs.path}",
+                    f"source={path}",
                     "path=/metrics-exchange",
                 ],
                 check_exit=True,
@@ -311,7 +315,7 @@ class Runner:
         self.status.exist = True
 
         if self._shared_fs:
-            self._add_shared_filesystem()
+            self._add_shared_filesystem(self._shared_fs.path)
 
         return instance
 
