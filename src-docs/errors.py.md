@@ -85,7 +85,7 @@ Initialize a new instance of the SharedFilesystemError exception.
 ---
 
 ## <kbd>class</kbd> `IssueMetricEventError`
-Error when issuing a metric event. 
+Represents an error when issuing a metric event. 
 
 
 
@@ -94,7 +94,7 @@ Error when issuing a metric event.
 ---
 
 ## <kbd>class</kbd> `LogrotateSetupError`
-Error raised when logrotate cannot be setup. 
+Represents an error raised when logrotate cannot be setup. 
 
 
 

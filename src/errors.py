@@ -95,11 +95,11 @@ class SubprocessError(Exception):
 
 
 class IssueMetricEventError(Exception):
-    """Error when issuing a metric event."""
+    """Represents an error when issuing a metric event."""
 
 
 class LogrotateSetupError(Exception):
-    """Error raised when logrotate cannot be setup."""
+    """Represents an error raised when logrotate cannot be setup."""
 
 
 class SharedFilesystemError(Exception):
