@@ -17,6 +17,7 @@ from utilities import execute_command
 
 FILESYSTEM_OWNER = "ubuntu:ubuntu"
 FILESYSTEM_BASE_PATH = Path("/home/ubuntu/runner-fs")
+FILESYSTEM_IMAGES_PATH = Path("/home/ubuntu/runner-fs-images")
 FILESYSTEM_SIZE = "1M"
 
 
@@ -44,7 +45,7 @@ def _get_runner_image_path(runner_name: str) -> Path:
     Returns:
         The path of the runner image.
     """
-    return FILESYSTEM_BASE_PATH / f"{runner_name}.img"
+    return FILESYSTEM_IMAGES_PATH / f"{runner_name}.img"
 
 
 def create(runner_name: str) -> SharedFilesystem:
@@ -62,7 +63,14 @@ def create(runner_name: str) -> SharedFilesystem:
     Raises:
         CreateSharedFilesystemError: If the creation of the shared filesystem fails.
     """
-    FILESYSTEM_BASE_PATH.mkdir(exist_ok=True)
+    try:
+        FILESYSTEM_BASE_PATH.mkdir(exist_ok=True)
+        FILESYSTEM_IMAGES_PATH.mkdir(exist_ok=True)
+    except OSError as exc:
+        raise CreateSharedFilesystemError(
+            "Failed to create shared filesystem base path or images path"
+        ) from exc
+
     runner_fs_path = FILESYSTEM_BASE_PATH / runner_name
 
     try:

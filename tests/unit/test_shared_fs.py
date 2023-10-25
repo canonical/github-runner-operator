@@ -18,7 +18,9 @@ def filesystem_base_path_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> Pa
     Mock the hardcoded filesystem base path.
     """
     fs_path = tmp_path / "runner-fs"
+    fs_images_path = tmp_path / "images"
     monkeypatch.setattr("shared_fs.FILESYSTEM_BASE_PATH", fs_path)
+    monkeypatch.setattr("shared_fs.FILESYSTEM_IMAGES_PATH", fs_images_path)
     return fs_path
 
 

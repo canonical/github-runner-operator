@@ -108,11 +108,11 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
 
     try:
         installed_timestamp = fs.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).read_text()
+        logger.debug("Runner %s installed at %s", fs.runner_name, installed_timestamp)
     except FileNotFoundError:
         logger.exception("installed_timestamp not found for runner %s", fs.runner_name)
         return None
 
-    logger.debug("Runner %s installed at %s", fs.runner_name, installed_timestamp)
     try:
         pre_job_metrics = json.loads(fs.path.joinpath(PRE_JOB_METRICS_FILE_NAME).read_text())
         logger.debug("Pre-job metrics for runner %s: %s", fs.runner_name, pre_job_metrics)
