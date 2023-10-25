@@ -7,11 +7,12 @@ Classes and functions to operate on the shared filesystem between the charm and 
 
 **Global Variables**
 ---------------
+- **FILESYSTEM_OWNER**
 - **FILESYSTEM_SIZE**
 
 ---
 
-<a href="../src/shared_fs.py#L49"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L50"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create`
 
@@ -43,7 +44,7 @@ The method is not idempotent and will raise an exception if the shared filesyste
 
 ---
 
-<a href="../src/shared_fs.py#L94"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L95"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `list_all`
 
@@ -61,32 +62,7 @@ List the shared filesystems.
 
 ---
 
-<a href="../src/shared_fs.py#L108"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>function</kbd> `delete`
-
-```python
-delete(runner_name: str) → None
-```
-
-Delete the shared filesystem for the runner. 
-
-
-
-**Args:**
- 
- - <b>`runner_name`</b>:  The name of the runner. 
-
-
-
-**Raises:**
- 
- - <b>`DeleteSharedFilesystemError`</b>:  If the shared filesystem could not be deleted. 
-
-
----
-
-<a href="../src/shared_fs.py#L138"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L109"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `get`
 
@@ -112,6 +88,31 @@ Get the shared filesystem for the runner.
 **Raises:**
  
  - <b>`SharedFilesystemNotFoundError`</b>:  If the shared filesystem is not found. 
+
+
+---
+
+<a href="../src/shared_fs.py#L128"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>function</kbd> `delete`
+
+```python
+delete(runner_name: str) → None
+```
+
+Delete the shared filesystem for the runner. 
+
+
+
+**Args:**
+ 
+ - <b>`runner_name`</b>:  The name of the runner. 
+
+
+
+**Raises:**
+ 
+ - <b>`DeleteSharedFilesystemError`</b>:  If the shared filesystem could not be deleted. 
 
 
 ---

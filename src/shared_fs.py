@@ -15,6 +15,7 @@ from errors import (
 )
 from utilities import execute_command
 
+FILESYSTEM_OWNER = "ubuntu:ubuntu"
 FILESYSTEM_BASE_PATH = Path("/home/ubuntu/runner-fs")
 FILESYSTEM_SIZE = "1M"
 
@@ -83,7 +84,7 @@ def create(runner_name: str) -> SharedFilesystem:
             ["sudo", "mount", "-o", "loop", str(runner_image_path), str(runner_fs_path)],
             check_exit=True,
         )
-        execute_command(["sudo", "chown", "ubuntu:ubuntu", str(runner_fs_path)], check_exit=True)
+        execute_command(["sudo", "chown", FILESYSTEM_OWNER, str(runner_fs_path)], check_exit=True)
     except SubprocessError as exc:
         raise CreateSharedFilesystemError(
             f"Failed to create shared filesystem for runner {runner_name}"
@@ -105,36 +106,6 @@ def list_all() -> Iterator[SharedFilesystem]:
         yield SharedFilesystem(path=directory, runner_name=directory.name)
 
 
-def delete(runner_name: str) -> None:
-    """Delete the shared filesystem for the runner.
-
-    Args:
-        runner_name: The name of the runner.
-
-    Raises:
-        DeleteSharedFilesystemError: If the shared filesystem could not be deleted.
-    """
-    try:
-        runner_fs = get(runner_name)
-    except SharedFilesystemNotFoundError as exc:
-        raise DeleteSharedFilesystemError(
-            f"Shared filesystem for runner {runner_name} not found."
-        ) from exc
-    runner_image_path = _get_runner_image_path(runner_name)
-
-    try:
-        execute_command(
-            ["sudo", "umount", str(runner_fs.path)],
-            check_exit=True,
-        )
-    except SubprocessError as exc:
-        raise DeleteSharedFilesystemError(
-            f"Failed to unmount shared filesystem for runner {runner_name}"
-        ) from exc
-    runner_image_path.unlink(missing_ok=True)
-    shutil.rmtree(runner_fs.path)
-
-
 def get(runner_name: str) -> SharedFilesystem:
     """Get the shared filesystem for the runner.
 
@@ -152,3 +123,40 @@ def get(runner_name: str) -> SharedFilesystem:
             f"Shared filesystem for runner {runner_name} not found."
         )
     return SharedFilesystem(runner_fs, runner_name)
+
+
+def delete(runner_name: str) -> None:
+    """Delete the shared filesystem for the runner.
+
+    Args:
+        runner_name: The name of the runner.
+
+    Raises:
+        DeleteSharedFilesystemError: If the shared filesystem could not be deleted.
+    """
+    try:
+        runner_fs = get(runner_name)
+    except SharedFilesystemNotFoundError as exc:
+        raise DeleteSharedFilesystemError() from exc
+    runner_image_path = _get_runner_image_path(runner_name)
+
+    try:
+        execute_command(
+            ["sudo", "umount", str(runner_fs.path)],
+            check_exit=True,
+        )
+    except SubprocessError as exc:
+        raise DeleteSharedFilesystemError(
+            f"Failed to unmount shared filesystem for runner {runner_name}"
+        ) from exc
+    try:
+        runner_image_path.unlink(missing_ok=True)
+    except OSError as exc:
+        raise DeleteSharedFilesystemError(
+            "Failed to remove runner image for shared filesystem"
+        ) from exc
+
+    try:
+        shutil.rmtree(runner_fs.path)
+    except OSError as exc:
+        raise DeleteSharedFilesystemError("Failed to remove shared filesystem") from exc
