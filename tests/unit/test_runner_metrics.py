@@ -257,7 +257,7 @@ def test_extract_corrupt_data(
         3. A runner with json array post-job metrics inside shared fs
         4. A runner with no real timestamp in installed_timestamp file inside shared fs
     act: Call extract
-    assert: No metric event is issued.
+    assert: No metric event is issued and shared filesystems are quarantined in all cases.
     """
     runner_metrics_data = RunnerMetrics(
         installed_timestamp=1,
@@ -288,6 +288,7 @@ def test_extract_corrupt_data(
     runner_metrics.extract(flavor, set())
 
     issue_event_mock.assert_not_called()
+    shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
 
     # 2. Runner has non-json post-job metrics inside shared fs
     runner_fs = _create_runner_files(
@@ -301,6 +302,7 @@ def test_extract_corrupt_data(
     runner_metrics.extract(flavor, set())
 
     issue_event_mock.assert_not_called()
+    shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
 
     # 3. Runner has json post-job metrics but a json array (not object) inside shared fs.
     runner_fs = _create_runner_files(
@@ -314,6 +316,7 @@ def test_extract_corrupt_data(
     runner_metrics.extract(flavor, set())
 
     issue_event_mock.assert_not_called()
+    shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
 
     # 4. Runner has not a timestamp in installed_timestamp file inside shared fs
     runner_fs = _create_runner_files(
@@ -327,6 +330,7 @@ def test_extract_corrupt_data(
     runner_metrics.extract(flavor, set())
 
     issue_event_mock.assert_not_called()
+    shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
 
 
 def test_extract_raises_error_for_too_large_files(
@@ -335,7 +339,7 @@ def test_extract_raises_error_for_too_large_files(
     """
     arrange: Runners with too large metric and timestamp files.
     act: Call extract.
-    assert: No metric event is issued.
+    assert: No metric event is issued and shared filesystems is quarantined.
     """
     runner_metrics_data = RunnerMetrics(
         installed_timestamp=1,
@@ -369,6 +373,7 @@ def test_extract_raises_error_for_too_large_files(
     runner_metrics.extract(flavor, set())
 
     issue_event_mock.assert_not_called()
+    shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
 
     # 2. Runner has a post-job metrics file that is too large
     invalid_post_job_data = runner_metrics_data.post_job.copy(
@@ -385,6 +390,7 @@ def test_extract_raises_error_for_too_large_files(
     runner_metrics.extract(flavor, set())
 
     issue_event_mock.assert_not_called()
+    shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
 
     # 3. Runner has an installed_timestamp file that is too large
     invalid_ts = "1" * (runner_metrics.FILE_SIZE_BYTES_LIMIT + 1)
@@ -400,6 +406,7 @@ def test_extract_raises_error_for_too_large_files(
     runner_metrics.extract(flavor, set())
 
     issue_event_mock.assert_not_called()
+    shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
 
 
 def test_extract_ignores_filesystems_without_ts(

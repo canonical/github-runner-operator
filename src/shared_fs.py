@@ -3,6 +3,7 @@
 
 """Classes and functions to operate on the shared filesystem between the charm and the runners."""
 import shutil
+import tarfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterator
@@ -10,6 +11,7 @@ from typing import Iterator
 from errors import (
     CreateSharedFilesystemError,
     DeleteSharedFilesystemError,
+    QuarantineSharedFilesystemError,
     SharedFilesystemNotFoundError,
     SubprocessError,
 )
@@ -18,6 +20,7 @@ from utilities import execute_command
 FILESYSTEM_OWNER = "ubuntu:ubuntu"
 FILESYSTEM_BASE_PATH = Path("/home/ubuntu/runner-fs")
 FILESYSTEM_IMAGES_PATH = Path("/home/ubuntu/runner-fs-images")
+FILESYSTEM_QUARANTINE_PATH = Path("/home/ubuntu/runner-fs-quarantine")
 FILESYSTEM_SIZE = "1M"
 
 
@@ -66,6 +69,7 @@ def create(runner_name: str) -> SharedFilesystem:
     try:
         FILESYSTEM_BASE_PATH.mkdir(exist_ok=True)
         FILESYSTEM_IMAGES_PATH.mkdir(exist_ok=True)
+        FILESYSTEM_QUARANTINE_PATH.mkdir(exist_ok=True)
     except OSError as exc:
         raise CreateSharedFilesystemError(
             "Failed to create shared filesystem base path or images path"
@@ -168,3 +172,30 @@ def delete(runner_name: str) -> None:
         shutil.rmtree(runner_fs.path)
     except OSError as exc:
         raise DeleteSharedFilesystemError("Failed to remove shared filesystem") from exc
+
+
+def move_to_quarantine(runner_name: str) -> None:
+    """Archive the shared filesystem for the runner and delete it.
+
+    Args:
+        runner_name: The name of the runner.
+
+    Raises:
+        QuarantineSharedFilesystemError: If the shared filesystem could not be quarantined.
+        DeleteSharedFilesystemError: If the shared filesystem could not be deleted.
+    """
+    try:
+        runner_fs = get(runner_name)
+    except SharedFilesystemNotFoundError as exc:
+        raise QuarantineSharedFilesystemError() from exc
+
+    tarfile_path = FILESYSTEM_QUARANTINE_PATH.joinpath(runner_name).with_suffix(".tar.gz")
+    try:
+        with tarfile.open(tarfile_path, "w:gz") as tar:
+            tar.add(runner_fs.path, arcname=runner_fs.path.name)
+    except OSError as exc:
+        raise QuarantineSharedFilesystemError(
+            f"Failed to archive shared filesystem for runner {runner_name}"
+        ) from exc
+
+    delete(runner_name)

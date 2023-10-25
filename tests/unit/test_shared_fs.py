@@ -1,6 +1,7 @@
 #  Copyright 2023 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import secrets
+import tarfile
 from pathlib import Path
 from unittest.mock import MagicMock, Mock
 
@@ -12,16 +13,18 @@ import shared_fs
 from errors import SubprocessError
 
 
-@pytest.fixture(autouse=True, name="filesystem_base_path")
-def filesystem_base_path_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> Path:
+@pytest.fixture(autouse=True, name="filesystem_paths")
+def filesystem_paths_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> dict[str, Path]:
     """
-    Mock the hardcoded filesystem base path.
+    Mock the hardcoded filesystem paths.
     """
     fs_path = tmp_path / "runner-fs"
     fs_images_path = tmp_path / "images"
+    fs_quarantine_path = tmp_path / "quarantine"
     monkeypatch.setattr("shared_fs.FILESYSTEM_BASE_PATH", fs_path)
     monkeypatch.setattr("shared_fs.FILESYSTEM_IMAGES_PATH", fs_images_path)
-    return fs_path
+    monkeypatch.setattr("shared_fs.FILESYSTEM_QUARANTINE_PATH", fs_quarantine_path)
+    return {"base": fs_path, "images": fs_images_path, "quarantine": fs_quarantine_path}
 
 
 @pytest.fixture(autouse=True, name="exc_cmd_mock")
@@ -155,3 +158,35 @@ def test_get_raises_not_found_error():
 
     with pytest.raises(errors.SharedFilesystemNotFoundError):
         shared_fs.get(runner_name)
+
+
+def test_quarantine(filesystem_paths: dict[str, Path], tmp_path: Path):
+    """
+    arrange: Create a shared filesystem for a runner with a file in it.
+    act: Call quarantine.
+    assert: The shared filesystem is moved to the quarantine.
+    """
+    runner_name = secrets.token_hex(16)
+    fs = shared_fs.create(runner_name)
+    fs.path.joinpath("test.txt").write_text("foo bar")
+
+    shared_fs.move_to_quarantine(runner_name)
+
+    tarfile_path = filesystem_paths["quarantine"].joinpath(runner_name).with_suffix(".tar.gz")
+    assert tarfile_path.exists()
+    tarfile.open(tarfile_path).extractall(path=tmp_path)
+    assert tmp_path.joinpath(f"{runner_name}/test.txt").exists()
+    assert tmp_path.joinpath(f"{runner_name}/test.txt").read_text(encoding="utf-8") == "foo bar"
+    assert not fs.path.exists()
+
+
+def test_quarantine_raises_error():
+    """
+    arrange: Nothing.
+    act: Call quarantine.
+    assert: A QuarantineSharedFilesystemError is raised.
+    """
+    runner_name = secrets.token_hex(16)
+
+    with pytest.raises(errors.QuarantineSharedFilesystemError):
+        shared_fs.move_to_quarantine(runner_name)

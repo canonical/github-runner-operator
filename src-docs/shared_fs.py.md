@@ -12,7 +12,7 @@ Classes and functions to operate on the shared filesystem between the charm and 
 
 ---
 
-<a href="../src/shared_fs.py#L51"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L54"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create`
 
@@ -44,7 +44,7 @@ The method is not idempotent and will raise an exception if the shared filesyste
 
 ---
 
-<a href="../src/shared_fs.py#L103"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L107"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `list_all`
 
@@ -62,7 +62,7 @@ List the shared filesystems.
 
 ---
 
-<a href="../src/shared_fs.py#L117"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L121"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `get`
 
@@ -92,7 +92,7 @@ Get the shared filesystem for the runner.
 
 ---
 
-<a href="../src/shared_fs.py#L136"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L140"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `delete`
 
@@ -112,6 +112,32 @@ Delete the shared filesystem for the runner.
 
 **Raises:**
  
+ - <b>`DeleteSharedFilesystemError`</b>:  If the shared filesystem could not be deleted. 
+
+
+---
+
+<a href="../src/shared_fs.py#L177"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>function</kbd> `move_to_quarantine`
+
+```python
+move_to_quarantine(runner_name: str) → None
+```
+
+Archive the shared filesystem for the runner and delete it. 
+
+
+
+**Args:**
+ 
+ - <b>`runner_name`</b>:  The name of the runner. 
+
+
+
+**Raises:**
+ 
+ - <b>`QuarantineSharedFilesystemError`</b>:  If the shared filesystem could not be quarantined. 
  - <b>`DeleteSharedFilesystemError`</b>:  If the shared filesystem could not be deleted. 
 
 

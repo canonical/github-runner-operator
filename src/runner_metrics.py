@@ -209,27 +209,26 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
     Args:
         flavor: The flavor of the runners to extract metrics from.
         ignore_runners: The set of runners to ignore.
-
     """
     for fs in shared_fs.list_all():
-        if fs.runner_name not in ignore_runners:
+        if (runner_name := fs.runner_name) not in ignore_runners:
             try:
                 logger.debug(
-                    "Extracting metrics from shared filesystem for runner %s", fs.runner_name
+                    "Extracting metrics from shared filesystem for runner %s", runner_name
                 )
                 metrics_from_fs = _extract_metrics_from_fs(fs)
             except CorruptMetricDataError:
-                logger.exception("Corrupt metric data found for runner %s", fs.runner_name)
-                _clean_up_shared_fs(fs)
+                logger.exception("Corrupt metric data found for runner %s", runner_name)
+                shared_fs.move_to_quarantine(runner_name)
                 continue
 
             if metrics_from_fs:
                 try:
                     _issue_runner_metrics(runner_metrics=metrics_from_fs, flavor=flavor)
                 except errors.IssueMetricEventError:
-                    logger.exception("Not able to issue metrics for runner %s", fs.runner_name)
+                    logger.exception("Not able to issue metrics for runner %s", runner_name)
             else:
-                logger.warning("Not able to issue metrics for runner %s", fs.runner_name)
+                logger.warning("Not able to issue metrics for runner %s", runner_name)
 
-            logger.debug("Cleaning up shared filesystem for runner %s", fs.runner_name)
+            logger.debug("Cleaning up shared filesystem for runner %s", runner_name)
             _clean_up_shared_fs(fs)

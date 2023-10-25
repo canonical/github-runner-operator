@@ -99,6 +99,15 @@ Error for missing runner binary.
 
 ---
 
+## <kbd>class</kbd> `QuarantineSharedFilesystemError`
+Represents an error when the shared filesystem could not be quarantined. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `RunnerBinaryError`
 Error of getting runner binary. 
 

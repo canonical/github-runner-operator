@@ -114,6 +114,10 @@ class DeleteSharedFilesystemError(SharedFilesystemError):
     """Represents an error when the shared filesystem could not be deleted."""
 
 
+class QuarantineSharedFilesystemError(SharedFilesystemError):
+    """Represents an error when the shared filesystem could not be quarantined."""
+
+
 class SharedFilesystemNotFoundError(SharedFilesystemError):
     """Represents an error when the shared filesystem is not found."""
 
