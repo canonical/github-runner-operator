@@ -234,7 +234,7 @@ async def app_scheduled_events(
             "reconcile-interval": 8,
         },
     )
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 20)
 
     await application.set_config({"virtual-machines": "1"})
     await reconcile(app=application, model=model)
