@@ -178,9 +178,16 @@ def _clean_up_shared_fs(fs: shared_fs.SharedFilesystem) -> None:
     Args:
         fs: The shared filesystem for a specific runner.
     """
-    fs.path.joinpath(PRE_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
-    fs.path.joinpath(POST_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
-    fs.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).unlink(missing_ok=True)
+    try:
+        fs.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).unlink(missing_ok=True)
+        fs.path.joinpath(PRE_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
+        fs.path.joinpath(POST_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
+    except OSError:
+        logger.exception(
+            "Could not remove metric files for runner %s, "
+            "this may lead to duplicate metrics issued",
+            fs.runner_name,
+        )
 
     try:
         shared_fs.delete(fs.runner_name)
@@ -203,12 +210,18 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
         flavor: The flavor of the runners to extract metrics from.
         ignore_runners: The set of runners to ignore.
 
-    Raises:
-        CorruptMetricDataError: If one of the files inside the shared filesystem is not valid.
     """
     for fs in shared_fs.list_all():
         if fs.runner_name not in ignore_runners:
-            metrics_from_fs = _extract_metrics_from_fs(fs)
+            try:
+                logger.debug(
+                    "Extracting metrics from shared filesystem for runner %s", fs.runner_name
+                )
+                metrics_from_fs = _extract_metrics_from_fs(fs)
+            except CorruptMetricDataError:
+                logger.exception("Corrupt metric data found for runner %s", fs.runner_name)
+                _clean_up_shared_fs(fs)
+                continue
 
             if metrics_from_fs:
                 try:

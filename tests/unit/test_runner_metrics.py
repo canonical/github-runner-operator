@@ -247,7 +247,9 @@ def test_extract_ignores_runners(
         assert call((runner_filesystems[i].runner_name,)) not in shared_fs_mock.delete.mock_calls
 
 
-def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
+def test_extract_corrupt_data(
+    tmp_path: Path, shared_fs_mock: MagicMock, issue_event_mock: MagicMock
+):
     """
     arrange:
         1. A runner with non-compliant pre-job metrics inside shared fs
@@ -255,7 +257,7 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
         3. A runner with json array post-job metrics inside shared fs
         4. A runner with no real timestamp in installed_timestamp file inside shared fs
     act: Call extract
-    assert: CorruptDataError raised in all cases.
+    assert: No metric event is issued.
     """
     runner_metrics_data = RunnerMetrics(
         installed_timestamp=1,
@@ -283,8 +285,9 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
 
     flavor = secrets.token_hex(16)
 
-    with pytest.raises(errors.CorruptMetricDataError):
-        runner_metrics.extract(flavor, set())
+    runner_metrics.extract(flavor, set())
+
+    issue_event_mock.assert_not_called()
 
     # 2. Runner has non-json post-job metrics inside shared fs
     runner_fs = _create_runner_files(
@@ -295,8 +298,9 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    with pytest.raises(errors.CorruptMetricDataError):
-        runner_metrics.extract(flavor, set())
+    runner_metrics.extract(flavor, set())
+
+    issue_event_mock.assert_not_called()
 
     # 3. Runner has json post-job metrics but a json array (not object) inside shared fs.
     runner_fs = _create_runner_files(
@@ -307,8 +311,9 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    with pytest.raises(errors.CorruptMetricDataError):
-        runner_metrics.extract(flavor, set())
+    runner_metrics.extract(flavor, set())
+
+    issue_event_mock.assert_not_called()
 
     # 4. Runner has not a timestamp in installed_timestamp file inside shared fs
     runner_fs = _create_runner_files(
@@ -319,15 +324,18 @@ def test_extract_raises_errors(tmp_path: Path, shared_fs_mock: MagicMock):
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    with pytest.raises(errors.CorruptMetricDataError):
-        runner_metrics.extract(flavor, set())
+    runner_metrics.extract(flavor, set())
+
+    issue_event_mock.assert_not_called()
 
 
-def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock: MagicMock):
+def test_extract_raises_error_for_too_large_files(
+    tmp_path: Path, shared_fs_mock: MagicMock, issue_event_mock: MagicMock
+):
     """
     arrange: Runners with too large metric and timestamp files.
     act: Call extract.
-    assert: CorruptDataError raised  in all cases.
+    assert: No metric event is issued.
     """
     runner_metrics_data = RunnerMetrics(
         installed_timestamp=1,
@@ -358,8 +366,9 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
 
     flavor = secrets.token_hex(16)
 
-    with pytest.raises(errors.CorruptMetricDataError):
-        runner_metrics.extract(flavor, set())
+    runner_metrics.extract(flavor, set())
+
+    issue_event_mock.assert_not_called()
 
     # 2. Runner has a post-job metrics file that is too large
     invalid_post_job_data = runner_metrics_data.post_job.copy(
@@ -373,8 +382,9 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    with pytest.raises(errors.CorruptMetricDataError):
-        runner_metrics.extract(flavor, set())
+    runner_metrics.extract(flavor, set())
+
+    issue_event_mock.assert_not_called()
 
     # 3. Runner has an installed_timestamp file that is too large
     invalid_ts = "1" * (runner_metrics.FILE_SIZE_BYTES_LIMIT + 1)
@@ -387,8 +397,9 @@ def test_extract_raises_error_for_too_large_files(tmp_path: Path, shared_fs_mock
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    with pytest.raises(errors.CorruptMetricDataError):
-        runner_metrics.extract(flavor, set())
+    runner_metrics.extract(flavor, set())
+
+    issue_event_mock.assert_not_called()
 
 
 def test_extract_ignores_filesystems_without_ts(
