@@ -7,16 +7,20 @@ import secrets
 import subprocess
 import zipfile
 from pathlib import Path
-from typing import Any, AsyncIterator
+from time import sleep
+from typing import Any, AsyncIterator, Iterator, Optional
 
 import pytest
 import pytest_asyncio
 import yaml
+from github import Github, GithubException
+from github.Branch import Branch
+from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-from tests.integration.helpers import create_runner
+from tests.integration.helpers import ensure_charm_has_runner, reconcile
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
@@ -36,15 +40,12 @@ def app_name() -> str:
 
 
 @pytest.fixture(scope="module")
-def charm_file(pytestconfig: pytest.Config) -> str:
+def charm_file(pytestconfig: pytest.Config, loop_device: Optional[str]) -> str:
     """Path to the built charm."""
     charm = pytestconfig.getoption("--charm-file")
     assert charm, "Please specify the --charm-file command line option"
 
-    with zipfile.ZipFile(charm, mode="a") as charm_file:
-        charm_file.writestr(
-            "lxd-profile.yaml",
-            """config:
+    lxd_profile_str = """config:
     security.nesting: true
     security.privileged: true
     raw.lxc: |
@@ -57,7 +58,20 @@ devices:
         path: /dev/kmsg
         source: /dev/kmsg
         type: unix-char
-""",
+"""
+    if loop_device:
+        lxd_profile_str += f"""    loop-control:
+        path: /dev/loop-control
+        type: unix-char
+    loop14:
+        path: {loop_device}
+        type: unix-block
+"""
+
+    with zipfile.ZipFile(charm, mode="a") as charm_file:
+        charm_file.writestr(
+            "lxd-profile.yaml",
+            lxd_profile_str,
         )
     return f"./{charm}"
 
@@ -106,6 +120,12 @@ def no_proxy(pytestconfig: pytest.Config) -> str:
     """Configured no_proxy setting."""
     no_proxy = pytestconfig.getoption("--no-proxy")
     return "" if no_proxy is None else no_proxy
+
+
+@pytest.fixture(scope="module")
+def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
+    """Configured loop_device setting."""
+    return pytestconfig.getoption("--loop-device")
 
 
 @pytest.fixture(scope="module")
@@ -164,7 +184,7 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
-    await create_runner(app=app_no_runner, model=model)
+    await ensure_charm_has_runner(app=app_no_runner, model=model)
 
     yield app_no_runner
 
@@ -214,12 +234,78 @@ async def app_scheduled_events(
             "reconcile-interval": 8,
         },
     )
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
-    unit = application.units[0]
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 20)
 
     await application.set_config({"virtual-machines": "1"})
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await reconcile(app=application, model=model)
 
     yield application
+
+
+@pytest.fixture(scope="module")
+def github_client(token: str) -> Github:
+    """Returns the github client."""
+    return Github(token)
+
+
+@pytest.fixture(scope="module")
+def github_repository(github_client: Github, path: str) -> Repository:
+    """Returns client to the Github repository."""
+    return github_client.get_repo(path)
+
+
+@pytest.fixture(scope="module")
+def forked_github_repository(
+    github_repository: Repository,
+) -> Iterator[Repository]:
+    """Create a fork for a GitHub repository."""
+    forked_repository = github_repository.create_fork(name=f"test-{github_repository.name}")
+
+    # Wait for repo to be ready
+    for _ in range(10):
+        try:
+            sleep(10)
+            forked_repository.get_branches()
+            break
+        except GithubException:
+            pass
+    else:
+        assert False, "timed out whilst waiting for repository creation"
+
+    yield forked_repository
+
+    # Parallel runs of this test module is allowed. Therefore, the forked repo is not removed.
+
+
+@pytest.fixture(scope="module")
+def forked_github_branch(
+    github_repository: Repository, forked_github_repository: Repository
+) -> Iterator[Branch]:
+    """Create a new forked branch for testing."""
+    branch_name = f"test/{secrets.token_hex(4)}"
+
+    # Other tests change the default branch of the forked repo. Therefore, we need to get the
+    # default branch name of the original repository again (because some tests require signed
+    # commits, which should be present on the original default branch).
+    main_branch = forked_github_repository.get_branch(github_repository.default_branch)
+    branch_ref = forked_github_repository.create_git_ref(
+        ref=f"refs/heads/{branch_name}", sha=main_branch.commit.sha
+    )
+
+    for _ in range(10):
+        try:
+            branch = forked_github_repository.get_branch(branch_name)
+            break
+        except GithubException as err:
+            if err.status == 404:
+                sleep(5)
+                continue
+            raise
+    else:
+        assert (
+            False
+        ), "Failed to get created branch in fork repo, the issue with GitHub or network."
+
+    yield branch
+
+    branch_ref.delete()

@@ -12,7 +12,7 @@ Models and functions for the metric events.
 
 ---
 
-<a href="../src/metrics.py#L79"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L98"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 
@@ -30,14 +30,16 @@ The metric event is logged to the metrics log.
  
  - <b>`event`</b>:  The metric event to log. 
 
+
+
 **Raises:**
  
- - <b>`OSError`</b>:  If an error occurs while writing the metrics log. 
+ - <b>`IssueMetricEventError`</b>:  If the event cannot be logged. 
 
 
 ---
 
-<a href="../src/metrics.py#L126"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L149"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `setup_logrotate`
 
@@ -59,7 +61,12 @@ Configure logrotate for the metrics log.
 ## <kbd>class</kbd> `Event`
 Base class for metric events. 
 
-Attrs:  timestamp: The UNIX time stamp of the time at which the event was originally issued.  event: The name of the event. Will be set to the class name in snake case if not provided. 
+
+
+**Attributes:**
+ 
+ - <b>`timestamp`</b>:  The UNIX time stamp of the time at which the event was originally issued. 
+ - <b>`event`</b>:  The name of the event. Will be set to the class name in snake case if not provided. 
 
 <a href="../src/metrics.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
@@ -87,7 +94,48 @@ Initialize the event.
 ## <kbd>class</kbd> `RunnerInstalled`
 Metric event for when a runner is installed. 
 
-Attrs:  flavor: Describes the characteristics of the runner.  The flavour could be for example "small".  duration: The duration of the installation in seconds. 
+
+
+**Attributes:**
+ 
+ - <b>`flavor`</b>:  Describes the characteristics of the runner.  The flavor could be for example "small". 
+ - <b>`duration`</b>:  The duration of the installation in seconds. 
+
+<a href="../src/metrics.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(*args, **kwargs)
+```
+
+Initialize the event. 
+
+
+
+**Args:**
+ 
+ - <b>`*args`</b>:  The positional arguments to pass to the base class. 
+ - <b>`**kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `RunnerStart`
+Metric event for when a runner is started. 
+
+
+
+**Attributes:**
+ 
+ - <b>`flavor`</b>:  Describes the characteristics of the runner.  The flavor could be for example "small". 
+ - <b>`workflow`</b>:  The workflow name. 
+ - <b>`repo`</b>:  The repository name. 
+ - <b>`github_event`</b>:  The github event. 
+ - <b>`idle`</b>:  The idle time in seconds. 
 
 <a href="../src/metrics.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 

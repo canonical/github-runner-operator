@@ -29,6 +29,8 @@ def mocks(monkeypatch, tmp_path, exec_command):
         "firewall.Firewall.get_host_ip", unittest.mock.MagicMock(return_value="10.0.0.1")
     )
     monkeypatch.setattr("firewall.Firewall.refresh_firewall", unittest.mock.MagicMock())
+    monkeypatch.setattr("runner.execute_command", exec_command)
+    monkeypatch.setattr("runner.shared_fs", unittest.mock.MagicMock())
     monkeypatch.setattr("metrics.execute_command", exec_command)
     monkeypatch.setattr("metrics.METRICS_LOG_PATH", Path(tmp_path / "metrics.log"))
     monkeypatch.setattr("metrics.LOGROTATE_CONFIG", Path(tmp_path / "github-runner-metrics"))
@@ -37,6 +39,7 @@ def mocks(monkeypatch, tmp_path, exec_command):
     monkeypatch.setattr("runner_manager.GhApi", MockGhapiClient)
     monkeypatch.setattr("runner_manager.jinja2", unittest.mock.MagicMock())
     monkeypatch.setattr("runner_manager.LxdClient", MockLxdClient)
+    monkeypatch.setattr("runner_manager.shared_fs", unittest.mock.MagicMock())
     monkeypatch.setattr(
         "runner_manager.RepoPolicyComplianceClient", MockRepoPolicyComplianceClient
     )

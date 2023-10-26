@@ -9,8 +9,44 @@ Errors used by the charm.
 
 ---
 
+## <kbd>class</kbd> `CorruptMetricDataError`
+Represents an error with the data being corrupt. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `CreateSharedFilesystemError`
+Represents an error when the shared filesystem could not be created. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `DeleteSharedFilesystemError`
+Represents an error when the shared filesystem could not be deleted. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `IssueMetricEventError`
+Represents an error when issuing a metric event. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `LogrotateSetupError`
-Error raised when logrotate cannot be setup. 
+Represents an error raised when logrotate cannot be setup. 
 
 
 
@@ -63,6 +99,15 @@ Error for missing runner binary.
 
 ---
 
+## <kbd>class</kbd> `QuarantineSharedFilesystemError`
+Represents an error when the shared filesystem could not be quarantined. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `RunnerBinaryError`
 Error of getting runner binary. 
 
@@ -108,6 +153,15 @@ Error for loading file on runner.
 
 ---
 
+## <kbd>class</kbd> `RunnerMetricsError`
+Base class for all runner metrics errors. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `RunnerRemoveError`
 Error for runner removal failure. 
 
@@ -119,6 +173,24 @@ Error for runner removal failure.
 
 ## <kbd>class</kbd> `RunnerStartError`
 Error for runner start failure. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `SharedFilesystemError`
+Base class for all shared filesystem errors. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `SharedFilesystemNotFoundError`
+Represents an error when the shared filesystem is not found. 
 
 
 

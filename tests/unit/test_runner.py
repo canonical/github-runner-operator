@@ -8,11 +8,14 @@ import unittest
 from pathlib import Path
 from unittest.mock import MagicMock
 
+import jinja2
 import pytest
+from _pytest.monkeypatch import MonkeyPatch
 
-from errors import RunnerCreateError, RunnerRemoveError
+from errors import CreateSharedFilesystemError, RunnerCreateError, RunnerRemoveError
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
+from shared_fs import SharedFilesystem
 from tests.unit.mock import (
     MockLxdClient,
     MockRepoPolicyComplianceClient,
@@ -51,6 +54,40 @@ def mock_lxd_client_fixture():
     return MockLxdClient()
 
 
+@pytest.fixture(autouse=True, scope="function", name="shared_fs")
+def shared_fs_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
+    """Mock the module for handling the Shared Filesystem."""
+    mock = MagicMock()
+    monkeypatch.setattr("runner.shared_fs", mock)
+    return mock
+
+
+@pytest.fixture(autouse=True, scope="function", name="exc_cmd_mock")
+def exc_command_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
+    """Mock the execution of a command."""
+    exc_cmd_mock = MagicMock()
+    monkeypatch.setattr("runner.execute_command", exc_cmd_mock)
+    return exc_cmd_mock
+
+
+@pytest.fixture(scope="function", name="jinja")
+def jinja2_environment_fixture() -> MagicMock:
+    """Mock the jinja2 environment.
+
+    Provides distinct mocks for each template.
+    """
+    jinja2_mock = MagicMock(spec=jinja2.Environment)
+    template_mocks = {
+        "start.j2": MagicMock(),
+        "pre-job.j2": MagicMock(),
+        "env.j2": MagicMock(),
+        "environment.j2": MagicMock(),
+        "systemd-docker-proxy.j2": MagicMock(),
+    }
+    jinja2_mock.get_template.side_effect = lambda x: template_mocks.get(x, MagicMock())
+    return jinja2_mock
+
+
 @pytest.fixture(
     scope="function",
     name="runner",
@@ -62,16 +99,18 @@ def mock_lxd_client_fixture():
         ),
     ],
 )
-def runner_fixture(request, lxd: MockLxdClient, tmp_path: Path):
+def runner_fixture(request, lxd: MockLxdClient, jinja: MagicMock, tmp_path: Path):
     client = RunnerClients(
         MagicMock(),
-        MagicMock(),
+        jinja,
         lxd,
         MockRepoPolicyComplianceClient(),
     )
     pool_path = tmp_path / "test_storage"
     pool_path.mkdir(exist_ok=True)
-    config = RunnerConfig("test_app", request.param[0], request.param[1], pool_path, "test_runner")
+    config = RunnerConfig(
+        "test_app", request.param[0], request.param[1], pool_path, "test_runner", False
+    )
     status = RunnerStatus()
     return Runner(
         client,
@@ -148,6 +187,73 @@ def test_create_runner_fail(
 
     with pytest.raises(RunnerCreateError):
         runner.create("test_image", vm_resources, binary_path, token)
+
+
+def test_create_with_metrics(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    token: str,
+    binary_path: Path,
+    lxd: MockLxdClient,
+    shared_fs: MagicMock,
+    exc_cmd_mock: MagicMock,
+    jinja: MagicMock,
+):
+    """
+    arrange: Config the runner to issue metrics and mock the shared filesystem.
+    act: Create a runner.
+    assert: The command for adding a device has been executed and the templates are
+        rendered to issue metrics.
+    """
+
+    runner.config.issue_metrics = True
+    shared_fs.create.return_value = SharedFilesystem(
+        path=Path("/home/ubuntu/shared_fs"), runner_name="test_runner"
+    )
+    runner.create("test_image", vm_resources, binary_path, token)
+
+    exc_cmd_mock.assert_called_once_with(
+        [
+            "sudo",
+            "lxc",
+            "config",
+            "device",
+            "add",
+            "test_runner",
+            "metrics",
+            "disk",
+            "source=/home/ubuntu/shared_fs",
+            "path=/metrics-exchange",
+        ],
+        check_exit=True,
+    )
+
+    jinja.get_template("start.j2").render.assert_called_once_with(issue_metrics=True)
+    jinja.get_template("pre-job.j2").render.assert_called_once()
+    assert "issue_metrics" in jinja.get_template("pre-job.j2").render.call_args[1]
+
+
+def test_create_with_metrics_and_shared_fs_error(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    token: str,
+    binary_path: Path,
+    lxd: MockLxdClient,
+    shared_fs: MagicMock,
+):
+    """
+    arrange: Config the runner to issue metrics and mock the shared filesystem module
+     to throw an expected error.
+    act: Create a runner.
+    assert: The runner is created despite the error on the shared filesystem.
+    """
+    runner.config.issue_metrics = True
+    shared_fs.create.side_effect = CreateSharedFilesystemError("")
+
+    runner.create("test_image", vm_resources, binary_path, token)
+
+    instances = lxd.instances.all()
+    assert len(instances) == 1
 
 
 def test_remove(

@@ -20,7 +20,16 @@ from typing import Iterable, Optional, Sequence
 
 import yaml
 
-from errors import LxdError, RunnerCreateError, RunnerError, RunnerFileLoadError, RunnerRemoveError
+import shared_fs
+from errors import (
+    CreateSharedFilesystemError,
+    LxdError,
+    RunnerCreateError,
+    RunnerError,
+    RunnerFileLoadError,
+    RunnerRemoveError,
+    SubprocessError,
+)
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
 from runner_type import (
@@ -31,7 +40,7 @@ from runner_type import (
     RunnerStatus,
     VirtualMachineResources,
 )
-from utilities import retry
+from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
 LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
@@ -91,6 +100,8 @@ class Runner:
         self.status = runner_status
         self.instance = instance
 
+        self._shared_fs: Optional[shared_fs.SharedFilesystem] = None
+
         # If the proxy setting are set, then add NO_PROXY local variables.
         if self.config.proxies.get("http") or self.config.proxies.get("https"):
             if self.config.proxies.get("no_proxy"):
@@ -117,6 +128,15 @@ class Runner:
         """
         logger.info("Creating runner: %s", self.config.name)
 
+        if self.config.issue_metrics:
+            try:
+                self._shared_fs = shared_fs.create(self.config.name)
+            except CreateSharedFilesystemError:
+                logger.exception(
+                    "Unable to create shared filesystem for runner %s. "
+                    "Will not create metrics for this runner.",
+                    self.config.name,
+                )
         try:
             self.instance = self._create_instance(image, resources)
             self._start_instance()
@@ -125,6 +145,7 @@ class Runner:
             self._wait_boot_up()
             self._install_binary(binary_path)
             self._configure_runner()
+
             self._register_runner(registration_token, labels=[self.config.app_name, image])
             self._start_runner()
         except (RunnerError, LxdError) as err:
@@ -213,6 +234,35 @@ class Runner:
                 runner_id=self.status.runner_id,
             )
 
+    def _add_shared_filesystem(self, path: Path) -> None:
+        """Add the shared filesystem to the runner instance.
+
+        Args:
+            path: Path to the shared filesystem.
+        """
+        try:
+            execute_command(
+                [
+                    "sudo",
+                    "lxc",
+                    "config",
+                    "device",
+                    "add",
+                    self.config.name,
+                    "metrics",
+                    "disk",
+                    f"source={path}",
+                    "path=/metrics-exchange",
+                ],
+                check_exit=True,
+            )
+        except SubprocessError:
+            logger.exception(
+                "Unable to add shared filesystem to runner %s. "
+                "Will not create metrics for this runner.",
+                self.config.name,
+            )
+
     @retry(tries=5, delay=1, local_logger=logger)
     def _create_instance(
         self, image: str, resources: VirtualMachineResources, ephemeral: bool = True
@@ -263,6 +313,10 @@ class Runner:
             raise
 
         self.status.exist = True
+
+        if self._shared_fs:
+            self._add_shared_filesystem(self._shared_fs.path)
+
         return instance
 
     @retry(tries=5, delay=1, local_logger=logger)
@@ -486,6 +540,14 @@ class Runner:
             )
             raise RunnerFileLoadError(f"Failed to load runner binary on {self.config.name}")
 
+    def _should_render_templates_with_metrics(self) -> bool:
+        """Whether to render templates with metrics.
+
+        Returns:
+            True if the runner should render templates with metrics.
+        """
+        return self._shared_fs is not None
+
     @retry(tries=5, delay=10, max_delay=60, backoff=2, local_logger=logger)
     def _configure_runner(self) -> None:
         """Load configuration on to the runner.
@@ -497,7 +559,9 @@ class Runner:
             raise RunnerError("Runner operation called prior to runner creation.")
 
         # Load the runner startup script.
-        startup_contents = self._clients.jinja.get_template("start.j2").render()
+        startup_contents = self._clients.jinja.get_template("start.j2").render(
+            issue_metrics=self._should_render_templates_with_metrics()
+        )
         self._put_file(str(self.runner_script), startup_contents, mode="0755")
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
@@ -507,7 +571,9 @@ class Runner:
         host_ip, _ = bridge_address_range.split("/")
         one_time_token = self._clients.repo.get_one_time_token()
         pre_job_contents = self._clients.jinja.get_template("pre-job.j2").render(
-            host_ip=host_ip, one_time_token=one_time_token
+            host_ip=host_ip,
+            one_time_token=one_time_token,
+            issue_metrics=self._should_render_templates_with_metrics(),
         )
         self._put_file(str(self.pre_job_script), pre_job_contents)
         self.instance.execute(

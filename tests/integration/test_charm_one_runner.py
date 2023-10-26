@@ -11,6 +11,7 @@ from charm import GithubRunnerCharm
 from tests.integration.helpers import (
     assert_resource_lxd_profile,
     get_runner_names,
+    reconcile,
     run_in_lxd_instance,
     run_in_unit,
     start_test_http_server,
@@ -172,9 +173,7 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
     # 1.
     await app.set_config({"virtual-machines": "0"})
 
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await reconcile(app=app, model=model)
     await wait_till_num_of_runners(unit, 0)
 
     exit_code, _ = await run_in_unit(unit, f"rm -rf {GithubRunnerCharm.ram_pool_path}/*")
@@ -183,8 +182,6 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
     # 2.
     await app.set_config({"virtual-machines": "1"})
 
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await reconcile(app=app, model=model)
 
     await wait_till_num_of_runners(unit, 1)

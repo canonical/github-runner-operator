@@ -18,6 +18,8 @@ from runner_manager import RunnerManager
 from tests.status_name import ACTIVE_STATUS_NAME
 from utilities import retry
 
+DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
+
 
 async def check_runner_binary_exists(unit: Unit) -> bool:
     """Checks if runner binary exists in the charm.
@@ -241,16 +243,40 @@ EOT""",
         assert False, "Timeout waiting for HTTP server to start up"
 
 
-async def create_runner(app: Application, model: Model) -> None:
-    """Let the charm create a runner.
+async def ensure_charm_has_runner(app: Application, model: Model) -> None:
+    """Reconcile the charm to contain one runner.
 
     Args:
         app: The GitHub Runner Charm app to create the runner for.
         model: The machine charm model.
     """
     await app.set_config({"virtual-machines": "1"})
-    unit = app.units[0]
-    action = await unit.run_action("reconcile-runners")
+    await reconcile(app=app, model=model)
+    await wait_till_num_of_runners(unit=app.units[0], num=1)
+
+
+async def get_runner_name(unit: Unit) -> str:
+    """Get the name of the runner.
+
+    Expects only one runner to be present.
+
+    Args:
+        unit: The GitHub Runner Charm unit to get the runner name for.
+    """
+    runners = await get_runner_names(unit)
+    assert len(runners) == 1
+    return runners[0]
+
+
+async def reconcile(app: Application, model: Model) -> None:
+    """Reconcile the runners.
+
+    Uses the first unit found in the application for the reconciliation.
+
+    Args:
+        app: The GitHub Runner Charm app to reconcile the runners for.
+        model: The machine charm model.
+    """
+    action = await app.units[0].run_action("reconcile-runners")
     await action.wait()
     await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
-    await wait_till_num_of_runners(unit, 1)
