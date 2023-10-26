@@ -14,12 +14,12 @@ Classes and function to extract the metrics from a shared filesystem.
 
 ---
 
-<a href="../src/runner_metrics.py#L198"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_metrics.py#L228"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `extract`
 
 ```python
-extract(flavor: str, ignore_runners: set[str]) → None
+extract(flavor: str, ignore_runners: set[str]) → dict[Type[Event], int]
 ```
 
 Extract and issue metrics from runners. 
@@ -36,6 +36,11 @@ If corrupt data is found, an error is raised immediately, as this may indicate t
  - <b>`ignore_runners`</b>:  The set of runners to ignore. 
 
 
+
+**Returns:**
+ A dictionary containing the number of issued events per event type. 
+
+
 ---
 
 ## <kbd>class</kbd> `PostJobMetrics`
@@ -47,6 +52,15 @@ Metrics for the post-job phase of a runner.
  
  - <b>`timestamp`</b>:  The UNIX time stamp of the time at which the event was originally issued. 
  - <b>`status`</b>:  The status of the job. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `PostJobStatus`
+The status of the post-job phase of a runner. 
 
 
 

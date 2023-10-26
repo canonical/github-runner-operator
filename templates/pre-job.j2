@@ -84,6 +84,21 @@ if [[ $REPO_CHECK -ne 0 ]]; then
   # Killing the runner.Listener process to stop the runner application. This will prevent jobs from being executed.
   pkill -2 Runner.Listener
 
+
+    {% if issue_metrics %}
+        # Write Post Job metrics with status "repo-policy-check-failure" .
+        # We write it here, rather than relying on the post-job script,
+        # as it may not run due to the poweroff command below.
+        post_job_timestamp=$(date +%s)
+
+        jq -n \
+          --argjson timestamp "$post_job_timestamp" \
+          '{
+            "timestamp": $timestamp,
+            "status": "repo-policy-check-failure"
+          }' > /metrics-exchange/post-job-metrics.json || true
+    {% endif %}
+
   # Shutdown the instance as a safe guard. The time delay is needed for the runner application to upload the logs.
   bash -c "sleep 10; sudo systemctl poweroff -i" &
 

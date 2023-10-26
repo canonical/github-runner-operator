@@ -95,6 +95,44 @@ class RunnerStart(Event):
     idle: NonNegativeFloat
 
 
+class RunnerStop(Event):
+    """Metric event for when a runner is stopped.
+
+    Attributes:
+        flavor: Describes the characteristics of the runner.
+          The flavor could be for example "small".
+        workflow: The workflow name.
+        repo: The repository name.
+        github_event: The github event.
+        status: A string describing the reason for stopping the runner.
+        job_duration: The duration of the job in seconds.
+    """
+
+    flavor: str
+    workflow: str
+    repo: str
+    github_event: str
+    status: str
+    job_duration: NonNegativeFloat
+
+
+class Reconciliation(Event):
+    """Metric event for when the charm has finished reconciliation.
+
+    Attributes:
+        flavor: Describes the characteristics of the runner.
+          The flavor could be for example "small".
+        crashed_runners: The number of crashed runners.
+        idle_runners: The number of idle runners.
+        duration: The duration of the reconciliation in seconds.
+    """
+
+    flavor: str
+    crashed_runners: int
+    idle_runners: int
+    duration: NonNegativeFloat
+
+
 def issue_event(event: Event) -> None:
     """Issue a metric event.
 
