@@ -17,6 +17,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Optional, Sequence
+from urllib.parse import urljoin, urlsplit, urlunsplit
 
 import yaml
 
@@ -499,8 +500,8 @@ class Runner:
         self._apt_install(["docker.io", "npm", "python3-pip", "shellcheck", "jq", "wget"])
         self._wget_install(
             [
-                WgetExecutable(
-                    url="https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64",
+                yq_executable := WgetExecutable(
+                    url="https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64",
                     cmd="yq",
                 )
             ]
@@ -751,6 +752,28 @@ class Runner:
 
         self.instance.execute(["/usr/bin/apt-get", "clean"])
 
+    def _wget_download(self, url: str, path: str) -> None:
+        """Download the file to path.
+
+        Args:
+            url: URL to download from.
+            path: Path to store the file.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        logger.info("Downloading %s via wget to %s...", url, path)
+        wget_cmd = ["/usr/bin/wget", url, "-O", path]
+        if self.config.proxies.get("http", None) or self.config.proxies.get("https", None):
+            wget_cmd += ["-e", "use_proxy=on"]
+        if self.config.proxies.get("http", None):
+            wget_cmd += ["-e", f"http_proxy={self.config.proxies['http']}"]
+        if self.config.proxies.get("https", None):
+            wget_cmd += ["-e", f"https_proxy={self.config.proxies['https']}"]
+        if self.config.proxies.get("no_proxy", None):
+            wget_cmd += ["-e", f"no_proxy={self.config.proxies['no_proxy']}"]
+        self.instance.execute(wget_cmd)
+
     def _wget_install(self, executables: Iterable[WgetExecutable]) -> None:
         """Installs the given binaries.
 
@@ -765,15 +788,60 @@ class Runner:
 
         for executable in executables:
             executable_path = f"/usr/bin/{executable.cmd}"
-            logger.info("Downloading %s via wget to %s...", executable.url, executable_path)
-            wget_cmd = ["/usr/bin/wget", executable.url, "-O", executable_path]
-            if self.config.proxies.get("http", None) or self.config.proxies.get("https", None):
-                wget_cmd += ["-e", "use_proxy=on"]
-            if self.config.proxies.get("http", None):
-                wget_cmd += ["-e", f"http_proxy={self.config.proxies['http']}"]
-            if self.config.proxies.get("https", None):
-                wget_cmd += ["-e", f"https_proxy={self.config.proxies['https']}"]
-            if self.config.proxies.get("no_proxy", None):
-                wget_cmd += ["-e", f"no_proxy={self.config.proxies['no_proxy']}"]
-            self.instance.execute(wget_cmd)
+            self._wget_download(executable.url, executable_path)
             self.instance.execute(["/usr/bin/chmod", "+x", executable_path])
+
+    def _execute(self, cmd: list[str], cwd: str | None = None) -> tuple[str, str]:
+        """Execute command in runner instance.
+
+        Args:
+            cmd: Commands to be executed.
+            cwd: Working directory to execute the commands.
+
+        Returns:
+            Tuple containing the stdout, stderr.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        return_code, stdout, stderr = self.instance.execute(cmd, cwd)
+        stdout_str = stdout.read().decode("utf-8")
+        stderr_str = stderr.read().decode("utf-8")
+
+        if return_code != 0:
+            raise RunnerError(
+                "Command %s failed with code %i in runner %s: %s",
+                " ".join(cmd),
+                return_code,
+                self.config.name,
+                stderr_str,
+            )
+
+        return stdout_str, stderr_str
+
+    def _verify_yq_checksum(self, yq_executable: WgetExecutable) -> None:
+        """Verify the checksum is correct for the yq executable.
+
+        Args:
+            yq_executable: Information on yq executable to check.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        split_url = urlsplit(yq_executable.url)
+        # Extract the base download path
+        split_url.path, executable_name = split_url.path.rsplit("/", 1)
+        base_url = urlunsplit(split_url)
+
+        self._wget_download(urljoin(base_url, "checksums"))
+        self._wget_download(urljoin(base_url, "extract-checksum.sh"))
+
+        stdout, _ = self._execute(["bash", "extract-checksum.sh", "SHA-256", executable_name])
+        expected_checksum = stdout.rsplit(maxsplit=1)[1]
+
+        yq_path, _ = self._execute(["which", yq_executable.cmd])
+        stdout, _ = self._execute(["sha256sum", yq_path])
+        calculated_checksum = stdout.lsplit(maxsplit=1)[0]
+
+        if expected_checksum != calculated_checksum:
+            raise RunnerError("Checksum mismatch for yq executable")
