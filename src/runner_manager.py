@@ -486,6 +486,9 @@ class RunnerManager:
             len(runner_states.unhealthy),
         )
 
+        if self.config.charm_state.is_metrics_logging_available:
+            metric_stats = self._issue_runner_metrics()
+
         # Clean up offline runners
         if runner_states.unhealthy:
             logger.info("Cleaning up unhealthy runners.")
@@ -511,7 +514,6 @@ class RunnerManager:
 
         if self.config.charm_state.is_metrics_logging_available:
             end_ts = time.time()
-            metric_stats = self._issue_runner_metrics()
             self._issue_reconciliation_metric(
                 metric_stats=metric_stats,
                 reconciliation_start_ts=start_ts,
