@@ -135,28 +135,27 @@ async def _integrate_apps(app: Application, model: Model):
     await model.wait_for_idle(apps=[grafana_agent.name])
 
 
-async def _wait_until_runner_is_used_up(unit: Unit):
+async def _wait_until_runner_is_used_up(runner_name: str, unit: Unit):
     """Wait until the runner is used up.
 
     Args:
+        runner_name: The runner name to wait for.
         unit: The unit which contains the runner.
     """
-    runner = await get_runner_name(unit)
-
     for _ in range(30):
         runners = await get_runner_names(unit)
-        if runner not in runners:
+        if runner_name not in runners:
             break
         sleep(30)
     else:
         assert False, "Timeout while waiting for the runner to be used up"
 
 
-async def _assert_workflow_run_conclusion(app: Application, conclusion: str, workflow: Workflow):
+async def _assert_workflow_run_conclusion(runner_name: str, conclusion: str, workflow: Workflow):
     """Assert that the workflow run has the expected conclusion.
 
     Args:
-        app: The charm to assert the workflow run conclusion for.
+        runner_name: The runner name to assert the workflow run conclusion for.
         conclusion: The expected workflow run conclusion.
         workflow: The workflow to assert the workflow run conclusion for.
     """
@@ -164,29 +163,32 @@ async def _assert_workflow_run_conclusion(app: Application, conclusion: str, wor
         logs_url = run.jobs()[0].logs_url()
         logs = requests.get(logs_url).content.decode("utf-8")
 
-        if f"Job is about to start running on the runner: {app.name}-" in logs:
+        if f"Job is about to start running on the runner: {runner_name}" in logs:
             assert run.jobs()[0].conclusion == conclusion
 
 
-async def _wait_for_workflow_to_complete(app: Application, workflow: Workflow, conclusion: str):
+async def _wait_for_workflow_to_complete(unit: Unit, workflow: Workflow, conclusion: str):
     """Wait for the workflow to complete.
 
     Args:
-        app: The charm to wait for the workflow to complete.
+        unit: The unit which contains the runner.
         workflow: The workflow to wait for.
         conclusion: The workflow conclusion to wait for.
     """
-    await _wait_until_runner_is_used_up(app.units[0])
+    runner_name = await get_runner_name(unit)
+    await _wait_until_runner_is_used_up(runner_name, unit)
     # Wait for the workflow log to contain the conclusion
     sleep(60)
 
-    await _assert_workflow_run_conclusion(app, conclusion, workflow)
+    await _assert_workflow_run_conclusion(runner_name, conclusion, workflow)
 
 
 async def _dispatch_workflow(
     app: Application, branch: Branch, github_repository: Repository, conclusion: str
 ):
     """Dispatch a workflow on a branch for the runner to run.
+
+    The function assumes that there is only one runner running in the unit.
 
     Args:
         app: The charm to dispatch the workflow for.
@@ -197,7 +199,9 @@ async def _dispatch_workflow(
     workflow = github_repository.get_workflow(id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME)
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(branch, {"runner": app.name})
-    await _wait_for_workflow_to_complete(app=app, workflow=workflow, conclusion=conclusion)
+    await _wait_for_workflow_to_complete(
+        unit=app.units[0], workflow=workflow, conclusion=conclusion
+    )
 
 
 async def _assert_events_after_reconciliation(
