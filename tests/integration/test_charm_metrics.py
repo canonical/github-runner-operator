@@ -32,7 +32,7 @@ from tests.status_name import ACTIVE_STATUS_NAME
 TEST_WORKFLOW_NAME = "Workflow Dispatch Tests"
 
 
-@pytest.fixture(scope="module", name="branch_with_protection")
+@pytest.fixture(scope="function", name="branch_with_protection")
 def branch_with_protection_fixture(forked_github_branch: Branch):
     """Add required branch protection to the branch."""
 
@@ -42,14 +42,6 @@ def branch_with_protection_fixture(forked_github_branch: Branch):
     yield forked_github_branch
 
     forked_github_branch.remove_protection()
-
-
-async def _clear_metrics_log(unit: Unit):
-    retcode, _ = await run_in_unit(
-        unit=unit,
-        command=f"if [ -f {METRICS_LOG_PATH} ]; then rm {METRICS_LOG_PATH}; fi",
-    )
-    assert retcode == 0, "Failed to clear metrics log"
 
 
 @pytest_asyncio.fixture(scope="module", name="app_integrated")
@@ -62,18 +54,53 @@ async def app_integrated_fixture(
     yield app_no_runner
 
 
+async def _clear_metrics_log(unit: Unit) -> None:
+    """Clear the metrics log on the unit.
+
+    Args:
+        unit: The unit to clear the metrics log on.
+    """
+    retcode, _ = await run_in_unit(
+        unit=unit,
+        command=f"if [ -f {METRICS_LOG_PATH} ]; then rm {METRICS_LOG_PATH}; fi",
+    )
+    assert retcode == 0, "Failed to clear metrics log"
+
+
+async def _print_loop_device_info(unit: Unit, loop_device: str) -> None:
+    """Print loop device info on the unit.
+
+    Args:
+        unit: The unit to print the loop device info on.
+        loop_device: The loop device to print the info for.
+    """
+    retcode, stdout = await run_in_unit(
+        unit=unit,
+        command="sudo losetup -lJ",
+    )
+    assert retcode == 0, f"Failed to get loop devices: {stdout}"
+    assert stdout is not None, "Failed to get loop devices, no stdout message"
+    loop_devices_info = json.loads(stdout)
+    for loop_device_info in loop_devices_info["loopdevices"]:
+        if loop_device_info["name"] == loop_device:
+            logging.info("Loop device %s info: %s", loop_device, loop_device_info)
+            break
+    else:
+        logging.info("Loop device %s not found", loop_device)
+
+
 @pytest_asyncio.fixture(scope="function", name="app")
-async def app_fixture(model: Model, app_integrated: Application) -> AsyncIterator[Application]:
+async def app_fixture(
+    model: Model, app_integrated: Application, loop_device: str
+) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
-    Ensure that the metrics log is empty and cleared after each test.
+    Clear the metrics log before each test.
     """
-    metrics_log = await _get_metrics_log(app_integrated.units[0])
-    assert metrics_log == ""
-
+    unit = app_integrated.units[0]
+    await _clear_metrics_log(unit)
+    await _print_loop_device_info(unit, loop_device)
     yield app_integrated
-
-    await _clear_metrics_log(app_integrated.units[0])
 
 
 async def _get_metrics_log(unit: Unit) -> str:
@@ -205,7 +232,7 @@ async def _assert_events_after_reconciliation(
             assert metric_log.get("workflow") == TEST_WORKFLOW_NAME
             assert metric_log.get("repo") == github_repository.full_name
             assert metric_log.get("github_event") == "workflow_dispatch"
-            assert metric_log.get("status") == PostJobStatus.NORMAL
+            assert metric_log.get("status") == post_job_status
             assert metric_log.get("job_duration") >= 0
         if metric_log.get("event") == "reconciliation":
             assert metric_log.get("flavor") == app.name
