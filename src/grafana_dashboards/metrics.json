@@ -297,7 +297,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "avg_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", idle=\"idle\" | event = `runner_start` | unwrap idle [1h]) by (filename)",
+          "expr": "avg_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle=\"idle\" | event=\"runner_start\" | unwrap idle[1h]) by(filename)",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Average",
           "queryType": "range",
@@ -309,7 +309,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", idle=\"idle\" | event = `runner_start` | unwrap idle [1h]) by (filename)",
+          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle=\"idle\" | event=\"runner_start\" | unwrap idle[1h]) by(filename)",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Max",
           "queryType": "range",
@@ -321,7 +321,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "min_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", idle=\"idle\" | event = `runner_start` | unwrap idle [1h]) by (filename)",
+          "expr": "min_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle=\"idle\" | event=\"runner_start\" | unwrap idle[1h]) by(filename)",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Min",
           "queryType": "range",
@@ -416,7 +416,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "avg_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", duration=\"duration\" | event = `runner_installed` | unwrap duration [1h]) by (filename)",
+          "expr": "avg_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\" | event=\"runner_installed\" | unwrap duration[1h]) by(filename)",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Average",
           "queryType": "range",
@@ -428,7 +428,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", duration=\"duration\" | event = `runner_installed` | unwrap duration [1h]) by (filename)",
+          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\" | event=\"runner_installed\" | unwrap duration[1h]) by(filename)",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Max",
           "queryType": "range",
@@ -440,7 +440,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "min_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", duration=\"duration\" | event = `runner_installed` | unwrap duration [1h]) by (filename)",
+          "expr": "min_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\" | event=\"runner_installed\" | unwrap duration[1h]) by(filename)",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Min",
           "queryType": "range",
@@ -535,7 +535,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "avg_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", job_duration=\"job_duration\" | event = `runner_stop` | unwrap idle [1h]) by (filename)",
+          "expr": "avg_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", job_duration=\"job_duration\" | event = `runner_stop` | unwrap job_duration [1h])",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Average",
           "queryType": "range",
@@ -547,7 +547,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", job_duration=\"job_duration\" | event = `runner_stop` | unwrap idle [1h]) by (filename)",
+          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", job_duration=\"job_duration\" | event = `runner_stop` | unwrap job_duration [1h])",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Max",
           "queryType": "range",
@@ -559,7 +559,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "min_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", job_duration=\"job_duration\" | event = `runner_stop` | unwrap job_duration [1h]) by (filename)",
+          "expr": "min_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",job_duration=\"job_duration\" | event=\"runner_stop\" | unwrap job_duration[1h]) by(filename)",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Min",
           "queryType": "range",
@@ -654,7 +654,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "avg_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\" | event=\"reconciliation\" | unwrap duration[1h])",
+          "expr": "avg_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\" | event=\"reconciliation\" | unwrap duration[1h]) by(filename)",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Average",
           "queryType": "range",
@@ -666,7 +666,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\" | event=\"reconciliation\" | unwrap duration[1h])",
+          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\" | event=\"reconciliation\" | unwrap duration[1h]) by(filename)",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Max",
           "queryType": "range",
@@ -678,7 +678,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "min_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\" | event=\"reconciliation\" | unwrap duration[1h])",
+          "expr": "min_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\" | event=\"reconciliation\" | unwrap duration[1h]) by(filename)",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Min",
           "queryType": "range",
