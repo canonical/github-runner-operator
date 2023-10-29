@@ -506,6 +506,7 @@ class Runner:
                 )
             ]
         )
+        self._verify_yq_checksum(yq_executable)
 
         # Add the user to docker group.
         self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
@@ -810,11 +811,10 @@ class Runner:
 
         if return_code != 0:
             raise RunnerError(
-                "Command %s failed with code %i in runner %s: %s",
-                " ".join(cmd),
-                return_code,
-                self.config.name,
-                stderr_str,
+                (
+                    f"Command {' '.join(cmd)} failed with code {return_code} in runner "
+                    f"{self.config.name}: {stderr_str}"
+                )
             )
 
         return stdout_str, stderr_str
@@ -830,18 +830,19 @@ class Runner:
 
         split_url = urlsplit(yq_executable.url)
         # Extract the base download path
-        split_url.path, executable_name = split_url.path.rsplit("/", 1)
-        base_url = urlunsplit(split_url)
+        base_path, executable_name = split_url.path.rsplit("/", 1)
+        base_path_parts = split_url._replace(path=base_path)
+        base_url = urlunsplit(base_path_parts)
 
-        self._wget_download(urljoin(base_url, "checksums"))
-        self._wget_download(urljoin(base_url, "extract-checksum.sh"))
+        self._wget_download(urljoin(base_url, "checksums"), "checksums")
+        self._wget_download(urljoin(base_url, "extract-checksum.sh"), "extract-checksum.sh")
 
         stdout, _ = self._execute(["bash", "extract-checksum.sh", "SHA-256", executable_name])
         expected_checksum = stdout.rsplit(maxsplit=1)[1]
 
         yq_path, _ = self._execute(["which", yq_executable.cmd])
         stdout, _ = self._execute(["sha256sum", yq_path])
-        calculated_checksum = stdout.lsplit(maxsplit=1)[0]
+        calculated_checksum = stdout.split(maxsplit=1)[0]
 
         if expected_checksum != calculated_checksum:
             raise RunnerError("Checksum mismatch for yq executable")
