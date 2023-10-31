@@ -64,7 +64,7 @@ class WgetExecutable:
 class Runner:
     """Single instance of GitHub self-hosted runner.
 
-    Attrs:
+    Attributes:
         app_name (str): Name of the charm.
         path (GitHubPath): Path to GitHub repo or org.
         proxies (ProxySetting): HTTP proxy setting for juju charm.
@@ -594,10 +594,17 @@ class Runner:
 
         # Load `.env` config file for GitHub self-hosted runner.
         env_contents = self._clients.jinja.get_template("env.j2").render(
-            proxies=self.config.proxies, pre_job_script=str(self.pre_job_script)
+            proxies=self.config.proxies,
+            pre_job_script=str(self.pre_job_script),
+            dockerhub_mirror=self.config.dockerhub_mirror,
         )
         self._put_file(str(self.env_file), env_contents)
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
+
+        if self.config.dockerhub_mirror:
+            docker_daemon_config = {"registry-mirrors": [self.config.dockerhub_mirror]}
+            self._put_file("/etc/docker/daemon.json", json.dumps(docker_daemon_config))
+            self.instance.execute(["systemctl", "restart", "docker"])
 
         if self.config.proxies:
             # Creating directory and putting the file are idempotent, and can be retried.

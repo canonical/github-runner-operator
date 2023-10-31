@@ -22,7 +22,7 @@ class GitHubRunnerStatus(Enum):
 class RunnerApplication(TypedDict, total=False):
     """Information on the runner application.
 
-    Attrs:
+    Attributes:
         os: Operating system to run the runner application on.
         architecture: Computer Architecture to run the runner application on.
         download_url: URL to download the runner application.
@@ -46,7 +46,7 @@ RunnerApplicationList = List[RunnerApplication]
 class SelfHostedRunnerLabel(TypedDict, total=False):
     """A single label of self-hosted runners.
 
-    Attrs:
+    Attributes:
         id: Unique identifier of the label.
         name: Name of the label.
         type: Type of label. Read-only labels are applied automatically when
@@ -61,7 +61,7 @@ class SelfHostedRunnerLabel(TypedDict, total=False):
 class SelfHostedRunner(TypedDict):
     """Information on a single self-hosted runner.
 
-    Attrs:
+    Attributes:
         id: Unique identifier of the runner.
         name: Name of the runner.
         os: Operation system of the runner.
@@ -80,7 +80,7 @@ class SelfHostedRunner(TypedDict):
 class SelfHostedRunnerList(TypedDict):
     """Information on a collection of self-hosted runners.
 
-    Attrs:
+    Attributes:
         total_count: Total number of runners.
         runners: List of runners.
     """
@@ -92,7 +92,7 @@ class SelfHostedRunnerList(TypedDict):
 class RegistrationToken(TypedDict):
     """Token used for registering GitHub runners.
 
-    Attrs:
+    Attributes:
         token: Token for registering GitHub runners.
         expires_at: Time the token expires at.
     """
@@ -104,7 +104,7 @@ class RegistrationToken(TypedDict):
 class RemoveToken(TypedDict):
     """Token used for removing GitHub runners.
 
-    Attrs:
+    Attributes:
         token: Token for removing GitHub runners.
         expires_at: Time the token expires at.
     """

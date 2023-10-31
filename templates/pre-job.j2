@@ -92,3 +92,10 @@ if [[ $REPO_CHECK -ne 0 ]]; then
 fi
 
 logger -s "The repository setup check has passed, proceeding to execute jobs"
+
+if [[ -n "$DOCKERHUB_MIRROR" ]]; then
+  logger -s "A private docker registry is setup as a dockerhub mirror for this self-hosted runner."
+  logger -s "The docker daemon on this self-hosted runner is configured to use the dockerhub mirror."
+  logger -s "The URL to the private docker registry is in the DOCKERHUB_MIRROR environment variable."
+  logger -s "For microk8s, see instructions here: https://microk8s.io/docs/dockerhub-limits"
+fi

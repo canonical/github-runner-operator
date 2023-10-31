@@ -4,6 +4,7 @@
 """Utilities for integration test."""
 
 import json
+import subprocess
 from asyncio import sleep
 from typing import Any
 
@@ -280,3 +281,56 @@ async def reconcile(app: Application, model: Model) -> None:
     action = await app.units[0].run_action("reconcile-runners")
     await action.wait()
     await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
+
+
+async def deploy_github_runner_charm(
+    model: Model,
+    charm_file: str,
+    app_name: str,
+    path: str,
+    token: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
+    reconcile_interval: int,
+) -> Application:
+    """Deploy github-runner charm.
+
+    Args:
+        model: Model to deploy the charm.
+        charm_file: Path of the charm file to deploy.
+        app_name: Application name for the deployment.
+        path: Path representing the GitHub repo/org.
+        token: GitHub Personal Token for the application to use.
+        http_proxy: HTTP proxy for the application to use.
+        https_proxy: HTTPS proxy for the application to use.
+        no_proxy: No proxy configuration for the application.
+        reconcile_interval: Time between reconcile for the application.
+    """
+    subprocess.run(["sudo", "modprobe", "br_netfilter"])
+
+    await model.set_config(
+        {
+            "juju-http-proxy": http_proxy,
+            "juju-https-proxy": https_proxy,
+            "juju-no-proxy": no_proxy,
+            "logging-config": "<root>=INFO;unit=DEBUG",
+        }
+    )
+
+    application = await model.deploy(
+        charm_file,
+        application_name=app_name,
+        series="jammy",
+        config={
+            "path": path,
+            "token": token,
+            "virtual-machines": 0,
+            "denylist": "10.10.0.0/16",
+            "test-mode": "insecure",
+            "reconcile-interval": reconcile_interval,
+        },
+    )
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 30)
+
+    return application

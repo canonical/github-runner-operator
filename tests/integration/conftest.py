@@ -4,7 +4,6 @@
 """Fixtures for github runner charm integration tests."""
 
 import secrets
-import subprocess
 import zipfile
 from pathlib import Path
 from time import sleep
@@ -20,8 +19,13 @@ from juju.application import Application
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-from tests.integration.helpers import ensure_charm_has_runner, reconcile
-from tests.status_name import ACTIVE_STATUS_NAME
+from tests.integration.helpers import (
+    deploy_github_runner_charm,
+    ensure_charm_has_runner,
+    reconcile,
+)
+
+DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
 
 
 @pytest.fixture(scope="module")
@@ -147,33 +151,18 @@ async def app_no_runner(
     no_proxy: str,
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
-    subprocess.run(["sudo", "modprobe", "br_netfilter"])
-
-    await model.set_config(
-        {
-            "juju-http-proxy": http_proxy,
-            "juju-https-proxy": https_proxy,
-            "juju-no-proxy": no_proxy,
-            "logging-config": "<root>=INFO;unit=DEBUG",
-        }
+    # Set the scheduled event to 1 hour to avoid interfering with the tests.
+    application = await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=app_name,
+        path=path,
+        token=token,
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=60,
     )
-
-    application = await model.deploy(
-        charm_file,
-        application_name=app_name,
-        series="jammy",
-        config={
-            "path": path,
-            "token": token,
-            "virtual-machines": 0,
-            "denylist": "10.10.0.0/16",
-            "test-mode": "insecure",
-            # Set the scheduled event to 1 hour to avoid interfering with the tests.
-            "reconcile-interval": 60,
-        },
-    )
-    await model.wait_for_idle(timeout=60 * 30)
-
     yield application
 
 
@@ -210,35 +199,48 @@ async def app_scheduled_events(
     next trigger. Therefore, it would take a hour for the duration change to
     take effect.
     """
-    subprocess.run(["sudo", "modprobe", "br_netfilter"])
-
-    await model.set_config(
-        {
-            "juju-http-proxy": http_proxy,
-            "juju-https-proxy": https_proxy,
-            "juju-no-proxy": no_proxy,
-            "logging-config": "<root>=INFO;unit=DEBUG",
-        }
+    application = await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=app_name,
+        path=path,
+        token=token,
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=8,
     )
-
-    application = await model.deploy(
-        charm_file,
-        application_name=app_name,
-        series="jammy",
-        config={
-            "path": path,
-            "token": token,
-            "virtual-machines": 0,
-            "denylist": "10.10.0.0/16",
-            "test-mode": "insecure",
-            "reconcile-interval": 8,
-        },
-    )
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 20)
 
     await application.set_config({"virtual-machines": "1"})
     await reconcile(app=application, model=model)
 
+    yield application
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app_runner(
+    model: Model,
+    charm_file: str,
+    app_name: str,
+    path: str,
+    token: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
+) -> AsyncIterator[Application]:
+    """Application to test runners."""
+    # Use a different app_name so workflows can select runners from this deployment.
+    application = await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=f"{app_name}-test",
+        path=path,
+        token=token,
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=60,
+    )
     yield application
 
 

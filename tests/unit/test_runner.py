@@ -109,7 +109,13 @@ def runner_fixture(request, lxd: MockLxdClient, jinja: MagicMock, tmp_path: Path
     pool_path = tmp_path / "test_storage"
     pool_path.mkdir(exist_ok=True)
     config = RunnerConfig(
-        "test_app", request.param[0], request.param[1], pool_path, "test_runner", False
+        name="test_runner",
+        app_name="test_app",
+        path=request.param[0],
+        proxies=request.param[1],
+        lxd_storage_path=pool_path,
+        dockerhub_mirror=None,
+        issue_metrics=False,
     )
     status = RunnerStatus()
     return Runner(
