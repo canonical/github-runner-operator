@@ -275,10 +275,7 @@ class GithubRunnerCharm(CharmBase):
         else:
             path = GitHubOrg(org=path, group=self.config["group"])
 
-        dockerhub_mirror = (
-            self.config["dockerhub-mirror"] if self.config["dockerhub-mirror"] else None
-        )
-
+        dockerhub_mirror = self.config["dockerhub-mirror"] or None
         app_name, unit = self.unit.name.rsplit("/", 1)
         return RunnerManager(
             app_name,
