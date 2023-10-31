@@ -11,6 +11,7 @@ from tests.integration.helpers import (
     check_runner_binary_exists,
     get_repo_policy_compliance_pip_info,
     install_repo_policy_compliance_from_git_source,
+    reconcile,
     remove_runner_bin,
     wait_till_num_of_runners,
 )
@@ -180,17 +181,13 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     # 1.
     await app.set_config({"virtual-machines": "1"})
 
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await reconcile(app=app, model=model)
 
     await wait_till_num_of_runners(unit, 1)
 
     # 2.
     await app.set_config({"virtual-machines": "0"})
 
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await reconcile(app=app, model=model)
 
     await wait_till_num_of_runners(unit, 0)

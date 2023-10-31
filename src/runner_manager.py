@@ -23,8 +23,10 @@ from ghapi.page import pages
 from typing_extensions import assert_never
 
 import metrics
+import runner_metrics
+import shared_fs
 from charm_state import State as CharmState
-from errors import RunnerBinaryError, RunnerCreateError
+from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
 from github_type import (
     GitHubRunnerStatus,
     RegistrationToken,
@@ -36,6 +38,7 @@ from github_type import (
 from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
+from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import (
     GitHubOrg,
     GitHubPath,
@@ -61,7 +64,7 @@ class RunnerManagerConfig:
         image: Name of the image for creating LXD instance.
         service_token: Token for accessing local service.
         lxd_storage_path: Path to be used as LXD storage.
-        issue_metrics: Whether to issue metrics.
+        charm_state: The state of the charm.
         dockerhub_mirror: URL of dockerhub mirror to use.
     """
 
@@ -91,7 +94,7 @@ class RunnerManager:
 
     runner_bin_path = Path("/home/ubuntu/github-runner-app")
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         app_name: str,
         unit: int,
@@ -326,8 +329,19 @@ class RunnerManager:
                         duration=ts_after - ts_now,
                     ),
                 )
-            except OSError:
+            except IssueMetricEventError:
                 logger.exception("Failed to issue metrics")
+
+            fs = shared_fs.get(runner.config.name)
+            try:
+                (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).write_text(
+                    str(ts_after), encoding="utf-8"
+                )
+            except FileNotFoundError:
+                logger.exception(
+                    "Failed to write runner-installed.timestamp, "
+                    "will not be able to issue all metrics."
+                )
         else:
             runner.create(
                 self.config.image,
@@ -367,6 +381,9 @@ class RunnerManager:
             len(runner_states.unhealthy),
         )
 
+        if self.config.charm_state.is_metrics_logging_available:
+            runner_metrics.extract(flavor=self.app_name, ignore_runners=set(runner_states.healthy))
+
         # Clean up offline runners
         if runner_states.unhealthy:
             logger.info("Cleaning up unhealthy runners.")
@@ -401,6 +418,7 @@ class RunnerManager:
                     proxies=self.proxies,
                     lxd_storage_path=self.config.lxd_storage_path,
                     dockerhub_mirror=self.config.dockerhub_mirror,
+                    issue_metrics=self.config.charm_state.is_metrics_logging_available,
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
                 try:
@@ -555,6 +573,7 @@ class RunnerManager:
                 proxies=self.proxies,
                 lxd_storage_path=self.config.lxd_storage_path,
                 dockerhub_mirror=self.config.dockerhub_mirror,
+                issue_metrics=self.config.charm_state.is_metrics_logging_available,
             )
             return Runner(
                 self._clients,

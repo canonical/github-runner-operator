@@ -5,9 +5,9 @@
 import logging
 from pathlib import Path
 
-from pydantic import BaseModel, NonNegativeInt
+from pydantic import BaseModel, NonNegativeFloat
 
-from errors import LogrotateSetupError, SubprocessError
+from errors import IssueMetricEventError, LogrotateSetupError, SubprocessError
 from utilities import execute_command
 
 LOG_ROTATE_TIMER_SYSTEMD_SERVICE = "logrotate.timer"
@@ -29,7 +29,7 @@ class Event(BaseModel):
          event: The name of the event. Will be set to the class name in snake case if not provided.
     """
 
-    timestamp: NonNegativeInt
+    timestamp: NonNegativeFloat
     event: str
 
     @staticmethod
@@ -68,12 +68,31 @@ class RunnerInstalled(Event):
 
     Attributes:
         flavor: Describes the characteristics of the runner.
-          The flavour could be for example "small".
+          The flavor could be for example "small".
         duration: The duration of the installation in seconds.
     """
 
     flavor: str
-    duration: NonNegativeInt
+    duration: NonNegativeFloat
+
+
+class RunnerStart(Event):
+    """Metric event for when a runner is started.
+
+    Attributes:
+        flavor: Describes the characteristics of the runner.
+          The flavor could be for example "small".
+        workflow: The workflow name.
+        repo: The repository name.
+        github_event: The github event.
+        idle: The idle time in seconds.
+    """
+
+    flavor: str
+    workflow: str
+    repo: str
+    github_event: str
+    idle: NonNegativeFloat
 
 
 def issue_event(event: Event) -> None:
@@ -83,11 +102,15 @@ def issue_event(event: Event) -> None:
 
     Args:
         event: The metric event to log.
+
     Raises:
-        OSError: If an error occurs while writing the metrics log.
+        IssueMetricEventError: If the event cannot be logged.
     """
-    with METRICS_LOG_PATH.open(mode="a", encoding="utf-8") as metrics_file:
-        metrics_file.write(f"{event.json()}\n")
+    try:
+        with METRICS_LOG_PATH.open(mode="a", encoding="utf-8") as metrics_file:
+            metrics_file.write(f"{event.json()}\n")
+    except OSError as exc:
+        raise IssueMetricEventError(f"Cannot write to {METRICS_LOG_PATH}") from exc
 
 
 def _enable_logrotate() -> None:

@@ -5,6 +5,9 @@
 # <kbd>module</kbd> `runner_manager.py`
 Runner Manager manages the runners on LXD and GitHub. 
 
+**Global Variables**
+---------------
+- **RUNNER_INSTALLED_TS_FILE_NAME**
 
 
 ---
@@ -23,7 +26,11 @@ Used as a returned type to method querying runner information.
 ## <kbd>class</kbd> `RunnerManager`
 Manage a group of runners according to configuration. 
 
+<<<<<<< HEAD
 <a href="../src/runner_manager.py#L94"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+=======
+<a href="../src/runner_manager.py#L95"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+>>>>>>> main
 
 ### <kbd>function</kbd> `__init__`
 
@@ -52,7 +59,11 @@ Construct RunnerManager object for creating and managing runners.
 
 ---
 
+<<<<<<< HEAD
 <a href="../src/runner_manager.py#L155"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+=======
+<a href="../src/runner_manager.py#L156"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+>>>>>>> main
 
 ### <kbd>function</kbd> `check_runner_bin`
 
@@ -69,7 +80,11 @@ Check if runner binary exists.
 
 ---
 
+<<<<<<< HEAD
 <a href="../src/runner_manager.py#L438"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+=======
+<a href="../src/runner_manager.py#L453"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+>>>>>>> main
 
 ### <kbd>function</kbd> `flush`
 
@@ -92,7 +107,11 @@ Remove existing runners.
 
 ---
 
+<<<<<<< HEAD
 <a href="../src/runner_manager.py#L268"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+=======
+<a href="../src/runner_manager.py#L269"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+>>>>>>> main
 
 ### <kbd>function</kbd> `get_github_info`
 
@@ -109,7 +128,11 @@ Get information on the runners from GitHub.
 
 ---
 
+<<<<<<< HEAD
 <a href="../src/utilities.py#L163"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+=======
+<a href="../src/utilities.py#L164"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+>>>>>>> main
 
 ### <kbd>function</kbd> `get_latest_runner_bin_url`
 
@@ -138,7 +161,11 @@ The runner binary URL changes when a new version is available.
 
 ---
 
+<<<<<<< HEAD
 <a href="../src/runner_manager.py#L339"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+=======
+<a href="../src/runner_manager.py#L351"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+>>>>>>> main
 
 ### <kbd>function</kbd> `reconcile`
 
@@ -162,7 +189,11 @@ Bring runners in line with target.
 
 ---
 
+<<<<<<< HEAD
 <a href="../src/utilities.py#L201"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+=======
+<a href="../src/utilities.py#L202"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+>>>>>>> main
 
 ### <kbd>function</kbd> `update_runner_bin`
 
@@ -195,8 +226,12 @@ Configuration of runner manager.
  - <b>`image`</b>:  Name of the image for creating LXD instance. 
  - <b>`service_token`</b>:  Token for accessing local service. 
  - <b>`lxd_storage_path`</b>:  Path to be used as LXD storage. 
+<<<<<<< HEAD
  - <b>`issue_metrics`</b>:  Whether to issue metrics. 
  - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
+=======
+ - <b>`charm_state`</b>:  The state of the charm. 
+>>>>>>> main
 
 
 
