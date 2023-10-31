@@ -57,6 +57,10 @@ class MissingConfigurationError(Exception):
         self.configs = configs
 
 
+class ConfigurationError(Exception):
+    """Error for juju configuration."""
+
+
 class LxdError(Exception):
     """Error for executing LXD actions."""
 

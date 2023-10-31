@@ -13,6 +13,7 @@ import shutil
 import urllib.error
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional, Sequence, TypeVar
+from urllib.parse import urlsplit
 
 import jinja2
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
@@ -32,6 +33,7 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 import metrics
 from charm_state import State
 from errors import (
+    ConfigurationError,
     LogrotateSetupError,
     MissingConfigurationError,
     MissingRunnerBinaryError,
@@ -72,6 +74,9 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
     def func_with_catch_errors(self, event: EventT) -> None:
         try:
             func(self, event)
+        except ConfigurationError as err:
+            logger.exception("Issue with charm configuration")
+            self.unit.status = BlockedStatus(str(err))
         except MissingConfigurationError as err:
             logger.exception("Missing required charm configuration")
             self.unit.status = BlockedStatus(
@@ -102,6 +107,9 @@ def catch_action_errors(
     def func_with_catch_errors(self, event: ActionEvent) -> None:
         try:
             func(self, event)
+        except ConfigurationError as err:
+            logger.exception("Issue with charm configuration")
+            self.unit.status = BlockedStatus(str(err))
         except MissingConfigurationError as err:
             logger.exception("Missing required charm configuration")
             event.fail(f"Missing required charm configuration: {err.configs}")
@@ -253,6 +261,13 @@ class GithubRunnerCharm(CharmBase):
         if missing_configs:
             raise MissingConfigurationError(missing_configs)
 
+        dockerhub_mirror = self.config["dockerhub-mirror"] or None
+        dockerhub_mirror_url = urlsplit(dockerhub_mirror)
+        if dockerhub_mirror is not None and dockerhub_mirror_url.scheme != "https":
+            raise ConfigurationError(
+                "Only secured registry supported for dockerhub mirror, the scheme should be https"
+            )
+
         self._ensure_service_health()
 
         size_in_kib = (
@@ -275,7 +290,6 @@ class GithubRunnerCharm(CharmBase):
         else:
             path = GitHubOrg(org=path, group=self.config["group"])
 
-        dockerhub_mirror = self.config["dockerhub-mirror"] or None
         app_name, unit = self.unit.name.rsplit("/", 1)
         return RunnerManager(
             app_name,

@@ -9,6 +9,15 @@ Errors used by the charm.
 
 ---
 
+## <kbd>class</kbd> `ConfigurationError`
+Error for juju configuration. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `CorruptMetricDataError`
 Represents an error with the data being corrupt. 
 
@@ -214,7 +223,7 @@ Error for Subprocess calls.
  - <b>`stdout`</b>:  Content of stdout of the subprocess. 
  - <b>`stderr`</b>:  Content of stderr of the subprocess. 
 
-<a href="../src/errors.py#L74"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L78"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
