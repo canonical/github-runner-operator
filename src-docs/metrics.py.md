@@ -98,10 +98,6 @@ Metric event for when a runner is installed.
 
 **Attributes:**
  
-<<<<<<< HEAD
- - <b>`flavor`</b>:  Describes the characteristics of the runner.  The flavour could be for example "small". 
- - <b>`duration`</b>:  The duration of the installation in seconds. 
-=======
  - <b>`flavor`</b>:  Describes the characteristics of the runner.  The flavor could be for example "small". 
  - <b>`duration`</b>:  The duration of the installation in seconds. 
 
@@ -140,7 +136,6 @@ Metric event for when a runner is started.
  - <b>`repo`</b>:  The repository name. 
  - <b>`github_event`</b>:  The github event. 
  - <b>`idle`</b>:  The idle time in seconds. 
->>>>>>> main
 
 <a href="../src/metrics.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 

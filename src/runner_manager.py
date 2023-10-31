@@ -417,8 +417,8 @@ class RunnerManager:
                     path=self.config.path,
                     proxies=self.proxies,
                     lxd_storage_path=self.config.lxd_storage_path,
-                    dockerhub_mirror=self.config.dockerhub_mirror,
                     issue_metrics=self.config.charm_state.is_metrics_logging_available,
+                    dockerhub_mirror=self.config.dockerhub_mirror,
                 )
                 runner = Runner(self._clients, config, RunnerStatus())
                 try:
@@ -572,8 +572,8 @@ class RunnerManager:
                 path=self.config.path,
                 proxies=self.proxies,
                 lxd_storage_path=self.config.lxd_storage_path,
-                dockerhub_mirror=self.config.dockerhub_mirror,
                 issue_metrics=self.config.charm_state.is_metrics_logging_available,
+                dockerhub_mirror=self.config.dockerhub_mirror,
             )
             return Runner(
                 self._clients,
