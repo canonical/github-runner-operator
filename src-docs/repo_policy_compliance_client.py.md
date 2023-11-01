@@ -12,7 +12,12 @@ Client for requesting repo policy compliance service.
 ## <kbd>class</kbd> `RepoPolicyComplianceClient`
 Client for repo policy compliance service. 
 
-Attrs:  base_url: Base url to the repo policy compliance service.  token: Charm token configured for the repo policy compliance service. 
+
+
+**Attributes:**
+ 
+ - <b>`base_url`</b>:  Base url to the repo policy compliance service. 
+ - <b>`token`</b>:  Charm token configured for the repo policy compliance service. 
 
 <a href="../src/repo_policy_compliance_client.py#L23"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 

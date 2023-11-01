@@ -65,6 +65,7 @@ class RunnerManagerConfig:
         service_token: Token for accessing local service.
         lxd_storage_path: Path to be used as LXD storage.
         charm_state: The state of the charm.
+        dockerhub_mirror: URL of dockerhub mirror to use.
     """
 
     path: GitHubPath
@@ -73,6 +74,7 @@ class RunnerManagerConfig:
     service_token: str
     lxd_storage_path: Path
     charm_state: CharmState
+    dockerhub_mirror: str | None = None
 
 
 @dataclass
@@ -410,12 +412,13 @@ class RunnerManager:
         logger.info("Attempting to add %i runner(s).", count)
         for _ in range(count):
             config = RunnerConfig(
-                self.app_name,
-                self.config.path,
-                self.proxies,
-                self.config.lxd_storage_path,
-                self._generate_runner_name(),
-                self.config.charm_state.is_metrics_logging_available,
+                name=self._generate_runner_name(),
+                app_name=self.app_name,
+                path=self.config.path,
+                proxies=self.proxies,
+                lxd_storage_path=self.config.lxd_storage_path,
+                issue_metrics=self.config.charm_state.is_metrics_logging_available,
+                dockerhub_mirror=self.config.dockerhub_mirror,
             )
             runner = Runner(self._clients, config, RunnerStatus())
             try:
@@ -635,12 +638,13 @@ class RunnerManager:
             busy = getattr(remote_runner, "busy", None)
 
             config = RunnerConfig(
-                self.app_name,
-                self.config.path,
-                self.proxies,
-                self.config.lxd_storage_path,
-                name,
-                self.config.charm_state.is_metrics_logging_available,
+                name=name,
+                app_name=self.app_name,
+                path=self.config.path,
+                proxies=self.proxies,
+                lxd_storage_path=self.config.lxd_storage_path,
+                issue_metrics=self.config.charm_state.is_metrics_logging_available,
+                dockerhub_mirror=self.config.dockerhub_mirror,
             )
             return Runner(
                 self._clients,

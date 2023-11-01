@@ -92,7 +92,7 @@ Initialize the event.
 ---
 
 ## <kbd>class</kbd> `Reconciliation`
-Metric event for when a runner is stopped. 
+Metric event for when the charm has finished reconciliation. 
 
 
 

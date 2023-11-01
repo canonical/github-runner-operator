@@ -87,21 +87,23 @@ class RunnerConfig:
     """Configuration for runner.
 
     Attributes:
+        name: Name of the runner.
         app_name: Application name of the charm.
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
             name.
         proxies: HTTP(S) proxy settings.
         lxd_storage_path: Path to be used as LXD storage.
-        name: Name of the runner.
         issue_metrics: Whether to issue metrics.
+        dockerhub_mirror: URL of dockerhub mirror to use.
     """
 
+    name: str
     app_name: str
     path: GitHubPath
     proxies: ProxySetting
     lxd_storage_path: Path
-    name: str
     issue_metrics: bool
+    dockerhub_mirror: str | None = None
 
 
 @dataclass

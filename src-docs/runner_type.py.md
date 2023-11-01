@@ -93,12 +93,13 @@ Configuration for runner.
 
 **Attributes:**
  
+ - <b>`name`</b>:  Name of the runner. 
  - <b>`app_name`</b>:  Application name of the charm. 
  - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name. 
  - <b>`proxies`</b>:  HTTP(S) proxy settings. 
  - <b>`lxd_storage_path`</b>:  Path to be used as LXD storage. 
- - <b>`name`</b>:  Name of the runner. 
  - <b>`issue_metrics`</b>:  Whether to issue metrics. 
+ - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
 
 
 
