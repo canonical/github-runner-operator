@@ -1,17 +1,17 @@
 A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines.
 
-This charm simplifies initial deployment and "day N" operations of GitHub self-hosted runners. The charm requires a [GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) and a GitHub repository or organization to connect to. The charm makes it easy to managed self-hosted runners with security and hardware resource usage in mind.
+This charm simplifies initial deployment and "day N" operations of GitHub self-hosted runners. The charm requires a [GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) and a GitHub repository or organization to connect to. The charm makes it easy to manage self-hosted runners with security and hardware resource usage in mind.
 
-The charm maintains a set of ephemeral self-hosted runner each isolated in a virtual machine instance. The resource usage of the self-hosted runners can be configured.
+The charm maintains a set of ephemeral self-hosted runner each isolated in a virtual machine instance. To prevent disk IO of multiple self-hosted runners overwhelming the hardware disk IO, random access memory is used as disk for the virtual machine instances. In addition, the resource usage of the self-hosted runners can be configured.
 
-This charm will make operating GitHub self-hosted runners simple and straightforwared for DevOps or SRE teams through Juju's clean interface.
+This charm will make operating GitHub self-hosted runners simple and straightforward for DevOps or SRE teams through Juju's clean interface.
 
 ## In this documentation
 
 | | |
 |--|--|
-| [Tutorials](https://charmhub.io/github-runner/docs/tutorial)</br> Get started - a hands-on introduction to using the GitHub runner charm for new users </br> | [How-to guides]() </br> Step-by-step guides covering key operations and common tasks |
-| [Reference]() </br> Technical information - specifications, APIs, architecture | [Explanation]() </br> Concepts - discussion and clarification of key topics |
+|  [Tutorials](https://charmhub.io/github-runner/docs/tutorial)</br>  Get started - a hands-on introduction to using the GitHub runner charm for new users </br> | [How-to guides]() </br> Step-by-step guides covering key operations and common tasks |
+| [Reference]() </br> Technical information - specifications, APIs, architecture | [Explanation]() </br> Concepts - discussion and clarification of key topics  |
 
 ## Contributing to this documentation
 
