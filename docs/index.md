@@ -1,8 +1,13 @@
 A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines.
 
-This charm simplifies initial deployment and "day N" operations of GitHub self-hosted runners. The charm requires a [GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) and a GitHub repository or organization to connect to. The charm makes it easy to manage self-hosted runners with security and hardware resource usage in mind.
+This charm simplifies initial deployment and "day N" operations of GitHub self-hosted runners. The charm makes it easy to manage self-hosted runners with security and hardware resource usage in mind.
 
-The charm maintains a set of ephemeral self-hosted runner each isolated in a virtual machine instance. To prevent disk IO of multiple self-hosted runners overwhelming the hardware disk IO, random access memory is used as disk for the virtual machine instances. In addition, the resource usage of the self-hosted runners can be configured.
+Operating your own GitHub self-hosted runner comes with [its own security concerns according to GitHub](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
+Just like GitHub, the self-hosted runner managed by the charm are isolated in a single-use virtual machine. However, arbitrary code execution is possible under certain repositories settings. This can be utilized by malicious actors in a number of ways, such as, crypto-mining. To combat this, the charm enforce a set of GitHub repository settings to ensure code that executed in the self-hosted runner are reviewed by someone trusted.
+
+The charm also upgrades dependencies on a schedule to migrate security risks. The upgrades includes linux kernel upgrades and would automated the rebooting process. This ensures the latest security patches are installed within mintues.
+
+The charm maintains a set of ephemeral self-hosted runner each isolated in a single-use virtual machine instance. To prevent disk IO of multiple self-hosted runners overwhelming the hardware disk IO, random access memory is used as disk for the virtual machine instances. In addition, the resource usage of the self-hosted runners can be configured.
 
 This charm will make operating GitHub self-hosted runners simple and straightforward for DevOps or SRE teams through Juju's clean interface.
 
@@ -10,8 +15,8 @@ This charm will make operating GitHub self-hosted runners simple and straightfor
 
 | | |
 |--|--|
-|  [Tutorials](https://charmhub.io/github-runner/docs/tutorial)</br>  Get started - a hands-on introduction to using the GitHub runner charm for new users </br> | [How-to guides]() </br> Step-by-step guides covering key operations and common tasks |
-| [Reference]() </br> Technical information - specifications, APIs, architecture | [Explanation]() </br> Concepts - discussion and clarification of key topics  |
+|  [Tutorials](https://charmhub.io/github-runner/docs/quick-start)</br>  Get started - a hands-on introduction to using the GitHub runner charm for new users </br> | [How-to guides](https://charmhub.io/github-runner/docs/how-to-comply-security) </br> Step-by-step guides covering key operations and common tasks |
+| [Reference](https://charmhub.io/github-runner/docs/actions) </br> Technical information - specifications, APIs, architecture | [Explanation](https://charmhub.io/github-runner/docs/charm-architecture) </br> Concepts - discussion and clarification of key topics  |
 
 ## Contributing to this documentation
 
