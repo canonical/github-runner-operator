@@ -2,10 +2,10 @@
 # See LICENSE file for licensing details.
 
 """Test cases of RunnerManager class."""
-
+import random
 import secrets
 from pathlib import Path
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, call
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
@@ -13,7 +13,7 @@ from _pytest.monkeypatch import MonkeyPatch
 import shared_fs
 from charm_state import State
 from errors import IssueMetricEventError, RunnerBinaryError
-from metrics import RunnerInstalled
+from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
 from runner import Runner, RunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
@@ -84,6 +84,14 @@ def shared_fs_fixture(tmp_path: Path, monkeypatch: MonkeyPatch) -> MagicMock:
     monkeypatch.setattr("runner_manager.shared_fs", shared_fs_mock)
     monkeypatch.setattr("runner.shared_fs", shared_fs_mock)
     return shared_fs_mock
+
+
+@pytest.fixture(autouse=True, name="runner_metrics")
+def runner_metrics_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
+    """Mock the runner metrics module."""
+    runner_metrics_mock = MagicMock()
+    monkeypatch.setattr("runner_manager.runner_metrics", runner_metrics_mock)
+    return runner_metrics_mock
 
 
 def test_get_latest_runner_bin_url(runner_manager: RunnerManager):
@@ -242,8 +250,8 @@ def test_reconcile_issues_runner_installed_event(
 
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 
-    issue_event_mock.assert_called_once_with(
-        event=RunnerInstalled(timestamp=12345, flavor=runner_manager.app_name, duration=0)
+    issue_event_mock.assert_has_calls(
+        [call(event=RunnerInstalled(timestamp=12345, flavor=runner_manager.app_name, duration=0))]
     )
 
 
@@ -262,14 +270,14 @@ def test_reconcile_issues_no_runner_installed_event_if_metrics_disabled(
     issue_event_mock.assert_not_called()
 
 
-def test_reconcile_error_on_runner_installed_event_is_ignored(
+def test_reconcile_error_on_issue_event_is_ignored(
     runner_manager: RunnerManager,
     issue_event_mock: MagicMock,
     charm_state: MagicMock,
 ):
     """
     arrange: Enable issuing of metrics and mock the metric issuing to raise an expected error.
-    act: Reconcile to create a runner.
+    act: Reconcile.
     assert: No error is raised.
     """
     charm_state.is_metrics_logging_available = True
@@ -279,6 +287,62 @@ def test_reconcile_error_on_runner_installed_event_is_ignored(
     delta = runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 
     assert delta == 1
+
+
+def test_reconcile_issues_reconciliation_metric_event(
+    runner_manager: RunnerManager,
+    monkeypatch: MonkeyPatch,
+    issue_event_mock: MagicMock,
+    charm_state: MagicMock,
+    runner_metrics: MagicMock,
+):
+    """
+    arrange:
+        - Enable issuing of metrics
+        - Mock timestamps
+        - The result of runner_metrics.extract
+        - Create three online runners , where two are idle
+    act: Reconcile.
+    assert: The expected event is issued.
+    """
+    charm_state.is_metrics_logging_available = True
+    t_mock = MagicMock(return_value=12345)
+    monkeypatch.setattr("runner_manager.time.time", t_mock)
+    runner_metrics.extract.return_value = {RunnerStart: 3, RunnerStop: 1}
+
+    def mock_get_runners():
+        """Create three mock runners where one is busy."""
+        runners = []
+        for i in range(3):
+            # 0 is a mock runner id.
+            status = RunnerStatus(0, True, True, False if i < 2 else True)
+            runners.append(Runner(MagicMock(), MagicMock(), status, None))
+        return runners
+
+    # Create online runners.
+    runner_manager._get_runners = mock_get_runners
+    runner_manager._get_runner_health_states = lambda: RunnerByHealth(
+        (
+            f"{runner_manager.instance_name}-0",
+            f"{runner_manager.instance_name}-1",
+            f"{runner_manager.instance_name}-2",
+        ),
+        (),
+    )
+
+    runner_manager.reconcile(
+        quantity=random.randint(0, 5), resources=VirtualMachineResources(2, "7GiB", "10Gib")
+    )
+
+    issue_event_mock.assert_any_call(
+        event=Reconciliation(
+            timestamp=12345,
+            flavor=runner_manager.app_name,
+            crashed_runners=2,
+            idle_runners=2,
+            duration=0,
+        )
+    )
 
 
 def test_reconcile_places_timestamp_in_newly_created_runner(

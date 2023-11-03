@@ -5,9 +5,10 @@
 
 import json
 import logging
+from enum import Enum
 from json import JSONDecodeError
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Type
 
 from pydantic import BaseModel, NonNegativeFloat, ValidationError
 
@@ -22,6 +23,9 @@ FILE_SIZE_BYTES_LIMIT = 1024
 PRE_JOB_METRICS_FILE_NAME = "pre-job-metrics.json"
 POST_JOB_METRICS_FILE_NAME = "post-job-metrics.json"
 RUNNER_INSTALLED_TS_FILE_NAME = "runner-installed.timestamp"
+
+
+IssuedMetricEventsStats = dict[Type[metrics.Event], int]
 
 
 class PreJobMetrics(BaseModel):
@@ -42,6 +46,13 @@ class PreJobMetrics(BaseModel):
     event: str
 
 
+class PostJobStatus(str, Enum):
+    """The status of the post-job phase of a runner."""
+
+    NORMAL = "normal"
+    REPO_POLICY_CHECK_FAILURE = "repo-policy-check-failure"
+
+
 class PostJobMetrics(BaseModel):
     """Metrics for the post-job phase of a runner.
 
@@ -51,7 +62,7 @@ class PostJobMetrics(BaseModel):
     """
 
     timestamp: NonNegativeFloat
-    status: str
+    status: PostJobStatus
 
 
 class RunnerMetrics(BaseModel):
@@ -151,7 +162,7 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
         raise CorruptMetricDataError(str(exc)) from exc
 
 
-def _issue_runner_metrics(runner_metrics: RunnerMetrics, flavor: str) -> None:
+def _issue_runner_metrics(runner_metrics: RunnerMetrics, flavor: str) -> IssuedMetricEventsStats:
     """Issue metrics.
 
     Converts the metrics into respective metric events and issues them.
@@ -159,8 +170,11 @@ def _issue_runner_metrics(runner_metrics: RunnerMetrics, flavor: str) -> None:
     Args:
         runner_metrics: The metrics to be issued.
         flavor: The flavor of the runners.
+
+    Returns:
+        A dictionary containing the number of issued events per event type.
     """
-    event = metrics.RunnerStart(
+    runner_start_event = metrics.RunnerStart(
         timestamp=runner_metrics.pre_job.timestamp,
         flavor=flavor,
         workflow=runner_metrics.pre_job.workflow,
@@ -168,7 +182,23 @@ def _issue_runner_metrics(runner_metrics: RunnerMetrics, flavor: str) -> None:
         github_event=runner_metrics.pre_job.event,
         idle=runner_metrics.pre_job.timestamp - runner_metrics.installed_timestamp,
     )
-    metrics.issue_event(event)
+    metrics.issue_event(runner_start_event)
+    stats = {metrics.RunnerStart: 1}
+
+    if runner_metrics.post_job:
+        runner_stop_event = metrics.RunnerStop(
+            timestamp=runner_metrics.post_job.timestamp,
+            flavor=flavor,
+            workflow=runner_metrics.pre_job.workflow,
+            repo=runner_metrics.pre_job.repository,
+            github_event=runner_metrics.pre_job.event,
+            status=runner_metrics.post_job.status,
+            job_duration=runner_metrics.post_job.timestamp - runner_metrics.pre_job.timestamp,
+        )
+        metrics.issue_event(runner_stop_event)
+        stats[metrics.RunnerStop] = 1
+
+    return stats
 
 
 def _clean_up_shared_fs(fs: shared_fs.SharedFilesystem) -> None:
@@ -195,7 +225,7 @@ def _clean_up_shared_fs(fs: shared_fs.SharedFilesystem) -> None:
         logger.exception("Could not delete shared filesystem for runner %s.", fs.runner_name)
 
 
-def extract(flavor: str, ignore_runners: set[str]) -> None:
+def extract(flavor: str, ignore_runners: set[str]) -> IssuedMetricEventsStats:
     """Extract and issue metrics from runners.
 
     The metrics are extracted from the shared filesystem of given runners
@@ -209,7 +239,11 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
     Args:
         flavor: The flavor of the runners to extract metrics from.
         ignore_runners: The set of runners to ignore.
+
+    Returns:
+        A dictionary containing the number of issued events per event type.
     """
+    total_stats: IssuedMetricEventsStats = {}
     for fs in shared_fs.list_all():
         if (runner_name := fs.runner_name) not in ignore_runners:
             try:
@@ -224,11 +258,16 @@ def extract(flavor: str, ignore_runners: set[str]) -> None:
 
             if metrics_from_fs:
                 try:
-                    _issue_runner_metrics(runner_metrics=metrics_from_fs, flavor=flavor)
+                    stats = _issue_runner_metrics(runner_metrics=metrics_from_fs, flavor=flavor)
                 except errors.IssueMetricEventError:
                     logger.exception("Not able to issue metrics for runner %s", runner_name)
+                else:
+                    for event_type, count in stats.items():
+                        total_stats[event_type] = total_stats.get(event_type, 0) + count
+
             else:
                 logger.warning("Not able to issue metrics for runner %s", runner_name)
 
             logger.debug("Cleaning up shared filesystem for runner %s", runner_name)
             _clean_up_shared_fs(fs)
+    return total_stats
