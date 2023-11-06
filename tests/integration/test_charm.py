@@ -49,4 +49,4 @@ async def test_check_runners(ops_test: OpsTest, app: Application) -> None:
     """
     action = await app.units[0].run_action("check-runners")
     await action.wait()
-    assert action.result == {}
+    assert action.results == {}
