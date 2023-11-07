@@ -6,7 +6,7 @@ on:
 
 jobs:
   github-test:
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
     steps:
       - name: Echo test
         run: echo hello
