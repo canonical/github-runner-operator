@@ -16,7 +16,7 @@ from utilities import execute_command
 class FirewallEntry:
     """Represent an entry in the firewall.
 
-    Attrs:
+    Attributes:
         ip_range: The IP address range using CIDR notation.
     """
 

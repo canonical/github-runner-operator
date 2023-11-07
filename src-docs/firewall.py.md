@@ -72,7 +72,11 @@ Refresh the firewall configuration.
 ## <kbd>class</kbd> `FirewallEntry`
 Represent an entry in the firewall. 
 
-Attrs:  ip_range: The IP address range using CIDR notation. 
+
+
+**Attributes:**
+ 
+ - <b>`ip_range`</b>:  The IP address range using CIDR notation. 
 
 
 

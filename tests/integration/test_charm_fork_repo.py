@@ -6,88 +6,25 @@
 The forked repo is configured to fail the repo-policy-compliance check.
 """
 
-import secrets
+from datetime import datetime, timezone
 from time import sleep
-from typing import AsyncIterator, Iterator
+from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio
 import requests
-from github import Consts, Github
+from github import Consts
 from github.Branch import Branch
-from github.GithubException import GithubException
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import create_runner, get_runner_names
-from tests.status_name import ACTIVE_STATUS_NAME
-
-DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
-
-
-@pytest.fixture(scope="module")
-def github_client(token: str) -> Github:
-    """Returns the github client."""
-    return Github(token)
-
-
-@pytest.fixture(scope="module")
-def github_repository(github_client: Github, path: str) -> Repository:
-    """Returns client to the Github repository."""
-    return github_client.get_repo(path)
-
-
-@pytest.fixture(scope="module")
-def forked_github_repository(
-    github_repository: Repository,
-) -> Iterator[Repository]:
-    """Create a fork for a GitHub repository."""
-    forked_repository = github_repository.create_fork(name=f"test-{github_repository.name}")
-
-    # Wait for repo to be ready
-    for _ in range(10):
-        try:
-            sleep(10)
-            forked_repository.get_branches()
-            break
-        except GithubException:
-            pass
-    else:
-        assert False, "timed out whilst waiting for repository creation"
-
-    yield forked_repository
-
-    # Parallel runs of this test module is allowed. Therefore, the forked repo is not removed.
-
-
-@pytest.fixture(scope="module")
-def forked_github_branch(forked_github_repository: Repository) -> Iterator[Branch]:
-    """Create a new forked branch for testing."""
-    branch_name = f"test/{secrets.token_hex(4)}"
-
-    main_branch = forked_github_repository.get_branch(forked_github_repository.default_branch)
-    branch_ref = forked_github_repository.create_git_ref(
-        ref=f"refs/heads/{branch_name}", sha=main_branch.commit.sha
-    )
-
-    for _ in range(10):
-        try:
-            branch = forked_github_repository.get_branch(branch_name)
-            break
-        except GithubException as err:
-            if err.status == 404:
-                sleep(5)
-                continue
-            raise
-    else:
-        assert (
-            False
-        ), "Failed to get created branch in fork repo, the issue with GitHub or network."
-
-    yield branch
-
-    branch_ref.delete()
+from tests.integration.helpers import (
+    DISPATCH_TEST_WORKFLOW_FILENAME,
+    ensure_charm_has_runner,
+    get_runner_names,
+    reconcile,
+)
 
 
 @pytest.fixture(scope="module")
@@ -145,7 +82,7 @@ async def app_with_unsigned_commit_repo(
     app = app_no_runner  # alias for readability as the app will have a runner during the test
 
     await app.set_config({"path": forked_github_repository.full_name})
-    await create_runner(app=app, model=model)
+    await ensure_charm_has_runner(app=app, model=model)
 
     yield app
 
@@ -164,6 +101,8 @@ async def test_dispatch_workflow_failure(
     act: Trigger a workflow dispatch on a branch in the forked repository.
     assert: The workflow that was dispatched failed and the reason is logged.
     """
+    start_time = datetime.now(timezone.utc)
+
     unit = app_with_unsigned_commit_repo.units[0]
     runners = await get_runner_names(unit)
     assert len(runners) == 1
@@ -187,7 +126,12 @@ async def test_dispatch_workflow_failure(
     else:
         assert False, "Timeout while waiting for workflow to complete"
 
-    for run in workflow.get_runs():
+    # Unable to find the run id of the workflow that was dispatched.
+    # Therefore, all runs after this test start should pass the conditions.
+    for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
+        if start_time > run.created_at:
+            continue
+
         logs_url = run.jobs()[0].logs_url()
         logs = requests.get(logs_url).content.decode("utf-8")
 
@@ -213,7 +157,7 @@ async def test_path_config_change(
     path: str,
 ) -> None:
     """
-    arrange: A working application with one runner in a forked repoistory.
+    arrange: A working application with one runner in a forked repository.
     act: Change the path configuration to the main repository and reconcile runners.
     assert: No runners connected to the forked repository and one runner in the main repository.
     """
@@ -221,9 +165,7 @@ async def test_path_config_change(
 
     await app_with_unsigned_commit_repo.set_config({"path": path})
 
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await reconcile(app=app_with_unsigned_commit_repo, model=model)
 
     runner_names = await get_runner_names(unit)
     assert len(runner_names) == 1

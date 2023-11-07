@@ -42,7 +42,7 @@ class MissingRunnerBinaryError(Exception):
 class MissingConfigurationError(Exception):
     """Error for missing juju configuration.
 
-    Attrs:
+    Attributes:
         configs: The missing configurations.
     """
 
@@ -57,6 +57,10 @@ class MissingConfigurationError(Exception):
         self.configs = configs
 
 
+class ConfigurationError(Exception):
+    """Error for juju configuration."""
+
+
 class LxdError(Exception):
     """Error for executing LXD actions."""
 
@@ -64,7 +68,7 @@ class LxdError(Exception):
 class SubprocessError(Exception):
     """Error for Subprocess calls.
 
-    Attrs:
+    Attributes:
         cmd: Command in list form.
         return_code: Return code of the subprocess.
         stdout: Content of stdout of the subprocess.
@@ -94,5 +98,37 @@ class SubprocessError(Exception):
         self.stderr = stderr
 
 
+class IssueMetricEventError(Exception):
+    """Represents an error when issuing a metric event."""
+
+
 class LogrotateSetupError(Exception):
-    """Error raised when logrotate cannot be setup."""
+    """Represents an error raised when logrotate cannot be setup."""
+
+
+class SharedFilesystemError(Exception):
+    """Base class for all shared filesystem errors."""
+
+
+class CreateSharedFilesystemError(SharedFilesystemError):
+    """Represents an error when the shared filesystem could not be created."""
+
+
+class DeleteSharedFilesystemError(SharedFilesystemError):
+    """Represents an error when the shared filesystem could not be deleted."""
+
+
+class QuarantineSharedFilesystemError(SharedFilesystemError):
+    """Represents an error when the shared filesystem could not be quarantined."""
+
+
+class SharedFilesystemNotFoundError(SharedFilesystemError):
+    """Represents an error when the shared filesystem is not found."""
+
+
+class RunnerMetricsError(Exception):
+    """Base class for all runner metrics errors."""
+
+
+class CorruptMetricDataError(RunnerMetricsError):
+    """Represents an error with the data being corrupt."""

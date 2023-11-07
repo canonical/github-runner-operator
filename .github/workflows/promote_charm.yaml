@@ -7,12 +7,14 @@ on:
         type: choice
         description: 'Origin Channel'
         options:
+        - latest/beta
         - latest/edge
       destination-channel:
         type: choice
         description: 'Destination Channel'
         options:
         - latest/stable
+        - latest/beta
     secrets:
       CHARMHUB_TOKEN:
         required: true

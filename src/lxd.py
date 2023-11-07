@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 class LxdInstanceFileManager:
     """File manager of an LXD instance.
 
-    Attrs:
+    Attributes:
         instance (LxdInstance): LXD instance where the files are located in.
     """
 
@@ -151,7 +151,7 @@ class LxdInstanceFileManager:
 class LxdInstance:
     """An LXD instance.
 
-    Attrs:
+    Attributes:
         name (str): Name of the LXD instance.
         files (LxdInstanceFiles): Manager for the files on the LXD instance.
         status (str): Status of the LXD instance.
@@ -489,7 +489,7 @@ class LxdStoragePoolManager:
 class LxdStoragePool:
     """An LXD storage pool.
 
-    Attrs:
+    Attributes:
         name (str): Name of the storage pool.
         driver (str): Type of driver of the storage pool.
         used_by (list[str]): LXD instances using the storage pool.

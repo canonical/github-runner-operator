@@ -4,19 +4,28 @@
 """Fixtures for github runner charm integration tests."""
 
 import secrets
-import subprocess
+import zipfile
 from pathlib import Path
-from typing import Any, AsyncIterator
+from time import sleep
+from typing import Any, AsyncIterator, Iterator, Optional
 
 import pytest
 import pytest_asyncio
 import yaml
+from github import Github, GithubException
+from github.Branch import Branch
+from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-from tests.integration.helpers import create_runner
-from tests.status_name import ACTIVE_STATUS_NAME
+from tests.integration.helpers import (
+    deploy_github_runner_charm,
+    ensure_charm_has_runner,
+    reconcile,
+)
+
+DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
 
 
 @pytest.fixture(scope="module")
@@ -34,14 +43,41 @@ def app_name() -> str:
     return f"integration-id{secrets.token_hex(2)}"
 
 
-@pytest_asyncio.fixture(scope="module")
-async def charm_path(ops_test: OpsTest, lxd_profile: Path) -> AsyncIterator[Path]:
-    """Path to the built charm.
+@pytest.fixture(scope="module")
+def charm_file(pytestconfig: pytest.Config, loop_device: Optional[str]) -> str:
+    """Path to the built charm."""
+    charm = pytestconfig.getoption("--charm-file")
+    assert charm, "Please specify the --charm-file command line option"
 
-    Including lxd_profile fixture as an argument, will make lxd_profile.yaml
-    file present under the charm directory during the building of the charm.
-    """
-    yield await ops_test.build_charm(".")
+    lxd_profile_str = """config:
+    security.nesting: true
+    security.privileged: true
+    raw.lxc: |
+        lxc.apparmor.profile=unconfined
+        lxc.mount.auto=proc:rw sys:rw cgroup:rw
+        lxc.cgroup.devices.allow=a
+        lxc.cap.drop=
+devices:
+    kmsg:
+        path: /dev/kmsg
+        source: /dev/kmsg
+        type: unix-char
+"""
+    if loop_device:
+        lxd_profile_str += f"""    loop-control:
+        path: /dev/loop-control
+        type: unix-char
+    loop14:
+        path: {loop_device}
+        type: unix-block
+"""
+
+    with zipfile.ZipFile(charm, mode="a") as charm_file:
+        charm_file.writestr(
+            "lxd-profile.yaml",
+            lxd_profile_str,
+        )
+    return f"./{charm}"
 
 
 @pytest.fixture(scope="module")
@@ -91,6 +127,12 @@ def no_proxy(pytestconfig: pytest.Config) -> str:
 
 
 @pytest.fixture(scope="module")
+def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
+    """Configured loop_device setting."""
+    return pytestconfig.getoption("--loop-device")
+
+
+@pytest.fixture(scope="module")
 def model(ops_test: OpsTest) -> Model:
     """Juju model used in the test."""
     assert ops_test.model is not None
@@ -98,40 +140,9 @@ def model(ops_test: OpsTest) -> Model:
 
 
 @pytest_asyncio.fixture(scope="module")
-async def lxd_profile() -> AsyncIterator[Path]:
-    """File containing LXD profile for test mode.
-
-    The file needs to be in the charm directory while building a test version
-    of the charm.
-    """
-    lxd_profile_path = Path("lxd-profile.yaml")
-
-    lxd_profile_path.write_text(
-        """config:
-    security.nesting: true
-    security.privileged: true
-    raw.lxc: |
-        lxc.apparmor.profile=unconfined
-        lxc.mount.auto=proc:rw sys:rw cgroup:rw
-        lxc.cgroup.devices.allow=a
-        lxc.cap.drop=
-devices:
-    kmsg:
-        path: /dev/kmsg
-        source: /dev/kmsg
-        type: unix-char
-"""
-    )
-
-    yield lxd_profile_path
-
-    lxd_profile_path.unlink(missing_ok=True)
-
-
-@pytest_asyncio.fixture(scope="module")
 async def app_no_runner(
     model: Model,
-    charm_path: Path,
+    charm_file: str,
     app_name: str,
     path: str,
     token: str,
@@ -140,33 +151,18 @@ async def app_no_runner(
     no_proxy: str,
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
-    subprocess.run(["sudo", "modprobe", "br_netfilter"])
-
-    await model.set_config(
-        {
-            "juju-http-proxy": http_proxy,
-            "juju-https-proxy": https_proxy,
-            "juju-no-proxy": no_proxy,
-            "logging-config": "<root>=INFO;unit=DEBUG",
-        }
+    # Set the scheduled event to 1 hour to avoid interfering with the tests.
+    application = await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=app_name,
+        path=path,
+        token=token,
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=60,
     )
-
-    application = await model.deploy(
-        charm_path,
-        application_name=app_name,
-        series="jammy",
-        config={
-            "path": path,
-            "token": token,
-            "virtual-machines": 0,
-            "denylist": "10.10.0.0/16",
-            "test-mode": "insecure",
-            # Set the scheduled event to 1 hour to avoid interfering with the tests.
-            "reconcile-interval": 60,
-        },
-    )
-    await model.wait_for_idle(timeout=60 * 30)
-
     yield application
 
 
@@ -177,7 +173,7 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
-    await create_runner(app=app_no_runner, model=model)
+    await ensure_charm_has_runner(app=app_no_runner, model=model)
 
     yield app_no_runner
 
@@ -185,7 +181,7 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
 @pytest_asyncio.fixture(scope="module")
 async def app_scheduled_events(
     model: Model,
-    charm_path: Path,
+    charm_file: str,
     app_name: str,
     path: str,
     token: str,
@@ -203,36 +199,115 @@ async def app_scheduled_events(
     next trigger. Therefore, it would take a hour for the duration change to
     take effect.
     """
-    subprocess.run(["sudo", "modprobe", "br_netfilter"])
-
-    await model.set_config(
-        {
-            "juju-http-proxy": http_proxy,
-            "juju-https-proxy": https_proxy,
-            "juju-no-proxy": no_proxy,
-            "logging-config": "<root>=INFO;unit=DEBUG",
-        }
+    application = await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=app_name,
+        path=path,
+        token=token,
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=8,
     )
-
-    application = await model.deploy(
-        charm_path,
-        application_name=app_name,
-        series="jammy",
-        config={
-            "path": path,
-            "token": token,
-            "virtual-machines": 0,
-            "denylist": "10.10.0.0/16",
-            "test-mode": "insecure",
-            "reconcile-interval": 8,
-        },
-    )
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
-    unit = application.units[0]
 
     await application.set_config({"virtual-machines": "1"})
-    action = await unit.run_action("reconcile-runners")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await reconcile(app=application, model=model)
 
     yield application
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app_runner(
+    model: Model,
+    charm_file: str,
+    app_name: str,
+    path: str,
+    token: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
+) -> AsyncIterator[Application]:
+    """Application to test runners."""
+    # Use a different app_name so workflows can select runners from this deployment.
+    application = await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=f"{app_name}-test",
+        path=path,
+        token=token,
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=60,
+    )
+    yield application
+
+
+@pytest.fixture(scope="module")
+def github_client(token: str) -> Github:
+    """Returns the github client."""
+    return Github(token)
+
+
+@pytest.fixture(scope="module")
+def github_repository(github_client: Github, path: str) -> Repository:
+    """Returns client to the Github repository."""
+    return github_client.get_repo(path)
+
+
+@pytest.fixture(scope="module")
+def forked_github_repository(
+    github_repository: Repository,
+) -> Iterator[Repository]:
+    """Create a fork for a GitHub repository."""
+    forked_repository = github_repository.create_fork(name=f"test-{github_repository.name}")
+
+    # Wait for repo to be ready
+    for _ in range(10):
+        try:
+            sleep(10)
+            forked_repository.get_branches()
+            break
+        except GithubException:
+            pass
+    else:
+        assert False, "timed out whilst waiting for repository creation"
+
+    yield forked_repository
+
+    # Parallel runs of this test module is allowed. Therefore, the forked repo is not removed.
+
+
+@pytest.fixture(scope="module")
+def forked_github_branch(
+    github_repository: Repository, forked_github_repository: Repository
+) -> Iterator[Branch]:
+    """Create a new forked branch for testing."""
+    branch_name = f"test/{secrets.token_hex(4)}"
+
+    # Other tests change the default branch of the forked repo. Therefore, we need to get the
+    # default branch name of the original repository again (because some tests require signed
+    # commits, which should be present on the original default branch).
+    main_branch = forked_github_repository.get_branch(github_repository.default_branch)
+    branch_ref = forked_github_repository.create_git_ref(
+        ref=f"refs/heads/{branch_name}", sha=main_branch.commit.sha
+    )
+
+    for _ in range(10):
+        try:
+            branch = forked_github_repository.get_branch(branch_name)
+            break
+        except GithubException as err:
+            if err.status == 404:
+                sleep(5)
+                continue
+            raise
+    else:
+        assert (
+            False
+        ), "Failed to get created branch in fork repo, the issue with GitHub or network."
+
+    yield branch
+
+    branch_ref.delete()

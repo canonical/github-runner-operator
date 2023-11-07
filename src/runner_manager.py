@@ -23,8 +23,10 @@ from ghapi.page import pages
 from typing_extensions import assert_never
 
 import metrics
+import runner_metrics
+import shared_fs
 from charm_state import State as CharmState
-from errors import RunnerBinaryError, RunnerCreateError
+from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
 from github_type import (
     GitHubRunnerStatus,
     RegistrationToken,
@@ -36,6 +38,7 @@ from github_type import (
 from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
+from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import (
     GitHubOrg,
     GitHubPath,
@@ -53,7 +56,7 @@ logger = logging.getLogger(__name__)
 class RunnerManagerConfig:
     """Configuration of runner manager.
 
-    Attrs:
+    Attributes:
         path: GitHub repository path in the format '<owner>/<repo>', or the
             GitHub organization name.
         token: GitHub personal access token to register runner to the
@@ -61,7 +64,8 @@ class RunnerManagerConfig:
         image: Name of the image for creating LXD instance.
         service_token: Token for accessing local service.
         lxd_storage_path: Path to be used as LXD storage.
-        issue_metrics: Whether to issue metrics.
+        charm_state: The state of the charm.
+        dockerhub_mirror: URL of dockerhub mirror to use.
     """
 
     path: GitHubPath
@@ -70,6 +74,7 @@ class RunnerManagerConfig:
     service_token: str
     lxd_storage_path: Path
     charm_state: CharmState
+    dockerhub_mirror: str | None = None
 
 
 @dataclass
@@ -89,7 +94,7 @@ class RunnerManager:
 
     runner_bin_path = Path("/home/ubuntu/github-runner-app")
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         app_name: str,
         unit: int,
@@ -324,8 +329,19 @@ class RunnerManager:
                         duration=ts_after - ts_now,
                     ),
                 )
-            except OSError:
-                logger.exception("Failed to issue metrics")
+            except IssueMetricEventError:
+                logger.exception("Failed to issue RunnerInstalled metric")
+
+            fs = shared_fs.get(runner.config.name)
+            try:
+                (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).write_text(
+                    str(ts_after), encoding="utf-8"
+                )
+            except FileNotFoundError:
+                logger.exception(
+                    "Failed to write runner-installed.timestamp, "
+                    "will not be able to issue all metrics."
+                )
         else:
             runner.create(
                 self.config.image,
@@ -333,6 +349,111 @@ class RunnerManager:
                 RunnerManager.runner_bin_path,
                 registration_token,
             )
+
+    def _issue_runner_metrics(self) -> runner_metrics.IssuedMetricEventsStats:
+        """Issue runner metrics.
+
+        Returns:
+            The stats of issued metric events.
+        """
+        runner_states = self._get_runner_health_states()
+
+        return runner_metrics.extract(
+            flavor=self.app_name, ignore_runners=set(runner_states.healthy)
+        )
+
+    def _issue_reconciliation_metric(
+        self,
+        metric_stats: runner_metrics.IssuedMetricEventsStats,
+        reconciliation_start_ts: float,
+        reconciliation_end_ts: float,
+    ):
+        """Issue reconciliation metric.
+
+        Args:
+            metric_stats: The stats of issued metric events.
+            reconciliation_start_ts: The timestamp of when reconciliation started.
+            reconciliation_end_ts: The timestamp of when reconciliation ended.
+        """
+        runners = self._get_runners()
+        idle_runners = [
+            runner
+            for runner in runners
+            if runner.status.exist and runner.status.online and not runner.status.busy
+        ]
+
+        try:
+            metrics.issue_event(
+                event=metrics.Reconciliation(
+                    timestamp=time.time(),
+                    flavor=self.app_name,
+                    # Ignore line break before binary operator
+                    crashed_runners=metric_stats.get(metrics.RunnerStart, 0)
+                    - metric_stats.get(metrics.RunnerStop, 0),  # noqa: W503
+                    idle_runners=len(idle_runners),
+                    duration=reconciliation_end_ts - reconciliation_start_ts,
+                )
+            )
+        except IssueMetricEventError:
+            logger.exception("Failed to issue Reconciliation metric")
+
+    def _spawn_new_runners(self, count: int, resources: VirtualMachineResources):
+        """Spawn new runners.
+
+        Args:
+            count: Number of runners to spawn.
+            resources: Configuration of the virtual machine resources.
+        """
+        if not RunnerManager.runner_bin_path.exists():
+            raise RunnerCreateError("Unable to create runner due to missing runner binary.")
+        logger.info("Getting registration token for GitHub runners.")
+        registration_token = self._get_github_registration_token()
+        remove_token = self._get_github_remove_token()
+        logger.info("Attempting to add %i runner(s).", count)
+        for _ in range(count):
+            config = RunnerConfig(
+                name=self._generate_runner_name(),
+                app_name=self.app_name,
+                path=self.config.path,
+                proxies=self.proxies,
+                lxd_storage_path=self.config.lxd_storage_path,
+                issue_metrics=self.config.charm_state.is_metrics_logging_available,
+                dockerhub_mirror=self.config.dockerhub_mirror,
+            )
+            runner = Runner(self._clients, config, RunnerStatus())
+            try:
+                self._create_runner(registration_token, resources, runner)
+                logger.info("Created runner: %s", runner.config.name)
+            except RunnerCreateError:
+                logger.error("Unable to create runner: %s", runner.config.name)
+                runner.remove(remove_token)
+                logger.info("Cleaned up runner: %s", runner.config.name)
+                raise
+
+    def _remove_runners(self, count: int, runners: list[Runner]) -> None:
+        """Remove runners.
+
+        Args:
+            count: Number of runners to remove.
+            runners: List of online runners.
+        """
+        logger.info("Attempting to remove %i runner(s).", count)
+        # Idle runners are online runners that have not taken a job.
+        idle_runners = [runner for runner in runners if not runner.status.busy]
+        offset = min(count, len(idle_runners))
+        if offset != 0:
+            logger.info("Removing %i runner(s).", offset)
+            remove_runners = idle_runners[:offset]
+
+            logger.info("Cleaning up idle runners.")
+
+            remove_token = self._get_github_remove_token()
+
+            for runner in remove_runners:
+                runner.remove(remove_token)
+                logger.info("Removed runner: %s", runner.config.name)
+        else:
+            logger.info("There are no idle runners to remove.")
 
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
@@ -344,6 +465,9 @@ class RunnerManager:
         Returns:
             Difference between intended runners and actual runners.
         """
+        if self.config.charm_state.is_metrics_logging_available:
+            start_ts = time.time()
+
         runners = self._get_runners()
 
         # Add/Remove runners to match the target quantity
@@ -365,6 +489,9 @@ class RunnerManager:
             len(runner_states.unhealthy),
         )
 
+        if self.config.charm_state.is_metrics_logging_available:
+            metric_stats = self._issue_runner_metrics()
+
         # Clean up offline runners
         if runner_states.unhealthy:
             logger.info("Cleaning up unhealthy runners.")
@@ -382,54 +509,19 @@ class RunnerManager:
         delta = quantity - len(runner_states.healthy)
         # Spawn new runners
         if delta > 0:
-            if not RunnerManager.runner_bin_path.exists():
-                raise RunnerCreateError("Unable to create runner due to missing runner binary.")
-
-            logger.info("Getting registration token for GitHub runners.")
-
-            registration_token = self._get_github_registration_token()
-            remove_token = self._get_github_remove_token()
-
-            logger.info("Attempting to add %i runner(s).", delta)
-            for _ in range(delta):
-                config = RunnerConfig(
-                    self.app_name,
-                    self.config.path,
-                    self.proxies,
-                    self.config.lxd_storage_path,
-                    self._generate_runner_name(),
-                )
-                runner = Runner(self._clients, config, RunnerStatus())
-                try:
-                    self._create_runner(registration_token, resources, runner)
-                    logger.info("Created runner: %s", runner.config.name)
-                except RunnerCreateError:
-                    logger.error("Unable to create runner: %s", runner.config.name)
-                    runner.remove(remove_token)
-                    logger.info("Cleaned up runner: %s", runner.config.name)
-                    raise
-
+            self._spawn_new_runners(delta, resources)
         elif delta < 0:
-            logger.info("Attempting to remove %i runner(s).", -delta)
-            # Idle runners are online runners that have not taken a job.
-            idle_runners = [runner for runner in online_runners if not runner.status.busy]
-            offset = min(-delta, len(idle_runners))
-            if offset != 0:
-                logger.info("Removing %i runner(s).", offset)
-                remove_runners = idle_runners[:offset]
-
-                logger.info("Cleaning up idle runners.")
-
-                remove_token = self._get_github_remove_token()
-
-                for runner in remove_runners:
-                    runner.remove(remove_token)
-                    logger.info("Removed runner: %s", runner.config.name)
-            else:
-                logger.info("There are no idle runners to remove.")
+            self._remove_runners(count=-delta, runners=online_runners)
         else:
             logger.info("No changes to number of runners needed.")
 
+        if self.config.charm_state.is_metrics_logging_available:
+            end_ts = time.time()
+            self._issue_reconciliation_metric(
+                metric_stats=metric_stats,
+                reconciliation_start_ts=start_ts,
+                reconciliation_end_ts=end_ts,
+            )
         return delta
 
     def flush(self, flush_busy: bool = True) -> int:
@@ -546,7 +638,13 @@ class RunnerManager:
             busy = getattr(remote_runner, "busy", None)
 
             config = RunnerConfig(
-                self.app_name, self.config.path, self.proxies, self.config.lxd_storage_path, name
+                name=name,
+                app_name=self.app_name,
+                path=self.config.path,
+                proxies=self.proxies,
+                lxd_storage_path=self.config.lxd_storage_path,
+                issue_metrics=self.config.charm_state.is_metrics_logging_available,
+                dockerhub_mirror=self.config.dockerhub_mirror,
             )
             return Runner(
                 self._clients,

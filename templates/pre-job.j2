@@ -1,7 +1,26 @@
 #!/usr/bin/env bash
 
+timestamp=$(date +%s)
+
 # Disable exit-on-error, due the need for error handling.
 set +e
+
+{% if issue_metrics %}
+jq -n \
+  --arg workflow "$GITHUB_WORKFLOW" \
+  --arg repository "$GITHUB_REPOSITORY" \
+  --arg event "$GITHUB_EVENT_NAME" \
+  --argjson timestamp "$timestamp" \
+  --arg workflow_run_id "$GITHUB_RUN_ID" \
+  '{
+    "workflow": $workflow,
+    "repository": $repository,
+    "event": $event,
+    "timestamp": $timestamp,
+    "workflow_run_id": $workflow_run_id
+  }' > /metrics-exchange/pre-job-metrics.json || true
+{% endif %}
+
 
 # Log common env variables.
 logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
@@ -65,6 +84,21 @@ if [[ $REPO_CHECK -ne 0 ]]; then
   # Killing the runner.Listener process to stop the runner application. This will prevent jobs from being executed.
   pkill -2 Runner.Listener
 
+
+    {% if issue_metrics %}
+        # Write Post Job metrics with status "repo-policy-check-failure" .
+        # We write it here, rather than relying on the post-job script,
+        # as it may not run due to the poweroff command below.
+        post_job_timestamp=$(date +%s)
+
+        jq -n \
+          --argjson timestamp "$post_job_timestamp" \
+          '{
+            "timestamp": $timestamp,
+            "status": "repo-policy-check-failure"
+          }' > /metrics-exchange/post-job-metrics.json || true
+    {% endif %}
+
   # Shutdown the instance as a safe guard. The time delay is needed for the runner application to upload the logs.
   bash -c "sleep 10; sudo systemctl poweroff -i" &
 
@@ -73,3 +107,10 @@ if [[ $REPO_CHECK -ne 0 ]]; then
 fi
 
 logger -s "The repository setup check has passed, proceeding to execute jobs"
+
+if [[ -n "$DOCKERHUB_MIRROR" ]]; then
+  logger -s "A private docker registry is setup as a dockerhub mirror for this self-hosted runner."
+  logger -s "The docker daemon on this self-hosted runner is configured to use the dockerhub mirror."
+  logger -s "The URL to the private docker registry is in the DOCKERHUB_MIRROR environment variable."
+  logger -s "For microk8s, see instructions here: https://microk8s.io/docs/dockerhub-limits"
+fi

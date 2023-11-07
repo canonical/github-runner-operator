@@ -1,3 +1,29 @@
 #!/bin/bash
 
+# Don't exit on error to make sure the machine gets powered off.
+set +e
+
+{% if issue_metrics %}
+
+write_post_metrics(){
+    # Only write the post-job metrics if the file does not already exist - which may indicate
+    # that the job has failed inside pre-job.
+
+    if [ -f /metrics-exchange/post-job-metrics.json ]; then
+        return
+    fi
+
+    timestamp=$(date +%s)
+
+    jq -n \
+      --argjson timestamp "$timestamp" \
+      '{
+        "timestamp": $timestamp,
+        "status": "normal"
+      }' > /metrics-exchange/post-job-metrics.json
+}
+
+(/home/ubuntu/github-runner/run.sh; write_post_metrics; sudo systemctl poweroff -i) &>/dev/null &
+{% else %}
 (/home/ubuntu/github-runner/run.sh; sudo systemctl poweroff -i) &>/dev/null &
+{% endif %}
