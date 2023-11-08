@@ -385,12 +385,7 @@ class GithubRunnerCharm(CharmBase):
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
         if exit_code == 0:
             logger.info("Rebooting system...")
-
-            # The juju-reboot is inject to PATH by juju.
-            cmd = ["juju-reboot"]
-            if now:
-                cmd += ["--now"]
-            execute_command(cmd)
+            self.unit.reboot(now=now)
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
