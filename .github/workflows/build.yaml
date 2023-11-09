@@ -1,0 +1,59 @@
+name: Build rocks
+
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: [self-hosted, linux, X64, jammy, large]
+    outputs:
+      rock: ${{ steps.set.outputs.rock }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+    - name: Setup aproxy
+      run: |
+        sudo snap install aproxy --edge
+        sudo snap set aproxy proxy=squid.internal:3128
+        sudo nft -f - << EOF
+        define default-ip = $(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
+        define private-ips = { 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }
+        table ip aproxy
+        flush table ip aproxy
+        table ip aproxy {
+              chain prerouting {
+                      type nat hook prerouting priority dstnat; policy accept;
+                      ip daddr != \$private-ips tcp dport { 80, 443 } counter dnat to \$default-ip:8443
+              }
+
+              chain output {
+                      type nat hook output priority -100; policy accept;
+                      ip daddr != \$private-ips tcp dport { 80, 443 } counter dnat to \$default-ip:8443
+              }
+        }
+        EOF
+    - uses: canonical/craft-actions/rockcraft-pack@main
+      id: rockcraft
+    - name: Set rock output
+      id: set
+      run: echo "rock=${{ steps.rockcraft.outputs.rock }}" >> "$GITHUB_OUTPUT"
+
+    - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
+      with:
+        path: ${{ steps.rockcraft.outputs.rock }}
+        name: ${{ steps.rockcraft.outputs.rock }}
+
+    - name: Install Syft
+      run: |
+        curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+    - name: Create SBOM
+      run: syft $(realpath ${{ steps.rockcraft.outputs.rock }}) -o spdx-json=identity_platform_admin_ui.sbom.json
+
+    - name: Upload SBOM
+      uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
+      with:
+        name: identity-platform-admin-ui-sbom
+        path: "identity_platform_admin_ui.sbom.json"
+
