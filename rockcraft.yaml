@@ -1,0 +1,43 @@
+name: identity-platform-admin-ui
+
+base: bare
+build-base: ubuntu:22.04
+version: '1.2.0' # x-release-please-version
+summary: Canonical Identity platform Admin UI
+description: |
+  This is the Canonical Identity platform admin UI used for connecting
+  Ory Kratos with Ory Hydra.
+license: Apache-2.0
+
+platforms:
+  amd64:
+
+services:
+  admin-ui:
+    override: replace
+    command: /usr/bin/identity-platform-admin-ui
+    startup: enabled
+
+parts:
+  certificates:
+    plugin: nil
+    stage-packages:
+      - ca-certificates
+
+  go-build:
+    plugin: go
+    source: .
+    source-type: local
+    build-snaps:
+      - go/1.19/stable
+      - node/18/stable
+    build-packages:
+      - make
+      - git
+    override-build: |
+      make npm-build build
+      install -D -m755 cmd/app ${CRAFT_PART_INSTALL}/opt/identity-platform-admin-ui/bin/app
+    organize:
+      opt/identity-platform-admin-ui/bin/app: usr/bin/identity-platform-admin-ui
+    stage-packages:
+      - base-files_var

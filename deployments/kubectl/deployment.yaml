@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity-platform-admin-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: identity-platform-admin-ui
+  strategy: 
+    type: Recreate    
+  template:
+    metadata:
+      labels:
+        app: identity-platform-admin-ui
+      annotations:
+        prometheus.io/path: /api/v0/metrics
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+    spec:
+      containers:
+      - image: identity-platform-admin-ui
+        name: identity-platform-admin-ui
+        envFrom:
+          - configMapRef:
+              name: identity-platform-admin-ui
+        ports:
+        - name: http
+          containerPort: 8000
+        readinessProbe:
+          httpGet:
+            path: "/api/v0/status"
+            port: 8000
+          initialDelaySeconds: 1
+          failureThreshold: 10
+          timeoutSeconds: 5
+          periodSeconds: 30
+        livenessProbe:
+          httpGet:
+            path: "/api/v0/status"
+            port: 8000
+          initialDelaySeconds: 1
+          failureThreshold: 10
+          timeoutSeconds: 5
+          periodSeconds: 30
+      imagePullSecrets:
+      - name: regcred-github

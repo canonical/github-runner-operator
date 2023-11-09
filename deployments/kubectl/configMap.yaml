@@ -1,0 +1,110 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: identity-platform-admin-ui
+data:
+  PORT: "8000"
+  LOG_LEVEL: DEBUG
+  TRACING_ENABLED: "false" 
+  KRATOS_PUBLIC_URL: http://kratos-public.default.svc.cluster.local
+  KRATOS_ADMIN_URL: http://kratos-public.default.svc.cluster.local
+  HYDRA_ADMIN_URL: http://hydra-admin.default.svc.cluster.local:4445
+  IDP_CONFIGMAP_NAME: idps
+  IDP_CONFIGMAP_NAMESPACE: default
+  SCHEMAS_CONFIGMAP_NAME: identity-schemas
+  SCHEMAS_CONFIGMAP_NAMESPACE: default
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: idps
+data:
+  "idps.yaml": |
+    - id: microsoft_af675f353bd7451588e2b8032e315f6f
+      client_id: af675f35-3bd7-4515-88e2-b8032e315f6f
+      provider: microsoft
+      client_secret: 3y38Q~aslkdhaskjhd~W0xWDB.123u98asd
+      microsoft_tenant: e1574293-28de-4e94-87d5-b61c76fc14e1
+      mapper_url: file:///etc/config/kratos/microsoft_schema.jsonnet
+      scope:
+        - profile
+        - email
+        - address
+        - phone
+    - id: google_18fa2999e6c9475aa49515d933d8e8ce
+      client_id: 18fa2999-e6c9-475a-a495-15d933d8e8ce
+      provider: google
+      client_secret: 3y38Q~aslkdhaskjhd~W0xWDB.123u98asd
+      mapper_url: file:///etc/config/kratos/google_schema.jsonnet
+      scope:
+        - profile
+        - email
+        - address
+        - phone
+    - id: aws_18fa2999e6c9475aa49589d941d8e1zy
+      client_id: 18fa2999-e6c9-475a-a495-89d941d8e1zy
+      provider: aws
+      client_secret: 3y38Q~aslkdhaskjhd~W0xWDB.123u98asd
+      mapper_url: file:///etc/config/kratos/google_schema.jsonnet
+      scope:
+        - profile
+        - email
+        - address
+        - phone
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: identity-schemas
+data:
+  "default.schema": "default"
+  "admin_v0": |
+    {
+            "id": "admin_v0",
+            "schema": {
+                "$id": "https://schemas.canonical.com/presets/kratos/admin_v0.json",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "additionalProperties": true,
+                    "traits": {
+                        "properties": {
+                            "email": {
+                                "format": "email",
+                                "minLength": 3,
+                                "ory.sh/kratos": {
+                                    "verification": {
+                                        "via": "email"
+                                    }
+                                },
+                                "title": "E-Mail",
+                                "type": "string"
+                            },
+                            "name": {
+                                "title": "Name",
+                                "type": "string"
+                            },
+                            "phone_number": {
+                                "title": "Phone Number",
+                                "type": "string"
+                            },
+                            "username": {
+                                "ory.sh/kratos": {
+                                    "credentials": {
+                                        "password": {
+                                            "identifier": true
+                                        }
+                                    }
+                                },
+                                "title": "Username",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "title": "Admin Account",
+                "type": "object"
+            }
+        }

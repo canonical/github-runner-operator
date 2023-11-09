@@ -1,0 +1,84 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+build:
+  artifacts:
+  - image: "identity-platform-admin-ui"
+    sync:
+      infer:
+      - "cmd/main.go"
+      - "go.mod"
+      - "go.sum"
+    custom:
+      buildCommand: ./build.sh
+      dependencies:
+        paths: 
+          - rockcraft.yaml
+    platforms: ["linux/amd64"]        
+  local:
+    push: true
+
+test:
+  - image: "identity-platform-admin-ui"
+    structureTests:
+      - './structure-tests.yaml'
+
+
+manifests:
+  rawYaml:
+    - "deployments/kubectl/*"
+
+deploy:
+  kubectl:
+  helm:
+    releases:
+      - name: postgresql
+        remoteChart: oci://registry-1.docker.io/bitnamicharts/postgresql
+        valuesFiles: ["deployments/helm/postgresql/values.yaml"]
+      - name: kratos
+        remoteChart: kratos
+        repo: https://k8s.ory.sh/helm/charts
+        valuesFiles: ["deployments/helm/kratos/values.yaml"]
+        wait: false
+      - name: hydra
+        remoteChart: hydra
+        repo: https://k8s.ory.sh/helm/charts
+        valuesFiles: ["deployments/helm/hydra/values.yaml"]
+        wait: false
+      - name: oathkeeper
+        remoteChart: oathkeeper
+        repo: https://k8s.ory.sh/helm/charts
+        setValues:
+          demo: "true"
+        wait: false
+
+portForward:
+- resourceType: service
+  resourceName: identity-platform-admin-ui
+  namespace: default
+  port: 80
+  localPort: 8000
+- resourceType: service
+  resourceName: kratos-admin
+  namespace: default
+  port: 80
+  localPort: 14434
+- resourceType: service
+  resourceName: kratos-public
+  namespace: default
+  port: 80
+  localPort: 14433
+- resourceType: service
+  resourceName: hydra-admin
+  namespace: default
+  port: 4445
+  localPort: 14445
+- resourceType: service
+  resourceName: hydra-public
+  namespace: default
+  port: 4444
+  localPort: 14444
+- resourceType: service
+  resourceName: oathkeeper-api
+  namespace: default
+  port: 4456
+  localPort: 14456

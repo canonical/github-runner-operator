@@ -1,87 +1,182 @@
-[![CharmHub Badge](https://charmhub.io/github-runner-operator/badge.svg)](https://charmhub.io/github-runner-operator)
-[![Promote charm](https://github.com/canonical/github-runner-operator/actions/workflows/promote_charm.yaml/badge.svg)](https://github.com/canonical/github-runner-operator/actions/workflows/promote_charm.yaml)
-[![Discourse Status](https://img.shields.io/discourse/status?server=https%3A%2F%2Fdiscourse.charmhub.io&style=flat&label=CharmHub%20Discourse)](https://discourse.charmhub.io)
+# Identity Platform Admin UI
 
-# GitHub runner
+[![codecov](https://codecov.io/gh/canonical/identity-platform-admin-ui/branch/main/graph/badge.svg?token=Aloh6MWghg)](https://codecov.io/gh/canonical/identity-platform-admin-ui)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/canonical/identity-platform-admin-ui/badge)](https://securityscorecards.dev/viewer/?platform=github.com&org=canonical&repo=identity-platform-admin-ui)
+![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/v/tag/canonical/identity-platform-admin-ui)
+[![CI](https://github.com/canonical/identity-platform-admin-ui/actions/workflows/ci.yaml/badge.svg)](https://github.com/canonical/identity-platform-admin-ui/actions/workflows/ci.yaml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/canonical/identity-platform-admin-ui.svg)](https://pkg.go.dev/github.com/canonical/identity-platform-admin-ui)
 
-## Description
-
-This machine charm creates [self-hosted runners for running GitHub Actions](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners). Each unit of this charm will start a configurable number of LXD based containers and virtual
-machines to host them. Every runner performs only one job, after which it unregisters from GitHub to ensure that each job runs in
-a clean environment.
-
-The charm will periodically check the number of runners and spawn or destroy runners as necessary to match the number provided by configuration of
-runners. Both the reconciliation interval and the number of runners to maintain are configurable.
-
-## Usage
-
-There are two mandatory configuration options - `path` and `token`.
-
-* `path` determines the organization or repository that the runner will be registered with;
-* `token` is a [GitHub Personal Access Token (PAT)](https://github.com/settings/tokens) (note: this is not the same as the token given in the Add a Runner instructions). The PAT token requires either:
-  * the **`repo`** ("Full control of private repositories") permission for
-use with repositories or;
-  * both the **`repo`** and **`admin:org`** ("Full control of orgs and teams, read and write org projects") permissions for use with an organization. This is necessary because the charm will create and remove runners as needed to ensure that each runner executes only one job to protect jobs from leaking information to other jobs running on the same runner.
-
-The number of runners on a single unit is configured using two configuration options that can be both used at the same time:
-
-* the `containers` option configures the number of LXD container runners;
-* the `virtual-machines` option configures the number of LXD virtual machine runners.
-
-For example, if the charm is deployed with 2 units `juju deploy <charm> -n 2` and the `containers` value of 3 is in use,
-there will be a total of 6 container based runners, three on each unit.
-
-## Reconciliation
-
-Each unit will periodically check the number of runners at the interval specified by `check-interval` to maintain the appropriate number. During the check, all the offline runners are unregistered from GitHub.
-
-If there are more idle runners than configured, the oldest idle runners are unregistered and destroyed. If there are less idle runners than configured, new runners are spawned and registered with GitHub.
-
-During each time period, every unit will make one or more API calls to GitHub. The interval may need to be adjusted if the number of units is large enough to trigger [Rate Limiting](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting).
+This is the Admin UI for the Canonical Identity Platform.
 
 
-## COS
-The charm is designed to provide comprehensive metrics and monitoring capabilities for both the Runners and the Charm itself. These metrics are made available through the `cos-agent` integration with the `cos_agent` interface. Additionally, a Grafana Dashboard is included to help visualize these metrics effectively.
+## Environment Variables
 
-### Loki Integration
-#### Loki Push API
-The charm seamlessly integrates with Loki, a powerful log aggregation system, through the `cos_agent` interface. This integration allows the charm to push various metrics and logs related to the Runners and the Charm itself to a Loki instance. This provides valuable insights into the performance and behavior of your deployment.
+- `OTEL_GRPC_ENDPOINT`: address of the open telemetry grpc endpoint, used for tracing
+- `OTEL_HTTP_ENDPOINT`: address of the open telemetry http endpoint, used for tracing (grpc endpoint takes precedence)
+- `TRACING_ENABLED`: flag enabling tracing 
+- `LOG_LEVEL`: log level, one of `info`,`warn`,`error`,`debug`, defaults to `error`
+- `LOG_FILE`: file where to dump logs, defaults to `log.txt`
+- `PORT `: http server port, defaults to `8080`
+- `DEBUG`: debugging flag for hydra and kratos clients
+- `KRATOS_PUBLIC_URL`: Kratos public endpoints address
+- `KRATOS_ADMIN_URL`: Kratos admin endpoints address
+- `HYDRA_ADMIN_URL`: Hydra admin endpoints address
+- `IDP_CONFIGMAP_NAME`: name of the k8s config map containing Identity Providers
+- `IDP_CONFIGMAP_NAMESPACE`: namespace of the k8s config map containing Identity Providers
+- `SCHEMAS_CONFIGMAP_NAME`: name of the k8s config map containing Identity Schemas
+- `SCHEMAS_CONFIGMAP_NAMESPACE`: namespace of the k8s config map containing Identity Schemas
 
-### Grafana Dashboard
-To make monitoring even more accessible, the charm comes with a pre-configured Grafana Dashboard. This dashboard is designed to visualize the metrics collected by the charm, making it easier for operators to track the health and performance of the system.
 
-#### Automated Dashboard Deployment
-You can automate the deployment of the Grafana Dashboard using the [cos-integration-k8s](https://charmhub.io/cos-configuration-k8s) charm. This simplifies the setup process and ensures that your monitoring infrastructure is ready to go with minimal manual intervention.
+## Development setup
 
-#### Configuration Options
-To enable the automated deployment of the Grafana Dashboard, you can provide the following configuration options when deploying the `cos-integration-k8s` charm:
+As a requirement, please make sure to:
+* have `rockcraft`, `yq`, `skopeo` and `make` installed
 
-```ini
-git_repo=https://https://github.com/canonical/github-runner-operator
-git_branch=main
-git_depth=1
-grafana_dashboards_path=src/grafana_dashboard_metrics
+      snap install rockcraft
+      snap install yq
+      apt install skopeo
+      apt install make
+
+* microk8s is installed with the `registry` addon operating at `localhost:32000` and kubectl configured to use it
+
+      snap install microk8s --classic
+      microk8s status --wait-ready
+      microk8s enable registry
+      # ensure kubectl is configured to use microk8s
+      microk8s.kubectl config view --raw > $HOME/.kube/config
+
+
+* ensure [`skaffold`](https://github.com/GoogleContainerTools/skaffold), [`container-structure-test`](https://github.com/GoogleContainerTools/container-structure-test) and [`docker`](https://docs.docker.com/engine/install/ubuntu/) are installed according to their documentation
+
+Run `make dev` to get a working environment in k8s
+
+
+## Endpoint examples
+
+```shell
+> http :8000/api/v0/identities
+HTTP/1.1 200 OK
+Content-Length: 86
+Content-Type: application/json
+Date: Wed, 11 Oct 2023 10:05:37 GMT
+Vary: Origin
+
+{
+    "_meta": {
+        "page": 1,
+        "size": 100
+    },
+    "data": [],
+    "message": "List of identities",
+    "status": 200
+}
 ```
 
+```shell
+> http :8000/api/v0/idps      
+HTTP/1.1 200 OK
+Content-Length: 1520
+Content-Type: application/json
+Date: Wed, 11 Oct 2023 10:05:43 GMT
+Vary: Origin
 
+{
+    "_meta": null,
+    "data": [
+        {
+            "apple_private_key": "",
+            "apple_private_key_id": "",
+            "apple_team_id": "",
+            "auth_url": "",
+            "client_id": "af675f35-3bd7-4515-88e2-b8032e315f6f",
+            "client_secret": "3y38Q~aslkdhaskjhd~W0xWDB.123u98asd",
+            "id": "microsoft_af675f353bd7451588e2b8032e315f6f",
+            "issuer_url": "",
+            "label": "",
+            "mapper_url": "file:///etc/config/kratos/microsoft_schema.jsonnet",
+            "microsoft_tenant": "e1574293-28de-4e94-87d5-b61c76fc14e1",
+            "provider": "microsoft",
+            "requested_claims": null,
+            "scope": [
+                "profile",
+                "email",
+                "address",
+                "phone"
+            ],
+            "subject_source": "",
+            "token_url": ""
+        },
+        {
+            "apple_private_key": "",
+            "apple_private_key_id": "",
+            "apple_team_id": "",
+            "auth_url": "",
+            "client_id": "18fa2999-e6c9-475a-a495-15d933d8e8ce",
+            "client_secret": "3y38Q~aslkdhaskjhd~W0xWDB.123u98asd",
+            "id": "google_18fa2999e6c9475aa49515d933d8e8ce",
+            "issuer_url": "",
+            "label": "",
+            "mapper_url": "file:///etc/config/kratos/google_schema.jsonnet",
+            "microsoft_tenant": "",
+            "provider": "google",
+            "requested_claims": null,
+            "scope": [
+                "profile",
+                "email",
+                "address",
+                "phone"
+            ],
+            "subject_source": "",
+            "token_url": ""
+        },
+        {
+            "apple_private_key": "",
+            "apple_private_key_id": "",
+            "apple_team_id": "",
+            "auth_url": "",
+            "client_id": "18fa2999-e6c9-475a-a495-89d941d8e1zy",
+            "client_secret": "3y38Q~aslkdhaskjhd~W0xWDB.123u98asd",
+            "id": "aws_18fa2999e6c9475aa49589d941d8e1zy",
+            "issuer_url": "",
+            "label": "",
+            "mapper_url": "file:///etc/config/kratos/google_schema.jsonnet",
+            "microsoft_tenant": "",
+            "provider": "aws",
+            "requested_claims": null,
+            "scope": [
+                "profile",
+                "email",
+                "address",
+                "phone"
+            ],
+            "subject_source": "",
+            "token_url": ""
+        }
+    ],
+    "message": "List of IDPs",
+    "status": 200
+}
+```
 
+```shell
+> http :8000/api/v0/clients     
+HTTP/1.1 200 OK
+Content-Length: 316
+Content-Type: application/json
+Date: Wed, 11 Oct 2023 10:05:47 GMT
+Vary: Origin
 
-
-## Development
-
-This charm uses black and flake8 for formatting. Both run with the lint stage of tox.
-
-## Testing
-
-Testing is run via tox and pytest. The unit test can be ran with `tox -e unit` and the integration test on juju 3.1 with `tox -e integration-juju3.1`.
-
-Dependencies are installed in virtual environments. Integration testing requires a juju controller to execute. These tests will use the existing controller, creating an ephemeral model for the tests which is removed after testing. If you do not already have a controller setup, you can configure a local instance via LXD, see the [upstream documentation](https://juju.is/docs/lxd-cloud) for details.
-
-## Generating src docs for every commit
-
-Run the following command:
-
-```bash
-echo -e "tox -e src-docs\ngit add src-docs\n" >> .git/hooks/pre-commit
-chmod +x .git/hooks/pre-commit
+{
+    "_links": {
+        "first": "/api/v0/clients?page=eyJvZmZzZXQiOiIwIiwidiI6Mn0&size=200",
+        "next": "/api/v0/clients?page=eyJvZmZzZXQiOiIyMDAiLCJ2IjoyfQ&size=200",
+        "prev": "/api/v0/clients?page=eyJvZmZzZXQiOiItMjAwIiwidiI6Mn0&size=200"
+    },
+    "_meta": {
+        "total_count": "0"
+    },
+    "data": [],
+    "message": "List of clients",
+    "status": 200
+}
 ```

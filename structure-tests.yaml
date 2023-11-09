@@ -1,0 +1,30 @@
+schemaVersion: 2.0.0
+
+
+globalEnvVars:
+  - key: "KRATOS_PUBLIC_URL"
+    value: "https://kratos.iam.public"
+  - key: "KRATOS_ADMIN_URL"
+    value: "https://kratos.iam.admin"
+  - key: "HYDRA_ADMIN_URL"
+    value: "https://hydra.iam.admin"
+  - key: "IDP_CONFIGMAP_NAME"
+    value: idps
+  - key: "IDP_CONFIGMAP_NAMESPACE"
+    value: default
+  - key: "SCHEMAS_CONFIGMAP_NAME"
+    value: identity-schemas
+  - key: "SCHEMAS_CONFIGMAP_NAMESPACE"
+    value: default
+
+fileExistenceTests:
+- name: "no go binary"
+  path: "/usr/bin/go"
+  shouldExist: false
+- name: "application go binary"
+  path: "/usr/bin/identity-platform-admin-ui"
+  shouldExist: true
+commandTests:
+  - name: "application version"
+    command: "/usr/bin/identity-platform-admin-ui"
+    args: ["-version"]

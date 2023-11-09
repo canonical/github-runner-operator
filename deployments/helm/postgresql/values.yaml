@@ -1,0 +1,19 @@
+global:
+  postgresql:
+    auth:
+      database: "iam"
+      username: "iam"
+      password: "iam"
+      postgresPassword: "iam"
+primary:
+  initdb:
+    scripts:
+      init.sql: |
+        CREATE DATABASE kratos;
+        CREATE DATABASE hydra;
+
+auth:
+  database: "iam"
+  username: "iam"
+  password: "iam"
+  postgresPassword: "iam"

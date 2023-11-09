@@ -1,31 +1,81 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:base",
+    ":disableDependencyDashboard",
+    ":automergeDigest",
+    ":automergePatch",
+    ":automergeMinor",
+    ":rebaseStalePrs",
+    ":semanticCommits",
+    ":semanticCommitScope(deps)",
+    "helpers:pinGitHubActionDigests",
   ],
-  "regexManagers": [
-    {
-      "fileMatch": ["(^|/)rockcraft.yaml$"],
-      "description": "Update base image references",
-      "matchStringsStrategy": "any",
-      "matchStrings": ["# renovate: build-base:\\s+(?<depName>[^:]*):(?<currentValue>[^\\s@]*)(@(?<currentDigest>sha256:[0-9a-f]*))?",
-      "# renovate: base:\\s+(?<depName>[^:]*):(?<currentValue>[^\\s@]*)(@(?<currentDigest>sha256:[0-9a-f]*))?"],
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "ubuntu"
-    }
-  ],
+  "automergeType": "pr",
+  "rebaseWhen": "behind-base-branch",
   "packageRules": [
     {
-      "enabled": true,
-      "matchDatasources": [
-        "docker"
-      ],
-      "pinDigests": true
+      "groupName": "github actions",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "schedule": ["at any time"],
+      "additionalBranchPrefix": "auto-"
     },
     {
-      "matchFiles": ["rockcraft.yaml"],
-      "matchUpdateTypes": ["major", "minor", "patch"],
-      "enabled": false
+      "groupName": "UI deps",
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "schedule": ["at any time"],
+      "prPriority": 4,
+      "additionalBranchPrefix": "auto-"
+    },
+    {
+      "groupName": "internal UI dependencies",
+      "groupSlug": "internal",
+      "packagePatterns": [
+          "^@canonical",
+          "^canonicalwebteam",
+          "^vanilla-framework"
+      ],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "schedule": ["at any time"],
+      "prPriority": 5,
+      "additionalBranchPrefix": "auto-"
+    },
+    {
+      "groupName": "internal UI dependencies",
+      "groupSlug": "internal",
+      "packagePatterns": [
+          "^@canonical",
+          "^canonicalwebteam",
+          "^vanilla-framework"
+      ],
+      "matchUpdateTypes": ["major"],
+      "schedule": ["at any time"],
+      "prPriority": 5
+    },
+    {
+      "groupName": "Go deps",
+      "matchManagers": ["gomod"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "schedule": ["at any time"],
+      "additionalBranchPrefix": "auto-"
+    },
+    {
+      "groupName": "Go deps",
+      "matchManagers": ["gomod"],
+      "matchUpdateTypes": ["major"],
+      "schedule": ["at any time"]
+    },
+    {
+      "groupName": "renovate packages",
+      "matchSourceUrlPrefixes": ["https://github.com/renovatebot/"],
+      "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "schedule": ["at any time"],
+      "additionalBranchPrefix": "auto-"
     }
   ]
 }

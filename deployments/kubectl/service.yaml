@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/path: /api/v0/metrics
+    prometheus.io/scrape: "true"
+    io.cilium/global-service: "true"  
+  name: identity-platform-admin-ui
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: identity-platform-admin-ui
+  type: ClusterIP
+---

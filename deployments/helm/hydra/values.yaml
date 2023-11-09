@@ -1,0 +1,14 @@
+hydra:
+  dev: true
+  config:
+    dsn: "postgres://iam:iam@postgresql.default.svc.cluster.local/hydra?sslmode=disable&max_conn_lifetime=10s"
+    secrets:
+      system: 
+        - SUFNUGxhdGZvcm0K
+    urls:
+      self:
+        issuer: https://localhost:4444/
+      login: https://my-idp/login
+      consent: https://my-idp/consent
+  automigration:
+    enabled: true
