@@ -143,7 +143,7 @@ class Runner:
             # Wait some initial time for the instance to boot up
             time.sleep(60)
             self._wait_boot_up()
-            self._install_binary(binary_path)
+            self._install_binaries(binary_path)
             self._configure_runner()
 
             self._register_runner(registration_token, labels=[self.config.app_name, image])
@@ -477,14 +477,14 @@ class Runner:
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
     @retry(tries=5, delay=1, local_logger=logger)
-    def _install_binary(self, binary: Path) -> None:
-        """Load GitHub self-hosted runner binary on to the runner instance.
+    def _install_binaries(self, runner_binary: Path) -> None:
+        """Install runner binary and other binaries.
 
         Args:
-            binary: Path to the compressed runner binary.
+            runner_binary: Path to the compressed runner binary.
 
         Raises:
-            RunnerFileLoadError: Unable to load the file into the runner instance.
+            RunnerFileLoadError: Unable to load the runner binary into the runner instance.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -505,6 +505,7 @@ class Runner:
                 )
             ]
         )
+        self.instance.execute(["npm", "install", "--global", "yarn"])
 
         # Add the user to docker group.
         self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
@@ -519,7 +520,7 @@ class Runner:
 
         # Creating directory and putting the file are idempotent, and can be retried.
         self.instance.files.mk_dir(str(self.runner_application))
-        self.instance.files.push_file(str(binary), binary_path)
+        self.instance.files.push_file(str(runner_binary), binary_path)
 
         self.instance.execute(
             ["/usr/bin/tar", "-xzf", binary_path, "-C", str(self.runner_application)]
