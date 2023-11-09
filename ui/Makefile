@@ -7,7 +7,6 @@ build: install
 .PHONY=build
 
 install:
-	sleep 2h
 	$(YARN) install
 .PHONY=install
 
