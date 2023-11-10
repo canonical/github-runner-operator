@@ -24,7 +24,7 @@ from tests.status_name import ACTIVE_STATUS_NAME
 @pytest.mark.abort_on_fail
 async def test_network_access(app: Application) -> None:
     """
-    arrange: An working application with one runner. Setup a HTTP server in the juju unit.
+    arrange: A working application with one runner. Setup a HTTP server in the juju unit.
     act: Make HTTP call to the HTTP server from inside a runner.
     assert: The HTTP call failed.
     """
@@ -47,6 +47,31 @@ async def test_network_access(app: Application) -> None:
 
     assert return_code == 7
     assert stdout is None
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_usage_of_aproxy(model: Model, app: Application, squid_proxy: str) -> None:
+    """
+    arrange: A working application with one runner using aproxy configured for a proxy server.
+    act: Run curl in the runner.
+    assert: The aproxy log contains the request.
+    """
+    unit = app.units[0]
+
+    await app.set_config({"aproxy-proxy": squid_proxy})
+
+    names = await get_runner_names(unit)
+    assert names
+    runner_name = names[0]
+
+    return_code, stdout = await run_in_lxd_instance(unit, runner_name, "curl http://canonical.com")
+    assert return_code == 0
+
+    return_code, stdout = await run_in_unit(unit, "snap logs aproxy.aproxy -n=all")
+    assert return_code == 0
+    assert stdout is not None
+    assert "canonical.com" in stdout
 
 
 @pytest.mark.asyncio

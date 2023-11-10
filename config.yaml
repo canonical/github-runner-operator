@@ -70,3 +70,13 @@ options:
       The private docker registry configured as dockerhub mirror to be used by the runners. If set 
       a message will be displayed prior to job execution on self-hosted runner informing users to 
       use the provided registry.
+  aproxy-proxy:
+    type: string
+    default: ""
+    description: |
+      (Experimental, may be removed) When set to a http proxy server socket address 
+      (format hostname:port, e.g. squid.internal:3128),
+      the charm (and the runners) will use aproxy (https://github.com/canonical/aproxy) 
+      to forward all traffic to the proxy server.
+      This is useful when the charm is deployed in a network that requires a proxy to access the 
+      internet.

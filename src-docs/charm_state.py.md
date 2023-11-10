@@ -12,6 +12,37 @@ State of the Charm.
 
 ---
 
+## <kbd>class</kbd> `CharmConfigInvalidError`
+Raised when charm config is invalid. 
+
+
+
+**Attributes:**
+ 
+ - <b>`msg`</b>:  Explanation of the error. 
+
+<a href="../src/charm_state.py#L26"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(msg: str)
+```
+
+Initialize a new instance of the CharmConfigInvalidError exception. 
+
+
+
+**Args:**
+ 
+ - <b>`msg`</b>:  Explanation of the error. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `State`
 The charm state. 
 
@@ -19,15 +50,15 @@ The charm state.
 
 **Attributes:**
  
- - <b>`proxy_config`</b>:  Proxy configuration. 
- - <b>`_charm`</b>:  The charm instance. 
+ - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
+ - <b>`aproxy_proxy`</b>:  The socket address of the proxy to configure aproxy with. 
 
 
 
 
 ---
 
-<a href="../src/charm_state.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L47"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -39,7 +70,13 @@ Initialize the state from charm.
 
 
 
+**Args:**
+ 
+ - <b>`charm`</b>:  The charm instance. 
+
+
+
 **Returns:**
-  Current state of the charm. 
+ Current state of the charm. 
 
 

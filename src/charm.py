@@ -16,6 +16,7 @@ from typing import Any, Callable, Dict, Optional, Sequence, TypeVar
 from urllib.parse import urlsplit
 
 import jinja2
+import ops
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from ops.charm import (
     ActionEvent,
@@ -31,7 +32,7 @@ from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 import metrics
-from charm_state import State
+from charm_state import CharmConfigInvalidError, State
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
@@ -144,7 +145,11 @@ class GithubRunnerCharm(CharmBase):
         super().__init__(*args, **kargs)
 
         self._grafana_agent = COSAgentProvider(self)
-        self._state = State.from_charm(self)
+        try:
+            self._state = State.from_charm(self)
+        except CharmConfigInvalidError as exc:
+            self.unit.status = ops.BlockedStatus(exc.msg)
+            return
 
         if LXD_PROFILE_YAML.exists():
             if self.config.get("test-mode") != "insecure":
@@ -424,6 +429,46 @@ class GithubRunnerCharm(CharmBase):
         runner_manager.flush()
         self._reconcile_runners(runner_manager)
 
+    def _configure_aproxy(self, aproxy_proxy: str) -> None:
+        """Configure aproxy.
+
+        Args:
+            aproxy_proxy: Proxy to configure aproxy with.
+        """
+        logger.info("Configuring aproxy for the runner.")
+
+        execute_command(["snap", "set", "aproxy", f"proxy={aproxy_proxy}"])
+
+        stdout, _ = execute_command(
+            [
+                "/bin/bash",
+                "-c",
+                r"ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') |"
+                r" grep -oP 'src \K\S+'",
+            ],
+            check_exit=True,
+        )
+        default_ip = stdout.strip()
+
+        nft_input = f"define default-ip = {default_ip}"
+        nft_input += r"""
+define private-ips = { 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }
+table ip aproxy
+flush table ip aproxy
+table ip aproxy {
+        chain prerouting {
+                type nat hook prerouting priority dstnat; policy accept;
+                ip daddr != $private-ips tcp dport { 80, 443 } counter dnat to $default-ip:8443
+        }
+
+        chain output {
+                type nat hook output priority -100; policy accept;
+                ip daddr != $private-ips tcp dport { 80, 443 } counter dnat to $default-ip:8443
+        }
+}
+"""
+        execute_command(["nft", "-f", "-"], input=nft_input.encode("utf-8"))
+
     @catch_charm_errors
     def _on_config_changed(self, _event: ConfigChangedEvent) -> None:
         """Handle the configuration change.
@@ -465,6 +510,9 @@ class GithubRunnerCharm(CharmBase):
         if self.config["token"] != self._stored.token:
             runner_manager.flush(flush_busy=False)
             self._stored.token = self.config["token"]
+
+        if self._state.aproxy_proxy:
+            self._configure_aproxy(self._state.aproxy_proxy)
 
     def _check_and_update_dependencies(self) -> bool:
         """Check and updates runner binary and services.
@@ -773,6 +821,9 @@ class GithubRunnerCharm(CharmBase):
                 "security.port_isolation=true",
             ]
         )
+        # install aproxy, currently only edge channel available
+        execute_command(["snap", "install", "aproxy", "--edge"])
+
         logger.info("Finished installing charm dependencies.")
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
