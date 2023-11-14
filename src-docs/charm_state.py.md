@@ -21,7 +21,7 @@ Raised when charm config is invalid.
  
  - <b>`msg`</b>:  Explanation of the error. 
 
-<a href="../src/charm_state.py#L26"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -43,6 +43,21 @@ Initialize a new instance of the CharmConfigInvalidError exception.
 
 ---
 
+## <kbd>class</kbd> `ProxySetting`
+The proxy setting to be used for the charm. 
+
+
+
+**Attributes:**
+ 
+ - <b>`aproxy_address`</b>:  The socket address of the proxy to configure aproxy with. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `State`
 The charm state. 
 
@@ -51,14 +66,14 @@ The charm state.
 **Attributes:**
  
  - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
- - <b>`aproxy_proxy`</b>:  The socket address of the proxy to configure aproxy with. 
+ - <b>`proxy`</b>:  The proxy configuration 
 
 
 
 
 ---
 
-<a href="../src/charm_state.py#L47"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L58"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
