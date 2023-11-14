@@ -38,11 +38,11 @@ class State:
 
     Attributes:
         is_metrics_logging_available: Whether the charm is able to issue metrics.
-        aproxy_proxy: The socket address of the proxy to configure aproxy with.
+        aproxy_address: The socket address of the proxy to configure aproxy with.
     """
 
     is_metrics_logging_available: bool
-    aproxy_proxy: Optional[str]
+    aproxy_address: Optional[str]
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "State":
@@ -54,14 +54,14 @@ class State:
         Returns:
             Current state of the charm.
         """
-        if aproxy_proxy := charm.config.get("aproxy-proxy"):
-            if not HOSTNAME_PORT_PATTERN.match(aproxy_proxy):
+        if aproxy_address := charm.config.get("aproxy-address"):
+            if not HOSTNAME_PORT_PATTERN.match(aproxy_address):
                 raise CharmConfigInvalidError(
-                    f"aproxy-proxy must be a valid socket address, got {aproxy_proxy}"
+                    f"aproxy-address must be a valid socket address, got {aproxy_address}"
                 )
         else:
-            aproxy_proxy = None
+            aproxy_address = None
         return cls(
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
-            aproxy_proxy=aproxy_proxy,
+            aproxy_address=aproxy_address,
         )

@@ -70,7 +70,7 @@ options:
       The private docker registry configured as dockerhub mirror to be used by the runners. If set 
       a message will be displayed prior to job execution on self-hosted runner informing users to 
       use the provided registry.
-  aproxy-proxy:
+  aproxy-address:
     type: string
     default: ""
     description: |

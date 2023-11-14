@@ -59,7 +59,7 @@ async def test_usage_of_aproxy(model: Model, app: Application, squid_proxy: str)
     """
     unit = app.units[0]
 
-    await app.set_config({"aproxy-proxy": squid_proxy})
+    await app.set_config({"aproxy-address": squid_proxy})
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
 
     names = await get_runner_names(unit)

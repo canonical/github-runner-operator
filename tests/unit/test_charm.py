@@ -289,11 +289,11 @@ class TestCharm(unittest.TestCase):
         rm.return_value = mock_rm = MagicMock()
         mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
         harness = Harness(GithubRunnerCharm)
-        harness.update_config({"aproxy-proxy": "invalid"})
+        harness.update_config({"aproxy-address": "invalid"})
         harness.begin()
 
         assert harness.charm.unit.status == BlockedStatus(
-            "aproxy-proxy must be a valid socket address, got invalid"
+            "aproxy-address must be a valid socket address, got invalid"
         )
 
     @patch("charm.RunnerManager")

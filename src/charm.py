@@ -506,8 +506,8 @@ table ip aproxy {
             runner_manager.flush(flush_busy=False)
             self._stored.token = self.config["token"]
 
-        if self._state.aproxy_proxy:
-            self._configure_aproxy(self._state.aproxy_proxy)
+        if self._state.aproxy_address:
+            self._configure_aproxy(self._state.aproxy_address)
 
     def _check_and_update_dependencies(self) -> bool:
         """Check and updates runner binary and services.
