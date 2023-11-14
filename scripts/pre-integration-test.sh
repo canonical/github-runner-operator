@@ -17,4 +17,4 @@ echo "http_access allow all" | sudo tee -a /etc/squid/squid.conf
 sudo systemctl restart squid
 
 # Output PYTEST_ADDOPTS to GitHub Actions environment
-echo "PYTEST_ADDOPTS=--loop-device=$loop_device --squid-proxy=http://$default_ip:3128" >> "$GITHUB_ENV"
+echo "PYTEST_ADDOPTS=--loop-device=$loop_device --squid-proxy=$default_ip:3128" >> "$GITHUB_ENV"
