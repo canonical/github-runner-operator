@@ -10,7 +10,7 @@ sudo modprobe br_netfilter
 loop_device=$(sudo losetup -f)
 
 # Install squid proxy for proxy test
-default_ip=$(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
+default_ip="$(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')"
 sudo apt install squid
 sudo sed -i 's/http_access deny/# http_access deny/g' /etc/squid/squid.conf
 echo "http_access allow all" | sudo tee -a /etc/squid/squid.conf
