@@ -81,7 +81,7 @@ Error for missing juju configuration.
  
  - <b>`configs`</b>:  The missing configurations. 
 
-<a href="../src/errors.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L49"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -114,15 +114,6 @@ Error for missing runner binary.
 
 ## <kbd>class</kbd> `QuarantineSharedFilesystemError`
 Represents an error when the shared filesystem could not be quarantined. 
-
-
-
-
-
----
-
-## <kbd>class</kbd> `RunnerAproxyError`
-Error for setting up aproxy. 
 
 
 
@@ -232,7 +223,7 @@ Error for Subprocess calls.
  - <b>`stdout`</b>:  Content of stdout of the subprocess. 
  - <b>`stderr`</b>:  Content of stderr of the subprocess. 
 
-<a href="../src/errors.py#L82"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L78"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

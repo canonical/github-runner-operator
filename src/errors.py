@@ -35,10 +35,6 @@ class RunnerBinaryError(RunnerError):
     """Error of getting runner binary."""
 
 
-class RunnerAproxyError(RunnerError):
-    """Error for setting up aproxy."""
-
-
 class MissingRunnerBinaryError(Exception):
     """Error for missing runner binary."""
 

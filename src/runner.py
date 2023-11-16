@@ -24,7 +24,6 @@ import shared_fs
 from errors import (
     CreateSharedFilesystemError,
     LxdError,
-    RunnerAproxyError,
     RunnerCreateError,
     RunnerError,
     RunnerFileLoadError,
@@ -47,6 +46,7 @@ logger = logging.getLogger(__name__)
 LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
 if not LXD_PROFILE_YAML.exists():
     LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
+LXDBR_DNSMASQ_LEASES_FILE = "/var/snap/lxd/common/lxd/networks/lxdbr0/dnsmasq.leases"
 
 
 @dataclass
@@ -567,23 +567,17 @@ class Runner:
 
         logger.info("Configuring aproxy for the runner.")
 
-        ret_code, _, _ = self.instance.execute(
-            ["snap", "set", "aproxy", f"proxy={aproxy_address}"]
-        )
-        if ret_code != 0:
-            raise RunnerAproxyError("unable to set proxy for aproxy")
+        self.instance.execute(["snap", "set", "aproxy", f"proxy={aproxy_address}"])
 
-        ret_code, stdout, _ = self.instance.execute(
+        stdout, _ = execute_command(
             [
-                "/bin/bash",
-                "-c",
-                r"ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') |"
-                r" grep -oP 'src \K\S+'",
-            ]
+                "/usr/bin/awk",
+                f'$4 == "{self.instance.name}" {{ print $3 }}',
+                LXDBR_DNSMASQ_LEASES_FILE,
+            ],
+            check_exit=True,
         )
-        if ret_code != 0:
-            raise RunnerAproxyError("unable to get default IP address")
-        default_ip = stdout.read().decode("utf-8").strip()
+        default_ip = stdout.strip()
 
         nft_input = rf"""define default-ip = {default_ip}
 define private-ips = {{ 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }}
@@ -601,9 +595,7 @@ table ip aproxy {{
         }}
 }}
 """
-        ret_code, _, _ = self.instance.execute(["nft", "-f", "-"], input=nft_input.encode("utf-8"))
-        if ret_code != 0:
-            raise RunnerAproxyError("unable to configure nftables for aproxy")
+        self.instance.execute(["nft", "-f", "-"], input=nft_input.encode("utf-8"))
 
     def _configure_docker_proxy(self):
         """Configure docker proxy."""
