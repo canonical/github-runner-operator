@@ -24,6 +24,7 @@ import shared_fs
 from errors import (
     CreateSharedFilesystemError,
     LxdError,
+    RunnerAproxyError,
     RunnerCreateError,
     RunnerError,
     RunnerFileLoadError,
@@ -46,7 +47,7 @@ logger = logging.getLogger(__name__)
 LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
 if not LXD_PROFILE_YAML.exists():
     LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
-LXDBR_DNSMASQ_LEASES_FILE = "/var/snap/lxd/common/lxd/networks/lxdbr0/dnsmasq.leases"
+LXDBR_DNSMASQ_LEASES_FILE = Path("/var/snap/lxd/common/lxd/networks/lxdbr0/dnsmasq.leases")
 
 
 @dataclass
@@ -553,6 +554,27 @@ class Runner:
         """
         return self._shared_fs is not None
 
+    def _get_default_ip(self) -> Optional[str]:
+        """Get the default IP of the runner.
+
+        Returns:
+            The default IP of the runner or None if not found.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        default_ip = None
+        # parse LXD dnsmasq leases file to get the default IP of the runner
+        # format: timestamp mac-address ip-address hostname client-id
+        lines = LXDBR_DNSMASQ_LEASES_FILE.read_text("utf-8").splitlines(keepends=False)
+        for line in lines:
+            columns = line.split()
+            if len(columns) >= 4 and columns[3] == self.instance.name:
+                default_ip = columns[2]
+                break
+
+        return default_ip
+
     def _configure_aproxy(self, aproxy_address: str) -> None:
         """Configure aproxy.
 
@@ -569,15 +591,9 @@ class Runner:
 
         self.instance.execute(["snap", "set", "aproxy", f"proxy={aproxy_address}"])
 
-        stdout, _ = execute_command(
-            [
-                "/usr/bin/awk",
-                f'$4 == "{self.instance.name}" {{ print $3 }}',
-                LXDBR_DNSMASQ_LEASES_FILE,
-            ],
-            check_exit=True,
-        )
-        default_ip = stdout.strip()
+        default_ip = self._get_default_ip()
+        if not default_ip:
+            raise RunnerAproxyError("Unable to find default IP for aproxy configuration.")
 
         nft_input = rf"""define default-ip = {default_ip}
 define private-ips = {{ 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }}
