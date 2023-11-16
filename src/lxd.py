@@ -230,17 +230,23 @@ class LxdInstance:
             raise LxdError(f"Unable to delete the LXD instance {self.name}") from err
 
     def execute(
-        self, cmd: list[str], cwd: Optional[str] = None, hide_cmd: bool = False
+        self, cmd: list[str], cwd: Optional[str] = None, hide_cmd: bool = False, **kwargs
     ) -> Tuple[int, IO, IO]:
         """Execute a command within the LXD instance.
 
         Exceptions are not raised if command execution failed. Caller should
         check the exit code and stderr for errors.
 
+        The command is executed with `subprocess.run`, additional arguments can be passed to it as
+        keyword arguments. The following arguments to `subprocess.run` should not be set:
+        `capture_output`, `shell`, `check`. As those arguments are used by this function.
+
         Args:
             cmd: Commands to be executed.
             cwd: Working directory to execute the commands.
             hide_cmd: Hide logging of cmd.
+            kwargs: Additional keyword arguments for the `subprocess.run` call.
+
 
         Returns:
             Tuple containing the exit code, stdout, stderr.
@@ -251,7 +257,7 @@ class LxdInstance:
 
         lxc_cmd += ["--"] + cmd
 
-        result = secure_run_subprocess(lxc_cmd, hide_cmd)
+        result = secure_run_subprocess(lxc_cmd, hide_cmd, **kwargs)
         return (result.returncode, io.BytesIO(result.stdout), io.BytesIO(result.stderr))
 
 

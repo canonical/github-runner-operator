@@ -24,6 +24,7 @@ import shared_fs
 from errors import (
     CreateSharedFilesystemError,
     LxdError,
+    RunnerAproxyError,
     RunnerCreateError,
     RunnerError,
     RunnerFileLoadError,
@@ -507,6 +508,9 @@ class Runner:
         )
         self.instance.execute(["npm", "install", "--global", "yarn"])
 
+        # install aproxy, currently only edge channel available
+        self.instance.execute(["snap", "install", "aproxy", "--edge"])
+
         # Add the user to docker group.
         self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
         # Allow traffic for docker user.
@@ -548,6 +552,91 @@ class Runner:
             True if the runner should render templates with metrics.
         """
         return self._shared_fs is not None
+
+    def _configure_aproxy(self, aproxy_address: str) -> None:
+        """Configure aproxy.
+
+        Args:
+            aproxy_address: Proxy to configure aproxy with.
+
+        Raises:
+            RunnerAproxyError: If unable to configure aproxy.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        logger.info("Configuring aproxy for the runner.")
+
+        ret_code, _, _ = self.instance.execute(
+            ["snap", "set", "aproxy", f"proxy={aproxy_address}"]
+        )
+        if ret_code != 0:
+            raise RunnerAproxyError("unable to set proxy for aproxy")
+
+        ret_code, stdout, _ = self.instance.execute(
+            [
+                "/bin/bash",
+                "-c",
+                r"ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') |"
+                r" grep -oP 'src \K\S+'",
+            ]
+        )
+        if ret_code != 0:
+            raise RunnerAproxyError("unable to get default IP address")
+        default_ip = stdout.read().decode("utf-8").strip()
+
+        nft_input = rf"""define default-ip = {default_ip}
+define private-ips = {{ 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }}
+table ip aproxy
+flush table ip aproxy
+table ip aproxy {{
+        chain prerouting {{
+                type nat hook prerouting priority dstnat; policy accept;
+                ip daddr != $private-ips tcp dport {{ 80, 443 }} counter dnat to $default-ip:8443
+        }}
+
+        chain output {{
+                type nat hook output priority -100; policy accept;
+                ip daddr != $private-ips tcp dport {{ 80, 443 }} counter dnat to $default-ip:8443
+        }}
+}}
+"""
+        ret_code, _, _ = self.instance.execute(["nft", "-f", "-"], input=nft_input.encode("utf-8"))
+        if ret_code != 0:
+            raise RunnerAproxyError("unable to configure nftables for aproxy")
+
+    def _configure_docker_proxy(self):
+        """Configure docker proxy."""
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        # Creating directory and putting the file are idempotent, and can be retried.
+        logger.info("Adding proxy setting to the runner.")
+        docker_proxy_contents = self._clients.jinja.get_template("systemd-docker-proxy.j2").render(
+            proxies=self.config.proxies
+        )
+        # Set docker daemon proxy config
+        docker_service_path = Path("/etc/systemd/system/docker.service.d")
+        docker_service_proxy = docker_service_path / "http-proxy.conf"
+        self.instance.files.mk_dir(str(docker_service_path))
+        self._put_file(str(docker_service_proxy), docker_proxy_contents)
+        self.instance.execute(["systemctl", "daemon-reload"])
+        self.instance.execute(["systemctl", "restart", "docker"])
+        # Set docker client proxy config
+        docker_client_proxy = {
+            "proxies": {
+                "default": {
+                    "httpProxy": self.config.proxies["http"],
+                    "httpsProxy": self.config.proxies["https"],
+                    "noProxy": self.config.proxies["no_proxy"],
+                }
+            }
+        }
+        docker_client_proxy_content = json.dumps(docker_client_proxy)
+        # Configure the docker client for root user and ubuntu user.
+        self._put_file("/root/.docker/config.json", docker_client_proxy_content)
+        self._put_file("/home/ubuntu/.docker/config.json", docker_client_proxy_content)
+        self.instance.execute(["/usr/bin/chown", "-R", "ubuntu:ubuntu", "/home/ubuntu/.docker"])
 
     @retry(tries=5, delay=10, max_delay=60, backoff=2, local_logger=logger)
     def _configure_runner(self) -> None:
@@ -608,40 +697,10 @@ class Runner:
             self.instance.execute(["systemctl", "restart", "docker"])
 
         if self.config.proxies:
-            # Creating directory and putting the file are idempotent, and can be retried.
-            logger.info("Adding proxy setting to the runner.")
-
-            docker_proxy_contents = self._clients.jinja.get_template(
-                "systemd-docker-proxy.j2"
-            ).render(proxies=self.config.proxies)
-
-            # Set docker daemon proxy config
-            docker_service_path = Path("/etc/systemd/system/docker.service.d")
-            docker_service_proxy = docker_service_path / "http-proxy.conf"
-
-            self.instance.files.mk_dir(str(docker_service_path))
-            self._put_file(str(docker_service_proxy), docker_proxy_contents)
-
-            self.instance.execute(["systemctl", "daemon-reload"])
-            self.instance.execute(["systemctl", "restart", "docker"])
-
-            # Set docker client proxy config
-            docker_client_proxy = {
-                "proxies": {
-                    "default": {
-                        "httpProxy": self.config.proxies["http"],
-                        "httpsProxy": self.config.proxies["https"],
-                        "noProxy": self.config.proxies["no_proxy"],
-                    }
-                }
-            }
-            docker_client_proxy_content = json.dumps(docker_client_proxy)
-            # Configure the docker client for root user and ubuntu user.
-            self._put_file("/root/.docker/config.json", docker_client_proxy_content)
-            self._put_file("/home/ubuntu/.docker/config.json", docker_client_proxy_content)
-            self.instance.execute(
-                ["/usr/bin/chown", "-R", "ubuntu:ubuntu", "/home/ubuntu/.docker"]
-            )
+            if self.config.proxies.get("aproxy_address"):
+                self._configure_aproxy(self.config.proxies["aproxy_address"])
+            else:
+                self._configure_docker_proxy()
 
         # Ensure the no existing /usr/bin/python.
         self.instance.execute(["rm", "/usr/bin/python"])
