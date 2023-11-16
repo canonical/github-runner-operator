@@ -66,7 +66,7 @@ EOF
 /usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/extract-checksum.sh
 /usr/bin/bash extract-checksum.sh SHA-256 yq_linux_amd64 | /usr/bin/awk '{print $2,$1}' | /usr/bin/sha256sum -c | /usr/bin/grep OK
 
-/snap/bin/lxc file push yq_linux_amd64 runner/usr/bin/yq --mode +x
+/snap/bin/lxc file push yq_linux_amd64 runner/usr/bin/yq --mode 755
 
 /snap/bin/lxc publish runner --alias runner --reuse -f
 /snap/bin/lxc image export runner ./runner-image --vm
