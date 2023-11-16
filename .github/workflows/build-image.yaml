@@ -16,7 +16,7 @@ jobs:
           channel: 5.19/stable
       - uses: actions/checkout@v4
       - name: Run build script
-        run: bash build-image.sh
+        run: bash scripts/build-image.sh
       - uses: actions/upload-artifact@v3
         with:
           name: self-hosted-runner-image 
