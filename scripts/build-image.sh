@@ -39,9 +39,9 @@ done
 /snap/bin/lxc exec runner -- /usr/sbin/iptables -I DOCKER-USER -j ACCEPT
 
 # Set up aproxy for downloading
-/snap/bin/lxc exec runner -- /usr/bin/snap install aproxy --edge
-/snap/bin/lxc exec runner -- /usr/bin/snap set aproxy proxy=squid.internal:3128
-/snap/bin/lxc exec runner -- sh -c 'nft -f - << EOF
+/usr/bin/snap install aproxy --edge
+/usr/bin/snap set aproxy proxy=squid.internal:3128
+nft -f - << EOF
 define default-ip = $(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
 define private-ips = { 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }
 table ip aproxy
@@ -57,17 +57,16 @@ table ip aproxy {
               ip daddr != \$private-ips tcp dport { 80, 443 } counter dnat to \$default-ip:8443
       }
 }
-EOF'
+EOF
 
 # Download and verify checksum of yq
-/snap/bin/lxc exec runner -- wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-/snap/bin/lxc exec runner -- wget https://github.com/mikefarah/yq/releases/latest/download/checksums
-/snap/bin/lxc exec runner -- wget https://github.com/mikefarah/yq/releases/latest/download/checksums_hashes_order
-/snap/bin/lxc exec runner -- wget https://github.com/mikefarah/yq/releases/latest/download/extract-checksum.sh
-/snap/bin/lxc exec runner -- sh -c 'bash extract-checksum.sh SHA-256 yq_linux_amd64 | awk '{print $2,$1}' | sha256sum -c | grep OK'
-/snap/bin/lxc exec runner -- mv yq_linux_amd64 /usr/local/bin/yq
-/snap/bin/lxc exec runner -- chmod a+x /usr/local/bin/yq
-/snap/bin/lxd exec runner -- rm checksums checksums_hashes_order extract-checksum.sh
+/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums
+/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums_hashes_order
+/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/extract-checksum.sh
+/usr/bin/bash extract-checksum.sh SHA-256 yq_linux_amd64 | /usr/bin/awk '{print $2,$1}' | /usr/bin/sha256sum -c | /usr/bin/grep OK
+
+/snap/bin/lxc file push yq_linux_amd64 runner/usr/bin/yq --mode +x
 
 /snap/bin/lxc publish runner --alias runner --reuse -f
 /snap/bin/lxc image export runner ./runner-image --vm

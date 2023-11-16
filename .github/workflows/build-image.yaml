@@ -15,6 +15,8 @@ jobs:
         with:
           channel: 5.19/stable
       - uses: actions/checkout@v4
+      - name: Install wget
+        run: sudo apt update && sudo apt install -yq wget
       - name: Run build script
         run: bash scripts/build-image.sh
       - uses: actions/upload-artifact@v3
