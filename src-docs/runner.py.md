@@ -9,9 +9,6 @@ The `Runner` class stores the information on the runners and manages the lifecyc
 
 The `RunnerManager` class from `runner_manager.py` creates and manages a collection of `Runner` instances. 
 
-**Global Variables**
----------------
-- **LXDBR_DNSMASQ_LEASES_FILE**
 
 
 ---

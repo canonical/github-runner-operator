@@ -80,3 +80,5 @@ options:
       to forward all traffic to the proxy server.
       This is useful when the charm is deployed in a network that requires a proxy to access the 
       internet.
+      Note that you cannot use a proxy server listening on port 80 or 443, as all traffic to these
+      ports is relayed to aproxy, which would cause an infinite loop.
