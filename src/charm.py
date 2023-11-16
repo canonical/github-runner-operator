@@ -445,22 +445,21 @@ class GithubRunnerCharm(CharmBase):
         )
         default_ip = stdout.strip()
 
-        nft_input = f"define default-ip = {default_ip}"
-        nft_input += r"""
-define private-ips = { 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }
+        nft_input = rf"""define default-ip = {default_ip}
+define private-ips = {{ 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }}
 table ip aproxy
 flush table ip aproxy
-table ip aproxy {
-        chain prerouting {
+table ip aproxy {{
+        chain prerouting {{
                 type nat hook prerouting priority dstnat; policy accept;
-                ip daddr != $private-ips tcp dport { 80, 443 } counter dnat to $default-ip:8443
-        }
+                ip daddr != $private-ips tcp dport {{ 80, 443 }} counter dnat to $default-ip:8443
+        }}
 
-        chain output {
+        chain output {{
                 type nat hook output priority -100; policy accept;
-                ip daddr != $private-ips tcp dport { 80, 443 } counter dnat to $default-ip:8443
-        }
-}
+                ip daddr != $private-ips tcp dport {{ 80, 443 }} counter dnat to $default-ip:8443
+        }}
+}}
 """
         execute_command(["nft", "-f", "-"], input=nft_input.encode("utf-8"))
 
