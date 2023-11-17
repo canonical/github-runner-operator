@@ -2,6 +2,9 @@
 #  See LICENSE file for licensing details.
 
 """Test the usage of a proxy server."""
+import subprocess
+from typing import AsyncIterator
+
 import pytest
 import pytest_asyncio
 from juju.application import Application
@@ -12,18 +15,43 @@ from tests.integration.helpers import (
     get_runner_names,
     run_in_lxd_instance,
 )
+from utilities import execute_command
+
+PROXY_PORT = 8899
+
+
+@pytest_asyncio.fixture(scope="module", name="proxy")
+async def proxy_fixture() -> AsyncIterator[str]:
+    """Start proxy.py and return the proxy server address."""
+    process = subprocess.Popen(["proxy", "--hostname", "0.0.0.0", "--port", str(PROXY_PORT)])
+
+    # Get default ip using following commands
+    stdout, _ = execute_command(
+        [
+            "/bin/bash",
+            "-c",
+            r"ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') |"
+            r" grep -oP 'src \K\S+'",
+        ],
+        check_exit=True,
+    )
+    default_ip = stdout.strip()
+
+    yield f"http://{default_ip}:{PROXY_PORT}"
+
+    process.terminate()
 
 
 @pytest_asyncio.fixture(scope="module", name="app_with_aproxy")
 async def app_with_aproxy_fixture(
-    model: Model, app_no_runner: Application, squid_proxy: str
+    model: Model, app_no_runner: Application, proxy: str
 ) -> Application:
     """Application configured to use aproxy"""
 
     await model.set_config(
         {
-            "juju-http-proxy": squid_proxy,
-            "juju-https-proxy": squid_proxy,
+            "juju-http-proxy": proxy,
+            "juju-https-proxy": proxy,
             "juju-no-proxy": "",
             "logging-config": "<root>=INFO;unit=DEBUG",
         }

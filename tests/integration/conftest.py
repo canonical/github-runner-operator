@@ -127,13 +127,6 @@ def no_proxy(pytestconfig: pytest.Config) -> str:
 
 
 @pytest.fixture(scope="module")
-def squid_proxy(pytestconfig: pytest.Config) -> str:
-    """Configured squid_proxy setting."""
-    squid_proxy = pytestconfig.getoption("--squid-proxy")
-    return "" if squid_proxy is None else squid_proxy
-
-
-@pytest.fixture(scope="module")
 def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
     """Configured loop_device setting."""
     return pytestconfig.getoption("--loop-device")

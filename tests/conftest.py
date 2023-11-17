@@ -17,4 +17,3 @@ def pytest_addoption(parser: Parser):
     parser.addoption("--https-proxy", action="store")
     parser.addoption("--no-proxy", action="store")
     parser.addoption("--loop-device", action="store")
-    parser.addoption("--squid-proxy", action="store")
