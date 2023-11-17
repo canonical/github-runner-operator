@@ -15,7 +15,9 @@ from tests.integration.helpers import (
 
 
 @pytest_asyncio.fixture(scope="module", name="app_with_aproxy")
-async def app_with_aproxy_fixture(model: Model, app_no_runner: Application, squid_proxy: str) -> Application:
+async def app_with_aproxy_fixture(
+    model: Model, app_no_runner: Application, squid_proxy: str
+) -> Application:
     """Application configured to use aproxy"""
 
     await model.set_config(
