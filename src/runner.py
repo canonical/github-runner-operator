@@ -108,6 +108,8 @@ class Runner:
         if self.config.proxies.get("http") or self.config.proxies.get("https"):
             if self.config.proxies.get("no_proxy"):
                 self.config.proxies["no_proxy"] += ","
+            else:
+                self.config.proxies["no_proxy"] = ""
             self.config.proxies["no_proxy"] += f"{self.config.name},.svc"
 
     def create(

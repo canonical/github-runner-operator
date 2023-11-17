@@ -21,7 +21,7 @@ Raised when charm config is invalid.
  
  - <b>`msg`</b>:  Explanation of the error. 
 
-<a href="../src/charm_state.py#L26"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -43,6 +43,53 @@ Initialize a new instance of the CharmConfigInvalidError exception.
 
 ---
 
+## <kbd>class</kbd> `ProxyConfig`
+Proxy configuration. 
+
+
+
+**Attributes:**
+ 
+ - <b>`http_proxy`</b>:  HTTP proxy address. 
+ - <b>`https_proxy`</b>:  HTTPS proxy address. 
+ - <b>`no_proxy`</b>:  Comma-separated list of hosts that should not be proxied. 
+ - <b>`use_aproxy`</b>:  Whether aproxy should be used. 
+
+
+---
+
+#### <kbd>property</kbd> aproxy_address
+
+Return the aproxy address. 
+
+
+
+---
+
+<a href="../src/charm_state.py#L51"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `from_charm`
+
+```python
+from_charm(charm: CharmBase) → ProxyConfig
+```
+
+Initialize the proxy config from charm. 
+
+
+
+**Args:**
+ 
+ - <b>`charm`</b>:  The charm instance. 
+
+
+
+**Returns:**
+ Current proxy config of the charm. 
+
+
+---
+
 ## <kbd>class</kbd> `State`
 The charm state. 
 
@@ -51,14 +98,14 @@ The charm state.
 **Attributes:**
  
  - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
- - <b>`aproxy_address`</b>:  The socket address of the proxy to configure aproxy with. 
+ - <b>`proxy_config`</b>:  Whether aproxy should be used. 
 
 
 
 
 ---
 
-<a href="../src/charm_state.py#L47"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L100"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
