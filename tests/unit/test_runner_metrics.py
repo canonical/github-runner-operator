@@ -6,13 +6,11 @@ from pathlib import Path
 from unittest.mock import MagicMock, call
 
 import pytest
-from _pytest.logging import LogCaptureFixture
-from _pytest.monkeypatch import MonkeyPatch
 
 import errors
 import runner_metrics
 import shared_fs
-from metrics import RunnerStart
+from metrics import RunnerStart, RunnerStop
 from runner_metrics import (
     RUNNER_INSTALLED_TS_FILE_NAME,
     PostJobMetrics,
@@ -22,7 +20,7 @@ from runner_metrics import (
 
 
 @pytest.fixture(autouse=True, name="issue_event_mock")
-def issue_event_mock_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
+def issue_event_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     """Mock the issue_event function."""
     issue_event_mock = MagicMock()
     monkeypatch.setattr("metrics.issue_event", issue_event_mock)
@@ -30,7 +28,7 @@ def issue_event_mock_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
 
 
 @pytest.fixture(autouse=True, name="shared_fs_mock")
-def shared_fs_mock_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
+def shared_fs_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     """Mock the issue_event function."""
     shared_fs_mock = MagicMock(spec=shared_fs)
     monkeypatch.setattr("runner_metrics.shared_fs", shared_fs_mock)
@@ -99,7 +97,10 @@ def test_extract(shared_fs_mock: MagicMock, issue_event_mock: MagicMock, tmp_pat
         2. A runner with only pre-job metrics inside shared fs
         3. A runner with no metrics except installed_timestamp inside shared fs
     act: Call extract
-    assert: For runners 1 & 2 RunnerStart events are issued and all shared filesystems are removed.
+    assert: All shared filesystems are removed and for runners
+        1. RunnerStart and RunnerInstalled events are issued
+        2. RunnerStart event is issued
+        3. No event is issued
     """
     runner_with_all_metrics = RunnerMetrics(
         installed_timestamp=1696427232.2253454,
@@ -110,7 +111,9 @@ def test_extract(shared_fs_mock: MagicMock, issue_event_mock: MagicMock, tmp_pat
             repository="repository1",
             event="push",
         ),
-        post_job=PostJobMetrics(timestamp=3, status="status1"),
+        post_job=PostJobMetrics(
+            timestamp=1796427233.2253454, status=runner_metrics.PostJobStatus.NORMAL
+        ),
     )
     runner_without_post_job_metrics = RunnerMetrics(
         installed_timestamp=4,
@@ -147,10 +150,16 @@ def test_extract(shared_fs_mock: MagicMock, issue_event_mock: MagicMock, tmp_pat
     shared_fs_mock.list_all.return_value = [runner1_fs, runner2_fs, runner3_fs]
 
     flavor = secrets.token_hex(16)
-    runner_metrics.extract(flavor, set())
+    metric_stats = runner_metrics.extract(flavor, set())
+
+    assert metric_stats == {
+        RunnerStart: 2,
+        RunnerStop: 1,
+    }
 
     issue_event_mock.assert_has_calls(
         [
+            # 1. Runner
             call(
                 RunnerStart(
                     timestamp=runner_with_all_metrics.pre_job.timestamp,
@@ -163,6 +172,20 @@ def test_extract(shared_fs_mock: MagicMock, issue_event_mock: MagicMock, tmp_pat
                     - runner_with_all_metrics.installed_timestamp,  # noqa: W503
                 )
             ),
+            call(
+                RunnerStop(
+                    timestamp=runner_with_all_metrics.post_job.timestamp,
+                    flavor=flavor,
+                    workflow=runner_with_all_metrics.pre_job.workflow,
+                    repo=runner_with_all_metrics.pre_job.repository,
+                    github_event=runner_with_all_metrics.pre_job.event,
+                    status=runner_with_all_metrics.post_job.status,
+                    # Ignore line break before binary operator
+                    job_duration=runner_with_all_metrics.post_job.timestamp
+                    - runner_with_all_metrics.pre_job.timestamp,  # noqa: W503
+                )
+            ),
+            # 2. Runner
             call(
                 RunnerStart(
                     timestamp=runner_without_post_job_metrics.pre_job.timestamp,
@@ -204,7 +227,7 @@ def test_extract_ignores_runners(
             repository="repository1",
             event="push",
         ),
-        post_job=PostJobMetrics(timestamp=3, status="status1"),
+        post_job=PostJobMetrics(timestamp=3, status=runner_metrics.PostJobStatus.NORMAL),
     )
 
     runner_fs_base = _create_runner_fs_base(tmp_path)
@@ -224,9 +247,14 @@ def test_extract_ignores_runners(
     shared_fs_mock.list_all.return_value = runner_filesystems
 
     flavor = secrets.token_hex(16)
-    runner_metrics.extract(
+    stats = runner_metrics.extract(
         flavor, {runner_filesystems[0].runner_name, runner_filesystems[2].runner_name}
     )
+
+    assert stats == {
+        RunnerStart: 3,
+        RunnerStop: 3,
+    }
 
     for i in (0, 2):
         assert (
@@ -268,7 +296,7 @@ def test_extract_corrupt_data(
             repository="repository1",
             event="push",
         ),
-        post_job=PostJobMetrics(timestamp=3, status="status1"),
+        post_job=PostJobMetrics(timestamp=3, status=runner_metrics.PostJobStatus.NORMAL),
     )
 
     runner_fs_base = _create_runner_fs_base(tmp_path)
@@ -350,7 +378,7 @@ def test_extract_raises_error_for_too_large_files(
             repository="repository1",
             event="push",
         ),
-        post_job=PostJobMetrics(timestamp=3, status="status1"),
+        post_job=PostJobMetrics(timestamp=3, status=runner_metrics.PostJobStatus.NORMAL),
     )
 
     runner_fs_base = _create_runner_fs_base(tmp_path)
@@ -426,7 +454,7 @@ def test_extract_ignores_filesystems_without_ts(
             repository="repository1",
             event="push",
         ),
-        post_job=PostJobMetrics(timestamp=3, status="status1"),
+        post_job=PostJobMetrics(timestamp=3, status=runner_metrics.PostJobStatus.NORMAL),
     )
 
     runner_fs_base = _create_runner_fs_base(tmp_path)
@@ -441,14 +469,15 @@ def test_extract_ignores_filesystems_without_ts(
 
     flavor = secrets.token_hex(16)
 
-    runner_metrics.extract(flavor, set())
+    metric_stats = runner_metrics.extract(flavor, set())
 
+    assert not metric_stats
     issue_event_mock.assert_not_called()
     shared_fs_mock.delete.assert_called_once_with(runner_fs.runner_name)
 
 
 def test_extract_ignores_failure_on_shared_fs_cleanup(
-    tmp_path: Path, shared_fs_mock: MagicMock, caplog: LogCaptureFixture
+    tmp_path: Path, shared_fs_mock: MagicMock, caplog: pytest.LogCaptureFixture
 ):
     """
     arrange: Mock the shared_fs.delete to raise an exception.
@@ -464,7 +493,7 @@ def test_extract_ignores_failure_on_shared_fs_cleanup(
             repository="repository1",
             event="push",
         ),
-        post_job=PostJobMetrics(timestamp=3, status="status1"),
+        post_job=PostJobMetrics(timestamp=3, status=runner_metrics.PostJobStatus.NORMAL),
     )
 
     runner_fs_base = _create_runner_fs_base(tmp_path)
@@ -482,8 +511,12 @@ def test_extract_ignores_failure_on_shared_fs_cleanup(
 
     flavor = secrets.token_hex(16)
 
-    runner_metrics.extract(flavor, set())
+    stats = runner_metrics.extract(flavor, set())
 
+    assert stats == {
+        RunnerStart: 1,
+        RunnerStop: 1,
+    }
     assert "Failed to delete shared filesystem" in caplog.text
 
 
@@ -491,7 +524,7 @@ def test_extract_ignores_failure_on_issue_event(
     tmp_path: Path,
     shared_fs_mock: MagicMock,
     issue_event_mock: MagicMock,
-    caplog: LogCaptureFixture,
+    caplog: pytest.LogCaptureFixture,
 ):
     """
     arrange: Mock the issue_event_mock to raise an exception.
@@ -507,7 +540,7 @@ def test_extract_ignores_failure_on_issue_event(
             repository="repository1",
             event="push",
         ),
-        post_job=PostJobMetrics(timestamp=3, status="status1"),
+        post_job=PostJobMetrics(timestamp=3, status=runner_metrics.PostJobStatus.NORMAL),
     )
 
     runner_fs_base = _create_runner_fs_base(tmp_path)
