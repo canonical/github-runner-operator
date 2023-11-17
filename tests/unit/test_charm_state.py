@@ -1,7 +1,7 @@
 #  Copyright 2023 Canonical Ltd.
 #  See LICENSE file for licensing details.
-
-from unittest.mock import MagicMock
+import os
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -38,15 +38,30 @@ def test_metrics_logging_available_false():
     assert not state.is_metrics_logging_available
 
 
-def test_invalid_aproxy_proxy():
+def test_aproxy_proxy_missing():
     """
-    arrange: Setup mocked charm to return an invalid proxy url.
+    arrange: Setup mocked charm to use aproxy without configured http proxy.
     act: Retrieve state from charm.
     assert: CharmConfigInvalidError is raised.
     """
     charm = MagicMock()
     charm.model.relations.__getitem__.return_value = []
-    charm.config = {"aproxy-address": "invalid"}
+    charm.config = {"use-aproxy": "true"}
 
     with pytest.raises(CharmConfigInvalidError):
         State.from_charm(charm)
+
+
+def test_proxy_invalid_format():
+    """
+    arrange: Setup mocked charm and invalid juju proxy settings.
+    act: Retrieve state from charm.
+    assert: CharmConfigInvalidError is raised.
+    """
+    charm = MagicMock()
+    charm.model.relations.__getitem__.return_value = []
+
+    url_without_scheme = "proxy.example.com:8080"
+    with patch.dict(os.environ, {"JUJU_CHARM_HTTP_PROXY": url_without_scheme}):
+        with pytest.raises(CharmConfigInvalidError):
+            State.from_charm(charm)

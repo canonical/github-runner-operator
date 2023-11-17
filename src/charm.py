@@ -48,7 +48,7 @@ from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
-from utilities import bytes_with_unit_to_kib, execute_command, get_env_var, retry
+from utilities import bytes_with_unit_to_kib, execute_command, retry
 
 logger = logging.getLogger(__name__)
 
@@ -164,16 +164,17 @@ class GithubRunnerCharm(CharmBase):
         )
 
         self.proxies: ProxySetting = {}
-        if http_proxy := get_env_var("JUJU_CHARM_HTTP_PROXY"):
-            self.proxies["http"] = http_proxy
-        if https_proxy := get_env_var("JUJU_CHARM_HTTPS_PROXY"):
-            self.proxies["https"] = https_proxy
-        # there's no need for no_proxy if there's no http_proxy or https_proxy
-        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY")
-        if (https_proxy or http_proxy) and no_proxy:
-            self.proxies["no_proxy"] = no_proxy
-        if self._state.aproxy_address:
-            self.proxies["aproxy_address"] = self._state.aproxy_address
+        if proxy_config := self._state.proxy_config:
+            if http_proxy := proxy_config.http_proxy:
+                self.proxies["http"] = str(http_proxy)
+            if https_proxy := proxy_config.https_proxy:
+                self.proxies["https"] = str(https_proxy)
+            # there's no need for no_proxy if there's no http_proxy or https_proxy
+            no_proxy = proxy_config.no_proxy
+            if (https_proxy or http_proxy) and no_proxy:
+                self.proxies["no_proxy"] = no_proxy
+            if proxy_config.use_aproxy:
+                self.proxies["aproxy_address"] = proxy_config.aproxy_address
 
         self.service_token = None
 

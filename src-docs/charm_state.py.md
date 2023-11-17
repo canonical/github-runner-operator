@@ -66,6 +66,18 @@ Return the aproxy address.
 
 ---
 
+<a href="../src/charm_state.py#L85"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `check_fields`
+
+```python
+check_fields(values: dict) → dict
+```
+
+Validate the proxy configuration. 
+
+---
+
 <a href="../src/charm_state.py#L51"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
@@ -105,7 +117,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L100"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L109"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 

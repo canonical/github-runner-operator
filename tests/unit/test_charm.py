@@ -283,18 +283,16 @@ class TestCharm(unittest.TestCase):
     def test_on_config_changed_failure(self, run, wt, mkdir, rm):
         """
         arrange: Setup mocked charm.
-        act: Fire config changed event with invalid proxy url.
+        act: Fire config changed event to use aproxy without configured http proxy.
         assert: Charm is in blocked state.
         """
         rm.return_value = mock_rm = MagicMock()
         mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
         harness = Harness(GithubRunnerCharm)
-        harness.update_config({"aproxy-address": "invalid"})
+        harness.update_config({"use-aproxy": True})
         harness.begin()
 
-        assert harness.charm.unit.status == BlockedStatus(
-            "aproxy-address must be a valid socket address, got invalid"
-        )
+        assert harness.charm.unit.status == BlockedStatus("Invalid proxy configuration")
 
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")

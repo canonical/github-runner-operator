@@ -24,7 +24,16 @@ async def test_usage_of_aproxy(model: Model, app_no_runner: Application, squid_p
     app = app_no_runner  # Rename to make it clear that the app will contain a runner.
     unit = app.units[0]
 
-    await app.set_config({"aproxy-address": squid_proxy})
+    await model.set_config(
+        {
+            "juju-http-proxy": squid_proxy,
+            "juju-https-proxy": squid_proxy,
+            "juju-no-proxy": "",
+            "logging-config": "<root>=INFO;unit=DEBUG",
+        }
+    )
+
+    await app.set_config({"use-aproxy": "true"})
     await ensure_charm_has_runner(app, model)
 
     names = await get_runner_names(unit)
