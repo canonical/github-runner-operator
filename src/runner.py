@@ -16,7 +16,7 @@ import pathlib
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Optional, Sequence
+from typing import Iterable, NamedTuple, Optional, Sequence
 
 import yaml
 
@@ -48,6 +48,8 @@ LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
 if not LXD_PROFILE_YAML.exists():
     LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
 LXDBR_DNSMASQ_LEASES_FILE = Path("/var/snap/lxd/common/lxd/networks/lxdbr0/dnsmasq.leases")
+
+Snap = NamedTuple("Snap", [("name", str), ("channel", str)])
 
 
 @dataclass
@@ -501,6 +503,7 @@ class Runner:
         self.instance.execute(["/usr/sbin/usermod", "-aG", "microk8s", "ubuntu"])
 
         self._apt_install(["docker.io", "npm", "python3-pip", "shellcheck", "jq", "wget"])
+        self._snap_install([Snap(name="aproxy", channel="edge")])
         self._wget_install(
             [
                 WgetExecutable(
@@ -510,9 +513,6 @@ class Runner:
             ]
         )
         self.instance.execute(["npm", "install", "--global", "yarn"])
-
-        # install aproxy, currently only edge channel available
-        self.instance.execute(["snap", "install", "aproxy", "--edge"])
 
         # Add the user to docker group.
         self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
@@ -827,6 +827,22 @@ table ip aproxy {{
             self.instance.execute(["/usr/bin/apt-get", "install", "-yq", pkg])
 
         self.instance.execute(["/usr/bin/apt-get", "clean"])
+
+    def _snap_install(self, snaps: Iterable[Snap]) -> None:
+        """Installs the given snap packages.
+
+        This is a temporary solution to provide tools not offered by the base ubuntu image. Custom
+        images based on the GitHub action runner image will be used in the future.
+
+        Args:
+            snaps: snaps to be installed.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        for snap in snaps:
+            logger.info("Installing %s via snap...", snap.name)
+            self.instance.execute(["snap", "install", snap.name, f"--channel={snap.channel}"])
 
     def _wget_install(self, executables: Iterable[WgetExecutable]) -> None:
         """Installs the given binaries.
