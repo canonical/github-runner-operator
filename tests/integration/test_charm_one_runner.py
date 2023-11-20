@@ -24,7 +24,7 @@ from tests.status_name import ACTIVE_STATUS_NAME
 @pytest.mark.abort_on_fail
 async def test_network_access(app: Application) -> None:
     """
-    arrange: An working application with one runner. Setup a HTTP server in the juju unit.
+    arrange: A working application with one runner. Setup a HTTP server in the juju unit.
     act: Make HTTP call to the HTTP server from inside a runner.
     assert: The HTTP call failed.
     """
