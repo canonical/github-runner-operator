@@ -58,7 +58,7 @@ class ProxyConfig(BaseModel):
         Returns:
             Current proxy config of the charm.
         """
-        use_aproxy = bool(charm.config.get("use-aproxy"))
+        use_aproxy = bool(charm.config.get("experimental-use-aproxy"))
         http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY") or None
         https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
         no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None

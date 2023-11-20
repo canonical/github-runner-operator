@@ -46,7 +46,7 @@ def test_aproxy_proxy_missing():
     """
     charm = MagicMock()
     charm.model.relations.__getitem__.return_value = []
-    charm.config = {"use-aproxy": "true"}
+    charm.config = {"experimental-use-aproxy": "true"}
 
     with pytest.raises(CharmConfigInvalidError):
         State.from_charm(charm)

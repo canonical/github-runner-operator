@@ -57,7 +57,7 @@ async def app_with_aproxy_fixture(
         }
     )
 
-    await app_no_runner.set_config({"use-aproxy": "true"})
+    await app_no_runner.set_config({"experimental-use-aproxy": "true"})
 
     return app_no_runner
 

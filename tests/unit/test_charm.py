@@ -289,7 +289,7 @@ class TestCharm(unittest.TestCase):
         rm.return_value = mock_rm = MagicMock()
         mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
         harness = Harness(GithubRunnerCharm)
-        harness.update_config({"use-aproxy": True})
+        harness.update_config({"experimental-use-aproxy": True})
         harness.begin()
 
         assert harness.charm.unit.status == BlockedStatus("Invalid proxy configuration")
