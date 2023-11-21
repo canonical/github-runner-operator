@@ -9,7 +9,6 @@ import tarfile
 import time
 import urllib.request
 import uuid
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterator, Optional
 
@@ -18,75 +17,28 @@ import jinja2
 import requests
 import requests.adapters
 import urllib3
-from ghapi.all import GhApi
-from ghapi.page import pages
-from typing_extensions import assert_never
 
 import metrics
 import runner_metrics
 import shared_fs
-from charm_state import State as CharmState
 from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
-from github_type import (
-    GitHubRunnerStatus,
-    RegistrationToken,
-    RemoveToken,
-    RunnerApplication,
-    RunnerApplicationList,
-    SelfHostedRunner,
-)
+from github_client import GithubClient
+from github_type import RunnerApplication, SelfHostedRunner
 from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
-from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
+from runner import Runner, RunnerConfig, RunnerStatus
+from runner_manager_type import RunnerInfo, RunnerManagerClients, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
-from runner_type import (
-    GitHubOrg,
-    GitHubPath,
-    GitHubRepo,
-    ProxySetting,
-    RunnerByHealth,
-    VirtualMachineResources,
-)
+from runner_type import ProxySetting, RunnerByHealth, VirtualMachineResources
 from utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
 
 
-@dataclass
-class RunnerManagerConfig:
-    """Configuration of runner manager.
-
-    Attributes:
-        path: GitHub repository path in the format '<owner>/<repo>', or the
-            GitHub organization name.
-        token: GitHub personal access token to register runner to the
-            repository or organization.
-        image: Name of the image for creating LXD instance.
-        service_token: Token for accessing local service.
-        lxd_storage_path: Path to be used as LXD storage.
-        charm_state: The state of the charm.
-        dockerhub_mirror: URL of dockerhub mirror to use.
-    """
-
-    path: GitHubPath
-    token: str
-    image: str
-    service_token: str
-    lxd_storage_path: Path
-    charm_state: CharmState
-    dockerhub_mirror: str | None = None
-
-
-@dataclass
-class RunnerInfo:
-    """Information from GitHub of a runner.
-
-    Used as a returned type to method querying runner information.
-    """
-
-    name: str
-    status: GitHubRunnerStatus
-    busy: bool
+REPO_OWNER = "canonical"
+REPO_NAME = "github-runner-operator"
+IMAGE_ARTIFACT = "self-hosted-runner-image"
+IMAGE_FILENAME = "runner-image.tar.gz"
 
 
 class RunnerManager:
@@ -146,8 +98,8 @@ class RunnerManager:
         local_session.mount("https://", adapter)
         local_session.trust_env = False
 
-        self._clients = RunnerClients(
-            GhApi(token=self.config.token),
+        self._clients = RunnerManagerClients(
+            GithubClient(token=self.config.token, request_session=local_session),
             jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True),
             LxdClient(),
             RepoPolicyComplianceClient(
@@ -178,15 +130,7 @@ class RunnerManager:
         Returns:
             Information on the runner application.
         """
-        runner_bins: RunnerApplicationList = []
-        if isinstance(self.config.path, GitHubRepo):
-            runner_bins = self._clients.github.actions.list_runner_applications_for_repo(
-                owner=self.config.path.owner, repo=self.config.path.repo
-            )
-        if isinstance(self.config.path, GitHubOrg):
-            runner_bins = self._clients.github.actions.list_runner_applications_for_org(
-                org=self.config.path.org
-            )
+        runner_bins = self._clients.github.get_runner_applications(self.config.path)
 
         logger.debug("Response of runner binary list: %s", runner_bins)
 
@@ -407,8 +351,8 @@ class RunnerManager:
         if not RunnerManager.runner_bin_path.exists():
             raise RunnerCreateError("Unable to create runner due to missing runner binary.")
         logger.info("Getting registration token for GitHub runners.")
-        registration_token = self._get_github_registration_token()
-        remove_token = self._get_github_remove_token()
+        registration_token = self._clients.github.get_runner_registration_token(self.config.path)
+        remove_token = self._clients.github.get_runner_remove_token(self.config.path)
         logger.info("Attempting to add %i runner(s).", count)
         for _ in range(count):
             config = RunnerConfig(
@@ -447,7 +391,7 @@ class RunnerManager:
 
             logger.info("Cleaning up idle runners.")
 
-            remove_token = self._get_github_remove_token()
+            remove_token = self._clients.github.get_runner_remove_token(self.config.path)
 
             for runner in remove_runners:
                 runner.remove(remove_token)
@@ -496,7 +440,7 @@ class RunnerManager:
         if runner_states.unhealthy:
             logger.info("Cleaning up unhealthy runners.")
 
-            remove_token = self._get_github_remove_token()
+            remove_token = self._clients.github.get_runner_remove_token(self.config.path)
 
             unhealthy_runners = [
                 runner for runner in runners if runner.config.name in set(runner_states.unhealthy)
@@ -544,7 +488,7 @@ class RunnerManager:
 
         logger.info("Removing existing %i local runners", len(runners))
 
-        remove_token = self._get_github_remove_token()
+        remove_token = self._clients.github.get_runner_remove_token(self.config.path)
 
         for runner in runners:
             runner.remove(remove_token)
@@ -562,42 +506,9 @@ class RunnerManager:
         return f"{self.instance_name}-{suffix}"
 
     def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
-        remote_runners_list: list[SelfHostedRunner] = []
-        if isinstance(self.config.path, GitHubRepo):
-            # The documentation of ghapi for pagination is incorrect and examples will give errors.
-            # This workaround is a temp solution. Will be moving to PyGitHub in the future.
-            self._clients.github.actions.list_self_hosted_runners_for_repo(
-                owner=self.config.path.owner, repo=self.config.path.repo, per_page=100
-            )
-            num_of_pages = self._clients.github.last_page()
-            remote_runners_list = [
-                item
-                for page in pages(
-                    self._clients.github.actions.list_self_hosted_runners_for_repo,
-                    num_of_pages + 1,
-                    owner=self.config.path.owner,
-                    repo=self.config.path.repo,
-                    per_page=100,
-                )
-                for item in page["runners"]
-            ]
-        if isinstance(self.config.path, GitHubOrg):
-            # The documentation of ghapi for pagination is incorrect and examples will give errors.
-            # This workaround is a temp solution. Will be moving to PyGitHub in the future.
-            self._clients.github.actions.list_self_hosted_runners_for_org(
-                org=self.config.path.org, per_page=100
-            )
-            num_of_pages = self._clients.github.last_page()
-            remote_runners_list = [
-                item
-                for page in pages(
-                    self._clients.github.actions.list_self_hosted_runners_for_org,
-                    num_of_pages + 1,
-                    org=self.config.path.org,
-                    per_page=100,
-                )
-                for item in page["runners"]
-            ]
+        remote_runners_list: list[SelfHostedRunner] = self._clients.github.get_runner_github_info(
+            self.config.path
+        )
 
         logger.debug("List of runners found on GitHub:%s", remote_runners_list)
 
@@ -669,42 +580,16 @@ class RunnerManager:
 
         return runners
 
-    def _get_github_registration_token(self) -> str:
-        """Get token from GitHub used for registering runners.
+    def download_runner_image(self) -> None:
+        """Download runner image from GitHub and load to LXC.
 
-        Returns:
-            The registration token.
+        Raises:
+            LxdError: Unable to load LXD image downloaded.
         """
-        token: RegistrationToken
-        if isinstance(self.config.path, GitHubRepo):
-            token = self._clients.github.actions.create_registration_token_for_repo(
-                owner=self.config.path.owner, repo=self.config.path.repo
-            )
-        elif isinstance(self.config.path, GitHubOrg):
-            token = self._clients.github.actions.create_registration_token_for_org(
-                org=self.config.path.org
-            )
-        else:
-            assert_never(token)
-
-        return token["token"]
-
-    def _get_github_remove_token(self) -> str:
-        """Get token from GitHub used for removing runners.
-
-        Returns:
-            The removing token.
-        """
-        token: RemoveToken
-        if isinstance(self.config.path, GitHubRepo):
-            token = self._clients.github.actions.create_remove_token_for_repo(
-                owner=self.config.path.owner, repo=self.config.path.repo
-            )
-        elif isinstance(self.config.path, GitHubOrg):
-            token = self._clients.github.actions.create_remove_token_for_org(
-                org=self.config.path.org
-            )
-        else:
-            assert_never(token)
-
-        return token["token"]
+        self._clients.github.download_artifact(
+            REPO_OWNER,
+            REPO_NAME,
+            IMAGE_ARTIFACT,
+            IMAGE_FILENAME,
+        )
+        self._clients.lxd.images.create(self.config.image, IMAGE_FILENAME)

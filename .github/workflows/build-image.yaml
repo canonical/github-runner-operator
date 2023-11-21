@@ -4,8 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 3 * * *'
-  # TODO: Test only
-  pull_request:
 
 jobs:
   build-image:
@@ -15,10 +13,9 @@ jobs:
         with:
           channel: 5.19/stable
       - uses: actions/checkout@v4
-      - name: Install wget
-        run: sudo apt-get update && sudo apt-get install -yq wget
       - name: Run build script
         run: bash scripts/build-image.sh
+      # TODO: Test the image with integration test.
       - uses: actions/upload-artifact@v3
         with:
           name: self-hosted-runner-image 

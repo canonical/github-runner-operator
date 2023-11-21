@@ -16,7 +16,7 @@ import pathlib
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Optional, Sequence
+from typing import Optional, Sequence
 
 import yaml
 
@@ -32,14 +32,8 @@ from errors import (
 )
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
-from runner_type import (
-    GitHubOrg,
-    GitHubRepo,
-    RunnerClients,
-    RunnerConfig,
-    RunnerStatus,
-    VirtualMachineResources,
-)
+from runner_manager_type import RunnerManagerClients
+from runner_type import GithubOrg, GithubRepo, RunnerConfig, RunnerStatus, VirtualMachineResources
 from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
@@ -82,7 +76,7 @@ class Runner:
 
     def __init__(
         self,
-        clients: RunnerClients,
+        clients: RunnerManagerClients,
         runner_config: RunnerConfig,
         runner_status: RunnerStatus,
         instance: Optional[LxdInstance] = None,
@@ -209,7 +203,7 @@ class Runner:
         logger.info("Removing runner on GitHub: %s", self.config.name)
 
         # The runner should cleanup itself.  Cleanup on GitHub in case of runner cleanup error.
-        if isinstance(self.config.path, GitHubRepo):
+        if isinstance(self.config.path, GithubRepo):
             logger.debug(
                 "Ensure runner %s with id %s is removed from GitHub repo %s/%s",
                 self.config.name,
@@ -222,7 +216,7 @@ class Runner:
                 repo=self.config.path.repo,
                 runner_id=self.status.runner_id,
             )
-        if isinstance(self.config.path, GitHubOrg):
+        if isinstance(self.config.path, GithubOrg):
             logger.debug(
                 "Ensure runner %s with id %s is removed from GitHub org %s",
                 self.config.name,
@@ -289,9 +283,6 @@ class Runner:
             "type": "container" if LXD_PROFILE_YAML.exists() else "virtual-machine",
             "source": {
                 "type": "image",
-                "mode": "pull",
-                "server": "https://cloud-images.ubuntu.com/daily",
-                "protocol": "simplestreams",
                 "alias": image,
             },
             "ephemeral": ephemeral,
@@ -489,28 +480,6 @@ class Runner:
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
-        # TEMP: Install common tools used in GitHub Actions. This will be removed once virtual
-        # machines are created from custom images/GitHub runner image.
-
-        # Pre-create the microk8s group and add the user to it.
-        self.instance.execute(["/usr/sbin/groupadd", "microk8s"])
-        self.instance.execute(["/usr/sbin/usermod", "-aG", "microk8s", "ubuntu"])
-
-        self._apt_install(["docker.io", "npm", "python3-pip", "shellcheck", "jq", "wget"])
-        self._wget_install(
-            [
-                WgetExecutable(
-                    url="https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64",
-                    cmd="yq",
-                )
-            ]
-        )
-
-        # Add the user to docker group.
-        self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
-        # Allow traffic for docker user.
-        self.instance.execute(["/usr/sbin/iptables", "-I", "DOCKER-USER", "-j", "ACCEPT"])
-
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
         binary_path = "/tmp/runner.tgz"  # nosec B108
@@ -677,7 +646,7 @@ class Runner:
             self.instance.name,
         ]
 
-        if isinstance(self.config.path, GitHubOrg):
+        if isinstance(self.config.path, GithubOrg):
             register_cmd += ["--runnergroup", self.config.path.group]
 
         logger.info("Executing registration command...")
@@ -737,50 +706,3 @@ class Runner:
             raise RunnerFileLoadError(
                 f"Failed to load file {filepath} to runner {self.instance.name}"
             )
-
-    def _apt_install(self, packages: Iterable[str]) -> None:
-        """Installs the given APT packages.
-
-        This is a temporary solution to provide tools not offered by the base ubuntu image. Custom
-        images based on the GitHub action runner image will be used in the future.
-
-        Args:
-            packages: Packages to be install via apt.
-        """
-        if self.instance is None:
-            raise RunnerError("Runner operation called prior to runner creation.")
-
-        self.instance.execute(["/usr/bin/apt-get", "update"])
-
-        for pkg in packages:
-            logger.info("Installing %s via APT...", pkg)
-            self.instance.execute(["/usr/bin/apt-get", "install", "-yq", pkg])
-
-        self.instance.execute(["/usr/bin/apt-get", "clean"])
-
-    def _wget_install(self, executables: Iterable[WgetExecutable]) -> None:
-        """Installs the given binaries.
-
-        This is a temporary solution to provide tools not offered by the base ubuntu image. Custom
-        images based on the GitHub action runner image will be used in the future.
-
-        Args:
-            executables: The executables to download.
-        """
-        if self.instance is None:
-            raise RunnerError("Runner operation called prior to runner creation.")
-
-        for executable in executables:
-            executable_path = f"/usr/bin/{executable.cmd}"
-            logger.info("Downloading %s via wget to %s...", executable.url, executable_path)
-            wget_cmd = ["/usr/bin/wget", executable.url, "-O", executable_path]
-            if self.config.proxies.get("http", None) or self.config.proxies.get("https", None):
-                wget_cmd += ["-e", "use_proxy=on"]
-            if self.config.proxies.get("http", None):
-                wget_cmd += ["-e", f"http_proxy={self.config.proxies['http']}"]
-            if self.config.proxies.get("https", None):
-                wget_cmd += ["-e", f"https_proxy={self.config.proxies['https']}"]
-            if self.config.proxies.get("no_proxy", None):
-                wget_cmd += ["-e", f"no_proxy={self.config.proxies['no_proxy']}"]
-            self.instance.execute(wget_cmd)
-            self.instance.execute(["/usr/bin/chmod", "+x", executable_path])

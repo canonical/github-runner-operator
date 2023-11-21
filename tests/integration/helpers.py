@@ -321,7 +321,7 @@ async def deploy_github_runner_charm(
     application = await model.deploy(
         charm_file,
         application_name=app_name,
-        series="jammy",
+        series="runner",
         config={
             "path": path,
             "token": token,

@@ -11,10 +11,16 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
-from errors import LogrotateSetupError, MissingConfigurationError, RunnerError, SubprocessError
+from errors import (
+    ConfigurationError,
+    LogrotateSetupError,
+    MissingConfigurationError,
+    RunnerError,
+    SubprocessError,
+)
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
-from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
+from runner_type import GithubOrg, GithubRepo, VirtualMachineResources
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
@@ -107,9 +113,9 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubOrg(org="mockorg", group="mockgroup"),
+                path=GithubOrg(org="mockorg", group="mockgroup"),
                 token="mocktoken",
-                image="jammy",
+                image="runner",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
                 charm_state=harness.charm._state,
@@ -133,9 +139,9 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubRepo(owner="mockorg", repo="repo"),
+                path=GithubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
-                image="jammy",
+                image="runner",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
                 charm_state=harness.charm._state,
@@ -162,9 +168,9 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubRepo(owner="mockorg", repo="repo"),
+                path=GithubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
-                image="jammy",
+                image="runner",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
                 charm_state=harness.charm._state,
@@ -182,9 +188,9 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubRepo(owner="mockorg", repo="repo"),
+                path=GithubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
-                image="jammy",
+                image="runner",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
                 charm_state=harness.charm._state,
@@ -226,7 +232,8 @@ class TestCharm(unittest.TestCase):
         assert harness.charm._get_runner_manager() is not None
 
         # With invalid path.
-        assert harness.charm._get_runner_manager("mocktoken", "mock/invalid/path") is None
+        with self.assertRaises(ConfigurationError):
+            harness.charm._get_runner_manager("mocktoken", "mock/invalid/path")
 
     @patch("charm.metrics.setup_logrotate")
     @patch("charm.RunnerManager")

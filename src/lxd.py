@@ -11,6 +11,7 @@ from __future__ import annotations
 import io
 import logging
 import tempfile
+from pathlib import Path
 from typing import IO, Optional, Tuple, Union
 
 import pylxd.models
@@ -525,6 +526,32 @@ class LxdStoragePool:
         self._pylxd_storage_pool.delete()
 
 
+class LxdImageManager:  # pylint: disable=too-few-public-methods
+    """LXD image manager."""
+
+    def __init__(self, pylxd_client: pylxd.Client):
+        """Instantiate the LXD image manager.
+
+        Args:
+            pylxd_client: Instance of pylxd.Client.
+        """
+        self._pylxd_client = pylxd_client
+
+    def create(self, name: str, path: Path):
+        """Import a LXD image.
+
+        Args:
+            name: Alias for the image.
+            path: Path of the LXD image file.
+
+        Raises:
+            LxdError: Unable to import the file as LXD image.
+        """
+        result = secure_run_subprocess(["lxc", "image", "import", "--alias", name, str(path)])
+        if result.returncode != 0:
+            raise LxdError(result.stdout.decode("utf-8"))
+
+
 # Disable pylint as the public methods of this class are split into instances and profiles.
 class LxdClient:  # pylint: disable=too-few-public-methods
     """LXD client."""
@@ -536,3 +563,4 @@ class LxdClient:  # pylint: disable=too-few-public-methods
         self.profiles = LxdProfileManager(pylxd_client)
         self.networks = LxdNetworkManager(pylxd_client)
         self.storage_pools = LxdStoragePoolManager(pylxd_client)
+        self.images = LxdImageManager(pylxd_client)

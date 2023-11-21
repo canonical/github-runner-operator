@@ -3,13 +3,13 @@
 <a href="../src/runner_type.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `runner_type.py`
-Types used by both RunnerManager and Runner classes. 
+Types used by Runner class. 
 
 
 
 ---
 
-## <kbd>class</kbd> `GitHubOrg`
+## <kbd>class</kbd> `GithubOrg`
 Represent GitHub organization. 
 
 
@@ -17,7 +17,7 @@ Represent GitHub organization.
 
 ---
 
-<a href="../src/runner_type.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_type.py#L47"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `path`
 
@@ -30,7 +30,7 @@ Return a string representing the path.
 
 ---
 
-## <kbd>class</kbd> `GitHubRepo`
+## <kbd>class</kbd> `GithubRepo`
 Represent GitHub repository. 
 
 
@@ -38,7 +38,7 @@ Represent GitHub repository.
 
 ---
 
-<a href="../src/runner_type.py#L41"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_type.py#L35"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `path`
 
@@ -62,23 +62,6 @@ Represent HTTP-related proxy settings.
 
 ## <kbd>class</kbd> `RunnerByHealth`
 Set of runners LXD instance by health state. 
-
-
-
-
-
----
-
-## <kbd>class</kbd> `RunnerClients`
-Clients for accessing various services. 
-
-
-
-**Attributes:**
- 
- - <b>`github`</b>:  Used to query GitHub API. 
- - <b>`jinja`</b>:  Used for templating. 
- - <b>`lxd`</b>:  Used to interact with LXD API. 
 
 
 

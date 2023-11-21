@@ -17,7 +17,7 @@ from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
 from runner import Runner, RunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
-from runner_type import GitHubOrg, GitHubRepo, RunnerByHealth, VirtualMachineResources
+from runner_type import GithubOrg, GithubRepo, RunnerByHealth, VirtualMachineResources
 from shared_fs import SharedFilesystem
 from tests.unit.mock import TEST_BINARY
 
@@ -38,9 +38,9 @@ def charm_state_fixture():
     scope="function",
     name="runner_manager",
     params=[
-        (GitHubOrg("test_org", "test_group"), {}),
+        (GithubOrg("test_org", "test_group"), {}),
         (
-            GitHubRepo("test_owner", "test_repo"),
+            GithubRepo("test_owner", "test_repo"),
             {"no_proxy": "test_no_proxy", "http": "test_http", "https": "test_https"},
         ),
     ],

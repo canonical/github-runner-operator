@@ -46,7 +46,7 @@ from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
-from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
+from runner_type import GithubOrg, GithubRepo, ProxySetting, VirtualMachineResources
 from utilities import bytes_with_unit_to_kib, execute_command, get_env_var, retry
 
 logger = logging.getLogger(__name__)
@@ -283,12 +283,12 @@ class GithubRunnerCharm(CharmBase):
             paths = path.split("/")
             if len(paths) != 2:
                 logger.error("Invalid path %s", path)
-                return None
+                raise ConfigurationError(f"Invalid path {path}")
 
             owner, repo = paths
-            path = GitHubRepo(owner=owner, repo=repo)
+            path = GithubRepo(owner=owner, repo=repo)
         else:
-            path = GitHubOrg(org=path, group=self.config["group"])
+            path = GithubOrg(org=path, group=self.config["group"])
 
         app_name, unit = self.unit.name.rsplit("/", 1)
         return RunnerManager(
@@ -297,7 +297,7 @@ class GithubRunnerCharm(CharmBase):
             RunnerManagerConfig(
                 path=path,
                 token=token,
-                image="jammy",
+                image="runner",
                 service_token=self.service_token,
                 lxd_storage_path=self.ram_pool_path,
                 charm_state=self._state,
