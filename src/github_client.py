@@ -32,7 +32,8 @@ class GithubClient:
             request_session: Requests session for HTTP requests.
         """
         self._token = token
-        self._client = GhApi(self._token)
+        logger.info(f"DEBUG DEBUG {self._token}")
+        self._client = GhApi(token=self._token)
         self._session = request_session
 
     def get_runner_applications(self, path: GithubPath) -> RunnerApplicationList:
