@@ -18,7 +18,7 @@ For more information about how to install and use Juju, see [Get started with Ju
 
 ## Steps
 
-### Create GitHub repositry
+### Create GitHub repository
 
 The GitHub self-hosted runner spawned by the charm needs to connect to a GitHub repository or organization. GitHub repositories are used as it is simpler to manage.
 
@@ -58,7 +58,7 @@ Create a branch protection rule with the branch name pattern `**` and enable `Re
 
 ### Run a simple workflow on the self-hosted runner
 
-Once the self-hosted runner is available on GitHub, it can be used to run GitHub Actions jobs similiar to runners provided by GitHub. The only difference being the label specified in the `runs-on` of a job.
+Once the self-hosted runner is available on GitHub, it can be used to run GitHub Actions jobs similar to runners provided by GitHub. The only difference being the label specified in the `runs-on` of a job.
 
 The self-hosted runner managed by the charm would have the following labels: `self-hosted`, `linux`, and the application name
 

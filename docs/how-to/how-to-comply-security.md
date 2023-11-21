@@ -1,6 +1,6 @@
 # How to comply with security requirements
 
-[Running GitHub self-hosted runner poses security risk, such as, arbitrary code execution according to GitHub](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security). Like GitHub the self-hosted runners managed by the charm are isolated in its own single-use virtual machine instance. In addtion, the charm enforce some repository settings to ensure all code running on the self-hosted runners are reviewed by someone trusted.
+[Running GitHub self-hosted runner poses security risk, such as, arbitrary code execution according to GitHub](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security). Like GitHub the self-hosted runners managed by the charm are isolated in its own single-use virtual machine instance. In addition, the charm enforce some repository settings to ensure all code running on the self-hosted runners are reviewed by someone trusted.
 
 The repository settings enforced with this [Python library](https://github.com/canonical/repo-policy-compliance). The rules enforce are different depending on how the GitHub Actions workflow is triggered. The README of the python library details the policies it enforces for different type of trigger.
 

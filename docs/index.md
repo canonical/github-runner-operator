@@ -50,5 +50,5 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
 | 1 | reference | [Reference]() |
 | 2 | actions | [Actions](https://discourse.charmhub.io/t/github-runner-docs-actions/12443) |
 | 2 | configurations | [Configurations](https://discourse.charmhub.io/t/github-runner-docs-configurations/12444) |
-| 1 | explanation | [Explantion]() |
+| 1 | explanation | [Explanation]() |
 | 2| charm-architecture | [Charm architecture](https://discourse.charmhub.io/t/github-runner-docs-charm-architecture/12446) |

@@ -2,7 +2,7 @@
 
 The charm can be hardware resource instensive. As each instance of self-hosted runner application is hosted in a virtual machine.
 
-## Virutal machine resource usage
+## Virtual machine resource usage
 
 The minimum resource usage for a single virtual machine:
 
