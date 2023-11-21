@@ -103,6 +103,10 @@ def secure_run_subprocess(
     CalledProcessError will not be raised on error of the command executed.
     Errors should be handled by the caller by checking the exit code.
 
+    The command is executed with `subprocess.run`, additional arguments can be passed to it as
+    keyword arguments. The following arguments to `subprocess.run` should not be set:
+    `capture_output`, `shell`, `check`. As those arguments are used by this function.
+
     Args:
         cmd: Command in a list.
         hide_cmd: Hide logging of cmd.

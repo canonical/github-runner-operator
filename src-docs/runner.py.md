@@ -28,7 +28,7 @@ Single instance of GitHub self-hosted runner.
  - <b>`online`</b> (bool):  Whether GitHub marks this runner as online. 
  - <b>`busy`</b> (bool):  Whether GitHub marks this runner as busy. 
 
-<a href="../src/runner.py#L77"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L81"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -56,7 +56,7 @@ Construct the runner instance.
 
 ---
 
-<a href="../src/runner.py#L105"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L111"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `create`
 
@@ -88,7 +88,7 @@ Create the runner instance on LXD and register it on GitHub.
 
 ---
 
-<a href="../src/runner.py#L148"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L154"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `remove`
 
@@ -109,6 +109,15 @@ Remove this runner instance from LXD and GitHub.
 **Raises:**
  
  - <b>`RunnerRemoveError`</b>:  Failure in removing runner. 
+
+
+---
+
+## <kbd>class</kbd> `Snap`
+Snap(name, channel) 
+
+
+
 
 
 ---

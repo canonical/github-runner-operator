@@ -16,6 +16,7 @@ from typing import Any, Callable, Dict, Optional, Sequence, TypeVar
 from urllib.parse import urlsplit
 
 import jinja2
+import ops
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from ops.charm import (
     ActionEvent,
@@ -31,7 +32,7 @@ from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 import metrics
-from charm_state import State
+from charm_state import CharmConfigInvalidError, State
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
@@ -47,7 +48,7 @@ from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_type import GithubOrg, GithubRepo, ProxySetting, VirtualMachineResources
-from utilities import bytes_with_unit_to_kib, execute_command, get_env_var, retry
+from utilities import bytes_with_unit_to_kib, execute_command, retry
 
 logger = logging.getLogger(__name__)
 
@@ -144,7 +145,11 @@ class GithubRunnerCharm(CharmBase):
         super().__init__(*args, **kargs)
 
         self._grafana_agent = COSAgentProvider(self)
-        self._state = State.from_charm(self)
+        try:
+            self._state = State.from_charm(self)
+        except CharmConfigInvalidError as exc:
+            self.unit.status = ops.BlockedStatus(exc.msg)
+            return
 
         if LXD_PROFILE_YAML.exists():
             if self.config.get("test-mode") != "insecure":
@@ -159,14 +164,17 @@ class GithubRunnerCharm(CharmBase):
         )
 
         self.proxies: ProxySetting = {}
-        if http_proxy := get_env_var("JUJU_CHARM_HTTP_PROXY"):
-            self.proxies["http"] = http_proxy
-        if https_proxy := get_env_var("JUJU_CHARM_HTTPS_PROXY"):
-            self.proxies["https"] = https_proxy
-        # there's no need for no_proxy if there's no http_proxy or https_proxy
-        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY")
-        if (https_proxy or http_proxy) and no_proxy:
-            self.proxies["no_proxy"] = no_proxy
+        if proxy_config := self._state.proxy_config:
+            if http_proxy := proxy_config.http_proxy:
+                self.proxies["http"] = str(http_proxy)
+            if https_proxy := proxy_config.https_proxy:
+                self.proxies["https"] = str(https_proxy)
+            # there's no need for no_proxy if there's no http_proxy or https_proxy
+            no_proxy = proxy_config.no_proxy
+            if (https_proxy or http_proxy) and no_proxy:
+                self.proxies["no_proxy"] = no_proxy
+            if proxy_config.use_aproxy:
+                self.proxies["aproxy_address"] = proxy_config.aproxy_address
 
         self.service_token = None
 
@@ -768,6 +776,7 @@ class GithubRunnerCharm(CharmBase):
                 "security.port_isolation=true",
             ]
         )
+
         logger.info("Finished installing charm dependencies.")
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
