@@ -32,7 +32,7 @@ done
 
 /snap/bin/lxc exec runner -- /usr/bin/apt-get update
 /snap/bin/lxc exec runner --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get upgrade -yq
-/snap/bin/lxc exec runner --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget -yq
+/snap/bin/lxc exec runner --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget yarn -yq
 /snap/bin/lxc exec runner -- /usr/sbin/groupadd microk8s
 /snap/bin/lxc exec runner -- /usr/sbin/usermod -aG microk8s ubuntu
 /snap/bin/lxc exec runner -- /usr/sbin/usermod -aG docker ubuntu
