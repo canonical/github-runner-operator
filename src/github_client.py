@@ -141,14 +141,20 @@ class GithubClient:
 
         return token["token"]
 
-    def download_artifact(self, owner: str, repo: str, artifact_name: str, filename: str) -> None:
-        """Download artifact from GitHub repo.
+    def get_latest_artifact(
+        self, owner: str, repo: str, artifact_name: str, filename: str, previous_url: str | None
+    ) -> str:
+        """Ensure the latest artifact from GitHub repo is downloaded.
 
         Args:
             owner: Owner of the GitHub repo.
             repo: Name of the GitHub repo.
             artifact_name: Name of the artifact to download.
             filename: Name of the file to decompress from the artifact.
+            previous_url: Download URL of the previous download of artifact.
+
+        Returns:
+            Download URL of the latest artifact
         """
         # Get the last 2000 artifacts on the repository.
         artifacts = [
@@ -173,11 +179,16 @@ class GithubClient:
                 f"Unable to find non-expired {artifact_name} artifact at {owner}/{repo}"
             )
 
+        if artifact_info.archive_download_url == previous_url:
+            return previous_url
+
         logger.info(
-            "Downloading artifact %s created at %s", artifact_name, artifact_info.created_at
+            "Downloading lastest artifact %s created at %s",
+            artifact_name,
+            artifact_info.created_at,
         )
 
-        # Download image zip to disk with buffer size 16MiB.
+        # Download image zip to disk with buffer size 128MiB.
         with self._session.get(
             artifact_info.archive_download_url,
             headers={
@@ -188,8 +199,10 @@ class GithubClient:
             timeout=60,
             stream=True,
         ) as response:
-            with open(f"{filename}.zip", "wb") as file:
+            with open(f"/home/ubuntu/{filename}.zip", "wb") as file:
                 shutil.copyfileobj(response.raw, file, 128 * 1024)
 
-        with ZipFile(f"{filename}.zip") as artifact_zip:
+        with ZipFile(f"/home/ubuntu/{filename}.zip", "r") as artifact_zip:
             artifact_zip.extract(filename)
+
+        return artifact_info.archive_download_url

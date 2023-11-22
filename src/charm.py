@@ -161,6 +161,7 @@ class GithubRunnerCharm(CharmBase):
             path=self.config["path"],  # for detecting changes
             token=self.config["token"],  # for detecting changes
             runner_bin_url=None,
+            runner_image_url=None,
         )
 
         self.proxies: ProxySetting = {}
@@ -482,7 +483,9 @@ class GithubRunnerCharm(CharmBase):
         runner_manager = self._get_runner_manager()
 
         self.unit.status = MaintenanceStatus("Downloading runner image from Github")
-        runner_manager.download_runner_image()
+        self._stored.runner_image_url = runner_manager.download_latest_runner_image(
+            self._stored.runner_image_url
+        )
 
         # Check if the runner binary file exists.
         if not runner_manager.check_runner_bin():

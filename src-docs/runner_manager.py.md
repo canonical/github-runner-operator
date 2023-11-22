@@ -67,10 +67,10 @@ Check if runner binary exists.
 
 <a href="../src/runner_manager.py#L583"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>function</kbd> `download_runner_image`
+### <kbd>function</kbd> `download_latest_runner_image`
 
 ```python
-download_runner_image() → None
+download_latest_runner_image(previous_url: str | None) → str
 ```
 
 Download runner image from GitHub and load to LXC. 

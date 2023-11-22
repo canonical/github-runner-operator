@@ -38,18 +38,19 @@ Instantiate the GiHub API client.
 
 <a href="../src/github_client.py#L144"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>function</kbd> `download_artifact`
+### <kbd>function</kbd> `get_latest_artifact`
 
 ```python
-download_artifact(
+get_latest_artifact(
     owner: str,
     repo: str,
     artifact_name: str,
-    filename: str
-) → None
+    filename: str,
+    previous_url: str | None
+) → str
 ```
 
-Download artifact from GitHub repo. 
+Ensure the latest artifact from GitHub repo is downloaded. 
 
 
 
@@ -59,6 +60,12 @@ Download artifact from GitHub repo.
  - <b>`repo`</b>:  Name of the GitHub repo. 
  - <b>`artifact_name`</b>:  Name of the artifact to download. 
  - <b>`filename`</b>:  Name of the file to decompress from the artifact. 
+ - <b>`previous_url`</b>:  Download URL of the previous download of artifact. 
+
+
+
+**Returns:**
+ Download URL of the latest artifact 
 
 ---
 

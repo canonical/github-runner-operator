@@ -580,16 +580,21 @@ class RunnerManager:
 
         return runners
 
-    def download_runner_image(self) -> None:
+    def download_latest_runner_image(self, previous_url: str | None) -> str:
         """Download runner image from GitHub and load to LXC.
 
         Raises:
             LxdError: Unable to load LXD image downloaded.
         """
-        self._clients.github.download_artifact(
+        latest_url = self._clients.github.get_latest_artifact(
             REPO_OWNER,
             REPO_NAME,
             IMAGE_ARTIFACT,
             IMAGE_FILENAME,
+            previous_url,
         )
-        self._clients.lxd.images.create(self.config.image, IMAGE_FILENAME)
+
+        if latest_url != previous_url:
+            self._clients.lxd.images.create(self.config.image, IMAGE_FILENAME)
+
+        return latest_url
