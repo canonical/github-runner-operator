@@ -481,10 +481,12 @@ class GithubRunnerCharm(CharmBase):
 
         runner_manager = self._get_runner_manager()
 
+        self.unit.status = MaintenanceStatus("Downloading runner image from Github")
+        runner_manager.download_runner_image()
+
         # Check if the runner binary file exists.
         if not runner_manager.check_runner_bin():
             self._stored.runner_bin_url = None
-
         try:
             self.unit.status = MaintenanceStatus("Checking for runner binary updates")
             runner_info = runner_manager.get_latest_runner_bin_url()
