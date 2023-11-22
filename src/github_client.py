@@ -32,7 +32,6 @@ class GithubClient:
             request_session: Requests session for HTTP requests.
         """
         self._token = token
-        logger.info(f"DEBUG DEBUG {self._token}")
         self._client = GhApi(token=self._token)
         self._session = request_session
 
@@ -190,7 +189,7 @@ class GithubClient:
             stream=True,
         ) as response:
             with open(f"{filename}.zip", "wb") as file:
-                shutil.copyfileobj(response.raw, file, 16 * 1024)
+                shutil.copyfileobj(response.raw, file, 128 * 1024)
 
         with ZipFile(f"{filename}.zip") as artifact_zip:
             artifact_zip.extract(filename)
