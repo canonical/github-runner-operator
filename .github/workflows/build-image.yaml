@@ -9,6 +9,7 @@ on:
 
 jobs:
   build-container-image:
+    name: Build runner image for containers
     runs-on: [self-hosted, large]
     steps:
       - uses: canonical/setup-lxd@main
@@ -27,9 +28,20 @@ jobs:
           path: ./runner-image.tar.gz
           retention-days: 14
           if-no-files-found: error
-  # TODO: Run integration tests
-  build-image:
+  integration-tests:
+    name: Integration test
     needs: build-container-image
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    secrets: inherit
+    with:
+      juju-channel: 3.1/stable
+      pre-run-script: scripts/pre-integration-test.sh
+      provider: lxd
+      test-tox-env: integration-juju3.1
+      modules: '["test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics", "test_self_hosted_runner", "test_charm_with_proxy"]'
+  build-image:
+    name: Build runner image for virtual machine
+    needs: integration-tests
     runs-on: [self-hosted, large]
     steps:
       - uses: canonical/setup-lxd@main
