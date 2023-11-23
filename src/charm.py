@@ -343,6 +343,12 @@ class GithubRunnerCharm(CharmBase):
 
         self._refresh_firewall()
         runner_manager = self._get_runner_manager()
+
+        self.unit.status = MaintenanceStatus("Downloading runner image from Github")
+        self._stored.runner_image_url = runner_manager.download_latest_runner_image(
+            self._stored.runner_image_url
+        )
+
         self.unit.status = MaintenanceStatus("Downloading runner binary")
         try:
             runner_info = runner_manager.get_latest_runner_bin_url()
