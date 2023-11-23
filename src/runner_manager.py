@@ -1,14 +1,11 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Runner Manager manages the runners on LXD and GitHub."""
-
 import hashlib
-import logging
+import secrets
 import tarfile
 import time
 import urllib.request
-import uuid
 from pathlib import Path
 from typing import Dict, Iterator, Optional
 
@@ -502,7 +499,7 @@ class RunnerManager:
         Returns:
             Generated name of runner.
         """
-        suffix = str(uuid.uuid4())
+        suffix = secrets.token_hex(12)
         return f"{self.instance_name}-{suffix}"
 
     def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
