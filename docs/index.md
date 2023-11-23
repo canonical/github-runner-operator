@@ -43,10 +43,10 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
 | 2 | quick-start | [Quick start](https://discourse.charmhub.io/t/github-runner-docs-quick-start/12441) |
 | 2 | managing-resource-usage | [Managing resource usage](https://discourse.charmhub.io/t/github-runner-docs-managing-resource-usage/12450) |
 | 1 | how-to | [How to]() |
-| 2 | how-to-comply-security | [How to comply with security requirements](https://discourse.charmhub.io/t/github-runner-docs-how-to-comply-with-security-requirements/12440) |
-| 2 | how-to-change-token | [How to change GitHub personal access token](https://discourse.charmhub.io/t/github-runner-docs-how-to-change-github-personal-access-token/12451) |
-| 2 | how-to-change-path | [How to change repository or organization](https://discourse.charmhub.io/t/github-runner-docs-how-to-change-repository-or-organization/12442) |
-| 2 | how-to-contribute | [How to contribute](https://discourse.charmhub.io/t/github-runner-docs-how-to-contribute/7815) |
+| 2 | comply-security | [How to comply with security requirements](https://discourse.charmhub.io/t/github-runner-docs-how-to-comply-with-security-requirements/12440) |
+| 2 | change-token | [How to change GitHub personal access token](https://discourse.charmhub.io/t/github-runner-docs-how-to-change-github-personal-access-token/12451) |
+| 2 | change-path | [How to change repository or organization](https://discourse.charmhub.io/t/github-runner-docs-how-to-change-repository-or-organization/12442) |
+| 2 | contribute | [How to contribute](https://discourse.charmhub.io/t/github-runner-docs-how-to-contribute/7815) |
 | 1 | reference | [Reference]() |
 | 2 | actions | [Actions](https://discourse.charmhub.io/t/github-runner-docs-actions/12443) |
 | 2 | configurations | [Configurations](https://discourse.charmhub.io/t/github-runner-docs-configurations/12444) |
