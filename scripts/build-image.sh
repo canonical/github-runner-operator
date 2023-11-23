@@ -5,7 +5,6 @@
 
 set -e
 
-/snap/bin/lxc launch ubuntu-daily:jammy runner --vm
 while ! /snap/bin/lxc exec runner -- /usr/bin/who
 do
     echo "Wait for lxd agent to be ready"
@@ -70,6 +69,3 @@ EOF
 /usr/bin/bash extract-checksum.sh SHA-256 yq_linux_amd64 | /usr/bin/awk '{print $2,$1}' | /usr/bin/sha256sum -c | /usr/bin/grep OK
 
 /snap/bin/lxc file push yq_linux_amd64 runner/usr/bin/yq --mode 755
-
-/snap/bin/lxc publish runner --alias runner --reuse -f
-/snap/bin/lxc image export runner ./runner-image --vm

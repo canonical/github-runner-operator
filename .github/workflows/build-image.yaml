@@ -4,18 +4,44 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 3 * * *'
+  # TODO: Test only
+  pull_request:
 
 jobs:
-  build-image:
+  build-container-image:
     runs-on: [self-hosted, large]
     steps:
       - uses: canonical/setup-lxd@main
         with:
           channel: 5.19/stable
       - uses: actions/checkout@v4
+      - name: Start runner container
+        run: /snap/bin/lxc launch ubuntu-daily:jammy runner
       - name: Run build script
         run: bash scripts/build-image.sh
-      # TODO: Test the image with integration test.
+      - name: Publish runner container as image
+        run: /snap/bin/lxc publish runner --alias runner --reuse -f && /snap/bin/lxc image export runner ./runner-image
+      - uses: actions/upload-artifact@v3
+        with:
+          name: self-hosted-runner-image-container
+          path: ./runner-image.tar.gz
+          retention-days: 14
+          if-no-files-found: error
+  # TODO: Run integration tests
+  build-image:
+    needs: build-container-image
+    runs-on: [self-hosted, large]
+    steps:
+      - uses: canonical/setup-lxd@main
+        with:
+          channel: 5.19/stable
+      - uses: actions/checkout@v4
+      - name: Start runner VM
+        run: /snap/bin/lxc launch ubuntu-daily:jammy runner --vm
+      - name: Run build script
+        run: bash scripts/build-image.sh
+      - name: Publish runner container as image
+        run: /snap/bin/lxc publish runner --alias runner --reuse -f && /snap/bin/lxc image export runner./runner-image --vm
       - uses: actions/upload-artifact@v3
         with:
           name: self-hosted-runner-image 
