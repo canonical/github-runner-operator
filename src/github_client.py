@@ -142,13 +142,12 @@ class GithubClient:
         return token["token"]
 
     def get_latest_artifact(
-        self, owner: str, repo: str, artifact_name: str, filename: str, previous_url: str | None
+        self, repo_path: GithubRepo, artifact_name: str, filename: str, previous_url: str | None
     ) -> str:
         """Ensure the latest artifact from GitHub repo is downloaded.
 
         Args:
-            owner: Owner of the GitHub repo.
-            repo: Name of the GitHub repo.
+            repo_path: Path to the GitHub repo in <owner>/<repo> format.
             artifact_name: Name of the artifact to download.
             filename: Name of the file to decompress from the artifact.
             previous_url: Download URL of the previous download of artifact.
@@ -162,8 +161,8 @@ class GithubClient:
             for page in pages(
                 self._client.actions.list_artifacts_for_repo,
                 20,
-                owner=owner,
-                repo=repo,
+                owner=repo_path.owner,
+                repo=repo_path.repo,
                 per_page=100,
             )
             for item in page["artifacts"]
@@ -176,14 +175,14 @@ class GithubClient:
         artifact_info = next(iter(artifact_infos), None)
         if not artifact_info:
             raise RuntimeError(
-                f"Unable to find non-expired {artifact_name} artifact at {owner}/{repo}"
+                f"Unable to find non-expired {artifact_name} artifact at {repo_path.path()}"
             )
 
         if artifact_info.archive_download_url == previous_url:
             return previous_url
 
         logger.info(
-            "Downloading lastest artifact %s created at %s",
+            "Downloading latest artifact %s created at %s",
             artifact_name,
             artifact_info.created_at,
         )

@@ -42,8 +42,7 @@ Instantiate the GiHub API client.
 
 ```python
 get_latest_artifact(
-    owner: str,
-    repo: str,
+    repo_path: GithubRepo,
     artifact_name: str,
     filename: str,
     previous_url: str | None
@@ -56,8 +55,7 @@ Ensure the latest artifact from GitHub repo is downloaded.
 
 **Args:**
  
- - <b>`owner`</b>:  Owner of the GitHub repo. 
- - <b>`repo`</b>:  Name of the GitHub repo. 
+ - <b>`repo_path`</b>:  Path to the GitHub repo in <owner>/<repo> format. 
  - <b>`artifact_name`</b>:  Name of the artifact to download. 
  - <b>`filename`</b>:  Name of the file to decompress from the artifact. 
  - <b>`previous_url`</b>:  Download URL of the previous download of artifact. 

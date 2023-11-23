@@ -1,7 +1,10 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+"""Runner Manager manages the runners on LXD and GitHub."""
+
 import hashlib
+import logging
 import secrets
 import tarfile
 import time
@@ -26,7 +29,7 @@ from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerInfo, RunnerManagerClients, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
-from runner_type import ProxySetting, RunnerByHealth, VirtualMachineResources
+from runner_type import GithubRepo, ProxySetting, RunnerByHealth, VirtualMachineResources
 from utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
@@ -584,8 +587,7 @@ class RunnerManager:
             LxdError: Unable to load LXD image downloaded.
         """
         latest_url = self._clients.github.get_latest_artifact(
-            REPO_OWNER,
-            REPO_NAME,
+            GithubRepo(REPO_OWNER, REPO_NAME),
             IMAGE_ARTIFACT,
             IMAGE_FILENAME,
             previous_url,

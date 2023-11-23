@@ -43,6 +43,10 @@ def mock_get_latest_runner_bin_url():
     return mock
 
 
+def mock_download_latest_runner_image(*args):
+    return "www.example.com"
+
+
 def mock_get_github_info():
     return [
         RunnerInfo("test runner 0", GitHubRunnerStatus.ONLINE.value, True),
@@ -156,6 +160,8 @@ class TestCharm(unittest.TestCase):
     def test_update_config(self, run, wt, mkdir, rm):
         rm.return_value = mock_rm = MagicMock()
         mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
+        mock_rm.download_latest_runner_image = mock_download_latest_runner_image
+
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
@@ -246,6 +252,7 @@ class TestCharm(unittest.TestCase):
 
         rm.return_value = mock_rm = MagicMock()
         mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
+        mock_rm.download_latest_runner_image = mock_download_latest_runner_image
 
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
