@@ -154,7 +154,7 @@
           "refId": "D"
         }
       ],
-      "title": "Runners Total",
+      "title": "Lifecycle Status",
       "transformations": [],
       "type": "timeseries"
     },
@@ -244,7 +244,7 @@
           "editorMode": "code",
           "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle_runners=\"idle_runners\" | event=\"reconciliation\" | unwrap idle_runners[10m]))",
           "hide": false,
-          "legendFormat": "Idle Runners",
+          "legendFormat": "Idle",
           "queryType": "range",
           "refId": "D"
         },
@@ -256,12 +256,12 @@
           "editorMode": "code",
           "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",active_runners=\"active_runners\" | event=\"reconciliation\" | unwrap active_runners[10m]))",
           "hide": false,
-          "legendFormat": "Active Runners",
+          "legendFormat": "Active",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Gauges",
+      "title": "Active and Idle Runners",
       "transformations": [
         {
           "id": "calculateField",
