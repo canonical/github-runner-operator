@@ -9,7 +9,7 @@ Conceptually, the charm can be divided into the following:
 
 ## LXD ephemeral virtual machines
 
-Using LXD ephemeral virtual machines to host the self-hosted runners ensures the environment is clean and isolated. The charm spawns a set of virtual machines with resources configured according to the charm configurations. The self-hosted runners start with the ephemeral option and will clean themselves up once the execution has finishes, freeing the resources.
+ To ensure a clean and isolated environment for every runner, Self-hosted runners are hosted using LXD virtual machines. The charm spawns virtual machines setting resources based on charm configurations. The self-hosted runners start with the ephemeral option and will clean themselves up once the execution has finishes, freeing the resources.
 
 ## GitHub repository setting check
 
