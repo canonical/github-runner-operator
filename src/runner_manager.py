@@ -26,7 +26,7 @@ from github_client import GithubClient
 from github_type import RunnerApplication, SelfHostedRunner
 from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
-from runner import Runner, RunnerConfig, RunnerStatus
+from runner import LXD_PROFILE_YAML, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerInfo, RunnerManagerClients, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import GithubRepo, ProxySetting, RunnerByHealth, VirtualMachineResources
@@ -38,6 +38,7 @@ logger = logging.getLogger(__name__)
 REPO_OWNER = "canonical"
 REPO_NAME = "github-runner-operator"
 IMAGE_ARTIFACT = "self-hosted-runner-image"
+CONTAINER_IMAGE_ARTIFACT = "self-hosted-runner-image-container"
 IMAGE_FILENAME = "runner-image.tar.gz"
 
 
@@ -586,9 +587,12 @@ class RunnerManager:
         Raises:
             LxdError: Unable to load LXD image downloaded.
         """
+        # Download container or virtual machine image depending on whether in test mode.
+        artifact_name = CONTAINER_IMAGE_ARTIFACT if LXD_PROFILE_YAML.exists() else IMAGE_ARTIFACT
+
         latest_url = self._clients.github.get_latest_artifact(
             GithubRepo(REPO_OWNER, REPO_NAME),
-            IMAGE_ARTIFACT,
+            artifact_name,
             IMAGE_FILENAME,
             previous_url,
         )
