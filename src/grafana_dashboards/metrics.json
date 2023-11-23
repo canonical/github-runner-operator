@@ -155,49 +155,7 @@
         }
       ],
       "title": "Runners Total",
-      "transformations": [
-        {
-          "id": "calculateField",
-          "options": {
-            "binary": {
-              "left": "Started",
-              "operator": "-",
-              "reducer": "sum",
-              "right": "Stopped"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            }
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Active",
-            "binary": {
-              "left": "Started - Stopped",
-              "operator": "-",
-              "reducer": "sum",
-              "right": "Crashed"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            }
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Started - Stopped": true
-            },
-            "indexByName": {},
-            "renameByName": {}
-          }
-        }
-      ],
+      "transformations": [],
       "type": "timeseries"
     },
     {
@@ -289,6 +247,18 @@
           "legendFormat": "Idle Runners",
           "queryType": "range",
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",active_runners=\"active_runners\" | event=\"reconciliation\" | unwrap active_runners[10m]))",
+          "hide": false,
+          "legendFormat": "Active Runners",
+          "queryType": "range",
+          "refId": "A"
         }
       ],
       "title": "Gauges",
@@ -1022,6 +992,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics",
-  "version": 2,
+  "version": 3,
   "weekStart": ""
 }
