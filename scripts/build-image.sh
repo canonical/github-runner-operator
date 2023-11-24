@@ -44,7 +44,7 @@ done
 sudo /usr/bin/snap install aproxy --edge
 sudo /usr/bin/snap set aproxy proxy=squid.internal:3128
 sudo nft -f - << EOF
-define default-ip = $(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
+define default-ip = "$(ip route get "$(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+')" | grep -oP 'src \K\S+')"
 define private-ips = { 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }
 table ip aproxy
 flush table ip aproxy
