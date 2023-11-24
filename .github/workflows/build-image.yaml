@@ -4,8 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 3 * * *'
-  # TODO: Test only
-  pull_request:
 
 jobs:
   build-container-image:
