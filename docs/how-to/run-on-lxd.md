@@ -10,4 +10,4 @@ To run this charm on LXD, add `virt-type=virtual-machine` to the constraints dur
 juju deploy github-runner --constraints="cores=4 mem=16G virt-type=virtual-machine" --config token=<TOKEN> --config path=<OWNER/REPO>
 ```
 
-This constraint ensure the juju machine hosting the charm is a LXD virtual machine.
+This constraint ensures the juju machine hosting the charm is a LXD virtual machine.

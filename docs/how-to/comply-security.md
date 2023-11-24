@@ -13,7 +13,6 @@ In this guide, a recommended set of policies will be presented, but any set repo
   - branch name pattern `**` with `Require signed commits` enabled.
   - branch name pattern matching only the default branch of the repository, such as `main`, with the follow enabled:
     - `Dismiss stale pull request approvals when new commits are pushed`
-    - `Required signed commits`
     - `Do not allow bypassing the above settings`
 
 With these settings, the common workflow of creating branches with pull requests and merging to the default branch is supported. Other GitHub Actions workflow triggers such as workflow_dispatch, push, and schedule are supported as well.

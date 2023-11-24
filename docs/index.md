@@ -3,7 +3,7 @@ A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) f
 This charm simplifies initial deployment and "day N" operations of GitHub self-hosted runners. The charm makes it easy to manage self-hosted runners with security and hardware resource usage in mind.
 
 Operating a self-hosted runner comes with [certain security concerns according to GitHub](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
-Just like GitHub's, the self-hosted runners managed by the charm are isolated in a single-use virtual machine. However, arbitrary code execution is possible under certain repository settings. This can be leveraged by malicious actors in a number of ways, such as, crypto-mining. To combat this, the charm enforces a set of GitHub repository settings to ensure the executed code is reviewed by someone trusted.
+Just like GitHub's, the self-hosted runners managed by the charm are isolated in a single-use virtual machine. 
 
 The charm also upgrades dependencies on a schedule to mitigate security risks. The upgrade includes linux kernel upgrades, automatically rebooting the machines. This ensures the latest security patches are installed within minutes.
 

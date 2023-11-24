@@ -50,12 +50,6 @@ Once the charm reaches active status, visit the runner page for the GitHub repos
 
 The charm will spawn new runners on a schedule. During this time, the charm will enter maintenance status.
 
-### Ensure GitHub repository settings are secure
-
-For public repositories, [arbitrary code execution within the self-hosted runners is possible](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security). To combat this, the charm enforces a set of setting for the repositories to ensure the code executed is reviewed by someone trusted.
-
-Create a branch protection rule with the branch name pattern `**` and enable `Require signed commits` by following the instructions [here](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule#creating-a-branch-protection-rule).
-
 ### Run a simple workflow on the self-hosted runner
 
 Once the self-hosted runner is available on GitHub, it can be used to run GitHub Actions jobs similar to runners provided by GitHub. The only difference being the label specified in the `runs-on` of a job.
