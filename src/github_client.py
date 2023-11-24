@@ -141,6 +141,26 @@ class GithubClient:
 
         return token["token"]
 
+    def delete_runner(self, path: GithubPath, runner_id: int) -> None:
+        """Delete the self-hosted runner from GitHub.
+
+        Args:
+            path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
+                name.
+            runner_id: Id of the runner.
+        """
+        if isinstance(path, GithubRepo):
+            self._client.actions.delete_self_hosted_runner_from_repo(
+                owner=path.owner,
+                repo=path.repo,
+                runner_id=runner_id,
+            )
+        if isinstance(path, GithubOrg):
+            self._client.actions.delete_self_hosted_runner_from_org(
+                org=path.org,
+                runner_id=runner_id,
+            )
+
     def get_latest_artifact(
         self, repo_path: GithubRepo, artifact_name: str, filename: str, previous_url: str | None
     ) -> str:

@@ -34,7 +34,7 @@ from errors import (
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
 from runner_manager_type import RunnerManagerClients
-from runner_type import GithubOrg, GithubRepo, RunnerConfig, RunnerStatus, VirtualMachineResources
+from runner_type import GithubOrg, RunnerConfig, RunnerStatus, VirtualMachineResources
 from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
@@ -209,30 +209,13 @@ class Runner:
         logger.info("Removing runner on GitHub: %s", self.config.name)
 
         # The runner should cleanup itself.  Cleanup on GitHub in case of runner cleanup error.
-        if isinstance(self.config.path, GithubRepo):
-            logger.debug(
-                "Ensure runner %s with id %s is removed from GitHub repo %s/%s",
-                self.config.name,
-                self.status.runner_id,
-                self.config.path.owner,
-                self.config.path.repo,
-            )
-            self._clients.github.actions.delete_self_hosted_runner_from_repo(
-                owner=self.config.path.owner,
-                repo=self.config.path.repo,
-                runner_id=self.status.runner_id,
-            )
-        if isinstance(self.config.path, GithubOrg):
-            logger.debug(
-                "Ensure runner %s with id %s is removed from GitHub org %s",
-                self.config.name,
-                self.status.runner_id,
-                self.config.path.org,
-            )
-            self._clients.github.actions.delete_self_hosted_runner_from_org(
-                org=self.config.path.org,
-                runner_id=self.status.runner_id,
-            )
+        logger.debug(
+            "Ensure runner %s with id %s is removed from GitHub %s",
+            self.config.name,
+            self.status.runner_id,
+            self.config.path.path(),
+        )
+        self._clients.github.delete_runner(self.config.path, self.status.runner_id)
 
     def _add_shared_filesystem(self, path: Path) -> None:
         """Add the shared filesystem to the runner instance.

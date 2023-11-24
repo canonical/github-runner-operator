@@ -38,6 +38,25 @@ Instantiate the GiHub API client.
 
 <a href="../src/github_client.py#L144"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
+### <kbd>function</kbd> `delete_runner`
+
+```python
+delete_runner(path: Union[GithubOrg, GithubRepo], runner_id: int) → None
+```
+
+Delete the self-hosted runner from GitHub. 
+
+
+
+**Args:**
+ 
+ - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name. 
+ - <b>`runner_id`</b>:  Id of the runner. 
+
+---
+
+<a href="../src/github_client.py#L164"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
 ### <kbd>function</kbd> `get_latest_artifact`
 
 ```python
