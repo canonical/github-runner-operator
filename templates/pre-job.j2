@@ -68,7 +68,7 @@ else
   logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
 
   curl "${CURL_ARGS[@]}" \
-      -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\" \
+      -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\"}" \
       http://{{host_ip}}:8080/${CHECK_NAME}/check-run &> repo_check_output.txt
   REPO_CHECK=$?
 
