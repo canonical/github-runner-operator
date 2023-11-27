@@ -12,7 +12,7 @@ Models and functions for the metric events.
 
 ---
 
-<a href="../src/metrics.py#L136"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L138"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 
@@ -39,7 +39,7 @@ The metric event is logged to the metrics log.
 
 ---
 
-<a href="../src/metrics.py#L187"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L189"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `setup_logrotate`
 
@@ -101,6 +101,7 @@ Metric event for when the charm has finished reconciliation.
  - <b>`flavor`</b>:  Describes the characteristics of the runner.  The flavor could be for example "small". 
  - <b>`crashed_runners`</b>:  The number of crashed runners. 
  - <b>`idle_runners`</b>:  The number of idle runners. 
+ - <b>`active_runners`</b>:  The number of active runners. 
  - <b>`duration`</b>:  The duration of the reconciliation in seconds. 
 
 <a href="../src/metrics.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
