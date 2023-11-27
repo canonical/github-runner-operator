@@ -41,18 +41,8 @@ CURL_ARGS=(
 # Set REPO_CHECK to a failure code as a safe guard.
 REPO_CHECK=1
 
-# Workflow dispatch, Push and Schedule - Request repo-policy-compliance service check:
-if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "push" ]] || [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
-
-  logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
-
-  curl "${CURL_ARGS[@]}" \
-      -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"branch_name\": \"${GITHUB_REF_NAME}\", \"commit_sha\": \"${GITHUB_SHA}\"}" \
-      http://{{host_ip}}:8080/${GITHUB_EVENT_NAME}/check-run &> repo_check_output.txt
-  REPO_CHECK=$?
-
 # Pull request - Request repo-policy-compliance service check:
-elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
+if [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
 
   GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.repo.full_name')
   COMMIT_SHA=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.sha')
@@ -69,10 +59,18 @@ elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
   REPO_CHECK=$?
 
 else
+  # Workflow dispatch, Push and Schedule use their respective endpoints, all other events use push by default.
+  CHECK_NAME="push"
+  if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
+    CHECK_NAME="${GITHUB_EVENT_NAME}"
+  fi
 
-  logger -p user.error -s "${GITHUB_EVENT_NAME} is not supported yet. Please request it to be added on https://github.com/canonical/github-runner-operator/issues/new/choose"
+  logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
 
-  REPO_CHECK=1
+  curl "${CURL_ARGS[@]}" \
+      -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\" \
+      http://{{host_ip}}:8080/${CHECK_NAME}/check-run &> repo_check_output.txt
+  REPO_CHECK=$?
 
 fi
 
