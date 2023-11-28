@@ -18,12 +18,14 @@ from github.Branch import Branch
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
+from juju.unit import Unit
 
 from tests.integration.helpers import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     ensure_charm_has_runner,
     get_runner_names,
     reconcile,
+    run_in_unit,
 )
 
 
@@ -87,6 +89,53 @@ async def app_with_unsigned_commit_repo(
     yield app
 
 
+async def _replace_repo_policy_check(unit: Unit):
+    # stop repo policy service
+    # replace repo policy check with a mock
+    await run_in_unit(unit, "/usr/bin/systemctl stop repo-policy-compliance")
+    await run_in_unit(
+        unit,
+        """cat <<EOT >> /etc/systemd/system/test-http-server.service
+    [Unit]
+    Description=Simple HTTP server for testing
+    After=network.target
+
+    [Service]
+    User=ubuntu
+    Group=www-data
+    WorkingDirectory=/home/ubuntu
+    ExecStart=python3 /home/ubuntu/server.py
+    EOT""",
+    )
+
+    await run_in_unit(
+        unit,
+        """cat <<EOT >> /home/ubuntu/server.py
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+class MyHandler(BaseHTTPRequestHandler):
+   def do_POST(self):
+       self.send_response(403)
+       self.send_header('Content-type', 'text/plain')
+       self.end_headers()
+       self.wfile.write(b'The check failed!')
+
+httpd = HTTPServer(('0.0.0.0', 8080), MyHandler)
+httpd.serve_forever()""",
+    )
+    await run_in_unit(unit, "/usr/bin/systemctl daemon-reload")
+    await run_in_unit(unit, "/usr/bin/systemctl start test-http-server")
+
+    # Test the HTTP server
+    for _ in range(10):
+        return_code, stdout = await run_in_unit(unit, "curl http://localhost:8080")
+        if return_code == 0 and stdout:
+            break
+        sleep(3)
+    else:
+        assert False, "Timeout waiting for HTTP server to start up"
+
+
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_dispatch_workflow_failure(
@@ -104,6 +153,8 @@ async def test_dispatch_workflow_failure(
     start_time = datetime.now(timezone.utc)
 
     unit = app_with_unsigned_commit_repo.units[0]
+    await _replace_repo_policy_check(unit)
+
     runners = await get_runner_names(unit)
     assert len(runners) == 1
     runner_to_be_used = runners[0]
@@ -144,7 +195,7 @@ async def test_dispatch_workflow_failure(
                 "Stopping execution of jobs due to repository setup is not compliant with policies"
                 in logs
             )
-            assert "commit the job is running on is not signed" in logs
+            assert "The check failed!" in logs
             assert "Should not echo if pre-job script failed" not in logs
 
 
