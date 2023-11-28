@@ -12,7 +12,7 @@
 
 - GitHub Account.
 - Juju 3 installed.
-- Juju controller on OpenStack, and a juju model.
+- Juju controller on OpenStack or LXD (See [How to run on LXD cloud](https://charmhub.io/github-runner/docs/run-on-lxd)), and a juju model.
 
 For more information about how to install and use Juju, see [Get started with Juju](https://juju.is/docs/olm/get-started-with-juju).
 
@@ -44,7 +44,7 @@ juju deploy github-runner --constraints="cores=4 mem=16G" --config token=<TOKEN>
 
 Replacing the `<TOKEN>` with the personal access token, and `<OWNER/REPO>` the GitHub account name and GitHub repository separated with `/`.
 
-The `--constraints` option for the `juju deploy` sets the resource requirements for the juju machine hosting the charm application. This is used to accommodate different sizes of self-hosted runners. For details, refer to [Managing resource usage](https://discourse.charmhub.io/t/github-runner-docs-managing-resource-usage/12450).
+The `--constraints` option for the `juju deploy` sets the resource requirements for the juju machine hosting the charm application. This is used to accommodate different sizes of self-hosted runners. For details, refer to [Managing resource usage](https://charmhub.io/github-runner/docs/managing-resource-usage).
 
 Once the charm reaches active status, visit the runner page for the GitHub repository (`https://github.com/{OWNER}/{REPO}/settings/actions/runners`) according to the instructions [here](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/using-self-hosted-runners-in-a-workflow#viewing-available-runners-for-a-repository). A single new runner should be available as it is the default number of self-hosted runners created.
 
@@ -74,6 +74,12 @@ jobs:
 ```
 
 Upon pushing the changes, under the `Actions` tab of the GitHub repository, the workflow run should appear after a while. The workflow should complete successfully.
+
+If the workflow failed at the `Set up runner` step with the following message:
+
+> This job has failed to pass a repository policy compliance check as defined in the https://github.com/canonical/repo-policy-compliance repository. The specific failure is listed below. Please update the settings on this project to fix the relevant policy.
+
+The repository setting does not comply with the best practice enforce by the charm. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/repo-policy).
 
 #### Removing the charm
 

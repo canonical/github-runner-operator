@@ -3,7 +3,7 @@ A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) f
 This charm simplifies initial deployment and "day N" operations of GitHub self-hosted runners. The charm makes it easy to manage self-hosted runners with security and hardware resource usage in mind.
 
 Operating a self-hosted runner comes with [certain security concerns according to GitHub](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
-Just like GitHub's, the self-hosted runners managed by the charm are isolated in a single-use virtual machine. 
+Just like GitHub's, the self-hosted runners managed by the charm are isolated in a single-use virtual machine.
 
 The charm also upgrades dependencies on a schedule to mitigate security risks. The upgrade includes linux kernel upgrades, automatically rebooting the machines. This ensures the latest security patches are installed within minutes.
 
@@ -11,11 +11,13 @@ The charm maintains a set of ephemeral self-hosted runners, each isolated in a s
 
 This charm will make operating GitHub self-hosted runners simple and straightforward for DevOps or SRE teams through Juju's clean interface.
 
+The charm enforces a set of GitHub repository settings as best practice. This is planned to be opt-in in the future. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/repo-policy).
+
 ## In this documentation
 
 | | |
 |--|--|
-|  [Tutorials](https://charmhub.io/github-runner/docs/quick-start)</br>  Get started - a hands-on introduction to using the GitHub runner charm for new users </br> | [How-to guides](https://charmhub.io/github-runner/docs/how-to-comply-security) </br> Step-by-step guides covering key operations and common tasks |
+|  [Tutorials](https://charmhub.io/github-runner/docs/quick-start)</br>  Get started - a hands-on introduction to using the GitHub runner charm for new users </br> | [How-to guides](https://charmhub.io/github-runner/docs/run-on-lxd) </br> Step-by-step guides covering key operations and common tasks |
 | [Reference](https://charmhub.io/github-runner/docs/actions) </br> Technical information - specifications, APIs, architecture | [Explanation](https://charmhub.io/github-runner/docs/charm-architecture) </br> Concepts - discussion and clarification of key topics  |
 
 ## Contributing to this documentation
@@ -44,7 +46,7 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
 | 2 | managing-resource-usage | [Managing resource usage](https://discourse.charmhub.io/t/github-runner-docs-managing-resource-usage/12450) |
 | 1 | how-to | [How to]() |
 | 2 | run-on-lxd | [How to run on LXD cloud](https://discourse.charmhub.io/t/github-runner-docs-how-to-run-on-lxd-cloud/12631) |
-| 2 | comply-security | [How to comply with security requirements](https://discourse.charmhub.io/t/github-runner-docs-how-to-comply-with-security-requirements/12440) |
+| 2 | repo-policy | [How to comply with repository policies](https://discourse.charmhub.io/t/github-runner-docs-how-to-comply-with-repository-policies/12440) |
 | 2 | change-token | [How to change GitHub personal access token](https://discourse.charmhub.io/t/github-runner-docs-how-to-change-github-personal-access-token/12451) |
 | 2 | change-path | [How to change repository or organization](https://discourse.charmhub.io/t/github-runner-docs-how-to-change-repository-or-organization/12442) |
 | 2 | contribute | [How to contribute](https://discourse.charmhub.io/t/github-runner-docs-how-to-contribute/7815) |
