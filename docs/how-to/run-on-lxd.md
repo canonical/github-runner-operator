@@ -2,7 +2,7 @@
 
 This machine charm needs to run on virtual machines with nested virtualization enabled.
 
-By default, juju machine on LXD are containers.
+By default, juju machines on LXD are containers.
 
 To run this charm on LXD, add `virt-type=virtual-machine` to the constraints during deployment:
 
