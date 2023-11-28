@@ -9,10 +9,9 @@ The forked repo is configured to fail the repo-policy-compliance check.
 import secrets
 from datetime import datetime, timezone
 from time import sleep
-from typing import AsyncIterator, Iterator
+from typing import Iterator
 
 import pytest
-import pytest_asyncio
 import requests
 from github import GithubException
 from github.Branch import Branch
@@ -64,10 +63,7 @@ def forked_github_branch(
 
 @pytest.fixture(scope="module")
 def branch_with_stale_review(forked_github_branch: Branch):
-    """Create branch that would fail the branch protection check.
-
-    Makes the branch the default branch for the repository and makes the latest commit unsigned.
-    """
+    """Create branch that would fail the branch protection check."""
     forked_github_branch.edit_protection(dismiss_stale_reviews=False)
 
     yield forked_github_branch
@@ -75,40 +71,23 @@ def branch_with_stale_review(forked_github_branch: Branch):
     forked_github_branch.remove_protection()
 
 
-@pytest_asyncio.fixture(scope="module")
-async def app_with_stale_review_repo(
-    model: Model, app_no_runner: Application, forked_github_repository: Repository
-) -> AsyncIterator[Application]:
-    """Application with a single runner on a repo with dismiss stale review disabled.
-
-    Test should ensure it returns with the application in a good state and has
-    one runner.
-    """
-    app = app_no_runner  # alias for readability as the app will have a runner during the test
-
-    await app.set_config({"path": forked_github_repository.full_name})
-    await ensure_charm_has_runner(app=app, model=model)
-
-    yield app
-
-
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_dispatch_workflow_failure(
-    app_with_unsigned_commit_repo: Application,
+    app_with_forked_repo: Application,
     forked_github_repository: Repository,
     branch_with_stale_review: Branch,
 ) -> None:
     """
     arrange:
-        1. A forked repository with unsigned commit in default branch.
+        1. A forked repository with a branch with stale review allowed.
         2. A working application with one runner on the forked repository.
     act: Trigger a workflow dispatch on a branch in the forked repository.
     assert: The workflow that was dispatched failed and the reason is logged.
     """
     start_time = datetime.now(timezone.utc)
 
-    unit = app_with_unsigned_commit_repo.units[0]
+    unit = app_with_forked_repo.units[0]
     runners = await get_runner_names(unit)
     assert len(runners) == 1
     runner_to_be_used = runners[0]
@@ -119,7 +98,7 @@ async def test_dispatch_workflow_failure(
 
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(
-        branch_with_stale_review, {"runner": app_with_unsigned_commit_repo.name}
+        branch_with_stale_review, {"runner": app_with_forked_repo.name}
     )
 
     # Wait until the runner is used up.
@@ -140,10 +119,7 @@ async def test_dispatch_workflow_failure(
         logs_url = run.jobs()[0].logs_url()
         logs = requests.get(logs_url).content.decode("utf-8")
 
-        if (
-            f"Job is about to start running on the runner: {app_with_unsigned_commit_repo.name}-"
-            in logs
-        ):
+        if f"Job is about to start running on the runner: {app_with_forked_repo.name}-" in logs:
             assert run.jobs()[0].conclusion == "failure"
             assert (
                 "Stopping execution of jobs due to repository setup is not compliant with policies"
@@ -157,7 +133,7 @@ async def test_dispatch_workflow_failure(
 @pytest.mark.abort_on_fail
 async def test_path_config_change(
     model: Model,
-    app_with_unsigned_commit_repo: Application,
+    app_with_forked_repo: Application,
     github_repository: Repository,
     path: str,
 ) -> None:
@@ -166,11 +142,11 @@ async def test_path_config_change(
     act: Change the path configuration to the main repository and reconcile runners.
     assert: No runners connected to the forked repository and one runner in the main repository.
     """
-    unit = app_with_unsigned_commit_repo.units[0]
+    unit = app_with_forked_repo.units[0]
 
-    await app_with_unsigned_commit_repo.set_config({"path": path})
+    await app_with_forked_repo.set_config({"path": path})
 
-    await reconcile(app=app_with_unsigned_commit_repo, model=model)
+    await reconcile(app=app_with_forked_repo, model=model)
 
     runner_names = await get_runner_names(unit)
     assert len(runner_names) == 1
