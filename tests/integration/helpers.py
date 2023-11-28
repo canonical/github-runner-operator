@@ -6,7 +6,7 @@
 import json
 import subprocess
 from asyncio import sleep
-from typing import Any
+from typing import Any, Optional
 
 import juju.version
 import yaml
@@ -216,7 +216,17 @@ async def run_in_lxd_instance(
     return await run_in_unit(unit, lxc_cmd, timeout)
 
 
-async def start_test_http_server(unit: Unit, port: int):
+async def start_test_http_server(unit: Unit, port: int, exec_start: Optional[str] = None) -> None:
+    """Start a HTTP server in the juju unit.
+
+    Args:
+        unit: Juju unit to start the HTTP server in.
+        port: Port to start the HTTP server on.
+        exec_start: The command to start the HTTP server. If not set, the default command
+        `python3 -m http.server {port}` is used.
+    """
+    if exec_start is None:
+        exec_start = f"python3 -m http.server {port}"
     await run_in_unit(
         unit,
         f"""cat <<EOT >> /etc/systemd/system/test-http-server.service
@@ -228,7 +238,7 @@ After=network.target
 User=ubuntu
 Group=www-data
 WorkingDirectory=/home/ubuntu
-ExecStart=python3 -m http.server {port}
+ExecStart={exec_start}
 EOT""",
     )
     await run_in_unit(unit, "/usr/bin/systemctl daemon-reload")
@@ -334,3 +344,19 @@ async def deploy_github_runner_charm(
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 30)
 
     return application
+
+
+async def wait_until_runner_is_used_up(runner_name: str, unit: Unit):
+    """Wait until the runner is used up.
+
+    Args:
+        runner_name: The runner name to wait for.
+        unit: The unit which contains the runner.
+    """
+    for _ in range(30):
+        runners = await get_runner_names(unit)
+        if runner_name not in runners:
+            break
+        await sleep(30)
+    else:
+        assert False, "Timeout while waiting for the runner to be used up"

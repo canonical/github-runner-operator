@@ -23,9 +23,9 @@ from tests.integration.helpers import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     ensure_charm_has_runner,
     get_runner_name,
-    get_runner_names,
     reconcile,
     run_in_unit,
+    wait_until_runner_is_used_up,
 )
 from tests.status_name import ACTIVE_STATUS_NAME
 
@@ -135,22 +135,6 @@ async def _integrate_apps(app: Application, model: Model):
     await model.wait_for_idle(apps=[grafana_agent.name])
 
 
-async def _wait_until_runner_is_used_up(runner_name: str, unit: Unit):
-    """Wait until the runner is used up.
-
-    Args:
-        runner_name: The runner name to wait for.
-        unit: The unit which contains the runner.
-    """
-    for _ in range(30):
-        runners = await get_runner_names(unit)
-        if runner_name not in runners:
-            break
-        sleep(30)
-    else:
-        assert False, "Timeout while waiting for the runner to be used up"
-
-
 async def _assert_workflow_run_conclusion(runner_name: str, conclusion: str, workflow: Workflow):
     """Assert that the workflow run has the expected conclusion.
 
@@ -176,7 +160,7 @@ async def _wait_for_workflow_to_complete(unit: Unit, workflow: Workflow, conclus
         conclusion: The workflow conclusion to wait for.
     """
     runner_name = await get_runner_name(unit)
-    await _wait_until_runner_is_used_up(runner_name, unit)
+    await wait_until_runner_is_used_up(runner_name, unit)
     # Wait for the workflow log to contain the conclusion
     sleep(60)
 
