@@ -29,6 +29,7 @@ class ProxySetting(TypedDict, total=False):
     no_proxy: str
     http: str
     https: str
+    aproxy_address: str
 
 
 @dataclass

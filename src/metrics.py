@@ -124,12 +124,14 @@ class Reconciliation(Event):
           The flavor could be for example "small".
         crashed_runners: The number of crashed runners.
         idle_runners: The number of idle runners.
+        active_runners: The number of active runners.
         duration: The duration of the reconciliation in seconds.
     """
 
     flavor: str
     crashed_runners: int
     idle_runners: int
+    active_runners: int
     duration: NonNegativeFloat
 
 

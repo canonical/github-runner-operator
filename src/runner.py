@@ -16,7 +16,7 @@ import pathlib
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Optional, Sequence
+from typing import Iterable, NamedTuple, Optional, Sequence
 
 import yaml
 
@@ -24,6 +24,7 @@ import shared_fs
 from errors import (
     CreateSharedFilesystemError,
     LxdError,
+    RunnerAproxyError,
     RunnerCreateError,
     RunnerError,
     RunnerFileLoadError,
@@ -46,6 +47,9 @@ logger = logging.getLogger(__name__)
 LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
 if not LXD_PROFILE_YAML.exists():
     LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
+LXDBR_DNSMASQ_LEASES_FILE = Path("/var/snap/lxd/common/lxd/networks/lxdbr0/dnsmasq.leases")
+
+Snap = NamedTuple("Snap", [("name", str), ("channel", str)])
 
 
 @dataclass
@@ -106,6 +110,8 @@ class Runner:
         if self.config.proxies.get("http") or self.config.proxies.get("https"):
             if self.config.proxies.get("no_proxy"):
                 self.config.proxies["no_proxy"] += ","
+            else:
+                self.config.proxies["no_proxy"] = ""
             self.config.proxies["no_proxy"] += f"{self.config.name},.svc"
 
     def create(
@@ -143,7 +149,7 @@ class Runner:
             # Wait some initial time for the instance to boot up
             time.sleep(60)
             self._wait_boot_up()
-            self._install_binary(binary_path)
+            self._install_binaries(binary_path)
             self._configure_runner()
 
             self._register_runner(registration_token, labels=[self.config.app_name, image])
@@ -477,14 +483,14 @@ class Runner:
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
     @retry(tries=5, delay=1, local_logger=logger)
-    def _install_binary(self, binary: Path) -> None:
-        """Load GitHub self-hosted runner binary on to the runner instance.
+    def _install_binaries(self, runner_binary: Path) -> None:
+        """Install runner binary and other binaries.
 
         Args:
-            binary: Path to the compressed runner binary.
+            runner_binary: Path to the compressed runner binary.
 
         Raises:
-            RunnerFileLoadError: Unable to load the file into the runner instance.
+            RunnerFileLoadError: Unable to load the runner binary into the runner instance.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -497,6 +503,7 @@ class Runner:
         self.instance.execute(["/usr/sbin/usermod", "-aG", "microk8s", "ubuntu"])
 
         self._apt_install(["docker.io", "npm", "python3-pip", "shellcheck", "jq", "wget"])
+        self._snap_install([Snap(name="aproxy", channel="edge")])
         self._wget_install(
             [
                 WgetExecutable(
@@ -505,6 +512,7 @@ class Runner:
                 )
             ]
         )
+        self.instance.execute(["npm", "install", "--global", "yarn"])
 
         # Add the user to docker group.
         self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
@@ -519,7 +527,7 @@ class Runner:
 
         # Creating directory and putting the file are idempotent, and can be retried.
         self.instance.files.mk_dir(str(self.runner_application))
-        self.instance.files.push_file(str(binary), binary_path)
+        self.instance.files.push_file(str(runner_binary), binary_path)
 
         self.instance.execute(
             ["/usr/bin/tar", "-xzf", binary_path, "-C", str(self.runner_application)]
@@ -547,6 +555,98 @@ class Runner:
             True if the runner should render templates with metrics.
         """
         return self._shared_fs is not None
+
+    def _get_default_ip(self) -> Optional[str]:
+        """Get the default IP of the runner.
+
+        Returns:
+            The default IP of the runner or None if not found.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        default_ip = None
+        # parse LXD dnsmasq leases file to get the default IP of the runner
+        # format: timestamp mac-address ip-address hostname client-id
+        lines = LXDBR_DNSMASQ_LEASES_FILE.read_text("utf-8").splitlines(keepends=False)
+        for line in lines:
+            columns = line.split()
+            if len(columns) >= 4 and columns[3] == self.instance.name:
+                default_ip = columns[2]
+                break
+
+        return default_ip
+
+    def _configure_aproxy(self, aproxy_address: str) -> None:
+        """Configure aproxy.
+
+        Args:
+            aproxy_address: Proxy to configure aproxy with.
+
+        Raises:
+            RunnerAproxyError: If unable to configure aproxy.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        logger.info("Configuring aproxy for the runner.")
+
+        self.instance.execute(["snap", "set", "aproxy", f"proxy={aproxy_address}"])
+
+        default_ip = self._get_default_ip()
+        if not default_ip:
+            raise RunnerAproxyError("Unable to find default IP for aproxy configuration.")
+
+        nft_input = rf"""define default-ip = {default_ip}
+define private-ips = {{ 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }}
+table ip aproxy
+flush table ip aproxy
+table ip aproxy {{
+        chain prerouting {{
+                type nat hook prerouting priority dstnat; policy accept;
+                ip daddr != $private-ips tcp dport {{ 80, 443 }} counter dnat to $default-ip:8443
+        }}
+
+        chain output {{
+                type nat hook output priority -100; policy accept;
+                ip daddr != $private-ips tcp dport {{ 80, 443 }} counter dnat to $default-ip:8443
+        }}
+}}
+"""
+        self.instance.execute(["nft", "-f", "-"], input=nft_input.encode("utf-8"))
+
+    def _configure_docker_proxy(self):
+        """Configure docker proxy."""
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        # Creating directory and putting the file are idempotent, and can be retried.
+        logger.info("Adding proxy setting to the runner.")
+        docker_proxy_contents = self._clients.jinja.get_template("systemd-docker-proxy.j2").render(
+            proxies=self.config.proxies
+        )
+        # Set docker daemon proxy config
+        docker_service_path = Path("/etc/systemd/system/docker.service.d")
+        docker_service_proxy = docker_service_path / "http-proxy.conf"
+        self.instance.files.mk_dir(str(docker_service_path))
+        self._put_file(str(docker_service_proxy), docker_proxy_contents)
+        self.instance.execute(["systemctl", "daemon-reload"])
+        self.instance.execute(["systemctl", "restart", "docker"])
+        # Set docker client proxy config
+        docker_client_proxy = {
+            "proxies": {
+                "default": {
+                    "httpProxy": self.config.proxies["http"],
+                    "httpsProxy": self.config.proxies["https"],
+                    "noProxy": self.config.proxies["no_proxy"],
+                }
+            }
+        }
+        docker_client_proxy_content = json.dumps(docker_client_proxy)
+        # Configure the docker client for root user and ubuntu user.
+        self._put_file("/root/.docker/config.json", docker_client_proxy_content)
+        self._put_file("/home/ubuntu/.docker/config.json", docker_client_proxy_content)
+        self.instance.execute(["/usr/bin/chown", "-R", "ubuntu:ubuntu", "/home/ubuntu/.docker"])
 
     @retry(tries=5, delay=10, max_delay=60, backoff=2, local_logger=logger)
     def _configure_runner(self) -> None:
@@ -607,40 +707,10 @@ class Runner:
             self.instance.execute(["systemctl", "restart", "docker"])
 
         if self.config.proxies:
-            # Creating directory and putting the file are idempotent, and can be retried.
-            logger.info("Adding proxy setting to the runner.")
-
-            docker_proxy_contents = self._clients.jinja.get_template(
-                "systemd-docker-proxy.j2"
-            ).render(proxies=self.config.proxies)
-
-            # Set docker daemon proxy config
-            docker_service_path = Path("/etc/systemd/system/docker.service.d")
-            docker_service_proxy = docker_service_path / "http-proxy.conf"
-
-            self.instance.files.mk_dir(str(docker_service_path))
-            self._put_file(str(docker_service_proxy), docker_proxy_contents)
-
-            self.instance.execute(["systemctl", "daemon-reload"])
-            self.instance.execute(["systemctl", "restart", "docker"])
-
-            # Set docker client proxy config
-            docker_client_proxy = {
-                "proxies": {
-                    "default": {
-                        "httpProxy": self.config.proxies["http"],
-                        "httpsProxy": self.config.proxies["https"],
-                        "noProxy": self.config.proxies["no_proxy"],
-                    }
-                }
-            }
-            docker_client_proxy_content = json.dumps(docker_client_proxy)
-            # Configure the docker client for root user and ubuntu user.
-            self._put_file("/root/.docker/config.json", docker_client_proxy_content)
-            self._put_file("/home/ubuntu/.docker/config.json", docker_client_proxy_content)
-            self.instance.execute(
-                ["/usr/bin/chown", "-R", "ubuntu:ubuntu", "/home/ubuntu/.docker"]
-            )
+            if self.config.proxies.get("aproxy_address"):
+                self._configure_aproxy(self.config.proxies["aproxy_address"])
+            else:
+                self._configure_docker_proxy()
 
         # Ensure the no existing /usr/bin/python.
         self.instance.execute(["rm", "/usr/bin/python"])
@@ -757,6 +827,22 @@ class Runner:
             self.instance.execute(["/usr/bin/apt-get", "install", "-yq", pkg])
 
         self.instance.execute(["/usr/bin/apt-get", "clean"])
+
+    def _snap_install(self, snaps: Iterable[Snap]) -> None:
+        """Installs the given snap packages.
+
+        This is a temporary solution to provide tools not offered by the base ubuntu image. Custom
+        images based on the GitHub action runner image will be used in the future.
+
+        Args:
+            snaps: snaps to be installed.
+        """
+        if self.instance is None:
+            raise RunnerError("Runner operation called prior to runner creation.")
+
+        for snap in snaps:
+            logger.info("Installing %s via snap...", snap.name)
+            self.instance.execute(["snap", "install", snap.name, f"--channel={snap.channel}"])
 
     def _wget_install(self, executables: Iterable[WgetExecutable]) -> None:
         """Installs the given binaries.

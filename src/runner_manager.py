@@ -5,10 +5,10 @@
 
 import hashlib
 import logging
+import secrets
 import tarfile
 import time
 import urllib.request
-import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterator, Optional
@@ -48,6 +48,8 @@ from runner_type import (
     VirtualMachineResources,
 )
 from utilities import retry, set_env_var
+
+REMOVED_RUNNER_LOG_STR = "Removed runner: %s"
 
 logger = logging.getLogger(__name__)
 
@@ -376,11 +378,11 @@ class RunnerManager:
             reconciliation_end_ts: The timestamp of when reconciliation ended.
         """
         runners = self._get_runners()
-        idle_runners = [
-            runner
-            for runner in runners
-            if runner.status.exist and runner.status.online and not runner.status.busy
+        online_runners = [
+            runner for runner in runners if runner.status.exist and runner.status.online
         ]
+        idle_count = len([runner for runner in online_runners if not runner.status.busy])
+        active_count = len(online_runners) - idle_count
 
         try:
             metrics.issue_event(
@@ -390,7 +392,8 @@ class RunnerManager:
                     # Ignore line break before binary operator
                     crashed_runners=metric_stats.get(metrics.RunnerStart, 0)
                     - metric_stats.get(metrics.RunnerStop, 0),  # noqa: W503
-                    idle_runners=len(idle_runners),
+                    idle_runners=idle_count,
+                    active_runners=active_count,
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )
             )
@@ -451,7 +454,7 @@ class RunnerManager:
 
             for runner in remove_runners:
                 runner.remove(remove_token)
-                logger.info("Removed runner: %s", runner.config.name)
+                logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
         else:
             logger.info("There are no idle runners to remove.")
 
@@ -504,7 +507,7 @@ class RunnerManager:
 
             for runner in unhealthy_runners:
                 runner.remove(remove_token)
-                logger.info("Removed runner: %s", runner.config.name)
+                logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
 
         delta = quantity - len(runner_states.healthy)
         # Spawn new runners
@@ -548,7 +551,7 @@ class RunnerManager:
 
         for runner in runners:
             runner.remove(remove_token)
-            logger.info("Removed runner: %s", runner.config.name)
+            logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
 
         return len(runners)
 
@@ -558,7 +561,7 @@ class RunnerManager:
         Returns:
             Generated name of runner.
         """
-        suffix = str(uuid.uuid4())
+        suffix = secrets.token_hex(12)
         return f"{self.instance_name}-{suffix}"
 
     def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
