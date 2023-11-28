@@ -44,7 +44,7 @@ juju deploy github-runner --constraints="cores=4 mem=16G" --config token=<TOKEN>
 
 Replacing the `<TOKEN>` with the personal access token, and `<OWNER/REPO>` the GitHub account name and GitHub repository separated with `/`.
 
-The `--constraints` option for the `juju deploy` sets the resource requirements for the juju machine hosting the charm application. This is used to accommodate different sizes of self-hosted runners.
+The `--constraints` option for the `juju deploy` sets the resource requirements for the juju machine hosting the charm application. This is used to accommodate different sizes of self-hosted runners. For details, refer to [Managing resource usage](https://discourse.charmhub.io/t/github-runner-docs-managing-resource-usage/12450).
 
 Once the charm reaches active status, visit the runner page for the GitHub repository (`https://github.com/{OWNER}/{REPO}/settings/actions/runners`) according to the instructions [here](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/using-self-hosted-runners-in-a-workflow#viewing-available-runners-for-a-repository). A single new runner should be available as it is the default number of self-hosted runners created.
 
