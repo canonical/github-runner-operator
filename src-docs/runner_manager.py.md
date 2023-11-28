@@ -27,7 +27,7 @@ Used as a returned type to method querying runner information.
 ## <kbd>class</kbd> `RunnerManager`
 Manage a group of runners according to configuration. 
 
-<a href="../src/runner_manager.py#L99"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L100"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -56,7 +56,7 @@ Construct RunnerManager object for creating and managing runners.
 
 ---
 
-<a href="../src/runner_manager.py#L160"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L161"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `check_runner_bin`
 
@@ -73,7 +73,7 @@ Check if runner binary exists.
 
 ---
 
-<a href="../src/runner_manager.py#L530"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L531"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `flush`
 
@@ -96,7 +96,7 @@ Remove existing runners.
 
 ---
 
-<a href="../src/runner_manager.py#L273"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L274"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_github_info`
 
@@ -113,14 +113,14 @@ Get information on the runners from GitHub.
 
 ---
 
-<a href="../src/utilities.py#L168"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L169"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_latest_runner_bin_url`
 
 ```python
 get_latest_runner_bin_url(
     os_name: str = 'linux',
-    arch_name: str = 'x64'
+    arch: ARCH = <ARCH.X64: 'x64'>
 ) → RunnerApplication
 ```
 
@@ -133,7 +133,7 @@ The runner binary URL changes when a new version is available.
 **Args:**
  
  - <b>`os_name`</b>:  Name of operating system. 
- - <b>`arch_name`</b>:  Name of architecture. 
+ - <b>`arch`</b>:  Name of architecture. 
 
 
 
@@ -142,7 +142,7 @@ The runner binary URL changes when a new version is available.
 
 ---
 
-<a href="../src/runner_manager.py#L461"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L462"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `reconcile`
 
@@ -166,7 +166,7 @@ Bring runners in line with target.
 
 ---
 
-<a href="../src/utilities.py#L206"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L207"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `update_runner_bin`
 
