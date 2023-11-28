@@ -5,6 +5,8 @@
 
 import dataclasses
 import logging
+import platform
+from enum import Enum
 from typing import Optional
 
 from ops import CharmBase
@@ -13,6 +15,19 @@ from pydantic import AnyHttpUrl, BaseModel, ValidationError, root_validator
 from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
+
+ARCHITECTURES_ARM = ("arm",)
+ARCHITECTURES_ARM64 = ("aarch64_be", "aarch64", "armv8b", "armv8l", "arm64")
+ARCHITECTURES_X86 = ("x86_64",)
+
+
+class ARCH(str, Enum):
+    """Supported system architectures."""
+
+    ARM = "arm"
+    ARM64 = "arm64"
+    X64 = "x64"
+
 
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
 
@@ -94,6 +109,44 @@ class ProxyConfig(BaseModel):
         return values
 
 
+class UnsupportedArchitectureError(Exception):
+    """Raised when given machine charm architecture is unsupported.
+
+    Attributes:
+        arch: The current machine architecture.
+    """
+
+    def __init__(self, arch: str) -> None:
+        """Initialize a new instance of the CharmConfigInvalidError exception.
+
+        Args:
+            arch: The current machine architecture.
+        """
+        self.arch = arch
+
+
+def _get_supported_arch() -> ARCH:
+    """Get current machine architecture.
+
+    Raises:
+        CharmConfigInvalidError: _description_
+        CharmConfigInvalidError: _description_
+
+    Returns:
+        Arch: _description_
+    """
+    arch = platform.machine()
+    match arch:
+        case arch if arch in ARCHITECTURES_ARM:
+            return ARCH.ARM
+        case arch if arch in ARCHITECTURES_ARM64:
+            return ARCH.ARM64
+        case arch if arch in ARCHITECTURES_X86:
+            return ARCH.X64
+        case _:
+            raise UnsupportedArchitectureError(arch=arch)
+
+
 @dataclasses.dataclass(frozen=True)
 class State:
     """The charm state.
@@ -101,10 +154,12 @@ class State:
     Attributes:
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Whether aproxy should be used.
+        arch: The underlying compute architecture, i.e. x64, amd64
     """
 
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
+    arch: ARCH
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "State":
@@ -122,7 +177,14 @@ class State:
             logger.error("Invalid proxy config: %s", exc)
             raise CharmConfigInvalidError("Invalid proxy configuration") from exc
 
+        try:
+            arch = _get_supported_arch()
+        except UnsupportedArchitectureError as exc:
+            logger.error("Unsupported architecture: %s", exc.arch)
+            raise CharmConfigInvalidError(f"Unsupported architecture {exc.arch}") from exc
+
         return cls(
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
+            arch=arch,
         )

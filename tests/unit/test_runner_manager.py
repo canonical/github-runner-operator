@@ -11,7 +11,7 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 import shared_fs
-from charm_state import State
+from charm_state import ARCH, State
 from errors import IssueMetricEventError, RunnerBinaryError
 from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
 from runner import Runner, RunnerStatus
@@ -102,7 +102,7 @@ def test_get_latest_runner_bin_url(runner_manager: RunnerManager):
     act: Get runner bin url of existing binary.
     assert: Correct mock data returned.
     """
-    runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux", arch_name="x64")
+    runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux", arch=ARCH.X64)
     assert runner_bin["os"] == "linux"
     assert runner_bin["architecture"] == "x64"
     assert runner_bin["download_url"] == "https://www.example.com"
@@ -111,12 +111,16 @@ def test_get_latest_runner_bin_url(runner_manager: RunnerManager):
 
 def test_get_latest_runner_bin_url_missing_binary(runner_manager: RunnerManager):
     """
-    arrange: Nothing.
+    arrange: Given a mocked GH API client that returns runner binaries.
     act: Get runner bin url of non-existing binary.
     assert: Error related to runner bin raised.
     """
+    runner_manager._clients.github.actions = MagicMock()
+    runner_manager._clients.github.actions.list_runner_applications_for_repo.return_value = []
+    runner_manager._clients.github.actions.list_runner_applications_for_org.return_value = []
+
     with pytest.raises(RunnerBinaryError):
-        runner_manager.get_latest_runner_bin_url(os_name="not_exist", arch_name="not_exist")
+        runner_manager.get_latest_runner_bin_url(os_name="not_exist", arch=ARCH.ARM)
 
 
 def test_update_runner_bin(runner_manager: RunnerManager):
@@ -136,7 +140,7 @@ def test_update_runner_bin(runner_manager: RunnerManager):
     runner_manager.runner_bin_path.unlink(missing_ok=True)
 
     runner_manager.session.get = MockRequestLibResponse
-    runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux", arch_name="x64")
+    runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux", arch=ARCH.X64)
 
     runner_manager.update_runner_bin(runner_bin)
 
