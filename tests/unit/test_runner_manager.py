@@ -21,6 +21,8 @@ from runner_type import GitHubOrg, GitHubRepo, RunnerByHealth, VirtualMachineRes
 from shared_fs import SharedFilesystem
 from tests.unit.mock import TEST_BINARY
 
+RUNNER_MANAGER_TIME_MODULE = "runner_manager.time.time"
+
 
 @pytest.fixture(scope="function", name="token")
 def token_fixture():
@@ -246,7 +248,7 @@ def test_reconcile_issues_runner_installed_event(
     """
     charm_state.is_metrics_logging_available = True
     t_mock = MagicMock(return_value=12345)
-    monkeypatch.setattr("runner_manager.time.time", t_mock)
+    monkeypatch.setattr(RUNNER_MANAGER_TIME_MODULE, t_mock)
 
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 
@@ -307,7 +309,7 @@ def test_reconcile_issues_reconciliation_metric_event(
     """
     charm_state.is_metrics_logging_available = True
     t_mock = MagicMock(return_value=12345)
-    monkeypatch.setattr("runner_manager.time.time", t_mock)
+    monkeypatch.setattr(RUNNER_MANAGER_TIME_MODULE, t_mock)
     runner_metrics.extract.return_value = {RunnerStart: 3, RunnerStop: 1}
 
     def mock_get_runners():
@@ -340,6 +342,7 @@ def test_reconcile_issues_reconciliation_metric_event(
             flavor=runner_manager.app_name,
             crashed_runners=2,
             idle_runners=2,
+            active_runners=1,
             duration=0,
         )
     )
@@ -360,7 +363,7 @@ def test_reconcile_places_timestamp_in_newly_created_runner(
     """
     charm_state.is_metrics_logging_available = True
     t_mock = MagicMock(return_value=12345)
-    monkeypatch.setattr("runner_manager.time.time", t_mock)
+    monkeypatch.setattr(RUNNER_MANAGER_TIME_MODULE, t_mock)
     runner_shared_fs = tmp_path / "runner_fs"
     runner_shared_fs.mkdir()
     fs = SharedFilesystem(path=runner_shared_fs, runner_name="test_runner")

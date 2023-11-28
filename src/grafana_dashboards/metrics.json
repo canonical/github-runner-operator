@@ -154,50 +154,8 @@
           "refId": "D"
         }
       ],
-      "title": "Runners Total",
-      "transformations": [
-        {
-          "id": "calculateField",
-          "options": {
-            "binary": {
-              "left": "Started",
-              "operator": "-",
-              "reducer": "sum",
-              "right": "Stopped"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            }
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Active",
-            "binary": {
-              "left": "Started - Stopped",
-              "operator": "-",
-              "reducer": "sum",
-              "right": "Crashed"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            }
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Started - Stopped": true
-            },
-            "indexByName": {},
-            "renameByName": {}
-          }
-        }
-      ],
+      "title": "Lifecycle Status",
+      "transformations": [],
       "type": "timeseries"
     },
     {
@@ -286,12 +244,24 @@
           "editorMode": "code",
           "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle_runners=\"idle_runners\" | event=\"reconciliation\" | unwrap idle_runners[10m]))",
           "hide": false,
-          "legendFormat": "Idle Runners",
+          "legendFormat": "Idle",
           "queryType": "range",
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",active_runners=\"active_runners\" | event=\"reconciliation\" | unwrap active_runners[10m]))",
+          "hide": false,
+          "legendFormat": "Active",
+          "queryType": "range",
+          "refId": "A"
         }
       ],
-      "title": "Gauges",
+      "title": "Active and Idle Runners",
       "transformations": [
         {
           "id": "calculateField",
@@ -1022,6 +992,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics",
-  "version": 2,
+  "version": 3,
   "weekStart": ""
 }
