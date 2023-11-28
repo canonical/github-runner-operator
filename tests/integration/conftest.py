@@ -13,7 +13,6 @@ import pytest
 import pytest_asyncio
 import yaml
 from github import Github, GithubException
-from github.Branch import Branch
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
@@ -277,37 +276,3 @@ def forked_github_repository(
     yield forked_repository
 
     # Parallel runs of this test module is allowed. Therefore, the forked repo is not removed.
-
-
-@pytest.fixture(scope="module")
-def forked_github_branch(
-    github_repository: Repository, forked_github_repository: Repository
-) -> Iterator[Branch]:
-    """Create a new forked branch for testing."""
-    branch_name = f"test/{secrets.token_hex(4)}"
-
-    # Other tests change the default branch of the forked repo. Therefore, we need to get the
-    # default branch name of the original repository again (because some tests require signed
-    # commits, which should be present on the original default branch).
-    main_branch = forked_github_repository.get_branch(github_repository.default_branch)
-    branch_ref = forked_github_repository.create_git_ref(
-        ref=f"refs/heads/{branch_name}", sha=main_branch.commit.sha
-    )
-
-    for _ in range(10):
-        try:
-            branch = forked_github_repository.get_branch(branch_name)
-            break
-        except GithubException as err:
-            if err.status == 404:
-                sleep(5)
-                continue
-            raise
-    else:
-        assert (
-            False
-        ), "Failed to get created branch in fork repo, the issue with GitHub or network."
-
-    yield branch
-
-    branch_ref.delete()
