@@ -6,59 +6,17 @@
 The forked repo is configured to fail the repo-policy-compliance check.
 """
 
-import secrets
 from datetime import datetime, timezone
 from time import sleep
-from typing import Iterator
 
 import pytest
 import requests
-from github import GithubException
 from github.Branch import Branch
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import (
-    DISPATCH_TEST_WORKFLOW_FILENAME,
-    ensure_charm_has_runner,
-    get_runner_names,
-    reconcile,
-)
-
-
-@pytest.fixture(scope="module")
-def forked_github_branch(
-    github_repository: Repository, forked_github_repository: Repository
-) -> Iterator[Branch]:
-    """Create a new forked branch for testing.
-
-    This branch should only be used for this module.
-    """
-    branch_name = f"test/{secrets.token_hex(4)}"
-
-    main_branch = forked_github_repository.get_branch(github_repository.default_branch)
-    branch_ref = forked_github_repository.create_git_ref(
-        ref=f"refs/heads/{branch_name}", sha=main_branch.commit.sha
-    )
-
-    for _ in range(10):
-        try:
-            branch = forked_github_repository.get_branch(branch_name)
-            break
-        except GithubException as err:
-            if err.status == 404:
-                sleep(5)
-                continue
-            raise
-    else:
-        assert (
-            False
-        ), "Failed to get created branch in fork repo, the issue with GitHub or network."
-
-    yield branch
-
-    branch_ref.delete()
+from tests.integration.helpers import DISPATCH_TEST_WORKFLOW_FILENAME, get_runner_names, reconcile
 
 
 @pytest.fixture(scope="module")
