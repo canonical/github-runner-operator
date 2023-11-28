@@ -7,7 +7,7 @@ on:
 jobs:
   integration-tests-juju2:
     name: Integration test with juju 2.9
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@self-hosted-runner-integration-test
     secrets: inherit
     with:
       juju-channel: 2.9/stable
@@ -17,7 +17,7 @@ jobs:
       modules: '["test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics", "test_self_hosted_runner", "test_charm_with_proxy"]'
   integration-tests-juju3:
     name: Integration test with juju 3.1
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@self-hosted-runner-integration-test
     secrets: inherit
     with:
       juju-channel: 3.1/stable
