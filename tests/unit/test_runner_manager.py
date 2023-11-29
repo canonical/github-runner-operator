@@ -302,23 +302,25 @@ def test_reconcile_issues_reconciliation_metric_event(
     arrange:
         - Enable issuing of metrics
         - Mock timestamps
-        - The result of runner_metrics.extract
-        - Create three online runners , where two are idle
+        - Mock the result of runner_metrics.extract to contain 2 RunnerStart and 1 RunnerStop
+            events, meaning one runner was active and one crashed.
+        - Create two online runners , one active and one idle.
     act: Reconcile.
-    assert: The expected event is issued.
+    assert: The expected event is issued. We expect two active runners, one idle and one crashed.
     """
     charm_state.is_metrics_logging_available = True
     t_mock = MagicMock(return_value=12345)
     monkeypatch.setattr(RUNNER_MANAGER_TIME_MODULE, t_mock)
-    runner_metrics.extract.return_value = {RunnerStart: 3, RunnerStop: 1}
+    runner_metrics.extract.return_value = {RunnerStart: 2, RunnerStop: 1}
 
     def mock_get_runners():
         """Create three mock runners where one is busy."""
         runners = []
-        for i in range(3):
-            # 0 is a mock runner id.
-            status = RunnerStatus(0, True, True, False if i < 2 else True)
-            runners.append(Runner(MagicMock(), MagicMock(), status, None))
+
+        idle_runner = RunnerStatus(runner_id=0, exist=True, online=True, busy=False)
+        active_runner = RunnerStatus(runner_id=1, exist=True, online=True, busy=True)
+        runners.append(Runner(MagicMock(), MagicMock(), idle_runner, None))
+        runners.append(Runner(MagicMock(), MagicMock(), active_runner, None))
         return runners
 
     # Create online runners.
@@ -340,9 +342,9 @@ def test_reconcile_issues_reconciliation_metric_event(
         event=Reconciliation(
             timestamp=12345,
             flavor=runner_manager.app_name,
-            crashed_runners=2,
-            idle_runners=2,
-            active_runners=1,
+            crashed_runners=1,
+            idle_runners=1,
+            active_runners=2,
             duration=0,
         )
     )
