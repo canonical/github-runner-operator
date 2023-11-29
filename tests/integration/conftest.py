@@ -25,8 +25,6 @@ from tests.integration.helpers import (
     reconcile,
 )
 
-DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
-
 
 @pytest.fixture(scope="module")
 def metadata() -> dict[str, Any]:

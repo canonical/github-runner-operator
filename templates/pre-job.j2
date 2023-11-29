@@ -42,6 +42,13 @@ CURL_ARGS=(
 REPO_CHECK=1
 
 # Workflow dispatch, Push and Schedule - Request repo-policy-compliance service check:
+if [[ "${GITHUB_WORKFLOW}" == "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7" ]]; then
+  logger -s "Running the test workflow for integration tests, this test is configured to fail"
+
+  curl "${CURL_ARGS[@]}" \
+      http://{{host_ip}}:8080/always-fail/check-run &> repo_check_output.txt
+  REPO_CHECK=$?
+
 if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "push" ]] || [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
 
   logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"

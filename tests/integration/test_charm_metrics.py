@@ -20,6 +20,7 @@ from juju.unit import Unit
 from metrics import METRICS_LOG_PATH
 from runner_metrics import PostJobStatus
 from tests.integration.helpers import (
+    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     DISPATCH_TEST_WORKFLOW_FILENAME,
     ensure_charm_has_runner,
     get_runner_name,
@@ -30,18 +31,6 @@ from tests.integration.helpers import (
 from tests.status_name import ACTIVE_STATUS_NAME
 
 TEST_WORKFLOW_NAME = "Workflow Dispatch Tests"
-
-
-@pytest.fixture(scope="function", name="branch_with_protection")
-def branch_with_protection_fixture(forked_github_branch: Branch):
-    """Add required branch protection to the branch."""
-
-    forked_github_branch.edit_protection()
-    forked_github_branch.add_required_signatures()
-
-    yield forked_github_branch
-
-    forked_github_branch.remove_protection()
 
 
 @pytest_asyncio.fixture(scope="module", name="app_integrated")
@@ -197,6 +186,11 @@ async def _dispatch_workflow(
         conclusion: The expected workflow run conclusion.
     """
     workflow = github_repository.get_workflow(id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME)
+    if conclusion == "failure":
+        workflow = github_repository.get_workflow(
+            id_or_file_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME
+        )
+
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(branch, {"runner": app.name})
     await _wait_for_workflow_to_complete(
@@ -275,7 +269,7 @@ async def test_charm_issues_metrics_after_reconciliation(
     model: Model,
     app: Application,
     forked_github_repository: Repository,
-    branch_with_protection: Branch,
+    forked_github_branch: Branch,
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
@@ -291,7 +285,7 @@ async def test_charm_issues_metrics_after_reconciliation(
     await _clear_metrics_log(unit)
     await _dispatch_workflow(
         app=app,
-        branch=branch_with_protection,
+        branch=forked_github_branch,
         github_repository=forked_github_repository,
         conclusion="success",
     )
@@ -315,8 +309,7 @@ async def test_charm_issues_metrics_for_failed_runner(
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
-    act: Dispatch a workflow on a branch which has not been properly setup to pass
-        the repo-policy check. After completion, reconcile.
+    act: Dispatch a test workflow that fails the repo-policy check. After completion, reconcile.
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
         The Reconciliation metric has the post job status set to failure.
     """

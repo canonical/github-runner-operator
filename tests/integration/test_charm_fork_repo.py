@@ -13,68 +13,24 @@ from typing import AsyncIterator
 import pytest
 import pytest_asyncio
 import requests
-from github import Consts
 from github.Branch import Branch
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
 from tests.integration.helpers import (
-    DISPATCH_TEST_WORKFLOW_FILENAME,
+    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     ensure_charm_has_runner,
     get_runner_names,
     reconcile,
 )
 
 
-@pytest.fixture(scope="module")
-def branch_with_unsigned_commit(
-    forked_github_branch: Branch, forked_github_repository: Repository
-):
-    """Create branch that would fail the branch protection check.
-
-    Makes the branch the default branch for the repository and makes the latest commit unsigned.
-    """
-    # Make an unsigned commit
-    forked_github_repository.create_file(
-        "test.txt", "testing", "some content", branch=forked_github_branch.name
-    )
-
-    # Change default branch so that the commit is ignored by the check for unique commits being
-    # signed
-    forked_github_repository.edit(default_branch=forked_github_branch.name)
-
-    # forked_github_branch.edit_protection seems to be broken as of version 1.59 of PyGithub.
-    # Without passing the users_bypass_pull_request_allowances the API returns a 422 indicating
-    # that None is not a valid value for bypass pull request allowances, with it there is a 422 for
-    # forks indicating that users and teams allowances can only be set on organisation
-    # repositories.
-    post_parameters = {
-        "required_status_checks": None,
-        "enforce_admins": None,
-        "required_pull_request_reviews": {"dismiss_stale_reviews": False},
-        "restrictions": None,
-    }
-    # pylint: disable=protected-access
-    forked_github_branch._requester.requestJsonAndCheck(  # type: ignore
-        "PUT",
-        forked_github_branch.protection_url,
-        headers={"Accept": Consts.mediaTypeRequireMultipleApprovingReviews},
-        input=post_parameters,
-    )
-    # pylint: enable=protected-access
-    forked_github_branch.add_required_signatures()
-
-    yield forked_github_branch
-
-    forked_github_branch.remove_protection()
-
-
 @pytest_asyncio.fixture(scope="module")
-async def app_with_unsigned_commit_repo(
+async def app_with_forked_repo(
     model: Model, app_no_runner: Application, forked_github_repository: Repository
 ) -> AsyncIterator[Application]:
-    """Application with a single runner on a repo with unsigned commit.
+    """Application with a single runner on a forked repo.
 
     Test should ensure it returns with the application in a good state and has
     one runner.
@@ -109,7 +65,7 @@ async def test_dispatch_workflow_failure(
     runner_to_be_used = runners[0]
 
     workflow = forked_github_repository.get_workflow(
-        id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME
+        id_or_file_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME
     )
 
     # The `create_dispatch` returns True on success.
@@ -144,7 +100,7 @@ async def test_dispatch_workflow_failure(
                 "Stopping execution of jobs due to repository setup is not compliant with policies"
                 in logs
             )
-            assert "commit the job is running on is not signed" in logs
+            assert "Endpoint designed for testing that always fails" in logs
             assert "Should not echo if pre-job script failed" not in logs
 
 
