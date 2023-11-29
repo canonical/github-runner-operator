@@ -18,5 +18,5 @@ To use this charm for GitHub organisations, the following scopes should be selec
 By using [`juju config`](https://juju.is/docs/juju/juju-config) to change the [charm configuration token](https://charmhub.io/github-runner/configure#token) the charm unregisters and removes the old self-hosted runners and instantiates new ones.
 
 ```shell
-juju config token=<TOKEN>
+juju config <APP_NAME> token=<TOKEN>
 ```
