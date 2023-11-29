@@ -15,7 +15,7 @@ jobs:
         run: df -h
   self-host-test:
     name: self-hosted test
-    runs-on: [self-hosted, test]
+    runs-on: [self-hosted, large]
     steps:
       - name: Echo test
         run: echo hello
