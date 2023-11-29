@@ -28,11 +28,11 @@ from tests.integration.helpers import (
 async def test_dispatch_workflow_failure(
     app_with_forked_repo: Application,
     forked_github_repository: Repository,
-    branch_with_unsigned_commit: Branch,
+    forked_github_branch: Branch,
 ) -> None:
     """
     arrange:
-        1. A forked repository with unsigned commit in default branch.
+        1. A forked repository.
         2. A working application with one runner on the forked repository.
     act: Trigger a workflow dispatch on a branch in the forked repository.
     assert: The workflow that was dispatched failed and the reason is logged.
@@ -50,7 +50,7 @@ async def test_dispatch_workflow_failure(
 
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(
-        branch_with_unsigned_commit, {"runner": app_with_forked_repo.name}
+        forked_github_branch, {"runner": app_with_forked_repo.name}
     )
 
     # Wait until the runner is used up.
