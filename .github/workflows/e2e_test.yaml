@@ -136,13 +136,13 @@ jobs:
             --config denylist=10.0.0.0/8 \
             --config test-mode=insecure
 
-      - name: Checkout branch (Schedule, Issues)
+      - name: Checkout branch (Issues, Schedule)
         if: matrix.event.name == 'issues' || matrix.event.name == 'schedule'
         uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.E2E_TESTING_TOKEN }}
-      - name: Create temporary orphan branch (Schedule, Issues)
+      - name: Create temporary orphan branch (Issues, Schedule)
         if: matrix.event.name == 'issues' || matrix.event.name == 'schedule'
         run: |
           # We dont need all content for the test, so create an orphan branch.
