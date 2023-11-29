@@ -84,6 +84,8 @@ jobs:
             abbreviation: push
           - name: schedule
             abbreviation: sd
+          - name: issues
+            abbreviation: is
     steps:
       - name: Setup Lxd Juju Controller
         uses: charmed-kubernetes/actions-operator@main
@@ -134,26 +136,30 @@ jobs:
             --config denylist=10.0.0.0/8 \
             --config test-mode=insecure
 
-      - name: Checkout branch (Schedule)
-        if: matrix.event.name == 'schedule'
+      - name: Checkout branch (Schedule, Issues)
+        if: matrix.event.name == 'issues' || matrix.event.name == 'schedule'
         uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.E2E_TESTING_TOKEN }}
-      - name: Create temporary orphan branch (Schedule)
-        if: matrix.event.name == 'schedule'
+      - name: Create temporary orphan branch (Schedule, Issues)
+        if: matrix.event.name == 'issues' || matrix.event.name == 'schedule'
         run: |
-          # We dont need all content for schedule test, so create an orphan branch.
+          # We dont need all content for the test, so create an orphan branch.
           git checkout --orphan ${{ steps.runner-name.outputs.name }}
           git reset
           
-          # Create schedule test workflow
-          SCHEDULE_WF_FILE=".github/workflows/schedule_test.yaml"
-          sed -i "s/workflow_dispatch:/schedule:\n  - cron: '*\/5 * * * *'/" $SCHEDULE_WF_FILE
-          git add $SCHEDULE_WF_FILE
+          WF_FILE=".github/workflows/schedule_test.yaml"
+          # Replace workflow event in schedule_test.yaml
+          if [[ ${{ matrix.event.name }} == 'schedule' ]]; then
+            sed -i "s/workflow_dispatch:/schedule:\n  - cron: '*\/5 * * * *'/" $WF_FILE
+          else
+            sed -i "s/workflow_dispatch:/issues:\n  types: [opened]/" $WF_FILE
+          fi
+          git add $WF_FILE
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git commit -m"Add schedule workflow"
+          git commit -m"Add ${{matrix.event.name}} workflow"
           git push origin ${{ steps.runner-name.outputs.name }}
       - name: Create signed commit (Schedule)
         if: matrix.event.name == 'schedule'
@@ -171,8 +177,8 @@ jobs:
             --field message="Add schedule workflow" \
             --field content="$CONTENT"  \
             --field branch="${{ steps.runner-name.outputs.name }}"
-      - name: Deploy github-runner Charm (Schedule)
-        if: matrix.event.name == 'schedule'
+      - name: Deploy github-runner Charm (Issues, Schedule)
+        if: matrix.event.name == 'issues' || matrix.event.name == 'schedule'
         env:
           GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
@@ -313,8 +319,8 @@ jobs:
             kill $(jobs -p)
           fi
 
-      - name: Watch github-runner (Schedule)
-        if: matrix.event.name == 'schedule'
+      - name: Watch github-runner (Issues, Schedule)
+        if:  matrix.event.name == 'issues' || matrix.event.name == 'schedule'
         env:
           GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
@@ -340,6 +346,16 @@ jobs:
               -H "X-GitHub-Api-Version: 2022-11-28" \
               /repos/${TESTING_REPO}/branches/main/protection/required_signatures
 
+          # For issues, we need to trigger the workflow by opening an issue
+            if ${{ matrix.event.name == 'issues' }}; then
+                gh api \
+                --method POST \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                /repos/${TESTING_REPO}/issues \
+                -f title="Test issue ${{ steps.runner-name.outputs.name }}"
+            fi
+          
           get-workflow-status() {
               # Search recent workflow runs for the one designated by the run-id ref
               output=$(gh run list \
@@ -419,8 +435,8 @@ jobs:
           "/repos/${{ secrets.E2E_TESTING_REPO }}/git/refs/heads/${{ steps.runner-name.outputs.name }}"
           echo "Deleted ref ${{ steps.runner-name.outputs.name }}"
 
-      - name: Clean Up (Schedule)
-        if: always() && (matrix.event.name == 'schedule')
+      - name: Clean Up (Issues, Schedule)
+        if: always() && (matrix.event.name == 'issues' || matrix.event.name == 'schedule')
         env:
           GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
