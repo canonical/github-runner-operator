@@ -2,16 +2,25 @@ name: Manual test
 
 on:
   # push:
-  # pull_request:
+  pull_request:
   workflow_dispatch:
 
 jobs:
-  test:
-    name: test
+  github-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo test
+        run: echo hello
+      - name: Disk usage
+        run: df -h
+  self-host-test:
+    name: self-hosted test
     runs-on: [self-hosted, test]
     steps:
-      - run: echo $DOCKERHUB_MIRROR
-      - run: docker run hello-world
+      - name: Echo test
+        run: echo hello
+      - name: Disk usage
+        run: df -h
       # - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> rustup.sh
       # - run: sh rustup.sh -y
       # - run: $HOME/.cargo/bin/cargo install ripgrep
