@@ -163,6 +163,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
+      "description": "This panel displays the number of active, idle or crashed runners reported by the GithubRunner charms during the reconciliation. These values represent the state of the runners in the time between the previous reconciliation and the current moment, just before the reconciliation process is started.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -260,52 +261,22 @@
           "legendFormat": "Active",
           "queryType": "range",
           "refId": "A"
-        }
-      ],
-      "title": "Active and Idle Runners",
-      "transformations": [
-        {
-          "id": "calculateField",
-          "options": {
-            "binary": {
-              "left": "Started",
-              "operator": "-",
-              "reducer": "sum",
-              "right": "Stopped"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            }
-          }
         },
         {
-          "id": "calculateField",
-          "options": {
-            "alias": "Active",
-            "binary": {
-              "left": "Started - Stopped",
-              "operator": "-",
-              "reducer": "sum",
-              "right": "Crashed"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            }
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Started - Stopped": true
-            },
-            "indexByName": {},
-            "renameByName": {}
-          }
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(filename) (last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", crashed_runners=\"crashed_runners\" | event = `reconciliation` | unwrap crashed_runners [$__range]))",
+          "hide": false,
+          "legendFormat": "Crashed",
+          "queryType": "range",
+          "refId": "B"
         }
       ],
+      "title": "Runner Status",
+      "transformations": [],
       "type": "timeseries"
     },
     {
