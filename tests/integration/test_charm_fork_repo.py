@@ -8,10 +8,8 @@ The forked repo is configured to fail the repo-policy-compliance check.
 
 from datetime import datetime, timezone
 from time import sleep
-from typing import AsyncIterator
 
 import pytest
-import pytest_asyncio
 import requests
 from github.Branch import Branch
 from github.Repository import Repository
@@ -20,33 +18,15 @@ from juju.model import Model
 
 from tests.integration.helpers import (
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
-    ensure_charm_has_runner,
     get_runner_names,
     reconcile,
 )
 
 
-@pytest_asyncio.fixture(scope="module")
-async def app_with_forked_repo(
-    model: Model, app_no_runner: Application, forked_github_repository: Repository
-) -> AsyncIterator[Application]:
-    """Application with a single runner on a forked repo.
-
-    Test should ensure it returns with the application in a good state and has
-    one runner.
-    """
-    app = app_no_runner  # alias for readability as the app will have a runner during the test
-
-    await app.set_config({"path": forked_github_repository.full_name})
-    await ensure_charm_has_runner(app=app, model=model)
-
-    yield app
-
-
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_dispatch_workflow_failure(
-    app_with_unsigned_commit_repo: Application,
+    app_with_forked_repo: Application,
     forked_github_repository: Repository,
     branch_with_unsigned_commit: Branch,
 ) -> None:
@@ -59,7 +39,7 @@ async def test_dispatch_workflow_failure(
     """
     start_time = datetime.now(timezone.utc)
 
-    unit = app_with_unsigned_commit_repo.units[0]
+    unit = app_with_forked_repo.units[0]
     runners = await get_runner_names(unit)
     assert len(runners) == 1
     runner_to_be_used = runners[0]
@@ -70,7 +50,7 @@ async def test_dispatch_workflow_failure(
 
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(
-        branch_with_unsigned_commit, {"runner": app_with_unsigned_commit_repo.name}
+        branch_with_unsigned_commit, {"runner": app_with_forked_repo.name}
     )
 
     # Wait until the runner is used up.
@@ -91,10 +71,7 @@ async def test_dispatch_workflow_failure(
         logs_url = run.jobs()[0].logs_url()
         logs = requests.get(logs_url).content.decode("utf-8")
 
-        if (
-            f"Job is about to start running on the runner: {app_with_unsigned_commit_repo.name}-"
-            in logs
-        ):
+        if f"Job is about to start running on the runner: {app_with_forked_repo.name}-" in logs:
             assert run.jobs()[0].conclusion == "failure"
             assert (
                 "Stopping execution of jobs due to repository setup is not compliant with policies"
@@ -108,7 +85,7 @@ async def test_dispatch_workflow_failure(
 @pytest.mark.abort_on_fail
 async def test_path_config_change(
     model: Model,
-    app_with_unsigned_commit_repo: Application,
+    app_with_forked_repo: Application,
     github_repository: Repository,
     path: str,
 ) -> None:
@@ -117,11 +94,11 @@ async def test_path_config_change(
     act: Change the path configuration to the main repository and reconcile runners.
     assert: No runners connected to the forked repository and one runner in the main repository.
     """
-    unit = app_with_unsigned_commit_repo.units[0]
+    unit = app_with_forked_repo.units[0]
 
-    await app_with_unsigned_commit_repo.set_config({"path": path})
+    await app_with_forked_repo.set_config({"path": path})
 
-    await reconcile(app=app_with_unsigned_commit_repo, model=model)
+    await reconcile(app=app_with_forked_repo, model=model)
 
     runner_names = await get_runner_names(unit)
     assert len(runner_names) == 1

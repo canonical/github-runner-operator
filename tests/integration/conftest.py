@@ -309,3 +309,20 @@ def forked_github_branch(
     yield branch
 
     branch_ref.delete()
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app_with_forked_repo(
+    model: Model, app_no_runner: Application, forked_github_repository: Repository
+) -> AsyncIterator[Application]:
+    """Application with a single runner on a forked repo.
+
+    Test should ensure it returns with the application in a good state and has
+    one runner.
+    """
+    app = app_no_runner  # alias for readability as the app will have a runner during the test
+
+    await app.set_config({"path": forked_github_repository.full_name})
+    await ensure_charm_has_runner(app=app, model=model)
+
+    yield app
