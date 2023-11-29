@@ -59,9 +59,9 @@ if [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
   REPO_CHECK=$?
 
 else
-  # Workflow dispatch, Push and Schedule use their respective endpoints, all other events use push by default.
-  CHECK_NAME="push"
-  if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
+  # Workflow dispatch, Push and Schedule use their respective endpoints, all other events use default by default.
+  CHECK_NAME="default"
+  if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "push" ]] || [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
     CHECK_NAME="${GITHUB_EVENT_NAME}"
   fi
 
