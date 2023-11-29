@@ -39,6 +39,8 @@ The charm requires a GitHub personal access token for the [`token` configuration
 - Requesting a list of self-hosted runners configured in an organization or repository
 - Deletion of self-hosted runners
 
+The token is also passed to [repo-policy-compliance](https://github.com/canonical/repo-policy-compliance) to access GitHub API for the service.
+
 ## GitHub repository setting check
 
 The [repo-policy-compliance](https://github.com/canonical/repo-policy-compliance) is a [Flask application](https://flask.palletsprojects.com/) hosted on [Gunicorn](https://gunicorn.org/) that provides a RESTful HTTP API to check the settings of GitHub repositories. This ensures the GitHub repository settings do not allow the execution of code not reviewed by maintainers on the self-hosted runners.
