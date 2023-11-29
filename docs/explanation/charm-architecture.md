@@ -22,11 +22,12 @@ The virtual machines hosting the runner use random access memory as disk; theref
 
 ## Network configuration
 
-The charm respects the proxy configuration passed from Juju in the following environment variables: `JUJU_CHARM_HTTP_PROXY`, `JUJU_CHARM_HTTPS_PROXY`, and `JUJU_CHARM_NO_PROXY`. The GitHub self-hosted runner applications are configured to use the proxy configuration.
+The charm respects the HTTP(S) proxy configuration of the model configuration of Juju. The configuration can be set with [`juju model-config`](https://juju.is/docs/juju/juju-model-config) using the following keys: `juju-http-proxy`, `juju-https-proxy`, `juju-no-proxy`. The GitHub self-hosted runner applications are configured to use the proxy configuration.
 
-If an HTTP(S) proxy is used, all HTTP(S) requests in the GitHub workflow will be routed to the proxy automatically with [aproxy](https://github.com/canonical/aproxy). The service is installed on each runner virtual machine and configured according to the proxy configuration from Juju.
+If an HTTP(S) proxy is used, all HTTP(S) requests in the GitHub workflow will be transparently routed to the proxy with [aproxy](https://github.com/canonical/aproxy). Iptables are set up to route network traffic to the destination on ports 80 and 443 to the aproxy. The aproxy will route received packets to the configured HTTP(S) proxy. The service is installed on each runner virtual machine and configured according to the proxy configuration from the Juju model.
 
-The firewall is configured to deny traffic from the runner to IPs on the [`denylist` configuration](https://charmhub.io/github-runner/configure#denylist). The runner will always have access to essential services such as DHCP and DNS, regardless of the denylist configuration.
+The nftables on the Juju machine are configured to deny traffic from the runner virtual machine to IPs on the [`denylist` configuration](https://charmhub.io/github-runner/configure#denylist). The runner will always have access to essential services such as DHCP and DNS, regardless of the denylist configuration.
+
 
 ## GitHub API usage
 
@@ -48,16 +49,24 @@ Using the [pre-job script](https://docs.github.com/en/actions/hosting-your-own-r
 
 Upon installing or upgrading the charm, the kernel will be upgraded, and the Juju machine will be restarted if needed.
 
+The charm installs the following dependencies:
+
+- For running repo-policy-compliance
+  - gunicorn
+- For firewall to prevent runners from accessing web service on the denylist
+  - nftables
+- For virtualization and virtual machine management
+  - lxd
+  - cpu-checker
+  - libvirt-clients
+  - libvirt-daemon-driver-qemu
+  - apparmor-utils
+
+These dependencies can be regularly updated using the [landscape-client charm](https://charmhub.io/landscape-client).
+
 The charm installs the following dependencies and regularly updates them:
 
-- Gunicorn
-- Nftables
-- LXD
-- Cpu-checker
-- Libvirt-clients
-- Libvirt-daemon-driver-qemu
-- Apparmor-utils
-- Repo-policy-compliance
+- repo-policy-compliance
 - GitHub self-hosted runner application
 
-The charm ensures the above dependencies are updated prior to creating new virtual machines for runners.
+The charm checks if the installed versions are the latest and performs upgrades if needed before creating new virtual machines for runners.
