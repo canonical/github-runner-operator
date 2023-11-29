@@ -49,9 +49,7 @@ async def test_dispatch_workflow_failure(
     )
 
     # The `create_dispatch` returns True on success.
-    assert workflow.create_dispatch(
-        forked_github_branch, {"runner": app_with_forked_repo.name}
-    )
+    assert workflow.create_dispatch(forked_github_branch, {"runner": app_with_forked_repo.name})
 
     # Wait until the runner is used up.
     for _ in range(30):
