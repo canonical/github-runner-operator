@@ -243,7 +243,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle_runners=\"idle_runners\" | event=\"reconciliation\" | unwrap idle_runners[10m]))",
+          "expr": "sum by(filename) (last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", idle_runners=\"idle_runners\" | event = `reconciliation` | unwrap idle_runners [$__range]))",
           "hide": false,
           "legendFormat": "Idle",
           "queryType": "range",
@@ -255,7 +255,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",active_runners=\"active_runners\" | event=\"reconciliation\" | unwrap active_runners[10m]))",
+          "expr": "sum by(filename) (last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", active_runners=\"active_runners\" | event = `reconciliation` | unwrap active_runners [$__range]))",
           "hide": false,
           "legendFormat": "Active",
           "queryType": "range",
@@ -993,6 +993,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics",
-  "version": 3,
+  "version": 4,
   "weekStart": ""
 }
