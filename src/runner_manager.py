@@ -29,25 +29,22 @@ from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import LXD_PROFILE_YAML, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerInfo, RunnerManagerClients, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
-from runner_type import GithubRepo, ProxySetting, RunnerByHealth, VirtualMachineResources
-from utilities import retry, set_env_var
+from runner_type import ProxySetting, RunnerByHealth, VirtualMachineResources
+from utilities import retry, secure_run_subprocess, set_env_var
 
 REMOVED_RUNNER_LOG_STR = "Removed runner: %s"
 
 logger = logging.getLogger(__name__)
 
 
-REPO_OWNER = "canonical"
-REPO_NAME = "github-runner-operator"
-IMAGE_ARTIFACT = "self-hosted-runner-image"
-CONTAINER_IMAGE_ARTIFACT = "self-hosted-runner-image-container"
-IMAGE_FILENAME = "runner-image.tar.gz"
+BUILD_IMAGE_SCRIPT_FILENAME = "scripts/build-image.sh"
 
 
 class RunnerManager:
     """Manage a group of runners according to configuration."""
 
     runner_bin_path = Path("/home/ubuntu/github-runner-app")
+    cron_path = Path("/etc/cron.d")
 
     def __init__(
         self,
@@ -584,23 +581,20 @@ class RunnerManager:
 
         return runners
 
-    def download_latest_runner_image(self, previous_url: str | None) -> str:
-        """Download runner image from GitHub and load to LXC.
+    def build_runner_image(self) -> None:
+        """Build the LXD image for hosting runner.
+
+        Build container image in test mode, else virtual machine image.
 
         Raises:
-            LxdError: Unable to load LXD image downloaded.
+            LxdError: Unable to build the LXD image.
         """
-        # Download container or virtual machine image depending on whether in test mode.
-        artifact_name = CONTAINER_IMAGE_ARTIFACT if LXD_PROFILE_YAML.exists() else IMAGE_ARTIFACT
+        cmd = ["/usr/bin/bash", BUILD_IMAGE_SCRIPT_FILENAME]
+        if not LXD_PROFILE_YAML.exists():
+            cmd += ["--vm"]
+        secure_run_subprocess(cmd, hide_cmd=True)
 
-        latest_url = self._clients.github.get_latest_artifact(
-            GithubRepo(REPO_OWNER, REPO_NAME),
-            artifact_name,
-            IMAGE_FILENAME,
-            previous_url,
-        )
-
-        if latest_url != previous_url:
-            self._clients.lxd.images.create(self.config.image, IMAGE_FILENAME)
-
-        return latest_url
+    def schedule_build_runner_image(self) -> None:
+        """Install cron job for building runner image."""
+        cron_file = self.cron_path / "build-runner-image"
+        cron_file.write_text(f"0 3 * * * ubuntu /usr/bin/bash {BUILD_IMAGE_SCRIPT_FILENAME}")

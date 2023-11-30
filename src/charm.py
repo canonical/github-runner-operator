@@ -344,10 +344,9 @@ class GithubRunnerCharm(CharmBase):
         self._refresh_firewall()
         runner_manager = self._get_runner_manager()
 
-        self.unit.status = MaintenanceStatus("Downloading runner image from Github")
-        self._stored.runner_image_url = runner_manager.download_latest_runner_image(
-            self._stored.runner_image_url
-        )
+        self.unit.status = MaintenanceStatus("Building runner image")
+        runner_manager.build_runner_image()
+        runner_manager.schedule_build_runner_image()
 
         self.unit.status = MaintenanceStatus("Downloading runner binary")
         try:
@@ -487,11 +486,6 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Checking for updates")
 
         runner_manager = self._get_runner_manager()
-
-        self.unit.status = MaintenanceStatus("Downloading runner image from Github")
-        self._stored.runner_image_url = runner_manager.download_latest_runner_image(
-            self._stored.runner_image_url
-        )
 
         # Check if the runner binary file exists.
         if not runner_manager.check_runner_bin():
