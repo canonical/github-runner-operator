@@ -5,7 +5,7 @@ This charm simplifies the initial deployment and "day N" operations of GitHub se
 Operating a self-hosted runner comes with [certain security concerns according to GitHub](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
 Just like GitHub's, the self-hosted runners managed by the charm are isolated in a single-use virtual machine.
 
-The charm also upgrades dependencies on a schedule to mitigate security risks. This ensures the latest security patches are installed within minutes.
+Some of the charm dependencies upgrades on a schedule to migrate security risks. The landscape-client charm can be deployed with this charm to ensure other dependencies are up to date.
 
 The charm maintains a set of ephemeral self-hosted runners, each isolated in a single-use virtual machine instance. To prevent disk IO exhaustion, random access memory is used as disk for the virtual machine instances. In addition, resource limits for the self-hosted runners can be configured.
 
@@ -38,23 +38,3 @@ The GitHub runner charm is a member of the Ubuntu family. It's an open-source pr
 - [Contribute](Contribute)
 
 Thinking about using the GitHub runner charm for your next project? [Get in touch](https://chat.charmhub.io/charmhub/channels/charm-dev)!
-
-# Navigation
-
-| Level | Path | Navlink |
-| -- | -- | -- |
-| 1 | tutorial | [Tutorial]() |
-| 2 | quick-start | [Quick start](https://discourse.charmhub.io/t/github-runner-docs-quick-start/12441) |
-| 2 | managing-resource-usage | [Managing resource usage](https://discourse.charmhub.io/t/github-runner-docs-managing-resource-usage/12450) |
-| 1 | how-to | [How to]() |
-| 2 | run-on-lxd | [How to run on LXD cloud](https://discourse.charmhub.io/t/github-runner-docs-how-to-run-on-lxd-cloud/12631) |
-| 2 | configure-denylist | [How to restrict self-hosted runner network access]() |
-| 2 | repo-policy | [How to comply with repository policies](https://discourse.charmhub.io/t/github-runner-docs-how-to-comply-with-repository-policies/12440) |
-| 2 | change-token | [How to change GitHub personal access token](https://discourse.charmhub.io/t/github-runner-docs-how-to-change-github-personal-access-token/12451) |
-| 2 | change-path | [How to change repository or organization](https://discourse.charmhub.io/t/github-runner-docs-how-to-change-repository-or-organization/12442) |
-| 2 | contribute | [How to contribute](https://discourse.charmhub.io/t/github-runner-docs-how-to-contribute/7815) |
-| 1 | reference | [Reference]() |
-| 2 | actions | [Actions](https://discourse.charmhub.io/t/github-runner-docs-actions/12443) |
-| 2 | configurations | [Configurations](https://discourse.charmhub.io/t/github-runner-docs-configurations/12444) |
-| 1 | explanation | [Explanation]() |
-| 2 | charm-architecture | [Charm architecture](https://discourse.charmhub.io/t/github-runner-docs-charm-architecture/12446) |
