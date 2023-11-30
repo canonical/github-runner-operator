@@ -91,21 +91,6 @@ class RunnerInfo:
     busy: bool
 
 
-@dataclass
-class RunnerStats:
-    """Stats of runners for last period.
-
-    Attributes:
-        active: Number of active runners.
-        crashed: Number of crashed runners.
-        idle: Number of idle runners.
-    """
-
-    active: int
-    crashed: int
-    idle: int
-
-
 class RunnerManager:
     """Manage a group of runners according to configuration."""
 
@@ -379,51 +364,48 @@ class RunnerManager:
             flavor=self.app_name, ignore_runners=set(runner_states.healthy)
         )
 
-    def _compute_runner_stats_for_last_period(
-        self, metric_stats: runner_metrics.IssuedMetricEventsStats, online_runners: list[Runner]
-    ) -> RunnerStats:
-        """Compute runner stats for last period.
-
-        Compute the number of idle, active and crashed runners for the last period
-        (between the last reconciliation and now).
-
-        Args:
-            metric_stats: The stats of issued metric events.
-            online_runners: List of online runners.
-
-        Returns:
-            A RunnerStats object containing the number of idle, active and crashed runners.
-        """
-        idle_count = len([runner for runner in online_runners if not runner.status.busy])
-        current_active_count = len(online_runners) - idle_count
-        active_between_last_reconciliation_and_now = metric_stats.get(metrics.RunnerStop, 0)
-        active_count = current_active_count + active_between_last_reconciliation_and_now
-        crashed_runners = metric_stats.get(metrics.RunnerStart, 0) - metric_stats.get(
-            metrics.RunnerStop, 0
-        )
-        return RunnerStats(active=active_count, crashed=crashed_runners, idle=idle_count)
-
     def _issue_reconciliation_metric(
         self,
-        runner_stats: RunnerStats,
+        metric_stats: runner_metrics.IssuedMetricEventsStats,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
     ):
         """Issue reconciliation metric.
 
         Args:
-            runner_stats: The stats of runners for last period.
+            metric_stats: The stats of issued metric events.
             reconciliation_start_ts: The timestamp of when reconciliation started.
             reconciliation_end_ts: The timestamp of when reconciliation ended.
         """
+        runners = self._get_runners()
+        runner_states = self._get_runner_health_states()
+        healthy_runners = set(runner_states.healthy)
+        online_runners = [
+            runner for runner in runners if runner.status.exist and runner.status.online
+        ]
+        active_runner_names = {
+            runner.config.name for runner in online_runners if runner.status.busy
+        }
+        offline_runner_names = {
+            runner.config.name
+            for runner in runners
+            if runner.status.exist and not runner.status.online
+        }
+
+        active_count = len(active_runner_names)
+        idle_online_count = len(online_runners) - active_count
+        idle_offline_count = len((offline_runner_names & healthy_runners) - active_runner_names)
+
         try:
             metrics.issue_event(
                 event=metrics.Reconciliation(
                     timestamp=time.time(),
                     flavor=self.app_name,
-                    crashed_runners=runner_stats.crashed,
-                    idle_runners=runner_stats.idle,
-                    active_runners=runner_stats.active,
+                    # Ignore line break before binary operator
+                    crashed_runners=metric_stats.get(metrics.RunnerStart, 0)
+                    - metric_stats.get(metrics.RunnerStop, 0),  # noqa: W503
+                    idle_runners=idle_online_count + idle_offline_count,
+                    active_runners=active_count,
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )
             )
@@ -524,7 +506,6 @@ class RunnerManager:
 
         if self.config.charm_state.is_metrics_logging_available:
             metric_stats = self._issue_runner_metrics()
-            runner_stats = self._compute_runner_stats_for_last_period(metric_stats, online_runners)
 
         # Clean up offline runners
         if runner_states.unhealthy:
@@ -552,7 +533,7 @@ class RunnerManager:
         if self.config.charm_state.is_metrics_logging_available:
             end_ts = time.time()
             self._issue_reconciliation_metric(
-                runner_stats=runner_stats,
+                metric_stats=metric_stats,
                 reconciliation_start_ts=start_ts,
                 reconciliation_end_ts=end_ts,
             )
