@@ -16,7 +16,7 @@ from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
 
-ARCHITECTURES_ARM64 = ("aarch64_be", "aarch64", "armv8b", "armv8l", "arm64")
+ARCHITECTURES_ARM64 = ("aarch64", "arm64")
 ARCHITECTURES_X86 = ("x86_64",)
 
 

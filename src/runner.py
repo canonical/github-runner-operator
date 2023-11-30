@@ -55,6 +55,7 @@ Snap = NamedTuple("Snap", [("name", str), ("channel", str)])
 YQ_BIN_URL_AMD64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64"
 YQ_BIN_URL_ARM64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_arm64"
 
+
 @dataclass
 class WgetExecutable:
     """The executable to be installed through wget.

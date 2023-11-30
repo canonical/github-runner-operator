@@ -120,7 +120,7 @@ def test_get_latest_runner_bin_url_missing_binary(runner_manager: RunnerManager)
     runner_manager._clients.github.actions.list_runner_applications_for_org.return_value = []
 
     with pytest.raises(RunnerBinaryError):
-        runner_manager.get_latest_runner_bin_url(os_name="not_exist", arch=ARCH.ARM)
+        runner_manager.get_latest_runner_bin_url(os_name="not_exist", arch=ARCH.ARM64)
 
 
 def test_update_runner_bin(runner_manager: RunnerManager):
