@@ -118,7 +118,8 @@ class Runner:
                 self.config.proxies["no_proxy"] = ""
             self.config.proxies["no_proxy"] += f"{self.config.name},.svc"
 
-    def create(
+    # All the arguments are required
+    def create(  # pylint: disable=too-many-arguments
         self,
         image: str,
         resources: VirtualMachineResources,

@@ -312,7 +312,6 @@ class GithubRunnerCharm(CharmBase):
                 dockerhub_mirror=dockerhub_mirror,
             ),
             proxies=self.proxies,
-            arch=self._state.arch,
         )
 
     @catch_charm_errors
@@ -345,7 +344,7 @@ class GithubRunnerCharm(CharmBase):
         runner_manager = self._get_runner_manager()
         self.unit.status = MaintenanceStatus("Downloading runner binary")
         try:
-            runner_info = runner_manager.get_latest_runner_bin_url(arch=self._state.arch)
+            runner_info = runner_manager.get_latest_runner_bin_url()
             logger.info("Downloading %s from: %s", runner_info.filename, runner_info.download_url)
             self._stored.runner_bin_url = runner_info.download_url
             runner_manager.update_runner_bin(runner_info)
@@ -488,7 +487,7 @@ class GithubRunnerCharm(CharmBase):
 
         try:
             self.unit.status = MaintenanceStatus("Checking for runner binary updates")
-            runner_info = runner_manager.get_latest_runner_bin_url(arch=self._state.arch)
+            runner_info = runner_manager.get_latest_runner_bin_url()
         except urllib.error.URLError as err:
             logger.exception("Failed to check for runner updates")
             # Failure to download runner binary is a transient error.

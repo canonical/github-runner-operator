@@ -33,6 +33,7 @@ def token_fixture():
 def charm_state_fixture():
     mock = MagicMock(spec=State)
     mock.is_metrics_logging_available = False
+    mock.arch = ARCH.X64
     return mock
 
 
@@ -102,7 +103,7 @@ def test_get_latest_runner_bin_url(runner_manager: RunnerManager):
     act: Get runner bin url of existing binary.
     assert: Correct mock data returned.
     """
-    runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux", arch=ARCH.X64)
+    runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux")
     assert runner_bin["os"] == "linux"
     assert runner_bin["architecture"] == "x64"
     assert runner_bin["download_url"] == "https://www.example.com"
@@ -120,7 +121,7 @@ def test_get_latest_runner_bin_url_missing_binary(runner_manager: RunnerManager)
     runner_manager._clients.github.actions.list_runner_applications_for_org.return_value = []
 
     with pytest.raises(RunnerBinaryError):
-        runner_manager.get_latest_runner_bin_url(os_name="not_exist", arch=ARCH.ARM64)
+        runner_manager.get_latest_runner_bin_url(os_name="not_exist")
 
 
 def test_update_runner_bin(runner_manager: RunnerManager):
@@ -140,7 +141,7 @@ def test_update_runner_bin(runner_manager: RunnerManager):
     runner_manager.runner_bin_path.unlink(missing_ok=True)
 
     runner_manager.session.get = MockRequestLibResponse
-    runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux", arch=ARCH.X64)
+    runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux")
 
     runner_manager.update_runner_bin(runner_bin)
 

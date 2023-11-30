@@ -25,7 +25,6 @@ from typing_extensions import assert_never
 import metrics
 import runner_metrics
 import shared_fs
-from charm_state import ARCH
 from charm_state import State as CharmState
 from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
 from github_type import (
@@ -191,14 +190,13 @@ class RunnerManager:
         logger.debug("Response of runner binary list: %s", runner_bins)
 
         try:
+            arch = self.config.charm_state.arch.value
             return next(
-                bin
-                for bin in runner_bins
-                if bin["os"] == os_name and bin["architecture"] == self.arch.value
+                bin for bin in runner_bins if bin["os"] == os_name and bin["architecture"] == arch
             )
         except StopIteration as err:
             raise RunnerBinaryError(
-                f"Unable query GitHub runner binary information for {os_name} {self.arch.value}"
+                f"Unable query GitHub runner binary information for {os_name} {arch}"
             ) from err
 
     @retry(tries=5, delay=30, local_logger=logger)
