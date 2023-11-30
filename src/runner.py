@@ -21,6 +21,7 @@ from typing import Iterable, NamedTuple, Optional, Sequence
 import yaml
 
 import shared_fs
+from charm_state import ARCH
 from errors import (
     CreateSharedFilesystemError,
     LxdError,
@@ -51,6 +52,8 @@ LXDBR_DNSMASQ_LEASES_FILE = Path("/var/snap/lxd/common/lxd/networks/lxdbr0/dnsma
 
 Snap = NamedTuple("Snap", [("name", str), ("channel", str)])
 
+YQ_BIN_URL_AMD64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64"
+YQ_BIN_URL_ARM64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_arm64"
 
 @dataclass
 class WgetExecutable:
@@ -483,7 +486,7 @@ class Runner:
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
     @retry(tries=5, delay=1, local_logger=logger)
-    def _install_binaries(self, runner_binary: Path) -> None:
+    def _install_binaries(self, runner_binary: Path, arch=ARCH.X64) -> None:
         """Install runner binary and other binaries.
 
         Args:
@@ -507,7 +510,7 @@ class Runner:
         self._wget_install(
             [
                 WgetExecutable(
-                    url="https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64",
+                    url=YQ_BIN_URL_AMD64 if arch is ARCH.X64 else YQ_BIN_URL_ARM64,
                     cmd="yq",
                 )
             ]
