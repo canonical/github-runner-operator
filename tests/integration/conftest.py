@@ -161,7 +161,7 @@ async def app_no_runner(
         no_proxy=no_proxy,
         reconcile_interval=60,
     )
-    yield application
+    return application
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -173,7 +173,7 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     """
     await ensure_charm_has_runner(app=app_no_runner, model=model)
 
-    yield app_no_runner
+    return app_no_runner
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -212,7 +212,7 @@ async def app_scheduled_events(
     await application.set_config({"virtual-machines": "1"})
     await reconcile(app=application, model=model)
 
-    yield application
+    return application
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -239,7 +239,7 @@ async def app_runner(
         no_proxy=no_proxy,
         reconcile_interval=60,
     )
-    yield application
+    return application
 
 
 @pytest.fixture(scope="module")
@@ -272,7 +272,7 @@ def forked_github_repository(
     else:
         assert False, "timed out whilst waiting for repository creation"
 
-    yield forked_repository
+    return forked_repository
 
     # Parallel runs of this test module is allowed. Therefore, the forked repo is not removed.
 
@@ -325,4 +325,4 @@ async def app_with_forked_repo(
     await app.set_config({"path": forked_github_repository.full_name})
     await ensure_charm_has_runner(app=app, model=model)
 
-    yield app
+    return app
