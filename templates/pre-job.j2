@@ -41,8 +41,17 @@ CURL_ARGS=(
 # Set REPO_CHECK to a failure code as a safe guard.
 REPO_CHECK=1
 
+# Special Workflow dispatch repo-policy-compliance service check designed to fail:
+if [[ "${GITHUB_WORKFLOW}" == "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7" ]]; then
+  logger -s "Running the test workflow for integration tests, this test is configured to fail"
+
+  curl "${CURL_ARGS[@]}" \
+      -X POST \
+      http://{{host_ip}}:8080/always-fail/check-run &> repo_check_output.txt
+  REPO_CHECK=$?
+
 # Pull request - Request repo-policy-compliance service check:
-if [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
+elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
 
   GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.repo.full_name')
   COMMIT_SHA=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.sha')
