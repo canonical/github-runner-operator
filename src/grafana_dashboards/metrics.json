@@ -113,7 +113,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\" | label_format timestamp=\"{{mulf .timestamp 1000}}\" | event = \"runner_start\" | timestamp >= ${__from} [$__range]))",
+          "expr": "sum by(filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event = \"runner_start\" | timestamp >= ${__from} [$__range]))",
           "key": "Q-f7c42eab-69be-43b5-a807-35c071f708a0-0",
           "legendFormat": "Started",
           "queryType": "range",
@@ -125,7 +125,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "sum by(filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\" | label_format timestamp=\"{{mulf .timestamp 1000}}\" | event = \"runner_installed\" | timestamp >= ${__from} [$__range]))",
+          "expr": "sum by(filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event = \"runner_installed\" | timestamp >= ${__from} [$__range]))",
           "hide": false,
           "legendFormat": "Initialized",
           "queryType": "range",
@@ -137,7 +137,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "sum by(filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\" | label_format timestamp=\"{{mulf .timestamp 1000}}\" | event = \"runner_stop\" | timestamp >= ${__from} [$__range]))",
+          "expr": "sum by(filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event = \"runner_stop\" | timestamp >= ${__from} [$__range]))",
           "hide": false,
           "legendFormat": "Stopped",
           "queryType": "range",
@@ -149,7 +149,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "sum by(filename) (sum_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", crashed_runners=\"crashed_runners\", timestamp=\"timestamp\" | label_format timestamp=\"{{mulf .timestamp 1000}}\" | event = `reconciliation` | timestamp >= ${__from} | unwrap crashed_runners [$__range]))",
+          "expr": "sum by(filename) (sum_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", crashed_runners=\"crashed_runners\", timestamp=\"timestamp\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event = `reconciliation` | timestamp >= ${__from} | unwrap crashed_runners [$__range]))",
           "hide": false,
           "legendFormat": "Crashed",
           "queryType": "range",
