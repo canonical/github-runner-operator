@@ -34,7 +34,8 @@ async def test_dispatch_workflow_failure(
     arrange:
         1. A forked repository.
         2. A working application with one runner on the forked repository.
-    act: Trigger a workflow dispatch on a branch in the forked repository.
+    act: Trigger a workflow dispatch that fails the repo policy check on a branch
+     in the forked repository.
     assert: The workflow that was dispatched failed and the reason is logged.
     """
     start_time = datetime.now(timezone.utc)
