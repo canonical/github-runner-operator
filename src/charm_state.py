@@ -16,7 +16,6 @@ from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
 
-ARCHITECTURES_ARM = ("arm",)
 ARCHITECTURES_ARM64 = ("aarch64_be", "aarch64", "armv8b", "armv8l", "arm64")
 ARCHITECTURES_X86 = ("x86_64",)
 
@@ -24,7 +23,6 @@ ARCHITECTURES_X86 = ("x86_64",)
 class ARCH(str, Enum):
     """Supported system architectures."""
 
-    ARM = "arm"
     ARM64 = "arm64"
     X64 = "x64"
 
@@ -129,16 +127,13 @@ def _get_supported_arch() -> ARCH:
     """Get current machine architecture.
 
     Raises:
-        CharmConfigInvalidError: _description_
-        CharmConfigInvalidError: _description_
+        UnsupportedArchitectureError: if the current architecture is unsupported.
 
     Returns:
-        Arch: _description_
+        Arch: Current machine architecture.
     """
     arch = platform.machine()
     match arch:
-        case arch if arch in ARCHITECTURES_ARM:
-            return ARCH.ARM
         case arch if arch in ARCHITECTURES_ARM64:
             return ARCH.ARM64
         case arch if arch in ARCHITECTURES_X86:
