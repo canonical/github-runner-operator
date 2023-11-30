@@ -31,6 +31,7 @@ from tests.integration.helpers import (
 from tests.status_name import ACTIVE_STATUS_NAME
 
 TEST_WORKFLOW_NAME = "Workflow Dispatch Tests"
+FAILURE_TEST_WORKFLOW_NAME = "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7"
 
 
 @pytest_asyncio.fixture(scope="module", name="app_integrated")
@@ -221,13 +222,19 @@ async def _assert_events_after_reconciliation(
     for metric_log in log_lines:
         if metric_log.get("event") == "runner_start":
             assert metric_log.get("flavor") == app.name
-            assert metric_log.get("workflow") == TEST_WORKFLOW_NAME
+            assert (
+                metric_log.get("workflow") == TEST_WORKFLOW_NAME
+                or metric_log.get("workflow") == FAILURE_TEST_WORKFLOW_NAME
+            )
             assert metric_log.get("repo") == github_repository.full_name
             assert metric_log.get("github_event") == "workflow_dispatch"
             assert metric_log.get("idle") >= 0
         if metric_log.get("event") == "runner_stop":
             assert metric_log.get("flavor") == app.name
-            assert metric_log.get("workflow") == TEST_WORKFLOW_NAME
+            assert (
+                metric_log.get("workflow") == TEST_WORKFLOW_NAME
+                or metric_log.get("workflow") == FAILURE_TEST_WORKFLOW_NAME
+            )
             assert metric_log.get("repo") == github_repository.full_name
             assert metric_log.get("github_event") == "workflow_dispatch"
             assert metric_log.get("status") == post_job_status

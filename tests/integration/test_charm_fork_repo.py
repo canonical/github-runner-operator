@@ -75,7 +75,7 @@ async def test_dispatch_workflow_failure(
                 "Stopping execution of jobs due to repository setup is not compliant with policies"
                 in logs
             )
-            assert "Endpoint designed for testing that always fails" in logs
+            assert "The method is not allowed for the requested URL" in logs
             assert "Should not echo if pre-job script failed" not in logs
 
 
