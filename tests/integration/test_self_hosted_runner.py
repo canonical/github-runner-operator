@@ -13,8 +13,11 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.conftest import DISPATCH_TEST_WORKFLOW_FILENAME
-from tests.integration.helpers import get_runner_names, run_in_lxd_instance
+from tests.integration.helpers import (
+    DISPATCH_TEST_WORKFLOW_FILENAME,
+    get_runner_names,
+    run_in_lxd_instance,
+)
 from tests.status_name import ACTIVE_STATUS_NAME
 
 
