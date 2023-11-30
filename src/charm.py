@@ -312,6 +312,7 @@ class GithubRunnerCharm(CharmBase):
                 dockerhub_mirror=dockerhub_mirror,
             ),
             proxies=self.proxies,
+            arch=self._state.arch,
         )
 
     @catch_charm_errors

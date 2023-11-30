@@ -124,6 +124,7 @@ class Runner:
         resources: VirtualMachineResources,
         binary_path: Path,
         registration_token: str,
+        arch=ARCH.X64,
     ):
         """Create the runner instance on LXD and register it on GitHub.
 
@@ -132,6 +133,7 @@ class Runner:
             resources: Resource setting for the LXD instance.
             binary_path: Path to the runner binary.
             registration_token: Token for registering the runner on GitHub.
+            arch: Current machine architecture.
 
         Raises:
             RunnerCreateError: Unable to create an LXD instance for runner.
@@ -153,7 +155,7 @@ class Runner:
             # Wait some initial time for the instance to boot up
             time.sleep(60)
             self._wait_boot_up()
-            self._install_binaries(binary_path)
+            self._install_binaries(binary_path, arch=arch)
             self._configure_runner()
 
             self._register_runner(registration_token, labels=[self.config.app_name, image])
@@ -492,6 +494,7 @@ class Runner:
 
         Args:
             runner_binary: Path to the compressed runner binary.
+            arch: The machine architecture.
 
         Raises:
             RunnerFileLoadError: Unable to load the runner binary into the runner instance.

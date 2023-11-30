@@ -167,16 +167,13 @@ class RunnerManager:
         return self.runner_bin_path.exists()
 
     @retry(tries=5, delay=30, local_logger=logger)
-    def get_latest_runner_bin_url(
-        self, os_name: str = "linux", arch: ARCH = ARCH.X64
-    ) -> RunnerApplication:
+    def get_latest_runner_bin_url(self, os_name: str = "linux") -> RunnerApplication:
         """Get the URL for the latest runner binary.
 
         The runner binary URL changes when a new version is available.
 
         Args:
             os_name: Name of operating system.
-            arch: Name of architecture.
 
         Returns:
             Information on the runner application.
@@ -197,11 +194,11 @@ class RunnerManager:
             return next(
                 bin
                 for bin in runner_bins
-                if bin["os"] == os_name and bin["architecture"] == arch.value
+                if bin["os"] == os_name and bin["architecture"] == self.arch.value
             )
         except StopIteration as err:
             raise RunnerBinaryError(
-                f"Unable query GitHub runner binary information for {os_name} {arch.value}"
+                f"Unable query GitHub runner binary information for {os_name} {self.arch.value}"
             ) from err
 
     @retry(tries=5, delay=30, local_logger=logger)
@@ -322,6 +319,7 @@ class RunnerManager:
                 resources,
                 RunnerManager.runner_bin_path,
                 registration_token,
+                arch=self.config.charm_state.arch,
             )
             ts_after = time.time()
             try:
@@ -351,6 +349,7 @@ class RunnerManager:
                 resources,
                 RunnerManager.runner_bin_path,
                 registration_token,
+                arch=self.config.charm_state.arch,
             )
 
     def _issue_runner_metrics(self) -> runner_metrics.IssuedMetricEventsStats:
