@@ -165,7 +165,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "This panel displays the number of active, idle or crashed runners reported by the GithubRunner charms during the reconciliation. These values represent the state of the runners in the time between the previous reconciliation and the current moment, just before the reconciliation process is started.",
+      "description": "This panel totals the number of idle runners reported by the charm units after a reconciliation event. Note that there may be active runners in the time between reconciliations which will not be shown in this panel.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -232,7 +232,7 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "mode": "single",
@@ -246,38 +246,14 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle_runners=\"idle_runners\" | event=\"reconciliation\" | unwrap idle_runners[$__range]))",
+          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle_runners=\"idle_runners\" | event=\"reconciliation\" | unwrap idle_runners[60m]))",
           "hide": false,
           "legendFormat": "Idle",
           "queryType": "range",
           "refId": "D"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "code",
-          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",active_runners=\"active_runners\" | event=\"reconciliation\" | unwrap active_runners[$__range]))",
-          "hide": false,
-          "legendFormat": "Active",
-          "queryType": "range",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "code",
-          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",crashed_runners=\"crashed_runners\" | event=\"reconciliation\" | unwrap crashed_runners[$__range]))",
-          "hide": false,
-          "legendFormat": "Crashed",
-          "queryType": "range",
-          "refId": "B"
         }
       ],
-      "title": "Runner Status",
+      "title": "Idle Runners after Reconciliation",
       "transformations": [],
       "type": "timeseries"
     },
