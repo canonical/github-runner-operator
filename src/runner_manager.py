@@ -30,14 +30,14 @@ from runner import LXD_PROFILE_YAML, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerInfo, RunnerManagerClients, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import ProxySetting, RunnerByHealth, VirtualMachineResources
-from utilities import retry, secure_run_subprocess, set_env_var
+from utilities import execute_command, retry, set_env_var
 
 REMOVED_RUNNER_LOG_STR = "Removed runner: %s"
 
 logger = logging.getLogger(__name__)
 
 
-BUILD_IMAGE_SCRIPT_FILENAME = "scripts/build-image.sh"
+BUILD_IMAGE_SCRIPT_FILENAME = "src/build-image.sh"
 
 
 class RunnerManager:
@@ -592,7 +592,7 @@ class RunnerManager:
         cmd = ["/usr/bin/bash", BUILD_IMAGE_SCRIPT_FILENAME]
         if not LXD_PROFILE_YAML.exists():
             cmd += ["--vm"]
-        secure_run_subprocess(cmd, hide_cmd=True)
+        execute_command(cmd)
 
     def schedule_build_runner_image(self) -> None:
         """Install cron job for building runner image."""
