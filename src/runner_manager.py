@@ -320,11 +320,23 @@ class RunnerManager:
             reconciliation_end_ts: The timestamp of when reconciliation ended.
         """
         runners = self._get_runners()
+        runner_states = self._get_runner_health_states()
+        healthy_runners = set(runner_states.healthy)
         online_runners = [
             runner for runner in runners if runner.status.exist and runner.status.online
         ]
-        idle_count = len([runner for runner in online_runners if not runner.status.busy])
-        active_count = len(online_runners) - idle_count
+        active_runner_names = {
+            runner.config.name for runner in online_runners if runner.status.busy
+        }
+        offline_runner_names = {
+            runner.config.name
+            for runner in runners
+            if runner.status.exist and not runner.status.online
+        }
+
+        active_count = len(active_runner_names)
+        idle_online_count = len(online_runners) - active_count
+        idle_offline_count = len((offline_runner_names & healthy_runners) - active_runner_names)
 
         try:
             metrics.issue_event(
@@ -334,8 +346,7 @@ class RunnerManager:
                     # Ignore line break before binary operator
                     crashed_runners=metric_stats.get(metrics.RunnerStart, 0)
                     - metric_stats.get(metrics.RunnerStop, 0),  # noqa: W503
-                    idle_runners=idle_count,
-                    active_runners=active_count,
+                    idle_runners=idle_online_count + idle_offline_count,
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )
             )

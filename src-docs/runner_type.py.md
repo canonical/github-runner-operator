@@ -97,6 +97,7 @@ Status of runner.
 
 **Attributes:**
  
+ - <b>`runner_id`</b>:  ID of the runner. 
  - <b>`exist`</b>:  Whether the runner instance exists on LXD. 
  - <b>`online`</b>:  Whether GitHub marks this runner as online. 
  - <b>`busy`</b>:  Whether GitHub marks this runner as busy. 

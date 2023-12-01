@@ -61,17 +61,7 @@ class WgetExecutable:
 
 
 class Runner:
-    """Single instance of GitHub self-hosted runner.
-
-    Attributes:
-        app_name (str): Name of the charm.
-        path (GitHubPath): Path to GitHub repo or org.
-        proxies (ProxySetting): HTTP proxy setting for juju charm.
-        name (str): Name of the runner instance.
-        exist (bool): Whether the runner instance exists on LXD.
-        online (bool): Whether GitHub marks this runner as online.
-        busy (bool): Whether GitHub marks this runner as busy.
-    """
+    """Single instance of GitHub self-hosted runner."""
 
     runner_application = Path("/home/ubuntu/github-runner")
     env_file = runner_application / ".env"
