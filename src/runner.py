@@ -13,6 +13,7 @@ collection of `Runner` instances.
 import json
 import logging
 import pathlib
+import textwrap
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -529,11 +530,11 @@ class Runner:
 
         return default_ip
 
-    def _configure_aproxy(self, aproxy_address: str) -> None:
+    def _configure_aproxy(self, proxy_address: str) -> None:
         """Configure aproxy.
 
         Args:
-            aproxy_address: Proxy to configure aproxy with.
+            proxy_address: Proxy to configure aproxy with.
 
         Raises:
             RunnerAproxyError: If unable to configure aproxy.
@@ -543,28 +544,33 @@ class Runner:
 
         logger.info("Configuring aproxy for the runner.")
 
-        self.instance.execute(["snap", "set", "aproxy", f"proxy={aproxy_address}"])
+        aproxy_port = 54969
+
+        self.instance.execute(
+            ["snap", "set", "aproxy", f"proxy={proxy_address}", f"listen=:{aproxy_port}"]
+        )
 
         default_ip = self._get_default_ip()
         if not default_ip:
             raise RunnerAproxyError("Unable to find default IP for aproxy configuration.")
 
-        nft_input = rf"""define default-ip = {default_ip}
-define private-ips = {{ 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }}
-table ip aproxy
-flush table ip aproxy
-table ip aproxy {{
-        chain prerouting {{
+        nft_input = textwrap.dedent(
+            f"""\
+            define default-ip = {default_ip}
+            define private-ips = {{ 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }}
+            table ip aproxy
+            flush table ip aproxy
+            table ip aproxy {{
+              chain prerouting {{
                 type nat hook prerouting priority dstnat; policy accept;
-                ip daddr != $private-ips tcp dport {{ 80, 443 }} counter dnat to $default-ip:8443
-        }}
-
-        chain output {{
+                ip daddr != $private-ips tcp dport {{ 80, 443 }} dnat to $default-ip:{aproxy_port}
+              }}
+              chain output {{
                 type nat hook output priority -100; policy accept;
-                ip daddr != $private-ips tcp dport {{ 80, 443 }} counter dnat to $default-ip:8443
-        }}
-}}
-"""
+                ip daddr != $private-ips tcp dport {{ 80, 443 }} dnat to $default-ip:{aproxy_port}
+              }}
+            }}"""
+        )
         self.instance.execute(["nft", "-f", "-"], input=nft_input.encode("utf-8"))
 
     def _configure_docker_proxy(self):

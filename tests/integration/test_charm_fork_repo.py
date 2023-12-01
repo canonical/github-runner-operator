@@ -16,17 +16,11 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import DISPATCH_TEST_WORKFLOW_FILENAME, get_runner_names, reconcile
-
-
-@pytest.fixture(scope="module")
-def branch_with_stale_review(forked_github_branch: Branch):
-    """Create branch that would fail the branch protection check."""
-    forked_github_branch.edit_protection(dismiss_stale_reviews=False)
-
-    yield forked_github_branch
-
-    forked_github_branch.remove_protection()
+from tests.integration.helpers import (
+    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
+    get_runner_names,
+    reconcile,
+)
 
 
 @pytest.mark.asyncio
@@ -34,13 +28,14 @@ def branch_with_stale_review(forked_github_branch: Branch):
 async def test_dispatch_workflow_failure(
     app_with_forked_repo: Application,
     forked_github_repository: Repository,
-    branch_with_stale_review: Branch,
+    forked_github_branch: Branch,
 ) -> None:
     """
     arrange:
-        1. A forked repository with a branch with stale review allowed.
+        1. A forked repository.
         2. A working application with one runner on the forked repository.
-    act: Trigger a workflow dispatch on a branch in the forked repository.
+    act: Trigger a workflow dispatch that fails the repo policy check on a branch
+     in the forked repository.
     assert: The workflow that was dispatched failed and the reason is logged.
     """
     start_time = datetime.now(timezone.utc)
@@ -51,13 +46,11 @@ async def test_dispatch_workflow_failure(
     runner_to_be_used = runners[0]
 
     workflow = forked_github_repository.get_workflow(
-        id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME
+        id_or_file_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME
     )
 
     # The `create_dispatch` returns True on success.
-    assert workflow.create_dispatch(
-        branch_with_stale_review, {"runner": app_with_forked_repo.name}
-    )
+    assert workflow.create_dispatch(forked_github_branch, {"runner": app_with_forked_repo.name})
 
     # Wait until the runner is used up.
     for _ in range(30):
@@ -83,8 +76,8 @@ async def test_dispatch_workflow_failure(
                 "Stopping execution of jobs due to repository setup is not compliant with policies"
                 in logs
             )
+            assert "Endpoint designed for testing that always fails" in logs
             assert "Should not echo if pre-job script failed" not in logs
-            assert "commit the job is running on is not signed" in logs
 
 
 @pytest.mark.asyncio

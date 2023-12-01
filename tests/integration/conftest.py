@@ -25,8 +25,6 @@ from tests.integration.helpers import (
     reconcile,
 )
 
-DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
-
 
 @pytest.fixture(scope="module")
 def metadata() -> dict[str, Any]:
@@ -163,7 +161,7 @@ async def app_no_runner(
         no_proxy=no_proxy,
         reconcile_interval=60,
     )
-    yield application
+    return application
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -175,7 +173,7 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     """
     await ensure_charm_has_runner(app=app_no_runner, model=model)
 
-    yield app_no_runner
+    return app_no_runner
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -214,7 +212,7 @@ async def app_scheduled_events(
     await application.set_config({"virtual-machines": "1"})
     await reconcile(app=application, model=model)
 
-    yield application
+    return application
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -241,7 +239,7 @@ async def app_runner(
         no_proxy=no_proxy,
         reconcile_interval=60,
     )
-    yield application
+    return application
 
 
 @pytest.fixture(scope="module")
@@ -274,38 +272,21 @@ def forked_github_repository(
     else:
         assert False, "timed out whilst waiting for repository creation"
 
-    yield forked_repository
+    return forked_repository
 
     # Parallel runs of this test module is allowed. Therefore, the forked repo is not removed.
-
-
-@pytest_asyncio.fixture(scope="module")
-async def app_with_forked_repo(
-    model: Model, app_no_runner: Application, forked_github_repository: Repository
-) -> AsyncIterator[Application]:
-    """Application with a single runner on the forked repo.
-
-    Test should ensure it returns with the application in a good state and has
-    one runner.
-    """
-    app = app_no_runner  # alias for readability as the app will have a runner during the test
-
-    await app.set_config({"path": forked_github_repository.full_name})
-    await ensure_charm_has_runner(app=app, model=model)
-
-    yield app
 
 
 @pytest.fixture(scope="module")
 def forked_github_branch(
     github_repository: Repository, forked_github_repository: Repository
 ) -> Iterator[Branch]:
-    """Create a new forked branch for testing.
-
-    This branch should only be used for this module.
-    """
+    """Create a new forked branch for testing."""
     branch_name = f"test/{secrets.token_hex(4)}"
 
+    # Other tests change the default branch of the forked repo. Therefore, we need to get the
+    # default branch name of the original repository again (because some tests require signed
+    # commits, which should be present on the original default branch).
     main_branch = forked_github_repository.get_branch(github_repository.default_branch)
     branch_ref = forked_github_repository.create_git_ref(
         ref=f"refs/heads/{branch_name}", sha=main_branch.commit.sha
@@ -328,3 +309,20 @@ def forked_github_branch(
     yield branch
 
     branch_ref.delete()
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app_with_forked_repo(
+    model: Model, app_no_runner: Application, forked_github_repository: Repository
+) -> AsyncIterator[Application]:
+    """Application with a single runner on a forked repo.
+
+    Test should ensure it returns with the application in a good state and has
+    one runner.
+    """
+    app = app_no_runner  # alias for readability as the app will have a runner during the test
+
+    await app.set_config({"path": forked_github_repository.full_name})
+    await ensure_charm_has_runner(app=app, model=model)
+
+    return app
