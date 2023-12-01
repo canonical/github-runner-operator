@@ -405,7 +405,6 @@ class RunnerManager:
                     crashed_runners=metric_stats.get(metrics.RunnerStart, 0)
                     - metric_stats.get(metrics.RunnerStop, 0),  # noqa: W503
                     idle_runners=idle_online_count + idle_offline_count,
-                    active_runners=active_count,
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )
             )

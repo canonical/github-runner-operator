@@ -306,7 +306,8 @@ def test_reconcile_issues_reconciliation_metric_event(
             events, meaning one runner was active and one crashed.
         - Create two online runners , one active and one idle.
     act: Reconcile.
-    assert: The expected event is issued. We expect one active runner, two idle and one crashed.
+    assert: The expected event is issued. We expect two idle runners and one crashed runner
+     to be reported.
     """
     charm_state.is_metrics_logging_available = True
     t_mock = MagicMock(return_value=12345)
@@ -382,7 +383,6 @@ def test_reconcile_issues_reconciliation_metric_event(
             flavor=runner_manager.app_name,
             crashed_runners=1,
             idle_runners=2,
-            active_runners=1,
             duration=0,
         )
     )
