@@ -302,34 +302,56 @@ def test_reconcile_issues_reconciliation_metric_event(
     arrange:
         - Enable issuing of metrics
         - Mock timestamps
-        - The result of runner_metrics.extract
-        - Create three online runners , where two are idle
+        - Mock the result of runner_metrics.extract to contain 2 RunnerStart and 1 RunnerStop
+            events, meaning one runner was active and one crashed.
+        - Create two online runners , one active and one idle.
     act: Reconcile.
-    assert: The expected event is issued.
+    assert: The expected event is issued. We expect two idle runners and one crashed runner
+     to be reported.
     """
     charm_state.is_metrics_logging_available = True
     t_mock = MagicMock(return_value=12345)
     monkeypatch.setattr(RUNNER_MANAGER_TIME_MODULE, t_mock)
-    runner_metrics.extract.return_value = {RunnerStart: 3, RunnerStop: 1}
+    runner_metrics.extract.return_value = {RunnerStart: 2, RunnerStop: 1}
+
+    online_idle_runner_name = f"{runner_manager.instance_name}-0"
+    offline_idle_runner_name = f"{runner_manager.instance_name}-1"
+    active_runner_name = f"{runner_manager.instance_name}-2"
 
     def mock_get_runners():
         """Create three mock runners where one is busy."""
         runners = []
-        for i in range(3):
-            # 0 is a mock runner id.
-            status = RunnerStatus(0, True, True, False if i < 2 else True)
-            runners.append(Runner(MagicMock(), MagicMock(), status, None))
+
+        online_idle_runner = RunnerStatus(runner_id=0, exist=True, online=True, busy=False)
+        offline_idle_runner = RunnerStatus(runner_id=1, exist=True, online=False, busy=False)
+        active_runner = RunnerStatus(runner_id=2, exist=True, online=True, busy=True)
+
+        for runner_status, runner_config in zip(
+            (online_idle_runner, offline_idle_runner, active_runner),
+            (online_idle_runner_name, offline_idle_runner_name, active_runner_name),
+        ):
+            config = MagicMock()
+            config.name = runner_config
+            runners.append(
+                Runner(
+                    clients=MagicMock(),
+                    runner_config=config,
+                    runner_status=runner_status,
+                    instance=None,
+                )
+            )
+
         return runners
 
     # Create online runners.
     runner_manager._get_runners = mock_get_runners
     runner_manager._get_runner_health_states = lambda: RunnerByHealth(
-        (
-            f"{runner_manager.instance_name}-0",
-            f"{runner_manager.instance_name}-1",
-            f"{runner_manager.instance_name}-2",
+        healthy=(
+            online_idle_runner_name,
+            offline_idle_runner_name,
+            active_runner_name,
         ),
-        (),
+        unhealthy=(),
     )
 
     runner_manager.reconcile(
@@ -340,9 +362,8 @@ def test_reconcile_issues_reconciliation_metric_event(
         event=Reconciliation(
             timestamp=12345,
             flavor=runner_manager.app_name,
-            crashed_runners=2,
+            crashed_runners=1,
             idle_runners=2,
-            active_runners=1,
             duration=0,
         )
     )
