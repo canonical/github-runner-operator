@@ -56,9 +56,9 @@ done
 /snap/bin/lxc publish builder --alias builder --reuse -f
 
 # Swap in the built image
-/snap/bin/lxc image alias rename runner old-runner
+/snap/bin/lxc image alias rename runner old-runner || true
 /snap/bin/lxc image alias rename builder runner
-/snap/bin/lxc image delete old-runner
+/snap/bin/lxc image delete old-runner || true
 
 # Clean up LXD instance
 /snap/bin/lxc stop builder
