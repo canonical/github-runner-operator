@@ -24,6 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
+  "id": 88,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -67,6 +68,7 @@
               "mode": "off"
             }
           },
+          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -110,8 +112,8 @@
             "type": "loki",
             "uid": "${lokids}"
           },
-          "editorMode": "builder",
-          "expr": "sum by(filename)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_start\"[$__range]))",
+          "editorMode": "code",
+          "expr": "sum by(filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event = \"runner_start\" | timestamp >= ${__from} [$__range]))",
           "key": "Q-f7c42eab-69be-43b5-a807-35c071f708a0-0",
           "legendFormat": "Started",
           "queryType": "range",
@@ -123,7 +125,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "sum by(filename)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_installed\"[$__range]))",
+          "expr": "sum by(filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event = \"runner_installed\" | timestamp >= ${__from} [$__range]))",
           "hide": false,
           "legendFormat": "Initialized",
           "queryType": "range",
@@ -135,7 +137,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "sum by(filename)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_stop\"[$__range]))",
+          "expr": "sum by(filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event = \"runner_stop\" | timestamp >= ${__from} [$__range]))",
           "hide": false,
           "legendFormat": "Stopped",
           "queryType": "range",
@@ -147,7 +149,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "sum by(filename)(sum_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",crashed_runners=\"crashed_runners\" | event=\"reconciliation\" | unwrap crashed_runners[$__range]))",
+          "expr": "sum by(filename) (sum_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", crashed_runners=\"crashed_runners\", timestamp=\"timestamp\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event = `reconciliation` | timestamp >= ${__from} | unwrap crashed_runners [$__range]))",
           "hide": false,
           "legendFormat": "Crashed",
           "queryType": "range",
@@ -163,6 +165,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
+      "description": "This panel totals the number of idle runners reported by the charm units after a reconciliation event. Note that there may be active runners in the time between reconciliations which will not be shown in this panel.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -198,6 +201,7 @@
               "mode": "off"
             }
           },
+          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -228,7 +232,7 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "mode": "single",
@@ -242,69 +246,15 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle_runners=\"idle_runners\" | event=\"reconciliation\" | unwrap idle_runners[10m]))",
+          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle_runners=\"idle_runners\" | event=\"reconciliation\" | unwrap idle_runners[60m]))",
           "hide": false,
           "legendFormat": "Idle",
           "queryType": "range",
           "refId": "D"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "code",
-          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",active_runners=\"active_runners\" | event=\"reconciliation\" | unwrap active_runners[10m]))",
-          "hide": false,
-          "legendFormat": "Active",
-          "queryType": "range",
-          "refId": "A"
         }
       ],
-      "title": "Active and Idle Runners",
-      "transformations": [
-        {
-          "id": "calculateField",
-          "options": {
-            "binary": {
-              "left": "Started",
-              "operator": "-",
-              "reducer": "sum",
-              "right": "Stopped"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            }
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Active",
-            "binary": {
-              "left": "Started - Stopped",
-              "operator": "-",
-              "reducer": "sum",
-              "right": "Crashed"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            }
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Started - Stopped": true
-            },
-            "indexByName": {},
-            "renameByName": {}
-          }
-        }
-      ],
+      "title": "Idle Runners after Reconciliation",
+      "transformations": [],
       "type": "timeseries"
     },
     {
@@ -992,6 +942,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics",
-  "version": 3,
+  "version": 4,
   "weekStart": ""
 }
