@@ -134,6 +134,7 @@ def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
 def model(ops_test: OpsTest) -> Model:
     """Juju model used in the test."""
     assert ops_test.model is not None
+    ops_test.model.set_constraints({"root-disk": "15G"})
     return ops_test.model
 
 

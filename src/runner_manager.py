@@ -590,8 +590,8 @@ class RunnerManager:
             LxdError: Unable to build the LXD image.
         """
         cmd = ["/usr/bin/bash", BUILD_IMAGE_SCRIPT_FILENAME]
-        if not LXD_PROFILE_YAML.exists():
-            cmd += ["--vm"]
+        if LXD_PROFILE_YAML.exists():
+            cmd += ["test"]
         execute_command(cmd)
 
     def schedule_build_runner_image(self) -> None:

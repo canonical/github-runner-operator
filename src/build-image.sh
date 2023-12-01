@@ -5,7 +5,11 @@
 
 set -e
 
-/snap/bin/lxc launch ubuntu-daily:jammy builder "$1"
+if [[ "$1" == "test" ]]; then
+    /snap/bin/lxc launch ubuntu-daily:jammy builder
+else
+    /snap/bin/lxc launch ubuntu-daily:jammy builder --vm
+fi
 while ! /snap/bin/lxc exec builder -- /usr/bin/who
 do
     echo "Wait for lxd agent to be ready"
@@ -41,27 +45,6 @@ done
 /snap/bin/lxc exec builder -- /usr/sbin/usermod -aG docker ubuntu
 /snap/bin/lxc exec builder -- /usr/sbin/iptables -I DOCKER-USER -j ACCEPT
 
-# Set up aproxy for downloading
-sudo /usr/bin/snap install aproxy --edge
-sudo /usr/bin/snap set aproxy proxy=squid.internal:3128
-sudo nft -f - << EOF
-define default-ip = "$(ip route get "$(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+')" | grep -oP 'src \K\S+')"
-define private-ips = { 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }
-table ip aproxy
-flush table ip aproxy
-table ip aproxy {
-      chain prerouting {
-              type nat hook prerouting priority dstnat; policy accept;
-              ip daddr != \$private-ips tcp dport { 80, 443 } counter dnat to \$default-ip:8443
-      }
-
-      chain output {
-              type nat hook output priority -100; policy accept;
-              ip daddr != \$private-ips tcp dport { 80, 443 } counter dnat to \$default-ip:8443
-      }
-}
-EOF
-
 # Download and verify checksum of yq
 /usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
 /usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums
@@ -71,10 +54,12 @@ EOF
 /snap/bin/lxc file push yq_linux_amd64 builder/usr/bin/yq --mode 755
 
 /snap/bin/lxc publish builder --alias builder --reuse -f
-/snap/bin/lxc stop builder
-/snap/bin/lxc delete builder
 
 # Swap in the built image
 /snap/bin/lxc image alias rename runner old-runner
 /snap/bin/lxc image alias rename builder runner
 /snap/bin/lxc image delete old-runner
+
+# Clean up LXD instance
+/snap/bin/lxc stop builder
+/snap/bin/lxc delete builder
