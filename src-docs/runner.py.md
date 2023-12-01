@@ -16,19 +16,7 @@ The `RunnerManager` class from `runner_manager.py` creates and manages a collect
 ## <kbd>class</kbd> `Runner`
 Single instance of GitHub self-hosted runner. 
 
-
-
-**Attributes:**
- 
- - <b>`app_name`</b> (str):  Name of the charm. 
- - <b>`path`</b> (GitHubPath):  Path to GitHub repo or org. 
- - <b>`proxies`</b> (ProxySetting):  HTTP proxy setting for juju charm. 
- - <b>`name`</b> (str):  Name of the runner instance. 
- - <b>`exist`</b> (bool):  Whether the runner instance exists on LXD. 
- - <b>`online`</b> (bool):  Whether GitHub marks this runner as online. 
- - <b>`busy`</b> (bool):  Whether GitHub marks this runner as busy. 
-
-<a href="../src/runner.py#L87"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L72"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -56,7 +44,7 @@ Construct the runner instance.
 
 ---
 
-<a href="../src/runner.py#L117"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L102"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `create`
 
@@ -88,7 +76,7 @@ Create the runner instance on LXD and register it on GitHub.
 
 ---
 
-<a href="../src/runner.py#L160"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L145"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `remove`
 
