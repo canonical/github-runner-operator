@@ -132,11 +132,7 @@ class Runner:
         """Create the runner instance on LXD and register it on GitHub.
 
         Args:
-            image: Name of the image to launch the LXD instance with.
-            resources: Resource setting for the LXD instance.
-            binary_path: Path to the runner binary.
-            registration_token: Token for registering the runner on GitHub.
-            arch: Current machine architecture.
+            config: The instance config to create the LXD VMs and configure GitHub runner with.
 
         Raises:
             RunnerCreateError: Unable to create an LXD instance for runner.
