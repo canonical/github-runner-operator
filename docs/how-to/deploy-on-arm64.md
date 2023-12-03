@@ -18,7 +18,9 @@ instance to deploy the GitHub Runner on ARM64 architecture.
 
 Run the following command:
 ```shell
-juju deploy github-runner --constraints="instance-type=a1.metal" --config token=<PERSONAL-ACCESS-TOKEN> --config path=<OWNER/REPO>
+juju deploy github-runner \
+    --constraints="instance-type=a1.metal arch=arm64" \
+    --config token=<PERSONAL-ACCESS-TOKEN> --config path=<OWNER/REPO>
 ```
 
 The units may take several minutes to settle. Furthermore, due to charm restart (kernel update),
