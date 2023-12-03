@@ -70,6 +70,25 @@ class WgetExecutable:
     cmd: str
 
 
+@dataclass
+class CreateRunnerConfig:
+    """The configuration values for creating a single runner instance.
+
+    Args:
+        image: Name of the image to launch the LXD instance with.
+        resources: Resource setting for the LXD instance.
+        binary_path: Path to the runner binary.
+        registration_token: Token for registering the runner on GitHub.
+        arch: Current machine architecture.
+    """
+
+    image: str
+    resources: VirtualMachineResources
+    binary_path: Path
+    registration_token: str
+    arch: ARCH = ARCH.X64
+
+
 class Runner:
     """Single instance of GitHub self-hosted runner.
 
@@ -119,15 +138,7 @@ class Runner:
                 self.config.proxies["no_proxy"] = ""
             self.config.proxies["no_proxy"] += f"{self.config.name},.svc"
 
-    # All the arguments are required
-    def create(  # pylint: disable=too-many-arguments
-        self,
-        image: str,
-        resources: VirtualMachineResources,
-        binary_path: Path,
-        registration_token: str,
-        arch=ARCH.X64,
-    ):
+    def create(self, config: CreateRunnerConfig):
         """Create the runner instance on LXD and register it on GitHub.
 
         Args:
@@ -152,15 +163,17 @@ class Runner:
                     self.config.name,
                 )
         try:
-            self.instance = self._create_instance(image, resources)
+            self.instance = self._create_instance(config.image, config.resources)
             self._start_instance()
             # Wait some initial time for the instance to boot up
             time.sleep(60)
             self._wait_boot_up()
-            self._install_binaries(binary_path, arch=arch)
+            self._install_binaries(config.binary_path, arch=config.arch)
             self._configure_runner()
 
-            self._register_runner(registration_token, labels=[self.config.app_name, image])
+            self._register_runner(
+                config.registration_token, labels=[self.config.app_name, config.image]
+            )
             self._start_runner()
         except (RunnerError, LxdError) as err:
             raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err

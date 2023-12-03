@@ -37,7 +37,7 @@ from github_type import (
 )
 from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
-from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
+from runner import CreateRunnerConfig, Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import (
     GitHubOrg,
@@ -313,11 +313,13 @@ class RunnerManager:
         if self.config.charm_state.is_metrics_logging_available:
             ts_now = time.time()
             runner.create(
-                self.config.image,
-                resources,
-                RunnerManager.runner_bin_path,
-                registration_token,
-                arch=self.config.charm_state.arch,
+                config=CreateRunnerConfig(
+                    image=self.config.image,
+                    resources=resources,
+                    binary_path=RunnerManager.runner_bin_path,
+                    registration_token=registration_token,
+                    arch=self.config.charm_state.arch,
+                )
             )
             ts_after = time.time()
             try:
@@ -343,11 +345,13 @@ class RunnerManager:
                 )
         else:
             runner.create(
-                self.config.image,
-                resources,
-                RunnerManager.runner_bin_path,
-                registration_token,
-                arch=self.config.charm_state.arch,
+                config=CreateRunnerConfig(
+                    image=self.config.image,
+                    resources=resources,
+                    binary_path=RunnerManager.runner_bin_path,
+                    registration_token=registration_token,
+                    arch=self.config.charm_state.arch,
+                )
             )
 
     def _issue_runner_metrics(self) -> runner_metrics.IssuedMetricEventsStats:
