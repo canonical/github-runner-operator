@@ -16,13 +16,9 @@ from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
 
-ARCHITECTURES_ARM64 = set(
-    (
-        "aarch64",
-        "arm64",
-    )
-)
-ARCHITECTURES_X86 = set(("x86_64",))
+ARCHITECTURES_ARM64 = {"aarch64", "arm64"}
+
+ARCHITECTURES_X86 = {"x86_64"}
 
 
 class ARCH(str, Enum):
