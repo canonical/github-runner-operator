@@ -16,8 +16,13 @@ from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
 
-ARCHITECTURES_ARM64 = ("aarch64", "arm64")
-ARCHITECTURES_X86 = ("x86_64",)
+ARCHITECTURES_ARM64 = set(
+    (
+        "aarch64",
+        "arm64",
+    )
+)
+ARCHITECTURES_X86 = set(("x86_64",))
 
 
 class ARCH(str, Enum):
@@ -149,7 +154,7 @@ class State:
     Attributes:
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Whether aproxy should be used.
-        arch: The underlying compute architecture, i.e. x64, amd64
+        arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
     """
 
     is_metrics_logging_available: bool
