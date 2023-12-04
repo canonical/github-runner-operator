@@ -2,8 +2,7 @@
 
 The charm supports deployment on ARM64 machines. However, it should be noted that the ARM64
 deployment currently only supports ARM64 bare-metal machines due to the limitations of
-[nested virtualization on ARM64](https://developer.arm.com/documentation/102142/0100/Nested-virtualization)
-with LXD.
+[nested virtualization on ARM64](https://developer.arm.com/documentation/102142/0100/Nested-virtualization).
 
 The following uses AWS's [m7g.metal](https://aws.amazon.com/blogs/aws/now-available-bare-metal-arm-based-ec2-instances/)
 instance to deploy the GitHub Runner on ARM64 architecture.
