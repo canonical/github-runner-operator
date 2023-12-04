@@ -3,7 +3,12 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-set -e
+set -euxo pipefail
+
+while /snap/bin/lxc info builder
+do
+    /snap/bin/lxc delete builder --force
+done
 
 if [[ "$1" == "test" ]]; then
     /snap/bin/lxc launch ubuntu-daily:jammy builder
@@ -61,5 +66,4 @@ done
 /snap/bin/lxc image delete old-runner || true
 
 # Clean up LXD instance
-/snap/bin/lxc stop builder
-/snap/bin/lxc delete builder
+/snap/bin/lxc delete builder --force
