@@ -5,7 +5,7 @@ deployment currently only supports ARM64 bare-metal machines due to the limitati
 [nested virtualization on ARM64](https://developer.arm.com/documentation/102142/0100/Nested-virtualization)
 with LXD.
 
-The following uses AWS's [a1.metal](https://aws.amazon.com/blogs/aws/now-available-bare-metal-arm-based-ec2-instances/)
+The following uses AWS's [m7g.metal](https://aws.amazon.com/blogs/aws/now-available-bare-metal-arm-based-ec2-instances/)
 instance to deploy the GitHub Runner on ARM64 architecture.
 
 ### Prerequisites
