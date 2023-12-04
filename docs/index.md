@@ -1,21 +1,25 @@
 A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) for deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines.
 
-This charm simplifies initial deployment and "day N" operations of GitHub self-hosted runners. The charm makes it easy to manage self-hosted runners with security and hardware resource usage in mind.
+This charm simplifies the initial deployment and "day N" operations of GitHub self-hosted runners. The charm makes it easy to manage self-hosted runners with security and hardware resource usage in mind.
 
 Operating a self-hosted runner comes with [certain security concerns according to GitHub](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
-Just like GitHub's, the self-hosted runners managed by the charm are isolated in a single-use virtual machine. However, arbitrary code execution is possible under certain repository settings. This can be leveraged by malicious actors in a number of ways, such as, crypto-mining. To combat this, the charm enforces a set of GitHub repository settings to ensure the executed code is reviewed by someone trusted.
+Just like GitHub's, the self-hosted runners managed by the charm are isolated in a single-use virtual machine.
 
-The charm also upgrades dependencies on a schedule to mitigate security risks. The upgrade includes linux kernel upgrades, automatically rebooting the machines. This ensures the latest security patches are installed within minutes.
+Some of the charm dependencies upgrades on a schedule to migrate security risks. The landscape-client charm can be deployed with this charm to ensure other dependencies are up to date.
 
 The charm maintains a set of ephemeral self-hosted runners, each isolated in a single-use virtual machine instance. To prevent disk IO exhaustion, random access memory is used as disk for the virtual machine instances. In addition, resource limits for the self-hosted runners can be configured.
 
+See [charm architecture](https://charmhub.io/github-runner/docs/charm-architecture) for more information.
+
 This charm will make operating GitHub self-hosted runners simple and straightforward for DevOps or SRE teams through Juju's clean interface.
+
+The charm enforces a set of GitHub repository settings as best practice. This is planned to be opt-in in the future. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/repo-policy).
 
 ## In this documentation
 
 | | |
 |--|--|
-|  [Tutorials](https://charmhub.io/github-runner/docs/quick-start)</br>  Get started - a hands-on introduction to using the GitHub runner charm for new users </br> | [How-to guides](https://charmhub.io/github-runner/docs/how-to-comply-security) </br> Step-by-step guides covering key operations and common tasks |
+|  [Tutorials](https://charmhub.io/github-runner/docs/quick-start)</br>  Get started - a hands-on introduction to using the GitHub runner charm for new users </br> | [How-to guides](https://charmhub.io/github-runner/docs/run-on-lxd) </br> Step-by-step guides covering key operations and common tasks |
 | [Reference](https://charmhub.io/github-runner/docs/actions) </br> Technical information - specifications, APIs, architecture | [Explanation](https://charmhub.io/github-runner/docs/charm-architecture) </br> Concepts - discussion and clarification of key topics  |
 
 ## Contributing to this documentation
@@ -34,20 +38,3 @@ The GitHub runner charm is a member of the Ubuntu family. It's an open-source pr
 - [Contribute](Contribute)
 
 Thinking about using the GitHub runner charm for your next project? [Get in touch](https://chat.charmhub.io/charmhub/channels/charm-dev)!
-
-# Contents
-
-1. [Tutorial](tutorial)
-  1. [Quick start](tutorial/quick-start.md)
-  1. [Managing resource usage](tutorial/managing-resource-usage.md)
-1. [How to](how-to)
-  1. [How to run on LXD cloud](how-to/run-on-lxd.md)
-  1. [How to comply with security requirements](how-to/comply-security.md)
-  1. [How to change GitHub personal access token](how-to/change-token.md)
-  1. [How to change repository or organization](how-to/change-path.md)
-  1. [How to contribute](how-to/contribute.md)
-1. [Reference](reference)
-  1. [Actions](reference/actions.md)
-  1. [Configurations](reference/configurations.md)
-1. [Explanation](explanation)
-  1. [Charm architecture](explanation/charm-architecture.md)
