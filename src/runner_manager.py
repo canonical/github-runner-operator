@@ -37,7 +37,7 @@ REMOVED_RUNNER_LOG_STR = "Removed runner: %s"
 logger = logging.getLogger(__name__)
 
 
-BUILD_IMAGE_SCRIPT_FILENAME = "script/build-image.sh"
+BUILD_IMAGE_SCRIPT_FILENAME = "scripts/build-image.sh"
 
 
 class RunnerManager:
