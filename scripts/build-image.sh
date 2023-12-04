@@ -3,7 +3,7 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-set -ex
+set -e
 
 while /snap/bin/lxc info builder
 do
