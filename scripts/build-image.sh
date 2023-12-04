@@ -51,12 +51,17 @@ done
 /snap/bin/lxc exec builder -- /usr/sbin/iptables -I DOCKER-USER -j ACCEPT
 
 # Download and verify checksum of yq
-/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+if [[ uname -u == 'x86_64' ]]; then
+    YQ_ARCH="amd64"
+else
+    YQ_ARCH="arm64"
+fi
+/usr/bin/wget 'https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$YQ_ARCH'
 /usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums
 /usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums_hashes_order
 /usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/extract-checksum.sh
-/usr/bin/bash extract-checksum.sh SHA-256 yq_linux_amd64 | /usr/bin/awk '{print $2,$1}' | /usr/bin/sha256sum -c | /usr/bin/grep OK
-/snap/bin/lxc file push yq_linux_amd64 builder/usr/bin/yq --mode 755
+/usr/bin/bash extract-checksum.sh SHA-256 'yq_linux_$YQ_ARCH' | /usr/bin/awk '{print $2,$1}' | /usr/bin/sha256sum -c | /usr/bin/grep OK
+/snap/bin/lxc file push 'yq_linux_$YQ_ARCH' builder/usr/bin/yq --mode 755
 
 /snap/bin/lxc publish builder --alias builder --reuse -f
 
