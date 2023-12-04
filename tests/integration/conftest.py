@@ -134,7 +134,6 @@ def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
 def model(ops_test: OpsTest) -> Model:
     """Juju model used in the test."""
     assert ops_test.model is not None
-    ops_test.model.set_constraints({"root-disk": "15G"})
     return ops_test.model
 
 
@@ -173,7 +172,6 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     one runner.
     """
     await ensure_charm_has_runner(app=app_no_runner, model=model)
-
     return app_no_runner
 
 
