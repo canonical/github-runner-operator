@@ -3,7 +3,7 @@
 ### Nested virtualiztion support
 
 GitHub runner uses [LXD](https://github.com/canonical/lxd) to create a virtual machine to run the 
-GitHub runner's binary. Some versions of the ARM64 architecture does not support nested 
+GitHub runner's binary. Some versions of the ARM64 architecture do not support nested 
 virtualizations. 
 
 Furthermore LXD uses QEMU with KVM acceleration options. When run on a nested virtual machine, 
