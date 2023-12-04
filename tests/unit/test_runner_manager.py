@@ -13,6 +13,7 @@ from _pytest.monkeypatch import MonkeyPatch
 import shared_fs
 from charm_state import ARCH, State
 from errors import IssueMetricEventError, RunnerBinaryError
+from github_type import RunnerApplication
 from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
 from runner import Runner, RunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
@@ -97,17 +98,36 @@ def runner_metrics_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     return runner_metrics_mock
 
 
-def test_get_latest_runner_bin_url(runner_manager: RunnerManager):
+@pytest.mark.parametrize(
+    "arch",
+    [
+        pytest.param(ARCH.ARM64),
+        pytest.param(ARCH.X64),
+    ],
+)
+def test_get_latest_runner_bin_url(runner_manager: RunnerManager, arch: ARCH):
     """
     arrange: Nothing.
     act: Get runner bin url of existing binary.
     assert: Correct mock data returned.
     """
+    runner_manager.config.charm_state.arch = arch
+    mock_gh_client = MagicMock()
+    app = RunnerApplication(
+        os="linux",
+        architecture=arch.value,
+        download_url=(download_url := "https://www.example.com"),
+        filename=(filename := "test_runner_binary"),
+    )
+    mock_gh_client.actions.list_runner_applications_for_repo.return_value = (app,)
+    mock_gh_client.actions.list_runner_applications_for_org.return_value = (app,)
+    runner_manager._clients.github = mock_gh_client
+
     runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux")
     assert runner_bin["os"] == "linux"
-    assert runner_bin["architecture"] == "x64"
-    assert runner_bin["download_url"] == "https://www.example.com"
-    assert runner_bin["filename"] == "test_runner_binary"
+    assert runner_bin["architecture"] == arch.value
+    assert runner_bin["download_url"] == download_url
+    assert runner_bin["filename"] == filename
 
 
 def test_get_latest_runner_bin_url_missing_binary(runner_manager: RunnerManager):
