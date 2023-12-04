@@ -331,7 +331,7 @@ async def deploy_github_runner_charm(
             "test-mode": "insecure",
             "reconcile-interval": reconcile_interval,
         },
-        constraints={"root-disk": "15G"},
+        constraints={"root-disk": 15},
     )
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 30)
 
