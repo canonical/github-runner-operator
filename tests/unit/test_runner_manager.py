@@ -132,7 +132,7 @@ def test_get_latest_runner_bin_url(runner_manager: RunnerManager, arch: ARCH):
 
 def test_get_latest_runner_bin_url_missing_binary(runner_manager: RunnerManager):
     """
-    arrange: Given a mocked GH API client that returns runner binaries.
+    arrange: Given a mocked GH API client that does not return any runner binaries.
     act: Get runner bin url of non-existing binary.
     assert: Error related to runner bin raised.
     """
