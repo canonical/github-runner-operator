@@ -13,4 +13,10 @@ Error: Failed instance creation: Failed creating instance record: Instance type 
 is not supported on this server: KVM support is missing (no /dev/kvm)
 ```
 
-Therefore, it is necessary that the charm is deployed on a bare metal instance.
+There is also an identified problem with the kernel version which causes the following error occur
+when checking `kvm-ok`
+```
+modprobe msr = FATAL: Module msr not found.
+```
+
+Therefore, it is currently necessary that the charm is deployed on a bare metal instance.
