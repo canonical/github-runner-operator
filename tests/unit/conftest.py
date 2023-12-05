@@ -38,6 +38,7 @@ def mocks(monkeypatch, tmp_path, exec_command):
     monkeypatch.setattr("runner.time", unittest.mock.MagicMock())
     monkeypatch.setattr("runner_manager.GhApi", MockGhapiClient)
     monkeypatch.setattr("runner_manager.jinja2", unittest.mock.MagicMock())
+    monkeypatch.setattr("runner_manager.runner_logs", unittest.mock.MagicMock())
     monkeypatch.setattr("runner_manager.LxdClient", MockLxdClient)
     monkeypatch.setattr("runner_manager.shared_fs", unittest.mock.MagicMock())
     monkeypatch.setattr(

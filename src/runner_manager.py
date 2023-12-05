@@ -23,6 +23,7 @@ from ghapi.page import pages
 from typing_extensions import assert_never
 
 import metrics
+import runner_logs
 import runner_metrics
 import shared_fs
 from charm_state import State as CharmState
@@ -505,6 +506,7 @@ class RunnerManager:
 
         if self.config.charm_state.is_metrics_logging_available:
             metric_stats = self._issue_runner_metrics()
+            runner_logs.remove_outdated_crashed_runner_logs()
 
         # Clean up offline runners
         if runner_states.unhealthy:
@@ -517,6 +519,7 @@ class RunnerManager:
             ]
 
             for runner in unhealthy_runners:
+                runner_logs.get_crashed_runner_logs(runner)
                 runner.remove(remove_token)
                 logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
 
