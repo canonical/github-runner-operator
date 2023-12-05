@@ -12,7 +12,7 @@ Models and functions for the metric events.
 
 ---
 
-<a href="../src/metrics.py#L138"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L149"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 
@@ -39,7 +39,7 @@ The metric event is logged to the metrics log.
 
 ---
 
-<a href="../src/metrics.py#L189"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L200"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `setup_logrotate`
 
@@ -68,7 +68,7 @@ Base class for metric events.
  - <b>`timestamp`</b>:  The UNIX time stamp of the time at which the event was originally issued. 
  - <b>`event`</b>:  The name of the event. Will be set to the class name in snake case if not provided. 
 
-<a href="../src/metrics.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -103,7 +103,7 @@ Metric event for when the charm has finished reconciliation.
  - <b>`idle_runners`</b>:  The number of idle runners. 
  - <b>`duration`</b>:  The duration of the reconciliation in seconds. 
 
-<a href="../src/metrics.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -126,6 +126,21 @@ Initialize the event.
 
 ---
 
+## <kbd>class</kbd> `ReturnCodeInformation`
+Information about the return code of a runner. 
+
+
+
+**Attributes:**
+ 
+ - <b>`code`</b>:  The exit code of the runner. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `RunnerInstalled`
 Metric event for when a runner is installed. 
 
@@ -136,7 +151,7 @@ Metric event for when a runner is installed.
  - <b>`flavor`</b>:  Describes the characteristics of the runner.  The flavor could be for example "small". 
  - <b>`duration`</b>:  The duration of the installation in seconds. 
 
-<a href="../src/metrics.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -172,7 +187,7 @@ Metric event for when a runner is started.
  - <b>`github_event`</b>:  The github event. 
  - <b>`idle`</b>:  The idle time in seconds. 
 
-<a href="../src/metrics.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -210,7 +225,7 @@ Metric event for when a runner is stopped.
  - <b>`code`</b>:  The xit code of the runner.e 
  - <b>`job_duration`</b>:  The duration of the job in seconds. 
 
-<a href="../src/metrics.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
