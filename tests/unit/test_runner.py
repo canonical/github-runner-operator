@@ -13,7 +13,7 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 from errors import CreateSharedFilesystemError, RunnerCreateError, RunnerRemoveError
-from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
+from runner import CreateRunnerConfig, Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
 from shared_fs import SharedFilesystem
 from tests.unit.mock import (
@@ -138,7 +138,14 @@ def test_create(
     assert: An lxd instance for the runner is created.
     """
 
-    runner.create("test_image", vm_resources, binary_path, token)
+    runner.create(
+        config=CreateRunnerConfig(
+            image="test_image",
+            resources=vm_resources,
+            binary_path=binary_path,
+            registration_token=token,
+        )
+    )
 
     instances = lxd.instances.all()
     assert len(instances) == 1
@@ -171,7 +178,14 @@ def test_create_lxd_fail(
     lxd.profiles.exists = mock_lxd_error_func
 
     with pytest.raises(RunnerCreateError):
-        runner.create("test_image", vm_resources, binary_path, token)
+        runner.create(
+            config=CreateRunnerConfig(
+                image="test_image",
+                resources=vm_resources,
+                binary_path=binary_path,
+                registration_token=token,
+            )
+        )
 
     assert len(lxd.instances.all()) == 0
 
@@ -192,7 +206,14 @@ def test_create_runner_fail(
     runner._clients.lxd.instances.create = mock_runner_error_func
 
     with pytest.raises(RunnerCreateError):
-        runner.create("test_image", vm_resources, binary_path, token)
+        runner.create(
+            config=CreateRunnerConfig(
+                image="test_image",
+                resources=vm_resources,
+                binary_path=binary_path,
+                registration_token=token,
+            )
+        )
 
 
 def test_create_with_metrics(
@@ -216,7 +237,14 @@ def test_create_with_metrics(
     shared_fs.create.return_value = SharedFilesystem(
         path=Path("/home/ubuntu/shared_fs"), runner_name="test_runner"
     )
-    runner.create("test_image", vm_resources, binary_path, token)
+    runner.create(
+        config=CreateRunnerConfig(
+            image="test_image",
+            resources=vm_resources,
+            binary_path=binary_path,
+            registration_token=token,
+        )
+    )
 
     exc_cmd_mock.assert_called_once_with(
         [
@@ -256,7 +284,14 @@ def test_create_with_metrics_and_shared_fs_error(
     runner.config.issue_metrics = True
     shared_fs.create.side_effect = CreateSharedFilesystemError("")
 
-    runner.create("test_image", vm_resources, binary_path, token)
+    runner.create(
+        config=CreateRunnerConfig(
+            image="test_image",
+            resources=vm_resources,
+            binary_path=binary_path,
+            registration_token=token,
+        )
+    )
 
     instances = lxd.instances.all()
     assert len(instances) == 1
@@ -275,7 +310,14 @@ def test_remove(
     assert: The lxd instance for the runner is removed.
     """
 
-    runner.create("test_image", vm_resources, binary_path, token)
+    runner.create(
+        config=CreateRunnerConfig(
+            image="test_image",
+            resources=vm_resources,
+            binary_path=binary_path,
+            registration_token=token,
+        )
+    )
     runner.remove("test_token")
     assert len(lxd.instances.all()) == 0
 
@@ -294,7 +336,14 @@ def test_remove_failed_instance(
     """
     # Cases where the ephemeral instance encountered errors and the status was Stopped but not
     # removed was found before.
-    runner.create("test_image", vm_resources, binary_path, token)
+    runner.create(
+        config=CreateRunnerConfig(
+            image="test_image",
+            resources=vm_resources,
+            binary_path=binary_path,
+            registration_token=token,
+        )
+    )
     runner.instance.status = "Stopped"
     runner.remove("test_token")
     assert len(lxd.instances.all()) == 0
@@ -327,7 +376,14 @@ def test_remove_with_stop_error(
     act: Remove the runner.
     assert: RunnerRemoveError is raised.
     """
-    runner.create("test_image", vm_resources, binary_path, token)
+    runner.create(
+        config=CreateRunnerConfig(
+            image="test_image",
+            resources=vm_resources,
+            binary_path=binary_path,
+            registration_token=token,
+        )
+    )
     runner.instance.stop = mock_lxd_error_func
 
     with pytest.raises(RunnerRemoveError):
@@ -346,7 +402,14 @@ def test_remove_with_delete_error(
     act: Remove the runner.
     assert: RunnerRemoveError is raised.
     """
-    runner.create("test_image", vm_resources, binary_path, token)
+    runner.create(
+        config=CreateRunnerConfig(
+            image="test_image",
+            resources=vm_resources,
+            binary_path=binary_path,
+            registration_token=token,
+        )
+    )
     runner.instance.status = "Stopped"
     runner.instance.delete = mock_lxd_error_func
 

@@ -9,6 +9,29 @@ The `Runner` class stores the information on the runners and manages the lifecyc
 
 The `RunnerManager` class from `runner_manager.py` creates and manages a collection of `Runner` instances. 
 
+**Global Variables**
+---------------
+- **YQ_BIN_URL_AMD64**
+- **YQ_BIN_URL_ARM64**
+
+
+---
+
+## <kbd>class</kbd> `CreateRunnerConfig`
+The configuration values for creating a single runner instance. 
+
+
+
+**Args:**
+ 
+ - <b>`image`</b>:  Name of the image to launch the LXD instance with. 
+ - <b>`resources`</b>:  Resource setting for the LXD instance. 
+ - <b>`binary_path`</b>:  Path to the runner binary. 
+ - <b>`registration_token`</b>:  Token for registering the runner on GitHub. 
+ - <b>`arch`</b>:  Current machine architecture. 
+
+
+
 
 
 ---
@@ -16,7 +39,7 @@ The `RunnerManager` class from `runner_manager.py` creates and manages a collect
 ## <kbd>class</kbd> `Runner`
 Single instance of GitHub self-hosted runner. 
 
-<a href="../src/runner.py#L78"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L101"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -44,17 +67,12 @@ Construct the runner instance.
 
 ---
 
-<a href="../src/runner.py#L108"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L131"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `create`
 
 ```python
-create(
-    image: str,
-    resources: VirtualMachineResources,
-    binary_path: Path,
-    registration_token: str
-)
+create(config: CreateRunnerConfig)
 ```
 
 Create the runner instance on LXD and register it on GitHub. 
@@ -67,6 +85,7 @@ Create the runner instance on LXD and register it on GitHub.
  - <b>`resources`</b>:  Resource setting for the LXD instance. 
  - <b>`binary_path`</b>:  Path to the runner binary. 
  - <b>`registration_token`</b>:  Token for registering the runner on GitHub. 
+ - <b>`arch`</b>:  Current machine architecture. 
 
 
 
@@ -76,7 +95,7 @@ Create the runner instance on LXD and register it on GitHub.
 
 ---
 
-<a href="../src/runner.py#L151"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L171"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `remove`
 

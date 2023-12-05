@@ -37,7 +37,7 @@ from github_type import (
 )
 from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
-from runner import Runner, RunnerClients, RunnerConfig, RunnerStatus
+from runner import CreateRunnerConfig, Runner, RunnerClients, RunnerConfig, RunnerStatus
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import (
     GitHubOrg,
@@ -166,16 +166,13 @@ class RunnerManager:
         return self.runner_bin_path.exists()
 
     @retry(tries=5, delay=30, local_logger=logger)
-    def get_latest_runner_bin_url(
-        self, os_name: str = "linux", arch_name: str = "x64"
-    ) -> RunnerApplication:
+    def get_latest_runner_bin_url(self, os_name: str = "linux") -> RunnerApplication:
         """Get the URL for the latest runner binary.
 
         The runner binary URL changes when a new version is available.
 
         Args:
             os_name: Name of operating system.
-            arch_name: Name of architecture.
 
         Returns:
             Information on the runner application.
@@ -193,14 +190,13 @@ class RunnerManager:
         logger.debug("Response of runner binary list: %s", runner_bins)
 
         try:
+            arch = self.config.charm_state.arch.value
             return next(
-                bin
-                for bin in runner_bins
-                if bin["os"] == os_name and bin["architecture"] == arch_name
+                bin for bin in runner_bins if bin["os"] == os_name and bin["architecture"] == arch
             )
         except StopIteration as err:
             raise RunnerBinaryError(
-                f"Unable query GitHub runner binary information for {os_name} {arch_name}"
+                f"Unable query GitHub runner binary information for {os_name} {arch}"
             ) from err
 
     @retry(tries=5, delay=30, local_logger=logger)
@@ -317,10 +313,13 @@ class RunnerManager:
         if self.config.charm_state.is_metrics_logging_available:
             ts_now = time.time()
             runner.create(
-                self.config.image,
-                resources,
-                RunnerManager.runner_bin_path,
-                registration_token,
+                config=CreateRunnerConfig(
+                    image=self.config.image,
+                    resources=resources,
+                    binary_path=RunnerManager.runner_bin_path,
+                    registration_token=registration_token,
+                    arch=self.config.charm_state.arch,
+                )
             )
             ts_after = time.time()
             try:
@@ -346,10 +345,13 @@ class RunnerManager:
                 )
         else:
             runner.create(
-                self.config.image,
-                resources,
-                RunnerManager.runner_bin_path,
-                registration_token,
+                config=CreateRunnerConfig(
+                    image=self.config.image,
+                    resources=resources,
+                    binary_path=RunnerManager.runner_bin_path,
+                    registration_token=registration_token,
+                    arch=self.config.charm_state.arch,
+                )
             )
 
     def _issue_runner_metrics(self) -> runner_metrics.IssuedMetricEventsStats:

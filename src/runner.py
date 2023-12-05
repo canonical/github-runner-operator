@@ -22,6 +22,7 @@ from typing import Iterable, NamedTuple, Optional, Sequence
 import yaml
 
 import shared_fs
+from charm_state import ARCH
 from errors import (
     CreateSharedFilesystemError,
     LxdError,
@@ -52,6 +53,9 @@ LXDBR_DNSMASQ_LEASES_FILE = Path("/var/snap/lxd/common/lxd/networks/lxdbr0/dnsma
 
 Snap = NamedTuple("Snap", [("name", str), ("channel", str)])
 
+YQ_BIN_URL_AMD64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64"
+YQ_BIN_URL_ARM64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_arm64"
+
 
 @dataclass
 class WgetExecutable:
@@ -64,6 +68,25 @@ class WgetExecutable:
 
     url: str
     cmd: str
+
+
+@dataclass
+class CreateRunnerConfig:
+    """The configuration values for creating a single runner instance.
+
+    Args:
+        image: Name of the image to launch the LXD instance with.
+        resources: Resource setting for the LXD instance.
+        binary_path: Path to the runner binary.
+        registration_token: Token for registering the runner on GitHub.
+        arch: Current machine architecture.
+    """
+
+    image: str
+    resources: VirtualMachineResources
+    binary_path: Path
+    registration_token: str
+    arch: ARCH = ARCH.X64
 
 
 class Runner:
@@ -105,20 +128,11 @@ class Runner:
                 self.config.proxies["no_proxy"] = ""
             self.config.proxies["no_proxy"] += f"{self.config.name},.svc"
 
-    def create(
-        self,
-        image: str,
-        resources: VirtualMachineResources,
-        binary_path: Path,
-        registration_token: str,
-    ):
+    def create(self, config: CreateRunnerConfig):
         """Create the runner instance on LXD and register it on GitHub.
 
         Args:
-            image: Name of the image to launch the LXD instance with.
-            resources: Resource setting for the LXD instance.
-            binary_path: Path to the runner binary.
-            registration_token: Token for registering the runner on GitHub.
+            config: The instance config to create the LXD VMs and configure GitHub runner with.
 
         Raises:
             RunnerCreateError: Unable to create an LXD instance for runner.
@@ -135,15 +149,17 @@ class Runner:
                     self.config.name,
                 )
         try:
-            self.instance = self._create_instance(image, resources)
+            self.instance = self._create_instance(config.image, config.resources)
             self._start_instance()
             # Wait some initial time for the instance to boot up
             time.sleep(60)
             self._wait_boot_up()
-            self._install_binaries(binary_path)
+            self._install_binaries(config.binary_path, arch=config.arch)
             self._configure_runner()
 
-            self._register_runner(registration_token, labels=[self.config.app_name, image])
+            self._register_runner(
+                config.registration_token, labels=[self.config.app_name, config.image]
+            )
             self._start_runner()
         except (RunnerError, LxdError) as err:
             raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err
@@ -474,11 +490,12 @@ class Runner:
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
     @retry(tries=5, delay=1, local_logger=logger)
-    def _install_binaries(self, runner_binary: Path) -> None:
+    def _install_binaries(self, runner_binary: Path, arch=ARCH.X64) -> None:
         """Install runner binary and other binaries.
 
         Args:
             runner_binary: Path to the compressed runner binary.
+            arch: The machine architecture.
 
         Raises:
             RunnerFileLoadError: Unable to load the runner binary into the runner instance.
@@ -498,7 +515,7 @@ class Runner:
         self._wget_install(
             [
                 WgetExecutable(
-                    url="https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64",
+                    url=YQ_BIN_URL_AMD64 if arch is ARCH.X64 else YQ_BIN_URL_ARM64,
                     cmd="yq",
                 )
             ]
