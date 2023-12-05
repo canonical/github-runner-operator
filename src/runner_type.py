@@ -112,6 +112,7 @@ class RunnerStatus:
     """Status of runner.
 
     Attributes:
+        runner_id: ID of the runner.
         exist: Whether the runner instance exists on LXD.
         online: Whether GitHub marks this runner as online.
         busy: Whether GitHub marks this runner as busy.

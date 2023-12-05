@@ -1,7 +1,7 @@
-name: Schedule Event Tests
+name: Issues and Schedule Event Tests
 
 on:
-  workflow_dispatch:  # Replaced by end-to-end test to match 'schedule'
+  workflow_dispatch:  # Replaced by end-to-end test to match 'issues' or 'schedule'
 
 jobs:
 
@@ -17,7 +17,7 @@ jobs:
           RUNNER_NAME=${REPO#${{ github.repository_owner }}/}
           echo name=$RUNNER_NAME >> $GITHUB_OUTPUT
 
-  schedule-event-tests:
+  issues-schedule-event-tests:
     needs: [ extract-runner-name ]
     runs-on: [ self-hosted, linux, x64, "${{ needs.extract-runner-name.outputs.name }}" ]
     steps:

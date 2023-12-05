@@ -11,8 +11,9 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 import shared_fs
-from charm_state import State
+from charm_state import ARCH, State
 from errors import IssueMetricEventError, RunnerBinaryError
+from github_type import RunnerApplication
 from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
 from runner import Runner, RunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
@@ -33,6 +34,7 @@ def token_fixture():
 def charm_state_fixture():
     mock = MagicMock(spec=State)
     mock.is_metrics_logging_available = False
+    mock.arch = ARCH.X64
     return mock
 
 
@@ -96,27 +98,50 @@ def runner_metrics_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     return runner_metrics_mock
 
 
-def test_get_latest_runner_bin_url(runner_manager: RunnerManager):
+@pytest.mark.parametrize(
+    "arch",
+    [
+        pytest.param(ARCH.ARM64),
+        pytest.param(ARCH.X64),
+    ],
+)
+def test_get_latest_runner_bin_url(runner_manager: RunnerManager, arch: ARCH):
     """
     arrange: Nothing.
     act: Get runner bin url of existing binary.
     assert: Correct mock data returned.
     """
-    runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux", arch_name="x64")
+    runner_manager.config.charm_state.arch = arch
+    mock_gh_client = MagicMock()
+    app = RunnerApplication(
+        os="linux",
+        architecture=arch.value,
+        download_url=(download_url := "https://www.example.com"),
+        filename=(filename := "test_runner_binary"),
+    )
+    mock_gh_client.actions.list_runner_applications_for_repo.return_value = (app,)
+    mock_gh_client.actions.list_runner_applications_for_org.return_value = (app,)
+    runner_manager._clients.github = mock_gh_client
+
+    runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux")
     assert runner_bin["os"] == "linux"
-    assert runner_bin["architecture"] == "x64"
-    assert runner_bin["download_url"] == "https://www.example.com"
-    assert runner_bin["filename"] == "test_runner_binary"
+    assert runner_bin["architecture"] == arch.value
+    assert runner_bin["download_url"] == download_url
+    assert runner_bin["filename"] == filename
 
 
 def test_get_latest_runner_bin_url_missing_binary(runner_manager: RunnerManager):
     """
-    arrange: Nothing.
+    arrange: Given a mocked GH API client that does not return any runner binaries.
     act: Get runner bin url of non-existing binary.
     assert: Error related to runner bin raised.
     """
+    runner_manager._clients.github.actions = MagicMock()
+    runner_manager._clients.github.actions.list_runner_applications_for_repo.return_value = []
+    runner_manager._clients.github.actions.list_runner_applications_for_org.return_value = []
+
     with pytest.raises(RunnerBinaryError):
-        runner_manager.get_latest_runner_bin_url(os_name="not_exist", arch_name="not_exist")
+        runner_manager.get_latest_runner_bin_url(os_name="not_exist")
 
 
 def test_update_runner_bin(runner_manager: RunnerManager):
@@ -136,7 +161,7 @@ def test_update_runner_bin(runner_manager: RunnerManager):
     runner_manager.runner_bin_path.unlink(missing_ok=True)
 
     runner_manager.session.get = MockRequestLibResponse
-    runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux", arch_name="x64")
+    runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux")
 
     runner_manager.update_runner_bin(runner_bin)
 
@@ -302,34 +327,56 @@ def test_reconcile_issues_reconciliation_metric_event(
     arrange:
         - Enable issuing of metrics
         - Mock timestamps
-        - The result of runner_metrics.extract
-        - Create three online runners , where two are idle
+        - Mock the result of runner_metrics.extract to contain 2 RunnerStart and 1 RunnerStop
+            events, meaning one runner was active and one crashed.
+        - Create two online runners , one active and one idle.
     act: Reconcile.
-    assert: The expected event is issued.
+    assert: The expected event is issued. We expect two idle runners and one crashed runner
+     to be reported.
     """
     charm_state.is_metrics_logging_available = True
     t_mock = MagicMock(return_value=12345)
     monkeypatch.setattr(RUNNER_MANAGER_TIME_MODULE, t_mock)
-    runner_metrics.extract.return_value = {RunnerStart: 3, RunnerStop: 1}
+    runner_metrics.extract.return_value = {RunnerStart: 2, RunnerStop: 1}
+
+    online_idle_runner_name = f"{runner_manager.instance_name}-0"
+    offline_idle_runner_name = f"{runner_manager.instance_name}-1"
+    active_runner_name = f"{runner_manager.instance_name}-2"
 
     def mock_get_runners():
         """Create three mock runners where one is busy."""
         runners = []
-        for i in range(3):
-            # 0 is a mock runner id.
-            status = RunnerStatus(0, True, True, False if i < 2 else True)
-            runners.append(Runner(MagicMock(), MagicMock(), status, None))
+
+        online_idle_runner = RunnerStatus(runner_id=0, exist=True, online=True, busy=False)
+        offline_idle_runner = RunnerStatus(runner_id=1, exist=True, online=False, busy=False)
+        active_runner = RunnerStatus(runner_id=2, exist=True, online=True, busy=True)
+
+        for runner_status, runner_config in zip(
+            (online_idle_runner, offline_idle_runner, active_runner),
+            (online_idle_runner_name, offline_idle_runner_name, active_runner_name),
+        ):
+            config = MagicMock()
+            config.name = runner_config
+            runners.append(
+                Runner(
+                    clients=MagicMock(),
+                    runner_config=config,
+                    runner_status=runner_status,
+                    instance=None,
+                )
+            )
+
         return runners
 
     # Create online runners.
     runner_manager._get_runners = mock_get_runners
     runner_manager._get_runner_health_states = lambda: RunnerByHealth(
-        (
-            f"{runner_manager.instance_name}-0",
-            f"{runner_manager.instance_name}-1",
-            f"{runner_manager.instance_name}-2",
+        healthy=(
+            online_idle_runner_name,
+            offline_idle_runner_name,
+            active_runner_name,
         ),
-        (),
+        unhealthy=(),
     )
 
     runner_manager.reconcile(
@@ -340,9 +387,8 @@ def test_reconcile_issues_reconciliation_metric_event(
         event=Reconciliation(
             timestamp=12345,
             flavor=runner_manager.app_name,
-            crashed_runners=2,
+            crashed_runners=1,
             idle_runners=2,
-            active_runners=1,
             duration=0,
         )
     )
