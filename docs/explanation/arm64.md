@@ -7,7 +7,7 @@ GitHub runner's binary. Some versions of the ARM64 architecture do not support n
 virtualizations. 
 
 Furthermore LXD by default uses QEMU with KVM acceleration options and such behavior cannot
-overriden. When run on a machine without KVM support,
+overridden. When run on a machine without KVM support,
 the following error will occur:
 ```
 Error: Failed instance creation: Failed creating instance record: Instance type "virtual-machine"
