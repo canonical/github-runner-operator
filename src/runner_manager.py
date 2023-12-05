@@ -5,6 +5,7 @@
 
 import hashlib
 import logging
+import random
 import secrets
 import tarfile
 import time
@@ -608,4 +609,9 @@ class RunnerManager:
     def schedule_build_runner_image(self) -> None:
         """Install cron job for building runner image."""
         cron_file = self.cron_path / "build-runner-image"
-        cron_file.write_text(f"0 3 * * * ubuntu /usr/bin/bash {BUILD_IMAGE_SCRIPT_FILENAME}")
+        minute = random.randint(0, 59)
+        base_hour = random.randint(0, 5)
+        hours = ",".join([str(base_hour + offset) for offset in (0, 6, 12, 18)])
+        cron_file.write_text(
+            f"{minute} {hours} * * * ubuntu /usr/bin/bash {BUILD_IMAGE_SCRIPT_FILENAME}"
+        )
