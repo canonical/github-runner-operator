@@ -172,6 +172,7 @@ async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Applica
     one runner.
     """
     await ensure_charm_has_runner(app=app_no_runner, model=model)
+
     return app_no_runner
 
 
