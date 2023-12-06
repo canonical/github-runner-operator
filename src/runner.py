@@ -155,7 +155,7 @@ class Runner:
             # Wait some initial time for the instance to boot up
             time.sleep(60)
             self._wait_boot_up()
-            self._install_binaries(config.binary_path, arch=config.arch)
+            self._install_binaries(config.binary_path)
             self._configure_runner()
 
             self._register_runner(
@@ -471,12 +471,11 @@ class Runner:
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
     @retry(tries=5, delay=1, local_logger=logger)
-    def _install_binaries(self, runner_binary: Path, arch=ARCH.X64) -> None:
+    def _install_binaries(self, runner_binary: Path) -> None:
         """Install runner binary and other binaries.
 
         Args:
             runner_binary: Path to the compressed runner binary.
-            arch: The machine architecture.
 
         Raises:
             RunnerFileLoadError: Unable to load the runner binary into the runner instance.

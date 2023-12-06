@@ -119,8 +119,8 @@ def test_get_latest_runner_bin_url(runner_manager: RunnerManager, arch: ARCH):
         download_url=(download_url := "https://www.example.com"),
         filename=(filename := "test_runner_binary"),
     )
-    mock_gh_client.actions.list_runner_applications_for_repo.return_value = (app,)
-    mock_gh_client.actions.list_runner_applications_for_org.return_value = (app,)
+    mock_gh_client.get_runner_applications.return_value = (app,)
+    mock_gh_client.get_runner_applications.return_value = (app,)
     runner_manager._clients.github = mock_gh_client
 
     runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux")
@@ -136,9 +136,9 @@ def test_get_latest_runner_bin_url_missing_binary(runner_manager: RunnerManager)
     act: Get runner bin url of non-existing binary.
     assert: Error related to runner bin raised.
     """
-    runner_manager._clients.github.actions = MagicMock()
-    runner_manager._clients.github.actions.list_runner_applications_for_repo.return_value = []
-    runner_manager._clients.github.actions.list_runner_applications_for_org.return_value = []
+    runner_manager._clients.github = MagicMock()
+    runner_manager._clients.github.get_runner_applications.return_value = []
+    runner_manager._clients.github.get_runner_applications.return_value = []
 
     with pytest.raises(RunnerBinaryError):
         runner_manager.get_latest_runner_bin_url(os_name="not_exist")

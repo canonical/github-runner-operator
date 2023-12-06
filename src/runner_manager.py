@@ -611,8 +611,10 @@ class RunnerManager:
     def schedule_build_runner_image(self) -> None:
         """Install cron job for building runner image."""
         cron_file = self.cron_path / "build-runner-image"
-        minute = random.randint(0, 59)
-        base_hour = random.randint(0, 5)
+        # Randomized the time executing the building of image.
+        # The random number are not used for security purposes.
+        minute = random.randint(0, 59)  # nosec B311
+        base_hour = random.randint(0, 5)  # nosec B311
         hours = ",".join([str(base_hour + offset) for offset in (0, 6, 12, 18)])
         cron_file.write_text(
             f"{minute} {hours} * * * ubuntu /usr/bin/bash {BUILD_IMAGE_SCRIPT_FILENAME}"
