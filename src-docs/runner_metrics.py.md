@@ -14,7 +14,7 @@ Classes and function to extract the metrics from a shared filesystem.
 
 ---
 
-<a href="../src/runner_metrics.py#L228"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_metrics.py#L242"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `extract`
 
@@ -52,6 +52,7 @@ Metrics for the post-job phase of a runner.
  
  - <b>`timestamp`</b>:  The UNIX time stamp of the time at which the event was originally issued. 
  - <b>`status`</b>:  The status of the job. 
+ - <b>`status_info`</b>:  More information about the status. 
 
 
 
@@ -80,6 +81,21 @@ Metrics for the pre-job phase of a runner.
  - <b>`workflow_run_id`</b>:  The workflow run id. 
  - <b>`repository`</b>:  The repository name. 
  - <b>`event`</b>:  The github event. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `ReturnCodeInformation`
+Information about the return code of the post-job phase of a runner. 
+
+
+
+**Attributes:**
+ 
+ - <b>`code`</b>:  The exit code of the runner. 
 
 
 

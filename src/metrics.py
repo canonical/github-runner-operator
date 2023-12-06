@@ -4,6 +4,7 @@
 """Models and functions for the metric events."""
 import logging
 from pathlib import Path
+from typing import Optional
 
 from pydantic import BaseModel, NonNegativeFloat
 
@@ -95,6 +96,16 @@ class RunnerStart(Event):
     idle: NonNegativeFloat
 
 
+class ReturnCodeInformation(BaseModel):
+    """Information about the return code of a runner.
+
+    Attributes:
+        code: The exit code of the runner.
+    """
+
+    code: int
+
+
 class RunnerStop(Event):
     """Metric event for when a runner is stopped.
 
@@ -105,6 +116,7 @@ class RunnerStop(Event):
         repo: The repository name.
         github_event: The github event.
         status: A string describing the reason for stopping the runner.
+        status_info: More information about the status.
         job_duration: The duration of the job in seconds.
     """
 
@@ -113,6 +125,7 @@ class RunnerStop(Event):
     repo: str
     github_event: str
     status: str
+    status_info: Optional[ReturnCodeInformation]
     job_duration: NonNegativeFloat
 
 
