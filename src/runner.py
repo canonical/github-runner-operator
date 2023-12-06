@@ -59,6 +59,7 @@ class Snap(NamedTuple):
     channel: str
     revision: Optional[int] = None
 
+
 YQ_BIN_URL_AMD64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64"
 YQ_BIN_URL_ARM64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_arm64"
 
