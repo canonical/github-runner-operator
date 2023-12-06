@@ -11,6 +11,7 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
+from charm_state import ARCH
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
@@ -37,7 +38,7 @@ def raise_url_error(*args, **kargs):
     raise urllib.error.URLError("mock error")
 
 
-def mock_get_latest_runner_bin_url():
+def mock_get_latest_runner_bin_url(os_name: str = "linux", arch: ARCH = ARCH.X64):
     mock = MagicMock()
     mock.download_url = "www.example.com"
     return mock
