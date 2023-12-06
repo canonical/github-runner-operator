@@ -170,7 +170,7 @@ class LxdInstance:
         """
         self._pylxd_instance = pylxd_instance
         self.name = self._pylxd_instance.name
-        self.files = LxdInstanceFileManager(self._pylxd_instance)
+        self.files = LxdInstanceFileManager(self)
 
     @property
     def status(self) -> str:
