@@ -10,11 +10,15 @@ retry() {
     local wait_message="$2"
     local max_try="$3"
 
-    local attempt=1
+    local attempt=0
 
-    while [[ ! $command ]] && [[ attempt -le $max_try]];
+    while ! $command
     do
         attempt=$(($attempt + 1))
+        if [[ attempt -ge $max_try ]]; then
+            return
+        fi
+
         echo $wait_message
         sleep 10
     done
