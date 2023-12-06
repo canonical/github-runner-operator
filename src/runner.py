@@ -479,14 +479,6 @@ class Runner:
 
         self._snap_install([Snap(name="aproxy", channel="edge")])
 
-        # TODO: Move to build script
-        self.instance.execute(["npm", "install", "--global", "yarn"])
-
-        # Add the user to docker group.
-        self.instance.execute(["/usr/sbin/usermod", "-aG", "docker", "ubuntu"])
-        # Allow traffic for docker user.
-        self.instance.execute(["/usr/sbin/iptables", "-I", "DOCKER-USER", "-j", "ACCEPT"])
-
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
         binary_path = "/tmp/runner.tgz"  # nosec B108

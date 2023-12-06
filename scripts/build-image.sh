@@ -5,42 +5,41 @@
 
 set -e
 
+retry() {
+    local command="$1"
+    local wait_message="$2"
+    local max_try="$3"
+
+    local attempt=1
+
+    while [[ ! $command ]] && [[ attempt -le $max_try]];
+    do
+        attempt=$(($attempt + 1))
+        echo $wait_message
+        sleep 10
+    done
+}
+
 while /snap/bin/lxc info builder
 do
     /snap/bin/lxc delete builder --force
 done
 
 if [[ "$1" == "test" ]]; then
-    /snap/bin/lxc launch ubuntu-daily:jammy builder
+    retry '/snap/bin/lxc launch ubuntu-daily:jammy builder' 'Starting LXD VM'
 else
-    /snap/bin/lxc launch ubuntu-daily:jammy builder --vm
+    retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --vm' 'Starting LXD VM'
 fi
-while ! /snap/bin/lxc exec builder -- /usr/bin/who
-do
-    echo "Wait for lxd agent to be ready"
-    sleep 10
-done
-while ! /snap/bin/lxc exec builder -- /usr/bin/nslookup github.com
-do
-    echo "Wait for network to be ready"
-    sleep 10
-done
+retry '/snap/bin/lxc exec builder -- /usr/bin/who' 'Wait for lxd agent to be ready' 30
+retry '/snap/bin/lxc exec builder -- /usr/bin/nslookup github.com' 'Wait for network to be ready' 30
 
 /snap/bin/lxc exec builder -- /usr/bin/apt-get update
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get upgrade -yq
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get install linux-generic-hwe-22.04 -yq
 
 /snap/bin/lxc restart builder
-while ! /snap/bin/lxc exec builder -- /usr/bin/who
-do
-    echo "Wait for lxd agent to be ready"
-    sleep 10
-done
-while ! /snap/bin/lxc exec builder -- /usr/bin/nslookup github.com
-do
-    echo "Wait for network to be ready"
-    sleep 10
-done
+retry '/snap/bin/lxc exec builder -- /usr/bin/who' 'Wait for lxd agent to be ready' 30
+retry '/snap/bin/lxc exec builder -- /usr/bin/nslookup github.com' 'Wait for network to be ready' 30
 
 /snap/bin/lxc exec builder -- /usr/bin/apt-get update
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get upgrade -yq
