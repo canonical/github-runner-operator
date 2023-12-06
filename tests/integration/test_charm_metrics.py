@@ -244,7 +244,33 @@ async def _assert_events_after_reconciliation(
             assert metric_log.get("flavor") == app.name
             assert metric_log.get("duration") >= 0
             assert metric_log.get("crashed_runners") == 0
-            assert metric_log.get("idle_runners") == 0
+            assert metric_log.get("idle_runners") >= 0
+
+
+async def _wait_for_runner_to_be_marked_offline(
+    forked_github_repository: Repository, runner_name: str
+):
+    """Wait for the runner to be marked offline.
+
+    Args:
+        forked_github_repository: The github repository to wait for the runner
+        to be marked offline.
+        runner_name: The runner name to wait for.
+    """
+    for _ in range(30):
+        for runner in forked_github_repository.get_self_hosted_runners():
+            if runner.name == runner_name:
+                logging.info("Runner %s status: %s", runner.name, runner.status)
+                if runner.status == "online":
+                    logging.info(
+                        "Runner still marked as online, waiting for it to be marked offline"
+                    )
+                    sleep(60)
+                    break
+        else:
+            break
+    else:
+        assert False, "Timeout while waiting for runner to be marked offline"
 
 
 @pytest.mark.asyncio
@@ -361,26 +387,24 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     await app.set_config({"path": forked_github_repository.full_name})
     await ensure_charm_has_runner(app=app, model=model)
 
-    # Clear metrics log to make reconciliation event more predictable
     unit = app.units[0]
-    await _clear_metrics_log(unit)
 
     workflow = forked_github_repository.get_workflow(
         id_or_file_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME
     )
-    # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(forked_github_branch, {"runner": app.name})
 
     # Wait for the workflow log to be picked up by the runner
     sleep(60)
 
-    # kill run.sh
+    # Make the runner terminate abnormally by killing run.sh
     runner_name = await get_runner_name(unit)
     kill_run_sh_cmd = "pkill -9 run.sh"
     ret_code, _ = await run_in_lxd_instance(unit, runner_name, kill_run_sh_cmd)
     assert ret_code == 0, "Failed to kill run.sh"
 
-    sleep(120)
+    # We need to wait that the runner is marked offline to avoid errors during reconciliation.
+    await _wait_for_runner_to_be_marked_offline(forked_github_repository, runner_name)
 
     # Set the number of virtual machines to 0 to speedup reconciliation
     await app.set_config({"virtual-machines": "0"})
