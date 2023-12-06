@@ -45,7 +45,14 @@ if not LXD_PROFILE_YAML.exists():
     LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
 LXDBR_DNSMASQ_LEASES_FILE = Path("/var/snap/lxd/common/lxd/networks/lxdbr0/dnsmasq.leases")
 
-Snap = NamedTuple("Snap", [("name", str), ("channel", str)])
+
+class Snap(NamedTuple):
+    """This class represents a snap installation."""
+
+    name: str
+    channel: str
+    revision: Optional[int] = None
+
 
 YQ_BIN_URL_AMD64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64"
 YQ_BIN_URL_ARM64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_arm64"
@@ -477,7 +484,7 @@ class Runner:
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
-        self._snap_install([Snap(name="aproxy", channel="edge")])
+        self._snap_install([Snap(name="aproxy", channel="edge", revision=6)])
 
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
@@ -787,4 +794,7 @@ class Runner:
 
         for snap in snaps:
             logger.info("Installing %s via snap...", snap.name)
-            self.instance.execute(["snap", "install", snap.name, f"--channel={snap.channel}"])
+            cmd = ["snap", "install", snap.name, f"--channel={snap.channel}"]
+            if snap.revision is not None:
+                cmd.append(f"--revision={snap.revision}")
+            self.instance.execute(cmd)
