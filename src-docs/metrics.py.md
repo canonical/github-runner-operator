@@ -91,6 +91,21 @@ Initialize the event.
 
 ---
 
+## <kbd>class</kbd> `ExitCodeInformation`
+Information about the exit code of a runner. 
+
+
+
+**Attributes:**
+ 
+ - <b>`code`</b>:  The exit code of the runner. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `Reconciliation`
 Metric event for when the charm has finished reconciliation. 
 
@@ -119,21 +134,6 @@ Initialize the event.
  
  - <b>`*args`</b>:  The positional arguments to pass to the base class. 
  - <b>`**kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
-
-
-
-
-
----
-
-## <kbd>class</kbd> `ReturnCodeInformation`
-Information about the return code of a runner. 
-
-
-
-**Attributes:**
- 
- - <b>`code`</b>:  The exit code of the runner. 
 
 
 

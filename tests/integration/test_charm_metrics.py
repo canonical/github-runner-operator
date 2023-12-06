@@ -250,7 +250,7 @@ async def _assert_events_after_reconciliation(
 async def _wait_for_runner_to_be_marked_offline(
     forked_github_repository: Repository, runner_name: str
 ):
-    """Wait for the runner to be marked offline.
+    """Wait for the runner to be marked offline or to be non-existent.
 
     Args:
         forked_github_repository: The github repository to wait for the runner

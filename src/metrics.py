@@ -96,8 +96,8 @@ class RunnerStart(Event):
     idle: NonNegativeFloat
 
 
-class ReturnCodeInformation(BaseModel):
-    """Information about the return code of a runner.
+class ExitCodeInformation(BaseModel):
+    """Information about the exit code of a runner.
 
     Attributes:
         code: The exit code of the runner.
@@ -125,7 +125,7 @@ class RunnerStop(Event):
     repo: str
     github_event: str
     status: str
-    status_info: Optional[ReturnCodeInformation]
+    status_info: Optional[ExitCodeInformation]
     job_duration: NonNegativeFloat
 
 

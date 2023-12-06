@@ -54,8 +54,8 @@ class PostJobStatus(str, Enum):
     REPO_POLICY_CHECK_FAILURE = "repo-policy-check-failure"
 
 
-class ReturnCodeInformation(BaseModel):
-    """Information about the return code of the post-job phase of a runner.
+class ExitCodeInformation(BaseModel):
+    """Information about the exit code of a runner.
 
     Attributes:
         code: The exit code of the runner.
@@ -75,7 +75,7 @@ class PostJobMetrics(BaseModel):
 
     timestamp: NonNegativeFloat
     status: PostJobStatus
-    status_info: Optional[ReturnCodeInformation]
+    status_info: Optional[ExitCodeInformation]
 
 
 class RunnerMetrics(BaseModel):

@@ -43,6 +43,21 @@ If corrupt data is found, an error is raised immediately, as this may indicate t
 
 ---
 
+## <kbd>class</kbd> `ExitCodeInformation`
+Information about the exit code of a runner. 
+
+
+
+**Attributes:**
+ 
+ - <b>`code`</b>:  The exit code of the runner. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `PostJobMetrics`
 Metrics for the post-job phase of a runner. 
 
@@ -81,21 +96,6 @@ Metrics for the pre-job phase of a runner.
  - <b>`workflow_run_id`</b>:  The workflow run id. 
  - <b>`repository`</b>:  The repository name. 
  - <b>`event`</b>:  The github event. 
-
-
-
-
-
----
-
-## <kbd>class</kbd> `ReturnCodeInformation`
-Information about the return code of the post-job phase of a runner. 
-
-
-
-**Attributes:**
- 
- - <b>`code`</b>:  The exit code of the runner. 
 
 
 

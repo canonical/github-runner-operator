@@ -17,9 +17,9 @@ def log_dir_base_path_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
     return log_dir_base_path
 
 
-def test_get_crashed_runner_logs(log_dir_base_path):
+def test_get_crashed_runner_logs(log_dir_base_path: Path):
     """
-    arrange: Mock the Runner instance and the log paths
+    arrange: Mock the Runner instance and the base log directory path
     act: Get the logs of the crashed runner
     assert: The expected log directory is created and logs are pulled
     """
@@ -42,9 +42,11 @@ def test_get_crashed_runner_logs(log_dir_base_path):
     )
 
 
-def test_remove_outdated_crashed_runner_logs(log_dir_base_path, monkeypatch: pytest.MonkeyPatch):
+def test_remove_outdated_crashed_runner_logs(
+    log_dir_base_path: Path, monkeypatch: pytest.MonkeyPatch
+):
     """
-    arrange: Mock the log directory path and the stat function
+    arrange: Mock the base log directory path
     act: Remove the logs of the crashed runner
     assert: The expected logs are removed
     """
