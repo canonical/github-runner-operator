@@ -51,7 +51,14 @@ if not LXD_PROFILE_YAML.exists():
     LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
 LXDBR_DNSMASQ_LEASES_FILE = Path("/var/snap/lxd/common/lxd/networks/lxdbr0/dnsmasq.leases")
 
-Snap = NamedTuple("Snap", [("name", str), ("channel", str)])
+
+class Snap(NamedTuple):
+    """This class represents a snap installation."""
+
+    name: str
+    channel: str
+    revision: Optional[int] = None
+
 
 YQ_BIN_URL_AMD64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64"
 YQ_BIN_URL_ARM64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_arm64"
@@ -511,7 +518,7 @@ class Runner:
         self.instance.execute(["/usr/sbin/usermod", "-aG", "microk8s", "ubuntu"])
 
         self._apt_install(["docker.io", "npm", "python3-pip", "shellcheck", "jq", "wget"])
-        self._snap_install([Snap(name="aproxy", channel="edge")])
+        self._snap_install([Snap(name="aproxy", channel="edge", revision=6)])
         self._wget_install(
             [
                 WgetExecutable(
@@ -855,7 +862,10 @@ class Runner:
 
         for snap in snaps:
             logger.info("Installing %s via snap...", snap.name)
-            self.instance.execute(["snap", "install", snap.name, f"--channel={snap.channel}"])
+            cmd = ["snap", "install", snap.name, f"--channel={snap.channel}"]
+            if snap.revision is not None:
+                cmd.append(f"--revision={snap.revision}")
+            self.instance.execute(cmd)
 
     def _wget_install(self, executables: Iterable[WgetExecutable]) -> None:
         """Installs the given binaries.
