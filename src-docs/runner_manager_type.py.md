@@ -16,6 +16,14 @@ Used as a returned type to method querying runner information.
 
 
 
+**Attributes:**
+ 
+ - <b>`name`</b>:  Name of the runner. 
+ - <b>`status`</b>:  Status of the runner. 
+ - <b>`busy`</b>:  Whether the runner has taken a job. 
+
+
+
 
 
 ---
