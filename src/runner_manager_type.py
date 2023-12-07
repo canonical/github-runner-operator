@@ -62,7 +62,7 @@ class RunnerInfo:
     """Information from GitHub of a runner.
 
     Used as a returned type to method querying runner information.
-    
+
     Attributes:
         name: Name of the runner.
         status: Status of the runner.
