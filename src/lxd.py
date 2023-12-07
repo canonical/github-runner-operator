@@ -543,7 +543,7 @@ class LxdImageManager:  # pylint: disable=too-few-public-methods
         """
         self._pylxd_client = pylxd_client
 
-    def create(self, name: str, path: Path):
+    def import(self, name: str, path: Path):
         """Import a LXD image.
 
         Args:
