@@ -5,7 +5,15 @@ on:
 
 jobs:
   unit-tests:
-    uses: canonical/operator-workflows/.github/workflows/test.yaml@main
-    secrets: inherit
-    with:
-      self-hosted-runner: false
+    runs-on: [self-hosted, stg-gh-deploy]
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - run: echo test
+      - run: ls -la
+      - run: ./test.sh
+        env:
+          VAULT_APPROLE_ROLE_ID: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+          VAULT_APPROLE_SECRET_ID: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+          JUJU_CONTROLLER: ${{ secrets.DEPLOY_JUJU_CONTROLLER }}
+          JUJU_MODEL: ${{ secrets.DEPLOY_JUJU_MODEL }}
+          VAULT_ADDR: ${{ secrets.DEPLOY_VAULT_ADDR }}
