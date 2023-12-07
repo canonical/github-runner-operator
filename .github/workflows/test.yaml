@@ -17,3 +17,4 @@ jobs:
           JUJU_CONTROLLER: ${{ secrets.DEPLOY_JUJU_CONTROLLER }}
           JUJU_MODEL: ${{ secrets.DEPLOY_JUJU_MODEL }}
           VAULT_ADDR: ${{ secrets.DEPLOY_VAULT_ADDR }}
+          PRODSTACK: ${{ secrets.DEPLOY_PRODSTACK }}
