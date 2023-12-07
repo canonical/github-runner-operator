@@ -19,7 +19,7 @@ retry() {
             return
         fi
 
-        echo $wait_message
+        echo "$wait_message"
         sleep 10
     done
 }
