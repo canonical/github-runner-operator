@@ -1,4 +1,4 @@
-name: Workflow Dispatch Tests
+name: Workflow Dispatch Crash Tests
 
 on:
   # Manually dispatched workflow action
@@ -12,7 +12,6 @@ jobs:
   workflow-dispatch-tests:
     runs-on: [self-hosted, linux, x64, "${{ inputs.runner }}"]
     steps:
-      - name: Sleep for an hour to allow time for the runner to crash.
+      - name: Sleep for an hour to give the integration test some time to crash the runner.
         run: |
           sleep 3600
-
