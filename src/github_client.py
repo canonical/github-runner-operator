@@ -8,8 +8,6 @@ remove token for runner.
 """
 
 import logging
-import shutil
-from zipfile import ZipFile
 
 from ghapi.all import GhApi, pages
 from requests import Session
@@ -160,68 +158,3 @@ class GithubClient:
                 org=path.org,
                 runner_id=runner_id,
             )
-
-    def get_latest_artifact(
-        self, repo_path: GithubRepo, artifact_name: str, filename: str, previous_url: str | None
-    ) -> str:
-        """Ensure the latest artifact from GitHub repo is downloaded.
-
-        Args:
-            repo_path: Path to the GitHub repo in <owner>/<repo> format.
-            artifact_name: Name of the artifact to download.
-            filename: Name of the file to decompress from the artifact.
-            previous_url: Download URL of the previous download of artifact.
-
-        Returns:
-            Download URL of the latest artifact
-        """
-        # Get the last 2000 artifacts on the repository.
-        artifacts = [
-            item
-            for page in pages(
-                self._client.actions.list_artifacts_for_repo,
-                20,
-                owner=repo_path.owner,
-                repo=repo_path.repo,
-                per_page=100,
-            )
-            for item in page["artifacts"]
-        ]
-
-        artifact_infos = list(
-            filter(lambda x: x.name == artifact_name and not x.expired, artifacts)
-        )
-        artifact_infos = sorted(artifact_infos, key=lambda x: x.created_at, reverse=True)
-        artifact_info = next(iter(artifact_infos), None)
-        if not artifact_info:
-            raise RuntimeError(
-                f"Unable to find non-expired {artifact_name} artifact at {repo_path.path()}"
-            )
-
-        if artifact_info.archive_download_url == previous_url:
-            return previous_url
-
-        logger.info(
-            "Downloading latest artifact %s created at %s",
-            artifact_name,
-            artifact_info.created_at,
-        )
-
-        # Download image zip to disk with buffer size 128MiB.
-        with self._session.get(
-            artifact_info.archive_download_url,
-            headers={
-                "X-GitHub-Api-Version": "2022-11-28",
-                "Authorization": f"Bearer {self._token}",
-                "Accept": "application/vnd.github+json",
-            },
-            timeout=60,
-            stream=True,
-        ) as response:
-            with open(f"/home/ubuntu/{filename}.zip", "wb") as file:
-                shutil.copyfileobj(response.raw, file, 128 * 1024)
-
-        with ZipFile(f"/home/ubuntu/{filename}.zip", "r") as artifact_zip:
-            artifact_zip.extract(filename)
-
-        return artifact_info.archive_download_url
