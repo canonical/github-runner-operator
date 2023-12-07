@@ -14,12 +14,12 @@ retry() {
 
     while ! $command
     do
-        attempt=$attempt + 1
+        attempt=$((attempt + 1))
         if [[ attempt -ge $max_try ]]; then
             return
         fi
 
-        echo "$wait_message"
+        echo $wait_message
         sleep 10
     done
 }
