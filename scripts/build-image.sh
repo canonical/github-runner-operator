@@ -24,10 +24,31 @@ retry() {
     done
 }
 
-while /snap/bin/lxc info builder
-do
-    /snap/bin/lxc delete builder --force
-done
+cleanup() {
+    local test_command="$1"
+    local clean_up_command="$2"
+    local wait_message="$3"
+    local max_try="$4"
+
+    local attempt=0
+
+    while bash -c "$test_command"
+    do
+        echo "$wait_message"
+
+        $clean_up_command
+
+        attempt=$((attempt + 1))
+        if [[ attempt -ge $max_try ]]; then
+            # Cleanup failure.
+            return 1
+        fi
+
+        sleep 10
+    done
+}
+
+cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD VM of previous run' 10
 
 if [[ "$1" == "test" ]]; then
     retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --device root,size=5GiB' 'Starting LXD VM'
@@ -74,4 +95,4 @@ fi
 /snap/bin/lxc image delete old-runner || true
 
 # Clean up LXD instance
-/snap/bin/lxc delete builder --force
+cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD VM' 10
