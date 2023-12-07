@@ -35,8 +35,10 @@ from tests.status_name import ACTIVE_STATUS_NAME
 
 TEST_WORKFLOW_NAMES = [
     "Workflow Dispatch Tests",
+    "Workflow Dispatch Crash Tests",
     "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7",
 ]
+JOB_LOG_START_MSG_TEMPLATE = "Job is about to start running on the runner: {runner_name}"
 
 
 @pytest_asyncio.fixture(scope="module", name="app_integrated")
@@ -158,7 +160,7 @@ async def _assert_workflow_run_conclusion(runner_name: str, conclusion: str, wor
         logs_url = run.jobs()[0].logs_url()
         logs = requests.get(logs_url).content.decode("utf-8")
 
-        if f"Job is about to start running on the runner: {runner_name}" in logs:
+        if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
             assert run.jobs()[0].conclusion == conclusion
 
 
@@ -176,6 +178,32 @@ async def _wait_for_workflow_to_complete(unit: Unit, workflow: Workflow, conclus
     sleep(60)
 
     await _assert_workflow_run_conclusion(runner_name, conclusion, workflow)
+
+
+async def _wait_for_workflow_to_start(unit: Unit, workflow: Workflow):
+    """Wait for the workflow to start.
+
+    Args:
+        unit: The unit which contains the runner.
+        workflow: The workflow to wait for.
+    """
+    runner_name = await get_runner_name(unit)
+    for _ in range(30):
+        for run in workflow.get_runs():
+            logging.info("run %s", run)
+            jobs = run.jobs()
+            if jobs:
+                logs_url = run.jobs()[0].logs_url()
+                logs = requests.get(logs_url).content.decode("utf-8")
+
+                if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
+                    break
+        else:
+            sleep(30)
+            continue
+        break
+    else:
+        assert False, "Timeout while waiting for the workflow to start"
 
 
 async def _dispatch_workflow(
@@ -394,8 +422,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     )
     assert workflow.create_dispatch(forked_github_branch, {"runner": app.name})
 
-    # Wait for the workflow log to be picked up by the runner
-    sleep(60)
+    await _wait_for_workflow_to_start(unit, workflow)
 
     # Make the runner terminate abnormally by killing run.sh
     runner_name = await get_runner_name(unit)
