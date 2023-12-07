@@ -611,7 +611,8 @@ class RunnerManager:
     def schedule_build_runner_image(self) -> None:
         """Install cron job for building runner image."""
         cron_file = self.cron_path / "build-runner-image"
-        # Randomized the time executing the building of image.
+        # Randomized the time executing the building of image to prevent all instances of the charm
+        # building images at the same time, using up the disk, and network IO of the server.
         # The random number are not used for security purposes.
         minute = random.randint(0, 59)  # nosec B311
         base_hour = random.randint(0, 5)  # nosec B311
