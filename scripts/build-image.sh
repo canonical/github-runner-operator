@@ -53,7 +53,7 @@ cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder 
 if [[ "$1" == "test" ]]; then
     retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --device root,size=5GiB' 'Starting LXD VM'
 else
-    retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --vm --device root,size=5GiB' 'Starting LXD VM'
+    retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --vm --device root,size=5GiB' 'Starting LXD container'
 fi
 retry '/snap/bin/lxc exec builder -- /usr/bin/who' 'Wait for lxd agent to be ready' 30
 retry '/snap/bin/lxc exec builder -- /usr/bin/nslookup github.com' 'Wait for network to be ready' 30
@@ -68,7 +68,8 @@ retry '/snap/bin/lxc exec builder -- /usr/bin/nslookup github.com' 'Wait for net
 
 /snap/bin/lxc exec builder -- /usr/bin/apt-get update
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get upgrade -yq
-/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget yarn -yq
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget -yq
+/snap/bin/lxc exec builder -- /usr/bin/npm install --global yarn 
 /snap/bin/lxc exec builder -- /usr/sbin/groupadd microk8s
 /snap/bin/lxc exec builder -- /usr/sbin/usermod -aG microk8s ubuntu
 /snap/bin/lxc exec builder -- /usr/sbin/usermod -aG docker ubuntu
