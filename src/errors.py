@@ -136,3 +136,7 @@ class RunnerMetricsError(Exception):
 
 class CorruptMetricDataError(RunnerMetricsError):
     """Represents an error with the data being corrupt."""
+
+
+class JobQueueDurationCalculationError(RunnerMetricsError):
+    """Represents an error with the job queue duration calculation."""

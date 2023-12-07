@@ -4,6 +4,7 @@
 """Models and functions for the metric events."""
 import logging
 from pathlib import Path
+from typing import Optional
 
 from pydantic import BaseModel, NonNegativeFloat
 
@@ -86,6 +87,9 @@ class RunnerStart(Event):
         repo: The repository name.
         github_event: The github event.
         idle: The idle time in seconds.
+        queue_duration: The time in seconds it took before the runner picked up the job.
+          This is optional as we rely on the Github API and there may be problems
+          retrieving the data.
     """
 
     flavor: str
@@ -93,6 +97,7 @@ class RunnerStart(Event):
     repo: str
     github_event: str
     idle: NonNegativeFloat
+    queue_duration: Optional[NonNegativeFloat]
 
 
 class RunnerStop(Event):

@@ -5,11 +5,14 @@
 
 import json
 import logging
+from datetime import datetime
 from enum import Enum
 from json import JSONDecodeError
 from pathlib import Path
 from typing import Optional, Type
+from urllib.error import HTTPError
 
+from ghapi.core import GhApi
 from pydantic import BaseModel, NonNegativeFloat, ValidationError
 
 import errors
@@ -162,7 +165,9 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
         raise CorruptMetricDataError(str(exc)) from exc
 
 
-def _issue_runner_metrics(runner_metrics: RunnerMetrics, flavor: str) -> IssuedMetricEventsStats:
+def _issue_runner_metrics(
+    runner_metrics: RunnerMetrics, flavor: str, queue_duration: Optional[float]
+) -> IssuedMetricEventsStats:
     """Issue metrics.
 
     Converts the metrics into respective metric events and issues them.
@@ -170,6 +175,7 @@ def _issue_runner_metrics(runner_metrics: RunnerMetrics, flavor: str) -> IssuedM
     Args:
         runner_metrics: The metrics to be issued.
         flavor: The flavor of the runners.
+        queue_duration: The time in seconds the job took before the runner picked it up.
 
     Returns:
         A dictionary containing the number of issued events per event type.
@@ -181,6 +187,7 @@ def _issue_runner_metrics(runner_metrics: RunnerMetrics, flavor: str) -> IssuedM
         repo=runner_metrics.pre_job.repository,
         github_event=runner_metrics.pre_job.event,
         idle=runner_metrics.pre_job.timestamp - runner_metrics.installed_timestamp,
+        queue_duration=queue_duration,
     )
     metrics.issue_event(runner_start_event)
     stats = {metrics.RunnerStart: 1}
@@ -199,6 +206,52 @@ def _issue_runner_metrics(runner_metrics: RunnerMetrics, flavor: str) -> IssuedM
         stats[metrics.RunnerStop] = 1
 
     return stats
+
+
+def _calculate_job_queue_duration(
+    ghapi: GhApi, pre_job_metrics: PreJobMetrics, runner_name: str
+) -> float:
+    """Calculate the job queue duration.
+
+    The Github API is accessed to retrieve the job data for the runner, which includes
+    the time the job was created and the time the job was started.
+
+    Args:
+        ghapi: The GitHub API client.
+        pre_job_metrics: The pre-job metrics.
+        runner_name: The name of the runner.
+
+    Raises:
+        JobQueueDurationCalculationError: Raised if the job data could not be retrieved.
+
+    Returns:
+        The time in seconds the job took before the runner picked it up.
+    """
+    owner, repo = pre_job_metrics.repository.split("/", maxsplit=1)
+
+    try:
+        wf_run = ghapi.actions.list_jobs_for_workflow_run(
+            owner=owner, repo=repo, run_id=pre_job_metrics.workflow_run_id
+        )
+    except HTTPError as exc:
+        raise errors.JobQueueDurationCalculationError(
+            f"Could not list jobs for workflow run {pre_job_metrics.workflow_run_id}"
+        ) from exc
+
+    for job in wf_run["jobs"]:
+        if job["runner_name"] == runner_name:
+            # datetime strings should be in ISO 8601 format, but they can also use Z instead of
+            # +00:00, which is not supported by datetime.fromisoformat
+            created_at = datetime.fromisoformat(job["created_at"].replace("Z", "+00:00"))
+            started_at = datetime.fromisoformat(job["started_at"].replace("Z", "+00:00"))
+            duration = (started_at - created_at).total_seconds()
+            break
+    else:
+        raise errors.JobQueueDurationCalculationError(
+            f"Could not find job for runner {runner_name}"
+        )
+
+    return duration
 
 
 def _clean_up_shared_fs(fs: shared_fs.SharedFilesystem) -> None:
@@ -225,7 +278,7 @@ def _clean_up_shared_fs(fs: shared_fs.SharedFilesystem) -> None:
         logger.exception("Could not delete shared filesystem for runner %s.", fs.runner_name)
 
 
-def extract(flavor: str, ignore_runners: set[str]) -> IssuedMetricEventsStats:
+def extract(flavor: str, ignore_runners: set[str], gh_api: GhApi) -> IssuedMetricEventsStats:
     """Extract and issue metrics from runners.
 
     The metrics are extracted from the shared filesystem of given runners
@@ -258,13 +311,23 @@ def extract(flavor: str, ignore_runners: set[str]) -> IssuedMetricEventsStats:
 
             if metrics_from_fs:
                 try:
-                    stats = _issue_runner_metrics(runner_metrics=metrics_from_fs, flavor=flavor)
+                    jq_duration = _calculate_job_queue_duration(
+                        gh_api, metrics_from_fs.pre_job, fs.runner_name
+                    )
+                except errors.JobQueueDurationCalculationError:
+                    logger.exception(
+                        "Not able to calculate queue duration for runner %s", runner_name
+                    )
+                    jq_duration = None
+                try:
+                    stats = _issue_runner_metrics(
+                        runner_metrics=metrics_from_fs, flavor=flavor, queue_duration=jq_duration
+                    )
                 except errors.IssueMetricEventError:
                     logger.exception("Not able to issue metrics for runner %s", runner_name)
                 else:
                     for event_type, count in stats.items():
                         total_stats[event_type] = total_stats.get(event_type, 0) + count
-
             else:
                 logger.warning("Not able to issue metrics for runner %s", runner_name)
 

@@ -363,7 +363,9 @@ class RunnerManager:
         runner_states = self._get_runner_health_states()
 
         return runner_metrics.extract(
-            flavor=self.app_name, ignore_runners=set(runner_states.healthy)
+            flavor=self.app_name,
+            ignore_runners=set(runner_states.healthy),
+            gh_api=self._clients.github,
         )
 
     def _issue_reconciliation_metric(

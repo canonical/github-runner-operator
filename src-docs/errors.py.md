@@ -54,6 +54,15 @@ Represents an error when issuing a metric event.
 
 ---
 
+## <kbd>class</kbd> `JobQueueDurationCalculationError`
+Represents an error with the job queue duration calculation. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `LogrotateSetupError`
 Represents an error raised when logrotate cannot be setup. 
 

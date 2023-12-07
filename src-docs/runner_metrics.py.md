@@ -14,12 +14,16 @@ Classes and function to extract the metrics from a shared filesystem.
 
 ---
 
-<a href="../src/runner_metrics.py#L228"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_metrics.py#L281"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `extract`
 
 ```python
-extract(flavor: str, ignore_runners: set[str]) → dict[Type[Event], int]
+extract(
+    flavor: str,
+    ignore_runners: set[str],
+    gh_api: GhApi
+) → dict[Type[Event], int]
 ```
 
 Extract and issue metrics from runners. 
