@@ -190,10 +190,9 @@ async def _wait_for_workflow_to_start(unit: Unit, workflow: Workflow):
     runner_name = await get_runner_name(unit)
     for _ in range(30):
         for run in workflow.get_runs():
-            logging.info("run %s", run)
             jobs = run.jobs()
             if jobs:
-                logs_url = run.jobs()[0].logs_url()
+                logs_url = jobs[0].logs_url()
                 logs = requests.get(logs_url).content.decode("utf-8")
 
                 if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
@@ -204,6 +203,25 @@ async def _wait_for_workflow_to_start(unit: Unit, workflow: Workflow):
         break
     else:
         assert False, "Timeout while waiting for the workflow to start"
+
+
+async def _cancel_workflow_run(unit: Unit, workflow: Workflow):
+    """Cancel the workflow run.
+
+    Args:
+        unit: The unit which contains the runner.
+        workflow: The workflow to cancel the workflow run for.
+    """
+    runner_name = await get_runner_name(unit)
+
+    for run in workflow.get_runs():
+        jobs = run.jobs()
+        if jobs:
+            logs_url = jobs[0].logs_url()
+            logs = requests.get(logs_url).content.decode("utf-8")
+
+            if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
+                run.cancel()
 
 
 async def _dispatch_workflow(
@@ -430,7 +448,9 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     ret_code, _ = await run_in_lxd_instance(unit, runner_name, kill_run_sh_cmd)
     assert ret_code == 0, "Failed to kill run.sh"
 
-    # We need to wait that the runner is marked offline to avoid errors during reconciliation.
+    # Cancel workflow and wait that the runner is marked offline
+    # to avoid errors during reconciliation.
+    await _cancel_workflow_run(unit, workflow)
     await _wait_for_runner_to_be_marked_offline(forked_github_repository, runner_name)
 
     # Set the number of virtual machines to 0 to speedup reconciliation

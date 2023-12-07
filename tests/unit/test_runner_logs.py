@@ -42,9 +42,7 @@ def test_get_crashed(log_dir_base_path: Path):
     )
 
 
-def test_remove_outdated_crashed(
-    log_dir_base_path: Path, monkeypatch: pytest.MonkeyPatch
-):
+def test_remove_outdated_crashed(log_dir_base_path: Path, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Mock the base log directory path
     act: Remove the logs of the crashed runner
