@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, call
 import pytest
 
 import runner_logs
-from runner_logs import get_crashed_runner_logs
+from runner_logs import get_crashed
 
 
 @pytest.fixture(name="log_dir_base_path")
@@ -17,7 +17,7 @@ def log_dir_base_path_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
     return log_dir_base_path
 
 
-def test_get_crashed_runner_logs(log_dir_base_path: Path):
+def test_get_crashed(log_dir_base_path: Path):
     """
     arrange: Mock the Runner instance and the base log directory path
     act: Get the logs of the crashed runner
@@ -27,7 +27,7 @@ def test_get_crashed_runner_logs(log_dir_base_path: Path):
     runner.config.name = "test-runner"
     runner.instance.files.pull_file = MagicMock()
 
-    get_crashed_runner_logs(runner)
+    get_crashed(runner)
 
     assert log_dir_base_path.exists()
 
@@ -42,7 +42,7 @@ def test_get_crashed_runner_logs(log_dir_base_path: Path):
     )
 
 
-def test_remove_outdated_crashed_runner_logs(
+def test_remove_outdated_crashed(
     log_dir_base_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
     """
@@ -55,6 +55,6 @@ def test_remove_outdated_crashed_runner_logs(
     log_dir_path = log_dir_base_path / "test-runner"
     log_dir_path.mkdir(parents=True)
 
-    runner_logs.remove_outdated_crashed_runner_logs()
+    runner_logs.remove_outdated_crashed()
 
     assert not log_dir_path.exists()

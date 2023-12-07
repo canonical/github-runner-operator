@@ -13,10 +13,10 @@ Functions to pull and remove the logs of the crashed runners.
 
 <a href="../src/runner_logs.py#L22"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>function</kbd> `get_crashed_runner_logs`
+## <kbd>function</kbd> `get_crashed`
 
 ```python
-get_crashed_runner_logs(runner: Runner) → None
+get_crashed(runner: Runner) → None
 ```
 
 Pull the logs of the crashed runner and put them in a directory named after the runner. 
@@ -34,10 +34,10 @@ Expects the runner to have an instance.
 
 <a href="../src/runner_logs.py#L44"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>function</kbd> `remove_outdated_crashed_runner_logs`
+## <kbd>function</kbd> `remove_outdated_crashed`
 
 ```python
-remove_outdated_crashed_runner_logs() → None
+remove_outdated_crashed() → None
 ```
 
 Remove the logs of the crashed runners that are older than 7 days. 

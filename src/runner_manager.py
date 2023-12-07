@@ -508,7 +508,7 @@ class RunnerManager:
 
         if self.config.charm_state.is_metrics_logging_available:
             metric_stats = self._issue_runner_metrics()
-            runner_logs.remove_outdated_crashed_runner_logs()
+            runner_logs.remove_outdated_crashed()
 
         # Clean up offline runners
         if runner_states.unhealthy:
@@ -521,7 +521,7 @@ class RunnerManager:
             ]
 
             for runner in unhealthy_runners:
-                runner_logs.get_crashed_runner_logs(runner)
+                runner_logs.get_crashed(runner)
                 runner.remove(remove_token)
                 logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
 

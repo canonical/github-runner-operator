@@ -19,7 +19,7 @@ SEVEN_DAYS_IN_SECONDS = 7 * 24 * 60 * 60
 logger = logging.getLogger(__name__)
 
 
-def get_crashed_runner_logs(runner: Runner) -> None:
+def get_crashed(runner: Runner) -> None:
     """Pull the logs of the crashed runner and put them in a directory named after the runner.
 
     Expects the runner to have an instance.
@@ -41,7 +41,7 @@ def get_crashed_runner_logs(runner: Runner) -> None:
     runner.instance.files.pull_file(str(SYSLOG_PATH), str(target_log_path))
 
 
-def remove_outdated_crashed_runner_logs() -> None:
+def remove_outdated_crashed() -> None:
     """Remove the logs of the crashed runners that are older than 7 days."""
     maxage_absolute = time.time() - SEVEN_DAYS_IN_SECONDS
     for log_path in CRASHED_RUNNER_LOGS_DIR_PATH.glob("*"):
