@@ -13,6 +13,7 @@ from typing import Optional, Type
 from urllib.error import HTTPError
 
 from ghapi.core import GhApi
+from ghapi.page import paged
 from pydantic import BaseModel, NonNegativeFloat, ValidationError
 
 import errors
@@ -29,6 +30,18 @@ RUNNER_INSTALLED_TS_FILE_NAME = "runner-installed.timestamp"
 
 
 IssuedMetricEventsStats = dict[Type[metrics.Event], int]
+
+
+class GithubJobStats(BaseModel):
+    """Stats for a job on GitHub.
+
+    Args:
+        created_at: The time the job was created.
+        started_at: The time the job was started.
+    """
+
+    created_at: datetime
+    started_at: datetime
 
 
 class PreJobMetrics(BaseModel):
@@ -208,6 +221,48 @@ def _issue_runner_metrics(
     return stats
 
 
+def _find_job_on_github(
+    ghapi: GhApi, owner: str, repo: str, workflow_run_id: str, runner_name: str
+) -> GithubJobStats:
+    """Find a job for a workflow run on GitHub.
+
+    Args:
+        ghapi: The GitHub API client.
+        owner: The owner of the repository.
+        repo: The repository name.
+        workflow_run_id: The workflow run id.
+        runner_name: The name of the runner.
+    Returns:
+        The job stats
+    Raises:
+        JobNotFoundOnGithubError: Raised if the job data could not be retrieved.
+    """
+    paged_kwargs = {"owner": owner, "repo": repo, "run_id": workflow_run_id}
+    try:
+        for wf_run_page in paged(ghapi.actions.list_jobs_for_workflow_run, **paged_kwargs):
+            jobs = wf_run_page["jobs"]
+            # ghapi performs endless pagination,
+            # so we have to break out of the loop if there are no more jobs
+            if not jobs:
+                break
+            for job in jobs:
+                if job["runner_name"] == runner_name:
+                    # datetime strings should be in ISO 8601 format,
+                    # but they can also use Z instead of
+                    # +00:00, which is not supported by datetime.fromisoformat
+                    created_at = datetime.fromisoformat(job["created_at"].replace("Z", "+00:00"))
+                    started_at = datetime.fromisoformat(job["started_at"].replace("Z", "+00:00"))
+                    return GithubJobStats(created_at=created_at, started_at=started_at)
+
+    except HTTPError as exc:
+        raise errors.JobNotFoundOnGithubError(
+            f"Could not find job for runner {runner_name}. "
+            f"Could not list jobs for workflow run {workflow_run_id}"
+        ) from exc
+
+    raise errors.JobNotFoundOnGithubError(f"Could not find job for runner {runner_name}.")
+
+
 def _calculate_job_queue_duration(
     ghapi: GhApi, pre_job_metrics: PreJobMetrics, runner_name: str
 ) -> float:
@@ -221,35 +276,20 @@ def _calculate_job_queue_duration(
         pre_job_metrics: The pre-job metrics.
         runner_name: The name of the runner.
 
-    Raises:
-        JobQueueDurationCalculationError: Raised if the job data could not be retrieved.
 
     Returns:
         The time in seconds the job took before the runner picked it up.
     """
     owner, repo = pre_job_metrics.repository.split("/", maxsplit=1)
 
-    try:
-        wf_run = ghapi.actions.list_jobs_for_workflow_run(
-            owner=owner, repo=repo, run_id=pre_job_metrics.workflow_run_id
-        )
-    except HTTPError as exc:
-        raise errors.JobQueueDurationCalculationError(
-            f"Could not list jobs for workflow run {pre_job_metrics.workflow_run_id}"
-        ) from exc
-
-    for job in wf_run["jobs"]:
-        if job["runner_name"] == runner_name:
-            # datetime strings should be in ISO 8601 format, but they can also use Z instead of
-            # +00:00, which is not supported by datetime.fromisoformat
-            created_at = datetime.fromisoformat(job["created_at"].replace("Z", "+00:00"))
-            started_at = datetime.fromisoformat(job["started_at"].replace("Z", "+00:00"))
-            duration = (started_at - created_at).total_seconds()
-            break
-    else:
-        raise errors.JobQueueDurationCalculationError(
-            f"Could not find job for runner {runner_name}"
-        )
+    job = _find_job_on_github(
+        ghapi=ghapi,
+        owner=owner,
+        repo=repo,
+        workflow_run_id=pre_job_metrics.workflow_run_id,
+        runner_name=runner_name,
+    )
+    duration = (job.started_at - job.created_at).total_seconds()
 
     return duration
 
@@ -314,7 +354,7 @@ def extract(flavor: str, ignore_runners: set[str], gh_api: GhApi) -> IssuedMetri
                     jq_duration = _calculate_job_queue_duration(
                         gh_api, metrics_from_fs.pre_job, fs.runner_name
                     )
-                except errors.JobQueueDurationCalculationError:
+                except errors.JobNotFoundOnGithubError:
                     logger.exception(
                         "Not able to calculate queue duration for runner %s", runner_name
                     )

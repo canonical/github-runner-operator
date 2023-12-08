@@ -54,7 +54,7 @@ Represents an error when issuing a metric event.
 
 ---
 
-## <kbd>class</kbd> `JobQueueDurationCalculationError`
+## <kbd>class</kbd> `JobNotFoundOnGithubError`
 Represents an error with the job queue duration calculation. 
 
 

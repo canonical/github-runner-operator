@@ -138,5 +138,5 @@ class CorruptMetricDataError(RunnerMetricsError):
     """Represents an error with the data being corrupt."""
 
 
-class JobQueueDurationCalculationError(RunnerMetricsError):
+class JobNotFoundOnGithubError(RunnerMetricsError):
     """Represents an error with the job queue duration calculation."""

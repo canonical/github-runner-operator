@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 import http
 import json
+import random
 import secrets
 from pathlib import Path
 from unittest.mock import MagicMock, call
@@ -617,6 +618,121 @@ def test_extract_ignores_failure_on_queue_duration_calculation(
     shared_fs_mock.list_all.return_value = [runner_fs]
 
     stats = runner_metrics.extract(flavor=flavor, ignore_runners=set(), gh_api=gh_api_mock)
+
+    assert stats == {
+        RunnerStart: 1,
+        RunnerStop: 1,
+    }
+
+    issue_event_mock.assert_any_call(
+        RunnerStart(
+            timestamp=runner_metrics_data.pre_job.timestamp,
+            flavor=flavor,
+            workflow=runner_metrics_data.pre_job.workflow,
+            repo=runner_metrics_data.pre_job.repository,
+            github_event=runner_metrics_data.pre_job.event,
+            # Ignore line break before binary operator
+            idle=runner_metrics_data.pre_job.timestamp
+            - runner_metrics_data.installed_timestamp,  # noqa: W503
+            queue_duration=None,
+        )
+    )
+
+
+def test_github_api_pagination_multiple_pages(shared_fs_mock: MagicMock, issue_event_mock: MagicMock, tmp_path: Path):
+    runner_metrics_data = _create_metrics_data()
+
+    runner_fs_base = _create_runner_fs_base(tmp_path)
+
+    runner_fs = _create_runner_files(
+        runner_fs_base,
+        runner_metrics_data.pre_job.json(),
+        runner_metrics_data.post_job.json(),
+        str(runner_metrics_data.installed_timestamp),
+    )
+    shared_fs_mock.list_all.return_value = [runner_fs]
+
+    no_of_pages = 4
+    no_of_jobs_per_page = 3
+    runner_names = [secrets.token_hex(16) for _ in range(no_of_pages * no_of_jobs_per_page)]
+
+    runner_names[random.choice(range(no_of_pages))] = runner_fs.runner_name
+
+    ghapi_mock = MagicMock()
+    ghapi_mock.actions = MagicMock()
+
+    ghapi_mock.actions.list_jobs_for_workflow_run.side_effect = [{
+        "jobs": [
+            {
+                "created_at": TEST_JOB_CREATED_AT,
+                "started_at": TEST_JOB_STARTED_AT,
+                "runner_name": runner_names[i * no_of_jobs_per_page + j],
+            }
+            for j in range(no_of_jobs_per_page)
+        ]
+    } for i in range(no_of_pages)]
+
+    flavor = secrets.token_hex(16)
+    stats = runner_metrics.extract(flavor=flavor, ignore_runners=set(), gh_api=ghapi_mock)
+
+    assert stats == {
+        RunnerStart: 1,
+        RunnerStop: 1,
+    }
+
+    issue_event_mock.assert_any_call(
+        RunnerStart(
+            timestamp=runner_metrics_data.pre_job.timestamp,
+            flavor=flavor,
+            workflow=runner_metrics_data.pre_job.workflow,
+            repo=runner_metrics_data.pre_job.repository,
+            github_event=runner_metrics_data.pre_job.event,
+            # Ignore line break before binary operator
+            idle=runner_metrics_data.pre_job.timestamp
+            - runner_metrics_data.installed_timestamp,  # noqa: W503
+            queue_duration=None,
+        )
+    )
+
+
+def test_github_api_pagination_job_not_found(
+    shared_fs_mock: MagicMock, issue_event_mock: MagicMock, tmp_path: Path
+):
+    runner_metrics_data = _create_metrics_data()
+
+    runner_fs_base = _create_runner_fs_base(tmp_path)
+
+    runner_fs = _create_runner_files(
+        runner_fs_base,
+        runner_metrics_data.pre_job.json(),
+        runner_metrics_data.post_job.json(),
+        str(runner_metrics_data.installed_timestamp),
+    )
+    shared_fs_mock.list_all.return_value = [runner_fs]
+
+    no_of_pages = 4
+    no_of_jobs_per_page = 3
+    runner_names = [secrets.token_hex(16) for _ in range(no_of_pages * no_of_jobs_per_page)]
+
+    ghapi_mock = MagicMock()
+    ghapi_mock.actions = MagicMock()
+
+    ghapi_mock.actions.list_jobs_for_workflow_run.side_effect = [
+        {
+            "jobs": [
+                {
+                    "created_at": TEST_JOB_CREATED_AT,
+                    "started_at": TEST_JOB_STARTED_AT,
+                    "runner_name": runner_names[i * no_of_jobs_per_page + j],
+                }
+                for j in range(no_of_jobs_per_page)
+            ]
+        }
+        for i in range(no_of_pages)
+    ] + [{"jobs": []}]
+
+    flavor = secrets.token_hex(16)
+    stats = runner_metrics.extract(flavor=flavor, ignore_runners=set(), gh_api=ghapi_mock)
 
     assert stats == {
         RunnerStart: 1,
