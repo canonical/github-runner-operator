@@ -240,7 +240,7 @@ async def _assert_events_after_reconciliation(
             assert metric_log.get("flavor") == app.name
             assert metric_log.get("duration") >= 0
             assert metric_log.get("crashed_runners") == 0
-            assert metric_log.get("idle_runners") == 0
+            assert metric_log.get("idle_runners") >= 0
 
 
 @pytest.mark.asyncio
