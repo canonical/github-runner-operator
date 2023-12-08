@@ -521,7 +521,8 @@ class RunnerManager:
             ]
 
             for runner in unhealthy_runners:
-                runner_logs.get_crashed(runner)
+                if self.config.charm_state.is_metrics_logging_available:
+                    runner_logs.get_crashed(runner)
                 runner.remove(remove_token)
                 logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
 
