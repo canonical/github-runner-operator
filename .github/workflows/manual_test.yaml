@@ -2,17 +2,17 @@ name: Manual test
 
 on:
   # push:
-  # pull_request:
+  pull_request:
   workflow_dispatch:
 
 jobs:
-  github-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Echo test
-        run: echo hello
-      - name: Disk usage
-        run: df -h
+  # github-test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Echo test
+  #       run: echo hello
+  #     - name: Disk usage
+  #       run: df -h
   self-host-test:
     name: self-hosted test
     runs-on: [self-hosted, large]
@@ -21,6 +21,8 @@ jobs:
         run: echo hello
       - name: Disk usage
         run: df -h
+      - name: sleep
+        run: sleep 60m
       # - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> rustup.sh
       # - run: sh rustup.sh -y
       # - run: $HOME/.cargo/bin/cargo install ripgrep
