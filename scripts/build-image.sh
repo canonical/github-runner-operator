@@ -76,10 +76,15 @@ retry '/snap/bin/lxc exec builder -- /usr/bin/nslookup github.com' 'Wait for net
 /snap/bin/lxc exec builder -- /usr/sbin/iptables -I DOCKER-USER -j ACCEPT
 
 # Download and verify checksum of yq
-if [[ $(uname -u) == 'x86_64' ]]; then
+if [[ $(uname -m) == 'aarch64' ]]; then
+    YQ_ARCH="arm64"
+elif [[ $(uname -m) == 'arm64' ]]; then
+    YQ_ARCH="arm64"
+elif [[ $(uname -m) == 'x86_64' ]]; then
     YQ_ARCH="amd64"
 else
-    YQ_ARCH="arm64"
+    echo "Unsupported CPU architecture: $(uname -m)"
+    return 1
 fi
 /usr/bin/wget "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$YQ_ARCH"
 /usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums
