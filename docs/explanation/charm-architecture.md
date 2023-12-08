@@ -72,3 +72,11 @@ The charm installs the following dependencies and regularly updates them:
 - GitHub self-hosted runner application
 
 The charm checks if the installed versions are the latest and performs upgrades if needed before creating new virtual machines for runners.
+
+## COS Integration
+Upon integration through the `cos-agent`, the charm initiates the logging of specific metric events
+into the file `/var/log/github-runner-metrics.log`. For comprehensive details, please refer to the
+pertinent [specification](https://discourse.charmhub.io/t/specification-isd075-github-runner-cos-integration/12084).
+
+Subsequently, the `grafana-agent` transmits this log file to Loki, facilitating access for Grafana's visualisation capabilities.
+Notably, most events are transmitted during reconciliation. This approach prioritises long-term monitoring over real-time updates, aligning with the intended monitoring objectives.
