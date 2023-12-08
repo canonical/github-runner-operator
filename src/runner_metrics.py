@@ -317,6 +317,51 @@ def _clean_up_shared_fs(fs: shared_fs.SharedFilesystem) -> None:
         logger.exception("Could not delete shared filesystem for runner %s.", fs.runner_name)
 
 
+def _extract_fs(
+    runner_fs: shared_fs.SharedFilesystem, flavor: str, gh_api: GhApi
+) -> IssuedMetricEventsStats:
+    """Extract and issue metrics from a shared filesystem.
+
+    Args:
+        runner_fs: The shared filesystem for a specific runner.
+        flavor: The flavor of the runner.
+        gh_api: The GitHub API client.
+
+    Returns:
+        A dictionary containing the number of issued events per event type.
+    """
+    runner_name = runner_fs.runner_name
+    try:
+        logger.debug("Extracting metrics from shared filesystem for runner %s", runner_name)
+        metrics_from_fs = _extract_metrics_from_fs(runner_fs)
+    except CorruptMetricDataError:
+        logger.exception("Corrupt metric data found for runner %s", runner_name)
+        shared_fs.move_to_quarantine(runner_name)
+        return {}
+
+    stats = {}
+    if metrics_from_fs:
+        try:
+            jq_duration = _calculate_job_queue_duration(
+                ghapi=gh_api, pre_job_metrics=metrics_from_fs.pre_job, runner_name=runner_name
+            )
+        except errors.JobNotFoundOnGithubError:
+            logger.exception("Not able to calculate queue duration for runner %s", runner_name)
+            jq_duration = None
+        try:
+            stats = _issue_runner_metrics(
+                runner_metrics=metrics_from_fs, flavor=flavor, queue_duration=jq_duration
+            )
+        except errors.IssueMetricEventError:
+            logger.exception("Not able to issue metrics for runner %s", runner_name)
+    else:
+        logger.warning("Not able to issue metrics for runner %s", runner_name)
+
+    logger.debug("Cleaning up shared filesystem for runner %s", runner_name)
+    _clean_up_shared_fs(runner_fs)
+    return stats
+
+
 def extract(flavor: str, ignore_runners: set[str], gh_api: GhApi) -> IssuedMetricEventsStats:
     """Extract and issue metrics from runners.
 
@@ -338,39 +383,8 @@ def extract(flavor: str, ignore_runners: set[str], gh_api: GhApi) -> IssuedMetri
     """
     total_stats: IssuedMetricEventsStats = {}
     for fs in shared_fs.list_all():
-        if (runner_name := fs.runner_name) not in ignore_runners:
-            try:
-                logger.debug(
-                    "Extracting metrics from shared filesystem for runner %s", runner_name
-                )
-                metrics_from_fs = _extract_metrics_from_fs(fs)
-            except CorruptMetricDataError:
-                logger.exception("Corrupt metric data found for runner %s", runner_name)
-                shared_fs.move_to_quarantine(runner_name)
-                continue
-
-            if metrics_from_fs:
-                try:
-                    jq_duration = _calculate_job_queue_duration(
-                        ghapi=gh_api, pre_job_metrics=metrics_from_fs.pre_job, runner_name=fs.runner_name
-                    )
-                except errors.JobNotFoundOnGithubError:
-                    logger.exception(
-                        "Not able to calculate queue duration for runner %s", runner_name
-                    )
-                    jq_duration = None
-                try:
-                    stats = _issue_runner_metrics(
-                        runner_metrics=metrics_from_fs, flavor=flavor, queue_duration=jq_duration
-                    )
-                except errors.IssueMetricEventError:
-                    logger.exception("Not able to issue metrics for runner %s", runner_name)
-                else:
-                    for event_type, count in stats.items():
-                        total_stats[event_type] = total_stats.get(event_type, 0) + count
-            else:
-                logger.warning("Not able to issue metrics for runner %s", runner_name)
-
-            logger.debug("Cleaning up shared filesystem for runner %s", runner_name)
-            _clean_up_shared_fs(fs)
+        if fs.runner_name not in ignore_runners:
+            stats = _extract_fs(runner_fs=fs, flavor=flavor, gh_api=gh_api)
+            for event_type, count in stats.items():
+                total_stats[event_type] = total_stats.get(event_type, 0) + count
     return total_stats
