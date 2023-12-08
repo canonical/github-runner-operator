@@ -224,7 +224,7 @@ def _issue_runner_metrics(
 def _find_job_on_github(
     ghapi: GhApi, owner: str, repo: str, workflow_run_id: str, runner_name: str
 ) -> GithubJobStats:
-    """Find a job for a workflow run on GitHub.
+    """Find a job for a workflow run on GitHub and return the job stats.
 
     Args:
         ghapi: The GitHub API client.
@@ -275,7 +275,6 @@ def _calculate_job_queue_duration(
         ghapi: The GitHub API client.
         pre_job_metrics: The pre-job metrics.
         runner_name: The name of the runner.
-
 
     Returns:
         The time in seconds the job took before the runner picked it up.
@@ -332,6 +331,7 @@ def extract(flavor: str, ignore_runners: set[str], gh_api: GhApi) -> IssuedMetri
     Args:
         flavor: The flavor of the runners to extract metrics from.
         ignore_runners: The set of runners to ignore.
+        gh_api: The GitHub API client.
 
     Returns:
         A dictionary containing the number of issued events per event type.
@@ -352,7 +352,7 @@ def extract(flavor: str, ignore_runners: set[str], gh_api: GhApi) -> IssuedMetri
             if metrics_from_fs:
                 try:
                     jq_duration = _calculate_job_queue_duration(
-                        gh_api, metrics_from_fs.pre_job, fs.runner_name
+                        ghapi=gh_api, pre_job_metrics=metrics_from_fs.pre_job, runner_name=fs.runner_name
                     )
                 except errors.JobNotFoundOnGithubError:
                     logger.exception(

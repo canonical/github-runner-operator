@@ -241,7 +241,7 @@ def _assert_runner_events_issued(
 
 def test_extract(shared_fs_mock: MagicMock, issue_event_mock: MagicMock, tmp_path: Path):
     """
-    arrange: A mocked GhApi object. And the following:
+    arrange:
         1. A runner with all metrics inside shared fs
         2. A runner with only pre-job metrics inside shared fs
         3. A runner with no metrics except installed_timestamp inside shared fs
@@ -288,6 +288,7 @@ def test_extract(shared_fs_mock: MagicMock, issue_event_mock: MagicMock, tmp_pat
 
     gh_api_mock = _setup_ghapi_mock({runner1_fs.runner_name, runner2_fs.runner_name})
     flavor = secrets.token_hex(16)
+
     metric_stats = runner_metrics.extract(flavor=flavor, ignore_runners=set(), gh_api=gh_api_mock)
 
     assert metric_stats == {
@@ -354,7 +355,7 @@ def test_extract_ignores_runners(
     shared_fs_mock: MagicMock, issue_event_mock: MagicMock, tmp_path: Path
 ):
     """
-    arrange: Runners with metrics and a mocked GhApi object.
+    arrange: Runners with metrics.
     act: Call extract with some runners on ignore list
     expect: The ignored runners are not processed.
     """
@@ -379,6 +380,7 @@ def test_extract_ignores_runners(
     ignore_runners = {runner_filesystems[0].runner_name, runner_filesystems[2].runner_name}
     ghapi_mock = _setup_ghapi_mock({runner_fs.runner_name for runner_fs in runner_filesystems})
     flavor = secrets.token_hex(16)
+
     stats = runner_metrics.extract(flavor, ignore_runners=ignore_runners, gh_api=ghapi_mock)
 
     assert stats == {
@@ -512,6 +514,7 @@ def test_extract_raises_error_for_too_large_files(
     flavor = secrets.token_hex(16)
 
     runner_metrics.extract(flavor=flavor, ignore_runners=set(), gh_api=gh_api_mock)
+
     issue_event_mock.assert_not_called()
     shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
     gh_api_mock.assert_not_called()
@@ -529,6 +532,7 @@ def test_extract_raises_error_for_too_large_files(
     shared_fs_mock.list_all.return_value = [runner_fs]
 
     runner_metrics.extract(flavor=flavor, ignore_runners=set(), gh_api=gh_api_mock)
+
     issue_event_mock.assert_not_called()
     shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
     gh_api_mock.assert_not_called()
@@ -704,6 +708,7 @@ def test_github_api_pagination_multiple_pages(
 
     ghapi_mock = _setup_ghapi_mock_multiple_pages(runner_name=runner_name)
     flavor = secrets.token_hex(16)
+
     stats = runner_metrics.extract(flavor=flavor, ignore_runners=set(), gh_api=ghapi_mock)
 
     _assert_runner_events_issued(
@@ -724,6 +729,7 @@ def test_github_api_pagination_job_not_found(
 
     ghapi_mock = _setup_ghapi_mock_multiple_pages()
     flavor = secrets.token_hex(16)
+
     stats = runner_metrics.extract(flavor=flavor, ignore_runners=set(), gh_api=ghapi_mock)
 
     _assert_runner_events_issued(

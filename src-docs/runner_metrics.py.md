@@ -14,7 +14,7 @@ Classes and function to extract the metrics from a shared filesystem.
 
 ---
 
-<a href="../src/runner_metrics.py#L321"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_metrics.py#L320"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `extract`
 
@@ -38,6 +38,7 @@ If corrupt data is found, an error is raised immediately, as this may indicate t
  
  - <b>`flavor`</b>:  The flavor of the runners to extract metrics from. 
  - <b>`ignore_runners`</b>:  The set of runners to ignore. 
+ - <b>`gh_api`</b>:  The GitHub API client. 
 
 
 
