@@ -6,6 +6,7 @@
 import logging
 import shutil
 import time
+from datetime import datetime
 from pathlib import Path
 
 from runner import Runner
@@ -42,9 +43,14 @@ def get_crashed(runner: Runner) -> None:
 
 
 def remove_outdated_crashed() -> None:
-    """Remove the logs of the crashed runners that are older than a certain amount of time."""
-    logger.info("Removing outdated logs of the crashed runners.")
+    """Remove the logs of the crashed runners that are too old."""
     maxage_absolute = time.time() - OUTDATED_LOGS_IN_SECONDS
+    dt_object = datetime.fromtimestamp(maxage_absolute)
+    logger.info(
+        "Removing the outdated logs of the crashed runners. "
+        "All logs older than %s will be removed.",
+        dt_object.strftime("%Y-%m-%d %H:%M:%S"),
+    )
 
     for log_path in CRASHED_RUNNER_LOGS_DIR_PATH.glob("*"):
         if log_path.is_dir() and (log_path.stat().st_mtime < maxage_absolute):
@@ -55,4 +61,3 @@ def remove_outdated_crashed() -> None:
                 logger.exception(
                     "Unable to remove the outdated logs of the crashed runner %s.", log_path.name
                 )
-

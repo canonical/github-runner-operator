@@ -11,7 +11,7 @@ Functions to pull and remove the logs of the crashed runners.
 
 ---
 
-<a href="../src/runner_logs.py#L22"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_logs.py#L23"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `get_crashed`
 
@@ -32,7 +32,7 @@ Expects the runner to have an instance.
 
 ---
 
-<a href="../src/runner_logs.py#L44"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_logs.py#L45"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `remove_outdated_crashed`
 
@@ -40,6 +40,6 @@ Expects the runner to have an instance.
 remove_outdated_crashed() → None
 ```
 
-Remove the logs of the crashed runners that are older than a certain amount of time. 
+Remove the logs of the crashed runners that are too old. 
 
 
