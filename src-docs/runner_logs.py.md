@@ -7,7 +7,7 @@ Functions to pull and remove the logs of the crashed runners.
 
 **Global Variables**
 ---------------
-- **SEVEN_DAYS_IN_SECONDS**
+- **OUTDATED_LOGS_IN_SECONDS**
 
 ---
 
@@ -40,6 +40,6 @@ Expects the runner to have an instance.
 remove_outdated_crashed() → None
 ```
 
-Remove the logs of the crashed runners that are older than 7 days. 
+Remove the logs of the crashed runners that are older than a certain amount of time. 
 
 

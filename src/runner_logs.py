@@ -14,7 +14,7 @@ CRASHED_RUNNER_LOGS_DIR_PATH = Path("/var/log/github-runner-crashed")
 DIAG_DIR_PATH = Path("/home/ubuntu/github-runner/_diag")
 SYSLOG_PATH = Path("/var/log/syslog")
 
-SEVEN_DAYS_IN_SECONDS = 7 * 24 * 60 * 60
+OUTDATED_LOGS_IN_SECONDS = 7 * 24 * 60 * 60
 
 logger = logging.getLogger(__name__)
 
@@ -42,10 +42,10 @@ def get_crashed(runner: Runner) -> None:
 
 
 def remove_outdated_crashed() -> None:
-    """Remove the logs of the crashed runners that are older than 7 days."""
-    logger.info("Removing the logs of the crashed runners that are older than 7 days.")
-    maxage_absolute = time.time() - SEVEN_DAYS_IN_SECONDS
+    """Remove the logs of the crashed runners that are older than a certain amount of time."""
+    logger.info("Removing outdated logs of the crashed runners.")
+    maxage_absolute = time.time() - OUTDATED_LOGS_IN_SECONDS
     for log_path in CRASHED_RUNNER_LOGS_DIR_PATH.glob("*"):
         if log_path.is_dir() and (log_path.stat().st_mtime < maxage_absolute):
-            logger.info("Removing the logs of the crashed runner %s.", log_path.name)
+            logger.info("Removing the outdated logs of the crashed runner %s.", log_path.name)
             shutil.rmtree(log_path)
