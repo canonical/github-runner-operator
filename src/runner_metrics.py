@@ -233,7 +233,7 @@ def _find_job_on_github(
         workflow_run_id: The workflow run id.
         runner_name: The name of the runner.
     Returns:
-        The job stats
+        The job stats.
     Raises:
         JobNotFoundOnGithubError: Raised if the job data could not be retrieved.
     """
