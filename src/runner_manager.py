@@ -367,7 +367,6 @@ class RunnerManager:
                 event=metrics.Reconciliation(
                     timestamp=time.time(),
                     flavor=self.app_name,
-                    # Ignore line break before binary operator
                     crashed_runners=metric_stats.get(metrics.RunnerStart, 0)
                     - metric_stats.get(metrics.RunnerStop, 0),
                     idle_runners=idle_online_count + idle_offline_count,
