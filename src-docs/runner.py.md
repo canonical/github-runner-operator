@@ -39,13 +39,13 @@ The configuration values for creating a single runner instance.
 ## <kbd>class</kbd> `Runner`
 Single instance of GitHub self-hosted runner. 
 
-<a href="../src/runner.py#L108"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L102"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
 ```python
 __init__(
-    clients: RunnerClients,
+    clients: RunnerManagerClients,
     runner_config: RunnerConfig,
     runner_status: RunnerStatus,
     instance: Optional[LxdInstance] = None
@@ -67,7 +67,7 @@ Construct the runner instance.
 
 ---
 
-<a href="../src/runner.py#L138"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L132"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `create`
 
@@ -91,7 +91,7 @@ Create the runner instance on LXD and register it on GitHub.
 
 ---
 
-<a href="../src/runner.py#L174"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L168"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `remove`
 
