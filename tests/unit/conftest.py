@@ -36,8 +36,9 @@ def mocks(monkeypatch, tmp_path, exec_command):
     monkeypatch.setattr("metrics.LOGROTATE_CONFIG", Path(tmp_path / "github-runner-metrics"))
 
     monkeypatch.setattr("runner.time", unittest.mock.MagicMock())
-    monkeypatch.setattr("runner_manager.GhApi", MockGhapiClient)
-    monkeypatch.setattr("runner_manager.jinja2", unittest.mock.MagicMock())
+    monkeypatch.setattr("github_client.GhApi", MockGhapiClient)
+    monkeypatch.setattr("runner_manager_type.jinja2", unittest.mock.MagicMock())
+    monkeypatch.setattr("runner_manager_type.LxdClient", MockLxdClient)
     monkeypatch.setattr("runner_manager.LxdClient", MockLxdClient)
     monkeypatch.setattr("runner_manager.shared_fs", unittest.mock.MagicMock())
     monkeypatch.setattr(
