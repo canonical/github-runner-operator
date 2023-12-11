@@ -43,6 +43,7 @@ def get_crashed(runner: Runner) -> None:
 
 def remove_outdated_crashed() -> None:
     """Remove the logs of the crashed runners that are older than 7 days."""
+    logger.info("Removing the logs of the crashed runners that are older than 7 days.")
     maxage_absolute = time.time() - SEVEN_DAYS_IN_SECONDS
     for log_path in CRASHED_RUNNER_LOGS_DIR_PATH.glob("*"):
         if log_path.is_dir() and (log_path.stat().st_mtime < maxage_absolute):
