@@ -369,7 +369,7 @@ class RunnerManager:
                     flavor=self.app_name,
                     # Ignore line break before binary operator
                     crashed_runners=metric_stats.get(metrics.RunnerStart, 0)
-                    - metric_stats.get(metrics.RunnerStop, 0),  # noqa: W503
+                    - metric_stats.get(metrics.RunnerStop, 0),
                     idle_runners=idle_online_count + idle_offline_count,
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )
