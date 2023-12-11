@@ -5,6 +5,7 @@ A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) t
 Conceptually, the charm can be divided into the following:
 
 - Management of LXD ephemeral virtual machines to host [ephemeral self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/autoscaling-with-self-hosted-runners#using-ephemeral-runners-for-autoscaling)
+- Management of the virtual machine image
 - Management of the network
 - GitHub API usage
 - Management of [Python web service for checking GitHub repository settings](https://github.com/canonical/repo-policy-compliance)
@@ -20,6 +21,31 @@ On schedule or upon configuration change, the charm performs a reconcile to ensu
 
 The virtual machines hosting the runner use random access memory as disk; therefore, the [`vm-disk` configuration](https://charmhub.io/github-runner/configure#vm-disk) can impact the memory usage of the Juju machine. This is done to prevent disk IO exhaustion on the Juju machine on disk-intensive GitHub workflows. In the future, an alternative method to prevent disk IO exhaustion will be implemented.
 
+## Virtual machine image
+
+The virtual machine images are built on installation and on a schedule every 6 hours. These images are constructed by launching a virtual machine instance, modifying the instance with configurations and software installs, and then exporting the instance as an image. This process reduces the time needed to launch a virtual machine instance for hosting the self-hosted runner application.
+
+The software installed in the image includes:
+
+- APT packages:
+  - docker.io
+  - npm
+  - python3-pip
+  - shellcheck
+  - jq
+  - wget
+- npm packages:
+  - yarn
+- Binary downloaded:
+  - yq
+
+The configurations applied in the image include:
+
+- Creating a group named `microk8s`.
+- Adding the `ubuntu` user to the `microk8s` group. Note that the `microk8s` package is not installed in the image; this preconfigures the group for users who install the package.
+- Adding the `ubuntu` user to the `docker` group.
+- Adding iptables rules to accept traffic for the DOCKER-USER chain. This resolves a networking conflict with LXD.
+
 ## Network configuration
 
 The charm respects the HTTP(S) proxy configuration of the model configuration of Juju. The configuration can be set with [`juju model-config`](https://juju.is/docs/juju/juju-model-config) using the following keys: `juju-http-proxy`, `juju-https-proxy`, `juju-no-proxy`. The GitHub self-hosted runner applications are configured to use the proxy configuration.
@@ -27,7 +53,6 @@ The charm respects the HTTP(S) proxy configuration of the model configuration of
 If an HTTP(S) proxy is used, all HTTP(S) requests in the GitHub workflow will be transparently routed to the proxy with [aproxy](https://github.com/canonical/aproxy). Iptables are set up to route network traffic to the destination on ports 80 and 443 to the aproxy. The aproxy will route received packets to the configured HTTP(S) proxy. The service is installed on each runner virtual machine and configured according to the proxy configuration from the Juju model.
 
 The nftables on the Juju machine are configured to deny traffic from the runner virtual machine to IPs on the [`denylist` configuration](https://charmhub.io/github-runner/configure#denylist). The runner will always have access to essential services such as DHCP and DNS, regardless of the denylist configuration.
-
 
 ## GitHub API usage
 

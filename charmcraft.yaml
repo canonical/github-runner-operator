@@ -11,6 +11,8 @@ parts:
       - libffi-dev  # for cffi
       - libssl-dev  # for cryptography
       - rust-all  # for cryptography
+    prime:
+      - scripts/build-image.sh
 bases:
   - build-on:
     - name: "ubuntu"

@@ -13,8 +13,9 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 from errors import CreateSharedFilesystemError, RunnerCreateError, RunnerRemoveError
-from runner import CreateRunnerConfig, Runner, RunnerClients, RunnerConfig, RunnerStatus
-from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
+from runner import CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
+from runner_manager_type import RunnerManagerClients
+from runner_type import GithubOrg, GithubRepo, VirtualMachineResources
 from shared_fs import SharedFilesystem
 from tests.unit.mock import (
     MockLxdClient,
@@ -92,15 +93,15 @@ def jinja2_environment_fixture() -> MagicMock:
     scope="function",
     name="runner",
     params=[
-        (GitHubOrg("test_org", "test_group"), {}),
+        (GithubOrg("test_org", "test_group"), {}),
         (
-            GitHubRepo("test_owner", "test_repo"),
+            GithubRepo("test_owner", "test_repo"),
             {"no_proxy": "test_no_proxy", "http": "test_http", "https": "test_https"},
         ),
     ],
 )
 def runner_fixture(request, lxd: MockLxdClient, jinja: MagicMock, tmp_path: Path):
-    client = RunnerClients(
+    client = RunnerManagerClients(
         MagicMock(),
         jinja,
         lxd,

@@ -89,7 +89,7 @@ async def test_flush_runner_and_resource_config(app: Application) -> None:
     await assert_resource_lxd_profile(unit, configs)
 
     # 3.
-    await app.set_config({"vm-cpu": "1", "vm-memory": "3GiB", "vm-disk": "5GiB"})
+    await app.set_config({"vm-cpu": "1", "vm-memory": "3GiB", "vm-disk": "8GiB"})
 
     # 4.
     action = await app.units[0].run_action("flush-runners")
