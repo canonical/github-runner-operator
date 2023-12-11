@@ -45,7 +45,14 @@ def remove_outdated_crashed() -> None:
     """Remove the logs of the crashed runners that are older than a certain amount of time."""
     logger.info("Removing outdated logs of the crashed runners.")
     maxage_absolute = time.time() - OUTDATED_LOGS_IN_SECONDS
+
     for log_path in CRASHED_RUNNER_LOGS_DIR_PATH.glob("*"):
         if log_path.is_dir() and (log_path.stat().st_mtime < maxage_absolute):
             logger.info("Removing the outdated logs of the crashed runner %s.", log_path.name)
-            shutil.rmtree(log_path)
+            try:
+                shutil.rmtree(log_path)
+            except OSError:
+                logger.exception(
+                    "Unable to remove the outdated logs of the crashed runner %s.", log_path.name
+                )
+

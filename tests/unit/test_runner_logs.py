@@ -48,7 +48,7 @@ def test_remove_outdated_crashed(log_dir_base_path: Path, monkeypatch: pytest.Mo
     act: Remove the logs of the crashed runner
     assert: The expected logs are removed
     """
-    monkeypatch.setattr(runner_logs, "SEVEN_DAYS_IN_SECONDS", 0)
+    monkeypatch.setattr(runner_logs, "OUTDATED_LOGS_IN_SECONDS", 0)
 
     log_dir_path = log_dir_base_path / "test-runner"
     log_dir_path.mkdir(parents=True)
