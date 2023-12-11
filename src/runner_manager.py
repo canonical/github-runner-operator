@@ -540,15 +540,30 @@ class RunnerManager:
             )
         return delta
 
-    def flush(self, flush_busy: bool = True) -> int:
+    def flush(self, flush_busy: bool = True, wait_repo_check: bool = False) -> int:
         """Remove existing runners.
 
         Args:
-            flush_busy: Whether to flush busy runners as well.
+            flush_busy: Whether to flush busy runners.
+            wait_repo_check: Whether to wait for busy runner to complete
+                repo-policy-compliance check before flushing the runners.
 
         Returns:
             Number of runners removed.
         """
+        if wait_repo_check:
+            for _ in range(5):
+                busy_runners = [
+                    runner
+                    for runner in self._get_runners()
+                    if runner.status.exist and runner.status.busy
+                ]
+                for runner in busy_runners:
+                    # TODO:
+                    runner.instance.execute()
+
+                time.sleep(30)
+
         if flush_busy:
             runners = [runner for runner in self._get_runners() if runner.status.exist]
         else:

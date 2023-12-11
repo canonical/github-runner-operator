@@ -78,7 +78,7 @@ Check if runner binary exists.
 ### <kbd>function</kbd> `flush`
 
 ```python
-flush(flush_busy: bool = True) → int
+flush(flush_busy: bool = True, wait_repo_check: bool = False) → int
 ```
 
 Remove existing runners. 
@@ -87,7 +87,8 @@ Remove existing runners.
 
 **Args:**
  
- - <b>`flush_busy`</b>:  Whether to flush busy runners as well. 
+ - <b>`flush_busy`</b>:  Whether to flush busy runners. 
+ - <b>`wait_repo_check`</b>:  Whether to wait for busy runner to complete  repo-policy-compliance check before flushing the runners. 
 
 
 
