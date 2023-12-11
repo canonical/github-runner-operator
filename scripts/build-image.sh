@@ -51,7 +51,7 @@ cleanup() {
 cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD VM of previous run' 10
 
 if [[ "$1" == "test" ]]; then
-    retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --device root,size=5GiB' 'Starting LXD VM'
+    retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --device root,size=8GiB' 'Starting LXD VM'
 else
     retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --vm --device root,size=5GiB' 'Starting LXD container'
 fi
