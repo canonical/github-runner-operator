@@ -63,9 +63,9 @@ Configuration of runner manager.
 
 ---
 
-#### <kbd>property</kbd> is_metrics_logging_enabled
+#### <kbd>property</kbd> are_metrics_enabled
 
-Whether metrics logging is enabled. 
+Whether metrics for the runners should be collected. 
 
 
 
