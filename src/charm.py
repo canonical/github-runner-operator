@@ -525,7 +525,6 @@ class GithubRunnerCharm(CharmBase):
 
             self.unit.status = MaintenanceStatus("Flushing runners due to updated deps")
 
-            # TODO: Wait until busy runner are at least one minutes into the job, then flush.
             runner_manager.flush(flush_busy=False)
             self._start_services()
 

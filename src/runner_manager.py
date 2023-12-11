@@ -3,6 +3,7 @@
 
 """Runner Manager manages the runners on LXD and GitHub."""
 
+import datetime
 import hashlib
 import logging
 import random
@@ -483,6 +484,30 @@ class RunnerManager:
             )
         return delta
 
+    def _runners_in_pre_job(self) -> bool:
+        """Check there exist runners in the pre-job script stage.
+
+        If a runner has taken a job for 1 minute or more, it is assumed to exit the pre-job script.
+
+        Returns:
+            Whether there are runners that has taken a job and run for less than 1 minute.
+        """
+        now = datetime.now()
+        busy_runners = [
+            runner for runner in self._get_runners() if runner.status.exist and runner.status.busy
+        ]
+        for runner in busy_runners:
+            exit_code, stdout, _ = runner.instance.execute(
+                ["/usr/bin/stat", "-c", "'%w'", "/home/ubuntu/github-runner/_work"]
+            )
+            if exit_code != 0:
+                return False
+            date_str, time_str, timezone_str = stdout.read().decode("utf-8").split(" ")
+            job_start_time = datetime.fromisoformat(f"{date_str}T{time_str[:12]}{timezone_str}")
+            if job_start_time + datetime.timedelta(minutes=1) > now:
+                return False
+        return True
+
     def flush(self, flush_busy: bool = True, wait_repo_check: bool = False) -> int:
         """Remove existing runners.
 
@@ -496,16 +521,16 @@ class RunnerManager:
         """
         if wait_repo_check:
             for _ in range(5):
-                busy_runners = [
-                    runner
-                    for runner in self._get_runners()
-                    if runner.status.exist and runner.status.busy
-                ]
-                for runner in busy_runners:
-                    # TODO:
-                    runner.instance.execute()
-
+                if not self._runners_in_pre_job():
+                    break
                 time.sleep(30)
+            else:
+                logger.warning(
+                    (
+                        "Proceed with flush runner after timeout waiting on runner in setup "
+                        "stage, pre-job script might fail in currently running jobs"
+                    )
+                )
 
         if flush_busy:
             runners = [runner for runner in self._get_runners() if runner.status.exist]
