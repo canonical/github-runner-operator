@@ -12,10 +12,16 @@ from ops.testing import Harness
 
 from charm import GithubRunnerCharm
 from charm_state import ARCH
-from errors import LogrotateSetupError, MissingConfigurationError, RunnerError, SubprocessError
+from errors import (
+    ConfigurationError,
+    LogrotateSetupError,
+    MissingConfigurationError,
+    RunnerError,
+    SubprocessError,
+)
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
-from runner_type import GitHubOrg, GitHubRepo, VirtualMachineResources
+from runner_type import GithubOrg, GithubRepo, VirtualMachineResources
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
@@ -36,6 +42,10 @@ def mock_get_latest_runner_bin_url(os_name: str = "linux", arch: ARCH = ARCH.X64
     mock = MagicMock()
     mock.download_url = "www.example.com"
     return mock
+
+
+def mock_download_latest_runner_image(*args):
+    return "www.example.com"
 
 
 def mock_get_github_info():
@@ -108,9 +118,9 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubOrg(org="mockorg", group="mockgroup"),
+                path=GithubOrg(org="mockorg", group="mockgroup"),
                 token="mocktoken",
-                image="jammy",
+                image="runner",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
                 charm_state=harness.charm._state,
@@ -134,9 +144,9 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubRepo(owner="mockorg", repo="repo"),
+                path=GithubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
-                image="jammy",
+                image="runner",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
                 charm_state=harness.charm._state,
@@ -151,6 +161,8 @@ class TestCharm(unittest.TestCase):
     def test_update_config(self, run, wt, mkdir, rm):
         rm.return_value = mock_rm = MagicMock()
         mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
+        mock_rm.download_latest_runner_image = mock_download_latest_runner_image
+
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
         harness.begin()
@@ -163,9 +175,9 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubRepo(owner="mockorg", repo="repo"),
+                path=GithubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
-                image="jammy",
+                image="runner",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
                 charm_state=harness.charm._state,
@@ -183,9 +195,9 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             RunnerManagerConfig(
-                path=GitHubRepo(owner="mockorg", repo="repo"),
+                path=GithubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
-                image="jammy",
+                image="runner",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
                 charm_state=harness.charm._state,
@@ -227,7 +239,8 @@ class TestCharm(unittest.TestCase):
         assert harness.charm._get_runner_manager() is not None
 
         # With invalid path.
-        assert harness.charm._get_runner_manager("mocktoken", "mock/invalid/path") is None
+        with self.assertRaises(ConfigurationError):
+            harness.charm._get_runner_manager("mocktoken", "mock/invalid/path")
 
     @patch("charm.metrics.setup_logrotate")
     @patch("charm.RunnerManager")
@@ -240,6 +253,7 @@ class TestCharm(unittest.TestCase):
 
         rm.return_value = mock_rm = MagicMock()
         mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
+        mock_rm.download_latest_runner_image = mock_download_latest_runner_image
 
         harness = Harness(GithubRunnerCharm)
         harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})

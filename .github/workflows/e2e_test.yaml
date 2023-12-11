@@ -492,3 +492,5 @@ jobs:
         run: |
           HOST_IP=$(ip route | grep default | cut -f 3 -d" ")
           [ $((ping $HOST_IP -c 5 || :) | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
+      - name: Test sctp support
+        run: sudo apt-get install lksctp-tools -yq && checksctp

@@ -1,18 +1,12 @@
 # Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Types used by both RunnerManager and Runner classes."""
+"""Types used by Runner class."""
 
 
 from dataclasses import dataclass
 from pathlib import Path
 from typing import NamedTuple, Optional, TypedDict, Union
-
-import jinja2
-from ghapi.all import GhApi
-
-from lxd import LxdClient
-from repo_policy_compliance_client import RepoPolicyComplianceClient
 
 
 @dataclass
@@ -33,7 +27,7 @@ class ProxySetting(TypedDict, total=False):
 
 
 @dataclass
-class GitHubRepo:
+class GithubRepo:
     """Represent GitHub repository."""
 
     owner: str
@@ -45,7 +39,7 @@ class GitHubRepo:
 
 
 @dataclass
-class GitHubOrg:
+class GithubOrg:
     """Represent GitHub organization."""
 
     org: str
@@ -56,7 +50,7 @@ class GitHubOrg:
         return self.org
 
 
-GitHubPath = Union[GitHubOrg, GitHubRepo]
+GithubPath = Union[GithubOrg, GithubRepo]
 
 
 class VirtualMachineResources(NamedTuple):
@@ -65,22 +59,6 @@ class VirtualMachineResources(NamedTuple):
     cpu: int
     memory: str
     disk: str
-
-
-@dataclass
-class RunnerClients:
-    """Clients for accessing various services.
-
-    Attributes:
-        github: Used to query GitHub API.
-        jinja: Used for templating.
-        lxd: Used to interact with LXD API.
-    """
-
-    github: GhApi
-    jinja: jinja2.Environment
-    lxd: LxdClient
-    repo: RepoPolicyComplianceClient
 
 
 @dataclass
@@ -100,7 +78,7 @@ class RunnerConfig:
 
     name: str
     app_name: str
-    path: GitHubPath
+    path: GithubPath
     proxies: ProxySetting
     lxd_storage_path: Path
     issue_metrics: bool

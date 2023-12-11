@@ -39,13 +39,13 @@ The configuration values for creating a single runner instance.
 ## <kbd>class</kbd> `Runner`
 Single instance of GitHub self-hosted runner. 
 
-<a href="../src/runner.py#L101"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L102"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
 ```python
 __init__(
-    clients: RunnerClients,
+    clients: RunnerManagerClients,
     runner_config: RunnerConfig,
     runner_status: RunnerStatus,
     instance: Optional[LxdInstance] = None
@@ -67,7 +67,7 @@ Construct the runner instance.
 
 ---
 
-<a href="../src/runner.py#L131"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L132"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `create`
 
@@ -81,11 +81,7 @@ Create the runner instance on LXD and register it on GitHub.
 
 **Args:**
  
- - <b>`image`</b>:  Name of the image to launch the LXD instance with. 
- - <b>`resources`</b>:  Resource setting for the LXD instance. 
- - <b>`binary_path`</b>:  Path to the runner binary. 
- - <b>`registration_token`</b>:  Token for registering the runner on GitHub. 
- - <b>`arch`</b>:  Current machine architecture. 
+ - <b>`config`</b>:  The instance config to create the LXD VMs and configure GitHub runner with. 
 
 
 
@@ -95,7 +91,7 @@ Create the runner instance on LXD and register it on GitHub.
 
 ---
 
-<a href="../src/runner.py#L171"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L168"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `remove`
 
@@ -121,7 +117,7 @@ Remove this runner instance from LXD and GitHub.
 ---
 
 ## <kbd>class</kbd> `Snap`
-Snap(name, channel) 
+This class represents a snap installation. 
 
 
 
