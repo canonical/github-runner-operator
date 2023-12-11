@@ -486,8 +486,7 @@ def test_issue_events_no_post_job_metrics(issue_event_mock: MagicMock):
             workflow=runner_metrics_data.pre_job.workflow,
             repo=runner_metrics_data.pre_job.repository,
             github_event=runner_metrics_data.pre_job.event,
-            idle=runner_metrics_data.pre_job.timestamp
-            - runner_metrics_data.installed_timestamp,
+            idle=runner_metrics_data.pre_job.timestamp - runner_metrics_data.installed_timestamp,
             queue_duration=3600,
         )
     )
