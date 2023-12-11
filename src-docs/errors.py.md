@@ -45,6 +45,24 @@ Represents an error when the shared filesystem could not be deleted.
 
 ---
 
+## <kbd>class</kbd> `GithubClientError`
+Base class for all github client errors. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `GithubMetricsError`
+Base class for all github metrics errors. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `IssueMetricEventError`
 Represents an error when issuing a metric event. 
 
@@ -54,8 +72,8 @@ Represents an error when issuing a metric event.
 
 ---
 
-## <kbd>class</kbd> `JobNotFoundOnGithubError`
-Represents an error with the job queue duration calculation. 
+## <kbd>class</kbd> `JobNotFoundError`
+Represents an error when the job could not be found on GitHub. 
 
 
 

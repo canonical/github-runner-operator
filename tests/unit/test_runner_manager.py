@@ -327,7 +327,7 @@ def test_reconcile_issues_reconciliation_metric_event(
     arrange:
         - Enable issuing of metrics
         - Mock timestamps
-        - Mock the result of runner_metrics.extract to contain 2 RunnerStart and 1 RunnerStop
+        - Mock the result of runner_metrics.issue_event to contain 2 RunnerStart and 1 RunnerStop
             events, meaning one runner was active and one crashed.
         - Create two online runners , one active and one idle.
     act: Reconcile.
@@ -337,7 +337,8 @@ def test_reconcile_issues_reconciliation_metric_event(
     charm_state.is_metrics_logging_available = True
     t_mock = MagicMock(return_value=12345)
     monkeypatch.setattr(RUNNER_MANAGER_TIME_MODULE, t_mock)
-    runner_metrics.extract.return_value = {RunnerStart: 2, RunnerStop: 1}
+    runner_metrics.extract.return_value = (MagicMock() for _ in range(2))
+    runner_metrics.issue_events.side_effect = [{RunnerStart, RunnerStop}, {RunnerStart}]
 
     online_idle_runner_name = f"{runner_manager.instance_name}-0"
     offline_idle_runner_name = f"{runner_manager.instance_name}-1"

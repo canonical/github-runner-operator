@@ -5,15 +5,11 @@
 
 import json
 import logging
-from datetime import datetime
 from enum import Enum
 from json import JSONDecodeError
 from pathlib import Path
-from typing import Optional, Type
-from urllib.error import HTTPError
+from typing import Iterator, Optional, Type
 
-from ghapi.core import GhApi
-from ghapi.page import paged
 from pydantic import BaseModel, NonNegativeFloat, ValidationError
 
 import errors
@@ -27,21 +23,6 @@ FILE_SIZE_BYTES_LIMIT = 1024
 PRE_JOB_METRICS_FILE_NAME = "pre-job-metrics.json"
 POST_JOB_METRICS_FILE_NAME = "post-job-metrics.json"
 RUNNER_INSTALLED_TS_FILE_NAME = "runner-installed.timestamp"
-
-
-IssuedMetricEventsStats = dict[Type[metrics.Event], int]
-
-
-class GithubJobStats(BaseModel):
-    """Stats for a job on GitHub.
-
-    Args:
-        created_at: The time the job was created.
-        started_at: The time the job was started.
-    """
-
-    created_at: datetime
-    started_at: datetime
 
 
 class PreJobMetrics(BaseModel):
@@ -88,11 +69,13 @@ class RunnerMetrics(BaseModel):
         installed_timestamp: The UNIX time stamp of the time at which the runner was installed.
         pre_job: The metrics for the pre-job phase.
         post_job: The metrics for the post-job phase.
+        runner_name: The name of the runner.
     """
 
     installed_timestamp: NonNegativeFloat
     pre_job: PreJobMetrics
     post_job: Optional[PostJobMetrics]
+    runner_name: str
 
 
 def _inspect_file_sizes(fs: shared_fs.SharedFilesystem) -> tuple[Path, ...]:
@@ -133,39 +116,40 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
             f"The limit is {FILE_SIZE_BYTES_LIMIT} bytes."
         )
 
+    runner_name = fs.runner_name
     try:
         installed_timestamp = fs.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).read_text()
-        logger.debug("Runner %s installed at %s", fs.runner_name, installed_timestamp)
+        logger.debug("Runner %s installed at %s", runner_name, installed_timestamp)
     except FileNotFoundError:
-        logger.exception("installed_timestamp not found for runner %s", fs.runner_name)
+        logger.exception("installed_timestamp not found for runner %s", runner_name)
         return None
 
     try:
         pre_job_metrics = json.loads(fs.path.joinpath(PRE_JOB_METRICS_FILE_NAME).read_text())
-        logger.debug("Pre-job metrics for runner %s: %s", fs.runner_name, pre_job_metrics)
+        logger.debug("Pre-job metrics for runner %s: %s", runner_name, pre_job_metrics)
     except FileNotFoundError:
-        logger.warning("%s not found for runner %s.", PRE_JOB_METRICS_FILE_NAME, fs.runner_name)
+        logger.warning("%s not found for runner %s.", PRE_JOB_METRICS_FILE_NAME, runner_name)
         return None
     except JSONDecodeError as exc:
         raise CorruptMetricDataError(str(exc)) from exc
 
     try:
         post_job_metrics = json.loads(fs.path.joinpath(POST_JOB_METRICS_FILE_NAME).read_text())
-        logger.debug("Post-job metrics for runner %s: %s", fs.runner_name, post_job_metrics)
+        logger.debug("Post-job metrics for runner %s: %s", runner_name, post_job_metrics)
     except FileNotFoundError:
-        logger.warning("%s not found for runner %s", POST_JOB_METRICS_FILE_NAME, fs.runner_name)
+        logger.warning("%s not found for runner %s", POST_JOB_METRICS_FILE_NAME, runner_name)
         post_job_metrics = None
     except JSONDecodeError as exc:
         raise CorruptMetricDataError(str(exc)) from exc
 
     if not isinstance(pre_job_metrics, dict):
         raise CorruptMetricDataError(
-            f"Pre-job metrics for runner {fs.runner_name} is not a JSON object."
+            f"Pre-job metrics for runner {runner_name} is not a JSON object."
         )
 
     if not isinstance(post_job_metrics, dict) and post_job_metrics is not None:
         raise CorruptMetricDataError(
-            f"Post-job metrics for runner {fs.runner_name} is not a JSON object."
+            f"Post-job metrics for runner {runner_name} is not a JSON object."
         )
 
     try:
@@ -173,124 +157,10 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
             installed_timestamp=installed_timestamp,
             pre_job=PreJobMetrics(**pre_job_metrics),
             post_job=PostJobMetrics(**post_job_metrics) if post_job_metrics else None,
+            runner_name=runner_name,
         )
     except ValidationError as exc:
         raise CorruptMetricDataError(str(exc)) from exc
-
-
-def _issue_runner_metrics(
-    runner_metrics: RunnerMetrics, flavor: str, queue_duration: Optional[float]
-) -> IssuedMetricEventsStats:
-    """Issue metrics.
-
-    Converts the metrics into respective metric events and issues them.
-
-    Args:
-        runner_metrics: The metrics to be issued.
-        flavor: The flavor of the runners.
-        queue_duration: The time in seconds the job took before the runner picked it up.
-
-    Returns:
-        A dictionary containing the number of issued events per event type.
-    """
-    runner_start_event = metrics.RunnerStart(
-        timestamp=runner_metrics.pre_job.timestamp,
-        flavor=flavor,
-        workflow=runner_metrics.pre_job.workflow,
-        repo=runner_metrics.pre_job.repository,
-        github_event=runner_metrics.pre_job.event,
-        idle=runner_metrics.pre_job.timestamp - runner_metrics.installed_timestamp,
-        queue_duration=queue_duration,
-    )
-    metrics.issue_event(runner_start_event)
-    stats = {metrics.RunnerStart: 1}
-
-    if runner_metrics.post_job:
-        runner_stop_event = metrics.RunnerStop(
-            timestamp=runner_metrics.post_job.timestamp,
-            flavor=flavor,
-            workflow=runner_metrics.pre_job.workflow,
-            repo=runner_metrics.pre_job.repository,
-            github_event=runner_metrics.pre_job.event,
-            status=runner_metrics.post_job.status,
-            job_duration=runner_metrics.post_job.timestamp - runner_metrics.pre_job.timestamp,
-        )
-        metrics.issue_event(runner_stop_event)
-        stats[metrics.RunnerStop] = 1
-
-    return stats
-
-
-def _find_job_on_github(
-    ghapi: GhApi, owner: str, repo: str, workflow_run_id: str, runner_name: str
-) -> GithubJobStats:
-    """Find a job for a workflow run on GitHub and return the job stats.
-
-    Args:
-        ghapi: The GitHub API client.
-        owner: The owner of the repository.
-        repo: The repository name.
-        workflow_run_id: The workflow run id.
-        runner_name: The name of the runner.
-    Returns:
-        The job stats.
-    Raises:
-        JobNotFoundOnGithubError: Raised if the job data could not be retrieved.
-    """
-    paged_kwargs = {"owner": owner, "repo": repo, "run_id": workflow_run_id}
-    try:
-        for wf_run_page in paged(ghapi.actions.list_jobs_for_workflow_run, **paged_kwargs):
-            jobs = wf_run_page["jobs"]
-            # ghapi performs endless pagination,
-            # so we have to break out of the loop if there are no more jobs
-            if not jobs:
-                break
-            for job in jobs:
-                if job["runner_name"] == runner_name:
-                    # datetime strings should be in ISO 8601 format,
-                    # but they can also use Z instead of
-                    # +00:00, which is not supported by datetime.fromisoformat
-                    created_at = datetime.fromisoformat(job["created_at"].replace("Z", "+00:00"))
-                    started_at = datetime.fromisoformat(job["started_at"].replace("Z", "+00:00"))
-                    return GithubJobStats(created_at=created_at, started_at=started_at)
-
-    except HTTPError as exc:
-        raise errors.JobNotFoundOnGithubError(
-            f"Could not find job for runner {runner_name}. "
-            f"Could not list jobs for workflow run {workflow_run_id}"
-        ) from exc
-
-    raise errors.JobNotFoundOnGithubError(f"Could not find job for runner {runner_name}.")
-
-
-def _calculate_job_queue_duration(
-    ghapi: GhApi, pre_job_metrics: PreJobMetrics, runner_name: str
-) -> float:
-    """Calculate the job queue duration.
-
-    The Github API is accessed to retrieve the job data for the runner, which includes
-    the time the job was created and the time the job was started.
-
-    Args:
-        ghapi: The GitHub API client.
-        pre_job_metrics: The pre-job metrics.
-        runner_name: The name of the runner.
-
-    Returns:
-        The time in seconds the job took before the runner picked it up.
-    """
-    owner, repo = pre_job_metrics.repository.split("/", maxsplit=1)
-
-    job = _find_job_on_github(
-        ghapi=ghapi,
-        owner=owner,
-        repo=repo,
-        workflow_run_id=pre_job_metrics.workflow_run_id,
-        runner_name=runner_name,
-    )
-    duration = (job.started_at - job.created_at).total_seconds()
-
-    return duration
 
 
 def _clean_up_shared_fs(fs: shared_fs.SharedFilesystem) -> None:
@@ -318,17 +188,15 @@ def _clean_up_shared_fs(fs: shared_fs.SharedFilesystem) -> None:
 
 
 def _extract_fs(
-    runner_fs: shared_fs.SharedFilesystem, flavor: str, gh_api: GhApi
-) -> IssuedMetricEventsStats:
-    """Extract and issue metrics from a shared filesystem.
+    runner_fs: shared_fs.SharedFilesystem,
+) -> Optional[RunnerMetrics]:
+    """Extract metrics from a shared filesystem.
 
     Args:
         runner_fs: The shared filesystem for a specific runner.
-        flavor: The flavor of the runner.
-        gh_api: The GitHub API client.
 
     Returns:
-        A dictionary containing the number of issued events per event type.
+        The extracted metrics if at least the pre-job metrics are present.
     """
     runner_name = runner_fs.runner_name
     try:
@@ -337,54 +205,93 @@ def _extract_fs(
     except CorruptMetricDataError:
         logger.exception("Corrupt metric data found for runner %s", runner_name)
         shared_fs.move_to_quarantine(runner_name)
-        return {}
-
-    stats = {}
-    if metrics_from_fs:
-        try:
-            jq_duration = _calculate_job_queue_duration(
-                ghapi=gh_api, pre_job_metrics=metrics_from_fs.pre_job, runner_name=runner_name
-            )
-        except errors.JobNotFoundOnGithubError:
-            logger.exception("Not able to calculate queue duration for runner %s", runner_name)
-            jq_duration = None
-        try:
-            stats = _issue_runner_metrics(
-                runner_metrics=metrics_from_fs, flavor=flavor, queue_duration=jq_duration
-            )
-        except errors.IssueMetricEventError:
-            logger.exception("Not able to issue metrics for runner %s", runner_name)
-    else:
-        logger.warning("Not able to issue metrics for runner %s", runner_name)
+        return None
 
     logger.debug("Cleaning up shared filesystem for runner %s", runner_name)
     _clean_up_shared_fs(runner_fs)
-    return stats
+    return metrics_from_fs
 
 
-def extract(flavor: str, ignore_runners: set[str], gh_api: GhApi) -> IssuedMetricEventsStats:
-    """Extract and issue metrics from runners.
+def extract(ignore_runners: set[str]) -> Iterator[RunnerMetrics]:
+    """Extract metrics from runners.
 
-    The metrics are extracted from the shared filesystem of given runners
-    and respective metric events are issued.
+    The metrics are extracted from the shared filesystem of given runners.
     Orphan shared filesystems are cleaned up.
 
-    If corrupt data is found, an error is raised immediately, as this may indicate that a malicious
+    If corrupt data is found, the metrics are not processed further and the filesystem is moved
+    to a special quarantine directory, as this may indicate that a malicious
     runner is trying to manipulate the shared file system.
+
     In order to avoid DoS attacks, the file size is also checked.
 
     Args:
-        flavor: The flavor of the runners to extract metrics from.
         ignore_runners: The set of runners to ignore.
-        gh_api: The GitHub API client.
 
     Returns:
-        A dictionary containing the number of issued events per event type.
+        An iterator over the extracted metrics.
     """
-    total_stats: IssuedMetricEventsStats = {}
     for fs in shared_fs.list_all():
         if fs.runner_name not in ignore_runners:
-            stats = _extract_fs(runner_fs=fs, flavor=flavor, gh_api=gh_api)
-            for event_type, count in stats.items():
-                total_stats[event_type] = total_stats.get(event_type, 0) + count
-    return total_stats
+            runner_metrics = _extract_fs(runner_fs=fs)
+            if not runner_metrics:
+                logger.warning("Not able to issue metrics for runner %s", fs.runner_name)
+            else:
+                yield runner_metrics
+
+
+def issue_events(
+    runner_metrics: RunnerMetrics, flavor: str, queue_duration: Optional[float]
+) -> set[Type[metrics.Event]]:
+    """Issue the metrics events for a runner.
+
+    Args:
+        runner_metrics: The metrics for the runner.
+        flavor: The flavor of the runner.
+        queue_duration: The queue duration of the runner.
+
+    Returns:
+        A set of issued events.
+    """
+    runner_start_event = metrics.RunnerStart(
+        timestamp=runner_metrics.pre_job.timestamp,
+        flavor=flavor,
+        workflow=runner_metrics.pre_job.workflow,
+        repo=runner_metrics.pre_job.repository,
+        github_event=runner_metrics.pre_job.event,
+        idle=runner_metrics.pre_job.timestamp - runner_metrics.installed_timestamp,
+        queue_duration=queue_duration,
+    )
+    try:
+        metrics.issue_event(runner_start_event)
+    except errors.IssueMetricEventError:
+        logger.exception(
+            "Not able to issue RunnerStart metric for runner %s. "
+            "Will not issue RunnerStop metric.",
+            runner_metrics.runner_name,
+        )
+        # Return to not issuing RunnerStop metrics if RunnerStart metric could not be issued.
+        return set()
+
+    issued_events = {metrics.RunnerStart}
+
+    if runner_metrics.post_job:
+        runner_stop_event = metrics.RunnerStop(
+            timestamp=runner_metrics.post_job.timestamp,
+            flavor=flavor,
+            workflow=runner_metrics.pre_job.workflow,
+            repo=runner_metrics.pre_job.repository,
+            github_event=runner_metrics.pre_job.event,
+            status=runner_metrics.post_job.status,
+            job_duration=runner_metrics.post_job.timestamp - runner_metrics.pre_job.timestamp,
+        )
+        try:
+            metrics.issue_event(runner_stop_event)
+        except errors.IssueMetricEventError:
+            logger.exception(
+                "Not able to issue RunnerStop metric for runner %s.", runner_metrics.runner_name
+            )
+            return issued_events
+
+        issued_events.add(metrics.RunnerStop)
+
+    return issued_events
