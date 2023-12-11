@@ -24,7 +24,7 @@ extract(ignore_runners: set[str]) → Iterator[RunnerMetrics]
 
 Extract metrics from runners. 
 
-The metrics are extracted from the shared filesystem of given runners. Orphan shared filesystems are cleaned up. 
+The metrics are extracted from the shared filesystems of the runners. Orphan shared filesystems are cleaned up. 
 
 If corrupt data is found, the metrics are not processed further and the filesystem is moved to a special quarantine directory, as this may indicate that a malicious runner is trying to manipulate the shared file system. 
 
@@ -64,7 +64,7 @@ Issue the metrics events for a runner.
  
  - <b>`runner_metrics`</b>:  The metrics for the runner. 
  - <b>`flavor`</b>:  The flavor of the runner. 
- - <b>`queue_duration`</b>:  The queue duration of the runner. 
+ - <b>`queue_duration`</b>:  The job queue duration of the job the runner executed. 
 
 
 
@@ -109,7 +109,7 @@ Metrics for the pre-job phase of a runner.
  - <b>`timestamp`</b>:  The UNIX time stamp of the time at which the event was originally issued. 
  - <b>`workflow`</b>:  The workflow name. 
  - <b>`workflow_run_id`</b>:  The workflow run id. 
- - <b>`repository`</b>:  The repository name. 
+ - <b>`repository`</b>:  The repository path in the format '<owner>/<repo>'. 
  - <b>`event`</b>:  The github event. 
 
 

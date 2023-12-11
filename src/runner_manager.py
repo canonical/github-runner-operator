@@ -318,7 +318,7 @@ class RunnerManager:
                     runner_name=extracted_metrics.runner_name,
                 )
             except errors.GithubMetricsError:
-                logger.exception("Failed to get job queue duration")
+                logger.exception("Failed to calculate job queue duration")
                 queue_duration = None
 
             issued_events = runner_metrics.issue_events(

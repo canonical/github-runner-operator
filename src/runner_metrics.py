@@ -10,7 +10,7 @@ from json import JSONDecodeError
 from pathlib import Path
 from typing import Iterator, Optional, Type
 
-from pydantic import BaseModel, NonNegativeFloat, ValidationError
+from pydantic import BaseModel, Field, NonNegativeFloat, ValidationError
 
 import errors
 import metrics
@@ -32,14 +32,14 @@ class PreJobMetrics(BaseModel):
         timestamp: The UNIX time stamp of the time at which the event was originally issued.
         workflow: The workflow name.
         workflow_run_id: The workflow run id.
-        repository: The repository name.
+        repository: The repository path in the format '<owner>/<repo>'.
         event: The github event.
     """
 
     timestamp: NonNegativeFloat
     workflow: str
     workflow_run_id: str
-    repository: str
+    repository: str = Field(None, regex=r"^.+/.+$")
     event: str
 
 
@@ -215,7 +215,7 @@ def _extract_fs(
 def extract(ignore_runners: set[str]) -> Iterator[RunnerMetrics]:
     """Extract metrics from runners.
 
-    The metrics are extracted from the shared filesystem of given runners.
+    The metrics are extracted from the shared filesystems of the runners.
     Orphan shared filesystems are cleaned up.
 
     If corrupt data is found, the metrics are not processed further and the filesystem is moved
@@ -247,7 +247,7 @@ def issue_events(
     Args:
         runner_metrics: The metrics for the runner.
         flavor: The flavor of the runner.
-        queue_duration: The queue duration of the runner.
+        queue_duration: The job queue duration of the job the runner executed.
 
     Returns:
         A set of issued events.
