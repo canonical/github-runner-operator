@@ -47,7 +47,7 @@ from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
-from runner_type import GitHubOrg, GitHubRepo, ProxySetting, VirtualMachineResources
+from runner_type import GithubOrg, GithubRepo, ProxySetting, VirtualMachineResources
 from utilities import bytes_with_unit_to_kib, execute_command, retry
 
 logger = logging.getLogger(__name__)
@@ -161,6 +161,7 @@ class GithubRunnerCharm(CharmBase):
             path=self.config["path"],  # for detecting changes
             token=self.config["token"],  # for detecting changes
             runner_bin_url=None,
+            runner_image_url=None,
         )
 
         self.proxies: ProxySetting = {}
@@ -291,12 +292,12 @@ class GithubRunnerCharm(CharmBase):
             paths = path.split("/")
             if len(paths) != 2:
                 logger.error("Invalid path %s", path)
-                return None
+                raise ConfigurationError(f"Invalid path {path}")
 
             owner, repo = paths
-            path = GitHubRepo(owner=owner, repo=repo)
+            path = GithubRepo(owner=owner, repo=repo)
         else:
-            path = GitHubOrg(org=path, group=self.config["group"])
+            path = GithubOrg(org=path, group=self.config["group"])
 
         app_name, unit = self.unit.name.rsplit("/", 1)
         return RunnerManager(
@@ -305,7 +306,7 @@ class GithubRunnerCharm(CharmBase):
             RunnerManagerConfig(
                 path=path,
                 token=token,
-                image="jammy",
+                image="runner",
                 service_token=self.service_token,
                 lxd_storage_path=self.ram_pool_path,
                 charm_state=self._state,
@@ -342,6 +343,11 @@ class GithubRunnerCharm(CharmBase):
 
         self._refresh_firewall()
         runner_manager = self._get_runner_manager()
+
+        self.unit.status = MaintenanceStatus("Building runner image")
+        runner_manager.build_runner_image()
+        runner_manager.schedule_build_runner_image()
+
         self.unit.status = MaintenanceStatus("Downloading runner binary")
         try:
             runner_info = runner_manager.get_latest_runner_bin_url()
@@ -484,7 +490,6 @@ class GithubRunnerCharm(CharmBase):
         # Check if the runner binary file exists.
         if not runner_manager.check_runner_bin():
             self._stored.runner_bin_url = None
-
         try:
             self.unit.status = MaintenanceStatus("Checking for runner binary updates")
             runner_info = runner_manager.get_latest_runner_bin_url()
