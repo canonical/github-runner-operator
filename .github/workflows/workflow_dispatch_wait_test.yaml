@@ -1,0 +1,29 @@
+name: Workflow Dispatch Wait Tests
+
+on:
+  # Manually dispatched workflow action
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: 'Self hosted gh runner'
+        required: true
+      minutes:
+        description: 'Number of minutes to wait'
+        # Number type not supported in workflow dispatch: https://github.com/orgs/community/discussions/67182
+        # Seems to be by design: https://github.blog/changelog/2021-11-10-github-actions-input-types-for-manual-workflows/
+        default: '2'
+
+
+jobs:
+  workflow-dispatch-tests:
+    runs-on: [self-hosted, linux, x64, "${{ inputs.runner }}"]
+    steps:
+      - name: Echo input variable and message
+        run: |
+          echo "Hello, runner: ${{ inputs.runner }}"
+      - name: Wait
+        run: |
+          sleep ${{ inputs.minutes }}m
+      - name: Always echo a message
+        if: always()
+        run: echo "Should not echo if pre-job script failed"

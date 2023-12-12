@@ -10,7 +10,7 @@ import secrets
 import tarfile
 import time
 import urllib.request
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, Iterator, Optional
 
@@ -492,7 +492,7 @@ class RunnerManager:
         Returns:
             Whether there are runners that has taken a job and run for less than 1 minute.
         """
-        now = datetime.now()
+        now = datetime.now(timezone.utc)
         busy_runners = [
             runner for runner in self._get_runners() if runner.status.exist and runner.status.busy
         ]

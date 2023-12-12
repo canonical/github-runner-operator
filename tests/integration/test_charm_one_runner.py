@@ -3,12 +3,18 @@
 
 """Integration tests for github-runner charm."""
 
+from datetime import datetime, timezone
+from time import sleep
+
 import pytest
+from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
 from charm import GithubRunnerCharm
+from github_client import GithubClient
 from tests.integration.helpers import (
+    DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     assert_resource_lxd_profile,
     get_runner_names,
     reconcile,
@@ -185,3 +191,69 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
     await reconcile(app=app, model=model)
 
     await wait_till_num_of_runners(unit, 1)
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_wait_on_busy_runner_repo_check(
+    model: Model,
+    app_runner: Application,
+    github_repository: Repository,
+    runner_manager_github_client: GithubClient,
+) -> None:
+    """
+    arrange: A working application with no runners.
+    act:
+        1. Set dockerhub-mirror config and spawn one runner.
+        2. Dispatch a workflow.
+    assert:
+        1. registry-mirrors is setup in /etc/docker/daemon.json of runner.
+        2. Message about dockerhub_mirror appears in logs.
+    """
+
+    unit = app_runner.units[0]
+
+    names = await get_runner_names(unit)
+    assert len(names) == 1
+
+    runner_to_be_used = names[0]
+
+    main_branch = github_repository.get_branch(github_repository.default_branch)
+    workflow = github_repository.get_workflow(id_or_file_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME)
+
+    workflow.create_dispatch(main_branch, {"runner": app_runner.name, "minutes": 30})
+
+    # Wait until runner is busy.
+    for _ in range(30):
+        all_runners = runner_manager_github_client.get_runner_github_info(
+            f"{github_repository.owner}/{github_repository.name}"
+        )
+        runner = [runner for runner in all_runners if runner.name == runner_to_be_used]
+        assert len(runner) == 1, "Should not occur GitHub should enforce unique naming"
+        runner = runner[0]
+        if runner["busy"]:
+            start_time = datetime.now(timezone.utc)
+            break
+
+        sleep(10)
+    else:
+        assert False, "Timeout while waiting for workflow to complete"
+
+    # Unable to find the run id of the workflow that was dispatched.
+    # Therefore, all runs after this test start should pass the conditions.
+    for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
+        if start_time > run.created_at:
+            continue
+
+        try:
+            logs_url = run.jobs()[0].logs_url()
+            logs = requests.get(logs_url).content.decode("utf-8")
+        except github.GithubException.GithubException:
+            continue
+
+        if f"Job is about to start running on the runner: {app_runner.name}-" in logs:
+            assert run.jobs()[0].conclusion == "success"
+            assert (
+                "A private docker registry is setup as a dockerhub mirror for this self-hosted"
+                " runner."
+            ) in logs
