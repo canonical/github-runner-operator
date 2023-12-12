@@ -11,6 +11,9 @@ The charm maintains a set of ephemeral self-hosted runners, each isolated in a s
 
 See [charm architecture](https://charmhub.io/github-runner/docs/charm-architecture) for more information.
 
+The charm also supports observability through the optional `cos-agent` integration.
+Metrics and logs about the runners and the charm itself are collected and sent to the [Canonical Observability Stack](https://charmhub.io/topics/canonical-observability-stack) for analysis and visualisation.
+
 This charm will make operating GitHub self-hosted runners simple and straightforward for DevOps or SRE teams through Juju's clean interface.
 
 The charm enforces a set of GitHub repository settings as best practice. This is planned to be opt-in in the future. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/repo-policy).

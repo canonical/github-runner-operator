@@ -56,6 +56,11 @@ class RunnerManagerConfig:
     charm_state: CharmState
     dockerhub_mirror: str | None = None
 
+    @property
+    def are_metrics_enabled(self) -> bool:
+        """Whether metrics for the runners should be collected."""
+        return self.charm_state.is_metrics_logging_available
+
 
 @dataclass
 class RunnerInfo:
