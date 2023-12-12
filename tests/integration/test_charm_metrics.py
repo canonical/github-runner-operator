@@ -1,7 +1,7 @@
 #  Copyright 2023 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
-"""Integration tests for metrics."""
+"""Integration tests for metrics/logs."""
 import json
 import logging
 from time import sleep
@@ -17,23 +17,28 @@ from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
 
+import runner_logs
 from metrics import METRICS_LOG_PATH
 from runner_metrics import PostJobStatus
 from tests.integration.helpers import (
+    DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     DISPATCH_TEST_WORKFLOW_FILENAME,
     ensure_charm_has_runner,
     get_runner_name,
     get_runner_names,
     reconcile,
+    run_in_lxd_instance,
     run_in_unit,
 )
 from tests.status_name import ACTIVE_STATUS_NAME
 
 TEST_WORKFLOW_NAMES = [
     "Workflow Dispatch Tests",
+    "Workflow Dispatch Crash Tests",
     "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7",
 ]
+JOB_LOG_START_MSG_TEMPLATE = "Job is about to start running on the runner: {runner_name}"
 
 
 @pytest_asyncio.fixture(scope="module", name="app_integrated")
@@ -155,7 +160,7 @@ async def _assert_workflow_run_conclusion(runner_name: str, conclusion: str, wor
         logs_url = run.jobs()[0].logs_url()
         logs = requests.get(logs_url).content.decode("utf-8")
 
-        if f"Job is about to start running on the runner: {runner_name}" in logs:
+        if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
             assert run.jobs()[0].conclusion == conclusion
 
 
@@ -173,6 +178,50 @@ async def _wait_for_workflow_to_complete(unit: Unit, workflow: Workflow, conclus
     sleep(60)
 
     await _assert_workflow_run_conclusion(runner_name, conclusion, workflow)
+
+
+async def _wait_for_workflow_to_start(unit: Unit, workflow: Workflow):
+    """Wait for the workflow to start.
+
+    Args:
+        unit: The unit which contains the runner.
+        workflow: The workflow to wait for.
+    """
+    runner_name = await get_runner_name(unit)
+    for _ in range(30):
+        for run in workflow.get_runs():
+            jobs = run.jobs()
+            if jobs:
+                logs_url = jobs[0].logs_url()
+                logs = requests.get(logs_url).content.decode("utf-8")
+
+                if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
+                    break
+        else:
+            sleep(30)
+            continue
+        break
+    else:
+        assert False, "Timeout while waiting for the workflow to start"
+
+
+async def _cancel_workflow_run(unit: Unit, workflow: Workflow):
+    """Cancel the workflow run.
+
+    Args:
+        unit: The unit which contains the runner.
+        workflow: The workflow to cancel the workflow run for.
+    """
+    runner_name = await get_runner_name(unit)
+
+    for run in workflow.get_runs():
+        jobs = run.jobs()
+        if jobs:
+            logs_url = jobs[0].logs_url()
+            logs = requests.get(logs_url).content.decode("utf-8")
+
+            if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
+                run.cancel()
 
 
 async def _dispatch_workflow(
@@ -235,12 +284,40 @@ async def _assert_events_after_reconciliation(
             assert metric_log.get("repo") == github_repository.full_name
             assert metric_log.get("github_event") == "workflow_dispatch"
             assert metric_log.get("status") == post_job_status
+            if post_job_status == PostJobStatus.ABNORMAL:
+                assert metric_log.get("status_info", {}).get("code", 0) != 0
             assert metric_log.get("job_duration") >= 0
         if metric_log.get("event") == "reconciliation":
             assert metric_log.get("flavor") == app.name
             assert metric_log.get("duration") >= 0
             assert metric_log.get("crashed_runners") == 0
             assert metric_log.get("idle_runners") >= 0
+
+
+async def _wait_for_runner_to_be_marked_offline(
+    forked_github_repository: Repository, runner_name: str
+):
+    """Wait for the runner to be marked offline or to be non-existent.
+
+    Args:
+        forked_github_repository: The github repository to wait for the runner
+        to be marked offline.
+        runner_name: The runner name to wait for.
+    """
+    for _ in range(30):
+        for runner in forked_github_repository.get_self_hosted_runners():
+            if runner.name == runner_name:
+                logging.info("Runner %s status: %s", runner.name, runner.status)
+                if runner.status == "online":
+                    logging.info(
+                        "Runner still marked as online, waiting for it to be marked offline"
+                    )
+                    sleep(60)
+                    break
+        else:
+            break
+    else:
+        assert False, "Timeout while waiting for runner to be marked offline"
 
 
 @pytest.mark.asyncio
@@ -304,7 +381,7 @@ async def test_charm_issues_metrics_after_reconciliation(
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_charm_issues_metrics_for_failed_runner(
+async def test_charm_issues_metrics_for_failed_repo_policy(
     model: Model,
     app: Application,
     forked_github_repository: Repository,
@@ -338,3 +415,89 @@ async def test_charm_issues_metrics_for_failed_runner(
         github_repository=forked_github_repository,
         post_job_status=PostJobStatus.REPO_POLICY_CHECK_FAILURE,
     )
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_charm_issues_metrics_for_abnormal_termination(
+    model: Model,
+    app: Application,
+    forked_github_repository: Repository,
+    forked_github_branch: Branch,
+):
+    """
+    arrange: A properly integrated charm with a runner registered on the fork repo.
+    act: Dispatch a test workflow and afterwards kill run.sh. After that, reconcile.
+    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
+        The Reconciliation metric has the post job status set to Abnormal.
+    """
+    await app.set_config({"path": forked_github_repository.full_name})
+    await ensure_charm_has_runner(app=app, model=model)
+
+    unit = app.units[0]
+
+    workflow = forked_github_repository.get_workflow(
+        id_or_file_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME
+    )
+    assert workflow.create_dispatch(forked_github_branch, {"runner": app.name})
+
+    await _wait_for_workflow_to_start(unit, workflow)
+
+    # Make the runner terminate abnormally by killing run.sh
+    runner_name = await get_runner_name(unit)
+    kill_run_sh_cmd = "pkill -9 run.sh"
+    ret_code, _ = await run_in_lxd_instance(unit, runner_name, kill_run_sh_cmd)
+    assert ret_code == 0, "Failed to kill run.sh"
+
+    # Cancel workflow and wait that the runner is marked offline
+    # to avoid errors during reconciliation.
+    await _cancel_workflow_run(unit, workflow)
+    await _wait_for_runner_to_be_marked_offline(forked_github_repository, runner_name)
+
+    # Set the number of virtual machines to 0 to speedup reconciliation
+    await app.set_config({"virtual-machines": "0"})
+    await reconcile(app=app, model=model)
+
+    await _assert_events_after_reconciliation(
+        app=app,
+        github_repository=forked_github_repository,
+        post_job_status=PostJobStatus.ABNORMAL,
+    )
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_charm_retrieves_logs_from_unhealthy_runners(
+    model: Model,
+    app: Application,
+):
+    """
+    arrange: A properly integrated charm with one runner.
+    act: Kill the start.sh script, which marks the runner as unhealthy. After that, reconcile.
+    assert: The logs are pulled from the crashed runner.
+    """
+    await ensure_charm_has_runner(app=app, model=model)
+
+    unit = app.units[0]
+    runner_name = await get_runner_name(unit)
+
+    kill_start_sh_cmd = "pkill -9 start.sh"
+    ret_code, _ = await run_in_lxd_instance(unit, runner_name, kill_start_sh_cmd)
+    assert ret_code == 0, "Failed to kill start.sh"
+
+    # Set the number of virtual machines to 0 to avoid to speedup reconciliation.
+    await app.set_config({"virtual-machines": "0"})
+    await reconcile(app=app, model=model)
+
+    ret_code, stdout = await run_in_unit(unit, f"ls {runner_logs.CRASHED_RUNNER_LOGS_DIR_PATH}")
+    assert ret_code == 0, "Failed to list crashed runner logs"
+    assert stdout
+    assert runner_name in stdout, "Failed to find crashed runner log"
+
+    ret_code, stdout = await run_in_unit(
+        unit, f"ls {runner_logs.CRASHED_RUNNER_LOGS_DIR_PATH}/{runner_name}"
+    )
+    assert ret_code == 0, "Failed to list crashed runner log"
+    assert stdout
+    assert "_diag" in stdout, "Failed to find crashed runner diag log"
+    assert "syslog" in stdout, "Failed to find crashed runner syslog log"

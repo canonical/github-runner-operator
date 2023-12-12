@@ -12,7 +12,7 @@ Models and functions for the metric events.
 
 ---
 
-<a href="../src/metrics.py#L141"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L153"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 
@@ -39,7 +39,7 @@ The metric event is logged to the metrics log.
 
 ---
 
-<a href="../src/metrics.py#L192"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L204"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `setup_logrotate`
 
@@ -84,6 +84,21 @@ Initialize the event.
  
  - <b>`*args`</b>:  The positional arguments to pass to the base class. 
  - <b>`**kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `ExitCodeInformation`
+Information about the exit code of a runner. 
+
+
+
+**Attributes:**
+ 
+ - <b>`code`</b>:  The exit code of the runner. 
 
 
 
@@ -208,6 +223,7 @@ Metric event for when a runner is stopped.
  - <b>`repo`</b>:  The repository name. 
  - <b>`github_event`</b>:  The github event. 
  - <b>`status`</b>:  A string describing the reason for stopping the runner. 
+ - <b>`status_info`</b>:  More information about the status. 
  - <b>`job_duration`</b>:  The duration of the job in seconds. 
 
 <a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>

@@ -100,6 +100,16 @@ class RunnerStart(Event):
     queue_duration: Optional[NonNegativeFloat]
 
 
+class ExitCodeInformation(BaseModel):
+    """Information about the exit code of a runner.
+
+    Attributes:
+        code: The exit code of the runner.
+    """
+
+    code: int
+
+
 class RunnerStop(Event):
     """Metric event for when a runner is stopped.
 
@@ -110,6 +120,7 @@ class RunnerStop(Event):
         repo: The repository name.
         github_event: The github event.
         status: A string describing the reason for stopping the runner.
+        status_info: More information about the status.
         job_duration: The duration of the job in seconds.
     """
 
@@ -118,6 +129,7 @@ class RunnerStop(Event):
     repo: str
     github_event: str
     status: str
+    status_info: Optional[ExitCodeInformation]
     job_duration: NonNegativeFloat
 
 
@@ -151,7 +163,7 @@ def issue_event(event: Event) -> None:
     """
     try:
         with METRICS_LOG_PATH.open(mode="a", encoding="utf-8") as metrics_file:
-            metrics_file.write(f"{event.json()}\n")
+            metrics_file.write(f"{event.json(exclude_none=True)}\n")
     except OSError as exc:
         raise IssueMetricEventError(f"Cannot write to {METRICS_LOG_PATH}") from exc
 

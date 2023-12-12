@@ -22,6 +22,7 @@ import urllib3
 import errors
 import github_metrics
 import metrics
+import runner_logs
 import runner_metrics
 import shared_fs
 from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
@@ -257,7 +258,7 @@ class RunnerManager:
             resources: Configuration of the virtual machine resources.
             runner: Runner to be created.
         """
-        if self.config.charm_state.is_metrics_logging_available:
+        if self.config.are_metrics_enabled:
             ts_now = time.time()
             runner.create(
                 config=CreateRunnerConfig(
@@ -396,7 +397,7 @@ class RunnerManager:
                 path=self.config.path,
                 proxies=self.proxies,
                 lxd_storage_path=self.config.lxd_storage_path,
-                issue_metrics=self.config.charm_state.is_metrics_logging_available,
+                issue_metrics=self.config.are_metrics_enabled,
                 dockerhub_mirror=self.config.dockerhub_mirror,
             )
             runner = Runner(self._clients, config, RunnerStatus())
@@ -444,7 +445,7 @@ class RunnerManager:
         Returns:
             Difference between intended runners and actual runners.
         """
-        if self.config.charm_state.is_metrics_logging_available:
+        if self.config.are_metrics_enabled:
             start_ts = time.time()
 
         runners = self._get_runners()
@@ -468,7 +469,8 @@ class RunnerManager:
             len(runner_states.unhealthy),
         )
 
-        if self.config.charm_state.is_metrics_logging_available:
+        runner_logs.remove_outdated_crashed()
+        if self.config.are_metrics_enabled:
             metric_stats = self._issue_runner_metrics()
 
         # Clean up offline runners
@@ -482,6 +484,8 @@ class RunnerManager:
             ]
 
             for runner in unhealthy_runners:
+                if self.config.are_metrics_enabled:
+                    runner_logs.get_crashed(runner)
                 runner.remove(remove_token)
                 logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
 
@@ -494,7 +498,7 @@ class RunnerManager:
         else:
             logger.info("No changes to number of runners needed.")
 
-        if self.config.charm_state.is_metrics_logging_available:
+        if self.config.are_metrics_enabled:
             end_ts = time.time()
             self._issue_reconciliation_metric(
                 metric_stats=metric_stats,
@@ -589,7 +593,7 @@ class RunnerManager:
                 path=self.config.path,
                 proxies=self.proxies,
                 lxd_storage_path=self.config.lxd_storage_path,
-                issue_metrics=self.config.charm_state.is_metrics_logging_available,
+                issue_metrics=self.config.are_metrics_enabled,
                 dockerhub_mirror=self.config.dockerhub_mirror,
             )
             return Runner(

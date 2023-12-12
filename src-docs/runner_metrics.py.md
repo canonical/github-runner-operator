@@ -14,7 +14,7 @@ Classes and function to extract the metrics from a shared filesystem.
 
 ---
 
-<a href="../src/runner_metrics.py#L215"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_metrics.py#L228"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `extract`
 
@@ -44,7 +44,7 @@ In order to avoid DoS attacks, the file size is also checked.
 
 ---
 
-<a href="../src/runner_metrics.py#L242"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_metrics.py#L255"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_events`
 
@@ -74,6 +74,21 @@ Issue the metrics events for a runner.
 
 ---
 
+## <kbd>class</kbd> `ExitCodeInformation`
+Information about the exit code of a runner. 
+
+
+
+**Attributes:**
+ 
+ - <b>`code`</b>:  The exit code of the runner. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `PostJobMetrics`
 Metrics for the post-job phase of a runner. 
 
@@ -83,6 +98,7 @@ Metrics for the post-job phase of a runner.
  
  - <b>`timestamp`</b>:  The UNIX time stamp of the time at which the event was originally issued. 
  - <b>`status`</b>:  The status of the job. 
+ - <b>`status_info`</b>:  More information about the status. 
 
 
 
