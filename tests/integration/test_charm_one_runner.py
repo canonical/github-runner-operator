@@ -5,11 +5,13 @@
 
 from datetime import datetime, timezone
 from time import sleep
+import github
 
 import pytest
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
+import requests
 
 from charm import GithubRunnerCharm
 from github_client import GithubClient
