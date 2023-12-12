@@ -28,7 +28,7 @@ The Github API is accessed to retrieve the job data for the runner, which includ
 
 **Args:**
  
- - <b>`ghapi`</b>:  The GitHub API client. 
+ - <b>`github_client`</b>:  The GitHub API client. 
  - <b>`pre_job_metrics`</b>:  The pre-job metrics. 
  - <b>`runner_name`</b>:  The name of the runner. 
 

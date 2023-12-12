@@ -17,7 +17,7 @@ def job_queue_duration(
     the time the job was created and the time the job was started.
 
     Args:
-        ghapi: The GitHub API client.
+        github_client: The GitHub API client.
         pre_job_metrics: The pre-job metrics.
         runner_name: The name of the runner.
 
