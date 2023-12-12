@@ -1,6 +1,5 @@
 name: Comment on the pull request
 
-permissions: write-all
 on:
   workflow_run:
     workflows: ["Tests"]
