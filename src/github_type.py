@@ -118,7 +118,7 @@ class RemoveToken(TypedDict):
 class GithubJobStats(BaseModel):
     """Stats for a job on GitHub.
 
-    Attributes
+    Attributes:
         created_at: The time the job was created.
         started_at: The time the job was started.
     """
