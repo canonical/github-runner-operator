@@ -15,13 +15,15 @@ jobs:
   #       run: df -h
   self-host-test:
     name: self-hosted test
-    runs-on: [self-hosted, github-runner]
+    runs-on: [self-hosted, large]
     steps:
       - name: Echo test
         run: echo hello
       - name: Disk usage
         run: df -h
-      - name: sleep
+      - name: Setup operator environment
+        uses: yhaliaw/actions-operator@microk8s-docker-registry
+      - name: Wait
         run: sleep 60m
       # - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> rustup.sh
       # - run: sh rustup.sh -y
