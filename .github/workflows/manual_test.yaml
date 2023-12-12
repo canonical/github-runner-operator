@@ -23,6 +23,9 @@ jobs:
         run: df -h
       - name: Setup operator environment
         uses: yhaliaw/actions-operator@microk8s-docker-registry
+        with:
+          provider: microk8s
+          microk8s-docker-registry: https://github-runner-dockerhub-cache.canonical.com:5000
       - name: Wait
         run: sleep 60m
       # - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> rustup.sh
