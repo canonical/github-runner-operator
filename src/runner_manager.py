@@ -3,7 +3,6 @@
 
 """Runner Manager manages the runners on LXD and GitHub."""
 
-import datetime
 import hashlib
 import logging
 import random
@@ -11,6 +10,7 @@ import secrets
 import tarfile
 import time
 import urllib.request
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, Iterator, Optional
 
@@ -504,7 +504,7 @@ class RunnerManager:
                 return False
             date_str, time_str, timezone_str = stdout.read().decode("utf-8").split(" ")
             job_start_time = datetime.fromisoformat(f"{date_str}T{time_str[:12]}{timezone_str}")
-            if job_start_time + datetime.timedelta(minutes=1) > now:
+            if job_start_time + timedelta(minutes=1) > now:
                 return False
         return True
 
