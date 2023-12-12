@@ -8,16 +8,23 @@ jobs:
     name: Integration test with juju 2.9
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     with:
       juju-channel: 2.9/stable
       pre-run-script: scripts/pre-integration-test.sh
       provider: lxd
       test-tox-env: integration-juju2.9
       modules: '["test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics", "test_self_hosted_runner", "test_charm_with_proxy"]'
+
   integration-tests-juju3:
     name: Integration test with juju 3.1
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
     with:
       juju-channel: 3.1/stable
       pre-run-script: scripts/pre-integration-test.sh
