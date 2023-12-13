@@ -628,7 +628,7 @@ class RunnerManager:
         Raises:
             LxdError: Unable to build the LXD image.
         """
-        execute_command(self._build_image_command)
+        execute_command(self._build_image_command())
 
     def schedule_build_runner_image(self) -> None:
         """Install cron job for building runner image."""
