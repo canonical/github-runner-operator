@@ -50,7 +50,6 @@ cleanup() {
 
 HTTP_PROXY="$1"
 HTTPS_PROXY="$2"
-NO_PROXY="$3"
 MODE="$3"
 
 cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD VM of previous run' 10

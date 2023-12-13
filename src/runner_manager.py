@@ -627,14 +627,12 @@ class RunnerManager:
         """
         http_proxy = self.proxies.get("http", "")
         https_proxy = self.proxies.get("https", "")
-        no_proxy = self.proxies.get("no_proxy", "")
 
         cmd = [
             "/usr/bin/bash",
             BUILD_IMAGE_SCRIPT_FILENAME,
             http_proxy,
             https_proxy,
-            no_proxy,
         ]
         if LXD_PROFILE_YAML.exists():
             cmd += ["test"]
