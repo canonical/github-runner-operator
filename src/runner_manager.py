@@ -605,9 +605,9 @@ class RunnerManager:
         Returns:
             Command to execute to build runner image.
         """
-        http_proxy = self.proxies.get(["http"], "")
-        https_proxy = self.proxies.get(["https"], "")
-        no_proxy = self.proxies.get(["no_proxy"], "")
+        http_proxy = self.proxies.get("http", "")
+        https_proxy = self.proxies.get("https", "")
+        no_proxy = self.proxies.get("no_proxy", "")
 
         cmd = [
             "/usr/bin/bash",
