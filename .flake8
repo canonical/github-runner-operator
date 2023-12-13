@@ -1,4 +1,5 @@
 [flake8]
+ignore = W503  # not compatible with black
 max-line-length = 99
 select: E,W,F,C,N
 exclude:

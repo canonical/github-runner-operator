@@ -6,9 +6,11 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from enum import Enum
 from typing import List, TypedDict
 
+from pydantic import BaseModel
 from typing_extensions import NotRequired
 
 
@@ -111,3 +113,15 @@ class RemoveToken(TypedDict):
 
     token: str
     expires_at: str
+
+
+class GithubJobStats(BaseModel):
+    """Stats for a job on GitHub.
+
+    Attributes:
+        created_at: The time the job was created.
+        started_at: The time the job was started.
+    """
+
+    created_at: datetime
+    started_at: datetime

@@ -11,7 +11,7 @@ import tarfile
 import time
 import urllib.request
 from pathlib import Path
-from typing import Dict, Iterator, Optional
+from typing import Dict, Iterator, Optional, Type
 
 import fastcore.net
 import jinja2
@@ -19,6 +19,8 @@ import requests
 import requests.adapters
 import urllib3
 
+import errors
+import github_metrics
 import metrics
 import runner_logs
 import runner_metrics
@@ -40,6 +42,8 @@ logger = logging.getLogger(__name__)
 
 
 BUILD_IMAGE_SCRIPT_FILENAME = "scripts/build-image.sh"
+
+IssuedMetricEventsStats = dict[Type[metrics.Event], int]
 
 
 class RunnerManager:
@@ -101,7 +105,7 @@ class RunnerManager:
         local_session.trust_env = False
 
         self._clients = RunnerManagerClients(
-            GithubClient(token=self.config.token, request_session=local_session),
+            GithubClient(token=self.config.token),
             jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True),
             LxdClient(),
             RepoPolicyComplianceClient(
@@ -298,7 +302,7 @@ class RunnerManager:
                 )
             )
 
-    def _issue_runner_metrics(self) -> runner_metrics.IssuedMetricEventsStats:
+    def _issue_runner_metrics(self) -> IssuedMetricEventsStats:
         """Issue runner metrics.
 
         Returns:
@@ -306,13 +310,30 @@ class RunnerManager:
         """
         runner_states = self._get_runner_health_states()
 
-        return runner_metrics.extract(
-            flavor=self.app_name, ignore_runners=set(runner_states.healthy)
-        )
+        total_stats: IssuedMetricEventsStats = {}
+        for extracted_metrics in runner_metrics.extract(ignore_runners=set(runner_states.healthy)):
+            try:
+                queue_duration = github_metrics.job_queue_duration(
+                    github_client=self._clients.github,
+                    pre_job_metrics=extracted_metrics.pre_job,
+                    runner_name=extracted_metrics.runner_name,
+                )
+            except errors.GithubMetricsError:
+                logger.exception("Failed to calculate job queue duration")
+                queue_duration = None
+
+            issued_events = runner_metrics.issue_events(
+                runner_metrics=extracted_metrics,
+                queue_duration=queue_duration,
+                flavor=self.app_name,
+            )
+            for event_type in issued_events:
+                total_stats[event_type] = total_stats.get(event_type, 0) + 1
+        return total_stats
 
     def _issue_reconciliation_metric(
         self,
-        metric_stats: runner_metrics.IssuedMetricEventsStats,
+        metric_stats: IssuedMetricEventsStats,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
     ):
@@ -347,9 +368,8 @@ class RunnerManager:
                 event=metrics.Reconciliation(
                     timestamp=time.time(),
                     flavor=self.app_name,
-                    # Ignore line break before binary operator
                     crashed_runners=metric_stats.get(metrics.RunnerStart, 0)
-                    - metric_stats.get(metrics.RunnerStop, 0),  # noqa: W503
+                    - metric_stats.get(metrics.RunnerStop, 0),
                     idle_runners=idle_online_count + idle_offline_count,
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )

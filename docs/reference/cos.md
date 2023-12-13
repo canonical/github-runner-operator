@@ -14,6 +14,7 @@ The dashboard presents the following panels:
     - Runner idle duration
     - Charm reconciliation duration
     - Job duration
+    - Job queue duration - how long a job waits in the queue before a runner picks it up
 
 While the dashboard visualises a subset of potential metrics, these metrics are logged in a file named `/var/log/github-runner-metrics.log`. Use following Loki query to retrieve lines from this file:
 

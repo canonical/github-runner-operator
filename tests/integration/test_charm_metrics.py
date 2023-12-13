@@ -277,6 +277,7 @@ async def _assert_events_after_reconciliation(
             assert metric_log.get("repo") == github_repository.full_name
             assert metric_log.get("github_event") == "workflow_dispatch"
             assert metric_log.get("idle") >= 0
+            assert metric_log.get("queue_duration") >= 0
         if metric_log.get("event") == "runner_stop":
             assert metric_log.get("flavor") == app.name
             assert metric_log.get("workflow") in TEST_WORKFLOW_NAMES

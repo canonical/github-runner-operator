@@ -12,7 +12,7 @@ Models and functions for the metric events.
 
 ---
 
-<a href="../src/metrics.py#L149"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L153"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 
@@ -39,7 +39,7 @@ The metric event is logged to the metrics log.
 
 ---
 
-<a href="../src/metrics.py#L200"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L204"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `setup_logrotate`
 
@@ -186,6 +186,7 @@ Metric event for when a runner is started.
  - <b>`repo`</b>:  The repository name. 
  - <b>`github_event`</b>:  The github event. 
  - <b>`idle`</b>:  The idle time in seconds. 
+ - <b>`queue_duration`</b>:  The time in seconds it took before the runner picked up the job.  This is optional as we rely on the Github API and there may be problems  retrieving the data. 
 
 <a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
