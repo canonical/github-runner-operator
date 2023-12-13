@@ -50,7 +50,18 @@ class PostJobStatus(str, Enum):
     """The status of the post-job phase of a runner."""
 
     NORMAL = "normal"
+    ABNORMAL = "abnormal"
     REPO_POLICY_CHECK_FAILURE = "repo-policy-check-failure"
+
+
+class ExitCodeInformation(BaseModel):
+    """Information about the exit code of a runner.
+
+    Attributes:
+        code: The exit code of the runner.
+    """
+
+    code: int
 
 
 class PostJobMetrics(BaseModel):
@@ -59,10 +70,12 @@ class PostJobMetrics(BaseModel):
     Args:
         timestamp: The UNIX time stamp of the time at which the event was originally issued.
         status: The status of the job.
+        status_info: More information about the status.
     """
 
     timestamp: NonNegativeFloat
     status: PostJobStatus
+    status_info: Optional[ExitCodeInformation]
 
 
 class RunnerMetrics(BaseModel):
@@ -193,6 +206,7 @@ def _issue_runner_metrics(runner_metrics: RunnerMetrics, flavor: str) -> IssuedM
             repo=runner_metrics.pre_job.repository,
             github_event=runner_metrics.pre_job.event,
             status=runner_metrics.post_job.status,
+            status_info=runner_metrics.post_job.status_info,
             job_duration=runner_metrics.post_job.timestamp - runner_metrics.pre_job.timestamp,
         )
         metrics.issue_event(runner_stop_event)

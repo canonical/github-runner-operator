@@ -284,9 +284,6 @@ def forked_github_branch(
     """Create a new forked branch for testing."""
     branch_name = f"test/{secrets.token_hex(4)}"
 
-    # Other tests change the default branch of the forked repo. Therefore, we need to get the
-    # default branch name of the original repository again (because some tests require signed
-    # commits, which should be present on the original default branch).
     main_branch = forked_github_repository.get_branch(github_repository.default_branch)
     branch_ref = forked_github_repository.create_git_ref(
         ref=f"refs/heads/{branch_name}", sha=main_branch.commit.sha

@@ -26,6 +26,8 @@ from lxd_type import (
 )
 from utilities import execute_command, secure_run_subprocess
 
+LXC_BINARY = "/snap/bin/lxc"
+
 logger = logging.getLogger(__name__)
 
 
@@ -64,7 +66,7 @@ class LxdInstanceFileManager:
             LxdError: Unable to load the file into the LXD instance.
         """
         lxc_cmd = [
-            "/snap/bin/lxc",
+            LXC_BINARY,
             "file",
             "push",
             "--create-dirs",
@@ -105,20 +107,22 @@ class LxdInstanceFileManager:
 
             self.push_file(file.name, filepath, mode)
 
-    def pull_file(self, source: str, destination: str) -> None:
+    def pull_file(self, source: str, destination: str, is_dir=False) -> None:
         """Pull a file from the LXD instance to the local machine.
 
         Args:
             source: Path of the file to pull in the LXD instance.
             destination: Path in local machine.
+            is_dir: Whether the source is a directory.
 
         Raises:
             LxdError: Unable to load the file from the LXD instance.
         """
         lxc_cmd = [
-            "/snap/bin/lxc",
+            LXC_BINARY,
             "file",
             "pull",
+            *(["-r"] if is_dir else []),
             f"{self.instance.name}/{source.lstrip('/')}",
             destination,
         ]
@@ -167,7 +171,7 @@ class LxdInstance:
         """
         self._pylxd_instance = pylxd_instance
         self.name = self._pylxd_instance.name
-        self.files = LxdInstanceFileManager(self._pylxd_instance)
+        self.files = LxdInstanceFileManager(self)
 
     @property
     def status(self) -> str:
@@ -252,7 +256,7 @@ class LxdInstance:
         Returns:
             Tuple containing the exit code, stdout, stderr.
         """
-        lxc_cmd = ["/snap/bin/lxc", "exec", self.name]
+        lxc_cmd = [LXC_BINARY, "exec", self.name]
         if cwd:
             lxc_cmd += ["--cwd", cwd]
 
