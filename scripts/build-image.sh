@@ -69,6 +69,8 @@ retry '/snap/bin/lxc exec builder -- /usr/bin/nslookup github.com' 'Wait for net
 /snap/bin/lxc exec builder -- /usr/bin/apt-get update
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get upgrade -yq
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget -yq
+/snap/bin/lxc npm config set proxy http://squid.internal:3128
+/snap/bin/lxc npm config set https-proxy http://squid.internal:3128
 /snap/bin/lxc exec builder -- /usr/bin/npm install --global yarn 
 /snap/bin/lxc exec builder -- /usr/sbin/groupadd microk8s
 /snap/bin/lxc exec builder -- /usr/sbin/usermod -aG microk8s ubuntu
