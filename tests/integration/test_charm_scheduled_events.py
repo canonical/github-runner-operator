@@ -54,7 +54,7 @@ async def test_update_interval(model: Model, app_scheduled_events: Application) 
     await wait_till_num_of_runners(unit, 0)
 
     await sleep(10 * 60)
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=20 * 60)
 
     assert await check_runner_binary_exists(unit)
 

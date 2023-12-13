@@ -18,6 +18,22 @@ Status of runner on GitHub.
 
 ---
 
+## <kbd>class</kbd> `GithubJobStats`
+Stats for a job on GitHub. 
+
+
+
+**Attributes:**
+ 
+ - <b>`created_at`</b>:  The time the job was created. 
+ - <b>`started_at`</b>:  The time the job was started. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `RegistrationToken`
 Token used for registering GitHub runners. 
 
