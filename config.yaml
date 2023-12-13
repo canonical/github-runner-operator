@@ -18,7 +18,9 @@ options:
   token:
     type: string
     default: ""
-    description: The GitHub Personal Access Token for registering the self-hosted runners.
+    description: |
+     The GitHub Personal Access Token for registering the self-hosted runners. The token requires
+      `repo` scope for repository runners and `repo` + `admin:org` scope for organization runners.
   virtual-machines:
     type: int
     default: 1
