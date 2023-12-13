@@ -48,9 +48,14 @@ cleanup() {
     done
 }
 
+HTTP_PROXY="$1"
+HTTPS_PROXY="$2"
+NO_PROXY="$3"
+MODE="$3"
+
 cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD VM of previous run' 10
 
-if [[ "$1" == "test" ]]; then
+if [[ "$MODE" == "test" ]]; then
     retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --device root,size=5GiB' 'Starting LXD container'
 else
     retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --vm --device root,size=8GiB' 'Starting LXD VM'
@@ -69,8 +74,12 @@ retry '/snap/bin/lxc exec builder -- /usr/bin/nslookup github.com' 'Wait for net
 /snap/bin/lxc exec builder -- /usr/bin/apt-get update
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get upgrade -yq
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget -yq
-/snap/bin/lxc npm config set proxy http://squid.internal:3128
-/snap/bin/lxc npm config set https-proxy http://squid.internal:3128
+if [[ ! -z "$HTTP_PROXY" ]]; then
+    /snap/bin/lxc npm config set proxy "$HTTP_PROXY"
+fi
+if [[ ! -z "$HTTPS_PROXY" ]]; then
+    /snap/bin/lxc npm config set https-proxy "$HTTPS_PROXY"
+fi
 /snap/bin/lxc exec builder -- /usr/bin/npm install --global yarn 
 /snap/bin/lxc exec builder -- /usr/sbin/groupadd microk8s
 /snap/bin/lxc exec builder -- /usr/sbin/usermod -aG microk8s ubuntu

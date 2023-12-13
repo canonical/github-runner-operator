@@ -603,7 +603,13 @@ class RunnerManager:
         Raises:
             LxdError: Unable to build the LXD image.
         """
-        cmd = ["/usr/bin/bash", BUILD_IMAGE_SCRIPT_FILENAME]
+        cmd = [
+            "/usr/bin/bash",
+            BUILD_IMAGE_SCRIPT_FILENAME,
+            self.proxies["http"],
+            self.proxies["https"],
+            self.proxies["no_proxy"],
+        ]
         if LXD_PROFILE_YAML.exists():
             cmd += ["test"]
         execute_command(cmd)
@@ -618,5 +624,8 @@ class RunnerManager:
         base_hour = random.randint(0, 5)  # nosec B311
         hours = ",".join([str(base_hour + offset) for offset in (0, 6, 12, 18)])
         cron_file.write_text(
-            f"{minute} {hours} * * * ubuntu /usr/bin/bash {BUILD_IMAGE_SCRIPT_FILENAME}"
+            (
+                f"{minute} {hours} * * * ubuntu /usr/bin/bash {BUILD_IMAGE_SCRIPT_FILENAME} "
+                f"{self.proxies['http']} {self.proxies['https']} {self.proxies['no_proxy']}"
+            )
         )
