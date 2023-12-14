@@ -73,10 +73,10 @@ retry '/snap/bin/lxc exec builder -- /usr/bin/nslookup github.com' 'Wait for net
 /snap/bin/lxc exec builder -- /usr/bin/apt-get update
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get upgrade -yq
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget -yq
-if [[ ! -z "$HTTP_PROXY" ]]; then
+if [[ -n "$HTTP_PROXY" ]]; then
     /snap/bin/lxc npm config set proxy "$HTTP_PROXY"
 fi
-if [[ ! -z "$HTTPS_PROXY" ]]; then
+if [[ -n "$HTTPS_PROXY" ]]; then
     /snap/bin/lxc npm config set https-proxy "$HTTPS_PROXY"
 fi
 /snap/bin/lxc exec builder -- /usr/bin/npm install --global yarn 
