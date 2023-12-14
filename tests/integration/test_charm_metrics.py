@@ -286,6 +286,8 @@ async def _assert_events_after_reconciliation(
             assert metric_log.get("status") == post_job_status
             if post_job_status == PostJobStatus.ABNORMAL:
                 assert metric_log.get("status_info", {}).get("code", 0) != 0
+            elif post_job_status == PostJobStatus.REPO_POLICY_CHECK_FAILURE:
+                assert metric_log.get("status_info", {}).get("code", 0) == 403
             assert metric_log.get("job_duration") >= 0
         if metric_log.get("event") == "reconciliation":
             assert metric_log.get("flavor") == app.name

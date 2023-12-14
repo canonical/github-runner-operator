@@ -100,11 +100,13 @@ class RunnerStart(Event):
     queue_duration: Optional[NonNegativeFloat]
 
 
-class ExitCodeInformation(BaseModel):
-    """Information about the exit code of a runner.
+class CodeInformation(BaseModel):
+    """Information about a status code.
+
+    This could e.g. be an exit code or a http status code.
 
     Attributes:
-        code: The exit code of the runner.
+        code: The status code.
     """
 
     code: int
@@ -129,7 +131,7 @@ class RunnerStop(Event):
     repo: str
     github_event: str
     status: str
-    status_info: Optional[ExitCodeInformation]
+    status_info: Optional[CodeInformation]
     job_duration: NonNegativeFloat
 
 

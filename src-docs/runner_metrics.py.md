@@ -74,14 +74,14 @@ Issue the metrics events for a runner.
 
 ---
 
-## <kbd>class</kbd> `ExitCodeInformation`
-Information about the exit code of a runner. 
+## <kbd>class</kbd> `CodeInformation`
+Information about a status code. 
 
 
 
 **Attributes:**
  
- - <b>`code`</b>:  The exit code of the runner. 
+ - <b>`code`</b>:  The status code. 
 
 
 
