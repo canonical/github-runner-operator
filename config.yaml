@@ -18,7 +18,9 @@ options:
   token:
     type: string
     default: ""
-    description: The GitHub Personal Access Token for registering the self-hosted runners.
+    description: |
+     The GitHub Personal Access Token for registering the self-hosted runners. The token requires
+      'repo' scope for repository runners and 'repo' + 'admin:org' scope for organization runners.
   virtual-machines:
     type: int
     default: 1
@@ -74,10 +76,10 @@ options:
     type: boolean
     default: false
     description: |
-      (Experimental, may be removed) When set to true, [aproxy](https://github.com/canonical/aproxy) 
+      (Experimental, may be removed) When set to true, aproxy (https://github.com/canonical/aproxy) 
       will  be installed inside the runners and will forward all http/s traffic to a proxy server
-      configured by the juju model config `juju-http-proxy` 
-      (or if this is not set, `juju-https-proxy` will be used).
+      configured by the juju model config 'juju-http-proxy' 
+      (or if this is not set, 'juju-https-proxy' will be used).
       This is useful when the charm is deployed in a network that requires a proxy to access the 
       internet.
       Note that you should not specify a proxy server listening on port 80 or 443, as all traffic
