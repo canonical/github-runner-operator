@@ -619,6 +619,25 @@ class RunnerManager:
 
         return runners
 
+    def _build_image_command(self) -> list[str]:
+        """Get command for building runner image.
+
+        Returns:
+            Command to execute to build runner image.
+        """
+        http_proxy = self.proxies.get("http", "")
+        https_proxy = self.proxies.get("https", "")
+
+        cmd = [
+            "/usr/bin/bash",
+            BUILD_IMAGE_SCRIPT_FILENAME,
+            http_proxy,
+            https_proxy,
+        ]
+        if LXD_PROFILE_YAML.exists():
+            cmd += ["test"]
+        return cmd
+
     def build_runner_image(self) -> None:
         """Build the LXD image for hosting runner.
 
@@ -627,10 +646,7 @@ class RunnerManager:
         Raises:
             LxdError: Unable to build the LXD image.
         """
-        cmd = ["/usr/bin/bash", BUILD_IMAGE_SCRIPT_FILENAME]
-        if LXD_PROFILE_YAML.exists():
-            cmd += ["test"]
-        execute_command(cmd)
+        execute_command(self._build_image_command())
 
     def schedule_build_runner_image(self) -> None:
         """Install cron job for building runner image."""
@@ -641,6 +657,4 @@ class RunnerManager:
         minute = random.randint(0, 59)  # nosec B311
         base_hour = random.randint(0, 5)  # nosec B311
         hours = ",".join([str(base_hour + offset) for offset in (0, 6, 12, 18)])
-        cron_file.write_text(
-            f"{minute} {hours} * * * ubuntu /usr/bin/bash {BUILD_IMAGE_SCRIPT_FILENAME}"
-        )
+        cron_file.write_text(f"{minute} {hours} * * * ubuntu {self._build_image_command()} ")
