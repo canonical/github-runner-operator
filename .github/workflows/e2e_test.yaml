@@ -53,7 +53,7 @@ jobs:
         run: charmcraft pack || ( cat ~/.local/state/charmcraft/log/* && exit 1 )
 
       - name: Upload github-runner Charm
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dangerous-test-only-github-runner_ubuntu-22.04-amd64.charm
           path: github-runner_ubuntu-22.04-amd64.charm
@@ -380,7 +380,7 @@ jobs:
           fi
       - name: Upload test logs (Issues, Schedule)
         if: always() && (matrix.event.name == 'issues' || matrix.event.name == 'schedule')
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{matrix.event.name}}-workflow-logs.zip
           path: ${{matrix.event.name}}-workflow-logs.zip
