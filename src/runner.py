@@ -495,6 +495,9 @@ class Runner:
 
         self._apt_install(["docker.io", "npm", "python3-pip", "shellcheck", "jq", "wget"])
         self._snap_install([Snap(name="aproxy", channel="edge")])
+        if self.config.proxies:
+            if self.config.proxies.get("aproxy_address"):
+                self._configure_aproxy(self.config.proxies["aproxy_address"])
         self._wget_install(
             [
                 WgetExecutable(
