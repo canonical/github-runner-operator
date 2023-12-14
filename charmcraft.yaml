@@ -13,6 +13,7 @@ parts:
       - rust-all  # for cryptography
     prime:
       - scripts/build-image.sh
+      - scripts/repo_policy_compilance_service.py
 bases:
   - build-on:
     - name: "ubuntu"
