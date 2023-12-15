@@ -61,6 +61,12 @@ Configuration of runner manager.
  - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
 
 
+---
+
+#### <kbd>property</kbd> are_metrics_enabled
+
+Whether metrics for the runners should be collected. 
+
 
 
 

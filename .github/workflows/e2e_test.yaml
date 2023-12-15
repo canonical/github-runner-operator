@@ -202,7 +202,7 @@ jobs:
       - name: Watch github-runner (Pull Request)
         if: matrix.event.name == 'pull_request'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         timeout-minutes: 30
         run: |
           juju debug-log --replay --tail &
@@ -394,7 +394,7 @@ jobs:
       - name: Clean Up (Workflow Dispatch and Push)
         if: always() && (matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push')
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
           gh api \
           --method DELETE \

@@ -11,7 +11,7 @@ import tarfile
 import time
 import urllib.request
 from pathlib import Path
-from typing import Dict, Iterator, Optional
+from typing import Dict, Iterator, Optional, Type
 
 import fastcore.net
 import jinja2
@@ -19,7 +19,10 @@ import requests
 import requests.adapters
 import urllib3
 
+import errors
+import github_metrics
 import metrics
+import runner_logs
 import runner_metrics
 import shared_fs
 from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
@@ -39,6 +42,8 @@ logger = logging.getLogger(__name__)
 
 
 BUILD_IMAGE_SCRIPT_FILENAME = "scripts/build-image.sh"
+
+IssuedMetricEventsStats = dict[Type[metrics.Event], int]
 
 
 class RunnerManager:
@@ -100,7 +105,7 @@ class RunnerManager:
         local_session.trust_env = False
 
         self._clients = RunnerManagerClients(
-            GithubClient(token=self.config.token, request_session=local_session),
+            GithubClient(token=self.config.token),
             jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True),
             LxdClient(),
             RepoPolicyComplianceClient(
@@ -253,7 +258,7 @@ class RunnerManager:
             resources: Configuration of the virtual machine resources.
             runner: Runner to be created.
         """
-        if self.config.charm_state.is_metrics_logging_available:
+        if self.config.are_metrics_enabled:
             ts_now = time.time()
             runner.create(
                 config=CreateRunnerConfig(
@@ -297,7 +302,7 @@ class RunnerManager:
                 )
             )
 
-    def _issue_runner_metrics(self) -> runner_metrics.IssuedMetricEventsStats:
+    def _issue_runner_metrics(self) -> IssuedMetricEventsStats:
         """Issue runner metrics.
 
         Returns:
@@ -305,13 +310,30 @@ class RunnerManager:
         """
         runner_states = self._get_runner_health_states()
 
-        return runner_metrics.extract(
-            flavor=self.app_name, ignore_runners=set(runner_states.healthy)
-        )
+        total_stats: IssuedMetricEventsStats = {}
+        for extracted_metrics in runner_metrics.extract(ignore_runners=set(runner_states.healthy)):
+            try:
+                queue_duration = github_metrics.job_queue_duration(
+                    github_client=self._clients.github,
+                    pre_job_metrics=extracted_metrics.pre_job,
+                    runner_name=extracted_metrics.runner_name,
+                )
+            except errors.GithubMetricsError:
+                logger.exception("Failed to calculate job queue duration")
+                queue_duration = None
+
+            issued_events = runner_metrics.issue_events(
+                runner_metrics=extracted_metrics,
+                queue_duration=queue_duration,
+                flavor=self.app_name,
+            )
+            for event_type in issued_events:
+                total_stats[event_type] = total_stats.get(event_type, 0) + 1
+        return total_stats
 
     def _issue_reconciliation_metric(
         self,
-        metric_stats: runner_metrics.IssuedMetricEventsStats,
+        metric_stats: IssuedMetricEventsStats,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
     ):
@@ -346,9 +368,8 @@ class RunnerManager:
                 event=metrics.Reconciliation(
                     timestamp=time.time(),
                     flavor=self.app_name,
-                    # Ignore line break before binary operator
                     crashed_runners=metric_stats.get(metrics.RunnerStart, 0)
-                    - metric_stats.get(metrics.RunnerStop, 0),  # noqa: W503
+                    - metric_stats.get(metrics.RunnerStop, 0),
                     idle_runners=idle_online_count + idle_offline_count,
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )
@@ -376,7 +397,7 @@ class RunnerManager:
                 path=self.config.path,
                 proxies=self.proxies,
                 lxd_storage_path=self.config.lxd_storage_path,
-                issue_metrics=self.config.charm_state.is_metrics_logging_available,
+                issue_metrics=self.config.are_metrics_enabled,
                 dockerhub_mirror=self.config.dockerhub_mirror,
             )
             runner = Runner(self._clients, config, RunnerStatus())
@@ -424,7 +445,7 @@ class RunnerManager:
         Returns:
             Difference between intended runners and actual runners.
         """
-        if self.config.charm_state.is_metrics_logging_available:
+        if self.config.are_metrics_enabled:
             start_ts = time.time()
 
         runners = self._get_runners()
@@ -448,7 +469,8 @@ class RunnerManager:
             len(runner_states.unhealthy),
         )
 
-        if self.config.charm_state.is_metrics_logging_available:
+        runner_logs.remove_outdated_crashed()
+        if self.config.are_metrics_enabled:
             metric_stats = self._issue_runner_metrics()
 
         # Clean up offline runners
@@ -462,6 +484,8 @@ class RunnerManager:
             ]
 
             for runner in unhealthy_runners:
+                if self.config.are_metrics_enabled:
+                    runner_logs.get_crashed(runner)
                 runner.remove(remove_token)
                 logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
 
@@ -474,7 +498,7 @@ class RunnerManager:
         else:
             logger.info("No changes to number of runners needed.")
 
-        if self.config.charm_state.is_metrics_logging_available:
+        if self.config.are_metrics_enabled:
             end_ts = time.time()
             self._issue_reconciliation_metric(
                 metric_stats=metric_stats,
@@ -569,7 +593,7 @@ class RunnerManager:
                 path=self.config.path,
                 proxies=self.proxies,
                 lxd_storage_path=self.config.lxd_storage_path,
-                issue_metrics=self.config.charm_state.is_metrics_logging_available,
+                issue_metrics=self.config.are_metrics_enabled,
                 dockerhub_mirror=self.config.dockerhub_mirror,
             )
             return Runner(
@@ -595,6 +619,25 @@ class RunnerManager:
 
         return runners
 
+    def _build_image_command(self) -> list[str]:
+        """Get command for building runner image.
+
+        Returns:
+            Command to execute to build runner image.
+        """
+        http_proxy = self.proxies.get("http", "")
+        https_proxy = self.proxies.get("https", "")
+
+        cmd = [
+            "/usr/bin/bash",
+            BUILD_IMAGE_SCRIPT_FILENAME,
+            http_proxy,
+            https_proxy,
+        ]
+        if LXD_PROFILE_YAML.exists():
+            cmd += ["test"]
+        return cmd
+
     def build_runner_image(self) -> None:
         """Build the LXD image for hosting runner.
 
@@ -603,10 +646,7 @@ class RunnerManager:
         Raises:
             LxdError: Unable to build the LXD image.
         """
-        cmd = ["/usr/bin/bash", BUILD_IMAGE_SCRIPT_FILENAME]
-        if LXD_PROFILE_YAML.exists():
-            cmd += ["test"]
-        execute_command(cmd)
+        execute_command(self._build_image_command())
 
     def schedule_build_runner_image(self) -> None:
         """Install cron job for building runner image."""
@@ -617,6 +657,4 @@ class RunnerManager:
         minute = random.randint(0, 59)  # nosec B311
         base_hour = random.randint(0, 5)  # nosec B311
         hours = ",".join([str(base_hour + offset) for offset in (0, 6, 12, 18)])
-        cron_file.write_text(
-            f"{minute} {hours} * * * ubuntu /usr/bin/bash {BUILD_IMAGE_SCRIPT_FILENAME}"
-        )
+        cron_file.write_text(f"{minute} {hours} * * * ubuntu {self._build_image_command()} ")
