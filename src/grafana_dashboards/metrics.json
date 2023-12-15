@@ -342,7 +342,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "avg_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", duration=\"queue_duration\" | __error__=`` | event = `runner_start` | unwrap duration [1h])",
+          "expr": "avg_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", duration=\"queue_duration\" | __error__=`` | event = `runner_start` | unwrap duration [1h]) by (filename)",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Average",
           "queryType": "range",
@@ -354,7 +354,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", duration=\"queue_duration\" | __error__=`` | event = `runner_start` | unwrap duration [1h])",
+          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", duration=\"queue_duration\" | __error__=`` | event = `runner_start` | unwrap duration [1h]) by (filename)",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Max",
           "queryType": "range",
@@ -366,7 +366,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "min_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", duration=\"queue_duration\" | __error__=`` | event = `runner_start` | unwrap duration [1h])",
+          "expr": "min_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", duration=\"queue_duration\" | __error__=`` | event = `runner_start` | unwrap duration [1h]) by (filename)",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "Min",
           "queryType": "range",
@@ -1061,6 +1061,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics",
-  "version": 4,
+  "version": 5,
   "weekStart": ""
 }
