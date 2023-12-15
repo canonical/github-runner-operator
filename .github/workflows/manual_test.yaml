@@ -15,7 +15,7 @@ jobs:
   #       run: df -h
   self-host-test:
     name: self-hosted test
-    runs-on: [self-hosted, github-runner]
+    runs-on: [self-hosted, edge]
     steps:
       - name: Echo test
         run: echo hello
