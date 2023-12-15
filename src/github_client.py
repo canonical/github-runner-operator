@@ -17,7 +17,7 @@ from typing_extensions import assert_never
 
 import errors
 from github_type import (
-    GithubJobStats,
+    JobStats,
     RegistrationToken,
     RemoveToken,
     RunnerApplicationList,
@@ -167,9 +167,7 @@ class GithubClient:
                 runner_id=runner_id,
             )
 
-    def get_job_info(
-        self, path: GithubRepo, workflow_run_id: str, runner_name: str
-    ) -> GithubJobStats:
+    def get_job_info(self, path: GithubRepo, workflow_run_id: str, runner_name: str) -> JobStats:
         """Get information about a job for a specific workflow run.
 
         Args:
@@ -201,7 +199,13 @@ class GithubClient:
                         started_at = datetime.fromisoformat(
                             job["started_at"].replace("Z", "+00:00")
                         )
-                        return GithubJobStats(created_at=created_at, started_at=started_at)
+                        # conclusion could be null per api schema, so we need to handle that
+                        # though we would assume that it should always be present,
+                        # as the job should be finished
+                        conclusion = job.get("conclusion", None)
+                        return JobStats(
+                            created_at=created_at, started_at=started_at, conclusion=conclusion
+                        )
 
         except HTTPError as exc:
             raise errors.JobNotFoundError(

@@ -18,7 +18,16 @@ Status of runner on GitHub.
 
 ---
 
-## <kbd>class</kbd> `GithubJobStats`
+## <kbd>class</kbd> `JobConclusion`
+Conclusion of a job on GitHub. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `JobStats`
 Stats for a job on GitHub. 
 
 

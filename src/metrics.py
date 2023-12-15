@@ -133,6 +133,7 @@ class RunnerStop(Event):
     status: str
     status_info: Optional[CodeInformation]
     job_duration: NonNegativeFloat
+    job_conclusion: Optional[str]
 
 
 class Reconciliation(Event):
