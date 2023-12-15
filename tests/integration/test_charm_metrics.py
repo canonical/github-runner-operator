@@ -287,7 +287,11 @@ async def _assert_events_after_reconciliation(
             assert metric_log.get("status") == post_job_status
             if post_job_status == PostJobStatus.ABNORMAL:
                 assert metric_log.get("status_info", {}).get("code", 0) != 0
-                assert metric_log.get("job_conclusion") == JobConclusion.FAILURE
+                # Either the job conclusion is not yet set or it is set to cancelled.
+                assert metric_log.get("job_conclusion") in [
+                    JobConclusion.FAILURE,
+                    JobConclusion.CANCELLED,
+                ]
             elif post_job_status == PostJobStatus.REPO_POLICY_CHECK_FAILURE:
                 assert metric_log.get("status_info", {}).get("code", 0) == 403
                 assert metric_log.get("job_conclusion") == JobConclusion.FAILURE
