@@ -7,7 +7,6 @@ from asyncio import sleep
 from typing import AsyncIterator
 from urllib.parse import urlparse
 
-import juju
 import pytest
 import pytest_asyncio
 from juju.application import Application
@@ -77,8 +76,8 @@ async def app_with_aproxy_fixture(
     # Disable external network access for the juju machine.
     proxy_url = urlparse(proxy)
     await machine.ssh(f"sudo iptables -I OUTPUT -d {proxy_url.hostname} -j ACCEPT")
-    await machine.ssh(f"sudo iptables -I OUTPUT -d 10.0.0.0/8 -j ACCEPT")
-    await machine.ssh(f"sudo iptables -P OUTPUT DROP")
+    await machine.ssh("sudo iptables -I OUTPUT -d 10.0.0.0/8 -j ACCEPT")
+    await machine.ssh("sudo iptables -P OUTPUT DROP")
     # Test the external network access is disabled.
     await machine.ssh("ping -c1 canonical.com 2>&1 | grep 'Temporary failure in name resolution'")
 
