@@ -3,6 +3,7 @@
 
 """Test the usage of a proxy server."""
 import subprocess
+from asyncio import sleep
 from typing import AsyncIterator
 
 import pytest
@@ -15,6 +16,7 @@ from tests.integration.helpers import (
     get_runner_names,
     run_in_lxd_instance,
 )
+from tests.status_name import ACTIVE_STATUS_NAME
 from utilities import execute_command
 
 PROXY_PORT = 8899
@@ -44,10 +46,14 @@ async def proxy_fixture() -> AsyncIterator[str]:
 
 @pytest_asyncio.fixture(scope="module", name="app_with_aproxy")
 async def app_with_aproxy_fixture(
-    model: Model, app_no_runner: Application, proxy: str
+    model: Model,
+    charm_file: str,
+    app_name: str,
+    path: str,
+    token: str,
+    proxy: str,
 ) -> Application:
-    """Application configured to use aproxy"""
-
+    """Application with aproxy setup and firewall to block all other network access."""
     await model.set_config(
         {
             "juju-http-proxy": proxy,
@@ -57,9 +63,41 @@ async def app_with_aproxy_fixture(
         }
     )
 
-    await app_no_runner.set_config({"experimental-use-aproxy": "true"})
+    machine = await model.add_machine(constraints={"root-disk": 15}, series="jammy")
+    # Wait until juju agent has the hostname of the machine.
+    for _ in range(60):
+        if machine.hostname is not None:
+            break
+        await sleep(10)
+    else:
+        assert False, "Timeout waiting for machine to start"
 
-    return app_no_runner
+    # Disable external network access for the juju machine.
+    execute_command(["lxc", "config", "device", "add", machine.hostname, "eth0", "none"])
+    # Test the external network access is disabled.
+    await machine.ssh("ping -c1 canonical.com 2>&1 | grep 'Temporary failure in name resolution'")
+
+    # Deploy the charm in the juju machine with external network access disabled.
+    application = await model.deploy(
+        charm_file,
+        application_name=app_name,
+        series="jammy",
+        config={
+            "path": path,
+            "token": token,
+            "virtual-machines": 0,
+            "denylist": "10.10.0.0/16",
+            "test-mode": "insecure",
+            "reconcile-interval": 60,
+            "experimental-use-aproxy": "true",
+        },
+        constraints={"root-disk": 15},
+    )
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 30)
+
+    await ensure_charm_has_runner(app=application, model=model)
+
+    return application
 
 
 @pytest.mark.asyncio
