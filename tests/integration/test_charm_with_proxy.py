@@ -5,7 +5,9 @@
 import subprocess
 from asyncio import sleep
 from typing import AsyncIterator
+from urllib.parse import urlparse
 
+import juju
 import pytest
 import pytest_asyncio
 from juju.application import Application
@@ -73,7 +75,10 @@ async def app_with_aproxy_fixture(
         assert False, "Timeout waiting for machine to start"
 
     # Disable external network access for the juju machine.
-    execute_command(["lxc", "config", "device", "add", machine.hostname, "eth0", "none"])
+    proxy_url = urlparse(proxy)
+    await machine.ssh(f"sudo iptables -I OUTPUT -d {proxy_url.hostname} -j ACCEPT")
+    await machine.ssh(f"sudo iptables -I OUTPUT -d 10.0.0.0/8 -j ACCEPT")
+    await machine.ssh(f"sudo iptables -P OUTPUT DROP")
     # Test the external network access is disabled.
     await machine.ssh("ping -c1 canonical.com 2>&1 | grep 'Temporary failure in name resolution'")
 
@@ -92,6 +97,7 @@ async def app_with_aproxy_fixture(
             "experimental-use-aproxy": "true",
         },
         constraints={"root-disk": 15},
+        to=machine,
     )
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 30)
 
