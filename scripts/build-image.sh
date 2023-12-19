@@ -96,13 +96,14 @@ else
     echo "Unsupported CPU architecture: $(uname -m)"
     return 1
 fi
-/usr/bin/wget "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$YQ_ARCH"
-/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums
-/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums_hashes_order
-/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/extract-checksum.sh
+/usr/bin/wget "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$YQ_ARCH" -O "yq_linux_$YQ_ARCH"
+/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums -O checksums
+/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums_hashes_order -O checksums_hashes_order
+/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/extract-checksum.sh -O extract-checksum.sh
 /usr/bin/bash extract-checksum.sh SHA-256 "yq_linux_$YQ_ARCH" | /usr/bin/awk '{print $2,$1}' | /usr/bin/sha256sum -c | /usr/bin/grep OK
 /snap/bin/lxc file push "yq_linux_$YQ_ARCH" builder/usr/bin/yq --mode 755
 
+/snap/bin/lxc exec builder -- /usr/bin/sync
 /snap/bin/lxc publish builder --alias builder --reuse -f
 
 # Swap in the built image
@@ -111,4 +112,4 @@ fi
 /snap/bin/lxc image delete old-runner || true
 
 # Clean up LXD instance
-cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD VM' 10
+cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD instance' 10
