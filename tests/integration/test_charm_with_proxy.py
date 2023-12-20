@@ -63,13 +63,10 @@ async def app_with_aproxy_fixture(
             "juju-http-proxy": proxy,
             "juju-https-proxy": proxy,
             "juju-no-proxy": "127.0.0.1,localhost,::1",
-            "logging-config": "<root>=INFO;unit=DEBUG",
-            "http-proxy": proxy,
-            "https-proxy": proxy,
-            "no-proxy": "127.0.0.1,localhost,::1",
             "snap-http-proxy": proxy,
             "snap-https-proxy": proxy,
             "snap-no-proxy": "127.0.0.1,localhost,::1",
+            "logging-config": "<root>=INFO;unit=DEBUG",
         }
     )
 
