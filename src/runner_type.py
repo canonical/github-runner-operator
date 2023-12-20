@@ -64,28 +64,29 @@ class VirtualMachineResources(NamedTuple):
 
 
 @dataclass
-class RunnerConfig:
+# The instance attributes are all required and is better standalone each.
+class RunnerConfig:  # pylint: disable=too-many-instance-attributes
     """Configuration for runner.
 
     Attributes:
         app_name: Application name of the charm.
-        dockerhub_mirror: URL of dockerhub mirror to use.
         issue_metrics: Whether to issue metrics.
         lxd_storage_path: Path to be used as LXD storage.
         name: Name of the runner.
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
             name.
         proxies: HTTP(S) proxy settings.
+        dockerhub_mirror: URL of dockerhub mirror to use.
         ssh_debug_info: The SSH debug server connection metadata.
     """
 
     app_name: str
-    dockerhub_mirror: str | None = None
     issue_metrics: bool
     lxd_storage_path: Path
     name: str
     path: GithubPath
     proxies: ProxySetting
+    dockerhub_mirror: str | None = None
     ssh_debug_info: SSHDebugInfo | None = None
 
 

@@ -30,6 +30,7 @@ class ARCH(str, Enum):
 
 
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
+SSH_DEBUG_INTEGRATION_NAME = "ssh-debug"
 
 
 class CharmConfigInvalidError(Exception):
@@ -144,9 +145,6 @@ def _get_supported_arch() -> ARCH:
             raise UnsupportedArchitectureError(arch=arch)
 
 
-SSH_DEBUG_RELATION = "ssh-debug"
-
-
 class SSHDebugInfo(BaseModel):
     """SSH connection information for debug workflow.
 
@@ -181,15 +179,15 @@ class SSHDebugInfo(BaseModel):
         return list(related_units)[adjusted_unit_num % total_related_units]
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "SSHDebugInfo" | None:
+    def from_charm(cls, charm: CharmBase) -> Optional["SSHDebugInfo"]:
         """Initialize the SSHDebugInfo from charm relation data.
 
         Args:
             charm: The charm instance.
         """
-        relations = charm.model.relations[SSH_DEBUG_RELATION]
+        relations = charm.model.relations[SSH_DEBUG_INTEGRATION_NAME]
         if not relations:
-            return
+            return None
         relation = relations[0]
         num_units = charm.app.planned_units()
         unit_num = int(charm.unit.name.split("/")[-1])
@@ -251,5 +249,5 @@ class State:
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
             arch=arch,
-            ssh_info=ssh_debug_info,
+            ssh_debug_info=ssh_debug_info,
         )

@@ -35,6 +35,7 @@ def charm_state_fixture():
     mock = MagicMock(spec=State)
     mock.is_metrics_logging_available = False
     mock.arch = ARCH.X64
+    mock.ssh_debug_info = None
     return mock
 
 

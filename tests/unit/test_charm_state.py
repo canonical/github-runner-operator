@@ -2,12 +2,20 @@
 #  See LICENSE file for licensing details.
 import os
 import platform
+from collections import defaultdict
 from unittest.mock import MagicMock, patch
 
+import ops
 import pytest
 
 from charm import GithubRunnerCharm
-from charm_state import ARCH, CharmConfigInvalidError, State
+from charm_state import (
+    ARCH,
+    COS_AGENT_INTEGRATION_NAME,
+    SSH_DEBUG_INTEGRATION_NAME,
+    CharmConfigInvalidError,
+    State,
+)
 
 
 def test_metrics_logging_available_true():
@@ -17,7 +25,10 @@ def test_metrics_logging_available_true():
     assert: metrics_logging_available returns True.
     """
     charm = MagicMock()
-    charm.model.relations.__getitem__.return_value = [MagicMock()]
+    charm.model.relations = {
+        COS_AGENT_INTEGRATION_NAME: MagicMock(spec=ops.Relation),
+        SSH_DEBUG_INTEGRATION_NAME: None,
+    }
     charm.config = {}
 
     state = State.from_charm(charm)
@@ -104,6 +115,7 @@ def test_from_charm_arch(monkeypatch: pytest.MonkeyPatch, arch: str, expected_ar
     monkeypatch.setattr(platform, "machine", mock_machine)
     mock_charm = MagicMock(spec=GithubRunnerCharm)
     mock_charm.config = {}
+    mock_charm.model.relations = defaultdict(lambda: None)
 
     state = State.from_charm(mock_charm)
 
