@@ -14,6 +14,7 @@ from charm_state import (
     COS_AGENT_INTEGRATION_NAME,
     SSH_DEBUG_INTEGRATION_NAME,
     CharmConfigInvalidError,
+    SSHDebugInfo,
     State,
 )
 
@@ -120,3 +121,91 @@ def test_from_charm_arch(monkeypatch: pytest.MonkeyPatch, arch: str, expected_ar
     state = State.from_charm(mock_charm)
 
     assert state.arch == expected_arch
+
+
+def test_ssh_debug_info_from_charm_no_relations():
+    """
+    arrange: given a mocked charm that has no ssh-debug relations.
+    act: when SSHDebug.from_charm is called.
+    assert: None is returned.
+    """
+    mock_charm = MagicMock(spec=GithubRunnerCharm)
+    mock_charm.model.relations = {SSH_DEBUG_INTEGRATION_NAME: []}
+
+    assert SSHDebugInfo.from_charm(mock_charm) is None
+
+
+@pytest.mark.parametrize(
+    "invalid_relation_data",
+    [
+        pytest.param(
+            {
+                "host": "invalidip",
+                "port": "8080",
+                "rsa_fingerprint": "fingerprint_data",
+                "ed25519_fingerprint": "fingerprint_data",
+            },
+            id="invalid host IP",
+        ),
+        pytest.param(
+            {
+                "host": "127.0.0.1",
+                "port": "invalidport",
+                "rsa_fingerprint": "fingerprint_data",
+                "ed25519_fingerprint": "fingerprint_data",
+            },
+            id="invalid port",
+        ),
+    ],
+)
+def test_from_charm_ssh_debug_info_error(invalid_relation_data: dict):
+    """
+    arrange: Given an mocked charm that has invalid ssh-debug relation data.
+    act: when from_charm is called.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MagicMock(spec=GithubRunnerCharm)
+    mock_charm.config = {}
+    mock_relation = MagicMock(spec=ops.Relation)
+    mock_relation.units = {mock_unit := MagicMock(spec=ops.Unit)}
+    mock_relation.data = {mock_unit: invalid_relation_data}
+    mock_charm.model.relations = {SSH_DEBUG_INTEGRATION_NAME: [mock_relation]}
+    mock_charm.app.planned_units.return_value = 1
+    mock_charm.unit.name = "github-runner-operator/0"
+
+    with pytest.raises(CharmConfigInvalidError):
+        State.from_charm(mock_charm)
+
+
+def test_from_charm_ssh_debug_info():
+    """
+    arrange: Given an mocked charm that has invalid ssh-debug relation data.
+    act: when from_charm is called.
+    assert: ssh_debug_info data has been correctly parsed.
+    """
+    mock_charm = MagicMock(spec=GithubRunnerCharm)
+    mock_charm.config = {}
+    mock_relation = MagicMock(spec=ops.Relation)
+    mock_relation.units = {mock_unit := MagicMock(spec=ops.Unit)}
+    mock_relation.data = {
+        mock_unit: (
+            mock_relation_data := {
+                "host": "127.0.0.1",
+                "port": "8080",
+                "rsa_fingerprint": "fingerprint_data",
+                "ed25519_fingerprint": "fingerprint_data",
+            }
+        )
+    }
+    mock_charm.model.relations = {
+        SSH_DEBUG_INTEGRATION_NAME: [mock_relation],
+        COS_AGENT_INTEGRATION_NAME: None,
+    }
+    mock_charm.app.planned_units.return_value = 1
+    mock_charm.unit.name = "github-runner-operator/0"
+
+    ssh_debug_info = State.from_charm(mock_charm).ssh_debug_info
+    assert str(ssh_debug_info.host) == mock_relation_data["host"]
+    assert str(ssh_debug_info.port) == mock_relation_data["port"]
+    assert ssh_debug_info.rsa_fingerprint == mock_relation_data["rsa_fingerprint"]
+    assert ssh_debug_info.ed25519_fingerprint == mock_relation_data["ed25519_fingerprint"]

@@ -9,7 +9,7 @@ import platform
 from enum import Enum
 from typing import Optional
 
-from ops import CharmBase, Unit
+from ops import CharmBase
 from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
 from pydantic.networks import IPvAnyAddress
 
@@ -160,24 +160,6 @@ class SSHDebugInfo(BaseModel):
     rsa_fingerprint: str
     ed25519_fingerprint: str
 
-    @staticmethod
-    def _circular_ring_hash(
-        unit_num: int, num_planned_units: int, related_units: set[Unit]
-    ) -> Unit:
-        """Get a matched unit through circular ring hash distribution method.
-
-        Args:
-            cur_unit_num: The current unit number (nth unit)
-
-        """
-        # if unit has been deleted and scaled, the unit number will be greater than number of total
-        # units available.
-        adjusted_unit_num = (
-            unit_num if unit_num < num_planned_units else unit_num - num_planned_units
-        )
-        total_related_units = len(related_units)
-        return list(related_units)[adjusted_unit_num % total_related_units]
-
     @classmethod
     def from_charm(cls, charm: CharmBase) -> Optional["SSHDebugInfo"]:
         """Initialize the SSHDebugInfo from charm relation data.
@@ -189,9 +171,7 @@ class SSHDebugInfo(BaseModel):
         if not relations:
             return None
         relation = relations[0]
-        num_units = charm.app.planned_units()
-        unit_num = int(charm.unit.name.split("/")[-1])
-        target_unit = cls._circular_ring_hash(unit_num, num_units, relation.units)
+        target_unit = next(iter(relation.units))
         relation_data = relation.data[target_unit]
         return SSHDebugInfo(
             host=relation_data.get("host"),
