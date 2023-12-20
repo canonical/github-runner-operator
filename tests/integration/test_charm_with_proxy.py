@@ -96,7 +96,7 @@ async def app_with_aproxy_fixture(
             "experimental-use-aproxy": "true",
         },
         constraints={"root-disk": 15},
-        to=machine,
+        to=machine.id,
     )
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 30)
 
