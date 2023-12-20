@@ -9,8 +9,9 @@ import platform
 from enum import Enum
 from typing import Optional
 
-from ops import CharmBase
-from pydantic import AnyHttpUrl, BaseModel, ValidationError, root_validator
+from ops import CharmBase, Unit
+from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
+from pydantic.networks import IPvAnyAddress
 
 from utilities import get_env_var
 
@@ -143,6 +144,65 @@ def _get_supported_arch() -> ARCH:
             raise UnsupportedArchitectureError(arch=arch)
 
 
+SSH_DEBUG_RELATION = "ssh-debug"
+
+
+class SSHDebugInfo(BaseModel):
+    """SSH connection information for debug workflow.
+
+    Attributes:
+        host: The SSH relay server host IP address inside the VPN.
+        port: The SSH relay server port.
+        rsa_fingerprint: The host SSH server public RSA key fingerprint.
+        ed25519_fingerprint: The host SSH server public ed25519 key fingerprint.
+    """
+
+    host: IPvAnyAddress
+    port: int = Field(0, gt=0, le=65535)
+    rsa_fingerprint: str
+    ed25519_fingerprint: str
+
+    @staticmethod
+    def _circular_ring_hash(
+        unit_num: int, num_planned_units: int, related_units: set[Unit]
+    ) -> Unit:
+        """Get a matched unit through circular ring hash distribution method.
+
+        Args:
+            cur_unit_num: The current unit number (nth unit)
+
+        """
+        # if unit has been deleted and scaled, the unit number will be greater than number of total
+        # units available.
+        adjusted_unit_num = (
+            unit_num if unit_num < num_planned_units else unit_num - num_planned_units
+        )
+        total_related_units = len(related_units)
+        return list(related_units)[adjusted_unit_num % total_related_units]
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "SSHDebugInfo" | None:
+        """Initialize the SSHDebugInfo from charm relation data.
+
+        Args:
+            charm: The charm instance.
+        """
+        relations = charm.model.relations[SSH_DEBUG_RELATION]
+        if not relations:
+            return
+        relation = relations[0]
+        num_units = charm.app.planned_units()
+        unit_num = int(charm.unit.name.split("/")[-1])
+        target_unit = cls._circular_ring_hash(unit_num, num_units, relation.units)
+        relation_data = relation.data[target_unit]
+        return SSHDebugInfo(
+            host=relation_data.get("host"),
+            port=relation_data.get("port"),
+            rsa_fingerprint=relation_data.get("rsa_fingerprint"),
+            ed25519_fingerprint=relation_data.get("ed25519_fingerprint"),
+        )
+
+
 @dataclasses.dataclass(frozen=True)
 class State:
     """The charm state.
@@ -151,11 +211,13 @@ class State:
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Whether aproxy should be used.
         arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
+        ssh_debug_info: The SSH debug connection configuration information.
     """
 
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
     arch: ARCH
+    ssh_debug_info: Optional[SSHDebugInfo]
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "State":
@@ -179,8 +241,15 @@ class State:
             logger.error("Unsupported architecture: %s", exc.arch)
             raise CharmConfigInvalidError(f"Unsupported architecture {exc.arch}") from exc
 
+        try:
+            ssh_debug_info = SSHDebugInfo.from_charm(charm)
+        except ValidationError as exc:
+            logger.error("Invalid SSH debug info: %s.", exc)
+            raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
+
         return cls(
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
             arch=arch,
+            ssh_info=ssh_debug_info,
         )

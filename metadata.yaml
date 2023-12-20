@@ -24,3 +24,7 @@ series:
 provides:
   cos-agent:
     interface: cos_agent
+
+requires:
+  ssh-debug:
+    interface: ssh-debug

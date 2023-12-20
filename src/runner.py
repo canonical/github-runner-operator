@@ -659,7 +659,7 @@ class Runner:
 
         # Load `/etc/environment` file.
         environment_contents = self._clients.jinja.get_template("environment.j2").render(
-            proxies=self.config.proxies
+            proxies=self.config.proxies, ssh_debug_info=self.config.ssh_debug_info
         )
         self._put_file("/etc/environment", environment_contents)
 

@@ -5,3 +5,9 @@ NO_PROXY={{proxies['no_proxy']}}
 http_proxy={{proxies['http']}}
 https_proxy={{proxies['https']}}
 no_proxy={{proxies['no_proxy']}}
+{% if ssh_debug_info %}
+TMATE-SERVER-HOST={{ssh_debug_info['host']}}
+TMATE-SERVER-PORT={{ssh_debug_info['port']}}
+TMATE-SERVER-RSA-FINGERPRINT={{ssh_debug_info['rsa_fingerprint']}}
+TMATE-SERVER-ED25519-FINGERPRINT={{ssh_debug_info['ed25519_fingerprint']}}
+{% endif %}

@@ -8,6 +8,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import NamedTuple, Optional, TypedDict, Union
 
+from charm_state import SSHDebugInfo
+
 
 @dataclass
 class RunnerByHealth:
@@ -66,23 +68,25 @@ class RunnerConfig:
     """Configuration for runner.
 
     Attributes:
-        name: Name of the runner.
         app_name: Application name of the charm.
+        dockerhub_mirror: URL of dockerhub mirror to use.
+        issue_metrics: Whether to issue metrics.
+        lxd_storage_path: Path to be used as LXD storage.
+        name: Name of the runner.
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
             name.
         proxies: HTTP(S) proxy settings.
-        lxd_storage_path: Path to be used as LXD storage.
-        issue_metrics: Whether to issue metrics.
-        dockerhub_mirror: URL of dockerhub mirror to use.
+        ssh_debug_info: The SSH debug server connection metadata.
     """
 
-    name: str
     app_name: str
+    dockerhub_mirror: str | None = None
+    issue_metrics: bool
+    lxd_storage_path: Path
+    name: str
     path: GithubPath
     proxies: ProxySetting
-    lxd_storage_path: Path
-    issue_metrics: bool
-    dockerhub_mirror: str | None = None
+    ssh_debug_info: SSHDebugInfo | None = None
 
 
 @dataclass
