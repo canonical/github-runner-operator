@@ -653,7 +653,9 @@ class RunnerManager:
     def schedule_build_runner_image(self) -> None:
         """Install cron job for building runner image."""
         # Replace empty string in the build image command list and form a string.
-        build_image_command= " ".join([part if part else "''" for part in self._build_image_command()])
+        build_image_command = " ".join(
+            [part if part else "''" for part in self._build_image_command()]
+        )
 
         cron_file = self.cron_path / "build-runner-image"
         # Randomized the time executing the building of image to prevent all instances of the charm
@@ -662,6 +664,4 @@ class RunnerManager:
         minute = random.randint(0, 59)  # nosec B311
         base_hour = random.randint(0, 5)  # nosec B311
         hours = ",".join([str(base_hour + offset) for offset in (0, 6, 12, 18)])
-        cron_file.write_text(
-            f"{minute} {hours} * * * ubuntu {build_image_command}"
-        )
+        cron_file.write_text(f"{minute} {hours} * * * ubuntu {build_image_command}")
