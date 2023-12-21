@@ -627,12 +627,14 @@ class RunnerManager:
         """
         http_proxy = self.proxies.get("http", "")
         https_proxy = self.proxies.get("https", "")
+        no_proxy = self.proxies.get("no_proxy", "")
 
         cmd = [
             "/usr/bin/bash",
             BUILD_IMAGE_SCRIPT_FILENAME,
             http_proxy,
             https_proxy,
+            no_proxy,
         ]
         if LXD_PROFILE_YAML.exists():
             cmd += ["test"]
@@ -650,6 +652,9 @@ class RunnerManager:
 
     def schedule_build_runner_image(self) -> None:
         """Install cron job for building runner image."""
+        # Replace empty string in the build image command list and form a string.
+        build_image_command= " ".join([part if part else "''" for part in self._build_image_command()])
+
         cron_file = self.cron_path / "build-runner-image"
         # Randomized the time executing the building of image to prevent all instances of the charm
         # building images at the same time, using up the disk, and network IO of the server.
@@ -658,5 +663,5 @@ class RunnerManager:
         base_hour = random.randint(0, 5)  # nosec B311
         hours = ",".join([str(base_hour + offset) for offset in (0, 6, 12, 18)])
         cron_file.write_text(
-            f"{minute} {hours} * * * ubuntu {' '.join(self._build_image_command())}"
+            f"{minute} {hours} * * * ubuntu {build_image_command}"
         )
