@@ -82,7 +82,13 @@ async def app_with_aproxy_fixture(
     # Disable external network access for the juju machine.
     proxy_url = urlparse(proxy)
     await machine.ssh(f"sudo iptables -I OUTPUT -d {proxy_url.hostname} -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 0.0.0.0/8 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 127.0.0.0/12 -j ACCEPT")
     await machine.ssh("sudo iptables -I OUTPUT -d 10.0.0.0/8 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 172.12.0.0/12 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 192.168.0.0/16 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 169.254.0.0/16 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 198.18.0.0/15 -j ACCEPT")
     await machine.ssh("sudo iptables -P OUTPUT DROP")
     # Test the external network access is disabled.
     await machine.ssh("ping -c1 canonical.com 2>&1 | grep 'Temporary failure in name resolution'")
