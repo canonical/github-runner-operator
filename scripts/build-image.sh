@@ -54,10 +54,10 @@ NO_PROXY="$3"
 MODE="$4"
 
 if [[ -n "$HTTP_PROXY" ]]; then
-    /snap/bin/lxc config set core.proxy_http $HTTP_PROXY
+    /snap/bin/lxc config set core.proxy_http "$HTTP_PROXY"
 fi
 if [[ -n "$HTTPS_PROXY" ]]; then
-    /snap/bin/lxc config set core.proxy_https $HTTPS_PROXY
+    /snap/bin/lxc config set core.proxy_https "$HTTPS_PROXY"
 fi
 
 cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD VM of previous run' 10
