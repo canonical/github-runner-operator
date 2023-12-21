@@ -72,7 +72,7 @@ async def app_with_aproxy_fixture(
 
     machine = await model.add_machine(constraints={"root-disk": 15}, series="jammy")
     # Wait until juju agent has the hostname of the machine.
-    for _ in range(60):
+    for _ in range(120):
         if machine.hostname is not None:
             break
         await sleep(10)
