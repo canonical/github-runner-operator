@@ -91,7 +91,7 @@ async def app_with_aproxy_fixture(
     await machine.ssh("sudo iptables -I OUTPUT -d 198.18.0.0/15 -j ACCEPT")
     await machine.ssh("sudo iptables -P OUTPUT DROP")
     # Test the external network access is disabled.
-    await machine.ssh("ping -c1 canonical.com 2>&1 | grep 'Temporary failure in name resolution'")
+    await machine.ssh("ping -c1 canonical.com 2>&1 | grep '100% packet loss'")
 
     # Deploy the charm in the juju machine with external network access disabled.
     application = await model.deploy(

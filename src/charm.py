@@ -686,14 +686,14 @@ class GithubRunnerCharm(CharmBase):
         if "http" in self.proxies:
             env["HTTP_PROXY"] = self.proxies["http"]
             env["http_proxy"] = self.proxies["http"]
+            execute_command(["git", "config", "--global", "http.proxy", self.proxies["http"]])
         if "https" in self.proxies:
             env["HTTPS_PROXY"] = self.proxies["https"]
             env["https_proxy"] = self.proxies["https"]
+            execute_command(["git", "config", "--global", "https.proxy", self.proxies["https"]])
         if "no_proxy" in self.proxies:
             env["NO_PROXY"] = self.proxies["no_proxy"]
             env["no_proxy"] = self.proxies["no_proxy"]
-        # Setup git proxy settings.
-        execute_command(["git", "config", "--global", "http.proxy", self.proxies["http"]])
 
         old_version = execute_command(
             [
