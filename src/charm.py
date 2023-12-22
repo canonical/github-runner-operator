@@ -672,6 +672,9 @@ class GithubRunnerCharm(CharmBase):
         delta_virtual_machines = runner_manager.reconcile(
             virtual_machines, virtual_machines_resources
         )
+
+        self.unit.status = ActiveStatus()
+
         return {"delta": {"virtual-machines": delta_virtual_machines}}
 
     def _install_repo_policy_compliance(self) -> bool:

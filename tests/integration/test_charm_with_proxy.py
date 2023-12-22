@@ -110,7 +110,7 @@ async def app_with_aproxy_fixture(
         config={
             "path": path,
             "token": token,
-            "virtual-machines": 0,
+            "virtual-machines": 1,
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
             "reconcile-interval": 60,
@@ -120,8 +120,6 @@ async def app_with_aproxy_fixture(
         to=machine.id,
     )
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 60)
-
-    await ensure_charm_has_runner(app=application, model=model)
 
     return application
 
