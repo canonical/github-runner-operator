@@ -324,8 +324,6 @@ class GithubRunnerCharm(CharmBase):
         """
         self.unit.status = MaintenanceStatus("Installing packages")
 
-        self._update_kernel()
-
         try:
             # The `_start_services`, `_install_deps` includes retry.
             self._install_deps()
