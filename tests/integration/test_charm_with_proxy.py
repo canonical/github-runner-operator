@@ -83,12 +83,21 @@ async def app_with_aproxy_fixture(
     proxy_url = urlparse(proxy)
     await machine.ssh(f"sudo iptables -I OUTPUT -d {proxy_url.hostname} -j ACCEPT")
     await machine.ssh("sudo iptables -I OUTPUT -d 0.0.0.0/8 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 127.0.0.0/12 -j ACCEPT")
     await machine.ssh("sudo iptables -I OUTPUT -d 10.0.0.0/8 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 172.12.0.0/12 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 192.168.0.0/16 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 100.64.0.0/10 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 127.0.0.0/8 -j ACCEPT")
     await machine.ssh("sudo iptables -I OUTPUT -d 169.254.0.0/16 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 172.16.0.0/12 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 192.0.0.0/24 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 192.0.2.0/24 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 192.88.99.0/24 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 192.168.0.0/16 -j ACCEPT")
     await machine.ssh("sudo iptables -I OUTPUT -d 198.18.0.0/15 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 198.51.100.0/24 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 203.0.113.0/24 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 224.0.0.0/4 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 233.252.0.0/24 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 240.0.0.0/4 -j ACCEPT")
     await machine.ssh("sudo iptables -P OUTPUT DROP")
     # Test the external network access is disabled.
     await machine.ssh("ping -c1 canonical.com 2>&1 | grep '100% packet loss'")
@@ -137,6 +146,6 @@ async def test_usage_of_aproxy(model: Model, app_with_aproxy: Application) -> No
     return_code, stdout = await run_in_lxd_instance(
         unit, runner_name, "snap logs aproxy.aproxy -n=all"
     )
-    assert return_code == 0
-    assert stdout is not None
     assert "canonical.com" in stdout
+    assert stdout is not None
+    assert return_code == 0
