@@ -146,6 +146,6 @@ async def test_usage_of_aproxy(model: Model, app_with_aproxy: Application) -> No
     return_code, stdout = await run_in_lxd_instance(
         unit, runner_name, "snap logs aproxy.aproxy -n=all"
     )
-    assert "canonical.com" in stdout
-    assert stdout is not None
     assert return_code == 0
+    assert stdout is not None
+    assert "canonical.com" in stdout
