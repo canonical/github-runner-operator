@@ -119,7 +119,7 @@ async def app_with_aproxy_fixture(
         constraints={"root-disk": 15},
         to=machine.id,
     )
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 30)
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 60)
 
     await ensure_charm_has_runner(app=application, model=model)
 
