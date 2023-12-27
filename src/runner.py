@@ -668,6 +668,7 @@ class Runner:
             proxies=self.config.proxies,
             pre_job_script=str(self.pre_job_script),
             dockerhub_mirror=self.config.dockerhub_mirror,
+            ssh_debug_info=self.config.ssh_debug_info,
         )
         self._put_file(str(self.env_file), env_contents)
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])

@@ -12,7 +12,7 @@ from charm import GithubRunnerCharm
 from charm_state import (
     ARCH,
     COS_AGENT_INTEGRATION_NAME,
-    SSH_DEBUG_INTEGRATION_NAME,
+    DEBUG_SSH_INTEGRATION_NAME,
     CharmConfigInvalidError,
     SSHDebugInfo,
     State,
@@ -28,7 +28,7 @@ def test_metrics_logging_available_true():
     charm = MagicMock()
     charm.model.relations = {
         COS_AGENT_INTEGRATION_NAME: MagicMock(spec=ops.Relation),
-        SSH_DEBUG_INTEGRATION_NAME: None,
+        DEBUG_SSH_INTEGRATION_NAME: None,
     }
     charm.config = {}
 
@@ -130,7 +130,7 @@ def test_ssh_debug_info_from_charm_no_relations():
     assert: None is returned.
     """
     mock_charm = MagicMock(spec=GithubRunnerCharm)
-    mock_charm.model.relations = {SSH_DEBUG_INTEGRATION_NAME: []}
+    mock_charm.model.relations = {DEBUG_SSH_INTEGRATION_NAME: []}
 
     assert SSHDebugInfo.from_charm(mock_charm) is None
 
@@ -169,7 +169,7 @@ def test_from_charm_ssh_debug_info_error(invalid_relation_data: dict):
     mock_relation = MagicMock(spec=ops.Relation)
     mock_relation.units = {mock_unit := MagicMock(spec=ops.Unit)}
     mock_relation.data = {mock_unit: invalid_relation_data}
-    mock_charm.model.relations = {SSH_DEBUG_INTEGRATION_NAME: [mock_relation]}
+    mock_charm.model.relations = {DEBUG_SSH_INTEGRATION_NAME: [mock_relation]}
     mock_charm.app.planned_units.return_value = 1
     mock_charm.unit.name = "github-runner-operator/0"
 
@@ -198,7 +198,7 @@ def test_from_charm_ssh_debug_info():
         )
     }
     mock_charm.model.relations = {
-        SSH_DEBUG_INTEGRATION_NAME: [mock_relation],
+        DEBUG_SSH_INTEGRATION_NAME: [mock_relation],
         COS_AGENT_INTEGRATION_NAME: None,
     }
     mock_charm.app.planned_units.return_value = 1

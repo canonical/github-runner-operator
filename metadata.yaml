@@ -26,5 +26,5 @@ provides:
     interface: cos_agent
 
 requires:
-  ssh-debug:
-    interface: ssh-debug
+  debug-ssh:
+    interface: debug-ssh

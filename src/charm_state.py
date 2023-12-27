@@ -30,7 +30,7 @@ class ARCH(str, Enum):
 
 
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
-SSH_DEBUG_INTEGRATION_NAME = "ssh-debug"
+DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 
 
 class CharmConfigInvalidError(Exception):
@@ -167,17 +167,26 @@ class SSHDebugInfo(BaseModel):
         Args:
             charm: The charm instance.
         """
-        relations = charm.model.relations[SSH_DEBUG_INTEGRATION_NAME]
-        if not relations:
+        relations = charm.model.relations[DEBUG_SSH_INTEGRATION_NAME]
+        if not relations or not len((relation := relations[0]).units):
             return None
-        relation = relations[0]
-        target_unit = next(iter(relation.units))
+        target_unit = next(
+            filter(lambda unit: charm.app.name not in unit.name, iter(relation.units))
+        )
         relation_data = relation.data[target_unit]
+        if (
+            not (host := relation_data.get("host"))
+            or not (port := relation_data.get("port"))
+            or not (rsa_fingerprint := relation_data.get("rsa_fingerprint"))
+            or not (ed25519_fingerprint := relation_data.get("ed25519_fingerprint"))
+        ):
+            logger.warning("%s relation data not yet ready.", DEBUG_SSH_INTEGRATION_NAME)
+            return None
         return SSHDebugInfo(
-            host=relation_data.get("host"),
-            port=relation_data.get("port"),
-            rsa_fingerprint=relation_data.get("rsa_fingerprint"),
-            ed25519_fingerprint=relation_data.get("ed25519_fingerprint"),
+            host=host,
+            port=port,
+            rsa_fingerprint=rsa_fingerprint,
+            ed25519_fingerprint=ed25519_fingerprint,
         )
 
 
