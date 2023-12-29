@@ -167,10 +167,13 @@ def test_from_charm_ssh_debug_info_error(invalid_relation_data: dict):
     mock_charm = MagicMock(spec=GithubRunnerCharm)
     mock_charm.config = {}
     mock_relation = MagicMock(spec=ops.Relation)
-    mock_relation.units = {mock_unit := MagicMock(spec=ops.Unit)}
+    mock_unit = MagicMock(spec=ops.Unit)
+    mock_unit.name = "tmate-ssh-server-operator/0"
+    mock_relation.units = {mock_unit}
     mock_relation.data = {mock_unit: invalid_relation_data}
     mock_charm.model.relations = {DEBUG_SSH_INTEGRATION_NAME: [mock_relation]}
     mock_charm.app.planned_units.return_value = 1
+    mock_charm.app.name = "github-runner-operator"
     mock_charm.unit.name = "github-runner-operator/0"
 
     with pytest.raises(CharmConfigInvalidError):
@@ -186,7 +189,9 @@ def test_from_charm_ssh_debug_info():
     mock_charm = MagicMock(spec=GithubRunnerCharm)
     mock_charm.config = {}
     mock_relation = MagicMock(spec=ops.Relation)
-    mock_relation.units = {mock_unit := MagicMock(spec=ops.Unit)}
+    mock_unit = MagicMock(spec=ops.Unit)
+    mock_unit.name = "tmate-ssh-server-operator/0"
+    mock_relation.units = {mock_unit}
     mock_relation.data = {
         mock_unit: (
             mock_relation_data := {
@@ -202,6 +207,7 @@ def test_from_charm_ssh_debug_info():
         COS_AGENT_INTEGRATION_NAME: None,
     }
     mock_charm.app.planned_units.return_value = 1
+    mock_charm.app.name = "github-runner-operator"
     mock_charm.unit.name = "github-runner-operator/0"
 
     ssh_debug_info = State.from_charm(mock_charm).ssh_debug_info
