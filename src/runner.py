@@ -796,4 +796,9 @@ class Runner:
             cmd = ["snap", "install", snap.name, f"--channel={snap.channel}"]
             if snap.revision is not None:
                 cmd.append(f"--revision={snap.revision}")
-            self.instance.execute(cmd)
+            exit_code, stdout, stderr = self.instance.execute(cmd)
+
+            if exit_code != 0:
+                err_msg = stderr.read().decode("utf-8")
+                logger.error("Unable to install %s due to %s", snap.name, err_msg)
+                raise RunnerCreateError(f"Unable to install {snap.name}")
