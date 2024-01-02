@@ -562,6 +562,13 @@ class Runner:
         self.instance.execute(
             ["snap", "set", "aproxy", f"proxy={proxy_address}", f"listen=:{aproxy_port}"]
         )
+        exit_code, stdout, _ = self.instance.execute(["snap", "logs", "aproxy.aproxy", "-n=all"])
+        if (
+            exit_code != 0
+            or "Started Service for snap application aproxy.aproxy"
+            not in stdout.read().decode("utf-8")
+        ):
+            raise RunnerAproxyError("Aproxy service did not configure correctly")
 
         default_ip = self._get_default_ip()
         if not default_ip:
@@ -796,7 +803,7 @@ class Runner:
             cmd = ["snap", "install", snap.name, f"--channel={snap.channel}"]
             if snap.revision is not None:
                 cmd.append(f"--revision={snap.revision}")
-            exit_code, stdout, stderr = self.instance.execute(cmd)
+            exit_code, _, stderr = self.instance.execute(cmd)
 
             if exit_code != 0:
                 err_msg = stderr.read().decode("utf-8")
