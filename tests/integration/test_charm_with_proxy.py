@@ -4,6 +4,7 @@
 """Test the usage of a proxy server."""
 import subprocess
 from asyncio import sleep
+from pathlib import Path
 from typing import AsyncIterator
 from urllib.parse import urlparse
 
@@ -26,7 +27,16 @@ PROXY_PORT = 8899
 @pytest_asyncio.fixture(scope="module", name="proxy")
 async def proxy_fixture() -> AsyncIterator[str]:
     """Start proxy.py and return the proxy server address."""
-    process = subprocess.Popen(["proxy", "--hostname", "0.0.0.0", "--port", str(PROXY_PORT)])
+    result = subprocess.run(["which", "tinyproxy"])
+    if result.returncode != 0:
+        assert (
+            False
+        ), "Cannot find tinyproxy in PATH, install tinyproxy with `apt install tinyproxy -y`"
+
+    tinyproxy_config = Path("tinyproxy.conf")
+    tinyproxy_config.write_text((f"Port {PROXY_PORT}\n" "Listen 0.0.0.0\n" "Timeout 600\n"))
+
+    process = subprocess.Popen(["tinyproxy", "-d", "-c", str(tinyproxy_config)])
 
     # Get default ip using following commands
     stdout, _ = execute_command(
@@ -43,6 +53,8 @@ async def proxy_fixture() -> AsyncIterator[str]:
     yield f"http://{default_ip}:{PROXY_PORT}"
 
     process.terminate()
+    if tinyproxy_config.exists():
+        tinyproxy_config.unlink()
 
 
 @pytest_asyncio.fixture(scope="module", name="app_with_aproxy")
