@@ -126,7 +126,7 @@ async def app_with_aproxy_fixture(
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_usage_of_aproxy(model: Model, app_with_aproxy: Application, proxy: str) -> None:
+async def test_usage_of_aproxy(model: Model, app_with_aproxy: Application) -> None:
     """
     arrange: A working application with one runner using aproxy configured for a proxy server.
     act: Run curl in the runner.
@@ -142,8 +142,8 @@ async def test_usage_of_aproxy(model: Model, app_with_aproxy: Application, proxy
         unit,
         runner_name,
         "curl http://canonical.com",
-        env={"http_proxy": proxy, "https_proxy": proxy},
     )
+
     assert return_code == 0
 
     return_code, stdout = await run_in_lxd_instance(

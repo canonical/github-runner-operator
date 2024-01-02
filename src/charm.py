@@ -368,6 +368,8 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of starting the charm.
         """
+        self._check_and_update_dependencies()
+
         runner_manager = self._get_runner_manager()
 
         self.unit.status = MaintenanceStatus("Starting runners")
