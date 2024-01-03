@@ -28,10 +28,9 @@ PROXY_PORT = 8899
 async def proxy_fixture() -> AsyncIterator[str]:
     """Start proxy.py and return the proxy server address."""
     result = subprocess.run(["which", "tinyproxy"])
-    if result.returncode != 0:
-        assert (
-            False
-        ), "Cannot find tinyproxy in PATH, install tinyproxy with `apt install tinyproxy -y`"
+    assert (
+        result.returncode != 0
+    ), "Cannot find tinyproxy in PATH, install tinyproxy with `apt install tinyproxy -y`"
 
     tinyproxy_config = Path("tinyproxy.conf")
     tinyproxy_config.write_text((f"Port {PROXY_PORT}\n" "Listen 0.0.0.0\n" "Timeout 600\n"))
