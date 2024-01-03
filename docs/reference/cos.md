@@ -8,9 +8,9 @@ Upon [COS](https://charmhub.io/topics/canonical-observability-stack) integration
 The dashboard presents the following rows:
 
 - General: Displays general metrics about the charm and runners, such as:
-  - Lifecycle Counters: Tracks the frequency of Runner initialisation, start, stop, and crash events.
-  - Idle Runners after Reconciliation: Reflects the count of Runners marked as idle during the last reconciliation event. Note: This data updates post-reconciliation events and isn't real-time.
-  - Duration Observations: Each data point aggregates the last hour, showcasing minimum, maximum, and average durations for:
+  - Lifecycle counters: Tracks the frequency of Runner initialisation, start, stop, and crash events.
+  - Idle runners after reconciliation: Reflects the count of Runners marked as idle during the last reconciliation event. Note: This data updates post-reconciliation events and isn't real-time.
+  - Duration observations: Each data point aggregates the last hour, showcasing minimum, maximum, and average durations for:
       - Runner installation
       - Runner idle duration
       - Charm reconciliation duration
