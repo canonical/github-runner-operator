@@ -19,6 +19,7 @@ The dashboard presents the following rows:
  regular expression on the `Repository` variable. The following metrics are displayed:
   - Pie charts: Share of jobs by completion status, job conclusion, flavor, repo policy check failure http codes and github events.
   - Job duration observation
+  - Number of jobs per repository
 
 
 
