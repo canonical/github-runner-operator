@@ -306,7 +306,7 @@ class GithubRunnerCharm(CharmBase):
             RunnerManagerConfig(
                 path=path,
                 token=token,
-                image="runner",
+                image="jammy",
                 service_token=self.service_token,
                 lxd_storage_path=self.ram_pool_path,
                 charm_state=self._state,
