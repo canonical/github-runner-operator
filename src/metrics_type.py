@@ -1,3 +1,6 @@
+# Copyright 2024 Canonical Ltd.
+# See LICENSE file for licensing details.
+
 #  Copyright 2023 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
