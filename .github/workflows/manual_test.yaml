@@ -15,14 +15,16 @@ jobs:
   #       run: df -h
   self-host-test:
     name: self-hosted test
-    runs-on: [self-hosted, edge]
+    runs-on: [self-hosted, edge, jammy]
     steps:
-      - uses: actions/checkout@v4.1.1
-      - uses: canonical/setup-lxd@v0.1.1
-      - name: Pack charm
-        run: |
-          sudo snap install charmcraft --classic --channel latest/stable
-          charmcraft pack -v
+      - run: echo hello
+      - run: df -h
+      # - uses: actions/checkout@v4.1.1
+      # - uses: canonical/setup-lxd@v0.1.1
+      # - name: Pack charm
+      #   run: |
+      #     sudo snap install charmcraft --classic --channel latest/stable
+      #     charmcraft pack -v
       # - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> rustup.sh
       # - run: sh rustup.sh -y
       # - run: $HOME/.cargo/bin/cargo install ripgrep
