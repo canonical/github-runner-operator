@@ -29,7 +29,7 @@ async def proxy_fixture() -> AsyncIterator[str]:
     """Start proxy.py and return the proxy server address."""
     result = subprocess.run(["which", "tinyproxy"])
     assert (
-        result.returncode != 0
+        result.returncode == 0
     ), "Cannot find tinyproxy in PATH, install tinyproxy with `apt install tinyproxy -y`"
 
     tinyproxy_config = Path("tinyproxy.conf")
