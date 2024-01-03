@@ -17,18 +17,12 @@ jobs:
     name: self-hosted test
     runs-on: [self-hosted, edge]
     steps:
-      - name: Echo test
-        run: echo hello
-      - name: Disk usage
-        run: df -h
-      - name: Echo env var
-        run: echo $DOCKERHUB_MIRROR
-      - name: Setup operator environment
-        uses: yhaliaw/actions-operator@microk8s-docker-registry
-        with:
-          provider: microk8s
-      - name: Wait
-        run: sleep 60m
+      - uses: actions/checkout@v4.1.1
+      - uses: canonical/setup-lxd@v0.1.1
+      - name: Pack charm
+        run: |
+          sudo snap install charmcraft --classic --channel latest/stable
+          charmcraft pack -v
       # - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> rustup.sh
       # - run: sh rustup.sh -y
       # - run: $HOME/.cargo/bin/cargo install ripgrep
