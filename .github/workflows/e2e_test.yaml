@@ -431,7 +431,7 @@ jobs:
   e2e-test:
     name: End-to-End Test
     needs: [build-charm, run-id]
-    runs-on: [self-hosted, linux, x64, "pr-${{ needs.run-id.outputs.run-id }}"]
+    runs-on: [self-hosted, linux, x64, jammy, "pr-${{ needs.run-id.outputs.run-id }}"]
     steps:
       # Snapd can have some issues in privileged LXD containers without setting
       # security.nesting=True and this.
