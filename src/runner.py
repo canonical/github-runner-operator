@@ -470,7 +470,7 @@ class Runner:
 
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
-    @retry(tries=5, delay=10, max_delay=60, backoff=2, local_logger=logger)
+    @retry(tries=10, delay=10, max_delay=120, backoff=2, local_logger=logger)
     def _install_binaries(self, runner_binary: Path) -> None:
         """Install runner binary and other binaries.
 
