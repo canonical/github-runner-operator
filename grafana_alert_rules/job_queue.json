@@ -1,0 +1,132 @@
+{
+  "id": 4,
+  "uid": "TJxNipKSz",
+  "orgID": 1,
+  "folderUID": "8kORy5KSk",
+  "ruleGroup": "github-runner-capacity",
+  "title": "Job Queue duration too high",
+  "condition": "C",
+  "data": [
+    {
+      "refId": "A",
+      "queryType": "range",
+      "relativeTimeRange": {
+        "from": 3600,
+        "to": 0
+      },
+      "datasourceUid": "P30805665297C0350",
+      "model": {
+        "editorMode": "code",
+        "expr": "quantile_over_time(0.5, {filename=\"/var/log/github-runner-metrics.log\"} | json event=\"event\",duration=\"queue_duration\",flavor=\"flavor\" | __error__=\"\" | event=\"runner_start\" | unwrap duration[1h]) by(flavor)",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "queryType": "range",
+        "refId": "A"
+      }
+    },
+    {
+      "refId": "B",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 3600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                3
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "type": "__expr__",
+          "uid": "-100"
+        },
+        "expression": "A",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "reducer": "last",
+        "refId": "B",
+        "type": "reduce"
+      }
+    },
+    {
+      "refId": "C",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0,
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "B"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "name": "Expression",
+          "type": "__expr__",
+          "uid": "__expr__"
+        },
+        "expression": "$B \u003e 1800",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "refId": "C",
+        "type": "math"
+      }
+    }
+  ],
+  "updated": "2024-01-04T13:49:27Z",
+  "noDataState": "NoData",
+  "execErrState": "Error",
+  "for": "1h",
+  "annotations": {
+    "description": "Job queue duration is higher than 30 minutes for half of the runners with flavor {{$labels.flavor}}",
+    "summary": "Job queue duration is too high for flavor {{$labels.flavor}}"
+  },
+  "labels": {
+    "severity": "high",
+    "type": "runner-capacity"
+  }
+}

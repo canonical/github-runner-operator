@@ -1,0 +1,85 @@
+{
+  "id": 1,
+  "uid": "S_cgecKSz",
+  "orgID": 1,
+  "folderUID": "8kORy5KSk",
+  "ruleGroup": "github-runner-failure",
+  "title": "Crashed runner",
+  "condition": "B",
+  "data": [
+    {
+      "refId": "A",
+      "queryType": "range",
+      "relativeTimeRange": {
+        "from": 3600,
+        "to": 0
+      },
+      "datasourceUid": "P30805665297C0350",
+      "model": {
+        "editorMode": "code",
+        "expr": "(sum_over_time({filename=\"/var/log/github-runner-metrics.log\"} | json event=\"event\", crashed_runners=\"crashed_runners\" |  event = `reconciliation` | unwrap crashed_runners [$__range]))",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "queryType": "range",
+        "refId": "A"
+      }
+    },
+    {
+      "refId": "B",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 3600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "type": "__expr__",
+          "uid": "-100"
+        },
+        "expression": "A",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "reducer": "last",
+        "refId": "B",
+        "type": "reduce"
+      }
+    }
+  ],
+  "updated": "2024-01-04T13:01:42Z",
+  "noDataState": "NoData",
+  "execErrState": "Error",
+  "for": "0s",
+  "annotations": {
+    "summary": "A runner in unit {{ $labels.juju_unit }} crashed."
+  },
+  "labels": {
+    "severity": "high",
+    "type": "runner-failure"
+  }
+}

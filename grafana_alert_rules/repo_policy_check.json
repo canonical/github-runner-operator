@@ -1,0 +1,85 @@
+{
+  "id": 3,
+  "uid": "nTF7ktKSz",
+  "orgID": 1,
+  "folderUID": "8kORy5KSk",
+  "ruleGroup": "github-runner-failure",
+  "title": "Repo-policy check failures",
+  "condition": "B",
+  "data": [
+    {
+      "refId": "A",
+      "queryType": "range",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "P30805665297C0350",
+      "model": {
+        "editorMode": "code",
+        "expr": "sum by (filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\"} | json event=\"event\" | event=\"runner_stop\" | json status=\"status\" | status=\"repo-policy-check-failure\" | json http_code=\"status_info.code\" | http_code=~\"4..\" [$__range])) / sum by (filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\"} | json event=\"event\" | event=\"runner_stop\" [$__range]))",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "queryType": "range",
+        "refId": "A"
+      }
+    },
+    {
+      "refId": "B",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0.5
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "type": "__expr__",
+          "uid": "-100"
+        },
+        "expression": "A",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "refId": "B",
+        "type": "classic_conditions"
+      }
+    }
+  ],
+  "updated": "2024-01-04T13:01:42Z",
+  "noDataState": "NoData",
+  "execErrState": "Error",
+  "for": "3h",
+  "annotations": {
+    "description": "More than 50 % of jobs have failed the repo-policy check (4xx status code)",
+    "summary": "Too many repo-policy check failures"
+  },
+  "labels": {
+    "severity": "medium",
+    "type": "runner-failure"
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "id": 5,
+  "uid": "VbG5WpKSz",
+  "orgID": 1,
+  "folderUID": "8kORy5KSk",
+  "ruleGroup": "github-runner-capacity",
+  "title": "Short idle time",
+  "condition": "C",
+  "data": [
+    {
+      "refId": "A",
+      "queryType": "range",
+      "relativeTimeRange": {
+        "from": 3600,
+        "to": 0
+      },
+      "datasourceUid": "P30805665297C0350",
+      "model": {
+        "editorMode": "code",
+        "expr": "avg_over_time({filename=\"/var/log/github-runner-metrics.log\"} | json event=\"event\",idle=\"idle\",flavor=\"flavor\" | event=\"runner_start\" | unwrap idle[1h]) by(flavor)",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "queryType": "range",
+        "refId": "A"
+      }
+    },
+    {
+      "refId": "B",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 3600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                3
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "type": "__expr__",
+          "uid": "-100"
+        },
+        "expression": "A",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "reducer": "last",
+        "refId": "B",
+        "type": "reduce"
+      }
+    },
+    {
+      "refId": "C",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0,
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "B"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "name": "Expression",
+          "type": "__expr__",
+          "uid": "__expr__"
+        },
+        "expression": "$B \u003c 300",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "refId": "C",
+        "type": "math"
+      }
+    }
+  ],
+  "updated": "2024-01-04T13:49:27Z",
+  "noDataState": "NoData",
+  "execErrState": "Error",
+  "for": "2h",
+  "annotations": {
+    "description": "Idle time for flavor {{$labels.flavor}} is on average smaller than 5 minutes.",
+    "summary": "Idle time for flavor {{$labels.flavor}} is too short"
+  },
+  "labels": {
+    "severity": "high",
+    "type": "runner-capacity"
+  }
+}
