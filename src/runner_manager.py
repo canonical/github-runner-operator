@@ -313,18 +313,18 @@ class RunnerManager:
         total_stats: IssuedMetricEventsStats = {}
         for extracted_metrics in runner_metrics.extract(ignore_runners=set(runner_states.healthy)):
             try:
-                queue_duration = github_metrics.job_queue_duration(
+                job_metrics = github_metrics.job(
                     github_client=self._clients.github,
                     pre_job_metrics=extracted_metrics.pre_job,
                     runner_name=extracted_metrics.runner_name,
                 )
             except errors.GithubMetricsError:
-                logger.exception("Failed to calculate job queue duration")
-                queue_duration = None
+                logger.exception("Failed to calculate job metrics")
+                job_metrics = None
 
             issued_events = runner_metrics.issue_events(
                 runner_metrics=extracted_metrics,
-                queue_duration=queue_duration,
+                job_metrics=job_metrics,
                 flavor=self.app_name,
             )
             for event_type in issued_events:
