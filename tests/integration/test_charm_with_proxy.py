@@ -26,7 +26,7 @@ PROXY_PORT = 8899
 
 @pytest_asyncio.fixture(scope="module", name="proxy")
 async def proxy_fixture() -> AsyncIterator[str]:
-    """Start proxy.py and return the proxy server address."""
+    """Start tinyproxy and return the proxy server address."""
     result = subprocess.run(["which", "tinyproxy"])
     assert (
         result.returncode == 0
