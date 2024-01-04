@@ -12,7 +12,7 @@ Models and functions for the metric events.
 
 ---
 
-<a href="../src/metrics.py#L153"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L156"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 
@@ -39,7 +39,7 @@ The metric event is logged to the metrics log.
 
 ---
 
-<a href="../src/metrics.py#L204"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L207"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `setup_logrotate`
 
@@ -54,6 +54,23 @@ Configure logrotate for the metrics log.
 **Raises:**
  
  - <b>`LogrotateSetupError`</b>:  If the logrotate.timer cannot be enabled. 
+
+
+---
+
+## <kbd>class</kbd> `CodeInformation`
+Information about a status code. 
+
+This could e.g. be an exit code or a http status code. 
+
+
+
+**Attributes:**
+ 
+ - <b>`code`</b>:  The status code. 
+
+
+
 
 
 ---
@@ -84,21 +101,6 @@ Initialize the event.
  
  - <b>`*args`</b>:  The positional arguments to pass to the base class. 
  - <b>`**kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
-
-
-
-
-
----
-
-## <kbd>class</kbd> `ExitCodeInformation`
-Information about the exit code of a runner. 
-
-
-
-**Attributes:**
- 
- - <b>`code`</b>:  The exit code of the runner. 
 
 
 
