@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright 2023 Canonical Ltd.
+# Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 set -e
@@ -107,9 +107,9 @@ fi
 /snap/bin/lxc publish builder --alias builder --reuse -f
 
 # Swap in the built image
-/snap/bin/lxc image alias rename runner old-runner || true
-/snap/bin/lxc image alias rename builder runner
-/snap/bin/lxc image delete old-runner || true
+/snap/bin/lxc image alias rename jammy old-jammy || true
+/snap/bin/lxc image alias rename builder jammy
+/snap/bin/lxc image delete old-jammy || true
 
 # Clean up LXD instance
 cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD instance' 10
