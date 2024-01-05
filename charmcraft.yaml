@@ -1,4 +1,4 @@
-# Copyright 2023 Canonical Ltd.
+# Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 type: charm
@@ -13,6 +13,7 @@ parts:
       - rust-all  # for cryptography
     prime:
       - scripts/build-image.sh
+      - scripts/repo_policy_compliance_service.py
 bases:
   - build-on:
     - name: "ubuntu"

@@ -14,7 +14,7 @@ Classes and function to extract the metrics from a shared filesystem.
 
 ---
 
-<a href="../src/runner_metrics.py#L228"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_metrics.py#L229"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `extract`
 
@@ -44,7 +44,7 @@ In order to avoid DoS attacks, the file size is also checked.
 
 ---
 
-<a href="../src/runner_metrics.py#L255"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_metrics.py#L256"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_events`
 
@@ -52,7 +52,7 @@ In order to avoid DoS attacks, the file size is also checked.
 issue_events(
     runner_metrics: RunnerMetrics,
     flavor: str,
-    queue_duration: Optional[float]
+    job_metrics: Optional[GithubJobMetrics]
 ) → set[Type[Event]]
 ```
 
@@ -64,7 +64,7 @@ Issue the metrics events for a runner.
  
  - <b>`runner_metrics`</b>:  The metrics for the runner. 
  - <b>`flavor`</b>:  The flavor of the runner. 
- - <b>`queue_duration`</b>:  The job queue duration of the job the runner executed. 
+ - <b>`job_metrics`</b>:  The metrics about the job run by the runner. 
 
 
 
@@ -74,14 +74,14 @@ Issue the metrics events for a runner.
 
 ---
 
-## <kbd>class</kbd> `ExitCodeInformation`
-Information about the exit code of a runner. 
+## <kbd>class</kbd> `CodeInformation`
+Information about a status code. 
 
 
 
 **Attributes:**
  
- - <b>`code`</b>:  The exit code of the runner. 
+ - <b>`code`</b>:  The status code. 
 
 
 

@@ -1,4 +1,4 @@
-#  Copyright 2023 Canonical Ltd.
+# Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import http
 import random
@@ -12,23 +12,24 @@ import pytest
 
 from errors import JobNotFoundError
 from github_client import GithubClient
-from github_type import GithubJobStats
+from github_type import JobConclusion, JobStats
 from runner_type import GithubRepo
 
 JobStatsRawData = namedtuple(
     "JobStatsRawData",
-    ["created_at", "started_at", "runner_name"],
+    ["created_at", "started_at", "runner_name", "conclusion"],
 )
 
 
 @pytest.fixture(name="job_stats_raw")
 def job_stats_fixture() -> JobStatsRawData:
-    """Create a GithubJobStats object."""
+    """Create a JobStats object."""
 
     runner_name = secrets.token_hex(16)
     return JobStatsRawData(
         created_at="2021-10-01T00:00:00Z",
         started_at="2021-10-01T01:00:00Z",
+        conclusion="success",
         runner_name=runner_name,
     )
 
@@ -44,6 +45,7 @@ def github_client_fixture(job_stats_raw: JobStatsRawData) -> GithubClient:
                 "created_at": job_stats_raw.created_at,
                 "started_at": job_stats_raw.started_at,
                 "runner_name": job_stats_raw.runner_name,
+                "conclusion": job_stats_raw.conclusion,
             }
         ]
     }
@@ -75,6 +77,7 @@ def _mock_multiple_pages_for_job_response(
                     "created_at": job_stats_raw.created_at,
                     "started_at": job_stats_raw.started_at,
                     "runner_name": runner_names[i * no_of_jobs_per_page + j],
+                    "conclusion": job_stats_raw.conclusion,
                 }
                 for j in range(no_of_jobs_per_page)
             ]
@@ -88,7 +91,7 @@ def test_get_job_info(github_client: GithubClient, job_stats_raw: JobStatsRawDat
     arrange: A mocked Github Client that returns one page of jobs containing one job
      with the runner.
     act: Call get_job_info.
-    assert: The correct GithubJobStats object is returned.
+    assert: The correct JobStats object is returned.
     """
     github_repo = GithubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
     job_stats = github_client.get_job_info(
@@ -96,10 +99,42 @@ def test_get_job_info(github_client: GithubClient, job_stats_raw: JobStatsRawDat
         workflow_run_id=secrets.token_hex(16),
         runner_name=job_stats_raw.runner_name,
     )
-    assert job_stats == GithubJobStats(
+    assert job_stats == JobStats(
         created_at=datetime(2021, 10, 1, 0, 0, 0, tzinfo=timezone.utc),
         started_at=datetime(2021, 10, 1, 1, 0, 0, tzinfo=timezone.utc),
         runner_name=job_stats_raw.runner_name,
+        conclusion=JobConclusion.SUCCESS,
+    )
+
+
+def test_get_job_info_no_conclusion(github_client: GithubClient, job_stats_raw: JobStatsRawData):
+    """
+    arrange: A mocked Github Client that returns one page of jobs containing one job
+     with the runner with conclusion set to None.
+    act: Call get_job_info.
+    assert: JobStats object with conclusion set to None is returned.
+    """
+    github_client._client.actions.list_jobs_for_workflow_run.return_value = {
+        "jobs": [
+            {
+                "created_at": job_stats_raw.created_at,
+                "started_at": job_stats_raw.started_at,
+                "runner_name": job_stats_raw.runner_name,
+                "conclusion": None,
+            }
+        ]
+    }
+    github_repo = GithubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
+    job_stats = github_client.get_job_info(
+        path=github_repo,
+        workflow_run_id=secrets.token_hex(16),
+        runner_name=job_stats_raw.runner_name,
+    )
+    assert job_stats == JobStats(
+        created_at=datetime(2021, 10, 1, 0, 0, 0, tzinfo=timezone.utc),
+        started_at=datetime(2021, 10, 1, 1, 0, 0, tzinfo=timezone.utc),
+        runner_name=job_stats_raw.runner_name,
+        conclusion=None,
     )
 
 
@@ -110,7 +145,7 @@ def test_github_api_pagination_multiple_pages(
     arrange: A mocked Github Client that returns multiple pages of jobs containing
      one job with the runner.
     act: Call get_job_info.
-    assert: The correct GithubJobStats object is returned.
+    assert: The correct JobStats object is returned.
     """
     _mock_multiple_pages_for_job_response(
         github_client=github_client, job_stats_raw=job_stats_raw, include_runner=True
@@ -122,10 +157,11 @@ def test_github_api_pagination_multiple_pages(
         workflow_run_id=secrets.token_hex(16),
         runner_name=job_stats_raw.runner_name,
     )
-    assert job_stats == GithubJobStats(
+    assert job_stats == JobStats(
         created_at=datetime(2021, 10, 1, 0, 0, 0, tzinfo=timezone.utc),
         started_at=datetime(2021, 10, 1, 1, 0, 0, tzinfo=timezone.utc),
         runner_name=job_stats_raw.runner_name,
+        conclusion=JobConclusion.SUCCESS,
     )
 
 

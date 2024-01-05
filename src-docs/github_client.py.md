@@ -64,7 +64,7 @@ get_job_info(
     path: GithubRepo,
     workflow_run_id: str,
     runner_name: str
-) → GithubJobStats
+) → JobStats
 ```
 
 Get information about a job for a specific workflow run. 

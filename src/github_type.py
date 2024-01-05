@@ -1,4 +1,4 @@
-# Copyright 2023 Canonical Ltd.
+# Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Return type for the GitHub web API."""
@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import List, TypedDict
+from typing import List, Optional, TypedDict
 
 from pydantic import BaseModel
 from typing_extensions import NotRequired
@@ -115,7 +115,19 @@ class RemoveToken(TypedDict):
     expires_at: str
 
 
-class GithubJobStats(BaseModel):
+class JobConclusion(str, Enum):
+    """Conclusion of a job on GitHub."""
+
+    SUCCESS = "success"
+    FAILURE = "failure"
+    NEUTRAL = "neutral"
+    CANCELLED = "cancelled"
+    SKIPPED = "skipped"
+    TIMED_OUT = "timed_out"
+    ACTION_REQUIRED = "action_required"
+
+
+class JobStats(BaseModel):
     """Stats for a job on GitHub.
 
     Attributes:
@@ -125,3 +137,4 @@ class GithubJobStats(BaseModel):
 
     created_at: datetime
     started_at: datetime
+    conclusion: Optional[JobConclusion]

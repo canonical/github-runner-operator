@@ -1,4 +1,4 @@
-#  Copyright 2023 Canonical Ltd.
+# Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Integration tests for metrics/logs."""
@@ -18,6 +18,7 @@ from juju.model import Model
 from juju.unit import Unit
 
 import runner_logs
+from github_type import JobConclusion
 from metrics import METRICS_LOG_PATH
 from runner_metrics import PostJobStatus
 from tests.integration.helpers import (
@@ -286,6 +287,17 @@ async def _assert_events_after_reconciliation(
             assert metric_log.get("status") == post_job_status
             if post_job_status == PostJobStatus.ABNORMAL:
                 assert metric_log.get("status_info", {}).get("code", 0) != 0
+                # Either the job conclusion is not yet set or it is set to cancelled.
+                assert metric_log.get("job_conclusion") in [
+                    None,
+                    JobConclusion.CANCELLED,
+                ]
+            elif post_job_status == PostJobStatus.REPO_POLICY_CHECK_FAILURE:
+                assert metric_log.get("status_info", {}).get("code", 0) == 403
+                assert metric_log.get("job_conclusion") == JobConclusion.FAILURE
+            else:
+                assert "status_info" not in metric_log
+                assert metric_log.get("job_conclusion") == JobConclusion.SUCCESS
             assert metric_log.get("job_duration") >= 0
         if metric_log.get("event") == "reconciliation":
             assert metric_log.get("flavor") == app.name
