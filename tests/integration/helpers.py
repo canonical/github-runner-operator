@@ -197,7 +197,12 @@ async def run_in_unit(unit: Unit, command: str, timeout=None) -> tuple[int, str 
 
 
 async def run_in_lxd_instance(
-    unit: Unit, name: str, command: str, cwd=None, timeout=None
+    unit: Unit,
+    name: str,
+    command: str,
+    env: dict[str, str] | None = None,
+    cwd: str | None = None,
+    timeout: int | None = None,
 ) -> tuple[int, str | None]:
     """Run command in LXD instance of a juju unit.
 
@@ -205,6 +210,7 @@ async def run_in_lxd_instance(
         unit: Juju unit to execute the command in.
         name: Name of LXD instance.
         command: Command to execute.
+        env: Mapping of environment variable name to value.
         cwd: Work directory of the command.
         timeout: Amount of time to wait for the execution.
 
@@ -212,6 +218,9 @@ async def run_in_lxd_instance(
         Tuple of return code and stdout.
     """
     lxc_cmd = f"/snap/bin/lxc exec {name}"
+    if env:
+        for key, value in env.items():
+            lxc_cmd += f"--env {key}={value}"
     if cwd:
         lxc_cmd += f" --cwd {cwd}"
     lxc_cmd += f" -- {command}"

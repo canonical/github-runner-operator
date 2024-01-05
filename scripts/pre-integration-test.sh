@@ -6,6 +6,9 @@
 # Enable kernel module br_netfilter
 sudo modprobe br_netfilter
 
+# Install tinyproxy
+sudo apt install tinyproxy -y
+
 # Find a loop-device
 loop_device=$(sudo losetup -f)
 echo "PYTEST_ADDOPTS=--loop-device=$loop_device" >> "$GITHUB_ENV"
