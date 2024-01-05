@@ -874,7 +874,7 @@ class GithubRunnerCharm(CharmBase):
             execute_command(["dpkg", "--configure", "-a"])
             execute_command(["/usr/bin/apt-get", "install", "-qy"] + list(packages))
 
-    def _on_debug_ssh_relation_changed(self) -> None:
+    def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
         runner_manager = self._get_runner_manager()
         runner_manager.flush()
