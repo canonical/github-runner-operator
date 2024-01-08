@@ -18,7 +18,7 @@ def test_metrics_logging_available_true():
     """
     charm = MagicMock()
     charm.model.relations.__getitem__.return_value = [MagicMock()]
-    charm.config = {}
+    charm.config = {"runner-storage": "juju-storage"}
 
     state = State.from_charm(charm)
 
@@ -33,7 +33,7 @@ def test_metrics_logging_available_false():
     """
     charm = MagicMock()
     charm.model.relations.__getitem__.return_value = []
-    charm.config = {}
+    charm.config = {"runner-storage": "juju-storage"}
 
     state = State.from_charm(charm)
 
@@ -79,7 +79,7 @@ def test_from_charm_invalid_arch(monkeypatch: pytest.MonkeyPatch):
     mock_machine.return_value = "i686"  # 32 bit is unsupported
     monkeypatch.setattr(platform, "machine", mock_machine)
     mock_charm = MagicMock(spec=GithubRunnerCharm)
-    mock_charm.config = {}
+    mock_charm.config = {"runner-storage": "juju-storage"}
 
     with pytest.raises(CharmConfigInvalidError):
         State.from_charm(mock_charm)
@@ -103,8 +103,22 @@ def test_from_charm_arch(monkeypatch: pytest.MonkeyPatch, arch: str, expected_ar
     mock_machine.return_value = arch
     monkeypatch.setattr(platform, "machine", mock_machine)
     mock_charm = MagicMock(spec=GithubRunnerCharm)
-    mock_charm.config = {}
+    mock_charm.config = {"runner-storage": "juju-storage"}
 
     state = State.from_charm(mock_charm)
 
     assert state.arch == expected_arch
+
+
+def test_invalid_runner_storage():
+    """
+    arrange: Setup mocked charm with juju-storage as runner-storage.
+    act: Change the runner-storage config to memory.
+    assert: Configuration Error raised.
+    """
+    charm = MagicMock()
+    charm.model.relations.__getitem__.return_value = [MagicMock()]
+    charm.config = {"runner-storage": "no exist"}
+
+    with pytest.raises(CharmConfigInvalidError):
+        State.from_charm(charm)

@@ -17,7 +17,7 @@ from tests.integration.helpers import (
     start_test_http_server,
     wait_till_num_of_runners,
 )
-from tests.status_name import ACTIVE_STATUS_NAME
+from tests.status_name import ACTIVE_STATUS_NAME, BLOCKED_STATUS_NAME
 
 
 @pytest.mark.asyncio
@@ -185,3 +185,27 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
     await reconcile(app=app, model=model)
 
     await wait_till_num_of_runners(unit, 1)
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_change_runner_storage(model: Model, app: Application) -> None:
+    """
+    arrange: An working application with one runners using memory as runner storage.
+    act:
+        1. Change runner-storage to juju-storage.
+        2. Change runner-storage back to memory.
+    assert:
+        1. Application in blocked state.
+        2. Application back to active state.
+    """
+    unit = app.units[0]
+    
+    # 1.
+    await app.set_config({"runner-storage": "juju-storage"})
+    await model.wait_for_idle(status=BLOCKED_STATUS_NAME, timeout= 1 * 60)
+    assert "runner-storage config cannot be changed after deployment" in unit.workload_status_message
+    
+    # 2.
+    await app.set_config({"runner-storage": "memory"})
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout= 1 * 60)

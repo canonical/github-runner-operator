@@ -32,7 +32,7 @@ from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 import metrics
-from charm_state import CharmConfigInvalidError, State
+from charm_state import CharmConfigInvalidError, RunnerStorage, State
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
@@ -132,6 +132,7 @@ class GithubRunnerCharm(CharmBase):
     repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
     repo_check_web_service_script = Path("scripts/repo_policy_compliance_service.py")
     repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
+    juju_storage_path = Path("/storage/juju")
     ram_pool_path = Path("/storage/ram")
 
     def __init__(self, *args, **kargs) -> None:
@@ -145,6 +146,7 @@ class GithubRunnerCharm(CharmBase):
         super().__init__(*args, **kargs)
 
         self._grafana_agent = COSAgentProvider(self)
+
         try:
             self._state = State.from_charm(self)
         except CharmConfigInvalidError as exc:
@@ -197,6 +199,42 @@ class GithubRunnerCharm(CharmBase):
         )
 
     @retry(tries=5, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
+    def _ensure_runner_storage(self, size: int) -> Path:
+        """Ensure the runner storage is setup.
+
+        Args:
+            size: Size of the storage needed in kilobytes.
+
+        Raises:
+            RunnerError: Unable to setup storage for runner.
+        """
+        match self._state.charm_config.runner_storage:
+            case RunnerStorage.Memory:
+                path = self.ram_pool_path
+                self._create_memory_storage(self.ram_pool_path, size)
+            case RunnerStorage.JujuStorage:
+                path = self.juju_storage_path
+                # No simple way to get mount points within Python.
+                stdout, exit_code = execute_command(["mount", "-l"], check_exit=False)
+                if exit_code != 0 or str(self.juju_storage_path) not in stdout:
+                    ConfigurationError(
+                        (
+                            "Non-root disk storage should be mount on the runner juju storage to be "
+                            "use as the disk for the runners"
+                        )
+                    )
+                # Check if the storage mounted has enough space
+                disk = shutil.disk_usage(path)
+                if size * 1024 < disk.free:
+                    ConfigurationError(
+                        (
+                            f"Required disk space for runners {size}KiB less than storage free "
+                            f"size {disk.free / 1024}KiB"
+                        )
+                    )
+
+        return path
+
     def _create_memory_storage(self, path: Path, size: int) -> None:
         """Create a tmpfs-based LVM volume group.
 
@@ -283,7 +321,7 @@ class GithubRunnerCharm(CharmBase):
             bytes_with_unit_to_kib(self.config["vm-disk"]) * self.config["virtual-machines"]
         )
 
-        self._create_memory_storage(self.ram_pool_path, size_in_kib)
+        lxd_storage_path = self._ensure_runner_storage(size_in_kib)
 
         if self.service_token is None:
             self.service_token = self._get_service_token()
@@ -308,7 +346,7 @@ class GithubRunnerCharm(CharmBase):
                 token=token,
                 image="jammy",
                 service_token=self.service_token,
-                lxd_storage_path=self.ram_pool_path,
+                lxd_storage_path=lxd_storage_path,
                 charm_state=self._state,
                 dockerhub_mirror=dockerhub_mirror,
             ),
@@ -454,6 +492,7 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = BlockedStatus(
                 (f"Failed to start timer for regular reconciliation" f"checks: {ex}")
             )
+            return
 
         if self.config["path"] != self._stored.path:
             prev_runner_manager = self._get_runner_manager(

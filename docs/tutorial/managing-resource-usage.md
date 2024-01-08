@@ -14,13 +14,17 @@ The minimum requirements for a single virtual machine are:
 
 It is recommended the juju machine has a minimum of 4GiB of memory dedicated to itself. Generally, 20GiB of disk is provisioned for the juju machine for the Juju logs.
 
-The juju machine will also need the enough resources to host the virtual machines. The memory of the juju machine is used as the disk for the virtual machines.
+The juju machine will also need the enough resources to host the virtual machines.
 
 The recommended combined resource usage is:
 
 - vCPU: Depends on the workload
 - memory: number of virtual machines * (memory per virtual machine + disk per virtual machine) + 4GiB
 - disk: 20GiB
+
+If memory is used as [runner storage](https://charmhub.io/github-runner/docs/configure-runner-storage):
+
+- memory: number of virtual machines * (memory per virtual machine + disk per virtual machine) + 4GiB
 
 ## Juju machine constraints
 

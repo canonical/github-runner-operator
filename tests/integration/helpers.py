@@ -340,6 +340,7 @@ async def deploy_github_runner_charm(
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
             "reconcile-interval": reconcile_interval,
+            "runner-storage": "memory",
         },
         constraints={"root-disk": 15},
     )

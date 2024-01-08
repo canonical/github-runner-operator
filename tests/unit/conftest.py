@@ -14,6 +14,14 @@ def exec_command_fixture():
     return unittest.mock.MagicMock(return_value=("", 0))
 
 
+def disk_usage_mock(free_disk):
+    disk = unittest.mock.MagicMock()
+    disk.free = free_disk
+    disk_usage = unittest.mock.MagicMock(return_value=disk)
+    disk_usage.a = "HELLO"
+    return disk_usage
+
+
 @pytest.fixture(autouse=True)
 def mocks(monkeypatch, tmp_path, exec_command):
     monkeypatch.setattr(
@@ -24,7 +32,10 @@ def mocks(monkeypatch, tmp_path, exec_command):
     )
     monkeypatch.setattr("charm.os", unittest.mock.MagicMock())
     monkeypatch.setattr("charm.shutil", unittest.mock.MagicMock())
+    monkeypatch.setattr("charm.shutil.disk_usage", disk_usage_mock(10 * 1024 * 1024 * 1024))
     monkeypatch.setattr("charm.jinja2", unittest.mock.MagicMock())
+    monkeypatch.setattr("charm_state.json", unittest.mock.MagicMock())
+    monkeypatch.setattr("charm_state.CHARM_STATE_PATH", Path(tmp_path / "charm_state.json"))
     monkeypatch.setattr(
         "firewall.Firewall.get_host_ip", unittest.mock.MagicMock(return_value="10.0.0.1")
     )

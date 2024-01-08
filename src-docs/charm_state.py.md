@@ -23,6 +23,44 @@ Supported system architectures.
 
 ---
 
+## <kbd>class</kbd> `CharmConfig`
+Charm configuration. 
+
+
+
+**Attributes:**
+ 
+ - <b>`runner_storage`</b>:  Storage to used as disk for the runner. 
+
+
+
+
+---
+
+<a href="../src/charm_state.py#L76"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `from_charm`
+
+```python
+from_charm(charm: CharmBase) → CharmConfig
+```
+
+Initialize the config from charm. 
+
+
+
+**Args:**
+ 
+ - <b>`charm`</b>:  The charm instance. 
+
+
+
+**Returns:**
+ Current config of the charm. 
+
+
+---
+
 ## <kbd>class</kbd> `CharmConfigInvalidError`
 Raised when charm config is invalid. 
 
@@ -32,7 +70,7 @@ Raised when charm config is invalid.
  
  - <b>`msg`</b>:  Explanation of the error. 
 
-<a href="../src/charm_state.py#L41"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L58"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -77,7 +115,7 @@ Return the aproxy address.
 
 ---
 
-<a href="../src/charm_state.py#L99"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L143"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_fields`
 
@@ -89,7 +127,7 @@ Validate the proxy configuration.
 
 ---
 
-<a href="../src/charm_state.py#L65"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L109"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -113,6 +151,15 @@ Initialize the proxy config from charm.
 
 ---
 
+## <kbd>class</kbd> `RunnerStorage`
+Supported storage as runner disk. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `State`
 The charm state. 
 
@@ -121,7 +168,7 @@ The charm state.
 **Attributes:**
  
  - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
- - <b>`proxy_config`</b>:  Whether aproxy should be used. 
+ - <b>`proxy_config`</b>:  Whether aproxy should be used. storage_config: 
  - <b>`arch`</b>:  The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64. 
 
 
@@ -129,7 +176,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L160"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L206"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -162,7 +209,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L118"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L162"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
