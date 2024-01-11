@@ -330,9 +330,9 @@ async def deploy_github_runner_charm(
         }
     )
 
-    storage = []
+    storage = {}
     if runner_storage == "juju-storage":
-        storage += ["runner"]
+        storage["runner"] = {'pool': 'rootfs', 'size': 11}
 
     application = await model.deploy(
         charm_file,
@@ -348,8 +348,10 @@ async def deploy_github_runner_charm(
             "runner-storage": runner_storage,
         },
         constraints={"root-disk": 15},
-        attach_storage=storage,
+        storage=storage,
     )
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 30)
 
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 30)
+    import pytest
+    pytest.set_trace()
     return application
