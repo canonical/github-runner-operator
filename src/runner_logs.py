@@ -9,6 +9,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+from errors import LxdError, RunnerLogsError
 from runner import Runner
 
 CRASHED_RUNNER_LOGS_DIR_PATH = Path("/var/log/github-runner-crashed")
@@ -27,19 +28,24 @@ def get_crashed(runner: Runner) -> None:
 
     Args:
         runner: The runner.
+
+    Raises:
+        RunnerLogsError: If the runner logs could not be pulled.
     """
     logger.info("Pulling the logs of the crashed runner %s.", runner.config.name)
     if runner.instance is None:
-        logger.error(
-            "Cannot pull the logs for %s as runner has no running instance.", runner.config.name
+        raise RunnerLogsError(
+            f"Cannot pull the logs for {runner.config.name} as runner has no running instance."
         )
-        return
 
     target_log_path = CRASHED_RUNNER_LOGS_DIR_PATH / runner.config.name
     target_log_path.mkdir(parents=True, exist_ok=True)
 
-    runner.instance.files.pull_file(str(DIAG_DIR_PATH), str(target_log_path), is_dir=True)
-    runner.instance.files.pull_file(str(SYSLOG_PATH), str(target_log_path))
+    try:
+        runner.instance.files.pull_file(str(DIAG_DIR_PATH), str(target_log_path), is_dir=True)
+        runner.instance.files.pull_file(str(SYSLOG_PATH), str(target_log_path))
+    except LxdError as exc:
+        raise RunnerLogsError(str(exc)) from exc
 
 
 def remove_outdated_crashed() -> None:

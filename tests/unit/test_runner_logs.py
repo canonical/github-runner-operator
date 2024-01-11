@@ -6,6 +6,7 @@ from unittest.mock import MagicMock, call
 import pytest
 
 import runner_logs
+from errors import LxdError, RunnerLogsError
 from runner_logs import get_crashed
 
 
@@ -40,6 +41,40 @@ def test_get_crashed(log_dir_base_path: Path):
             call(str(runner_logs.SYSLOG_PATH), str(log_dir_path)),
         ]
     )
+
+
+def test_get_crashed_no_instance(log_dir_base_path: Path):
+    """
+    arrange: Mock the Runner instance to be None
+    act: Get the logs of the crashed runner
+    assert: A RunnerLogsError is raised
+    """
+    runner = MagicMock()
+    runner.config.name = "test-runner"
+    runner.instance = None
+
+    with pytest.raises(RunnerLogsError) as exc_info:
+        get_crashed(runner)
+
+    assert "Cannot pull the logs for test-runner as runner has no running instance." in str(
+        exc_info.value
+    )
+
+
+def test_get_crashed_lxd_error(log_dir_base_path: Path):
+    """
+    arrange: Mock the Runner instance to raise an LxdError
+    act: Get the logs of the crashed runner
+    assert: A RunnerLogsError is raised
+    """
+    runner = MagicMock()
+    runner.config.name = "test-runner"
+    runner.instance.files.pull_file = MagicMock(side_effect=LxdError("Cannot pull file"))
+
+    with pytest.raises(RunnerLogsError) as exc_info:
+        get_crashed(runner)
+
+    assert "Cannot pull file" in str(exc_info.value)
 
 
 def test_remove_outdated_crashed(log_dir_base_path: Path, monkeypatch: pytest.MonkeyPatch):
