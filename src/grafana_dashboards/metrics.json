@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 155,
+  "id": 29,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -804,7 +804,7 @@
             "lastNotNull"
           ],
           "fields": "",
-          "values": false
+          "values": true
         },
         "tooltip": {
           "mode": "single",
@@ -818,9 +818,9 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename,status)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_stop\" | json status=\"status\",repo=\"repo\" | repo=~\"$repository\"[$__range]))",
-          "legendFormat": "{{status}}",
-          "queryType": "range",
+          "expr": "sum by(status)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_stop\" | json status=\"status\",repo=\"repo\" | repo=~\"$repository\"[$__range]))",
+          "legendFormat": "",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -871,7 +871,7 @@
             "lastNotNull"
           ],
           "fields": "",
-          "values": false
+          "values": true
         },
         "tooltip": {
           "mode": "single",
@@ -885,9 +885,9 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename,job_conclusion)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_stop\" | json job_conclusion=\"job_conclusion\",repo=\"repo\" | repo=~\"$repository\"[$__range]))",
-          "legendFormat": "{{job_conclusion}}",
-          "queryType": "range",
+          "expr": "sum by(job_conclusion)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_stop\" | json job_conclusion=\"job_conclusion\",repo=\"repo\" | repo=~\"$repository\"[$__range]))",
+          "legendFormat": "",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -938,7 +938,7 @@
             "lastNotNull"
           ],
           "fields": "",
-          "values": false
+          "values": true
         },
         "tooltip": {
           "mode": "single",
@@ -952,9 +952,9 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename,flavor)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_start\" | json flavor=\"flavor\",repo=\"repo\" | repo=~\"$repository\"[$__range]))",
-          "legendFormat": "{{flavor}}",
-          "queryType": "range",
+          "expr": "sum by(flavor)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_start\" | json flavor=\"flavor\",repo=\"repo\" | repo=~\"$repository\"[$__range]))",
+          "legendFormat": "",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -1005,7 +1005,7 @@
             "lastNotNull"
           ],
           "fields": "",
-          "values": false
+          "values": true
         },
         "tooltip": {
           "mode": "single",
@@ -1019,9 +1019,9 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename,http_code)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_stop\" | json status=\"status\",repo=\"repo\" | status=\"repo-policy-check-failure\" | repo=~\"$repository\" | json http_code=\"status_info.code\"[$__range]))",
-          "legendFormat": "{{http_code}}",
-          "queryType": "range",
+          "expr": "sum by(http_code)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_stop\" | json status=\"status\",repo=\"repo\" | status=\"repo-policy-check-failure\" | repo=~\"$repository\" | json http_code=\"status_info.code\"[$__range]))",
+          "legendFormat": "",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -1072,7 +1072,7 @@
             "lastNotNull"
           ],
           "fields": "",
-          "values": false
+          "values": true
         },
         "tooltip": {
           "mode": "single",
@@ -1086,9 +1086,9 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename,github_event)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_start\" | json github_event=\"github_event\",repo=\"repo\" | repo=~\"$repository\"[$__range]))",
-          "legendFormat": "{{github_event}}",
-          "queryType": "range",
+          "expr": "sum by(github_event)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_start\" | json github_event=\"github_event\",repo=\"repo\" | repo=~\"$repository\"[$__range]))",
+          "legendFormat": "",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -1259,7 +1259,7 @@
             "lastNotNull"
           ],
           "fields": "",
-          "values": false
+          "values": true
         },
         "showUnfilled": true
       },
@@ -1271,9 +1271,9 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename,repo)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_start\" | json repo=\"repo\" | repo=~\"$repository\" [$__range]))",
-          "legendFormat": "{{repo}}",
-          "queryType": "range",
+          "expr": "sum by(filename,repo)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event=\"runner_start\" | json repo=\"repo\" | repo=~\"$repository\"[$__range]))",
+          "legendFormat": "",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -1511,6 +1511,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics",
-  "version": 6,
+  "version": 7,
   "weekStart": ""
 }
