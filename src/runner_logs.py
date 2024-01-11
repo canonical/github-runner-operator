@@ -45,7 +45,7 @@ def get_crashed(runner: Runner) -> None:
         runner.instance.files.pull_file(str(DIAG_DIR_PATH), str(target_log_path), is_dir=True)
         runner.instance.files.pull_file(str(SYSLOG_PATH), str(target_log_path))
     except LxdError as exc:
-        raise RunnerLogsError(str(exc)) from exc
+        raise RunnerLogsError(f"Cannot pull the logs for {runner.config.name}.") from exc
 
 
 def remove_outdated_crashed() -> None:

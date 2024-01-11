@@ -74,7 +74,8 @@ def test_get_crashed_lxd_error(log_dir_base_path: Path):
     with pytest.raises(RunnerLogsError) as exc_info:
         get_crashed(runner)
 
-    assert "Cannot pull file" in str(exc_info.value)
+    assert "Cannot pull the logs for test-runner." in str(exc_info.value)
+    assert "Cannot pull file" in str(exc_info.value.__cause__)
 
 
 def test_remove_outdated_crashed(log_dir_base_path: Path, monkeypatch: pytest.MonkeyPatch):
