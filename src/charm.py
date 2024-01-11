@@ -33,7 +33,6 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 import metrics
 from charm_state import CharmConfigInvalidError, State
-from charms.traefik_k8s.v2.ingress import IngressPerAppRequirer, IngressPerAppReadyEvent
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
@@ -196,18 +195,6 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(
             self.on.update_dependencies_action, self._on_update_dependencies_action
         )
-        self.ingress = IngressPerAppRequirer(self, host="10.158.39.7", port=8080, strip_prefix=True)
-        self.framework.observe(self.ingress.on.ready, self._on_ingress_ready)
-        self.framework.observe(self.ingress.on.revoked, self._on_ingress_revoked)
-
-    def _on_ingress_ready(self, event: IngressPerAppReadyEvent):
-        self.unit.status = ops.ActiveStatus(f"I have ingress at {event.url}!")
-
-    def _on_ingress_revoked(self, _):
-        self.unit.status = ops.WaitingStatus(f"I have lost my ingress URL!")
-
-    def _foo(self):
-        self.ingress.provide_ingress_requirements(host="foo.com", port=42)
 
     @retry(tries=5, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _create_memory_storage(self, path: Path, size: int) -> None:
