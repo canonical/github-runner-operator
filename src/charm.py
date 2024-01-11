@@ -214,9 +214,7 @@ class GithubRunnerCharm(CharmBase):
                 self._create_memory_storage(self.ram_pool_path, size)
             case RunnerStorage.JUJU_STORAGE:
                 path = self.juju_storage_path
-                # No simple way to get mount points within Python.
-                stdout, exit_code = execute_command(["mount", "-l"], check_exit=False)
-                if exit_code != 0 or str(self.juju_storage_path) not in stdout:
+                if not self._juju_storage_mounted():
                     raise ConfigurationError(
                         (
                             "Non-root disk storage should be mount on the runner juju storage to "
@@ -225,15 +223,25 @@ class GithubRunnerCharm(CharmBase):
                     )
                 # Check if the storage mounted has enough space
                 disk = shutil.disk_usage(path)
-                if size * 1024 < disk.free:
+                if size * 1024 > disk.free:
                     raise ConfigurationError(
                         (
-                            f"Required disk space for runners {size}KiB less than storage free "
-                            f"size {disk.free / 1024}KiB"
+                            f"Required disk space for runners {size}KiB is greater than storage "
+                            f"free size {disk.free / 1024}KiB"
                         )
                     )
 
         return path
+
+    def _juju_storage_mounted(self) -> bool:
+        """Whether a juju storage is mounted on the runner-storage location.
+
+        Returns:
+            True if a juju storage is mounted on the runner-storage location.
+        """
+        # Use `mount` as Python does not have easy method to get the mount points.
+        stdout, exit_code = execute_command(["mount", "-l"], False)
+        return exit_code == 0 and str(self.juju_storage_path) in stdout
 
     def _create_memory_storage(self, path: Path, size: int) -> None:
         """Create a tmpfs-based LVM volume group.

@@ -191,7 +191,7 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
 @pytest.mark.abort_on_fail
 async def test_change_runner_storage(model: Model, app: Application) -> None:
     """
-    arrange: An working application with one runners using memory as runner storage.
+    arrange: An working application with one runners using memory as disk.
     act:
         1. Change runner-storage to juju-storage.
         2. Change runner-storage back to memory.

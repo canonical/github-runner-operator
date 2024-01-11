@@ -158,6 +158,28 @@ class TestCharm(unittest.TestCase):
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
+    def test_exceed_free_disk_size(self, run, wt, mkdir, rm):
+        rm.return_value = mock_rm = MagicMock()
+        mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
+        mock_rm.download_latest_runner_image = mock_download_latest_runner_image
+
+        harness = Harness(GithubRunnerCharm)
+        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+        harness.begin()
+
+        harness.update_config({"virtual-machines": 10})
+        harness.charm.on.reconcile_runners.emit()
+        assert harness.charm.unit.status == BlockedStatus(
+            (
+                "Required disk space for runners 104857600KiB is greater than storage free size "
+                "31457280.0KiB"
+            )
+        )
+
+    @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
+    @patch("pathlib.Path.write_text")
+    @patch("subprocess.run")
     def test_update_config(self, run, wt, mkdir, rm):
         rm.return_value = mock_rm = MagicMock()
         mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
@@ -188,7 +210,7 @@ class TestCharm(unittest.TestCase):
         mock_rm.reset_mock()
 
         # update to 10 VMs with 4 cpu and 7GiB memory
-        harness.update_config({"virtual-machines": 10, "vm-cpu": 4})
+        harness.update_config({"virtual-machines": 5, "vm-cpu": 4, "vm-disk": "6GiB"})
         harness.charm.on.reconcile_runners.emit()
         token = harness.charm.service_token
         rm.assert_called_with(
@@ -205,7 +227,7 @@ class TestCharm(unittest.TestCase):
             proxies={},
         )
         mock_rm.reconcile.assert_called_with(
-            10, VirtualMachineResources(cpu=4, memory="7GiB", disk="10GiB")
+            5, VirtualMachineResources(cpu=4, memory="7GiB", disk="6GiB")
         )
         mock_rm.reset_mock()
 

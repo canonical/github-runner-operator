@@ -156,6 +156,7 @@ async def app_no_runner(
         app_name=app_name,
         path=path,
         token=token,
+        runner_storage="memory",
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
@@ -203,6 +204,7 @@ async def app_scheduled_events(
         app_name=app_name,
         path=path,
         token=token,
+        runner_storage="memory",
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
@@ -234,6 +236,7 @@ async def app_runner(
         app_name=f"{app_name}-test",
         path=path,
         token=token,
+        runner_storage="memory",
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
@@ -323,3 +326,31 @@ async def app_with_forked_repo(
     await ensure_charm_has_runner(app=app, model=model)
 
     return app
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app_juju_storage(
+    model: Model,
+    charm_file: str,
+    app_name: str,
+    path: str,
+    token: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
+) -> AsyncIterator[Application]:
+    """Application with juju storage setup."""
+    # Set the scheduled event to 1 hour to avoid interfering with the tests.
+    application = await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=app_name,
+        path=path,
+        token=token,
+        runner_storage="juju-storage",
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=60,
+    )
+    return application

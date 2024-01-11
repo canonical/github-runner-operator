@@ -300,6 +300,7 @@ async def deploy_github_runner_charm(
     app_name: str,
     path: str,
     token: str,
+    runner_storage: str,
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
@@ -329,6 +330,10 @@ async def deploy_github_runner_charm(
         }
     )
 
+    storage = []
+    if runner_storage == "juju-storage":
+        storage += ["runner"]
+
     application = await model.deploy(
         charm_file,
         application_name=app_name,
@@ -340,9 +345,10 @@ async def deploy_github_runner_charm(
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
             "reconcile-interval": reconcile_interval,
-            "runner-storage": "memory",
+            "runner-storage": runner_storage,
         },
         constraints={"root-disk": 15},
+        attach_storage=storage,
     )
     await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 30)
 
