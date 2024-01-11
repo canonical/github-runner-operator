@@ -48,7 +48,7 @@ The `--constraints` option for the `juju deploy` sets the resource requirements 
 
 The `--storage` option mounts a juju storage to be use as the disk for LXD instances hosting the self-hosted runners. Refer [How to configure runner storage](https://charmhub.io/github-runner/docs/configure-runner-storage) for more information.
 
-The charm preforms various installation and configuration. The charm might upgrade the kernel of the juju machine and might reboot the juju machine. During rebooting of the juju machine can appear in the `down` state.
+The charm performs various installation and configuration. The charm might upgrade the kernel of the juju machine and might reboot the juju machine. During rebooting of the juju machine can appear in the `down` state.
 
 Once the charm reaches active status, visit the runner page for the GitHub repository (`https://github.com/{OWNER}/{REPO}/settings/actions/runners`) according to the instructions [here](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/using-self-hosted-runners-in-a-workflow#viewing-available-runners-for-a-repository). A single new runner should be available as it is the default number of self-hosted runners created.
 

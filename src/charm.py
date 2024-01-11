@@ -209,24 +209,24 @@ class GithubRunnerCharm(CharmBase):
             RunnerError: Unable to setup storage for runner.
         """
         match self._state.charm_config.runner_storage:
-            case RunnerStorage.Memory:
+            case RunnerStorage.MEMORY:
                 path = self.ram_pool_path
                 self._create_memory_storage(self.ram_pool_path, size)
-            case RunnerStorage.JujuStorage:
+            case RunnerStorage.JUJU_STORAGE:
                 path = self.juju_storage_path
                 # No simple way to get mount points within Python.
                 stdout, exit_code = execute_command(["mount", "-l"], check_exit=False)
                 if exit_code != 0 or str(self.juju_storage_path) not in stdout:
-                    ConfigurationError(
+                    raise ConfigurationError(
                         (
-                            "Non-root disk storage should be mount on the runner juju storage to be "
-                            "use as the disk for the runners"
+                            "Non-root disk storage should be mount on the runner juju storage to "
+                            "be use as the disk for the runners"
                         )
                     )
                 # Check if the storage mounted has enough space
                 disk = shutil.disk_usage(path)
                 if size * 1024 < disk.free:
-                    ConfigurationError(
+                    raise ConfigurationError(
                         (
                             f"Required disk space for runners {size}KiB less than storage free "
                             f"size {disk.free / 1024}KiB"

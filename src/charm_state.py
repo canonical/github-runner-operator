@@ -38,8 +38,8 @@ COS_AGENT_INTEGRATION_NAME = "cos-agent"
 class RunnerStorage(str, Enum):
     """Supported storage as runner disk."""
 
-    JujuStorage = "juju-storage"
-    Memory = "memory"
+    JUJU_STORAGE = "juju-storage"
+    MEMORY = "memory"
 
     @classmethod
     def _missing_(cls, value: object) -> Any:
@@ -215,7 +215,7 @@ class State:
         """
         prev_state = None
         if CHARM_STATE_PATH.exists():
-            with open(CHARM_STATE_PATH, mode="r") as state_file:
+            with open(CHARM_STATE_PATH, mode="r", encoding="utf-8") as state_file:
                 prev_state = json.load(state_file)
                 logger.info(prev_state)
 
@@ -256,7 +256,7 @@ class State:
             arch=arch,
         )
 
-        with open(CHARM_STATE_PATH, mode="w") as state_file:
+        with open(CHARM_STATE_PATH, mode="w", encoding="utf-8") as state_file:
             state_dict = dataclasses.asdict(state)
             # Convert pydantic object to python object serializable by json module.
             state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())

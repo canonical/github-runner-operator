@@ -200,12 +200,14 @@ async def test_change_runner_storage(model: Model, app: Application) -> None:
         2. Application back to active state.
     """
     unit = app.units[0]
-    
+
     # 1.
     await app.set_config({"runner-storage": "juju-storage"})
-    await model.wait_for_idle(status=BLOCKED_STATUS_NAME, timeout= 1 * 60)
-    assert "runner-storage config cannot be changed after deployment" in unit.workload_status_message
-    
+    await model.wait_for_idle(status=BLOCKED_STATUS_NAME, timeout=1 * 60)
+    assert (
+        "runner-storage config cannot be changed after deployment" in unit.workload_status_message
+    )
+
     # 2.
     await app.set_config({"runner-storage": "memory"})
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout= 1 * 60)
+    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=1 * 60)
