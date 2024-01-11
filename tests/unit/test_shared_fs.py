@@ -30,7 +30,7 @@ def filesystem_paths_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> dict[s
 @pytest.fixture(autouse=True, name="exc_cmd_mock")
 def exc_command_fixture(monkeypatch: MonkeyPatch) -> Mock:
     """Mock the execution of a command."""
-    exc_cmd_mock = Mock()
+    exc_cmd_mock = Mock(return_value=("", 0))
     monkeypatch.setattr("shared_fs.execute_command", exc_cmd_mock)
     return exc_cmd_mock
 
@@ -131,6 +131,29 @@ def test_delete_raises_error():
 
     with pytest.raises(errors.DeleteSharedFilesystemError):
         shared_fs.delete(runner_name)
+
+
+def test_delete_filesystem_ignores_unmounted_filesystem(exc_cmd_mock: MagicMock):
+    """
+    arrange: Create a shared filesystem for a runner and mock mountpoint cmd
+     to return NOT_A_MOUNTPOINT exit code.
+    act: Call delete.
+    assert: The shared filesystem is deleted.
+    """
+    runner_name = secrets.token_hex(16)
+    shared_fs.create(runner_name)
+
+    def exc_cmd_side_effect(*args, **_):
+        if args[0][0] == "mountpoint":
+            return "", shared_fs.DIR_NO_MOUNTPOINT_EXIT_CODE
+        return "", 0
+
+    exc_cmd_mock.side_effect = exc_cmd_side_effect
+
+    shared_fs.delete(runner_name)
+
+    with pytest.raises(errors.SharedFilesystemNotFoundError):
+        shared_fs.get(runner_name)
 
 
 def test_get_shared_filesystem():

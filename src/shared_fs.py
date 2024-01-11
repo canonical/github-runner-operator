@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Classes and functions to operate on the shared filesystem between the charm and the runners."""
+import logging
 import shutil
 import tarfile
 from dataclasses import dataclass
@@ -12,10 +13,15 @@ from errors import (
     CreateSharedFilesystemError,
     DeleteSharedFilesystemError,
     QuarantineSharedFilesystemError,
+    SharedFilesystemError,
     SharedFilesystemNotFoundError,
     SubprocessError,
 )
 from utilities import execute_command
+
+DIR_NO_MOUNTPOINT_EXIT_CODE = 32
+
+logger = logging.getLogger(__name__)
 
 FILESYSTEM_OWNER = "ubuntu:ubuntu"
 FILESYSTEM_BASE_PATH = Path("/home/ubuntu/runner-fs")
@@ -137,6 +143,27 @@ def get(runner_name: str) -> SharedFilesystem:
     return SharedFilesystem(runner_fs, runner_name)
 
 
+def _is_mountpoint(path: Path) -> bool:
+    """Check if the path is a mountpoint.
+
+    Args:
+        path: The path to check.
+
+    Returns:
+        True if the path is a mountpoint, False otherwise.
+
+    Raises:
+        SharedFilesystemError: If the check fails.
+    """
+    _, ret_code = execute_command(["mountpoint", "-q", str(path)], check_exit=False)
+    if ret_code not in (0, DIR_NO_MOUNTPOINT_EXIT_CODE):
+        raise SharedFilesystemError(
+            f"Failed to check if path {path} is a mountpoint. "
+            f"mountpoint command return code: {ret_code}"
+        )
+    return ret_code == 0
+
+
 def delete(runner_name: str) -> None:
     """Delete the shared filesystem for the runner.
 
@@ -153,14 +180,24 @@ def delete(runner_name: str) -> None:
     runner_image_path = _get_runner_image_path(runner_name)
 
     try:
-        execute_command(
-            ["sudo", "umount", str(runner_fs.path)],
-            check_exit=True,
-        )
-    except SubprocessError as exc:
+        is_mounted = _is_mountpoint(runner_fs.path)
+    except SharedFilesystemError as exc:
         raise DeleteSharedFilesystemError(
-            f"Failed to unmount shared filesystem for runner {runner_name}"
+            f"Failed to determine if shared filesystem is mounted for runner {runner_name}"
         ) from exc
+
+    if not is_mounted:
+        logger.warning("Shared filesystem for runner %s is not mounted", runner_name)
+    else:
+        try:
+            execute_command(
+                ["sudo", "umount", str(runner_fs.path)],
+                check_exit=True,
+            )
+        except SubprocessError as exc:
+            raise DeleteSharedFilesystemError(
+                f"Failed to unmount shared filesystem for runner {runner_name}"
+            ) from exc
     try:
         runner_image_path.unlink(missing_ok=True)
     except OSError as exc:
