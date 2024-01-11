@@ -37,7 +37,7 @@ The GitHub runner charm is a member of the Ubuntu family. It's an open-source pr
 
 - [Code of conduct](https://ubuntu.com/community/code-of-conduct)
 - [Get support](https://discourse.charmhub.io/)
-- [Join our online chat](https://chat.charmhub.io/charmhub/channels/charm-dev)
+- [Join our online chat](https://matrix.to/#/#charmhub-charmdev:ubuntu.com)
 - [Contribute](Contribute)
 
 Thinking about using the GitHub runner charm for your next project? [Get in touch](https://chat.charmhub.io/charmhub/channels/charm-dev)!

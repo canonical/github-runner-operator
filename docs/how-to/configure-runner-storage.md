@@ -6,7 +6,7 @@ To prevent GitHub Action job from exhausting the disk IO of the juju machine hos
 - Random access memory as disk
 - Storage provided by juju
 
-The option is configured with [`runner-storage`](https://charmhub.io/github-runner/configure#runner-storage) option. The configuration should be set during deployment and cannot be changed.
+This is configured with the [`runner-storage`](https://charmhub.io/github-runner/configure#runner-storage) option. The configuration should be set during deployment and cannot be changed.
 
 ## Random access memory as disk
 
