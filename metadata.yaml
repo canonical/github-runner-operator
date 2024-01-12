@@ -26,3 +26,7 @@ provides:
     interface: cos_agent
   website:
     interface: http
+
+requires:
+  amqp:
+    interface: rabbitmq

@@ -196,6 +196,7 @@ class GithubRunnerCharm(CharmBase):
             self.on.update_dependencies_action, self._on_update_dependencies_action
         )
         self.framework.observe(self.on.website_relation_joined, self._on_website_relation_joined)
+        self.framework.observe(self.on.amqp_relation_joined, self._on_amqp_relation_joined)
 
     def _on_website_relation_joined(self, event: ops.charm.RelationJoinedEvent) -> None:
         """Handle the joining of the website relation.
@@ -205,6 +206,16 @@ class GithubRunnerCharm(CharmBase):
         """
         event.relation.data[self.unit]["port"] = "8080"
         event.relation.data[self.unit]["hostname"] = "10.33.194.117"
+
+    def _on_amqp_relation_joined(self, event: ops.charm.RelationJoinedEvent) -> None:
+        """Handle the joining of the amqp relation.
+
+        Args:
+            event: Event of amqp relation joined.
+        """
+        event.relation.data[self.unit]["username"] = "bartolomeus"
+        event.relation.data[self.unit]["vhost"] = "10.33.194.117"
+        event.relation.data[self.unit]["admin"] = "true"
 
     @retry(tries=5, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _create_memory_storage(self, path: Path, size: int) -> None:
