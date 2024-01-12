@@ -398,6 +398,11 @@ class GithubRunnerCharm(CharmBase):
 
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
         if exit_code == 0:
+            if self._state.is_metrics_logging_available:
+                logger.debug("Issuing metrics due to upcoming system reboot")
+                runner_manager = self._get_runner_manager()
+                runner_manager.issue_runner_metrics()
+
             logger.info("Rebooting system...")
             self.unit.reboot(now=now)
 
