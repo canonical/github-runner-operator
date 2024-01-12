@@ -29,7 +29,7 @@ async def test_update_dependencies_action_latest_service(
     model: Model, app_no_runner: Application
 ) -> None:
     """
-    arrange: An working application with latest version of repo-policy-compliance service.
+    arrange: A working application with latest version of repo-policy-compliance service.
     act: Run update-dependencies action.
     assert:
         a. Service is installed in the charm.
@@ -141,7 +141,7 @@ async def test_update_dependencies_action_on_runner_binary(
 @pytest.mark.abort_on_fail
 async def test_check_runners_no_runners(app_no_runner: Application) -> None:
     """
-    arrange: An working application with no runners.
+    arrange: A working application with no runners.
     act: Run check-runners action.
     assert: Action returns result with no runner.
     """
@@ -160,7 +160,7 @@ async def test_check_runners_no_runners(app_no_runner: Application) -> None:
 @pytest.mark.abort_on_fail
 async def test_reconcile_runners(model: Model, app_no_runner: Application) -> None:
     """
-    arrange: An working application with no runners.
+    arrange: A working application with no runners.
     act:
         1.  a. Set virtual-machines config to 1.
             b. Run reconcile_runners action.

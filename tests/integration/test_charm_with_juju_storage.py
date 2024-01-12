@@ -14,7 +14,7 @@ from tests.integration.helpers import reconcile, wait_till_num_of_runners
 @pytest.mark.abort_on_fail
 async def test_spawn_one_runner(model: Model, app_juju_storage: Application) -> None:
     """
-    arrange: An working application with no runners and juju storage setup.
+    arrange: A working application with no runners and juju storage setup.
     act: Spawn one runner.
     assert: One runner should exist.
     """

@@ -8,7 +8,7 @@ The minimum requirements for a single virtual machine are:
 
 - 1 [virtual machine vCPU](https://charmhub.io/github-runner/configure#vm-cpu)
 - 2GiB of [virtual machine memory](https://charmhub.io/github-runner/configure#vm-memory)
-- 6GiB of [virtual machine disk](https://charmhub.io/github-runner/configure#vm-disk)
+- 10GiB of [virtual machine disk](https://charmhub.io/github-runner/configure#vm-disk)
 
 ## Juju machine resource usage
 

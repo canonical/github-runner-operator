@@ -9,7 +9,7 @@ import logging
 import platform
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 from ops import CharmBase
 from pydantic import AnyHttpUrl, BaseModel, ValidationError, root_validator
@@ -41,12 +41,6 @@ class RunnerStorage(str, Enum):
     JUJU_STORAGE = "juju-storage"
     MEMORY = "memory"
 
-    @classmethod
-    def _missing_(cls, value: object) -> Any:
-        raise ValueError(
-            f"{value} is not a valid runner storage ({list(cls.__members__.values())})"
-        )
-
 
 class CharmConfigInvalidError(Exception):
     """Raised when charm config is invalid.
@@ -58,7 +52,7 @@ class CharmConfigInvalidError(Exception):
     def __init__(self, msg: str):
         """Initialize a new instance of the CharmConfigInvalidError exception.
 
-        Args:
+        Args:`
             msg: Explanation of the error.
         """
         self.msg = msg
@@ -68,7 +62,7 @@ class CharmConfig(BaseModel):
     """Charm configuration.
 
     Attributes:
-        runner_storage: Storage to used as disk for the runner.
+        runner_storage: Storage to be used as disk for the runner.
     """
 
     runner_storage: RunnerStorage
@@ -86,7 +80,8 @@ class CharmConfig(BaseModel):
         try:
             runner_storage = RunnerStorage(charm.config.get("runner-storage"))
         except ValueError as err:
-            raise CharmConfigInvalidError(str(err)) from err
+            logger.exception("Invalid runner-storage configuration")
+            raise CharmConfigInvalidError("Invalid runner-storage configuration") from err
 
         return cls(runner_storage=runner_storage)
 
@@ -215,9 +210,9 @@ class State:
         """
         prev_state = None
         if CHARM_STATE_PATH.exists():
-            with open(CHARM_STATE_PATH, mode="r", encoding="utf-8") as state_file:
-                prev_state = json.load(state_file)
-                logger.info(prev_state)
+            json_data = CHARM_STATE_PATH.read_text(encoding="utf-8")
+            prev_state = json.loads(json_data)
+            logger.info("Previous charm state: %s", prev_state)
 
         try:
             proxy_config = ProxyConfig.from_charm(charm)
@@ -256,11 +251,11 @@ class State:
             arch=arch,
         )
 
-        with open(CHARM_STATE_PATH, mode="w", encoding="utf-8") as state_file:
-            state_dict = dataclasses.asdict(state)
-            # Convert pydantic object to python object serializable by json module.
-            state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
-            state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
-            json.dump(state_dict, state_file, ensure_ascii=False)
+        state_dict = dataclasses.asdict(state)
+        # Convert pydantic object to python object serializable by json module.
+        state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
+        state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
+        json_data = json.dumps(state_dict, ensure_ascii=False)
+        CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
 
         return state

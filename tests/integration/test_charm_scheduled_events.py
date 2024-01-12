@@ -27,7 +27,7 @@ from tests.status_name import ACTIVE
 @pytest.mark.abort_on_fail
 async def test_update_interval(model: Model, app_scheduled_events: Application) -> None:
     """
-    arrange: An working application with one runner.
+    arrange: A working application with one runner.
     act:
         1.  a. Remove runner binary.
             b. Crash the one runner

@@ -159,6 +159,11 @@ class TestCharm(unittest.TestCase):
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
     def test_exceed_free_disk_size(self, run, wt, mkdir, rm):
+        """
+        arrange: Charm with 30GiB of storage for runner.
+        act: Configuration that uses 100GiB of disk.
+        assert: Charm enters block state.
+        """
         rm.return_value = mock_rm = MagicMock()
         mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
         mock_rm.download_latest_runner_image = mock_download_latest_runner_image
@@ -171,8 +176,8 @@ class TestCharm(unittest.TestCase):
         harness.charm.on.reconcile_runners.emit()
         assert harness.charm.unit.status == BlockedStatus(
             (
-                "Required disk space for runners 104857600KiB is greater than storage free size "
-                "31457280.0KiB"
+                "Required disk space for runners 102400.0MiB is greater than storage total size "
+                "30720.0MiB"
             )
         )
 
