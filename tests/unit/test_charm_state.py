@@ -118,7 +118,7 @@ def test_invalid_runner_storage():
     """
     charm = MagicMock()
     charm.model.relations.__getitem__.return_value = [MagicMock()]
-    charm.config = {"runner-storage": "no exist"}
+    charm.config = {"runner-storage": "not-exist"}
 
     with pytest.raises(CharmConfigInvalidError):
         State.from_charm(charm)
