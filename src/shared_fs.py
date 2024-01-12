@@ -201,8 +201,10 @@ def get(runner_name: str) -> SharedFilesystem:
         ) from exc
 
     if not is_mounted:
-        logger.warning(
-            "Shared filesystem for runner %s is not mounted. Will mount now.", runner_name
+        logger.info(
+            "Shared filesystem for runner %s is not mounted (may happen after reboot). "
+            "Will be mounted now.",
+            runner_name,
         )
         runner_img_path = _get_runner_image_path(runner_name)
         try:
