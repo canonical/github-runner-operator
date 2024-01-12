@@ -148,3 +148,7 @@ class GithubClientError(Exception):
 
 class JobNotFoundError(GithubClientError):
     """Represents an error when the job could not be found on GitHub."""
+
+
+class RunnerLogsError(Exception):
+    """Base class for all runner logs errors."""
