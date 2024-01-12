@@ -168,7 +168,8 @@ The charm state.
 **Attributes:**
  
  - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
- - <b>`proxy_config`</b>:  Whether aproxy should be used. storage_config: 
+ - <b>`proxy_config`</b>:  Proxy-related configuration. 
+ - <b>`charm_config`</b>:  Configuration of the juju charm. 
  - <b>`arch`</b>:  The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64. 
 
 

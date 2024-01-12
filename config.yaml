@@ -78,8 +78,9 @@ options:
     description: |
       The storage for runner LXD instance to mount as disk. Can be "memory" or "juju-storage". If 
       set to "memory", memory-based storage created with tmpfs will be used as disk for LXD 
-      instances. If set to "juju-storage", storage provided with juju will be used as disk for LXD 
-      instances. This configuration cannot be changed after deployment.
+      instances. If set to "juju-storage", storage provided by juju will be used as disk for LXD 
+      instances. This configuration cannot be changed after deployment. The charm needs to be
+      redeployed to change the storage option.
   experimental-use-aproxy:
     type: boolean
     default: false

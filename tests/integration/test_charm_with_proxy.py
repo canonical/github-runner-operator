@@ -18,7 +18,7 @@ from tests.integration.helpers import (
     get_runner_names,
     run_in_lxd_instance,
 )
-from tests.status_name import ACTIVE_STATUS_NAME
+from tests.status_name import ACTIVE
 from utilities import execute_command
 
 PROXY_PORT = 8899
@@ -130,7 +130,7 @@ async def app_with_aproxy_fixture(
         constraints={"root-disk": 15},
         to=machine.id,
     )
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 60)
+    await model.wait_for_idle(status=ACTIVE, timeout=60 * 60)
 
     return application
 

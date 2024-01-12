@@ -210,9 +210,11 @@ class GithubRunnerCharm(CharmBase):
         """
         match self._state.charm_config.runner_storage:
             case RunnerStorage.MEMORY:
+                logger.info("Creating tmpfs storage")
                 path = self.ram_pool_path
                 self._create_memory_storage(self.ram_pool_path, size)
             case RunnerStorage.JUJU_STORAGE:
+                logger.info("Verifying juju storage")
                 path = self.juju_storage_path
                 if not self._juju_storage_mounted():
                     raise ConfigurationError(
@@ -221,15 +223,16 @@ class GithubRunnerCharm(CharmBase):
                             "be use as the disk for the runners"
                         )
                     )
-                # Check if the storage mounted has enough space
-                disk = shutil.disk_usage(path)
-                if size * 1024 > disk.free:
-                    raise ConfigurationError(
-                        (
-                            f"Required disk space for runners {size}KiB is greater than storage "
-                            f"free size {disk.free / 1024}KiB"
-                        )
-                    )
+        # Check if the storage mounted has enough space
+        disk = shutil.disk_usage(path)
+        # Some storage space might be used by existing runners.
+        if size * 1024 > disk.total:
+            raise ConfigurationError(
+                (
+                    f"Required disk space for runners {size / 1024}MiB is greater than storage "
+                    f"total size {disk.free / 1024 / 1024}MiB"
+                )
+            )
 
         return path
 
@@ -240,7 +243,7 @@ class GithubRunnerCharm(CharmBase):
             True if a juju storage is mounted on the runner-storage location.
         """
         # Use `mount` as Python does not have easy method to get the mount points.
-        stdout, exit_code = execute_command(["mount", "-l"], False)
+        stdout, exit_code = execute_command(["mountpoint", str(self.juju_storage_path)], False)
         return exit_code == 0 and str(self.juju_storage_path) in stdout
 
     def _create_memory_storage(self, path: Path, size: int) -> None:

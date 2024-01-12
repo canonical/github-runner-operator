@@ -17,7 +17,7 @@ from tests.integration.helpers import (
     start_test_http_server,
     wait_till_num_of_runners,
 )
-from tests.status_name import ACTIVE_STATUS_NAME, BLOCKED_STATUS_NAME
+from tests.status_name import ACTIVE, BLOCKED
 
 
 @pytest.mark.asyncio
@@ -140,7 +140,7 @@ async def test_token_config_changed(model: Model, app: Application, token_alt: s
     unit = app.units[0]
 
     await app.set_config({"token": token_alt})
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await model.wait_for_idle(status=ACTIVE)
 
     return_code, stdout = await run_in_unit(
         unit, "cat /etc/systemd/system/repo-policy-compliance.service"
@@ -203,11 +203,11 @@ async def test_change_runner_storage(model: Model, app: Application) -> None:
 
     # 1.
     await app.set_config({"runner-storage": "juju-storage"})
-    await model.wait_for_idle(status=BLOCKED_STATUS_NAME, timeout=1 * 60)
+    await model.wait_for_idle(status=BLOCKED, timeout=1 * 60)
     assert (
         "runner-storage config cannot be changed after deployment" in unit.workload_status_message
     )
 
     # 2.
     await app.set_config({"runner-storage": "memory"})
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=1 * 60)
+    await model.wait_for_idle(status=ACTIVE, timeout=1 * 60)

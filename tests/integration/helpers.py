@@ -16,7 +16,7 @@ from juju.unit import Unit
 
 from runner import Runner
 from runner_manager import RunnerManager
-from tests.status_name import ACTIVE_STATUS_NAME
+from tests.status_name import ACTIVE
 from utilities import retry
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
@@ -291,7 +291,7 @@ async def reconcile(app: Application, model: Model) -> None:
     """
     action = await app.units[0].run_action("reconcile-runners")
     await action.wait()
-    await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
+    await model.wait_for_idle(apps=[app.name], status=ACTIVE)
 
 
 async def deploy_github_runner_charm(
@@ -351,5 +351,5 @@ async def deploy_github_runner_charm(
         storage=storage,
     )
 
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 30)
+    await model.wait_for_idle(status=ACTIVE, timeout=60 * 30)
     return application

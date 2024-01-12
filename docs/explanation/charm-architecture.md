@@ -13,13 +13,16 @@ Conceptually, the charm can be divided into the following:
 
 ## LXD ephemeral virtual machines
 
-To ensure a clean and isolated environment for every runner, self-hosted runners use LXD virtual machines. The charm spawns virtual machines, setting resources based on charm configurations. The self-hosted runners start with the ephemeral option and will clean themselves up once the execution has finished, freeing the resources. This is [similar to how GitHub hosts their runners due to security concerns](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security). 
+To ensure a clean and isolated environment for every runner, self-hosted runners use LXD virtual machines. The charm spawns virtual machines, setting resources based on charm configurations. The self-hosted runners start with the ephemeral option and will clean themselves up once the execution has finished, freeing the resources. This is [similar to how GitHub hosts their runners due to security concerns](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
 
 As the virtual machines are single-use, the charm will replenish virtual machines on a regular schedule. This time period is determined by the [`reconcile-interval` configuration](https://charmhub.io/github-runner/configure#reconcile-interval).
 
 On schedule or upon configuration change, the charm performs a reconcile to ensure the number of runners managed by the charm matches the [`virtual-machines` configuration](https://charmhub.io/github-runner/configure#virtual-machines), and the resources used by the runners match the various resource configurations.
 
-The virtual machines hosting the runner use random access memory as disk; therefore, the [`vm-disk` configuration](https://charmhub.io/github-runner/configure#vm-disk) can impact the memory usage of the Juju machine. This is done to prevent disk IO exhaustion on the Juju machine on disk-intensive GitHub workflows. In the future, an alternative method to prevent disk IO exhaustion will be implemented.
+To prevent disk IO exhaustion on the Juju machine on disk-intensive GitHub workflows, the charm has two storage options provided by [`runner-storage` configuration](https://charmhub.io/github-runner/configure#runner-storage):
+
+- Use memory of the juju machine as disk. Under this option, the [`vm-disk` configuration](https://charmhub.io/github-runner/configure#vm-disk) can impact the memory usage of the Juju machine.
+- Use storage mount by juju as the disk.
 
 ## Virtual machine image
 

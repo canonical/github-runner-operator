@@ -39,7 +39,7 @@ The charm requires a GitHub personal access token with `repo` access, which can 
 Once the personal access token is created, the charm can be deployed with:
 
 ```shell
-juju deploy github-runner --constraints="cores=4 mem=12G root-disk=20G" --config token=<TOKEN> --config path=<OWNER/REPO> --config runner-storage=juju-storage --storage runner=rootfs,12GiB
+juju deploy github-runner --constraints="cores=4 mem=12G root-disk=20G virt-type=virtual-machine" --config token=<TOKEN> --config path=<OWNER/REPO> --config runner-storage=memory --config vm-memory=2GiB --config vm-disk=6GiB
 ```
 
 Replacing the `<TOKEN>` with the personal access token, and `<OWNER/REPO>` the GitHub account name and GitHub repository separated with `/`.

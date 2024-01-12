@@ -17,7 +17,7 @@ The `runner-storage` configuration needs to be set to `memory` during deployment
 An example deployment:
 
 ```shell
-juju deploy github-runner --constraints="cores=4 mem=12G root-disk=20G" --config token=<TOKEN> --config path=<OWNER/REPO> --config runner-storage=memory --config vm-memory=2GiB --config vm-disk=6GiB
+juju deploy github-runner --constraints="cores=4 mem=12G root-disk=20G virt-type=virtual-machine" --config token=<TOKEN> --config path=<OWNER/REPO> --config runner-storage=memory --config vm-memory=2GiB --config vm-disk=6GiB
 ```
 
 ## Storage provided by juju
@@ -27,5 +27,8 @@ The juju storage needs to be mounted during deployment, and the `runner-storage`
 An example deployment:
 
 ```shell
-juju deploy github-runner --constraints="cores=4 mem=12G root-disk=20G" --config token=<TOKEN> --config path=<OWNER/REPO> --config runner-storage=juju-storage --storage runner=rootfs,12GiB
+juju deploy github-runner --constraints="cores=4 mem=6G root-disk=26G virt-type=virtual-machine" --config token=<TOKEN> --config path=<OWNER/REPO> --config runner-storage=juju-storage --config vm-memory=2GiB --config vm-memory=6GiB --storage runner=rootfs
 ```
+
+The above example uses `rootfs`, which is using the root disk of the juju machine. Hence the root-disk size was increase to 26G.
+In production environment, a separated storage managed by juju should be used. See [how to manage juju storage](https://juju.is/docs/juju/manage-storage).

@@ -15,7 +15,7 @@ from tests.integration.helpers import (
     remove_runner_bin,
     wait_till_num_of_runners,
 )
-from tests.status_name import ACTIVE_STATUS_NAME
+from tests.status_name import ACTIVE
 
 REPO_POLICY_COMPLIANCE_VER_0_2_GIT_SOURCE = (
     "git+https://github.com/canonical/"
@@ -41,7 +41,7 @@ async def test_update_dependencies_action_latest_service(
     await action.wait()
     assert action.results["flush"] == "False"
 
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await model.wait_for_idle(status=ACTIVE)
     assert await get_repo_policy_compliance_pip_info(unit) is not None
 
 
@@ -64,7 +64,7 @@ async def test_update_dependencies_action_no_service(
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await model.wait_for_idle(status=ACTIVE)
 
     assert action.results["flush"] == "True"
     assert await get_repo_policy_compliance_pip_info(unit) is not None
@@ -92,7 +92,7 @@ async def test_update_dependencies_action_old_service(
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await model.wait_for_idle(status=ACTIVE)
 
     assert action.results["flush"] == "True"
     assert await get_repo_policy_compliance_pip_info(unit) is not None
@@ -120,7 +120,7 @@ async def test_update_dependencies_action_on_runner_binary(
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await model.wait_for_idle(status=ACTIVE)
 
     # The runners should be flushed on update of runner binary.
     assert action.results["flush"] == "True"
@@ -129,7 +129,7 @@ async def test_update_dependencies_action_on_runner_binary(
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await model.wait_for_idle(status=ACTIVE)
 
     # The runners should be flushed on update of runner binary.
     assert action.results["flush"] == "False"
