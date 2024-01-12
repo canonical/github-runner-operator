@@ -312,7 +312,7 @@ class RunnerManager:
                 )
             )
 
-    def issue_runner_metrics(self) -> IssuedMetricEventsStats:
+    def _issue_runner_metrics(self) -> IssuedMetricEventsStats:
         """Issue runner metrics.
 
         Returns:
@@ -481,7 +481,7 @@ class RunnerManager:
 
         runner_logs.remove_outdated_crashed()
         if self.config.are_metrics_enabled:
-            metric_stats = self.issue_runner_metrics()
+            metric_stats = self._issue_runner_metrics()
 
         # Clean up offline runners
         if runner_states.unhealthy:

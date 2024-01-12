@@ -148,23 +148,6 @@ The runner binary URL changes when a new version is available.
 
 ---
 
-<a href="../src/runner_manager.py#L315"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>function</kbd> `issue_runner_metrics`
-
-```python
-issue_runner_metrics() → dict[Type[Event], int]
-```
-
-Issue runner metrics. 
-
-
-
-**Returns:**
-  The stats of issued metric events. 
-
----
-
 <a href="../src/runner_manager.py#L448"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `reconcile`

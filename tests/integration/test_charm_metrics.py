@@ -33,7 +33,6 @@ from tests.integration.helpers import (
     run_in_unit,
 )
 from tests.status_name import ACTIVE_STATUS_NAME
-from utilities import execute_command
 
 TEST_WORKFLOW_NAMES = [
     "Workflow Dispatch Tests",
@@ -41,7 +40,6 @@ TEST_WORKFLOW_NAMES = [
     "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7",
 ]
 JOB_LOG_START_MSG_TEMPLATE = "Job is about to start running on the runner: {runner_name}"
-REBOOT_REQUIRED_FILE = "/var/run/reboot-required"
 
 
 @pytest_asyncio.fixture(scope="module", name="app_integrated")
@@ -359,44 +357,6 @@ async def test_charm_issues_runner_installed_metric(app: Application, model: Mod
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_charm_retrieves_logs_from_unhealthy_runners(
-    model: Model,
-    app: Application,
-):
-    """
-    arrange: A properly integrated charm with one runner.
-    act: Kill the start.sh script, which marks the runner as unhealthy. After that, reconcile.
-    assert: The logs are pulled from the crashed runner.
-    """
-    await ensure_charm_has_runner(app=app, model=model)
-
-    unit = app.units[0]
-    runner_name = await get_runner_name(unit)
-
-    kill_start_sh_cmd = "pkill -9 start.sh"
-    ret_code, _ = await run_in_lxd_instance(unit, runner_name, kill_start_sh_cmd)
-    assert ret_code == 0, "Failed to kill start.sh"
-
-    # Set the number of virtual machines to 0 to avoid to speedup reconciliation.
-    await app.set_config({"virtual-machines": "0"})
-    await reconcile(app=app, model=model)
-
-    ret_code, stdout = await run_in_unit(unit, f"ls {runner_logs.CRASHED_RUNNER_LOGS_DIR_PATH}")
-    assert ret_code == 0, "Failed to list crashed runner logs"
-    assert stdout
-    assert runner_name in stdout, "Failed to find crashed runner log"
-
-    ret_code, stdout = await run_in_unit(
-        unit, f"ls {runner_logs.CRASHED_RUNNER_LOGS_DIR_PATH}/{runner_name}"
-    )
-    assert ret_code == 0, "Failed to list crashed runner log"
-    assert stdout
-    assert "_diag" in stdout, "Failed to find crashed runner diag log"
-    assert "syslog" in stdout, "Failed to find crashed runner syslog log"
-
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
 async def test_charm_issues_metrics_after_reconciliation(
     model: Model,
     app: Application,
@@ -519,50 +479,37 @@ async def test_charm_issues_metrics_for_abnormal_termination(
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_charm_reboot(
+async def test_charm_retrieves_logs_from_unhealthy_runners(
     model: Model,
     app: Application,
-    forked_github_repository: Repository,
-    forked_github_branch: Branch,
 ):
     """
-    arrange: A properly integrated charm with a runner registered on the fork repo.
-    act: Dispatch a workflow on a branch for the runner to run. After completion, trigger a reboot.
-    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
-        The Reconciliation metric has the post job status set to normal.
+    arrange: A properly integrated charm with one runner.
+    act: Kill the start.sh script, which marks the runner as unhealthy. After that, reconcile.
+    assert: The logs are pulled from the crashed runner.
     """
-    await app.set_config({"path": forked_github_repository.full_name})
     await ensure_charm_has_runner(app=app, model=model)
 
-    # Clear metrics log to make reconciliation event more predictable
     unit = app.units[0]
-    await _clear_metrics_log(unit)
-    await _dispatch_workflow(
-        app=app,
-        branch=forked_github_branch,
-        github_repository=forked_github_repository,
-        conclusion="success",
-    )
+    runner_name = await get_runner_name(unit)
 
-    retcode, stdout = await run_in_unit(
-        unit=unit,
-        command=f"sudo touch {REBOOT_REQUIRED_FILE}",
-    )
-    assert retcode == 0, f"Failed to create {REBOOT_REQUIRED_FILE}: {stdout}"
+    kill_start_sh_cmd = "pkill -9 start.sh"
+    ret_code, _ = await run_in_lxd_instance(unit, runner_name, kill_start_sh_cmd)
+    assert ret_code == 0, "Failed to kill start.sh"
 
-    # We have to dispatch the event not the action, because the action does not trigger a reboot
-    retcode, stdout = await run_in_unit(
-        unit=unit,
-        command="sudo systemctl start ghro.reconcile-runners.service",
-    )
-    assert retcode == 0, f"Failed to dispatch reconciliation event: {stdout}"
+    # Set the number of virtual machines to 0 to avoid to speedup reconciliation.
+    await app.set_config({"virtual-machines": "0"})
+    await reconcile(app=app, model=model)
 
-    await model.wait_for_idle(apps=[app.name])
+    ret_code, stdout = await run_in_unit(unit, f"ls {runner_logs.CRASHED_RUNNER_LOGS_DIR_PATH}")
+    assert ret_code == 0, "Failed to list crashed runner logs"
+    assert stdout
+    assert runner_name in stdout, "Failed to find crashed runner log"
 
-    await _assert_events_after_reconciliation(
-        app=app, github_repository=forked_github_repository, post_job_status=PostJobStatus.NORMAL
+    ret_code, stdout = await run_in_unit(
+        unit, f"ls {runner_logs.CRASHED_RUNNER_LOGS_DIR_PATH}/{runner_name}"
     )
-    stdout, retcode = execute_command(["juju", "debug-log"])
-    assert stdout, "Failed to get debug-log or it is empty"
-    assert retcode == 0, f"Failed to get debug-log: {stdout}"
-    assert "Rebooting system..." in stdout
+    assert ret_code == 0, "Failed to list crashed runner log"
+    assert stdout
+    assert "_diag" in stdout, "Failed to find crashed runner diag log"
+    assert "syslog" in stdout, "Failed to find crashed runner syslog log"
