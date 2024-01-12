@@ -46,7 +46,7 @@ Construct RunnerManager object for creating and managing runners.
 
 ---
 
-<a href="../src/runner_manager.py#L648"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L658"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `build_runner_image`
 
@@ -83,7 +83,7 @@ Check if runner binary exists.
 
 ---
 
-<a href="../src/runner_manager.py#L515"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L525"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `flush`
 
@@ -148,7 +148,7 @@ The runner binary URL changes when a new version is available.
 
 ---
 
-<a href="../src/runner_manager.py#L438"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L448"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `reconcile`
 
@@ -172,7 +172,7 @@ Bring runners in line with target.
 
 ---
 
-<a href="../src/runner_manager.py#L658"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L668"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `schedule_build_runner_image`
 

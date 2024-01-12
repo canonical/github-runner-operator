@@ -117,7 +117,7 @@ def test_delete_filesystem():
 
     shared_fs.delete(runner_name)
 
-    with pytest.raises(errors.SharedFilesystemNotFoundError):
+    with pytest.raises(errors.GetSharedFilesystemError):
         shared_fs.get(runner_name)
 
 
@@ -152,7 +152,7 @@ def test_delete_filesystem_ignores_unmounted_filesystem(exc_cmd_mock: MagicMock)
 
     shared_fs.delete(runner_name)
 
-    with pytest.raises(errors.SharedFilesystemNotFoundError):
+    with pytest.raises(errors.GetSharedFilesystemError):
         shared_fs.get(runner_name)
 
 
@@ -171,16 +171,48 @@ def test_get_shared_filesystem():
     assert fs.runner_name == runner_name
 
 
-def test_get_raises_not_found_error():
+def test_get_raises_error_if_not_found():
     """
     arrange: Nothing.
     act: Call get.
-    assert: A SharedFilesystemNotFoundError is raised.
+    assert: A GetSharedFilesystemError is raised.
     """
     runner_name = secrets.token_hex(16)
 
-    with pytest.raises(errors.SharedFilesystemNotFoundError):
+    with pytest.raises(errors.GetSharedFilesystemError):
         shared_fs.get(runner_name)
+
+
+def test_get_mounts_if_unmounted(exc_cmd_mock: MagicMock):
+    """
+    arrange: Given a runner name and a mock mountpoint cmd
+     which returns NOT_A_MOUNTPOINT exit code.
+    act: Call create and get.
+    assert: The shared filesystem is mounted.
+    """
+    runner_name = secrets.token_hex(16)
+    shared_fs.create(runner_name)
+
+    def exc_cmd_side_effect(*args, **_):
+        if args[0][0] == "mountpoint":
+            return "", shared_fs.DIR_NO_MOUNTPOINT_EXIT_CODE
+        return "", 0
+
+    exc_cmd_mock.side_effect = exc_cmd_side_effect
+
+    shared_fs.get(runner_name)
+
+    exc_cmd_mock.assert_any_call(
+        [
+            "sudo",
+            "mount",
+            "-o",
+            "loop",
+            str(shared_fs._get_runner_image_path(runner_name)),
+            str(shared_fs._get_runner_fs_path(runner_name)),
+        ],
+        check_exit=True,
+    )
 
 
 def test_quarantine(filesystem_paths: dict[str, Path], tmp_path: Path):
