@@ -150,7 +150,9 @@ async def _wait_until_runner_is_used_up(runner_name: str, unit: Unit):
         assert False, "Timeout while waiting for the runner to be used up"
 
 
-async def _assert_workflow_run_conclusion(runner_name: str, conclusion: str, workflow: Workflow, start_time: datetime):
+async def _assert_workflow_run_conclusion(
+    runner_name: str, conclusion: str, workflow: Workflow, start_time: datetime
+):
     """Assert that the workflow run has the expected conclusion.
 
     Args:
@@ -167,7 +169,9 @@ async def _assert_workflow_run_conclusion(runner_name: str, conclusion: str, wor
             assert run.jobs()[0].conclusion == conclusion
 
 
-async def _wait_for_workflow_to_complete(unit: Unit, workflow: Workflow, conclusion: str, start_time: datetime):
+async def _wait_for_workflow_to_complete(
+    unit: Unit, workflow: Workflow, conclusion: str, start_time: datetime
+):
     """Wait for the workflow to complete.
 
     Args:
@@ -181,7 +185,9 @@ async def _wait_for_workflow_to_complete(unit: Unit, workflow: Workflow, conclus
     # Wait for the workflow log to contain the conclusion
     sleep(60)
 
-    await _assert_workflow_run_conclusion(runner_name=runner_name, conclusion=conclusion, workflow=workflow, start_time=start_time)
+    await _assert_workflow_run_conclusion(
+        runner_name=runner_name, conclusion=conclusion, workflow=workflow, start_time=start_time
+    )
 
 
 async def _wait_for_workflow_to_start(unit: Unit, workflow: Workflow):
@@ -479,6 +485,43 @@ async def test_charm_issues_metrics_for_abnormal_termination(
         app=app,
         github_repository=forked_github_repository,
         post_job_status=PostJobStatus.ABNORMAL,
+    )
+
+
+async def test_charm_remounts_shared_fs(
+    model: Model,
+    app: Application,
+    forked_github_repository: Repository,
+    forked_github_branch: Branch,
+):
+    """
+    arrange: A properly integrated charm with a runner registered on the fork repo.
+    act: Dispatch a test workflow and afterwards unmount the shared fs. After that, reconcile.
+    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
+    """
+    await app.set_config({"path": forked_github_repository.full_name})
+    await ensure_charm_has_runner(app=app, model=model)
+
+    # Clear metrics log to make reconciliation event more predictable
+    unit = app.units[0]
+    runner_name = await get_runner_name(unit)
+    await _clear_metrics_log(unit)
+    await _dispatch_workflow(
+        app=app,
+        branch=forked_github_branch,
+        github_repository=forked_github_repository,
+        conclusion="success",
+    )
+
+    # unmount shared fs
+    await run_in_unit(unit, f"sudo umount /home/ubuntu/runner-fs/{runner_name}")
+
+    # Set the number of virtual machines to 0 to speedup reconciliation
+    await app.set_config({"virtual-machines": "0"})
+    await reconcile(app=app, model=model)
+
+    await _assert_events_after_reconciliation(
+        app=app, github_repository=forked_github_repository, post_job_status=PostJobStatus.NORMAL
     )
 
 
