@@ -877,7 +877,7 @@ class GithubRunnerCharm(CharmBase):
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
         runner_manager = self._get_runner_manager()
-        runner_manager.flush()
+        runner_manager.flush(flush_busy=False)
 
 
 if __name__ == "__main__":
