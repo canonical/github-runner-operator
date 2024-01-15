@@ -157,8 +157,8 @@ class SSHDebugInfo(BaseModel):
 
     host: IPvAnyAddress
     port: int = Field(0, gt=0, le=65535)
-    rsa_fingerprint: str
-    ed25519_fingerprint: str
+    rsa_fingerprint: str = Field(pattern="^SHA256:.*")
+    ed25519_fingerprint: str = Field(pattern="^SHA256:.*")
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> Optional["SSHDebugInfo"]:

@@ -142,8 +142,8 @@ def test_ssh_debug_info_from_charm_no_relations():
             {
                 "host": "invalidip",
                 "port": "8080",
-                "rsa_fingerprint": "fingerprint_data",
-                "ed25519_fingerprint": "fingerprint_data",
+                "rsa_fingerprint": "SHA:fingerprint_data",
+                "ed25519_fingerprint": "SHA:fingerprint_data",
             },
             id="invalid host IP",
         ),
@@ -151,10 +151,19 @@ def test_ssh_debug_info_from_charm_no_relations():
             {
                 "host": "127.0.0.1",
                 "port": "invalidport",
-                "rsa_fingerprint": "fingerprint_data",
-                "ed25519_fingerprint": "fingerprint_data",
+                "rsa_fingerprint": "SHA:fingerprint_data",
+                "ed25519_fingerprint": "SHA:fingerprint_data",
             },
             id="invalid port",
+        ),
+        pytest.param(
+            {
+                "host": "127.0.0.1",
+                "port": "invalidport",
+                "rsa_fingerprint": "invalid_fingerprint_data",
+                "ed25519_fingerprint": "invalid_fingerprint_data",
+            },
+            id="invalid fingerprint",
         ),
     ],
 )
