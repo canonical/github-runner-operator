@@ -264,16 +264,19 @@ class GithubRunnerCharm(CharmBase):
                             "be used as the disk for the runners"
                         )
                     )
-        # Check if the storage mounted has enough space
-        disk = shutil.disk_usage(path)
-        # Some storage space might be used by existing runners.
-        if size * 1024 > disk.total:
-            raise ConfigurationError(
-                (
-                    f"Required disk space for runners {size / 1024}MiB is greater than storage "
-                    f"total size {disk.total / 1024 / 1024}MiB"
+
+        # tmpfs storage is not created if required size is 0.
+        if size > 0:
+            # Check if the storage mounted has enough space
+            disk = shutil.disk_usage(path)
+            # Some storage space might be used by existing runners.
+            if size * 1024 > disk.total:
+                raise ConfigurationError(
+                    (
+                        f"Required disk space for runners {size / 1024}MiB is greater than "
+                        f"storage total size {disk.total / 1024 / 1024}MiB"
+                    )
                 )
-            )
 
         return path
 
