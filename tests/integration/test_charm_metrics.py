@@ -4,6 +4,7 @@
 """Integration tests for metrics/logs."""
 import json
 import logging
+from datetime import datetime, timezone
 from time import sleep
 from typing import AsyncIterator
 
@@ -149,15 +150,16 @@ async def _wait_until_runner_is_used_up(runner_name: str, unit: Unit):
         assert False, "Timeout while waiting for the runner to be used up"
 
 
-async def _assert_workflow_run_conclusion(runner_name: str, conclusion: str, workflow: Workflow):
+async def _assert_workflow_run_conclusion(runner_name: str, conclusion: str, workflow: Workflow, start_time: datetime):
     """Assert that the workflow run has the expected conclusion.
 
     Args:
         runner_name: The runner name to assert the workflow run conclusion for.
         conclusion: The expected workflow run conclusion.
         workflow: The workflow to assert the workflow run conclusion for.
+        start_time: The start time of the workflow.
     """
-    for run in workflow.get_runs():
+    for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
         logs_url = run.jobs()[0].logs_url()
         logs = requests.get(logs_url).content.decode("utf-8")
 
@@ -165,20 +167,21 @@ async def _assert_workflow_run_conclusion(runner_name: str, conclusion: str, wor
             assert run.jobs()[0].conclusion == conclusion
 
 
-async def _wait_for_workflow_to_complete(unit: Unit, workflow: Workflow, conclusion: str):
+async def _wait_for_workflow_to_complete(unit: Unit, workflow: Workflow, conclusion: str, start_time: datetime):
     """Wait for the workflow to complete.
 
     Args:
         unit: The unit which contains the runner.
         workflow: The workflow to wait for.
         conclusion: The workflow conclusion to wait for.
+        start_time: The start time of the workflow.
     """
     runner_name = await get_runner_name(unit)
     await _wait_until_runner_is_used_up(runner_name, unit)
     # Wait for the workflow log to contain the conclusion
     sleep(60)
 
-    await _assert_workflow_run_conclusion(runner_name, conclusion, workflow)
+    await _assert_workflow_run_conclusion(runner_name=runner_name, conclusion=conclusion, workflow=workflow, start_time=start_time)
 
 
 async def _wait_for_workflow_to_start(unit: Unit, workflow: Workflow):
@@ -238,6 +241,8 @@ async def _dispatch_workflow(
         github_repository: The github repository to dispatch the workflow on.
         conclusion: The expected workflow run conclusion.
     """
+    start_time = datetime.now(timezone.utc)
+
     workflow = github_repository.get_workflow(id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME)
     if conclusion == "failure":
         workflow = github_repository.get_workflow(
@@ -247,7 +252,7 @@ async def _dispatch_workflow(
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(branch, {"runner": app.name})
     await _wait_for_workflow_to_complete(
-        unit=app.units[0], workflow=workflow, conclusion=conclusion
+        unit=app.units[0], workflow=workflow, conclusion=conclusion, start_time=start_time
     )
 
 
