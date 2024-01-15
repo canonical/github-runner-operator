@@ -1,4 +1,4 @@
-# Copyright 2023 Canonical Ltd.
+# Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Manage the lifecycle of runners.
@@ -52,10 +52,6 @@ class Snap(NamedTuple):
     name: str
     channel: str
     revision: Optional[int] = None
-
-
-YQ_BIN_URL_AMD64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64"
-YQ_BIN_URL_ARM64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_arm64"
 
 
 @dataclass
@@ -260,7 +256,7 @@ class Runner:
                 self.config.name,
             )
 
-    @retry(tries=5, delay=1, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _create_instance(
         self, image: str, resources: VirtualMachineResources, ephemeral: bool = True
     ) -> LxdInstance:
@@ -313,7 +309,7 @@ class Runner:
 
         return instance
 
-    @retry(tries=5, delay=1, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _ensure_runner_profile(self) -> None:
         """Ensure the runner profile is present on LXD.
 
@@ -340,7 +336,7 @@ class Runner:
         if not self._clients.lxd.profiles.exists("runner"):
             raise RunnerError("Failed to create runner LXD profile")
 
-    @retry(tries=5, delay=5, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _ensure_runner_storage_pool(self) -> None:
         """Ensure the runner storage pool exists."""
         if self._clients.lxd.storage_pools.exists("runner"):
@@ -388,7 +384,7 @@ class Runner:
         """
         return f"cpu-{cpu}-mem-{memory}-disk-{disk}"
 
-    @retry(tries=5, delay=1, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _get_resource_profile(self, resources: VirtualMachineResources) -> str:
         """Get the LXD profile name of given resource limit.
 
@@ -442,7 +438,7 @@ class Runner:
 
         return profile_name
 
-    @retry(tries=5, delay=1, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _start_instance(self) -> None:
         """Start an instance and wait for it to boot.
 
@@ -470,7 +466,7 @@ class Runner:
 
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
-    @retry(tries=5, delay=1, local_logger=logger)
+    @retry(tries=10, delay=10, max_delay=120, backoff=2, local_logger=logger)
     def _install_binaries(self, runner_binary: Path) -> None:
         """Install runner binary and other binaries.
 
@@ -562,6 +558,13 @@ class Runner:
         self.instance.execute(
             ["snap", "set", "aproxy", f"proxy={proxy_address}", f"listen=:{aproxy_port}"]
         )
+        exit_code, stdout, _ = self.instance.execute(["snap", "logs", "aproxy.aproxy", "-n=all"])
+        if (
+            exit_code != 0
+            or "Started Service for snap application aproxy.aproxy"
+            not in stdout.read().decode("utf-8")
+        ):
+            raise RunnerAproxyError("Aproxy service did not configure correctly")
 
         default_ip = self._get_default_ip()
         if not default_ip:
@@ -796,4 +799,9 @@ class Runner:
             cmd = ["snap", "install", snap.name, f"--channel={snap.channel}"]
             if snap.revision is not None:
                 cmd.append(f"--revision={snap.revision}")
-            self.instance.execute(cmd)
+            exit_code, _, stderr = self.instance.execute(cmd)
+
+            if exit_code != 0:
+                err_msg = stderr.read().decode("utf-8")
+                logger.error("Unable to install %s due to %s", snap.name, err_msg)
+                raise RunnerCreateError(f"Unable to install {snap.name}")

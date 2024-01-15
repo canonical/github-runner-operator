@@ -1,4 +1,4 @@
-# Copyright 2023 Canonical Ltd.
+# Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Errors used by the charm."""
@@ -136,3 +136,19 @@ class RunnerMetricsError(Exception):
 
 class CorruptMetricDataError(RunnerMetricsError):
     """Represents an error with the data being corrupt."""
+
+
+class GithubMetricsError(Exception):
+    """Base class for all github metrics errors."""
+
+
+class GithubClientError(Exception):
+    """Base class for all github client errors."""
+
+
+class JobNotFoundError(GithubClientError):
+    """Represents an error when the job could not be found on GitHub."""
+
+
+class RunnerLogsError(Exception):
+    """Base class for all runner logs errors."""

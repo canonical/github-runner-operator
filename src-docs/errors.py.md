@@ -45,8 +45,35 @@ Represents an error when the shared filesystem could not be deleted.
 
 ---
 
+## <kbd>class</kbd> `GithubClientError`
+Base class for all github client errors. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `GithubMetricsError`
+Base class for all github metrics errors. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `IssueMetricEventError`
 Represents an error when issuing a metric event. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `JobNotFoundError`
+Represents an error when the job could not be found on GitHub. 
 
 
 
@@ -168,6 +195,15 @@ Error for executing commands on runner.
 
 ## <kbd>class</kbd> `RunnerFileLoadError`
 Error for loading file on runner. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `RunnerLogsError`
+Base class for all runner logs errors. 
 
 
 

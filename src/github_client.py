@@ -1,4 +1,4 @@
-# Copyright 2023 Canonical Ltd.
+# Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """GitHub API client.
@@ -8,12 +8,21 @@ remove token for runner.
 """
 
 import logging
+from datetime import datetime
+from urllib.error import HTTPError
 
 from ghapi.all import GhApi, pages
-from requests import Session
+from ghapi.page import paged
 from typing_extensions import assert_never
 
-from github_type import RegistrationToken, RemoveToken, RunnerApplicationList, SelfHostedRunner
+import errors
+from github_type import (
+    JobStats,
+    RegistrationToken,
+    RemoveToken,
+    RunnerApplicationList,
+    SelfHostedRunner,
+)
 from runner_type import GithubOrg, GithubPath, GithubRepo
 
 logger = logging.getLogger(__name__)
@@ -22,7 +31,7 @@ logger = logging.getLogger(__name__)
 class GithubClient:
     """GitHub API client."""
 
-    def __init__(self, token: str, request_session: Session):
+    def __init__(self, token: str):
         """Instantiate the GiHub API client.
 
         Args:
@@ -31,7 +40,6 @@ class GithubClient:
         """
         self._token = token
         self._client = GhApi(token=self._token)
-        self._session = request_session
 
     def get_runner_applications(self, path: GithubPath) -> RunnerApplicationList:
         """Get list of runner applications available for download.
@@ -158,3 +166,51 @@ class GithubClient:
                 org=path.org,
                 runner_id=runner_id,
             )
+
+    def get_job_info(self, path: GithubRepo, workflow_run_id: str, runner_name: str) -> JobStats:
+        """Get information about a job for a specific workflow run.
+
+        Args:
+            path: GitHub repository path in the format '<owner>/<repo>'.
+            workflow_run_id: Id of the workflow run.
+            runner_name: Name of the runner.
+
+        Returns:
+            Job information.
+        """
+        paged_kwargs = {"owner": path.owner, "repo": path.repo, "run_id": workflow_run_id}
+        try:
+            for wf_run_page in paged(
+                self._client.actions.list_jobs_for_workflow_run, **paged_kwargs
+            ):
+                jobs = wf_run_page["jobs"]
+                # ghapi performs endless pagination,
+                # so we have to break out of the loop if there are no more jobs
+                if not jobs:
+                    break
+                for job in jobs:
+                    if job["runner_name"] == runner_name:
+                        # datetime strings should be in ISO 8601 format,
+                        # but they can also use Z instead of
+                        # +00:00, which is not supported by datetime.fromisoformat
+                        created_at = datetime.fromisoformat(
+                            job["created_at"].replace("Z", "+00:00")
+                        )
+                        started_at = datetime.fromisoformat(
+                            job["started_at"].replace("Z", "+00:00")
+                        )
+                        # conclusion could be null per api schema, so we need to handle that
+                        # though we would assume that it should always be present,
+                        # as the job should be finished
+                        conclusion = job.get("conclusion", None)
+                        return JobStats(
+                            created_at=created_at, started_at=started_at, conclusion=conclusion
+                        )
+
+        except HTTPError as exc:
+            raise errors.JobNotFoundError(
+                f"Could not find job for runner {runner_name}. "
+                f"Could not list jobs for workflow run {workflow_run_id}"
+            ) from exc
+
+        raise errors.JobNotFoundError(f"Could not find job for runner {runner_name}.")

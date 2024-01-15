@@ -1,4 +1,4 @@
-# Copyright 2023 Canonical Ltd.
+# Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Test cases for GithubRunnerCharm."""
@@ -120,7 +120,7 @@ class TestCharm(unittest.TestCase):
             RunnerManagerConfig(
                 path=GithubOrg(org="mockorg", group="mockgroup"),
                 token="mocktoken",
-                image="runner",
+                image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
                 charm_state=harness.charm._state,
@@ -146,7 +146,7 @@ class TestCharm(unittest.TestCase):
             RunnerManagerConfig(
                 path=GithubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
-                image="runner",
+                image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
                 charm_state=harness.charm._state,
@@ -177,7 +177,7 @@ class TestCharm(unittest.TestCase):
             RunnerManagerConfig(
                 path=GithubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
-                image="runner",
+                image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
                 charm_state=harness.charm._state,
@@ -197,7 +197,7 @@ class TestCharm(unittest.TestCase):
             RunnerManagerConfig(
                 path=GithubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
-                image="runner",
+                image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.ram_pool_path,
                 charm_state=harness.charm._state,

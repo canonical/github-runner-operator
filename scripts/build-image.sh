@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright 2023 Canonical Ltd.
+# Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 set -e
@@ -48,14 +48,40 @@ cleanup() {
     done
 }
 
+HTTP_PROXY="$1"
+HTTPS_PROXY="$2"
+NO_PROXY="$3"
+MODE="$4"
+
+if [[ -n "$HTTP_PROXY" ]]; then
+    /snap/bin/lxc config set core.proxy_http "$HTTP_PROXY"
+fi
+if [[ -n "$HTTPS_PROXY" ]]; then
+    /snap/bin/lxc config set core.proxy_https "$HTTPS_PROXY"
+fi
+
 cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD VM of previous run' 10
 
-if [[ "$1" == "test" ]]; then
+if [[ "$MODE" == "test" ]]; then
     retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --device root,size=5GiB' 'Starting LXD container'
 else
     retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --vm --device root,size=8GiB' 'Starting LXD VM'
 fi
 retry '/snap/bin/lxc exec builder -- /usr/bin/who' 'Wait for lxd agent to be ready' 30
+if [[ -n "$HTTP_PROXY" ]]; then
+    /snap/bin/lxc exec builder -- echo "HTTP_PROXY=$HTTP_PROXY" >> /etc/environment
+    /snap/bin/lxc exec builder -- echo "http_proxy=$HTTP_PROXY" >> /etc/environment
+    /snap/bin/lxc exec builder -- echo "Acquire::http::Proxy \"$HTTP_PROXY\";" >> /etc/apt/apt.conf
+fi
+if [[ -n "$HTTPS_PROXY" ]]; then
+    /snap/bin/lxc exec builder -- echo "HTTPS_PROXY=$HTTPS_PROXY" >> /etc/environment
+    /snap/bin/lxc exec builder -- echo "https_proxy=$HTTPS_PROXY" >> /etc/environment
+    /snap/bin/lxc exec builder -- echo "Acquire::https::Proxy \"$HTTPS_PROXY\";" >> /etc/apt/apt.conf
+fi
+if [[ -n "$NO_PROXY" ]]; then
+    /snap/bin/lxc exec builder -- echo "NO_PROXY=$NO_PROXY" >> /etc/environment
+    /snap/bin/lxc exec builder -- echo "no_proxy=$NO_PROXY" >> /etc/environment
+fi
 retry '/snap/bin/lxc exec builder -- /usr/bin/nslookup github.com' 'Wait for network to be ready' 30
 
 /snap/bin/lxc exec builder -- /usr/bin/apt-get update
@@ -69,6 +95,12 @@ retry '/snap/bin/lxc exec builder -- /usr/bin/nslookup github.com' 'Wait for net
 /snap/bin/lxc exec builder -- /usr/bin/apt-get update
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get upgrade -yq
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget -yq
+if [[ -n "$HTTP_PROXY" ]]; then
+    /snap/bin/lxc exec builder -- /usr/bin/npm config set proxy "$HTTP_PROXY"
+fi
+if [[ -n "$HTTPS_PROXY" ]]; then
+    /snap/bin/lxc exec builder -- /usr/bin/npm config set https-proxy "$HTTPS_PROXY"
+fi
 /snap/bin/lxc exec builder -- /usr/bin/npm install --global yarn 
 /snap/bin/lxc exec builder -- /usr/sbin/groupadd microk8s
 /snap/bin/lxc exec builder -- /usr/sbin/usermod -aG microk8s ubuntu
@@ -86,19 +118,20 @@ else
     echo "Unsupported CPU architecture: $(uname -m)"
     return 1
 fi
-/usr/bin/wget "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$YQ_ARCH"
-/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums
-/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums_hashes_order
-/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/extract-checksum.sh
+/usr/bin/wget "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$YQ_ARCH" -O "yq_linux_$YQ_ARCH"
+/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums -O checksums
+/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums_hashes_order -O checksums_hashes_order
+/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/extract-checksum.sh -O extract-checksum.sh
 /usr/bin/bash extract-checksum.sh SHA-256 "yq_linux_$YQ_ARCH" | /usr/bin/awk '{print $2,$1}' | /usr/bin/sha256sum -c | /usr/bin/grep OK
 /snap/bin/lxc file push "yq_linux_$YQ_ARCH" builder/usr/bin/yq --mode 755
 
+/snap/bin/lxc exec builder -- /usr/bin/sync
 /snap/bin/lxc publish builder --alias builder --reuse -f
 
 # Swap in the built image
-/snap/bin/lxc image alias rename runner old-runner || true
-/snap/bin/lxc image alias rename builder runner
-/snap/bin/lxc image delete old-runner || true
+/snap/bin/lxc image alias rename jammy old-jammy || true
+/snap/bin/lxc image alias rename builder jammy
+/snap/bin/lxc image delete old-jammy || true
 
 # Clean up LXD instance
-cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD VM' 10
+cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD instance' 10

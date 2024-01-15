@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2023 Canonical Ltd.
+# Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
@@ -130,7 +130,7 @@ class GithubRunnerCharm(CharmBase):
 
     service_token_path = Path("service_token")
     repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
-    repo_check_web_service_script = Path("templates/repo_policy_compliance_service.py")
+    repo_check_web_service_script = Path("scripts/repo_policy_compliance_service.py")
     repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
     ram_pool_path = Path("/storage/ram")
 
@@ -306,7 +306,7 @@ class GithubRunnerCharm(CharmBase):
             RunnerManagerConfig(
                 path=path,
                 token=token,
-                image="runner",
+                image="jammy",
                 service_token=self.service_token,
                 lxd_storage_path=self.ram_pool_path,
                 charm_state=self._state,
@@ -323,8 +323,6 @@ class GithubRunnerCharm(CharmBase):
             event: Event of installing the charm.
         """
         self.unit.status = MaintenanceStatus("Installing packages")
-
-        self._update_kernel()
 
         try:
             # The `_start_services`, `_install_deps` includes retry.
@@ -370,6 +368,8 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of starting the charm.
         """
+        self._check_and_update_dependencies()
+
         runner_manager = self._get_runner_manager()
 
         self.unit.status = MaintenanceStatus("Starting runners")
@@ -672,6 +672,9 @@ class GithubRunnerCharm(CharmBase):
         delta_virtual_machines = runner_manager.reconcile(
             virtual_machines, virtual_machines_resources
         )
+
+        self.unit.status = ActiveStatus()
+
         return {"delta": {"virtual-machines": delta_virtual_machines}}
 
     def _install_repo_policy_compliance(self) -> bool:

@@ -1,4 +1,4 @@
-# Copyright 2023 Canonical Ltd.
+# Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Types used by RunnerManager class."""
@@ -55,6 +55,11 @@ class RunnerManagerConfig:
     lxd_storage_path: Path
     charm_state: CharmState
     dockerhub_mirror: str | None = None
+
+    @property
+    def are_metrics_enabled(self) -> bool:
+        """Whether metrics for the runners should be collected."""
+        return self.charm_state.is_metrics_logging_available
 
 
 @dataclass

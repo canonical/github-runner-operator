@@ -6,6 +6,8 @@ set +e
 {% if issue_metrics %}
 
 write_post_metrics(){
+    # Expects the exit code of the run.sh script as the first argument.
+
     # Only write the post-job metrics if the file does not already exist - which may indicate
     # that the job has failed inside pre-job.
 
@@ -15,15 +17,30 @@ write_post_metrics(){
 
     timestamp=$(date +%s)
 
-    jq -n \
-      --argjson timestamp "$timestamp" \
-      '{
-        "timestamp": $timestamp,
-        "status": "normal"
-      }' > /metrics-exchange/post-job-metrics.json
+    # Write the post-job metrics using status abnormal and exit code if exit code is non-zero
+    if [ "$1" != "0" ]; then
+        jq -n \
+          --argjson timestamp "$timestamp" \
+          --arg status "abnormal" \
+          --argjson exit_code "$1" \
+          '{
+            "timestamp": $timestamp,
+            "status": $status,
+            "status_info": {code: $exit_code}
+          }' > /metrics-exchange/post-job-metrics.json
+        return
+    else
+        # If exit code is zero, write the post-job metrics using status normal
+        jq -n \
+          --argjson timestamp "$timestamp" \
+          '{
+            "timestamp": $timestamp,
+            "status": "normal"
+          }' > /metrics-exchange/post-job-metrics.json
+    fi
 }
 
-(/home/ubuntu/github-runner/run.sh; write_post_metrics; sudo systemctl poweroff -i) &>/dev/null &
+(/home/ubuntu/github-runner/run.sh; write_post_metrics $?; sudo systemctl poweroff -i) &>/dev/null &
 {% else %}
 (/home/ubuntu/github-runner/run.sh; sudo systemctl poweroff -i) &>/dev/null &
 {% endif %}

@@ -1,4 +1,4 @@
-# Copyright 2023 Canonical Ltd.
+# Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 import unittest.mock
@@ -39,6 +39,8 @@ def mocks(monkeypatch, tmp_path, exec_command):
     monkeypatch.setattr("github_client.GhApi", MockGhapiClient)
     monkeypatch.setattr("runner_manager_type.jinja2", unittest.mock.MagicMock())
     monkeypatch.setattr("runner_manager_type.LxdClient", MockLxdClient)
+    monkeypatch.setattr("runner_manager.github_metrics", unittest.mock.MagicMock())
+    monkeypatch.setattr("runner_manager.runner_logs", unittest.mock.MagicMock())
     monkeypatch.setattr("runner_manager.LxdClient", MockLxdClient)
     monkeypatch.setattr("runner_manager.shared_fs", unittest.mock.MagicMock())
     monkeypatch.setattr(

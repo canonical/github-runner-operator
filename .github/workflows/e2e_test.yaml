@@ -53,7 +53,7 @@ jobs:
         run: charmcraft pack || ( cat ~/.local/state/charmcraft/log/* && exit 1 )
 
       - name: Upload github-runner Charm
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dangerous-test-only-github-runner_ubuntu-22.04-amd64.charm
           path: github-runner_ubuntu-22.04-amd64.charm
@@ -109,7 +109,7 @@ jobs:
         run: juju model-config logging-config="<root>=INFO;unit=DEBUG"
 
       - name: Download github-runner Charm
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: dangerous-test-only-github-runner_ubuntu-22.04-amd64.charm
 
@@ -201,7 +201,7 @@ jobs:
       - name: Watch github-runner (Pull Request)
         if: matrix.event.name == 'pull_request'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         timeout-minutes: 30
         run: |
           juju debug-log --replay --tail &
@@ -380,7 +380,7 @@ jobs:
           fi
       - name: Upload test logs (Issues, Schedule)
         if: always() && (matrix.event.name == 'issues' || matrix.event.name == 'schedule')
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{matrix.event.name}}-workflow-logs.zip
           path: ${{matrix.event.name}}-workflow-logs.zip
@@ -393,7 +393,7 @@ jobs:
       - name: Clean Up (Workflow Dispatch and Push)
         if: always() && (matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push')
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
           gh api \
           --method DELETE \
@@ -431,7 +431,7 @@ jobs:
   e2e-test:
     name: End-to-End Test
     needs: [build-charm, run-id]
-    runs-on: [self-hosted, linux, x64, "pr-${{ needs.run-id.outputs.run-id }}"]
+    runs-on: [self-hosted, linux, x64, jammy, "pr-${{ needs.run-id.outputs.run-id }}"]
     steps:
       # Snapd can have some issues in privileged LXD containers without setting
       # security.nesting=True and this.
