@@ -202,6 +202,15 @@ Error for loading file on runner.
 
 ---
 
+## <kbd>class</kbd> `RunnerLogsError`
+Base class for all runner logs errors. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `RunnerMetricsError`
 Base class for all runner metrics errors. 
 

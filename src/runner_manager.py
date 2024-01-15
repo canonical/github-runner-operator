@@ -486,7 +486,12 @@ class RunnerManager:
 
             for runner in unhealthy_runners:
                 if self.config.are_metrics_enabled:
-                    runner_logs.get_crashed(runner)
+                    try:
+                        runner_logs.get_crashed(runner)
+                    except errors.RunnerLogsError:
+                        logger.exception(
+                            "Failed to get logs of crashed runner %s", runner.config.name
+                        )
                 runner.remove(remove_token)
                 logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
 
