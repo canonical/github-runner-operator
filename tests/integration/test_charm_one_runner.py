@@ -230,9 +230,9 @@ async def test_wait_on_busy_runner_repo_check(
         all_runners = runner_manager_github_client.get_runner_github_info(
             f"{github_repository.owner}/{github_repository.name}"
         )
-        runner = [runner for runner in all_runners if runner.name == runner_to_be_used]
-        assert len(runner) == 1, "Should not occur GitHub should enforce unique naming"
-        runner = runner[0]
+        runners = [runner for runner in all_runners if runner.name == runner_to_be_used]
+        assert len(runners) == 1, "Should not occur GitHub should enforce unique naming"
+        runner = runners[0]
         if runner["busy"]:
             start_time = datetime.now(timezone.utc)
             break
