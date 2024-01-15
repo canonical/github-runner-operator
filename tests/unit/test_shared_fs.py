@@ -12,6 +12,8 @@ import errors
 import shared_fs
 from errors import SubprocessError
 
+MOUNTPOINT_FAILURE_EXIT_CODE = 1
+
 
 @pytest.fixture(autouse=True, name="filesystem_paths")
 def filesystem_paths_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> dict[str, Path]:
@@ -104,6 +106,33 @@ def test_list_shared_filesystems_empty():
     fs_list = list(shared_fs.list_all())
 
     assert len(fs_list) == 0
+
+
+def test_list_shared_filesystems_ignore_unmounted_fs(exc_cmd_mock: MagicMock):
+    """
+    arrange: Create shared filesystems for multiple runners and mock mountpoint cmd
+     to return NOT_A_MOUNTPOINT exit code for a dedicated runner.
+    act: Call list.
+    assert: A generator listing all the shared filesystems except the one of the dedicated runner
+     is returned.
+    """
+    runner_names = [secrets.token_hex(16) for _ in range(3)]
+    for runner_name in runner_names:
+        shared_fs.create(runner_name)
+
+    runner_with_mount_failure = runner_names[0]
+
+    def exc_cmd_side_effect(*args, **_):
+        if args[0][0] == "mountpoint" and runner_with_mount_failure in args[0][2]:
+            return "", MOUNTPOINT_FAILURE_EXIT_CODE
+        return "", 0
+
+    exc_cmd_mock.side_effect = exc_cmd_side_effect
+
+    fs_list = list(shared_fs.list_all())
+
+    assert len(fs_list) == 2
+    assert runner_with_mount_failure not in [fs.runner_name for fs in fs_list]
 
 
 def test_delete_filesystem():
