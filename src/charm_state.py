@@ -170,9 +170,7 @@ class SSHDebugInfo(BaseModel):
         relations = charm.model.relations[DEBUG_SSH_INTEGRATION_NAME]
         if not relations or not (relation := relations[0]).units:
             return None
-        target_unit = next(
-            filter(lambda unit: charm.app.name not in unit.name, iter(relation.units))
-        )
+        target_unit = next(iter(relation.units))
         relation_data = relation.data[target_unit]
         if (
             not (host := relation_data.get("host"))
