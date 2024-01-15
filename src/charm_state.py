@@ -52,7 +52,7 @@ class CharmConfigInvalidError(Exception):
     def __init__(self, msg: str):
         """Initialize a new instance of the CharmConfigInvalidError exception.
 
-        Args:`
+        Args:
             msg: Explanation of the error.
         """
         self.msg = msg

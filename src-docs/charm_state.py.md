@@ -82,7 +82,7 @@ Initialize a new instance of the CharmConfigInvalidError exception.
 
 
 
-**Args:`**
+**Args:**
  
  - <b>`msg`</b>:  Explanation of the error. 
 
