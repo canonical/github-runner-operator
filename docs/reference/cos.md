@@ -10,7 +10,7 @@ The dashboard presents the following rows:
 - General: Displays general metrics about the charm and runners, such as:
   - Lifecycle counters: Tracks the frequency of Runner initialisation, start, stop, and crash events.
   - Idle runners after reconciliation: Reflects the count of Runners marked as idle during the last reconciliation event. Note: This data updates post-reconciliation events and isn't real-time.
-  - Duration observations: Each data point aggregates the last hour and shows the 50th, 90th, 95th percentile and maximum durations for:
+  - Duration observations: Each data point aggregates the last hour, showcasing minimum, maximum, and average durations for:
       - Runner installation
       - Runner idle duration
       - Charm reconciliation duration
