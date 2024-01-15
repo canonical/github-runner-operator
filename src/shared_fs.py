@@ -172,7 +172,12 @@ def list_all() -> Iterator[SharedFilesystem]:
 
     directories = (entry for entry in FILESYSTEM_BASE_PATH.iterdir() if entry.is_dir())
     for directory in directories:
-        yield SharedFilesystem(path=directory, runner_name=directory.name)
+        try:
+            fs = get(runner_name=directory.name)
+        except GetSharedFilesystemError:
+            logger.error("Failed to get shared filesystem for runner %s", directory.name)
+        else:
+            yield fs
 
 
 def get(runner_name: str) -> SharedFilesystem:
