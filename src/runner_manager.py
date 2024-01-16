@@ -281,16 +281,26 @@ class RunnerManager:
             except IssueMetricEventError:
                 logger.exception("Failed to issue RunnerInstalled metric")
 
-            fs = shared_fs.get(runner.config.name)
             try:
-                (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).write_text(
-                    str(ts_after), encoding="utf-8"
-                )
-            except FileNotFoundError:
+                fs = shared_fs.get(runner.config.name)
+            except errors.GetSharedFilesystemError:
                 logger.exception(
-                    "Failed to write runner-installed.timestamp, "
-                    "will not be able to issue all metrics."
+                    "Failed to get shared filesystem for runner %s, "
+                    "will not be able to issue all metrics.",
+                    runner.config.name,
                 )
+            else:
+                try:
+                    (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).write_text(
+                        str(ts_after), encoding="utf-8"
+                    )
+                except FileNotFoundError:
+                    logger.exception(
+                        "Failed to write runner-installed.timestamp into shared filesystem "
+                        "for runner %s, will not be able to issue all metrics.",
+                        runner.config.name,
+                    )
+
         else:
             runner.create(
                 config=CreateRunnerConfig(

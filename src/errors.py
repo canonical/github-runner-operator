@@ -122,12 +122,16 @@ class DeleteSharedFilesystemError(SharedFilesystemError):
     """Represents an error when the shared filesystem could not be deleted."""
 
 
+class GetSharedFilesystemError(SharedFilesystemError):
+    """Represents an error when the shared filesystem could not be retrieved."""
+
+
 class QuarantineSharedFilesystemError(SharedFilesystemError):
     """Represents an error when the shared filesystem could not be quarantined."""
 
 
-class SharedFilesystemNotFoundError(SharedFilesystemError):
-    """Represents an error when the shared filesystem is not found."""
+class SharedFilesystemMountError(SharedFilesystemError):
+    """Represents an error related to the mounting of the shared filesystem."""
 
 
 class RunnerMetricsError(Exception):
