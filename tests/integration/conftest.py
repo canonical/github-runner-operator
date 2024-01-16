@@ -12,10 +12,12 @@ from typing import Any, AsyncIterator, Iterator, Optional
 import pytest
 import pytest_asyncio
 import yaml
+from git import Repo
 from github import Github, GithubException
 from github.Branch import Branch
 from github.Repository import Repository
 from juju.application import Application
+from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
@@ -23,6 +25,7 @@ from tests.integration.helpers import (
     deploy_github_runner_charm,
     ensure_charm_has_runner,
     reconcile,
+    wait_for,
 )
 
 
@@ -245,6 +248,34 @@ async def app_runner(
     return application
 
 
+@pytest_asyncio.fixture(scope="module", name="tmate_ssh_server_app")
+async def tmate_ssh_server_app_fixture(
+    model: Model, app: Application
+) -> AsyncIterator[Application]:
+    """tmate-ssh-server charm application related to GitHub-Runner app charm."""
+    tmate_app: Application = await model.deploy("tmate-ssh-server", channel="edge")
+    await app.relate("ssh-debug", f"{tmate_app.charm_name}:ssh-debug")
+    await model.wait_for_idle()
+
+    return tmate_app
+
+
+@pytest_asyncio.fixture(scope="module", name="tmate_ssh_server_unit_ip")
+async def tmate_ssh_server_unit_ip_fixture(
+    tmate_ssh_server_app: Application,
+) -> AsyncIterator[str]:
+    """tmate-ssh-server charm unit ip."""
+    status: FullStatus = await model.get_status([tmate_ssh_server_app.charm_name])
+    try:
+        unit_status: UnitStatus = next(
+            iter(status.applications[tmate_ssh_server_app.charm_name].units.values())
+        )
+        assert unit_status.address, "Invalid unit address"
+        return unit_status.address
+    except StopIteration as exc:
+        raise StopIteration("Invalid unit status") from exc
+
+
 @pytest.fixture(scope="module")
 def github_client(token: str) -> Github:
     """Returns the github client."""
@@ -354,3 +385,28 @@ async def app_juju_storage(
         reconcile_interval=60,
     )
     return application
+
+
+@pytest_asyncio.fixture(scope="module", name="test_github_branch")
+async def test_github_branch_fixture(github_repository: Repository) -> Iterator[Branch]:
+    """Create a new branch for testing, from latest commit in current branch."""
+    test_branch = f"test/{secrets.token_hex(4)}"
+    branch_ref = github_repository.create_git_ref(
+        ref=f"refs/heads/{test_branch}", sha=Repo().head.commit.hexsha
+    )
+
+    def get_branch():
+        """Get newly created branch."""
+        try:
+            branch = github_repository.get_branch(test_branch)
+        except GithubException as err:
+            if err.status == 404:
+                return False
+            raise
+        return branch
+
+    await wait_for(get_branch)
+
+    yield get_branch()
+
+    branch_ref.delete()
