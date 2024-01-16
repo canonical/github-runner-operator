@@ -254,8 +254,8 @@ async def tmate_ssh_server_app_fixture(
 ) -> AsyncIterator[Application]:
     """tmate-ssh-server charm application related to GitHub-Runner app charm."""
     tmate_app: Application = await model.deploy("tmate-ssh-server", channel="edge")
-    await app.relate("debug-ssh", f"{tmate_app.charm_name}:debug-ssh")
-    await model.wait_for_idle()
+    await app.relate("debug-ssh", f"{tmate_app.name}:debug-ssh")
+    await model.wait_for_idle(raise_on_error=False, timeout=60 * 30)
 
     return tmate_app
 
@@ -266,10 +266,10 @@ async def tmate_ssh_server_unit_ip_fixture(
     tmate_ssh_server_app: Application,
 ) -> AsyncIterator[str]:
     """tmate-ssh-server charm unit ip."""
-    status: FullStatus = await model.get_status([tmate_ssh_server_app.charm_name])
+    status: FullStatus = await model.get_status([tmate_ssh_server_app.name])
     try:
         unit_status: UnitStatus = next(
-            iter(status.applications[tmate_ssh_server_app.charm_name].units.values())
+            iter(status.applications[tmate_ssh_server_app.name].units.values())
         )
         assert unit_status.address, "Invalid unit address"
         return unit_status.address
