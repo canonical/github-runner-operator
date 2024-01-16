@@ -17,7 +17,7 @@ from tests.integration.helpers import (
     start_test_http_server,
     wait_till_num_of_runners,
 )
-from tests.status_name import ACTIVE_STATUS_NAME
+from tests.status_name import ACTIVE, BLOCKED
 
 
 @pytest.mark.asyncio
@@ -53,7 +53,7 @@ async def test_network_access(app: Application) -> None:
 @pytest.mark.abort_on_fail
 async def test_flush_runner_and_resource_config(app: Application) -> None:
     """
-    arrange: An working application with one runner.
+    arrange: A working application with one runner.
     act:
         1. Run Check_runner action. Record the runner name for later.
         2. Nothing.
@@ -116,7 +116,7 @@ async def test_flush_runner_and_resource_config(app: Application) -> None:
 @pytest.mark.abort_on_fail
 async def test_check_runner(app: Application) -> None:
     """
-    arrange: An working application with one runner.
+    arrange: A working application with one runner.
     act: Run check_runner action.
     assert: Action returns result with one runner.
     """
@@ -133,14 +133,14 @@ async def test_check_runner(app: Application) -> None:
 @pytest.mark.abort_on_fail
 async def test_token_config_changed(model: Model, app: Application, token_alt: str) -> None:
     """
-    arrange: An working application with one runner.
+    arrange: A working application with one runner.
     act: Change the token configuration.
     assert: The repo-policy-compliance using the new token.
     """
     unit = app.units[0]
 
     await app.set_config({"token": token_alt})
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await model.wait_for_idle(status=ACTIVE)
 
     return_code, stdout = await run_in_unit(
         unit, "cat /etc/systemd/system/repo-policy-compliance.service"
@@ -157,7 +157,7 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
     model: Model, app: Application
 ) -> None:
     """
-    arrange: An working application with one runners.
+    arrange: A working application with one runners.
     act:
         1.  a. Set virtual-machines config to 0.
             b. Run reconcile_runners action.
@@ -185,3 +185,29 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
     await reconcile(app=app, model=model)
 
     await wait_till_num_of_runners(unit, 1)
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_change_runner_storage(model: Model, app: Application) -> None:
+    """
+    arrange: A working application with one runners using memory as disk.
+    act:
+        1. Change runner-storage to juju-storage.
+        2. Change runner-storage back to memory.
+    assert:
+        1. Application in blocked state.
+        2. Application back to active state.
+    """
+    unit = app.units[0]
+
+    # 1.
+    await app.set_config({"runner-storage": "juju-storage"})
+    await model.wait_for_idle(status=BLOCKED, timeout=1 * 60)
+    assert (
+        "runner-storage config cannot be changed after deployment" in unit.workload_status_message
+    )
+
+    # 2.
+    await app.set_config({"runner-storage": "memory"})
+    await model.wait_for_idle(status=ACTIVE, timeout=1 * 60)

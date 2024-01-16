@@ -18,7 +18,7 @@ from tests.integration.helpers import (
     get_runner_names,
     run_in_lxd_instance,
 )
-from tests.status_name import ACTIVE_STATUS_NAME
+from tests.status_name import ACTIVE
 
 
 @pytest.mark.asyncio
@@ -45,7 +45,7 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
     await app_runner.set_config({"virtual-machines": "1", "dockerhub-mirror": fake_url})
     action = await unit.run_action("reconcile-runners")
     await action.wait()
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME)
+    await model.wait_for_idle(status=ACTIVE)
     names = await get_runner_names(unit)
     assert len(names) == 1
 

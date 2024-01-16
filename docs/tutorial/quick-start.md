@@ -39,12 +39,16 @@ The charm requires a GitHub personal access token with `repo` access, which can 
 Once the personal access token is created, the charm can be deployed with:
 
 ```shell
-juju deploy github-runner --constraints="cores=4 mem=16G root-disk=20G" --config token=<TOKEN> --config path=<OWNER/REPO>
+juju deploy github-runner --constraints="cores=4 mem=16G root-disk=20G virt-type=virtual-machine" --config token=<TOKEN> --config path=<OWNER/REPO> --config runner-storage=memory --config vm-memory=2GiB --config vm-disk=10GiB
 ```
 
 Replacing the `<TOKEN>` with the personal access token, and `<OWNER/REPO>` the GitHub account name and GitHub repository separated with `/`.
 
 The `--constraints` option for the `juju deploy` sets the resource requirements for the juju machine hosting the charm application. This is used to accommodate different sizes of self-hosted runners. For details, refer to [Managing resource usage](https://charmhub.io/github-runner/docs/managing-resource-usage).
+
+The `--storage` option mounts a juju storage to be used as the disk for LXD instances hosting the self-hosted runners. Refer [How to configure runner storage](https://charmhub.io/github-runner/docs/configure-runner-storage) for more information.
+
+The charm performs various installation and configuration on startup. The charm might upgrade the kernel of the juju machine and reboot the juju machine. During reboot, the juju machine will go into the `down` state, this is a part of the normal reboot process and the juju machine should be restarted after a while.
 
 Once the charm reaches active status, visit the runner page for the GitHub repository (`https://github.com/{OWNER}/{REPO}/settings/actions/runners`) according to the instructions [here](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/using-self-hosted-runners-in-a-workflow#viewing-available-runners-for-a-repository). A single new runner should be available as it is the default number of self-hosted runners created.
 
