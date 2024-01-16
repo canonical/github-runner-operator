@@ -4,6 +4,7 @@
 """Integration tests for metrics/logs."""
 import json
 import logging
+from datetime import datetime, timezone
 from time import sleep
 from typing import AsyncIterator
 
@@ -149,15 +150,18 @@ async def _wait_until_runner_is_used_up(runner_name: str, unit: Unit):
         assert False, "Timeout while waiting for the runner to be used up"
 
 
-async def _assert_workflow_run_conclusion(runner_name: str, conclusion: str, workflow: Workflow):
+async def _assert_workflow_run_conclusion(
+    runner_name: str, conclusion: str, workflow: Workflow, start_time: datetime
+):
     """Assert that the workflow run has the expected conclusion.
 
     Args:
         runner_name: The runner name to assert the workflow run conclusion for.
         conclusion: The expected workflow run conclusion.
         workflow: The workflow to assert the workflow run conclusion for.
+        start_time: The start time of the workflow.
     """
-    for run in workflow.get_runs():
+    for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
         logs_url = run.jobs()[0].logs_url()
         logs = requests.get(logs_url).content.decode("utf-8")
 
@@ -165,20 +169,25 @@ async def _assert_workflow_run_conclusion(runner_name: str, conclusion: str, wor
             assert run.jobs()[0].conclusion == conclusion
 
 
-async def _wait_for_workflow_to_complete(unit: Unit, workflow: Workflow, conclusion: str):
+async def _wait_for_workflow_to_complete(
+    unit: Unit, workflow: Workflow, conclusion: str, start_time: datetime
+):
     """Wait for the workflow to complete.
 
     Args:
         unit: The unit which contains the runner.
         workflow: The workflow to wait for.
         conclusion: The workflow conclusion to wait for.
+        start_time: The start time of the workflow.
     """
     runner_name = await get_runner_name(unit)
     await _wait_until_runner_is_used_up(runner_name, unit)
     # Wait for the workflow log to contain the conclusion
     sleep(60)
 
-    await _assert_workflow_run_conclusion(runner_name, conclusion, workflow)
+    await _assert_workflow_run_conclusion(
+        runner_name=runner_name, conclusion=conclusion, workflow=workflow, start_time=start_time
+    )
 
 
 async def _wait_for_workflow_to_start(unit: Unit, workflow: Workflow):
@@ -238,6 +247,8 @@ async def _dispatch_workflow(
         github_repository: The github repository to dispatch the workflow on.
         conclusion: The expected workflow run conclusion.
     """
+    start_time = datetime.now(timezone.utc)
+
     workflow = github_repository.get_workflow(id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME)
     if conclusion == "failure":
         workflow = github_repository.get_workflow(
@@ -247,7 +258,7 @@ async def _dispatch_workflow(
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(branch, {"runner": app.name})
     await _wait_for_workflow_to_complete(
-        unit=app.units[0], workflow=workflow, conclusion=conclusion
+        unit=app.units[0], workflow=workflow, conclusion=conclusion, start_time=start_time
     )
 
 
@@ -474,6 +485,43 @@ async def test_charm_issues_metrics_for_abnormal_termination(
         app=app,
         github_repository=forked_github_repository,
         post_job_status=PostJobStatus.ABNORMAL,
+    )
+
+
+async def test_charm_remounts_shared_fs(
+    model: Model,
+    app: Application,
+    forked_github_repository: Repository,
+    forked_github_branch: Branch,
+):
+    """
+    arrange: A properly integrated charm with a runner registered on the fork repo.
+    act: Dispatch a test workflow and afterwards unmount the shared fs. After that, reconcile.
+    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
+    """
+    await app.set_config({"path": forked_github_repository.full_name})
+    await ensure_charm_has_runner(app=app, model=model)
+
+    # Clear metrics log to make reconciliation event more predictable
+    unit = app.units[0]
+    runner_name = await get_runner_name(unit)
+    await _clear_metrics_log(unit)
+    await _dispatch_workflow(
+        app=app,
+        branch=forked_github_branch,
+        github_repository=forked_github_repository,
+        conclusion="success",
+    )
+
+    # unmount shared fs
+    await run_in_unit(unit, f"sudo umount /home/ubuntu/runner-fs/{runner_name}")
+
+    # Set the number of virtual machines to 0 to speedup reconciliation
+    await app.set_config({"virtual-machines": "0"})
+    await reconcile(app=app, model=model)
+
+    await _assert_events_after_reconciliation(
+        app=app, github_repository=forked_github_repository, post_job_status=PostJobStatus.NORMAL
     )
 
 
