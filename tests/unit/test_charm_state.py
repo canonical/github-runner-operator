@@ -30,7 +30,7 @@ def test_metrics_logging_available_true():
         COS_AGENT_INTEGRATION_NAME: MagicMock(spec=ops.Relation),
         DEBUG_SSH_INTEGRATION_NAME: None,
     }
-    charm.config = {}
+    charm.config = {"runner-storage": "juju-storage"}
 
     state = State.from_charm(charm)
 
@@ -45,7 +45,7 @@ def test_metrics_logging_available_false():
     """
     charm = MagicMock()
     charm.model.relations.__getitem__.return_value = []
-    charm.config = {}
+    charm.config = {"runner-storage": "juju-storage"}
 
     state = State.from_charm(charm)
 
@@ -91,7 +91,7 @@ def test_from_charm_invalid_arch(monkeypatch: pytest.MonkeyPatch):
     mock_machine.return_value = "i686"  # 32 bit is unsupported
     monkeypatch.setattr(platform, "machine", mock_machine)
     mock_charm = MagicMock(spec=GithubRunnerCharm)
-    mock_charm.config = {}
+    mock_charm.config = {"runner-storage": "juju-storage"}
 
     with pytest.raises(CharmConfigInvalidError):
         State.from_charm(mock_charm)
@@ -115,8 +115,8 @@ def test_from_charm_arch(monkeypatch: pytest.MonkeyPatch, arch: str, expected_ar
     mock_machine.return_value = arch
     monkeypatch.setattr(platform, "machine", mock_machine)
     mock_charm = MagicMock(spec=GithubRunnerCharm)
-    mock_charm.config = {}
     mock_charm.model.relations = defaultdict(lambda: None)
+    mock_charm.config = {"runner-storage": "juju-storage"}
 
     state = State.from_charm(mock_charm)
 
@@ -215,6 +215,7 @@ def test_from_charm_ssh_debug_info():
         DEBUG_SSH_INTEGRATION_NAME: [mock_relation],
         COS_AGENT_INTEGRATION_NAME: None,
     }
+    mock_charm.config = {"runner-storage": "juju-storage"}
     mock_charm.app.planned_units.return_value = 1
     mock_charm.app.name = "github-runner-operator"
     mock_charm.unit.name = "github-runner-operator/0"
@@ -224,3 +225,17 @@ def test_from_charm_ssh_debug_info():
     assert str(ssh_debug_info.port) == mock_relation_data["port"]
     assert ssh_debug_info.rsa_fingerprint == mock_relation_data["rsa_fingerprint"]
     assert ssh_debug_info.ed25519_fingerprint == mock_relation_data["ed25519_fingerprint"]
+
+
+def test_invalid_runner_storage():
+    """
+    arrange: Setup mocked charm with juju-storage as runner-storage.
+    act: Change the runner-storage config to memory.
+    assert: Configuration Error raised.
+    """
+    charm = MagicMock()
+    charm.model.relations.__getitem__.return_value = [MagicMock()]
+    charm.config = {"runner-storage": "not-exist"}
+
+    with pytest.raises(CharmConfigInvalidError):
+        State.from_charm(charm)

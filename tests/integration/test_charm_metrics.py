@@ -33,7 +33,7 @@ from tests.integration.helpers import (
     run_in_lxd_instance,
     run_in_unit,
 )
-from tests.status_name import ACTIVE_STATUS_NAME
+from tests.status_name import ACTIVE
 
 TEST_WORKFLOW_NAMES = [
     "Workflow Dispatch Tests",
@@ -130,7 +130,7 @@ async def _integrate_apps(app: Application, model: Model):
     """
     grafana_agent = await model.deploy("grafana-agent", channel="latest/edge")
     await model.relate(f"{app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
-    await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
+    await model.wait_for_idle(apps=[app.name], status=ACTIVE)
     await model.wait_for_idle(apps=[grafana_agent.name])
 
 

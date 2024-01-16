@@ -4,9 +4,11 @@
 """State of the Charm."""
 
 import dataclasses
+import json
 import logging
 import platform
 from enum import Enum
+from pathlib import Path
 from typing import Optional
 
 from ops import CharmBase
@@ -21,6 +23,8 @@ ARCHITECTURES_ARM64 = {"aarch64", "arm64"}
 
 ARCHITECTURES_X86 = {"x86_64"}
 
+CHARM_STATE_PATH = Path("charm_state.json")
+
 
 class ARCH(str, Enum):
     """Supported system architectures."""
@@ -31,6 +35,13 @@ class ARCH(str, Enum):
 
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
 DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
+
+
+class RunnerStorage(str, Enum):
+    """Supported storage as runner disk."""
+
+    JUJU_STORAGE = "juju-storage"
+    MEMORY = "memory"
 
 
 class CharmConfigInvalidError(Exception):
@@ -47,6 +58,34 @@ class CharmConfigInvalidError(Exception):
             msg: Explanation of the error.
         """
         self.msg = msg
+
+
+class CharmConfig(BaseModel):
+    """Charm configuration.
+
+    Attributes:
+        runner_storage: Storage to be used as disk for the runner.
+    """
+
+    runner_storage: RunnerStorage
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "CharmConfig":
+        """Initialize the config from charm.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            Current config of the charm.
+        """
+        try:
+            runner_storage = RunnerStorage(charm.config.get("runner-storage"))
+        except ValueError as err:
+            logger.exception("Invalid runner-storage configuration")
+            raise CharmConfigInvalidError("Invalid runner-storage configuration") from err
+
+        return cls(runner_storage=runner_storage)
 
 
 class ProxyConfig(BaseModel):
@@ -194,13 +233,15 @@ class State:
 
     Attributes:
         is_metrics_logging_available: Whether the charm is able to issue metrics.
-        proxy_config: Whether aproxy should be used.
+        proxy_config: Proxy-related configuration.
+        charm_config: Configuration of the juju charm.
         arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
         ssh_debug_info: The SSH debug connection configuration information.
     """
 
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
+    charm_config: CharmConfig
     arch: ARCH
     ssh_debug_info: Optional[SSHDebugInfo]
 
@@ -214,12 +255,36 @@ class State:
         Returns:
             Current state of the charm.
         """
+        prev_state = None
+        if CHARM_STATE_PATH.exists():
+            json_data = CHARM_STATE_PATH.read_text(encoding="utf-8")
+            prev_state = json.loads(json_data)
+            logger.info("Previous charm state: %s", prev_state)
+
         try:
             proxy_config = ProxyConfig.from_charm(charm)
         except ValidationError as exc:
             logger.error("Invalid proxy config: %s", exc)
             raise CharmConfigInvalidError("Invalid proxy configuration") from exc
 
+        try:
+            charm_config = CharmConfig.from_charm(charm)
+        except ValidationError as exc:
+            logger.error("Invalid charm config: %s", exc)
+            raise CharmConfigInvalidError("Invalid charm configuration") from exc
+
+        if (
+            prev_state is not None
+            and prev_state["charm_config"]["runner_storage"] != charm_config.runner_storage
+        ):
+            logger.warning(
+                "Storage option changed from %s to %s, blocking the charm",
+                prev_state["charm_config"]["runner_storage"],
+                charm_config.runner_storage,
+            )
+            raise CharmConfigInvalidError(
+                "runner-storage config cannot be changed after deployment, redeploy if needed"
+            )
         try:
             arch = _get_supported_arch()
         except UnsupportedArchitectureError as exc:
@@ -232,9 +297,19 @@ class State:
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
-        return cls(
+        state = cls(
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
+            charm_config=charm_config,
             arch=arch,
             ssh_debug_info=ssh_debug_info,
         )
+
+        state_dict = dataclasses.asdict(state)
+        # Convert pydantic object to python object serializable by json module.
+        state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
+        state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
+        json_data = json.dumps(state_dict, ensure_ascii=False)
+        CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
+
+        return state

@@ -28,3 +28,9 @@ provides:
 requires:
   debug-ssh:
     interface: debug-ssh
+
+storage:
+  runner:
+    description: Storage for the root disk of LXD instances hosting the runner application.
+    type: filesystem
+    location: /storage/juju
