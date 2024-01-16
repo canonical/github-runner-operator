@@ -24,3 +24,9 @@ series:
 provides:
   cos-agent:
     interface: cos_agent
+
+storage:
+  runner:
+    description: Storage for the root disk of LXD instances hosting the runner application.
+    type: filesystem
+    location: /storage/juju

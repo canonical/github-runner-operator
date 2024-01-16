@@ -122,7 +122,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                lxd_storage_path=GithubRunnerCharm.ram_pool_path,
+                lxd_storage_path=GithubRunnerCharm.juju_storage_path,
                 charm_state=harness.charm._state,
             ),
             proxies={},
@@ -148,10 +148,37 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                lxd_storage_path=GithubRunnerCharm.ram_pool_path,
+                lxd_storage_path=GithubRunnerCharm.juju_storage_path,
                 charm_state=harness.charm._state,
             ),
             proxies={},
+        )
+
+    @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
+    @patch("pathlib.Path.write_text")
+    @patch("subprocess.run")
+    def test_exceed_free_disk_size(self, run, wt, mkdir, rm):
+        """
+        arrange: Charm with 30GiB of storage for runner.
+        act: Configuration that uses 100GiB of disk.
+        assert: Charm enters block state.
+        """
+        rm.return_value = mock_rm = MagicMock()
+        mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
+        mock_rm.download_latest_runner_image = mock_download_latest_runner_image
+
+        harness = Harness(GithubRunnerCharm)
+        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+        harness.begin()
+
+        harness.update_config({"virtual-machines": 10})
+        harness.charm.on.reconcile_runners.emit()
+        assert harness.charm.unit.status == BlockedStatus(
+            (
+                "Required disk space for runners 102400.0MiB is greater than storage total size "
+                "30720.0MiB"
+            )
         )
 
     @patch("charm.RunnerManager")
@@ -179,7 +206,7 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                lxd_storage_path=GithubRunnerCharm.ram_pool_path,
+                lxd_storage_path=GithubRunnerCharm.juju_storage_path,
                 charm_state=harness.charm._state,
             ),
             proxies={},
@@ -188,7 +215,7 @@ class TestCharm(unittest.TestCase):
         mock_rm.reset_mock()
 
         # update to 10 VMs with 4 cpu and 7GiB memory
-        harness.update_config({"virtual-machines": 10, "vm-cpu": 4})
+        harness.update_config({"virtual-machines": 5, "vm-cpu": 4, "vm-disk": "6GiB"})
         harness.charm.on.reconcile_runners.emit()
         token = harness.charm.service_token
         rm.assert_called_with(
@@ -199,13 +226,13 @@ class TestCharm(unittest.TestCase):
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
-                lxd_storage_path=GithubRunnerCharm.ram_pool_path,
+                lxd_storage_path=GithubRunnerCharm.juju_storage_path,
                 charm_state=harness.charm._state,
             ),
             proxies={},
         )
         mock_rm.reconcile.assert_called_with(
-            10, VirtualMachineResources(cpu=4, memory="7GiB", disk="10GiB")
+            5, VirtualMachineResources(cpu=4, memory="7GiB", disk="6GiB")
         )
         mock_rm.reset_mock()
 

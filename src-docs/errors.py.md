@@ -45,6 +45,15 @@ Represents an error when the shared filesystem could not be deleted.
 
 ---
 
+## <kbd>class</kbd> `GetSharedFilesystemError`
+Represents an error when the shared filesystem could not be retrieved. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `GithubClientError`
 Base class for all github client errors. 
 
@@ -247,8 +256,8 @@ Base class for all shared filesystem errors.
 
 ---
 
-## <kbd>class</kbd> `SharedFilesystemNotFoundError`
-Represents an error when the shared filesystem is not found. 
+## <kbd>class</kbd> `SharedFilesystemMountError`
+Represents an error related to the mounting of the shared filesystem. 
 
 
 

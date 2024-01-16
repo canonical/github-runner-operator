@@ -4,5 +4,5 @@
 from ops.model import ActiveStatus, BlockedStatus
 
 # mypy can not find type of `name` attribute.
-ACTIVE_STATUS_NAME = ActiveStatus.name  # type: ignore
-BLOCKED_STATUS_NAME = BlockedStatus.name  # type: ignore
+ACTIVE = ActiveStatus.name  # type: ignore
+BLOCKED = BlockedStatus.name  # type: ignore

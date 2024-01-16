@@ -16,7 +16,7 @@ from juju.unit import Unit
 
 from runner import Runner
 from runner_manager import RunnerManager
-from tests.status_name import ACTIVE_STATUS_NAME
+from tests.status_name import ACTIVE
 from utilities import retry
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
@@ -292,7 +292,7 @@ async def reconcile(app: Application, model: Model) -> None:
     """
     action = await app.units[0].run_action("reconcile-runners")
     await action.wait()
-    await model.wait_for_idle(apps=[app.name], status=ACTIVE_STATUS_NAME)
+    await model.wait_for_idle(apps=[app.name], status=ACTIVE)
 
 
 async def deploy_github_runner_charm(
@@ -301,6 +301,7 @@ async def deploy_github_runner_charm(
     app_name: str,
     path: str,
     token: str,
+    runner_storage: str,
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
@@ -330,6 +331,10 @@ async def deploy_github_runner_charm(
         }
     )
 
+    storage = {}
+    if runner_storage == "juju-storage":
+        storage["runner"] = {"pool": "rootfs", "size": 11}
+
     application = await model.deploy(
         charm_file,
         application_name=app_name,
@@ -341,9 +346,11 @@ async def deploy_github_runner_charm(
             "denylist": "10.10.0.0/16",
             "test-mode": "insecure",
             "reconcile-interval": reconcile_interval,
+            "runner-storage": runner_storage,
         },
         constraints={"root-disk": 15},
+        storage=storage,
     )
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=60 * 30)
 
+    await model.wait_for_idle(status=ACTIVE, timeout=60 * 30)
     return application
