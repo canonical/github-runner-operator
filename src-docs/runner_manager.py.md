@@ -46,7 +46,7 @@ Construct RunnerManager object for creating and managing runners.
 
 ---
 
-<a href="../src/runner_manager.py#L698"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L707"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `build_runner_image`
 
@@ -88,7 +88,7 @@ Check if runner binary exists.
 ### <kbd>function</kbd> `flush`
 
 ```python
-flush(flush_busy: bool = True, wait_repo_check: bool = False) → int
+flush(force_flush_busy: bool = False, wait_repo_check: bool = False) → int
 ```
 
 Remove existing runners. 
@@ -97,8 +97,8 @@ Remove existing runners.
 
 **Args:**
  
- - <b>`flush_busy`</b>:  Whether to flush busy runners. 
- - <b>`wait_repo_check`</b>:  Whether to wait for busy runner to complete  repo-policy-compliance check before flushing the runners. 
+ - <b>`force_flush_busy`</b>:  Whether to flush busy runners immediately. 
+ - <b>`wait_repo_check`</b>:  Whether to flush busy runners after waiting for  repo-policy-compliance check to complete. 
 
 
 
@@ -173,7 +173,7 @@ Bring runners in line with target.
 
 ---
 
-<a href="../src/runner_manager.py#L708"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L717"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `schedule_build_runner_image`
 

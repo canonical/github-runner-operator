@@ -547,17 +547,33 @@ class RunnerManager:
                 return False
         return True
 
-    def flush(self, flush_busy: bool = True, wait_repo_check: bool = False) -> int:
+    def flush(self, force_flush_busy: bool = False, wait_repo_check: bool = False) -> int:
         """Remove existing runners.
 
         Args:
-            flush_busy: Whether to flush busy runners.
-            wait_repo_check: Whether to wait for busy runner to complete
-                repo-policy-compliance check before flushing the runners.
+            force_flush_busy: Whether to flush busy runners immediately.
+            wait_repo_check: Whether to flush busy runners after waiting for
+                repo-policy-compliance check to complete.
 
         Returns:
             Number of runners removed.
         """
+        remove_token = self._clients.github.get_runner_remove_token(self.config.path)
+
+        # Removing non-busy runners
+        runners = [
+            runner
+            for runner in self._get_runners()
+            if runner.status.exist and not runner.status.busy
+        ]
+
+        logger.info("Removing existing %i non-busy local runners", len(runners))
+
+        remove_count = len(runner)
+        for runner in runners:
+            runner.remove(remove_token)
+            logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
+
         if wait_repo_check:
             for _ in range(5):
                 if not self._runners_in_pre_job():
@@ -571,24 +587,17 @@ class RunnerManager:
                     )
                 )
 
-        if flush_busy:
-            runners = [runner for runner in self._get_runners() if runner.status.exist]
-        else:
-            runners = [
-                runner
-                for runner in self._get_runners()
-                if runner.status.exist and not runner.status.busy
-            ]
+        if force_flush_busy or wait_repo_check:
+            busy_runners = [runner for runner in self._get_runners() if runner.status.exist]
 
-        logger.info("Removing existing %i local runners", len(runners))
+            logger.info("Removing existing %i busy local runners", len(runners))
 
-        remove_token = self._clients.github.get_runner_remove_token(self.config.path)
+            remove_count += len(busy_runners)
+            for runner in busy_runners:
+                runner.remove(remove_token)
+                logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
 
-        for runner in runners:
-            runner.remove(remove_token)
-            logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
-
-        return len(runners)
+        return remove_count
 
     def _generate_runner_name(self) -> str:
         """Generate a runner name based on charm name.

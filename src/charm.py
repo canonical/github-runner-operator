@@ -426,7 +426,7 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = MaintenanceStatus("Starting runners")
         try:
-            runner_manager.flush(flush_busy=False)
+            runner_manager.flush()
             self._reconcile_runners(runner_manager)
         except RunnerError as err:
             logger.exception("Failed to start runners")
@@ -482,7 +482,7 @@ class GithubRunnerCharm(CharmBase):
         if not runner_manager:
             return
 
-        runner_manager.flush()
+        runner_manager.flush(wait_repo_check=True)
         self._reconcile_runners(runner_manager)
 
     @catch_charm_errors
@@ -514,7 +514,7 @@ class GithubRunnerCharm(CharmBase):
             )  # Casting for mypy checks.
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
-                prev_runner_manager.flush(flush_busy=False)
+                prev_runner_manager.flush()
             self._stored.path = self.config["path"]
 
         runner_manager = self._get_runner_manager()
@@ -525,7 +525,7 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
         if self.config["token"] != self._stored.token:
-            runner_manager.flush(flush_busy=False)
+            runner_manager.flush()
             self._stored.token = self.config["token"]
 
     def _check_and_update_dependencies(self) -> bool:
@@ -578,7 +578,7 @@ class GithubRunnerCharm(CharmBase):
 
             self.unit.status = MaintenanceStatus("Flushing runners due to updated deps")
 
-            runner_manager.flush(flush_busy=False, wait_repo_check=True)
+            runner_manager.flush(wait_repo_check=True)
             self._start_services()
 
         self.unit.status = ActiveStatus()
@@ -668,7 +668,7 @@ class GithubRunnerCharm(CharmBase):
         """
         runner_manager = self._get_runner_manager()
 
-        runner_manager.flush()
+        runner_manager.flush(wait_repo_check=True)
         delta = self._reconcile_runners(runner_manager)
 
         self._on_check_runners_action(event)
@@ -699,7 +699,7 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = BlockedStatus(f"Failed to stop charm event timer: {ex}")
 
         runner_manager = self._get_runner_manager()
-        runner_manager.flush()
+        runner_manager.flush(force_flush_busy=True)
 
     def _reconcile_runners(self, runner_manager: RunnerManager) -> Dict[str, Any]:
         """Reconcile the current runners state and intended runner state.
