@@ -254,7 +254,7 @@ async def tmate_ssh_server_app_fixture(
 ) -> AsyncIterator[Application]:
     """tmate-ssh-server charm application related to GitHub-Runner app charm."""
     tmate_app: Application = await model.deploy("tmate-ssh-server", channel="edge")
-    await app.relate("ssh-debug", f"{tmate_app.charm_name}:ssh-debug")
+    await app.relate("debug-ssh", f"{tmate_app.charm_name}:debug-ssh")
     await model.wait_for_idle()
 
     return tmate_app
