@@ -262,6 +262,7 @@ async def tmate_ssh_server_app_fixture(
 
 @pytest_asyncio.fixture(scope="module", name="tmate_ssh_server_unit_ip")
 async def tmate_ssh_server_unit_ip_fixture(
+    model: Model,
     tmate_ssh_server_app: Application,
 ) -> AsyncIterator[str]:
     """tmate-ssh-server charm unit ip."""
@@ -388,7 +389,7 @@ async def app_juju_storage(
 
 
 @pytest_asyncio.fixture(scope="module", name="test_github_branch")
-async def test_github_branch_fixture(github_repository: Repository) -> Iterator[Branch]:
+async def test_github_branch_fixture(github_repository: Repository) -> AsyncIterator[Branch]:
     """Create a new branch for testing, from latest commit in current branch."""
     test_branch = f"test/{secrets.token_hex(4)}"
     branch_ref = github_repository.create_git_ref(

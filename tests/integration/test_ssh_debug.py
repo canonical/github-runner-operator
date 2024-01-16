@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm with ssh-debug integration."""
+import typing
 import zipfile
 from io import BytesIO
 
@@ -9,6 +10,7 @@ import requests
 from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
+from github.WorkflowRun import WorkflowRun
 
 from tests.integration.helpers import wait_for
 
@@ -27,20 +29,33 @@ async def test_ssh_debug(
     """
     # trigger tmate action
     workflow: Workflow = github_repository.get_workflow("workflow_dispatch_ssh_debug.yaml")
-    workflow.create_dispatch(test_github_branch, inputs={"runner": app_name})
+    assert workflow.create_dispatch(
+        test_github_branch, inputs={"runner": app_name}
+    ), "Failed to dispatch workflow"
 
     # get action logs
-    last_run = workflow.get_runs()[0]
+    def latest_workflow_run() -> typing.Optional[WorkflowRun]:
+        """Get latest workflow run."""
+        try:
+            last_run: WorkflowRun = next(workflow.get_runs())
+        except StopIteration:
+            return None
+        if last_run.head_branch != test_github_branch:
+            return None
+        return last_run
+
+    await wait_for(latest_workflow_run)
+    lastest_run = typing.cast(WorkflowRun, latest_workflow_run())
 
     def is_workflow_complete():
         """Return if the workflow is complete."""
-        last_run.update()
-        return last_run.status == "completed"
+        lastest_run.update()
+        return lastest_run.status == "completed"
 
     await wait_for(is_workflow_complete)
 
     response = requests.get(
-        last_run.logs_url,
+        lastest_run.logs_url,
         headers={
             "Accept": "application/vnd.github+json",
             "Authorization": f"Bearer {token}",
