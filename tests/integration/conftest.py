@@ -271,8 +271,8 @@ async def tmate_ssh_server_unit_ip_fixture(
         unit_status: UnitStatus = next(
             iter(status.applications[tmate_ssh_server_app.name].units.values())
         )
-        assert unit_status.address, "Invalid unit address"
-        return unit_status.address
+        assert unit_status.public_address, "Invalid unit address"
+        return unit_status.public_address
     except StopIteration as exc:
         raise StopIteration("Invalid unit status") from exc
 
