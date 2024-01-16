@@ -499,7 +499,9 @@ class GithubRunnerCharm(CharmBase):
         self._refresh_firewall()
         try:
             self._event_timer.ensure_event_timer(
-                "reconcile-runners", self.config["reconcile-interval"]
+                event_name="reconcile-runners",
+                interval=int(self.config["reconcile-interval"]),
+                timeout=int(self.config["reconcile-interval"]) - 1,
             )
         except TimerEnableError as ex:
             logger.exception("Failed to start the event timer")
