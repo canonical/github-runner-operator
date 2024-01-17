@@ -13,7 +13,6 @@ import shutil
 import urllib.error
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional, Sequence, TypeVar
-from urllib.parse import urlsplit
 
 import jinja2
 import ops
@@ -43,11 +42,11 @@ from errors import (
     SubprocessError,
 )
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
-from firewall import Firewall, FirewallEntry
+from firewall import Firewall
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
-from runner_type import GithubOrg, GithubRepo, ProxySetting, VirtualMachineResources
+from runner_type import ProxySetting
 from utilities import bytes_with_unit_to_kib, execute_command, retry
 
 logger = logging.getLogger(__name__)
@@ -313,30 +312,11 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             An instance of RunnerManager.
         """
-        if token is None:
-            token = self.config["token"]
-        if path is None:
-            path = self.config["path"]
-
-        missing_configs = []
-        if not token:
-            missing_configs.append("token")
-        if not path:
-            missing_configs.append("path")
-        if missing_configs:
-            raise MissingConfigurationError(missing_configs)
-
-        dockerhub_mirror = self.config["dockerhub-mirror"] or None
-        dockerhub_mirror_url = urlsplit(dockerhub_mirror)
-        if dockerhub_mirror is not None and dockerhub_mirror_url.scheme != "https":
-            raise ConfigurationError(
-                "Only secured registry supported for dockerhub mirror, the scheme should be https"
-            )
-
         self._ensure_service_health()
 
         size_in_kib = (
-            bytes_with_unit_to_kib(self.config["vm-disk"]) * self.config["virtual-machines"]
+            bytes_with_unit_to_kib(self._state.runner_config.virtual_machine_resources.disk)
+            * self._state.runner_config.virtual_machines
         )
 
         lxd_storage_path = self._ensure_runner_storage(size_in_kib)
@@ -344,29 +324,18 @@ class GithubRunnerCharm(CharmBase):
         if self.service_token is None:
             self.service_token = self._get_service_token()
 
-        if "/" in path:
-            paths = path.split("/")
-            if len(paths) != 2:
-                logger.error("Invalid path %s", path)
-                raise ConfigurationError(f"Invalid path {path}")
-
-            owner, repo = paths
-            path = GithubRepo(owner=owner, repo=repo)
-        else:
-            path = GithubOrg(org=path, group=self.config["group"])
-
         app_name, unit = self.unit.name.rsplit("/", 1)
         return RunnerManager(
             app_name,
             unit,
             RunnerManagerConfig(
-                path=path,
-                token=token,
+                path=self._state.charm_config.path,
+                token=self._state.charm_config.token,
                 image="jammy",
                 service_token=self.service_token,
                 lxd_storage_path=lxd_storage_path,
                 charm_state=self._state,
-                dockerhub_mirror=dockerhub_mirror,
+                dockerhub_mirror=self._state.charm_config.dockerhub_mirror,
             ),
             proxies=self.proxies,
         )
@@ -496,14 +465,14 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of configuration change.
         """
-        if self.config["token"] != self._stored.token:
+        if self._state.charm_config.token != self._stored.token:
             self._start_services()
             self._stored.token = None
 
         self._refresh_firewall()
         try:
             self._event_timer.ensure_event_timer(
-                "reconcile-runners", self.config["reconcile-interval"]
+                "reconcile-runners", self._state.charm_config.reconcile_interval
             )
         except TimerEnableError as ex:
             logger.exception("Failed to start the event timer")
@@ -512,14 +481,14 @@ class GithubRunnerCharm(CharmBase):
             )
             return
 
-        if self.config["path"] != self._stored.path:
+        if self._state.charm_config.path != self._stored.path:
             prev_runner_manager = self._get_runner_manager(
                 path=str(self._stored.path)
             )  # Casting for mypy checks.
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
                 prev_runner_manager.flush(flush_busy=False)
-            self._stored.path = self.config["path"]
+            self._stored.path = self._state.charm_config.path
 
         runner_manager = self._get_runner_manager()
         if runner_manager:
@@ -528,9 +497,9 @@ class GithubRunnerCharm(CharmBase):
         else:
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
-        if self.config["token"] != self._stored.token:
+        if self._state.charm_config.token != self._stored.token:
             runner_manager.flush(flush_busy=False)
-            self._stored.token = self.config["token"]
+            self._stored.token = self._state.charm_config.token
 
     def _check_and_update_dependencies(self) -> bool:
         """Check and updates runner binary and services.
@@ -720,14 +689,9 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = MaintenanceStatus("Reconciling runners")
 
-        virtual_machines_resources = VirtualMachineResources(
-            self.config["vm-cpu"], self.config["vm-memory"], self.config["vm-disk"]
-        )
-
-        virtual_machines = self.config["virtual-machines"]
-
         delta_virtual_machines = runner_manager.reconcile(
-            virtual_machines, virtual_machines_resources
+            self._state.runner_config.virtual_machines,
+            self._state.runner_config.virtual_machine_resources,
         )
 
         self.unit.status = ActiveStatus()
@@ -869,7 +833,7 @@ class GithubRunnerCharm(CharmBase):
         service_content = environment.get_template("repo-policy-compliance.service.j2").render(
             working_directory=str(self.repo_check_web_service_path),
             charm_token=self.service_token,
-            github_token=self.config["token"],
+            github_token=self._state.charm_config.token,
             proxies=self.proxies,
         )
         self.repo_check_systemd_service.write_text(service_content, encoding="utf-8")
@@ -902,15 +866,8 @@ class GithubRunnerCharm(CharmBase):
         # Temp: Monitor the LXD networks to track down issues with missing network.
         logger.info(execute_command(["/snap/bin/lxc", "network", "list", "--format", "json"]))
 
-        firewall_denylist_config = self.config.get("denylist")
-        denylist = []
-        if firewall_denylist_config.strip():
-            denylist = [
-                FirewallEntry.decode(entry.strip())
-                for entry in firewall_denylist_config.split(",")
-            ]
         firewall = Firewall("lxdbr0")
-        firewall.refresh_firewall(denylist)
+        firewall.refresh_firewall(self._state.charm_config.denylist)
         logger.debug(
             "firewall update, current firewall: %s",
             execute_command(["/usr/sbin/nft", "list", "ruleset"]),

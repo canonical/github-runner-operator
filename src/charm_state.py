@@ -10,11 +10,14 @@ import platform
 from enum import Enum
 from pathlib import Path
 from typing import Optional
+from urllib.parse import urlsplit
 
 from ops import CharmBase
 from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
 from pydantic.networks import IPvAnyAddress
 
+from firewall import FirewallEntry
+from runner_type import GithubOrg, GithubPath, GithubRepo, VirtualMachineResources
 from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
@@ -60,13 +63,135 @@ class CharmConfigInvalidError(Exception):
         self.msg = msg
 
 
+def _valid_storage_size_str(size: str) -> bool:
+    """Validate the storage size string.
+
+    Args:
+        size: Storage size string.
+
+    Return:
+        Whether the string is valid.
+    """
+    # Checks whether the string confirms to using the KiB, MiB, GiB, TiB, PiB,
+    # EiB suffix for storage size as specified in config.yaml.
+    valid_suffixes = ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB"]
+    valid = any(suffix == size[-3:] for suffix in valid_suffixes)
+
+    valid = valid or size[:-3].isdigit()
+    return valid
+
+
 class CharmConfig(BaseModel):
-    """Charm configuration.
+    """General charm configuration.
+
+    Some charm configurations are grouped into other configuration models.
 
     Attributes:
+        path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
+            name.
+        token: GitHub personal access token for GitHub API.
+    """
+
+    path: GithubPath
+    token: str
+    reconcile_interval: int
+    denylist: list[str]
+    dockerhub_mirror: str | None
+
+    @classmethod
+    def _parse_path(cls, charm: CharmBase) -> GithubPath:
+        path_str = charm.config.get("path")
+        if not path_str:
+            raise CharmConfigInvalidError("Missing path configuration")
+
+        if "/" in path_str:
+            paths = path_str.split("/")
+            if len(paths) != 2:
+                raise CharmConfigInvalidError(f"Invalid path configuration {path_str}")
+            owner, repo = paths
+            path = GithubRepo(owner=owner, repo=repo)
+        else:
+            runner_group = charm.config.get("group")
+            path = GithubOrg(org=path_str, group=runner_group)
+        return path
+
+    @classmethod
+    def _parse_denylist(cls, charm: CharmBase) -> list[str]:
+        denylist_str = charm.config.get("denylist", "")
+
+        entry_list = [entry.strip() for entry in denylist_str.split(",")]
+        denylist = [FirewallEntry.decode(entry) for entry in entry_list if entry]
+        return denylist
+
+    @classmethod
+    def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
+        dockerhub_mirror = charm.config.get("dockerhub_mirror") or None
+
+        dockerhub_mirror_url = urlsplit(dockerhub_mirror)
+        if dockerhub_mirror is not None and dockerhub_mirror_url.scheme != "https":
+            raise CharmConfigInvalidError(
+                (
+                    "Only secured registry supported for dockerhub-mirror configuration, the "
+                    "scheme should be https"
+                )
+            )
+        return dockerhub_mirror
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "CharmConfig":
+        """Initialize the config from charm.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            Current config of the charm.
+        """
+        path = cls._parse_path(charm)
+
+        token = charm.config.get("token")
+        if not token:
+            raise CharmConfigInvalidError("Missing token configuration")
+
+        try:
+            reconcile_interval = int(charm.config.get("reconcile-interval"))
+        except ValueError as err:
+            raise CharmConfigInvalidError("The reconcile-interval config must be int") as err
+
+
+        denylist = cls._parse_denylist(charm)
+        dockerhub_mirror = cls._parse_dockerhub_mirror(charm)
+
+        return cls(
+            path=path,
+            token=token,
+            reconcile_interval=reconcile_interval,
+            denylist=denylist,
+            dockerhub_mirror=dockerhub_mirror,
+        )
+
+    @root_validator
+    @classmethod
+    def check_fields(cls, values: dict) -> dict:
+        """Validate the general charm configuration."""
+        if values.get["reconcile_interval"] < 2:
+            raise ValueError(
+                "The reconcile_interval configuration needs to be greater or equal to 2"
+            )
+
+        return values
+
+
+class RunnerConfig(BaseModel):
+    """Runner configurations.
+
+    Attributes:
+        virtual_machines: Number of virtual machine-based runner to spawn.
         runner_storage: Storage to be used as disk for the runner.
     """
 
+    virtual_machines: int
+    virtual_machine_resources: VirtualMachineResources
     runner_storage: RunnerStorage
 
     @classmethod
@@ -85,7 +210,32 @@ class CharmConfig(BaseModel):
             logger.exception("Invalid runner-storage configuration")
             raise CharmConfigInvalidError("Invalid runner-storage configuration") from err
 
-        return cls(runner_storage=runner_storage)
+        virtual_machines = charm.config.get("virtual_machines")
+
+        virtual_machines_resources = VirtualMachineResources(
+            charm.config["vm-cpu"], charm.config["vm-memory"], charm.config["vm-disk"]
+        )
+
+        return cls(
+            virtual_machines=virtual_machines,
+            virtual_machines_resources=virtual_machines_resources,
+            runner_storage=runner_storage,
+        )
+
+    @root_validator
+    @classmethod
+    def check_fields(cls, values: dict) -> dict:
+        """Validate the runner configuration."""
+        if values.get["virtual_machines"] < 0:
+            raise ValueError(
+                "The virtual-machines configuration needs to be greater or equal to 0"
+            )
+
+        resources = values.get["virtual_machine_resources"]
+        if resources.cpu < 1:
+            raise ValueError("The vm-cpu configuration needs to be greater than 0")
+
+        return values
 
 
 class ProxyConfig(BaseModel):
@@ -242,6 +392,7 @@ class State:
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
     charm_config: CharmConfig
+    runner_config: RunnerConfig
     arch: ARCH
     ssh_debug_info: Optional[SSHDebugInfo]
 
@@ -273,6 +424,12 @@ class State:
             logger.error("Invalid charm config: %s", exc)
             raise CharmConfigInvalidError("Invalid charm configuration") from exc
 
+        try:
+            runner_config = RunnerConfig.from_charm(charm)
+        except ValidationError as exc:
+            logger.error("Invalid charm config: %s", exc)
+            raise CharmConfigInvalidError("Invalid runner configuration") from exc
+
         if (
             prev_state is not None
             and prev_state["charm_config"]["runner_storage"] != charm_config.runner_storage
@@ -285,6 +442,7 @@ class State:
             raise CharmConfigInvalidError(
                 "runner-storage config cannot be changed after deployment, redeploy if needed"
             )
+
         try:
             arch = _get_supported_arch()
         except UnsupportedArchitectureError as exc:
@@ -301,6 +459,7 @@ class State:
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
             charm_config=charm_config,
+            runner_config=runner_config,
             arch=arch,
             ssh_debug_info=ssh_debug_info,
         )

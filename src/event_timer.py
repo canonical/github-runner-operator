@@ -20,7 +20,7 @@ class TimerDisableError(Exception):
 
 class EventConfig(TypedDict):
     """Configuration used by service and timer templates.
-    
+
     Attributes:
         event: Name of the event.
         interval: Minutes between the event trigger.
