@@ -32,7 +32,7 @@ from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 import metrics
-from charm_state import CharmConfigInvalidError, RunnerStorage, State
+from charm_state import DEBUG_SSH_INTEGRATION_NAME, CharmConfigInvalidError, RunnerStorage, State
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
@@ -188,6 +188,10 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.config_changed, self._on_config_changed)
         self.framework.observe(self.on.start, self._on_start)
         self.framework.observe(self.on.stop, self._on_stop)
+        self.framework.observe(
+            self.on[DEBUG_SSH_INTEGRATION_NAME].relation_changed,
+            self._on_debug_ssh_relation_changed,
+        )
 
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
 
@@ -922,6 +926,11 @@ class GithubRunnerCharm(CharmBase):
             logging.warning("Running 'dpkg --configure -a' as last apt install was interrupted")
             execute_command(["dpkg", "--configure", "-a"])
             execute_command(["/usr/bin/apt-get", "install", "-qy"] + list(packages))
+
+    def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
+        """Handle debug ssh relation changed event."""
+        runner_manager = self._get_runner_manager()
+        runner_manager.flush(flush_busy=False)
 
 
 if __name__ == "__main__":

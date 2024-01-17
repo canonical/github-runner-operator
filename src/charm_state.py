@@ -12,7 +12,8 @@ from pathlib import Path
 from typing import Optional
 
 from ops import CharmBase
-from pydantic import AnyHttpUrl, BaseModel, ValidationError, root_validator
+from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
+from pydantic.networks import IPvAnyAddress
 
 from utilities import get_env_var
 
@@ -33,6 +34,7 @@ class ARCH(str, Enum):
 
 
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
+DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 
 
 class RunnerStorage(str, Enum):
@@ -182,6 +184,49 @@ def _get_supported_arch() -> ARCH:
             raise UnsupportedArchitectureError(arch=arch)
 
 
+class SSHDebugInfo(BaseModel):
+    """SSH connection information for debug workflow.
+
+    Attributes:
+        host: The SSH relay server host IP address inside the VPN.
+        port: The SSH relay server port.
+        rsa_fingerprint: The host SSH server public RSA key fingerprint.
+        ed25519_fingerprint: The host SSH server public ed25519 key fingerprint.
+    """
+
+    host: IPvAnyAddress
+    port: int = Field(0, gt=0, le=65535)
+    rsa_fingerprint: str = Field(pattern="^SHA256:.*")
+    ed25519_fingerprint: str = Field(pattern="^SHA256:.*")
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> Optional["SSHDebugInfo"]:
+        """Initialize the SSHDebugInfo from charm relation data.
+
+        Args:
+            charm: The charm instance.
+        """
+        relations = charm.model.relations[DEBUG_SSH_INTEGRATION_NAME]
+        if not relations or not (relation := relations[0]).units:
+            return None
+        target_unit = next(iter(relation.units))
+        relation_data = relation.data[target_unit]
+        if (
+            not (host := relation_data.get("host"))
+            or not (port := relation_data.get("port"))
+            or not (rsa_fingerprint := relation_data.get("rsa_fingerprint"))
+            or not (ed25519_fingerprint := relation_data.get("ed25519_fingerprint"))
+        ):
+            logger.warning("%s relation data not yet ready.", DEBUG_SSH_INTEGRATION_NAME)
+            return None
+        return SSHDebugInfo(
+            host=host,
+            port=port,
+            rsa_fingerprint=rsa_fingerprint,
+            ed25519_fingerprint=ed25519_fingerprint,
+        )
+
+
 @dataclasses.dataclass(frozen=True)
 class State:
     """The charm state.
@@ -191,12 +236,14 @@ class State:
         proxy_config: Proxy-related configuration.
         charm_config: Configuration of the juju charm.
         arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
+        ssh_debug_info: The SSH debug connection configuration information.
     """
 
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
     charm_config: CharmConfig
     arch: ARCH
+    ssh_debug_info: Optional[SSHDebugInfo]
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "State":
@@ -244,11 +291,18 @@ class State:
             logger.error("Unsupported architecture: %s", exc.arch)
             raise CharmConfigInvalidError(f"Unsupported architecture {exc.arch}") from exc
 
+        try:
+            ssh_debug_info = SSHDebugInfo.from_charm(charm)
+        except ValidationError as exc:
+            logger.error("Invalid SSH debug info: %s.", exc)
+            raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
+
         state = cls(
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
             charm_config=charm_config,
             arch=arch,
+            ssh_debug_info=ssh_debug_info,
         )
 
         state_dict = dataclasses.asdict(state)
