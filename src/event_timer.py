@@ -74,11 +74,16 @@ class EventTimer:
         Raises:
             TimerEnableError: Timer cannot be started. Events will be not emitted.
         """
+        if timeout is not None:
+            timeout_in_secs = timeout * 60
+        else:
+            timeout_in_secs = interval * 30
+
         context: EventConfig = {
             "event": event_name,
             "interval": interval,
             "random_delay": interval // 4,
-            "timeout": timeout * 60 or (interval * 30),
+            "timeout": timeout_in_secs,
             "unit": self.unit_name,
         }
         self._render_event_template("service", event_name, context)

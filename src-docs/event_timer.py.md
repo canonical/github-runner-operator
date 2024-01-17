@@ -48,7 +48,7 @@ Construct the timer manager.
 
 ---
 
-<a href="../src/event_timer.py#L100"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L105"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `disable_event_timer`
 
