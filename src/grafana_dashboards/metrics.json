@@ -46,27 +46,40 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "Jobs per day. Note that the date label indicates the end of a daily interval. For example, the date 01/18 aggregates the data from the 24 hours before (i.e. the day 01/17).",
+      "description": "Each point visualises the aggregation of the last 24 hours.",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
           },
           "custom": {
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "fillOpacity": 80,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
+            "lineInterpolation": "linear",
             "lineWidth": 1,
+            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
             }
           },
           "mappings": [],
@@ -96,24 +109,16 @@
       "id": 3,
       "interval": "1d",
       "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "groupWidth": 0.7,
         "legend": {
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
-        "orientation": "auto",
-        "showValue": "auto",
-        "stacking": "none",
         "tooltip": {
           "mode": "single",
           "sort": "none"
-        },
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 0
+        }
       },
       "pluginVersion": "9.2.1",
       "targets": [
@@ -134,7 +139,7 @@
       "timeFrom": "14d",
       "title": "Jobs per day",
       "transformations": [],
-      "type": "barchart"
+      "type": "timeseries"
     },
     {
       "datasource": {
