@@ -43,7 +43,7 @@ async def test_ssh_debug(
             return None
         return last_run
 
-    await wait_for(latest_workflow_run)
+    await wait_for(latest_workflow_run, timeout=60 * 10, check_interval=60)
     lastest_run = typing.cast(WorkflowRun, latest_workflow_run())
 
     def is_workflow_complete():
@@ -51,7 +51,7 @@ async def test_ssh_debug(
         lastest_run.update()
         return lastest_run.status == "completed"
 
-    await wait_for(is_workflow_complete)
+    await wait_for(is_workflow_complete, timeout=60 * 45, check_interval=60)
 
     response = requests.get(
         lastest_run.logs_url,
