@@ -1,0 +1,27 @@
+name: Issues and Schedule Event Tests
+
+on:
+  schedule:
+  - cron: '*/5 * * * *'  # Replaced by end-to-end test to match 'issues' or 'schedule'
+
+jobs:
+
+  extract-runner-name:
+    runs-on: ubuntu-latest
+    outputs:
+      name: ${{ steps.extract-runner-name.outputs.name }}
+    steps:
+      - name: Extract runner name
+        id: extract-runner-name
+        run: |
+          REPO=${{ github.repository }}
+          RUNNER_NAME=${REPO#${{ github.repository_owner }}/}
+          echo name=$RUNNER_NAME >> $GITHUB_OUTPUT
+
+  issues-schedule-event-tests:
+    needs: [ extract-runner-name ]
+    runs-on: [ self-hosted, linux, x64, "${{ needs.extract-runner-name.outputs.name }}" ]
+    steps:
+      - name: Echo runner name
+        run: |
+          echo "Hello, runner:  ${{ needs.extract-runner-name.outputs.name }}"
