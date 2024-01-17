@@ -391,7 +391,7 @@ async def app_juju_storage(
 @pytest_asyncio.fixture(scope="module", name="test_github_branch")
 async def test_github_branch_fixture(github_repository: Repository) -> AsyncIterator[Branch]:
     """Create a new branch for testing, from latest commit in current branch."""
-    test_branch = f"test/{secrets.token_hex(4)}"
+    test_branch = f"test-{secrets.token_hex(4)}"
     branch_ref = github_repository.create_git_ref(
         ref=f"refs/heads/{test_branch}", sha=Repo().head.commit.hexsha
     )
