@@ -163,7 +163,6 @@ class GithubRunnerCharm(CharmBase):
             path=self.config["path"],  # for detecting changes
             token=self.config["token"],  # for detecting changes
             runner_bin_url=None,
-            runner_image_url=None,
         )
 
         self.proxies: ProxySetting = {}

@@ -48,7 +48,7 @@ Construct the timer manager.
 
 ---
 
-<a href="../src/event_timer.py#L99"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L100"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `disable_event_timer`
 
@@ -96,6 +96,7 @@ The timeout is the number of seconds before an event is timed out. If not set or
  
  - <b>`event_name`</b>:  Name of the juju event to schedule. 
  - <b>`interval`</b>:  Number of minutes between emitting each event. 
+ - <b>`timeout`</b>:  Timeout for each event handle in minutes. 
 
 
 
