@@ -25,6 +25,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
+  "id": 164,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -340,27 +341,6 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
-      },
-      {
-        "current": {
-          "selected": false,
-          "text": ".*",
-          "value": ".*"
-        },
-        "description": "Specify the repositories that can be applied to a panel in the Jobs row. You can use a regular expression to match multiple repositories. Use .* to match all repositories.",
-        "hide": 0,
-        "label": "Repository",
-        "name": "repository",
-        "options": [
-          {
-            "selected": true,
-            "text": ".*",
-            "value": ".*"
-          }
-        ],
-        "query": ".*",
-        "skipUrlSync": false,
-        "type": "textbox"
       }
     ]
   },
