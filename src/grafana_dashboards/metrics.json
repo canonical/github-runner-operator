@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 31,
+  "id": 30,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -40,106 +40,6 @@
       "panels": [],
       "title": "General",
       "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "${lokids}"
-      },
-      "description": "Each point visualises the aggregation of the last 24 hours.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 1
-      },
-      "hideTimeOverride": false,
-      "id": 3,
-      "interval": "1d",
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "9.2.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "code",
-          "expr": "sum by(filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\" | event = `runner_start` [1d]))",
-          "key": "Q-f7c42eab-69be-43b5-a807-35c071f708a0-0",
-          "legendFormat": "Started",
-          "queryType": "range",
-          "refId": "A",
-          "resolution": 1
-        }
-      ],
-      "timeFrom": "14d",
-      "title": "Jobs per day",
-      "transformations": [],
-      "type": "timeseries"
     },
     {
       "datasource": {
@@ -203,10 +103,10 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
+        "x": 0,
         "y": 1
       },
-      "id": 22,
+      "id": 3,
       "options": {
         "legend": {
           "calcs": [],
@@ -270,6 +170,103 @@
         }
       ],
       "title": "Lifecycle Status",
+      "transformations": [],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${lokids}"
+      },
+      "description": "This panel totals the number of idle runners reported by the charm units after a reconciliation event. Note that there may be active runners in the time between reconciliations which will not be shown in this panel.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle_runners=\"idle_runners\" | event=\"reconciliation\" | unwrap idle_runners[60m]))",
+          "hide": false,
+          "legendFormat": "Idle",
+          "queryType": "range",
+          "refId": "D"
+        }
+      ],
+      "title": "Idle Runners after Reconciliation",
       "transformations": [],
       "type": "timeseries"
     },
@@ -412,7 +409,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "This panel totals the number of idle runners reported by the charm units after a reconciliation event. Note that there may be active runners in the time between reconciliations which will not be shown in this panel.",
+      "description": "All aggregations are based on a 1-hour time period.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -448,7 +445,6 @@
               "mode": "off"
             }
           },
-          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -463,7 +459,7 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "s"
         },
         "overrides": []
       },
@@ -473,13 +469,13 @@
         "x": 12,
         "y": 9
       },
-      "id": 7,
+      "id": 4,
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": false
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -492,16 +488,54 @@
             "type": "loki",
             "uid": "${lokids}"
           },
-          "editorMode": "code",
-          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle_runners=\"idle_runners\" | event=\"reconciliation\" | unwrap idle_runners[60m]))",
+          "editorMode": "builder",
+          "expr": "quantile_over_time(0.5,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle=\"idle\" | event=\"runner_start\" | unwrap idle[1h]) by(filename)",
+          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
+          "legendFormat": "50%",
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "builder",
+          "expr": "quantile_over_time(0.95,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle=\"idle\" | event=\"runner_start\" | unwrap idle[1h]) by(filename)",
           "hide": false,
-          "legendFormat": "Idle",
+          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
+          "legendFormat": "95%",
+          "queryType": "range",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "builder",
+          "expr": "quantile_over_time(0.99,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle=\"idle\" | event=\"runner_start\" | unwrap idle[1h]) by(filename)",
+          "hide": false,
+          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
+          "legendFormat": "99%",
           "queryType": "range",
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle=\"idle\" | event=\"runner_start\" | unwrap idle[1h]) by(filename)",
+          "hide": false,
+          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
+          "legendFormat": "Max",
+          "queryType": "range",
+          "refId": "E"
         }
       ],
-      "title": "Idle Runners after Reconciliation",
-      "transformations": [],
+      "title": "Runner Idle Duration (Percentile)",
       "type": "timeseries"
     },
     {
@@ -703,140 +737,6 @@
         "x": 12,
         "y": 17
       },
-      "id": 4,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "builder",
-          "expr": "quantile_over_time(0.5,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle=\"idle\" | event=\"runner_start\" | unwrap idle[1h]) by(filename)",
-          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
-          "legendFormat": "50%",
-          "queryType": "range",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "builder",
-          "expr": "quantile_over_time(0.95,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle=\"idle\" | event=\"runner_start\" | unwrap idle[1h]) by(filename)",
-          "hide": false,
-          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
-          "legendFormat": "95%",
-          "queryType": "range",
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "builder",
-          "expr": "quantile_over_time(0.99,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle=\"idle\" | event=\"runner_start\" | unwrap idle[1h]) by(filename)",
-          "hide": false,
-          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
-          "legendFormat": "99%",
-          "queryType": "range",
-          "refId": "D"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "code",
-          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle=\"idle\" | event=\"runner_start\" | unwrap idle[1h]) by(filename)",
-          "hide": false,
-          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
-          "legendFormat": "Max",
-          "queryType": "range",
-          "refId": "E"
-        }
-      ],
-      "title": "Runner Idle Duration (Percentile)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "${lokids}"
-      },
-      "description": "All aggregations are based on a 1-hour time period.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 25
-      },
       "id": 6,
       "options": {
         "legend": {
@@ -912,7 +812,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 33
+        "y": 25
       },
       "id": 12,
       "panels": [],
@@ -945,7 +845,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 34
+        "y": 26
       },
       "id": 14,
       "options": {
@@ -1013,7 +913,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 34
+        "y": 26
       },
       "id": 20,
       "options": {
@@ -1080,7 +980,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 42
+        "y": 34
       },
       "id": 18,
       "options": {
@@ -1147,7 +1047,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 42
+        "y": 34
       },
       "id": 15,
       "options": {
@@ -1214,7 +1114,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 50
+        "y": 42
       },
       "id": 19,
       "options": {
@@ -1318,7 +1218,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 50
+        "y": 42
       },
       "id": 17,
       "options": {
@@ -1421,7 +1321,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 58
+        "y": 50
       },
       "id": 21,
       "options": {
@@ -1686,6 +1586,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics",
-  "version": 10,
+  "version": 9,
   "weekStart": ""
 }
