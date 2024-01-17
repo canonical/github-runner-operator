@@ -37,10 +37,9 @@ async def test_ssh_debug(
     def latest_workflow_run() -> typing.Optional[WorkflowRun]:
         """Get latest workflow run."""
         try:
-            last_run: WorkflowRun = next(workflow.get_runs())
-        except StopIteration:
-            return None
-        if last_run.head_branch != test_github_branch:
+            # The test branch is unique per test, hence there can only be one run per branch.
+            last_run: WorkflowRun = workflow.get_runs(branch=test_github_branch)[0]
+        except IndexError:
             return None
         return last_run
 
