@@ -249,8 +249,8 @@ async def app_runner(
     return application
 
 
-@pytest_asyncio.fixture(scope="module", name="tmate_ssh_server_app")
-async def tmate_ssh_server_app_fixture(
+@pytest_asyncio.fixture(scope="module", name="app_no_wait")
+async def app_no_wait_fixture(
     model: Model,
     charm_file: str,
     app_name: str,
@@ -260,8 +260,7 @@ async def tmate_ssh_server_app_fixture(
     https_proxy: str,
     no_proxy: str,
 ) -> AsyncIterator[Application]:
-    """tmate-ssh-server charm application related to GitHub-Runner app charm."""
-    # 5 min reconcile period to register flushed runners after relation data changed event.
+    """GitHub runner charm application without waiting for active."""
     app: Application = await deploy_github_runner_charm(
         model=model,
         charm_file=charm_file,
@@ -276,8 +275,16 @@ async def tmate_ssh_server_app_fixture(
         wait_idle=False,
     )
     await app.set_config({"virtual-machines": "1"})
+    return app
+
+
+@pytest_asyncio.fixture(scope="module", name="tmate_ssh_server_app")
+async def tmate_ssh_server_app_fixture(
+    model: Model, app_no_wait: Application
+) -> AsyncIterator[Application]:
+    """tmate-ssh-server charm application related to GitHub-Runner app charm."""
     tmate_app: Application = await model.deploy("tmate-ssh-server", channel="edge")
-    await app.relate("debug-ssh", f"{tmate_app.name}:debug-ssh")
+    await app_no_wait.relate("debug-ssh", f"{tmate_app.name}:debug-ssh")
     await model.wait_for_idle(status=ACTIVE, timeout=60 * 30)
 
     return tmate_app

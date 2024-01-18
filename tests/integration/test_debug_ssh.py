@@ -3,26 +3,28 @@
 
 """Integration tests for github-runner charm with ssh-debug integration."""
 import logging
-import typing
-import zipfile
-from io import BytesIO
+from datetime import datetime, timezone
 
-import requests
 from github.Branch import Branch
 from github.Repository import Repository
-from github.Workflow import Workflow
 from github.WorkflowRun import WorkflowRun
+from juju.application import Application
 
-from tests.integration.helpers import wait_for
+from tests.integration.charm_metrics_helpers import (
+    _get_job_logs,
+    dispatch_workflow,
+    get_workflow_runs,
+)
 
 logger = logging.getLogger(__name__)
 
+SSH_DEBUG_WORKFLOW_FILE_NAME = "workflow_dispatch_ssh_debug.yaml"
+
 
 async def test_ssh_debug(
+    app_no_wait: Application,
     github_repository: Repository,
     test_github_branch: Branch,
-    app_name: str,
-    token: str,
     tmate_ssh_server_unit_ip: str,
 ):
     """
@@ -32,54 +34,26 @@ async def test_ssh_debug(
     """
     # trigger tmate action
     logger.info("Dispatching workflow_dispatch_ssh_debug.yaml workflow.")
-    workflow: Workflow = github_repository.get_workflow("workflow_dispatch_ssh_debug.yaml")
-    assert workflow.create_dispatch(
-        test_github_branch, inputs={"runner": app_name}
-    ), "Failed to dispatch workflow"
+    start_time = datetime.now(timezone.utc)
 
-    # get action logs
-    def latest_workflow_run() -> typing.Optional[WorkflowRun]:
-        """Get latest workflow run."""
-        try:
-            logger.info("Fetching latest workflow run on branch %s.", test_github_branch.name)
-            # The test branch is unique per test, hence there can only be one run per branch.
-            last_run: WorkflowRun = workflow.get_runs(branch=test_github_branch)[0]
-        except IndexError:
-            return None
-        return last_run
-
-    await wait_for(latest_workflow_run, timeout=60 * 10, check_interval=60)
-    lastest_run = typing.cast(WorkflowRun, latest_workflow_run())
-
-    def is_workflow_complete():
-        """Return if the workflow is complete."""
-        lastest_run.update()
-        logger.info("Fetched latest workflow status %s.", lastest_run.status)
-        return lastest_run.status == "completed"
-
-    await wait_for(is_workflow_complete, timeout=60 * 45, check_interval=60)
-
-    response = requests.get(
-        lastest_run.logs_url,
-        headers={
-            "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {token}",
-            "X-GitHub-Api-Version": "2022-11-28",
-        },
+    workflow = await dispatch_workflow(
+        app=app_no_wait,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="completed",
+        workflow_id_or_name=SSH_DEBUG_WORKFLOW_FILE_NAME,
     )
-    zip_data = BytesIO(response.content)
-    with zipfile.ZipFile(zip_data, "r") as zip_ref:
-        logger.info("Files: %s", zip_ref.namelist())
-        tmate_log_filename = next(
-            iter(
-                [
-                    name
-                    for name in zip_ref.namelist()
-                    if "workflow-dispatch-tests/3_Setup tmate session.txt" == name
-                ]
-            )
+
+    latest_run: WorkflowRun = next(
+        get_workflow_runs(
+            start_time=start_time,
+            workflow=workflow,
+            runner_name=app_no_wait.name,
+            branch=test_github_branch,
         )
-        logs = str(zip_ref.read(tmate_log_filename), encoding="utf-8")
+    )
+
+    logs = _get_job_logs(latest_run.jobs("latest")[0])
 
     # ensure ssh connection info printed in logs.
     logger.info("Logs: %s", logs)

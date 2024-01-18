@@ -6,6 +6,7 @@
 
 import json
 import logging
+import typing
 from datetime import datetime, timezone
 from time import sleep
 
@@ -13,6 +14,8 @@ import requests
 from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
+from github.WorkflowJob import WorkflowJob
+from github.WorkflowRun import WorkflowRun
 from juju.application import Application
 from juju.unit import Unit
 
@@ -51,6 +54,39 @@ async def _wait_until_runner_is_used_up(runner_name: str, unit: Unit):
         assert False, "Timeout while waiting for the runner to be used up"
 
 
+def _get_job_logs(job: WorkflowJob) -> str:
+    """Retrieve a workflow's job logs.
+
+    Args:
+        job: The target job to fetch the logs from.
+
+    Returns:
+        The job logs.
+    """
+    logs_url = job.logs_url()
+    logs = requests.get(logs_url).content.decode("utf-8")
+    return logs
+
+
+def get_workflow_runs(
+    start_time: datetime, workflow: Workflow, runner_name: str, branch: Branch = None
+) -> typing.Generator[WorkflowRun, None, None]:
+    """Fetch the latest matching runs of a workflow for a given runner.
+
+    Args:
+        start_time: The start time of the workflow.
+        workflow: The target workflow to get the run for.
+        runner_name: The runner name the workflow job is assigned to.
+        branch: The branch the workflow is run on.
+    """
+    for run in workflow.get_runs(created=f">={start_time.isoformat()}", branch=branch):
+        latest_job: WorkflowJob = run.jobs()[0]
+        logs = _get_job_logs(job=latest_job)
+
+        if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
+            yield run
+
+
 async def _assert_workflow_run_conclusion(
     runner_name: str, conclusion: str, workflow: Workflow, start_time: datetime
 ):
@@ -63,11 +99,11 @@ async def _assert_workflow_run_conclusion(
         start_time: The start time of the workflow.
     """
     for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
-        logs_url = run.jobs()[0].logs_url()
-        logs = requests.get(logs_url).content.decode("utf-8")
+        latest_job: WorkflowJob = run.jobs()[0]
+        logs = _get_job_logs(job=latest_job)
 
         if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
-            assert run.jobs()[0].conclusion == conclusion
+            assert latest_job.conclusion == conclusion
 
 
 async def _wait_for_workflow_to_complete(
@@ -190,7 +226,11 @@ async def _cancel_workflow_run(unit: Unit, workflow: Workflow):
 
 
 async def dispatch_workflow(
-    app: Application, branch: Branch, github_repository: Repository, conclusion: str
+    app: Application,
+    branch: Branch,
+    github_repository: Repository,
+    conclusion: str,
+    workflow_id_or_name: str = DISPATCH_TEST_WORKFLOW_FILENAME,
 ):
     """Dispatch a workflow on a branch for the runner to run.
 
@@ -201,10 +241,13 @@ async def dispatch_workflow(
         branch: The branch to dispatch the workflow on.
         github_repository: The github repository to dispatch the workflow on.
         conclusion: The expected workflow run conclusion.
+
+    Returns:
+        A completed workflow.
     """
     start_time = datetime.now(timezone.utc)
 
-    workflow = github_repository.get_workflow(id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME)
+    workflow = github_repository.get_workflow(id_or_file_name=workflow_id_or_name)
     if conclusion == "failure":
         workflow = github_repository.get_workflow(
             id_or_file_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME
@@ -215,6 +258,7 @@ async def dispatch_workflow(
     await _wait_for_workflow_to_complete(
         unit=app.units[0], workflow=workflow, conclusion=conclusion, start_time=start_time
     )
+    return workflow
 
 
 async def assert_events_after_reconciliation(
