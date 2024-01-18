@@ -162,7 +162,6 @@ class GithubRunnerCharm(CharmBase):
             path=self.config["path"],  # for detecting changes
             token=self.config["token"],  # for detecting changes
             runner_bin_url=None,
-            runner_image_url=None,
         )
 
         self.proxies: ProxySetting = {}
@@ -472,7 +471,9 @@ class GithubRunnerCharm(CharmBase):
         self._refresh_firewall()
         try:
             self._event_timer.ensure_event_timer(
-                "reconcile-runners", self._state.charm_config.reconcile_interval
+                event_name="reconcile-runners",
+                interval=int(self.config["reconcile-interval"]),
+                timeout=int(self.config["reconcile-interval"]) - 1,
             )
         except TimerEnableError as ex:
             logger.exception("Failed to start the event timer")
