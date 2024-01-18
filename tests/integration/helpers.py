@@ -307,6 +307,7 @@ async def deploy_github_runner_charm(
     https_proxy: str,
     no_proxy: str,
     reconcile_interval: int,
+    wait_idle: bool = True,
 ) -> Application:
     """Deploy github-runner charm.
 
@@ -320,6 +321,7 @@ async def deploy_github_runner_charm(
         https_proxy: HTTPS proxy for the application to use.
         no_proxy: No proxy configuration for the application.
         reconcile_interval: Time between reconcile for the application.
+        wait_idle: wait for model to become idle.
     """
     subprocess.run(["sudo", "modprobe", "br_netfilter"])
 
@@ -353,7 +355,9 @@ async def deploy_github_runner_charm(
         storage=storage,
     )
 
-    await model.wait_for_idle(status=ACTIVE, timeout=60 * 30)
+    if wait_idle:
+        await model.wait_for_idle(status=ACTIVE, timeout=60 * 30)
+
     return application
 
 

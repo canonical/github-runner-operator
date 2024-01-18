@@ -27,6 +27,7 @@ from tests.integration.helpers import (
     reconcile,
     wait_for,
 )
+from tests.status_name import ACTIVE
 
 
 @pytest.fixture(scope="module")
@@ -250,12 +251,34 @@ async def app_runner(
 
 @pytest_asyncio.fixture(scope="module", name="tmate_ssh_server_app")
 async def tmate_ssh_server_app_fixture(
-    model: Model, app: Application
+    model: Model,
+    charm_file: str,
+    app_name: str,
+    path: str,
+    token: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
 ) -> AsyncIterator[Application]:
     """tmate-ssh-server charm application related to GitHub-Runner app charm."""
+    # 5 min reconcile period to register flushed runners after relation data changed event.
+    app: Application = await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=app_name,
+        path=path,
+        token=token,
+        runner_storage="memory",
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=60,
+        wait_idle=False,
+    )
+    await app.set_config({"virtual-machines": "1"})
     tmate_app: Application = await model.deploy("tmate-ssh-server", channel="edge")
     await app.relate("debug-ssh", f"{tmate_app.name}:debug-ssh")
-    await model.wait_for_idle(raise_on_error=False, timeout=60 * 30)
+    await model.wait_for_idle(status=ACTIVE, timeout=60 * 30)
 
     return tmate_app
 

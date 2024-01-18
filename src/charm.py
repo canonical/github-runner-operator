@@ -931,6 +931,7 @@ class GithubRunnerCharm(CharmBase):
         """Handle debug ssh relation changed event."""
         runner_manager = self._get_runner_manager()
         runner_manager.flush(flush_busy=False)
+        self._reconcile_runners(runner_manager)
 
 
 if __name__ == "__main__":

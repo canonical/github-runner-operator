@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm with ssh-debug integration."""
+import logging
 import typing
 import zipfile
 from io import BytesIO
@@ -13,6 +14,8 @@ from github.Workflow import Workflow
 from github.WorkflowRun import WorkflowRun
 
 from tests.integration.helpers import wait_for
+
+logger = logging.getLogger(__name__)
 
 
 async def test_ssh_debug(
@@ -28,6 +31,7 @@ async def test_ssh_debug(
     assert: the ssh connection info from action-log and tmate-ssh-server matches.
     """
     # trigger tmate action
+    logger.info("Dispatching workflow_dispatch_ssh_debug.yaml workflow.")
     workflow: Workflow = github_repository.get_workflow("workflow_dispatch_ssh_debug.yaml")
     assert workflow.create_dispatch(
         test_github_branch, inputs={"runner": app_name}
@@ -37,6 +41,7 @@ async def test_ssh_debug(
     def latest_workflow_run() -> typing.Optional[WorkflowRun]:
         """Get latest workflow run."""
         try:
+            logger.info("Fetching latest workflow run on branch %s.", test_github_branch.name)
             # The test branch is unique per test, hence there can only be one run per branch.
             last_run: WorkflowRun = workflow.get_runs(branch=test_github_branch)[0]
         except IndexError:
@@ -49,6 +54,7 @@ async def test_ssh_debug(
     def is_workflow_complete():
         """Return if the workflow is complete."""
         lastest_run.update()
+        logger.info("Fetched latest workflow status %s.", lastest_run.status)
         return lastest_run.status == "completed"
 
     await wait_for(is_workflow_complete, timeout=60 * 45, check_interval=60)
