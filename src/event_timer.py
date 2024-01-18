@@ -69,15 +69,21 @@ class EventTimer:
         Args:
             event_name: Name of the juju event to schedule.
             interval: Number of minutes between emitting each event.
+            timeout: Timeout for each event handle in minutes.
 
         Raises:
             TimerEnableError: Timer cannot be started. Events will be not emitted.
         """
+        if timeout is not None:
+            timeout_in_secs = timeout * 60
+        else:
+            timeout_in_secs = interval * 30
+
         context: EventConfig = {
             "event": event_name,
             "interval": interval,
             "random_delay": interval // 4,
-            "timeout": timeout or (interval * 30),
+            "timeout": timeout_in_secs,
             "unit": self.unit_name,
         }
         self._render_event_template("service", event_name, context)

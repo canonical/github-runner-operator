@@ -34,7 +34,7 @@ jobs:
           EOF
 
       - name: Cache github-runner Charm
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: cache-charm
         with:
           path: github-runner_ubuntu-22.04-amd64.charm

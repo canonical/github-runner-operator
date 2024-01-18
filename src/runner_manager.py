@@ -402,13 +402,14 @@ class RunnerManager:
         logger.info("Attempting to add %i runner(s).", count)
         for _ in range(count):
             config = RunnerConfig(
-                name=self._generate_runner_name(),
                 app_name=self.app_name,
+                dockerhub_mirror=self.config.dockerhub_mirror,
+                issue_metrics=self.config.are_metrics_enabled,
+                lxd_storage_path=self.config.lxd_storage_path,
                 path=self.config.path,
                 proxies=self.proxies,
-                lxd_storage_path=self.config.lxd_storage_path,
-                issue_metrics=self.config.are_metrics_enabled,
-                dockerhub_mirror=self.config.dockerhub_mirror,
+                name=self._generate_runner_name(),
+                ssh_debug_info=self.config.charm_state.ssh_debug_info,
             )
             runner = Runner(self._clients, config, RunnerStatus())
             try:
@@ -603,13 +604,14 @@ class RunnerManager:
             busy = getattr(remote_runner, "busy", None)
 
             config = RunnerConfig(
-                name=name,
                 app_name=self.app_name,
+                dockerhub_mirror=self.config.dockerhub_mirror,
+                issue_metrics=self.config.are_metrics_enabled,
+                lxd_storage_path=self.config.lxd_storage_path,
+                name=name,
                 path=self.config.path,
                 proxies=self.proxies,
-                lxd_storage_path=self.config.lxd_storage_path,
-                issue_metrics=self.config.are_metrics_enabled,
-                dockerhub_mirror=self.config.dockerhub_mirror,
+                ssh_debug_info=self.config.charm_state.ssh_debug_info,
             )
             return Runner(
                 self._clients,

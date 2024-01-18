@@ -25,6 +25,10 @@ provides:
   cos-agent:
     interface: cos_agent
 
+requires:
+  debug-ssh:
+    interface: debug-ssh
+
 storage:
   runner:
     description: Storage for the root disk of LXD instances hosting the runner application.
