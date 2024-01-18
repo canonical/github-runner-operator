@@ -14,4 +14,4 @@ jobs:
     steps:
     - name: Setup tmate session
       uses: canonical/action-tmate@chore/env_var_change
-      timeout-minutes: 1
+      timeout-minutes: 5
