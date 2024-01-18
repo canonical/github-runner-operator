@@ -69,11 +69,19 @@ async def test_ssh_debug(
     )
     zip_data = BytesIO(response.content)
     with zipfile.ZipFile(zip_data, "r") as zip_ref:
+        logger.info("Files: %s", zip_ref.namelist())
         tmate_log_filename = next(
-            iter([name for name in zip_ref.namelist() if "Setup tmate session" in name])
+            iter(
+                [
+                    name
+                    for name in zip_ref.namelist()
+                    if "workflow-dispatch-tests/3_Setup tmate session.txt" == name
+                ]
+            )
         )
         logs = str(zip_ref.read(tmate_log_filename), encoding="utf-8")
 
     # ensure ssh connection info printed in logs.
+    logger.info("Logs: %s", logs)
     assert tmate_ssh_server_unit_ip in logs, "Tmate ssh server IP not found in action logs."
     assert "10022" in logs, "Tmate ssh server connection port not found in action logs."

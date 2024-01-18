@@ -87,6 +87,8 @@ retry '/snap/bin/lxc exec builder -- /usr/bin/nslookup github.com' 'Wait for net
 /snap/bin/lxc exec builder -- /usr/bin/apt-get update
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get upgrade -yq
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get install linux-generic-hwe-22.04 -yq
+# This will remove older version of kernel as HWE is installed now.
+/snap/bin/lxc exec builder -- /usr/bin/apt-get autoremove --purge
 
 /snap/bin/lxc restart builder
 retry '/snap/bin/lxc exec builder -- /usr/bin/who' 'Wait for lxd agent to be ready' 30
@@ -106,6 +108,10 @@ fi
 /snap/bin/lxc exec builder -- /usr/sbin/usermod -aG microk8s ubuntu
 /snap/bin/lxc exec builder -- /usr/sbin/usermod -aG docker ubuntu
 /snap/bin/lxc exec builder -- /usr/sbin/iptables -I DOCKER-USER -j ACCEPT
+
+# Reduce image size
+/snap/bin/lxc exec builder -- /usr/bin/npm cache clean --force
+/snap/bin/lxc exec builder -- /usr/bin/apt-get clean
 
 # Download and verify checksum of yq
 if [[ $(uname -m) == 'aarch64' ]]; then
