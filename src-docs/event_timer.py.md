@@ -14,6 +14,16 @@ Configuration used by service and timer templates.
 
 
 
+**Attributes:**
+ 
+ - <b>`event`</b>:  Name of the event. 
+ - <b>`interval`</b>:  Minutes between the event trigger. 
+ - <b>`random_delay`</b>:  Minutes of random delay added between event trigger. 
+ - <b>`timeout`</b>:  Minutes before the event handle is timeout. 
+ - <b>`unit`</b>:  Name of the juju unit. 
+
+
+
 
 
 ---
@@ -27,7 +37,7 @@ Manages the timer to emit juju events at regular intervals.
  
  - <b>`unit_name`</b> (str):  Name of the juju unit to emit events to. 
 
-<a href="../src/event_timer.py#L40"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -48,7 +58,7 @@ Construct the timer manager.
 
 ---
 
-<a href="../src/event_timer.py#L105"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L113"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `disable_event_timer`
 
@@ -72,7 +82,7 @@ Disable the systemd timer for the given event.
 
 ---
 
-<a href="../src/event_timer.py#L61"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L69"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `ensure_event_timer`
 

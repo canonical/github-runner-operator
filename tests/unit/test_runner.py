@@ -12,10 +12,10 @@ import jinja2
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
+from charm_state import GithubOrg, GithubRepo, VirtualMachineResources
 from errors import CreateSharedFilesystemError, RunnerCreateError, RunnerRemoveError
 from runner import CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerManagerClients
-from runner_type import GithubOrg, GithubRepo, VirtualMachineResources
 from shared_fs import SharedFilesystem
 from tests.unit.mock import (
     MockLxdClient,

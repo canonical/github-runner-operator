@@ -12,7 +12,7 @@ import secrets
 import shutil
 import urllib.error
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional, Sequence, TypeVar
+from typing import Any, Callable, Dict, Sequence, TypeVar
 
 import jinja2
 import ops
@@ -251,7 +251,7 @@ class GithubRunnerCharm(CharmBase):
         Raises:
             RunnerError: Unable to setup storage for runner.
         """
-        match self._state.charm_config.runner_storage:
+        match self._state.runner_config.runner_storage:
             case RunnerStorage.MEMORY:
                 logger.info("Creating tmpfs storage")
                 path = self.ram_pool_path
@@ -298,15 +298,8 @@ class GithubRunnerCharm(CharmBase):
             logger.info("Restart repo-policy-compliance service")
             raise
 
-    def _get_runner_manager(
-        self, token: Optional[str] = None, path: Optional[str] = None
-    ) -> RunnerManager:
-        """Get a RunnerManager instance, or None if missing config.
-
-        Args:
-            token: GitHub personal access token to manager the runners with.
-            path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
-                name.
+    def _get_runner_manager(self) -> RunnerManager:
+        """Get a RunnerManager instance.
 
         Returns:
             An instance of RunnerManager.
@@ -483,9 +476,7 @@ class GithubRunnerCharm(CharmBase):
             return
 
         if self._state.charm_config.path != self._stored.path:
-            prev_runner_manager = self._get_runner_manager(
-                path=str(self._stored.path)
-            )  # Casting for mypy checks.
+            prev_runner_manager = self._get_runner_manager()
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
                 prev_runner_manager.flush(flush_busy=False)

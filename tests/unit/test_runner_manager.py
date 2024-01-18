@@ -11,14 +11,14 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 import shared_fs
-from charm_state import ARCH, State
+from charm_state import ARCH, GithubOrg, GithubRepo, State, VirtualMachineResources
 from errors import IssueMetricEventError, RunnerBinaryError
 from github_type import RunnerApplication
 from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
 from runner import Runner, RunnerStatus
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
-from runner_type import GithubOrg, GithubRepo, RunnerByHealth, VirtualMachineResources
+from runner_type import RunnerByHealth
 from shared_fs import SharedFilesystem
 from tests.unit.mock import TEST_BINARY
 

@@ -9,7 +9,7 @@ import logging
 import platform
 from enum import Enum
 from pathlib import Path
-from typing import Optional
+from typing import NamedTuple, Optional, Union
 from urllib.parse import urlsplit
 
 from ops import CharmBase
@@ -17,7 +17,6 @@ from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validat
 from pydantic.networks import IPvAnyAddress
 
 from firewall import FirewallEntry
-from runner_type import GithubOrg, GithubPath, GithubRepo, VirtualMachineResources
 from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
@@ -27,6 +26,41 @@ ARCHITECTURES_ARM64 = {"aarch64", "arm64"}
 ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
+
+
+@dataclasses.dataclass
+class GithubRepo:
+    """Represent GitHub repository."""
+
+    owner: str
+    repo: str
+
+    def path(self) -> str:
+        """Return a string representing the path."""
+        return f"{self.owner}/{self.repo}"
+
+
+@dataclasses.dataclass
+class GithubOrg:
+    """Represent GitHub organization."""
+
+    org: str
+    group: str
+
+    def path(self) -> str:
+        """Return a string representing the path."""
+        return self.org
+
+
+GithubPath = Union[GithubOrg, GithubRepo]
+
+
+class VirtualMachineResources(NamedTuple):
+    """Virtual machine resource configuration."""
+
+    cpu: int
+    memory: str
+    disk: str
 
 
 class ARCH(str, Enum):
@@ -104,6 +138,7 @@ class CharmConfig(BaseModel):
         if not path_str:
             raise CharmConfigInvalidError("Missing path configuration")
 
+        path: GithubPath
         if "/" in path_str:
             paths = path_str.split("/")
             if len(paths) != 2:
@@ -111,7 +146,7 @@ class CharmConfig(BaseModel):
             owner, repo = paths
             path = GithubRepo(owner=owner, repo=repo)
         else:
-            runner_group = charm.config.get("group")
+            runner_group = charm.config.get("group", "")
             path = GithubOrg(org=path_str, group=runner_group)
         return path
 
@@ -154,10 +189,9 @@ class CharmConfig(BaseModel):
             raise CharmConfigInvalidError("Missing token configuration")
 
         try:
-            reconcile_interval = int(charm.config.get("reconcile-interval"))
+            reconcile_interval = int(charm.config["reconcile-interval"])
         except ValueError as err:
-            raise CharmConfigInvalidError("The reconcile-interval config must be int") as err
-
+            raise CharmConfigInvalidError("The reconcile-interval config must be int") from err
 
         denylist = cls._parse_denylist(charm)
         dockerhub_mirror = cls._parse_dockerhub_mirror(charm)
@@ -174,7 +208,12 @@ class CharmConfig(BaseModel):
     @classmethod
     def check_fields(cls, values: dict) -> dict:
         """Validate the general charm configuration."""
-        if values.get["reconcile_interval"] < 2:
+        reconcile_interval = values.get("reconcile_interval")
+        # By property definition, this cannot be None.
+        assert reconcile_interval is not None, "Unreachable code"
+
+        if reconcile_interval < 2:
+            logger.exception("The virtual-machines configuration must be int")
             raise ValueError(
                 "The reconcile_interval configuration needs to be greater or equal to 2"
             )
@@ -195,7 +234,7 @@ class RunnerConfig(BaseModel):
     runner_storage: RunnerStorage
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "CharmConfig":
+    def from_charm(cls, charm: CharmBase) -> "RunnerConfig":
         """Initialize the config from charm.
 
         Args:
@@ -205,20 +244,29 @@ class RunnerConfig(BaseModel):
             Current config of the charm.
         """
         try:
-            runner_storage = RunnerStorage(charm.config.get("runner-storage"))
+            runner_storage = RunnerStorage(charm.config["runner-storage"])
         except ValueError as err:
-            logger.exception("Invalid runner-storage configuration")
             raise CharmConfigInvalidError("Invalid runner-storage configuration") from err
 
-        virtual_machines = charm.config.get("virtual_machines")
+        try:
+            virtual_machines = int(charm.config["virtual_machines"])
+        except ValueError as err:
+            raise CharmConfigInvalidError(
+                "The virtual-machines configuration must be int"
+            ) from err
 
-        virtual_machines_resources = VirtualMachineResources(
-            charm.config["vm-cpu"], charm.config["vm-memory"], charm.config["vm-disk"]
+        try:
+            cpu = int(charm.config["vm-cpu"])
+        except ValueError as err:
+            raise CharmConfigInvalidError("Invalid vm-cpu configuration") from err
+
+        virtual_machine_resources = VirtualMachineResources(
+            cpu, charm.config["vm-memory"], charm.config["vm-disk"]
         )
 
         return cls(
             virtual_machines=virtual_machines,
-            virtual_machines_resources=virtual_machines_resources,
+            virtual_machine_resources=virtual_machine_resources,
             runner_storage=runner_storage,
         )
 
@@ -226,14 +274,23 @@ class RunnerConfig(BaseModel):
     @classmethod
     def check_fields(cls, values: dict) -> dict:
         """Validate the runner configuration."""
-        if values.get["virtual_machines"] < 0:
+        virtual_machines = values.get("virtual_machines")
+        resources = values.get("virtual_machine_resources")
+        # By property definition, these cannot be None.
+        assert virtual_machines is not None, "Unreachable code"
+        assert resources is not None, "Unreachable code"
+
+        if virtual_machines < 0:
             raise ValueError(
                 "The virtual-machines configuration needs to be greater or equal to 0"
             )
 
-        resources = values.get["virtual_machine_resources"]
         if resources.cpu < 1:
             raise ValueError("The vm-cpu configuration needs to be greater than 0")
+        if _valid_storage_size_str(resources.memory):
+            raise ValueError("Invalid vm-memory configuration")
+        if _valid_storage_size_str(resources.disk):
+            raise ValueError("Invalid vm-disk configuration")
 
         return values
 
@@ -432,12 +489,12 @@ class State:
 
         if (
             prev_state is not None
-            and prev_state["charm_config"]["runner_storage"] != charm_config.runner_storage
+            and prev_state["runner_config"]["runner_storage"] != runner_config.runner_storage
         ):
             logger.warning(
                 "Storage option changed from %s to %s, blocking the charm",
-                prev_state["charm_config"]["runner_storage"],
-                charm_config.runner_storage,
+                prev_state["runner_config"]["runner_storage"],
+                runner_config.runner_storage,
             )
             raise CharmConfigInvalidError(
                 "runner-storage config cannot be changed after deployment, redeploy if needed"

@@ -11,7 +11,7 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
-from charm_state import ARCH
+from charm_state import ARCH, GithubOrg, GithubRepo, VirtualMachineResources
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
@@ -21,7 +21,6 @@ from errors import (
 )
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
-from runner_type import GithubOrg, GithubRepo, VirtualMachineResources
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
