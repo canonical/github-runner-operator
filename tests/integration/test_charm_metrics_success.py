@@ -15,7 +15,6 @@ from juju.model import Model
 
 from runner_metrics import PostJobStatus
 from tests.integration.charm_metrics_helpers import (
-    DISPATCH_TEST_WORKFLOW_FILENAME,
     assert_events_after_reconciliation,
     clear_metrics_log,
     dispatch_workflow,
@@ -23,6 +22,7 @@ from tests.integration.charm_metrics_helpers import (
     print_loop_device_info,
 )
 from tests.integration.helpers import (
+    DISPATCH_TEST_WORKFLOW_FILENAME,
     ensure_charm_has_runner,
     get_runner_name,
     reconcile,

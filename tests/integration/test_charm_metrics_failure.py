@@ -14,7 +14,6 @@ from juju.model import Model
 import runner_logs
 from runner_metrics import PostJobStatus
 from tests.integration.charm_metrics_helpers import (
-    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     _cancel_workflow_run,
     _wait_for_workflow_to_start,
     assert_events_after_reconciliation,
@@ -25,6 +24,7 @@ from tests.integration.charm_metrics_helpers import (
 )
 from tests.integration.helpers import (
     DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
+    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     ensure_charm_has_runner,
     get_runner_name,
     reconcile,
