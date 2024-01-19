@@ -14,6 +14,7 @@ from juju.model import Model
 import runner_logs
 from runner_metrics import PostJobStatus
 from tests.integration.charm_metrics_helpers import (
+    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     _cancel_workflow_run,
     _wait_for_workflow_to_start,
     assert_events_after_reconciliation,
@@ -71,6 +72,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
         branch=forked_github_branch,
         github_repository=forked_github_repository,
         conclusion="failure",
+        workflow_id_or_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     )
 
     # Set the number of virtual machines to 0 to speedup reconciliation

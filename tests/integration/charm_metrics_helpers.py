@@ -103,7 +103,10 @@ async def _assert_workflow_run_conclusion(
         logs = _get_job_logs(job=latest_job)
 
         if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
-            assert latest_job.conclusion == conclusion
+            assert latest_job.conclusion == conclusion, (
+                f"Job {latest_job.name} for {runner_name} expected {conclusion}, "
+                f"got {latest_job.conclusion}"
+            )
 
 
 async def _wait_for_workflow_to_complete(
@@ -230,7 +233,7 @@ async def dispatch_workflow(
     branch: Branch,
     github_repository: Repository,
     conclusion: str,
-    workflow_id_or_name: str = DISPATCH_TEST_WORKFLOW_FILENAME,
+    workflow_id_or_name: str,
 ):
     """Dispatch a workflow on a branch for the runner to run.
 
@@ -241,6 +244,8 @@ async def dispatch_workflow(
         branch: The branch to dispatch the workflow on.
         github_repository: The github repository to dispatch the workflow on.
         conclusion: The expected workflow run conclusion.
+        workflow_id_or_name: The workflow filename in .github/workflows in main branch to run or
+            its id.
 
     Returns:
         A completed workflow.
@@ -248,10 +253,6 @@ async def dispatch_workflow(
     start_time = datetime.now(timezone.utc)
 
     workflow = github_repository.get_workflow(id_or_file_name=workflow_id_or_name)
-    if conclusion == "failure":
-        workflow = github_repository.get_workflow(
-            id_or_file_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME
-        )
 
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(branch, {"runner": app.name})

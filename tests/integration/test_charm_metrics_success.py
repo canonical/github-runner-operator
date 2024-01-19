@@ -15,6 +15,7 @@ from juju.model import Model
 
 from runner_metrics import PostJobStatus
 from tests.integration.charm_metrics_helpers import (
+    DISPATCH_TEST_WORKFLOW_FILENAME,
     assert_events_after_reconciliation,
     clear_metrics_log,
     dispatch_workflow,
@@ -91,6 +92,7 @@ async def test_charm_issues_metrics_after_reconciliation(
         branch=forked_github_branch,
         github_repository=forked_github_repository,
         conclusion="success",
+        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
     )
 
     # Set the number of virtual machines to 0 to speedup reconciliation
@@ -127,6 +129,7 @@ async def test_charm_remounts_shared_fs(
         branch=forked_github_branch,
         github_repository=forked_github_repository,
         conclusion="success",
+        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
     )
 
     # unmount shared fs

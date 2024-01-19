@@ -36,11 +36,12 @@ async def test_ssh_debug(
     logger.info("Dispatching workflow_dispatch_ssh_debug.yaml workflow.")
     start_time = datetime.now(timezone.utc)
 
+    # expect failure since the ssh workflow will timeout
     workflow = await dispatch_workflow(
         app=app_no_wait,
         branch=test_github_branch,
         github_repository=github_repository,
-        conclusion="completed",
+        conclusion="failure",
         workflow_id_or_name=SSH_DEBUG_WORKFLOW_FILE_NAME,
     )
 
