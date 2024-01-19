@@ -26,7 +26,11 @@ The "GitHub Self-Hosted Runner Metrics" metrics dashboard presents the following
 
 The "GitHub Self-Hosted Runner Metrics (Long-Term)" metrics dashboard displays the following rows:
 
-- General: Displays a panel showing the number of jobs per day.
+- General: Contains the following panels:
+  - Total Jobs
+  - Total unique repositories
+  - Timeseries chart displaying the number of jobs per day
+  - Percentage of jobs with low queue time (less than 60 seconds)
 
 
 
