@@ -10,7 +10,7 @@ from github.Repository import Repository
 from github.WorkflowRun import WorkflowRun
 from juju.application import Application
 
-from tests.integration.helpers import _get_job_logs, dispatch_workflow, get_workflow_runs
+from tests.integration.helpers import dispatch_workflow, get_job_logs, get_workflow_runs
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ async def test_ssh_debug(
         )
     )
 
-    logs = _get_job_logs(latest_run.jobs("latest")[0])
+    logs = get_job_logs(latest_run.jobs("latest")[0])
 
     # ensure ssh connection info printed in logs.
     logger.info("Logs: %s", logs)

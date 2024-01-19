@@ -398,7 +398,7 @@ def get_workflow_runs(
     """
     for run in workflow.get_runs(created=f">={start_time.isoformat()}", branch=branch):
         latest_job: WorkflowJob = run.jobs()[0]
-        logs = _get_job_logs(job=latest_job)
+        logs = get_job_logs(job=latest_job)
 
         if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
             yield run
@@ -433,7 +433,7 @@ async def _assert_workflow_run_conclusion(
     """
     for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
         latest_job: WorkflowJob = run.jobs()[0]
-        logs = _get_job_logs(job=latest_job)
+        logs = get_job_logs(job=latest_job)
 
         if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
             assert latest_job.conclusion == conclusion, (
