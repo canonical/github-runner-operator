@@ -27,6 +27,7 @@ from tests.integration.helpers import (
     reconcile,
     wait_for,
 )
+from tests.status_name import ACTIVE
 
 
 @pytest.fixture(scope="module")
@@ -420,3 +421,16 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
     yield get_branch()
 
     branch_ref.delete()
+
+
+@pytest_asyncio.fixture(scope="module", name="app_with_grafana_agent")
+async def app_with_grafana_agent_integrated_fixture(
+    model: Model, app_no_runner: Application
+) -> AsyncIterator[Application]:
+    """Setup the charm to be integrated with grafana-agent using the cos-agent integration."""
+    grafana_agent = await model.deploy("grafana-agent", channel="latest/edge")
+    await model.relate(f"{app_no_runner.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
+    await model.wait_for_idle(apps=[app_no_runner.name], status=ACTIVE)
+    await model.wait_for_idle(apps=[grafana_agent.name])
+
+    yield app_no_runner
