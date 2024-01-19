@@ -19,7 +19,7 @@ from charm_state import (
 )
 
 
-def test_metrics_logging_available_true():
+def test_metrics_logging_available_true(charm_config: dict):
     """
     arrange: Setup mocked charm to return an integration.
     act: Retrieve state from charm.
@@ -30,14 +30,14 @@ def test_metrics_logging_available_true():
         COS_AGENT_INTEGRATION_NAME: MagicMock(spec=ops.Relation),
         DEBUG_SSH_INTEGRATION_NAME: None,
     }
-    charm.config = {"runner-storage": "juju-storage"}
+    charm.config = charm_config
 
     state = State.from_charm(charm)
 
     assert state.is_metrics_logging_available
 
 
-def test_metrics_logging_available_false():
+def test_metrics_logging_available_false(charm_config: dict):
     """
     arrange: Setup mocked charm to return no integration.
     act: Retrieve state from charm.
@@ -45,14 +45,14 @@ def test_metrics_logging_available_false():
     """
     charm = MagicMock()
     charm.model.relations.__getitem__.return_value = []
-    charm.config = {"runner-storage": "juju-storage"}
+    charm.config = charm_config
 
     state = State.from_charm(charm)
 
     assert not state.is_metrics_logging_available
 
 
-def test_aproxy_proxy_missing():
+def test_aproxy_proxy_missing(charm_config: dict):
     """
     arrange: Setup mocked charm to use aproxy without configured http proxy.
     act: Retrieve state from charm.

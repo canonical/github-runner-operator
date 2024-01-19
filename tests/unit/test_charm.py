@@ -12,13 +12,7 @@ from ops.testing import Harness
 
 from charm import GithubRunnerCharm
 from charm_state import ARCH, GithubOrg, GithubRepo, VirtualMachineResources
-from errors import (
-    ConfigurationError,
-    LogrotateSetupError,
-    MissingConfigurationError,
-    RunnerError,
-    SubprocessError,
-)
+from errors import ConfigurationError, LogrotateSetupError, RunnerError, SubprocessError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
 
@@ -122,7 +116,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
-                charm_state=harness.charm._state,
+                charm_state=harness.charm.state,
             ),
             proxies={},
         )
@@ -148,7 +142,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
-                charm_state=harness.charm._state,
+                charm_state=harness.charm.state,
             ),
             proxies={},
         )
@@ -206,7 +200,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
-                charm_state=harness.charm._state,
+                charm_state=harness.charm.state,
             ),
             proxies={},
         )
@@ -226,7 +220,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
-                charm_state=harness.charm._state,
+                charm_state=harness.charm.state,
             ),
             proxies={},
         )
@@ -257,7 +251,7 @@ class TestCharm(unittest.TestCase):
         # Get runner manager via input.
         assert harness.charm._get_runner_manager("mocktoken", "mockorg/repo") is not None
 
-        with self.assertRaises(MissingConfigurationError):
+        with self.assertRaises(ConfigurationError):
             harness.charm._get_runner_manager()
 
         # Get runner manager via config.
@@ -366,9 +360,7 @@ class TestCharm(unittest.TestCase):
 
         # No config
         harness.charm._on_check_runners_action(mock_event)
-        mock_event.fail.assert_called_with(
-            "Missing required charm configuration: ['token', 'path']"
-        )
+        mock_event.fail.assert_called_with("Missing path configuration")
 
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")

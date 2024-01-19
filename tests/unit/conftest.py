@@ -61,3 +61,22 @@ def mocks(monkeypatch, tmp_path, exec_command):
         "runner_manager.RepoPolicyComplianceClient", MockRepoPolicyComplianceClient
     )
     monkeypatch.setattr("utilities.time", unittest.mock.MagicMock())
+
+@pytest.fixture()
+def charm_config() -> dict:
+    """Standard charm configuration for testing."""
+    return {
+        "path": "mock_path",
+        "token": "mock_token",
+        "group": "default",
+        "virtual-machines": 1,
+        "vm-cpu": 2,
+        "vm-memory": "7GiB",
+        "vm-disk": "10GiB",
+        "reconcile-interval": 10,
+        "test-mode": "",
+        "denylist": "",
+        "dockerhub-mirror": "",
+        "runner-storage": "juju-storage",
+        "experimental-use-aproxy": "false",
+    }

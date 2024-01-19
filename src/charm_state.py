@@ -249,7 +249,10 @@ class RunnerConfig(BaseModel):
             raise CharmConfigInvalidError("Invalid runner-storage configuration") from err
 
         try:
-            virtual_machines = int(charm.config["virtual_machines"])
+            # TODO
+            # import pytest
+            # pytest.set_trace()
+            virtual_machines = int(charm.config["virtual-machines"])
         except ValueError as err:
             raise CharmConfigInvalidError(
                 "The virtual-machines configuration must be int"
@@ -287,10 +290,10 @@ class RunnerConfig(BaseModel):
 
         if resources.cpu < 1:
             raise ValueError("The vm-cpu configuration needs to be greater than 0")
-        if _valid_storage_size_str(resources.memory):
-            raise ValueError("Invalid vm-memory configuration")
-        if _valid_storage_size_str(resources.disk):
-            raise ValueError("Invalid vm-disk configuration")
+        if not _valid_storage_size_str(resources.memory):
+            raise ValueError("Invalid format for vm-memory configuration, must be int with unit (e.g. MiB, GiB)")
+        if not _valid_storage_size_str(resources.disk):
+            raise ValueError("Invalid format for vm-disk configuration, must be int with unit (e.g., MiB, GiB)")
 
         return values
 
@@ -485,7 +488,7 @@ class State:
             runner_config = RunnerConfig.from_charm(charm)
         except ValidationError as exc:
             logger.error("Invalid charm config: %s", exc)
-            raise CharmConfigInvalidError("Invalid runner configuration") from exc
+            raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
         if (
             prev_state is not None

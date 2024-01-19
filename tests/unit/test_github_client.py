@@ -10,10 +10,10 @@ from urllib.error import HTTPError
 
 import pytest
 
+from charm_state import GithubRepo
 from errors import JobNotFoundError
 from github_client import GithubClient
 from github_type import JobConclusion, JobStats
-from runner_type import GithubRepo
 
 JobStatsRawData = namedtuple(
     "JobStatsRawData",
