@@ -2,24 +2,25 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm with ssh-debug integration."""
-import typing
-import zipfile
-from io import BytesIO
+import logging
+from datetime import datetime, timezone
 
-import requests
 from github.Branch import Branch
 from github.Repository import Repository
-from github.Workflow import Workflow
 from github.WorkflowRun import WorkflowRun
+from juju.application import Application
 
-from tests.integration.helpers import wait_for
+from tests.integration.helpers import dispatch_workflow, get_job_logs, get_workflow_runs
+
+logger = logging.getLogger(__name__)
+
+SSH_DEBUG_WORKFLOW_FILE_NAME = "workflow_dispatch_ssh_debug.yaml"
 
 
 async def test_ssh_debug(
+    app_no_wait: Application,
     github_repository: Repository,
     test_github_branch: Branch,
-    app_name: str,
-    token: str,
     tmate_ssh_server_unit_ip: str,
 ):
     """
@@ -28,47 +29,30 @@ async def test_ssh_debug(
     assert: the ssh connection info from action-log and tmate-ssh-server matches.
     """
     # trigger tmate action
-    workflow: Workflow = github_repository.get_workflow("workflow_dispatch_ssh_debug.yaml")
-    assert workflow.create_dispatch(
-        test_github_branch, inputs={"runner": app_name}
-    ), "Failed to dispatch workflow"
+    logger.info("Dispatching workflow_dispatch_ssh_debug.yaml workflow.")
+    start_time = datetime.now(timezone.utc)
 
-    # get action logs
-    def latest_workflow_run() -> typing.Optional[WorkflowRun]:
-        """Get latest workflow run."""
-        try:
-            last_run: WorkflowRun = next(workflow.get_runs())
-        except StopIteration:
-            return None
-        if last_run.head_branch != test_github_branch:
-            return None
-        return last_run
-
-    await wait_for(latest_workflow_run)
-    lastest_run = typing.cast(WorkflowRun, latest_workflow_run())
-
-    def is_workflow_complete():
-        """Return if the workflow is complete."""
-        lastest_run.update()
-        return lastest_run.status == "completed"
-
-    await wait_for(is_workflow_complete)
-
-    response = requests.get(
-        lastest_run.logs_url,
-        headers={
-            "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {token}",
-            "X-GitHub-Api-Version": "2022-11-28",
-        },
+    # expect failure since the ssh workflow will timeout
+    workflow = await dispatch_workflow(
+        app=app_no_wait,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="failure",
+        workflow_id_or_name=SSH_DEBUG_WORKFLOW_FILE_NAME,
     )
-    zip_data = BytesIO(response.content)
-    with zipfile.ZipFile(zip_data, "r") as zip_ref:
-        tmate_log_filename = next(
-            iter([name for name in zip_ref.namelist() if "Setup tmate session" in name])
+
+    latest_run: WorkflowRun = next(
+        get_workflow_runs(
+            start_time=start_time,
+            workflow=workflow,
+            runner_name=app_no_wait.name,
+            branch=test_github_branch,
         )
-        logs = str(zip_ref.read(tmate_log_filename), encoding="utf-8")
+    )
+
+    logs = get_job_logs(latest_run.jobs("latest")[0])
 
     # ensure ssh connection info printed in logs.
+    logger.info("Logs: %s", logs)
     assert tmate_ssh_server_unit_ip in logs, "Tmate ssh server IP not found in action logs."
     assert "10022" in logs, "Tmate ssh server connection port not found in action logs."

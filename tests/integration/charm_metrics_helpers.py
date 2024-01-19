@@ -6,11 +6,9 @@
 
 import json
 import logging
-from datetime import datetime, timezone
 from time import sleep
 
 import requests
-from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
 from juju.application import Application
@@ -19,76 +17,13 @@ from juju.unit import Unit
 from github_type import JobConclusion
 from metrics import METRICS_LOG_PATH
 from runner_metrics import PostJobStatus
-from tests.integration.helpers import (
-    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
-    DISPATCH_TEST_WORKFLOW_FILENAME,
-    get_runner_name,
-    get_runner_names,
-    run_in_unit,
-)
+from tests.integration.helpers import JOB_LOG_START_MSG_TEMPLATE, get_runner_name, run_in_unit
 
 TEST_WORKFLOW_NAMES = [
     "Workflow Dispatch Tests",
     "Workflow Dispatch Crash Tests",
     "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7",
 ]
-JOB_LOG_START_MSG_TEMPLATE = "Job is about to start running on the runner: {runner_name}"
-
-
-async def _wait_until_runner_is_used_up(runner_name: str, unit: Unit):
-    """Wait until the runner is used up.
-
-    Args:
-        runner_name: The runner name to wait for.
-        unit: The unit which contains the runner.
-    """
-    for _ in range(30):
-        runners = await get_runner_names(unit)
-        if runner_name not in runners:
-            break
-        sleep(30)
-    else:
-        assert False, "Timeout while waiting for the runner to be used up"
-
-
-async def _assert_workflow_run_conclusion(
-    runner_name: str, conclusion: str, workflow: Workflow, start_time: datetime
-):
-    """Assert that the workflow run has the expected conclusion.
-
-    Args:
-        runner_name: The runner name to assert the workflow run conclusion for.
-        conclusion: The expected workflow run conclusion.
-        workflow: The workflow to assert the workflow run conclusion for.
-        start_time: The start time of the workflow.
-    """
-    for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
-        logs_url = run.jobs()[0].logs_url()
-        logs = requests.get(logs_url).content.decode("utf-8")
-
-        if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
-            assert run.jobs()[0].conclusion == conclusion
-
-
-async def _wait_for_workflow_to_complete(
-    unit: Unit, workflow: Workflow, conclusion: str, start_time: datetime
-):
-    """Wait for the workflow to complete.
-
-    Args:
-        unit: The unit which contains the runner.
-        workflow: The workflow to wait for.
-        conclusion: The workflow conclusion to wait for.
-        start_time: The start time of the workflow.
-    """
-    runner_name = await get_runner_name(unit)
-    await _wait_until_runner_is_used_up(runner_name, unit)
-    # Wait for the workflow log to contain the conclusion
-    sleep(60)
-
-    await _assert_workflow_run_conclusion(
-        runner_name=runner_name, conclusion=conclusion, workflow=workflow, start_time=start_time
-    )
 
 
 async def _wait_for_workflow_to_start(unit: Unit, workflow: Workflow):
@@ -187,34 +122,6 @@ async def _cancel_workflow_run(unit: Unit, workflow: Workflow):
 
             if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
                 run.cancel()
-
-
-async def dispatch_workflow(
-    app: Application, branch: Branch, github_repository: Repository, conclusion: str
-):
-    """Dispatch a workflow on a branch for the runner to run.
-
-    The function assumes that there is only one runner running in the unit.
-
-    Args:
-        app: The charm to dispatch the workflow for.
-        branch: The branch to dispatch the workflow on.
-        github_repository: The github repository to dispatch the workflow on.
-        conclusion: The expected workflow run conclusion.
-    """
-    start_time = datetime.now(timezone.utc)
-
-    workflow = github_repository.get_workflow(id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME)
-    if conclusion == "failure":
-        workflow = github_repository.get_workflow(
-            id_or_file_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME
-        )
-
-    # The `create_dispatch` returns True on success.
-    assert workflow.create_dispatch(branch, {"runner": app.name})
-    await _wait_for_workflow_to_complete(
-        unit=app.units[0], workflow=workflow, conclusion=conclusion, start_time=start_time
-    )
 
 
 async def assert_events_after_reconciliation(
