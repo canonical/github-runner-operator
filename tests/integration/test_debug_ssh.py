@@ -10,11 +10,7 @@ from github.Repository import Repository
 from github.WorkflowRun import WorkflowRun
 from juju.application import Application
 
-from tests.integration.charm_metrics_helpers import (
-    _get_job_logs,
-    dispatch_workflow,
-    get_workflow_runs,
-)
+from tests.integration.helpers import _get_job_logs, dispatch_workflow, get_workflow_runs
 
 logger = logging.getLogger(__name__)
 

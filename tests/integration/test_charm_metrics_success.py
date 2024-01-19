@@ -17,12 +17,12 @@ from runner_metrics import PostJobStatus
 from tests.integration.charm_metrics_helpers import (
     assert_events_after_reconciliation,
     clear_metrics_log,
-    dispatch_workflow,
     get_metrics_log,
     print_loop_device_info,
 )
 from tests.integration.helpers import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
+    dispatch_workflow,
     ensure_charm_has_runner,
     get_runner_name,
     reconcile,

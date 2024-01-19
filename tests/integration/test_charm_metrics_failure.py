@@ -18,13 +18,13 @@ from tests.integration.charm_metrics_helpers import (
     _wait_for_workflow_to_start,
     assert_events_after_reconciliation,
     clear_metrics_log,
-    dispatch_workflow,
     print_loop_device_info,
     wait_for_runner_to_be_marked_offline,
 )
 from tests.integration.helpers import (
     DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
+    dispatch_workflow,
     ensure_charm_has_runner,
     get_runner_name,
     reconcile,
