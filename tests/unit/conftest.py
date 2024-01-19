@@ -62,6 +62,7 @@ def mocks(monkeypatch, tmp_path, exec_command):
     )
     monkeypatch.setattr("utilities.time", unittest.mock.MagicMock())
 
+
 @pytest.fixture()
 def charm_config() -> dict:
     """Standard charm configuration for testing."""

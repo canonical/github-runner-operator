@@ -291,9 +291,13 @@ class RunnerConfig(BaseModel):
         if resources.cpu < 1:
             raise ValueError("The vm-cpu configuration needs to be greater than 0")
         if not _valid_storage_size_str(resources.memory):
-            raise ValueError("Invalid format for vm-memory configuration, must be int with unit (e.g. MiB, GiB)")
+            raise ValueError(
+                "Invalid format for vm-memory configuration, must be int with unit (e.g. MiB, GiB)"
+            )
         if not _valid_storage_size_str(resources.disk):
-            raise ValueError("Invalid format for vm-disk configuration, must be int with unit (e.g., MiB, GiB)")
+            raise ValueError(
+                "Invalid format for vm-disk configuration, must be int with unit (e.g., MiB, GiB)"
+            )
 
         return values
 
