@@ -371,7 +371,7 @@ async def deploy_github_runner_charm(
     return application
 
 
-def _get_job_logs(job: WorkflowJob) -> str:
+def get_job_logs(job: WorkflowJob) -> str:
     """Retrieve a workflow's job logs.
 
     Args:
