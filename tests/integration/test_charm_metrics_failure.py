@@ -18,12 +18,13 @@ from tests.integration.charm_metrics_helpers import (
     _wait_for_workflow_to_start,
     assert_events_after_reconciliation,
     clear_metrics_log,
-    dispatch_workflow,
     print_loop_device_info,
     wait_for_runner_to_be_marked_offline,
 )
 from tests.integration.helpers import (
     DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
+    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
+    dispatch_workflow,
     ensure_charm_has_runner,
     get_runner_name,
     reconcile,
@@ -71,6 +72,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
         branch=forked_github_branch,
         github_repository=forked_github_repository,
         conclusion="failure",
+        workflow_id_or_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     )
 
     # Set the number of virtual machines to 0 to speedup reconciliation
