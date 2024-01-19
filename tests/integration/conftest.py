@@ -97,7 +97,8 @@ def token(pytestconfig: pytest.Config) -> str:
     token = pytestconfig.getoption("--token")
     assert token, "Please specify the --token command line option"
     secondary_tokens: str = pytestconfig.getoption("--secondary-tokens", default="")
-    tokens = secondary_tokens.split(",").append(token)
+    tokens = secondary_tokens.split(",")
+    tokens.append(token)
     random_token = random.choice(tokens)
     return random_token
 
