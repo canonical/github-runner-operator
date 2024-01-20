@@ -42,7 +42,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Setup tmate session
-      uses: canonical/action-tmate@master
+      uses: canonical/action-tmate@main
 ```
 
 The output of the action looks like the following.
