@@ -2,13 +2,11 @@
 #  See LICENSE file for licensing details.
 import os
 import platform
-from collections import defaultdict
 from unittest.mock import MagicMock, patch
 
 import ops
 import pytest
 
-from charm import GithubRunnerCharm
 from charm_state import (
     ARCH,
     COS_AGENT_INTEGRATION_NAME,
@@ -17,53 +15,37 @@ from charm_state import (
     SSHDebugInfo,
     State,
 )
+from tests.unit.factory import MockGithubRunnerCharmFactory
 
 
-def test_metrics_logging_available_true(charm_config: dict):
+def test_metrics_logging_available_true():
     """
     arrange: Setup mocked charm to return an integration.
     act: Retrieve state from charm.
     assert: metrics_logging_available returns True.
     """
-    charm = MagicMock()
+    charm = MockGithubRunnerCharmFactory()
     charm.model.relations = {
         COS_AGENT_INTEGRATION_NAME: MagicMock(spec=ops.Relation),
-        DEBUG_SSH_INTEGRATION_NAME: None,
+        DEBUG_SSH_INTEGRATION_NAME: [],
     }
-    charm.config = charm_config
 
     state = State.from_charm(charm)
 
     assert state.is_metrics_logging_available
 
 
-def test_metrics_logging_available_false(charm_config: dict):
+def test_metrics_logging_available_false():
     """
     arrange: Setup mocked charm to return no integration.
     act: Retrieve state from charm.
     assert: metrics_logging_available returns False.
     """
-    charm = MagicMock()
-    charm.model.relations.__getitem__.return_value = []
-    charm.config = charm_config
+    charm = MockGithubRunnerCharmFactory()
 
     state = State.from_charm(charm)
 
     assert not state.is_metrics_logging_available
-
-
-def test_aproxy_proxy_missing(charm_config: dict):
-    """
-    arrange: Setup mocked charm to use aproxy without configured http proxy.
-    act: Retrieve state from charm.
-    assert: CharmConfigInvalidError is raised.
-    """
-    charm = MagicMock()
-    charm.model.relations.__getitem__.return_value = []
-    charm.config = {"experimental-use-aproxy": "true"}
-
-    with pytest.raises(CharmConfigInvalidError):
-        State.from_charm(charm)
 
 
 def test_proxy_invalid_format():
@@ -72,13 +54,13 @@ def test_proxy_invalid_format():
     act: Retrieve state from charm.
     assert: CharmConfigInvalidError is raised.
     """
-    charm = MagicMock()
-    charm.model.relations.__getitem__.return_value = []
+    charm = MockGithubRunnerCharmFactory()
 
     url_without_scheme = "proxy.example.com:8080"
     with patch.dict(os.environ, {"JUJU_CHARM_HTTP_PROXY": url_without_scheme}):
-        with pytest.raises(CharmConfigInvalidError):
+        with pytest.raises(CharmConfigInvalidError) as err:
             State.from_charm(charm)
+        assert "Invalid proxy configuration" in err.value.msg
 
 
 def test_from_charm_invalid_arch(monkeypatch: pytest.MonkeyPatch):
@@ -87,14 +69,15 @@ def test_from_charm_invalid_arch(monkeypatch: pytest.MonkeyPatch):
     act: when _get_supported_arch is called.
     assert: a charm config invalid error is raised.
     """
+    mock_charm = MockGithubRunnerCharmFactory()
+
     mock_machine = MagicMock(spec=platform.machine)
     mock_machine.return_value = "i686"  # 32 bit is unsupported
     monkeypatch.setattr(platform, "machine", mock_machine)
-    mock_charm = MagicMock(spec=GithubRunnerCharm)
-    mock_charm.config = {"runner-storage": "juju-storage"}
 
-    with pytest.raises(CharmConfigInvalidError):
+    with pytest.raises(CharmConfigInvalidError) as err:
         State.from_charm(mock_charm)
+    assert "Unsupported architecture" in err.value.msg
 
 
 @pytest.mark.parametrize(
@@ -111,12 +94,11 @@ def test_from_charm_arch(monkeypatch: pytest.MonkeyPatch, arch: str, expected_ar
     act: when _get_supported_arch is called.
     assert: a correct architecture is inferred.
     """
+    mock_charm = MockGithubRunnerCharmFactory()
+
     mock_machine = MagicMock(spec=platform.machine)
     mock_machine.return_value = arch
     monkeypatch.setattr(platform, "machine", mock_machine)
-    mock_charm = MagicMock(spec=GithubRunnerCharm)
-    mock_charm.model.relations = defaultdict(lambda: None)
-    mock_charm.config = {"runner-storage": "juju-storage"}
 
     state = State.from_charm(mock_charm)
 
@@ -129,8 +111,7 @@ def test_ssh_debug_info_from_charm_no_relations():
     act: when SSHDebug.from_charm is called.
     assert: None is returned.
     """
-    mock_charm = MagicMock(spec=GithubRunnerCharm)
-    mock_charm.model.relations = {DEBUG_SSH_INTEGRATION_NAME: []}
+    mock_charm = MockGithubRunnerCharmFactory()
 
     assert SSHDebugInfo.from_charm(mock_charm) is None
 
@@ -173,20 +154,17 @@ def test_from_charm_ssh_debug_info_error(invalid_relation_data: dict):
     act: when from_charm is called.
     assert: CharmConfigInvalidError is raised.
     """
-    mock_charm = MagicMock(spec=GithubRunnerCharm)
-    mock_charm.config = {}
+    mock_charm = MockGithubRunnerCharmFactory()
     mock_relation = MagicMock(spec=ops.Relation)
     mock_unit = MagicMock(spec=ops.Unit)
     mock_unit.name = "tmate-ssh-server-operator/0"
     mock_relation.units = {mock_unit}
     mock_relation.data = {mock_unit: invalid_relation_data}
-    mock_charm.model.relations = {DEBUG_SSH_INTEGRATION_NAME: [mock_relation]}
-    mock_charm.app.planned_units.return_value = 1
-    mock_charm.app.name = "github-runner-operator"
-    mock_charm.unit.name = "github-runner-operator/0"
+    mock_charm.model.relations[DEBUG_SSH_INTEGRATION_NAME] = [mock_relation]
 
-    with pytest.raises(CharmConfigInvalidError):
+    with pytest.raises(CharmConfigInvalidError) as err:
         State.from_charm(mock_charm)
+    assert "Invalid SSH Debug info" in err.value.msg
 
 
 def test_from_charm_ssh_debug_info():
@@ -195,8 +173,7 @@ def test_from_charm_ssh_debug_info():
     act: when from_charm is called.
     assert: ssh_debug_info data has been correctly parsed.
     """
-    mock_charm = MagicMock(spec=GithubRunnerCharm)
-    mock_charm.config = {}
+    mock_charm = MockGithubRunnerCharmFactory()
     mock_relation = MagicMock(spec=ops.Relation)
     mock_unit = MagicMock(spec=ops.Unit)
     mock_unit.name = "tmate-ssh-server-operator/0"
@@ -211,14 +188,7 @@ def test_from_charm_ssh_debug_info():
             }
         )
     }
-    mock_charm.model.relations = {
-        DEBUG_SSH_INTEGRATION_NAME: [mock_relation],
-        COS_AGENT_INTEGRATION_NAME: None,
-    }
-    mock_charm.config = {"runner-storage": "juju-storage"}
-    mock_charm.app.planned_units.return_value = 1
-    mock_charm.app.name = "github-runner-operator"
-    mock_charm.unit.name = "github-runner-operator/0"
+    mock_charm.model.relations[DEBUG_SSH_INTEGRATION_NAME] = [mock_relation]
 
     ssh_debug_info = State.from_charm(mock_charm).ssh_debug_info
     assert str(ssh_debug_info.host) == mock_relation_data["host"]
@@ -227,15 +197,29 @@ def test_from_charm_ssh_debug_info():
     assert ssh_debug_info.ed25519_fingerprint == mock_relation_data["ed25519_fingerprint"]
 
 
+def test_aproxy_proxy_missing():
+    """
+    arrange: Setup mocked charm to use aproxy without configured http proxy.
+    act: Retrieve state from charm.
+    assert: CharmConfigInvalidError is raised.
+    """
+    charm = MockGithubRunnerCharmFactory()
+    charm.config["experimental-use-aproxy"] = True
+
+    with pytest.raises(CharmConfigInvalidError) as err:
+        State.from_charm(charm)
+    assert "Invalid proxy configuration" in err.value.msg
+
+
 def test_invalid_runner_storage():
     """
-    arrange: Setup mocked charm with juju-storage as runner-storage.
-    act: Change the runner-storage config to memory.
+    arrange: Setup mocked charm.
+    act: Set runner-storage to a non-existing option.
     assert: Configuration Error raised.
     """
-    charm = MagicMock()
-    charm.model.relations.__getitem__.return_value = [MagicMock()]
-    charm.config = {"runner-storage": "not-exist"}
+    charm = MockGithubRunnerCharmFactory()
+    charm.config["runner-storage"] = "not-exist"
 
-    with pytest.raises(CharmConfigInvalidError):
+    with pytest.raises(CharmConfigInvalidError) as err:
         State.from_charm(charm)
+    assert "Invalid runner-storage configuration" in err.value.msg
