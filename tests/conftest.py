@@ -11,8 +11,11 @@ def pytest_addoption(parser: Parser):
     """Add options to pytest parser."""
     parser.addoption("--path", action="store")
     parser.addoption("--token", action="store")
-    # A comma separated GitHub Personal Access Tokens, to help reduce rate limiting.
-    parser.addoption("--secondary-tokens", action="store")
+    parser.addoption(
+        "--secondary-tokens",
+        action="store",
+        help="A comma separated GitHub Personal Access Tokens, to help reduce rate limiting.",
+    )
     parser.addoption("--charm-file", action="store")
     parser.addoption("--token-alt", action="store")
     parser.addoption("--http-proxy", action="store")
