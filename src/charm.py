@@ -429,7 +429,7 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = MaintenanceStatus("Starting runners")
         try:
-            runner_manager.flush()
+            runner_manager.flush(force_flush_busy=False)
             self._reconcile_runners(runner_manager)
         except RunnerError as err:
             logger.exception("Failed to start runners")
@@ -519,7 +519,7 @@ class GithubRunnerCharm(CharmBase):
             )  # Casting for mypy checks.
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
-                prev_runner_manager.flush()
+                prev_runner_manager.flush(wait_repo_check=True)
             self._stored.path = self.config["path"]
 
         runner_manager = self._get_runner_manager()
@@ -530,7 +530,7 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
         if self.config["token"] != self._stored.token:
-            runner_manager.flush()
+            runner_manager.flush(wait_repo_check=True)
             self._stored.token = self.config["token"]
 
     def _check_and_update_dependencies(self) -> bool:
@@ -931,7 +931,7 @@ class GithubRunnerCharm(CharmBase):
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
         runner_manager = self._get_runner_manager()
-        runner_manager.flush(flush_busy=False)
+        runner_manager.flush(force_flush_busy=False)
         self._reconcile_runners(runner_manager)
 
 
