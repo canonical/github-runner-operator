@@ -12,9 +12,6 @@ can be established. Hence, action-tmate users must have
 [ssh-key registered](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
 on the GitHub account.
 
-For users using Canonical's self-hosted runners, access to tmate-ssh-server is provided only within
-Canonical VPN. 
-
 ## Deploying
 
 Use the following command to deploy and integrate github-runner with tmate-ssh-server.
@@ -49,8 +46,8 @@ The output of the action looks like the following.
 
 ```
 <workflow setup logs redacted>
-SSH: ssh -p 10022 <token>@<ip>
-or: ssh -i <path-to-private-SSH-key> -p10022 <token>@<ip>
+SSH: ssh -p 10022 <user>@<ip>
+or: ssh -i <path-to-private-SSH-key> -p10022 <user>@<ip>
 ```
 
 Read more about [action-tmate's usage here](https://github.com/canonical/action-tmate).
