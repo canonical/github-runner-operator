@@ -19,7 +19,7 @@ def pytest_addoption(parser: Parser):
         "--charm-file", action="store", help="The prebuilt github-runner-operator charm file."
     )
     parser.addoption(
-        "--token-alt", action="store", help="An alternative token to test repo-policy-compliance."
+        "--token-alt", action="store", help="An alternative token to test the change of a token."
     )
     parser.addoption(
         "--http-proxy",
