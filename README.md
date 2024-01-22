@@ -1,4 +1,4 @@
-[![CharmHub Badge](https://charmhub.io/github-runner-operator/badge.svg)](https://charmhub.io/github-runner-operator)
+[![CharmHub Badge](https://charmhub.io/github-runner/badge.svg)](https://charmhub.io/github-runner)
 [![Promote charm](https://github.com/canonical/github-runner-operator/actions/workflows/promote_charm.yaml/badge.svg)](https://github.com/canonical/github-runner-operator/actions/workflows/promote_charm.yaml)
 [![Discourse Status](https://img.shields.io/discourse/status?server=https%3A%2F%2Fdiscourse.charmhub.io&style=flat&label=CharmHub%20Discourse)](https://discourse.charmhub.io)
 
