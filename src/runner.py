@@ -487,7 +487,7 @@ class Runner:
                 Snap(
                     name="aproxy",
                     channel="edge",
-                    revision=APROXY_AMD_REVISION if arch == ARCH.X64 else APROXY_ARM_REVISION,
+                    revision=APROXY_ARM_REVISION if arch == ARCH.ARM64 else APROXY_AMD_REVISION,
                 )
             ]
         )
