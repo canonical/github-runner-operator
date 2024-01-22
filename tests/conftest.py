@@ -10,11 +10,10 @@ from pytest import Parser
 def pytest_addoption(parser: Parser):
     """Add options to pytest parser."""
     parser.addoption("--path", action="store")
-    parser.addoption("--token", action="store")
     parser.addoption(
-        "--secondary-tokens",
+        "--tokens",
         action="store",
-        help="A comma separated GitHub Personal Access Tokens, to help reduce rate limiting.",
+        help="A comma separated GitHub Personal Access Token(s), to help reduce rate limiting.",
     )
     parser.addoption("--charm-file", action="store")
     parser.addoption("--token-alt", action="store")

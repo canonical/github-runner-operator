@@ -94,11 +94,9 @@ def path(pytestconfig: pytest.Config) -> str:
 @pytest.fixture(scope="module")
 def token(pytestconfig: pytest.Config) -> str:
     """Configured token setting."""
-    token = pytestconfig.getoption("--token")
-    assert token, "Please specify the --token command line option"
-    secondary_tokens: str = pytestconfig.getoption("--secondary-tokens", default="")
-    tokens = [token.strip() for token in (secondary_tokens.split(",") if secondary_tokens else [])]
-    tokens.append(token)
+    tokens_csv = pytestconfig.getoption("--tokens")
+    assert tokens_csv, "Please specify the --tokens command line option"
+    tokens = tokens_csv.split(",")
     random_token = random.choice(tokens)
     return random_token
 
