@@ -536,6 +536,7 @@ class RunnerManager:
             runner for runner in self._get_runners() if runner.status.exist and runner.status.busy
         ]
         for runner in busy_runners:
+            # Check if `_work` directory exists, if it exists the runner has started a job.
             exit_code, stdout, _ = runner.instance.execute(
                 ["/usr/bin/stat", "-c", "'%w'", "/home/ubuntu/github-runner/_work"]
             )
@@ -569,7 +570,7 @@ class RunnerManager:
 
         logger.info("Removing existing %i non-busy local runners", len(runners))
 
-        remove_count = len(runner)
+        remove_count = len(runners)
         for runner in runners:
             runner.remove(remove_token)
             logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
