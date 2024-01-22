@@ -97,7 +97,7 @@ def token(pytestconfig: pytest.Config) -> str:
     token = pytestconfig.getoption("--token")
     tokens_csv = pytestconfig.getoption("--tokens")
     assert token or tokens_csv, "Please specify the --token or --tokens command line option"
-    tokens = {token.strip() for token in (tokens_csv.split(",") if tokens_csv != "" else [])}
+    tokens = {token.strip() for token in (tokens_csv.split(",") if tokens_csv else [])}
     tokens.add(token)
     random_token = random.choice(list(tokens))
     return random_token
