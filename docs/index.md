@@ -52,6 +52,7 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [How to change GitHub personal access token](how-to/change-token.md)
   1. [How to comply with security requirements](how-to/comply-security.md)
   1. [How to restrict self-hosted runner network access](how-to/configure-denylist.md)
+  1. [How to configure runner storage](how-to/configure-runner-storage.md)
   1. [How to contribute](how-to/contribute.md)
   1. [How to deploy on ARM64](how-to/deploy-on-arm64.md)
   1. [How to integrate with COS](how-to/integrate-with-cos.md)
