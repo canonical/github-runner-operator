@@ -87,7 +87,10 @@ devices:
 def path(pytestconfig: pytest.Config) -> str:
     """Configured path setting."""
     path = pytestconfig.getoption("--path")
-    assert path, "Please specify the --path command line option"
+    assert path, (
+        "Please specify the --path command line option with repository "
+        "path of <org>/<repo> or <user>/<repo> format."
+    )
     return path
 
 
@@ -105,7 +108,10 @@ def token(pytestconfig: pytest.Config) -> str:
 def token_alt(pytestconfig: pytest.Config, token: str) -> str:
     """Configured token_alt setting."""
     token_alt = pytestconfig.getoption("--token-alt")
-    assert token_alt, "Please specify the --token-alt command line option"
+    assert token_alt, (
+        "Please specify the --token-alt command line option with GitHub Personal "
+        "Access Token value."
+    )
     assert token_alt != token, "Please specify a different token for --token-alt"
     return token_alt
 
