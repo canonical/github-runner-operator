@@ -4,6 +4,8 @@ on:
   pull_request:
 
 jobs:
+  # test option values defined at test/conftest.py are passed on via repository secret
+  # INTEGRATION_TEST_ARGS to operator-workflows automatically.
   integration-tests-juju2:
     name: Integration test with juju 2.9
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
