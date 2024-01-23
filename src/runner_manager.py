@@ -28,7 +28,7 @@ import shared_fs
 from charm_state import VirtualMachineResources
 from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
 from github_client import GithubClient
-from github_type import RunnerApplication, SelfHostedRunner
+from github_type import RunnerApplication, RunnerApplicationList, SelfHostedRunner
 from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus

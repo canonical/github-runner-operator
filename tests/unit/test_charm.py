@@ -51,6 +51,14 @@ def mock_get_github_info():
     ]
 
 
+def setup_charm_harness() -> Harness:
+    harness = Harness(GithubRunnerCharm)
+    harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+    harness.begin()
+    harness.charm._setup_state()
+    return harness
+
+
 class TestCharm(unittest.TestCase):
     """Test cases for GithubRunnerCharm."""
 
@@ -63,19 +71,18 @@ class TestCharm(unittest.TestCase):
         },
     )
     def test_proxy_setting(self):
-        harness = Harness(GithubRunnerCharm)
-        harness.begin()
+        harness = setup_charm_harness()
 
         assert harness.charm.proxies["https"] == TEST_PROXY_SERVER_URL
         assert harness.charm.proxies["http"] == TEST_PROXY_SERVER_URL
         assert harness.charm.proxies["no_proxy"] == "127.0.0.1,localhost"
 
+    @patch("pathlib.Path.open")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
     @patch("builtins.open")
-    def test_install(self, open, run, wt):
-        harness = Harness(GithubRunnerCharm)
-        harness.begin()
+    def test_install(self, open, run, wt, path_open):
+        harness = setup_charm_harness()
         harness.charm.on.install.emit()
         calls = [
             call(

@@ -130,24 +130,7 @@ def _setup_github_runner_charm_state(
 
     @functools.wraps(func)
     def func_with_state_setup(self: "GithubRunnerCharm", event: EventT) -> None:
-        try:
-            self.state = State.from_charm(self)
-        except CharmConfigInvalidError as exc:
-            self.unit.status = ops.BlockedStatus(exc.msg)
-            raise ConfigurationError(exc.msg) from exc
-
-        if proxy_config := self.state.proxy_config:
-            if http_proxy := proxy_config.http_proxy:
-                self.proxies["http"] = str(http_proxy)
-            if https_proxy := proxy_config.https_proxy:
-                self.proxies["https"] = str(https_proxy)
-            # there's no need for no_proxy if there's no http_proxy or https_proxy
-            no_proxy = proxy_config.no_proxy
-            if (https_proxy or http_proxy) and no_proxy:
-                self.proxies["no_proxy"] = no_proxy
-            if proxy_config.use_aproxy:
-                self.proxies["aproxy_address"] = proxy_config.aproxy_address
-
+        self._setup_state()
         func(self, event)
 
     return func_with_state_setup
@@ -212,6 +195,26 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(
             self.on.update_dependencies_action, self._on_update_dependencies_action
         )
+
+    def _setup_state(self) -> None:
+        """Setup the charm state."""
+        try:
+            self.state = State.from_charm(self)
+        except CharmConfigInvalidError as exc:
+            self.unit.status = ops.BlockedStatus(exc.msg)
+            raise ConfigurationError(exc.msg) from exc
+
+        if proxy_config := self.state.proxy_config:
+            if http_proxy := proxy_config.http_proxy:
+                self.proxies["http"] = str(http_proxy)
+            if https_proxy := proxy_config.https_proxy:
+                self.proxies["https"] = str(https_proxy)
+            # there's no need for no_proxy if there's no http_proxy or https_proxy
+            no_proxy = proxy_config.no_proxy
+            if (https_proxy or http_proxy) and no_proxy:
+                self.proxies["no_proxy"] = no_proxy
+            if proxy_config.use_aproxy:
+                self.proxies["aproxy_address"] = proxy_config.aproxy_address
 
     def _create_memory_storage(self, path: Path, size: int) -> None:
         """Create a tmpfs-based LVM volume group.
@@ -381,8 +384,10 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Downloading runner binary")
         try:
             runner_info = runner_manager.get_latest_runner_bin_url()
-            logger.info("Downloading %s from: %s", runner_info.filename, runner_info.download_url)
-            self._stored.runner_bin_url = runner_info.download_url
+            logger.info(
+                "Downloading %s from: %s", runner_info["filename"], runner_info["download_url"]
+            )
+            self._stored.runner_bin_url = runner_info["download_url"]
             runner_manager.update_runner_bin(runner_info)
         # Safe guard against transient unexpected error.
         except RunnerBinaryError as err:
