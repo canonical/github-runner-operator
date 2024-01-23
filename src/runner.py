@@ -45,6 +45,9 @@ if not LXD_PROFILE_YAML.exists():
     LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
 LXDBR_DNSMASQ_LEASES_FILE = Path("/var/snap/lxd/common/lxd/networks/lxdbr0/dnsmasq.leases")
 
+APROXY_ARM_REVISION = 9
+APROXY_AMD_REVISION = 8
+
 
 class Snap(NamedTuple):
     """This class represents a snap installation."""
@@ -151,7 +154,7 @@ class Runner:
             # Wait some initial time for the instance to boot up
             time.sleep(60)
             self._wait_boot_up()
-            self._install_binaries(config.binary_path)
+            self._install_binaries(config.binary_path, config.arch)
             self._configure_runner()
 
             self._register_runner(
@@ -467,7 +470,7 @@ class Runner:
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
     @retry(tries=10, delay=10, max_delay=120, backoff=2, local_logger=logger)
-    def _install_binaries(self, runner_binary: Path) -> None:
+    def _install_binaries(self, runner_binary: Path, arch: ARCH) -> None:
         """Install runner binary and other binaries.
 
         Args:
@@ -479,7 +482,15 @@ class Runner:
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
-        self._snap_install([Snap(name="aproxy", channel="edge", revision=6)])
+        self._snap_install(
+            [
+                Snap(
+                    name="aproxy",
+                    channel="edge",
+                    revision=APROXY_ARM_REVISION if arch == ARCH.ARM64 else APROXY_AMD_REVISION,
+                )
+            ]
+        )
 
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
