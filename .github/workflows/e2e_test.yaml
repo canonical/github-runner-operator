@@ -227,7 +227,7 @@ jobs:
       - name: Watch github-runner (Workflow Dispatch and Push)
         if: matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ matrix.event.name == 'workflow_dispatch' && secrets.GITHUB_TOKEN || secrets.E2E_TESTING_TOKEN }}
         run: |
           juju debug-log --replay --tail &
 
