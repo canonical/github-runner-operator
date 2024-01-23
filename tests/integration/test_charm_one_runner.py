@@ -198,7 +198,6 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_wait_on_busy_runner_repo_check(
-    model: Model,
     app_runner: Application,
     github_repository: Repository,
     runner_manager_github_client: GithubClient,
@@ -214,7 +213,6 @@ async def test_wait_on_busy_runner_repo_check(
             b. The runner should be flushed.
 
     """
-
     unit = app_runner.units[0]
 
     names = await get_runner_names(unit)
@@ -222,6 +220,7 @@ async def test_wait_on_busy_runner_repo_check(
 
     runner_to_be_used = names[0]
 
+    # 1.
     main_branch = github_repository.get_branch(github_repository.default_branch)
     workflow = github_repository.get_workflow(id_or_file_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME)
 
@@ -243,6 +242,7 @@ async def test_wait_on_busy_runner_repo_check(
     else:
         assert False, "Timeout while waiting for workflow to complete"
 
+    # 2.
     action = await unit.run_action("flush-runners")
     await action.wait()
 
