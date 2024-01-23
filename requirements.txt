@@ -5,6 +5,6 @@ pylxd @ git+https://github.com/canonical/pylxd
 requests
 typing-extensions
 # Newer version does not work with default OpenSSL version on jammy.
-cryptography <= 38.0.4
+cryptography <=42.0.0
 pydantic ==1.10.14
 cosl == 0.0.7
