@@ -204,13 +204,15 @@ async def test_wait_on_busy_runner_repo_check(
     runner_manager_github_client: GithubClient,
 ) -> None:
     """
-    arrange: A working application with no runners.
+    arrange: A working application with one runner.
     act:
-        1. Set dockerhub-mirror config and spawn one runner.
-        2. Dispatch a workflow.
+        1. Dispatch a workflow that wait for 30 mins.
+        2. Run flush-runners action.
     assert:
-        1. registry-mirrors is setup in /etc/docker/daemon.json of runner.
-        2. Message about dockerhub_mirror appears in logs.
+        1. The runner is is busy status.
+        2.  a. The flush-runners action should take less than the timeout.
+            b. The runner should be flushed.
+
     """
 
     unit = app_runner.units[0]
@@ -231,7 +233,7 @@ async def test_wait_on_busy_runner_repo_check(
             f"{github_repository.owner}/{github_repository.name}"
         )
         runners = [runner for runner in all_runners if runner.name == runner_to_be_used]
-        assert len(runners) == 1, "Should not occur GitHub should enforce unique naming"
+        assert len(runners) == 1, "Should not occur as GitHub enforce unique naming of runner"
         runner = runners[0]
         if runner["busy"]:
             start_time = datetime.now(timezone.utc)
@@ -241,24 +243,17 @@ async def test_wait_on_busy_runner_repo_check(
     else:
         assert False, "Timeout while waiting for workflow to complete"
 
-    # Unable to find the run id of the workflow that was dispatched.
-    # Therefore, all runs after this test start should pass the conditions.
-    for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
-        if start_time > run.created_at:
-            continue
+    action = await unit.run_action("flush-runners")
+    await action.wait()
 
-        try:
-            logs_url = run.jobs()[0].logs_url()
-            logs = requests.get(logs_url).content.decode("utf-8")
-        except github.GithubException.GithubException:
-            continue
+    end_time = datetime.now(timezone.utc)
 
-        if f"Job is about to start running on the runner: {app_runner.name}-" in logs:
-            assert run.jobs()[0].conclusion == "success"
-            assert (
-                "A private docker registry is setup as a dockerhub mirror for this self-hosted"
-                " runner."
-            ) in logs
+    # The `RunnerManager` class `flush` method has a timeout of 5 * 30.
+    diff = end_time - start_time
+    assert diff.total_seconds() < 5 * 30
+
+    names = await get_runner_names(unit)
+    assert len(names) == 0
 
 
 async def test_change_runner_storage(model: Model, app: Application) -> None:
