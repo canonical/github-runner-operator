@@ -2,7 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Fixtures for github runner charm integration tests."""
-
+import logging
 import random
 import secrets
 import zipfile
@@ -29,6 +29,8 @@ from tests.integration.helpers import (
     wait_for,
 )
 from tests.status_name import ACTIVE
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope="module")
@@ -319,7 +321,9 @@ async def tmate_ssh_server_unit_ip_fixture(
 @pytest.fixture(scope="module")
 def github_client(token: str) -> Github:
     """Returns the github client."""
-    return Github(token)
+    gh = Github(token)
+    rate_limit = gh.get_rate_limit()
+    logger.info("GitHub token rate limit: %s", rate_limit.core)
 
 
 @pytest.fixture(scope="module")
