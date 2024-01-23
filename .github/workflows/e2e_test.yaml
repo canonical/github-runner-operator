@@ -131,7 +131,7 @@ jobs:
             ${{ steps.runner-name.outputs.name }} \
             --base ubuntu@22.04 \
             --config path=${{ secrets.E2E_TESTING_REPO }} \
-            --config token=${{ secrets.E2E_TESTING_TOKEN }} \
+            --config token=${{ secrets.GITHUB_TOKEN }} \
             --config virtual-machines=1 \
             --config denylist=10.0.0.0/8 \
             --config test-mode=insecure
