@@ -229,8 +229,6 @@ jobs:
         env:
           GH_TOKEN: ${{ matrix.event.name == 'workflow_dispatch' && secrets.GITHUB_TOKEN || secrets.E2E_TESTING_TOKEN }}
         run: |
-          juju debug-log --replay --tail &
-
           # Base any future branches on the current branch
           REF_SHA=$(gh api \
             -H "Accept: application/vnd.github+json" \
@@ -262,6 +260,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          juju debug-log --replay --tail &
+
           get-workflow-status() {
               # Search recent workflow runs for the one designated by the run-id ref
               output=$(gh run list \
