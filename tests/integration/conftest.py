@@ -30,8 +30,6 @@ from tests.integration.helpers import (
 )
 from tests.status_name import ACTIVE
 
-logger = logging.getLogger(__name__)
-
 
 @pytest.fixture(scope="module")
 def metadata() -> dict[str, Any]:
@@ -323,7 +321,8 @@ def github_client(token: str) -> Github:
     """Returns the github client."""
     gh = Github(token)
     rate_limit = gh.get_rate_limit()
-    logger.info("GitHub token rate limit: %s", rate_limit.core)
+    logging.info("GitHub token rate limit: %s", rate_limit.core)
+    return gh
 
 
 @pytest.fixture(scope="module")
