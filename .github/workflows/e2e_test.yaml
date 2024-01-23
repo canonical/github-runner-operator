@@ -224,7 +224,7 @@ jobs:
             exit 1
           fi
 
-      - name: Watch github-runner (Workflow Dispatch and Push)
+      - name: Trigger workflow (Workflow Dispatch and Push)
         if: matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push'
         env:
           GH_TOKEN: ${{ matrix.event.name == 'workflow_dispatch' && secrets.GITHUB_TOKEN || secrets.E2E_TESTING_TOKEN }}
@@ -257,6 +257,11 @@ jobs:
               -f runner=${{ steps.runner-name.outputs.name }}
           fi
 
+      - name: Watch github-runner (Workflow Dispatch and Push)
+        if: matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
           get-workflow-status() {
               # Search recent workflow runs for the one designated by the run-id ref
               output=$(gh run list \
@@ -303,7 +308,7 @@ jobs:
             kill $(jobs -p)
           fi
 
-      - name: Watch github-runner (Issues, Schedule)
+      - name: Trigger workflow and watch github-runner (Issues, Schedule)
         if:  matrix.event.name == 'issues' || matrix.event.name == 'schedule'
         env:
           GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
