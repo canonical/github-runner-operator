@@ -14,7 +14,14 @@ def pytest_addoption(parser: Parser):
         action="store",
         help="The path to repository in <org>/<repo> or <user>/<repo> format.",
     )
-    parser.addoption("--token", action="store", help="The GitHub Personal Access Token.")
+    parser.addoption(
+        "--token",
+        action="store",
+        help=(
+            "An optionally comma separated GitHub Personal Access Token(s). "
+            "Add more than one to help reduce rate limiting."
+        ),
+    )
     parser.addoption(
         "--charm-file", action="store", help="The prebuilt github-runner-operator charm file."
     )

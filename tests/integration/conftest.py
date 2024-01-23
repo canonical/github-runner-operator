@@ -3,6 +3,7 @@
 
 """Fixtures for github runner charm integration tests."""
 
+import random
 import secrets
 import zipfile
 from pathlib import Path
@@ -97,11 +98,10 @@ def path(pytestconfig: pytest.Config) -> str:
 def token(pytestconfig: pytest.Config) -> str:
     """Configured token setting."""
     token = pytestconfig.getoption("--token")
-    assert token, (
-        "Please specify the --token command line option with GitHub Personal Access "
-        "Token value."
-    )
-    return token
+    assert token, "Please specify the --token command line option"
+    tokens = {token.strip() for token in token.split(",")}
+    random_token = random.choice(list(tokens))
+    return random_token
 
 
 @pytest.fixture(scope="module")
