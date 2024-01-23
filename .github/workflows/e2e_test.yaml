@@ -227,6 +227,8 @@ jobs:
       - name: Trigger workflow (Workflow Dispatch and Push)
         if: matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push'
         env:
+          # push requires E2E_TESTING_TOKEN, because if GITHUB_TOKEN is used, no workflow is triggered for a push.
+          # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
           GH_TOKEN: ${{ matrix.event.name == 'workflow_dispatch' && secrets.GITHUB_TOKEN || secrets.E2E_TESTING_TOKEN }}
         run: |
           # Base any future branches on the current branch
