@@ -221,11 +221,12 @@ class CharmConfig(BaseModel):
         return values
 
 
-class RunnerConfig(BaseModel):
-    """Runner configurations.
+class RunnerCharmConfig(BaseModel):
+    """Runner configurations for the charm.
 
     Attributes:
         virtual_machines: Number of virtual machine-based runner to spawn.
+        virtual_machine_resources: Hardware resource use by one virtual machine for a runner.
         runner_storage: Storage to be used as disk for the runner.
     """
 
@@ -234,7 +235,7 @@ class RunnerConfig(BaseModel):
     runner_storage: RunnerStorage
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "RunnerConfig":
+    def from_charm(cls, charm: CharmBase) -> "RunnerCharmConfig":
         """Initialize the config from charm.
 
         Args:
@@ -249,9 +250,6 @@ class RunnerConfig(BaseModel):
             raise CharmConfigInvalidError("Invalid runner-storage configuration") from err
 
         try:
-            # TODO
-            # import pytest
-            # pytest.set_trace()
             virtual_machines = int(charm.config["virtual-machines"])
         except ValueError as err:
             raise CharmConfigInvalidError(
@@ -456,7 +454,7 @@ class State:
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
     charm_config: CharmConfig
-    runner_config: RunnerConfig
+    runner_config: RunnerCharmConfig
     arch: ARCH
     ssh_debug_info: Optional[SSHDebugInfo]
 
@@ -489,7 +487,7 @@ class State:
             raise CharmConfigInvalidError("Invalid charm configuration") from exc
 
         try:
-            runner_config = RunnerConfig.from_charm(charm)
+            runner_config = RunnerCharmConfig.from_charm(charm)
         except ValidationError as exc:
             logger.error("Invalid charm config: %s", exc)
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc

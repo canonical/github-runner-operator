@@ -173,7 +173,7 @@ Return the aproxy address.
 
 ---
 
-<a href="../src/charm_state.py#L354"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L352"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_fields`
 
@@ -185,7 +185,7 @@ Validate the proxy configuration.
 
 ---
 
-<a href="../src/charm_state.py#L320"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L318"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -209,14 +209,15 @@ Initialize the proxy config from charm.
 
 ---
 
-## <kbd>class</kbd> `RunnerConfig`
-Runner configurations. 
+## <kbd>class</kbd> `RunnerCharmConfig`
+Runner configurations for the charm. 
 
 
 
 **Attributes:**
  
  - <b>`virtual_machines`</b>:  Number of virtual machine-based runner to spawn. 
+ - <b>`virtual_machine_resources`</b>:  Hardware resource use by one virtual machine for a runner. 
  - <b>`runner_storage`</b>:  Storage to be used as disk for the runner. 
 
 
@@ -224,7 +225,7 @@ Runner configurations.
 
 ---
 
-<a href="../src/charm_state.py#L276"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L274"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_fields`
 
@@ -236,12 +237,12 @@ Validate the runner configuration.
 
 ---
 
-<a href="../src/charm_state.py#L236"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L237"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
 ```python
-from_charm(charm: CharmBase) → RunnerConfig
+from_charm(charm: CharmBase) → RunnerCharmConfig
 ```
 
 Initialize the config from charm. 
@@ -286,7 +287,7 @@ SSH connection information for debug workflow.
 
 ---
 
-<a href="../src/charm_state.py#L416"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L414"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -323,7 +324,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L463"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L461"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -356,7 +357,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L373"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L371"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

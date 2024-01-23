@@ -22,7 +22,7 @@ from typing import Iterable, NamedTuple, Optional, Sequence
 import yaml
 
 import shared_fs
-from charm_state import ARCH, GithubOrg, RunnerConfig, VirtualMachineResources
+from charm_state import ARCH, GithubOrg, VirtualMachineResources
 from errors import (
     CreateSharedFilesystemError,
     LxdError,
@@ -36,7 +36,7 @@ from errors import (
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
 from runner_manager_type import RunnerManagerClients
-from runner_type import RunnerStatus
+from runner_type import RunnerConfig, RunnerStatus
 from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
