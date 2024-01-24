@@ -139,13 +139,13 @@ async def test_wait_on_busy_runner_repo_check(
 
     workflow.create_dispatch(main_branch, {"runner": app_runner.name, "minutes": 30})
 
-    # Wait until runner is busy.
+    # Wait until runner online and then busy.
     for _ in range(30):
         all_runners = runner_manager_github_client.get_runner_github_info(
             f"{forked_github_repository.owner}/{forked_github_repository.name}"
         )
         runners = [runner for runner in all_runners if runner.name == runner_to_be_used]
-        assert len(runners) == 1, "Should not occur as GitHub enforce unique naming of runner"
+        assert len(runners) <= 1, "Should not occur as GitHub enforce unique naming of runner"
         runner = runners[0]
         if runner["busy"]:
             start_time = datetime.now(timezone.utc)
