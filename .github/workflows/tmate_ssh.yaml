@@ -1,0 +1,16 @@
+name: Test tmate action
+
+on: pull_request
+
+jobs:
+  tmate-action:
+    runs-on: [self-hosted, linux, x64, github-runner]
+    steps:
+    - name: Not on Monday or Wednesday
+      run: | 
+        env
+        echo "-------"
+        cat /etc/environment
+    - uses: actions/checkout@v3
+    - name: Setup tmate session
+      uses: canonical/action-tmate@main
