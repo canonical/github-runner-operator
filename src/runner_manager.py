@@ -32,7 +32,7 @@ from github_type import RunnerApplication, SelfHostedRunner
 from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
-from runner_manager_type import RunnerInfo, RunnerManagerClients, RunnerManagerConfig
+from runner_manager_type import FlushMode, RunnerInfo, RunnerManagerClients, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import ProxySetting, RunnerByHealth, VirtualMachineResources
 from utilities import execute_command, retry, set_env_var
@@ -549,13 +549,11 @@ class RunnerManager:
                 return False
         return True
 
-    def flush(self, force_flush_busy: bool = False, wait_repo_check: bool = False) -> int:
+    def flush(self, mode: FlushMode = FlushMode.FLUSH_IDLE) -> int:
         """Remove existing runners.
 
         Args:
-            force_flush_busy: Whether to flush busy runners immediately.
-            wait_repo_check: Whether to flush busy runners after waiting for
-                repo-policy-compliance check to complete.
+            mode: Strategy for flushing runners.
 
         Returns:
             Number of runners removed.
@@ -576,7 +574,7 @@ class RunnerManager:
             runner.remove(remove_token)
             logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
 
-        if wait_repo_check:
+        if mode == FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK:
             for _ in range(5):
                 if not self._runners_in_pre_job():
                     break
@@ -589,7 +587,10 @@ class RunnerManager:
                     )
                 )
 
-        if force_flush_busy or wait_repo_check:
+        if (
+            mode == FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK
+            or mode == FlushMode.FORCE_FLUSH_BUSY
+        ):
             busy_runners = [runner for runner in self._get_runners() if runner.status.exist]
 
             logger.info("Removing existing %i busy local runners", len(runners))

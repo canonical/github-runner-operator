@@ -9,6 +9,15 @@ Types used by RunnerManager class.
 
 ---
 
+## <kbd>class</kbd> `FlushMode`
+Strategy for flushing runners. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `RunnerInfo`
 Information from GitHub of a runner. 
 
