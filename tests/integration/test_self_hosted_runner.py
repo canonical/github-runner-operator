@@ -12,8 +12,8 @@ import requests
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
-from github_client import GithubClient
 
+from github_client import GithubClient
 from tests.integration.helpers import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
@@ -101,9 +101,9 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_wait_on_busy_runner_repo_check(
-        model: Model,
+    model: Model,
     app_runner: Application,
-    github_repository: Repository,
+    forked_github_repository: Repository,
     runner_manager_github_client: GithubClient,
 ) -> None:
     """
@@ -118,7 +118,11 @@ async def test_wait_on_busy_runner_repo_check(
     """
     unit = app_runner.units[0]
 
-    await app_runner.set_config({"virtual-machines": "1"})
+    config = await app_runner.get_config()
+
+    await app_runner.set_config(
+        {"path": forked_github_repository.full_name, "virtual-machines": "1"}
+    )
     await reconcile(app=app_runner, model=model)
     await wait_till_num_of_runners(unit, 1)
 
@@ -128,15 +132,17 @@ async def test_wait_on_busy_runner_repo_check(
     runner_to_be_used = names[0]
 
     # 1.
-    main_branch = github_repository.get_branch(github_repository.default_branch)
-    workflow = github_repository.get_workflow(id_or_file_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME)
+    main_branch = forked_github_repository.get_branch(forked_github_repository.default_branch)
+    workflow = forked_github_repository.get_workflow(
+        id_or_file_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME
+    )
 
     workflow.create_dispatch(main_branch, {"runner": app_runner.name, "minutes": 30})
 
     # Wait until runner is busy.
     for _ in range(30):
         all_runners = runner_manager_github_client.get_runner_github_info(
-            f"{github_repository.owner}/{github_repository.name}"
+            f"{forked_github_repository.owner}/{forked_github_repository.name}"
         )
         runners = [runner for runner in all_runners if runner.name == runner_to_be_used]
         assert len(runners) == 1, "Should not occur as GitHub enforce unique naming of runner"
@@ -162,8 +168,7 @@ async def test_wait_on_busy_runner_repo_check(
     names = await get_runner_names(unit)
     assert len(names) == 0
 
-
     # Ensure the app_runner is back to 0 runners.
-    await app_runner.set_config({"virtual-machines": "0"})
+    await app_runner.set_config({"virtual-machines": "0", "path": config["path"]})
     await reconcile(app=app_runner, model=model)
     await wait_till_num_of_runners(unit, 0)
