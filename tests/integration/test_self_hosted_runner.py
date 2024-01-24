@@ -145,7 +145,12 @@ async def test_wait_on_busy_runner_repo_check(
             f"{forked_github_repository.owner}/{forked_github_repository.name}"
         )
         runners = [runner for runner in all_runners if runner.name == runner_to_be_used]
-        assert len(runners) <= 1, "Should not occur as GitHub enforce unique naming of runner"
+
+        if not runners:
+            # if runner is not online yet.
+            continue
+
+        assert len(runners) == 1, "Should not occur as GitHub enforce unique naming of runner"
         runner = runners[0]
         if runner["busy"]:
             start_time = datetime.now(timezone.utc)
