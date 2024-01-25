@@ -9,7 +9,7 @@ jobs:
     - name: Not on Monday or Wednesday
       run: | 
         env
-        echo "-------"
+        echo "--------"
         cat /etc/environment
     - uses: actions/checkout@v3
     - name: Setup tmate session
