@@ -315,6 +315,9 @@ class State:
         # Convert pydantic object to python object serializable by json module.
         state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
         state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
+        state_dict["ssh_debug_infos"] = [
+            debug_info.json() for debug_info in state_dict["ssh_debug_infos"]
+        ]
         json_data = json.dumps(state_dict, ensure_ascii=False)
         CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
 
