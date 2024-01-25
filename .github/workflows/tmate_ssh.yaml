@@ -13,4 +13,4 @@ jobs:
         cat /etc/environment
     - uses: actions/checkout@v3
     - name: Setup tmate session
-      uses: canonical/action-tmate@fix/httperror
+      uses: canonical/action-tmate@main
