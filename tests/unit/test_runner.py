@@ -12,11 +12,13 @@ import jinja2
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
+from charm_state import SSHDebugInfo
 from errors import CreateSharedFilesystemError, RunnerCreateError, RunnerRemoveError
 from runner import CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerManagerClients
 from runner_type import GithubOrg, GithubRepo, VirtualMachineResources
 from shared_fs import SharedFilesystem
+from tests.unit.factories import SSHDebugInfoFactory
 from tests.unit.mock import (
     MockLxdClient,
     MockRepoPolicyComplianceClient,
@@ -89,6 +91,12 @@ def jinja2_environment_fixture() -> MagicMock:
     return jinja2_mock
 
 
+@pytest.fixture(scope="function", name="ssh_debug_infos")
+def ssh_debug_infos_fixture() -> list[SSHDebugInfo]:
+    """A list of randomly generated ssh_debug_infos."""
+    return SSHDebugInfoFactory.create_batch(size=100)
+
+
 @pytest.fixture(
     scope="function",
     name="runner",
@@ -100,7 +108,13 @@ def jinja2_environment_fixture() -> MagicMock:
         ),
     ],
 )
-def runner_fixture(request, lxd: MockLxdClient, jinja: MagicMock, tmp_path: Path):
+def runner_fixture(
+    request,
+    lxd: MockLxdClient,
+    jinja: MagicMock,
+    tmp_path: Path,
+    ssh_debug_infos: list[SSHDebugInfo],
+):
     client = RunnerManagerClients(
         MagicMock(),
         jinja,
@@ -117,6 +131,7 @@ def runner_fixture(request, lxd: MockLxdClient, jinja: MagicMock, tmp_path: Path
         lxd_storage_path=pool_path,
         dockerhub_mirror=None,
         issue_metrics=False,
+        ssh_debug_infos=ssh_debug_infos,
     )
     status = RunnerStatus()
     return Runner(
@@ -416,3 +431,32 @@ def test_remove_with_delete_error(
 
     with pytest.raises(RunnerRemoveError):
         runner.remove("test_token")
+
+
+def test_random_ssh_connection_choice(
+    runner: Runner,
+    vm_resources: VirtualMachineResources,
+    token: str,
+    binary_path: Path,
+):
+    """
+    arrange: given a mock runner with random batch of ssh debug infos.
+    act: when runner.configure_runner is called.
+    assert: selected ssh_debug_info is random.
+    """
+    runner.create(
+        config=CreateRunnerConfig(
+            image="test_image",
+            resources=vm_resources,
+            binary_path=binary_path,
+            registration_token=token,
+        )
+    )
+    runner._configure_runner()
+    first_call_args = runner._clients.jinja.get_template("env.j2").render.call_args.kwargs
+    runner._configure_runner()
+    second_call_args = runner._clients.jinja.get_template("env.j2").render.call_args.kwargs
+
+    assert (
+        first_call_args["ssh_debug_info"] != second_call_args["ssh_debug_info"]
+    ), "Same ssh debug info found, this may have occurred with a very low priority."
