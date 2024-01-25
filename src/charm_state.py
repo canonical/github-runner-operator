@@ -9,7 +9,7 @@ import logging
 import platform
 from enum import Enum
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
 from ops import CharmBase
 from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
@@ -200,7 +200,7 @@ class SSHDebugInfo(BaseModel):
     ed25519_fingerprint: str = Field(pattern="^SHA256:.*")
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> List["SSHDebugInfo"]:
+    def from_charm(cls, charm: CharmBase) -> list["SSHDebugInfo"]:
         """Initialize the SSHDebugInfo from charm relation data.
 
         Args:
@@ -249,7 +249,7 @@ class State:
     proxy_config: ProxyConfig
     charm_config: CharmConfig
     arch: ARCH
-    ssh_debug_infos: List[SSHDebugInfo]
+    ssh_debug_infos: list[SSHDebugInfo]
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "State":
