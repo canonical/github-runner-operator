@@ -13,6 +13,7 @@ collection of `Runner` instances.
 import json
 import logging
 import pathlib
+import secrets
 import textwrap
 import time
 from dataclasses import dataclass
@@ -22,7 +23,7 @@ from typing import Iterable, NamedTuple, Optional, Sequence
 import yaml
 
 import shared_fs
-from charm_state import ARCH
+from charm_state import ARCH, SSHDebugInfo
 from errors import (
     CreateSharedFilesystemError,
     LxdError,
@@ -671,9 +672,13 @@ class Runner:
         # As the user already has sudo access, this does not give the user any additional access.
         self.instance.execute(["/usr/bin/sudo", "chmod", "777", "/usr/local/bin"])
 
+        selected_ssh_connection: SSHDebugInfo | None = (
+            secrets.choice(self.config.ssh_debug_infos) if self.config.ssh_debug_infos else None
+        )
+        logger.info("SSH Debug info: %s", selected_ssh_connection)
         # Load `/etc/environment` file.
         environment_contents = self._clients.jinja.get_template("environment.j2").render(
-            proxies=self.config.proxies, ssh_debug_info=self.config.ssh_debug_info
+            proxies=self.config.proxies, ssh_debug_info=selected_ssh_connection
         )
         self._put_file("/etc/environment", environment_contents)
 
@@ -682,7 +687,7 @@ class Runner:
             proxies=self.config.proxies,
             pre_job_script=str(self.pre_job_script),
             dockerhub_mirror=self.config.dockerhub_mirror,
-            ssh_debug_info=self.config.ssh_debug_info,
+            ssh_debug_info=selected_ssh_connection,
         )
         self._put_file(str(self.env_file), env_contents)
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])

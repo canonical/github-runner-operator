@@ -77,7 +77,7 @@ class RunnerConfig:  # pylint: disable=too-many-instance-attributes
             name.
         proxies: HTTP(S) proxy settings.
         dockerhub_mirror: URL of dockerhub mirror to use.
-        ssh_debug_info: The SSH debug server connection metadata.
+        ssh_debug_infos: The SSH debug server connections metadata.
     """
 
     app_name: str
@@ -87,7 +87,7 @@ class RunnerConfig:  # pylint: disable=too-many-instance-attributes
     path: GithubPath
     proxies: ProxySetting
     dockerhub_mirror: str | None = None
-    ssh_debug_info: SSHDebugInfo | None = None
+    ssh_debug_infos: SSHDebugInfo | None = None
 
 
 @dataclass
