@@ -183,7 +183,7 @@ SSH connection information for debug workflow.
 ### <kbd>classmethod</kbd> `from_charm`
 
 ```python
-from_charm(charm: CharmBase) → Optional[ForwardRef('SSHDebugInfo')]
+from_charm(charm: CharmBase) → List[ForwardRef('SSHDebugInfo')]
 ```
 
 Initialize the SSHDebugInfo from charm relation data. 
@@ -208,14 +208,14 @@ The charm state.
  - <b>`proxy_config`</b>:  Proxy-related configuration. 
  - <b>`charm_config`</b>:  Configuration of the juju charm. 
  - <b>`arch`</b>:  The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64. 
- - <b>`ssh_debug_info`</b>:  The SSH debug connection configuration information. 
+ - <b>`ssh_debug_infos`</b>:  SSH debug connections configuration information. 
 
 
 
 
 ---
 
-<a href="../src/charm_state.py#L248"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L254"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
