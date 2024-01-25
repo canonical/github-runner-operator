@@ -183,7 +183,7 @@ SSH connection information for debug workflow.
 ### <kbd>classmethod</kbd> `from_charm`
 
 ```python
-from_charm(charm: CharmBase) → List[ForwardRef('SSHDebugInfo')]
+from_charm(charm: CharmBase) → list['SSHDebugInfo']
 ```
 
 Initialize the SSHDebugInfo from charm relation data. 
