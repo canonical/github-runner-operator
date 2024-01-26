@@ -11,6 +11,8 @@ import yaml
 
 from utilities import execute_command
 
+NetworkT = typing.TypeVar("NetworkT", ipaddress.IPv4Network, ipaddress.IPv6Network)
+
 
 @dataclasses.dataclass
 class FirewallEntry:
@@ -68,9 +70,9 @@ class Firewall:  # pylint: disable=too-few-public-methods
 
     def _exclude_network(
         self,
-        networks: typing.List[ipaddress.IPv4Network],
-        excludes: typing.List[ipaddress.IPv4Network],
-    ) -> typing.Set[ipaddress.IPv4Network]:
+        networks: typing.List[NetworkT],
+        excludes: typing.List[NetworkT],
+    ) -> typing.Set[NetworkT]:
         """Excludes the network segment from a pool of networks.
 
         Args:
@@ -83,7 +85,7 @@ class Firewall:  # pylint: disable=too-few-public-methods
         total_excluded_networks = set(networks)
 
         for exclude in excludes:
-            scoped_excluded_networks: set[ipaddress.IPv4Network] = set()
+            scoped_excluded_networks: set[NetworkT] = set()
             for net in total_excluded_networks:
                 if net.overlaps(exclude):
                     scoped_excluded_networks.update(net.address_exclude(exclude))

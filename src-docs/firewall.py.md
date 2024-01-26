@@ -12,7 +12,7 @@ The runner firewall manager.
 ## <kbd>class</kbd> `Firewall`
 Represent a firewall and provides methods to refresh its configuration. 
 
-<a href="../src/firewall.py#L50"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/firewall.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -33,7 +33,7 @@ Initialize a new Firewall instance.
 
 ---
 
-<a href="../src/firewall.py#L58"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/firewall.py#L60"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_host_ip`
 
@@ -50,7 +50,7 @@ Get the host IP address for the corresponding LXD network.
 
 ---
 
-<a href="../src/firewall.py#L96"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/firewall.py#L98"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `refresh_firewall`
 
@@ -86,7 +86,7 @@ Represent an entry in the firewall.
 
 ---
 
-<a href="../src/firewall.py#L25"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/firewall.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `decode`
 
