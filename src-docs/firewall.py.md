@@ -50,12 +50,15 @@ Get the host IP address for the corresponding LXD network.
 
 ---
 
-<a href="../src/firewall.py#L69"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/firewall.py#L83"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `refresh_firewall`
 
 ```python
-refresh_firewall(denylist: List[FirewallEntry])
+refresh_firewall(
+    denylist: List[FirewallEntry],
+    allowlist: Optional[List[FirewallEntry]] = None
+)
 ```
 
 Refresh the firewall configuration. 

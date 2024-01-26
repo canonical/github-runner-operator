@@ -66,7 +66,25 @@ class Firewall:  # pylint: disable=too-few-public-methods
         )
         return str(ipaddress.IPv4Interface(address.strip()).ip)
 
-    def refresh_firewall(self, denylist: typing.List[FirewallEntry]):
+    def _exclude_network(
+        self,
+        networks: typing.List[ipaddress.IPv4Network],
+        excludes: typing.List[ipaddress.IPv4Network],
+    ) -> typing.Set[ipaddress.IPv4Network]:
+        total: typing.Set[ipaddress.IPv4Network] = set()
+        for exclude in excludes:
+            for network in networks:
+                try:
+                    total.update(network.address_exclude(exclude))
+                except ValueError:
+                    total.update([network])
+        return total  # this currently doesn't work
+
+    def refresh_firewall(
+        self,
+        denylist: typing.List[FirewallEntry],
+        allowlist: typing.List[FirewallEntry] | None = None,
+    ):
         """Refresh the firewall configuration.
 
         Args:
@@ -128,23 +146,24 @@ class Firewall:  # pylint: disable=too-few-public-methods
                 "state": "enabled",
             },
         ]
+
         host_network = ipaddress.IPv4Network(host_ip)
-        for entry in denylist:
-            entry_network = ipaddress.IPv4Network(entry.ip_range)
-            try:
-                excluded = list(entry_network.address_exclude(host_network))
-            except ValueError:
-                excluded = [entry_network]
-            egress_rules.extend(
-                [
-                    {
-                        "action": "reject",
-                        "destination": str(ip),
-                        "state": "enabled",
-                    }
-                    for ip in excluded
-                ]
-            )
+        allowed_ips = [
+            host_network,
+            *[ipaddress.IPv4Network(entry.ip_range) for entry in (allowlist or [])],
+        ]
+        ips_to_deny = [ipaddress.IPv4Network(entry.ip_range) for entry in denylist]
+        denied_ips = self._exclude_network(ips_to_deny, allowed_ips)
+        egress_rules.extend(
+            [
+                {
+                    "action": "reject",
+                    "destination": str(ip),
+                    "state": "enabled",
+                }
+                for ip in denied_ips
+            ]
+        )
         acl_config["egress"] = egress_rules
         execute_command(
             ["lxc", "network", "acl", "edit", self._ACL_RULESET_NAME],
