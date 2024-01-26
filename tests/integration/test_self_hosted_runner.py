@@ -14,6 +14,7 @@ from juju.application import Application
 from juju.model import Model
 
 from github_client import GithubClient
+from runner_type import GithubRepo
 from tests.integration.helpers import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
@@ -142,7 +143,7 @@ async def test_wait_on_busy_runner_repo_check(
     # Wait until runner online and then busy.
     for _ in range(30):
         all_runners = runner_manager_github_client.get_runner_github_info(
-            f"{forked_github_repository.owner}/{forked_github_repository.name}"
+            GithubRepo(owner=forked_github_repository.owner, repo=forked_github_repository.name)
         )
         runners = [runner for runner in all_runners if runner.name == runner_to_be_used]
 
