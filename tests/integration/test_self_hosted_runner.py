@@ -143,7 +143,9 @@ async def test_wait_on_busy_runner_repo_check(
     # Wait until runner online and then busy.
     for _ in range(30):
         all_runners = runner_manager_github_client.get_runner_github_info(
-            GithubRepo(owner=forked_github_repository.owner, repo=forked_github_repository.name)
+            GithubRepo(
+                owner=forked_github_repository.owner.login, repo=forked_github_repository.name
+            )
         )
         runners = [runner for runner in all_runners if runner.name == runner_to_be_used]
 
