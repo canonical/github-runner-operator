@@ -137,7 +137,7 @@ async def test_wait_on_busy_runner_repo_check(
         id_or_file_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME
     )
 
-    assert workflow.create_dispatch(main_branch, {"runner": app_runner.name, "minutes": 30})
+    assert workflow.create_dispatch(main_branch, {"runner": app_runner.name, "minutes": "30"})
 
     # Wait until runner online and then busy.
     for _ in range(30):
