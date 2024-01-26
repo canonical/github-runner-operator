@@ -410,7 +410,7 @@ class RunnerManager:
                 path=self.config.path,
                 proxies=self.proxies,
                 name=self._generate_runner_name(),
-                ssh_debug_info=self.config.charm_state.ssh_debug_info,
+                ssh_debug_infos=self.config.charm_state.ssh_debug_infos,
             )
             runner = Runner(self._clients, config, RunnerStatus())
             try:
@@ -662,7 +662,7 @@ class RunnerManager:
                 name=name,
                 path=self.config.path,
                 proxies=self.proxies,
-                ssh_debug_info=self.config.charm_state.ssh_debug_info,
+                ssh_debug_infos=self.config.charm_state.ssh_debug_infos,
             )
             return Runner(
                 self._clients,
