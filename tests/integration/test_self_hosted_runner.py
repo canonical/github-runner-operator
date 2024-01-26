@@ -156,9 +156,9 @@ async def test_wait_on_busy_runner_repo_check(
             start_time = datetime.now(timezone.utc)
             break
 
-        sleep(10)
+        sleep(30)
     else:
-        assert False, "Timeout while waiting for workflow to complete"
+        assert False, "Timeout while waiting for runner to take up the workflow"
 
     # 2.
     action = await unit.run_action("flush-runners")
