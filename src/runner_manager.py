@@ -546,6 +546,7 @@ class RunnerManager:
             # The date is between two single quotes(').
             _, output, _ = stdout.read().decode("utf-8").strip().split("'")
             date_str, time_str, timezone_str = output.split(" ")
+            timezone_str = f"{timezone_str[:3]}:{timezone_str[3:]}"
             job_start_time = datetime.fromisoformat(f"{date_str}T{time_str[:12]}{timezone_str}")
             if job_start_time + timedelta(minutes=1) > now:
                 return False
