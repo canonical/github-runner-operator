@@ -543,7 +543,9 @@ class RunnerManager:
             )
             if exit_code != 0:
                 return False
-            date_str, time_str, timezone_str = stdout.read().decode("utf-8").split(" ")
+            # The date is between two single quotes(').
+            _, output, _ = stdout.read().decode("utf-8").strip().split("'")
+            date_str, time_str, timezone_str = output.split(" ")
             job_start_time = datetime.fromisoformat(f"{date_str}T{time_str[:12]}{timezone_str}")
             if job_start_time + timedelta(minutes=1) > now:
                 return False
