@@ -82,18 +82,18 @@ class Firewall:  # pylint: disable=too-few-public-methods
         Returns:
             The network pool without the network segments in excludes.
         """
-        total_excluded_networks = set(networks)
+        total_networks_without_excluded = set(networks)
 
         for exclude in excludes:
             scoped_excluded_networks: set[NetworkT] = set()
-            for net in total_excluded_networks:
+            for net in total_networks_without_excluded:
                 if net.overlaps(exclude):
                     scoped_excluded_networks.update(net.address_exclude(exclude))
                 else:
                     scoped_excluded_networks.add(net)
-            total_excluded_networks = scoped_excluded_networks
+            total_networks_without_excluded = scoped_excluded_networks
 
-        return total_excluded_networks
+        return total_networks_without_excluded
 
     def refresh_firewall(
         self,
