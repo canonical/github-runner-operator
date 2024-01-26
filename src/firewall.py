@@ -71,14 +71,27 @@ class Firewall:  # pylint: disable=too-few-public-methods
         networks: typing.List[ipaddress.IPv4Network],
         excludes: typing.List[ipaddress.IPv4Network],
     ) -> typing.Set[ipaddress.IPv4Network]:
-        total: typing.Set[ipaddress.IPv4Network] = set()
+        """Excludes the network segment from a pool of networks.
+
+        Args:
+            networks: The network pool to apply.
+            excludes: The networks to exclude from the pool.
+
+        Returns:
+            The network pool without the network segments in excludes.
+        """
+        total_excluded_networks = set(networks)
+
         for exclude in excludes:
-            for network in networks:
-                try:
-                    total.update(network.address_exclude(exclude))
-                except ValueError:
-                    total.update([network])
-        return total  # this currently doesn't work
+            scoped_excluded_networks: set[ipaddress.IPv4Network] = set()
+            for net in total_excluded_networks:
+                if net.overlaps(exclude):
+                    scoped_excluded_networks.update(net.address_exclude(exclude))
+                else:
+                    scoped_excluded_networks.add(net)
+            total_excluded_networks = scoped_excluded_networks
+
+        return total_excluded_networks
 
     def refresh_firewall(
         self,
@@ -147,13 +160,12 @@ class Firewall:  # pylint: disable=too-few-public-methods
             },
         ]
 
-        host_network = ipaddress.IPv4Network(host_ip)
         allowed_ips = [
-            host_network,
+            ipaddress.IPv4Network(host_ip),
             *[ipaddress.IPv4Network(entry.ip_range) for entry in (allowlist or [])],
         ]
         ips_to_deny = [ipaddress.IPv4Network(entry.ip_range) for entry in denylist]
-        denied_ips = self._exclude_network(ips_to_deny, allowed_ips)
+        denied_ips = self._exclude_network(networks=ips_to_deny, excludes=allowed_ips)
         egress_rules.extend(
             [
                 {

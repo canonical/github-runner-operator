@@ -914,7 +914,7 @@ class GithubRunnerCharm(CharmBase):
             FirewallEntry.decode(str(entry.host)) for entry in self._state.ssh_debug_infos
         ]
         firewall = Firewall("lxdbr0")
-        firewall.refresh_firewall(denylist, allowlist)
+        firewall.refresh_firewall(denylist=denylist, allowlist=allowlist)
         logger.debug(
             "firewall update, current firewall: %s",
             execute_command(["/usr/sbin/nft", "list", "ruleset"]),

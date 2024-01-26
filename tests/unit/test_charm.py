@@ -446,7 +446,7 @@ class TestCharm(unittest.TestCase):
 
         harness.charm._refresh_firewall()
         mocked_firewall_instance = mock_firewall.return_value
-        allowlist = mocked_firewall_instance.refresh_firewall.call_args_list[0][0][1]
+        allowlist = mocked_firewall_instance.refresh_firewall.call_args_list[0][1]["allowlist"]
         assert all(
             FirewallEntry(ip) in allowlist for ip in test_unit_ip_addresses
         ), "Expected IP firewall entry not found in allowlist arg."
