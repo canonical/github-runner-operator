@@ -13,7 +13,6 @@ on:
         # Seems to be by design: https://github.blog/changelog/2021-11-10-github-actions-input-types-for-manual-workflows/
         default: '2'
 
-
 jobs:
   workflow-dispatch-tests:
     runs-on: [self-hosted, linux, x64, "${{ inputs.runner }}"]
