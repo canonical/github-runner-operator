@@ -238,17 +238,17 @@ class State:
     """The charm state.
 
     Attributes:
+        arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
+        charm_config: Configuration of the juju charm.
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
-        charm_config: Configuration of the juju charm.
-        arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
         ssh_debug_infos: SSH debug connections configuration information.
     """
 
+    arch: ARCH
+    charm_config: CharmConfig
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
-    charm_config: CharmConfig
-    arch: ARCH
     ssh_debug_infos: list[SSHDebugInfo]
 
     @classmethod
