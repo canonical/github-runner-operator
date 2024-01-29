@@ -70,9 +70,9 @@ class Firewall:  # pylint: disable=too-few-public-methods
 
     def _exclude_network(
         self,
-        networks: typing.List[NetworkT],
-        excludes: typing.List[NetworkT],
-    ) -> typing.Set[NetworkT]:
+        networks: typing.Iterable[NetworkT],
+        excludes: typing.Iterable[NetworkT],
+    ) -> set[NetworkT]:
         """Excludes the network segment from a pool of networks.
 
         Args:
@@ -97,8 +97,8 @@ class Firewall:  # pylint: disable=too-few-public-methods
 
     def refresh_firewall(
         self,
-        denylist: typing.List[FirewallEntry],
-        allowlist: typing.List[FirewallEntry] | None = None,
+        denylist: typing.Iterable[FirewallEntry],
+        allowlist: typing.Iterable[FirewallEntry] | None = None,
     ):
         """Refresh the firewall configuration.
 
