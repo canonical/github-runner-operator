@@ -3,7 +3,7 @@
 
 """Test cases for firewall module."""
 
-from ipaddress import IPv4Address, IPv4Network
+from ipaddress import IPv4Network
 
 import pytest
 
