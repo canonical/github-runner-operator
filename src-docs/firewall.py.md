@@ -56,8 +56,8 @@ Get the host IP address for the corresponding LXD network.
 
 ```python
 refresh_firewall(
-    denylist: List[FirewallEntry],
-    allowlist: Optional[List[FirewallEntry]] = None
+    denylist: list[FirewallEntry],
+    allowlist: list[FirewallEntry] | None = None
 )
 ```
 
