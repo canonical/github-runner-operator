@@ -2,6 +2,38 @@
 # See LICENSE file for licensing details.
 
 options:
+  denylist:
+    type: string
+    default: ""
+    description: |
+      A comma separated list of IPv4 networks in CIDR notation that runners can not access.
+      The runner will always have access to essential services such as DHCP and DNS regardless
+      of the denylist configuration.
+  dockerhub-mirror:
+    type: string
+    default: ""
+    description: |
+      The private docker registry configured as dockerhub mirror to be used by the runners. If set 
+      a message will be displayed prior to job execution on self-hosted runner informing users to 
+      use the provided registry.
+  experimental-use-aproxy:
+    type: boolean
+    default: false
+    description: |
+      (Experimental, may be removed) When set to true, aproxy (https://github.com/canonical/aproxy) 
+      will  be installed inside the runners and will forward all http/s traffic to a proxy server
+      configured by the juju model config 'juju-http-proxy' 
+      (or if this is not set, 'juju-https-proxy' will be used).
+      This is useful when the charm is deployed in a network that requires a proxy to access the 
+      internet.
+      Note that you should not specify a proxy server listening on port 80 or 443, as all traffic
+      to these ports is relayed to aproxy, which would cause an infinite loop.
+  group:
+    type: string
+    default: "default"
+    description: |
+      The organization runner group to register the self-hosted runner under. This has no effect on
+      runners under a repository.
   path:
     type: string
     default: ""
@@ -9,12 +41,29 @@ options:
       The organization or the repository to register the self-hosted runners. For organization the 
       path would be the name of the organization. For repository the path should be in the 
       "{owner}/{repo}" format.
-  group:
-    type: string
-    default: "default"
+  reconcile-interval:
+    type: int
+    default: 10
     description: |
-      The organization runner group to register the self-hosted runner under. This has no effect on
-      runners under a repository.
+      Minutes between each reconciliation of the current runners state and their targeted state. 
+      On reconciliation, the charm polls the state of runners and see if actions are needed. A 
+      random delay of 25% is added. Changes to this time interval will apply when next interval is 
+      triggered. Prior to reconciliation, any packages, and services used by the software will be 
+      updated.
+  runner-storage:
+    type: string
+    default: "juju-storage"
+    description: |
+      The storage for runner LXD instance to mount as disk. Can be "memory" or "juju-storage". If 
+      set to "memory", memory-based storage created with tmpfs will be used as disk for LXD 
+      instances. If set to "juju-storage", storage provided by juju will be used as disk for LXD 
+      instances. This configuration cannot be changed after deployment. The charm needs to be
+      redeployed to change the storage option.
+  test-mode:
+    type: string
+    description: |
+      When set to 'insecure', the charm test mode is activated, which may deactivate some security
+      hardening measures.
   token:
     type: string
     default: ""
@@ -44,52 +93,3 @@ options:
     description: |
       Amount of disk space to allocate to root disk for virtual machine runner. Positive integers
       with KiB, MiB, GiB, TiB, PiB, EiB suffix.
-  reconcile-interval:
-    type: int
-    default: 10
-    description: |
-      Minutes between each reconciliation of the current runners state and their targeted state. 
-      On reconciliation, the charm polls the state of runners and see if actions are needed. A 
-      random delay of 25% is added. Changes to this time interval will apply when next interval is 
-      triggered. Prior to reconciliation, any packages, and services used by the software will be 
-      updated.
-  test-mode:
-    type: string
-    description: |
-      When set to 'insecure', the charm test mode is activated, which may deactivate some security
-      hardening measures.
-  denylist:
-    type: string
-    default: ""
-    description: |
-      A comma separated list of IPv4 networks in CIDR notation that runners can not access.
-      The runner will always have access to essential services such as DHCP and DNS regardless
-      of the denylist configuration.
-  dockerhub-mirror:
-    type: string
-    default: ""
-    description: |
-      The private docker registry configured as dockerhub mirror to be used by the runners. If set 
-      a message will be displayed prior to job execution on self-hosted runner informing users to 
-      use the provided registry.
-  runner-storage:
-    type: string
-    default: "juju-storage"
-    description: |
-      The storage for runner LXD instance to mount as disk. Can be "memory" or "juju-storage". If 
-      set to "memory", memory-based storage created with tmpfs will be used as disk for LXD 
-      instances. If set to "juju-storage", storage provided by juju will be used as disk for LXD 
-      instances. This configuration cannot be changed after deployment. The charm needs to be
-      redeployed to change the storage option.
-  experimental-use-aproxy:
-    type: boolean
-    default: false
-    description: |
-      (Experimental, may be removed) When set to true, aproxy (https://github.com/canonical/aproxy) 
-      will  be installed inside the runners and will forward all http/s traffic to a proxy server
-      configured by the juju model config 'juju-http-proxy' 
-      (or if this is not set, 'juju-https-proxy' will be used).
-      This is useful when the charm is deployed in a network that requires a proxy to access the 
-      internet.
-      Note that you should not specify a proxy server listening on port 80 or 443, as all traffic
-      to these ports is relayed to aproxy, which would cause an infinite loop.
