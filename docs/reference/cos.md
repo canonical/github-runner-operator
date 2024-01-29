@@ -5,7 +5,10 @@
 ### Runner and Charm Insights
 Upon [COS](https://charmhub.io/topics/canonical-observability-stack) integration, this charm initiates the transmission of various metrics—refer to the relevant [specification](https://discourse.charmhub.io/t/specification-isd075-github-runner-cos-integration/12084) for comprehensive details—regarding the runner instances and the charm itself.
 
-The dashboard presents the following rows:
+There are two dashboards. One for fine-granular metrics, called "GitHub Self-Hosted Runner Metrics", and one for long-term metrics,
+called "GitHub Self-Hosted Runner Metrics (Long-Term)". 
+
+The "GitHub Self-Hosted Runner Metrics" metrics dashboard presents the following rows:
 
 - General: Displays general metrics about the charm and runners, such as:
   - Lifecycle counters: Tracks the frequency of Runner initialisation, start, stop, and crash events.
@@ -20,6 +23,14 @@ The dashboard presents the following rows:
   - Pie charts: Share of jobs by completion status, job conclusion, flavor, repo policy check failure http codes and github events.
   - Job duration observation
   - Number of jobs per repository
+
+The "GitHub Self-Hosted Runner Metrics (Long-Term)" metrics dashboard displays the following rows:
+
+- General: Contains the following panels:
+  - Total Jobs
+  - Total unique repositories
+  - Timeseries chart displaying the number of jobs per day
+  - Percentage of jobs with low queue time (less than 60 seconds)
 
 
 

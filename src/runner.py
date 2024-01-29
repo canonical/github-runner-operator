@@ -13,6 +13,7 @@ collection of `Runner` instances.
 import json
 import logging
 import pathlib
+import secrets
 import textwrap
 import time
 from dataclasses import dataclass
@@ -22,7 +23,7 @@ from typing import Iterable, NamedTuple, Optional, Sequence
 import yaml
 
 import shared_fs
-from charm_state import ARCH, GithubOrg, VirtualMachineResources
+from charm_state import ARCH, GithubOrg, SSHDebugInfo, VirtualMachineResources
 from errors import (
     CreateSharedFilesystemError,
     LxdError,
@@ -44,6 +45,9 @@ LXD_PROFILE_YAML = pathlib.Path(__file__).parent.parent / "lxd-profile.yaml"
 if not LXD_PROFILE_YAML.exists():
     LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
 LXDBR_DNSMASQ_LEASES_FILE = Path("/var/snap/lxd/common/lxd/networks/lxdbr0/dnsmasq.leases")
+
+APROXY_ARM_REVISION = 9
+APROXY_AMD_REVISION = 8
 
 
 class Snap(NamedTuple):
@@ -151,7 +155,7 @@ class Runner:
             # Wait some initial time for the instance to boot up
             time.sleep(60)
             self._wait_boot_up()
-            self._install_binaries(config.binary_path)
+            self._install_binaries(config.binary_path, config.arch)
             self._configure_runner()
 
             self._register_runner(
@@ -467,7 +471,7 @@ class Runner:
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
     @retry(tries=10, delay=10, max_delay=120, backoff=2, local_logger=logger)
-    def _install_binaries(self, runner_binary: Path) -> None:
+    def _install_binaries(self, runner_binary: Path, arch: ARCH) -> None:
         """Install runner binary and other binaries.
 
         Args:
@@ -479,7 +483,15 @@ class Runner:
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
-        self._snap_install([Snap(name="aproxy", channel="edge", revision=6)])
+        self._snap_install(
+            [
+                Snap(
+                    name="aproxy",
+                    channel="edge",
+                    revision=APROXY_ARM_REVISION if arch == ARCH.ARM64 else APROXY_AMD_REVISION,
+                )
+            ]
+        )
 
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
@@ -660,9 +672,13 @@ class Runner:
         # As the user already has sudo access, this does not give the user any additional access.
         self.instance.execute(["/usr/bin/sudo", "chmod", "777", "/usr/local/bin"])
 
+        selected_ssh_connection: SSHDebugInfo | None = (
+            secrets.choice(self.config.ssh_debug_infos) if self.config.ssh_debug_infos else None
+        )
+        logger.info("SSH Debug info: %s", selected_ssh_connection)
         # Load `/etc/environment` file.
         environment_contents = self._clients.jinja.get_template("environment.j2").render(
-            proxies=self.config.proxies, ssh_debug_info=self.config.ssh_debug_info
+            proxies=self.config.proxies, ssh_debug_info=selected_ssh_connection
         )
         self._put_file("/etc/environment", environment_contents)
 
@@ -671,7 +687,7 @@ class Runner:
             proxies=self.config.proxies,
             pre_job_script=str(self.pre_job_script),
             dockerhub_mirror=self.config.dockerhub_mirror,
-            ssh_debug_info=self.config.ssh_debug_info,
+            ssh_debug_info=selected_ssh_connection,
         )
         self._put_file(str(self.env_file), env_contents)
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])

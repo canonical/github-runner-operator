@@ -412,31 +412,37 @@ class SSHDebugInfo(BaseModel):
     ed25519_fingerprint: str = Field(pattern="^SHA256:.*")
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> Optional["SSHDebugInfo"]:
+    def from_charm(cls, charm: CharmBase) -> list["SSHDebugInfo"]:
         """Initialize the SSHDebugInfo from charm relation data.
 
         Args:
             charm: The charm instance.
         """
+        ssh_debug_connections: list[SSHDebugInfo] = []
         relations = charm.model.relations[DEBUG_SSH_INTEGRATION_NAME]
         if not relations or not (relation := relations[0]).units:
-            return None
-        target_unit = next(iter(relation.units))
-        relation_data = relation.data[target_unit]
-        if (
-            not (host := relation_data.get("host"))
-            or not (port := relation_data.get("port"))
-            or not (rsa_fingerprint := relation_data.get("rsa_fingerprint"))
-            or not (ed25519_fingerprint := relation_data.get("ed25519_fingerprint"))
-        ):
-            logger.warning("%s relation data not yet ready.", DEBUG_SSH_INTEGRATION_NAME)
-            return None
-        return SSHDebugInfo(
-            host=host,
-            port=port,
-            rsa_fingerprint=rsa_fingerprint,
-            ed25519_fingerprint=ed25519_fingerprint,
-        )
+            return ssh_debug_connections
+        for unit in relation.units:
+            relation_data = relation.data[unit]
+            if (
+                not (host := relation_data.get("host"))
+                or not (port := relation_data.get("port"))
+                or not (rsa_fingerprint := relation_data.get("rsa_fingerprint"))
+                or not (ed25519_fingerprint := relation_data.get("ed25519_fingerprint"))
+            ):
+                logger.warning(
+                    "%s relation data for %s not yet ready.", DEBUG_SSH_INTEGRATION_NAME, unit.name
+                )
+                continue
+            ssh_debug_connections.append(
+                SSHDebugInfo(
+                    host=host,
+                    port=port,
+                    rsa_fingerprint=rsa_fingerprint,
+                    ed25519_fingerprint=ed25519_fingerprint,
+                )
+            )
+        return ssh_debug_connections
 
 
 @dataclasses.dataclass(frozen=True)
@@ -448,7 +454,7 @@ class State:
         proxy_config: Proxy-related configuration.
         charm_config: Configuration of the juju charm.
         arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
-        ssh_debug_info: The SSH debug connection configuration information.
+        ssh_debug_infos: SSH debug connections configuration information.
     """
 
     is_metrics_logging_available: bool
@@ -456,7 +462,7 @@ class State:
     charm_config: CharmConfig
     runner_config: RunnerCharmConfig
     arch: ARCH
-    ssh_debug_info: Optional[SSHDebugInfo]
+    ssh_debug_infos: list[SSHDebugInfo]
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "State":
@@ -512,7 +518,7 @@ class State:
             raise CharmConfigInvalidError(f"Unsupported architecture {exc.arch}") from exc
 
         try:
-            ssh_debug_info = SSHDebugInfo.from_charm(charm)
+            ssh_debug_infos = SSHDebugInfo.from_charm(charm)
         except ValidationError as exc:
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
@@ -523,13 +529,16 @@ class State:
             charm_config=charm_config,
             runner_config=runner_config,
             arch=arch,
-            ssh_debug_info=ssh_debug_info,
+            ssh_debug_infos=ssh_debug_infos,
         )
 
         state_dict = dataclasses.asdict(state)
         # Convert pydantic object to python object serializable by json module.
         state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
         state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
+        state_dict["ssh_debug_infos"] = [
+            debug_info.json() for debug_info in state_dict["ssh_debug_infos"]
+        ]
         json_data = json.dumps(state_dict, ensure_ascii=False)
         CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
 

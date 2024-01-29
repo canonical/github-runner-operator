@@ -9,6 +9,10 @@ The `Runner` class stores the information on the runners and manages the lifecyc
 
 The `RunnerManager` class from `runner_manager.py` creates and manages a collection of `Runner` instances. 
 
+**Global Variables**
+---------------
+- **APROXY_ARM_REVISION**
+- **APROXY_AMD_REVISION**
 
 
 ---
@@ -35,7 +39,7 @@ The configuration values for creating a single runner instance.
 ## <kbd>class</kbd> `Runner`
 Single instance of GitHub self-hosted runner. 
 
-<a href="../src/runner.py#L98"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L102"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -63,7 +67,7 @@ Construct the runner instance.
 
 ---
 
-<a href="../src/runner.py#L128"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L132"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `create`
 
@@ -87,7 +91,7 @@ Create the runner instance on LXD and register it on GitHub.
 
 ---
 
-<a href="../src/runner.py#L164"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L168"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `remove`
 
