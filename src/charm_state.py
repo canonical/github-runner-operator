@@ -304,10 +304,10 @@ class State:
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
         state = cls(
+            arch=arch,
+            charm_config=charm_config,
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
-            charm_config=charm_config,
-            arch=arch,
             ssh_debug_infos=ssh_debug_infos,
         )
 
