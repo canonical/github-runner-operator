@@ -300,7 +300,7 @@ async def tmate_ssh_server_app_fixture(
     """tmate-ssh-server charm application related to GitHub-Runner app charm."""
     tmate_app: Application = await model.deploy("tmate-ssh-server", channel="edge")
     await app_no_wait.relate("debug-ssh", f"{tmate_app.name}:debug-ssh")
-    await model.wait_for_idle(status=ACTIVE, timeout=60 * 30)
+    await model.wait_for_idle(apps=[tmate_app.name], status=ACTIVE, timeout=60 * 30)
 
     return tmate_app
 

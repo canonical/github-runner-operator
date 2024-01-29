@@ -19,6 +19,7 @@ from errors import (
     RunnerError,
     SubprocessError,
 )
+from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
 from runner_type import GithubOrg, GithubRepo, VirtualMachineResources
@@ -372,8 +373,8 @@ class TestCharm(unittest.TestCase):
         )
 
     @patch("charm.RunnerManager")
-    @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
+    @patch("pathlib.Path.mkdir")
     @patch("subprocess.run")
     def test_on_flush_runners_action(self, run, wt, mkdir, rm):
         mock_event = MagicMock()
@@ -391,3 +392,61 @@ class TestCharm(unittest.TestCase):
         harness.charm._on_flush_runners_action(mock_event)
         mock_event.set_results.assert_called()
         mock_event.reset_mock()
+
+    @patch("charm.RunnerManager")
+    @patch("pathlib.Path.write_text")
+    @patch("pathlib.Path.mkdir")
+    @patch("subprocess.run")
+    @patch("charm.Firewall")
+    def test__refresh_firewall(self, mock_firewall, *args):
+        """
+        arrange: given multiple tmate-ssh-server units in relation.
+        act: when refresh_firewall is called.
+        assert: the unit ip addresses are included in allowlist.
+        """
+        harness = Harness(GithubRunnerCharm)
+        relation_id = harness.add_relation("debug-ssh", "tmate-ssh-server")
+        harness.add_relation_unit(relation_id, "tmate-ssh-server/0")
+        harness.add_relation_unit(relation_id, "tmate-ssh-server/1")
+        harness.add_relation_unit(relation_id, "tmate-ssh-server/2")
+        test_unit_ip_addresses = ["127.0.0.1", "127.0.0.2", "127.0.0.3"]
+
+        harness.update_relation_data(
+            relation_id,
+            "tmate-ssh-server/0",
+            {
+                "host": test_unit_ip_addresses[0],
+                "port": "10022",
+                "rsa_fingerprint": "SHA256:abcd",
+                "ed25519_fingerprint": "abcd",
+            },
+        )
+        harness.update_relation_data(
+            relation_id,
+            "tmate-ssh-server/1",
+            {
+                "host": test_unit_ip_addresses[1],
+                "port": "10022",
+                "rsa_fingerprint": "SHA256:abcd",
+                "ed25519_fingerprint": "abcd",
+            },
+        )
+        harness.update_relation_data(
+            relation_id,
+            "tmate-ssh-server/2",
+            {
+                "host": test_unit_ip_addresses[2],
+                "port": "10022",
+                "rsa_fingerprint": "SHA256:abcd",
+                "ed25519_fingerprint": "abcd",
+            },
+        )
+
+        harness.begin()
+
+        harness.charm._refresh_firewall()
+        mocked_firewall_instance = mock_firewall.return_value
+        allowlist = mocked_firewall_instance.refresh_firewall.call_args_list[0][1]["allowlist"]
+        assert all(
+            FirewallEntry(ip) in allowlist for ip in test_unit_ip_addresses
+        ), "Expected IP firewall entry not found in allowlist arg."

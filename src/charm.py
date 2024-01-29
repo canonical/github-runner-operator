@@ -893,8 +893,11 @@ class GithubRunnerCharm(CharmBase):
                 FirewallEntry.decode(entry.strip())
                 for entry in firewall_denylist_config.split(",")
             ]
+        allowlist = [
+            FirewallEntry.decode(str(entry.host)) for entry in self._state.ssh_debug_connections
+        ]
         firewall = Firewall("lxdbr0")
-        firewall.refresh_firewall(denylist)
+        firewall.refresh_firewall(denylist=denylist, allowlist=allowlist)
         logger.debug(
             "firewall update, current firewall: %s",
             execute_command(["/usr/sbin/nft", "list", "ruleset"]),
@@ -913,6 +916,7 @@ class GithubRunnerCharm(CharmBase):
 
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
+        self._refresh_firewall()
         runner_manager = self._get_runner_manager()
         runner_manager.flush(FlushMode.FLUSH_IDLE)
         self._reconcile_runners(runner_manager)
