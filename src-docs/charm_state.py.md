@@ -161,7 +161,7 @@ Supported storage as runner disk.
 
 ---
 
-## <kbd>class</kbd> `SSHDebugInfo`
+## <kbd>class</kbd> `SSHDebugConnection`
 SSH connection information for debug workflow. 
 
 
@@ -183,7 +183,7 @@ SSH connection information for debug workflow.
 ### <kbd>classmethod</kbd> `from_charm`
 
 ```python
-from_charm(charm: CharmBase) → list['SSHDebugInfo']
+from_charm(charm: CharmBase) → list['SSHDebugConnection']
 ```
 
 Initialize the SSHDebugInfo from charm relation data. 
@@ -208,7 +208,7 @@ The charm state.
  - <b>`proxy_config`</b>:  Proxy-related configuration. 
  - <b>`charm_config`</b>:  Configuration of the juju charm. 
  - <b>`arch`</b>:  The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64. 
- - <b>`ssh_debug_infos`</b>:  SSH debug connections configuration information. 
+ - <b>`ssh_debug_connections`</b>:  SSH debug connections configuration information. 
 
 
 

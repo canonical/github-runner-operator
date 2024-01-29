@@ -23,7 +23,7 @@ from typing import Iterable, NamedTuple, Optional, Sequence
 import yaml
 
 import shared_fs
-from charm_state import ARCH, SSHDebugInfo
+from charm_state import ARCH, SSHDebugConnection
 from errors import (
     CreateSharedFilesystemError,
     LxdError,
@@ -672,8 +672,10 @@ class Runner:
         # As the user already has sudo access, this does not give the user any additional access.
         self.instance.execute(["/usr/bin/sudo", "chmod", "777", "/usr/local/bin"])
 
-        selected_ssh_connection: SSHDebugInfo | None = (
-            secrets.choice(self.config.ssh_debug_infos) if self.config.ssh_debug_infos else None
+        selected_ssh_connection: SSHDebugConnection | None = (
+            secrets.choice(self.config.ssh_debug_connections)
+            if self.config.ssh_debug_connections
+            else None
         )
         logger.info("SSH Debug info: %s", selected_ssh_connection)
         # Load `/etc/environment` file.
