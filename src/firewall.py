@@ -71,24 +71,24 @@ class Firewall:  # pylint: disable=too-few-public-methods
     def _exclude_network(
         self,
         networks: typing.Iterable[NetworkT],
-        excludes: typing.Iterable[NetworkT],
+        exclude: typing.Iterable[NetworkT],
     ) -> set[NetworkT]:
         """Excludes the network segment from a pool of networks.
 
         Args:
             networks: The network pool to apply.
-            excludes: The networks to exclude from the pool.
+            exclude: The networks to exclude from the pool.
 
         Returns:
             The network pool without the network segments in excludes.
         """
         total_networks_without_excluded = set(networks)
 
-        for exclude in excludes:
+        for exclude_net in exclude:
             scoped_excluded_networks: set[NetworkT] = set()
             for net in total_networks_without_excluded:
-                if net.overlaps(exclude):
-                    scoped_excluded_networks.update(net.address_exclude(exclude))
+                if net.overlaps(exclude_net):
+                    scoped_excluded_networks.update(net.address_exclude(exclude_net))
                 else:
                     scoped_excluded_networks.add(net)
             total_networks_without_excluded = scoped_excluded_networks
@@ -167,7 +167,7 @@ class Firewall:  # pylint: disable=too-few-public-methods
             *[ipaddress.IPv4Network(entry.ip_range) for entry in (allowlist or [])],
         ]
         ips_to_deny = [ipaddress.IPv4Network(entry.ip_range) for entry in denylist]
-        denied_ips = self._exclude_network(networks=ips_to_deny, excludes=allowed_ips)
+        denied_ips = self._exclude_network(networks=ips_to_deny, exclude=allowed_ips)
         egress_rules.extend(
             [
                 {
