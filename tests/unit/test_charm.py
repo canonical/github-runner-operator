@@ -55,7 +55,7 @@ def setup_charm_harness() -> Harness:
     harness = Harness(GithubRunnerCharm)
     harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
     harness.begin()
-    harness.charm._setup_state()
+    harness.charm.setup_state()
     return harness
 
 

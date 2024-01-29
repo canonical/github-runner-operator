@@ -28,7 +28,7 @@ class MockGithubRunnerCharmModelFactory(factory.Factory):
     class Meta:
         model = MagicMock
 
-    relations = {COS_AGENT_INTEGRATION_NAME: [], DEBUG_SSH_INTEGRATION_NAME: []}
+    relations: dict[str, list] = {COS_AGENT_INTEGRATION_NAME: [], DEBUG_SSH_INTEGRATION_NAME: []}
 
 
 class MockGithubRunnerCharmFactory(factory.Factory):
@@ -41,8 +41,10 @@ class MockGithubRunnerCharmFactory(factory.Factory):
     app = factory.SubFactory(MockGithubRunnerCharmAppFactory)
     model = factory.SubFactory(MockGithubRunnerCharmModelFactory)
 
+    # Ignore N805 as the first param is not self for Factory Boy sequences.
+    # See: https://factoryboy.readthedocs.io/en/stable/introduction.html#sequences
     @factory.sequence
-    def config(n):
+    def config(n):  # noqa: N805
         return {
             "path": f"mock_path_{n}",
             "token": f"mock_token_{n}",

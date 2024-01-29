@@ -209,8 +209,8 @@ class CharmConfig(BaseModel):
     def check_fields(cls, values: dict) -> dict:
         """Validate the general charm configuration."""
         reconcile_interval = values.get("reconcile_interval")
-        # By property definition, this cannot be None.
-        assert reconcile_interval is not None, "Unreachable code"
+        # By property definition, this cannot be None. Needed for mypy type check.
+        assert reconcile_interval is not None, "Unreachable code"  # nosec for [B101:assert_used]
 
         if reconcile_interval < 2:
             logger.exception("The virtual-machines configuration must be int")
@@ -277,9 +277,9 @@ class RunnerCharmConfig(BaseModel):
         """Validate the runner configuration."""
         virtual_machines = values.get("virtual_machines")
         resources = values.get("virtual_machine_resources")
-        # By property definition, these cannot be None.
-        assert virtual_machines is not None, "Unreachable code"
-        assert resources is not None, "Unreachable code"
+        # By property definition, this cannot be None. Needed for mypy type check.
+        assert virtual_machines is not None, "Unreachable code"  # nosec for [B101:assert_used]
+        assert resources is not None, "Unreachable code"  # nosec for [B101:assert_used]
 
         if virtual_machines < 0:
             raise ValueError(

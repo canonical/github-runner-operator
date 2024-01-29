@@ -130,7 +130,7 @@ def _setup_github_runner_charm_state(
 
     @functools.wraps(func)
     def func_with_state_setup(self: "GithubRunnerCharm", event: EventT) -> None:
-        self._setup_state()
+        self.setup_state()
         func(self, event)
 
     return func_with_state_setup
@@ -196,8 +196,8 @@ class GithubRunnerCharm(CharmBase):
             self.on.update_dependencies_action, self._on_update_dependencies_action
         )
 
-    def _setup_state(self) -> None:
-        """Setup the charm state."""
+    def setup_state(self) -> None:
+        """Set up the charm state."""
         try:
             self.state = State.from_charm(self)
         except CharmConfigInvalidError as exc:

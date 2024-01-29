@@ -122,6 +122,18 @@ Unit that this execution is responsible for.
 
 
 
+---
+
+<a href="../src/charm.py#L199"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `setup_state`
+
+```python
+setup_state() → None
+```
+
+Set up the charm state. 
+
 
 ---
 
