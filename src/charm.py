@@ -233,16 +233,6 @@ class GithubRunnerCharm(CharmBase):
                 logger.info("Cleaned up storage directory")
             raise RunnerError("Failed to configure runner storage") from err
 
-    def _juju_storage_mounted(self) -> bool:
-        """Whether a juju storage is mounted on the runner-storage location.
-
-        Returns:
-            True if a juju storage is mounted on the runner-storage location.
-        """
-        # Use `mount` as Python does not have easy method to get the mount points.
-        stdout, exit_code = execute_command(["mountpoint", str(self.juju_storage_path)], False)
-        return exit_code == 0 and str(self.juju_storage_path) in stdout
-
     @retry(tries=5, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _ensure_runner_storage(self, size: int) -> Path:
         """Ensure the runner storage is setup.
@@ -259,15 +249,7 @@ class GithubRunnerCharm(CharmBase):
                 path = self.ram_pool_path
                 self._create_memory_storage(self.ram_pool_path, size)
             case RunnerStorage.JUJU_STORAGE:
-                logger.info("Verifying juju storage")
                 path = self.juju_storage_path
-                if not self._juju_storage_mounted():
-                    raise ConfigurationError(
-                        (
-                            "Non-root disk storage should be mount on the runner juju storage to "
-                            "be used as the disk for the runners"
-                        )
-                    )
 
         # tmpfs storage is not created if required size is 0.
         if size > 0:

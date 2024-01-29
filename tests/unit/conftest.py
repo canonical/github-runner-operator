@@ -29,7 +29,6 @@ def mocks(monkeypatch, tmp_path, exec_command):
     monkeypatch.setattr(
         "charm.GithubRunnerCharm.repo_check_systemd_service", Path(tmp_path / "systemd_service")
     )
-    monkeypatch.setattr("charm.GithubRunnerCharm._juju_storage_mounted", lambda self: True)
     monkeypatch.setattr("charm.os", unittest.mock.MagicMock())
     monkeypatch.setattr("charm.shutil", unittest.mock.MagicMock())
     monkeypatch.setattr("charm.shutil.disk_usage", disk_usage_mock(30 * 1024 * 1024 * 1024))
