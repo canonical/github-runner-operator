@@ -20,14 +20,14 @@ from tests.integration.helpers import (
     run_in_unit,
     wait_till_num_of_runners,
 )
-from tests.status_name import ACTIVE_STATUS_NAME
+from tests.status_name import ACTIVE
 
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_update_interval(model: Model, app_scheduled_events: Application) -> None:
     """
-    arrange: An working application with one runner.
+    arrange: A working application with one runner.
     act:
         1.  a. Remove runner binary.
             b. Crash the one runner
@@ -54,7 +54,7 @@ async def test_update_interval(model: Model, app_scheduled_events: Application) 
     await wait_till_num_of_runners(unit, 0)
 
     await sleep(10 * 60)
-    await model.wait_for_idle(status=ACTIVE_STATUS_NAME, timeout=20 * 60)
+    await model.wait_for_idle(status=ACTIVE, timeout=20 * 60)
 
     assert await check_runner_binary_exists(unit)
 

@@ -32,7 +32,7 @@ from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 import metrics
-from charm_state import CharmConfigInvalidError, State
+from charm_state import DEBUG_SSH_INTEGRATION_NAME, CharmConfigInvalidError, RunnerStorage, State
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
@@ -130,8 +130,9 @@ class GithubRunnerCharm(CharmBase):
 
     service_token_path = Path("service_token")
     repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
-    repo_check_web_service_script = Path("templates/repo_policy_compliance_service.py")
+    repo_check_web_service_script = Path("scripts/repo_policy_compliance_service.py")
     repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
+    juju_storage_path = Path("/storage/juju")
     ram_pool_path = Path("/storage/ram")
 
     def __init__(self, *args, **kargs) -> None:
@@ -145,6 +146,7 @@ class GithubRunnerCharm(CharmBase):
         super().__init__(*args, **kargs)
 
         self._grafana_agent = COSAgentProvider(self)
+
         try:
             self._state = State.from_charm(self)
         except CharmConfigInvalidError as exc:
@@ -161,7 +163,6 @@ class GithubRunnerCharm(CharmBase):
             path=self.config["path"],  # for detecting changes
             token=self.config["token"],  # for detecting changes
             runner_bin_url=None,
-            runner_image_url=None,
         )
 
         self.proxies: ProxySetting = {}
@@ -186,6 +187,10 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.config_changed, self._on_config_changed)
         self.framework.observe(self.on.start, self._on_start)
         self.framework.observe(self.on.stop, self._on_stop)
+        self.framework.observe(
+            self.on[DEBUG_SSH_INTEGRATION_NAME].relation_changed,
+            self._on_debug_ssh_relation_changed,
+        )
 
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
 
@@ -196,7 +201,6 @@ class GithubRunnerCharm(CharmBase):
             self.on.update_dependencies_action, self._on_update_dependencies_action
         )
 
-    @retry(tries=5, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _create_memory_storage(self, path: Path, size: int) -> None:
         """Create a tmpfs-based LVM volume group.
 
@@ -227,6 +231,57 @@ class GithubRunnerCharm(CharmBase):
                 path.rmdir()
                 logger.info("Cleaned up storage directory")
             raise RunnerError("Failed to configure runner storage") from err
+
+    def _juju_storage_mounted(self) -> bool:
+        """Whether a juju storage is mounted on the runner-storage location.
+
+        Returns:
+            True if a juju storage is mounted on the runner-storage location.
+        """
+        # Use `mount` as Python does not have easy method to get the mount points.
+        stdout, exit_code = execute_command(["mountpoint", str(self.juju_storage_path)], False)
+        return exit_code == 0 and str(self.juju_storage_path) in stdout
+
+    @retry(tries=5, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
+    def _ensure_runner_storage(self, size: int) -> Path:
+        """Ensure the runner storage is setup.
+
+        Args:
+            size: Size of the storage needed in kibibytes.
+
+        Raises:
+            RunnerError: Unable to setup storage for runner.
+        """
+        match self._state.charm_config.runner_storage:
+            case RunnerStorage.MEMORY:
+                logger.info("Creating tmpfs storage")
+                path = self.ram_pool_path
+                self._create_memory_storage(self.ram_pool_path, size)
+            case RunnerStorage.JUJU_STORAGE:
+                logger.info("Verifying juju storage")
+                path = self.juju_storage_path
+                if not self._juju_storage_mounted():
+                    raise ConfigurationError(
+                        (
+                            "Non-root disk storage should be mount on the runner juju storage to "
+                            "be used as the disk for the runners"
+                        )
+                    )
+
+        # tmpfs storage is not created if required size is 0.
+        if size > 0:
+            # Check if the storage mounted has enough space
+            disk = shutil.disk_usage(path)
+            # Some storage space might be used by existing runners.
+            if size * 1024 > disk.total:
+                raise ConfigurationError(
+                    (
+                        f"Required disk space for runners {size / 1024}MiB is greater than "
+                        f"storage total size {disk.total / 1024 / 1024}MiB"
+                    )
+                )
+
+        return path
 
     @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
     def _ensure_service_health(self) -> None:
@@ -283,7 +338,7 @@ class GithubRunnerCharm(CharmBase):
             bytes_with_unit_to_kib(self.config["vm-disk"]) * self.config["virtual-machines"]
         )
 
-        self._create_memory_storage(self.ram_pool_path, size_in_kib)
+        lxd_storage_path = self._ensure_runner_storage(size_in_kib)
 
         if self.service_token is None:
             self.service_token = self._get_service_token()
@@ -308,7 +363,7 @@ class GithubRunnerCharm(CharmBase):
                 token=token,
                 image="jammy",
                 service_token=self.service_token,
-                lxd_storage_path=self.ram_pool_path,
+                lxd_storage_path=lxd_storage_path,
                 charm_state=self._state,
                 dockerhub_mirror=dockerhub_mirror,
             ),
@@ -323,8 +378,6 @@ class GithubRunnerCharm(CharmBase):
             event: Event of installing the charm.
         """
         self.unit.status = MaintenanceStatus("Installing packages")
-
-        self._update_kernel()
 
         try:
             # The `_start_services`, `_install_deps` includes retry.
@@ -370,6 +423,8 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of starting the charm.
         """
+        self._check_and_update_dependencies()
+
         runner_manager = self._get_runner_manager()
 
         self.unit.status = MaintenanceStatus("Starting runners")
@@ -447,13 +502,16 @@ class GithubRunnerCharm(CharmBase):
         self._refresh_firewall()
         try:
             self._event_timer.ensure_event_timer(
-                "reconcile-runners", self.config["reconcile-interval"]
+                event_name="reconcile-runners",
+                interval=int(self.config["reconcile-interval"]),
+                timeout=int(self.config["reconcile-interval"]) - 1,
             )
         except TimerEnableError as ex:
             logger.exception("Failed to start the event timer")
             self.unit.status = BlockedStatus(
                 (f"Failed to start timer for regular reconciliation" f"checks: {ex}")
             )
+            return
 
         if self.config["path"] != self._stored.path:
             prev_runner_manager = self._get_runner_manager(
@@ -672,6 +730,9 @@ class GithubRunnerCharm(CharmBase):
         delta_virtual_machines = runner_manager.reconcile(
             virtual_machines, virtual_machines_resources
         )
+
+        self.unit.status = ActiveStatus()
+
         return {"delta": {"virtual-machines": delta_virtual_machines}}
 
     def _install_repo_policy_compliance(self) -> bool:
@@ -866,6 +927,12 @@ class GithubRunnerCharm(CharmBase):
             logging.warning("Running 'dpkg --configure -a' as last apt install was interrupted")
             execute_command(["dpkg", "--configure", "-a"])
             execute_command(["/usr/bin/apt-get", "install", "-qy"] + list(packages))
+
+    def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
+        """Handle debug ssh relation changed event."""
+        runner_manager = self._get_runner_manager()
+        runner_manager.flush(flush_busy=False)
+        self._reconcile_runners(runner_manager)
 
 
 if __name__ == "__main__":

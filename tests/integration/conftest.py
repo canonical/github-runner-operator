@@ -2,7 +2,8 @@
 # See LICENSE file for licensing details.
 
 """Fixtures for github runner charm integration tests."""
-
+import logging
+import random
 import secrets
 import zipfile
 from pathlib import Path
@@ -12,10 +13,12 @@ from typing import Any, AsyncIterator, Iterator, Optional
 import pytest
 import pytest_asyncio
 import yaml
+from git import Repo
 from github import Github, GithubException
 from github.Branch import Branch
 from github.Repository import Repository
 from juju.application import Application
+from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
@@ -23,7 +26,9 @@ from tests.integration.helpers import (
     deploy_github_runner_charm,
     ensure_charm_has_runner,
     reconcile,
+    wait_for,
 )
+from tests.status_name import ACTIVE
 
 
 @pytest.fixture(scope="module")
@@ -82,7 +87,10 @@ devices:
 def path(pytestconfig: pytest.Config) -> str:
     """Configured path setting."""
     path = pytestconfig.getoption("--path")
-    assert path, "Please specify the --path command line option"
+    assert path, (
+        "Please specify the --path command line option with repository "
+        "path of <org>/<repo> or <user>/<repo> format."
+    )
     return path
 
 
@@ -91,14 +99,19 @@ def token(pytestconfig: pytest.Config) -> str:
     """Configured token setting."""
     token = pytestconfig.getoption("--token")
     assert token, "Please specify the --token command line option"
-    return token
+    tokens = {token.strip() for token in token.split(",")}
+    random_token = random.choice(list(tokens))
+    return random_token
 
 
 @pytest.fixture(scope="module")
 def token_alt(pytestconfig: pytest.Config, token: str) -> str:
     """Configured token_alt setting."""
     token_alt = pytestconfig.getoption("--token-alt")
-    assert token_alt, "Please specify the --token-alt command line option"
+    assert token_alt, (
+        "Please specify the --token-alt command line option with GitHub Personal "
+        "Access Token value."
+    )
     assert token_alt != token, "Please specify a different token for --token-alt"
     return token_alt
 
@@ -156,6 +169,7 @@ async def app_no_runner(
         app_name=app_name,
         path=path,
         token=token,
+        runner_storage="memory",
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
@@ -203,6 +217,7 @@ async def app_scheduled_events(
         app_name=app_name,
         path=path,
         token=token,
+        runner_storage="memory",
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
@@ -234,6 +249,7 @@ async def app_runner(
         app_name=f"{app_name}-test",
         path=path,
         token=token,
+        runner_storage="memory",
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
@@ -242,10 +258,71 @@ async def app_runner(
     return application
 
 
+@pytest_asyncio.fixture(scope="module", name="app_no_wait")
+async def app_no_wait_fixture(
+    model: Model,
+    charm_file: str,
+    app_name: str,
+    path: str,
+    token: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
+) -> AsyncIterator[Application]:
+    """GitHub runner charm application without waiting for active."""
+    app: Application = await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=app_name,
+        path=path,
+        token=token,
+        runner_storage="memory",
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=60,
+        wait_idle=False,
+    )
+    await app.set_config({"virtual-machines": "1"})
+    return app
+
+
+@pytest_asyncio.fixture(scope="module", name="tmate_ssh_server_app")
+async def tmate_ssh_server_app_fixture(
+    model: Model, app_no_wait: Application
+) -> AsyncIterator[Application]:
+    """tmate-ssh-server charm application related to GitHub-Runner app charm."""
+    tmate_app: Application = await model.deploy("tmate-ssh-server", channel="edge")
+    await app_no_wait.relate("debug-ssh", f"{tmate_app.name}:debug-ssh")
+    await model.wait_for_idle(status=ACTIVE, timeout=60 * 30)
+
+    return tmate_app
+
+
+@pytest_asyncio.fixture(scope="module", name="tmate_ssh_server_unit_ip")
+async def tmate_ssh_server_unit_ip_fixture(
+    model: Model,
+    tmate_ssh_server_app: Application,
+) -> AsyncIterator[str]:
+    """tmate-ssh-server charm unit ip."""
+    status: FullStatus = await model.get_status([tmate_ssh_server_app.name])
+    try:
+        unit_status: UnitStatus = next(
+            iter(status.applications[tmate_ssh_server_app.name].units.values())
+        )
+        assert unit_status.public_address, "Invalid unit address"
+        return unit_status.public_address
+    except StopIteration as exc:
+        raise StopIteration("Invalid unit status") from exc
+
+
 @pytest.fixture(scope="module")
 def github_client(token: str) -> Github:
     """Returns the github client."""
-    return Github(token)
+    gh = Github(token)
+    rate_limit = gh.get_rate_limit()
+    logging.info("GitHub token rate limit: %s", rate_limit.core)
+    return gh
 
 
 @pytest.fixture(scope="module")
@@ -323,3 +400,69 @@ async def app_with_forked_repo(
     await ensure_charm_has_runner(app=app, model=model)
 
     return app
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app_juju_storage(
+    model: Model,
+    charm_file: str,
+    app_name: str,
+    path: str,
+    token: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
+) -> AsyncIterator[Application]:
+    """Application with juju storage setup."""
+    # Set the scheduled event to 1 hour to avoid interfering with the tests.
+    application = await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=app_name,
+        path=path,
+        token=token,
+        runner_storage="juju-storage",
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=60,
+    )
+    return application
+
+
+@pytest_asyncio.fixture(scope="module", name="test_github_branch")
+async def test_github_branch_fixture(github_repository: Repository) -> AsyncIterator[Branch]:
+    """Create a new branch for testing, from latest commit in current branch."""
+    test_branch = f"test-{secrets.token_hex(4)}"
+    branch_ref = github_repository.create_git_ref(
+        ref=f"refs/heads/{test_branch}", sha=Repo().head.commit.hexsha
+    )
+
+    def get_branch():
+        """Get newly created branch."""
+        try:
+            branch = github_repository.get_branch(test_branch)
+        except GithubException as err:
+            if err.status == 404:
+                return False
+            raise
+        return branch
+
+    await wait_for(get_branch)
+
+    yield get_branch()
+
+    branch_ref.delete()
+
+
+@pytest_asyncio.fixture(scope="module", name="app_with_grafana_agent")
+async def app_with_grafana_agent_integrated_fixture(
+    model: Model, app_no_runner: Application
+) -> AsyncIterator[Application]:
+    """Setup the charm to be integrated with grafana-agent using the cos-agent integration."""
+    grafana_agent = await model.deploy("grafana-agent", channel="latest/edge")
+    await model.relate(f"{app_no_runner.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
+    await model.wait_for_idle(apps=[app_no_runner.name], status=ACTIVE)
+    await model.wait_for_idle(apps=[grafana_agent.name])
+
+    yield app_no_runner

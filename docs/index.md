@@ -7,7 +7,7 @@ Just like GitHub's, the self-hosted runners managed by the charm are isolated in
 
 Some of the charm dependencies upgrades on a schedule to migrate security risks. The landscape-client charm can be deployed with this charm to ensure other dependencies are up to date.
 
-The charm maintains a set of ephemeral self-hosted runners, each isolated in a single-use virtual machine instance. To prevent disk IO exhaustion, random access memory is used as disk for the virtual machine instances. In addition, resource limits for the self-hosted runners can be configured.
+The charm maintains a set of ephemeral self-hosted runners, each isolated in a single-use virtual machine instance. In addition, resource limits for the self-hosted runners can be configured.
 
 See [charm architecture](https://charmhub.io/github-runner/docs/charm-architecture) for more information.
 
@@ -37,7 +37,31 @@ The GitHub runner charm is a member of the Ubuntu family. It's an open-source pr
 
 - [Code of conduct](https://ubuntu.com/community/code-of-conduct)
 - [Get support](https://discourse.charmhub.io/)
-- [Join our online chat](https://chat.charmhub.io/charmhub/channels/charm-dev)
+- [Join our online chat](https://matrix.to/#/#charmhub-charmdev:ubuntu.com)
 - [Contribute](Contribute)
 
 Thinking about using the GitHub runner charm for your next project? [Get in touch](https://chat.charmhub.io/charmhub/channels/charm-dev)!
+
+# Contents
+
+1. [Explanation](explanation)
+  1. [ARM64](explanation/arm64.md)
+  1. [Charm architecture](explanation/charm-architecture.md)
+1. [How To](how-to)
+  1. [How to change repository or organization](how-to/change-path.md)
+  1. [How to change GitHub personal access token](how-to/change-token.md)
+  1. [How to comply with security requirements](how-to/comply-security.md)
+  1. [How to restrict self-hosted runner network access](how-to/configure-denylist.md)
+  1. [How to contribute](how-to/contribute.md)
+  1. [How to deploy on ARM64](how-to/deploy-on-arm64.md)
+  1. [How to integrate with COS](how-to/integrate-with-cos.md)
+  1. [How to comply with repository policies](how-to/repo-policy.md)
+  1. [How to run on LXD cloud](how-to/run-on-lxd.md)
+1. [Reference](reference)
+  1. [Actions](reference/actions.md)
+  1. [ARM64](reference/arm64.md)
+  1. [Configurations](reference/configurations.md)
+  1. [COS Integration](reference/cos.md)
+1. [Tutorial](tutorial)
+  1. [Managing resource usage](tutorial/managing-resource-usage.md)
+  1. [Quick start](tutorial/quick-start.md)

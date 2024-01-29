@@ -13,6 +13,7 @@ collection of `Runner` instances.
 import json
 import logging
 import pathlib
+import secrets
 import textwrap
 import time
 from dataclasses import dataclass
@@ -22,7 +23,7 @@ from typing import Iterable, NamedTuple, Optional, Sequence
 import yaml
 
 import shared_fs
-from charm_state import ARCH
+from charm_state import ARCH, SSHDebugInfo
 from errors import (
     CreateSharedFilesystemError,
     LxdError,
@@ -45,6 +46,9 @@ if not LXD_PROFILE_YAML.exists():
     LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
 LXDBR_DNSMASQ_LEASES_FILE = Path("/var/snap/lxd/common/lxd/networks/lxdbr0/dnsmasq.leases")
 
+APROXY_ARM_REVISION = 9
+APROXY_AMD_REVISION = 8
+
 
 class Snap(NamedTuple):
     """This class represents a snap installation."""
@@ -52,10 +56,6 @@ class Snap(NamedTuple):
     name: str
     channel: str
     revision: Optional[int] = None
-
-
-YQ_BIN_URL_AMD64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_amd64"
-YQ_BIN_URL_ARM64 = "https://github.com/mikefarah/yq/releases/download/v4.34.1/yq_linux_arm64"
 
 
 @dataclass
@@ -155,7 +155,7 @@ class Runner:
             # Wait some initial time for the instance to boot up
             time.sleep(60)
             self._wait_boot_up()
-            self._install_binaries(config.binary_path)
+            self._install_binaries(config.binary_path, config.arch)
             self._configure_runner()
 
             self._register_runner(
@@ -260,7 +260,7 @@ class Runner:
                 self.config.name,
             )
 
-    @retry(tries=5, delay=1, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _create_instance(
         self, image: str, resources: VirtualMachineResources, ephemeral: bool = True
     ) -> LxdInstance:
@@ -313,7 +313,7 @@ class Runner:
 
         return instance
 
-    @retry(tries=5, delay=1, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _ensure_runner_profile(self) -> None:
         """Ensure the runner profile is present on LXD.
 
@@ -340,7 +340,7 @@ class Runner:
         if not self._clients.lxd.profiles.exists("runner"):
             raise RunnerError("Failed to create runner LXD profile")
 
-    @retry(tries=5, delay=5, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _ensure_runner_storage_pool(self) -> None:
         """Ensure the runner storage pool exists."""
         if self._clients.lxd.storage_pools.exists("runner"):
@@ -388,7 +388,7 @@ class Runner:
         """
         return f"cpu-{cpu}-mem-{memory}-disk-{disk}"
 
-    @retry(tries=5, delay=1, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _get_resource_profile(self, resources: VirtualMachineResources) -> str:
         """Get the LXD profile name of given resource limit.
 
@@ -442,7 +442,7 @@ class Runner:
 
         return profile_name
 
-    @retry(tries=5, delay=1, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _start_instance(self) -> None:
         """Start an instance and wait for it to boot.
 
@@ -470,8 +470,8 @@ class Runner:
 
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
-    @retry(tries=5, delay=1, local_logger=logger)
-    def _install_binaries(self, runner_binary: Path) -> None:
+    @retry(tries=10, delay=10, max_delay=120, backoff=2, local_logger=logger)
+    def _install_binaries(self, runner_binary: Path, arch: ARCH) -> None:
         """Install runner binary and other binaries.
 
         Args:
@@ -483,7 +483,15 @@ class Runner:
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
-        self._snap_install([Snap(name="aproxy", channel="edge", revision=6)])
+        self._snap_install(
+            [
+                Snap(
+                    name="aproxy",
+                    channel="edge",
+                    revision=APROXY_ARM_REVISION if arch == ARCH.ARM64 else APROXY_AMD_REVISION,
+                )
+            ]
+        )
 
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
@@ -562,6 +570,13 @@ class Runner:
         self.instance.execute(
             ["snap", "set", "aproxy", f"proxy={proxy_address}", f"listen=:{aproxy_port}"]
         )
+        exit_code, stdout, _ = self.instance.execute(["snap", "logs", "aproxy.aproxy", "-n=all"])
+        if (
+            exit_code != 0
+            or "Started Service for snap application aproxy.aproxy"
+            not in stdout.read().decode("utf-8")
+        ):
+            raise RunnerAproxyError("Aproxy service did not configure correctly")
 
         default_ip = self._get_default_ip()
         if not default_ip:
@@ -657,9 +672,13 @@ class Runner:
         # As the user already has sudo access, this does not give the user any additional access.
         self.instance.execute(["/usr/bin/sudo", "chmod", "777", "/usr/local/bin"])
 
+        selected_ssh_connection: SSHDebugInfo | None = (
+            secrets.choice(self.config.ssh_debug_infos) if self.config.ssh_debug_infos else None
+        )
+        logger.info("SSH Debug info: %s", selected_ssh_connection)
         # Load `/etc/environment` file.
         environment_contents = self._clients.jinja.get_template("environment.j2").render(
-            proxies=self.config.proxies
+            proxies=self.config.proxies, ssh_debug_info=selected_ssh_connection
         )
         self._put_file("/etc/environment", environment_contents)
 
@@ -668,6 +687,7 @@ class Runner:
             proxies=self.config.proxies,
             pre_job_script=str(self.pre_job_script),
             dockerhub_mirror=self.config.dockerhub_mirror,
+            ssh_debug_info=selected_ssh_connection,
         )
         self._put_file(str(self.env_file), env_contents)
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
@@ -796,4 +816,9 @@ class Runner:
             cmd = ["snap", "install", snap.name, f"--channel={snap.channel}"]
             if snap.revision is not None:
                 cmd.append(f"--revision={snap.revision}")
-            self.instance.execute(cmd)
+            exit_code, _, stderr = self.instance.execute(cmd)
+
+            if exit_code != 0:
+                err_msg = stderr.read().decode("utf-8")
+                logger.error("Unable to install %s due to %s", snap.name, err_msg)
+                raise RunnerCreateError(f"Unable to install {snap.name}")

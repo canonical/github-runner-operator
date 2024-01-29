@@ -7,12 +7,13 @@ Classes and functions to operate on the shared filesystem between the charm and 
 
 **Global Variables**
 ---------------
+- **DIR_NO_MOUNTPOINT_EXIT_CODE**
 - **FILESYSTEM_OWNER**
 - **FILESYSTEM_SIZE**
 
 ---
 
-<a href="../src/shared_fs.py#L54"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L114"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create`
 
@@ -44,7 +45,7 @@ The method is not idempotent and will raise an exception if the shared filesyste
 
 ---
 
-<a href="../src/shared_fs.py#L107"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L164"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `list_all`
 
@@ -62,7 +63,7 @@ List the shared filesystems.
 
 ---
 
-<a href="../src/shared_fs.py#L121"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L183"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `get`
 
@@ -71,6 +72,8 @@ get(runner_name: str) → SharedFilesystem
 ```
 
 Get the shared filesystem for the runner. 
+
+Mounts the filesystem if it is not currently mounted. 
 
 
 
@@ -87,12 +90,12 @@ Get the shared filesystem for the runner.
 
 **Raises:**
  
- - <b>`SharedFilesystemNotFoundError`</b>:  If the shared filesystem is not found. 
+ - <b>`GetSharedFilesystemError`</b>:  If the shared filesystem could not be retrieved/mounted. 
 
 
 ---
 
-<a href="../src/shared_fs.py#L140"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L225"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `delete`
 
@@ -117,7 +120,7 @@ Delete the shared filesystem for the runner.
 
 ---
 
-<a href="../src/shared_fs.py#L177"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L271"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `move_to_quarantine`
 

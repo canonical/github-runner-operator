@@ -35,7 +35,7 @@ jobs:
           EOF
 
       - name: Cache github-runner Charm
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: cache-charm
         with:
           path: github-runner_ubuntu-22.04-amd64.charm
@@ -97,6 +97,17 @@ jobs:
       - name: Install GitHub Cli
         run: which gh || sudo apt install gh -y
 
+      - name: Check rate limit
+        env:
+          GH_TOKEN: ${{ (matrix.event.name == 'issues' || matrix.event.name == 'schedule') && secrets.E2E_TESTING_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          # Check rate limit, this check does not count against the primary rate limit:
+          # https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28#checking-the-status-of-your-rate-limit
+          gh api \
+              --method GET \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" --jq ".resources.core" \
+              /rate_limit
       - name: Create Testing Juju Model
         run: juju add-model testing
 
@@ -202,7 +213,7 @@ jobs:
       - name: Watch github-runner (Pull Request)
         if: matrix.event.name == 'pull_request'
         env:
-          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         timeout-minutes: 30
         run: |
           juju debug-log --replay --tail &
@@ -225,13 +236,13 @@ jobs:
             exit 1
           fi
 
-      - name: Watch github-runner (Workflow Dispatch and Push)
+      - name: Trigger workflow (Workflow Dispatch and Push)
         if: matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push'
         env:
-          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+          # push requires E2E_TESTING_TOKEN, because if GITHUB_TOKEN is used, no workflow is triggered for a push:
+          # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
+          GH_TOKEN: ${{ matrix.event.name == 'workflow_dispatch' && secrets.GITHUB_TOKEN || secrets.E2E_TESTING_TOKEN }}
         run: |
-          juju debug-log --replay --tail &
-
           # Base any future branches on the current branch
           REF_SHA=$(gh api \
             -H "Accept: application/vnd.github+json" \
@@ -257,6 +268,13 @@ jobs:
               --ref ${{ steps.runner-name.outputs.name }} \
               -f runner=${{ steps.runner-name.outputs.name }}
           fi
+
+      - name: Watch github-runner (Workflow Dispatch and Push)
+        if: matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          juju debug-log --replay --tail &
 
           get-workflow-status() {
               # Search recent workflow runs for the one designated by the run-id ref
@@ -304,7 +322,7 @@ jobs:
             kill $(jobs -p)
           fi
 
-      - name: Watch github-runner (Issues, Schedule)
+      - name: Trigger workflow and watch github-runner (Issues, Schedule)
         if:  matrix.event.name == 'issues' || matrix.event.name == 'schedule'
         env:
           GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
@@ -394,7 +412,7 @@ jobs:
       - name: Clean Up (Workflow Dispatch and Push)
         if: always() && (matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push')
         env:
-          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh api \
           --method DELETE \

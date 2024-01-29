@@ -16,6 +16,7 @@ import errors
 import metrics
 import shared_fs
 from errors import CorruptMetricDataError
+from metrics_type import GithubJobMetrics
 
 logger = logging.getLogger(__name__)
 
@@ -51,11 +52,11 @@ class PostJobStatus(str, Enum):
     REPO_POLICY_CHECK_FAILURE = "repo-policy-check-failure"
 
 
-class ExitCodeInformation(BaseModel):
-    """Information about the exit code of a runner.
+class CodeInformation(BaseModel):
+    """Information about a status code.
 
     Attributes:
-        code: The exit code of the runner.
+        code: The status code.
     """
 
     code: int
@@ -72,7 +73,7 @@ class PostJobMetrics(BaseModel):
 
     timestamp: NonNegativeFloat
     status: PostJobStatus
-    status_info: Optional[ExitCodeInformation]
+    status_info: Optional[CodeInformation]
 
 
 class RunnerMetrics(BaseModel):
@@ -253,14 +254,16 @@ def extract(ignore_runners: set[str]) -> Iterator[RunnerMetrics]:
 
 
 def issue_events(
-    runner_metrics: RunnerMetrics, flavor: str, queue_duration: Optional[float]
+    runner_metrics: RunnerMetrics,
+    flavor: str,
+    job_metrics: Optional[GithubJobMetrics],
 ) -> set[Type[metrics.Event]]:
     """Issue the metrics events for a runner.
 
     Args:
         runner_metrics: The metrics for the runner.
         flavor: The flavor of the runner.
-        queue_duration: The job queue duration of the job the runner executed.
+        job_metrics: The metrics about the job run by the runner.
 
     Returns:
         A set of issued events.
@@ -272,7 +275,7 @@ def issue_events(
         repo=runner_metrics.pre_job.repository,
         github_event=runner_metrics.pre_job.event,
         idle=runner_metrics.pre_job.timestamp - runner_metrics.installed_timestamp,
-        queue_duration=queue_duration,
+        queue_duration=job_metrics.queue_duration if job_metrics else None,
     )
     try:
         metrics.issue_event(runner_start_event)
@@ -297,6 +300,7 @@ def issue_events(
             status=runner_metrics.post_job.status,
             status_info=runner_metrics.post_job.status_info,
             job_duration=runner_metrics.post_job.timestamp - runner_metrics.pre_job.timestamp,
+            job_conclusion=job_metrics.conclusion if job_metrics else None,
         )
         try:
             metrics.issue_event(runner_stop_event)

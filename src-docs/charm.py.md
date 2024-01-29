@@ -5,6 +5,9 @@
 # <kbd>module</kbd> `charm.py`
 Charm for creating and managing GitHub self-hosted runner instances. 
 
+**Global Variables**
+---------------
+- **DEBUG_SSH_INTEGRATION_NAME**
 
 ---
 
@@ -63,7 +66,7 @@ Catch common errors in actions.
 ## <kbd>class</kbd> `GithubRunnerCharm`
 Charm for managing GitHub self-hosted runners. 
 
-<a href="../src/charm.py#L137"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L138"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

@@ -69,21 +69,27 @@ class EventTimer:
         Args:
             event_name: Name of the juju event to schedule.
             interval: Number of minutes between emitting each event.
+            timeout: Timeout for each event handle in minutes.
 
         Raises:
             TimerEnableError: Timer cannot be started. Events will be not emitted.
         """
+        if timeout is not None:
+            timeout_in_secs = timeout * 60
+        else:
+            timeout_in_secs = interval * 30
+
         context: EventConfig = {
             "event": event_name,
             "interval": interval,
             "random_delay": interval // 4,
-            "timeout": timeout or (interval * 30),
+            "timeout": timeout_in_secs,
             "unit": self.unit_name,
         }
         self._render_event_template("service", event_name, context)
         self._render_event_template("timer", event_name, context)
         try:
-            # Binding for systemctl do no exist, so `subprocess.run` used.
+            # Binding for systemctl do not exist, so `subprocess.run` used.
             subprocess.run(["/usr/bin/systemctl", "daemon-reload"], check=True)  # nosec B603
             subprocess.run(  # nosec B603
                 ["/usr/bin/systemctl", "enable", f"ghro.{event_name}.timer"], check=True
@@ -107,7 +113,7 @@ class EventTimer:
         """
         try:
             # Don't check for errors in case the timer wasn't registered.
-            # Binding for systemctl does no exist, so `subprocess.run` used.
+            # Binding for systemctl does not exist, so `subprocess.run` used.
             subprocess.run(  # nosec B603
                 ["/usr/bin/systemctl", "stop", f"ghro.{event_name}.timer"], check=False
             )

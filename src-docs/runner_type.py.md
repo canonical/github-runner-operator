@@ -17,7 +17,7 @@ Represent GitHub organization.
 
 ---
 
-<a href="../src/runner_type.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_type.py#L50"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `path`
 
@@ -38,7 +38,7 @@ Represent GitHub repository.
 
 ---
 
-<a href="../src/runner_type.py#L36"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_type.py#L38"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `path`
 
@@ -76,13 +76,14 @@ Configuration for runner.
 
 **Attributes:**
  
- - <b>`name`</b>:  Name of the runner. 
  - <b>`app_name`</b>:  Application name of the charm. 
+ - <b>`issue_metrics`</b>:  Whether to issue metrics. 
+ - <b>`lxd_storage_path`</b>:  Path to be used as LXD storage. 
+ - <b>`name`</b>:  Name of the runner. 
  - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name. 
  - <b>`proxies`</b>:  HTTP(S) proxy settings. 
- - <b>`lxd_storage_path`</b>:  Path to be used as LXD storage. 
- - <b>`issue_metrics`</b>:  Whether to issue metrics. 
  - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
+ - <b>`ssh_debug_infos`</b>:  The SSH debug server connections metadata. 
 
 
 

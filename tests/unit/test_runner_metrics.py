@@ -9,8 +9,10 @@ import pytest
 
 import errors
 import metrics
+import metrics_type
 import runner_metrics
 import shared_fs
+from github_type import JobConclusion
 from metrics import RunnerStart, RunnerStop
 from runner_metrics import (
     RUNNER_INSTALLED_TS_FILE_NAME,
@@ -429,8 +431,11 @@ def test_issue_events(issue_event_mock: MagicMock):
     runner_metrics_data = _create_metrics_data(runner_name)
 
     flavor = secrets.token_hex(16)
+    job_metrics = metrics_type.GithubJobMetrics(
+        queue_duration=3600, conclusion=JobConclusion.SUCCESS
+    )
     issued_metrics = runner_metrics.issue_events(
-        runner_metrics=runner_metrics_data, flavor=flavor, queue_duration=3600
+        runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
     )
     assert issued_metrics == {metrics.RunnerStart, metrics.RunnerStop}
     issue_event_mock.assert_has_calls(
@@ -445,7 +450,7 @@ def test_issue_events(issue_event_mock: MagicMock):
                     github_event=runner_metrics_data.pre_job.event,
                     idle=runner_metrics_data.pre_job.timestamp
                     - runner_metrics_data.installed_timestamp,
-                    queue_duration=3600,
+                    queue_duration=job_metrics.queue_duration,
                 )
             ),
             call(
@@ -458,6 +463,7 @@ def test_issue_events(issue_event_mock: MagicMock):
                     status=runner_metrics_data.post_job.status,
                     job_duration=runner_metrics_data.post_job.timestamp
                     - runner_metrics_data.pre_job.timestamp,
+                    job_conclusion=job_metrics.conclusion,
                 )
             ),
         ]
@@ -474,8 +480,11 @@ def test_issue_events_no_post_job_metrics(issue_event_mock: MagicMock):
     runner_metrics_data = _create_metrics_data(runner_name)
     runner_metrics_data.post_job = None
     flavor = secrets.token_hex(16)
+    job_metrics = metrics_type.GithubJobMetrics(
+        queue_duration=3600, conclusion=JobConclusion.SUCCESS
+    )
     issued_metrics = runner_metrics.issue_events(
-        runner_metrics=runner_metrics_data, flavor=flavor, queue_duration=3600
+        runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
     )
     assert issued_metrics == {metrics.RunnerStart}
 
@@ -487,7 +496,7 @@ def test_issue_events_no_post_job_metrics(issue_event_mock: MagicMock):
             repo=runner_metrics_data.pre_job.repository,
             github_event=runner_metrics_data.pre_job.event,
             idle=runner_metrics_data.pre_job.timestamp - runner_metrics_data.installed_timestamp,
-            queue_duration=3600,
+            queue_duration=job_metrics.queue_duration,
         )
     )
 
@@ -507,9 +516,12 @@ def test_issue_events_returns_empty_set_on_issue_event_failure(
     issue_event_mock.side_effect = [errors.IssueMetricEventError("Failed to issue metric"), None]
 
     flavor = secrets.token_hex(16)
+    job_metrics = metrics_type.GithubJobMetrics(
+        queue_duration=3600, conclusion=JobConclusion.SUCCESS
+    )
 
     issued_metrics = runner_metrics.issue_events(
-        runner_metrics=runner_metrics_data, flavor=flavor, queue_duration=3600
+        runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
     )
     assert not issued_metrics
     assert "Failed to issue metric" in caplog.text

@@ -11,8 +11,8 @@ The `RunnerManager` class from `runner_manager.py` creates and manages a collect
 
 **Global Variables**
 ---------------
-- **YQ_BIN_URL_AMD64**
-- **YQ_BIN_URL_ARM64**
+- **APROXY_ARM_REVISION**
+- **APROXY_AMD_REVISION**
 
 
 ---
