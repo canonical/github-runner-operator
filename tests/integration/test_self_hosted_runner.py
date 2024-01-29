@@ -110,10 +110,10 @@ async def test_wait_on_busy_runner_repo_check(
     """
     arrange: A working application with one runner.
     act:
-        1. Dispatch a workflow that wait for 30 mins.
+        1. Dispatch a workflow that waits for 30 mins.
         2. Run flush-runners action.
     assert:
-        1. The runner is is busy status.
+        1. The runner is in busy status.
         2.  a. The flush-runners action should take less than the timeout.
             b. The runner should be flushed.
     """
