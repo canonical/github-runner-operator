@@ -131,7 +131,10 @@ from firewall import Firewall
             [IPv4Network("127.0.0.0/30"), IPv4Network("127.0.1.0/30")],
             [IPv4Network("127.0.0.0/30"), IPv4Network("127.0.1.0/30")],
             [],
-            id="multiple domain multiple exclude domain[multiple full overlaps(equivalent network)]",
+            id=(
+                "multiple domain multiple exclude domain[multiple full "
+                "overlaps(equivalent network)]"
+            ),
         ),
         pytest.param(
             [IPv4Network("127.0.0.0/30"), IPv4Network("127.0.1.0/30")],
