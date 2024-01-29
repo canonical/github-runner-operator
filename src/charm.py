@@ -911,7 +911,7 @@ class GithubRunnerCharm(CharmBase):
                 for entry in firewall_denylist_config.split(",")
             ]
         allowlist = [
-            FirewallEntry.decode(str(entry.host)) for entry in self._state.ssh_debug_infos
+            FirewallEntry.decode(str(entry.host)) for entry in self._state.ssh_debug_connections
         ]
         firewall = Firewall("lxdbr0")
         firewall.refresh_firewall(denylist=denylist, allowlist=allowlist)
