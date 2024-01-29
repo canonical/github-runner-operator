@@ -30,4 +30,3 @@ juju deploy github-runner --constraints="cores=4 mem=6G root-disk=30G virt-type=
 ```
 
 The above example uses `rootfs`, which is using the root disk of the juju machine. Hence the root-disk size was increase to 30G.
-In production environment, a separated storage managed by juju should be used. See [how to manage juju storage](https://juju.is/docs/juju/manage-storage).
