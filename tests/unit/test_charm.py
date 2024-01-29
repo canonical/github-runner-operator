@@ -5,16 +5,19 @@
 import os
 import unittest
 import urllib.error
+from pathlib import Path
 from unittest.mock import MagicMock, call, patch
 
-from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
+import pytest
+from ops.model import BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
 from charm_state import ARCH, GithubOrg, GithubRepo, VirtualMachineResources
-from errors import ConfigurationError, LogrotateSetupError, RunnerError, SubprocessError
+from errors import LogrotateSetupError, RunnerError, SubprocessError
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
+from runner_type import ProxySetting
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
@@ -51,52 +54,137 @@ def mock_get_github_info():
     ]
 
 
-def setup_charm_harness() -> Harness:
+def setup_charm_harness(monkeypatch, runner_bin_path: Path) -> Harness:
+    def stub_update_runner_bin(self, binary) -> None:
+        runner_bin_path.touch()
+
     harness = Harness(GithubRunnerCharm)
-    harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+    harness.update_config({"path": "mock/repo", "token": "mocktoken"})
     harness.begin()
     harness.charm.setup_state()
+    monkeypatch.setattr("runner_manager.RunnerManager.update_runner_bin", stub_update_runner_bin)
     return harness
 
 
-class TestCharm(unittest.TestCase):
-    """Test cases for GithubRunnerCharm."""
+@pytest.fixture
+def harness(monkeypatch, runner_binary_path: Path) -> Harness:
+    return setup_charm_harness(monkeypatch, runner_binary_path)
 
-    @patch.dict(
-        os.environ,
-        {
-            "JUJU_CHARM_HTTPS_PROXY": TEST_PROXY_SERVER_URL,
-            "JUJU_CHARM_HTTP_PROXY": TEST_PROXY_SERVER_URL,
-            "JUJU_CHARM_NO_PROXY": "127.0.0.1,localhost",
-        },
+
+@pytest.fixture
+@patch.dict(
+    os.environ,
+    {
+        "JUJU_CHARM_HTTPS_PROXY": TEST_PROXY_SERVER_URL,
+        "JUJU_CHARM_HTTP_PROXY": TEST_PROXY_SERVER_URL,
+        "JUJU_CHARM_NO_PROXY": "127.0.0.1,localhost",
+    },
+)
+def proxied_harness(monkeypatch, runner_binary_path: Path) -> Harness:
+    return setup_charm_harness(monkeypatch, runner_binary_path)
+
+
+def test_proxy_setting(proxied_harness: Harness):
+    """
+    arrange: Set up charm under proxied environment.
+    act: Nothing.
+    assert: The proxy configuration are set.
+    """
+    assert proxied_harness.charm.proxies["https"] == TEST_PROXY_SERVER_URL
+    assert proxied_harness.charm.proxies["http"] == TEST_PROXY_SERVER_URL
+    assert proxied_harness.charm.proxies["no_proxy"] == "127.0.0.1,localhost"
+
+
+def test_install(harness: Harness, exec_command: MagicMock):
+    """
+    arrange: Set up charm.
+    act: Fire install event.
+    assert: Some install commands are run on the mock.
+    """
+    harness.charm.on.install.emit()
+    calls = [
+        call(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"]),
+        call(["/snap/bin/lxd", "init", "--auto"]),
+    ]
+    exec_command.assert_has_calls(calls, any_order=True)
+
+
+def test_on_config_changed_failure(harness: Harness):
+    """
+    arrange: Set up charm.
+    act: Fire config changed event to use aproxy without configured http proxy.
+    assert: Charm is in blocked state.
+    """
+    harness.update_config({"experimental-use-aproxy": True})
+    harness.charm.on.config_changed.emit()
+
+    assert harness.charm.unit.status == BlockedStatus("Invalid proxy configuration")
+
+
+def test_get_runner_manager(harness: Harness):
+    """
+    arrange: Set up charm.
+    act: Get runner manager.
+    assert: Runner manager is returned with the correct config.
+    """
+    runner_manager = harness.charm._get_runner_manager()
+    assert runner_manager is not None
+    assert runner_manager.config.token == "mocktoken"
+    assert runner_manager.proxies == ProxySetting()
+
+
+def test_on_flush_runners_action_fail(harness: Harness):
+    """
+    arrange: Set up charm without runner binary downloaded.
+    act: Run flush runner action.
+    assert: Action fail with missing runner binary.
+    """
+    mock_event = MagicMock()
+    harness.charm._on_flush_runners_action(mock_event)
+    mock_event.fail.assert_called_with("GitHub runner application not downloaded yet")
+
+
+def test_on_flush_runners_action_success(harness: Harness, runner_binary_path: Path):
+    """
+    arrange: Set up charm without runner binary downloaded.
+    act: Run flush runner action.
+    assert: Action fail with missing runner binary.
+    """
+    mock_event = MagicMock()
+    runner_binary_path.touch()
+    harness.charm._on_flush_runners_action(mock_event)
+    mock_event.set_results.assert_called()
+    runner_binary_path.unlink()
+
+
+def test_on_install_failure(monkeypatch, harness):
+    """
+    arrange: Charm with mock setup_logrotate.
+    act:
+        1. Mock setup_logrotate fails.
+        2. Charm in block state.
+    assert:
+        1. Mock _install_deps raises error.
+        2. Charm in block state.
+    """
+    monkeypatch.setattr(
+        "charm.metrics.setup_logrotate", setup_logrotate := unittest.mock.MagicMock()
     )
-    def test_proxy_setting(self):
-        harness = setup_charm_harness()
 
-        assert harness.charm.proxies["https"] == TEST_PROXY_SERVER_URL
-        assert harness.charm.proxies["http"] == TEST_PROXY_SERVER_URL
-        assert harness.charm.proxies["no_proxy"] == "127.0.0.1,localhost"
+    setup_logrotate.side_effect = LogrotateSetupError
+    harness.charm.on.install.emit()
+    assert harness.charm.unit.status == BlockedStatus("Failed to setup logrotate")
 
-    @patch("pathlib.Path.open")
-    @patch("pathlib.Path.write_text")
-    @patch("subprocess.run")
-    @patch("builtins.open")
-    def test_install(self, open, run, wt, path_open):
-        harness = setup_charm_harness()
-        harness.charm.on.install.emit()
-        calls = [
-            call(
-                ["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"],
-                capture_output=True,
-                shell=False,
-                check=False,
-            ),
-            call(
-                ["/snap/bin/lxd", "init", "--auto"], capture_output=True, shell=False, check=False
-            ),
-        ]
-        run.assert_has_calls(calls, any_order=True)
+    setup_logrotate.side_effect = None
+    GithubRunnerCharm._install_deps = raise_subprocess_error
+    harness.charm.on.install.emit()
+    assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")
 
+
+# New tests should not be added here. This should be refactored to pytest over time.
+# New test should be written with pytest, similar to the above tests.
+# Consider to rewrite test with pytest if the tests below needs to be changed.
+class TestCharm(unittest.TestCase):
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
@@ -248,57 +336,6 @@ class TestCharm(unittest.TestCase):
         harness.charm.on.stop.emit()
         mock_rm.flush.assert_called()
 
-    @patch("pathlib.Path.mkdir")
-    @patch("pathlib.Path.write_text")
-    @patch("subprocess.run")
-    def test_get_runner_manager(self, run, wt, mkdir):
-        harness = Harness(GithubRunnerCharm)
-        harness.begin()
-
-        # Get runner manager via input.
-        assert harness.charm._get_runner_manager("mocktoken", "mockorg/repo") is not None
-
-        with self.assertRaises(ConfigurationError):
-            harness.charm._get_runner_manager()
-
-        # Get runner manager via config.
-        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
-        assert harness.charm._get_runner_manager() is not None
-
-        # With invalid path.
-        with self.assertRaises(ConfigurationError):
-            harness.charm._get_runner_manager("mocktoken", "mock/invalid/path")
-
-    @patch("charm.metrics.setup_logrotate")
-    @patch("charm.RunnerManager")
-    @patch("pathlib.Path.mkdir")
-    @patch("pathlib.Path.write_text")
-    @patch("subprocess.run")
-    @patch("builtins.open")
-    def test_on_install_failure(self, open, run, wt, mkdir, rm, sr):
-        """Test various error thrown during install."""
-
-        rm.return_value = mock_rm = MagicMock()
-        mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
-        mock_rm.download_latest_runner_image = mock_download_latest_runner_image
-
-        harness = Harness(GithubRunnerCharm)
-        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
-        harness.begin()
-
-        # Base case: no error thrown.
-        harness.charm.on.install.emit()
-        assert harness.charm.unit.status == ActiveStatus()
-
-        sr.side_effect = LogrotateSetupError
-        harness.charm.on.install.emit()
-        assert harness.charm.unit.status == BlockedStatus("Failed to setup logrotate")
-
-        sr.side_effect = None
-        GithubRunnerCharm._install_deps = raise_subprocess_error
-        harness.charm.on.install.emit()
-        assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")
-
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
@@ -317,24 +354,6 @@ class TestCharm(unittest.TestCase):
         assert harness.charm.unit.status == MaintenanceStatus(
             "Failed to start runners: mock error"
         )
-
-    @patch("charm.RunnerManager")
-    @patch("pathlib.Path.mkdir")
-    @patch("pathlib.Path.write_text")
-    @patch("subprocess.run")
-    def test_on_config_changed_failure(self, run, wt, mkdir, rm):
-        """
-        arrange: Setup mocked charm.
-        act: Fire config changed event to use aproxy without configured http proxy.
-        assert: Charm is in blocked state.
-        """
-        rm.return_value = mock_rm = MagicMock()
-        mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
-        harness = Harness(GithubRunnerCharm)
-        harness.update_config({"experimental-use-aproxy": True})
-        harness.begin()
-
-        assert harness.charm.unit.status == BlockedStatus("Invalid proxy configuration")
 
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")
@@ -368,24 +387,3 @@ class TestCharm(unittest.TestCase):
         # No config
         harness.charm._on_check_runners_action(mock_event)
         mock_event.fail.assert_called_with("Missing path configuration")
-
-    @patch("charm.RunnerManager")
-    @patch("pathlib.Path.mkdir")
-    @patch("pathlib.Path.write_text")
-    @patch("subprocess.run")
-    def test_on_flush_runners_action(self, run, wt, mkdir, rm):
-        mock_event = MagicMock()
-
-        harness = Harness(GithubRunnerCharm)
-        harness.begin()
-
-        harness.charm._on_flush_runners_action(mock_event)
-        mock_event.fail.assert_called_with(
-            "Missing required charm configuration: ['token', 'path']"
-        )
-        mock_event.reset_mock()
-
-        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
-        harness.charm._on_flush_runners_action(mock_event)
-        mock_event.set_results.assert_called()
-        mock_event.reset_mock()

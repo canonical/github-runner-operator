@@ -78,9 +78,7 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
             self.unit.status = BlockedStatus(str(err))
         except MissingRunnerBinaryError:
             logger.exception("Missing runner binary")
-            self.unit.status = MaintenanceStatus(
-                "Missing runner binary, automatic retry will be attempted"
-            )
+            self.unit.status = MaintenanceStatus("GitHub runner application not downloaded yet")
 
     return func_with_catch_errors
 
@@ -107,7 +105,7 @@ def catch_action_errors(
             event.fail(str(err))
         except MissingRunnerBinaryError:
             logger.exception("Missing runner binary")
-            err_msg = "Missing runner binary, automatic retry will be attempted"
+            err_msg = "GitHub runner application not downloaded yet"
             self.unit.status = MaintenanceStatus(err_msg)
             event.fail(err_msg)
 
@@ -147,6 +145,7 @@ class GithubRunnerCharm(CharmBase):
     repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
     juju_storage_path = Path("/storage/juju")
     ram_pool_path = Path("/storage/ram")
+    kernel_module_path = Path("/etc/modules")
 
     def __init__(self, *args, **kargs) -> None:
         """Construct the charm.
@@ -504,7 +503,7 @@ class GithubRunnerCharm(CharmBase):
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
                 prev_runner_manager.flush(flush_busy=False)
-            self._stored.path = self.state.charm_config.path
+            self._stored.path = self.config["path"]
 
         runner_manager = self._get_runner_manager()
         if runner_manager:
@@ -775,7 +774,7 @@ class GithubRunnerCharm(CharmBase):
         """Enable kernel modules needed by the charm."""
         execute_command(["/usr/sbin/modprobe", "br_netfilter"])
 
-        with open("/etc/modules", "a", encoding="utf-8") as modules_file:
+        with self.kernel_module_path.open("a", encoding="utf-8") as modules_file:
             modules_file.write("br_netfilter\n")
 
     @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)

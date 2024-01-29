@@ -14,6 +14,16 @@ def exec_command_fixture():
     return unittest.mock.MagicMock(return_value=("", 0))
 
 
+@pytest.fixture(name="lxd_exec_command")
+def lxd_exec_command_fixture():
+    return unittest.mock.MagicMock(return_value=("", 0))
+
+
+@pytest.fixture(name="runner_binary_path")
+def runner_binary_path_fixture(tmp_path):
+    return tmp_path / "github-runner-app"
+
+
 def disk_usage_mock(total_disk):
     disk = unittest.mock.MagicMock()
     disk.total = total_disk
@@ -22,33 +32,36 @@ def disk_usage_mock(total_disk):
 
 
 @pytest.fixture(autouse=True)
-def mocks(monkeypatch, tmp_path, exec_command):
+def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_path):
+    cron_path = tmp_path / "cron.d"
+    cron_path.mkdir()
+
     monkeypatch.setattr(
-        "charm.GithubRunnerCharm.service_token_path", Path(tmp_path / "mock_service_token")
+        "charm.GithubRunnerCharm.service_token_path", tmp_path / "mock_service_token"
     )
     monkeypatch.setattr(
-        "charm.GithubRunnerCharm.repo_check_systemd_service", Path(tmp_path / "systemd_service")
+        "charm.GithubRunnerCharm.repo_check_web_service_path",
+        tmp_path / "repo_policy_compliance_service",
     )
+    monkeypatch.setattr(
+        "charm.GithubRunnerCharm.repo_check_systemd_service", tmp_path / "systemd_service"
+    )
+    monkeypatch.setattr("charm.GithubRunnerCharm.kernel_module_path", tmp_path / "modules")
+    monkeypatch.setattr("charm.GithubRunnerCharm._update_kernel", lambda self, now: None)
     monkeypatch.setattr("charm.GithubRunnerCharm._juju_storage_mounted", lambda self: True)
-    monkeypatch.setattr("charm.os", unittest.mock.MagicMock())
+    monkeypatch.setattr("charm.execute_command", exec_command)
     monkeypatch.setattr("charm.shutil", unittest.mock.MagicMock())
     monkeypatch.setattr("charm.shutil.disk_usage", disk_usage_mock(30 * 1024 * 1024 * 1024))
-    monkeypatch.setattr("charm.jinja2", unittest.mock.MagicMock())
-    monkeypatch.setattr("charm_state.json", unittest.mock.MagicMock())
-    monkeypatch.setattr(
-        "charm_state.json.dumps", unittest.mock.MagicMock(return_value="{'fake':'json'}")
-    )
     monkeypatch.setattr("charm_state.CHARM_STATE_PATH", Path(tmp_path / "charm_state.json"))
     monkeypatch.setattr(
         "firewall.Firewall.get_host_ip", unittest.mock.MagicMock(return_value="10.0.0.1")
     )
     monkeypatch.setattr("firewall.Firewall.refresh_firewall", unittest.mock.MagicMock())
-    monkeypatch.setattr("runner.execute_command", exec_command)
+    monkeypatch.setattr("runner.execute_command", lxd_exec_command)
     monkeypatch.setattr("runner.shared_fs", unittest.mock.MagicMock())
-    monkeypatch.setattr("metrics.execute_command", exec_command)
+    monkeypatch.setattr("metrics.execute_command", lxd_exec_command)
     monkeypatch.setattr("metrics.METRICS_LOG_PATH", Path(tmp_path / "metrics.log"))
     monkeypatch.setattr("metrics.LOGROTATE_CONFIG", Path(tmp_path / "github-runner-metrics"))
-
     monkeypatch.setattr("runner.time", unittest.mock.MagicMock())
     monkeypatch.setattr("github_client.GhApi", MockGhapiClient)
     monkeypatch.setattr("runner_manager_type.jinja2", unittest.mock.MagicMock())
@@ -57,27 +70,10 @@ def mocks(monkeypatch, tmp_path, exec_command):
     monkeypatch.setattr("runner_manager.runner_logs", unittest.mock.MagicMock())
     monkeypatch.setattr("runner_manager.LxdClient", MockLxdClient)
     monkeypatch.setattr("runner_manager.shared_fs", unittest.mock.MagicMock())
+    monkeypatch.setattr("runner_manager.execute_command", exec_command)
+    monkeypatch.setattr("runner_manager.RunnerManager.runner_bin_path", runner_binary_path)
+    monkeypatch.setattr("runner_manager.RunnerManager.cron_path", cron_path)
     monkeypatch.setattr(
         "runner_manager.RepoPolicyComplianceClient", MockRepoPolicyComplianceClient
     )
     monkeypatch.setattr("utilities.time", unittest.mock.MagicMock())
-
-
-@pytest.fixture()
-def charm_config() -> dict:
-    """Standard charm configuration for testing."""
-    return {
-        "path": "mock_path",
-        "token": "mock_token",
-        "group": "default",
-        "virtual-machines": 1,
-        "vm-cpu": 2,
-        "vm-memory": "7GiB",
-        "vm-disk": "10GiB",
-        "reconcile-interval": 10,
-        "test-mode": "",
-        "denylist": "",
-        "dockerhub-mirror": "",
-        "runner-storage": "juju-storage",
-        "experimental-use-aproxy": "false",
-    }
