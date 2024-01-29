@@ -50,7 +50,7 @@ Get the host IP address for the corresponding LXD network.
 
 ---
 
-<a href="../src/firewall.py#L98"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/firewall.py#L100"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `refresh_firewall`
 

@@ -70,9 +70,9 @@ class Firewall:  # pylint: disable=too-few-public-methods
 
     def _exclude_network(
         self,
-        networks: typing.Iterable[NetworkT],
-        exclude: typing.Iterable[NetworkT],
-    ) -> set[NetworkT]:
+        networks: list[NetworkT],
+        exclude: list[NetworkT],
+    ) -> list[NetworkT]:
         """Excludes the network segment from a pool of networks.
 
         Args:
@@ -82,15 +82,17 @@ class Firewall:  # pylint: disable=too-few-public-methods
         Returns:
             The network pool without the network segments in excludes.
         """
-        total_networks_without_excluded = set(networks)
+        total_networks_without_excluded = networks
 
         for exclude_net in exclude:
-            scoped_excluded_networks: set[NetworkT] = set()
+            scoped_excluded_networks: list[NetworkT] = []
             for net in total_networks_without_excluded:
+                if net == exclude_net or net.subnet_of(exclude_net):
+                    continue
                 if net.overlaps(exclude_net):
-                    scoped_excluded_networks.update(net.address_exclude(exclude_net))
+                    scoped_excluded_networks.extend(net.address_exclude(exclude_net))
                 else:
-                    scoped_excluded_networks.add(net)
+                    scoped_excluded_networks.append(net)
             total_networks_without_excluded = scoped_excluded_networks
 
         return total_networks_without_excluded
