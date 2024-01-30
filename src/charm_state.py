@@ -396,7 +396,7 @@ def _get_supported_arch() -> ARCH:
             raise UnsupportedArchitectureError(arch=arch)
 
 
-class SSHDebugInfo(BaseModel):
+class SSHDebugConnection(BaseModel):
     """SSH connection information for debug workflow.
 
     Attributes:
@@ -412,13 +412,13 @@ class SSHDebugInfo(BaseModel):
     ed25519_fingerprint: str = Field(pattern="^SHA256:.*")
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> list["SSHDebugInfo"]:
+    def from_charm(cls, charm: CharmBase) -> list["SSHDebugConnection"]:
         """Initialize the SSHDebugInfo from charm relation data.
 
         Args:
             charm: The charm instance.
         """
-        ssh_debug_connections: list[SSHDebugInfo] = []
+        ssh_debug_connections: list[SSHDebugConnection] = []
         relations = charm.model.relations[DEBUG_SSH_INTEGRATION_NAME]
         if not relations or not (relation := relations[0]).units:
             return ssh_debug_connections
@@ -435,7 +435,7 @@ class SSHDebugInfo(BaseModel):
                 )
                 continue
             ssh_debug_connections.append(
-                SSHDebugInfo(
+                SSHDebugConnection(
                     host=host,
                     port=port,
                     rsa_fingerprint=rsa_fingerprint,
@@ -454,7 +454,7 @@ class State:
         proxy_config: Proxy-related configuration.
         charm_config: Configuration of the juju charm.
         arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
-        ssh_debug_infos: SSH debug connections configuration information.
+        ssh_debug_connections: SSH debug connections configuration information.
     """
 
     is_metrics_logging_available: bool
@@ -462,7 +462,7 @@ class State:
     charm_config: CharmConfig
     runner_config: RunnerCharmConfig
     arch: ARCH
-    ssh_debug_infos: list[SSHDebugInfo]
+    ssh_debug_connections: list[SSHDebugConnection]
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "State":
@@ -518,7 +518,7 @@ class State:
             raise CharmConfigInvalidError(f"Unsupported architecture {exc.arch}") from exc
 
         try:
-            ssh_debug_infos = SSHDebugInfo.from_charm(charm)
+            ssh_debug_connections = SSHDebugConnection.from_charm(charm)
         except ValidationError as exc:
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
@@ -529,7 +529,7 @@ class State:
             charm_config=charm_config,
             runner_config=runner_config,
             arch=arch,
-            ssh_debug_infos=ssh_debug_infos,
+            ssh_debug_connections=ssh_debug_connections,
         )
 
         state_dict = dataclasses.asdict(state)
@@ -537,8 +537,8 @@ class State:
         state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
         state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
         state_dict["runner_config"] = json.loads(state_dict["runner_config"].json())
-        state_dict["ssh_debug_infos"] = [
-            debug_info.json() for debug_info in state_dict["ssh_debug_infos"]
+        state_dict["ssh_debug_connections"] = [
+            debug_info.json() for debug_info in state_dict["ssh_debug_connections"]
         ]
         json_data = json.dumps(state_dict, ensure_ascii=False)
         CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")

@@ -246,16 +246,6 @@ class GithubRunnerCharm(CharmBase):
                 logger.info("Cleaned up storage directory")
             raise RunnerError("Failed to configure runner storage") from err
 
-    def _juju_storage_mounted(self) -> bool:
-        """Whether a juju storage is mounted on the runner-storage location.
-
-        Returns:
-            True if a juju storage is mounted on the runner-storage location.
-        """
-        # Use `mount` as Python does not have easy method to get the mount points.
-        stdout, exit_code = execute_command(["mountpoint", str(self.juju_storage_path)], False)
-        return exit_code == 0 and str(self.juju_storage_path) in stdout
-
     @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _ensure_runner_storage(self, size: int) -> Path:
         """Ensure the runner storage is setup.
@@ -272,15 +262,7 @@ class GithubRunnerCharm(CharmBase):
                 path = self.ram_pool_path
                 self._create_memory_storage(self.ram_pool_path, size)
             case RunnerStorage.JUJU_STORAGE:
-                logger.info("Verifying juju storage")
                 path = self.juju_storage_path
-                if not self._juju_storage_mounted():
-                    raise ConfigurationError(
-                        (
-                            "Non-root disk storage should be mount on the runner juju storage to "
-                            "be used as the disk for the runners"
-                        )
-                    )
 
         # tmpfs storage is not created if required size is 0.
         if size > 0:
@@ -884,8 +866,15 @@ class GithubRunnerCharm(CharmBase):
         # Temp: Monitor the LXD networks to track down issues with missing network.
         logger.info(execute_command(["/snap/bin/lxc", "network", "list", "--format", "json"]))
 
+        firewall_denylist_config = self.config.get("denylist")
+        denylist = []
+        if firewall_denylist_config.strip():
+            denylist = [
+                FirewallEntry.decode(entry.strip())
+                for entry in firewall_denylist_config.split(",")
+            ]
         firewall = Firewall("lxdbr0")
-        firewall.refresh_firewall(self.state.charm_config.denylist)
+        firewall.refresh_firewall(denylist)
         logger.debug(
             "firewall update, current firewall: %s",
             execute_command(["/usr/sbin/nft", "list", "ruleset"]),
@@ -906,6 +895,7 @@ class GithubRunnerCharm(CharmBase):
     @_setup_github_runner_charm_state
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
+        self._refresh_firewall()
         runner_manager = self._get_runner_manager()
         runner_manager.flush(flush_busy=False)
         self._reconcile_runners(runner_manager)

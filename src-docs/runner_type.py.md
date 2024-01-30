@@ -41,7 +41,7 @@ Configuration for runner.
  - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name. 
  - <b>`proxies`</b>:  HTTP(S) proxy settings. 
  - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
- - <b>`ssh_debug_infos`</b>:  The SSH debug server connections metadata. 
+ - <b>`ssh_debug_connections`</b>:  The SSH debug server connections metadata. 
 
 
 

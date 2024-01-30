@@ -15,6 +15,7 @@ from ops.testing import Harness
 from charm import GithubRunnerCharm
 from charm_state import ARCH, GithubOrg, GithubRepo, VirtualMachineResources
 from errors import LogrotateSetupError, RunnerError, SubprocessError
+from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
 from runner_type import ProxySetting
@@ -386,4 +387,27 @@ class TestCharm(unittest.TestCase):
 
         # No config
         harness.charm._on_check_runners_action(mock_event)
-        mock_event.fail.assert_called_with("Missing path configuration")
+        mock_event.fail.assert_called_with(
+            "Missing required charm configuration: ['token', 'path']"
+        )
+
+    @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
+    @patch("pathlib.Path.write_text")
+    @patch("subprocess.run")
+    def test_on_flush_runners_action(self, run, wt, mkdir, rm):
+        mock_event = MagicMock()
+
+        harness = Harness(GithubRunnerCharm)
+        harness.begin()
+
+        harness.charm._on_flush_runners_action(mock_event)
+        mock_event.fail.assert_called_with(
+            "Missing required charm configuration: ['token', 'path']"
+        )
+        mock_event.reset_mock()
+
+        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+        harness.charm._on_flush_runners_action(mock_event)
+        mock_event.set_results.assert_called()
+        mock_event.reset_mock()

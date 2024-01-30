@@ -12,7 +12,7 @@ from charm_state import (
     COS_AGENT_INTEGRATION_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
     CharmConfigInvalidError,
-    SSHDebugInfo,
+    SSHDebugConnection,
     State,
 )
 from tests.unit.factory import MockGithubRunnerCharmFactory
@@ -113,7 +113,7 @@ def test_ssh_debug_info_from_charm_no_relations():
     """
     mock_charm = MockGithubRunnerCharmFactory()
 
-    assert not SSHDebugInfo.from_charm(mock_charm)
+    assert not SSHDebugConnection.from_charm(mock_charm)
 
 
 @pytest.mark.parametrize(
@@ -190,11 +190,13 @@ def test_from_charm_ssh_debug_info():
     }
     mock_charm.model.relations[DEBUG_SSH_INTEGRATION_NAME] = [mock_relation]
 
-    ssh_debug_infos = State.from_charm(mock_charm).ssh_debug_infos
-    assert str(ssh_debug_infos[0].host) == mock_relation_data["host"]
-    assert str(ssh_debug_infos[0].port) == mock_relation_data["port"]
-    assert ssh_debug_infos[0].rsa_fingerprint == mock_relation_data["rsa_fingerprint"]
-    assert ssh_debug_infos[0].ed25519_fingerprint == mock_relation_data["ed25519_fingerprint"]
+    ssh_debug_connections = State.from_charm(mock_charm).ssh_debug_connections
+    assert str(ssh_debug_connections[0].host) == mock_relation_data["host"]
+    assert str(ssh_debug_connections[0].port) == mock_relation_data["port"]
+    assert ssh_debug_connections[0].rsa_fingerprint == mock_relation_data["rsa_fingerprint"]
+    assert (
+        ssh_debug_connections[0].ed25519_fingerprint == mock_relation_data["ed25519_fingerprint"]
+    )
 
 
 def test_aproxy_proxy_missing():
