@@ -12,6 +12,7 @@ from asyncio import sleep
 from datetime import datetime, timezone
 from typing import Any, Awaitable, Callable, Union
 
+import github
 import juju.version
 import requests
 import yaml
@@ -397,6 +398,9 @@ def get_workflow_runs(
         runner_name: The runner name the workflow job is assigned to.
         branch: The branch the workflow is run on.
     """
+    if branch is None:
+        branch = github.GithubObject.NotSet
+
     for run in workflow.get_runs(created=f">={start_time.isoformat()}", branch=branch):
         latest_job: WorkflowJob = run.jobs()[0]
         logs = get_job_logs(job=latest_job)

@@ -8,7 +8,6 @@ from time import sleep
 
 import github
 import pytest
-import requests
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
@@ -18,7 +17,9 @@ from runner_type import GithubRepo
 from tests.integration.helpers import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+    get_job_logs,
     get_runner_names,
+    get_workflow_runs,
     reconcile,
     run_in_lxd_instance,
     wait_till_num_of_runners,
@@ -81,13 +82,10 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
 
     # Unable to find the run id of the workflow that was dispatched.
     # Therefore, all runs after this test start should pass the conditions.
-    for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
-        if start_time > run.created_at:
-            continue
-
+    for run in get_workflow_runs(start_time, workflow, runner_to_be_used):
+        jobs = run.jobs()
         try:
-            logs_url = run.jobs()[0].logs_url()
-            logs = requests.get(logs_url).content.decode("utf-8")
+            logs = get_job_logs(jobs[0])
         except github.GithubException.GithubException:
             continue
 
@@ -101,7 +99,7 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_wait_on_busy_runner_repo_check(
+async def test_flush_busy_runner(
     model: Model,
     app_runner: Application,
     forked_github_repository: Repository,
@@ -151,6 +149,7 @@ async def test_wait_on_busy_runner_repo_check(
 
         if not runners:
             # if runner is not online yet.
+            sleep(30)
             continue
 
         assert len(runners) == 1, "Should not occur as GitHub enforce unique naming of runner"

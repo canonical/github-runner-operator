@@ -187,6 +187,8 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
     await wait_till_num_of_runners(unit, 1)
 
 
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
 async def test_change_runner_storage(model: Model, app: Application) -> None:
     """
     arrange: A working application with one runners using memory as disk.
