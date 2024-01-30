@@ -17,7 +17,7 @@
       "datasourceUid": "P30805665297C0350",
       "model": {
         "editorMode": "code",
-        "expr": "count by (flavor)(sum by(instance, flavor)(last_over_time({filename=\"/var/log/github-runner-metrics.log\"} | json event=\"event\",idle_runners=\"idle_runners\",flavor=\"flavor\" | event=\"reconciliation\" | unwrap idle_runners[$__range])) == 0 ) / count by (flavor)(sum by(instance, flavor)(last_over_time({filename=\"/var/log/github-runner-metrics.log\"} | json event=\"event\",idle_runners=\"idle_runners\",flavor=\"flavor\" | event=\"reconciliation\" | unwrap idle_runners[$__range])))",
+        "expr": "count by (flavor)(sum by(instance, flavor)(max_over_time({filename=\"/var/log/github-runner-metrics.log\"} | json event=\"event\",idle_runners=\"idle_runners\",flavor=\"flavor\" | event=\"reconciliation\" | unwrap idle_runners[$__range])) == 0 ) / count by (flavor)(sum by(instance, flavor)(count_over_time({filename=\"/var/log/github-runner-metrics.log\"} | json event=\"event\",idle_runners=\"idle_runners\",flavor=\"flavor\" | event=\"reconciliation\" [$__range])))",
         "hide": false,
         "intervalMs": 1000,
         "maxDataPoints": 43200,
@@ -119,7 +119,7 @@
       }
     }
   ],
-  "updated": "2024-01-25T19:34:05Z",
+  "updated": "2024-01-30T15:27:05Z",
   "noDataState": "OK",
   "execErrState": "Error",
   "for": "2h",
