@@ -20,8 +20,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, NamedTuple, Optional, Sequence
 
+# Due to * import used by the fastcore.net library pylint need to be disable.
 import yaml
-from fastcore.net import HTTP422UnprocessableEntityError
+from fastcore.net import HTTP422UnprocessableEntityError  # pylint: disable=no-name-in-module
 
 import shared_fs
 from charm_state import ARCH, SSHDebugConnection
