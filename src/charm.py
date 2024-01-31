@@ -566,7 +566,7 @@ class GithubRunnerCharm(CharmBase):
 
             self.unit.status = MaintenanceStatus("Flushing runners due to updated deps")
 
-            runner_manager.flush(FlushMode.FLUSH_IDLE)
+            runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK)
             self._start_services()
 
         self.unit.status = ActiveStatus()
