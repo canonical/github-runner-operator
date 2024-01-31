@@ -12,7 +12,7 @@ import jinja2
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
-from charm_state import SSHDebugInfo
+from charm_state import SSHDebugConnection
 from errors import CreateSharedFilesystemError, RunnerCreateError, RunnerRemoveError
 from runner import CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerManagerClients
@@ -91,9 +91,9 @@ def jinja2_environment_fixture() -> MagicMock:
     return jinja2_mock
 
 
-@pytest.fixture(scope="function", name="ssh_debug_infos")
-def ssh_debug_infos_fixture() -> list[SSHDebugInfo]:
-    """A list of randomly generated ssh_debug_infos."""
+@pytest.fixture(scope="function", name="ssh_debug_connections")
+def ssh_debug_connections_fixture() -> list[SSHDebugConnection]:
+    """A list of randomly generated ssh_debug_connections."""
     return SSHDebugInfoFactory.create_batch(size=100)
 
 
@@ -113,7 +113,7 @@ def runner_fixture(
     lxd: MockLxdClient,
     jinja: MagicMock,
     tmp_path: Path,
-    ssh_debug_infos: list[SSHDebugInfo],
+    ssh_debug_connections: list[SSHDebugConnection],
 ):
     client = RunnerManagerClients(
         MagicMock(),
@@ -131,7 +131,7 @@ def runner_fixture(
         lxd_storage_path=pool_path,
         dockerhub_mirror=None,
         issue_metrics=False,
-        ssh_debug_infos=ssh_debug_infos,
+        ssh_debug_connections=ssh_debug_connections,
     )
     status = RunnerStatus()
     return Runner(

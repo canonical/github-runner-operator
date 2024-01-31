@@ -13,7 +13,7 @@ import factory
 import factory.fuzzy
 from pydantic.networks import IPvAnyAddress
 
-from charm_state import SSHDebugInfo
+from charm_state import SSHDebugConnection
 
 T = TypeVar("T")
 
@@ -30,7 +30,7 @@ class BaseMetaFactory(Generic[T], factory.base.FactoryMetaClass):
 # The attributes of these classes are generators for the attributes of the meta class
 # mypy incorrectly believes the factories don't support metaclass
 class SSHDebugInfoFactory(
-    factory.Factory, metaclass=BaseMetaFactory[SSHDebugInfo]  # type: ignore
+    factory.Factory, metaclass=BaseMetaFactory[SSHDebugConnection]  # type: ignore
 ):
     # Docstrings have been abbreviated for factories, checking for docstrings on model attributes
     # can be skipped.
@@ -39,7 +39,7 @@ class SSHDebugInfoFactory(
     class Meta:
         """Configuration for factory."""  # noqa: DCO060
 
-        model = SSHDebugInfo
+        model = SSHDebugConnection
         abstract = False
 
     host: IPvAnyAddress = factory.Faker("ipv4")
