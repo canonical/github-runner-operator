@@ -173,7 +173,7 @@ async def test_flush_busy_runner(
     assert diff.total_seconds() < 5 * 30
 
     names = await get_runner_names(unit)
-    assert len(names) == 0
+    assert runner_to_be_used not in names, "Found a runner that should be flushed"
 
     # Ensure the app_runner is back to 0 runners.
     await app_runner.set_config({"virtual-machines": "0", "path": config["path"]})

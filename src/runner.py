@@ -19,10 +19,9 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, NamedTuple, Optional, Sequence
+from urllib.error import HTTPError
 
-# Due to * import used by the fastcore.net library pylint need to be disable.
 import yaml
-from fastcore.net import HTTP422UnprocessableEntityError  # pylint: disable=no-name-in-module
 
 import shared_fs
 from charm_state import ARCH, SSHDebugConnection
@@ -233,7 +232,7 @@ class Runner:
         )
         try:
             self._clients.github.delete_runner(self.config.path, self.status.runner_id)
-        except HTTP422UnprocessableEntityError:
+        except HTTPError:
             logger.exception("Unable the remove runner on GitHub: %s", self.config.name)
             # This can occur when attempting to remove a busy runner.
             # The caller should retry later, after GitHub mark the runner as offline.
