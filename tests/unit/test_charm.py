@@ -67,12 +67,12 @@ def setup_charm_harness(monkeypatch, runner_bin_path: Path) -> Harness:
     return harness
 
 
-@pytest.fixture
-def harness(monkeypatch, runner_binary_path: Path) -> Harness:
+@pytest.fixture(name="harness")
+def harness_fixture(monkeypatch, runner_binary_path: Path) -> Harness:
     return setup_charm_harness(monkeypatch, runner_binary_path)
 
 
-@pytest.fixture
+@pytest.fixture(name="proxied_harness")
 @patch.dict(
     os.environ,
     {
@@ -81,7 +81,7 @@ def harness(monkeypatch, runner_binary_path: Path) -> Harness:
         "JUJU_CHARM_NO_PROXY": "127.0.0.1,localhost",
     },
 )
-def proxied_harness(monkeypatch, runner_binary_path: Path) -> Harness:
+def proxied_harness_fixture(monkeypatch, runner_binary_path: Path) -> Harness:
     return setup_charm_harness(monkeypatch, runner_binary_path)
 
 

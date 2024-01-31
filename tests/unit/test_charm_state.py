@@ -15,7 +15,7 @@ from charm_state import (
     SSHDebugConnection,
     State,
 )
-from tests.unit.factory import MockGithubRunnerCharmFactory
+from tests.unit.factories import MockGithubRunnerCharmFactory
 
 
 def test_metrics_logging_available_true():
