@@ -41,7 +41,7 @@ from errors import (
     SubprocessError,
 )
 from event_timer import EventTimer, TimerDisableError, TimerEnableError
-from firewall import Firewall
+from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
@@ -873,8 +873,11 @@ class GithubRunnerCharm(CharmBase):
                 FirewallEntry.decode(entry.strip())
                 for entry in firewall_denylist_config.split(",")
             ]
+        allowlist = [
+            FirewallEntry.decode(str(entry.host)) for entry in self.state.ssh_debug_connections
+        ]
         firewall = Firewall("lxdbr0")
-        firewall.refresh_firewall(denylist)
+        firewall.refresh_firewall(denylist=denylist, allowlist=allowlist)
         logger.debug(
             "firewall update, current firewall: %s",
             execute_command(["/usr/sbin/nft", "list", "ruleset"]),
