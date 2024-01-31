@@ -188,7 +188,6 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
     act: when refresh_firewall is called.
     assert: the unit ip addresses are included in allowlist.
     """
-    monkeypatch.setattr("charm.Firewall", mock_firewall := unittest.mock.MagicMock())
 
     runner_binary_path.touch()
 
@@ -229,9 +228,9 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
         },
     )
 
+    monkeypatch.setattr("charm.Firewall", mock_firewall := unittest.mock.MagicMock())
     harness.charm._refresh_firewall()
     mocked_firewall_instance = mock_firewall.return_value
-
     allowlist = mocked_firewall_instance.refresh_firewall.call_args_list[0][1]["allowlist"]
     assert all(
         FirewallEntry(ip) in allowlist for ip in test_unit_ip_addresses
