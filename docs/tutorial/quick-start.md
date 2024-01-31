@@ -12,7 +12,7 @@
 
 - GitHub Account.
 - Juju 3 installed.
-- Juju controller on OpenStack or LXD (See [How to run on LXD cloud](https://charmhub.io/github-runner/docs/how-to-run-on-lxd)), and a juju model.
+- Juju controller on OpenStack or LXD (see [How to run on LXD cloud](https://charmhub.io/github-runner/docs/how-to-run-on-lxd)) and a juju model.
 
 For more information about how to install and use Juju, see [Get started with Juju](https://juju.is/docs/olm/get-started-with-juju).
 
