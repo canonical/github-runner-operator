@@ -577,7 +577,10 @@ class RunnerManager:
             runner.remove(remove_token)
             logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
 
-        if mode in (FlushMode.FLUSH_IDLE_WAIT_REPO_CHECK, FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK):
+        if mode in (
+            FlushMode.FLUSH_IDLE_WAIT_REPO_CHECK,
+            FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK,
+        ):
             for _ in range(5):
                 if not self._runners_in_pre_job():
                     break

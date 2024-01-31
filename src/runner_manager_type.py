@@ -22,7 +22,7 @@ class FlushMode(Enum):
 
     Attributes:
         FLUSH_IDLE: Flush only idle runners.
-        FLUSH_IDLE_WAIT_REPO_CHECK: Flush only idle runners, then wait until repo-policy-check is 
+        FLUSH_IDLE_WAIT_REPO_CHECK: Flush only idle runners, then wait until repo-policy-check is
             completed for the busy runners.
         FORCE_FLUSH_BUSY: Force flush busy runners.
         FORCE_FLUSH_BUSY_WAIT_REPO_CHECK: Wait until the repo-policy-check is completed before
