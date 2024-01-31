@@ -12,6 +12,7 @@ from asyncio import sleep
 from datetime import datetime, timezone
 from typing import Any, Awaitable, Callable, Union
 
+import github
 import juju.version
 import requests
 import yaml
@@ -32,6 +33,7 @@ from utilities import retry
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
 DISPATCH_CRASH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_crash_test.yaml"
 DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME = "workflow_dispatch_failure_test.yaml"
+DISPATCH_WAIT_TEST_WORKFLOW_FILENAME = "workflow_dispatch_wait_test.yaml"
 
 JOB_LOG_START_MSG_TEMPLATE = "Job is about to start running on the runner: {runner_name}"
 
@@ -396,6 +398,9 @@ def get_workflow_runs(
         runner_name: The runner name the workflow job is assigned to.
         branch: The branch the workflow is run on.
     """
+    if branch is None:
+        branch = github.GithubObject.NotSet
+
     for run in workflow.get_runs(created=f">={start_time.isoformat()}", branch=branch):
         latest_job: WorkflowJob = run.jobs()[0]
         logs = get_job_logs(job=latest_job)

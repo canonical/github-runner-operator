@@ -9,6 +9,23 @@ Types used by RunnerManager class.
 
 ---
 
+## <kbd>class</kbd> `FlushMode`
+Strategy for flushing runners. 
+
+
+
+**Attributes:**
+ 
+ - <b>`FLUSH_IDLE`</b>:  Flush only idle runners. 
+ - <b>`FORCE_FLUSH_BUSY`</b>:  Force flush busy runners. 
+ - <b>`FORCE_FLUSH_BUSY_WAIT_REPO_CHECK`</b>:  Wait until the repo-policy-check is completed before  force flush of busy runners. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `RunnerInfo`
 Information from GitHub of a runner. 
 
