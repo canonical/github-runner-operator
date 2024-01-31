@@ -88,7 +88,7 @@ Check if runner binary exists.
 ### <kbd>function</kbd> `flush`
 
 ```python
-flush(mode: FlushMode = <FlushMode.FLUSH_IDLE: 0>) → int
+flush(mode: FlushMode = <FlushMode.FLUSH_IDLE: 1>) → int
 ```
 
 Remove existing runners. 

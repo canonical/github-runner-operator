@@ -4,7 +4,7 @@
 """Types used by RunnerManager class."""
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import Enum, auto
 from pathlib import Path
 
 import jinja2
@@ -22,14 +22,17 @@ class FlushMode(Enum):
 
     Attributes:
         FLUSH_IDLE: Flush only idle runners.
+        FLUSH_IDLE_WAIT_REPO_CHECK: Flush only idle runners, then wait until repo-policy-check is 
+            completed for the busy runners.
         FORCE_FLUSH_BUSY: Force flush busy runners.
         FORCE_FLUSH_BUSY_WAIT_REPO_CHECK: Wait until the repo-policy-check is completed before
             force flush of busy runners.
     """
 
-    FLUSH_IDLE = 0
-    FORCE_FLUSH_BUSY = 1
-    FORCE_FLUSH_BUSY_WAIT_REPO_CHECK = 2
+    FLUSH_IDLE = auto()
+    FLUSH_IDLE_WAIT_REPO_CHECK = auto()
+    FORCE_FLUSH_BUSY = auto()
+    FORCE_FLUSH_BUSY_WAIT_REPO_CHECK = auto()
 
 
 @dataclass
