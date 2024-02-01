@@ -5,6 +5,9 @@
 # <kbd>module</kbd> `event_timer.py`
 EventTimer for scheduling dispatch of juju event on regular intervals. 
 
+**Global Variables**
+---------------
+- **BIN_SYSTEMCTL**
 
 
 ---
@@ -27,7 +30,7 @@ Manages the timer to emit juju events at regular intervals.
  
  - <b>`unit_name`</b> (str):  Name of the juju unit to emit events to. 
 
-<a href="../src/event_timer.py#L40"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L44"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -48,7 +51,7 @@ Construct the timer manager.
 
 ---
 
-<a href="../src/event_timer.py#L105"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `disable_event_timer`
 
@@ -72,7 +75,7 @@ Disable the systemd timer for the given event.
 
 ---
 
-<a href="../src/event_timer.py#L61"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L65"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `ensure_event_timer`
 

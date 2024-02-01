@@ -9,6 +9,10 @@ from typing import Optional, TypedDict
 
 from jinja2 import Environment, FileSystemLoader
 
+from utilities import execute_command
+
+BIN_SYSTEMCTL = "/usr/bin/systemctl"
+
 
 class TimerEnableError(Exception):
     """Raised when unable to enable a event timer."""
@@ -89,14 +93,9 @@ class EventTimer:
         self._render_event_template("service", event_name, context)
         self._render_event_template("timer", event_name, context)
         try:
-            # Binding for systemctl do not exist, so `subprocess.run` used.
-            subprocess.run(["/usr/bin/systemctl", "daemon-reload"], check=True)  # nosec B603
-            subprocess.run(  # nosec B603
-                ["/usr/bin/systemctl", "enable", f"ghro.{event_name}.timer"], check=True
-            )
-            subprocess.run(  # nosec B603
-                ["/usr/bin/systemctl", "start", f"ghro.{event_name}.timer"], check=True
-            )
+            execute_command([BIN_SYSTEMCTL, "daemon-reload"])
+            execute_command([BIN_SYSTEMCTL, "enable", f"ghro.{event_name}.timer"])
+            execute_command([BIN_SYSTEMCTL, "start", f"ghro.{event_name}.timer"])
         except subprocess.CalledProcessError as ex:
             raise TimerEnableError from ex
         except subprocess.TimeoutExpired as ex:
@@ -113,12 +112,9 @@ class EventTimer:
         """
         try:
             # Don't check for errors in case the timer wasn't registered.
-            # Binding for systemctl does not exist, so `subprocess.run` used.
-            subprocess.run(  # nosec B603
-                ["/usr/bin/systemctl", "stop", f"ghro.{event_name}.timer"], check=False
-            )
-            subprocess.run(  # nosec B603
-                ["/usr/bin/systemctl", "disable", f"ghro.{event_name}.timer"], check=False
+            execute_command([BIN_SYSTEMCTL, "stop", f"ghro.{event_name}.timer"], check_exit=False)
+            execute_command(
+                [BIN_SYSTEMCTL, "disable", f"ghro.{event_name}.timer"], check_exit=False
             )
         except subprocess.CalledProcessError as ex:
             raise TimerEnableError from ex
