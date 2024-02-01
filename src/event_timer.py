@@ -88,11 +88,17 @@ class EventTimer:
             _, ret_code = execute_command(
                 [BIN_SYSTEMCTL, "is-active", f"ghro.{event_name}.timer"], check_exit=False
             )
-            return ret_code == 0
         except subprocess.CalledProcessError as ex:
             raise TimerStatusError from ex
         except subprocess.TimeoutExpired as ex:
             raise TimerStatusError from ex
+
+        if ret_code != 0:
+            execute_command(
+                [BIN_SYSTEMCTL, "list-timers", f"--all"], check_exit=False
+            )
+            return False
+        return True
 
     def ensure_event_timer(self, event_name: str, interval: int, timeout: Optional[int] = None):
         """Ensure that a systemd service and timer are registered to dispatch the given event.

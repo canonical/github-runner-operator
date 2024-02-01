@@ -51,7 +51,7 @@ Construct the timer manager.
 
 ---
 
-<a href="../src/event_timer.py#L136"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L142"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `disable_event_timer`
 
@@ -75,7 +75,7 @@ Disable the systemd timer for the given event.
 
 ---
 
-<a href="../src/event_timer.py#L97"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L103"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `ensure_event_timer`
 

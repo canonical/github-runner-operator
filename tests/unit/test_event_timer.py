@@ -20,9 +20,11 @@ def test_is_active_false(exec_command):
     """
     arrange: create an EventTimer object and exec command is mocked to return non-zero exit code
     act: call is_active
-    assert: return False
+    assert: return False and list-timers is called
     """
     exec_command.return_value = ("", 1)
 
     evt = EventTimer(secrets.token_hex(16))
     assert not evt.is_active(secrets.token_hex(16))
+    assert exec_command.call_count == 2
+    assert "list-timers" in exec_command.call_args_list[1][0][0]
