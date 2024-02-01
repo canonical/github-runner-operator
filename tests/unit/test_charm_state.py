@@ -15,6 +15,7 @@ from charm_state import (
     SSHDebugConnection,
     State,
 )
+from firewall import FirewallEntry
 from tests.unit.factories import MockGithubRunnerCharmFactory
 
 
@@ -225,3 +226,47 @@ def test_invalid_runner_storage():
     with pytest.raises(CharmConfigInvalidError) as err:
         State.from_charm(charm)
     assert "Invalid runner-storage configuration" in err.value.msg
+
+
+def test_denylist_single():
+    """
+    arrange: Setup mocked charm.
+    act: Set denylist to a valid IP address.
+    assert: Denylist is correctly parsed.
+    """
+    charm = MockGithubRunnerCharmFactory()
+    charm.config["denylist"] = "10.10.0.0/16"
+
+    state = State.from_charm(charm)
+    assert state.charm_config.denylist == [FirewallEntry.decode("10.10.0.0/16")]
+
+
+def test_denylist_multiple():
+    """
+    arrange: Setup mocked charm.
+    act: Set denylist to a list of valid IP addresses.
+    assert: Denylist is correctly parsed.
+    """
+    charm = MockGithubRunnerCharmFactory()
+    charm.config["denylist"] = "10.10.0.0/16,10.100.0.0/16"
+
+    state = State.from_charm(charm)
+    assert state.charm_config.denylist == [
+        FirewallEntry.decode("10.10.0.0/16"),
+        FirewallEntry.decode("10.100.0.0/16"),
+    ]
+
+
+def test_denylist_invalid():
+    """
+    arrange: Setup mocked charm.
+    act: Set denylist to a invalid IP address.
+    assert: Denylist is correctly parsed.
+    """
+    charm = MockGithubRunnerCharmFactory()
+    charm.config["denylist"] = "10.10.0.0/8"
+
+    with pytest.raises(CharmConfigInvalidError) as err:
+        State.from_charm(charm)
+    assert "incorrect firewall entry format" in str(err)
+    assert "10.10.0.0/8" in str(err)

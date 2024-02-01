@@ -64,6 +64,7 @@ def setup_charm_harness(monkeypatch, runner_bin_path: Path) -> Harness:
     harness.begin()
     harness.charm.setup_state()
     monkeypatch.setattr("runner_manager.RunnerManager.update_runner_bin", stub_update_runner_bin)
+    monkeypatch.setattr("runner_manager.RunnerManager._runners_in_pre_job", lambda self: False)
     return harness
 
 
@@ -119,7 +120,8 @@ def test_on_config_changed_failure(harness: Harness):
     harness.update_config({"experimental-use-aproxy": True})
     harness.charm.on.config_changed.emit()
 
-    assert harness.charm.unit.status == BlockedStatus("Invalid proxy configuration")
+    assert isinstance(harness.charm.unit.status, BlockedStatus)
+    assert "Invalid proxy configuration" in harness.charm.unit.status.message
 
 
 def test_get_runner_manager(harness: Harness):
@@ -134,12 +136,13 @@ def test_get_runner_manager(harness: Harness):
     assert runner_manager.proxies == ProxySetting()
 
 
-def test_on_flush_runners_action_fail(harness: Harness):
+def test_on_flush_runners_action_fail(harness: Harness, runner_binary_path: Path):
     """
     arrange: Set up charm without runner binary downloaded.
     act: Run flush runner action.
     assert: Action fail with missing runner binary.
     """
+    runner_binary_path.unlink(missing_ok=True)
     mock_event = MagicMock()
     harness.charm._on_flush_runners_action(mock_event)
     mock_event.fail.assert_called_with("GitHub runner application not downloaded yet")
@@ -155,7 +158,6 @@ def test_on_flush_runners_action_success(harness: Harness, runner_binary_path: P
     runner_binary_path.touch()
     harness.charm._on_flush_runners_action(mock_event)
     mock_event.set_results.assert_called()
-    runner_binary_path.unlink()
 
 
 def test_on_install_failure(monkeypatch, harness):

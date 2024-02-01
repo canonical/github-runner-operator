@@ -129,7 +129,7 @@ class CharmConfig(BaseModel):
     path: GithubPath
     token: str
     reconcile_interval: int
-    denylist: list[str]
+    denylist: list[FirewallEntry]
     dockerhub_mirror: str | None
 
     @classmethod
@@ -482,19 +482,19 @@ class State:
 
         try:
             proxy_config = ProxyConfig.from_charm(charm)
-        except ValidationError as exc:
+        except (ValidationError, ValueError) as exc:
             logger.error("Invalid proxy config: %s", exc)
-            raise CharmConfigInvalidError("Invalid proxy configuration") from exc
+            raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc
 
         try:
             charm_config = CharmConfig.from_charm(charm)
-        except ValidationError as exc:
+        except (ValidationError, ValueError) as exc:
             logger.error("Invalid charm config: %s", exc)
-            raise CharmConfigInvalidError("Invalid charm configuration") from exc
+            raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
         try:
             runner_config = RunnerCharmConfig.from_charm(charm)
-        except ValidationError as exc:
+        except (ValidationError, ValueError) as exc:
             logger.error("Invalid charm config: %s", exc)
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
