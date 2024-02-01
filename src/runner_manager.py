@@ -10,6 +10,7 @@ import secrets
 import tarfile
 import time
 import urllib.request
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, Iterator, Optional, Type
 
@@ -32,7 +33,7 @@ from github_type import RunnerApplication, SelfHostedRunner
 from lxd import LxdClient, LxdInstance
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
-from runner_manager_type import RunnerInfo, RunnerManagerClients, RunnerManagerConfig
+from runner_manager_type import FlushMode, RunnerInfo, RunnerManagerClients, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import ProxySetting, RunnerByHealth
 from utilities import execute_command, retry, set_env_var
@@ -524,33 +525,86 @@ class RunnerManager:
             )
         return delta
 
-    def flush(self, flush_busy: bool = True) -> int:
+    def _runners_in_pre_job(self) -> bool:
+        """Check there exist runners in the pre-job script stage.
+
+        If a runner has taken a job for 1 minute or more, it is assumed to exit the pre-job script.
+
+        Returns:
+            Whether there are runners that has taken a job and run for less than 1 minute.
+        """
+        now = datetime.now(timezone.utc)
+        busy_runners = [
+            runner for runner in self._get_runners() if runner.status.exist and runner.status.busy
+        ]
+        for runner in busy_runners:
+            # Check if `_work` directory exists, if it exists the runner has started a job.
+            exit_code, stdout, _ = runner.instance.execute(
+                ["/usr/bin/stat", "-c", "'%w'", "/home/ubuntu/github-runner/_work"]
+            )
+            if exit_code != 0:
+                return False
+            # The date is between two single quotes(').
+            _, output, _ = stdout.read().decode("utf-8").strip().split("'")
+            date_str, time_str, timezone_str = output.split(" ")
+            timezone_str = f"{timezone_str[:3]}:{timezone_str[3:]}"
+            job_start_time = datetime.fromisoformat(f"{date_str}T{time_str[:12]}{timezone_str}")
+            if job_start_time + timedelta(minutes=1) > now:
+                return False
+        return True
+
+    def flush(self, mode: FlushMode = FlushMode.FLUSH_IDLE) -> int:
         """Remove existing runners.
 
         Args:
-            flush_busy: Whether to flush busy runners as well.
+            mode: Strategy for flushing runners.
 
         Returns:
             Number of runners removed.
         """
-        if flush_busy:
-            runners = [runner for runner in self._get_runners() if runner.status.exist]
-        else:
-            runners = [
-                runner
-                for runner in self._get_runners()
-                if runner.status.exist and not runner.status.busy
-            ]
-
-        logger.info("Removing existing %i local runners", len(runners))
-
         remove_token = self._clients.github.get_runner_remove_token(self.config.path)
 
+        # Removing non-busy runners
+        runners = [
+            runner
+            for runner in self._get_runners()
+            if runner.status.exist and not runner.status.busy
+        ]
+
+        logger.info("Removing existing %i non-busy local runners", len(runners))
+
+        remove_count = len(runners)
         for runner in runners:
             runner.remove(remove_token)
             logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
 
-        return len(runners)
+        if mode in (
+            FlushMode.FLUSH_IDLE_WAIT_REPO_CHECK,
+            FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK,
+        ):
+            for _ in range(5):
+                if not self._runners_in_pre_job():
+                    break
+                time.sleep(30)
+            else:
+                logger.warning(
+                    (
+                        "Proceed with flush runner after timeout waiting on runner in setup "
+                        "stage, pre-job script might fail in currently running jobs"
+                    )
+                )
+
+        if mode in {FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK, FlushMode.FORCE_FLUSH_BUSY}:
+            busy_runners = [runner for runner in self._get_runners() if runner.status.exist]
+
+            logger.info("Removing existing %i busy local runners", len(runners))
+
+            remove_count += len(busy_runners)
+            for runner in busy_runners:
+                runner.remove(remove_token)
+                logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
+
+        return remove_count
 
     def _generate_runner_name(self) -> str:
         """Generate a runner name based on charm name.

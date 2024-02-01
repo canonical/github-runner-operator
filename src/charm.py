@@ -45,6 +45,7 @@ from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
+from runner_manager_type import FlushMode
 from runner_type import ProxySetting
 from utilities import bytes_with_unit_to_kib, execute_command, retry
 
@@ -394,7 +395,7 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = MaintenanceStatus("Starting runners")
         try:
-            runner_manager.flush(flush_busy=False)
+            runner_manager.flush(FlushMode.FLUSH_IDLE)
             self._reconcile_runners(runner_manager)
         except RunnerError as err:
             logger.exception("Failed to start runners")
@@ -451,7 +452,7 @@ class GithubRunnerCharm(CharmBase):
         if not runner_manager:
             return
 
-        runner_manager.flush()
+        runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK)
         self._reconcile_runners(runner_manager)
 
     @catch_charm_errors
@@ -484,7 +485,7 @@ class GithubRunnerCharm(CharmBase):
             prev_runner_manager = self._get_runner_manager()
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
-                prev_runner_manager.flush(flush_busy=False)
+                prev_runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK)
             self._stored.path = self.config["path"]
 
         runner_manager = self._get_runner_manager()
@@ -495,7 +496,7 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
         if self.state.charm_config.token != self._stored.token:
-            runner_manager.flush(flush_busy=False)
+            runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK)
             self._stored.token = self.state.charm_config.token
 
     def _check_and_update_dependencies(self) -> bool:
@@ -548,8 +549,8 @@ class GithubRunnerCharm(CharmBase):
 
             self.unit.status = MaintenanceStatus("Flushing runners due to updated deps")
 
+            runner_manager.flush(FlushMode.FLUSH_IDLE_WAIT_REPO_CHECK)
             self._start_services()
-            runner_manager.flush(flush_busy=False)
 
         self.unit.status = ActiveStatus()
         return service_updated or runner_bin_updated
@@ -639,7 +640,7 @@ class GithubRunnerCharm(CharmBase):
         """
         runner_manager = self._get_runner_manager()
 
-        runner_manager.flush()
+        runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK)
         delta = self._reconcile_runners(runner_manager)
 
         self._on_check_runners_action(event)
@@ -672,7 +673,7 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = BlockedStatus(f"Failed to stop charm event timer: {ex}")
 
         runner_manager = self._get_runner_manager()
-        runner_manager.flush()
+        runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY)
 
     def _reconcile_runners(self, runner_manager: RunnerManager) -> Dict[str, Any]:
         """Reconcile the current runners state and intended runner state.
@@ -900,7 +901,7 @@ class GithubRunnerCharm(CharmBase):
         """Handle debug ssh relation changed event."""
         self._refresh_firewall()
         runner_manager = self._get_runner_manager()
-        runner_manager.flush(flush_busy=False)
+        runner_manager.flush(FlushMode.FLUSH_IDLE)
         self._reconcile_runners(runner_manager)
 
 
