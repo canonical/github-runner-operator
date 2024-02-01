@@ -156,18 +156,25 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = ops.BlockedStatus(exc.msg)
             return
 
-        if LXD_PROFILE_YAML.exists():
-            if self.config.get("test-mode") != "insecure":
-                raise RuntimeError("lxd-profile.yaml detected outside test mode")
-            logger.critical("test mode is enabled")
-
         self._event_timer = EventTimer(self.unit.name)
         if not self._event_timer.is_active(RECONCILE_RUNNERS_EVENT):
             logger.warning(
                 "Reconciliation event timer is not activated - "
                 "this should only happen after first install"
             )
-            self._set_reconcile_timer()
+            try:
+                self._set_reconcile_timer()
+            except TimerEnableError as ex:
+                logger.exception("Failed to start the event timer")
+                self.unit.status = BlockedStatus(
+                    (f"Failed to start timer for regular reconciliation" f"checks: {ex}")
+                )
+                return
+
+        if LXD_PROFILE_YAML.exists():
+            if self.config.get("test-mode") != "insecure":
+                raise RuntimeError("lxd-profile.yaml detected outside test mode")
+            logger.critical("test mode is enabled")
 
         self._stored.set_default(
             path=self.config["path"],  # for detecting changes
@@ -448,19 +455,13 @@ class GithubRunnerCharm(CharmBase):
             logger.info("Rebooting system...")
             self.unit.reboot(now=now)
 
-    def _set_reconcile_timer(self):
-        try:
-            self._event_timer.ensure_event_timer(
-                event_name="reconcile-runners",
-                interval=int(self.config["reconcile-interval"]),
-                timeout=int(self.config["reconcile-interval"]) - 1,
-            )
-        except TimerEnableError as ex:
-            logger.exception("Failed to start the event timer")
-            self.unit.status = BlockedStatus(
-                (f"Failed to start timer for regular reconciliation" f"checks: {ex}")
-            )
-            return
+    def _set_reconcile_timer(self) -> None:
+        """Set the timer for regular reconciliation checks."""
+        self._event_timer.ensure_event_timer(
+            event_name="reconcile-runners",
+            interval=int(self.config["reconcile-interval"]),
+            timeout=int(self.config["reconcile-interval"]) - 1,
+        )
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
@@ -506,7 +507,14 @@ class GithubRunnerCharm(CharmBase):
             self._stored.token = None
 
         self._refresh_firewall()
-        self._set_reconcile_timer()
+        try:
+            self._set_reconcile_timer()
+        except TimerEnableError as ex:
+            logger.exception("Failed to start the event timer")
+            self.unit.status = BlockedStatus(
+                (f"Failed to start timer for regular reconciliation" f"checks: {ex}")
+            )
+            return
 
         if self.config["path"] != self._stored.path:
             prev_runner_manager = self._get_runner_manager(
