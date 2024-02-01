@@ -168,9 +168,9 @@ async def test_flush_busy_runner(
 
     end_time = datetime.now(timezone.utc)
 
-    # The `RunnerManager` class `flush` method has a timeout of 5 * 30.
+    # The flushing of runner should take less than the 30 minutes timeout of the workflow.
     diff = end_time - start_time
-    assert diff.total_seconds() < 5 * 30
+    assert diff.total_seconds() < 30 * 60
 
     names = await get_runner_names(unit)
     assert runner_to_be_used not in names, "Found a runner that should be flushed"
