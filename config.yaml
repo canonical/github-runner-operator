@@ -34,13 +34,13 @@ options:
     description: |
       The organization runner group to register the self-hosted runner under. This has no effect on
       runners under a repository.
-  openstack-cloud-yaml:
+  openstack-clouds-yaml:
     type: string
     default: ""
     description: |
       The openstack clouds.yaml
       (https://docs.openstack.org/python-openstackclient/pike/configuration/index.html#clouds-yaml).
-      Setting the openstack-cloud-yaml would enable spawning runners on OpenStack, instead of LXD
+      Setting the openstack-clouds-yaml would enable spawning runners on OpenStack, instead of LXD
       vms.
   path:
     type: string

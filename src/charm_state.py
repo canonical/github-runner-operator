@@ -15,6 +15,7 @@ from ops import CharmBase
 from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
 from pydantic.networks import IPvAnyAddress
 
+import openstack_manager
 from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
@@ -241,6 +242,7 @@ class State:
         arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
         charm_config: Configuration of the juju charm.
         is_metrics_logging_available: Whether the charm is able to issue metrics.
+        openstack_clouds_yaml: The openstack clouds.yaml configuration.
         proxy_config: Proxy-related configuration.
         ssh_debug_connections: SSH debug connections configuration information.
     """
@@ -248,6 +250,7 @@ class State:
     arch: ARCH
     charm_config: CharmConfig
     is_metrics_logging_available: bool
+    openstack_clouds_yaml: str | None
     proxy_config: ProxyConfig
     ssh_debug_connections: list[SSHDebugConnection]
 
@@ -303,10 +306,19 @@ class State:
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
+        openstack_clouds_yaml = charm.config.get("openstack-clouds-yaml")
+        if openstack_clouds_yaml:
+            try:
+                openstack_manager.initialize_openstack(openstack_clouds_yaml)
+            except openstack_manager.InvalidConfigError as exc:
+                logger.error("Invalid openstack config, %s.", exc)
+                raise CharmConfigInvalidError("Invalid openstack-clouds-yaml config.") from exc
+
         state = cls(
             arch=arch,
             charm_config=charm_config,
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
+            openstack_clouds_yaml=openstack_clouds_yaml,
             proxy_config=proxy_config,
             ssh_debug_connections=ssh_debug_connections,
         )
