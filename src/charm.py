@@ -42,7 +42,7 @@ from errors import (
     RunnerError,
     SubprocessError,
 )
-from event_timer import EventTimer, TimerDisableError, TimerEnableError
+from event_timer import EventTimer, TimerDisableError, TimerEnableError, TimerStatusError
 from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
@@ -157,20 +157,25 @@ class GithubRunnerCharm(CharmBase):
             return
 
         self._event_timer = EventTimer(self.unit.name)
-        if not self._event_timer.is_active(RECONCILE_RUNNERS_EVENT):
-            logger.warning(
-                "Reconciliation event timer is not activated - "
-                "this should only happen on the first charm execution after a deployment "
-                "on a new machine"
-            )
-            try:
-                self._set_reconcile_timer()
-            except TimerEnableError as ex:
-                logger.exception("Failed to start the event timer")
-                self.unit.status = BlockedStatus(
-                    (f"Failed to start timer for regular reconciliation" f"checks: {ex}")
+        try:
+            reconcile_evt_timer_is_active = self._event_timer.is_active(RECONCILE_RUNNERS_EVENT)
+        except TimerStatusError:
+            logger.exception("Failed to check the timer status")
+        else:
+            if not reconcile_evt_timer_is_active:
+                logger.warning(
+                    "Reconciliation event timer is not activated - "
+                    "this should only happen on the first charm execution after a deployment "
+                    "on a new machine."
                 )
-                return
+                try:
+                    self._set_reconcile_timer()
+                except TimerEnableError as ex:
+                    logger.exception("Failed to start the event timer")
+                    self.unit.status = BlockedStatus(
+                        (f"Failed to start timer for regular reconciliation checks: {ex}")
+                    )
+                    return
 
         if LXD_PROFILE_YAML.exists():
             if self.config.get("test-mode") != "insecure":
@@ -513,7 +518,7 @@ class GithubRunnerCharm(CharmBase):
         except TimerEnableError as ex:
             logger.exception("Failed to start the event timer")
             self.unit.status = BlockedStatus(
-                (f"Failed to start timer for regular reconciliation" f"checks: {ex}")
+                (f"Failed to start timer for regular reconciliation checks: {ex}")
             )
             return
 
