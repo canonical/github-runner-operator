@@ -160,7 +160,8 @@ class GithubRunnerCharm(CharmBase):
         if not self._event_timer.is_active(RECONCILE_RUNNERS_EVENT):
             logger.warning(
                 "Reconciliation event timer is not activated - "
-                "this should only happen after first install"
+                "this should only happen on the first charm execution after a deployment "
+                "on a new machine"
             )
             try:
                 self._set_reconcile_timer()
