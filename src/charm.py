@@ -680,7 +680,6 @@ class GithubRunnerCharm(CharmBase):
             event: Event of stopping the charm.
         """
         try:
-            self._event_timer.disable_event_timer("update-dependencies")
             self._event_timer.disable_event_timer("reconcile-runners")
         except TimerDisableError as ex:
             logger.exception("Failed to stop the timer")
