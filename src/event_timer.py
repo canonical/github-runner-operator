@@ -2,7 +2,7 @@
 # See LICENSE file for licensing details.
 
 """EventTimer for scheduling dispatch of juju event on regular intervals."""
-
+import logging
 import subprocess  # nosec B404
 from pathlib import Path
 from typing import Optional, TypedDict
@@ -12,6 +12,8 @@ import jinja2
 from utilities import execute_command
 
 BIN_SYSTEMCTL = "/usr/bin/systemctl"
+
+logger = logging.getLogger(__name__)
 
 
 class TimerError(Exception):
@@ -88,15 +90,14 @@ class EventTimer:
             _, ret_code = execute_command(
                 [BIN_SYSTEMCTL, "is-active", f"ghro.{event_name}.timer"], check_exit=False
             )
-        except subprocess.CalledProcessError as ex:
-            raise TimerStatusError from ex
-        except subprocess.TimeoutExpired as ex:
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
             raise TimerStatusError from ex
 
         if ret_code != 0:
-            execute_command(
-                [BIN_SYSTEMCTL, "list-timers", f"--all"], check_exit=False
-            )
+            try:
+                execute_command([BIN_SYSTEMCTL, "list-timers", "--all"], check_exit=False)
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
+                logger.exception("Unable to list systemd timers: %s", ex)
             return False
         return True
 
@@ -134,9 +135,7 @@ class EventTimer:
             execute_command([BIN_SYSTEMCTL, "daemon-reload"])
             execute_command([BIN_SYSTEMCTL, "enable", f"ghro.{event_name}.timer"])
             execute_command([BIN_SYSTEMCTL, "start", f"ghro.{event_name}.timer"])
-        except subprocess.CalledProcessError as ex:
-            raise TimerEnableError from ex
-        except subprocess.TimeoutExpired as ex:
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
             raise TimerEnableError from ex
 
     def disable_event_timer(self, event_name: str):
@@ -154,7 +153,5 @@ class EventTimer:
             execute_command(
                 [BIN_SYSTEMCTL, "disable", f"ghro.{event_name}.timer"], check_exit=False
             )
-        except subprocess.CalledProcessError as ex:
-            raise TimerDisableError from ex
-        except subprocess.TimeoutExpired as ex:
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
             raise TimerDisableError from ex
