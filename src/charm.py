@@ -51,6 +51,8 @@ from runner_manager_type import FlushMode
 from runner_type import GithubOrg, GithubRepo, ProxySetting, VirtualMachineResources
 from utilities import bytes_with_unit_to_kib, execute_command, retry
 
+RECONCILE_RUNNERS_EVENT = "reconcile-runners"
+
 logger = logging.getLogger(__name__)
 
 
@@ -158,7 +160,14 @@ class GithubRunnerCharm(CharmBase):
             if self.config.get("test-mode") != "insecure":
                 raise RuntimeError("lxd-profile.yaml detected outside test mode")
             logger.critical("test mode is enabled")
+
         self._event_timer = EventTimer(self.unit.name)
+        if not self._event_timer.is_active(RECONCILE_RUNNERS_EVENT):
+            logger.warning(
+                "Reconciliation event timer is not activated - "
+                "this should only happen after first install"
+            )
+            self._set_reconcile_timer()
 
         self._stored.set_default(
             path=self.config["path"],  # for detecting changes
@@ -439,6 +448,20 @@ class GithubRunnerCharm(CharmBase):
             logger.info("Rebooting system...")
             self.unit.reboot(now=now)
 
+    def _set_reconcile_timer(self):
+        try:
+            self._event_timer.ensure_event_timer(
+                event_name="reconcile-runners",
+                interval=int(self.config["reconcile-interval"]),
+                timeout=int(self.config["reconcile-interval"]) - 1,
+            )
+        except TimerEnableError as ex:
+            logger.exception("Failed to start the event timer")
+            self.unit.status = BlockedStatus(
+                (f"Failed to start timer for regular reconciliation" f"checks: {ex}")
+            )
+            return
+
     @catch_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
         """Handle the update of charm.
@@ -483,18 +506,7 @@ class GithubRunnerCharm(CharmBase):
             self._stored.token = None
 
         self._refresh_firewall()
-        try:
-            self._event_timer.ensure_event_timer(
-                event_name="reconcile-runners",
-                interval=int(self.config["reconcile-interval"]),
-                timeout=int(self.config["reconcile-interval"]) - 1,
-            )
-        except TimerEnableError as ex:
-            logger.exception("Failed to start the event timer")
-            self.unit.status = BlockedStatus(
-                (f"Failed to start timer for regular reconciliation" f"checks: {ex}")
-            )
-            return
+        self._set_reconcile_timer()
 
         if self.config["path"] != self._stored.path:
             prev_runner_manager = self._get_runner_manager(
