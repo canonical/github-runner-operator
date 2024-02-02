@@ -51,6 +51,8 @@ from runner_manager_type import FlushMode
 from runner_type import GithubOrg, GithubRepo, ProxySetting, VirtualMachineResources
 from utilities import bytes_with_unit_to_kib, execute_command, retry
 
+RECONCILE_TIMER_FAILURE_MSG = "Failed to start the timer for reconciliation event"
+
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
 
 logger = logging.getLogger(__name__)
@@ -160,7 +162,7 @@ class GithubRunnerCharm(CharmBase):
         try:
             reconcile_timer_is_active = self._event_timer.is_active(RECONCILE_RUNNERS_EVENT)
         except TimerStatusError:
-            logger.exception("Failed to check the timer status")
+            logger.exception("Failed to check the reconciliation event timer status")
         else:
             if not reconcile_timer_is_active:
                 logger.warning(
@@ -171,9 +173,9 @@ class GithubRunnerCharm(CharmBase):
                 try:
                     self._set_reconcile_timer()
                 except TimerEnableError as ex:
-                    logger.exception("Failed to start the event timer")
+                    logger.exception(RECONCILE_TIMER_FAILURE_MSG)
                     self.unit.status = BlockedStatus(
-                        f"Failed to start timer for regular reconciliation checks: {ex}"
+                        f"{RECONCILE_TIMER_FAILURE_MSG}: {ex}"
                     )
                     return
 
@@ -516,9 +518,9 @@ class GithubRunnerCharm(CharmBase):
         try:
             self._set_reconcile_timer()
         except TimerEnableError as ex:
-            logger.exception("Failed to start the event timer")
+            logger.exception(RECONCILE_TIMER_FAILURE_MSG)
             self.unit.status = BlockedStatus(
-                f"Failed to start timer for regular reconciliation checks: {ex}"
+                f"{RECONCILE_TIMER_FAILURE_MSG}: {ex}"
             )
             return
 
