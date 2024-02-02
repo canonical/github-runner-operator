@@ -133,7 +133,7 @@ jobs:
 
       - name: Copy github-runner Charm
         run: |
-          cp  github-runner_ubuntu-22.04-amd64-arm64.charm /home/$USER/ github-runner_ubuntu-22.04-amd64-arm64.charm
+          cp  github-runner_ubuntu-22.04-amd64-arm64.charm /home/$USER/github-runner_ubuntu-22.04-amd64-arm64.charm
 
       - name: Deploy github-runner Charm (Pull Request, Workflow Dispatch and Push)
         if: matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push' || matrix.event.name == 'pull_request'
@@ -200,7 +200,7 @@ jobs:
           git remote add testing https://github.com/${TESTING_REPO}.git
           git push testing ${{ steps.runner-name.outputs.name }}:main
 
-          juju deploy /home/$USER/ github-runner_ubuntu-22.04-amd64-arm64.charm \
+          juju deploy /home/$USER/github-runner_ubuntu-22.04-amd64-arm64.charm \
             ${{ steps.runner-name.outputs.name }} \
             --base ubuntu@22.04 \
             --config path=$TESTING_REPO \
