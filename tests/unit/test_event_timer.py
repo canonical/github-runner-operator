@@ -12,8 +12,8 @@ def test_is_active_true():
     act: call is_active
     assert: return True
     """
-    evt = EventTimer(secrets.token_hex(16))
-    assert evt.is_active(secrets.token_hex(16))
+    event = EventTimer(unit_name=secrets.token_hex(16))
+    assert event.is_active(event_name=secrets.token_hex(16))
 
 
 def test_is_active_false(exec_command):
@@ -24,8 +24,8 @@ def test_is_active_false(exec_command):
     """
     exec_command.return_value = ("", 1)
 
-    evt = EventTimer(secrets.token_hex(16))
-    assert not evt.is_active(secrets.token_hex(16))
+    event = EventTimer(unit_name=secrets.token_hex(16))
+    assert not event.is_active(event_name=secrets.token_hex(16))
 
 
 def test_is_active_false_list_timers(exec_command, caplog):
@@ -38,7 +38,7 @@ def test_is_active_false_list_timers(exec_command, caplog):
     exec_command.return_value = ("", 1)
     caplog.set_level(logging.DEBUG)
 
-    evt = EventTimer(secrets.token_hex(16))
-    assert not evt.is_active(secrets.token_hex(16))
+    event = EventTimer(unit_name=secrets.token_hex(16))
+    assert not event.is_active(event_name=secrets.token_hex(16))
     assert exec_command.call_count == 2
     assert "list-timers" in exec_command.call_args_list[1][0][0]

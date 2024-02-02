@@ -158,11 +158,11 @@ class GithubRunnerCharm(CharmBase):
 
         self._event_timer = EventTimer(self.unit.name)
         try:
-            reconcile_evt_timer_is_active = self._event_timer.is_active(RECONCILE_RUNNERS_EVENT)
+            reconcile_timer_is_active = self._event_timer.is_active(RECONCILE_RUNNERS_EVENT)
         except TimerStatusError:
             logger.exception("Failed to check the timer status")
         else:
-            if not reconcile_evt_timer_is_active:
+            if not reconcile_timer_is_active:
                 logger.warning(
                     "Reconciliation event timer is not activated - "
                     "this should only happen on the first charm execution after a deployment "
@@ -173,7 +173,7 @@ class GithubRunnerCharm(CharmBase):
                 except TimerEnableError as ex:
                     logger.exception("Failed to start the event timer")
                     self.unit.status = BlockedStatus(
-                        (f"Failed to start timer for regular reconciliation checks: {ex}")
+                        f"Failed to start timer for regular reconciliation checks: {ex}"
                     )
                     return
 
@@ -518,7 +518,7 @@ class GithubRunnerCharm(CharmBase):
         except TimerEnableError as ex:
             logger.exception("Failed to start the event timer")
             self.unit.status = BlockedStatus(
-                (f"Failed to start timer for regular reconciliation checks: {ex}")
+                f"Failed to start timer for regular reconciliation checks: {ex}"
             )
             return
 
