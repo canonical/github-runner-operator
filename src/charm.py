@@ -43,7 +43,7 @@ from errors import (
     RunnerError,
     SubprocessError,
 )
-from event_timer import EventTimer, TimerDisableError, TimerStatusError
+from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
@@ -701,11 +701,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of stopping the charm.
         """
-        try:
-            self._event_timer.disable_event_timer("reconcile-runners")
-        except TimerDisableError as ex:
-            logger.exception("Failed to stop the timer")
-            self.unit.status = BlockedStatus(f"Failed to stop charm event timer: {ex}")
+        self._event_timer.disable_event_timer("reconcile-runners")
 
         runner_manager = self._get_runner_manager()
         runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY)

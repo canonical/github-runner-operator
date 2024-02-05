@@ -152,11 +152,10 @@ class EventTimer:
         Raises:
             TimerDisableError: Timer cannot be stopped. Events will be emitted continuously.
         """
+        systemd_timer = f"ghro.{event_name}.timer"
         try:
             # Don't check for errors in case the timer wasn't registered.
-            execute_command([BIN_SYSTEMCTL, "stop", f"ghro.{event_name}.timer"], check_exit=False)
-            execute_command(
-                [BIN_SYSTEMCTL, "disable", f"ghro.{event_name}.timer"], check_exit=False
-            )
+            execute_command([BIN_SYSTEMCTL, "stop", systemd_timer], check_exit=False)
+            execute_command([BIN_SYSTEMCTL, "disable", systemd_timer], check_exit=False)
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
-            raise TimerDisableError from ex
+            raise TimerDisableError(f"Unable to disable systemd timer {systemd_timer}") from ex
