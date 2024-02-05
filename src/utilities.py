@@ -143,6 +143,8 @@ def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> tu
     keyword arguments. The following arguments to `subprocess.run` should not be set:
     `capture_output`, `shell`, `check`. As those arguments are used by this function.
 
+    The output is logged if the log level of the logger is set to debug.
+
     Args:
         cmd: Command in a list.
         check_exit: Whether to check for non-zero exit code and raise exceptions.
