@@ -134,12 +134,14 @@ class EventTimer:
         }
         self._render_event_template("service", event_name, context)
         self._render_event_template("timer", event_name, context)
+
+        systemd_timer = f"ghro.{event_name}.timer"
         try:
             execute_command([BIN_SYSTEMCTL, "daemon-reload"])
-            execute_command([BIN_SYSTEMCTL, "enable", f"ghro.{event_name}.timer"])
-            execute_command([BIN_SYSTEMCTL, "start", f"ghro.{event_name}.timer"])
+            execute_command([BIN_SYSTEMCTL, "enable", systemd_timer])
+            execute_command([BIN_SYSTEMCTL, "start", systemd_timer])
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
-            raise TimerEnableError from ex
+            raise TimerEnableError(f"Unable to enable systemd timer {systemd_timer}") from ex
 
     def disable_event_timer(self, event_name: str):
         """Disable the systemd timer for the given event.

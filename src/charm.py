@@ -43,7 +43,7 @@ from errors import (
     RunnerError,
     SubprocessError,
 )
-from event_timer import EventTimer, TimerDisableError, TimerEnableError, TimerStatusError
+from event_timer import EventTimer, TimerDisableError, TimerStatusError
 from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
@@ -51,8 +51,6 @@ from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_manager_type import FlushMode
 from runner_type import GithubOrg, GithubRepo, ProxySetting, VirtualMachineResources
 from utilities import bytes_with_unit_to_kib, execute_command, retry
-
-RECONCILE_TIMER_FAILURE_MSG = "Failed to start the timer for reconciliation event"
 
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
 
@@ -463,12 +461,7 @@ class GithubRunnerCharm(CharmBase):
         else:
             if not reconcile_timer_is_active:
                 logger.error("Reconciliation event timer is not activated")
-                try:
-                    self._set_reconcile_timer()
-                except TimerEnableError as ex:
-                    logger.exception(RECONCILE_TIMER_FAILURE_MSG)
-                    self.unit.status = BlockedStatus(f"{RECONCILE_TIMER_FAILURE_MSG}: {ex}")
-                    return
+                self._set_reconcile_timer()
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
@@ -514,12 +507,7 @@ class GithubRunnerCharm(CharmBase):
             self._stored.token = None
 
         self._refresh_firewall()
-        try:
-            self._set_reconcile_timer()
-        except TimerEnableError as ex:
-            logger.exception(RECONCILE_TIMER_FAILURE_MSG)
-            self.unit.status = BlockedStatus(f"{RECONCILE_TIMER_FAILURE_MSG}: {ex}")
-            return
+        self._set_reconcile_timer()
 
         if self.config["path"] != self._stored.path:
             prev_runner_manager = self._get_runner_manager(

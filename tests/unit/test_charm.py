@@ -7,6 +7,7 @@ import unittest
 import urllib.error
 from unittest.mock import MagicMock, call, patch
 
+import pytest
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
@@ -252,7 +253,7 @@ class TestCharm(unittest.TestCase):
         assert:
             1. ensure_event_timer is not called.
             2. ensure_event_timer is called.
-            3. Charm is in blocked state.
+            3. Charm throws error.
         """
         rm.return_value = mock_rm = MagicMock()
         mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
@@ -280,10 +281,8 @@ class TestCharm(unittest.TestCase):
 
         # 3. ensure_event_timer throws error.
         event_timer_mock.ensure_event_timer.side_effect = TimerEnableError("mock error")
-        harness.charm.on.update_status.emit()
-        assert harness.charm.unit.status == BlockedStatus(
-            "Failed to start the timer for reconciliation event: mock error"
-        )
+        with pytest.raises(TimerEnableError):
+            harness.charm.on.update_status.emit()
 
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")
