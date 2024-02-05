@@ -25,6 +25,7 @@ from ops.charm import (
     InstallEvent,
     StartEvent,
     StopEvent,
+    UpdateStatusEvent,
     UpgradeCharmEvent,
 )
 from ops.framework import EventBase, StoredState
@@ -42,7 +43,7 @@ from errors import (
     RunnerError,
     SubprocessError,
 )
-from event_timer import EventTimer, TimerDisableError, TimerEnableError
+from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
@@ -50,6 +51,8 @@ from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_manager_type import FlushMode
 from runner_type import GithubOrg, GithubRepo, ProxySetting, VirtualMachineResources
 from utilities import bytes_with_unit_to_kib, execute_command, retry
+
+RECONCILE_RUNNERS_EVENT = "reconcile-runners"
 
 logger = logging.getLogger(__name__)
 
@@ -154,11 +157,12 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = ops.BlockedStatus(exc.msg)
             return
 
+        self._event_timer = EventTimer(self.unit.name)
+
         if LXD_PROFILE_YAML.exists():
             if self.config.get("test-mode") != "insecure":
                 raise RuntimeError("lxd-profile.yaml detected outside test mode")
             logger.critical("test mode is enabled")
-        self._event_timer = EventTimer(self.unit.name)
 
         self._stored.set_default(
             path=self.config["path"],  # for detecting changes
@@ -201,6 +205,7 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(
             self.on.update_dependencies_action, self._on_update_dependencies_action
         )
+        self.framework.observe(self.on.update_status, self._on_update_status)
 
     def _create_memory_storage(self, path: Path, size: int) -> None:
         """Create a tmpfs-based LVM volume group.
@@ -439,6 +444,25 @@ class GithubRunnerCharm(CharmBase):
             logger.info("Rebooting system...")
             self.unit.reboot(now=now)
 
+    def _set_reconcile_timer(self) -> None:
+        """Set the timer for regular reconciliation checks."""
+        self._event_timer.ensure_event_timer(
+            event_name="reconcile-runners",
+            interval=int(self.config["reconcile-interval"]),
+            timeout=int(self.config["reconcile-interval"]) - 1,
+        )
+
+    def _ensure_reconcile_timer_is_active(self) -> None:
+        """Ensure the timer for reconciliation event is active."""
+        try:
+            reconcile_timer_is_active = self._event_timer.is_active(RECONCILE_RUNNERS_EVENT)
+        except TimerStatusError:
+            logger.exception("Failed to check the reconciliation event timer status")
+        else:
+            if not reconcile_timer_is_active:
+                logger.error("Reconciliation event timer is not activated")
+                self._set_reconcile_timer()
+
     @catch_charm_errors
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
         """Handle the update of charm.
@@ -483,18 +507,7 @@ class GithubRunnerCharm(CharmBase):
             self._stored.token = None
 
         self._refresh_firewall()
-        try:
-            self._event_timer.ensure_event_timer(
-                event_name="reconcile-runners",
-                interval=int(self.config["reconcile-interval"]),
-                timeout=int(self.config["reconcile-interval"]) - 1,
-            )
-        except TimerEnableError as ex:
-            logger.exception("Failed to start the event timer")
-            self.unit.status = BlockedStatus(
-                (f"Failed to start timer for regular reconciliation" f"checks: {ex}")
-            )
-            return
+        self._set_reconcile_timer()
 
         if self.config["path"] != self._stored.path:
             prev_runner_manager = self._get_runner_manager(
@@ -673,18 +686,22 @@ class GithubRunnerCharm(CharmBase):
         event.set_results({"flush": flushed})
 
     @catch_charm_errors
+    def _on_update_status(self, _: UpdateStatusEvent) -> None:
+        """Handle the update of charm status.
+
+        Args:
+            event: Event of updating the charm status.
+        """
+        self._ensure_reconcile_timer_is_active()
+
+    @catch_charm_errors
     def _on_stop(self, _: StopEvent) -> None:
         """Handle the stopping of the charm.
 
         Args:
             event: Event of stopping the charm.
         """
-        try:
-            self._event_timer.disable_event_timer("update-dependencies")
-            self._event_timer.disable_event_timer("reconcile-runners")
-        except TimerDisableError as ex:
-            logger.exception("Failed to stop the timer")
-            self.unit.status = BlockedStatus(f"Failed to stop charm event timer: {ex}")
+        self._event_timer.disable_event_timer("reconcile-runners")
 
         runner_manager = self._get_runner_manager()
         runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY)
