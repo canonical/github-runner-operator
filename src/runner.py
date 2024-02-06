@@ -19,7 +19,6 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, NamedTuple, Optional, Sequence
-from urllib.error import HTTPError
 
 import yaml
 
@@ -27,6 +26,7 @@ import shared_fs
 from charm_state import ARCH, SSHDebugConnection
 from errors import (
     CreateSharedFilesystemError,
+    GithubClientError,
     LxdError,
     RunnerAproxyError,
     RunnerCreateError,
@@ -232,7 +232,7 @@ class Runner:
         )
         try:
             self._clients.github.delete_runner(self.config.path, self.status.runner_id)
-        except HTTPError:
+        except GithubClientError:
             logger.exception("Unable the remove runner on GitHub: %s", self.config.name)
             # This can occur when attempting to remove a busy runner.
             # The caller should retry later, after GitHub mark the runner as offline.
