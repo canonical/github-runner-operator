@@ -18,8 +18,9 @@ Strategy for flushing runners.
  
  - <b>`FLUSH_IDLE`</b>:  Flush only idle runners. 
  - <b>`FLUSH_IDLE_WAIT_REPO_CHECK`</b>:  Flush only idle runners, then wait until repo-policy-check is  completed for the busy runners. 
- - <b>`FORCE_FLUSH_BUSY`</b>:  Force flush busy runners. 
- - <b>`FORCE_FLUSH_BUSY_WAIT_REPO_CHECK`</b>:  Wait until the repo-policy-check is completed before  force flush of busy runners. 
+ - <b>`FLUSH_BUSY`</b>:  Flush busy runners. 
+ - <b>`FLUSH_BUSY_WAIT_REPO_CHECK`</b>:  Wait until the repo-policy-check is completed before  flush of busy runners. 
+ - <b>`FORCE_FLUSH_WAIT_REPO_CHECK`</b>:  Force flush the runners (remove lxd instances even on  gh api issues, like invalid token).  Wait until repo-policy-check is completed before force flush of busy runners. 
 
 
 

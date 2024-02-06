@@ -166,7 +166,7 @@ class Runner:
         except (RunnerError, LxdError) as err:
             raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err
 
-    def remove(self, remove_token: str) -> None:
+    def remove(self, remove_token: Optional[str]) -> None:
         """Remove this runner instance from LXD and GitHub.
 
         Args:
@@ -179,18 +179,20 @@ class Runner:
 
         if self.instance:
             logger.info("Executing command to removal of runner and clean up...")
-            self.instance.execute(
-                [
-                    "/usr/bin/sudo",
-                    "-u",
-                    "ubuntu",
-                    str(self.config_script),
-                    "remove",
-                    "--token",
-                    remove_token,
-                ],
-                hide_cmd=True,
-            )
+
+            if remove_token:
+                self.instance.execute(
+                    [
+                        "/usr/bin/sudo",
+                        "-u",
+                        "ubuntu",
+                        str(self.config_script),
+                        "remove",
+                        "--token",
+                        remove_token,
+                    ],
+                    hide_cmd=True,
+                )
 
             if self.instance.status == "Running":
                 logger.info("Removing LXD instance of runner: %s", self.config.name)

@@ -496,7 +496,7 @@ class GithubRunnerCharm(CharmBase):
         if not runner_manager:
             return
 
-        runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK)
+        runner_manager.flush(FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
         self._reconcile_runners(runner_manager)
 
     @catch_charm_errors
@@ -523,7 +523,8 @@ class GithubRunnerCharm(CharmBase):
             prev_runner_manager = self._get_runner_manager(**prev_config_for_flush)
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners due to config change")
-                prev_runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK)
+                # it may be the case that the prev token has expired, so we need to use force flush
+                prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
 
         self._refresh_firewall()
 
@@ -680,7 +681,7 @@ class GithubRunnerCharm(CharmBase):
         """
         runner_manager = self._get_runner_manager()
 
-        runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK)
+        runner_manager.flush(FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
         delta = self._reconcile_runners(runner_manager)
 
         self._on_check_runners_action(event)
@@ -715,7 +716,7 @@ class GithubRunnerCharm(CharmBase):
         self._event_timer.disable_event_timer("reconcile-runners")
 
         runner_manager = self._get_runner_manager()
-        runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY)
+        runner_manager.flush(FlushMode.FLUSH_BUSY)
 
     def _reconcile_runners(self, runner_manager: RunnerManager) -> Dict[str, Any]:
         """Reconcile the current runners state and intended runner state.
