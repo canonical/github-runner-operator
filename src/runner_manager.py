@@ -587,6 +587,7 @@ class RunnerManager:
         if mode in (
             FlushMode.FLUSH_IDLE_WAIT_REPO_CHECK,
             FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK,
+            FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK,
         ):
             for _ in range(5):
                 if not self._runners_in_pre_job():
@@ -600,7 +601,11 @@ class RunnerManager:
                     )
                 )
 
-        if mode in {FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK, FlushMode.FLUSH_BUSY}:
+        if mode in {
+            FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK,
+            FlushMode.FLUSH_BUSY,
+            FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK,
+        }:
             busy_runners = [runner for runner in self._get_runners() if runner.status.exist]
 
             logger.info("Removing existing %i busy local runners", len(runners))
