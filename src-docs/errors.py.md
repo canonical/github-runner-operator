@@ -317,7 +317,7 @@ Construct the subprocess error.
 ---
 
 ## <kbd>class</kbd> `TokenError`
-Represents an error when the token is invalid. 
+Represents an error when the token is invalid or has not enough permissions. 
 
 
 

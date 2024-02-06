@@ -37,7 +37,11 @@ def catch_http_errors(func):
             return func(*args, **kwargs)
         except HTTPError as exc:
             if exc.code in (401, 403):
-                raise errors.TokenError from exc
+                if exc.code == 401:
+                    msg = "Invalid token."
+                else:
+                    msg = "Provided token has not enough permissions."
+                raise errors.TokenError(msg) from exc
             raise errors.GithubApiError from exc
 
     return wrapper

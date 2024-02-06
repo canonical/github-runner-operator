@@ -155,7 +155,7 @@ class GithubApiError(GithubClientError):
 
 
 class TokenError(GithubClientError):
-    """Represents an error when the token is invalid."""
+    """Represents an error when the token is invalid or has not enough permissions."""
 
 
 class JobNotFoundError(GithubClientError):
