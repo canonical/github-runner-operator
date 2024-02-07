@@ -503,6 +503,8 @@ jobs:
         run: yq --version
       - name: install check-jsonschema
         run: python3 -m pip install check-jsonschema
+      - name: unzip version
+        run: unzip --version
       # `check-jsonschema` is installed using pip. The directory `~/.local/bin` needs to be added to PATH.
       - name: test check-jsonschema
         run: check-jsonschema --version
