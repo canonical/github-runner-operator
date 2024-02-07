@@ -45,6 +45,7 @@ def initialize_openstack(clouds_yaml: str) -> None:
         cloud_name = list(cloud_config["clouds"].keys())[0]
     except (KeyError, IndexError) as exc:
         raise InvalidConfigError("Invalid clouds.yaml.") from exc
+    CLOUDS_YAML_PATH.parent.mkdir(parents=True, exist_ok=True)
     CLOUDS_YAML_PATH.write_text(clouds_yaml, encoding="utf-8")
     try:
         openstack.connect(cloud_name)
