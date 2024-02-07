@@ -1,11 +1,11 @@
-cosl == 0.0.7
-# Newer version does not work with default OpenSSL version on jammy.
-cryptography <= 38.0.4
 ghapi
 jinja2
 openstacksdk>=2,<3
 ops>=2.8
-pydantic ==1.10.14
 pylxd @ git+https://github.com/canonical/pylxd
 requests
 typing-extensions
+# Newer version does not work with default OpenSSL version on jammy.
+cryptography <= 38.0.4
+pydantic ==1.10.14
+cosl ==0.0.8

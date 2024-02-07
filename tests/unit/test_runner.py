@@ -457,6 +457,7 @@ def test_random_ssh_connection_choice(
     runner._configure_runner()
     second_call_args = runner._clients.jinja.get_template("env.j2").render.call_args.kwargs
 
-    assert (
-        first_call_args["ssh_debug_info"] != second_call_args["ssh_debug_info"]
-    ), "Same ssh debug info found, this may have occurred with a very low priority."
+    assert first_call_args["ssh_debug_info"] != second_call_args["ssh_debug_info"], (
+        "Same ssh debug info found, this may have occurred with a very low priority. "
+        "Just try again."
+    )

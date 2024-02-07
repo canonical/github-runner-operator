@@ -22,6 +22,7 @@ from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
+from github_client import GithubClient
 from tests.integration.helpers import (
     deploy_github_runner_charm,
     ensure_charm_has_runner,
@@ -150,6 +151,11 @@ def model(ops_test: OpsTest) -> Model:
     return ops_test.model
 
 
+@pytest.fixture(scope="module")
+def runner_manager_github_client(token: str) -> GithubClient:
+    return GithubClient(token=token)
+
+
 @pytest_asyncio.fixture(scope="module")
 async def app_no_runner(
     model: Model,
@@ -179,7 +185,7 @@ async def app_no_runner(
 
 
 @pytest_asyncio.fixture(scope="module")
-async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Application]:
+async def app_one_runner(model: Model, app_no_runner: Application) -> AsyncIterator[Application]:
     """Application with a single runner.
 
     Test should ensure it returns with the application in a good state and has

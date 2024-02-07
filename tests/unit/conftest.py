@@ -38,6 +38,8 @@ def mocks(monkeypatch, tmp_path, exec_command):
         "charm_state.json.dumps", unittest.mock.MagicMock(return_value="{'fake':'json'}")
     )
     monkeypatch.setattr("charm_state.CHARM_STATE_PATH", Path(tmp_path / "charm_state.json"))
+    monkeypatch.setattr("event_timer.jinja2", unittest.mock.MagicMock())
+    monkeypatch.setattr("event_timer.execute_command", exec_command)
     monkeypatch.setattr(
         "firewall.Firewall.get_host_ip", unittest.mock.MagicMock(return_value="10.0.0.1")
     )
