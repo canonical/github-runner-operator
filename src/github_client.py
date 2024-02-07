@@ -40,7 +40,7 @@ def catch_http_errors(func):
                 if exc.code == 401:
                     msg = "Invalid token."
                 else:
-                    msg = "Provided token has not enough permissions."
+                    msg = "Provided token has not enough permissions or has reached rate-limit."
                 raise errors.TokenError(msg) from exc
             raise errors.GithubApiError from exc
 
