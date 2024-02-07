@@ -96,7 +96,7 @@ Create the runner instance on LXD and register it on GitHub.
 ### <kbd>function</kbd> `remove`
 
 ```python
-remove(remove_token: str) → None
+remove(remove_token: Optional[str]) → None
 ```
 
 Remove this runner instance from LXD and GitHub. 

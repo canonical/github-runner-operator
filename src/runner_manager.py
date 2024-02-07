@@ -561,7 +561,14 @@ class RunnerManager:
         Returns:
             Number of runners removed.
         """
-        remove_token = self._clients.github.get_runner_remove_token(self.config.path)
+        try:
+            remove_token = self._clients.github.get_runner_remove_token(self.config.path)
+        except errors.GithubClientError:
+            logger.exception("Failed to get remove-token to unregister runners from GitHub.")
+            if mode != FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK:
+                raise
+            logger.info("Proceeding with flush without remove-token.")
+            remove_token = None
 
         # Removing non-busy runners
         runners = [
@@ -579,7 +586,8 @@ class RunnerManager:
 
         if mode in (
             FlushMode.FLUSH_IDLE_WAIT_REPO_CHECK,
-            FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK,
+            FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK,
+            FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK,
         ):
             for _ in range(5):
                 if not self._runners_in_pre_job():
@@ -593,7 +601,11 @@ class RunnerManager:
                     )
                 )
 
-        if mode in {FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK, FlushMode.FORCE_FLUSH_BUSY}:
+        if mode in {
+            FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK,
+            FlushMode.FLUSH_BUSY,
+            FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK,
+        }:
             busy_runners = [runner for runner in self._get_runners() if runner.status.exist]
 
             logger.info("Removing existing %i busy local runners", len(runners))

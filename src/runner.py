@@ -19,7 +19,6 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, NamedTuple, Optional, Sequence
-from urllib.error import HTTPError
 
 import yaml
 
@@ -27,6 +26,7 @@ import shared_fs
 from charm_state import ARCH, SSHDebugConnection
 from errors import (
     CreateSharedFilesystemError,
+    GithubClientError,
     LxdError,
     RunnerAproxyError,
     RunnerCreateError,
@@ -166,7 +166,7 @@ class Runner:
         except (RunnerError, LxdError) as err:
             raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err
 
-    def remove(self, remove_token: str) -> None:
+    def remove(self, remove_token: Optional[str]) -> None:
         """Remove this runner instance from LXD and GitHub.
 
         Args:
@@ -179,18 +179,20 @@ class Runner:
 
         if self.instance:
             logger.info("Executing command to removal of runner and clean up...")
-            self.instance.execute(
-                [
-                    "/usr/bin/sudo",
-                    "-u",
-                    "ubuntu",
-                    str(self.config_script),
-                    "remove",
-                    "--token",
-                    remove_token,
-                ],
-                hide_cmd=True,
-            )
+
+            if remove_token:
+                self.instance.execute(
+                    [
+                        "/usr/bin/sudo",
+                        "-u",
+                        "ubuntu",
+                        str(self.config_script),
+                        "remove",
+                        "--token",
+                        remove_token,
+                    ],
+                    hide_cmd=True,
+                )
 
             if self.instance.status == "Running":
                 logger.info("Removing LXD instance of runner: %s", self.config.name)
@@ -232,7 +234,7 @@ class Runner:
         )
         try:
             self._clients.github.delete_runner(self.config.path, self.status.runner_id)
-        except HTTPError:
+        except GithubClientError:
             logger.exception("Unable the remove runner on GitHub: %s", self.config.name)
             # This can occur when attempting to remove a busy runner.
             # The caller should retry later, after GitHub mark the runner as offline.

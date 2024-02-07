@@ -42,6 +42,7 @@ from errors import (
     RunnerBinaryError,
     RunnerError,
     SubprocessError,
+    TokenError,
 )
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
@@ -81,6 +82,9 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
             func(self, event)
         except ConfigurationError as err:
             logger.exception("Issue with charm configuration")
+            self.unit.status = BlockedStatus(str(err))
+        except TokenError as err:
+            logger.exception("Issue with GitHub token")
             self.unit.status = BlockedStatus(str(err))
         except MissingConfigurationError as err:
             logger.exception("Missing required charm configuration")
@@ -492,7 +496,7 @@ class GithubRunnerCharm(CharmBase):
         if not runner_manager:
             return
 
-        runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK)
+        runner_manager.flush(FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
         self._reconcile_runners(runner_manager)
 
     @catch_charm_errors
@@ -502,31 +506,39 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of configuration change.
         """
+        self._set_reconcile_timer()
+
+        prev_config_for_flush: dict[str, str] = {}
+
         if self.config["token"] != self._stored.token:
+            prev_config_for_flush["token"] = str(self._stored.token)
             self._start_services()
             self._stored.token = None
 
-        self._refresh_firewall()
-        self._set_reconcile_timer()
-
         if self.config["path"] != self._stored.path:
-            prev_runner_manager = self._get_runner_manager(
-                path=str(self._stored.path)
-            )  # Casting for mypy checks.
-            if prev_runner_manager:
-                self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
-                prev_runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK)
+            prev_config_for_flush["path"] = str(self._stored.path)
             self._stored.path = self.config["path"]
 
-        runner_manager = self._get_runner_manager()
-        if runner_manager:
+        if prev_config_for_flush:
+            prev_runner_manager = self._get_runner_manager(**prev_config_for_flush)
+            if prev_runner_manager:
+                self.unit.status = MaintenanceStatus("Removing runners due to config change")
+                # it may be the case that the prev token has expired, so we need to use force flush
+                prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
+
+        self._refresh_firewall()
+
+        try:
+            runner_manager = self._get_runner_manager()
+        except MissingConfigurationError as err:
+            self.unit.status = BlockedStatus(
+                f"Missing required charm configuration: {err.configs}"
+            )
+        else:
             self._reconcile_runners(runner_manager)
             self.unit.status = ActiveStatus()
-        else:
-            self.unit.status = BlockedStatus("Missing token or org/repo path config")
 
         if self.config["token"] != self._stored.token:
-            runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK)
             self._stored.token = self.config["token"]
 
     def _check_and_update_dependencies(self) -> bool:
@@ -669,7 +681,7 @@ class GithubRunnerCharm(CharmBase):
         """
         runner_manager = self._get_runner_manager()
 
-        runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK)
+        runner_manager.flush(FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
         delta = self._reconcile_runners(runner_manager)
 
         self._on_check_runners_action(event)
@@ -704,7 +716,7 @@ class GithubRunnerCharm(CharmBase):
         self._event_timer.disable_event_timer("reconcile-runners")
 
         runner_manager = self._get_runner_manager()
-        runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY)
+        runner_manager.flush(FlushMode.FLUSH_BUSY)
 
     def _reconcile_runners(self, runner_manager: RunnerManager) -> Dict[str, Any]:
         """Reconcile the current runners state and intended runner state.

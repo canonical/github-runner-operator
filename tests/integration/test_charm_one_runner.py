@@ -1,15 +1,18 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Integration tests for github-runner charm."""
+"""Integration tests for github-runner charm containing one runner."""
+from typing import AsyncIterator
 
 import pytest
+import pytest_asyncio
 from juju.application import Application
 from juju.model import Model
 
 from charm import GithubRunnerCharm
 from tests.integration.helpers import (
     assert_resource_lxd_profile,
+    ensure_charm_has_runner,
     get_runner_names,
     reconcile,
     run_in_lxd_instance,
@@ -18,6 +21,19 @@ from tests.integration.helpers import (
     wait_till_num_of_runners,
 )
 from tests.status_name import ACTIVE, BLOCKED
+
+
+@pytest_asyncio.fixture(scope="function", name="app")
+async def app_fixture(
+    model: Model,
+    app_one_runner: Application,
+) -> AsyncIterator[Application]:
+    """Setup and teardown the charm after each test.
+
+    Ensure the charm has one runner before starting a test.
+    """
+    await ensure_charm_has_runner(app_one_runner, model)
+    yield app_one_runner
 
 
 @pytest.mark.asyncio
@@ -211,3 +227,19 @@ async def test_change_runner_storage(model: Model, app: Application) -> None:
     # 2.
     await app.set_config({"runner-storage": "memory"})
     await model.wait_for_idle(status=ACTIVE, timeout=1 * 60)
+
+
+async def test_token_config_changed_insufficient_perms(
+    model: Model, app: Application, token_alt: str
+) -> None:
+    """
+    arrange: A working application with one runner.
+    act: Change the token to be invalid and set the number of runners to zero.
+    assert: The active runner should be removed, regardless of the invalid new token.
+    """
+    unit = app.units[0]
+
+    await app.set_config({"token": "", "virtual-machines": "0"})
+    await model.wait_for_idle()
+
+    await wait_till_num_of_runners(unit, num=0)
