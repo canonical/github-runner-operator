@@ -1,0 +1,17 @@
+name: Microstack Test
+
+on:
+  push:
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+          - run: sunbeam cluster bootstrap --accept-defaults
+          - run: sunbeam configure --accept-defaults --openrc demo-openrc
+          - run: sunbeam openrc > admin-openrc
+          - run: . admin-openrc
+          - run: openstack user list
+          - name: Setup tmate session
+            if: always()
+            uses: mxschmitt/action-tmate@v3
