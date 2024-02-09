@@ -5,10 +5,11 @@ on:
 
 jobs:
     test:
-        runs-on: [self-hosted, linux, x64, xlarge]
+        runs-on: [self-hosted, linux, x64, two-xlarge]
         steps:
           - run: sudo snap install openstack --channel 2023.1
-          - run: sunbeam prepare-node-script | bash -x && newgrp snap_daemon
+          - run: sunbeam prepare-node-script | bash -x
+          - run: newgrp snap_daemon
           - run: sunbeam cluster bootstrap --accept-defaults
           - run: sunbeam configure --accept-defaults --openrc demo-openrc
           - run: sunbeam openrc > admin-openrc
