@@ -2,6 +2,7 @@
 
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
+set -e
 
 retry() {
     local command="$1"
