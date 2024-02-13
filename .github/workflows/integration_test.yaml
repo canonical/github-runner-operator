@@ -1,28 +1,42 @@
 name: integration-tests
 
 on:
-  pull_request:
+  push:
 
 jobs:
-  # test option values defined at test/conftest.py are passed on via repository secret
-  # INTEGRATION_TEST_ARGS to operator-workflows automatically.
-  integration-tests-juju2:
-    name: Integration test with juju 2.9
+#  # test option values defined at test/conftest.py are passed on via repository secret
+#  # INTEGRATION_TEST_ARGS to operator-workflows automatically.
+#  integration-tests-juju2:
+#    name: Integration test with juju 2.9
+#    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+#    secrets: inherit
+#    with:
+#      juju-channel: 2.9/stable
+#      pre-run-script: scripts/pre-integration-test.sh
+#      provider: lxd
+#      test-tox-env: integration-juju2.9
+#      modules: '["test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh"]'
+#  integration-tests:
+#    name: Integration test with juju 3.1
+#    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+#    secrets: inherit
+#    with:
+#      juju-channel: 3.1/stable
+#      pre-run-script: scripts/pre-integration-test.sh
+#      provider: lxd
+#      test-tox-env: integration-juju3.1
+#      modules: '["test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh"]'
+  integration-tests-microstack:
+    name: Integration test using microstack
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
-      juju-channel: 2.9/stable
-      pre-run-script: scripts/pre-integration-test.sh
-      provider: lxd
-      test-tox-env: integration-juju2.9
-      modules: '["test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh"]'
-  integration-tests:
-    name: Integration test with juju 3.1
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-    secrets: inherit
-    with:
-      juju-channel: 3.1/stable
-      pre-run-script: scripts/pre-integration-test.sh
-      provider: lxd
-      test-tox-env: integration-juju3.1
-      modules: '["test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh"]'
+      # microstack requires juju 3.2 and microk8s 1.26
+      juju-channel: 3.2/stable
+      pre-run-script: scripts/setup-microstack.sh
+      provider: microk8s
+      channel: 1.26-strict/stable
+      test-tox-env: integration-juju3.2
+      modules: '["test_openstack"]'
+      self-hosted-runner: true
+      self-hosted-runner-label: two-xlarge

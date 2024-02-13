@@ -49,6 +49,8 @@ def initialize_openstack(clouds_yaml: str) -> None:
     CLOUDS_YAML_PATH.write_text(clouds_yaml, encoding="utf-8")
     try:
         openstack.connect(cloud_name)
+        logger.debug("OpenStack connection successful.")
+
     # pylint thinks this isn't an exception
     except keystoneauth1.exceptions.MissingRequiredOptions as exc:
         raise InvalidConfigError(  # pylint: disable=bad-exception-cause

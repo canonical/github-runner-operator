@@ -145,6 +145,13 @@ def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
 
 
 @pytest.fixture(scope="module")
+def openstack_rc(pytestconfig: pytest.Config) -> Optional[Path]:
+    """Configured openstack_rc setting."""
+    openstack_rc = pytestconfig.getoption("--openstack-rc")
+    return Path(openstack_rc) if openstack_rc else None
+
+
+@pytest.fixture(scope="module")
 def model(ops_test: OpsTest) -> Model:
     """Juju model used in the test."""
     assert ops_test.model is not None

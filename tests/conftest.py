@@ -48,3 +48,8 @@ def pytest_addoption(parser: Parser):
         action="store",
         help="The loop device to create shared FS for metrics logging",
     )
+    parser.addoption(
+        "--openstack-rc",
+        action="store",
+        help="The OpenStack RC file for the charm to use.",
+    )
