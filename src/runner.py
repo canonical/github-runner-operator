@@ -38,7 +38,13 @@ from errors import (
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
 from runner_manager_type import RunnerManagerClients
-from runner_type import GithubOrg, RunnerConfig, RunnerStatus, VirtualMachineResources
+from runner_type import (
+    GithubOrg,
+    ProxySetting,
+    RunnerConfig,
+    RunnerStatus,
+    VirtualMachineResources,
+)
 from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
@@ -121,6 +127,10 @@ class Runner:
         self.instance = instance
 
         self._shared_fs: Optional[shared_fs.SharedFilesystem] = None
+
+        if aproxy_address := self.config.proxies.get("aproxy_address"):
+            # If aproxy is used, the proxy environment variables are not necessary.
+            self.config.proxies = ProxySetting(aproxy_address=aproxy_address)
 
         # If the proxy setting are set, then add NO_PROXY local variables.
         if self.config.proxies.get("http") or self.config.proxies.get("https"):
