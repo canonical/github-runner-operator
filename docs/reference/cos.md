@@ -32,6 +32,7 @@ The "GitHub Self-Hosted Runner Metrics (Long-Term)" metrics dashboard displays t
   - Timeseries chart displaying the number of jobs per day
   - Percentage of jobs with low queue time (less than 60 seconds)
 
+Both dashboards allow for filtering by runner flavor by specifying a regular expression on the `Flavor` variable.
 
 
 While the dashboard visualises a subset of potential metrics, these metrics are logged in a file named `/var/log/github-runner-metrics.log`. Use following Loki query to retrieve lines from this file:
