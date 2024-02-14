@@ -14,7 +14,7 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
-from charm_state import ARCH
+from charm_state import ARCH, OPENSTACK_CLOUDS_YAML_CONFIG_NAME
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
@@ -415,7 +415,7 @@ class TestCharm(unittest.TestCase):
             {
                 "path": "mockorg/repo",
                 "token": "mocktoken",
-                "openstack-clouds-yaml": yaml.safe_dump(cloud_yaml),
+                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(cloud_yaml),
             }
         )
 

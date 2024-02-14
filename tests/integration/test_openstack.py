@@ -9,8 +9,8 @@ from pathlib import Path
 from juju.application import Application
 from juju.model import Model
 
+from charm_state import OPENSTACK_CLOUDS_YAML_CONFIG_NAME
 from tests.integration.helpers import run_in_unit
-from tests.status_name import BLOCKED
 
 
 def _load_openstack_rc_file(rc_file_path) -> dict:
@@ -42,6 +42,7 @@ async def test_openstack_integration(model: Model, app_no_runner: Application, o
     act: Set the openstack-clouds-yaml config in the charm
     assert: Check the unit log for successful OpenStack connection
     """
+    # microstack generates an OpenStack RC file instead of a clouds.yaml file.
     openstack_env = _load_openstack_rc_file(openstack_rc)
     project_name = openstack_env["OS_PROJECT_NAME"]
     clouds = {
@@ -58,8 +59,8 @@ async def test_openstack_integration(model: Model, app_no_runner: Application, o
             }
         }
     }
-    await app_no_runner.set_config({"openstack-clouds-yaml": json.dumps(clouds)})
-    await model.wait_for_idle()
+    await app_no_runner.set_config({OPENSTACK_CLOUDS_YAML_CONFIG_NAME: json.dumps(clouds)})
+    await model.wait_for_idle(apps=[app_no_runner.name])
     unit = app_no_runner.units[0]
     unit_name_with_dash = unit.name.replace("/", "-")
     ret_code, unit_log = await run_in_unit(

@@ -27,6 +27,8 @@ ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
 
+OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
+
 
 class ARCH(str, Enum):
     """Supported system architectures."""
@@ -88,7 +90,7 @@ class CharmConfig(BaseModel):
             logger.exception("Invalid runner-storage configuration")
             raise CharmConfigInvalidError("Invalid runner-storage configuration") from err
 
-        openstack_clouds_yaml_str = charm.config.get("openstack-clouds-yaml")
+        openstack_clouds_yaml_str = charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
         if openstack_clouds_yaml_str:
             try:
                 openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
