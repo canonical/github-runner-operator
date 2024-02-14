@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+import openstack_manager
 from tests.unit.mock import MockGhapiClient, MockLxdClient, MockRepoPolicyComplianceClient
 
 
@@ -38,6 +39,12 @@ def mocks(monkeypatch, tmp_path, exec_command):
         "charm_state.json.dumps", unittest.mock.MagicMock(return_value="{'fake':'json'}")
     )
     monkeypatch.setattr("charm_state.CHARM_STATE_PATH", Path(tmp_path / "charm_state.json"))
+    monkeypatch.setattr(
+        "charm_state.openstack_manager", unittest.mock.MagicMock(spec=openstack_manager)
+    )
+    monkeypatch.setattr(
+        "charm_state.openstack_manager.InvalidConfigError", openstack_manager.InvalidConfigError
+    )
     monkeypatch.setattr("event_timer.jinja2", unittest.mock.MagicMock())
     monkeypatch.setattr("event_timer.execute_command", exec_command)
     monkeypatch.setattr(

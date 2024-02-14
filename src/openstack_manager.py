@@ -30,29 +30,55 @@ class InvalidConfigError(Exception):
         self.msg = msg
 
 
-def initialize_openstack(clouds_yaml: str) -> None:
-    """Initialize clouds.yaml and check connection.
+def _validate_cloud_config(cloud_config: dict) -> None:
+    """Validate the format of the cloud configuration.
 
     Args:
-        clouds_yaml: The clouds.yaml configuration to apply.
+        cloud_config: The configuration in clouds.yaml format to validate.
 
     Raises:
-        InvalidConfigError: if an invalid clouds_yaml configuration was passed.
+        InvalidConfigError: if the format of the config is invalid.
     """
     # dict of format: {clouds: <cloud-name>: <cloud-config>}
-    cloud_config: dict = yaml.safe_load(clouds_yaml)
     try:
-        cloud_name = list(cloud_config["clouds"].keys())[0]
-    except (KeyError, IndexError) as exc:
+        clouds = list(cloud_config["clouds"].keys())
+    except KeyError as exc:
         raise InvalidConfigError("Invalid clouds.yaml.") from exc
+
+    if not clouds:
+        raise InvalidConfigError("No clouds defined in clouds.yaml.")
+
+
+def _write_config_to_disk(cloud_config: dict):
     CLOUDS_YAML_PATH.parent.mkdir(parents=True, exist_ok=True)
-    CLOUDS_YAML_PATH.write_text(clouds_yaml, encoding="utf-8")
+    with CLOUDS_YAML_PATH.open("w", encoding="utf-8") as clouds_yaml:
+        yaml.dump(cloud_config, clouds_yaml)
+
+
+def _connect(cloud_config):
+    clouds = list(cloud_config["clouds"].keys())
+    if len(clouds) > 1:
+        logger.warning("Multiple clouds defined in clouds.yaml. Using the first one to connect.")
+    cloud_name = clouds[0]
     try:
         openstack.connect(cloud_name)
         logger.debug("OpenStack connection successful.")
-
     # pylint thinks this isn't an exception
     except keystoneauth1.exceptions.MissingRequiredOptions as exc:
         raise InvalidConfigError(  # pylint: disable=bad-exception-cause
             "Missing required Openstack credentials"
         ) from exc
+
+
+def initialize_openstack(cloud_config: dict) -> None:
+    """Write config to disk and check connection.
+
+    Args:
+        cloud_config: The configuration in clouds.yaml format to apply.
+
+    Raises:
+        InvalidConfigError: if the format of the config is invalid.
+    """
+    _validate_cloud_config(cloud_config)
+    _write_config_to_disk(cloud_config)
+    _connect(cloud_config)

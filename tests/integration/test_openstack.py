@@ -1,8 +1,9 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
+"""Integration tests for OpenStack integration."""
+
 import json
-import logging
 from pathlib import Path
 
 from juju.application import Application
@@ -60,7 +61,6 @@ async def test_openstack_integration(model: Model, app_no_runner: Application, o
     await model.wait_for_idle(status=ACTIVE)
     unit = app_no_runner.units[0]
     unit_name_with_dash = unit.name.replace("/", "-")
-    logging.info(f"Unit name with dash: {unit_name_with_dash}")
     ret_code, unit_log = await run_in_unit(
         unit=unit,
         command=f"cat /var/log/juju/unit-{unit_name_with_dash}.log",

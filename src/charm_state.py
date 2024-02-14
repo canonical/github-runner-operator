@@ -11,6 +11,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional
 
+import yaml
 from ops import CharmBase
 from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
 from pydantic.networks import IPvAnyAddress
@@ -250,7 +251,7 @@ class State:
     arch: ARCH
     charm_config: CharmConfig
     is_metrics_logging_available: bool
-    openstack_clouds_yaml: str | None
+    openstack_clouds_yaml: dict | None
     proxy_config: ProxyConfig
     ssh_debug_connections: list[SSHDebugConnection]
 
@@ -306,13 +307,25 @@ class State:
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
-        openstack_clouds_yaml = charm.config.get("openstack-clouds-yaml")
-        if openstack_clouds_yaml:
+        openstack_clouds_yaml_str = charm.config.get("openstack-clouds-yaml")
+        if openstack_clouds_yaml_str:
+            try:
+                openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
+            except yaml.YAMLError as exc:
+                logger.error("Invalid openstack-clouds-yaml config: %s.", exc)
+                raise CharmConfigInvalidError(
+                    "Invalid openstack-clouds-yaml config. Invalid yaml."
+                ) from exc
             try:
                 openstack_manager.initialize_openstack(openstack_clouds_yaml)
             except openstack_manager.InvalidConfigError as exc:
                 logger.error("Invalid openstack config, %s.", exc)
-                raise CharmConfigInvalidError("Invalid openstack-clouds-yaml config.") from exc
+                raise CharmConfigInvalidError(
+                    "Invalid openstack config. "
+                    "Not able to initialize connection to openstack."
+                ) from exc
+        else:
+            openstack_clouds_yaml = None
 
         state = cls(
             arch=arch,
