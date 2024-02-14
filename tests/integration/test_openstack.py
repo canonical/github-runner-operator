@@ -59,7 +59,7 @@ async def test_openstack_integration(model: Model, app_no_runner: Application, o
         }
     }
     await app_no_runner.set_config({"openstack-clouds-yaml": json.dumps(clouds)})
-    await model.wait_for_idle(status=BLOCKED)
+    await model.wait_for_idle()
     unit = app_no_runner.units[0]
     unit_name_with_dash = unit.name.replace("/", "-")
     ret_code, unit_log = await run_in_unit(
