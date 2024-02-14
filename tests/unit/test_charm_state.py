@@ -273,7 +273,7 @@ def test_openstack_config(charm: MagicMock, clouds_yaml: dict):
     """
     charm.config["openstack-clouds-yaml"] = json.dumps(clouds_yaml)
     state = State.from_charm(charm)
-    assert state.openstack_clouds_yaml == clouds_yaml
+    assert state.charm_config.openstack_clouds_yaml == clouds_yaml
 
 
 def test_openstack_config_invalid_yaml(charm: MagicMock):
@@ -297,13 +297,10 @@ def test_openstack_config_invalid_config(charm: MagicMock, clouds_yaml):
     assert: CharmConfigInvalidError is raised.
     """
     charm.config["openstack-clouds-yaml"] = json.dumps(clouds_yaml)
-    charm_state.openstack_manager.initialize_openstack.side_effect = OSInvalidConfigError(
-        "invalid"
-    )
+    charm_state.openstack_manager.initialize.side_effect = OSInvalidConfigError("invalid")
 
     with pytest.raises(CharmConfigInvalidError) as exc:
         State.from_charm(charm)
-    assert (
-        "Invalid openstack-clouds-yaml config. Not able to initialize connection to openstack."
-        in str(exc.value)
+    assert "Invalid openstack config. Not able to initialize openstack integration." in str(
+        exc.value
     )

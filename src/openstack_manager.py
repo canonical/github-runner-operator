@@ -7,6 +7,7 @@ from pathlib import Path
 
 import keystoneauth1.exceptions
 import openstack
+import openstack.exceptions
 import yaml
 
 logger = logging.getLogger(__name__)
@@ -14,20 +15,16 @@ logger = logging.getLogger(__name__)
 CLOUDS_YAML_PATH = Path(Path.home() / ".config/openstack/clouds.yaml")
 
 
-class InvalidConfigError(Exception):
-    """Represents an invalid OpenStack configuration.
+class OpenStackError(Exception):
+    """Base class for OpenStack errors."""
 
-    Attributes:
-        msg: Explanation of the error.
-    """
 
-    def __init__(self, msg: str):
-        """Initialize a new instance of the InvalidConfigError exception.
+class InvalidConfigError(OpenStackError):
+    """Represents an invalid OpenStack configuration."""
 
-        Args:
-            msg: Explanation of the error.
-        """
-        self.msg = msg
+
+class UnauthorizedError(OpenStackError):
+    """Represents an unauthorized connection to OpenStack."""
 
 
 def _validate_cloud_config(cloud_config: dict) -> None:
@@ -55,23 +52,26 @@ def _write_config_to_disk(cloud_config: dict):
         yaml.dump(cloud_config, clouds_yaml)
 
 
-def _connect(cloud_config):
+def _create_connection(cloud_config):
+    """Create a connection object.
+
+    Args:
+        cloud_config: The configuration in clouds.yaml format to apply.
+    Raises:
+        InvalidConfigError: if the config has not all required information.
+    """
     clouds = list(cloud_config["clouds"].keys())
     if len(clouds) > 1:
         logger.warning("Multiple clouds defined in clouds.yaml. Using the first one to connect.")
     cloud_name = clouds[0]
-    try:
-        openstack.connect(cloud_name)
-        logger.debug("OpenStack connection successful.")
-    # pylint thinks this isn't an exception
-    except keystoneauth1.exceptions.MissingRequiredOptions as exc:
-        raise InvalidConfigError(  # pylint: disable=bad-exception-cause
-            "Missing required Openstack credentials"
-        ) from exc
+
+    # api documents that keystoneauth1.exceptions.MissingRequiredOptions can be raised but
+    # I could not reproduce it. I will leave it here for now.
+    return openstack.connect(cloud_name)
 
 
-def initialize_openstack(cloud_config: dict) -> None:
-    """Write config to disk and check connection.
+def initialize(cloud_config: dict) -> None:
+    """Validate config and write to disk.
 
     Args:
         cloud_config: The configuration in clouds.yaml format to apply.
@@ -81,4 +81,26 @@ def initialize_openstack(cloud_config: dict) -> None:
     """
     _validate_cloud_config(cloud_config)
     _write_config_to_disk(cloud_config)
-    _connect(cloud_config)
+
+
+def list_projects(cloud_config: dict):
+    """List all servers in the OpenStack cloud.
+
+    The purpose of the method is just to try out openstack integration and
+    it may be removed in the future.
+
+    Returns:
+        A list of projects.
+    """
+    conn = _create_connection(cloud_config)
+    try:
+        projects = conn.list_projects()
+        logger.debug("OpenStack connection successful.")
+        logger.debug("Projects: %s", projects)
+        # pylint thinks this isn't an exception
+    except keystoneauth1.exceptions.http.Unauthorized as exc:
+        raise UnauthorizedError(  # pylint: disable=bad-exception-cause
+            "Unauthorized to connect to OpenStack."
+        ) from exc
+
+    return projects
