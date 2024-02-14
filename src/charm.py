@@ -167,6 +167,19 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = ops.BlockedStatus(exc.msg)
             return
 
+        if self._state.charm_config.openstack_clouds_yaml:
+            # Test out openstack integration and then go
+            # into BlockedStatus as it is not supported yet
+            projects = openstack_manager.list_projects(
+                self._state.charm_config.openstack_clouds_yaml
+            )
+            logger.info("OpenStack projects: %s", projects)
+            self.unit.status = BlockedStatus(
+                "OpenStack integration is not supported yet. "
+                "Please remove the openstack-clouds-yaml config."
+            )
+            return
+
         self._event_timer = EventTimer(self.unit.name)
 
         if LXD_PROFILE_YAML.exists():
@@ -533,19 +546,6 @@ class GithubRunnerCharm(CharmBase):
                 prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
 
         self._refresh_firewall()
-
-        if self._state.charm_config.openstack_clouds_yaml:
-            # Test out openstack integration and then go
-            # into BlockedStatus as it is not supported yet
-            projects = openstack_manager.list_projects(
-                self._state.charm_config.openstack_clouds_yaml
-            )
-            logger.info("OpenStack projects: %s", projects)
-            self.unit.status = BlockedStatus(
-                "OpenStack integration is not supported yet. "
-                "Please remove the openstack-clouds-yaml config."
-            )
-            return
 
         try:
             runner_manager = self._get_runner_manager()
