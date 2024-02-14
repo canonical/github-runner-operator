@@ -36,6 +36,7 @@ jobs:
       pre-run-script: scripts/setup-microstack.sh
       provider: microk8s
       channel: 1.26-strict/stable
+      # do not enable rbac addon, otherwise the setup will fail
       microk8s-addons: "dns ingress hostpath-storage"
       test-tox-env: integration-juju3.2
       modules: '["test_openstack"]'

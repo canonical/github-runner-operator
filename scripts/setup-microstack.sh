@@ -2,6 +2,11 @@
 
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
+
+# Script to setup microstack for testing
+# This script is intended to be run in a self-hosted runner, which uses proxy settings,
+# and we encountered some issues with no_proxy not being interpreted correctly.
+
 set -e
 
 retry() {
@@ -42,4 +47,6 @@ sudo -g snap_daemon sunbeam openrc > admin-openrc
 # Test connection
 openstack user list
 
+juju clouds || echo "Failed to list clouds"
+juju bootstrap localhost lxd
 echo "PYTEST_ADDOPTS=--openstack-rc=${PWD}/admin-openrc" >> "${GITHUB_ENV}"
