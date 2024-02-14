@@ -390,6 +390,48 @@ class TestCharm(unittest.TestCase):
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
+    def test_on_config_changed_openstack_clouds_yaml(self, run, wt, mkdir, rm):
+        """
+        arrange: Setup mocked charm.
+        act: Fire config changed event to use openstack-clouds-yaml.
+        assert: Charm is in blocked state.
+        """
+        harness = Harness(GithubRunnerCharm)
+        cloud_yaml = {
+            "clouds": {
+                "microstack": {
+                    "auth": {
+                        "auth_url": secrets.token_hex(16),
+                        "project_name": secrets.token_hex(16),
+                        "project_domain_name": secrets.token_hex(16),
+                        "username": secrets.token_hex(16),
+                        "user_domain_name": secrets.token_hex(16),
+                        "password": secrets.token_hex(16),
+                    }
+                }
+            }
+        }
+        harness.update_config(
+            {
+                "path": "mockorg/repo",
+                "token": "mocktoken",
+                "openstack-clouds-yaml": yaml.safe_dump(cloud_yaml),
+            }
+        )
+
+        harness.begin()
+
+        harness.charm.on.config_changed.emit()
+
+        assert harness.charm.unit.status == BlockedStatus(
+            "OpenStack integration is not supported yet. "
+            "Please remove the openstack-clouds-yaml config."
+        )
+
+    @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
+    @patch("pathlib.Path.write_text")
+    @patch("subprocess.run")
     def test_check_runners_action(self, run, wt, mkdir, rm):
         rm.return_value = mock_rm = MagicMock()
         mock_event = MagicMock()
@@ -499,43 +541,3 @@ class TestCharm(unittest.TestCase):
         assert all(
             FirewallEntry(ip) in allowlist for ip in test_unit_ip_addresses
         ), "Expected IP firewall entry not found in allowlist arg."
-
-    @patch("charm.RunnerManager")
-    @patch("pathlib.Path.mkdir")
-    @patch("pathlib.Path.write_text")
-    @patch("subprocess.run")
-    def test_openstack_clouds_yaml(self, run, wt, mkdir, rm):
-        """
-        arrange: Setup mocked charm.
-        act: Use openstack-clouds-yaml config.
-        assert: Charm goes in blocked state.
-        """
-        harness = Harness(GithubRunnerCharm)
-        cloud_yaml = {
-            "clouds": {
-                "microstack": {
-                    "auth": {
-                        "auth_url": secrets.token_hex(16),
-                        "project_name": secrets.token_hex(16),
-                        "project_domain_name": secrets.token_hex(16),
-                        "username": secrets.token_hex(16),
-                        "user_domain_name": secrets.token_hex(16),
-                        "password": secrets.token_hex(16),
-                    }
-                }
-            }
-        }
-        harness.update_config(
-            {
-                "path": "mockorg/repo",
-                "token": "mocktoken",
-                "openstack-clouds-yaml": yaml.safe_dump(cloud_yaml),
-            }
-        )
-
-        harness.begin()
-
-        assert harness.charm.unit.status == BlockedStatus(
-            "OpenStack integration is not supported yet. "
-            "Please remove the openstack-clouds-yaml config."
-        )
