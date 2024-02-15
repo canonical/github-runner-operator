@@ -42,8 +42,9 @@ sunbeam prepare-node-script | bash -x
 sleep 10
 # The following can take a while....
 retry 'sudo -g snap_daemon sunbeam cluster bootstrap --accept-defaults' 'Waiting for cluster bootstrap to complete' 3
-sudo -g snap_daemon sunbeam openrc > admin-openrc
-. admin-openrc
+sg snap_daemon -c "sunbeam openrc" > admin-openrc
+# shellcheck source=admin-openrc
+source admin-openrc
 # Test connection
 openstack user list
 
