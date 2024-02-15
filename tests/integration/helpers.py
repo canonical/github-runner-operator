@@ -75,7 +75,8 @@ async def install_repo_policy_compliance_from_git_source(unit: Unit, source: Non
         unit: Unit instance to check for the LXD profile.
         source: The git source to install the package. If none the package is removed.
     """
-    await run_in_unit(unit, "python3 -m pip uninstall --yes repo-policy-compliance")
+    return_code, stdout = await run_in_unit(unit, "python3 -m pip uninstall --yes repo-policy-compliance")
+    assert return_code == 0, f"Failed to uninstall repo-policy-compliance: {stdout}"
 
     if source:
         return_code, _ = await run_in_unit(unit, f"python3 -m pip install {source}")
