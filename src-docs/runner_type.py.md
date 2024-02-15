@@ -17,7 +17,7 @@ Represent GitHub organization.
 
 ---
 
-<a href="../src/runner_type.py#L50"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_type.py#L51"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `path`
 
@@ -38,7 +38,7 @@ Represent GitHub repository.
 
 ---
 
-<a href="../src/runner_type.py#L38"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_type.py#L39"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `path`
 

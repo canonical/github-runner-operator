@@ -38,13 +38,7 @@ from errors import (
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
 from runner_manager_type import RunnerManagerClients
-from runner_type import (
-    GithubOrg,
-    ProxySetting,
-    RunnerConfig,
-    RunnerStatus,
-    VirtualMachineResources,
-)
+from runner_type import GithubOrg, RunnerConfig, RunnerStatus, VirtualMachineResources
 from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
@@ -127,18 +121,6 @@ class Runner:
         self.instance = instance
 
         self._shared_fs: Optional[shared_fs.SharedFilesystem] = None
-
-        if aproxy_address := self.config.proxies.get("aproxy_address"):
-            # If aproxy is used, the proxy environment variables are not necessary.
-            self.config.proxies = ProxySetting(aproxy_address=aproxy_address)
-
-        # If the proxy setting are set, then add NO_PROXY local variables.
-        if self.config.proxies.get("http") or self.config.proxies.get("https"):
-            if self.config.proxies.get("no_proxy"):
-                self.config.proxies["no_proxy"] += ","
-            else:
-                self.config.proxies["no_proxy"] = ""
-            self.config.proxies["no_proxy"] += f"{self.config.name},.svc"
 
     def create(self, config: CreateRunnerConfig):
         """Create the runner instance on LXD and register it on GitHub.
@@ -640,9 +622,9 @@ class Runner:
         docker_client_proxy = {
             "proxies": {
                 "default": {
-                    "httpProxy": self.config.proxies["http"],
-                    "httpsProxy": self.config.proxies["https"],
-                    "noProxy": self.config.proxies["no_proxy"],
+                    "httpProxy": self.config.proxies.http or "",
+                    "httpsProxy": self.config.proxies.https or "",
+                    "noProxy": self.config.proxies.no_proxy or "",
                 }
             }
         }
@@ -718,8 +700,8 @@ class Runner:
             self.instance.execute(["systemctl", "restart", "docker"])
 
         if self.config.proxies:
-            if self.config.proxies.get("aproxy_address"):
-                self._configure_aproxy(self.config.proxies["aproxy_address"])
+            if aproxy_address := self.config.proxies.aproxy_address:
+                self._configure_aproxy(aproxy_address)
             else:
                 self._configure_docker_proxy()
 

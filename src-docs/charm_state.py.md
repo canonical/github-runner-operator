@@ -100,10 +100,10 @@ Proxy configuration.
 
 **Attributes:**
  
- - <b>`http_proxy`</b>:  HTTP proxy address. 
- - <b>`https_proxy`</b>:  HTTPS proxy address. 
+ - <b>`http`</b>:  HTTP proxy address. 
+ - <b>`https`</b>:  HTTPS proxy address. 
  - <b>`no_proxy`</b>:  Comma-separated list of hosts that should not be proxied. 
- - <b>`use_aproxy`</b>:  Whether aproxy should be used. 
+ - <b>`use_aproxy`</b>:  Whether aproxy should be used for the runners. 
 
 
 ---
@@ -116,7 +116,7 @@ Return the aproxy address.
 
 ---
 
-<a href="../src/charm_state.py#L140"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L144"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_fields`
 
@@ -178,7 +178,7 @@ SSH connection information for debug workflow.
 
 ---
 
-<a href="../src/charm_state.py#L202"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L219"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -215,7 +215,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L254"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L271"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -248,7 +248,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L159"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L176"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

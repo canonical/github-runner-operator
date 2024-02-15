@@ -1,10 +1,16 @@
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-HTTP_PROXY={{proxies['http']}}
-HTTPS_PROXY={{proxies['https']}}
-NO_PROXY={{proxies['no_proxy']}}
-http_proxy={{proxies['http']}}
-https_proxy={{proxies['https']}}
-no_proxy={{proxies['no_proxy']}}
+{% if proxies.http %}
+Environment="HTTP_PROXY={{proxies.http}}
+Environment="http_proxy={{proxies.http}}"
+{% endif %}
+{% if proxies.https %}
+Environment="HTTPS_PROXY={{proxies.https}}
+Environment="https_proxy={{proxies.https}}"
+{% endif %}
+{% if proxies.no_proxy %}
+Environment="NO_PROXY={{proxies.no_proxy}}"
+Environment="no_proxy={{proxies.no_proxy}}"
+{% endif %}
 {% if ssh_debug_info %}
 TMATE_SERVER_HOST={{ssh_debug_info['host']}}
 TMATE_SERVER_PORT={{ssh_debug_info['port']}}
