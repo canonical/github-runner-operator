@@ -396,7 +396,7 @@ class RunnerManager:
         if self.proxies and not self.proxies.use_aproxy:
             # If the proxy setting are set, then add NO_PROXY local variables.
             if self.proxies.no_proxy:
-                no_proxy = self.config.proxies.no_proxy + ","
+                no_proxy = self.proxies.no_proxy + ","
             else:
                 no_proxy = ""
             no_proxy = no_proxy + f"{name},.svc"
