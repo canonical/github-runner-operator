@@ -11,6 +11,7 @@ from openstack.identity.v3 import project
 from openstack.test import fakes
 
 import openstack_manager
+from errors import OpenStackInvalidConfigError, OpenStackUnauthorizedError
 
 INVALID_CLOUDS_YAML_ERR_MSG = "Invalid clouds.yaml."
 
@@ -45,7 +46,7 @@ def mock_openstack(monkeypatch: pytest.MonkeyPatch, projects) -> MagicMock:
     return mock_connect
 
 
-def _create_clouds_yaml():
+def _create_clouds_yaml() -> dict:
     """Create a fake clouds.yaml."""
     return {
         "clouds": {
@@ -91,7 +92,7 @@ def test_initialize_validation_error(invalid_yaml: dict, expected_err_msg):
     assert: InvalidConfigError is raised.
     """
 
-    with pytest.raises(openstack_manager.InvalidConfigError) as exc:
+    with pytest.raises(OpenStackInvalidConfigError) as exc:
         openstack_manager.initialize(invalid_yaml)
     assert expected_err_msg in str(exc)
 
@@ -103,7 +104,6 @@ def test_list_projects(clouds_yaml_path: Path, openstack_connect_mock: MagicMock
     assert: openstack.connect and list_projects is called and the projects are returned.
     """
     clouds_yaml = _create_clouds_yaml()
-    clouds_yaml["clouds"]["microstack2"] = clouds_yaml["clouds"][CLOUD_NAME]
 
     openstack_manager.initialize(clouds_yaml)
     actual_projects = openstack_manager.list_projects(clouds_yaml)
@@ -142,7 +142,7 @@ def test_list_projects_missing_credentials_error(openstack_connect_mock: MagicMo
 
     openstack_manager.initialize(cloud_yaml)
 
-    with pytest.raises(openstack_manager.UnauthorizedError) as exc:
+    with pytest.raises(OpenStackUnauthorizedError) as exc:
         openstack_manager.list_projects(cloud_yaml)
     assert "Unauthorized to connect to OpenStack." in str(exc)
 

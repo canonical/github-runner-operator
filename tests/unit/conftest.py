@@ -25,8 +25,6 @@ def disk_usage_mock(total_disk):
 @pytest.fixture(autouse=True)
 def mocks(monkeypatch, tmp_path, exec_command):
     openstack_manager_mock = unittest.mock.MagicMock(spec=openstack_manager)
-    openstack_manager_mock.InvalidConfigError = openstack_manager.InvalidConfigError
-    openstack_manager_mock.UnauthorizedError = openstack_manager.UnauthorizedError
 
     monkeypatch.setattr(
         "charm.GithubRunnerCharm.service_token_path", Path(tmp_path / "mock_service_token")

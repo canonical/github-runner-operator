@@ -40,6 +40,7 @@ from errors import (
     LogrotateSetupError,
     MissingConfigurationError,
     MissingRunnerBinaryError,
+    OpenStackUnauthorizedError,
     RunnerBinaryError,
     RunnerError,
     SubprocessError,
@@ -97,7 +98,7 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
             self.unit.status = MaintenanceStatus(
                 "Missing runner binary, automatic retry will be attempted"
             )
-        except openstack_manager.UnauthorizedError:
+        except OpenStackUnauthorizedError:
             logger.exception("Unauthorized OpenStack connection")
             self.unit.status = BlockedStatus(
                 "Unauthorized OpenStack connection. Check credentials."

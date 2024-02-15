@@ -17,6 +17,7 @@ from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validat
 from pydantic.networks import IPvAnyAddress
 
 import openstack_manager
+from errors import OpenStackInvalidConfigError
 from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
@@ -101,7 +102,7 @@ class CharmConfig(BaseModel):
                 ) from exc
             try:
                 openstack_manager.initialize(openstack_clouds_yaml)
-            except openstack_manager.InvalidConfigError as exc:
+            except OpenStackInvalidConfigError as exc:
                 logger.error("Invalid openstack config, %s.", exc)
                 raise CharmConfigInvalidError(
                     "Invalid openstack config. Not able to initialize openstack integration."

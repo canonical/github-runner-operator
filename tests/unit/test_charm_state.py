@@ -19,7 +19,7 @@ from charm_state import (
     SSHDebugConnection,
     State,
 )
-from openstack_manager import InvalidConfigError as OSInvalidConfigError
+from errors import OpenStackInvalidConfigError
 
 
 @pytest.fixture(name="charm")
@@ -292,12 +292,12 @@ def test_openstack_config_invalid_yaml(charm: MagicMock):
 def test_openstack_config_invalid_config(charm: MagicMock, clouds_yaml):
     """
     arrange: Setup mocked charm with openstack-clouds-yaml and openstack_manager
-     to return InvalidConfigError.
+     to raise OpenStackInvalidConfigError.
     act: Retrieve state from charm.
     assert: CharmConfigInvalidError is raised.
     """
     charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = json.dumps(clouds_yaml)
-    charm_state.openstack_manager.initialize.side_effect = OSInvalidConfigError("invalid")
+    charm_state.openstack_manager.initialize.side_effect = OpenStackInvalidConfigError("invalid")
 
     with pytest.raises(CharmConfigInvalidError) as exc:
         State.from_charm(charm)

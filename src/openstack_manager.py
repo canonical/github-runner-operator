@@ -9,22 +9,13 @@ import keystoneauth1.exceptions
 import openstack
 import openstack.exceptions
 import yaml
+from openstack.identity.v3.project import Project
+
+from errors import OpenStackInvalidConfigError, OpenStackUnauthorizedError
 
 logger = logging.getLogger(__name__)
 
 CLOUDS_YAML_PATH = Path(Path.home() / ".config/openstack/clouds.yaml")
-
-
-class OpenStackError(Exception):
-    """Base class for OpenStack errors."""
-
-
-class InvalidConfigError(OpenStackError):
-    """Represents an invalid OpenStack configuration."""
-
-
-class UnauthorizedError(OpenStackError):
-    """Represents an unauthorized connection to OpenStack."""
 
 
 def _validate_cloud_config(cloud_config: dict) -> None:
@@ -40,25 +31,33 @@ def _validate_cloud_config(cloud_config: dict) -> None:
     try:
         clouds = list(cloud_config["clouds"].keys())
     except KeyError as exc:
-        raise InvalidConfigError("Invalid clouds.yaml.") from exc
+        raise OpenStackInvalidConfigError("Invalid clouds.yaml.") from exc
 
     if not clouds:
-        raise InvalidConfigError("No clouds defined in clouds.yaml.")
+        raise OpenStackInvalidConfigError("No clouds defined in clouds.yaml.")
 
 
-def _write_config_to_disk(cloud_config: dict):
+def _write_config_to_disk(cloud_config: dict) -> None:
+    """Write the cloud configuration to disk.
+
+    Args:
+        cloud_config: The configuration in clouds.yaml format to write to disk.
+    """
     CLOUDS_YAML_PATH.parent.mkdir(parents=True, exist_ok=True)
     with CLOUDS_YAML_PATH.open("w", encoding="utf-8") as clouds_yaml:
         yaml.dump(cloud_config, clouds_yaml)
 
 
-def _create_connection(cloud_config):
+def _create_connection(cloud_config) -> openstack.connection.Connection:
     """Create a connection object.
 
     Args:
         cloud_config: The configuration in clouds.yaml format to apply.
     Raises:
         InvalidConfigError: if the config has not all required information.
+
+    Returns:
+        An openstack.connection.Connection object.
     """
     clouds = list(cloud_config["clouds"].keys())
     if len(clouds) > 1:
@@ -66,12 +65,14 @@ def _create_connection(cloud_config):
     cloud_name = clouds[0]
 
     # api documents that keystoneauth1.exceptions.MissingRequiredOptions can be raised but
-    # I could not reproduce it. I will leave it here for now.
+    # I could not reproduce it. Therefore, no catch here.
     return openstack.connect(cloud_name)
 
 
 def initialize(cloud_config: dict) -> None:
-    """Validate config and write to disk.
+    """Initialize Openstack integration.
+
+    Validates config and writes it to disk.
 
     Args:
         cloud_config: The configuration in clouds.yaml format to apply.
@@ -83,11 +84,14 @@ def initialize(cloud_config: dict) -> None:
     _write_config_to_disk(cloud_config)
 
 
-def list_projects(cloud_config: dict):
-    """List all servers in the OpenStack cloud.
+def list_projects(cloud_config: dict) -> list[Project]:
+    """List all projects in the OpenStack cloud.
 
     The purpose of the method is just to try out openstack integration and
     it may be removed in the future.
+
+    It currently returns objects directly from the sdk,
+    which may not be ideal (mapping to domain objects may be preferable).
 
     Returns:
         A list of projects.
@@ -99,7 +103,7 @@ def list_projects(cloud_config: dict):
         logger.debug("Projects: %s", projects)
         # pylint thinks this isn't an exception
     except keystoneauth1.exceptions.http.Unauthorized as exc:
-        raise UnauthorizedError(  # pylint: disable=bad-exception-cause
+        raise OpenStackUnauthorizedError(  # pylint: disable=bad-exception-cause
             "Unauthorized to connect to OpenStack."
         ) from exc
 

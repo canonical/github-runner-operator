@@ -25,12 +25,9 @@ def _load_openstack_rc_file(rc_file_path) -> dict:
     env = {}
     with open(rc_file_path, "r") as f:
         for line in f:
-            # Check if the line starts with 'export'
             if line.startswith("export"):
-                # Remove 'export ' prefix and split key and value
                 parts = line[7:].strip().split("=", 1)
                 if len(parts) == 2:
-                    # Set the environment variable in the Python process
                     env[parts[0]] = parts[1]
 
     return env
@@ -59,8 +56,10 @@ async def test_openstack_integration(model: Model, app_no_runner: Application, o
             }
         }
     }
+
     await app_no_runner.set_config({OPENSTACK_CLOUDS_YAML_CONFIG_NAME: json.dumps(clouds)})
     await model.wait_for_idle(apps=[app_no_runner.name])
+
     unit = app_no_runner.units[0]
     unit_name_with_dash = unit.name.replace("/", "-")
     ret_code, unit_log = await run_in_unit(
