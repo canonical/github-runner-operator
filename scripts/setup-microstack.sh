@@ -43,7 +43,8 @@ sleep 10
 # The following can take a while....
 retry 'sudo -g snap_daemon sunbeam cluster bootstrap --accept-defaults' 'Waiting for cluster bootstrap to complete' 3
 sg snap_daemon -c "sunbeam openrc" > admin-openrc
-# shellcheck source=admin-openrc
+# file is generated dynamically, so shellcheck does not have access to it.
+# shellcheck source=/dev/null
 source admin-openrc
 # Test connection
 openstack user list
