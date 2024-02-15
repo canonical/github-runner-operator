@@ -146,9 +146,9 @@ class ProxyConfig(BaseModel):
     def check_fields(cls, values: dict) -> dict:
         """Validate the proxy configuration."""
         if values.get("use_aproxy") and not (
-            values.get("http_proxy") or values.get("https_proxy")
+            values.get("http") or values.get("https")
         ):
-            raise ValueError("aproxy requires http_proxy or https_proxy to be set")
+            raise ValueError("aproxy requires http or https to be set")
 
         return values
 
