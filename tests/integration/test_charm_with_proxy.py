@@ -179,7 +179,7 @@ async def app_fixture(app_with_prepared_machine: Application) -> AsyncIterator[A
     yield app_with_prepared_machine
     await app_with_prepared_machine.set_config(
         {
-            "virtual-machines": 0,
+            "virtual-machines": "0",
         }
     )
 
