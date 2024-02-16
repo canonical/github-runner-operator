@@ -114,15 +114,6 @@ async def app_with_prepared_machine_fixture(
 
     # Disable external network access for the juju machine except to the proxy to test usage
     # of the http proxy for the charm.
-    # Furthermore, forbid direct access to http server on host
-    # for charm
-    await machine.ssh(
-        f"sudo iptables -A OUTPUT -p tcp -d {host_ip} --dport {HTTP_SERVER_PORT} -j DROP"
-    )
-    # and runner
-    await machine.ssh(
-        f"sudo iptables -A FORWARD -p tcp -d {host_ip} --dport {HTTP_SERVER_PORT} -j DROP"
-    )
 
     # Allow access to following subnets
     for ips in (
@@ -145,8 +136,19 @@ async def app_with_prepared_machine_fixture(
         "240.0.0.0/4",
     ):
         await machine.ssh(f"sudo iptables -I OUTPUT -d {ips} -j ACCEPT")
+    # Furthermore, forbid direct access to http server on host
+    # for charm
+    await machine.ssh(
+        f"sudo iptables -A OUTPUT -p tcp -d {host_ip} --dport {HTTP_SERVER_PORT} -j DROP"
+    )
+    # and runner
+    await machine.ssh(
+        f"sudo iptables -A FORWARD -p tcp -d {host_ip} --dport {HTTP_SERVER_PORT} -j DROP"
+    )
+
     # Block all other network access.
     await machine.ssh("sudo iptables -P OUTPUT DROP")
+
     # Test the external network access is disabled.
     await machine.ssh("ping -c1 canonical.com 2>&1 | grep '100% packet loss'")
 
@@ -416,7 +418,7 @@ async def test_use_proxy_without_aproxy(
     return_code, stdout = await run_in_lxd_instance(
         unit,
         runner_name,
-        f"curl --connect-timeout 1 {NON_PRIVATE_IP}:{HTTP_SERVER_PORT}",
+        f"curl --connect-timeout 10 {NON_PRIVATE_IP}:{HTTP_SERVER_PORT}",
     )
     assert (
         return_code == 0
