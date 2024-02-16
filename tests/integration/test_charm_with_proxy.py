@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Test the usage of a proxy server."""
+import logging
 import socketserver
 import subprocess
 import threading
@@ -139,11 +140,11 @@ async def app_with_prepared_machine_fixture(
     # Furthermore, forbid direct access to http server on host
     # for charm
     await machine.ssh(
-        f"sudo iptables -A OUTPUT -p tcp -d {host_ip} --dport {HTTP_SERVER_PORT} -j DROP"
+        f"sudo iptables -I OUTPUT -p tcp -d {host_ip} --dport {HTTP_SERVER_PORT} -j DROP"
     )
     # and runner
     await machine.ssh(
-        f"sudo iptables -A FORWARD -p tcp -d {host_ip} --dport {HTTP_SERVER_PORT} -j DROP"
+        f"sudo iptables -I FORWARD -p tcp -d {host_ip} --dport {HTTP_SERVER_PORT} -j DROP"
     )
 
     # Block all other network access.
@@ -195,14 +196,14 @@ EOT"""
 async def app_fixture(app_with_prepared_machine: Application) -> AsyncIterator[Application]:
     """Setup and teardown the app.
 
-    Remove the runner after each test.
+    Make sure no runner exists before each test.
     """
-    yield app_with_prepared_machine
     await app_with_prepared_machine.set_config(
         {
             "virtual-machines": "0",
         }
     )
+    yield app_with_prepared_machine
 
 
 def _assert_proxy_var_in(text: str, not_in=False):
@@ -303,6 +304,15 @@ async def _add_translation_of_non_private_ip(unit: Unit, runner_name: str, host_
     )
     assert return_code == 0, f"Failed to add dnat rule: {stdout}"
 
+    # show nft ruleset
+    return_code, stdout = await run_in_lxd_instance(
+        unit,
+        runner_name,
+        "sudo nft list ruleset",
+    )
+    assert return_code == 0, f"Failed to list nft ruleset: {stdout}"
+    logging.info("nft ruleset: %s", stdout)
+
 
 async def _get_aproxy_logs(unit: Unit, runner_name: str) -> Optional[str]:
     """Get the aproxy logs.
@@ -354,7 +364,7 @@ async def test_usage_of_aproxy(
     return_code, stdout = await run_in_lxd_instance(
         unit,
         runner_name,
-        "curl http://canonical.com",
+        "su - ubuntu -c 'curl http://canonical.com'",
     )
     assert return_code == 0, f"Expected successful connection to http://canonical.com: {stdout}"
 
@@ -363,7 +373,7 @@ async def test_usage_of_aproxy(
     return_code, stdout = await run_in_lxd_instance(
         unit,
         runner_name,
-        f"curl --connect-timeout 1 {NON_PRIVATE_IP}:{HTTP_SERVER_PORT}",
+        f"su - ubuntu -c 'curl --connect-timeout 1 {NON_PRIVATE_IP}:{HTTP_SERVER_PORT}'",
     )
     assert (
         return_code == 28
@@ -382,11 +392,9 @@ async def test_use_proxy_without_aproxy(
 ) -> None:
     """
     arrange: A working application with a runner not using aproxy configured for a proxy server.
-        A non-private IP (X) is translated to the host IP that a web server is listening on,
-        so that aproxy has a chance to intercept the request.
     act: Run curl in the runner
         1. URL with standard port
-        2. URL with non-private IP X with non-standard port
+        2. URL of webserver on host with non-standard port
     assert: That the proxy vars are set in the runner, aproxy logs are empty, and that
         1. the request is successful
         2. the request is also successful because
@@ -404,25 +412,22 @@ async def test_use_proxy_without_aproxy(
     runner_name = names[0]
 
     await _assert_proxy_vars_set(unit, runner_name)
-    await _add_translation_of_non_private_ip(unit, runner_name, host_ip)
 
     # 1. URL with standard port, should succeed
     return_code, stdout = await run_in_lxd_instance(
         unit,
         runner_name,
-        "curl http://canonical.com",
+        "su - ubuntu -c 'curl http://canonical.com'",
     )
     assert return_code == 0, f"Expected successful connection to http://canonical.com: {stdout}"
 
-    # 2. URL with non-private IP X with non-standard port, should succeed
+    # 2. URL with non-standard port, should succeed
     return_code, stdout = await run_in_lxd_instance(
         unit,
         runner_name,
-        f"curl --connect-timeout 10 {NON_PRIVATE_IP}:{HTTP_SERVER_PORT}",
+        f"su - ubuntu -c 'curl --connect-timeout 10 {http_server}'",
     )
-    assert (
-        return_code == 0
-    ), f"Expected successful connection to {NON_PRIVATE_IP}:{HTTP_SERVER_PORT}: {stdout}"
+    assert return_code == 0, f"Expected successful connection to {http_server}: {stdout}"
 
     aproxy_logs = await _get_aproxy_logs(unit, runner_name)
     assert aproxy_logs is None
