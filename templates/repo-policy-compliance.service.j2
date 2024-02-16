@@ -9,11 +9,11 @@ WorkingDirectory={{working_directory}}
 Environment="GITHUB_TOKEN={{github_token}}"
 Environment="CHARM_TOKEN={{charm_token}}"
 {% if proxies.http %}
-Environment="HTTP_PROXY={{proxies.http}}
+Environment="HTTP_PROXY={{proxies.http}}"
 Environment="http_proxy={{proxies.http}}"
 {% endif %}
 {% if proxies.https %}
-Environment="HTTPS_PROXY={{proxies.https}}
+Environment="HTTPS_PROXY={{proxies.https}}"
 Environment="https_proxy={{proxies.https}}"
 {% endif %}
 {% if proxies.no_proxy %}
