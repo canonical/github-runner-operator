@@ -393,6 +393,17 @@ class RunnerManager:
             logger.exception("Failed to issue Reconciliation metric")
 
     def _get_runner_config(self, name: str) -> RunnerConfig:
+        """Get the configuration for a runner.
+
+        Sets the proxy settings for the runner according to the configuration
+        and creates a new runner configuration object.
+
+        Args:
+            name: Name of the runner.
+
+        Returns:
+            Configuration for the runner.
+        """
         if self.proxies and not self.proxies.use_aproxy:
             # If the proxy setting are set, then add NO_PROXY local variables.
             if self.proxies.no_proxy:
