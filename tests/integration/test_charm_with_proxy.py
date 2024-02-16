@@ -9,7 +9,6 @@ from asyncio import sleep
 from http.server import SimpleHTTPRequestHandler
 from pathlib import Path
 from typing import AsyncIterator, Optional
-from urllib.parse import urlparse
 
 import pytest
 import pytest_asyncio
@@ -85,12 +84,7 @@ async def http_server(host_ip: str) -> AsyncIterator[str]:
 
 @pytest_asyncio.fixture(scope="module", name="app_with_prepared_machine")
 async def app_with_prepared_machine_fixture(
-    model: Model,
-    charm_file: str,
-    app_name: str,
-    path: str,
-    token: str,
-    proxy: str,
+    model: Model, charm_file: str, app_name: str, path: str, token: str, proxy: str, host_ip: str
 ) -> Application:
     """Application with proxy setup and firewall to block all other network access."""
 
@@ -118,36 +112,61 @@ async def app_with_prepared_machine_fixture(
     else:
         assert False, "Timeout waiting for machine to start"
 
-    # Disable external network access for the juju machine.
-    proxy_url = urlparse(proxy)
-    # Forbid direct access to http server
+    # Disable external network access for the juju machine except to the proxy to test usage
+    # of the http proxy for the charm.
+    # Furthermore, forbid direct access to http server on host
+    # for charm
     await machine.ssh(
-        "sudo iptables -A OUTPUT"
-        f" -p tcp -d {proxy_url.hostname} --dport {HTTP_SERVER_PORT} -j DROP"
+        f"sudo iptables -A OUTPUT -p tcp -d {host_ip} --dport {HTTP_SERVER_PORT} -j DROP"
     )
-    # Allow other access to the host , e.g. to the proxy
-    await machine.ssh(f"sudo iptables -I OUTPUT -d {proxy_url.hostname} -j ACCEPT")
-    # Explicitly allow access to the following networks.
-    await machine.ssh("sudo iptables -I OUTPUT -d 0.0.0.0/8 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 10.0.0.0/8 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 100.64.0.0/10 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 127.0.0.0/8 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 169.254.0.0/16 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 172.16.0.0/12 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 192.0.0.0/24 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 192.0.2.0/24 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 192.88.99.0/24 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 192.168.0.0/16 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 198.18.0.0/15 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 198.51.100.0/24 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 203.0.113.0/24 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 224.0.0.0/4 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 233.252.0.0/24 -j ACCEPT")
-    await machine.ssh("sudo iptables -I OUTPUT -d 240.0.0.0/4 -j ACCEPT")
+    # and runner
+    await machine.ssh(
+        f"sudo iptables -A FORWARD -p tcp -d {host_ip} --dport {HTTP_SERVER_PORT} -j DROP"
+    )
+
+    # Allow access to following subnets
+    for ips in (
+        host_ip,
+        "0.0.0.0/8",  # Allow other access to the host , e.g. to the proxy
+        "10.0.0.0/8",
+        "100.64.0.0/10",
+        "127.0.0.0/8",
+        "169.254.0.0/16",
+        "172.16.0.0/12",
+        "192.0.0.0/24",
+        "192.0.2.0/24",
+        "192.88.99.0/24",
+        "192.168.0.0/16",
+        "198.18.0.0/15",
+        "198.51.100.0/24",
+        "203.0.113.0/24",
+        "224.0.0.0/4",
+        "233.252.0.0/24",
+        "240.0.0.0/4",
+    ):
+        await machine.ssh(f"sudo iptables -I OUTPUT -d {ips} -j ACCEPT")
     # Block all other network access.
     await machine.ssh("sudo iptables -P OUTPUT DROP")
     # Test the external network access is disabled.
     await machine.ssh("ping -c1 canonical.com 2>&1 | grep '100% packet loss'")
+
+    # Ensure iptables rules are restored on reboot, which might happen during the test.
+    await machine.ssh("sudo iptables-save | sudo tee /etc/iptables.rules.v4")
+    await machine.ssh(
+        """cat <<EOT | sudo tee /etc/systemd/system/iptables-restore.service
+[Unit]
+Description=Apply iptables firewall rules
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/iptables-restore /etc/iptables.rules.v4
+ExecReload=/sbin/iptables-restore /etc/iptables.rules.v4
+
+[Install]
+WantedBy=multi-user.target
+EOT"""
+    )
+    await machine.ssh("sudo systemctl enable iptables-restore.service")
 
     # Deploy the charm in the juju machine with external network access disabled.
     application = await model.deploy(
@@ -278,7 +297,7 @@ async def _add_translation_of_non_private_ip(unit: Unit, runner_name: str, host_
         unit,
         runner_name,
         "sudo nft add rule nat OUTPUT"
-        f" ip daddr 200.100.100.1 tcp dport {HTTP_SERVER_PORT} dnat to {host_ip}",
+        f" ip daddr {NON_PRIVATE_IP} tcp dport {HTTP_SERVER_PORT} dnat to {host_ip}",
     )
     assert return_code == 0, f"Failed to add dnat rule: {stdout}"
 
@@ -342,9 +361,11 @@ async def test_usage_of_aproxy(
     return_code, stdout = await run_in_lxd_instance(
         unit,
         runner_name,
-        f"curl --connect-timeout 1 {http_server}",
+        f"curl --connect-timeout 1 {NON_PRIVATE_IP}:{HTTP_SERVER_PORT}",
     )
-    assert return_code == 28, f"Expected connect timeout to {http_server}: {stdout}"
+    assert (
+        return_code == 28
+    ), f"Expected connect timeout to {NON_PRIVATE_IP}:{HTTP_SERVER_PORT}: {stdout}"
 
     aproxy_logs = await _get_aproxy_logs(unit, runner_name)
     assert aproxy_logs is not None
@@ -395,9 +416,11 @@ async def test_use_proxy_without_aproxy(
     return_code, stdout = await run_in_lxd_instance(
         unit,
         runner_name,
-        f"curl --connect-timeout 10 {http_server}",
+        f"curl --connect-timeout 1 {NON_PRIVATE_IP}:{HTTP_SERVER_PORT}",
     )
-    assert return_code == 0, f"Expected successful connection to {http_server}"
+    assert (
+        return_code == 0
+    ), f"Expected successful connection to {NON_PRIVATE_IP}:{HTTP_SERVER_PORT}: {stdout}"
 
     aproxy_logs = await _get_aproxy_logs(unit, runner_name)
     assert aproxy_logs is None
