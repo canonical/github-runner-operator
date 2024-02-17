@@ -3,13 +3,11 @@
 
 """Test the usage of a proxy server."""
 import logging
-import socketserver
 import subprocess
-import threading
 from asyncio import sleep
-from http.server import SimpleHTTPRequestHandler
 from pathlib import Path
 from typing import AsyncIterator, Optional
+from urllib.parse import urlparse
 
 import pytest
 import pytest_asyncio
@@ -20,20 +18,45 @@ from juju.unit import Unit
 from tests.integration.helpers import (
     ensure_charm_has_runner,
     get_runner_names,
+    reconcile,
     run_in_lxd_instance,
 )
 from tests.status_name import ACTIVE
 from utilities import execute_command
 
 NO_PROXY = "127.0.0.1,localhost,::1"
-NON_PRIVATE_IP = "200.100.100.10"
 PROXY_PORT = 8899
-HTTP_SERVER_PORT = 9432
+NON_STANDARD_PORT = 9432
 
 
-@pytest.fixture(scope="module", name="host_ip")
-def host_ip_fixture() -> str:
-    """Get the default ip of the host."""
+@pytest.fixture(scope="module", name="proxy_logs_filepath")
+def proxy_logs_filepath_fixture(tmp_path_factory) -> Path:
+    """Get the path to the proxy logs file."""
+    return tmp_path_factory.mktemp("tinyproxy") / "tinyproxy.log"
+
+
+@pytest_asyncio.fixture(scope="module", name="proxy")
+async def proxy_fixture(proxy_logs_filepath: Path) -> AsyncIterator[str]:
+    """Start tinyproxy and return the proxy server address."""
+    result = subprocess.run(["which", "tinyproxy"])
+    assert (
+        result.returncode == 0
+    ), "Cannot find tinyproxy in PATH, install tinyproxy with `apt install tinyproxy -y`"
+
+    tinyproxy_config = Path("tinyproxy.conf")
+    tinyproxy_config_value = (
+        f"Port {PROXY_PORT}\n"
+        "Listen 0.0.0.0\n"
+        "Timeout 600\n"
+        f'LogFile "{proxy_logs_filepath}"\n'
+        "LogLevel Connect\n"
+    )
+    logging.info("tinyproxy config: %s", tinyproxy_config_value)
+    tinyproxy_config.write_text(tinyproxy_config_value)
+
+    process = subprocess.Popen(["tinyproxy", "-d", "-c", str(tinyproxy_config)])
+
+    # Get default ip using following commands
     stdout, _ = execute_command(
         [
             "/bin/bash",
@@ -43,49 +66,23 @@ def host_ip_fixture() -> str:
         ],
         check_exit=True,
     )
-    return stdout.strip()
+    default_ip = stdout.strip()
 
-
-@pytest_asyncio.fixture(scope="module", name="proxy")
-async def proxy_fixture(host_ip: str) -> AsyncIterator[str]:
-    """Start tinyproxy and return the proxy server address."""
-    result = subprocess.run(["which", "tinyproxy"])
-    assert (
-        result.returncode == 0
-    ), "Cannot find tinyproxy in PATH, install tinyproxy with `apt install tinyproxy -y`"
-
-    tinyproxy_config = Path("tinyproxy.conf")
-    tinyproxy_config.write_text((f"Port {PROXY_PORT}\n" "Listen 0.0.0.0\n" "Timeout 600\n"))
-
-    process = subprocess.Popen(["tinyproxy", "-d", "-c", str(tinyproxy_config)])
-
-    yield f"http://{host_ip}:{PROXY_PORT}"
+    yield f"http://{default_ip}:{PROXY_PORT}"
 
     process.terminate()
     if tinyproxy_config.exists():
         tinyproxy_config.unlink()
 
 
-@pytest_asyncio.fixture(scope="module", name="http_server")
-async def http_server(host_ip: str) -> AsyncIterator[str]:
-    """Start a simple http server and return the address."""
-
-    def start_http_server(port):
-        handler = SimpleHTTPRequestHandler
-        httpd = socketserver.TCPServer(("", port), handler)
-        print(f"Serving on port {port}")
-        httpd.serve_forever()
-
-    # Start the server in a separate thread so it doesn't block the main thread
-    t = threading.Thread(target=start_http_server, args=(HTTP_SERVER_PORT,), daemon=True)
-    t.start()
-
-    yield f"http://{host_ip}:{HTTP_SERVER_PORT}"
-
-
 @pytest_asyncio.fixture(scope="module", name="app_with_prepared_machine")
 async def app_with_prepared_machine_fixture(
-    model: Model, charm_file: str, app_name: str, path: str, token: str, proxy: str, host_ip: str
+    model: Model,
+    charm_file: str,
+    app_name: str,
+    path: str,
+    token: str,
+    proxy: str,
 ) -> Application:
     """Application with proxy setup and firewall to block all other network access."""
 
@@ -113,41 +110,25 @@ async def app_with_prepared_machine_fixture(
     else:
         assert False, "Timeout waiting for machine to start"
 
-    # Disable external network access for the juju machine except to the proxy to test usage
-    # of the http proxy for the charm.
-
-    # Allow access to following subnets
-    for ips in (
-        host_ip,
-        "0.0.0.0/8",  # Allow other access to the host , e.g. to the proxy
-        "10.0.0.0/8",
-        "100.64.0.0/10",
-        "127.0.0.0/8",
-        "169.254.0.0/16",
-        "172.16.0.0/12",
-        "192.0.0.0/24",
-        "192.0.2.0/24",
-        "192.88.99.0/24",
-        "192.168.0.0/16",
-        "198.18.0.0/15",
-        "198.51.100.0/24",
-        "203.0.113.0/24",
-        "224.0.0.0/4",
-        "233.252.0.0/24",
-        "240.0.0.0/4",
-    ):
-        await machine.ssh(f"sudo iptables -I OUTPUT -d {ips} -j ACCEPT")
-    # Furthermore, forbid direct access to http server on host
-    # for charm
-    await machine.ssh(
-        f"sudo iptables -I OUTPUT -p tcp -d {host_ip} --dport {HTTP_SERVER_PORT} -j DROP"
-    )
-    # and runner
-    await machine.ssh(
-        f"sudo iptables -I FORWARD -p tcp -d {host_ip} --dport {HTTP_SERVER_PORT} -j DROP"
-    )
-
-    # Block all other network access.
+    # Disable external network access for the juju machine.
+    proxy_url = urlparse(proxy)
+    await machine.ssh(f"sudo iptables -I OUTPUT -d {proxy_url.hostname} -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 0.0.0.0/8 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 10.0.0.0/8 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 100.64.0.0/10 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 127.0.0.0/8 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 169.254.0.0/16 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 172.16.0.0/12 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 192.0.0.0/24 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 192.0.2.0/24 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 192.88.99.0/24 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 192.168.0.0/16 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 198.18.0.0/15 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 198.51.100.0/24 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 203.0.113.0/24 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 224.0.0.0/4 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 233.252.0.0/24 -j ACCEPT")
+    await machine.ssh("sudo iptables -I OUTPUT -d 240.0.0.0/4 -j ACCEPT")
     await machine.ssh("sudo iptables -P OUTPUT DROP")
 
     # Test the external network access is disabled.
@@ -193,16 +174,24 @@ EOT"""
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
-async def app_fixture(app_with_prepared_machine: Application) -> AsyncIterator[Application]:
+async def app_fixture(
+    app_with_prepared_machine: Application, model: Model, proxy_logs_filepath: Path
+) -> AsyncIterator[Application]:
     """Setup and teardown the app.
 
-    Make sure no runner exists before each test.
+    Make sure before each test:
+    - no runner exists
+    - Proxy logs are cleared
     """
     await app_with_prepared_machine.set_config(
         {
             "virtual-machines": "0",
         }
     )
+    await reconcile(app=app_with_prepared_machine, model=model)
+
+    proxy_logs_filepath.write_text("")
+
     yield app_with_prepared_machine
 
 
@@ -288,32 +277,6 @@ async def _assert_proxy_vars_not_set(unit: Unit, runner_name: str):
     await _assert_proxy_vars(unit, runner_name, not_set=True)
 
 
-async def _add_translation_of_non_private_ip(unit: Unit, runner_name: str, host_ip: str):
-    """Add dnat rule to translate non-private ip to the host ip.
-
-    Args:
-        host_ip: The host ip.
-        runner_name: The name of the runner.
-        unit: The unit to run the command on.
-    """
-    return_code, stdout = await run_in_lxd_instance(
-        unit,
-        runner_name,
-        "sudo nft add rule nat OUTPUT"
-        f" ip daddr {NON_PRIVATE_IP} tcp dport {HTTP_SERVER_PORT} dnat to {host_ip}",
-    )
-    assert return_code == 0, f"Failed to add dnat rule: {stdout}"
-
-    # show nft ruleset
-    return_code, stdout = await run_in_lxd_instance(
-        unit,
-        runner_name,
-        "sudo nft list ruleset",
-    )
-    assert return_code == 0, f"Failed to list nft ruleset: {stdout}"
-    logging.info("nft ruleset: %s", stdout)
-
-
 async def _get_aproxy_logs(unit: Unit, runner_name: str) -> Optional[str]:
     """Get the aproxy logs.
 
@@ -333,16 +296,12 @@ async def _get_aproxy_logs(unit: Unit, runner_name: str) -> Optional[str]:
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_usage_of_aproxy(
-    model: Model, app: Application, http_server: str, host_ip: str
-) -> None:
+async def test_usage_of_aproxy(model: Model, app: Application, proxy_logs_filepath: Path) -> None:
     """
     arrange: A working application with a runner using aproxy configured for a proxy server.
-        A non-private IP (X) is translated to the host IP that a web server is listening on,
-        so that aproxy has a chance to intercept the request.
     act: Run curl in the runner
         1. URL with standard port
-        2. URL with non-private IP X with non-standard port
+        2. URL with non-standard port
     assert: That no proxy vars are set in the runner and that
         1. the request is successful and the aproxy log contains the request
         2. the request is not successful and the aproxy log does not contain the request
@@ -358,43 +317,46 @@ async def test_usage_of_aproxy(
     assert names
     runner_name = names[0]
 
-    await _add_translation_of_non_private_ip(unit, runner_name, host_ip)
-
     # 1. URL with standard port, should succeed, gets intercepted by aproxy
     return_code, stdout = await run_in_lxd_instance(
         unit,
         runner_name,
         "su - ubuntu -c 'curl http://canonical.com'",
     )
-    assert return_code == 0, f"Expected successful connection to http://canonical.com: {stdout}"
+    assert (
+        return_code == 0
+    ), f"Expected successful connection to http://canonical.com. Error msg: {stdout}"
 
-    # 2. URL with non-private IP X with non-standard port, should fail,
-    # does not get intercepted by aproxy
+    # 2. URL with non-standard port, should fail, request does not get intercepted by aproxy
     return_code, stdout = await run_in_lxd_instance(
         unit,
         runner_name,
-        f"su - ubuntu -c 'curl --connect-timeout 1 {NON_PRIVATE_IP}:{HTTP_SERVER_PORT}'",
+        f"su - ubuntu -c 'curl http://canonical.com:{NON_STANDARD_PORT}'",
     )
     assert (
-        return_code == 28
-    ), f"Expected connect timeout to {NON_PRIVATE_IP}:{HTTP_SERVER_PORT}: {stdout}"
+        return_code == 7
+    ), f"Expected cannot connect error for http://canonical.com:{NON_STANDARD_PORT}. Error msg: {stdout}"
 
     aproxy_logs = await _get_aproxy_logs(unit, runner_name)
     assert aproxy_logs is not None
     assert "canonical.com" in aproxy_logs
-    assert NON_PRIVATE_IP not in aproxy_logs
+    assert f"http://canonical.com:{NON_STANDARD_PORT}" not in aproxy_logs
+
+    proxy_logs = proxy_logs_filepath.read_text(encoding="utf-8")
+    assert "GET http://canonical.com/" in proxy_logs
+    assert f"GET http://canonical.com:{NON_STANDARD_PORT}/" not in proxy_logs
 
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_use_proxy_without_aproxy(
-    model: Model, app: Application, http_server, host_ip
+    model: Model, app: Application, proxy_logs_filepath: Path
 ) -> None:
     """
     arrange: A working application with a runner not using aproxy configured for a proxy server.
     act: Run curl in the runner
         1. URL with standard port
-        2. URL of webserver on host with non-standard port
+        2. URL  with non-standard port
     assert: That the proxy vars are set in the runner, aproxy logs are empty, and that
         1. the request is successful
         2. the request is also successful because
@@ -419,15 +381,34 @@ async def test_use_proxy_without_aproxy(
         runner_name,
         "su - ubuntu -c 'curl http://canonical.com'",
     )
-    assert return_code == 0, f"Expected successful connection to http://canonical.com: {stdout}"
+    assert (
+        return_code == 0
+    ), f"Expected successful connection to http://canonical.com. Error msg: {stdout}"
 
-    # 2. URL with non-standard port, should succeed
+    # 2. URL with non-standard port, should return an error message by the proxy like this:
+    #
+    #  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+    # <html>
+    # <head><title>500 Unable to connect</title></head>
+    # <body>
+    # <h1>Unable to connect</h1>
+    # <p>Tinyproxy was unable to connect to the remote web server.</p>
+    # <hr />
+    # <p><em>Generated by tinyproxy version 1.11.0.</em></p>
+    # </body>
+    # </html>
     return_code, stdout = await run_in_lxd_instance(
         unit,
         runner_name,
-        f"su - ubuntu -c 'curl --connect-timeout 10 {http_server}'",
+        f"su - ubuntu -c 'curl http://canonical.com:{NON_STANDARD_PORT}'",
     )
-    assert return_code == 0, f"Expected successful connection to {http_server}: {stdout}"
+    assert (
+        return_code == 0
+    ), f"Expected error response from proxy for http://canonical.com:{NON_STANDARD_PORT}. Error msg: {stdout}"
+
+    proxy_logs = proxy_logs_filepath.read_text(encoding="utf-8")
+    assert "GET http://canonical.com/" in proxy_logs
+    assert f"GET http://canonical.com:{NON_STANDARD_PORT}/" in proxy_logs
 
     aproxy_logs = await _get_aproxy_logs(unit, runner_name)
     assert aproxy_logs is None
