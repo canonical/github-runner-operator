@@ -42,10 +42,11 @@ sunbeam prepare-node-script | bash -x
 sleep 10
 # The following can take a while....
 retry 'sudo -g snap_daemon sunbeam cluster bootstrap --accept-defaults' 'Waiting for cluster bootstrap to complete' 3
-sg snap_daemon -c "sunbeam cloud-config -a" > admin-clouds.yaml
+clouds_yaml="${PWD}/admin-clouds.yaml"
+sg snap_daemon -c "sunbeam cloud-config -a" | tee "$clouds_yaml"
 # Test connection
-openstack user list
+OS_CLIENT_CONFIG_FILE="$clouds_yaml" openstack --os-cloud sunbeam user list
 
 juju clouds || echo "Failed to list clouds"
 juju bootstrap localhost lxd
-echo "PYTEST_ADDOPTS=--openstack-clouds-yaml=${PWD}/admin-clouds.yaml" >> "${GITHUB_ENV}"
+echo "PYTEST_ADDOPTS=--openstack-clouds-yaml=$clouds_yaml" >> "${GITHUB_ENV}"
