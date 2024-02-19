@@ -8,10 +8,11 @@ Charm for creating and managing GitHub self-hosted runner instances.
 **Global Variables**
 ---------------
 - **DEBUG_SSH_INTEGRATION_NAME**
+- **RECONCILE_RUNNERS_EVENT**
 
 ---
 
-<a href="../src/charm.py#L63"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L67"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_charm_errors`
 
@@ -37,7 +38,7 @@ Catch common errors in charm.
 
 ---
 
-<a href="../src/charm.py#L87"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L94"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_action_errors`
 
@@ -66,7 +67,7 @@ Catch common errors in actions.
 ## <kbd>class</kbd> `GithubRunnerCharm`
 Charm for managing GitHub self-hosted runners. 
 
-<a href="../src/charm.py#L151"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L158"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -124,7 +125,7 @@ Unit that this execution is responsible for.
 
 ---
 
-<a href="../src/charm.py#L199"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L208"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `setup_state`
 

@@ -5,6 +5,9 @@
 # <kbd>module</kbd> `event_timer.py`
 EventTimer for scheduling dispatch of juju event on regular intervals. 
 
+**Global Variables**
+---------------
+- **BIN_SYSTEMCTL**
 
 
 ---
@@ -37,7 +40,7 @@ Manages the timer to emit juju events at regular intervals.
  
  - <b>`unit_name`</b> (str):  Name of the juju unit to emit events to. 
 
-<a href="../src/event_timer.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L63"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -58,7 +61,7 @@ Construct the timer manager.
 
 ---
 
-<a href="../src/event_timer.py#L113"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L154"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `disable_event_timer`
 
@@ -82,7 +85,7 @@ Disable the systemd timer for the given event.
 
 ---
 
-<a href="../src/event_timer.py#L69"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L115"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `ensure_event_timer`
 
@@ -114,6 +117,35 @@ The timeout is the number of seconds before an event is timed out. If not set or
  
  - <b>`TimerEnableError`</b>:  Timer cannot be started. Events will be not emitted. 
 
+---
+
+<a href="../src/event_timer.py#L86"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `is_active`
+
+```python
+is_active(event_name: str) → bool
+```
+
+Check if the systemd timer is active for the given event. 
+
+
+
+**Args:**
+ 
+ - <b>`event_name`</b>:  Name of the juju event to check. 
+
+
+
+**Returns:**
+ True if the timer is enabled, False otherwise. 
+
+
+
+**Raises:**
+ 
+ - <b>`TimerStatusError`</b>:  Timer status cannot be determined. 
+
 
 ---
 
@@ -128,6 +160,24 @@ Raised when unable to disable a event timer.
 
 ## <kbd>class</kbd> `TimerEnableError`
 Raised when unable to enable a event timer. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `TimerError`
+Generic timer error as base exception. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `TimerStatusError`
+Raised when unable to check status of a event timer. 
 
 
 

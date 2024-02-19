@@ -24,15 +24,19 @@ class FlushMode(Enum):
         FLUSH_IDLE: Flush only idle runners.
         FLUSH_IDLE_WAIT_REPO_CHECK: Flush only idle runners, then wait until repo-policy-check is
             completed for the busy runners.
-        FORCE_FLUSH_BUSY: Force flush busy runners.
-        FORCE_FLUSH_BUSY_WAIT_REPO_CHECK: Wait until the repo-policy-check is completed before
-            force flush of busy runners.
+        FLUSH_BUSY: Flush busy runners.
+        FLUSH_BUSY_WAIT_REPO_CHECK: Wait until the repo-policy-check is completed before
+            flush of busy runners.
+        FORCE_FLUSH_WAIT_REPO_CHECK: Force flush the runners (remove lxd instances even on
+            gh api issues, like invalid token).
+            Wait until repo-policy-check is completed before force flush of busy runners.
     """
 
     FLUSH_IDLE = auto()
     FLUSH_IDLE_WAIT_REPO_CHECK = auto()
-    FORCE_FLUSH_BUSY = auto()
-    FORCE_FLUSH_BUSY_WAIT_REPO_CHECK = auto()
+    FLUSH_BUSY = auto()
+    FLUSH_BUSY_WAIT_REPO_CHECK = auto()
+    FORCE_FLUSH_WAIT_REPO_CHECK = auto()
 
 
 @dataclass

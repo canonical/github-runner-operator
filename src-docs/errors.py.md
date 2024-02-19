@@ -54,6 +54,15 @@ Represents an error when the shared filesystem could not be retrieved.
 
 ---
 
+## <kbd>class</kbd> `GithubApiError`
+Represents an error when the GitHub API returns an error. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `GithubClientError`
 Base class for all github client errors. 
 
@@ -269,6 +278,15 @@ Construct the subprocess error.
  - <b>`return_code`</b>:  Return code of the subprocess. 
  - <b>`stdout`</b>:  Content of stdout of the subprocess. 
  - <b>`stderr`</b>:  Content of stderr of the subprocess. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `TokenError`
+Represents an error when the token is invalid or has not enough permissions. 
 
 
 

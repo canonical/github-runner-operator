@@ -185,7 +185,7 @@ async def app_no_runner(
 
 
 @pytest_asyncio.fixture(scope="module")
-async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Application]:
+async def app_one_runner(model: Model, app_no_runner: Application) -> AsyncIterator[Application]:
     """Application with a single runner.
 
     Test should ensure it returns with the application in a good state and has
