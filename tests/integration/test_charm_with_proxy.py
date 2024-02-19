@@ -44,13 +44,13 @@ async def proxy_fixture(proxy_logs_filepath: Path) -> AsyncIterator[str]:
     ), "Cannot find tinyproxy in PATH, install tinyproxy with `apt install tinyproxy -y`"
 
     tinyproxy_config = Path("tinyproxy.conf")
-    tinyproxy_config_value = (
-        f"Port {PROXY_PORT}\n"
-        "Listen 0.0.0.0\n"
-        "Timeout 600\n"
-        f'LogFile "{proxy_logs_filepath}"\n'
-        "LogLevel Connect\n"
-    )
+    tinyproxy_config_value = f"""Port {PROXY_PORT}
+Listen 0.0.0.0
+Timeout 600
+LogFile "{proxy_logs_filepath}"
+LogLevel Connect
+"""
+
     logging.info("tinyproxy config: %s", tinyproxy_config_value)
     tinyproxy_config.write_text(tinyproxy_config_value)
 
@@ -173,6 +173,15 @@ EOT"""
     return application
 
 
+def _clear_tinyproxy_log(proxy_logs_filepath: Path) -> None:
+    """Clear the tinyproxy log file content.
+
+    Args:
+        proxy_logs_filepath: The path to the tinyproxy log file.
+    """
+    proxy_logs_filepath.write_text("")
+
+
 @pytest_asyncio.fixture(scope="function", name="app")
 async def app_fixture(
     app_with_prepared_machine: Application, model: Model, proxy_logs_filepath: Path
@@ -190,7 +199,7 @@ async def app_fixture(
     )
     await reconcile(app=app_with_prepared_machine, model=model)
 
-    proxy_logs_filepath.write_text("")
+    _clear_tinyproxy_log(proxy_logs_filepath)
 
     yield app_with_prepared_machine
 
@@ -294,6 +303,26 @@ async def _get_aproxy_logs(unit: Unit, runner_name: str) -> Optional[str]:
     return stdout
 
 
+async def _curl_as_ubuntu_user(unit: Unit, runner_name: str, url: str) -> tuple[int, str]:
+    """Run curl as a logged in ubuntu user.
+
+    This should simulate the bevahiour of a curl inside the runner with environment variables set.
+
+    Args:
+        unit: The unit to run the command on.
+        runner_name: The name of the runner.
+        url: The URL to curl.
+
+    Returns:
+        The return code and stdout of the curl command.
+    """
+    return await run_in_lxd_instance(
+        unit,
+        runner_name,
+        f"su - ubuntu -c 'curl {url}'",
+    )
+
+
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_usage_of_aproxy(model: Model, app: Application, proxy_logs_filepath: Path) -> None:
@@ -303,8 +332,8 @@ async def test_usage_of_aproxy(model: Model, app: Application, proxy_logs_filepa
         1. URL with standard port
         2. URL with non-standard port
     assert: That no proxy vars are set in the runner and that
-        1. the request is successful and the aproxy log contains the request
-        2. the request is not successful and the aproxy log does not contain the request
+        1. the aproxy and tinyproxy log contains the request
+        2. neither the aproxy nor the tinyproxy log contains the request
     """
     await app.set_config(
         {
@@ -317,21 +346,20 @@ async def test_usage_of_aproxy(model: Model, app: Application, proxy_logs_filepa
     assert names
     runner_name = names[0]
 
+    # Clear the logs to avoid false positives if the log already contains matching requests
+    _clear_tinyproxy_log(proxy_logs_filepath)
+
     # 1. URL with standard port, should succeed, gets intercepted by aproxy
-    return_code, stdout = await run_in_lxd_instance(
-        unit,
-        runner_name,
-        "su - ubuntu -c 'curl http://canonical.com'",
-    )
+    return_code, stdout = await _curl_as_ubuntu_user(unit, runner_name, "http://canonical.com")
     assert (
         return_code == 0
     ), f"Expected successful connection to http://canonical.com. Error msg: {stdout}"
 
     # 2. URL with non-standard port, should fail, request does not get intercepted by aproxy
-    return_code, stdout = await run_in_lxd_instance(
+    return_code, stdout = await _curl_as_ubuntu_user(
         unit,
         runner_name,
-        f"su - ubuntu -c 'curl http://canonical.com:{NON_STANDARD_PORT}'",
+        f"http://canonical.com:{NON_STANDARD_PORT}",
     )
     assert (
         return_code == 7
@@ -356,11 +384,10 @@ async def test_use_proxy_without_aproxy(
     arrange: A working application with a runner not using aproxy configured for a proxy server.
     act: Run curl in the runner
         1. URL with standard port
-        2. URL  with non-standard port
+        2. URL with non-standard port
     assert: That the proxy vars are set in the runner, aproxy logs are empty, and that
-        1. the request is successful
-        2. the request is also successful because
-            when using env vars requests to non-standard ports are also forwarded to the proxy
+        the tinyproxy log contains both requests
+        (requests to non-standard ports are forwared using env vars).
     """
     await app.set_config(
         {
@@ -375,12 +402,11 @@ async def test_use_proxy_without_aproxy(
 
     await _assert_proxy_vars_set(unit, runner_name)
 
+    # Clear the logs to avoid false positives if the log already contains matching requests
+    _clear_tinyproxy_log(proxy_logs_filepath)
+
     # 1. URL with standard port, should succeed
-    return_code, stdout = await run_in_lxd_instance(
-        unit,
-        runner_name,
-        "su - ubuntu -c 'curl http://canonical.com'",
-    )
+    return_code, stdout = await _curl_as_ubuntu_user(unit, runner_name, "http://canonical.com")
     assert (
         return_code == 0
     ), f"Expected successful connection to http://canonical.com. Error msg: {stdout}"
@@ -397,10 +423,10 @@ async def test_use_proxy_without_aproxy(
     # <p><em>Generated by tinyproxy version 1.11.0.</em></p>
     # </body>
     # </html>
-    return_code, stdout = await run_in_lxd_instance(
+    return_code, stdout = await _curl_as_ubuntu_user(
         unit,
         runner_name,
-        f"su - ubuntu -c 'curl http://canonical.com:{NON_STANDARD_PORT}'",
+        f"http://canonical.com:{NON_STANDARD_PORT}",
     )
     assert (
         return_code == 0
