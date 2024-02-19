@@ -42,13 +42,10 @@ sunbeam prepare-node-script | bash -x
 sleep 10
 # The following can take a while....
 retry 'sudo -g snap_daemon sunbeam cluster bootstrap --accept-defaults' 'Waiting for cluster bootstrap to complete' 3
-sg snap_daemon -c "sunbeam openrc" > admin-openrc
-# file is generated dynamically, so shellcheck does not have access to it.
-# shellcheck source=/dev/null
-source admin-openrc
+sg snap_daemon -c "sunbeam cloud-config -a" > admin-clouds.yaml
 # Test connection
 openstack user list
 
 juju clouds || echo "Failed to list clouds"
 juju bootstrap localhost lxd
-echo "PYTEST_ADDOPTS=--openstack-rc=${PWD}/admin-openrc" >> "${GITHUB_ENV}"
+echo "PYTEST_ADDOPTS=--openstack-clouds-yaml=${PWD}/admin-clouds.yaml" >> "${GITHUB_ENV}"
