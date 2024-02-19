@@ -303,7 +303,7 @@ async def _get_aproxy_logs(unit: Unit, runner_name: str) -> Optional[str]:
     return stdout
 
 
-async def _curl_as_ubuntu_user(unit: Unit, runner_name: str, url: str) -> tuple[int, str]:
+async def _curl_as_ubuntu_user(unit: Unit, runner_name: str, url: str) -> tuple[int, str | None]:
     """Run curl as a logged in ubuntu user.
 
     This should simulate the bevahiour of a curl inside the runner with environment variables set.
