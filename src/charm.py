@@ -93,7 +93,10 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
             self.unit.status = BlockedStatus(str(err))
         except MissingRunnerBinaryError:
             logger.exception("Missing runner binary")
-            self.unit.status = MaintenanceStatus("GitHub runner application not downloaded yet")
+            self.unit.status = MaintenanceStatus(
+                "GitHub runner application not downloaded; the charm will retry download on "
+                "reconcile interval"
+            )
 
     return func_with_catch_errors
 
@@ -120,7 +123,7 @@ def catch_action_errors(
             event.fail(str(err))
         except MissingRunnerBinaryError:
             logger.exception("Missing runner binary")
-            err_msg = "GitHub runner application not downloaded yet"
+            err_msg = "GitHub runner application not downloaded; the charm will retry download on reconcile interval"
             self.unit.status = MaintenanceStatus(err_msg)
             event.fail(err_msg)
 
