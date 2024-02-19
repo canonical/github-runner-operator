@@ -16,10 +16,8 @@ jobs:
       pre-run-script: scripts/pre-integration-test.sh
       provider: lxd
       test-tox-env: integration-juju2.9
-      modules: '["test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics", "test_self_hosted_runner", "test_charm_with_proxy"]'
-      self-hosted-runner: true
-      self-hosted-runner-label: "edge"
-  integration-tests-juju3:
+      modules: '["test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh"]'
+  integration-tests:
     name: Integration test with juju 3.1
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@self-hosted-runner-integration-test
     secrets: inherit

@@ -7,6 +7,7 @@ import unittest
 import urllib.error
 from unittest.mock import MagicMock, call, patch
 
+import pytest
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
@@ -19,6 +20,8 @@ from errors import (
     RunnerError,
     SubprocessError,
 )
+from event_timer import EventTimer, TimerEnableError
+from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
 from runner_type import GithubOrg, GithubRepo, VirtualMachineResources
@@ -240,6 +243,51 @@ class TestCharm(unittest.TestCase):
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
+    def test_on_update_status(self, run, wt, mkdir, rm):
+        """
+        arrange: reconciliation event timer mocked to be
+          1. active
+          2. inactive
+          3. inactive with error thrown for ensure_event_timer
+        act: Emit update_status
+        assert:
+            1. ensure_event_timer is not called.
+            2. ensure_event_timer is called.
+            3. Charm throws error.
+        """
+        rm.return_value = mock_rm = MagicMock()
+        mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
+        mock_rm.download_latest_runner_image = mock_download_latest_runner_image
+
+        harness = Harness(GithubRunnerCharm)
+
+        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+        harness.begin()
+
+        event_timer_mock = MagicMock(spec=EventTimer)
+        harness.charm._event_timer = event_timer_mock
+        event_timer_mock.is_active.return_value = True
+
+        # 1. event timer is active
+        harness.charm.on.update_status.emit()
+        assert event_timer_mock.ensure_event_timer.call_count == 0
+        assert not isinstance(harness.charm.unit.status, BlockedStatus)
+
+        # 2. event timer is not active
+        event_timer_mock.is_active.return_value = False
+        harness.charm.on.update_status.emit()
+        event_timer_mock.ensure_event_timer.assert_called_once()
+        assert not isinstance(harness.charm.unit.status, BlockedStatus)
+
+        # 3. ensure_event_timer throws error.
+        event_timer_mock.ensure_event_timer.side_effect = TimerEnableError("mock error")
+        with pytest.raises(TimerEnableError):
+            harness.charm.on.update_status.emit()
+
+    @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
+    @patch("pathlib.Path.write_text")
+    @patch("subprocess.run")
     def test_on_stop(self, run, wt, mkdir, rm):
         rm.return_value = mock_rm = MagicMock()
         harness = Harness(GithubRunnerCharm)
@@ -372,8 +420,8 @@ class TestCharm(unittest.TestCase):
         )
 
     @patch("charm.RunnerManager")
-    @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
+    @patch("pathlib.Path.mkdir")
     @patch("subprocess.run")
     def test_on_flush_runners_action(self, run, wt, mkdir, rm):
         mock_event = MagicMock()
@@ -391,3 +439,61 @@ class TestCharm(unittest.TestCase):
         harness.charm._on_flush_runners_action(mock_event)
         mock_event.set_results.assert_called()
         mock_event.reset_mock()
+
+    @patch("charm.RunnerManager")
+    @patch("pathlib.Path.write_text")
+    @patch("pathlib.Path.mkdir")
+    @patch("subprocess.run")
+    @patch("charm.Firewall")
+    def test__refresh_firewall(self, mock_firewall, *args):
+        """
+        arrange: given multiple tmate-ssh-server units in relation.
+        act: when refresh_firewall is called.
+        assert: the unit ip addresses are included in allowlist.
+        """
+        harness = Harness(GithubRunnerCharm)
+        relation_id = harness.add_relation("debug-ssh", "tmate-ssh-server")
+        harness.add_relation_unit(relation_id, "tmate-ssh-server/0")
+        harness.add_relation_unit(relation_id, "tmate-ssh-server/1")
+        harness.add_relation_unit(relation_id, "tmate-ssh-server/2")
+        test_unit_ip_addresses = ["127.0.0.1", "127.0.0.2", "127.0.0.3"]
+
+        harness.update_relation_data(
+            relation_id,
+            "tmate-ssh-server/0",
+            {
+                "host": test_unit_ip_addresses[0],
+                "port": "10022",
+                "rsa_fingerprint": "SHA256:abcd",
+                "ed25519_fingerprint": "abcd",
+            },
+        )
+        harness.update_relation_data(
+            relation_id,
+            "tmate-ssh-server/1",
+            {
+                "host": test_unit_ip_addresses[1],
+                "port": "10022",
+                "rsa_fingerprint": "SHA256:abcd",
+                "ed25519_fingerprint": "abcd",
+            },
+        )
+        harness.update_relation_data(
+            relation_id,
+            "tmate-ssh-server/2",
+            {
+                "host": test_unit_ip_addresses[2],
+                "port": "10022",
+                "rsa_fingerprint": "SHA256:abcd",
+                "ed25519_fingerprint": "abcd",
+            },
+        )
+
+        harness.begin()
+
+        harness.charm._refresh_firewall()
+        mocked_firewall_instance = mock_firewall.return_value
+        allowlist = mocked_firewall_instance.refresh_firewall.call_args_list[0][1]["allowlist"]
+        assert all(
+            FirewallEntry(ip) in allowlist for ip in test_unit_ip_addresses
+        ), "Expected IP firewall entry not found in allowlist arg."

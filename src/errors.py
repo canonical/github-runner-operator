@@ -150,6 +150,14 @@ class GithubClientError(Exception):
     """Base class for all github client errors."""
 
 
+class GithubApiError(GithubClientError):
+    """Represents an error when the GitHub API returns an error."""
+
+
+class TokenError(GithubClientError):
+    """Represents an error when the token is invalid or has not enough permissions."""
+
+
 class JobNotFoundError(GithubClientError):
     """Represents an error when the job could not be found on GitHub."""
 
