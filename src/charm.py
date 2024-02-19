@@ -32,7 +32,14 @@ from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 import metrics
-from charm_state import DEBUG_SSH_INTEGRATION_NAME, CharmConfigInvalidError, RunnerStorage, State
+from charm_state import (
+    DEBUG_SSH_INTEGRATION_NAME,
+    CharmConfigInvalidError,
+    GithubPath,
+    RunnerStorage,
+    State,
+    parse_github_path,
+)
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
@@ -305,12 +312,19 @@ class GithubRunnerCharm(CharmBase):
             logger.info("Restart repo-policy-compliance service")
             raise
 
-    def _get_runner_manager(self) -> RunnerManager:
+    def _get_runner_manager(
+        self, token: str | None = None, path: GithubPath | None = None
+    ) -> RunnerManager:
         """Get a RunnerManager instance.
 
         Returns:
             An instance of RunnerManager.
         """
+        if token is None:
+            token = self.state.charm_config.token
+        if path is None:
+            path = self.state.charm_config.path
+
         self._ensure_service_health()
 
         size_in_kib = (
@@ -329,8 +343,8 @@ class GithubRunnerCharm(CharmBase):
             app_name,
             unit,
             RunnerManagerConfig(
-                path=self.state.charm_config.path,
-                token=self.state.charm_config.token,
+                path=path,
+                token=token,
                 image="jammy",
                 service_token=self.service_token,
                 lxd_storage_path=lxd_storage_path,
@@ -518,9 +532,11 @@ class GithubRunnerCharm(CharmBase):
             prev_runner_manager = self._get_runner_manager()
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
-                prev_runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK)
+                prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
         if self.config["path"] != self._stored.path:
-            prev_config_for_flush["path"] = str(self._stored.path)
+            prev_config_for_flush["path"] = parse_github_path(
+                self._stored.path, self.config["group"]
+            )
             self._stored.path = self.config["path"]
 
         if prev_config_for_flush:
@@ -532,18 +548,12 @@ class GithubRunnerCharm(CharmBase):
 
         self._refresh_firewall()
 
-        try:
-            runner_manager = self._get_runner_manager()
-        except MissingConfigurationError as err:
-            self.unit.status = BlockedStatus(
-                f"Missing required charm configuration: {err.configs}"
-            )
-        else:
-            self._reconcile_runners(runner_manager)
-            self.unit.status = ActiveStatus()
+        runner_manager = self._get_runner_manager()
+        self._reconcile_runners(runner_manager)
+        self.unit.status = ActiveStatus()
 
         if self.state.charm_config.token != self._stored.token:
-            runner_manager.flush(FlushMode.FORCE_FLUSH_BUSY_WAIT_REPO_CHECK)
+            runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
             self._stored.token = self.state.charm_config.token
 
     def _check_and_update_dependencies(self) -> bool:
@@ -714,6 +724,7 @@ class GithubRunnerCharm(CharmBase):
         self._ensure_reconcile_timer_is_active()
 
     @catch_charm_errors
+    @_setup_github_runner_charm_state
     def _on_stop(self, _: StopEvent) -> None:
         """Handle the stopping of the charm.
 

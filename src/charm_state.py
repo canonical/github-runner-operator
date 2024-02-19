@@ -55,6 +55,29 @@ class GithubOrg:
 GithubPath = Union[GithubOrg, GithubRepo]
 
 
+def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
+    """Parse GitHub path.
+
+    Args:
+        path_str: GitHub path in string format.
+        runner_group: Runner group name for GitHub organization. If the path is
+            a repository this argument is ignored.
+    Returns:
+        GithubPath object representing the GitHub repository, or the GitHub
+        organization with runner group information.
+    """
+    path: GithubPath
+    if "/" in path_str:
+        paths = path_str.split("/")
+        if len(paths) != 2:
+            raise CharmConfigInvalidError(f"Invalid path configuration {path_str}")
+        owner, repo = paths
+        path = GithubRepo(owner=owner, repo=repo)
+    else:
+        path = GithubOrg(org=path_str, group=runner_group)
+    return path
+
+
 class VirtualMachineResources(NamedTuple):
     """Virtual machine resource configuration."""
 
@@ -133,24 +156,6 @@ class CharmConfig(BaseModel):
     dockerhub_mirror: str | None
 
     @classmethod
-    def _parse_path(cls, charm: CharmBase) -> GithubPath:
-        path_str = charm.config.get("path")
-        if not path_str:
-            raise CharmConfigInvalidError("Missing path configuration")
-
-        path: GithubPath
-        if "/" in path_str:
-            paths = path_str.split("/")
-            if len(paths) != 2:
-                raise CharmConfigInvalidError(f"Invalid path configuration {path_str}")
-            owner, repo = paths
-            path = GithubRepo(owner=owner, repo=repo)
-        else:
-            runner_group = charm.config.get("group", "")
-            path = GithubOrg(org=path_str, group=runner_group)
-        return path
-
-    @classmethod
     def _parse_denylist(cls, charm: CharmBase) -> list[str]:
         denylist_str = charm.config.get("denylist", "")
 
@@ -182,7 +187,11 @@ class CharmConfig(BaseModel):
         Returns:
             Current config of the charm.
         """
-        path = cls._parse_path(charm)
+        path_str = charm.config.get("path", "")
+        if not path_str:
+            raise CharmConfigInvalidError("Missing path configuration")
+        runner_group = charm.config.get("group", "default")
+        path = parse_github_path(path_str, runner_group)
 
         token = charm.config.get("token")
         if not token:
