@@ -13,6 +13,8 @@ jobs:
         run: echo hello
       - name: Disk usage
         run: df -h
+      - name: CPU usage
+        run: lscpu
 
   # self-host-test:
   #   name: self-hosted test
