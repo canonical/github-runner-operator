@@ -123,7 +123,10 @@ def catch_action_errors(
             event.fail(str(err))
         except MissingRunnerBinaryError:
             logger.exception("Missing runner binary")
-            err_msg = "GitHub runner application not downloaded; the charm will retry download on reconcile interval"
+            err_msg = (
+                "GitHub runner application not downloaded; the charm will retry download on "
+                "reconcile interval"
+            )
             self.unit.status = MaintenanceStatus(err_msg)
             event.fail(err_msg)
 

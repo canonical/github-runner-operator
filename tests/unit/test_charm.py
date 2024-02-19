@@ -146,7 +146,10 @@ def test_on_flush_runners_action_fail(harness: Harness, runner_binary_path: Path
     runner_binary_path.unlink(missing_ok=True)
     mock_event = MagicMock()
     harness.charm._on_flush_runners_action(mock_event)
-    mock_event.fail.assert_called_with("GitHub runner application not downloaded yet")
+    mock_event.fail.assert_called_with(
+        "GitHub runner application not downloaded; the charm will retry download on reconcile "
+        "interval"
+    )
 
 
 def test_on_flush_runners_action_success(harness: Harness, runner_binary_path: Path):
