@@ -1,5 +1,5 @@
 # Copyright 2024 Canonical Ltd.
-#  See LICENSE file for licensing details.
+# See LICENSE file for licensing details.
 import os
 import platform
 from unittest.mock import MagicMock, patch
