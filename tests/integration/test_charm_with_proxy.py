@@ -387,7 +387,7 @@ async def test_use_proxy_without_aproxy(
         2. URL with non-standard port
     assert: That the proxy vars are set in the runner, aproxy logs are empty, and that
         the tinyproxy log contains both requests
-        (requests to non-standard ports are forwared using env vars).
+        (requests to non-standard ports will be forwarded when using env vars).
     """
     await app.set_config(
         {
