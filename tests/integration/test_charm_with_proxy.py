@@ -361,9 +361,10 @@ async def test_usage_of_aproxy(model: Model, app: Application, proxy_logs_filepa
         runner_name,
         f"http://canonical.com:{NON_STANDARD_PORT}",
     )
-    assert (
-        return_code == 7
-    ), f"Expected cannot connect error for http://canonical.com:{NON_STANDARD_PORT}. Error msg: {stdout}"
+    assert return_code == 7, (
+        f"Expected cannot connect error for http://canonical.com:{NON_STANDARD_PORT}. "
+        f"Error msg: {stdout}"
+    )
 
     aproxy_logs = await _get_aproxy_logs(unit, runner_name)
     assert aproxy_logs is not None
@@ -413,7 +414,6 @@ async def test_use_proxy_without_aproxy(
 
     # 2. URL with non-standard port, should return an error message by the proxy like this:
     #
-    #  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
     # <html>
     # <head><title>500 Unable to connect</title></head>
     # <body>
@@ -428,9 +428,10 @@ async def test_use_proxy_without_aproxy(
         runner_name,
         f"http://canonical.com:{NON_STANDARD_PORT}",
     )
-    assert (
-        return_code == 0
-    ), f"Expected error response from proxy for http://canonical.com:{NON_STANDARD_PORT}. Error msg: {stdout}"
+    assert return_code == 0, (
+        f"Expected error response from proxy for http://canonical.com:{NON_STANDARD_PORT}. "
+        f"Error msg: {stdout}"
+    )
 
     proxy_logs = proxy_logs_filepath.read_text(encoding="utf-8")
     assert "GET http://canonical.com/" in proxy_logs
