@@ -9,12 +9,10 @@ import random
 import secrets
 import tarfile
 import time
-import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, Iterator, Optional, Type
 
-import fastcore.net
 import jinja2
 import requests
 import requests.adapters
@@ -88,18 +86,6 @@ class RunnerManager:
         )
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
-        if self.proxies:
-            proxy_dict = {
-                "http_proxy": self.proxies.http,
-                "https_proxy": self.proxies.https,
-                "no_proxy": self.proxies.no_proxy,
-            }
-            # setup proxy for requests
-            self.session.proxies.update(proxy_dict)
-            # add proxy to fastcore which ghapi uses
-            proxy = urllib.request.ProxyHandler(proxy_dict)
-            opener = urllib.request.build_opener(proxy)
-            fastcore.net._opener = opener
 
         # The repo policy compliance service is on localhost and should not have any proxies
         # setting configured. The is a separated requests Session as the other one configured
