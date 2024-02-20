@@ -4,9 +4,11 @@
 """Module for handling interactions with OpenStack."""
 import logging
 from pathlib import Path
+from typing import Any
 
-import keystoneauth1.exceptions
+import keystoneauth1.exceptions.http
 import openstack
+import openstack.connection
 import openstack.exceptions
 import yaml
 from openstack.identity.v3.project import Project
@@ -18,15 +20,22 @@ logger = logging.getLogger(__name__)
 CLOUDS_YAML_PATH = Path(Path.home() / ".config/openstack/clouds.yaml")
 
 
-def _validate_cloud_config(cloud_config: dict) -> None:
+def _validate_cloud_config(cloud_config: Any) -> dict:
     """Validate the format of the cloud configuration.
 
     Args:
         cloud_config: The configuration in clouds.yaml format to validate.
 
+    Returns:
+        Validated cloud config dict.
+
     Raises:
         InvalidConfigError: if the format of the config is invalid.
     """
+    if (config_type := type(cloud_config)) is not dict:
+        raise OpenStackInvalidConfigError(
+            f"Invalid clouds.yaml format, expected dict, got {config_type}"
+        )
     # dict of format: {clouds: <cloud-name>: <cloud-config>}
     try:
         clouds = list(cloud_config["clouds"].keys())
@@ -36,6 +45,8 @@ def _validate_cloud_config(cloud_config: dict) -> None:
     if not clouds:
         raise OpenStackInvalidConfigError("No clouds defined in clouds.yaml.")
 
+    return cloud_config
+
 
 def _write_config_to_disk(cloud_config: dict) -> None:
     """Write the cloud configuration to disk.
@@ -44,15 +55,19 @@ def _write_config_to_disk(cloud_config: dict) -> None:
         cloud_config: The configuration in clouds.yaml format to write to disk.
     """
     CLOUDS_YAML_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with CLOUDS_YAML_PATH.open("w", encoding="utf-8") as clouds_yaml:
-        yaml.dump(cloud_config, clouds_yaml)
+    CLOUDS_YAML_PATH.write_text(encoding="utf-8", data=yaml.dump(cloud_config))
 
 
-def _create_connection(cloud_config) -> openstack.connection.Connection:
+def _create_connection(cloud_config: dict) -> openstack.connection.Connection:
     """Create a connection object.
+
+    This method should be called with a valid cloud_config. See def _validate_cloud_config.
+    Also, this method assumes that the clouds.yaml exists on CLOUDS_YAML_PATH. See def
+    _write_config_to_disk.
 
     Args:
         cloud_config: The configuration in clouds.yaml format to apply.
+
     Raises:
         InvalidConfigError: if the config has not all required information.
 
@@ -69,7 +84,7 @@ def _create_connection(cloud_config) -> openstack.connection.Connection:
     return openstack.connect(cloud_name)
 
 
-def initialize(cloud_config: dict) -> None:
+def initialize(cloud_config: Any) -> None:
     """Initialize Openstack integration.
 
     Validates config and writes it to disk.
@@ -80,8 +95,8 @@ def initialize(cloud_config: dict) -> None:
     Raises:
         InvalidConfigError: if the format of the config is invalid.
     """
-    _validate_cloud_config(cloud_config)
-    _write_config_to_disk(cloud_config)
+    valid_cloud_config = _validate_cloud_config(cloud_config)
+    _write_config_to_disk(valid_cloud_config)
 
 
 def list_projects(cloud_config: dict) -> list[Project]:
