@@ -8,57 +8,50 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_manager.py#L33"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L77"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>function</kbd> `initialize_openstack`
+## <kbd>function</kbd> `initialize`
 
 ```python
-initialize_openstack(clouds_yaml: str) → None
+initialize(cloud_config: dict) → None
 ```
 
-Initialize clouds.yaml and check connection. 
+Initialize Openstack integration. 
+
+Validates config and writes it to disk. 
 
 
 
 **Args:**
  
- - <b>`clouds_yaml`</b>:  The clouds.yaml configuration to apply. 
+ - <b>`cloud_config`</b>:  The configuration in clouds.yaml format to apply. 
 
 
 
 **Raises:**
  
- - <b>`InvalidConfigError`</b>:  if an invalid clouds_yaml configuration was passed. 
+ - <b>`InvalidConfigError`</b>:  if the format of the config is invalid. 
 
 
 ---
 
-## <kbd>class</kbd> `InvalidConfigError`
-Represents an invalid OpenStack configuration. 
+<a href="../src/openstack_manager.py#L92"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-
-
-**Attributes:**
- 
- - <b>`msg`</b>:  Explanation of the error. 
-
-<a href="../src/openstack_manager.py#L24"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>function</kbd> `__init__`
+## <kbd>function</kbd> `list_projects`
 
 ```python
-__init__(msg: str)
+list_projects(cloud_config: dict) → list[Project]
 ```
 
-Initialize a new instance of the InvalidConfigError exception. 
+List all projects in the OpenStack cloud. 
+
+The purpose of the method is just to try out openstack integration and it may be removed in the future. 
+
+It currently returns objects directly from the sdk, which may not be ideal (mapping to domain objects may be preferable). 
 
 
 
-**Args:**
- 
- - <b>`msg`</b>:  Explanation of the error. 
-
-
-
+**Returns:**
+  A list of projects. 
 
 
