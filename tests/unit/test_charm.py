@@ -3,17 +3,25 @@
 
 """Test cases for GithubRunnerCharm."""
 import os
+import secrets
 import unittest
 import urllib.error
 from pathlib import Path
 from unittest.mock import MagicMock, call, patch
 
 import pytest
+import yaml
 from ops.model import BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
-from charm_state import ARCH, GithubOrg, GithubRepo, VirtualMachineResources
+from charm_state import (
+    ARCH,
+    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    GithubOrg,
+    GithubRepo,
+    VirtualMachineResources,
+)
 from errors import LogrotateSetupError, RunnerError, SubprocessError
 from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
@@ -119,7 +127,6 @@ def test_on_config_changed_failure(harness: Harness):
     assert: Charm is in blocked state.
     """
     harness.update_config({"experimental-use-aproxy": True})
-    harness.charm.on.config_changed.emit()
 
     assert isinstance(harness.charm.unit.status, BlockedStatus)
     assert "Invalid proxy configuration" in harness.charm.unit.status.message
@@ -460,6 +467,48 @@ class TestCharm(unittest.TestCase):
         harness.charm.on.start.emit()
         assert harness.charm.unit.status == MaintenanceStatus(
             "Failed to start runners: mock error"
+        )
+
+    @patch("charm.RunnerManager")
+    @patch("pathlib.Path.mkdir")
+    @patch("pathlib.Path.write_text")
+    @patch("subprocess.run")
+    def test_on_config_changed_openstack_clouds_yaml(self, run, wt, mkdir, rm):
+        """
+        arrange: Setup mocked charm.
+        act: Fire config changed event to use openstack-clouds-yaml.
+        assert: Charm is in blocked state.
+        """
+        harness = Harness(GithubRunnerCharm)
+        cloud_yaml = {
+            "clouds": {
+                "microstack": {
+                    "auth": {
+                        "auth_url": secrets.token_hex(16),
+                        "project_name": secrets.token_hex(16),
+                        "project_domain_name": secrets.token_hex(16),
+                        "username": secrets.token_hex(16),
+                        "user_domain_name": secrets.token_hex(16),
+                        "password": secrets.token_hex(16),
+                    }
+                }
+            }
+        }
+        harness.update_config(
+            {
+                "path": "mockorg/repo",
+                "token": "mocktoken",
+                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(cloud_yaml),
+            }
+        )
+
+        harness.begin()
+
+        harness.charm.on.config_changed.emit()
+
+        assert harness.charm.unit.status == BlockedStatus(
+            "OpenStack integration is not supported yet. "
+            "Please remove the openstack-clouds-yaml config."
         )
 
     @patch("charm.RunnerManager")

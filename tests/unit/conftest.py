@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+import openstack_manager
 from tests.unit.mock import MockGhapiClient, MockLxdClient, MockRepoPolicyComplianceClient
 
 
@@ -33,6 +34,8 @@ def disk_usage_mock(total_disk):
 
 @pytest.fixture(autouse=True)
 def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_path):
+    openstack_manager_mock = unittest.mock.MagicMock(spec=openstack_manager)
+
     cron_path = tmp_path / "cron.d"
     cron_path.mkdir()
 
@@ -46,12 +49,14 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     monkeypatch.setattr(
         "charm.GithubRunnerCharm.repo_check_systemd_service", tmp_path / "systemd_service"
     )
+    monkeypatch.setattr("charm.openstack_manager", openstack_manager_mock)
     monkeypatch.setattr("charm.GithubRunnerCharm.kernel_module_path", tmp_path / "modules")
     monkeypatch.setattr("charm.GithubRunnerCharm._update_kernel", lambda self, now: None)
     monkeypatch.setattr("charm.execute_command", exec_command)
     monkeypatch.setattr("charm.shutil", unittest.mock.MagicMock())
     monkeypatch.setattr("charm.shutil.disk_usage", disk_usage_mock(30 * 1024 * 1024 * 1024))
     monkeypatch.setattr("charm_state.CHARM_STATE_PATH", Path(tmp_path / "charm_state.json"))
+    monkeypatch.setattr("charm_state.openstack_manager", openstack_manager_mock)
     monkeypatch.setattr("event_timer.jinja2", unittest.mock.MagicMock())
     monkeypatch.setattr("event_timer.execute_command", exec_command)
     monkeypatch.setattr(

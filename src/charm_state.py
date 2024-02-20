@@ -12,10 +12,13 @@ from pathlib import Path
 from typing import NamedTuple, Optional, Union
 from urllib.parse import urlsplit
 
+import yaml
 from ops import CharmBase
 from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
 from pydantic.networks import IPvAnyAddress
 
+import openstack_manager
+from errors import OpenStackInvalidConfigError
 from firewall import FirewallEntry
 from utilities import get_env_var
 
@@ -26,6 +29,10 @@ ARCHITECTURES_ARM64 = {"aarch64", "arm64"}
 ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
+
+OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
+
+OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
 
 
 @dataclasses.dataclass
@@ -147,6 +154,10 @@ class CharmConfig(BaseModel):
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
             name.
         token: GitHub personal access token for GitHub API.
+        reconcile_interval: Time between each reconciliation of runners.
+        denylist: List of IPv4 to block the runners from accessing.
+        dockerhub_mirror: Private docker registry as dockerhub mirror for the runners to use.
+        openstack_clouds_yaml: The openstack clouds.yaml configuration.
     """
 
     path: GithubPath
@@ -154,6 +165,7 @@ class CharmConfig(BaseModel):
     reconcile_interval: int
     denylist: list[FirewallEntry]
     dockerhub_mirror: str | None
+    openstack_clouds_yaml: dict | None
 
     @classmethod
     def _parse_denylist(cls, charm: CharmBase) -> list[str]:
@@ -205,12 +217,36 @@ class CharmConfig(BaseModel):
         denylist = cls._parse_denylist(charm)
         dockerhub_mirror = cls._parse_dockerhub_mirror(charm)
 
+        openstack_clouds_yaml_str = charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
+        if openstack_clouds_yaml_str:
+            try:
+                openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
+            except yaml.YAMLError as exc:
+                logger.error("Invalid openstack-clouds-yaml config: %s.", exc)
+                raise CharmConfigInvalidError(
+                    "Invalid openstack-clouds-yaml config. Invalid yaml."
+                ) from exc
+            if (config_type := type(openstack_clouds_yaml)) is not dict:
+                raise CharmConfigInvalidError(
+                    f"Invalid openstack config format, expected dict, got {config_type}"
+                )
+            try:
+                openstack_manager.initialize(openstack_clouds_yaml)
+            except OpenStackInvalidConfigError as exc:
+                logger.error("Invalid openstack config, %s.", exc)
+                raise CharmConfigInvalidError(
+                    "Invalid openstack config. Not able to initialize openstack integration."
+                ) from exc
+        else:
+            openstack_clouds_yaml = None
+
         return cls(
             path=path,
             token=token,
             reconcile_interval=reconcile_interval,
             denylist=denylist,
             dockerhub_mirror=dockerhub_mirror,
+            openstack_clouds_yaml=openstack_clouds_yaml,
         )
 
     @root_validator
@@ -459,18 +495,18 @@ class State:
     """The charm state.
 
     Attributes:
+        arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
+        charm_config: Configuration of the juju charm.
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
-        charm_config: Configuration of the juju charm.
-        arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
         ssh_debug_connections: SSH debug connections configuration information.
     """
 
+    arch: ARCH
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
     charm_config: CharmConfig
     runner_config: RunnerCharmConfig
-    arch: ARCH
     ssh_debug_connections: list[SSHDebugConnection]
 
     @classmethod
@@ -525,7 +561,6 @@ class State:
         except UnsupportedArchitectureError as exc:
             logger.error("Unsupported architecture: %s", exc.arch)
             raise CharmConfigInvalidError(f"Unsupported architecture {exc.arch}") from exc
-
         try:
             ssh_debug_connections = SSHDebugConnection.from_charm(charm)
         except ValidationError as exc:
@@ -533,11 +568,11 @@ class State:
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
         state = cls(
+            arch=arch,
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
             charm_config=charm_config,
             runner_config=runner_config,
-            arch=arch,
             ssh_debug_connections=ssh_debug_connections,
         )
 

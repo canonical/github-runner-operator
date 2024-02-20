@@ -32,6 +32,7 @@ from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 import metrics
+import openstack_manager
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     CharmConfigInvalidError,
@@ -44,6 +45,7 @@ from errors import (
     ConfigurationError,
     LogrotateSetupError,
     MissingRunnerBinaryError,
+    OpenStackUnauthorizedError,
     RunnerBinaryError,
     RunnerError,
     SubprocessError,
@@ -96,6 +98,11 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
             self.unit.status = MaintenanceStatus(
                 "GitHub runner application not downloaded; the charm will retry download on "
                 "reconcile interval"
+            )
+        except OpenStackUnauthorizedError:
+            logger.exception("Unauthorized OpenStack connection")
+            self.unit.status = BlockedStatus(
+                "Unauthorized OpenStack connection. Check credentials."
             )
 
     return func_with_catch_errors
@@ -554,6 +561,19 @@ class GithubRunnerCharm(CharmBase):
 
         self._refresh_firewall()
 
+        if self.state.charm_config.openstack_clouds_yaml:
+            # Test out openstack integration and then go
+            # into BlockedStatus as it is not supported yet
+            projects = openstack_manager.list_projects(
+                self.state.charm_config.openstack_clouds_yaml
+            )
+            logger.info("OpenStack projects: %s", projects)
+            self.unit.status = BlockedStatus(
+                "OpenStack integration is not supported yet. "
+                "Please remove the openstack-clouds-yaml config."
+            )
+            return
+
         runner_manager = self._get_runner_manager()
         self._reconcile_runners(runner_manager)
         self.unit.status = ActiveStatus()
@@ -721,6 +741,7 @@ class GithubRunnerCharm(CharmBase):
         event.set_results({"flush": flushed})
 
     @catch_charm_errors
+    @_setup_github_runner_charm_state
     def _on_update_status(self, _: UpdateStatusEvent) -> None:
         """Handle the update of charm status.
 
