@@ -48,9 +48,28 @@ The configurations applied in the image include:
 
 ## Network configuration
 
-The charm respects the HTTP(S) proxy configuration of the model configuration of Juju. The configuration can be set with [`juju model-config`](https://juju.is/docs/juju/juju-model-config) using the following keys: `juju-http-proxy`, `juju-https-proxy`, `juju-no-proxy`. The GitHub self-hosted runner applications are configured to use the proxy configuration.
+The charm respects the HTTP(S) proxy configuration of the model configuration of Juju. The configuration can be set with [`juju model-config`](https://juju.is/docs/juju/juju-model-config) using the following keys: `juju-http-proxy`, `juju-https-proxy`, `juju-no-proxy`. 
+The GitHub self-hosted runner applications will be configured to utilise the proxy configuration. 
+This involves setting environment variables such as `http_proxy`, `https_proxy`, `no_proxy`, `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY`
+in various locations within the runner environment, such as `/etc/environment`.
 
-If an HTTP(S) proxy is used, all HTTP(S) requests in the GitHub workflow will be transparently routed to the proxy with [aproxy](https://github.com/canonical/aproxy). Iptables are set up to route network traffic to the destination on ports 80 and 443 to the aproxy. The aproxy will route received packets to the configured HTTP(S) proxy. The service is installed on each runner virtual machine and configured according to the proxy configuration from the Juju model.
+However, employing this approach with environment variables has its drawbacks. 
+Not all applications within a workflow may adhere to these variables as they 
+[lack standardisation](https://about.gitlab.com/blog/2021/01/27/we-need-to-talk-no-proxy/). 
+This inconsistency can result in failed workflows, prompting the introduction of aproxy, as detailed in the subsection below.
+
+### aproxy
+If the proxy configuration is utilised and [aproxy](https://github.com/canonical/aproxy) is specified through the charm's configuration option,
+all HTTP(S) requests to standard ports (80, 443) within the GitHub workflow will be automatically directed 
+to the specified HTTP(s) proxy. Network traffic destined for ports 80 and 443 is redirected to aproxy using iptables.
+aproxy then forwards received packets to the designated HTTP(S) proxy. 
+Beyond that, the environment variables (`http_proxy`, `https_proxy`, `no_proxy`, `HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY`)
+will no longer be defined  in the runner environment. 
+It's worth noting that this setup deviates from the behaviour when not using aproxy, 
+where these variables are set in the runner environment. In that scenario, traffic to non-standard ports 
+would also be directed to the HTTP(s) proxy, unlike when using aproxy.
+
+### denylist
 
 The nftables on the Juju machine are configured to deny traffic from the runner virtual machine to IPs on the [`denylist` configuration](https://charmhub.io/github-runner/configure#denylist). The runner will always have access to essential services such as DHCP and DNS, regardless of the denylist configuration.
 
