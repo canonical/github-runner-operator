@@ -14,6 +14,7 @@ from charm_state import (
     COS_AGENT_INTEGRATION_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
     CharmConfigInvalidError,
+    ProxyConfig,
     SSHDebugConnection,
     State,
 )
@@ -79,6 +80,27 @@ def test_proxy_invalid_format():
     with patch.dict(os.environ, {"JUJU_CHARM_HTTP_PROXY": url_without_scheme}):
         with pytest.raises(CharmConfigInvalidError):
             State.from_charm(charm)
+
+
+def test_proxy_config_bool():
+    """
+    arrange: Various combinations for ProxyConfig
+    act: Create ProxyConfig object
+    assert: Expected boolean value
+    """
+    proxy_url = "http://proxy.example.com:8080"
+
+    # assert True if http or https is set
+    assert ProxyConfig(http=proxy_url)
+    assert ProxyConfig(https=proxy_url)
+    assert ProxyConfig(http=proxy_url, https=proxy_url)
+    assert ProxyConfig(http=proxy_url, https=proxy_url, no_proxy="localhost")
+
+    # assert False if otherwise
+    assert not ProxyConfig(use_aproxy=False)
+    assert not ProxyConfig(no_proxy="localhost")
+    assert not ProxyConfig(use_aproxy=False, no_proxy="localhost")
+    assert not ProxyConfig()
 
 
 def test_from_charm_invalid_arch(monkeypatch: pytest.MonkeyPatch):

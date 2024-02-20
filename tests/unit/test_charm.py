@@ -76,9 +76,9 @@ class TestCharm(unittest.TestCase):
         harness = Harness(GithubRunnerCharm)
         harness.begin()
 
-        assert harness.charm.proxies["https"] == TEST_PROXY_SERVER_URL
-        assert harness.charm.proxies["http"] == TEST_PROXY_SERVER_URL
-        assert harness.charm.proxies["no_proxy"] == "127.0.0.1,localhost"
+        assert harness.charm._state.proxy_config.https == TEST_PROXY_SERVER_URL
+        assert harness.charm._state.proxy_config.http == TEST_PROXY_SERVER_URL
+        assert harness.charm._state.proxy_config.no_proxy == "127.0.0.1,localhost"
 
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -128,7 +128,6 @@ class TestCharm(unittest.TestCase):
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
                 charm_state=harness.charm._state,
             ),
-            proxies={},
         )
 
     @patch("charm.RunnerManager")
@@ -154,7 +153,6 @@ class TestCharm(unittest.TestCase):
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
                 charm_state=harness.charm._state,
             ),
-            proxies={},
         )
 
     @patch("charm.RunnerManager")
@@ -212,7 +210,6 @@ class TestCharm(unittest.TestCase):
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
                 charm_state=harness.charm._state,
             ),
-            proxies={},
         )
         mock_rm.reconcile.assert_called_with(0, VirtualMachineResources(2, "7GiB", "10GiB")),
         mock_rm.reset_mock()
@@ -232,7 +229,6 @@ class TestCharm(unittest.TestCase):
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
                 charm_state=harness.charm._state,
             ),
-            proxies={},
         )
         mock_rm.reconcile.assert_called_with(
             5, VirtualMachineResources(cpu=4, memory="7GiB", disk="6GiB")
