@@ -121,16 +121,16 @@ class ProxyConfig(BaseModel):
     """Proxy configuration.
 
     Attributes:
-        http_proxy: HTTP proxy address.
-        https_proxy: HTTPS proxy address.
+        http: HTTP proxy address.
+        https: HTTPS proxy address.
         no_proxy: Comma-separated list of hosts that should not be proxied.
-        use_aproxy: Whether aproxy should be used.
+        use_aproxy: Whether aproxy should be used for the runners.
     """
 
-    http_proxy: Optional[AnyHttpUrl]
-    https_proxy: Optional[AnyHttpUrl]
+    http: Optional[AnyHttpUrl]
+    https: Optional[AnyHttpUrl]
     no_proxy: Optional[str]
-    use_aproxy: bool
+    use_aproxy: bool = False
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "ProxyConfig":
@@ -147,9 +147,13 @@ class ProxyConfig(BaseModel):
         https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
         no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None
 
+        # there's no need for no_proxy if there's no http_proxy or https_proxy
+        if not (https_proxy or http_proxy) and no_proxy:
+            no_proxy = None
+
         return cls(
-            http_proxy=http_proxy,
-            https_proxy=https_proxy,
+            http=http_proxy,
+            https=https_proxy,
             no_proxy=no_proxy,
             use_aproxy=use_aproxy,
         )
@@ -158,7 +162,7 @@ class ProxyConfig(BaseModel):
     def aproxy_address(self) -> Optional[str]:
         """Return the aproxy address."""
         if self.use_aproxy:
-            proxy_address = self.http_proxy or self.https_proxy
+            proxy_address = self.http or self.https
             # assert is only used to make mypy happy
             assert proxy_address is not None  # nosec for [B101:assert_used]
             aproxy_address = f"{proxy_address.host}:{proxy_address.port}"
@@ -170,12 +174,23 @@ class ProxyConfig(BaseModel):
     @classmethod
     def check_fields(cls, values: dict) -> dict:
         """Validate the proxy configuration."""
-        if values.get("use_aproxy") and not (
-            values.get("http_proxy") or values.get("https_proxy")
-        ):
-            raise ValueError("aproxy requires http_proxy or https_proxy to be set")
+        if values.get("use_aproxy") and not (values.get("http") or values.get("https")):
+            raise ValueError("aproxy requires http or https to be set")
 
         return values
+
+    def __bool__(self):
+        """Return whether we have a proxy config."""
+        return bool(self.http or self.https)
+
+    class Config:  # pylint: disable=too-few-public-methods
+        """Pydantic model configuration.
+
+        Attributes:
+            allow_mutation: Whether the model is mutable.
+        """
+
+        allow_mutation = False
 
 
 class UnsupportedArchitectureError(Exception):

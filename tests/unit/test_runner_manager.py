@@ -11,7 +11,7 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 import shared_fs
-from charm_state import ARCH, State
+from charm_state import ARCH, ProxyConfig, State
 from errors import IssueMetricEventError, RunnerBinaryError
 from github_type import RunnerApplication
 from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
@@ -23,6 +23,7 @@ from shared_fs import SharedFilesystem
 from tests.unit.mock import TEST_BINARY
 
 RUNNER_MANAGER_TIME_MODULE = "runner_manager.time.time"
+TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
 
 @pytest.fixture(scope="function", name="token")
@@ -43,14 +44,20 @@ def charm_state_fixture():
     scope="function",
     name="runner_manager",
     params=[
-        (GithubOrg("test_org", "test_group"), {}),
+        (GithubOrg("test_org", "test_group"), ProxyConfig()),
         (
             GithubRepo("test_owner", "test_repo"),
-            {"no_proxy": "test_no_proxy", "http": "test_http", "https": "test_https"},
+            ProxyConfig(
+                no_proxy="test_no_proxy",
+                http_proxy=TEST_PROXY_SERVER_URL,
+                https_proxy=TEST_PROXY_SERVER_URL,
+                use_aproxy=False,
+            ),
         ),
     ],
 )
 def runner_manager_fixture(request, tmp_path, monkeypatch, token, charm_state):
+    charm_state.proxy_config = request.param[1]
     monkeypatch.setattr(
         "runner_manager.RunnerManager.runner_bin_path", tmp_path / "mock_runner_binary"
     )
@@ -68,7 +75,6 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token, charm_state):
             pool_path,
             charm_state=charm_state,
         ),
-        proxies=request.param[1],
     )
     runner_manager.runner_bin_path.write_bytes(TEST_BINARY)
     return runner_manager
