@@ -164,3 +164,15 @@ class JobNotFoundError(GithubClientError):
 
 class RunnerLogsError(Exception):
     """Base class for all runner logs errors."""
+
+
+class OpenStackError(Exception):
+    """Base class for OpenStack errors."""
+
+
+class OpenStackInvalidConfigError(OpenStackError):
+    """Represents an invalid OpenStack configuration."""
+
+
+class OpenStackUnauthorizedError(OpenStackError):
+    """Represents an unauthorized connection to OpenStack."""

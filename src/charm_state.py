@@ -11,10 +11,13 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional
 
+import yaml
 from ops import CharmBase
 from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
 from pydantic.networks import IPvAnyAddress
 
+import openstack_manager
+from errors import OpenStackInvalidConfigError
 from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
@@ -24,6 +27,8 @@ ARCHITECTURES_ARM64 = {"aarch64", "arm64"}
 ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
+
+OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
 
 
 class ARCH(str, Enum):
@@ -68,6 +73,7 @@ class CharmConfig(BaseModel):
     """
 
     runner_storage: RunnerStorage
+    openstack_clouds_yaml: dict | None
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "CharmConfig":
@@ -85,7 +91,30 @@ class CharmConfig(BaseModel):
             logger.exception("Invalid runner-storage configuration")
             raise CharmConfigInvalidError("Invalid runner-storage configuration") from err
 
-        return cls(runner_storage=runner_storage)
+        openstack_clouds_yaml_str = charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
+        if openstack_clouds_yaml_str:
+            try:
+                openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
+            except yaml.YAMLError as exc:
+                logger.error("Invalid openstack-clouds-yaml config: %s.", exc)
+                raise CharmConfigInvalidError(
+                    "Invalid openstack-clouds-yaml config. Invalid yaml."
+                ) from exc
+            if (config_type := type(openstack_clouds_yaml)) is not dict:
+                raise CharmConfigInvalidError(
+                    f"Invalid openstack config format, expected dict, got {config_type}"
+                )
+            try:
+                openstack_manager.initialize(openstack_clouds_yaml)
+            except OpenStackInvalidConfigError as exc:
+                logger.error("Invalid openstack config, %s.", exc)
+                raise CharmConfigInvalidError(
+                    "Invalid openstack config. Not able to initialize openstack integration."
+                ) from exc
+        else:
+            openstack_clouds_yaml = None
+
+        return cls(runner_storage=runner_storage, openstack_clouds_yaml=openstack_clouds_yaml)
 
 
 class ProxyConfig(BaseModel):
@@ -238,17 +267,18 @@ class State:
     """The charm state.
 
     Attributes:
-        is_metrics_logging_available: Whether the charm is able to issue metrics.
-        proxy_config: Proxy-related configuration.
-        charm_config: Configuration of the juju charm.
         arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
+        charm_config: Configuration of the juju charm.
+        is_metrics_logging_available: Whether the charm is able to issue metrics.
+        openstack_clouds_yaml: The openstack clouds.yaml configuration.
+        proxy_config: Proxy-related configuration.
         ssh_debug_connections: SSH debug connections configuration information.
     """
 
+    arch: ARCH
+    charm_config: CharmConfig
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
-    charm_config: CharmConfig
-    arch: ARCH
     ssh_debug_connections: list[SSHDebugConnection]
 
     @classmethod
@@ -304,10 +334,10 @@ class State:
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
         state = cls(
+            arch=arch,
+            charm_config=charm_config,
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
-            charm_config=charm_config,
-            arch=arch,
             ssh_debug_connections=ssh_debug_connections,
         )
 

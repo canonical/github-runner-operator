@@ -157,6 +157,33 @@ Error for missing runner binary.
 
 ---
 
+## <kbd>class</kbd> `OpenStackError`
+Base class for OpenStack errors. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `OpenStackInvalidConfigError`
+Represents an invalid OpenStack configuration. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `OpenStackUnauthorizedError`
+Represents an unauthorized connection to OpenStack. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `QuarantineSharedFilesystemError`
 Represents an error when the shared filesystem could not be quarantined. 
 

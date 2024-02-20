@@ -145,6 +145,13 @@ def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
 
 
 @pytest.fixture(scope="module")
+def openstack_clouds_yaml(pytestconfig: pytest.Config) -> Optional[str]:
+    """Configured clouds-yaml setting."""
+    clouds_yaml = pytestconfig.getoption("--openstack-clouds-yaml")
+    return Path(clouds_yaml).read_text(encoding="utf-8") if clouds_yaml else None
+
+
+@pytest.fixture(scope="module")
 def model(ops_test: OpsTest) -> Model:
     """Juju model used in the test."""
     assert ops_test.model is not None
