@@ -622,9 +622,13 @@ class Runner:
         docker_client_proxy = {
             "proxies": {
                 "default": {
-                    "httpProxy": self.config.proxies.http or "",
-                    "httpsProxy": self.config.proxies.https or "",
-                    "noProxy": self.config.proxies.no_proxy or "",
+                    key: value
+                    for key, value in (
+                        ("httpProxy", self.config.proxies.http),
+                        ("httpsProxy", self.config.proxies.https),
+                        ("noProxy", self.config.proxies.no_proxy),
+                    )
+                    if value
                 }
             }
         }
