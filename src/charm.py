@@ -522,30 +522,11 @@ class GithubRunnerCharm(CharmBase):
 
         prev_config_for_flush: dict[str, str] = {}
 
-        if self.state.charm_config.token != self._stored.token:
+        if self.config["token"] != self._stored.token:
             prev_config_for_flush["token"] = str(self._stored.token)
             self._start_services()
             self._stored.token = None
 
-        self._refresh_firewall()
-        try:
-            self._event_timer.ensure_event_timer(
-                event_name="reconcile-runners",
-                interval=self.state.charm_config.reconcile_interval,
-                timeout=self.state.charm_config.reconcile_interval - 1,
-            )
-        except TimerEnableError as ex:
-            logger.exception("Failed to start the event timer")
-            self.unit.status = BlockedStatus(
-                (f"Failed to start timer for regular reconciliation" f"checks: {ex}")
-            )
-            return
-
-        if self.state.charm_config.path != self._stored.path:
-            prev_runner_manager = self._get_runner_manager()
-            if prev_runner_manager:
-                self.unit.status = MaintenanceStatus("Removing runners from old org/repo")
-                prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
         if self.config["path"] != self._stored.path:
             prev_config_for_flush["path"] = parse_github_path(
                 self._stored.path, self.config["group"]
