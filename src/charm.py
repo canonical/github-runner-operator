@@ -33,12 +33,14 @@ from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 import metrics
+import openstack_manager
 from charm_state import DEBUG_SSH_INTEGRATION_NAME, CharmConfigInvalidError, RunnerStorage, State
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
     MissingConfigurationError,
     MissingRunnerBinaryError,
+    OpenStackUnauthorizedError,
     RunnerBinaryError,
     RunnerError,
     SubprocessError,
@@ -95,6 +97,11 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
             logger.exception("Missing runner binary")
             self.unit.status = MaintenanceStatus(
                 "Missing runner binary, automatic retry will be attempted"
+            )
+        except OpenStackUnauthorizedError:
+            logger.exception("Unauthorized OpenStack connection")
+            self.unit.status = BlockedStatus(
+                "Unauthorized OpenStack connection. Check credentials."
             )
 
     return func_with_catch_errors
@@ -513,6 +520,19 @@ class GithubRunnerCharm(CharmBase):
                 prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
 
         self._refresh_firewall()
+
+        if self._state.charm_config.openstack_clouds_yaml:
+            # Test out openstack integration and then go
+            # into BlockedStatus as it is not supported yet
+            projects = openstack_manager.list_projects(
+                self._state.charm_config.openstack_clouds_yaml
+            )
+            logger.info("OpenStack projects: %s", projects)
+            self.unit.status = BlockedStatus(
+                "OpenStack integration is not supported yet. "
+                "Please remove the openstack-clouds-yaml config."
+            )
+            return
 
         try:
             runner_manager = self._get_runner_manager()
