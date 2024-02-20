@@ -83,17 +83,6 @@ def test_initialize(clouds_yaml_path: Path):
         pytest.param({"wrong-key": _create_clouds_yaml()["clouds"]}, INVALID_CLOUDS_YAML_ERR_MSG),
         pytest.param({}, INVALID_CLOUDS_YAML_ERR_MSG),
         pytest.param({"clouds": {}}, "No clouds defined in clouds.yaml."),
-        pytest.param(
-            ["invalid", "type", "list"],
-            "Invalid clouds.yaml format, expected dict, got <class 'list'>",
-        ),
-        pytest.param(
-            {"invalid", "type", "set"},
-            "Invalid clouds.yaml format, expected dict, got <class 'set'>",
-        ),
-        pytest.param(
-            "invalid string type", "Invalid clouds.yaml format, expected dict, got <class 'str'>"
-        ),
     ],
 )
 def test_initialize_validation_error(invalid_yaml: dict, expected_err_msg):

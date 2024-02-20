@@ -100,6 +100,10 @@ class CharmConfig(BaseModel):
                 raise CharmConfigInvalidError(
                     "Invalid openstack-clouds-yaml config. Invalid yaml."
                 ) from exc
+            if (config_type := type(openstack_clouds_yaml)) is not dict:
+                raise CharmConfigInvalidError(
+                    f"Invalid openstack config format, expected dict, got {config_type}"
+                )
             try:
                 openstack_manager.initialize(openstack_clouds_yaml)
             except OpenStackInvalidConfigError as exc:

@@ -4,6 +4,7 @@ import json
 import os
 import platform
 import secrets
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import ops
@@ -287,6 +288,38 @@ def test_openstack_config_invalid_yaml(charm: MagicMock):
     with pytest.raises(CharmConfigInvalidError) as exc:
         State.from_charm(charm)
     assert "Invalid openstack-clouds-yaml config. Invalid yaml." in str(exc.value)
+
+
+@pytest.mark.parametrize(
+    "clouds_yaml, expected_err_msg",
+    [
+        pytest.param(
+            '["invalid", "type", "list"]',
+            "Invalid openstack config format, expected dict, got <class 'list'>",
+        ),
+        pytest.param(
+            "invalid string type",
+            "Invalid openstack config format, expected dict, got <class 'str'>",
+        ),
+        pytest.param(
+            "3",
+            "Invalid openstack config format, expected dict, got <class 'int'>",
+        ),
+    ],
+)
+def test_openstack_config_invalid_format(
+    charm: MagicMock, clouds_yaml: Any, expected_err_msg: str
+):
+    """
+    arrange: Given a charm with openstack-clouds-yaml of types other than dict.
+    act: when charm state is initialized.
+    assert:
+    """
+    charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = clouds_yaml
+    with pytest.raises(CharmConfigInvalidError) as exc:
+        State.from_charm(charm)
+
+    assert expected_err_msg in str(exc.value)
 
 
 def test_openstack_config_invalid_config(charm: MagicMock, clouds_yaml):

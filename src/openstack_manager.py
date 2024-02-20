@@ -4,7 +4,6 @@
 """Module for handling interactions with OpenStack."""
 import logging
 from pathlib import Path
-from typing import Any
 
 import keystoneauth1.exceptions.http
 import openstack
@@ -20,22 +19,15 @@ logger = logging.getLogger(__name__)
 CLOUDS_YAML_PATH = Path(Path.home() / ".config/openstack/clouds.yaml")
 
 
-def _validate_cloud_config(cloud_config: Any) -> dict:
+def _validate_cloud_config(cloud_config: dict) -> None:
     """Validate the format of the cloud configuration.
 
     Args:
         cloud_config: The configuration in clouds.yaml format to validate.
 
-    Returns:
-        Validated cloud config dict.
-
     Raises:
         InvalidConfigError: if the format of the config is invalid.
     """
-    if (config_type := type(cloud_config)) is not dict:
-        raise OpenStackInvalidConfigError(
-            f"Invalid clouds.yaml format, expected dict, got {config_type}"
-        )
     # dict of format: {clouds: <cloud-name>: <cloud-config>}
     try:
         clouds = list(cloud_config["clouds"].keys())
@@ -44,8 +36,6 @@ def _validate_cloud_config(cloud_config: Any) -> dict:
 
     if not clouds:
         raise OpenStackInvalidConfigError("No clouds defined in clouds.yaml.")
-
-    return cloud_config
 
 
 def _write_config_to_disk(cloud_config: dict) -> None:
@@ -84,7 +74,7 @@ def _create_connection(cloud_config: dict) -> openstack.connection.Connection:
     return openstack.connect(cloud_name)
 
 
-def initialize(cloud_config: Any) -> None:
+def initialize(cloud_config: dict) -> None:
     """Initialize Openstack integration.
 
     Validates config and writes it to disk.
@@ -95,8 +85,8 @@ def initialize(cloud_config: Any) -> None:
     Raises:
         InvalidConfigError: if the format of the config is invalid.
     """
-    valid_cloud_config = _validate_cloud_config(cloud_config)
-    _write_config_to_disk(valid_cloud_config)
+    _validate_cloud_config(cloud_config)
+    _write_config_to_disk(cloud_config)
 
 
 def list_projects(cloud_config: dict) -> list[Project]:
