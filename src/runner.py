@@ -122,14 +122,6 @@ class Runner:
 
         self._shared_fs: Optional[shared_fs.SharedFilesystem] = None
 
-        # If the proxy setting are set, then add NO_PROXY local variables.
-        if self.config.proxies.get("http") or self.config.proxies.get("https"):
-            if self.config.proxies.get("no_proxy"):
-                self.config.proxies["no_proxy"] += ","
-            else:
-                self.config.proxies["no_proxy"] = ""
-            self.config.proxies["no_proxy"] += f"{self.config.name},.svc"
-
     def create(self, config: CreateRunnerConfig):
         """Create the runner instance on LXD and register it on GitHub.
 
@@ -630,9 +622,13 @@ class Runner:
         docker_client_proxy = {
             "proxies": {
                 "default": {
-                    "httpProxy": self.config.proxies["http"],
-                    "httpsProxy": self.config.proxies["https"],
-                    "noProxy": self.config.proxies["no_proxy"],
+                    key: value
+                    for key, value in (
+                        ("httpProxy", self.config.proxies.http),
+                        ("httpsProxy", self.config.proxies.https),
+                        ("noProxy", self.config.proxies.no_proxy),
+                    )
+                    if value
                 }
             }
         }
@@ -708,8 +704,8 @@ class Runner:
             self.instance.execute(["systemctl", "restart", "docker"])
 
         if self.config.proxies:
-            if self.config.proxies.get("aproxy_address"):
-                self._configure_aproxy(self.config.proxies["aproxy_address"])
+            if aproxy_address := self.config.proxies.aproxy_address:
+                self._configure_aproxy(aproxy_address)
             else:
                 self._configure_docker_proxy()
 

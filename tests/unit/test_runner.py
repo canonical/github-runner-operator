@@ -16,6 +16,7 @@ from charm_state import GithubOrg, GithubRepo, SSHDebugConnection, VirtualMachin
 from errors import CreateSharedFilesystemError, RunnerCreateError, RunnerRemoveError
 from runner import CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerManagerClients
+from runner_type import ProxySetting
 from shared_fs import SharedFilesystem
 from tests.unit.factories import SSHDebugInfoFactory
 from tests.unit.mock import (
@@ -24,6 +25,8 @@ from tests.unit.mock import (
     mock_lxd_error_func,
     mock_runner_error_func,
 )
+
+TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
 
 @pytest.fixture(scope="module", name="vm_resources")
@@ -100,10 +103,18 @@ def ssh_debug_connections_fixture() -> list[SSHDebugConnection]:
     scope="function",
     name="runner",
     params=[
-        (GithubOrg("test_org", "test_group"), {}),
+        (
+            GithubOrg("test_org", "test_group"),
+            ProxySetting(no_proxy=None, http=None, https=None, aproxy_address=None),
+        ),
         (
             GithubRepo("test_owner", "test_repo"),
-            {"no_proxy": "test_no_proxy", "http": "test_http", "https": "test_https"},
+            ProxySetting(
+                no_proxy="test_no_proxy",
+                http=TEST_PROXY_SERVER_URL,
+                https=TEST_PROXY_SERVER_URL,
+                aproxy_address=None,
+            ),
         ),
     ],
 )

@@ -51,7 +51,7 @@ from errors import (
     SubprocessError,
     TokenError,
 )
-from event_timer import EventTimer, TimerEnableError, TimerStatusError
+from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
@@ -234,9 +234,9 @@ class GithubRunnerCharm(CharmBase):
             raise ConfigurationError(exc.msg) from exc
 
         if proxy_config := self.state.proxy_config:
-            if http_proxy := proxy_config.http_proxy:
+            if http_proxy := proxy_config.http:
                 self.proxies["http"] = str(http_proxy)
-            if https_proxy := proxy_config.https_proxy:
+            if https_proxy := proxy_config.https:
                 self.proxies["https"] = str(https_proxy)
             # there's no need for no_proxy if there's no http_proxy or https_proxy
             no_proxy = proxy_config.no_proxy
@@ -364,7 +364,6 @@ class GithubRunnerCharm(CharmBase):
                 charm_state=self.state,
                 dockerhub_mirror=self.state.charm_config.dockerhub_mirror,
             ),
-            proxies=self.proxies,
         )
 
     @catch_charm_errors
@@ -777,15 +776,16 @@ class GithubRunnerCharm(CharmBase):
         """
         # Prepare environment for pip subprocess
         env = {}
-        if self.state.proxy_config.http_proxy is not None:
-            env["HTTP_PROXY"] = self.state.proxy_config.http_proxy
-            env["http_proxy"] = self.state.proxy_config.http_proxy
-        if self.state.proxy_config.https_proxy is not None:
-            env["HTTPS_PROXY"] = self.state.proxy_config.https_proxy
-            env["https_proxy"] = self.state.proxy_config.https_proxy
-        if self.state.proxy_config.no_proxy:
-            env["NO_PROXY"] = self.state.proxy_config.no_proxy
-            env["no_proxy"] = self.state.proxy_config.no_proxy
+        proxy_config = self.state.proxy_config
+        if http_proxy := proxy_config.http:
+            env["HTTP_PROXY"] = http_proxy
+            env["http_proxy"] = http_proxy
+        if https_proxy := proxy_config.https:
+            env["HTTPS_PROXY"] = https_proxy
+            env["https_proxy"] = https_proxy
+        if no_proxy := proxy_config.no_proxy:
+            env["NO_PROXY"] = no_proxy
+            env["no_proxy"] = no_proxy
 
         old_version = execute_command(
             [
@@ -904,7 +904,7 @@ class GithubRunnerCharm(CharmBase):
             working_directory=str(self.repo_check_web_service_path),
             charm_token=self.service_token,
             github_token=self.state.charm_config.token,
-            proxies=self.proxies,
+            proxies=self.state.proxy_config,
         )
         self.repo_check_systemd_service.write_text(service_content, encoding="utf-8")
 

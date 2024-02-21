@@ -20,6 +20,7 @@ from charm_state import (
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     GithubOrg,
     GithubRepo,
+    ProxyConfig,
     VirtualMachineResources,
 )
 from errors import LogrotateSetupError, RunnerError, SubprocessError
@@ -141,7 +142,7 @@ def test_get_runner_manager(harness: Harness):
     runner_manager = harness.charm._get_runner_manager()
     assert runner_manager is not None
     assert runner_manager.config.token == "mocktoken"
-    assert runner_manager.proxies == ProxySetting()
+    assert runner_manager.proxies == ProxyConfig(http=None, https=None, no_proxy=None, use_aproxy=False)
 
 
 def test_on_flush_runners_action_fail(harness: Harness, runner_binary_path: Path):
@@ -249,7 +250,6 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
         FirewallEntry(ip) in allowlist for ip in test_unit_ip_addresses
     ), "Expected IP firewall entry not found in allowlist arg."
 
-
 # New tests should not be added here. This should be refactored to pytest over time.
 # New test should be written with pytest, similar to the above tests.
 # Consider to rewrite test with pytest if the tests below needs to be changed.
@@ -282,7 +282,6 @@ class TestCharm(unittest.TestCase):
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
                 charm_state=harness.charm.state,
             ),
-            proxies={},
         )
 
     @patch("charm.RunnerManager")
@@ -308,7 +307,6 @@ class TestCharm(unittest.TestCase):
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
                 charm_state=harness.charm.state,
             ),
-            proxies={},
         )
 
     @patch("charm.RunnerManager")
@@ -366,7 +364,6 @@ class TestCharm(unittest.TestCase):
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
                 charm_state=harness.charm.state,
             ),
-            proxies={},
         )
         mock_rm.reconcile.assert_called_with(0, VirtualMachineResources(2, "7GiB", "10GiB")),
         mock_rm.reset_mock()
@@ -386,7 +383,6 @@ class TestCharm(unittest.TestCase):
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
                 charm_state=harness.charm.state,
             ),
-            proxies={},
         )
         mock_rm.reconcile.assert_called_with(
             5, VirtualMachineResources(cpu=4, memory="7GiB", disk="6GiB")
