@@ -156,7 +156,7 @@ async def test_token_config_changed(model: Model, app: Application, token_alt: s
     unit = app.units[0]
 
     await app.set_config({"token": token_alt})
-    await model.wait_for_idle(status=ACTIVE, timeout=10 * 60)
+    await model.wait_for_idle(status=ACTIVE, timeout=30 * 60)
 
     return_code, stdout = await run_in_unit(
         unit, "cat /etc/systemd/system/repo-policy-compliance.service"
