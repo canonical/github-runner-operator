@@ -12,8 +12,7 @@ import secrets
 import shutil
 import urllib.error
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional, Sequence, TypeVar
-from urllib.parse import urlsplit
+from typing import Any, Callable, Dict, Sequence, TypeVar
 
 import jinja2
 import ops
@@ -34,11 +33,17 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 import metrics
 import openstack_manager
-from charm_state import DEBUG_SSH_INTEGRATION_NAME, CharmConfigInvalidError, RunnerStorage, State
+from charm_state import (
+    DEBUG_SSH_INTEGRATION_NAME,
+    CharmConfigInvalidError,
+    GithubPath,
+    RunnerStorage,
+    State,
+    parse_github_path,
+)
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
-    MissingConfigurationError,
     MissingRunnerBinaryError,
     OpenStackUnauthorizedError,
     RunnerBinaryError,
@@ -48,11 +53,11 @@ from errors import (
 )
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
-from github_type import GitHubRunnerStatus
+from github_type import GitHubRunnerStatus, RunnerApplication
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_manager_type import FlushMode
-from runner_type import GithubOrg, GithubRepo, VirtualMachineResources
+from runner_type import ProxySetting
 from utilities import bytes_with_unit_to_kib, execute_command, retry
 
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
@@ -88,15 +93,11 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
         except TokenError as err:
             logger.exception("Issue with GitHub token")
             self.unit.status = BlockedStatus(str(err))
-        except MissingConfigurationError as err:
-            logger.exception("Missing required charm configuration")
-            self.unit.status = BlockedStatus(
-                f"Missing required charm configuration: {err.configs}"
-            )
         except MissingRunnerBinaryError:
             logger.exception("Missing runner binary")
             self.unit.status = MaintenanceStatus(
-                "Missing runner binary, automatic retry will be attempted"
+                "GitHub runner application not downloaded; the charm will retry download on "
+                "reconcile interval"
             )
         except OpenStackUnauthorizedError:
             logger.exception("Unauthorized OpenStack connection")
@@ -126,16 +127,39 @@ def catch_action_errors(
         except ConfigurationError as err:
             logger.exception("Issue with charm configuration")
             self.unit.status = BlockedStatus(str(err))
-        except MissingConfigurationError as err:
-            logger.exception("Missing required charm configuration")
-            event.fail(f"Missing required charm configuration: {err.configs}")
+            event.fail(str(err))
         except MissingRunnerBinaryError:
             logger.exception("Missing runner binary")
-            self.unit.status = MaintenanceStatus(
-                "Missing runner binary, automatic retry will be attempted"
+            err_msg = (
+                "GitHub runner application not downloaded; the charm will retry download on "
+                "reconcile interval"
             )
+            self.unit.status = MaintenanceStatus(err_msg)
+            event.fail(err_msg)
 
     return func_with_catch_errors
+
+
+def _setup_github_runner_charm_state(
+    func: Callable[["GithubRunnerCharm", EventT], None]
+) -> Callable[["GithubRunnerCharm", EventT], None]:
+    """Decorate GithubRunnerCharm method to set up charm state.
+
+    State setup includes file read and write. Therefore, this is not done in the __init__.
+
+    Args:
+        func: Method to be decorated.
+
+    Returns:
+        Decorated charm function with charm state setup.
+    """
+
+    @functools.wraps(func)
+    def func_with_state_setup(self: "GithubRunnerCharm", event: EventT) -> None:
+        self.setup_state()
+        func(self, event)
+
+    return func_with_state_setup
 
 
 class GithubRunnerCharm(CharmBase):
@@ -149,6 +173,7 @@ class GithubRunnerCharm(CharmBase):
     repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
     juju_storage_path = Path("/storage/juju")
     ram_pool_path = Path("/storage/ram")
+    kernel_module_path = Path("/etc/modules")
 
     def __init__(self, *args, **kargs) -> None:
         """Construct the charm.
@@ -159,14 +184,7 @@ class GithubRunnerCharm(CharmBase):
                 class.
         """
         super().__init__(*args, **kargs)
-
         self._grafana_agent = COSAgentProvider(self)
-
-        try:
-            self._state = State.from_charm(self)
-        except CharmConfigInvalidError as exc:
-            self.unit.status = ops.BlockedStatus(exc.msg)
-            return
 
         self._event_timer = EventTimer(self.unit.name)
 
@@ -181,7 +199,9 @@ class GithubRunnerCharm(CharmBase):
             runner_bin_url=None,
         )
 
-        self.service_token = None
+        self.state: State
+        self.proxies: ProxySetting = {}
+        self.service_token: str | None = None
 
         self.on.define_event("reconcile_runners", ReconcileRunnersEvent)
 
@@ -204,6 +224,26 @@ class GithubRunnerCharm(CharmBase):
             self.on.update_dependencies_action, self._on_update_dependencies_action
         )
         self.framework.observe(self.on.update_status, self._on_update_status)
+
+    def setup_state(self) -> None:
+        """Set up the charm state."""
+        try:
+            self.state = State.from_charm(self)
+        except CharmConfigInvalidError as exc:
+            self.unit.status = ops.BlockedStatus(exc.msg)
+            raise ConfigurationError(exc.msg) from exc
+
+        if proxy_config := self.state.proxy_config:
+            if http_proxy := proxy_config.http:
+                self.proxies["http"] = str(http_proxy)
+            if https_proxy := proxy_config.https:
+                self.proxies["https"] = str(https_proxy)
+            # there's no need for no_proxy if there's no http_proxy or https_proxy
+            no_proxy = proxy_config.no_proxy
+            if (https_proxy or http_proxy) and no_proxy:
+                self.proxies["no_proxy"] = no_proxy
+            if proxy_config.use_aproxy:
+                self.proxies["aproxy_address"] = proxy_config.aproxy_address
 
     def _create_memory_storage(self, path: Path, size: int) -> None:
         """Create a tmpfs-based LVM volume group.
@@ -236,7 +276,7 @@ class GithubRunnerCharm(CharmBase):
                 logger.info("Cleaned up storage directory")
             raise RunnerError("Failed to configure runner storage") from err
 
-    @retry(tries=5, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
+    @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _ensure_runner_storage(self, size: int) -> Path:
         """Ensure the runner storage is setup.
 
@@ -246,7 +286,7 @@ class GithubRunnerCharm(CharmBase):
         Raises:
             RunnerError: Unable to setup storage for runner.
         """
-        match self._state.charm_config.runner_storage:
+        match self.state.runner_config.runner_storage:
             case RunnerStorage.MEMORY:
                 logger.info("Creating tmpfs storage")
                 path = self.ram_pool_path
@@ -269,7 +309,7 @@ class GithubRunnerCharm(CharmBase):
 
         return path
 
-    @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
+    @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _ensure_service_health(self) -> None:
         """Ensure services managed by the charm is healthy.
 
@@ -286,42 +326,23 @@ class GithubRunnerCharm(CharmBase):
             raise
 
     def _get_runner_manager(
-        self, token: Optional[str] = None, path: Optional[str] = None
+        self, token: str | None = None, path: GithubPath | None = None
     ) -> RunnerManager:
-        """Get a RunnerManager instance, or None if missing config.
-
-        Args:
-            token: GitHub personal access token to manager the runners with.
-            path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
-                name.
+        """Get a RunnerManager instance.
 
         Returns:
             An instance of RunnerManager.
         """
         if token is None:
-            token = self.config["token"]
+            token = self.state.charm_config.token
         if path is None:
-            path = self.config["path"]
-
-        missing_configs = []
-        if not token:
-            missing_configs.append("token")
-        if not path:
-            missing_configs.append("path")
-        if missing_configs:
-            raise MissingConfigurationError(missing_configs)
-
-        dockerhub_mirror = self.config["dockerhub-mirror"] or None
-        dockerhub_mirror_url = urlsplit(dockerhub_mirror)
-        if dockerhub_mirror is not None and dockerhub_mirror_url.scheme != "https":
-            raise ConfigurationError(
-                "Only secured registry supported for dockerhub mirror, the scheme should be https"
-            )
+            path = self.state.charm_config.path
 
         self._ensure_service_health()
 
         size_in_kib = (
-            bytes_with_unit_to_kib(self.config["vm-disk"]) * self.config["virtual-machines"]
+            bytes_with_unit_to_kib(self.state.runner_config.virtual_machine_resources.disk)
+            * self.state.runner_config.virtual_machines
         )
 
         lxd_storage_path = self._ensure_runner_storage(size_in_kib)
@@ -329,18 +350,8 @@ class GithubRunnerCharm(CharmBase):
         if self.service_token is None:
             self.service_token = self._get_service_token()
 
-        if "/" in path:
-            paths = path.split("/")
-            if len(paths) != 2:
-                logger.error("Invalid path %s", path)
-                raise ConfigurationError(f"Invalid path {path}")
-
-            owner, repo = paths
-            path = GithubRepo(owner=owner, repo=repo)
-        else:
-            path = GithubOrg(org=path, group=self.config["group"])
-
         app_name, unit = self.unit.name.rsplit("/", 1)
+
         return RunnerManager(
             app_name,
             unit,
@@ -350,12 +361,68 @@ class GithubRunnerCharm(CharmBase):
                 image="jammy",
                 service_token=self.service_token,
                 lxd_storage_path=lxd_storage_path,
-                charm_state=self._state,
-                dockerhub_mirror=dockerhub_mirror,
+                charm_state=self.state,
+                dockerhub_mirror=self.state.charm_config.dockerhub_mirror,
             ),
         )
 
+    def _manage_runner_image(self, runner_manager: RunnerManager):
+        """Manage the runner image build process.
+
+        Outside of integration test, image will be built now and on a schedule.
+        During integration test, cache image will be used if found.
+
+        Args:
+            runner_manager: RunnerManager to use.
+        """
+        self.unit.status = MaintenanceStatus("Building runner image")
+
+        if self.state.integration_test_cache is None:
+            # Outside of integration test.
+            runner_manager.build_runner_image()
+            runner_manager.schedule_build_runner_image()
+            return
+
+        # During integration test attempt to use cached image.
+        image_cache_path = self.state.integration_test_cache / "runner_image"
+        if image_cache_path.is_file():
+            execute_command(["/snap/bin/lxc", "image", "import", str(image_cache_path), "jammy"])
+        else:
+            # Build and export image to cache.
+            runner_manager.build_runner_image()
+            execute_command(["/snap/bin/lxc", "image", "export", "jammy", str(image_cache_path)])
+
+        # Schedule build image should be ran after building the runner image.
+        runner_manager.schedule_build_runner_image()
+
+    def _manage_runner_binary_download(
+        self, runner_manager: RunnerManager, runner_bin_info: RunnerApplication
+    ):
+        """Manage the download the runner binary.
+
+        Outside of integration test, runner binary will be downloaded.
+        During integration test, cache runner binary will be used if found.
+
+        Args:
+            runner_manager: RunnerManager to use.
+            runner_bin_info: Information of the runner application to download.
+        """
+        if self.state.integration_test_cache is None:
+            # Outside of integration test.
+            runner_manager.update_runner_bin(runner_bin_info)
+            return
+
+        # During integration test attempt to use cached runner application.
+        runner_binary_cache_path = self.state.integration_test_cache / "runner_application"
+        if runner_binary_cache_path.is_file():
+            shutil.copy(runner_binary_cache_path, RunnerManager.runner_bin_path)
+            return
+
+        runner_manager.update_runner_bin(runner_bin_info)
+        shutil.copy(RunnerManager.runner_bin_path, runner_binary_cache_path)
+
     @catch_charm_errors
+    @_setup_github_runner_charm_state
     def _on_install(self, _event: InstallEvent) -> None:
         """Handle the installation of charm.
 
@@ -381,17 +448,18 @@ class GithubRunnerCharm(CharmBase):
 
         self._refresh_firewall()
         runner_manager = self._get_runner_manager()
-
-        self.unit.status = MaintenanceStatus("Building runner image")
-        runner_manager.build_runner_image()
-        runner_manager.schedule_build_runner_image()
+        self._manage_runner_image(runner_manager)
 
         self.unit.status = MaintenanceStatus("Downloading runner binary")
         try:
-            runner_info = runner_manager.get_latest_runner_bin_url()
-            logger.info("Downloading %s from: %s", runner_info.filename, runner_info.download_url)
-            self._stored.runner_bin_url = runner_info.download_url
-            runner_manager.update_runner_bin(runner_info)
+            runner_bin_info = runner_manager.get_latest_runner_bin_url()
+            logger.info(
+                "Downloading %s from: %s",
+                runner_bin_info["filename"],
+                runner_bin_info["download_url"],
+            )
+            self._stored.runner_bin_url = runner_bin_info["download_url"]
+            self._manage_runner_image(runner_bin_info)
         # Safe guard against transient unexpected error.
         except RunnerBinaryError as err:
             logger.exception("Failed to update runner binary")
@@ -402,6 +470,8 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = ActiveStatus()
 
+    @catch_charm_errors
+    @_setup_github_runner_charm_state
     def _on_start(self, _event: StartEvent) -> None:
         """Handle the start of the charm.
 
@@ -461,6 +531,7 @@ class GithubRunnerCharm(CharmBase):
                 self._set_reconcile_timer()
 
     @catch_charm_errors
+    @_setup_github_runner_charm_state
     def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
         """Handle the update of charm.
 
@@ -493,6 +564,7 @@ class GithubRunnerCharm(CharmBase):
         self._reconcile_runners(runner_manager)
 
     @catch_charm_errors
+    @_setup_github_runner_charm_state
     def _on_config_changed(self, _event: ConfigChangedEvent) -> None:
         """Handle the configuration change.
 
@@ -509,7 +581,9 @@ class GithubRunnerCharm(CharmBase):
             self._stored.token = None
 
         if self.config["path"] != self._stored.path:
-            prev_config_for_flush["path"] = str(self._stored.path)
+            prev_config_for_flush["path"] = parse_github_path(
+                self._stored.path, self.config["group"]
+            )
             self._stored.path = self.config["path"]
 
         if prev_config_for_flush:
@@ -521,11 +595,11 @@ class GithubRunnerCharm(CharmBase):
 
         self._refresh_firewall()
 
-        if self._state.charm_config.openstack_clouds_yaml:
+        if self.state.charm_config.openstack_clouds_yaml:
             # Test out openstack integration and then go
             # into BlockedStatus as it is not supported yet
             projects = openstack_manager.list_projects(
-                self._state.charm_config.openstack_clouds_yaml
+                self.state.charm_config.openstack_clouds_yaml
             )
             logger.info("OpenStack projects: %s", projects)
             self.unit.status = BlockedStatus(
@@ -534,18 +608,13 @@ class GithubRunnerCharm(CharmBase):
             )
             return
 
-        try:
-            runner_manager = self._get_runner_manager()
-        except MissingConfigurationError as err:
-            self.unit.status = BlockedStatus(
-                f"Missing required charm configuration: {err.configs}"
-            )
-        else:
-            self._reconcile_runners(runner_manager)
-            self.unit.status = ActiveStatus()
+        runner_manager = self._get_runner_manager()
+        self._reconcile_runners(runner_manager)
+        self.unit.status = ActiveStatus()
 
-        if self.config["token"] != self._stored.token:
-            self._stored.token = self.config["token"]
+        if self.state.charm_config.token != self._stored.token:
+            runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
+            self._stored.token = self.state.charm_config.token
 
     def _check_and_update_dependencies(self) -> bool:
         """Check and updates runner binary and services.
@@ -604,6 +673,7 @@ class GithubRunnerCharm(CharmBase):
         return service_updated or runner_bin_updated
 
     @catch_charm_errors
+    @_setup_github_runner_charm_state
     def _on_reconcile_runners(self, _event: ReconcileRunnersEvent) -> None:
         """Handle the reconciliation of runners.
 
@@ -623,6 +693,7 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = ActiveStatus()
 
     @catch_action_errors
+    @_setup_github_runner_charm_state
     def _on_check_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of checking of runner state.
 
@@ -630,9 +701,6 @@ class GithubRunnerCharm(CharmBase):
             event: Action event of checking runner states.
         """
         runner_manager = self._get_runner_manager()
-        if not runner_manager:
-            event.fail("Missing token or org/repo path config")
-            return
         if runner_manager.runner_bin_path is None:
             event.fail("Missing runner binary")
             return
@@ -663,6 +731,7 @@ class GithubRunnerCharm(CharmBase):
         )
 
     @catch_action_errors
+    @_setup_github_runner_charm_state
     def _on_reconcile_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of reconcile of runner state.
 
@@ -679,6 +748,7 @@ class GithubRunnerCharm(CharmBase):
         event.set_results(delta)
 
     @catch_action_errors
+    @_setup_github_runner_charm_state
     def _on_flush_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of flushing all runner and reconciling afterwards.
 
@@ -694,6 +764,7 @@ class GithubRunnerCharm(CharmBase):
         event.set_results(delta)
 
     @catch_action_errors
+    @_setup_github_runner_charm_state
     def _on_update_dependencies_action(self, event: ActionEvent) -> None:
         """Handle the action of updating dependencies and flushing runners if needed.
 
@@ -704,6 +775,7 @@ class GithubRunnerCharm(CharmBase):
         event.set_results({"flush": flushed})
 
     @catch_charm_errors
+    @_setup_github_runner_charm_state
     def _on_update_status(self, _: UpdateStatusEvent) -> None:
         """Handle the update of charm status.
 
@@ -713,6 +785,7 @@ class GithubRunnerCharm(CharmBase):
         self._ensure_reconcile_timer_is_active()
 
     @catch_charm_errors
+    @_setup_github_runner_charm_state
     def _on_stop(self, _: StopEvent) -> None:
         """Handle the stopping of the charm.
 
@@ -739,14 +812,9 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = MaintenanceStatus("Reconciling runners")
 
-        virtual_machines_resources = VirtualMachineResources(
-            self.config["vm-cpu"], self.config["vm-memory"], self.config["vm-disk"]
-        )
-
-        virtual_machines = self.config["virtual-machines"]
-
         delta_virtual_machines = runner_manager.reconcile(
-            virtual_machines, virtual_machines_resources
+            self.state.runner_config.virtual_machines,
+            self.state.runner_config.virtual_machine_resources,
         )
 
         self.unit.status = ActiveStatus()
@@ -762,7 +830,7 @@ class GithubRunnerCharm(CharmBase):
         """
         # Prepare environment for pip subprocess
         env = {}
-        proxy_config = self._state.proxy_config
+        proxy_config = self.state.proxy_config
         if http_proxy := proxy_config.http:
             env["HTTP_PROXY"] = http_proxy
             env["http_proxy"] = http_proxy
@@ -812,10 +880,10 @@ class GithubRunnerCharm(CharmBase):
         """Enable kernel modules needed by the charm."""
         execute_command(["/usr/sbin/modprobe", "br_netfilter"])
 
-        with open("/etc/modules", "a", encoding="utf-8") as modules_file:
+        with self.kernel_module_path.open("a", encoding="utf-8") as modules_file:
             modules_file.write("br_netfilter\n")
 
-    @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
+    @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _install_deps(self) -> None:
         """Install dependencies."""
         logger.info("Installing charm dependencies.")
@@ -864,7 +932,7 @@ class GithubRunnerCharm(CharmBase):
 
         logger.info("Finished installing charm dependencies.")
 
-    @retry(tries=10, delay=15, max_delay=60, backoff=1.5, local_logger=logger)
+    @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _start_services(self) -> None:
         """Ensure all services managed by the charm is running."""
         logger.info("Starting charm services...")
@@ -889,8 +957,8 @@ class GithubRunnerCharm(CharmBase):
         service_content = environment.get_template("repo-policy-compliance.service.j2").render(
             working_directory=str(self.repo_check_web_service_path),
             charm_token=self.service_token,
-            github_token=self.config["token"],
-            proxies=self._state.proxy_config,
+            github_token=self.state.charm_config.token,
+            proxies=self.state.proxy_config,
         )
         self.repo_check_systemd_service.write_text(service_content, encoding="utf-8")
 
@@ -930,7 +998,7 @@ class GithubRunnerCharm(CharmBase):
                 for entry in firewall_denylist_config.split(",")
             ]
         allowlist = [
-            FirewallEntry.decode(str(entry.host)) for entry in self._state.ssh_debug_connections
+            FirewallEntry.decode(str(entry.host)) for entry in self.state.ssh_debug_connections
         ]
         firewall = Firewall("lxdbr0")
         firewall.refresh_firewall(denylist=denylist, allowlist=allowlist)
@@ -950,6 +1018,8 @@ class GithubRunnerCharm(CharmBase):
             execute_command(["dpkg", "--configure", "-a"])
             execute_command(["/usr/bin/apt-get", "install", "-qy"] + list(packages))
 
+    @catch_charm_errors
+    @_setup_github_runner_charm_state
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
         self._refresh_firewall()

@@ -12,8 +12,8 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
+from charm_state import GithubRepo
 from github_client import GithubClient
-from runner_type import GithubRepo
 from tests.integration.helpers import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,

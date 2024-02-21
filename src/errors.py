@@ -43,24 +43,6 @@ class MissingRunnerBinaryError(Exception):
     """Error for missing runner binary."""
 
 
-class MissingConfigurationError(Exception):
-    """Error for missing juju configuration.
-
-    Attributes:
-        configs: The missing configurations.
-    """
-
-    def __init__(self, configs: list[str]):
-        """Construct the MissingConfigurationError.
-
-        Args:
-            configs: The missing configurations.
-        """
-        super().__init__(f"Missing required charm configuration: {configs}")
-
-        self.configs = configs
-
-
 class ConfigurationError(Exception):
     """Error for juju configuration."""
 

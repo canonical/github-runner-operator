@@ -139,6 +139,14 @@ def no_proxy(pytestconfig: pytest.Config) -> str:
 
 
 @pytest.fixture(scope="module")
+def integration_test_cache(pytestconfig: pytest.Config) -> str | None:
+    cache = pytestconfig.getoption("--integration-test-cache")
+    # Convert empty string to None.
+    cache = cache if cache else None
+    return cache
+
+
+@pytest.fixture(scope="module")
 def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
     """Configured loop_device setting."""
     return pytestconfig.getoption("--loop-device")
@@ -173,6 +181,7 @@ async def app_no_runner(
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
+    integration_test_cache: str | None,
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
     # Set the scheduled event to 1 hour to avoid interfering with the tests.
@@ -187,6 +196,7 @@ async def app_no_runner(
         https_proxy=https_proxy,
         no_proxy=no_proxy,
         reconcile_interval=60,
+        integration_test_cache=integration_test_cache,
     )
     return application
 
@@ -213,6 +223,7 @@ async def app_scheduled_events(
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
+    integration_test_cache: str | None,
 ) -> AsyncIterator[Application]:
     """Application with no token.
 
@@ -235,6 +246,7 @@ async def app_scheduled_events(
         https_proxy=https_proxy,
         no_proxy=no_proxy,
         reconcile_interval=8,
+        integration_test_cache=integration_test_cache,
     )
 
     await application.set_config({"virtual-machines": "1"})
@@ -253,6 +265,7 @@ async def app_runner(
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
+    integration_test_cache: str | None,
 ) -> AsyncIterator[Application]:
     """Application to test runners."""
     # Use a different app_name so workflows can select runners from this deployment.
@@ -267,6 +280,7 @@ async def app_runner(
         https_proxy=https_proxy,
         no_proxy=no_proxy,
         reconcile_interval=60,
+        integration_test_cache=integration_test_cache,
     )
     return application
 
@@ -281,6 +295,7 @@ async def app_no_wait_fixture(
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
+    integration_test_cache: str | None,
 ) -> AsyncIterator[Application]:
     """GitHub runner charm application without waiting for active."""
     app: Application = await deploy_github_runner_charm(
@@ -294,6 +309,7 @@ async def app_no_wait_fixture(
         https_proxy=https_proxy,
         no_proxy=no_proxy,
         reconcile_interval=60,
+        integration_test_cache=integration_test_cache,
         wait_idle=False,
     )
     await app.set_config({"virtual-machines": "1"})
@@ -425,6 +441,7 @@ async def app_juju_storage(
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
+    integration_test_cache: str | None,
 ) -> AsyncIterator[Application]:
     """Application with juju storage setup."""
     # Set the scheduled event to 1 hour to avoid interfering with the tests.
@@ -439,6 +456,7 @@ async def app_juju_storage(
         https_proxy=https_proxy,
         no_proxy=no_proxy,
         reconcile_interval=60,
+        integration_test_cache=integration_test_cache,
     )
     return application
 

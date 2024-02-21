@@ -4,10 +4,10 @@
 """Functions to calculate metrics from data retrieved from GitHub."""
 
 import errors
+from charm_state import GithubRepo
 from github_client import GithubClient
 from metrics_type import GithubJobMetrics
 from runner_metrics import PreJobMetrics
-from runner_type import GithubRepo
 
 
 def job(

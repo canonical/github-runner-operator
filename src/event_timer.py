@@ -34,7 +34,15 @@ class TimerStatusError(TimerError):
 
 
 class EventConfig(TypedDict):
-    """Configuration used by service and timer templates."""
+    """Configuration used by service and timer templates.
+
+    Attributes:
+        event: Name of the event.
+        interval: Minutes between the event trigger.
+        random_delay: Minutes of random delay added between event trigger.
+        timeout: Minutes before the event handle is timeout.
+        unit: Name of the juju unit.
+    """
 
     event: str
     interval: int

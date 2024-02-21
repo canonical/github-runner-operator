@@ -9,12 +9,12 @@ from pathlib import Path
 
 import jinja2
 
+from charm_state import GithubPath
 from charm_state import State as CharmState
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
 from lxd import LxdClient
 from repo_policy_compliance_client import RepoPolicyComplianceClient
-from runner_type import GithubPath
 
 
 class FlushMode(Enum):

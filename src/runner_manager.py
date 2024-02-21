@@ -24,6 +24,7 @@ import metrics
 import runner_logs
 import runner_metrics
 import shared_fs
+from charm_state import VirtualMachineResources
 from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
 from github_client import GithubClient
 from github_type import RunnerApplication, SelfHostedRunner
@@ -33,7 +34,7 @@ from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, R
 from runner_manager_type import FlushMode, RunnerInfo, RunnerManagerClients, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import ProxySetting as RunnerProxySetting
-from runner_type import RunnerByHealth, VirtualMachineResources
+from runner_type import RunnerByHealth
 from utilities import execute_command, retry, set_env_var
 
 REMOVED_RUNNER_LOG_STR = "Removed runner: %s"
