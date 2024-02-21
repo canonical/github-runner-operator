@@ -34,3 +34,9 @@ storage:
     description: Storage for the root disk of LXD instances hosting the runner application.
     type: filesystem
     location: /storage/juju
+  integration-test-cache:
+    description: Storage for caching artifact of integration test.
+    type: filesystem
+    multiple:
+      range: 0-1
+    location: /storage/integration-test-cache

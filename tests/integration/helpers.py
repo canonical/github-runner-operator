@@ -322,6 +322,7 @@ async def deploy_github_runner_charm(
     https_proxy: str,
     no_proxy: str,
     reconcile_interval: int,
+    integration_test_cache: str | None,
     wait_idle: bool = True,
 ) -> Application:
     """Deploy github-runner charm.
@@ -336,6 +337,7 @@ async def deploy_github_runner_charm(
         https_proxy: HTTPS proxy for the application to use.
         no_proxy: No proxy configuration for the application.
         reconcile_interval: Time between reconcile for the application.
+        integration_test_cache: Existing juju storage for caching test artifacts.
         wait_idle: wait for model to become idle.
     """
     subprocess.run(["sudo", "modprobe", "br_netfilter"])
@@ -353,6 +355,10 @@ async def deploy_github_runner_charm(
     if runner_storage == "juju-storage":
         storage["runner"] = {"pool": "rootfs", "size": 11}
 
+    attach_storage = []
+    if integration_test_cache is not None:
+        attach_storage.append(integration_test_cache)
+
     application = await model.deploy(
         charm_file,
         application_name=app_name,
@@ -368,6 +374,7 @@ async def deploy_github_runner_charm(
         },
         constraints={"root-disk": 15},
         storage=storage,
+        attach_storage=attach_storage,
     )
 
     if wait_idle:

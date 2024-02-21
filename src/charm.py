@@ -53,7 +53,7 @@ from errors import (
 )
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
-from github_type import GitHubRunnerStatus
+from github_type import GitHubRunnerStatus, RunnerApplication
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_manager_type import FlushMode
@@ -366,6 +366,61 @@ class GithubRunnerCharm(CharmBase):
             ),
         )
 
+    def _manage_runner_image(self, runner_manager: RunnerManager):
+        """Manage the runner image build process.
+
+        Outside of integration test, image will be built now and on a schedule.
+        During integration test, cache image will be used if found.
+
+        Args:
+            runner_manager: RunnerManager to use.
+        """
+        self.unit.status = MaintenanceStatus("Building runner image")
+
+        if self.state.integration_test_cache is None:
+            # Outside of integration test.
+            runner_manager.build_runner_image()
+            runner_manager.schedule_build_runner_image()
+            return
+
+        # During integration test attempt to use cached image.
+        image_cache_path = self.state.integration_test_cache / "runner_image"
+        if image_cache_path.is_file():
+            execute_command(["/snap/bin/lxc", "image", "import", str(image_cache_path), "jammy"])
+        else:
+            # Build and export image to cache.
+            runner_manager.build_runner_image()
+            execute_command(["/snap/bin/lxc", "image", "export", "jammy", str(image_cache_path)])
+
+        # Schedule build image should be ran after building the runner image.
+        runner_manager.schedule_build_runner_image()
+
+    def _manage_runner_binary_download(
+        self, runner_manager: RunnerManager, runner_bin_info: RunnerApplication
+    ):
+        """Manage the download the runner binary.
+
+        Outside of integration test, runner binary will be downloaded.
+        During integration test, cache runner binary will be used if found.
+
+        Args:
+            runner_manager: RunnerManager to use.
+            runner_bin_info: Information of the runner application to download.
+        """
+        if self.state.integration_test_cache is None:
+            # Outside of integration test.
+            runner_manager.update_runner_bin(runner_bin_info)
+            return
+
+        # During integration test attempt to use cached runner application.
+        runner_binary_cache_path = self.state.integration_test_cache / "runner_application"
+        if runner_binary_cache_path.is_file():
+            shutil.copy(runner_binary_cache_path, RunnerManager.runner_bin_path)
+            return
+
+        runner_manager.update_runner_bin(runner_bin_info)
+        shutil.copy(RunnerManager.runner_bin_path, runner_binary_cache_path)
+
     @catch_charm_errors
     @_setup_github_runner_charm_state
     def _on_install(self, _event: InstallEvent) -> None:
@@ -393,19 +448,18 @@ class GithubRunnerCharm(CharmBase):
 
         self._refresh_firewall()
         runner_manager = self._get_runner_manager()
-
-        self.unit.status = MaintenanceStatus("Building runner image")
-        runner_manager.build_runner_image()
-        runner_manager.schedule_build_runner_image()
+        self._manage_runner_image(runner_manager)
 
         self.unit.status = MaintenanceStatus("Downloading runner binary")
         try:
-            runner_info = runner_manager.get_latest_runner_bin_url()
+            runner_bin_info = runner_manager.get_latest_runner_bin_url()
             logger.info(
-                "Downloading %s from: %s", runner_info["filename"], runner_info["download_url"]
+                "Downloading %s from: %s",
+                runner_bin_info["filename"],
+                runner_bin_info["download_url"],
             )
-            self._stored.runner_bin_url = runner_info["download_url"]
-            runner_manager.update_runner_bin(runner_info)
+            self._stored.runner_bin_url = runner_bin_info["download_url"]
+            self._manage_runner_image(runner_bin_info)
         # Safe guard against transient unexpected error.
         except RunnerBinaryError as err:
             logger.exception("Failed to update runner binary")

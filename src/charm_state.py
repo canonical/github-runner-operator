@@ -515,6 +515,7 @@ class State:
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
         ssh_debug_connections: SSH debug connections configuration information.
+        integration_test_cache: Storage for storing artifact for integration test.
     """
 
     arch: ARCH
@@ -523,6 +524,7 @@ class State:
     charm_config: CharmConfig
     runner_config: RunnerCharmConfig
     ssh_debug_connections: list[SSHDebugConnection]
+    integration_test_cache: Path | None
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "State":
@@ -582,6 +584,11 @@ class State:
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
+        integration_test_cache = None
+        if charm.model.storages["integration-test-cache"]:
+            storage = charm.model.storages["integration-test-cache"][0]
+            integration_test_cache = storage.location
+
         state = cls(
             arch=arch,
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
@@ -589,6 +596,7 @@ class State:
             charm_config=charm_config,
             runner_config=runner_config,
             ssh_debug_connections=ssh_debug_connections,
+            integration_test_cache=integration_test_cache,
         )
 
         state_dict = dataclasses.asdict(state)

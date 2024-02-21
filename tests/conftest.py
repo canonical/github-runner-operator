@@ -29,6 +29,17 @@ def pytest_addoption(parser: Parser):
         "--token-alt", action="store", help="An alternative token to test the change of a token."
     )
     parser.addoption(
+        "--integration-test-cache",
+        action="store",
+        help=(
+            "Existing juju storage to be used as cache for integration test. Must be flushed if "
+            "the image build process is changed or newer version of github runner application is "
+            "available. Recommend way of creating the juju storage is to deploy the charm with a "
+            "new storage as the `integration-test-cache` storage; then detach the storage and "
+            "reuse it in integration tests."
+        ),
+    )
+    parser.addoption(
         "--http-proxy",
         action="store",
         help="HTTP proxy configuration value for juju model proxy configuration.",
