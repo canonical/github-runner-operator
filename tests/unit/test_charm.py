@@ -28,7 +28,6 @@ from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
-from runner_type import ProxySetting
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
@@ -142,7 +141,9 @@ def test_get_runner_manager(harness: Harness):
     runner_manager = harness.charm._get_runner_manager()
     assert runner_manager is not None
     assert runner_manager.config.token == "mocktoken"
-    assert runner_manager.proxies == ProxyConfig(http=None, https=None, no_proxy=None, use_aproxy=False)
+    assert runner_manager.proxies == ProxyConfig(
+        http=None, https=None, no_proxy=None, use_aproxy=False
+    )
 
 
 def test_on_flush_runners_action_fail(harness: Harness, runner_binary_path: Path):
@@ -249,6 +250,7 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
     assert all(
         FirewallEntry(ip) in allowlist for ip in test_unit_ip_addresses
     ), "Expected IP firewall entry not found in allowlist arg."
+
 
 # New tests should not be added here. This should be refactored to pytest over time.
 # New test should be written with pytest, similar to the above tests.

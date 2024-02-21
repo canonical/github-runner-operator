@@ -177,7 +177,7 @@ class CharmConfig(BaseModel):
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
-        dockerhub_mirror = charm.config.get("dockerhub_mirror") or None
+        dockerhub_mirror = charm.config.get("dockerhub-mirror") or None
 
         dockerhub_mirror_url = urlsplit(dockerhub_mirror)
         if dockerhub_mirror is not None and dockerhub_mirror_url.scheme != "https":
