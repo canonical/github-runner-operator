@@ -16,8 +16,8 @@ from ops.testing import Harness
 
 from charm import GithubRunnerCharm
 from charm_state import (
-    ARCH,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    Arch,
     GithubOrg,
     GithubRepo,
     ProxyConfig,
@@ -44,7 +44,7 @@ def raise_url_error(*args, **kargs):
     raise urllib.error.URLError("mock error")
 
 
-def mock_get_latest_runner_bin_url(os_name: str = "linux", arch: ARCH = ARCH.X64):
+def mock_get_latest_runner_bin_url(os_name: str = "linux", arch: Arch = Arch.X64):
     mock = MagicMock()
     mock.download_url = "www.example.com"
     return mock
@@ -71,7 +71,6 @@ def setup_charm_harness(monkeypatch, runner_bin_path: Path) -> Harness:
     harness = Harness(GithubRunnerCharm)
     harness.update_config({"path": "mock/repo", "token": "mocktoken"})
     harness.begin()
-    harness.charm.setup_state()
     monkeypatch.setattr("runner_manager.RunnerManager.update_runner_bin", stub_update_runner_bin)
     monkeypatch.setattr("runner_manager.RunnerManager._runners_in_pre_job", lambda self: False)
     return harness
@@ -82,7 +81,6 @@ def harness_fixture(monkeypatch, runner_binary_path: Path) -> Harness:
     return setup_charm_harness(monkeypatch, runner_binary_path)
 
 
-@pytest.fixture(name="proxied_harness")
 @patch.dict(
     os.environ,
     {
@@ -91,19 +89,16 @@ def harness_fixture(monkeypatch, runner_binary_path: Path) -> Harness:
         "JUJU_CHARM_NO_PROXY": "127.0.0.1,localhost",
     },
 )
-def proxied_harness_fixture(monkeypatch, runner_binary_path: Path) -> Harness:
-    return setup_charm_harness(monkeypatch, runner_binary_path)
-
-
-def test_proxy_setting(proxied_harness: Harness):
+def test_proxy_setting(harness: Harness):
     """
     arrange: Set up charm under proxied environment.
     act: Nothing.
     assert: The proxy configuration are set.
     """
-    assert proxied_harness.charm.proxies["https"] == TEST_PROXY_SERVER_URL
-    assert proxied_harness.charm.proxies["http"] == TEST_PROXY_SERVER_URL
-    assert proxied_harness.charm.proxies["no_proxy"] == "127.0.0.1,localhost"
+    state = harness.charm._setup_state()
+    assert state.proxy_config.https == TEST_PROXY_SERVER_URL
+    assert state.proxy_config.http == TEST_PROXY_SERVER_URL
+    assert state.proxy_config.no_proxy == "127.0.0.1,localhost"
 
 
 def test_install(harness: Harness, exec_command: MagicMock):
@@ -138,7 +133,8 @@ def test_get_runner_manager(harness: Harness):
     act: Get runner manager.
     assert: Runner manager is returned with the correct config.
     """
-    runner_manager = harness.charm._get_runner_manager()
+    state = harness.charm._setup_state()
+    runner_manager = harness.charm._get_runner_manager(state)
     assert runner_manager is not None
     assert runner_manager.config.token == "mocktoken"
     assert runner_manager.proxies == ProxyConfig(
@@ -244,7 +240,8 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
     )
 
     monkeypatch.setattr("charm.Firewall", mock_firewall := unittest.mock.MagicMock())
-    harness.charm._refresh_firewall()
+    state = harness.charm._setup_state()
+    harness.charm._refresh_firewall(state)
     mocked_firewall_instance = mock_firewall.return_value
     allowlist = mocked_firewall_instance.refresh_firewall.call_args_list[0][1]["allowlist"]
     assert all(
@@ -273,6 +270,7 @@ class TestCharm(unittest.TestCase):
         harness.begin()
         harness.charm.on.config_changed.emit()
         token = harness.charm.service_token
+        state = harness.charm._setup_state()
         rm.assert_called_with(
             "github-runner",
             "0",
@@ -282,7 +280,10 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
-                charm_state=harness.charm.state,
+                proxy_config=state.proxy_config,
+                arch=state.arch,
+                ssh_debug_connections=state.ssh_debug_connections,
+                is_metrics_logging_available=state.is_metrics_logging_available,
             ),
         )
 
@@ -298,6 +299,7 @@ class TestCharm(unittest.TestCase):
         harness.begin()
         harness.charm.on.config_changed.emit()
         token = harness.charm.service_token
+        state = harness.charm._setup_state()
         rm.assert_called_with(
             "github-runner",
             "0",
@@ -307,7 +309,10 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
-                charm_state=harness.charm.state,
+                proxy_config=state.proxy_config,
+                arch=state.arch,
+                ssh_debug_connections=state.ssh_debug_connections,
+                is_metrics_logging_available=state.is_metrics_logging_available,
             ),
         )
 
@@ -355,6 +360,7 @@ class TestCharm(unittest.TestCase):
         harness.update_config({"virtual-machines": 0})
         harness.charm.on.reconcile_runners.emit()
         token = harness.charm.service_token
+        state = harness.charm._setup_state()
         rm.assert_called_with(
             "github-runner",
             "0",
@@ -364,7 +370,10 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
-                charm_state=harness.charm.state,
+                proxy_config=state.proxy_config,
+                arch=state.arch,
+                ssh_debug_connections=state.ssh_debug_connections,
+                is_metrics_logging_available=state.is_metrics_logging_available,
             ),
         )
         mock_rm.reconcile.assert_called_with(0, VirtualMachineResources(2, "7GiB", "10GiB")),
@@ -374,6 +383,7 @@ class TestCharm(unittest.TestCase):
         harness.update_config({"virtual-machines": 5, "vm-cpu": 4, "vm-disk": "6GiB"})
         harness.charm.on.reconcile_runners.emit()
         token = harness.charm.service_token
+        state = harness.charm._setup_state()
         rm.assert_called_with(
             "github-runner",
             "0",
@@ -383,7 +393,10 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
-                charm_state=harness.charm.state,
+                proxy_config=state.proxy_config,
+                arch=state.arch,
+                ssh_debug_connections=state.ssh_debug_connections,
+                is_metrics_logging_available=state.is_metrics_logging_available,
             ),
         )
         mock_rm.reconcile.assert_called_with(

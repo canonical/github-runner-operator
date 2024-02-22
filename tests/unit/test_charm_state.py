@@ -12,9 +12,9 @@ import pytest
 
 import charm_state
 from charm_state import (
-    ARCH,
     COS_AGENT_INTEGRATION_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
+    Arch,
     CharmConfigInvalidError,
     ProxyConfig,
     SSHDebugConnection,
@@ -146,15 +146,15 @@ def test_from_charm_invalid_arch(monkeypatch: pytest.MonkeyPatch):
 @pytest.mark.parametrize(
     "arch, expected_arch",
     [
-        pytest.param("aarch64", ARCH.ARM64),
-        pytest.param("arm64", ARCH.ARM64),
-        pytest.param("x86_64", ARCH.X64),
+        pytest.param("aarch64", Arch.ARM64),
+        pytest.param("arm64", Arch.ARM64),
+        pytest.param("x86_64", Arch.X64),
     ],
 )
 def test_from_charm_arch(
     monkeypatch: pytest.MonkeyPatch,
     arch: str,
-    expected_arch: ARCH,
+    expected_arch: Arch,
 ):
     """
     arrange: Given a monkeypatched platform.machine that returns parametrized architectures.

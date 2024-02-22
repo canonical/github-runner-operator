@@ -32,30 +32,50 @@ CHARM_STATE_PATH = Path("charm_state.json")
 
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
 
-OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
+
+StorageSize = str
+"""Representation of storage size with KiB, MiB, GiB, TiB, PiB, EiB as unit."""
 
 
 @dataclasses.dataclass
 class GithubRepo:
-    """Represent GitHub repository."""
+    """Represent GitHub repository.
+
+    Attributes:
+        owner: Owner of the GitHub repository.
+        repo: Name of the GitHub repository.
+    """
 
     owner: str
     repo: str
 
     def path(self) -> str:
-        """Return a string representing the path."""
+        """Return a string representing the path.
+
+        Returns:
+            Path to the GitHub entity.
+        """
         return f"{self.owner}/{self.repo}"
 
 
 @dataclasses.dataclass
 class GithubOrg:
-    """Represent GitHub organization."""
+    """Represent GitHub organization.
+
+    Attributes:
+        org: Name of the GitHub organization.
+        group: Runner group to spawn the runners in.
+    """
 
     org: str
     group: str
 
     def path(self) -> str:
-        """Return a string representing the path."""
+        """Return a string representing the path.
+
+        Returns:
+            Path to the GitHub entity.
+        """
         return self.org
 
 
@@ -79,21 +99,25 @@ def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
         if len(paths) != 2:
             raise CharmConfigInvalidError(f"Invalid path configuration {path_str}")
         owner, repo = paths
-        path = GithubRepo(owner=owner, repo=repo)
-    else:
-        path = GithubOrg(org=path_str, group=runner_group)
-    return path
+        return GithubRepo(owner=owner, repo=repo)
+    return GithubOrg(org=path_str, group=runner_group)
 
 
 class VirtualMachineResources(NamedTuple):
-    """Virtual machine resource configuration."""
+    """Virtual machine resource configuration.
+
+    Attributes:
+        cpu: Number of vCPU for the virtual machine.
+        memory: Amount of memory for the virtual machine.
+        disk: Amount of disk for the virtual machine.
+    """
 
     cpu: int
-    memory: str
-    disk: str
+    memory: StorageSize
+    disk: StorageSize
 
 
-class ARCH(str, Enum):
+class Arch(str, Enum):
     """Supported system architectures."""
 
     ARM64 = "arm64"
@@ -138,11 +162,8 @@ def _valid_storage_size_str(size: str) -> bool:
     """
     # Checks whether the string confirms to using the KiB, MiB, GiB, TiB, PiB,
     # EiB suffix for storage size as specified in config.yaml.
-    valid_suffixes = ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB"]
-    valid = any(suffix == size[-3:] for suffix in valid_suffixes)
-
-    valid = valid or size[:-3].isdigit()
-    return valid
+    valid_suffixes = ("KiB", "MiB", "GiB", "TiB", "PiB", "EiB")
+    return size[-3:] in valid_suffixes and size[:-3].isdigit()
 
 
 class CharmConfig(BaseModel):
@@ -177,6 +198,14 @@ class CharmConfig(BaseModel):
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
+        """Parse and validate dockerhub mirror URL.
+        
+        args:
+            charm: The charm instance.
+
+        Returns:
+            The URL of dockerhub mirror.
+        """
         dockerhub_mirror = charm.config.get("dockerhub-mirror") or None
 
         dockerhub_mirror_url = urlsplit(dockerhub_mirror)
@@ -252,7 +281,14 @@ class CharmConfig(BaseModel):
     @root_validator
     @classmethod
     def check_fields(cls, values: dict) -> dict:
-        """Validate the general charm configuration."""
+        """Validate the general charm configuration.
+
+        Args:
+            values: Values in the pydantic model.
+
+        Returns:
+            Modified values in the pydantic model.
+        """
         reconcile_interval = values.get("reconcile_interval")
         # By property definition, this cannot be None. Needed for mypy type check.
         assert reconcile_interval is not None, "Unreachable code"  # nosec for [B101:assert_used]
@@ -319,7 +355,14 @@ class RunnerCharmConfig(BaseModel):
     @root_validator
     @classmethod
     def check_fields(cls, values: dict) -> dict:
-        """Validate the runner configuration."""
+        """Validate the runner configuration.
+
+        Args:
+            values: Values in the pydantic model.
+
+        Returns:
+            Modified values in the pydantic model.
+        """
         virtual_machines = values.get("virtual_machines")
         resources = values.get("virtual_machine_resources")
         # By property definition, this cannot be None. Needed for mypy type check.
@@ -401,7 +444,14 @@ class ProxyConfig(BaseModel):
     @root_validator
     @classmethod
     def check_fields(cls, values: dict) -> dict:
-        """Validate the proxy configuration."""
+        """Validate the proxy configuration.
+
+        Args:
+            values: Values in the pydantic model.
+
+        Returns:
+            Modified values in the pydantic model.
+        """
         if values.get("use_aproxy") and not (values.get("http") or values.get("https")):
             raise ValueError("aproxy requires http or https to be set")
 
@@ -437,7 +487,7 @@ class UnsupportedArchitectureError(Exception):
         self.arch = arch
 
 
-def _get_supported_arch() -> ARCH:
+def _get_supported_arch() -> Arch:
     """Get current machine architecture.
 
     Raises:
@@ -449,9 +499,9 @@ def _get_supported_arch() -> ARCH:
     arch = platform.machine()
     match arch:
         case arch if arch in ARCHITECTURES_ARM64:
-            return ARCH.ARM64
+            return Arch.ARM64
         case arch if arch in ARCHITECTURES_X86:
-            return ARCH.X64
+            return Arch.X64
         case _:
             raise UnsupportedArchitectureError(arch=arch)
 
@@ -517,7 +567,7 @@ class State:
         ssh_debug_connections: SSH debug connections configuration information.
     """
 
-    arch: ARCH
+    arch: Arch
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
     charm_config: CharmConfig
