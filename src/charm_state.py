@@ -290,6 +290,8 @@ class CharmConfig(BaseModel):
         """
         reconcile_interval = cast(int, values.get("reconcile_interval"))
 
+        # The EventTimer class sets a timeout of `reconcile_interval` - 1.
+        # Therefore the `reconcile_interval` must be at least 2.
         if reconcile_interval < 2:
             logger.exception("The virtual-machines configuration must be int")
             raise ValueError(

@@ -20,10 +20,7 @@ State of the Charm.
 ## <kbd>function</kbd> `parse_github_path`
 
 ```python
-parse_github_path(
-    path_str: str,
-    runner_group: str
-) → Union[GithubOrg, GithubRepo]
+parse_github_path(path_str: str, runner_group: str) → GithubOrg | GithubRepo
 ```
 
 Parse GitHub path. 
@@ -238,7 +235,7 @@ Return the aproxy address.
 
 ---
 
-<a href="../src/charm_state.py#L438"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L440"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_fields`
 
@@ -261,7 +258,7 @@ Validate the proxy configuration.
 
 ---
 
-<a href="../src/charm_state.py#L400"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L402"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -293,7 +290,7 @@ Runner configurations for the charm.
 **Attributes:**
  
  - <b>`virtual_machines`</b>:  Number of virtual machine-based runner to spawn. 
- - <b>`virtual_machine_resources`</b>:  Hardware resource use by one virtual machine for a runner. 
+ - <b>`virtual_machine_resources`</b>:  Hardware resource used by one virtual machine for a runner. 
  - <b>`runner_storage`</b>:  Storage to be used as disk for the runner. 
 
 
@@ -301,7 +298,7 @@ Runner configurations for the charm.
 
 ---
 
-<a href="../src/charm_state.py#L352"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L354"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_fields`
 
@@ -324,7 +321,7 @@ Validate the runner configuration.
 
 ---
 
-<a href="../src/charm_state.py#L315"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L317"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -374,7 +371,7 @@ SSH connection information for debug workflow.
 
 ---
 
-<a href="../src/charm_state.py#L518"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L520"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -411,7 +408,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L571"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L573"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -444,7 +441,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L475"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L477"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
