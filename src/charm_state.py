@@ -9,7 +9,7 @@ import logging
 import platform
 from enum import Enum
 from pathlib import Path
-from typing import NamedTuple, Optional, Union
+from typing import NamedTuple, Optional, Union, cast
 from urllib.parse import urlsplit
 
 import yaml
@@ -93,7 +93,6 @@ def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
         GithubPath object representing the GitHub repository, or the GitHub
         organization with runner group information.
     """
-    path: GithubPath
     if "/" in path_str:
         paths = path_str.split("/")
         if len(paths) != 2:
@@ -162,7 +161,7 @@ def _valid_storage_size_str(size: str) -> bool:
     """
     # Checks whether the string confirms to using the KiB, MiB, GiB, TiB, PiB,
     # EiB suffix for storage size as specified in config.yaml.
-    valid_suffixes = ("KiB", "MiB", "GiB", "TiB", "PiB", "EiB")
+    valid_suffixes = {"KiB", "MiB", "GiB", "TiB", "PiB", "EiB"}
     return size[-3:] in valid_suffixes and size[:-3].isdigit()
 
 
@@ -199,7 +198,7 @@ class CharmConfig(BaseModel):
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
         """Parse and validate dockerhub mirror URL.
-        
+
         args:
             charm: The charm instance.
 
@@ -289,9 +288,7 @@ class CharmConfig(BaseModel):
         Returns:
             Modified values in the pydantic model.
         """
-        reconcile_interval = values.get("reconcile_interval")
-        # By property definition, this cannot be None. Needed for mypy type check.
-        assert reconcile_interval is not None, "Unreachable code"  # nosec for [B101:assert_used]
+        reconcile_interval = cast(int, values.get("reconcile_interval"))
 
         if reconcile_interval < 2:
             logger.exception("The virtual-machines configuration must be int")
@@ -363,11 +360,8 @@ class RunnerCharmConfig(BaseModel):
         Returns:
             Modified values in the pydantic model.
         """
-        virtual_machines = values.get("virtual_machines")
-        resources = values.get("virtual_machine_resources")
-        # By property definition, this cannot be None. Needed for mypy type check.
-        assert virtual_machines is not None, "Unreachable code"  # nosec for [B101:assert_used]
-        assert resources is not None, "Unreachable code"  # nosec for [B101:assert_used]
+        virtual_machines = cast(int, values.get("virtual_machines"))
+        resources = cast(VirtualMachineResources, values.get("virtual_machine_resources"))
 
         if virtual_machines < 0:
             raise ValueError(
