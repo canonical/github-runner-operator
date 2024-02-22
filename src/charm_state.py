@@ -79,7 +79,7 @@ class GithubOrg:
         return self.org
 
 
-GithubPath = Union[GithubOrg, GithubRepo]
+GithubPath = GithubOrg | GithubRepo
 
 
 def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
@@ -304,7 +304,7 @@ class RunnerCharmConfig(BaseModel):
 
     Attributes:
         virtual_machines: Number of virtual machine-based runner to spawn.
-        virtual_machine_resources: Hardware resource use by one virtual machine for a runner.
+        virtual_machine_resources: Hardware resource used by one virtual machine for a runner.
         runner_storage: Storage to be used as disk for the runner.
     """
 

@@ -509,7 +509,7 @@ class GithubRunnerCharm(CharmBase):
             self._stored.token = None
         if self.config["path"] != self._stored.path:
             prev_config_for_flush["path"] = parse_github_path(
-                self._stored.path, self.config["group"]
+                self._stored.path, self.state.charm_config.group
             )
             self._stored.path = self.config["path"]
         if prev_config_for_flush:
