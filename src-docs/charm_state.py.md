@@ -9,6 +9,7 @@ State of the Charm.
 ---------------
 - **ARCHITECTURES_ARM64**
 - **ARCHITECTURES_X86**
+- **OPENSTACK_CLOUDS_YAML_CONFIG_NAME**
 - **COS_AGENT_INTEGRATION_NAME**
 - **DEBUG_SSH_INTEGRATION_NAME**
 
@@ -38,7 +39,7 @@ Charm configuration.
 
 ---
 
-<a href="../src/charm_state.py#L72"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L78"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -71,7 +72,7 @@ Raised when charm config is invalid.
  
  - <b>`msg`</b>:  Explanation of the error. 
 
-<a href="../src/charm_state.py#L54"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L59"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -100,10 +101,10 @@ Proxy configuration.
 
 **Attributes:**
  
- - <b>`http_proxy`</b>:  HTTP proxy address. 
- - <b>`https_proxy`</b>:  HTTPS proxy address. 
+ - <b>`http`</b>:  HTTP proxy address. 
+ - <b>`https`</b>:  HTTPS proxy address. 
  - <b>`no_proxy`</b>:  Comma-separated list of hosts that should not be proxied. 
- - <b>`use_aproxy`</b>:  Whether aproxy should be used. 
+ - <b>`use_aproxy`</b>:  Whether aproxy should be used for the runners. 
 
 
 ---
@@ -116,7 +117,7 @@ Return the aproxy address.
 
 ---
 
-<a href="../src/charm_state.py#L140"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L173"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_fields`
 
@@ -128,7 +129,7 @@ Validate the proxy configuration.
 
 ---
 
-<a href="../src/charm_state.py#L106"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L135"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -161,7 +162,7 @@ Supported storage as runner disk.
 
 ---
 
-## <kbd>class</kbd> `SSHDebugInfo`
+## <kbd>class</kbd> `SSHDebugConnection`
 SSH connection information for debug workflow. 
 
 
@@ -178,12 +179,12 @@ SSH connection information for debug workflow.
 
 ---
 
-<a href="../src/charm_state.py#L202"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L246"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
 ```python
-from_charm(charm: CharmBase) → Optional[ForwardRef('SSHDebugInfo')]
+from_charm(charm: CharmBase) → list['SSHDebugConnection']
 ```
 
 Initialize the SSHDebugInfo from charm relation data. 
@@ -204,18 +205,19 @@ The charm state.
 
 **Attributes:**
  
- - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
- - <b>`proxy_config`</b>:  Proxy-related configuration. 
- - <b>`charm_config`</b>:  Configuration of the juju charm. 
  - <b>`arch`</b>:  The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64. 
- - <b>`ssh_debug_info`</b>:  The SSH debug connection configuration information. 
+ - <b>`charm_config`</b>:  Configuration of the juju charm. 
+ - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
+ - <b>`openstack_clouds_yaml`</b>:  The openstack clouds.yaml configuration. 
+ - <b>`proxy_config`</b>:  Proxy-related configuration. 
+ - <b>`ssh_debug_connections`</b>:  SSH debug connections configuration information. 
 
 
 
 
 ---
 
-<a href="../src/charm_state.py#L248"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L299"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -248,7 +250,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L159"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L203"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

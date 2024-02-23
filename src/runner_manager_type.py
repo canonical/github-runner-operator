@@ -4,6 +4,7 @@
 """Types used by RunnerManager class."""
 
 from dataclasses import dataclass
+from enum import Enum, auto
 from pathlib import Path
 
 import jinja2
@@ -14,6 +15,28 @@ from github_type import GitHubRunnerStatus
 from lxd import LxdClient
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner_type import GithubPath
+
+
+class FlushMode(Enum):
+    """Strategy for flushing runners.
+
+    Attributes:
+        FLUSH_IDLE: Flush only idle runners.
+        FLUSH_IDLE_WAIT_REPO_CHECK: Flush only idle runners, then wait until repo-policy-check is
+            completed for the busy runners.
+        FLUSH_BUSY: Flush busy runners.
+        FLUSH_BUSY_WAIT_REPO_CHECK: Wait until the repo-policy-check is completed before
+            flush of busy runners.
+        FORCE_FLUSH_WAIT_REPO_CHECK: Force flush the runners (remove lxd instances even on
+            gh api issues, like invalid token).
+            Wait until repo-policy-check is completed before force flush of busy runners.
+    """
+
+    FLUSH_IDLE = auto()
+    FLUSH_IDLE_WAIT_REPO_CHECK = auto()
+    FLUSH_BUSY = auto()
+    FLUSH_BUSY_WAIT_REPO_CHECK = auto()
+    FORCE_FLUSH_WAIT_REPO_CHECK = auto()
 
 
 @dataclass

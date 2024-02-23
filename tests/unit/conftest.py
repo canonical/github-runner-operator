@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+import openstack_manager
 from tests.unit.mock import MockGhapiClient, MockLxdClient, MockRepoPolicyComplianceClient
 
 
@@ -23,13 +24,15 @@ def disk_usage_mock(total_disk):
 
 @pytest.fixture(autouse=True)
 def mocks(monkeypatch, tmp_path, exec_command):
+    openstack_manager_mock = unittest.mock.MagicMock(spec=openstack_manager)
+
     monkeypatch.setattr(
         "charm.GithubRunnerCharm.service_token_path", Path(tmp_path / "mock_service_token")
     )
     monkeypatch.setattr(
         "charm.GithubRunnerCharm.repo_check_systemd_service", Path(tmp_path / "systemd_service")
     )
-    monkeypatch.setattr("charm.GithubRunnerCharm._juju_storage_mounted", lambda self: True)
+    monkeypatch.setattr("charm.openstack_manager", openstack_manager_mock)
     monkeypatch.setattr("charm.os", unittest.mock.MagicMock())
     monkeypatch.setattr("charm.shutil", unittest.mock.MagicMock())
     monkeypatch.setattr("charm.shutil.disk_usage", disk_usage_mock(30 * 1024 * 1024 * 1024))
@@ -39,6 +42,9 @@ def mocks(monkeypatch, tmp_path, exec_command):
         "charm_state.json.dumps", unittest.mock.MagicMock(return_value="{'fake':'json'}")
     )
     monkeypatch.setattr("charm_state.CHARM_STATE_PATH", Path(tmp_path / "charm_state.json"))
+    monkeypatch.setattr("charm_state.openstack_manager", openstack_manager_mock)
+    monkeypatch.setattr("event_timer.jinja2", unittest.mock.MagicMock())
+    monkeypatch.setattr("event_timer.execute_command", exec_command)
     monkeypatch.setattr(
         "firewall.Firewall.get_host_ip", unittest.mock.MagicMock(return_value="10.0.0.1")
     )

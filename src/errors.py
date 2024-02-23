@@ -150,9 +150,29 @@ class GithubClientError(Exception):
     """Base class for all github client errors."""
 
 
+class GithubApiError(GithubClientError):
+    """Represents an error when the GitHub API returns an error."""
+
+
+class TokenError(GithubClientError):
+    """Represents an error when the token is invalid or has not enough permissions."""
+
+
 class JobNotFoundError(GithubClientError):
     """Represents an error when the job could not be found on GitHub."""
 
 
 class RunnerLogsError(Exception):
     """Base class for all runner logs errors."""
+
+
+class OpenStackError(Exception):
+    """Base class for OpenStack errors."""
+
+
+class OpenStackInvalidConfigError(OpenStackError):
+    """Represents an invalid OpenStack configuration."""
+
+
+class OpenStackUnauthorizedError(OpenStackError):
+    """Represents an unauthorized connection to OpenStack."""

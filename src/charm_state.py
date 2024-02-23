@@ -11,10 +11,13 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional
 
+import yaml
 from ops import CharmBase
 from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
 from pydantic.networks import IPvAnyAddress
 
+import openstack_manager
+from errors import OpenStackInvalidConfigError
 from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
@@ -24,6 +27,8 @@ ARCHITECTURES_ARM64 = {"aarch64", "arm64"}
 ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
+
+OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
 
 
 class ARCH(str, Enum):
@@ -68,6 +73,7 @@ class CharmConfig(BaseModel):
     """
 
     runner_storage: RunnerStorage
+    openstack_clouds_yaml: dict | None
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "CharmConfig":
@@ -85,23 +91,46 @@ class CharmConfig(BaseModel):
             logger.exception("Invalid runner-storage configuration")
             raise CharmConfigInvalidError("Invalid runner-storage configuration") from err
 
-        return cls(runner_storage=runner_storage)
+        openstack_clouds_yaml_str = charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
+        if openstack_clouds_yaml_str:
+            try:
+                openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
+            except yaml.YAMLError as exc:
+                logger.error("Invalid openstack-clouds-yaml config: %s.", exc)
+                raise CharmConfigInvalidError(
+                    "Invalid openstack-clouds-yaml config. Invalid yaml."
+                ) from exc
+            if (config_type := type(openstack_clouds_yaml)) is not dict:
+                raise CharmConfigInvalidError(
+                    f"Invalid openstack config format, expected dict, got {config_type}"
+                )
+            try:
+                openstack_manager.initialize(openstack_clouds_yaml)
+            except OpenStackInvalidConfigError as exc:
+                logger.error("Invalid openstack config, %s.", exc)
+                raise CharmConfigInvalidError(
+                    "Invalid openstack config. Not able to initialize openstack integration."
+                ) from exc
+        else:
+            openstack_clouds_yaml = None
+
+        return cls(runner_storage=runner_storage, openstack_clouds_yaml=openstack_clouds_yaml)
 
 
 class ProxyConfig(BaseModel):
     """Proxy configuration.
 
     Attributes:
-        http_proxy: HTTP proxy address.
-        https_proxy: HTTPS proxy address.
+        http: HTTP proxy address.
+        https: HTTPS proxy address.
         no_proxy: Comma-separated list of hosts that should not be proxied.
-        use_aproxy: Whether aproxy should be used.
+        use_aproxy: Whether aproxy should be used for the runners.
     """
 
-    http_proxy: Optional[AnyHttpUrl]
-    https_proxy: Optional[AnyHttpUrl]
+    http: Optional[AnyHttpUrl]
+    https: Optional[AnyHttpUrl]
     no_proxy: Optional[str]
-    use_aproxy: bool
+    use_aproxy: bool = False
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "ProxyConfig":
@@ -118,9 +147,13 @@ class ProxyConfig(BaseModel):
         https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
         no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None
 
+        # there's no need for no_proxy if there's no http_proxy or https_proxy
+        if not (https_proxy or http_proxy) and no_proxy:
+            no_proxy = None
+
         return cls(
-            http_proxy=http_proxy,
-            https_proxy=https_proxy,
+            http=http_proxy,
+            https=https_proxy,
             no_proxy=no_proxy,
             use_aproxy=use_aproxy,
         )
@@ -129,7 +162,7 @@ class ProxyConfig(BaseModel):
     def aproxy_address(self) -> Optional[str]:
         """Return the aproxy address."""
         if self.use_aproxy:
-            proxy_address = self.http_proxy or self.https_proxy
+            proxy_address = self.http or self.https
             # assert is only used to make mypy happy
             assert proxy_address is not None  # nosec for [B101:assert_used]
             aproxy_address = f"{proxy_address.host}:{proxy_address.port}"
@@ -141,12 +174,23 @@ class ProxyConfig(BaseModel):
     @classmethod
     def check_fields(cls, values: dict) -> dict:
         """Validate the proxy configuration."""
-        if values.get("use_aproxy") and not (
-            values.get("http_proxy") or values.get("https_proxy")
-        ):
-            raise ValueError("aproxy requires http_proxy or https_proxy to be set")
+        if values.get("use_aproxy") and not (values.get("http") or values.get("https")):
+            raise ValueError("aproxy requires http or https to be set")
 
         return values
+
+    def __bool__(self):
+        """Return whether we have a proxy config."""
+        return bool(self.http or self.https)
+
+    class Config:  # pylint: disable=too-few-public-methods
+        """Pydantic model configuration.
+
+        Attributes:
+            allow_mutation: Whether the model is mutable.
+        """
+
+        allow_mutation = False
 
 
 class UnsupportedArchitectureError(Exception):
@@ -184,7 +228,7 @@ def _get_supported_arch() -> ARCH:
             raise UnsupportedArchitectureError(arch=arch)
 
 
-class SSHDebugInfo(BaseModel):
+class SSHDebugConnection(BaseModel):
     """SSH connection information for debug workflow.
 
     Attributes:
@@ -200,31 +244,37 @@ class SSHDebugInfo(BaseModel):
     ed25519_fingerprint: str = Field(pattern="^SHA256:.*")
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> Optional["SSHDebugInfo"]:
+    def from_charm(cls, charm: CharmBase) -> list["SSHDebugConnection"]:
         """Initialize the SSHDebugInfo from charm relation data.
 
         Args:
             charm: The charm instance.
         """
+        ssh_debug_connections: list[SSHDebugConnection] = []
         relations = charm.model.relations[DEBUG_SSH_INTEGRATION_NAME]
         if not relations or not (relation := relations[0]).units:
-            return None
-        target_unit = next(iter(relation.units))
-        relation_data = relation.data[target_unit]
-        if (
-            not (host := relation_data.get("host"))
-            or not (port := relation_data.get("port"))
-            or not (rsa_fingerprint := relation_data.get("rsa_fingerprint"))
-            or not (ed25519_fingerprint := relation_data.get("ed25519_fingerprint"))
-        ):
-            logger.warning("%s relation data not yet ready.", DEBUG_SSH_INTEGRATION_NAME)
-            return None
-        return SSHDebugInfo(
-            host=host,
-            port=port,
-            rsa_fingerprint=rsa_fingerprint,
-            ed25519_fingerprint=ed25519_fingerprint,
-        )
+            return ssh_debug_connections
+        for unit in relation.units:
+            relation_data = relation.data[unit]
+            if (
+                not (host := relation_data.get("host"))
+                or not (port := relation_data.get("port"))
+                or not (rsa_fingerprint := relation_data.get("rsa_fingerprint"))
+                or not (ed25519_fingerprint := relation_data.get("ed25519_fingerprint"))
+            ):
+                logger.warning(
+                    "%s relation data for %s not yet ready.", DEBUG_SSH_INTEGRATION_NAME, unit.name
+                )
+                continue
+            ssh_debug_connections.append(
+                SSHDebugConnection(
+                    host=host,
+                    port=port,
+                    rsa_fingerprint=rsa_fingerprint,
+                    ed25519_fingerprint=ed25519_fingerprint,
+                )
+            )
+        return ssh_debug_connections
 
 
 @dataclasses.dataclass(frozen=True)
@@ -232,18 +282,19 @@ class State:
     """The charm state.
 
     Attributes:
-        is_metrics_logging_available: Whether the charm is able to issue metrics.
-        proxy_config: Proxy-related configuration.
-        charm_config: Configuration of the juju charm.
         arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
-        ssh_debug_info: The SSH debug connection configuration information.
+        charm_config: Configuration of the juju charm.
+        is_metrics_logging_available: Whether the charm is able to issue metrics.
+        openstack_clouds_yaml: The openstack clouds.yaml configuration.
+        proxy_config: Proxy-related configuration.
+        ssh_debug_connections: SSH debug connections configuration information.
     """
 
+    arch: ARCH
+    charm_config: CharmConfig
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
-    charm_config: CharmConfig
-    arch: ARCH
-    ssh_debug_info: Optional[SSHDebugInfo]
+    ssh_debug_connections: list[SSHDebugConnection]
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "State":
@@ -292,26 +343,26 @@ class State:
             raise CharmConfigInvalidError(f"Unsupported architecture {exc.arch}") from exc
 
         try:
-            ssh_debug_info = SSHDebugInfo.from_charm(charm)
+            ssh_debug_connections = SSHDebugConnection.from_charm(charm)
         except ValidationError as exc:
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
         state = cls(
+            arch=arch,
+            charm_config=charm_config,
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
-            charm_config=charm_config,
-            arch=arch,
-            ssh_debug_info=ssh_debug_info,
+            ssh_debug_connections=ssh_debug_connections,
         )
 
         state_dict = dataclasses.asdict(state)
         # Convert pydantic object to python object serializable by json module.
         state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
         state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
-        state_dict["ssh_debug_info"] = (
-            json.loads(state_dict["ssh_debug_info"].json()) if ssh_debug_info else None
-        )
+        state_dict["ssh_debug_connections"] = [
+            debug_info.json() for debug_info in state_dict["ssh_debug_connections"]
+        ]
         json_data = json.dumps(state_dict, ensure_ascii=False)
         CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
 

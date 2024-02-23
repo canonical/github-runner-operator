@@ -25,8 +25,7 @@ Manage a group of runners according to configuration.
 __init__(
     app_name: str,
     unit: int,
-    runner_manager_config: RunnerManagerConfig,
-    proxies: Optional[ProxySetting] = None
+    runner_manager_config: RunnerManagerConfig
 ) → None
 ```
 
@@ -39,14 +38,13 @@ Construct RunnerManager object for creating and managing runners.
  - <b>`app_name`</b>:  An name for the set of runners. 
  - <b>`unit`</b>:  Unit number of the set of runners. 
  - <b>`runner_manager_config`</b>:  Configuration for the runner manager. 
- - <b>`proxies`</b>:  HTTP proxy settings. 
 
 
 
 
 ---
 
-<a href="../src/runner_manager.py#L660"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L742"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `build_runner_image`
 
@@ -66,7 +64,7 @@ Build container image in test mode, else virtual machine image.
 
 ---
 
-<a href="../src/runner_manager.py#L116"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L107"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `check_runner_bin`
 
@@ -83,12 +81,12 @@ Check if runner binary exists.
 
 ---
 
-<a href="../src/runner_manager.py#L526"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L580"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `flush`
 
 ```python
-flush(flush_busy: bool = True) → int
+flush(mode: FlushMode = <FlushMode.FLUSH_IDLE: 1>) → int
 ```
 
 Remove existing runners. 
@@ -97,7 +95,7 @@ Remove existing runners.
 
 **Args:**
  
- - <b>`flush_busy`</b>:  Whether to flush busy runners as well. 
+ - <b>`mode`</b>:  Strategy for flushing runners. 
 
 
 
@@ -106,7 +104,7 @@ Remove existing runners.
 
 ---
 
-<a href="../src/runner_manager.py#L217"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L208"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_github_info`
 
@@ -123,7 +121,7 @@ Get information on the runners from GitHub.
 
 ---
 
-<a href="../src/utilities.py#L124"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L115"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_latest_runner_bin_url`
 
@@ -148,7 +146,7 @@ The runner binary URL changes when a new version is available.
 
 ---
 
-<a href="../src/runner_manager.py#L449"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L475"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `reconcile`
 
@@ -172,7 +170,7 @@ Bring runners in line with target.
 
 ---
 
-<a href="../src/runner_manager.py#L670"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L752"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `schedule_build_runner_image`
 
@@ -184,7 +182,7 @@ Install cron job for building runner image.
 
 ---
 
-<a href="../src/utilities.py#L150"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L141"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `update_runner_bin`
 

@@ -6,9 +6,9 @@
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import NamedTuple, Optional, TypedDict, Union
+from typing import NamedTuple, Optional, Union
 
-from charm_state import SSHDebugInfo
+from charm_state import SSHDebugConnection
 
 
 @dataclass
@@ -19,13 +19,14 @@ class RunnerByHealth:
     unhealthy: tuple[str]
 
 
-class ProxySetting(TypedDict, total=False):
+@dataclass
+class ProxySetting:
     """Represent HTTP-related proxy settings."""
 
-    no_proxy: str
-    http: str
-    https: str
-    aproxy_address: str
+    no_proxy: Optional[str]
+    http: Optional[str]
+    https: Optional[str]
+    aproxy_address: Optional[str]
 
 
 @dataclass
@@ -77,7 +78,7 @@ class RunnerConfig:  # pylint: disable=too-many-instance-attributes
             name.
         proxies: HTTP(S) proxy settings.
         dockerhub_mirror: URL of dockerhub mirror to use.
-        ssh_debug_info: The SSH debug server connection metadata.
+        ssh_debug_connections: The SSH debug server connections metadata.
     """
 
     app_name: str
@@ -87,7 +88,7 @@ class RunnerConfig:  # pylint: disable=too-many-instance-attributes
     path: GithubPath
     proxies: ProxySetting
     dockerhub_mirror: str | None = None
-    ssh_debug_info: SSHDebugInfo | None = None
+    ssh_debug_connections: list[SSHDebugConnection] | None = None
 
 
 @dataclass

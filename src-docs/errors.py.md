@@ -54,6 +54,15 @@ Represents an error when the shared filesystem could not be retrieved.
 
 ---
 
+## <kbd>class</kbd> `GithubApiError`
+Represents an error when the GitHub API returns an error. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `GithubClientError`
 Base class for all github client errors. 
 
@@ -141,6 +150,33 @@ Construct the MissingConfigurationError.
 
 ## <kbd>class</kbd> `MissingRunnerBinaryError`
 Error for missing runner binary. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `OpenStackError`
+Base class for OpenStack errors. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `OpenStackInvalidConfigError`
+Represents an invalid OpenStack configuration. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `OpenStackUnauthorizedError`
+Represents an unauthorized connection to OpenStack. 
 
 
 
@@ -300,6 +336,15 @@ Construct the subprocess error.
  - <b>`return_code`</b>:  Return code of the subprocess. 
  - <b>`stdout`</b>:  Content of stdout of the subprocess. 
  - <b>`stderr`</b>:  Content of stderr of the subprocess. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `TokenError`
+Represents an error when the token is invalid or has not enough permissions. 
 
 
 
