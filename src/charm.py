@@ -509,7 +509,7 @@ class GithubRunnerCharm(CharmBase):
             self._stored.token = None
         if self.config["path"] != self._stored.path:
             prev_config_for_flush["path"] = parse_github_path(
-                self._stored.path, state.charm_config.group
+                self._stored.path, self.config["group"]
             )
             self._stored.path = self.config["path"]
         if prev_config_for_flush:
@@ -631,11 +631,7 @@ class GithubRunnerCharm(CharmBase):
 
     @catch_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:
-        """Handle the action of checking of runner state.
-
-        Args:
-            event: Action event of checking runner states.
-        """
+        """Handle the action of checking of runner state."""
         state = self._setup_state()
         runner_manager = self._get_runner_manager(state)
         if runner_manager.runner_bin_path is None:
