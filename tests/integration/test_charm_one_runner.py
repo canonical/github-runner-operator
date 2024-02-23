@@ -243,7 +243,3 @@ async def test_token_config_changed_insufficient_perms(
     await model.wait_for_idle()
 
     await wait_till_num_of_runners(unit, num=0)
-
-    # Add the runner back for the next test using the `app` deployment. Not part of the testing.
-    await app.set_config({"token": token, "virtual-machines": "1"})
-    await model.wait_for_idle(status=ACTIVE, timeout=10 * 60)

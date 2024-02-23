@@ -9,7 +9,7 @@ import logging
 import platform
 from enum import Enum
 from pathlib import Path
-from typing import NamedTuple, Optional, Union, cast
+from typing import NamedTuple, Optional, cast
 from urllib.parse import urlsplit
 
 import yaml
