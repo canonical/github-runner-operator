@@ -146,6 +146,48 @@ Initialize a new instance of the CharmConfigInvalidError exception.
 
 ---
 
+## <kbd>class</kbd> `CharmState`
+The charm state. 
+
+
+
+**Attributes:**
+ 
+ - <b>`arch`</b>:  The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64. 
+ - <b>`charm_config`</b>:  Configuration of the juju charm. 
+ - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
+ - <b>`proxy_config`</b>:  Proxy-related configuration. 
+ - <b>`ssh_debug_connections`</b>:  SSH debug connections configuration information. 
+
+
+
+
+---
+
+<a href="../src/charm_state.py#L573"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `from_charm`
+
+```python
+from_charm(charm: CharmBase) → CharmState
+```
+
+Initialize the state from charm. 
+
+
+
+**Args:**
+ 
+ - <b>`charm`</b>:  The charm instance. 
+
+
+
+**Returns:**
+ Current state of the charm. 
+
+
+---
+
 ## <kbd>class</kbd> `GithubOrg`
 Represent GitHub organization. 
 
@@ -386,48 +428,6 @@ Initialize the SSHDebugInfo from charm relation data.
 **Args:**
  
  - <b>`charm`</b>:  The charm instance. 
-
-
----
-
-## <kbd>class</kbd> `State`
-The charm state. 
-
-
-
-**Attributes:**
- 
- - <b>`arch`</b>:  The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64. 
- - <b>`charm_config`</b>:  Configuration of the juju charm. 
- - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
- - <b>`proxy_config`</b>:  Proxy-related configuration. 
- - <b>`ssh_debug_connections`</b>:  SSH debug connections configuration information. 
-
-
-
-
----
-
-<a href="../src/charm_state.py#L573"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>classmethod</kbd> `from_charm`
-
-```python
-from_charm(charm: CharmBase) → State
-```
-
-Initialize the state from charm. 
-
-
-
-**Args:**
- 
- - <b>`charm`</b>:  The charm instance. 
-
-
-
-**Returns:**
- Current state of the charm. 
 
 
 ---

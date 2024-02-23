@@ -69,7 +69,7 @@ class RunnerManager:
         self.app_name = app_name
         self.instance_name = f"{app_name}-{unit}"
         self.config = runner_manager_config
-        self.proxies = runner_manager_config.proxy_config
+        self.proxies = runner_manager_config.charm_state.proxy_config
 
         # Setting the env var to this process and any child process spawned.
         if no_proxy := self.proxies.no_proxy:
@@ -130,7 +130,7 @@ class RunnerManager:
         logger.debug("Response of runner binary list: %s", runner_bins)
 
         try:
-            arch = self.config.arch.value
+            arch = self.config.charm_state.arch.value
             return next(
                 bin for bin in runner_bins if bin["os"] == os_name and bin["architecture"] == arch
             )
@@ -258,7 +258,7 @@ class RunnerManager:
                     resources=resources,
                     binary_path=RunnerManager.runner_bin_path,
                     registration_token=registration_token,
-                    arch=self.config.arch,
+                    arch=self.config.charm_state.arch,
                 )
             )
             ts_after = time.time()
@@ -300,7 +300,7 @@ class RunnerManager:
                     resources=resources,
                     binary_path=RunnerManager.runner_bin_path,
                     registration_token=registration_token,
-                    arch=self.config.arch,
+                    arch=self.config.charm_state.arch,
                 )
             )
 
@@ -420,7 +420,7 @@ class RunnerManager:
             path=self.config.path,
             proxies=proxies,
             name=name,
-            ssh_debug_connections=self.config.ssh_debug_connections,
+            ssh_debug_connections=self.config.charm_state.ssh_debug_connections,
         )
 
     def _spawn_new_runners(self, count: int, resources: VirtualMachineResources):

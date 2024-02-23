@@ -9,7 +9,7 @@ from pathlib import Path
 
 import jinja2
 
-from charm_state import Arch, GithubPath, ProxyConfig, SSHDebugConnection
+from charm_state import CharmState, GithubPath
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
 from lxd import LxdClient
@@ -68,9 +68,7 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
         service_token: Token for accessing local service.
         lxd_storage_path: Path to be used as LXD storage.
         proxy_config: Proxy configuration.
-        arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
-        ssh_debug_connections: SSH debug connections configuration information.
-        is_metrics_logging_available: Whether the charm is able to issue metrics.
+        charm_state: The state of the charm.
         dockerhub_mirror: URL of dockerhub mirror to use.
     """
 
@@ -79,16 +77,13 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     image: str
     service_token: str
     lxd_storage_path: Path
-    proxy_config: ProxyConfig
-    arch: Arch
-    ssh_debug_connections: list[SSHDebugConnection]
-    is_metrics_logging_available: bool
+    charm_state: CharmState
     dockerhub_mirror: str | None = None
 
     @property
     def are_metrics_enabled(self) -> bool:
         """Whether metrics for the runners should be collected."""
-        return self.is_metrics_logging_available
+        return self.charm_state.is_metrics_logging_available
 
 
 @dataclass

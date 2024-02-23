@@ -280,10 +280,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
-                proxy_config=state.proxy_config,
-                arch=state.arch,
-                ssh_debug_connections=state.ssh_debug_connections,
-                is_metrics_logging_available=state.is_metrics_logging_available,
+                charm_state=state,
             ),
         )
 
@@ -309,10 +306,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
-                proxy_config=state.proxy_config,
-                arch=state.arch,
-                ssh_debug_connections=state.ssh_debug_connections,
-                is_metrics_logging_available=state.is_metrics_logging_available,
+                charm_state=state,
             ),
         )
 
@@ -370,10 +364,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
-                proxy_config=state.proxy_config,
-                arch=state.arch,
-                ssh_debug_connections=state.ssh_debug_connections,
-                is_metrics_logging_available=state.is_metrics_logging_available,
+                charm_state=state,
             ),
         )
         mock_rm.reconcile.assert_called_with(0, VirtualMachineResources(2, "7GiB", "10GiB")),
@@ -393,10 +384,7 @@ class TestCharm(unittest.TestCase):
                 image="jammy",
                 service_token=token,
                 lxd_storage_path=GithubRunnerCharm.juju_storage_path,
-                proxy_config=state.proxy_config,
-                arch=state.arch,
-                ssh_debug_connections=state.ssh_debug_connections,
-                is_metrics_logging_available=state.is_metrics_logging_available,
+                charm_state=state,
             ),
         )
         mock_rm.reconcile.assert_called_with(

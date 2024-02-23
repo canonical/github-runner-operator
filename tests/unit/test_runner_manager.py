@@ -11,7 +11,14 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 import shared_fs
-from charm_state import Arch, GithubOrg, GithubRepo, ProxyConfig, State, VirtualMachineResources
+from charm_state import (
+    Arch,
+    CharmState,
+    GithubOrg,
+    GithubRepo,
+    ProxyConfig,
+    VirtualMachineResources,
+)
 from errors import IssueMetricEventError, RunnerBinaryError
 from github_type import RunnerApplication
 from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
@@ -33,7 +40,7 @@ def token_fixture():
 
 @pytest.fixture(scope="function", name="charm_state")
 def charm_state_fixture():
-    mock = MagicMock(spec=State)
+    mock = MagicMock(spec=CharmState)
     mock.is_metrics_logging_available = False
     mock.arch = Arch.X64
     mock.ssh_debug_connections = None
@@ -73,10 +80,7 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token, charm_state):
             image="jammy",
             service_token=secrets.token_hex(16),
             lxd_storage_path=pool_path,
-            proxy_config=charm_state.proxy_config,
-            arch=charm_state.arch,
-            ssh_debug_connections=charm_state.ssh_debug_connections,
-            is_metrics_logging_available=charm_state.is_metrics_logging_available,
+            charm_state=charm_state,
         ),
     )
     runner_manager.runner_bin_path.write_bytes(TEST_BINARY)
@@ -115,13 +119,13 @@ def runner_metrics_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
         pytest.param(Arch.X64),
     ],
 )
-def test_get_latest_runner_bin_url(runner_manager: RunnerManager, arch: Arch):
+def test_get_latest_runner_bin_url(runner_manager: RunnerManager, arch: Arch, charm_state):
     """
     arrange: Nothing.
     act: Get runner bin url of existing binary.
     assert: Correct mock data returned.
     """
-    runner_manager.config.arch = arch
+    charm_state.arch = arch
     mock_gh_client = MagicMock()
     app = RunnerApplication(
         os="linux",
@@ -274,13 +278,14 @@ def test_reconcile_issues_runner_installed_event(
     runner_manager: RunnerManager,
     monkeypatch: MonkeyPatch,
     issue_event_mock: MagicMock,
+    charm_state: CharmState,
 ):
     """
     arrange: Enable issuing of metrics and mock timestamps.
     act: Reconcile to create a runner.
     assert: The expected event is issued.
     """
-    runner_manager.config.is_metrics_logging_available = True
+    charm_state.is_metrics_logging_available = True
     t_mock = MagicMock(return_value=12345)
     monkeypatch.setattr(RUNNER_MANAGER_TIME_MODULE, t_mock)
 
@@ -330,6 +335,7 @@ def test_reconcile_issues_reconciliation_metric_event(
     monkeypatch: MonkeyPatch,
     issue_event_mock: MagicMock,
     runner_metrics: MagicMock,
+    charm_state: CharmState,
 ):
     """
     arrange:
@@ -342,7 +348,7 @@ def test_reconcile_issues_reconciliation_metric_event(
     assert: The expected event is issued. We expect two idle runners and one crashed runner
      to be reported.
     """
-    runner_manager.config.is_metrics_logging_available = True
+    charm_state.is_metrics_logging_available = True
     t_mock = MagicMock(return_value=12345)
     monkeypatch.setattr(RUNNER_MANAGER_TIME_MODULE, t_mock)
     runner_metrics.extract.return_value = (MagicMock() for _ in range(2))
@@ -408,6 +414,7 @@ def test_reconcile_places_timestamp_in_newly_created_runner(
     monkeypatch: MonkeyPatch,
     shared_fs: MagicMock,
     tmp_path: Path,
+    charm_state: CharmState,
 ):
     """
     arrange: Enable issuing of metrics, mock timestamps and
@@ -415,7 +422,7 @@ def test_reconcile_places_timestamp_in_newly_created_runner(
     act: Reconcile to create a runner.
     assert: The expected timestamp is placed in the shared filesystem.
     """
-    runner_manager.config.is_metrics_logging_available = True
+    charm_state.is_metrics_logging_available = True
     t_mock = MagicMock(return_value=12345)
     monkeypatch.setattr(RUNNER_MANAGER_TIME_MODULE, t_mock)
     runner_shared_fs = tmp_path / "runner_fs"

@@ -36,10 +36,10 @@ import openstack_manager
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     CharmConfigInvalidError,
+    CharmState,
     GithubPath,
     ProxyConfig,
     RunnerStorage,
-    State,
     VirtualMachineResources,
     parse_github_path,
 )
@@ -199,10 +199,10 @@ class GithubRunnerCharm(CharmBase):
         )
         self.framework.observe(self.on.update_status, self._on_update_status)
 
-    def _setup_state(self) -> State:
+    def _setup_state(self) -> CharmState:
         """Set up the charm state."""
         try:
-            return State.from_charm(self)
+            return CharmState.from_charm(self)
         except CharmConfigInvalidError as exc:
             raise ConfigurationError(exc.msg) from exc
 
@@ -287,7 +287,7 @@ class GithubRunnerCharm(CharmBase):
             raise
 
     def _get_runner_manager(
-        self, state: State, token: str | None = None, path: GithubPath | None = None
+        self, state: CharmState, token: str | None = None, path: GithubPath | None = None
     ) -> RunnerManager:
         """Get a RunnerManager instance.
 
@@ -330,10 +330,7 @@ class GithubRunnerCharm(CharmBase):
                 image="jammy",
                 service_token=self.service_token,
                 lxd_storage_path=lxd_storage_path,
-                proxy_config=state.proxy_config,
-                arch=state.arch,
-                ssh_debug_connections=state.ssh_debug_connections,
-                is_metrics_logging_available=state.is_metrics_logging_available,
+                charm_state=state,
                 dockerhub_mirror=state.charm_config.dockerhub_mirror,
             ),
         )
@@ -932,7 +929,7 @@ class GithubRunnerCharm(CharmBase):
             self.service_token_path.write_text(service_token, encoding="utf-8")
         return service_token
 
-    def _refresh_firewall(self, state: State) -> None:
+    def _refresh_firewall(self, state: CharmState) -> None:
         """Refresh the firewall configuration and rules.
 
         Args:

@@ -16,9 +16,9 @@ from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     Arch,
     CharmConfigInvalidError,
+    CharmState,
     ProxyConfig,
     SSHDebugConnection,
-    State,
 )
 from tests.unit.factories import MockGithubRunnerCharmFactory
 
@@ -58,7 +58,7 @@ def test_metrics_logging_available_true():
         DEBUG_SSH_INTEGRATION_NAME: [],
     }
 
-    state = State.from_charm(mock_charm)
+    state = CharmState.from_charm(mock_charm)
 
     assert state.is_metrics_logging_available
 
@@ -71,7 +71,7 @@ def test_metrics_logging_available_false():
     """
     mock_charm = MockGithubRunnerCharmFactory()
 
-    state = State.from_charm(mock_charm)
+    state = CharmState.from_charm(mock_charm)
 
     assert not state.is_metrics_logging_available
 
@@ -86,7 +86,7 @@ def test_aproxy_proxy_missing():
     mock_charm.config["experimental-use-aproxy"] = "true"
 
     with pytest.raises(CharmConfigInvalidError) as exc:
-        State.from_charm(mock_charm)
+        CharmState.from_charm(mock_charm)
     assert "Invalid proxy configuration" in str(exc.value)
 
 
@@ -101,7 +101,7 @@ def test_proxy_invalid_format():
     url_without_scheme = "proxy.example.com:8080"
     with patch.dict(os.environ, {"JUJU_CHARM_HTTP_PROXY": url_without_scheme}):
         with pytest.raises(CharmConfigInvalidError) as err:
-            State.from_charm(mock_charm)
+            CharmState.from_charm(mock_charm)
         assert "Invalid proxy configuration" in err.value.msg
 
 
@@ -139,7 +139,7 @@ def test_from_charm_invalid_arch(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(platform, "machine", mock_machine)
 
     with pytest.raises(CharmConfigInvalidError) as err:
-        State.from_charm(mock_charm)
+        CharmState.from_charm(mock_charm)
     assert "Unsupported architecture" in err.value.msg
 
 
@@ -167,7 +167,7 @@ def test_from_charm_arch(
     mock_machine.return_value = arch
     monkeypatch.setattr(platform, "machine", mock_machine)
 
-    state = State.from_charm(mock_charm)
+    state = CharmState.from_charm(mock_charm)
 
     assert state.arch == expected_arch
 
@@ -231,7 +231,7 @@ def test_from_charm_ssh_debug_info_error(invalid_relation_data: dict):
     mock_charm.model.relations[DEBUG_SSH_INTEGRATION_NAME] = [mock_relation]
 
     with pytest.raises(CharmConfigInvalidError) as err:
-        State.from_charm(mock_charm)
+        CharmState.from_charm(mock_charm)
     assert "Invalid SSH Debug info" in err.value.msg
 
 
@@ -258,7 +258,7 @@ def test_from_charm_ssh_debug_info():
     }
     mock_charm.model.relations[DEBUG_SSH_INTEGRATION_NAME] = [mock_relation]
 
-    ssh_debug_connections = State.from_charm(mock_charm).ssh_debug_connections
+    ssh_debug_connections = CharmState.from_charm(mock_charm).ssh_debug_connections
     assert str(ssh_debug_connections[0].host) == mock_relation_data["host"]
     assert str(ssh_debug_connections[0].port) == mock_relation_data["port"]
     assert ssh_debug_connections[0].rsa_fingerprint == mock_relation_data["rsa_fingerprint"]
@@ -277,7 +277,7 @@ def test_invalid_runner_storage():
     mock_charm.config["runner-storage"] = "not-exist"
 
     with pytest.raises(CharmConfigInvalidError) as exc:
-        State.from_charm(mock_charm)
+        CharmState.from_charm(mock_charm)
     assert "Invalid runner-storage" in str(exc.value)
 
 
@@ -289,7 +289,7 @@ def test_openstack_config(clouds_yaml: dict):
     """
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = json.dumps(clouds_yaml)
-    state = State.from_charm(mock_charm)
+    state = CharmState.from_charm(mock_charm)
     assert state.charm_config.openstack_clouds_yaml == clouds_yaml
 
 
@@ -305,7 +305,7 @@ def test_openstack_config_invalid_yaml():
     )
 
     with pytest.raises(CharmConfigInvalidError) as exc:
-        State.from_charm(mock_charm)
+        CharmState.from_charm(mock_charm)
     assert "Invalid openstack-clouds-yaml config. Invalid yaml." in str(exc.value)
 
 
@@ -335,5 +335,5 @@ def test_openstack_config_invalid_format(clouds_yaml: Any, expected_err_msg: str
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = clouds_yaml
     with pytest.raises(CharmConfigInvalidError) as exc:
-        State.from_charm(mock_charm)
+        CharmState.from_charm(mock_charm)
     assert expected_err_msg in str(exc)

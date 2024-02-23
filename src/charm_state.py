@@ -552,7 +552,7 @@ class SSHDebugConnection(BaseModel):
 
 
 @dataclasses.dataclass(frozen=True)
-class State:
+class CharmState:
     """The charm state.
 
     Attributes:
@@ -571,7 +571,7 @@ class State:
     ssh_debug_connections: list[SSHDebugConnection]
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "State":
+    def from_charm(cls, charm: CharmBase) -> "CharmState":
         """Initialize the state from charm.
 
         Args:
