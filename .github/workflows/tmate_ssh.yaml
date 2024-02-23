@@ -4,7 +4,7 @@ on: pull_request
 
 jobs:
   tmate-action:
-    runs-on: [self-hosted, linux, x64]
+    runs-on: [self-hosted, large]
     steps:
     - name: Not on Monday or Wednesday
       run: | 
