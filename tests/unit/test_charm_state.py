@@ -1,5 +1,5 @@
 # Copyright 2024 Canonical Ltd.
-#  See LICENSE file for licensing details.
+# See LICENSE file for licensing details.
 import json
 import os
 import platform
@@ -11,31 +11,16 @@ import ops
 import pytest
 
 import charm_state
-from charm import GithubRunnerCharm
 from charm_state import (
-    ARCH,
     COS_AGENT_INTEGRATION_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
+    Arch,
     CharmConfigInvalidError,
     ProxyConfig,
     SSHDebugConnection,
     State,
 )
-from errors import OpenStackInvalidConfigError
-
-
-@pytest.fixture(name="charm")
-def charm() -> MagicMock:
-    """Mock a charm instance with no relation data and minimal configuration.
-
-    Returns:
-        MagicMock: A mocked charm instance.
-    """
-    mock_charm = MagicMock(spec=GithubRunnerCharm)
-    mock_charm.config = {"runner-storage": "juju-storage"}
-    mock_charm.model.relations.__getitem__.return_value = []
-
-    return mock_charm
+from tests.unit.factories import MockGithubRunnerCharmFactory
 
 
 @pytest.fixture(name="clouds_yaml")
@@ -61,57 +46,63 @@ def clouds_yaml() -> dict:
     }
 
 
-def test_metrics_logging_available_true(charm: MagicMock):
+def test_metrics_logging_available_true():
     """
     arrange: Setup mocked charm to return an integration.
     act: Retrieve state from charm.
     assert: metrics_logging_available returns True.
     """
-    charm.model.relations = {
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.model.relations = {
         COS_AGENT_INTEGRATION_NAME: MagicMock(spec=ops.Relation),
-        DEBUG_SSH_INTEGRATION_NAME: None,
+        DEBUG_SSH_INTEGRATION_NAME: [],
     }
 
-    state = State.from_charm(charm)
+    state = State.from_charm(mock_charm)
 
     assert state.is_metrics_logging_available
 
 
-def test_metrics_logging_available_false(charm: MagicMock):
+def test_metrics_logging_available_false():
     """
     arrange: Setup mocked charm to return no integration.
     act: Retrieve state from charm.
     assert: metrics_logging_available returns False.
     """
+    mock_charm = MockGithubRunnerCharmFactory()
 
-    state = State.from_charm(charm)
+    state = State.from_charm(mock_charm)
 
     assert not state.is_metrics_logging_available
 
 
-def test_aproxy_proxy_missing(charm: MagicMock):
+def test_aproxy_proxy_missing():
     """
     arrange: Setup mocked charm to use aproxy without configured http proxy.
     act: Retrieve state from charm.
     assert: CharmConfigInvalidError is raised.
     """
-    charm.config["experimental-use-aproxy"] = "true"
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config["experimental-use-aproxy"] = "true"
 
     with pytest.raises(CharmConfigInvalidError) as exc:
-        State.from_charm(charm)
+        State.from_charm(mock_charm)
     assert "Invalid proxy configuration" in str(exc.value)
 
 
-def test_proxy_invalid_format(charm: MagicMock):
+def test_proxy_invalid_format():
     """
     arrange: Setup mocked charm and invalid juju proxy settings.
     act: Retrieve state from charm.
     assert: CharmConfigInvalidError is raised.
     """
+    mock_charm = MockGithubRunnerCharmFactory()
+
     url_without_scheme = "proxy.example.com:8080"
     with patch.dict(os.environ, {"JUJU_CHARM_HTTP_PROXY": url_without_scheme}):
-        with pytest.raises(CharmConfigInvalidError):
-            State.from_charm(charm)
+        with pytest.raises(CharmConfigInvalidError) as err:
+            State.from_charm(mock_charm)
+        assert "Invalid proxy configuration" in err.value.msg
 
 
 def test_proxy_config_bool():
@@ -135,54 +126,62 @@ def test_proxy_config_bool():
     assert not ProxyConfig()
 
 
-def test_from_charm_invalid_arch(monkeypatch: pytest.MonkeyPatch, charm: MagicMock):
+def test_from_charm_invalid_arch(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Given a monkeypatched platform.machine that returns an unsupported architecture type.
     act: when _get_supported_arch is called.
     assert: a charm config invalid error is raised.
     """
+    mock_charm = MockGithubRunnerCharmFactory()
+
     mock_machine = MagicMock(spec=platform.machine)
     mock_machine.return_value = "i686"  # 32 bit is unsupported
     monkeypatch.setattr(platform, "machine", mock_machine)
 
-    with pytest.raises(CharmConfigInvalidError):
-        State.from_charm(charm)
+    with pytest.raises(CharmConfigInvalidError) as err:
+        State.from_charm(mock_charm)
+    assert "Unsupported architecture" in err.value.msg
 
 
 @pytest.mark.parametrize(
     "arch, expected_arch",
     [
-        pytest.param("aarch64", ARCH.ARM64),
-        pytest.param("arm64", ARCH.ARM64),
-        pytest.param("x86_64", ARCH.X64),
+        pytest.param("aarch64", Arch.ARM64),
+        pytest.param("arm64", Arch.ARM64),
+        pytest.param("x86_64", Arch.X64),
     ],
 )
 def test_from_charm_arch(
-    monkeypatch: pytest.MonkeyPatch, arch: str, expected_arch: ARCH, charm: MagicMock
+    monkeypatch: pytest.MonkeyPatch,
+    arch: str,
+    expected_arch: Arch,
 ):
     """
     arrange: Given a monkeypatched platform.machine that returns parametrized architectures.
     act: when _get_supported_arch is called.
     assert: a correct architecture is inferred.
     """
+    mock_charm = MockGithubRunnerCharmFactory()
+
     mock_machine = MagicMock(spec=platform.machine)
     mock_machine.return_value = arch
     monkeypatch.setattr(platform, "machine", mock_machine)
 
-    state = State.from_charm(charm)
+    state = State.from_charm(mock_charm)
 
     assert state.arch == expected_arch
 
 
-def test_ssh_debug_info_from_charm_no_relations(charm: MagicMock):
+def test_ssh_debug_info_from_charm_no_relations():
     """
     arrange: given a mocked charm that has no ssh-debug relations.
     act: when SSHDebug.from_charm is called.
     assert: None is returned.
     """
-    charm.model.relations = {DEBUG_SSH_INTEGRATION_NAME: []}
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.model.relations = {DEBUG_SSH_INTEGRATION_NAME: []}
 
-    assert not SSHDebugConnection.from_charm(charm)
+    assert not SSHDebugConnection.from_charm(mock_charm)
 
 
 @pytest.mark.parametrize(
@@ -217,33 +216,32 @@ def test_ssh_debug_info_from_charm_no_relations(charm: MagicMock):
         ),
     ],
 )
-def test_from_charm_ssh_debug_info_error(invalid_relation_data: dict, charm: MagicMock):
+def test_from_charm_ssh_debug_info_error(invalid_relation_data: dict):
     """
     arrange: Given an mocked charm that has invalid ssh-debug relation data.
     act: when from_charm is called.
     assert: CharmConfigInvalidError is raised.
     """
+    mock_charm = MockGithubRunnerCharmFactory()
     mock_relation = MagicMock(spec=ops.Relation)
     mock_unit = MagicMock(spec=ops.Unit)
     mock_unit.name = "tmate-ssh-server-operator/0"
     mock_relation.units = {mock_unit}
     mock_relation.data = {mock_unit: invalid_relation_data}
-    charm.model.relations = {DEBUG_SSH_INTEGRATION_NAME: [mock_relation]}
-    charm.app.planned_units.return_value = 1
-    charm.app.name = "github-runner-operator"
-    charm.unit.name = "github-runner-operator/0"
+    mock_charm.model.relations[DEBUG_SSH_INTEGRATION_NAME] = [mock_relation]
 
-    with pytest.raises(CharmConfigInvalidError) as exc:
-        State.from_charm(charm)
-    assert "Invalid SSH Debug info" in str(exc.value)
+    with pytest.raises(CharmConfigInvalidError) as err:
+        State.from_charm(mock_charm)
+    assert "Invalid SSH Debug info" in err.value.msg
 
 
-def test_from_charm_ssh_debug_info(charm: MagicMock):
+def test_from_charm_ssh_debug_info():
     """
     arrange: Given an mocked charm that has invalid ssh-debug relation data.
     act: when from_charm is called.
     assert: ssh_debug_info data has been correctly parsed.
     """
+    mock_charm = MockGithubRunnerCharmFactory()
     mock_relation = MagicMock(spec=ops.Relation)
     mock_unit = MagicMock(spec=ops.Unit)
     mock_unit.name = "tmate-ssh-server-operator/0"
@@ -258,15 +256,9 @@ def test_from_charm_ssh_debug_info(charm: MagicMock):
             }
         )
     }
-    charm.model.relations = {
-        DEBUG_SSH_INTEGRATION_NAME: [mock_relation],
-        COS_AGENT_INTEGRATION_NAME: None,
-    }
-    charm.app.planned_units.return_value = 1
-    charm.app.name = "github-runner-operator"
-    charm.unit.name = "github-runner-operator/0"
+    mock_charm.model.relations[DEBUG_SSH_INTEGRATION_NAME] = [mock_relation]
 
-    ssh_debug_connections = State.from_charm(charm).ssh_debug_connections
+    ssh_debug_connections = State.from_charm(mock_charm).ssh_debug_connections
     assert str(ssh_debug_connections[0].host) == mock_relation_data["host"]
     assert str(ssh_debug_connections[0].port) == mock_relation_data["port"]
     assert ssh_debug_connections[0].rsa_fingerprint == mock_relation_data["rsa_fingerprint"]
@@ -275,40 +267,45 @@ def test_from_charm_ssh_debug_info(charm: MagicMock):
     )
 
 
-def test_invalid_runner_storage(charm: MagicMock):
+def test_invalid_runner_storage():
     """
-    arrange: Setup mocked charm with juju-storage as runner-storage.
-    act: Change the runner-storage config to memory.
+    arrange: Setup mocked charm.
+    act: Set runner-storage to a non-existing option.
     assert: Configuration Error raised.
     """
-    charm.config = {"runner-storage": "not-exist"}
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config["runner-storage"] = "not-exist"
 
     with pytest.raises(CharmConfigInvalidError) as exc:
-        State.from_charm(charm)
+        State.from_charm(mock_charm)
     assert "Invalid runner-storage" in str(exc.value)
 
 
-def test_openstack_config(charm: MagicMock, clouds_yaml: dict):
+def test_openstack_config(clouds_yaml: dict):
     """
     arrange: Setup mocked charm with openstack-clouds-yaml config.
     act: Retrieve state from charm.
     assert: openstack-clouds-yaml config is parsed correctly.
     """
-    charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = json.dumps(clouds_yaml)
-    state = State.from_charm(charm)
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = json.dumps(clouds_yaml)
+    state = State.from_charm(mock_charm)
     assert state.charm_config.openstack_clouds_yaml == clouds_yaml
 
 
-def test_openstack_config_invalid_yaml(charm: MagicMock):
+def test_openstack_config_invalid_yaml():
     """
     arrange: Setup mocked charm with openstack-clouds-yaml config containing invalid yaml.
     act: Retrieve state from charm.
     assert: CharmConfigInvalidError is raised.
     """
-    charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = "invalid_yaml\n-test: test\n"
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = (
+        "invalid_yaml\n-test: test\n"
+    )
 
     with pytest.raises(CharmConfigInvalidError) as exc:
-        State.from_charm(charm)
+        State.from_charm(mock_charm)
     assert "Invalid openstack-clouds-yaml config. Invalid yaml." in str(exc.value)
 
 
@@ -329,33 +326,14 @@ def test_openstack_config_invalid_yaml(charm: MagicMock):
         ),
     ],
 )
-def test_openstack_config_invalid_format(
-    charm: MagicMock, clouds_yaml: Any, expected_err_msg: str
-):
+def test_openstack_config_invalid_format(clouds_yaml: Any, expected_err_msg: str):
     """
     arrange: Given a charm with openstack-clouds-yaml of types other than dict.
     act: when charm state is initialized.
     assert:
     """
-    charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = clouds_yaml
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = clouds_yaml
     with pytest.raises(CharmConfigInvalidError) as exc:
-        State.from_charm(charm)
-
-    assert expected_err_msg in str(exc.value)
-
-
-def test_openstack_config_invalid_config(charm: MagicMock, clouds_yaml):
-    """
-    arrange: Setup mocked charm with openstack-clouds-yaml and openstack_manager
-     to raise OpenStackInvalidConfigError.
-    act: Retrieve state from charm.
-    assert: CharmConfigInvalidError is raised.
-    """
-    charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = json.dumps(clouds_yaml)
-    charm_state.openstack_manager.initialize.side_effect = OpenStackInvalidConfigError("invalid")
-
-    with pytest.raises(CharmConfigInvalidError) as exc:
-        State.from_charm(charm)
-    assert "Invalid openstack config. Not able to initialize openstack integration." in str(
-        exc.value
-    )
+        State.from_charm(mock_charm)
+    assert expected_err_msg in str(exc)

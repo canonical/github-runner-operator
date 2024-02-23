@@ -24,6 +24,7 @@ import metrics
 import runner_logs
 import runner_metrics
 import shared_fs
+from charm_state import VirtualMachineResources
 from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
 from github_client import GithubClient
 from github_type import RunnerApplication, SelfHostedRunner
@@ -33,7 +34,7 @@ from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, R
 from runner_manager_type import FlushMode, RunnerInfo, RunnerManagerClients, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import ProxySetting as RunnerProxySetting
-from runner_type import RunnerByHealth, VirtualMachineResources
+from runner_type import RunnerByHealth
 from utilities import execute_command, retry, set_env_var
 
 REMOVED_RUNNER_LOG_STR = "Removed runner: %s"
@@ -68,7 +69,7 @@ class RunnerManager:
         self.app_name = app_name
         self.instance_name = f"{app_name}-{unit}"
         self.config = runner_manager_config
-        self.proxies = runner_manager_config.charm_state.proxy_config
+        self.proxies = runner_manager_config.proxy_config
 
         # Setting the env var to this process and any child process spawned.
         if no_proxy := self.proxies.no_proxy:
@@ -129,7 +130,7 @@ class RunnerManager:
         logger.debug("Response of runner binary list: %s", runner_bins)
 
         try:
-            arch = self.config.charm_state.arch.value
+            arch = self.config.arch.value
             return next(
                 bin for bin in runner_bins if bin["os"] == os_name and bin["architecture"] == arch
             )
@@ -257,7 +258,7 @@ class RunnerManager:
                     resources=resources,
                     binary_path=RunnerManager.runner_bin_path,
                     registration_token=registration_token,
-                    arch=self.config.charm_state.arch,
+                    arch=self.config.arch,
                 )
             )
             ts_after = time.time()
@@ -299,7 +300,7 @@ class RunnerManager:
                     resources=resources,
                     binary_path=RunnerManager.runner_bin_path,
                     registration_token=registration_token,
-                    arch=self.config.charm_state.arch,
+                    arch=self.config.arch,
                 )
             )
 
@@ -419,7 +420,7 @@ class RunnerManager:
             path=self.config.path,
             proxies=proxies,
             name=name,
-            ssh_debug_connections=self.config.charm_state.ssh_debug_connections,
+            ssh_debug_connections=self.config.ssh_debug_connections,
         )
 
     def _spawn_new_runners(self, count: int, resources: VirtualMachineResources):

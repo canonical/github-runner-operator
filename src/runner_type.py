@@ -6,9 +6,9 @@
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import NamedTuple, Optional, Union
+from typing import Optional
 
-from charm_state import SSHDebugConnection
+from charm_state import GithubPath, SSHDebugConnection
 
 
 @dataclass
@@ -27,41 +27,6 @@ class ProxySetting:
     http: Optional[str]
     https: Optional[str]
     aproxy_address: Optional[str]
-
-
-@dataclass
-class GithubRepo:
-    """Represent GitHub repository."""
-
-    owner: str
-    repo: str
-
-    def path(self) -> str:
-        """Return a string representing the path."""
-        return f"{self.owner}/{self.repo}"
-
-
-@dataclass
-class GithubOrg:
-    """Represent GitHub organization."""
-
-    org: str
-    group: str
-
-    def path(self) -> str:
-        """Return a string representing the path."""
-        return self.org
-
-
-GithubPath = Union[GithubOrg, GithubRepo]
-
-
-class VirtualMachineResources(NamedTuple):
-    """Virtual machine resource configuration."""
-
-    cpu: int
-    memory: str
-    disk: str
 
 
 @dataclass

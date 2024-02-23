@@ -76,7 +76,10 @@ Configuration of runner manager.
  - <b>`image`</b>:  Name of the image for creating LXD instance. 
  - <b>`service_token`</b>:  Token for accessing local service. 
  - <b>`lxd_storage_path`</b>:  Path to be used as LXD storage. 
- - <b>`charm_state`</b>:  The state of the charm. 
+ - <b>`proxy_config`</b>:  Proxy configuration. 
+ - <b>`arch`</b>:  The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64. 
+ - <b>`ssh_debug_connections`</b>:  SSH debug connections configuration information. 
+ - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
  - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
 
 

@@ -117,37 +117,6 @@ Error for executing LXD actions.
 
 ---
 
-## <kbd>class</kbd> `MissingConfigurationError`
-Error for missing juju configuration. 
-
-
-
-**Attributes:**
- 
- - <b>`configs`</b>:  The missing configurations. 
-
-<a href="../src/errors.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>function</kbd> `__init__`
-
-```python
-__init__(configs: 'list[str]')
-```
-
-Construct the MissingConfigurationError. 
-
-
-
-**Args:**
- 
- - <b>`configs`</b>:  The missing configurations. 
-
-
-
-
-
----
-
 ## <kbd>class</kbd> `MissingRunnerBinaryError`
 Error for missing runner binary. 
 
@@ -313,7 +282,7 @@ Error for Subprocess calls.
  - <b>`stdout`</b>:  Content of stdout of the subprocess. 
  - <b>`stderr`</b>:  Content of stderr of the subprocess. 
 
-<a href="../src/errors.py#L82"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L64"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
