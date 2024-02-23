@@ -536,6 +536,10 @@ class GithubRunnerCharm(CharmBase):
         self._refresh_firewall()
 
         if self._state.charm_config.openstack_clouds_yaml:
+            image = openstack_manager.build_image(
+                self._state.charm_config.openstack_clouds_yaml, self.proxies
+            )
+            logger.info("Image successfully built: %s", image)
             # Test out openstack integration and then go
             # into BlockedStatus as it is not supported yet
             projects = openstack_manager.list_projects(

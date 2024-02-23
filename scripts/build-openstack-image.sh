@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+
+# Copyright 2024 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+set -e
+
+# Proxy args
+HTTP_PROXY="$1"
+HTTPS_PROXY="$2"
+NO_PROXY="$3"
+
+# cleanup any existing mounts
+cleanup() {
+    sudo umount /mnt/ubuntu-image/dev/ || true
+    sudo umount /mnt/ubuntu-image/proc/ || true
+    sudo umount /mnt/ubuntu-image/sys/ || true
+    sudo umount /mnt/ubuntu-image || true
+    sudo qemu-nbd --disconnect /dev/nbd0
+}
+
+if [[ -n "$HTTP_PROXY" ]]; then
+    /usr/bin/echo "HTTP_PROXY=$HTTP_PROXY" >> /etc/environment
+    /usr/bin/echo "http_proxy=$HTTP_PROXY" >> /etc/environment
+    /usr/bin/echo "Acquire::http::Proxy \"$HTTP_PROXY\";" >> /etc/apt/apt.conf
+fi
+if [[ -n "$HTTPS_PROXY" ]]; then
+    /usr/bin/echo "HTTPS_PROXY=$HTTPS_PROXY" >> /etc/environment
+    /usr/bin/echo "https_proxy=$HTTPS_PROXY" >> /etc/environment
+    /usr/bin/echo "Acquire::https::Proxy \"$HTTPS_PROXY\";" >> /etc/apt/apt.conf
+fi
+if [[ -n "$NO_PROXY" ]]; then
+    /usr/bin/echo "NO_PROXY=$NO_PROXY" >> /etc/environment
+    /usr/bin/echo "no_proxy=$NO_PROXY" >> /etc/environment
+fi
+
+# Architecture args
+ARCH=$(uname -m)
+if [[ $ARCH == 'aarch64' ]]; then
+    BIN_ARCH="arm64"
+elif [[ $ARCH == 'arm64' ]]; then
+    BIN_ARCH="arm64"
+elif [[ $ARCH == 'x86_64' ]]; then
+    BIN_ARCH="amd64"
+else
+    echo "Unsupported CPU architecture: $ARCH"
+    return 1
+fi
+
+# required to unpack image
+sudo DEBIAN_FRONTEND=noninteractive apt-get install qemu-utils -y
+
+# enable network block device
+sudo modprobe nbd
+
+# cleanup any existing mounts
+cleanup
+
+sudo wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-$BIN_ARCH.img \
+    -O jammy-server-cloudimg-$BIN_ARCH.img
+
+# resize image - installing dependencies requires more disk space
+sudo qemu-img resize jammy-server-cloudimg-$BIN_ARCH.img +1G
+
+# mount nbd
+echo "Connecting network block device to image"
+sudo qemu-nbd --connect=/dev/nbd0 jammy-server-cloudimg-$BIN_ARCH.img
+sudo mkdir -p /mnt/ubuntu-image
+sudo mount -o rw /dev/nbd0p1 /mnt/ubuntu-image
+
+# mount required system dirs
+echo "Mounting sys dirs"
+sudo mount --bind /dev/ /mnt/ubuntu-image/dev/
+sudo mount --bind /proc/ /mnt/ubuntu-image/proc/
+sudo mount --bind /sys/ /mnt/ubuntu-image/sys/
+sudo rm /mnt/ubuntu-image/etc/resolv.conf -f
+sudo cp /etc/resolv.conf /mnt/ubuntu-image/etc/resolv.conf
+
+# resize mount
+echo "Resizing mounts"
+sudo growpart /dev/nbd0 1 # grow partition size to available space
+sudo resize2fs /dev/nbd0p1 # resize fs accordingly
+
+# chroot and install dependencies
+echo "Installing dependencies in chroot env"
+sudo chroot /mnt/ubuntu-image/ <<EOF
+# Commands within the chroot environment
+df -h # print disk free space
+DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get update -yq
+DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get upgrade -yq
+DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget unzip gh -yq
+if [[ -n "$HTTP_PROXY" ]]; then
+    /snap/bin/lxc exec builder -- /usr/bin/npm config set proxy "$HTTP_PROXY"
+fi
+if [[ -n "$HTTPS_PROXY" ]]; then
+    /snap/bin/lxc exec builder -- /usr/bin/npm config set https-proxy "$HTTPS_PROXY"
+fi
+/usr/bin/npm install --global yarn 
+/usr/sbin/groupadd microk8s
+/usr/sbin/usermod -aG microk8s ubuntu
+/usr/sbin/usermod -aG docker ubuntu
+/usr/sbin/iptables -I DOCKER-USER -j ACCEPT
+
+# Reduce image size
+/usr/bin/npm cache clean --force
+DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get clean
+
+# Download and verify checksum of yq
+/usr/bin/wget "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_$BIN_ARCH" -O "yq_linux_$BIN_ARCH"
+/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums -O checksums
+/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums_hashes_order -O checksums_hashes_order
+/usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/extract-checksum.sh -O extract-checksum.sh
+/usr/bin/bash extract-checksum.sh SHA-256 "yq_linux_$BIN_ARCH" | /usr/bin/awk '{print \$2,\$1}' | /usr/bin/sha256sum -c | /usr/bin/grep OK
+chmod 755 yq_linux_$BIN_ARCH
+mv yq_linux_$BIN_ARCH /usr/bin/yq
+EOF
+
+# sync & cleanup
+echo "Syncing"
+sudo sync
+cleanup

@@ -4,19 +4,28 @@
 """Module for handling interactions with OpenStack."""
 import logging
 from pathlib import Path
+from subprocess import SubprocessError
+from typing import Optional
 
 import keystoneauth1.exceptions.http
 import openstack
 import openstack.connection
 import openstack.exceptions
+import openstack.image.v2.image
 import yaml
+from openstack.exceptions import OpenStackCloudException
 from openstack.identity.v3.project import Project
 
 from errors import OpenStackInvalidConfigError, OpenStackUnauthorizedError
+from runner_type import ProxySetting
+from utilities import execute_command
 
 logger = logging.getLogger(__name__)
 
 CLOUDS_YAML_PATH = Path(Path.home() / ".config/openstack/clouds.yaml")
+IMAGE_PATH = Path("jammy-server-cloudimg-amd64.img")
+IMAGE_NAME = "github-runner-jammy"
+BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 
 
 def _validate_cloud_config(cloud_config: dict) -> None:
@@ -113,3 +122,58 @@ def list_projects(cloud_config: dict) -> list[Project]:
         ) from exc
 
     return projects
+
+
+class ImageBuildError(Exception):
+    """Exception representing an error during image build process."""
+
+
+def _build_image_command(proxies: Optional[ProxySetting] = None) -> list[str]:
+    """Get command for building runner image.
+
+    Returns:
+        Command to execute to build runner image.
+    """
+    if not proxies:
+        proxies = ProxySetting()
+
+    http_proxy = proxies.get("http", "")
+    https_proxy = proxies.get("https", "")
+    no_proxy = proxies.get("no_proxy", "")
+
+    cmd = [
+        "/usr/bin/bash",
+        BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME,
+        http_proxy,
+        https_proxy,
+        no_proxy,
+    ]
+
+    return cmd
+
+
+def build_image(
+    cloud_config: dict, proxies: Optional[ProxySetting] = None
+) -> openstack.image.v2.image.Image:
+    """Build and upload an image to OpenStack.
+
+    Args:
+        cloud_config: The cloud configuration to connect OpenStack with.
+        proxies: HTTP proxy settings.
+
+    Raises:
+        ImageBuildError: If there were errors buliding/creating the image.
+
+    Returns:
+        The OpenStack image object.
+    """
+    try:
+        execute_command(_build_image_command(proxies), check_exit=True)
+    except SubprocessError as exc:
+        raise ImageBuildError("Failed to build image.") from exc
+
+    try:
+        conn = _create_connection(cloud_config)
+        return conn.create_image(name=IMAGE_NAME, filename=IMAGE_PATH)
+    except OpenStackCloudException as exc:
+        raise ImageBuildError("Failed to upload image.") from exc
