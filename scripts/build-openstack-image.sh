@@ -47,8 +47,8 @@ else
     return 1
 fi
 
-# required to unpack image
-sudo DEBIAN_FRONTEND=noninteractive apt-get install qemu-utils -y
+# qemu-utils required to unpack qcow image
+sudo DEBIAN_FRONTEND=noninteractive apt-get install qemu-utils libguestfs-tools -y
 
 # enable network block device
 sudo modprobe nbd
@@ -119,3 +119,6 @@ EOF
 echo "Syncing"
 sudo sync
 cleanup
+
+# Reduce image size by removing sparse space & compressing
+sudo virt-sparsify --compress jammy-server-cloudimg-$BIN_ARCH.img jammy-server-cloudimg-$BIN_ARCH-compressed.img
