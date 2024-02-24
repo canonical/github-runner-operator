@@ -397,6 +397,8 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of starting the charm.
         """
+        # Start event does not require retry on failure currently as it only perform the same 
+        # actions as the reconcile event. Therefore the reconcile event serves as a retry.
         state = self._setup_state()
         runner_manager = self._get_runner_manager(state)
 
