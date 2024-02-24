@@ -278,7 +278,7 @@ def test_reconcile_issues_runner_installed_event(
     runner_manager: RunnerManager,
     monkeypatch: MonkeyPatch,
     issue_event_mock: MagicMock,
-    charm_state: CharmState,
+    charm_state: MagicMock,
 ):
     """
     arrange: Enable issuing of metrics and mock timestamps.
@@ -335,7 +335,7 @@ def test_reconcile_issues_reconciliation_metric_event(
     monkeypatch: MonkeyPatch,
     issue_event_mock: MagicMock,
     runner_metrics: MagicMock,
-    charm_state: CharmState,
+    charm_state: MagicMock,
 ):
     """
     arrange:
@@ -414,7 +414,7 @@ def test_reconcile_places_timestamp_in_newly_created_runner(
     monkeypatch: MonkeyPatch,
     shared_fs: MagicMock,
     tmp_path: Path,
-    charm_state: CharmState,
+    charm_state: MagicMock,
 ):
     """
     arrange: Enable issuing of metrics, mock timestamps and
