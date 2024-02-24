@@ -500,7 +500,7 @@ class GithubRunnerCharm(CharmBase):
         self._set_reconcile_timer()
 
         prev_config_for_flush: dict[str, str] = {}
-        if self.state.charm_config.token != self._stored.token:
+        if state.charm_config.token != self._stored.token:
             prev_config_for_flush["token"] = str(self._stored.token)
             self._start_services(state.charm_config.token, state.proxy_config)
             self._stored.token = None
@@ -938,18 +938,11 @@ class GithubRunnerCharm(CharmBase):
         # Temp: Monitor the LXD networks to track down issues with missing network.
         logger.info(execute_command(["/snap/bin/lxc", "network", "list", "--format", "json"]))
 
-        firewall_denylist_config = self.config.get("denylist", "")
-        denylist = []
-        if firewall_denylist_config.strip():
-            denylist = [
-                FirewallEntry.decode(entry.strip())
-                for entry in firewall_denylist_config.split(",")
-            ]
         allowlist = [
             FirewallEntry.decode(str(entry.host)) for entry in state.ssh_debug_connections
         ]
         firewall = Firewall("lxdbr0")
-        firewall.refresh_firewall(denylist=denylist, allowlist=allowlist)
+        firewall.refresh_firewall(denylist=state.charm_config.denylist, allowlist=allowlist)
         logger.debug(
             "firewall update, current firewall: %s",
             execute_command(["/usr/sbin/nft", "list", "ruleset"]),
