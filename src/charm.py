@@ -44,6 +44,7 @@ from charm_state import (
     parse_github_path,
 )
 from errors import (
+    CharmInstallError,
     ConfigurationError,
     LogrotateSetupError,
     MissingRunnerBinaryError,
@@ -90,6 +91,11 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
             func(self, event)
         except ConfigurationError as err:
             logger.exception("Issue with charm configuration")
+
+            if isinstance(event, InstallEvent):
+                # Enter error state to let juju retry the install event.
+                raise
+
             self.unit.status = BlockedStatus(str(err))
         except TokenError as err:
             logger.exception("Issue with GitHub token")
@@ -105,6 +111,7 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
             self.unit.status = BlockedStatus(
                 "Unauthorized OpenStack connection. Check credentials."
             )
+        # Intentionally not catching `CharmInstallError`, to let juju retry the install event.
 
     return func_with_catch_errors
 
@@ -356,8 +363,7 @@ class GithubRunnerCharm(CharmBase):
                 msg = "Failed to setup logrotate"
             else:
                 msg = "Failed to install dependencies"
-            self.unit.status = BlockedStatus(msg)
-            return
+            raise CharmInstallError(msg) from err
 
         self._refresh_firewall(state)
         runner_manager = self._get_runner_manager(state)
