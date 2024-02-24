@@ -293,7 +293,7 @@ class GithubRunnerCharm(CharmBase):
 
         Args:
             state: Charm state.
-            token: GitHub personal access token to manager the runners with. If None the token in
+            token: GitHub personal access token to manage the runners with. If None the token in
                 charm state is used.
             path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
                 name. If None the path in charm state is used.
@@ -500,7 +500,7 @@ class GithubRunnerCharm(CharmBase):
         self._set_reconcile_timer()
 
         prev_config_for_flush: dict[str, str] = {}
-        if self.config["token"] != self._stored.token:
+        if self.state.charm_config.token != self._stored.token:
             prev_config_for_flush["token"] = str(self._stored.token)
             self._start_services(state.charm_config.token, state.proxy_config)
             self._stored.token = None
@@ -550,7 +550,7 @@ class GithubRunnerCharm(CharmBase):
         The runners are flushed if needed.
 
         Args:
-            runner_manager: RunnerManager used for find the runner application to download.
+            runner_manager: RunnerManager used for finding the runner application to download.
             token: GitHub personal access token for repo-policy-compliance to use.
             proxy_config: Proxy configuration.
 
