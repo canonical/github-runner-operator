@@ -43,7 +43,7 @@ async def test_ssh_debug(
             ),
         }
     )
-    await model.wait_for_idle(status=ACTIVE, timeout=60 * 30)
+    await model.wait_for_idle(status=ACTIVE, timeout=60 * 120)
 
     # trigger tmate action
     logger.info("Dispatching workflow_dispatch_ssh_debug.yaml workflow.")

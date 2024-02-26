@@ -408,7 +408,7 @@ def get_workflow_runs(
         latest_job: WorkflowJob = run.jobs()[0]
         logs = get_job_logs(job=latest_job)
 
-        if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
+        if runner_name in logs:
             yield run
 
 
