@@ -58,9 +58,6 @@ async def test_ssh_debug(
         workflow_id_or_name=SSH_DEBUG_WORKFLOW_FILE_NAME,
     )
 
-    # Wait for the workflow to be created by GitHub.
-    await sleep(3 * 60)
-
     latest_run: WorkflowRun = next(
         get_workflow_runs(
             start_time=start_time,
