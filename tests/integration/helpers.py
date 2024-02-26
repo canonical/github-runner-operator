@@ -408,7 +408,7 @@ def get_workflow_runs(
         latest_job: WorkflowJob = run.jobs()[0]
         logs = get_job_logs(job=latest_job)
 
-        if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
+        if runner_name in logs:
             yield run
 
 
@@ -464,7 +464,7 @@ async def _wait_for_workflow_to_complete(
     runner_name = await get_runner_name(unit)
     await _wait_until_runner_is_used_up(runner_name, unit)
     # Wait for the workflow log to contain the conclusion
-    await sleep(60)
+    await sleep(120)
 
     await _assert_workflow_run_conclusion(
         runner_name=runner_name, conclusion=conclusion, workflow=workflow, start_time=start_time

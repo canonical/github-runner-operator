@@ -53,7 +53,7 @@ Instantiate the GiHub API client.
 ### <kbd>function</kbd> `delete_runner`
 
 ```python
-delete_runner(path: Union[GithubOrg, GithubRepo], runner_id: int) → None
+delete_runner(path: GithubOrg | GithubRepo, runner_id: int) → None
 ```
 
 Delete the self-hosted runner from GitHub. 
@@ -101,9 +101,7 @@ Get information about a job for a specific workflow run.
 ### <kbd>function</kbd> `get_runner_applications`
 
 ```python
-get_runner_applications(
-    path: Union[GithubOrg, GithubRepo]
-) → List[RunnerApplication]
+get_runner_applications(path: GithubOrg | GithubRepo) → List[RunnerApplication]
 ```
 
 Get list of runner applications available for download. 
@@ -124,9 +122,7 @@ Get list of runner applications available for download.
 ### <kbd>function</kbd> `get_runner_github_info`
 
 ```python
-get_runner_github_info(
-    path: Union[GithubOrg, GithubRepo]
-) → list[SelfHostedRunner]
+get_runner_github_info(path: GithubOrg | GithubRepo) → list[SelfHostedRunner]
 ```
 
 Get runner information on GitHub under a repo or org. 
@@ -149,7 +145,7 @@ Get runner information on GitHub under a repo or org.
 ### <kbd>function</kbd> `get_runner_registration_token`
 
 ```python
-get_runner_registration_token(path: Union[GithubOrg, GithubRepo]) → str
+get_runner_registration_token(path: GithubOrg | GithubRepo) → str
 ```
 
 Get token from GitHub used for registering runners. 
@@ -172,7 +168,7 @@ Get token from GitHub used for registering runners.
 ### <kbd>function</kbd> `get_runner_remove_token`
 
 ```python
-get_runner_remove_token(path: Union[GithubOrg, GithubRepo]) → str
+get_runner_remove_token(path: GithubOrg | GithubRepo) → str
 ```
 
 Get token from GitHub used for removing runners. 

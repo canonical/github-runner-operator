@@ -16,6 +16,7 @@ from ghapi.page import paged
 from typing_extensions import assert_never
 
 import errors
+from charm_state import GithubOrg, GithubPath, GithubRepo
 from github_type import (
     JobStats,
     RegistrationToken,
@@ -23,7 +24,6 @@ from github_type import (
     RunnerApplicationList,
     SelfHostedRunner,
 )
-from runner_type import GithubOrg, GithubPath, GithubRepo
 
 logger = logging.getLogger(__name__)
 

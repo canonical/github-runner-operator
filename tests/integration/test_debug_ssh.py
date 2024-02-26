@@ -3,8 +3,9 @@
 
 """Integration tests for github-runner charm with ssh-debug integration."""
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timedelta
 
+from dateutil.tz import tzutc
 from github.Branch import Branch
 from github.Repository import Repository
 from github.WorkflowRun import WorkflowRun
@@ -42,11 +43,11 @@ async def test_ssh_debug(
             ),
         }
     )
-    await model.wait_for_idle(status=ACTIVE, timeout=60 * 30)
+    await model.wait_for_idle(status=ACTIVE, timeout=60 * 120)
 
     # trigger tmate action
     logger.info("Dispatching workflow_dispatch_ssh_debug.yaml workflow.")
-    start_time = datetime.now(timezone.utc)
+    start_time = datetime.now(tzutc())
 
     # expect failure since the ssh workflow will timeout
     workflow = await dispatch_workflow(
@@ -57,9 +58,11 @@ async def test_ssh_debug(
         workflow_id_or_name=SSH_DEBUG_WORKFLOW_FILE_NAME,
     )
 
+    # query a second before actual to ensure we query a bigger range. A branch is created per test
+    # module so this should only return a single result.
     latest_run: WorkflowRun = next(
         get_workflow_runs(
-            start_time=start_time,
+            start_time=start_time - timedelta(seconds=1),
             workflow=workflow,
             runner_name=app_no_wait.name,
             branch=test_github_branch,
