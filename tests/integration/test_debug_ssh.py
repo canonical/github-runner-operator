@@ -3,6 +3,7 @@
 
 """Integration tests for github-runner charm with ssh-debug integration."""
 import logging
+from asyncio import sleep
 from datetime import datetime, timezone
 
 from github.Branch import Branch
@@ -56,6 +57,9 @@ async def test_ssh_debug(
         conclusion="failure",
         workflow_id_or_name=SSH_DEBUG_WORKFLOW_FILE_NAME,
     )
+
+    # Wait for the workflow to be created by GitHub.
+    await sleep(3 * 60)
 
     latest_run: WorkflowRun = next(
         get_workflow_runs(
