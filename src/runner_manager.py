@@ -42,7 +42,7 @@ REMOVED_RUNNER_LOG_STR = "Removed runner: %s"
 logger = logging.getLogger(__name__)
 
 
-BUILD_IMAGE_SCRIPT_FILENAME = "scripts/build-image.sh"
+BUILD_IMAGE_SCRIPT_FILENAME = Path("scripts/build-image.sh")
 
 IssuedMetricEventsStats = dict[Type[metrics.Event], int]
 
@@ -731,7 +731,7 @@ class RunnerManager:
 
         cmd = [
             "/usr/bin/bash",
-            BUILD_IMAGE_SCRIPT_FILENAME,
+            str(BUILD_IMAGE_SCRIPT_FILENAME.absolute()),
             http_proxy,
             https_proxy,
             no_proxy,
@@ -764,4 +764,4 @@ class RunnerManager:
         minute = random.randint(0, 59)  # nosec B311
         base_hour = random.randint(0, 5)  # nosec B311
         hours = ",".join([str(base_hour + offset) for offset in (0, 6, 12, 18)])
-        cron_file.write_text(f"{minute} {hours} * * * ubuntu {build_image_command}")
+        cron_file.write_text(f"{minute} {hours} * * * ubuntu {build_image_command}\n")
