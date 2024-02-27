@@ -12,7 +12,7 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_manager.py#L86"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L90"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `initialize`
 
@@ -39,7 +39,7 @@ Validates config and writes it to disk.
 
 ---
 
-<a href="../src/openstack_manager.py#L101"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L105"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `list_projects`
 
@@ -61,12 +61,16 @@ It currently returns objects directly from the sdk, which may not be ideal (mapp
 
 ---
 
-<a href="../src/openstack_manager.py#L155"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L181"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
 ```python
-build_image(cloud_config: dict, proxies: Optional[ProxySetting] = None) → Image
+build_image(
+    cloud_config: dict,
+    runner_info: RunnerApplication,
+    proxies: Optional[ProxySetting] = None
+) → Image
 ```
 
 Build and upload an image to OpenStack. 
@@ -76,6 +80,7 @@ Build and upload an image to OpenStack.
 **Args:**
  
  - <b>`cloud_config`</b>:  The cloud configuration to connect OpenStack with. 
+ - <b>`runner_info`</b>:  The runner application metadata. 
  - <b>`proxies`</b>:  HTTP proxy settings. 
 
 
@@ -92,8 +97,67 @@ Build and upload an image to OpenStack.
 
 ---
 
+<a href="../src/openstack_manager.py#L215"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>function</kbd> `create_instance`
+
+```python
+create_instance(cloud_config: dict, instance_config: InstanceConfig) → Server
+```
+
+Create an OpenStack instance. 
+
+
+
+**Args:**
+ 
+ - <b>`cloud_config`</b>:  The cloud configuration to connect Openstack with. 
+ - <b>`instance_config`</b>:  The configuration values for Openstack instance to launch. 
+
+
+
+**Raises:**
+ 
+ - <b>`InstanceLaunchError`</b>:  if any errors occurred while launching Openstack instance. 
+
+
+
+**Returns:**
+ The created server. 
+
+
+---
+
 ## <kbd>class</kbd> `ImageBuildError`
 Exception representing an error during image build process. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `InstanceConfig`
+The configuration values for creating a single runner instance. 
+
+
+
+**Args:**
+ 
+ - <b>`name`</b>:  Name of the image to launch the GitHub runner instance with. 
+ - <b>`labels`</b>:  The runner instance labels. 
+ - <b>`registration_token`</b>:  Token for registering the runner on GitHub. 
+ - <b>`github_path`</b>:  The GitHub repo/org path 
+ - <b>`image`</b>:  The Openstack image to use to boot the instance with. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `InstanceLaunchError`
+Exception representing an error during instance launch process. 
 
 
 

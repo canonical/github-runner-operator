@@ -3,12 +3,15 @@
 
 """Module for handling interactions with OpenStack."""
 import logging
+from dataclasses import dataclass
 from pathlib import Path
 from subprocess import SubprocessError
-from typing import Optional
+from typing import Iterable, Optional
 
+import jinja2
 import keystoneauth1.exceptions.http
 import openstack
+import openstack.compute.v2.server
 import openstack.connection
 import openstack.exceptions
 import openstack.image.v2.image
@@ -17,13 +20,14 @@ from openstack.exceptions import OpenStackCloudException
 from openstack.identity.v3.project import Project
 
 from errors import OpenStackInvalidConfigError, OpenStackUnauthorizedError
-from runner_type import ProxySetting
+from github_type import RunnerApplication
+from runner_type import GithubPath, ProxySetting
 from utilities import execute_command
 
 logger = logging.getLogger(__name__)
 
 CLOUDS_YAML_PATH = Path(Path.home() / ".config/openstack/clouds.yaml")
-IMAGE_PATH = Path("jammy-server-cloudimg-amd64.img")
+IMAGE_PATH = Path("jammy-server-cloudimg-amd64-compressed.img")
 IMAGE_NAME = "github-runner-jammy"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 
@@ -128,7 +132,9 @@ class ImageBuildError(Exception):
     """Exception representing an error during image build process."""
 
 
-def _build_image_command(proxies: Optional[ProxySetting] = None) -> list[str]:
+def _build_image_command(
+    runner_info: RunnerApplication, proxies: Optional[ProxySetting] = None
+) -> list[str]:
     """Get command for building runner image.
 
     Returns:
@@ -144,6 +150,7 @@ def _build_image_command(proxies: Optional[ProxySetting] = None) -> list[str]:
     cmd = [
         "/usr/bin/bash",
         BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME,
+        runner_info["download_url"],
         http_proxy,
         https_proxy,
         no_proxy,
@@ -152,13 +159,35 @@ def _build_image_command(proxies: Optional[ProxySetting] = None) -> list[str]:
     return cmd
 
 
+@dataclass
+class InstanceConfig:
+    """The configuration values for creating a single runner instance.
+
+    Args:
+        name: Name of the image to launch the GitHub runner instance with.
+        labels: The runner instance labels.
+        registration_token: Token for registering the runner on GitHub.
+        github_path: The GitHub repo/org path
+        image: The Openstack image to use to boot the instance with.
+    """
+
+    name: str
+    labels: Iterable[str]
+    registration_token: str
+    github_path: GithubPath
+    image: str
+
+
 def build_image(
-    cloud_config: dict, proxies: Optional[ProxySetting] = None
+    cloud_config: dict,
+    runner_info: RunnerApplication,
+    proxies: Optional[ProxySetting] = None,
 ) -> openstack.image.v2.image.Image:
     """Build and upload an image to OpenStack.
 
     Args:
         cloud_config: The cloud configuration to connect OpenStack with.
+        runner_info: The runner application metadata.
         proxies: HTTP proxy settings.
 
     Raises:
@@ -168,7 +197,7 @@ def build_image(
         The OpenStack image object.
     """
     try:
-        execute_command(_build_image_command(proxies), check_exit=True)
+        execute_command(_build_image_command(runner_info, proxies), check_exit=True)
     except SubprocessError as exc:
         raise ImageBuildError("Failed to build image.") from exc
 
@@ -177,3 +206,47 @@ def build_image(
         return conn.create_image(name=IMAGE_NAME, filename=IMAGE_PATH)
     except OpenStackCloudException as exc:
         raise ImageBuildError("Failed to upload image.") from exc
+
+
+class InstanceLaunchError(Exception):
+    """Exception representing an error during instance launch process."""
+
+
+def create_instance(
+    cloud_config: dict,
+    instance_config: InstanceConfig,
+) -> openstack.compute.v2.server.Server:
+    """Create an OpenStack instance.
+
+    Args:
+        cloud_config: The cloud configuration to connect Openstack with.
+        instance_config: The configuration values for Openstack instance to launch.
+
+    Raises:
+        InstanceLaunchError: if any errors occurred while launching Openstack instance.
+
+    Returns:
+        The created server.
+    """
+    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
+    cloud_userdata = environment.get_template("openstack-userdata.sh.j2").render(
+        github_url=f"https://github.com/{instance_config.github_path.path()}",
+        token=instance_config.registration_token,
+        instance_labels=",".join(instance_config.labels),
+        instance_name=instance_config.name,
+    )
+
+    try:
+        conn = _create_connection(cloud_config)
+        return conn.create_server(
+            name="test",
+            image=instance_config.image,
+            flavor="m1.tiny",
+            userdata=cloud_userdata,
+            key_name="sunbeam",
+            security_groups=["default"],
+            admin_pass="helloworld",
+            ip_pool=["external-network"],
+        )
+    except OpenStackCloudException as exc:
+        raise InstanceLaunchError("Failed to launch instance.") from exc
