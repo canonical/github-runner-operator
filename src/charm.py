@@ -38,6 +38,7 @@ from charm_state import (
     CharmConfigInvalidError,
     CharmState,
     GithubPath,
+    HttpProxyEnvVar,
     ProxyConfig,
     RunnerStorage,
     VirtualMachineResources,
@@ -111,7 +112,7 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
             self.unit.status = BlockedStatus(
                 "Unauthorized OpenStack connection. Check credentials."
             )
-        # Intentionally not catching `CharmInstallError`, to let juju retry the install event.
+        # Intentionally not catching `CharmInstallError` to let juju retry install related issues.
 
     return func_with_catch_errors
 
@@ -349,13 +350,9 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of installing the charm.
         """
-        state = self._setup_state()
-
         self.unit.status = MaintenanceStatus("Installing packages")
         try:
-            # The `_start_services`, `_install_deps` includes retry.
             self._install_deps()
-            self._start_services(state.charm_config.token, state.proxy_config)
             metrics.setup_logrotate()
         except (LogrotateSetupError, SubprocessError) as err:
             logger.exception(err)
@@ -363,9 +360,13 @@ class GithubRunnerCharm(CharmBase):
                 msg = "Failed to setup logrotate"
             else:
                 msg = "Failed to install dependencies"
+            # Retry install by going into error state.
             raise CharmInstallError(msg) from err
 
-        self._refresh_firewall(state)
+        # Above this line, retry are done by entering error state.
+        # Below this line, retry is performed by other events, e.g., config_change.
+
+        state = self._setup_state()
         runner_manager = self._get_runner_manager(state)
 
         self.unit.status = MaintenanceStatus("Building runner image")
@@ -397,7 +398,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of starting the charm.
         """
-        # Start event does not require retry on failure currently as it only perform the same 
+        # Start event does not require retry on failure currently as it only perform the same
         # actions as the reconcile event. Therefore the reconcile event serves as a retry.
         state = self._setup_state()
         runner_manager = self._get_runner_manager(state)
@@ -465,13 +466,9 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Event of charm upgrade.
         """
-        state = self._setup_state()
-
         logger.info("Reinstalling dependencies...")
         try:
-            # The `_start_services`, `_install_deps` includes retry.
             self._install_deps()
-            self._start_services(state.charm_config.token, state.proxy_config)
             metrics.setup_logrotate()
         except (LogrotateSetupError, SubprocessError) as err:
             logger.exception(err)
@@ -480,12 +477,14 @@ class GithubRunnerCharm(CharmBase):
                 msg = "Failed to setup logrotate"
             else:
                 msg = "Failed to install dependencies"
-            self.unit.status = BlockedStatus(msg)
-            return
+            # Retry the install by going into error state.
+            raise CharmInstallError(msg) from err
 
-        state = self._setup_state()
-        self._refresh_firewall(state)
+        # Above this line, retry are done by entering error state.
+        # Below this line, retry is performed by other events, e.g., config_change.
+
         logger.info("Flushing the runners...")
+        state = self._setup_state()
         runner_manager = self._get_runner_manager(state)
         if not runner_manager:
             return
@@ -506,10 +505,12 @@ class GithubRunnerCharm(CharmBase):
         """
         state = self._setup_state()
         self._set_reconcile_timer()
+        self._refresh_firewall(state)
 
         prev_config_for_flush: dict[str, str] = {}
         if state.charm_config.token != self._stored.token:
             prev_config_for_flush["token"] = str(self._stored.token)
+            # The runners should be flushed at some point after `_start_services` is called.
             self._start_services(state.charm_config.token, state.proxy_config)
             self._stored.token = None
         if self.config["path"] != self._stored.path:
@@ -523,9 +524,6 @@ class GithubRunnerCharm(CharmBase):
                 self.unit.status = MaintenanceStatus("Removing runners due to config change")
                 # it may be the case that the prev token has expired, so we need to use force flush
                 prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
-
-        state = self._setup_state()
-        self._refresh_firewall(state)
 
         if state.charm_config.openstack_clouds_yaml:
             # Test out openstack integration and then go
@@ -593,7 +591,7 @@ class GithubRunnerCharm(CharmBase):
             runner_bin_updated = True
 
         self.unit.status = MaintenanceStatus("Checking for service updates")
-        service_updated = self._install_repo_policy_compliance(proxy_config)
+        service_updated = self._install_repo_policy_compliance(HttpProxyEnvVar.from_env())
 
         if service_updated or runner_bin_updated:
             logger.info(
@@ -770,11 +768,11 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = ActiveStatus()
         return {"delta": {"virtual-machines": delta_virtual_machines}}
 
-    def _install_repo_policy_compliance(self, proxy_config: ProxyConfig) -> bool:
-        """Install latest version of repo_policy_compliance service.
+    def _install_repo_policy_compliance(self, proxies: HttpProxyEnvVar) -> bool:
+        """Install or upgrade to latest version of repo_policy_compliance service.
 
         Args:
-            proxy_config: Proxy configuration.
+            proxies: HTTP proxy environment variables.
 
         Returns:
             Whether version install is changed. Going from not installed to
@@ -782,13 +780,13 @@ class GithubRunnerCharm(CharmBase):
         """
         # Prepare environment variables for pip subprocess
         env = {}
-        if http_proxy := proxy_config.http:
+        if http_proxy := proxies.http_proxy:
             env["HTTP_PROXY"] = http_proxy
             env["http_proxy"] = http_proxy
-        if https_proxy := proxy_config.https:
+        if https_proxy := proxies.https_proxy:
             env["HTTPS_PROXY"] = https_proxy
             env["https_proxy"] = https_proxy
-        if no_proxy := proxy_config.no_proxy:
+        if no_proxy := proxies.no_proxy:
             env["NO_PROXY"] = no_proxy
             env["no_proxy"] = no_proxy
 
@@ -836,15 +834,13 @@ class GithubRunnerCharm(CharmBase):
     @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _install_deps(self) -> None:
         """Install dependencies."""
-        state = self._setup_state()
-
         logger.info("Installing charm dependencies.")
         # Snap and Apt will use any proxies configured in the Juju model.
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
         # Install dependencies used by repo-policy-compliance and the firewall
         self._apt_install(["gunicorn", "python3-pip", "nftables"])
         # Install repo-policy-compliance package
-        self._install_repo_policy_compliance(state.proxy_config)
+        self._install_repo_policy_compliance(HttpProxyEnvVar.from_env())
         execute_command(
             ["/usr/bin/apt-get", "remove", "-qy", "lxd", "lxd-client"], check_exit=False
         )

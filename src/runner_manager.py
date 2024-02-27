@@ -74,9 +74,9 @@ class RunnerManager:
         # Setting the env var to this process and any child process spawned.
         if no_proxy := self.proxies.no_proxy:
             set_env_var("NO_PROXY", no_proxy)
-        if http_proxy := self.proxies.http:
+        if http_proxy := self.proxies.http_proxy:
             set_env_var("HTTP_PROXY", http_proxy)
-        if https_proxy := self.proxies.https:
+        if https_proxy := self.proxies.https_proxy:
             set_env_var("HTTPS_PROXY", https_proxy)
 
         self.session = requests.Session()
@@ -401,8 +401,8 @@ class RunnerManager:
 
             proxies = RunnerProxySetting(
                 no_proxy=no_proxy,
-                http=self.proxies.http,
-                https=self.proxies.https,
+                http=self.proxies.http_proxy,
+                https=self.proxies.https_proxy,
                 aproxy_address=None,
             )
         elif self.proxies.use_aproxy:
@@ -725,8 +725,8 @@ class RunnerManager:
         Returns:
             Command to execute to build runner image.
         """
-        http_proxy = self.proxies.http or ""
-        https_proxy = self.proxies.https or ""
+        http_proxy = self.proxies.http_proxy or ""
+        https_proxy = self.proxies.https_proxy or ""
         no_proxy = self.proxies.no_proxy or ""
 
         cmd = [

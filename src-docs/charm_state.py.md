@@ -164,7 +164,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L573"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L605"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -254,6 +254,39 @@ Return a string representing the path.
 
 ---
 
+## <kbd>class</kbd> `HttpProxyEnvVar`
+HTTP proxy environment variables. 
+
+Validation is not performed. Intend for propagating the environment variable as is to services used by the charm. 
+
+Used for access the proxy env vars where the state should not be accessed. The state can throw errors based on configuration. Code that should be performed regardless of configuration issues should use this class to access the proxy, e.g., install dependencies. 
+
+
+
+**Attributes:**
+ 
+ - <b>`http_proxy`</b>:  HTTP proxy environment variable. 
+ - <b>`https_proxy`</b>:  HTTPS proxy environment variable. 
+ - <b>`no_proxy`</b>:  No proxy environment variable. 
+
+
+
+
+---
+
+<a href="../src/charm_state.py#L408"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `from_env`
+
+```python
+from_env() → HttpProxyEnvVar
+```
+
+Initialize the HTTP proxy environment variable from env. 
+
+
+---
+
 ## <kbd>class</kbd> `ProxyConfig`
 Proxy configuration. 
 
@@ -261,8 +294,8 @@ Proxy configuration.
 
 **Attributes:**
  
- - <b>`http`</b>:  HTTP proxy address. 
- - <b>`https`</b>:  HTTPS proxy address. 
+ - <b>`http_proxy`</b>:  HTTP proxy address. 
+ - <b>`https_proxy`</b>:  HTTPS proxy address. 
  - <b>`no_proxy`</b>:  Comma-separated list of hosts that should not be proxied. 
  - <b>`use_aproxy`</b>:  Whether aproxy should be used for the runners. 
 
@@ -277,7 +310,7 @@ Return the aproxy address.
 
 ---
 
-<a href="../src/charm_state.py#L440"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L472"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_fields`
 
@@ -300,7 +333,7 @@ Validate the proxy configuration.
 
 ---
 
-<a href="../src/charm_state.py#L402"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L433"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -413,7 +446,7 @@ SSH connection information for debug workflow.
 
 ---
 
-<a href="../src/charm_state.py#L520"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L552"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -441,7 +474,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L477"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L509"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

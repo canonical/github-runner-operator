@@ -1,9 +1,9 @@
 [Service]
-{% if proxies.http %}
-Environment="HTTP_PROXY={{proxies.http}}"
+{% if proxies.http_proxy %}
+Environment="HTTP_PROXY={{proxies.http_proxy}}"
 {% endif %}
-{% if proxies.https %}
-Environment="HTTPS_PROXY={{proxies.https}}"
+{% if proxies.https_proxy %}
+Environment="HTTPS_PROXY={{proxies.https_proxy}}"
 {% endif %}
 {% if proxies.no_proxy %}
 Environment="NO_PROXY={{proxies.no_proxy}}"

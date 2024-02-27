@@ -96,8 +96,8 @@ def test_proxy_setting(harness: Harness):
     assert: The proxy configuration are set.
     """
     state = harness.charm._setup_state()
-    assert state.proxy_config.https == TEST_PROXY_SERVER_URL
-    assert state.proxy_config.http == TEST_PROXY_SERVER_URL
+    assert state.proxy_config.https_proxy == TEST_PROXY_SERVER_URL
+    assert state.proxy_config.http_proxy == TEST_PROXY_SERVER_URL
     assert state.proxy_config.no_proxy == "127.0.0.1,localhost"
 
 
@@ -138,7 +138,7 @@ def test_get_runner_manager(harness: Harness):
     assert runner_manager is not None
     assert runner_manager.config.token == "mocktoken"
     assert runner_manager.proxies == ProxyConfig(
-        http=None, https=None, no_proxy=None, use_aproxy=False
+        http_proxy=None, https_proxy=None, no_proxy=None, use_aproxy=False
     )
 
 

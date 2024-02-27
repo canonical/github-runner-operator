@@ -8,13 +8,13 @@ Group=www-data
 WorkingDirectory={{working_directory}}
 Environment="GITHUB_TOKEN={{github_token}}"
 Environment="CHARM_TOKEN={{charm_token}}"
-{% if proxies.http %}
-Environment="HTTP_PROXY={{proxies.http}}"
-Environment="http_proxy={{proxies.http}}"
+{% if proxies.http_proxy %}
+Environment="HTTP_PROXY={{proxies.http_proxy}}"
+Environment="http_proxy={{proxies.http_proxy}}"
 {% endif %}
-{% if proxies.https %}
-Environment="HTTPS_PROXY={{proxies.https}}"
-Environment="https_proxy={{proxies.https}}"
+{% if proxies.https_proxy %}
+Environment="HTTPS_PROXY={{proxies.https_proxy}}"
+Environment="https_proxy={{proxies.https_proxy}}"
 {% endif %}
 {% if proxies.no_proxy %}
 Environment="NO_PROXY={{proxies.no_proxy}}"
