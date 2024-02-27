@@ -498,4 +498,4 @@ def test_schedule_build_runner_image(
     cmd = f"/usr/bin/bash {BUILD_IMAGE_SCRIPT_FILENAME.absolute()} {http} {https} {no_proxy}"
 
     assert cronfile.exists()
-    assert cronfile.read_text() == f"4 4,10,16,22 * * * ubuntu {cmd}\n"
+    assert cronfile.read_text() == f"4 4,10,16,22 * * * root {cmd}\n"

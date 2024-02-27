@@ -764,4 +764,4 @@ class RunnerManager:
         minute = random.randint(0, 59)  # nosec B311
         base_hour = random.randint(0, 5)  # nosec B311
         hours = ",".join([str(base_hour + offset) for offset in (0, 6, 12, 18)])
-        cron_file.write_text(f"{minute} {hours} * * * ubuntu {build_image_command}\n")
+        cron_file.write_text(f"{minute} {hours} * * * root {build_image_command}\n")
