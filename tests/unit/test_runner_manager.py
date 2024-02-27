@@ -23,7 +23,7 @@ from errors import IssueMetricEventError, RunnerBinaryError
 from github_type import RunnerApplication
 from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
 from runner import Runner, RunnerStatus
-from runner_manager import RunnerManager, RunnerManagerConfig
+from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import RunnerByHealth
 from shared_fs import SharedFilesystem
@@ -56,8 +56,8 @@ def charm_state_fixture():
             GithubRepo("test_owner", "test_repo"),
             ProxyConfig(
                 no_proxy="test_no_proxy",
-                http_proxy=TEST_PROXY_SERVER_URL,
-                https_proxy=TEST_PROXY_SERVER_URL,
+                http=TEST_PROXY_SERVER_URL,
+                https=TEST_PROXY_SERVER_URL,
                 use_aproxy=False,
             ),
         ),
@@ -471,3 +471,31 @@ def test_reconcile_places_no_timestamp_in_newly_created_runner_if_metrics_disabl
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 
     assert not (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).exists()
+
+
+def test_schedule_build_runner_image(
+    runner_manager: RunnerManager,
+    tmp_path: Path,
+    charm_state: CharmState,
+    monkeypatch: MonkeyPatch,
+):
+    """
+    arrange: Mock the cron path and the randint function.
+    act: Schedule the build runner image.
+    assert: The cron file is created with the expected content.
+    """
+    runner_manager.cron_path = tmp_path / "cron"
+    runner_manager.cron_path.mkdir()
+    monkeypatch.setattr(random, "randint", MagicMock(spec=random.randint, return_value=4))
+
+    runner_manager.schedule_build_runner_image()
+
+    cronfile = runner_manager.cron_path / "build-runner-image"
+    http = charm_state.proxy_config.http or "''"
+    https = charm_state.proxy_config.https or "''"
+    no_proxy = charm_state.proxy_config.no_proxy or "''"
+
+    cmd = f"/usr/bin/bash {BUILD_IMAGE_SCRIPT_FILENAME.absolute()} {http} {https} {no_proxy}"
+
+    assert cronfile.exists()
+    assert cronfile.read_text() == f"4 4,10,16,22 * * * ubuntu {cmd}\n"
