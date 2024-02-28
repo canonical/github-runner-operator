@@ -7,6 +7,7 @@ Module for handling interactions with OpenStack.
 
 **Global Variables**
 ---------------
+- **IMAGE_PATH_TMPL**
 - **IMAGE_NAME**
 - **BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME**
 
@@ -97,7 +98,7 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_manager.py#L215"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L218"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
