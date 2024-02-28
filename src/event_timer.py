@@ -10,7 +10,6 @@ from typing import Optional, TypedDict
 import jinja2
 
 from utilities import execute_command
-from utilities import logger as utilities_logger
 
 BIN_SYSTEMCTL = "/usr/bin/systemctl"
 
@@ -102,15 +101,7 @@ class EventTimer:
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
             raise TimerStatusError from ex
 
-        if ret_code == 0:
-            return True
-
-        if utilities_logger.isEnabledFor(logging.DEBUG):
-            try:
-                execute_command([BIN_SYSTEMCTL, "list-timers", "--all"], check_exit=False)
-            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
-                logger.exception("Unable to list systemd timers: %s", ex)
-        return False
+        return ret_code == 0
 
     def ensure_event_timer(self, event_name: str, interval: int, timeout: Optional[int] = None):
         """Ensure that a systemd service and timer are registered to dispatch the given event.
