@@ -520,10 +520,28 @@ class GithubRunnerCharm(CharmBase):
         self._refresh_firewall(state)
 
         if state.charm_config.openstack_clouds_yaml:
+            # Only build it in test mode since it may interfere with users systems.
+            if self.config.get("test-mode") == "insecure":
+                image = openstack_manager.build_image(
+                    arch=state.arch,
+                    cloud_config=state.charm_config.openstack_clouds_yaml,
+                    github_token=state.charm_config.token,
+                    path=state.charm_config.path,
+                    proxies=state.proxy_config,
+                )
+                instance_config = openstack_manager.create_instance_config(
+                    unit_name=self.unit.name,
+                    openstack_image=image,
+                    path=state.charm_config.path,
+                    github_token=state.charm_config.token,
+                )
+                instance = openstack_manager.create_instance(
+                    cloud_config=state.charm_config.openstack_clouds_yaml,
+                    instance_config=instance_config,
+                )
+                logger.info("OpenStack instance: %s", instance)
             # Test out openstack integration and then go
             # into BlockedStatus as it is not supported yet
-            projects = openstack_manager.list_projects(state.charm_config.openstack_clouds_yaml)
-            logger.info("OpenStack projects: %s", projects)
             self.unit.status = BlockedStatus(
                 "OpenStack integration is not supported yet. "
                 "Please remove the openstack-clouds-yaml config."

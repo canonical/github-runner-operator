@@ -3,6 +3,7 @@
 
 """Module for handling interactions with OpenStack."""
 import logging
+import secrets
 from dataclasses import dataclass
 
 # subprocess module is used to call image build script.
@@ -19,9 +20,11 @@ import openstack.image.v2.image
 from openstack.exceptions import OpenStackCloudException
 from openstack.identity.v3.project import Project
 
-from errors import OpenStackUnauthorizedError
+from charm_state import Arch, ProxyConfig
+from errors import OpenStackUnauthorizedError, RunnerBinaryError
+from github_client import GithubClient
 from github_type import RunnerApplication
-from runner_type import GithubPath, ProxySetting
+from runner_type import GithubPath
 from utilities import execute_command
 
 logger = logging.getLogger(__name__)
@@ -87,20 +90,15 @@ class ImageBuildError(Exception):
     """Exception representing an error during image build process."""
 
 
-def _build_image_command(
-    runner_info: RunnerApplication, proxies: Optional[ProxySetting] = None
-) -> list[str]:
+def _build_image_command(runner_info: RunnerApplication, proxies: ProxyConfig) -> list[str]:
     """Get command for building runner image.
 
     Returns:
         Command to execute to build runner image.
     """
-    if not proxies:
-        proxies = ProxySetting(no_proxy=None, http=None, https=None, aproxy_address=None)
-
-    http_proxy = proxies.get("http", "")
-    https_proxy = proxies.get("https", "")
-    no_proxy = proxies.get("no_proxy", "")
+    http_proxy = proxies.http or ""
+    https_proxy = proxies.https or ""
+    no_proxy = proxies.no_proxy or ""
 
     cmd = [
         "/usr/bin/bash",
@@ -123,24 +121,28 @@ class InstanceConfig:
         labels: The runner instance labels.
         registration_token: Token for registering the runner on GitHub.
         github_path: The GitHub repo/org path
-        image: The Openstack image to use to boot the instance with.
+        openstack_image: The Openstack image to use to boot the instance with.
     """
 
     name: str
     labels: Iterable[str]
     registration_token: str
     github_path: GithubPath
-    image: str
+    openstack_image: openstack.image.v2.image.Image
 
 
 def build_image(
+    arch: Arch,
     cloud_config: dict[str, dict],
+    github_token: str,
+    path: GithubPath,
+    proxies: Optional[ProxyConfig] = None,
 ) -> openstack.image.v2.image.Image:
     """Build and upload an image to OpenStack.
 
     Args:
         cloud_config: The cloud configuration to connect OpenStack with.
-        runner_info: The runner application metadata.
+        github_token: The Github PAT token to generate runner registration token.
         proxies: HTTP proxy settings.
 
     Raises:
@@ -149,19 +151,52 @@ def build_image(
     Returns:
         The OpenStack image object.
     """
+    github = GithubClient(token=github_token)
     try:
-        execute_command(_build_image_command(runner_info, proxies), check_exit=True)
+        runner_application = github.get_runner_application(path=path, arch=arch)
+    except RunnerBinaryError as exc:
+        raise ImageBuildError("Failed to fetch image.") from exc
+
+    try:
+        execute_command(_build_image_command(runner_application, proxies), check_exit=True)
     except SubprocessError as exc:
         raise ImageBuildError("Failed to build image.") from exc
 
     try:
         conn = _create_connection(cloud_config)
-        arch = "amd64" if runner_info["architecture"] == "x64" else "arm64"
+        arch = "amd64" if runner_application["architecture"] == "x64" else "arm64"
         return conn.create_image(
             name=IMAGE_NAME, filename=IMAGE_PATH_TMPL.format(architecture=arch)
         )
     except OpenStackCloudException as exc:
         raise ImageBuildError("Failed to upload image.") from exc
+
+
+def create_instance_config(
+    unit_name: str,
+    openstack_image: openstack.image.v2.image.Image,
+    path: GithubPath,
+    github_token: str,
+) -> InstanceConfig:
+    """Create an instance config from charm data.
+
+    Args:
+        unit_name: The charm unit name.
+        image: Ubuntu image flavor.
+        path: Github organisation or repository path.
+        github_token: The Github PAT token to generate runner registration token.
+    """
+    app_name, unit_num = unit_name.rsplit("/", 1)
+    suffix = secrets.token_hex(12)
+    github = GithubClient(token=github_token)
+    registration_token = github.get_runner_registration_token(path=path)
+    return InstanceConfig(
+        name=f"{app_name}-{unit_num}-{suffix}",
+        labels=(app_name, "jammy"),
+        registration_token=registration_token,
+        github_path=path,
+        openstack_image=openstack_image,
+    )
 
 
 class InstanceLaunchError(Exception):
@@ -195,13 +230,10 @@ def create_instance(
     try:
         conn = _create_connection(cloud_config)
         return conn.create_server(
-            name="test",
-            image=instance_config.image,
+            name=instance_config.name,
+            image=instance_config.openstack_image,
             flavor="m1.tiny",
             userdata=cloud_userdata,
-            key_name="sunbeam",
-            security_groups=["default"],
-            ip_pool=["external-network"],
         )
     except OpenStackCloudException as exc:
         raise InstanceLaunchError("Failed to launch instance.") from exc
