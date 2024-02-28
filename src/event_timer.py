@@ -95,8 +95,10 @@ class EventTimer:
             TimerStatusError: Timer status cannot be determined.
         """
         try:
+            # We choose status over is-active here to provide debug logs that show the output of
+            # the timer.
             _, ret_code = execute_command(
-                [BIN_SYSTEMCTL, "is-active", f"ghro.{event_name}.timer"], check_exit=False
+                [BIN_SYSTEMCTL, "status", f"ghro.{event_name}.timer"], check_exit=False
             )
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
             raise TimerStatusError from ex
