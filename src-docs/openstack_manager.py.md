@@ -13,12 +13,12 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_manager.py#L60"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L63"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `list_projects`
 
 ```python
-list_projects(cloud_config: dict) → list[Project]
+list_projects(cloud_config: dict[str, dict]) → list[Project]
 ```
 
 List all projects in the OpenStack cloud. 
@@ -35,15 +35,17 @@ It currently returns objects directly from the sdk, which may not be ideal (mapp
 
 ---
 
-<a href="../src/openstack_manager.py#L136"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L134"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
 ```python
 build_image(
-    cloud_config: dict,
-    runner_info: RunnerApplication,
-    proxies: Optional[ProxySetting] = None
+    arch: Arch,
+    cloud_config: dict[str, dict],
+    github_token: str,
+    path: GithubOrg | GithubRepo,
+    proxies: Optional[ProxyConfig] = None
 ) → Image
 ```
 
@@ -54,7 +56,7 @@ Build and upload an image to OpenStack.
 **Args:**
  
  - <b>`cloud_config`</b>:  The cloud configuration to connect OpenStack with. 
- - <b>`runner_info`</b>:  The runner application metadata. 
+ - <b>`github_token`</b>:  The Github PAT token to generate runner registration token. 
  - <b>`proxies`</b>:  HTTP proxy settings. 
 
 
@@ -71,12 +73,42 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_manager.py#L173"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L175"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>function</kbd> `create_instance_config`
+
+```python
+create_instance_config(
+    unit_name: str,
+    openstack_image: Image,
+    path: GithubOrg | GithubRepo,
+    github_token: str
+) → InstanceConfig
+```
+
+Create an instance config from charm data. 
+
+
+
+**Args:**
+ 
+ - <b>`unit_name`</b>:  The charm unit name. 
+ - <b>`image`</b>:  Ubuntu image flavor. 
+ - <b>`path`</b>:  Github organisation or repository path. 
+ - <b>`github_token`</b>:  The Github PAT token to generate runner registration token. 
+
+
+---
+
+<a href="../src/openstack_manager.py#L206"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
 ```python
-create_instance(cloud_config: dict, instance_config: InstanceConfig) → Server
+create_instance(
+    cloud_config: dict[str, dict],
+    instance_config: InstanceConfig
+) → Server
 ```
 
 Create an OpenStack instance. 
@@ -122,7 +154,7 @@ The configuration values for creating a single runner instance.
  - <b>`labels`</b>:  The runner instance labels. 
  - <b>`registration_token`</b>:  Token for registering the runner on GitHub. 
  - <b>`github_path`</b>:  The GitHub repo/org path 
- - <b>`image`</b>:  The Openstack image to use to boot the instance with. 
+ - <b>`openstack_image`</b>:  The Openstack image to use to boot the instance with. 
 
 
 

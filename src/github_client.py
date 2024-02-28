@@ -16,11 +16,12 @@ from ghapi.page import paged
 from typing_extensions import assert_never
 
 import errors
-from charm_state import GithubOrg, GithubPath, GithubRepo
+from charm_state import Arch, GithubOrg, GithubPath, GithubRepo
 from github_type import (
     JobStats,
     RegistrationToken,
     RemoveToken,
+    RunnerApplication,
     RunnerApplicationList,
     SelfHostedRunner,
 )
@@ -79,6 +80,38 @@ class GithubClient:
             runner_bins = self._client.actions.list_runner_applications_for_org(org=path.org)
 
         return runner_bins
+
+    @catch_http_errors
+    def get_runner_application(
+        self, path: GithubPath, arch: Arch, os: str = "linux"
+    ) -> RunnerApplication:
+        """Get runner application available for download for given arch.
+
+        Args:
+            path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
+                name.
+            arch: The runner architecture.
+            os: The operating system that the runner binary should run on.
+
+        Raises:
+            RunnerBinaryError: If the runner application for given architecture and OS is not
+                found.
+
+        Returns:
+            The runner application.
+        """
+        runner_applications = self.get_runner_applications(path=path)
+        logger.debug("Response of runner applications list: %s", runner_applications)
+        try:
+            return next(
+                bin
+                for bin in runner_applications
+                if bin["os"] == os and bin["architecture"] == arch
+            )
+        except StopIteration as err:
+            raise errors.RunnerBinaryError(
+                f"Unable query GitHub runner binary information for {os} {arch}"
+            ) from err
 
     @catch_http_errors
     def get_runner_github_info(self, path: GithubPath) -> list[SelfHostedRunner]:
