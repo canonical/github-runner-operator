@@ -31,12 +31,12 @@ IMAGE_NAME = "github-runner-jammy"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 
 
-def _create_connection(cloud_config: dict) -> openstack.connection.Connection:
+def _create_connection(cloud_config: dict[str, dict]) -> openstack.connection.Connection:
     """Create a connection object.
 
     This method should be called with a valid cloud_config. See def _validate_cloud_config.
-    Also, this method assumes that the clouds.yaml exists on CLOUDS_YAML_PATH. See def
-    _write_config_to_disk.
+    Also, this method assumes that the clouds.yaml exists on ~/.config/openstack/clouds.yaml.
+    See charm_state.py _write_openstack_config_to_disk.
 
     Args:
         cloud_config: The configuration in clouds.yaml format to apply.
@@ -57,7 +57,7 @@ def _create_connection(cloud_config: dict) -> openstack.connection.Connection:
     return openstack.connect(cloud_name)
 
 
-def list_projects(cloud_config: dict) -> list[Project]:
+def list_projects(cloud_config: dict[str, dict]) -> list[Project]:
     """List all projects in the OpenStack cloud.
 
     The purpose of the method is just to try out openstack integration and
@@ -134,9 +134,7 @@ class InstanceConfig:
 
 
 def build_image(
-    cloud_config: dict,
-    runner_info: RunnerApplication,
-    proxies: Optional[ProxySetting] = None,
+    cloud_config: dict[str, dict],
 ) -> openstack.image.v2.image.Image:
     """Build and upload an image to OpenStack.
 
@@ -171,7 +169,7 @@ class InstanceLaunchError(Exception):
 
 
 def create_instance(
-    cloud_config: dict,
+    cloud_config: dict[str, dict],
     instance_config: InstanceConfig,
 ) -> openstack.compute.v2.server.Server:
     """Create an OpenStack instance.

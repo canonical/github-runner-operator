@@ -230,7 +230,7 @@ class CharmConfig(BaseModel):
     reconcile_interval: int
     denylist: list[FirewallEntry]
     dockerhub_mirror: str | None
-    openstack_clouds_yaml: dict | None
+    openstack_clouds_yaml: dict[str, dict] | None
 
     @classmethod
     def _parse_denylist(cls, charm: CharmBase) -> list[str]:
