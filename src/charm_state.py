@@ -9,7 +9,8 @@ import logging
 import platform
 from enum import Enum
 from pathlib import Path
-from typing import Optional
+from typing import NamedTuple, Optional, cast
+from urllib.parse import urlsplit
 
 import yaml
 from ops import CharmBase
@@ -18,6 +19,7 @@ from pydantic.networks import IPvAnyAddress
 
 import openstack_manager
 from errors import OpenStackInvalidConfigError
+from firewall import FirewallEntry
 from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
@@ -31,7 +33,90 @@ CHARM_STATE_PATH = Path("charm_state.json")
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
 
 
-class ARCH(str, Enum):
+StorageSize = str
+"""Representation of storage size with KiB, MiB, GiB, TiB, PiB, EiB as unit."""
+
+
+@dataclasses.dataclass
+class GithubRepo:
+    """Represent GitHub repository.
+
+    Attributes:
+        owner: Owner of the GitHub repository.
+        repo: Name of the GitHub repository.
+    """
+
+    owner: str
+    repo: str
+
+    def path(self) -> str:
+        """Return a string representing the path.
+
+        Returns:
+            Path to the GitHub entity.
+        """
+        return f"{self.owner}/{self.repo}"
+
+
+@dataclasses.dataclass
+class GithubOrg:
+    """Represent GitHub organization.
+
+    Attributes:
+        org: Name of the GitHub organization.
+        group: Runner group to spawn the runners in.
+    """
+
+    org: str
+    group: str
+
+    def path(self) -> str:
+        """Return a string representing the path.
+
+        Returns:
+            Path to the GitHub entity.
+        """
+        return self.org
+
+
+GithubPath = GithubOrg | GithubRepo
+
+
+def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
+    """Parse GitHub path.
+
+    Args:
+        path_str: GitHub path in string format.
+        runner_group: Runner group name for GitHub organization. If the path is
+            a repository this argument is ignored.
+    Returns:
+        GithubPath object representing the GitHub repository, or the GitHub
+        organization with runner group information.
+    """
+    if "/" in path_str:
+        paths = path_str.split("/")
+        if len(paths) != 2:
+            raise CharmConfigInvalidError(f"Invalid path configuration {path_str}")
+        owner, repo = paths
+        return GithubRepo(owner=owner, repo=repo)
+    return GithubOrg(org=path_str, group=runner_group)
+
+
+class VirtualMachineResources(NamedTuple):
+    """Virtual machine resource configuration.
+
+    Attributes:
+        cpu: Number of vCPU for the virtual machine.
+        memory: Amount of memory for the virtual machine.
+        disk: Amount of disk for the virtual machine.
+    """
+
+    cpu: int
+    memory: StorageSize
+    disk: StorageSize
+
+
+class Arch(str, Enum):
     """Supported system architectures."""
 
     ARM64 = "arm64"
@@ -65,15 +150,72 @@ class CharmConfigInvalidError(Exception):
         self.msg = msg
 
 
+def _valid_storage_size_str(size: str) -> bool:
+    """Validate the storage size string.
+
+    Args:
+        size: Storage size string.
+
+    Return:
+        Whether the string is valid.
+    """
+    # Checks whether the string confirms to using the KiB, MiB, GiB, TiB, PiB,
+    # EiB suffix for storage size as specified in config.yaml.
+    valid_suffixes = {"KiB", "MiB", "GiB", "TiB", "PiB", "EiB"}
+    return size[-3:] in valid_suffixes and size[:-3].isdigit()
+
+
 class CharmConfig(BaseModel):
-    """Charm configuration.
+    """General charm configuration.
+
+    Some charm configurations are grouped into other configuration models.
 
     Attributes:
-        runner_storage: Storage to be used as disk for the runner.
+        path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
+            name.
+        token: GitHub personal access token for GitHub API.
+        reconcile_interval: Time between each reconciliation of runners.
+        denylist: List of IPv4 to block the runners from accessing.
+        dockerhub_mirror: Private docker registry as dockerhub mirror for the runners to use.
+        openstack_clouds_yaml: The openstack clouds.yaml configuration.
     """
 
-    runner_storage: RunnerStorage
+    path: GithubPath
+    token: str
+    reconcile_interval: int
+    denylist: list[FirewallEntry]
+    dockerhub_mirror: str | None
     openstack_clouds_yaml: dict | None
+
+    @classmethod
+    def _parse_denylist(cls, charm: CharmBase) -> list[str]:
+        denylist_str = charm.config.get("denylist", "")
+
+        entry_list = [entry.strip() for entry in denylist_str.split(",")]
+        denylist = [FirewallEntry.decode(entry) for entry in entry_list if entry]
+        return denylist
+
+    @classmethod
+    def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
+        """Parse and validate dockerhub mirror URL.
+
+        args:
+            charm: The charm instance.
+
+        Returns:
+            The URL of dockerhub mirror.
+        """
+        dockerhub_mirror = charm.config.get("dockerhub-mirror") or None
+
+        dockerhub_mirror_url = urlsplit(dockerhub_mirror)
+        if dockerhub_mirror is not None and dockerhub_mirror_url.scheme != "https":
+            raise CharmConfigInvalidError(
+                (
+                    "Only secured registry supported for dockerhub-mirror configuration, the "
+                    "scheme should be https"
+                )
+            )
+        return dockerhub_mirror
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "CharmConfig":
@@ -85,11 +227,23 @@ class CharmConfig(BaseModel):
         Returns:
             Current config of the charm.
         """
+        path_str = charm.config.get("path", "")
+        if not path_str:
+            raise CharmConfigInvalidError("Missing path configuration")
+        runner_group = charm.config.get("group", "default")
+        path = parse_github_path(path_str, runner_group)
+
+        token = charm.config.get("token")
+        if not token:
+            raise CharmConfigInvalidError("Missing token configuration")
+
         try:
-            runner_storage = RunnerStorage(charm.config.get("runner-storage"))
+            reconcile_interval = int(charm.config["reconcile-interval"])
         except ValueError as err:
-            logger.exception("Invalid runner-storage configuration")
-            raise CharmConfigInvalidError("Invalid runner-storage configuration") from err
+            raise CharmConfigInvalidError("The reconcile-interval config must be int") from err
+
+        denylist = cls._parse_denylist(charm)
+        dockerhub_mirror = cls._parse_dockerhub_mirror(charm)
 
         openstack_clouds_yaml_str = charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
         if openstack_clouds_yaml_str:
@@ -114,7 +268,120 @@ class CharmConfig(BaseModel):
         else:
             openstack_clouds_yaml = None
 
-        return cls(runner_storage=runner_storage, openstack_clouds_yaml=openstack_clouds_yaml)
+        return cls(
+            path=path,
+            token=token,
+            reconcile_interval=reconcile_interval,
+            denylist=denylist,
+            dockerhub_mirror=dockerhub_mirror,
+            openstack_clouds_yaml=openstack_clouds_yaml,
+        )
+
+    @root_validator
+    @classmethod
+    def check_fields(cls, values: dict) -> dict:
+        """Validate the general charm configuration.
+
+        Args:
+            values: Values in the pydantic model.
+
+        Returns:
+            Modified values in the pydantic model.
+        """
+        reconcile_interval = cast(int, values.get("reconcile_interval"))
+
+        # The EventTimer class sets a timeout of `reconcile_interval` - 1.
+        # Therefore the `reconcile_interval` must be at least 2.
+        if reconcile_interval < 2:
+            logger.exception("The virtual-machines configuration must be int")
+            raise ValueError(
+                "The reconcile_interval configuration needs to be greater or equal to 2"
+            )
+
+        return values
+
+
+class RunnerCharmConfig(BaseModel):
+    """Runner configurations for the charm.
+
+    Attributes:
+        virtual_machines: Number of virtual machine-based runner to spawn.
+        virtual_machine_resources: Hardware resource used by one virtual machine for a runner.
+        runner_storage: Storage to be used as disk for the runner.
+    """
+
+    virtual_machines: int
+    virtual_machine_resources: VirtualMachineResources
+    runner_storage: RunnerStorage
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "RunnerCharmConfig":
+        """Initialize the config from charm.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            Current config of the charm.
+        """
+        try:
+            runner_storage = RunnerStorage(charm.config["runner-storage"])
+        except ValueError as err:
+            raise CharmConfigInvalidError("Invalid runner-storage configuration") from err
+
+        try:
+            virtual_machines = int(charm.config["virtual-machines"])
+        except ValueError as err:
+            raise CharmConfigInvalidError(
+                "The virtual-machines configuration must be int"
+            ) from err
+
+        try:
+            cpu = int(charm.config["vm-cpu"])
+        except ValueError as err:
+            raise CharmConfigInvalidError("Invalid vm-cpu configuration") from err
+
+        virtual_machine_resources = VirtualMachineResources(
+            cpu, charm.config["vm-memory"], charm.config["vm-disk"]
+        )
+
+        return cls(
+            virtual_machines=virtual_machines,
+            virtual_machine_resources=virtual_machine_resources,
+            runner_storage=runner_storage,
+        )
+
+    @root_validator
+    @classmethod
+    def check_fields(cls, values: dict) -> dict:
+        """Validate the runner configuration.
+
+        Args:
+            values: Values in the pydantic model.
+
+        Returns:
+            Modified values in the pydantic model.
+        """
+        virtual_machines = cast(int, values.get("virtual_machines"))
+        resources = cast(VirtualMachineResources, values.get("virtual_machine_resources"))
+
+        if virtual_machines < 0:
+            raise ValueError(
+                "The virtual-machines configuration needs to be greater or equal to 0"
+            )
+
+        if resources.cpu < 1:
+            raise ValueError("The vm-cpu configuration needs to be greater than 0")
+        if not _valid_storage_size_str(resources.memory):
+            raise ValueError(
+                "Invalid format for vm-memory configuration, must be int with unit (e.g. MiB, GiB)"
+            )
+        if not _valid_storage_size_str(resources.disk):
+            raise ValueError(
+                "Invalid format for vm-disk configuration, must be int with unit (e.g., MiB, GiB)"
+            )
+
+        return values
 
 
 class ProxyConfig(BaseModel):
@@ -173,7 +440,14 @@ class ProxyConfig(BaseModel):
     @root_validator
     @classmethod
     def check_fields(cls, values: dict) -> dict:
-        """Validate the proxy configuration."""
+        """Validate the proxy configuration.
+
+        Args:
+            values: Values in the pydantic model.
+
+        Returns:
+            Modified values in the pydantic model.
+        """
         if values.get("use_aproxy") and not (values.get("http") or values.get("https")):
             raise ValueError("aproxy requires http or https to be set")
 
@@ -209,7 +483,7 @@ class UnsupportedArchitectureError(Exception):
         self.arch = arch
 
 
-def _get_supported_arch() -> ARCH:
+def _get_supported_arch() -> Arch:
     """Get current machine architecture.
 
     Raises:
@@ -221,9 +495,9 @@ def _get_supported_arch() -> ARCH:
     arch = platform.machine()
     match arch:
         case arch if arch in ARCHITECTURES_ARM64:
-            return ARCH.ARM64
+            return Arch.ARM64
         case arch if arch in ARCHITECTURES_X86:
-            return ARCH.X64
+            return Arch.X64
         case _:
             raise UnsupportedArchitectureError(arch=arch)
 
@@ -278,26 +552,26 @@ class SSHDebugConnection(BaseModel):
 
 
 @dataclasses.dataclass(frozen=True)
-class State:
+class CharmState:
     """The charm state.
 
     Attributes:
         arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
         charm_config: Configuration of the juju charm.
         is_metrics_logging_available: Whether the charm is able to issue metrics.
-        openstack_clouds_yaml: The openstack clouds.yaml configuration.
         proxy_config: Proxy-related configuration.
         ssh_debug_connections: SSH debug connections configuration information.
     """
 
-    arch: ARCH
-    charm_config: CharmConfig
+    arch: Arch
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
+    charm_config: CharmConfig
+    runner_config: RunnerCharmConfig
     ssh_debug_connections: list[SSHDebugConnection]
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "State":
+    def from_charm(cls, charm: CharmBase) -> "CharmState":
         """Initialize the state from charm.
 
         Args:
@@ -314,34 +588,40 @@ class State:
 
         try:
             proxy_config = ProxyConfig.from_charm(charm)
-        except ValidationError as exc:
+        except (ValidationError, ValueError) as exc:
             logger.error("Invalid proxy config: %s", exc)
-            raise CharmConfigInvalidError("Invalid proxy configuration") from exc
+            raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc
 
         try:
             charm_config = CharmConfig.from_charm(charm)
-        except ValidationError as exc:
+        except (ValidationError, ValueError) as exc:
             logger.error("Invalid charm config: %s", exc)
-            raise CharmConfigInvalidError("Invalid charm configuration") from exc
+            raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
+
+        try:
+            runner_config = RunnerCharmConfig.from_charm(charm)
+        except (ValidationError, ValueError) as exc:
+            logger.error("Invalid charm config: %s", exc)
+            raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
         if (
             prev_state is not None
-            and prev_state["charm_config"]["runner_storage"] != charm_config.runner_storage
+            and prev_state["runner_config"]["runner_storage"] != runner_config.runner_storage
         ):
             logger.warning(
                 "Storage option changed from %s to %s, blocking the charm",
-                prev_state["charm_config"]["runner_storage"],
-                charm_config.runner_storage,
+                prev_state["runner_config"]["runner_storage"],
+                runner_config.runner_storage,
             )
             raise CharmConfigInvalidError(
                 "runner-storage config cannot be changed after deployment, redeploy if needed"
             )
+
         try:
             arch = _get_supported_arch()
         except UnsupportedArchitectureError as exc:
             logger.error("Unsupported architecture: %s", exc.arch)
             raise CharmConfigInvalidError(f"Unsupported architecture {exc.arch}") from exc
-
         try:
             ssh_debug_connections = SSHDebugConnection.from_charm(charm)
         except ValidationError as exc:
@@ -350,9 +630,10 @@ class State:
 
         state = cls(
             arch=arch,
-            charm_config=charm_config,
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
+            charm_config=charm_config,
+            runner_config=runner_config,
             ssh_debug_connections=ssh_debug_connections,
         )
 
@@ -360,6 +641,7 @@ class State:
         # Convert pydantic object to python object serializable by json module.
         state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
         state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
+        state_dict["runner_config"] = json.loads(state_dict["runner_config"].json())
         state_dict["ssh_debug_connections"] = [
             debug_info.json() for debug_info in state_dict["ssh_debug_connections"]
         ]

@@ -24,6 +24,7 @@ import metrics
 import runner_logs
 import runner_metrics
 import shared_fs
+from charm_state import VirtualMachineResources
 from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
 from github_client import GithubClient
 from github_type import RunnerApplication, SelfHostedRunner
@@ -33,7 +34,7 @@ from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, R
 from runner_manager_type import FlushMode, RunnerInfo, RunnerManagerClients, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import ProxySetting as RunnerProxySetting
-from runner_type import RunnerByHealth, VirtualMachineResources
+from runner_type import RunnerByHealth
 from utilities import execute_command, retry, set_env_var
 
 REMOVED_RUNNER_LOG_STR = "Removed runner: %s"
@@ -41,7 +42,7 @@ REMOVED_RUNNER_LOG_STR = "Removed runner: %s"
 logger = logging.getLogger(__name__)
 
 
-BUILD_IMAGE_SCRIPT_FILENAME = "scripts/build-image.sh"
+BUILD_IMAGE_SCRIPT_FILENAME = Path("scripts/build-image.sh")
 
 IssuedMetricEventsStats = dict[Type[metrics.Event], int]
 
@@ -730,7 +731,7 @@ class RunnerManager:
 
         cmd = [
             "/usr/bin/bash",
-            BUILD_IMAGE_SCRIPT_FILENAME,
+            str(BUILD_IMAGE_SCRIPT_FILENAME.absolute()),
             http_proxy,
             https_proxy,
             no_proxy,
@@ -763,4 +764,4 @@ class RunnerManager:
         minute = random.randint(0, 59)  # nosec B311
         base_hour = random.randint(0, 5)  # nosec B311
         hours = ",".join([str(base_hour + offset) for offset in (0, 6, 12, 18)])
-        cron_file.write_text(f"{minute} {hours} * * * ubuntu {build_image_command}")
+        cron_file.write_text(f"{minute} {hours} * * * ubuntu {build_image_command}\n")

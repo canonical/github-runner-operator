@@ -11,14 +11,21 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 import shared_fs
-from charm_state import ARCH, ProxyConfig, State
+from charm_state import (
+    Arch,
+    CharmState,
+    GithubOrg,
+    GithubRepo,
+    ProxyConfig,
+    VirtualMachineResources,
+)
 from errors import IssueMetricEventError, RunnerBinaryError
 from github_type import RunnerApplication
 from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
 from runner import Runner, RunnerStatus
-from runner_manager import RunnerManager, RunnerManagerConfig
+from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
-from runner_type import GithubOrg, GithubRepo, RunnerByHealth, VirtualMachineResources
+from runner_type import RunnerByHealth
 from shared_fs import SharedFilesystem
 from tests.unit.mock import TEST_BINARY
 
@@ -33,9 +40,9 @@ def token_fixture():
 
 @pytest.fixture(scope="function", name="charm_state")
 def charm_state_fixture():
-    mock = MagicMock(spec=State)
+    mock = MagicMock(spec=CharmState)
     mock.is_metrics_logging_available = False
-    mock.arch = ARCH.X64
+    mock.arch = Arch.X64
     mock.ssh_debug_connections = None
     return mock
 
@@ -49,8 +56,8 @@ def charm_state_fixture():
             GithubRepo("test_owner", "test_repo"),
             ProxyConfig(
                 no_proxy="test_no_proxy",
-                http_proxy=TEST_PROXY_SERVER_URL,
-                https_proxy=TEST_PROXY_SERVER_URL,
+                http=TEST_PROXY_SERVER_URL,
+                https=TEST_PROXY_SERVER_URL,
                 use_aproxy=False,
             ),
         ),
@@ -68,11 +75,11 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token, charm_state):
         "test app",
         "0",
         RunnerManagerConfig(
-            request.param[0],
-            token,
-            "jammy",
-            secrets.token_hex(16),
-            pool_path,
+            path=request.param[0],
+            token=token,
+            image="jammy",
+            service_token=secrets.token_hex(16),
+            lxd_storage_path=pool_path,
             charm_state=charm_state,
         ),
     )
@@ -108,17 +115,17 @@ def runner_metrics_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
 @pytest.mark.parametrize(
     "arch",
     [
-        pytest.param(ARCH.ARM64),
-        pytest.param(ARCH.X64),
+        pytest.param(Arch.ARM64),
+        pytest.param(Arch.X64),
     ],
 )
-def test_get_latest_runner_bin_url(runner_manager: RunnerManager, arch: ARCH):
+def test_get_latest_runner_bin_url(runner_manager: RunnerManager, arch: Arch, charm_state):
     """
     arrange: Nothing.
     act: Get runner bin url of existing binary.
     assert: Correct mock data returned.
     """
-    runner_manager.config.charm_state.arch = arch
+    charm_state.arch = arch
     mock_gh_client = MagicMock()
     app = RunnerApplication(
         os="linux",
@@ -327,8 +334,8 @@ def test_reconcile_issues_reconciliation_metric_event(
     runner_manager: RunnerManager,
     monkeypatch: MonkeyPatch,
     issue_event_mock: MagicMock,
-    charm_state: MagicMock,
     runner_metrics: MagicMock,
+    charm_state: MagicMock,
 ):
     """
     arrange:
@@ -464,3 +471,31 @@ def test_reconcile_places_no_timestamp_in_newly_created_runner_if_metrics_disabl
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 
     assert not (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).exists()
+
+
+def test_schedule_build_runner_image(
+    runner_manager: RunnerManager,
+    tmp_path: Path,
+    charm_state: CharmState,
+    monkeypatch: MonkeyPatch,
+):
+    """
+    arrange: Mock the cron path and the randint function.
+    act: Schedule the build runner image.
+    assert: The cron file is created with the expected content.
+    """
+    runner_manager.cron_path = tmp_path / "cron"
+    runner_manager.cron_path.mkdir()
+    monkeypatch.setattr(random, "randint", MagicMock(spec=random.randint, return_value=4))
+
+    runner_manager.schedule_build_runner_image()
+
+    cronfile = runner_manager.cron_path / "build-runner-image"
+    http = charm_state.proxy_config.http or "''"
+    https = charm_state.proxy_config.https or "''"
+    no_proxy = charm_state.proxy_config.no_proxy or "''"
+
+    cmd = f"/usr/bin/bash {BUILD_IMAGE_SCRIPT_FILENAME.absolute()} {http} {https} {no_proxy}"
+
+    assert cronfile.exists()
+    assert cronfile.read_text() == f"4 4,10,16,22 * * * ubuntu {cmd}\n"

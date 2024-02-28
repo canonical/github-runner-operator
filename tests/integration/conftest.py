@@ -289,7 +289,7 @@ async def app_no_wait_fixture(
         app_name=app_name,
         path=path,
         token=token,
-        runner_storage="memory",
+        runner_storage="juju-storage",
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
