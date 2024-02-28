@@ -35,8 +35,6 @@ DISPATCH_CRASH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_crash_test.yaml"
 DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME = "workflow_dispatch_failure_test.yaml"
 DISPATCH_WAIT_TEST_WORKFLOW_FILENAME = "workflow_dispatch_wait_test.yaml"
 
-JOB_LOG_START_MSG_TEMPLATE = "Job is about to start running on the runner: {runner_name}"
-
 
 async def check_runner_binary_exists(unit: Unit) -> bool:
     """Checks if runner binary exists in the charm.

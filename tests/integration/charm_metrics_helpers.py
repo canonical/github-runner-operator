@@ -17,7 +17,7 @@ from juju.unit import Unit
 from github_type import JobConclusion
 from metrics import METRICS_LOG_PATH
 from runner_metrics import PostJobStatus
-from tests.integration.helpers import JOB_LOG_START_MSG_TEMPLATE, get_runner_name, run_in_unit
+from tests.integration.helpers import get_runner_name, run_in_unit
 
 TEST_WORKFLOW_NAMES = [
     "Workflow Dispatch Tests",
