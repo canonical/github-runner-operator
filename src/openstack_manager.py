@@ -27,7 +27,7 @@ from utilities import execute_command
 logger = logging.getLogger(__name__)
 
 CLOUDS_YAML_PATH = Path(Path.home() / ".config/openstack/clouds.yaml")
-IMAGE_PATH = Path("jammy-server-cloudimg-amd64-compressed.img")
+IMAGE_PATH_TMPL = "jammy-server-cloudimg-{architecture}-compressed.img"
 IMAGE_NAME = "github-runner-jammy"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 
@@ -203,7 +203,10 @@ def build_image(
 
     try:
         conn = _create_connection(cloud_config)
-        return conn.create_image(name=IMAGE_NAME, filename=IMAGE_PATH)
+        arch = "amd64" if runner_info["architecture"] == "x64" else "arm64"
+        return conn.create_image(
+            name=IMAGE_NAME, filename=IMAGE_PATH_TMPL.format(architecture=arch)
+        )
     except OpenStackCloudException as exc:
         raise ImageBuildError("Failed to upload image.") from exc
 
