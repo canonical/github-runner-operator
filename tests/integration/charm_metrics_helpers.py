@@ -26,7 +26,7 @@ TEST_WORKFLOW_NAMES = [
 ]
 
 
-async def _wait_for_workflow_to_start(unit: Unit, workflow: Workflow):
+async def wait_for_workflow_to_start(unit: Unit, workflow: Workflow):
     """Wait for the workflow to start.
 
     Args:
@@ -41,7 +41,7 @@ async def _wait_for_workflow_to_start(unit: Unit, workflow: Workflow):
                 logs_url = jobs[0].logs_url()
                 logs = requests.get(logs_url).content.decode("utf-8")
 
-                if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
+                if runner_name in logs:
                     break
         else:
             sleep(30)
@@ -105,7 +105,7 @@ async def get_metrics_log(unit: Unit) -> str:
     return stdout.strip()
 
 
-async def _cancel_workflow_run(unit: Unit, workflow: Workflow):
+async def cancel_workflow_run(unit: Unit, workflow: Workflow):
     """Cancel the workflow run.
 
     Args:
@@ -120,7 +120,7 @@ async def _cancel_workflow_run(unit: Unit, workflow: Workflow):
             logs_url = jobs[0].logs_url()
             logs = requests.get(logs_url).content.decode("utf-8")
 
-            if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
+            if runner_name in logs:
                 run.cancel()
 
 

@@ -439,15 +439,22 @@ async def _assert_workflow_run_conclusion(
         workflow: The workflow to assert the workflow run conclusion for.
         start_time: The start time of the workflow.
     """
+    log_found = False
     for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
         latest_job: WorkflowJob = run.jobs()[0]
         logs = get_job_logs(job=latest_job)
 
-        if JOB_LOG_START_MSG_TEMPLATE.format(runner_name=runner_name) in logs:
+        if runner_name in logs:
+            log_found = True
             assert latest_job.conclusion == conclusion, (
                 f"Job {latest_job.name} for {runner_name} expected {conclusion}, "
                 f"got {latest_job.conclusion}"
             )
+
+    assert log_found, (
+        f"No run with runner({runner_name}) log found for workflow({workflow.name}) "
+        f"starting from {start_time} with conclusion {conclusion}"
+    )
 
 
 async def _wait_for_workflow_to_complete(
