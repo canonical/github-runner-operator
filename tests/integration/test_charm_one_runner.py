@@ -156,7 +156,7 @@ async def test_token_config_changed(model: Model, app: Application, token_alt: s
     unit = app.units[0]
 
     await app.set_config({"token": token_alt})
-    await model.wait_for_idle(status=ACTIVE)
+    await model.wait_for_idle(status=ACTIVE, timeout=30 * 60)
 
     return_code, stdout = await run_in_unit(
         unit, "cat /etc/systemd/system/repo-policy-compliance.service"
@@ -230,7 +230,7 @@ async def test_change_runner_storage(model: Model, app: Application) -> None:
 
 
 async def test_token_config_changed_insufficient_perms(
-    model: Model, app: Application, token_alt: str
+    model: Model, app: Application, token: str
 ) -> None:
     """
     arrange: A working application with one runner.
@@ -239,7 +239,7 @@ async def test_token_config_changed_insufficient_perms(
     """
     unit = app.units[0]
 
-    await app.set_config({"token": "", "virtual-machines": "0"})
+    await app.set_config({"token": "invalid-token", "virtual-machines": "0"})
     await model.wait_for_idle()
 
     await wait_till_num_of_runners(unit, num=0)

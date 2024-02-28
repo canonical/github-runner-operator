@@ -13,34 +13,7 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_manager.py#L90"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>function</kbd> `initialize`
-
-```python
-initialize(cloud_config: dict) → None
-```
-
-Initialize Openstack integration. 
-
-Validates config and writes it to disk. 
-
-
-
-**Args:**
- 
- - <b>`cloud_config`</b>:  The configuration in clouds.yaml format to apply. 
-
-
-
-**Raises:**
- 
- - <b>`InvalidConfigError`</b>:  if the format of the config is invalid. 
-
-
----
-
-<a href="../src/openstack_manager.py#L105"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L60"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `list_projects`
 
@@ -62,7 +35,7 @@ It currently returns objects directly from the sdk, which may not be ideal (mapp
 
 ---
 
-<a href="../src/openstack_manager.py#L181"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L136"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
@@ -88,7 +61,7 @@ Build and upload an image to OpenStack.
 
 **Raises:**
  
- - <b>`ImageBuildError`</b>:  If there were errors buliding/creating the image. 
+ - <b>`ImageBuildError`</b>:  If there were errors building/creating the image. 
 
 
 
@@ -98,7 +71,7 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_manager.py#L218"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L173"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 

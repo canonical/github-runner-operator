@@ -6,9 +6,9 @@
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import NamedTuple, Optional, TypedDict, Union
+from typing import Optional
 
-from charm_state import SSHDebugConnection
+from charm_state import GithubPath, SSHDebugConnection
 
 
 @dataclass
@@ -19,48 +19,14 @@ class RunnerByHealth:
     unhealthy: tuple[str]
 
 
-class ProxySetting(TypedDict, total=False):
+@dataclass
+class ProxySetting:
     """Represent HTTP-related proxy settings."""
 
-    no_proxy: str
-    http: str
-    https: str
-    aproxy_address: str
-
-
-@dataclass
-class GithubRepo:
-    """Represent GitHub repository."""
-
-    owner: str
-    repo: str
-
-    def path(self) -> str:
-        """Return a string representing the path."""
-        return f"{self.owner}/{self.repo}"
-
-
-@dataclass
-class GithubOrg:
-    """Represent GitHub organization."""
-
-    org: str
-    group: str
-
-    def path(self) -> str:
-        """Return a string representing the path."""
-        return self.org
-
-
-GithubPath = Union[GithubOrg, GithubRepo]
-
-
-class VirtualMachineResources(NamedTuple):
-    """Virtual machine resource configuration."""
-
-    cpu: int
-    memory: str
-    disk: str
+    no_proxy: Optional[str]
+    http: Optional[str]
+    https: Optional[str]
+    aproxy_address: Optional[str]
 
 
 @dataclass
@@ -87,7 +53,7 @@ class RunnerConfig:  # pylint: disable=too-many-instance-attributes
     path: GithubPath
     proxies: ProxySetting
     dockerhub_mirror: str | None = None
-    ssh_debug_connections: SSHDebugConnection | None = None
+    ssh_debug_connections: list[SSHDebugConnection] | None = None
 
 
 @dataclass

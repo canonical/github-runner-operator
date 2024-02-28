@@ -8,10 +8,16 @@ Group=www-data
 WorkingDirectory={{working_directory}}
 Environment="GITHUB_TOKEN={{github_token}}"
 Environment="CHARM_TOKEN={{charm_token}}"
-Environment="HTTP_PROXY={{proxies['http']}}"
-Environment="HTTPS_PROXY={{proxies['https']}}"
-Environment="NO_PROXY={{proxies['no_proxy']}}"
-Environment="http_proxy={{proxies['http']}}"
-Environment="https_proxy={{proxies['https']}}"
-Environment="no_proxy={{proxies['no_proxy']}}"
+{% if proxies.http %}
+Environment="HTTP_PROXY={{proxies.http}}"
+Environment="http_proxy={{proxies.http}}"
+{% endif %}
+{% if proxies.https %}
+Environment="HTTPS_PROXY={{proxies.https}}"
+Environment="https_proxy={{proxies.https}}"
+{% endif %}
+{% if proxies.no_proxy %}
+Environment="NO_PROXY={{proxies.no_proxy}}"
+Environment="no_proxy={{proxies.no_proxy}}"
+{% endif %}
 ExecStart=/usr/bin/gunicorn --bind 0.0.0.0:8080 --timeout 60 app:app

@@ -9,12 +9,11 @@ from pathlib import Path
 
 import jinja2
 
-from charm_state import State as CharmState
+from charm_state import CharmState, GithubPath
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
 from lxd import LxdClient
 from repo_policy_compliance_client import RepoPolicyComplianceClient
-from runner_type import GithubPath
 
 
 class FlushMode(Enum):
@@ -56,7 +55,8 @@ class RunnerManagerClients:
 
 
 @dataclass
-class RunnerManagerConfig:
+# The instance attributes are all required.
+class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     """Configuration of runner manager.
 
     Attributes:
@@ -67,6 +67,7 @@ class RunnerManagerConfig:
         image: Name of the image for creating LXD instance.
         service_token: Token for accessing local service.
         lxd_storage_path: Path to be used as LXD storage.
+        proxy_config: Proxy configuration.
         charm_state: The state of the charm.
         dockerhub_mirror: URL of dockerhub mirror to use.
     """

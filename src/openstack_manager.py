@@ -4,8 +4,9 @@
 """Module for handling interactions with OpenStack."""
 import logging
 from dataclasses import dataclass
-from pathlib import Path
-from subprocess import SubprocessError
+
+# subprocess module is used to call image build script.
+from subprocess import SubprocessError  # nosec
 from typing import Iterable, Optional
 
 import jinja2
@@ -15,50 +16,19 @@ import openstack.compute.v2.server
 import openstack.connection
 import openstack.exceptions
 import openstack.image.v2.image
-import yaml
 from openstack.exceptions import OpenStackCloudException
 from openstack.identity.v3.project import Project
 
-from errors import OpenStackInvalidConfigError, OpenStackUnauthorizedError
+from errors import OpenStackUnauthorizedError
 from github_type import RunnerApplication
 from runner_type import GithubPath, ProxySetting
 from utilities import execute_command
 
 logger = logging.getLogger(__name__)
 
-CLOUDS_YAML_PATH = Path(Path.home() / ".config/openstack/clouds.yaml")
 IMAGE_PATH_TMPL = "jammy-server-cloudimg-{architecture}-compressed.img"
 IMAGE_NAME = "github-runner-jammy"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
-
-
-def _validate_cloud_config(cloud_config: dict) -> None:
-    """Validate the format of the cloud configuration.
-
-    Args:
-        cloud_config: The configuration in clouds.yaml format to validate.
-
-    Raises:
-        InvalidConfigError: if the format of the config is invalid.
-    """
-    # dict of format: {clouds: <cloud-name>: <cloud-config>}
-    try:
-        clouds = list(cloud_config["clouds"].keys())
-    except KeyError as exc:
-        raise OpenStackInvalidConfigError("Invalid clouds.yaml.") from exc
-
-    if not clouds:
-        raise OpenStackInvalidConfigError("No clouds defined in clouds.yaml.")
-
-
-def _write_config_to_disk(cloud_config: dict) -> None:
-    """Write the cloud configuration to disk.
-
-    Args:
-        cloud_config: The configuration in clouds.yaml format to write to disk.
-    """
-    CLOUDS_YAML_PATH.parent.mkdir(parents=True, exist_ok=True)
-    CLOUDS_YAML_PATH.write_text(encoding="utf-8", data=yaml.dump(cloud_config))
 
 
 def _create_connection(cloud_config: dict) -> openstack.connection.Connection:
@@ -85,21 +55,6 @@ def _create_connection(cloud_config: dict) -> openstack.connection.Connection:
     # api documents that keystoneauth1.exceptions.MissingRequiredOptions can be raised but
     # I could not reproduce it. Therefore, no catch here.
     return openstack.connect(cloud_name)
-
-
-def initialize(cloud_config: dict) -> None:
-    """Initialize Openstack integration.
-
-    Validates config and writes it to disk.
-
-    Args:
-        cloud_config: The configuration in clouds.yaml format to apply.
-
-    Raises:
-        InvalidConfigError: if the format of the config is invalid.
-    """
-    _validate_cloud_config(cloud_config)
-    _write_config_to_disk(cloud_config)
 
 
 def list_projects(cloud_config: dict) -> list[Project]:
@@ -141,7 +96,7 @@ def _build_image_command(
         Command to execute to build runner image.
     """
     if not proxies:
-        proxies = ProxySetting()
+        proxies = ProxySetting(no_proxy=None, http=None, https=None, aproxy_address=None)
 
     http_proxy = proxies.get("http", "")
     https_proxy = proxies.get("https", "")
@@ -191,7 +146,7 @@ def build_image(
         proxies: HTTP proxy settings.
 
     Raises:
-        ImageBuildError: If there were errors buliding/creating the image.
+        ImageBuildError: If there were errors building/creating the image.
 
     Returns:
         The OpenStack image object.
@@ -248,7 +203,6 @@ def create_instance(
             userdata=cloud_userdata,
             key_name="sunbeam",
             security_groups=["default"],
-            admin_pass="helloworld",
             ip_pool=["external-network"],
         )
     except OpenStackCloudException as exc:

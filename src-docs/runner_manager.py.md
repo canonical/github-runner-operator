@@ -9,7 +9,6 @@ Runner Manager manages the runners on LXD and GitHub.
 ---------------
 - **RUNNER_INSTALLED_TS_FILE_NAME**
 - **REMOVED_RUNNER_LOG_STR**
-- **BUILD_IMAGE_SCRIPT_FILENAME**
 
 
 ---
@@ -25,8 +24,7 @@ Manage a group of runners according to configuration.
 __init__(
     app_name: str,
     unit: int,
-    runner_manager_config: RunnerManagerConfig,
-    proxies: Optional[ProxySetting] = None
+    runner_manager_config: RunnerManagerConfig
 ) → None
 ```
 
@@ -39,14 +37,13 @@ Construct RunnerManager object for creating and managing runners.
  - <b>`app_name`</b>:  An name for the set of runners. 
  - <b>`unit`</b>:  Unit number of the set of runners. 
  - <b>`runner_manager_config`</b>:  Configuration for the runner manager. 
- - <b>`proxies`</b>:  HTTP proxy settings. 
 
 
 
 
 ---
 
-<a href="../src/runner_manager.py#L726"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L743"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `build_runner_image`
 
@@ -66,7 +63,7 @@ Build container image in test mode, else virtual machine image.
 
 ---
 
-<a href="../src/runner_manager.py#L117"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L108"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `check_runner_bin`
 
@@ -83,7 +80,7 @@ Check if runner binary exists.
 
 ---
 
-<a href="../src/runner_manager.py#L555"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L581"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `flush`
 
@@ -106,7 +103,7 @@ Remove existing runners.
 
 ---
 
-<a href="../src/runner_manager.py#L218"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L209"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_github_info`
 
@@ -123,7 +120,7 @@ Get information on the runners from GitHub.
 
 ---
 
-<a href="../src/utilities.py#L125"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L116"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_latest_runner_bin_url`
 
@@ -148,7 +145,7 @@ The runner binary URL changes when a new version is available.
 
 ---
 
-<a href="../src/runner_manager.py#L450"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L476"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `reconcile`
 
@@ -172,7 +169,7 @@ Bring runners in line with target.
 
 ---
 
-<a href="../src/runner_manager.py#L736"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L753"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `schedule_build_runner_image`
 
@@ -184,7 +181,7 @@ Install cron job for building runner image.
 
 ---
 
-<a href="../src/utilities.py#L151"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L142"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `update_runner_bin`
 
