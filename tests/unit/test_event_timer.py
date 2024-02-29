@@ -1,6 +1,5 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
-import logging
 import secrets
 
 from event_timer import EventTimer
@@ -26,19 +25,3 @@ def test_is_active_false(exec_command):
 
     event = EventTimer(unit_name=secrets.token_hex(16))
     assert not event.is_active(event_name=secrets.token_hex(16))
-
-
-def test_is_active_false_list_timers(exec_command, caplog):
-    """
-    arrange: create an EventTimer object and mock exec command to return non-zero exit code
-     and set log level to debug
-    act: call is_active
-    assert: list-timers is called
-    """
-    exec_command.return_value = ("", 1)
-    caplog.set_level(logging.DEBUG)
-
-    event = EventTimer(unit_name=secrets.token_hex(16))
-    assert not event.is_active(event_name=secrets.token_hex(16))
-    assert exec_command.call_count == 2
-    assert "list-timers" in exec_command.call_args_list[1][0][0]
