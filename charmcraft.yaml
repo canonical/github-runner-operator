@@ -11,6 +11,7 @@ parts:
       - libffi-dev  # for cffi
       - libssl-dev  # for cryptography
       - rust-all  # for cryptography
+      - pkg-config # for cryptography
     prime:
       - scripts/build-image.sh
       - scripts/repo_policy_compliance_service.py
