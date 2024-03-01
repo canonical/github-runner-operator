@@ -5,7 +5,7 @@ ops>=2.8
 pylxd @ git+https://github.com/canonical/pylxd
 requests
 typing-extensions
-cryptography <=42.0.0
+cryptography <=42.0.5
 pydantic ==1.10.14
 cosl ==0.0.8
 # juju 3.1.2.0 depends on pyyaml<=6.0 and >=5.1.2
