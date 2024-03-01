@@ -1,0 +1,28 @@
+name: TMP upload docs
+
+on:
+  pull_request:
+
+jobs:
+  publish-docs:
+    if: ${{ github.event.inputs.destination-channel }} == 'latest/stable'
+    name: Publish docs
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - name: Search for docs folder
+        id: docs-exist
+        run: echo "docs_exist=$([[ -d docs ]] && echo 'True' || echo 'False')" >> $GITHUB_OUTPUT
+      - name: Publish documentation
+        if: steps.docs-exist.outputs.docs_exist == 'True'
+        uses: canonical/discourse-gatekeeper@stable
+        id: publishDocumentation
+        with:
+          discourse_host: discourse.charmhub.io
+          discourse_api_username: ${{ secrets.DISCOURSE_API_USERNAME }}
+          discourse_api_key: ${{ secrets.DISCOURSE_API_KEY }}
+          dry_run: ${{ inputs.doc-automation-disabled }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Show index page
+        if: steps.docs-exist.outputs.docs_exist == 'True'
+        run: echo '${{ steps.publishDocumentation.outputs.index_url }}'
