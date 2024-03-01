@@ -516,3 +516,14 @@ jobs:
           [ $((ping $HOST_IP -c 5 || :) | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
       - name: Test sctp support
         run: sudo apt-get install lksctp-tools -yq && checksctp
+
+  required_status_checks:
+    name: Required E2E Test Status Checks
+    runs-on: ubuntu-latest
+    needs:
+      - deploy-e2e-test-runner
+    if: always() && !cancelled()
+    timeout-minutes: 5
+    steps:
+      - run: |
+          [ '${{ needs.deploy-e2e-test-runner.result }}' = 'success' ] || (echo deploy-e2e-test-runner failed && false)
