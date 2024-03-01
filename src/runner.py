@@ -13,6 +13,7 @@ collection of `Runner` instances.
 import json
 import logging
 import pathlib
+import secrets
 import textwrap
 import time
 from dataclasses import dataclass
@@ -22,9 +23,10 @@ from typing import Iterable, NamedTuple, Optional, Sequence
 import yaml
 
 import shared_fs
-from charm_state import ARCH
+from charm_state import Arch, GithubOrg, SSHDebugConnection, VirtualMachineResources
 from errors import (
     CreateSharedFilesystemError,
+    GithubClientError,
     LxdError,
     RunnerAproxyError,
     RunnerCreateError,
@@ -36,7 +38,7 @@ from errors import (
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
 from runner_manager_type import RunnerManagerClients
-from runner_type import GithubOrg, RunnerConfig, RunnerStatus, VirtualMachineResources
+from runner_type import RunnerConfig, RunnerStatus
 from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
@@ -86,7 +88,7 @@ class CreateRunnerConfig:
     resources: VirtualMachineResources
     binary_path: Path
     registration_token: str
-    arch: ARCH = ARCH.X64
+    arch: Arch = Arch.X64
 
 
 class Runner:
@@ -119,14 +121,6 @@ class Runner:
         self.instance = instance
 
         self._shared_fs: Optional[shared_fs.SharedFilesystem] = None
-
-        # If the proxy setting are set, then add NO_PROXY local variables.
-        if self.config.proxies.get("http") or self.config.proxies.get("https"):
-            if self.config.proxies.get("no_proxy"):
-                self.config.proxies["no_proxy"] += ","
-            else:
-                self.config.proxies["no_proxy"] = ""
-            self.config.proxies["no_proxy"] += f"{self.config.name},.svc"
 
     def create(self, config: CreateRunnerConfig):
         """Create the runner instance on LXD and register it on GitHub.
@@ -164,7 +158,7 @@ class Runner:
         except (RunnerError, LxdError) as err:
             raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err
 
-    def remove(self, remove_token: str) -> None:
+    def remove(self, remove_token: Optional[str]) -> None:
         """Remove this runner instance from LXD and GitHub.
 
         Args:
@@ -177,18 +171,20 @@ class Runner:
 
         if self.instance:
             logger.info("Executing command to removal of runner and clean up...")
-            self.instance.execute(
-                [
-                    "/usr/bin/sudo",
-                    "-u",
-                    "ubuntu",
-                    str(self.config_script),
-                    "remove",
-                    "--token",
-                    remove_token,
-                ],
-                hide_cmd=True,
-            )
+
+            if remove_token:
+                self.instance.execute(
+                    [
+                        "/usr/bin/sudo",
+                        "-u",
+                        "ubuntu",
+                        str(self.config_script),
+                        "remove",
+                        "--token",
+                        remove_token,
+                    ],
+                    hide_cmd=True,
+                )
 
             if self.instance.status == "Running":
                 logger.info("Removing LXD instance of runner: %s", self.config.name)
@@ -228,7 +224,12 @@ class Runner:
             self.status.runner_id,
             self.config.path.path(),
         )
-        self._clients.github.delete_runner(self.config.path, self.status.runner_id)
+        try:
+            self._clients.github.delete_runner(self.config.path, self.status.runner_id)
+        except GithubClientError:
+            logger.exception("Unable the remove runner on GitHub: %s", self.config.name)
+            # This can occur when attempting to remove a busy runner.
+            # The caller should retry later, after GitHub mark the runner as offline.
 
     def _add_shared_filesystem(self, path: Path) -> None:
         """Add the shared filesystem to the runner instance.
@@ -470,7 +471,7 @@ class Runner:
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
     @retry(tries=10, delay=10, max_delay=120, backoff=2, local_logger=logger)
-    def _install_binaries(self, runner_binary: Path, arch: ARCH) -> None:
+    def _install_binaries(self, runner_binary: Path, arch: Arch) -> None:
         """Install runner binary and other binaries.
 
         Args:
@@ -487,7 +488,7 @@ class Runner:
                 Snap(
                     name="aproxy",
                     channel="edge",
-                    revision=APROXY_ARM_REVISION if arch == ARCH.ARM64 else APROXY_AMD_REVISION,
+                    revision=APROXY_ARM_REVISION if arch == Arch.ARM64 else APROXY_AMD_REVISION,
                 )
             ]
         )
@@ -621,9 +622,13 @@ class Runner:
         docker_client_proxy = {
             "proxies": {
                 "default": {
-                    "httpProxy": self.config.proxies["http"],
-                    "httpsProxy": self.config.proxies["https"],
-                    "noProxy": self.config.proxies["no_proxy"],
+                    key: value
+                    for key, value in (
+                        ("httpProxy", self.config.proxies.http),
+                        ("httpsProxy", self.config.proxies.https),
+                        ("noProxy", self.config.proxies.no_proxy),
+                    )
+                    if value
                 }
             }
         }
@@ -671,9 +676,15 @@ class Runner:
         # As the user already has sudo access, this does not give the user any additional access.
         self.instance.execute(["/usr/bin/sudo", "chmod", "777", "/usr/local/bin"])
 
+        selected_ssh_connection: SSHDebugConnection | None = (
+            secrets.choice(self.config.ssh_debug_connections)
+            if self.config.ssh_debug_connections
+            else None
+        )
+        logger.info("SSH Debug info: %s", selected_ssh_connection)
         # Load `/etc/environment` file.
         environment_contents = self._clients.jinja.get_template("environment.j2").render(
-            proxies=self.config.proxies, ssh_debug_info=self.config.ssh_debug_info
+            proxies=self.config.proxies, ssh_debug_info=selected_ssh_connection
         )
         self._put_file("/etc/environment", environment_contents)
 
@@ -682,7 +693,7 @@ class Runner:
             proxies=self.config.proxies,
             pre_job_script=str(self.pre_job_script),
             dockerhub_mirror=self.config.dockerhub_mirror,
-            ssh_debug_info=self.config.ssh_debug_info,
+            ssh_debug_info=selected_ssh_connection,
         )
         self._put_file(str(self.env_file), env_contents)
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
@@ -693,8 +704,8 @@ class Runner:
             self.instance.execute(["systemctl", "restart", "docker"])
 
         if self.config.proxies:
-            if self.config.proxies.get("aproxy_address"):
-                self._configure_aproxy(self.config.proxies["aproxy_address"])
+            if aproxy_address := self.config.proxies.aproxy_address:
+                self._configure_aproxy(aproxy_address)
             else:
                 self._configure_docker_proxy()
 

@@ -9,6 +9,25 @@ Types used by RunnerManager class.
 
 ---
 
+## <kbd>class</kbd> `FlushMode`
+Strategy for flushing runners. 
+
+
+
+**Attributes:**
+ 
+ - <b>`FLUSH_IDLE`</b>:  Flush only idle runners. 
+ - <b>`FLUSH_IDLE_WAIT_REPO_CHECK`</b>:  Flush only idle runners, then wait until repo-policy-check is  completed for the busy runners. 
+ - <b>`FLUSH_BUSY`</b>:  Flush busy runners. 
+ - <b>`FLUSH_BUSY_WAIT_REPO_CHECK`</b>:  Wait until the repo-policy-check is completed before  flush of busy runners. 
+ - <b>`FORCE_FLUSH_WAIT_REPO_CHECK`</b>:  Force flush the runners (remove lxd instances even on  gh api issues, like invalid token).  Wait until repo-policy-check is completed before force flush of busy runners. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `RunnerInfo`
 Information from GitHub of a runner. 
 
@@ -57,6 +76,7 @@ Configuration of runner manager.
  - <b>`image`</b>:  Name of the image for creating LXD instance. 
  - <b>`service_token`</b>:  Token for accessing local service. 
  - <b>`lxd_storage_path`</b>:  Path to be used as LXD storage. 
+ - <b>`proxy_config`</b>:  Proxy configuration. 
  - <b>`charm_state`</b>:  The state of the charm. 
  - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
 

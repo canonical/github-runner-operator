@@ -9,48 +9,6 @@ Types used by Runner class.
 
 ---
 
-## <kbd>class</kbd> `GithubOrg`
-Represent GitHub organization. 
-
-
-
-
----
-
-<a href="../src/runner_type.py#L50"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>function</kbd> `path`
-
-```python
-path() → str
-```
-
-Return a string representing the path. 
-
-
----
-
-## <kbd>class</kbd> `GithubRepo`
-Represent GitHub repository. 
-
-
-
-
----
-
-<a href="../src/runner_type.py#L38"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>function</kbd> `path`
-
-```python
-path() → str
-```
-
-Return a string representing the path. 
-
-
----
-
 ## <kbd>class</kbd> `ProxySetting`
 Represent HTTP-related proxy settings. 
 
@@ -83,7 +41,7 @@ Configuration for runner.
  - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name. 
  - <b>`proxies`</b>:  HTTP(S) proxy settings. 
  - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
- - <b>`ssh_debug_info`</b>:  The SSH debug server connection metadata. 
+ - <b>`ssh_debug_connections`</b>:  The SSH debug server connections metadata. 
 
 
 
@@ -102,15 +60,6 @@ Status of runner.
  - <b>`exist`</b>:  Whether the runner instance exists on LXD. 
  - <b>`online`</b>:  Whether GitHub marks this runner as online. 
  - <b>`busy`</b>:  Whether GitHub marks this runner as busy. 
-
-
-
-
-
----
-
-## <kbd>class</kbd> `VirtualMachineResources`
-Virtual machine resource configuration. 
 
 
 

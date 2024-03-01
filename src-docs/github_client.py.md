@@ -8,13 +8,25 @@ GitHub API client.
 Migrate to PyGithub in the future. PyGithub is still lacking some API such as remove token for runner. 
 
 
+---
+
+<a href="../src/github_client.py#L31"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>function</kbd> `catch_http_errors`
+
+```python
+catch_http_errors(func)
+```
+
+Catch HTTP errors and raise custom exceptions. 
+
 
 ---
 
 ## <kbd>class</kbd> `GithubClient`
 GitHub API client. 
 
-<a href="../src/github_client.py#L34"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_client.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -36,12 +48,12 @@ Instantiate the GiHub API client.
 
 ---
 
-<a href="../src/github_client.py#L150"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_client.py#L173"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `delete_runner`
 
 ```python
-delete_runner(path: Union[GithubOrg, GithubRepo], runner_id: int) → None
+delete_runner(path: GithubOrg | GithubRepo, runner_id: int) → None
 ```
 
 Delete the self-hosted runner from GitHub. 
@@ -55,7 +67,7 @@ Delete the self-hosted runner from GitHub.
 
 ---
 
-<a href="../src/github_client.py#L170"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_client.py#L194"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_job_info`
 
@@ -84,14 +96,12 @@ Get information about a job for a specific workflow run.
 
 ---
 
-<a href="../src/github_client.py#L44"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_client.py#L63"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_runner_applications`
 
 ```python
-get_runner_applications(
-    path: Union[GithubOrg, GithubRepo]
-) → List[RunnerApplication]
+get_runner_applications(path: GithubOrg | GithubRepo) → List[RunnerApplication]
 ```
 
 Get list of runner applications available for download. 
@@ -107,14 +117,12 @@ Get list of runner applications available for download.
 
 ---
 
-<a href="../src/github_client.py#L63"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_client.py#L83"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_runner_github_info`
 
 ```python
-get_runner_github_info(
-    path: Union[GithubOrg, GithubRepo]
-) → list[SelfHostedRunner]
+get_runner_github_info(path: GithubOrg | GithubRepo) → list[SelfHostedRunner]
 ```
 
 Get runner information on GitHub under a repo or org. 
@@ -132,12 +140,12 @@ Get runner information on GitHub under a repo or org.
 
 ---
 
-<a href="../src/github_client.py#L128"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_client.py#L150"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_runner_registration_token`
 
 ```python
-get_runner_registration_token(path: Union[GithubOrg, GithubRepo]) → str
+get_runner_registration_token(path: GithubOrg | GithubRepo) → str
 ```
 
 Get token from GitHub used for registering runners. 
@@ -155,12 +163,12 @@ Get token from GitHub used for registering runners.
 
 ---
 
-<a href="../src/github_client.py#L110"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_client.py#L131"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_runner_remove_token`
 
 ```python
-get_runner_remove_token(path: Union[GithubOrg, GithubRepo]) → str
+get_runner_remove_token(path: GithubOrg | GithubRepo) → str
 ```
 
 Get token from GitHub used for removing runners. 

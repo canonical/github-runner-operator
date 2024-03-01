@@ -12,7 +12,7 @@
 
 - GitHub Account.
 - Juju 3 installed.
-- Juju controller on OpenStack or LXD (See [How to run on LXD cloud](https://charmhub.io/github-runner/docs/run-on-lxd)), and a juju model.
+- Juju controller on OpenStack or LXD (see [How to run on LXD cloud](https://charmhub.io/github-runner/docs/how-to-run-on-lxd)) and a juju model.
 
 For more information about how to install and use Juju, see [Get started with Juju](https://juju.is/docs/olm/get-started-with-juju).
 
@@ -35,6 +35,7 @@ The registration token can be requested by calling the [GitHub API](https://docs
 ### Deploy the GitHub runner charm
 
 The charm requires a GitHub personal access token with `repo` access, which can be created following the instructions [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic).
+A user with `admin` access for the repository/org is required, otherwise, the repo-policy-compliance will fail the job.
 
 Once the personal access token is created, the charm can be deployed with:
 

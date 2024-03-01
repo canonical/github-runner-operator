@@ -22,6 +22,7 @@ from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
+from github_client import GithubClient
 from tests.integration.helpers import (
     deploy_github_runner_charm,
     ensure_charm_has_runner,
@@ -144,10 +145,22 @@ def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
 
 
 @pytest.fixture(scope="module")
+def openstack_clouds_yaml(pytestconfig: pytest.Config) -> Optional[str]:
+    """Configured clouds-yaml setting."""
+    clouds_yaml = pytestconfig.getoption("--openstack-clouds-yaml")
+    return Path(clouds_yaml).read_text(encoding="utf-8") if clouds_yaml else None
+
+
+@pytest.fixture(scope="module")
 def model(ops_test: OpsTest) -> Model:
     """Juju model used in the test."""
     assert ops_test.model is not None
     return ops_test.model
+
+
+@pytest.fixture(scope="module")
+def runner_manager_github_client(token: str) -> GithubClient:
+    return GithubClient(token=token)
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -179,7 +192,7 @@ async def app_no_runner(
 
 
 @pytest_asyncio.fixture(scope="module")
-async def app(model: Model, app_no_runner: Application) -> AsyncIterator[Application]:
+async def app_one_runner(model: Model, app_no_runner: Application) -> AsyncIterator[Application]:
     """Application with a single runner.
 
     Test should ensure it returns with the application in a good state and has
@@ -276,7 +289,7 @@ async def app_no_wait_fixture(
         app_name=app_name,
         path=path,
         token=token,
-        runner_storage="memory",
+        runner_storage="juju-storage",
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
@@ -294,7 +307,7 @@ async def tmate_ssh_server_app_fixture(
     """tmate-ssh-server charm application related to GitHub-Runner app charm."""
     tmate_app: Application = await model.deploy("tmate-ssh-server", channel="edge")
     await app_no_wait.relate("debug-ssh", f"{tmate_app.name}:debug-ssh")
-    await model.wait_for_idle(status=ACTIVE, timeout=60 * 30)
+    await model.wait_for_idle(apps=[tmate_app.name], status=ACTIVE, timeout=60 * 30)
 
     return tmate_app
 

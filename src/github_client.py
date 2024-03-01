@@ -6,7 +6,7 @@
 Migrate to PyGithub in the future. PyGithub is still lacking some API such as
 remove token for runner.
 """
-
+import functools
 import logging
 from datetime import datetime
 from urllib.error import HTTPError
@@ -16,6 +16,7 @@ from ghapi.page import paged
 from typing_extensions import assert_never
 
 import errors
+from charm_state import GithubOrg, GithubPath, GithubRepo
 from github_type import (
     JobStats,
     RegistrationToken,
@@ -23,9 +24,27 @@ from github_type import (
     RunnerApplicationList,
     SelfHostedRunner,
 )
-from runner_type import GithubOrg, GithubPath, GithubRepo
 
 logger = logging.getLogger(__name__)
+
+
+def catch_http_errors(func):
+    """Catch HTTP errors and raise custom exceptions."""
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except HTTPError as exc:
+            if exc.code in (401, 403):
+                if exc.code == 401:
+                    msg = "Invalid token."
+                else:
+                    msg = "Provided token has not enough permissions or has reached rate-limit."
+                raise errors.TokenError(msg) from exc
+            raise errors.GithubApiError from exc
+
+    return wrapper
 
 
 class GithubClient:
@@ -41,6 +60,7 @@ class GithubClient:
         self._token = token
         self._client = GhApi(token=self._token)
 
+    @catch_http_errors
     def get_runner_applications(self, path: GithubPath) -> RunnerApplicationList:
         """Get list of runner applications available for download.
 
@@ -60,6 +80,7 @@ class GithubClient:
 
         return runner_bins
 
+    @catch_http_errors
     def get_runner_github_info(self, path: GithubPath) -> list[SelfHostedRunner]:
         """Get runner information on GitHub under a repo or org.
 
@@ -107,6 +128,7 @@ class GithubClient:
             ]
         return remote_runners_list
 
+    @catch_http_errors
     def get_runner_remove_token(self, path: GithubPath) -> str:
         """Get token from GitHub used for removing runners.
 
@@ -125,6 +147,7 @@ class GithubClient:
 
         return token["token"]
 
+    @catch_http_errors
     def get_runner_registration_token(self, path: GithubPath) -> str:
         """Get token from GitHub used for registering runners.
 
@@ -147,6 +170,7 @@ class GithubClient:
 
         return token["token"]
 
+    @catch_http_errors
     def delete_runner(self, path: GithubPath, runner_id: int) -> None:
         """Delete the self-hosted runner from GitHub.
 
@@ -208,6 +232,8 @@ class GithubClient:
                         )
 
         except HTTPError as exc:
+            if exc.code in (401, 403):
+                raise errors.TokenError from exc
             raise errors.JobNotFoundError(
                 f"Could not find job for runner {runner_name}. "
                 f"Could not list jobs for workflow run {workflow_run_id}"
