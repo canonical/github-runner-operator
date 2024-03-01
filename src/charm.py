@@ -854,6 +854,8 @@ class GithubRunnerCharm(CharmBase):
         )
         execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
         execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])
+        # Add ubuntu user to lxd group, to allow building images with ubuntu user
+        execute_command(["/usr/sbin/usermod", "-aG", "lxd", "ubuntu"])
         execute_command(["/snap/bin/lxd", "waitready"])
         execute_command(["/snap/bin/lxd", "init", "--auto"])
         execute_command(["/snap/bin/lxc", "network", "set", "lxdbr0", "ipv6.address", "none"])

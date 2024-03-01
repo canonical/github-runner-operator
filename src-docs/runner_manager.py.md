@@ -9,7 +9,6 @@ Runner Manager manages the runners on LXD and GitHub.
 ---------------
 - **RUNNER_INSTALLED_TS_FILE_NAME**
 - **REMOVED_RUNNER_LOG_STR**
-- **BUILD_IMAGE_SCRIPT_FILENAME**
 
 
 ---
