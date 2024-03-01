@@ -43,7 +43,7 @@ It currently returns objects directly from the sdk, which may not be ideal (mapp
 build_image(
     arch: Arch,
     cloud_config: dict[str, dict],
-    github_token: str,
+    github_client: GithubClient,
     path: GithubOrg | GithubRepo,
     proxies: Optional[ProxyConfig] = None
 ) → Image
@@ -56,7 +56,8 @@ Build and upload an image to OpenStack.
 **Args:**
  
  - <b>`cloud_config`</b>:  The cloud configuration to connect OpenStack with. 
- - <b>`github_token`</b>:  The Github PAT token to generate runner registration token. 
+ - <b>`github_client`</b>:  The Github client to interact with Github API. 
+ - <b>`path`</b>:  Github organisation or repository path. 
  - <b>`proxies`</b>:  HTTP proxy settings. 
 
 
@@ -82,7 +83,7 @@ create_instance_config(
     unit_name: str,
     openstack_image: Image,
     path: GithubOrg | GithubRepo,
-    github_token: str
+    github_client: GithubClient
 ) → InstanceConfig
 ```
 
@@ -95,12 +96,12 @@ Create an instance config from charm data.
  - <b>`unit_name`</b>:  The charm unit name. 
  - <b>`image`</b>:  Ubuntu image flavor. 
  - <b>`path`</b>:  Github organisation or repository path. 
- - <b>`github_token`</b>:  The Github PAT token to generate runner registration token. 
+ - <b>`github_client`</b>:  The Github client to interact with Github API. 
 
 
 ---
 
-<a href="../src/openstack_manager.py#L206"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L205"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 

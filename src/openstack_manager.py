@@ -30,7 +30,7 @@ from utilities import execute_command
 logger = logging.getLogger(__name__)
 
 IMAGE_PATH_TMPL = "jammy-server-cloudimg-{architecture}-compressed.img"
-IMAGE_NAME = "github-runner-jammy"
+IMAGE_NAME = "jammy"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 
 
@@ -134,7 +134,7 @@ class InstanceConfig:
 def build_image(
     arch: Arch,
     cloud_config: dict[str, dict],
-    github_token: str,
+    github_client: GithubClient,
     path: GithubPath,
     proxies: Optional[ProxyConfig] = None,
 ) -> openstack.image.v2.image.Image:
@@ -142,7 +142,8 @@ def build_image(
 
     Args:
         cloud_config: The cloud configuration to connect OpenStack with.
-        github_token: The Github PAT token to generate runner registration token.
+        github_client: The Github client to interact with Github API.
+        path: Github organisation or repository path.
         proxies: HTTP proxy settings.
 
     Raises:
@@ -151,9 +152,8 @@ def build_image(
     Returns:
         The OpenStack image object.
     """
-    github = GithubClient(token=github_token)
     try:
-        runner_application = github.get_runner_application(path=path, arch=arch)
+        runner_application = github_client.get_runner_application(path=path, arch=arch)
     except RunnerBinaryError as exc:
         raise ImageBuildError("Failed to fetch image.") from exc
 
@@ -176,7 +176,7 @@ def create_instance_config(
     unit_name: str,
     openstack_image: openstack.image.v2.image.Image,
     path: GithubPath,
-    github_token: str,
+    github_client: GithubClient,
 ) -> InstanceConfig:
     """Create an instance config from charm data.
 
@@ -184,12 +184,11 @@ def create_instance_config(
         unit_name: The charm unit name.
         image: Ubuntu image flavor.
         path: Github organisation or repository path.
-        github_token: The Github PAT token to generate runner registration token.
+        github_client: The Github client to interact with Github API.
     """
     app_name, unit_num = unit_name.rsplit("/", 1)
     suffix = secrets.token_hex(12)
-    github = GithubClient(token=github_token)
-    registration_token = github.get_runner_registration_token(path=path)
+    registration_token = github_client.get_runner_registration_token(path=path)
     return InstanceConfig(
         name=f"{app_name}-{unit_num}-{suffix}",
         labels=(app_name, "jammy"),

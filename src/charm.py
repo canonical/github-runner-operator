@@ -55,6 +55,7 @@ from errors import (
 )
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
+from github_client import GithubClient
 from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
@@ -522,10 +523,11 @@ class GithubRunnerCharm(CharmBase):
         if state.charm_config.openstack_clouds_yaml:
             # Only build it in test mode since it may interfere with users systems.
             if self.config.get("test-mode") == "insecure":
+                github = GithubClient(token=state.charm_config.token)
                 image = openstack_manager.build_image(
                     arch=state.arch,
                     cloud_config=state.charm_config.openstack_clouds_yaml,
-                    github_token=state.charm_config.token,
+                    github_client=github,
                     path=state.charm_config.path,
                     proxies=state.proxy_config,
                 )
@@ -533,7 +535,7 @@ class GithubRunnerCharm(CharmBase):
                     unit_name=self.unit.name,
                     openstack_image=image,
                     path=state.charm_config.path,
-                    github_token=state.charm_config.token,
+                    github_client=github,
                 )
                 instance = openstack_manager.create_instance(
                     cloud_config=state.charm_config.openstack_clouds_yaml,
