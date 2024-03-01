@@ -14,12 +14,12 @@ from juju.model import Model
 import runner_logs
 from runner_metrics import PostJobStatus
 from tests.integration.charm_metrics_helpers import (
-    _cancel_workflow_run,
-    _wait_for_workflow_to_start,
     assert_events_after_reconciliation,
+    cancel_workflow_run,
     clear_metrics_log,
     print_loop_device_info,
     wait_for_runner_to_be_marked_offline,
+    wait_for_workflow_to_start,
 )
 from tests.integration.helpers import (
     DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
@@ -110,7 +110,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     )
     assert workflow.create_dispatch(forked_github_branch, {"runner": app.name})
 
-    await _wait_for_workflow_to_start(unit, workflow)
+    await wait_for_workflow_to_start(unit, workflow)
 
     # Make the runner terminate abnormally by killing run.sh
     runner_name = await get_runner_name(unit)
@@ -120,7 +120,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
 
     # Cancel workflow and wait that the runner is marked offline
     # to avoid errors during reconciliation.
-    await _cancel_workflow_run(unit, workflow)
+    await cancel_workflow_run(unit, workflow)
     await wait_for_runner_to_be_marked_offline(forked_github_repository, runner_name)
 
     # Set the number of virtual machines to 0 to speedup reconciliation
