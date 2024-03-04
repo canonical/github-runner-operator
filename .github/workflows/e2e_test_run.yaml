@@ -20,7 +20,7 @@ on:
         required: true
 jobs:
   e2e-test:
-    name: End-to-End Test
+    name: End-to-End Test Run
     runs-on: [self-hosted, linux, x64, jammy, "${{ inputs.runner-tag }}"]
     steps:
       # Snapd can have some issues in privileged LXD containers without setting

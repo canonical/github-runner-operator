@@ -222,8 +222,8 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             /repos/${{ secrets.E2E_TESTING_REPO }}/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs)
-            CONCLUSION=$(echo $JOBS | jq -r '.jobs[] | select(.name == "End-to-End Test") | .conclusion')
-            STATUS=$(echo $JOBS | jq -r '.jobs[] | select(.name == "End-to-End Test") | .status')
+            CONCLUSION=$(echo $JOBS | jq -r '.jobs[] | select(.name == "End-to-End Test / End-to-End Test Run") | .conclusion')
+            STATUS=$(echo $JOBS | jq -r '.jobs[] | select(.name == "End-to-End Test / End-to-End Test Run") | .status')
             if [[ $STATUS != "queued" && $STATUS != "in_progress" ]]; then
               break
             fi
