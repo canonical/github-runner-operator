@@ -8,20 +8,20 @@ on:
   # See https://github.com/orgs/community/discussions/39357
   workflow_call:
     inputs:
-      run-id:
-        description: The workflow run-id assigned to the e2e test runner.
+      runner-tag:
+        description: The e2e test runner tag to run the workflow on.
         type: string
         required: true
   workflow_dispatch:
     inputs:
-      run-id:
-        description: The workflow run-id assigned to the e2e test runner.
+      runner-tag:
+        description: The e2e test runner tag to run the workflow on.
         type: string
         required: true
 jobs:
   e2e-test:
     name: End-to-End Test
-    runs-on: [self-hosted, linux, x64, jammy, "pr-${{ inputs.run-id }}"]
+    runs-on: [self-hosted, linux, x64, jammy, "${{ inputs.runner-tag }}"]
     steps:
       # Snapd can have some issues in privileged LXD containers without setting
       # security.nesting=True and this.
