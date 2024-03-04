@@ -129,7 +129,7 @@ jobs:
 
       - name: Generate Runner Name
         id: runner-name
-        run: echo name=${{ matrix.event.abbreviation }}-${{ needs.run-id.outputs.run-id }} >> $GITHUB_OUTPUT
+        run: echo name=${{ matrix.event.abbreviation }}-${{ needs.run-id.outputs.run-id }}${{ github.run_attempt }} >> $GITHUB_OUTPUT
 
       - name: Copy github-runner Charm
         run: |
@@ -451,4 +451,15 @@ jobs:
     needs: [build-charm, run-id]
     uses: ./.github/workflows/e2e_test_run.yaml
     with:
-      runner-tag: "pr-${{ needs.run-id.outputs.run-id }}"
+      runner-tag: "pr-${{ needs.run-id.outputs.run-id }}${{ github.run_attempt}}"
+
+  required_status_checks:
+    name: Required E2E Test Status Checks
+    runs-on: ubuntu-latest
+    needs:
+      - deploy-e2e-test-runner
+    if: always() && !cancelled()
+    timeout-minutes: 5
+    steps:
+      - run: |
+          [ '${{ needs.deploy-e2e-test-runner.result }}' = 'success' ] || (echo deploy-e2e-test-runner failed && false)
