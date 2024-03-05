@@ -20,7 +20,7 @@ The "GitHub Self-Hosted Runner Metrics" metrics dashboard presents the following
       - Job queue duration - how long a job waits in the queue before a runner picks it up
 - Jobs: Displays certain metrics about the jobs executed by the runners. These metrics can be displayed per repository by specifying a
  regular expression on the `Repository` variable. The following metrics are displayed:
-  - Pie charts: Share of jobs by completion status, job conclusion, flavor, repo policy check failure http codes and github events.
+  - Proportion charts: Share of jobs by completion status, job conclusion, flavor, repo policy check failure http codes and github events over time.
   - Job duration observation
   - Number of jobs per repository
 
