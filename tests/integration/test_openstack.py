@@ -9,12 +9,12 @@ import openstack.connection
 from github.Branch import Branch
 from github.Repository import Repository
 from github.WorkflowRun import WorkflowRun
-from helpers import DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME, dispatch_workflow
 from juju.application import Application
 from juju.model import Model
 from openstack.compute.v2.server import Server
 
 from charm_state import OPENSTACK_CLOUDS_YAML_CONFIG_NAME
+from tests.integration.helpers import DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME, dispatch_workflow
 
 
 async def test_openstack_integration(
