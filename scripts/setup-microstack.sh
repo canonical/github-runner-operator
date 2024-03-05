@@ -31,9 +31,6 @@ retry() {
         sleep 10
     done
 }
-#  remove proxy vars as we encountered a problem with no_proxy not being interpreted correctly.
-head -n  1 /etc/environment > temp && sudo mv temp /etc/environment
-unset HTTP_PROXY HTTPS_PROXY NO_PROXY http_proxy https_proxy no_proxy
 # microk8s charm installed by microstack tries to create an alias for kubectl and fails otherwise
 sudo snap remove kubectl
 # Install microstack

@@ -35,6 +35,7 @@ The registration token can be requested by calling the [GitHub API](https://docs
 ### Deploy the GitHub runner charm
 
 The charm requires a GitHub personal access token with `repo` access, which can be created following the instructions [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic).
+A user with `admin` access for the repository/org is required, otherwise, the repo-policy-compliance will fail the job.
 
 Once the personal access token is created, the charm can be deployed with:
 

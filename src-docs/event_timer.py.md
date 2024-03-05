@@ -40,7 +40,7 @@ Manages the timer to emit juju events at regular intervals.
  
  - <b>`unit_name`</b> (str):  Name of the juju unit to emit events to. 
 
-<a href="../src/event_timer.py#L63"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L62"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -61,7 +61,7 @@ Construct the timer manager.
 
 ---
 
-<a href="../src/event_timer.py#L154"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L147"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `disable_event_timer`
 
@@ -85,7 +85,7 @@ Disable the systemd timer for the given event.
 
 ---
 
-<a href="../src/event_timer.py#L115"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L108"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `ensure_event_timer`
 
@@ -119,7 +119,7 @@ The timeout is the number of seconds before an event is timed out. If not set or
 
 ---
 
-<a href="../src/event_timer.py#L86"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L85"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `is_active`
 
