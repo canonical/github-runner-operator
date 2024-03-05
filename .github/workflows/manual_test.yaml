@@ -6,22 +6,22 @@ on:
   workflow_dispatch:
 
 jobs:
-  github-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Echo test
-        run: echo hello
-      - name: Disk usage
-        run: df -h
-      - name: CPU usage
-        run: lscpu
-
-  # self-host-test:
-  #   name: self-hosted test
-  #   runs-on: [self-hosted, edge, jammy]
+  # github-test:
+  #   runs-on: ubuntu-latest
   #   steps:
-  #     - run: echo hello
-  #     - run: df -h
+  #     - name: Echo test
+  #       run: echo hello
+  #     - name: Disk usage
+  #       run: df -h
+  #     - name: CPU usage
+  #       run: lscpu
+  self-host-test:
+    name: self-hosted test
+    runs-on: [self-hosted, edge, jammy]
+    steps:
+      - run: echo hello
+      - run: df -h
+      - run: ping 127.0.0.1
   # - uses: actions/checkout@v4.1.1
   # - uses: canonical/setup-lxd@v0.1.1
   # - name: Pack charm
