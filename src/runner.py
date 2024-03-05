@@ -23,7 +23,7 @@ from typing import Iterable, NamedTuple, Optional, Sequence
 import yaml
 
 import shared_fs
-from charm_state import ARCH, SSHDebugConnection
+from charm_state import Arch, GithubOrg, SSHDebugConnection, VirtualMachineResources
 from errors import (
     CreateSharedFilesystemError,
     GithubClientError,
@@ -38,7 +38,7 @@ from errors import (
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
 from runner_manager_type import RunnerManagerClients
-from runner_type import GithubOrg, RunnerConfig, RunnerStatus, VirtualMachineResources
+from runner_type import RunnerConfig, RunnerStatus
 from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
@@ -88,7 +88,7 @@ class CreateRunnerConfig:
     resources: VirtualMachineResources
     binary_path: Path
     registration_token: str
-    arch: ARCH = ARCH.X64
+    arch: Arch = Arch.X64
 
 
 class Runner:
@@ -121,14 +121,6 @@ class Runner:
         self.instance = instance
 
         self._shared_fs: Optional[shared_fs.SharedFilesystem] = None
-
-        # If the proxy setting are set, then add NO_PROXY local variables.
-        if self.config.proxies.get("http") or self.config.proxies.get("https"):
-            if self.config.proxies.get("no_proxy"):
-                self.config.proxies["no_proxy"] += ","
-            else:
-                self.config.proxies["no_proxy"] = ""
-            self.config.proxies["no_proxy"] += f"{self.config.name},.svc"
 
     def create(self, config: CreateRunnerConfig):
         """Create the runner instance on LXD and register it on GitHub.
@@ -479,7 +471,7 @@ class Runner:
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
     @retry(tries=10, delay=10, max_delay=120, backoff=2, local_logger=logger)
-    def _install_binaries(self, runner_binary: Path, arch: ARCH) -> None:
+    def _install_binaries(self, runner_binary: Path, arch: Arch) -> None:
         """Install runner binary and other binaries.
 
         Args:
@@ -496,7 +488,7 @@ class Runner:
                 Snap(
                     name="aproxy",
                     channel="edge",
-                    revision=APROXY_ARM_REVISION if arch == ARCH.ARM64 else APROXY_AMD_REVISION,
+                    revision=APROXY_ARM_REVISION if arch == Arch.ARM64 else APROXY_AMD_REVISION,
                 )
             ]
         )
@@ -630,9 +622,13 @@ class Runner:
         docker_client_proxy = {
             "proxies": {
                 "default": {
-                    "httpProxy": self.config.proxies["http"],
-                    "httpsProxy": self.config.proxies["https"],
-                    "noProxy": self.config.proxies["no_proxy"],
+                    key: value
+                    for key, value in (
+                        ("httpProxy", self.config.proxies.http),
+                        ("httpsProxy", self.config.proxies.https),
+                        ("noProxy", self.config.proxies.no_proxy),
+                    )
+                    if value
                 }
             }
         }
@@ -708,8 +704,8 @@ class Runner:
             self.instance.execute(["systemctl", "restart", "docker"])
 
         if self.config.proxies:
-            if self.config.proxies.get("aproxy_address"):
-                self._configure_aproxy(self.config.proxies["aproxy_address"])
+            if aproxy_address := self.config.proxies.aproxy_address:
+                self._configure_aproxy(aproxy_address)
             else:
                 self._configure_docker_proxy()
 

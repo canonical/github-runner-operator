@@ -145,6 +145,13 @@ def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
 
 
 @pytest.fixture(scope="module")
+def openstack_clouds_yaml(pytestconfig: pytest.Config) -> Optional[str]:
+    """Configured clouds-yaml setting."""
+    clouds_yaml = pytestconfig.getoption("--openstack-clouds-yaml")
+    return Path(clouds_yaml).read_text(encoding="utf-8") if clouds_yaml else None
+
+
+@pytest.fixture(scope="module")
 def model(ops_test: OpsTest) -> Model:
     """Juju model used in the test."""
     assert ops_test.model is not None
@@ -282,7 +289,7 @@ async def app_no_wait_fixture(
         app_name=app_name,
         path=path,
         token=token,
-        runner_storage="memory",
+        runner_storage="juju-storage",
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,

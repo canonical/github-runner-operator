@@ -9,12 +9,10 @@ import random
 import secrets
 import tarfile
 import time
-import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, Iterator, Optional, Type
 
-import fastcore.net
 import jinja2
 import requests
 import requests.adapters
@@ -26,6 +24,7 @@ import metrics
 import runner_logs
 import runner_metrics
 import shared_fs
+from charm_state import VirtualMachineResources
 from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
 from github_client import GithubClient
 from github_type import RunnerApplication, SelfHostedRunner
@@ -34,7 +33,8 @@ from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import FlushMode, RunnerInfo, RunnerManagerClients, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
-from runner_type import ProxySetting, RunnerByHealth, VirtualMachineResources
+from runner_type import ProxySetting as RunnerProxySetting
+from runner_type import RunnerByHealth
 from utilities import execute_command, retry, set_env_var
 
 REMOVED_RUNNER_LOG_STR = "Removed runner: %s"
@@ -42,7 +42,7 @@ REMOVED_RUNNER_LOG_STR = "Removed runner: %s"
 logger = logging.getLogger(__name__)
 
 
-BUILD_IMAGE_SCRIPT_FILENAME = "scripts/build-image.sh"
+BUILD_IMAGE_SCRIPT_FILENAME = Path("scripts/build-image.sh")
 
 IssuedMetricEventsStats = dict[Type[metrics.Event], int]
 
@@ -58,7 +58,6 @@ class RunnerManager:
         app_name: str,
         unit: int,
         runner_manager_config: RunnerManagerConfig,
-        proxies: Optional[ProxySetting] = None,
     ) -> None:
         """Construct RunnerManager object for creating and managing runners.
 
@@ -66,20 +65,19 @@ class RunnerManager:
             app_name: An name for the set of runners.
             unit: Unit number of the set of runners.
             runner_manager_config: Configuration for the runner manager.
-            proxies: HTTP proxy settings.
         """
         self.app_name = app_name
         self.instance_name = f"{app_name}-{unit}"
         self.config = runner_manager_config
-        self.proxies = proxies if proxies else ProxySetting()
+        self.proxies = runner_manager_config.charm_state.proxy_config
 
         # Setting the env var to this process and any child process spawned.
-        if "no_proxy" in self.proxies:
-            set_env_var("NO_PROXY", self.proxies["no_proxy"])
-        if "http" in self.proxies:
-            set_env_var("HTTP_PROXY", self.proxies["http"])
-        if "https" in self.proxies:
-            set_env_var("HTTPS_PROXY", self.proxies["https"])
+        if no_proxy := self.proxies.no_proxy:
+            set_env_var("NO_PROXY", no_proxy)
+        if http_proxy := self.proxies.http:
+            set_env_var("HTTP_PROXY", http_proxy)
+        if https_proxy := self.proxies.https:
+            set_env_var("HTTPS_PROXY", https_proxy)
 
         self.session = requests.Session()
         adapter = requests.adapters.HTTPAdapter(
@@ -89,13 +87,6 @@ class RunnerManager:
         )
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
-        if self.proxies:
-            # setup proxy for requests
-            self.session.proxies.update(self.proxies)
-            # add proxy to fastcore which ghapi uses
-            proxy = urllib.request.ProxyHandler(self.proxies)
-            opener = urllib.request.build_opener(proxy)
-            fastcore.net._opener = opener
 
         # The repo policy compliance service is on localhost and should not have any proxies
         # setting configured. The is a separated requests Session as the other one configured
@@ -388,6 +379,50 @@ class RunnerManager:
         except IssueMetricEventError:
             logger.exception("Failed to issue Reconciliation metric")
 
+    def _get_runner_config(self, name: str) -> RunnerConfig:
+        """Get the configuration for a runner.
+
+        Sets the proxy settings for the runner according to the configuration
+        and creates a new runner configuration object.
+
+        Args:
+            name: Name of the runner.
+
+        Returns:
+            Configuration for the runner.
+        """
+        if self.proxies and not self.proxies.use_aproxy:
+            # If the proxy setting are set, then add NO_PROXY local variables.
+            if self.proxies.no_proxy:
+                no_proxy = f"{self.proxies.no_proxy},"
+            else:
+                no_proxy = ""
+            no_proxy = f"{no_proxy}{name},.svc"
+
+            proxies = RunnerProxySetting(
+                no_proxy=no_proxy,
+                http=self.proxies.http,
+                https=self.proxies.https,
+                aproxy_address=None,
+            )
+        elif self.proxies.use_aproxy:
+            proxies = RunnerProxySetting(
+                aproxy_address=self.proxies.aproxy_address, no_proxy=None, http=None, https=None
+            )
+        else:
+            proxies = None
+
+        return RunnerConfig(
+            app_name=self.app_name,
+            dockerhub_mirror=self.config.dockerhub_mirror,
+            issue_metrics=self.config.are_metrics_enabled,
+            lxd_storage_path=self.config.lxd_storage_path,
+            path=self.config.path,
+            proxies=proxies,
+            name=name,
+            ssh_debug_connections=self.config.charm_state.ssh_debug_connections,
+        )
+
     def _spawn_new_runners(self, count: int, resources: VirtualMachineResources):
         """Spawn new runners.
 
@@ -402,16 +437,7 @@ class RunnerManager:
         remove_token = self._clients.github.get_runner_remove_token(self.config.path)
         logger.info("Attempting to add %i runner(s).", count)
         for _ in range(count):
-            config = RunnerConfig(
-                app_name=self.app_name,
-                dockerhub_mirror=self.config.dockerhub_mirror,
-                issue_metrics=self.config.are_metrics_enabled,
-                lxd_storage_path=self.config.lxd_storage_path,
-                path=self.config.path,
-                proxies=self.proxies,
-                name=self._generate_runner_name(),
-                ssh_debug_connections=self.config.charm_state.ssh_debug_connections,
-            )
+            config = self._get_runner_config(self._generate_runner_name())
             runner = Runner(self._clients, config, RunnerStatus())
             try:
                 self._create_runner(registration_token, resources, runner)
@@ -669,16 +695,7 @@ class RunnerManager:
             online = getattr(remote_runner, "status", None) == "online"
             busy = getattr(remote_runner, "busy", None)
 
-            config = RunnerConfig(
-                app_name=self.app_name,
-                dockerhub_mirror=self.config.dockerhub_mirror,
-                issue_metrics=self.config.are_metrics_enabled,
-                lxd_storage_path=self.config.lxd_storage_path,
-                name=name,
-                path=self.config.path,
-                proxies=self.proxies,
-                ssh_debug_connections=self.config.charm_state.ssh_debug_connections,
-            )
+            config = self._get_runner_config(name)
             return Runner(
                 self._clients,
                 config,
@@ -708,13 +725,13 @@ class RunnerManager:
         Returns:
             Command to execute to build runner image.
         """
-        http_proxy = self.proxies.get("http", "")
-        https_proxy = self.proxies.get("https", "")
-        no_proxy = self.proxies.get("no_proxy", "")
+        http_proxy = self.proxies.http or ""
+        https_proxy = self.proxies.https or ""
+        no_proxy = self.proxies.no_proxy or ""
 
         cmd = [
             "/usr/bin/bash",
-            BUILD_IMAGE_SCRIPT_FILENAME,
+            str(BUILD_IMAGE_SCRIPT_FILENAME.absolute()),
             http_proxy,
             https_proxy,
             no_proxy,
@@ -747,4 +764,4 @@ class RunnerManager:
         minute = random.randint(0, 59)  # nosec B311
         base_hour = random.randint(0, 5)  # nosec B311
         hours = ",".join([str(base_hour + offset) for offset in (0, 6, 12, 18)])
-        cron_file.write_text(f"{minute} {hours} * * * ubuntu {build_image_command}")
+        cron_file.write_text(f"{minute} {hours} * * * ubuntu {build_image_command}\n")

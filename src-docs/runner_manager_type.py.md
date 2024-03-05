@@ -76,6 +76,7 @@ Configuration of runner manager.
  - <b>`image`</b>:  Name of the image for creating LXD instance. 
  - <b>`service_token`</b>:  Token for accessing local service. 
  - <b>`lxd_storage_path`</b>:  Path to be used as LXD storage. 
+ - <b>`proxy_config`</b>:  Proxy configuration. 
  - <b>`charm_state`</b>:  The state of the charm. 
  - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
 

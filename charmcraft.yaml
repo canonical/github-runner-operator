@@ -11,6 +11,7 @@ parts:
       - libffi-dev  # for cffi
       - libssl-dev  # for cryptography
       - rust-all  # for cryptography
+      - pkg-config # for cryptography
     prime:
       - scripts/build-image.sh
       - scripts/repo_policy_compliance_service.py
@@ -20,10 +21,18 @@ bases:
       channel: "22.04"
       architectures:
       - amd64
-      - arm64
     run-on:
     - name: "ubuntu"
       channel: "22.04"
       architectures:
       - amd64
+  - build-on:
+    - name: "ubuntu"
+      channel: "22.04"
+      architectures:
+      - arm64
+    run-on:
+    - name: "ubuntu"
+      channel: "22.04"
+      architectures:
       - arm64

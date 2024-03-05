@@ -17,6 +17,16 @@ Configuration used by service and timer templates.
 
 
 
+**Attributes:**
+ 
+ - <b>`event`</b>:  Name of the event. 
+ - <b>`interval`</b>:  Minutes between the event trigger. 
+ - <b>`random_delay`</b>:  Minutes of random delay added between event trigger. 
+ - <b>`timeout`</b>:  Minutes before the event handle is timeout. 
+ - <b>`unit`</b>:  Name of the juju unit. 
+
+
+
 
 
 ---
@@ -30,7 +40,7 @@ Manages the timer to emit juju events at regular intervals.
  
  - <b>`unit_name`</b> (str):  Name of the juju unit to emit events to. 
 
-<a href="../src/event_timer.py#L55"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L62"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -51,7 +61,7 @@ Construct the timer manager.
 
 ---
 
-<a href="../src/event_timer.py#L146"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L147"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `disable_event_timer`
 
@@ -75,7 +85,7 @@ Disable the systemd timer for the given event.
 
 ---
 
-<a href="../src/event_timer.py#L107"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L108"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `ensure_event_timer`
 
@@ -109,7 +119,7 @@ The timeout is the number of seconds before an event is timed out. If not set or
 
 ---
 
-<a href="../src/event_timer.py#L78"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L85"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `is_active`
 
