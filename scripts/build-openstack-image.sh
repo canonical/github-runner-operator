@@ -94,6 +94,10 @@ df -h # print disk free space
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get update -yq
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get upgrade -yq
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget unzip gh -yq
+
+# Uninstall unattended-upgrades, to avoid lock errors when unattended-upgrades is active in the runner
+DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get purge unattended-upgrades -yq
+
 if [[ -n "$HTTP_PROXY" ]]; then
     /snap/bin/lxc exec builder -- /usr/bin/npm config set proxy "$HTTP_PROXY"
 fi
