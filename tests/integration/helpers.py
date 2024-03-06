@@ -365,7 +365,12 @@ async def deploy_github_runner_charm(
             "reconcile-interval": reconcile_interval,
             "runner-storage": runner_storage,
         },
-        constraints={"root-disk": "20G", "cores": 4, "mem": "10G", "virt-type": "virtual-machine"},
+        constraints={
+            "root-disk": 20 * 1024,
+            "cores": 4,
+            "mem": 10 * 1024,
+            "virt-type": "virtual-machine",
+        },
         storage=storage,
     )
 
