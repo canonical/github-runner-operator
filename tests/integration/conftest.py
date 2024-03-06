@@ -50,10 +50,15 @@ def app_name() -> str:
 
 
 @pytest.fixture(scope="module")
-def charm_file(pytestconfig: pytest.Config, loop_device: Optional[str]) -> str:
+def charm_file(
+    pytestconfig: pytest.Config, loop_device: Optional[str], openstack_clouds_yaml: Optional[str]
+) -> str:
     """Path to the built charm."""
     charm = pytestconfig.getoption("--charm-file")
     assert charm, "Please specify the --charm-file command line option"
+
+    if openstack_clouds_yaml:
+        return f"./{charm}"
 
     lxd_profile_str = """config:
     security.nesting: true
@@ -199,6 +204,33 @@ async def app_no_runner(
         path=path,
         token=token,
         runner_storage="memory",
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=60,
+    )
+    return application
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app_vm_runner(
+    model: Model,
+    charm_file: str,
+    app_name: str,
+    path: str,
+    token: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
+) -> AsyncIterator[Application]:
+    """Application launching VMs and no runners."""
+    application = await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=app_name,
+        path=path,
+        token=token,
+        runner_storage="juju-storage",
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
