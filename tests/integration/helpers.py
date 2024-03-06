@@ -36,6 +36,8 @@ DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME = "workflow_dispatch_failure_test.yaml"
 DISPATCH_WAIT_TEST_WORKFLOW_FILENAME = "workflow_dispatch_wait_test.yaml"
 DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME = "e2e_test_run.yaml"
 
+DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15}
+
 
 async def check_runner_binary_exists(unit: Unit) -> bool:
     """Checks if runner binary exists in the charm.
@@ -321,6 +323,7 @@ async def deploy_github_runner_charm(
     https_proxy: str,
     no_proxy: str,
     reconcile_interval: int,
+    constraints: dict | None = None,
     wait_idle: bool = True,
 ) -> Application:
     """Deploy github-runner charm.
@@ -365,12 +368,7 @@ async def deploy_github_runner_charm(
             "reconcile-interval": reconcile_interval,
             "runner-storage": runner_storage,
         },
-        constraints={
-            "root-disk": 20 * 1024,
-            "cores": 4,
-            "mem": 10 * 1024,
-            "virt-type": "virtual-machine",
-        },
+        constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
         storage=storage,
     )
 

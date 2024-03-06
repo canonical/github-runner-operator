@@ -203,6 +203,12 @@ async def app_no_runner(
         https_proxy=https_proxy,
         no_proxy=no_proxy,
         reconcile_interval=60,
+        constraints={
+            "root-disk": 20 * 1024,
+            "cores": 4,
+            "mem": 16 * 1024,
+            "virt-type": "virtual-machine",
+        },
     )
     return application
 
