@@ -13,14 +13,12 @@ from juju.application import Application
 from juju.model import Model
 from openstack.compute.v2.server import Server
 
-from charm_state import OPENSTACK_CLOUDS_YAML_CONFIG_NAME
 from tests.integration.helpers import DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME, dispatch_workflow
 
 
 async def test_openstack_integration(
     model: Model,
-    app_vm_runner: Application,
-    openstack_clouds_yaml: str,
+    app_openstack_runner: Application,
     openstack_connection: openstack.connection.Connection,
     github_repository: Repository,
     test_github_branch: Branch,
@@ -34,12 +32,11 @@ async def test_openstack_integration(
         1. the workflow run completes successfully.
         2. a server with image name jammy is created.
     """
-    await app_vm_runner.set_config({OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml})
-    await model.wait_for_idle(apps=[app_vm_runner.name], timeout=30 * 60)
+    await model.wait_for_idle(apps=[app_openstack_runner.name], timeout=30 * 60)
 
     # 1. when the e2e_test_run workflow is created.
     workflow = await dispatch_workflow(
-        app=app_vm_runner,
+        app=app_openstack_runner,
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="success",

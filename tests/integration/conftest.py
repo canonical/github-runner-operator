@@ -24,6 +24,7 @@ from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
+from charm_state import OPENSTACK_CLOUDS_YAML_CONFIG_NAME
 from github_client import GithubClient
 from tests.integration.helpers import (
     deploy_github_runner_charm,
@@ -213,7 +214,7 @@ async def app_no_runner(
 
 
 @pytest_asyncio.fixture(scope="module")
-async def app_vm_runner(
+async def app_openstack_runner(
     model: Model,
     charm_file: str,
     app_name: str,
@@ -222,6 +223,7 @@ async def app_vm_runner(
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
+    openstack_clouds_yaml: str,
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
     application = await deploy_github_runner_charm(
@@ -241,6 +243,7 @@ async def app_vm_runner(
             "mem": 16 * 1024,
             "virt-type": "virtual-machine",
         },
+        config={OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml},
     )
     return application
 

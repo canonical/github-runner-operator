@@ -324,6 +324,7 @@ async def deploy_github_runner_charm(
     no_proxy: str,
     reconcile_interval: int,
     constraints: dict | None = None,
+    config: dict | None = None,
     wait_idle: bool = True,
 ) -> Application:
     """Deploy github-runner charm.
@@ -355,11 +356,7 @@ async def deploy_github_runner_charm(
     if runner_storage == "juju-storage":
         storage["runner"] = {"pool": "rootfs", "size": 11}
 
-    application = await model.deploy(
-        charm_file,
-        application_name=app_name,
-        series="jammy",
-        config={
+    default_config = {
             "path": path,
             "token": token,
             "virtual-machines": 0,
@@ -367,7 +364,16 @@ async def deploy_github_runner_charm(
             "test-mode": "insecure",
             "reconcile-interval": reconcile_interval,
             "runner-storage": runner_storage,
-        },
+        }
+    
+    if config:
+        default_config.update(config)
+
+    application = await model.deploy(
+        charm_file,
+        application_name=app_name,
+        series="jammy",
+        config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
         storage=storage,
     )
