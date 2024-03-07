@@ -1,0 +1,87 @@
+name: Run End-to-End test
+
+on:
+  # The inputs are the same but they cannot be shared between triggers.
+  # See https://github.com/orgs/community/discussions/39357
+  workflow_call:
+    inputs:
+      runner-tag:
+        description: The e2e test runner tag to run the workflow on.
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      runner-tag:
+        description: The e2e test runner tag to run the workflow on.
+        type: string
+        required: true
+jobs:
+  e2e-test:
+    name: End-to-End Test Run
+    runs-on: [self-hosted, linux, x64, jammy, "${{ inputs.runner-tag }}"]
+    steps:
+      # Snapd can have some issues in privileged LXD containers without setting
+      # security.nesting=True and this.
+      - name: Fix snap issue in privileged LXD containers
+        run: ln -s /bin/true /usr/local/bin/udevadm
+      # Below is a series of simple tests to assess the functionality of the newly spawned runner.
+      - name: Echo hello world
+        run: echo "hello world"
+      - name: File permission for /usr/local/bin
+        run: ls -ld /usr/local/bin | grep drwxrwxrwx
+      - name: Test file permission for /usr/local/bin
+        run: touch /usr/local/bin/test_file
+      # "Install microk8s" step will test if the proxies settings are correct.
+      - name: Proxy set in /etc/environment
+        run: cat /etc/environment
+      # "Update apt in python docker container" step will test docker default proxy settings due to
+      # pulling the python image.
+      - name: Proxy set in docker daemon
+        run: |
+          [[ -z "${http_proxy}" && -z "${HTTP_PROXY}" ]] \
+            || sudo cat /etc/systemd/system/docker.service.d/http-proxy.conf | grep HTTP_PROXY
+      # "Update apt in python docker container" step will test docker client default proxy settings.
+      - name: Proxy set in docker client
+        run: |
+          [[ -z "${http_proxy}" && -z "${HTTP_PROXY}" ]] \
+            || cat /home/ubuntu/.docker/config.json | grep httpProxy
+      - name: Install microk8s
+        run: sudo snap install microk8s --classic
+      - name: Wait for microk8s
+        timeout-minutes: 10
+        run: microk8s status --wait-ready
+      - name: Deploy nginx for testing
+        run: microk8s kubectl create deployment nginx --image=nginx
+      - name: Wait for nginx to be ready
+        run: microk8s kubectl rollout status deployment/nginx --timeout=30m
+      - name: Update apt in python docker container
+        run: docker run python:3.10-slim apt-get update
+      - name: Docker version
+        run: docker version
+      - name: Check python alias for python3
+        run: python --version
+      - name: pip version
+        run: python3 -m pip --version
+      - name: npm version
+        run: npm --version
+      - name: shellcheck version
+        run: shellcheck --version
+      - name: jq version
+        run: jq --version
+      - name: yq version
+        run: yq --version
+      - name: install check-jsonschema
+        run: python3 -m pip install check-jsonschema
+      - name: unzip version
+        run: unzip -v
+      - name: gh version
+        run: gh --version
+      # `check-jsonschema` is installed using pip. The directory `~/.local/bin` needs to be added to PATH.
+      - name: test check-jsonschema
+        run: check-jsonschema --version
+      - name: Test Firewall
+        run: |
+          HOST_IP=$(ip route | grep default | cut -f 3 -d" ")
+          [ $((ping $HOST_IP -c 5 || :) | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
+      - name: Test sctp support
+        run: sudo apt-get install lksctp-tools -yq && checksctp
