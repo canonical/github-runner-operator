@@ -425,6 +425,16 @@ class GithubRunnerCharm(CharmBase):
             event: Event of starting the charm.
         """
         state = self._setup_state()
+
+        if state.charm_config.openstack_clouds_yaml:
+            # Test out openstack integration and then go
+            # into BlockedStatus as it is not supported yet
+            self.unit.status = BlockedStatus(
+                "OpenStack integration is not supported yet. "
+                "Please remove the openstack-clouds-yaml config."
+            )
+            return
+
         runner_manager = self._get_runner_manager(state)
 
         self._check_and_update_dependencies(
@@ -532,6 +542,15 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
         self._set_reconcile_timer()
 
+        if state.charm_config.openstack_clouds_yaml:
+            # Test out openstack integration and then go
+            # into BlockedStatus as it is not supported yet
+            self.unit.status = BlockedStatus(
+                "OpenStack integration is not supported yet. "
+                "Please remove the openstack-clouds-yaml config."
+            )
+            return
+
         prev_config_for_flush: dict[str, str] = {}
         if state.charm_config.token != self._stored.token:
             prev_config_for_flush["token"] = str(self._stored.token)
@@ -630,6 +649,11 @@ class GithubRunnerCharm(CharmBase):
             event: Event of reconciling the runner state.
         """
         state = self._setup_state()
+
+        if state.charm_config.openstack_clouds_yaml:
+            logger.warning("OpenStack integration is not supported yet. Skipping reconcile.")
+            return
+
         runner_manager = self._get_runner_manager(state)
 
         self._check_and_update_dependencies(
@@ -755,6 +779,10 @@ class GithubRunnerCharm(CharmBase):
         self._event_timer.disable_event_timer("reconcile-runners")
 
         state = self._setup_state()
+
+        if state.charm_config.openstack_clouds_yaml:
+            return
+        
         runner_manager = self._get_runner_manager(state)
         runner_manager.flush(FlushMode.FLUSH_BUSY)
 
@@ -771,6 +799,7 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             Changes in runner number due to reconciling runners.
         """
+
         if not RunnerManager.runner_bin_path.is_file():
             logger.warning("Unable to reconcile due to missing runner binary")
             raise MissingRunnerBinaryError()

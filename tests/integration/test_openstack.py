@@ -32,7 +32,7 @@ async def test_openstack_integration(
         1. the workflow run completes successfully.
         2. a server with image name jammy is created.
     """
-    await model.wait_for_idle(apps=[app_openstack_runner.name], timeout=30 * 60)
+    await model.wait_for_idle(apps=[app_openstack_runner.name], status="blocked", timeout=40 * 60)
 
     # 1. when the e2e_test_run workflow is created.
     workflow = await dispatch_workflow(

@@ -244,6 +244,7 @@ async def app_openstack_runner(
             "virt-type": "virtual-machine",
         },
         config={OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml},
+        wait_idle=False,
     )
     return application
 
