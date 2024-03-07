@@ -62,6 +62,8 @@ fi
 
 cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD VM of previous run' 10
 
+sudo modprobe br_netfilter
+
 if [[ "$MODE" == "test" ]]; then
     retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --device root,size=5GiB' 'Starting LXD container'
 else
