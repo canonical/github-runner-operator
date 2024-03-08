@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Module for handling interactions with OpenStack."""
+import json
 import logging
 import secrets
 from dataclasses import dataclass
@@ -20,7 +21,7 @@ import openstack.image.v2.image
 from openstack.exceptions import OpenStackCloudException
 from openstack.identity.v3.project import Project
 
-from charm_state import Arch, ProxyConfig
+from charm_state import Arch, ProxyConfig, SSHDebugConnection
 from errors import OpenStackUnauthorizedError, RunnerBinaryError
 from github_client import GithubClient
 from github_type import RunnerApplication
@@ -100,6 +101,25 @@ def _build_image_command(runner_info: RunnerApplication, proxies: ProxyConfig) -
     https_proxy = proxies.https or ""
     no_proxy = proxies.no_proxy or ""
 
+    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
+    docker_proxy_service_conf_content = environment.get_template("systemd-docker-proxy.j2").render(
+        proxies=proxies
+    )
+    docker_proxy = {
+        "proxies": {
+            "default": {
+                key: value
+                for key, value in (
+                    ("httpProxy", proxies.http),
+                    ("httpsProxy", proxies.https),
+                    ("noProxy", proxies.no_proxy),
+                )
+                if value
+            }
+        }
+    }
+    docker_client_proxy_content = json.dumps(docker_proxy)
+
     cmd = [
         "/usr/bin/bash",
         BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME,
@@ -107,6 +127,8 @@ def _build_image_command(runner_info: RunnerApplication, proxies: ProxyConfig) -
         http_proxy,
         https_proxy,
         no_proxy,
+        docker_proxy_service_conf_content,
+        docker_client_proxy_content,
     ]
 
     return cmd
@@ -211,6 +233,9 @@ class InstanceLaunchError(Exception):
 def create_instance(
     cloud_config: dict[str, dict],
     instance_config: InstanceConfig,
+    proxies: Optional[ProxyConfig] = None,
+    dockerhub_mirror: Optional[str] = None,
+    ssh_debug_connections: list[SSHDebugConnection] | None = None,
 ) -> openstack.compute.v2.server.Server:
     """Create an OpenStack instance.
 
@@ -225,11 +250,18 @@ def create_instance(
         The created server.
     """
     environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
+    env_contents = environment.get_template("env.j2").render(
+        proxies=proxies,
+        pre_job_script="",
+        dockerhub_mirror=dockerhub_mirror,
+        ssh_debug_info=(secrets.choice(ssh_debug_connections) if ssh_debug_connections else None),
+    )
     cloud_userdata = environment.get_template("openstack-userdata.sh.j2").render(
         github_url=f"https://github.com/{instance_config.github_path.path()}",
         token=instance_config.registration_token,
         instance_labels=",".join(instance_config.labels),
         instance_name=instance_config.name,
+        env_contents=env_contents,
     )
 
     try:

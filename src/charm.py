@@ -367,6 +367,9 @@ class GithubRunnerCharm(CharmBase):
                 instance = openstack_manager.create_instance(
                     cloud_config=state.charm_config.openstack_clouds_yaml,
                     instance_config=instance_config,
+                    proxies=state.proxy_config,
+                    dockerhub_mirror=state.charm_config.dockerhub_mirror,
+                    ssh_debug_connections=state.ssh_debug_connections
                 )
                 logger.info("OpenStack instance: %s", instance)
             # Test out openstack integration and then go

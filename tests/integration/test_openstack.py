@@ -41,6 +41,7 @@ async def test_openstack_integration(
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
+        dispatch_input={"runner-tag": app_openstack_runner.name},
     )
     # 1. the workflow run completes successfully.
     workflow_run: WorkflowRun = workflow.get_runs()[0]

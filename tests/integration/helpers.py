@@ -10,7 +10,8 @@ import time
 import typing
 from asyncio import sleep
 from datetime import datetime, timezone
-from typing import Any, Awaitable, Callable, Union
+from functools import partial
+from typing import Any, Awaitable, Callable, ParamSpec, TypeVar, Union
 
 import github
 import juju.version
@@ -357,15 +358,15 @@ async def deploy_github_runner_charm(
         storage["runner"] = {"pool": "rootfs", "size": 11}
 
     default_config = {
-            "path": path,
-            "token": token,
-            "virtual-machines": 0,
-            "denylist": "10.10.0.0/16",
-            "test-mode": "insecure",
-            "reconcile-interval": reconcile_interval,
-            "runner-storage": runner_storage,
-        }
-    
+        "path": path,
+        "token": token,
+        "virtual-machines": 0,
+        "denylist": "10.10.0.0/16",
+        "test-mode": "insecure",
+        "reconcile-interval": reconcile_interval,
+        "runner-storage": runner_storage,
+    }
+
     if config:
         default_config.update(config)
 
@@ -465,25 +466,35 @@ async def _assert_workflow_run_conclusion(
     )
 
 
-async def _wait_for_workflow_to_complete(
-    unit: Unit, workflow: Workflow, conclusion: str, start_time: datetime
-):
-    """Wait for the workflow to complete.
+def _get_latest_run(
+    workflow: Workflow, start_time: datetime, branch: Branch | None = None
+) -> WorkflowRun | None:
+    """Get the latest run after start_time.
 
     Args:
-        unit: The unit which contains the runner.
-        workflow: The workflow to wait for.
-        conclusion: The workflow conclusion to wait for.
-        start_time: The start time of the workflow.
-    """
-    runner_name = await get_runner_name(unit)
-    await _wait_until_runner_is_used_up(runner_name, unit)
-    # Wait for the workflow log to contain the conclusion
-    await sleep(120)
+        workflow: The workflow to get the latest run for.
+        start_time: The minium start time of the run.
 
-    await _assert_workflow_run_conclusion(
-        runner_name=runner_name, conclusion=conclusion, workflow=workflow, start_time=start_time
-    )
+    Returns:
+        The latest workflow run if the workflow has started. None otherwise.
+    """
+    try:
+        return workflow.get_runs(
+            branch=branch, created=f">={start_time.isoformat(timespec='seconds')}"
+        )[0]
+    except IndexError:
+        return None
+
+
+def _is_workflow_run_complete(run: WorkflowRun) -> bool:
+    """Wait for the workflow status to turn to complete.
+
+    Args:
+        run: The workflow run to check status for.
+    """
+    if run.update():
+        return run.status == "completed"
+    return False
 
 
 async def dispatch_workflow(
@@ -492,6 +503,7 @@ async def dispatch_workflow(
     github_repository: Repository,
     conclusion: str,
     workflow_id_or_name: str,
+    dispatch_input: dict | None = None,
 ):
     """Dispatch a workflow on a branch for the runner to run.
 
@@ -513,18 +525,33 @@ async def dispatch_workflow(
     workflow = github_repository.get_workflow(id_or_file_name=workflow_id_or_name)
 
     # The `create_dispatch` returns True on success.
-    assert workflow.create_dispatch(branch, {"runner": app.name})
-    await _wait_for_workflow_to_complete(
-        unit=app.units[0], workflow=workflow, conclusion=conclusion, start_time=start_time
+    assert workflow.create_dispatch(
+        branch, dispatch_input or {"runner": app.name}
+    ), "Failed to create workflow"
+
+    # There is a very small chance of selecting a run not created by the dispatch above.
+    run = await wait_for(
+        partial(_get_latest_run, workflow=workflow, start_time=start_time, branch=branch)
     )
+    await wait_for(partial(_is_workflow_run_complete, run=run), timeout=60 * 30, check_interval=60)
+
+    # The run object is updated by _is_workflow_run_complete function above.
+    assert (
+        run.conclusion == conclusion
+    ), f"Unexpected run conclusion, expected: {conclusion}, got: {run.conclusion}"
+
     return workflow
 
 
+P = ParamSpec("P")
+R = TypeVar("R")
+
+
 async def wait_for(
-    func: Callable[[], Union[Awaitable, Any]],
+    func: Callable[P, R],
     timeout: int = 300,
     check_interval: int = 10,
-) -> Any:
+) -> R:
     """Wait for function execution to become truthy.
 
     Args:

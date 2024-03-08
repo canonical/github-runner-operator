@@ -13,7 +13,7 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_manager.py#L63"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L64"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `list_projects`
 
@@ -35,7 +35,7 @@ It currently returns objects directly from the sdk, which may not be ideal (mapp
 
 ---
 
-<a href="../src/openstack_manager.py#L134"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L156"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
@@ -74,7 +74,7 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_manager.py#L181"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L203"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
@@ -101,14 +101,17 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/openstack_manager.py#L211"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L233"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
 ```python
 create_instance(
     cloud_config: dict[str, dict],
-    instance_config: InstanceConfig
+    instance_config: InstanceConfig,
+    proxies: Optional[ProxyConfig] = None,
+    dockerhub_mirror: Optional[str] = None,
+    ssh_debug_connections: list[SSHDebugConnection] | None = None
 ) → Server
 ```
 

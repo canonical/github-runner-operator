@@ -2,6 +2,9 @@
 
 set -e
 
+# Write .env contents
+su - ubuntu -c 'cd ~/actions-runner && echo "{{ env_contents }}" > .env'
+
 # Create the runner and start the configuration experience
 su - ubuntu -c "cd ~/actions-runner && ./config.sh \
     --url {{ github_url }} \
