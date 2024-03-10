@@ -271,6 +271,7 @@ def create_instance(
             image=instance_config.openstack_image,
             flavor="m1.tiny",
             userdata=cloud_userdata,
+            wait=True,
         )
     except OpenStackCloudException as exc:
         raise InstanceLaunchError("Failed to launch instance.") from exc
