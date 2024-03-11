@@ -120,3 +120,19 @@ def clouds_yaml_fixture(cloud_name: str) -> dict:
             }
         }
     }
+
+
+@pytest.fixture(name="multi_clouds_yaml")
+def multi_clouds_yaml_fixture(clouds_yaml: dict) -> dict:
+    """Testing clouds.yaml with multiple clouds."""
+    clouds_yaml["clouds"]["unused_cloud"] = {
+        "auth": {
+            "auth_url": secrets.token_hex(16),
+            "project_name": secrets.token_hex(16),
+            "project_domain_name": secrets.token_hex(16),
+            "username": secrets.token_hex(16),
+            "user_domain_name": secrets.token_hex(16),
+            "password": secrets.token_hex(16),
+        }
+    }
+    return clouds_yaml
