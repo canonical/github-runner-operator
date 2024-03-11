@@ -26,7 +26,7 @@ from errors import OpenStackUnauthorizedError, RunnerBinaryError
 from github_client import GithubClient
 from github_type import RunnerApplication
 from runner_type import GithubPath
-from utilities import execute_command
+from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
 
@@ -232,6 +232,7 @@ class InstanceLaunchError(Exception):
     """Exception representing an error during instance launch process."""
 
 
+@retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
 def create_instance(
     cloud_config: dict[str, dict],
     instance_config: InstanceConfig,
