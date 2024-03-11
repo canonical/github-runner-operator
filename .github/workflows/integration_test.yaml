@@ -45,5 +45,4 @@ jobs:
       modules: '["test_openstack"]'
       self-hosted-runner: true
       self-hosted-runner-label: two-xlarge
-      tmate-debug: true
-      tmate-timeout: 60
+
