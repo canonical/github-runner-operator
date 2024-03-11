@@ -39,8 +39,9 @@ sunbeam prepare-node-script | bash -x
 sleep 10
 # The following can take a while....
 retry 'sudo -g snap_daemon sunbeam cluster bootstrap --accept-defaults' 'Waiting for cluster bootstrap to complete' 3
-clouds_yaml="${PWD}/admin-clouds.yaml"
-sg snap_daemon -c "sunbeam cloud-config -a" | tee "$clouds_yaml"
+retry 'sudo -g snap_daemon sunbeam configure --accept-defaults --openrc demo-openrc' 'Configuring sunbeam cluster' 3
+clouds_yaml="${PWD}/clouds.yaml"
+sg snap_daemon -c "sunbeam cloud-config" | tee "$clouds_yaml"
 # Test connection
 OS_CLIENT_CONFIG_FILE="$clouds_yaml" openstack --os-cloud sunbeam user list
 
