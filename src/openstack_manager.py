@@ -91,15 +91,17 @@ class ImageBuildError(Exception):
     """Exception representing an error during image build process."""
 
 
-def _build_image_command(runner_info: RunnerApplication, proxies: ProxyConfig) -> list[str]:
+def _build_image_command(
+    runner_info: RunnerApplication, proxies: Optional[ProxyConfig] = None
+) -> list[str]:
     """Get command for building runner image.
 
     Returns:
         Command to execute to build runner image.
     """
-    http_proxy = proxies.http or ""
-    https_proxy = proxies.https or ""
-    no_proxy = proxies.no_proxy or ""
+    http_proxy = proxies.http if (proxies and proxies.http) else ""
+    https_proxy = proxies.https if (proxies and proxies.https) else ""
+    no_proxy = proxies.no_proxy if (proxies and proxies.no_proxy) else ""
 
     environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
     docker_proxy_service_conf_content = environment.get_template("systemd-docker-proxy.j2").render(
@@ -110,9 +112,9 @@ def _build_image_command(runner_info: RunnerApplication, proxies: ProxyConfig) -
             "default": {
                 key: value
                 for key, value in (
-                    ("httpProxy", proxies.http),
-                    ("httpsProxy", proxies.https),
-                    ("noProxy", proxies.no_proxy),
+                    ("httpProxy", http_proxy),
+                    ("httpsProxy", https_proxy),
+                    ("noProxy", no_proxy),
                 )
                 if value
             }
@@ -124,9 +126,9 @@ def _build_image_command(runner_info: RunnerApplication, proxies: ProxyConfig) -
         "/usr/bin/bash",
         BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME,
         runner_info["download_url"],
-        http_proxy,
-        https_proxy,
-        no_proxy,
+        str(http_proxy),
+        str(https_proxy),
+        str(no_proxy),
         docker_proxy_service_conf_content,
         docker_client_proxy_content,
     ]
@@ -177,7 +179,7 @@ def build_image(
     try:
         runner_application = github_client.get_runner_application(path=path, arch=arch)
     except RunnerBinaryError as exc:
-        raise ImageBuildError("Failed to fetch image.") from exc
+        raise ImageBuildError("Failed to fetch runner application.") from exc
 
     try:
         execute_command(_build_image_command(runner_application, proxies), check_exit=True)
