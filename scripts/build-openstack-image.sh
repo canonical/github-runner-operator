@@ -15,6 +15,26 @@ NO_PROXY="$4"
 DOCKER_PROXY_SERVICE_CONF="$5"
 DOCKER_PROXY_CONF="$6"
 
+# retry function
+retry() {
+    local command="$1"
+    local wait_message="$2"
+    local max_try="$3"
+
+    local attempt=0
+
+    while ! $command
+    do
+        attempt=$((attempt + 1))
+        if [[ attempt -ge $max_try ]]; then
+            return
+        fi
+
+        echo "$wait_message"
+        sleep 10
+    done
+}
+
 # cleanup any existing mounts
 cleanup() {
     sudo umount /mnt/ubuntu-image/dev/ || true
@@ -61,8 +81,8 @@ sudo modprobe nbd
 # cleanup any existing mounts
 cleanup
 
-sudo wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-$BIN_ARCH.img \
-    -O jammy-server-cloudimg-$BIN_ARCH.img
+retry "sudo wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-$BIN_ARCH.img \
+    -O jammy-server-cloudimg-$BIN_ARCH.img" "Downloading cloud image" 3
 
 # resize image - installing dependencies requires more disk space
 sudo qemu-img resize jammy-server-cloudimg-$BIN_ARCH.img +1.5G
@@ -71,13 +91,13 @@ sudo qemu-img resize jammy-server-cloudimg-$BIN_ARCH.img +1.5G
 echo "Connecting network block device to image"
 sudo qemu-nbd --connect=/dev/nbd0 jammy-server-cloudimg-$BIN_ARCH.img
 sudo mkdir -p /mnt/ubuntu-image
-sudo mount -o rw /dev/nbd0p1 /mnt/ubuntu-image
+retry "sudo mount -o rw /dev/nbd0p1 /mnt/ubuntu-image" "Mounting nbd0p1 device" 3
 
 # mount required system dirs
 echo "Mounting sys dirs"
-sudo mount --bind /dev/ /mnt/ubuntu-image/dev/
-sudo mount --bind /proc/ /mnt/ubuntu-image/proc/
-sudo mount --bind /sys/ /mnt/ubuntu-image/sys/
+retry "sudo mount --bind /dev/ /mnt/ubuntu-image/dev/" "Mounting /dev/" 3
+retry "sudo mount --bind /proc/ /mnt/ubuntu-image/proc/" "Mounting /proc/" 3
+retry "sudo mount --bind /sys/ /mnt/ubuntu-image/sys/" "Mounting /sys/" 3
 sudo rm /mnt/ubuntu-image/etc/resolv.conf -f
 sudo cp /etc/resolv.conf /mnt/ubuntu-image/etc/resolv.conf
 

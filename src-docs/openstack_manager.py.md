@@ -35,7 +35,7 @@ It currently returns objects directly from the sdk, which may not be ideal (mapp
 
 ---
 
-<a href="../src/openstack_manager.py#L156"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L158"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
@@ -74,7 +74,7 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_manager.py#L203"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L205"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
@@ -101,7 +101,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/openstack_manager.py#L233"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_manager.py#L235"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
