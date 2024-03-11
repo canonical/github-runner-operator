@@ -266,10 +266,11 @@ def create_instance(
 
     try:
         conn = _create_connection(cloud_config)
+        flavor = conn.create_flavor(name="m1.tiny", ram=512, vcpus=1, disk=1)
         return conn.create_server(
             name=instance_config.name,
             image=instance_config.openstack_image,
-            flavor="m1.tiny",
+            flavor=flavor.name,
             userdata=cloud_userdata,
             wait=True,
         )
