@@ -39,6 +39,7 @@ sunbeam prepare-node-script | bash -x
 sleep 10
 # The following can take a while....
 retry 'sudo -g snap_daemon sunbeam cluster bootstrap --accept-defaults' 'Waiting for cluster bootstrap to complete' 3
+# 2024/03/11 Demo user setup should be removed after openstack server creation PR.
 retry 'sudo -g snap_daemon sunbeam configure --accept-defaults --openrc demo-openrc' 'Configuring sunbeam cluster' 3
 clouds_yaml="${PWD}/clouds.yaml"
 sg snap_daemon -c "sunbeam cloud-config" | tee "$clouds_yaml"
