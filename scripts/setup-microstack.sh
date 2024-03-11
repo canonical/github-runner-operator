@@ -44,7 +44,7 @@ retry 'sudo -g snap_daemon sunbeam configure --accept-defaults --openrc demo-ope
 clouds_yaml="${PWD}/clouds.yaml"
 sg snap_daemon -c "sunbeam cloud-config" | tee "$clouds_yaml"
 # Test connection
-OS_CLIENT_CONFIG_FILE="$clouds_yaml" openstack --os-cloud sunbeam user list
+OS_CLIENT_CONFIG_FILE="$clouds_yaml" openstack --os-cloud sunbeam user show demo
 
 juju clouds || echo "Failed to list clouds"
 juju bootstrap localhost lxd
