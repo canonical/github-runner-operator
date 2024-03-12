@@ -8,8 +8,8 @@ import pytest
 from openstack.identity.v3 import project
 from openstack.test import fakes
 
-import openstack_manager
 from errors import OpenStackUnauthorizedError
+from openstack_cloud import openstack_manager
 
 CLOUD_NAME = "microstack"
 
@@ -19,7 +19,7 @@ def mock_openstack(monkeypatch: pytest.MonkeyPatch, projects) -> MagicMock:
     """Mock openstack.connect."""
     mock_connect = MagicMock(spec=openstack_manager.openstack.connect)
     mock_connect.return_value.list_projects.return_value = projects
-    monkeypatch.setattr("openstack_manager.openstack.connect", mock_connect)
+    monkeypatch.setattr("openstack_cloud.openstack_manager.openstack.connect", mock_connect)
 
     return mock_connect
 

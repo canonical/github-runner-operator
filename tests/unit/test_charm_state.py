@@ -4,13 +4,11 @@ import json
 import os
 import platform
 import secrets
-from pathlib import Path
 from typing import Any
 from unittest.mock import MagicMock, patch
 
 import ops
 import pytest
-import yaml
 
 import charm_state
 from charm_state import (
@@ -19,7 +17,6 @@ from charm_state import (
     Arch,
     CharmConfigInvalidError,
     CharmState,
-    OpenStackInvalidConfigError,
     ProxyConfig,
     SSHDebugConnection,
 )
@@ -309,7 +306,7 @@ def test_openstack_config_invalid_yaml():
 
     with pytest.raises(CharmConfigInvalidError) as exc:
         CharmState.from_charm(mock_charm)
-    assert "Invalid openstack-clouds-yaml config. Invalid yaml." in str(exc.value)
+    assert "Invalid experimental-openstack-clouds-yaml config. Invalid yaml." in str(exc.value)
 
 
 @pytest.mark.parametrize(
@@ -339,35 +336,4 @@ def test_openstack_config_invalid_format(clouds_yaml: Any, expected_err_msg: str
     mock_charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = clouds_yaml
     with pytest.raises(CharmConfigInvalidError) as exc:
         CharmState.from_charm(mock_charm)
-    assert expected_err_msg in str(exc)
-
-
-def test_initialize(clouds_yaml_path: Path, clouds_yaml: dict):
-    """
-    arrange: Mocked clouds.yaml data and path.
-    act: Call initialize.
-    assert: The clouds.yaml file is written to disk.
-    """
-    charm_state.initialize_openstack(clouds_yaml)
-
-    assert yaml.safe_load(clouds_yaml_path.read_text(encoding="utf-8")) == clouds_yaml
-
-
-@pytest.mark.parametrize(
-    "invalid_yaml, expected_err_msg",
-    [
-        pytest.param({"wrong-key": {"cloud_name": {"auth": {}}}}, "Invalid clouds.yaml."),
-        pytest.param({}, "Invalid clouds.yaml."),
-        pytest.param({"clouds": {}}, "No clouds defined in clouds.yaml."),
-    ],
-)
-def test_initialize_validation_error(invalid_yaml: dict, expected_err_msg):
-    """
-    arrange: Mocked clouds.yaml data with invalid data.
-    act: Call initialize.
-    assert: InvalidConfigError is raised.
-    """
-
-    with pytest.raises(OpenStackInvalidConfigError) as exc:
-        charm_state.initialize_openstack(invalid_yaml)
     assert expected_err_msg in str(exc)
