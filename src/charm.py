@@ -375,7 +375,7 @@ class GithubRunnerCharm(CharmBase):
                     ssh_debug_connections=state.ssh_debug_connections,
                 )
                 logger.info("OpenStack instance: %s", instance)
-            self._block_on_openstack_config()
+            self._block_on_openstack_config(state)
             return
 
         self.unit.status = MaintenanceStatus("Installing packages")
@@ -420,7 +420,7 @@ class GithubRunnerCharm(CharmBase):
 
     def _block_on_openstack_config(self, state: CharmState) -> bool:
         """Set unit to blocked status on openstack configuration set.
-        
+
         Returns:
             Whether openstack configuration is enabled.
         """
@@ -442,7 +442,7 @@ class GithubRunnerCharm(CharmBase):
         """
         state = self._setup_state()
 
-        if self._block_on_openstack_config():
+        if self._block_on_openstack_config(state):
             return
 
         runner_manager = self._get_runner_manager(state)
@@ -552,7 +552,7 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
         self._set_reconcile_timer()
 
-        if self._block_on_openstack_config():
+        if self._block_on_openstack_config(state):
             return
 
         prev_config_for_flush: dict[str, str] = {}
@@ -654,7 +654,7 @@ class GithubRunnerCharm(CharmBase):
         """
         state = self._setup_state()
 
-        if self._block_on_openstack_config():
+        if self._block_on_openstack_config(state):
             return
 
         runner_manager = self._get_runner_manager(state)
@@ -782,7 +782,7 @@ class GithubRunnerCharm(CharmBase):
         self._event_timer.disable_event_timer("reconcile-runners")
         state = self._setup_state()
 
-        if self._block_on_openstack_config():
+        if self._block_on_openstack_config(state):
             return
 
         runner_manager = self._get_runner_manager(state)
