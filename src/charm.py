@@ -375,12 +375,7 @@ class GithubRunnerCharm(CharmBase):
                     ssh_debug_connections=state.ssh_debug_connections,
                 )
                 logger.info("OpenStack instance: %s", instance)
-            # Test out openstack integration and then go
-            # into BlockedStatus as it is not supported yet
-            self.unit.status = BlockedStatus(
-                "OpenStack integration is not supported yet. "
-                "Please remove the openstack-clouds-yaml config."
-            )
+            self._block_on_openstack_config()
             return
 
         self.unit.status = MaintenanceStatus("Installing packages")
@@ -423,13 +418,20 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = ActiveStatus()
 
-    def _block_on_openstack_config(self) -> None:
-        """Set unit to blocked status on openstack configuration set."""
-        # Go into BlockedStatus as Openstack is not supported yet
-        self.unit.status = BlockedStatus(
-            "OpenStack integration is not supported yet. "
-            "Please remove the openstack-clouds-yaml config."
-        )
+    def _block_on_openstack_config(self, state: CharmState) -> bool:
+        """Set unit to blocked status on openstack configuration set.
+        
+        Returns:
+            Whether openstack configuration is enabled.
+        """
+        if state.charm_config.openstack_clouds_yaml:
+            # Go into BlockedStatus as Openstack is not supported yet
+            self.unit.status = BlockedStatus(
+                "OpenStack integration is not supported yet. "
+                "Please remove the openstack-clouds-yaml config."
+            )
+            return True
+        return False
 
     @catch_charm_errors
     def _on_start(self, _event: StartEvent) -> None:
@@ -440,8 +442,7 @@ class GithubRunnerCharm(CharmBase):
         """
         state = self._setup_state()
 
-        if state.charm_config.openstack_clouds_yaml:
-            self._block_on_openstack_config()
+        if self._block_on_openstack_config():
             return
 
         runner_manager = self._get_runner_manager(state)
@@ -551,8 +552,7 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
         self._set_reconcile_timer()
 
-        if state.charm_config.openstack_clouds_yaml:
-            self._block_on_openstack_config()
+        if self._block_on_openstack_config():
             return
 
         prev_config_for_flush: dict[str, str] = {}
@@ -654,8 +654,7 @@ class GithubRunnerCharm(CharmBase):
         """
         state = self._setup_state()
 
-        if state.charm_config.openstack_clouds_yaml:
-            self._block_on_openstack_config()
+        if self._block_on_openstack_config():
             return
 
         runner_manager = self._get_runner_manager(state)
@@ -783,8 +782,7 @@ class GithubRunnerCharm(CharmBase):
         self._event_timer.disable_event_timer("reconcile-runners")
         state = self._setup_state()
 
-        if state.charm_config.openstack_clouds_yaml:
-            self._block_on_openstack_config()
+        if self._block_on_openstack_config():
             return
 
         runner_manager = self._get_runner_manager(state)
