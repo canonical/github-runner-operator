@@ -11,7 +11,7 @@ import typing
 from asyncio import sleep
 from datetime import datetime, timezone
 from functools import partial
-from typing import Any, Awaitable, Callable, ParamSpec, TypeVar, Union
+from typing import Any, Awaitable, Callable, ParamSpec, TypeVar, cast
 
 import github
 import juju.version
@@ -473,7 +473,7 @@ def _get_latest_run(
 
     Args:
         workflow: The workflow to get the latest run for.
-        start_time: The minium start time of the run.
+        start_time: The minimum start time of the run.
 
     Returns:
         The latest workflow run if the workflow has started. None otherwise.
@@ -533,6 +533,7 @@ async def dispatch_workflow(
     run = await wait_for(
         partial(_get_latest_run, workflow=workflow, start_time=start_time, branch=branch)
     )
+    assert run, f"Run not found for workflow: {workflow.name} ({workflow.id})"
     await wait_for(partial(_is_workflow_run_complete, run=run), timeout=60 * 30, check_interval=60)
 
     # The run object is updated by _is_workflow_run_complete function above.
@@ -569,7 +570,7 @@ async def wait_for(
     is_awaitable = inspect.iscoroutinefunction(func)
     while time.time() < deadline:
         if is_awaitable:
-            if result := await func():
+            if result := await cast(Awaitable, func()):
                 return result
         else:
             if result := func():
@@ -578,7 +579,7 @@ async def wait_for(
 
     # final check before raising TimeoutError.
     if is_awaitable:
-        if result := await func():
+        if result := await cast(Awaitable, func()):
             return result
     else:
         if result := func():

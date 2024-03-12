@@ -119,16 +119,16 @@ def test__build_image_command():
         test_no_proxy,
         f"""[Service]
 
-Environment="HTTP_PROXY=http://proxy.test"
+Environment="HTTP_PROXY={test_http_proxy}"
 
 
-Environment="HTTPS_PROXY=https://proxy.test"
+Environment="HTTPS_PROXY={test_https_proxy}"
 
 
-Environment="NO_PROXY=http://no.proxy"
+Environment="NO_PROXY={test_no_proxy}"
 """,
-        '{"proxies": {"default": {"httpProxy": "http://proxy.test", "httpsProxy": '
-        '"https://proxy.test", "noProxy": "http://no.proxy"}}}',
+        f"""{{"proxies": {{"default": {{"httpProxy": "{test_http_proxy}", \
+"httpsProxy": "{test_https_proxy}", "noProxy": "{test_no_proxy}"}}}}}}""",
     ], "Unexpected build image command."
 
 
@@ -175,18 +175,26 @@ def test_build_build_image_script_error(monkeypatch: pytest.MonkeyPatch):
     assert "Failed to build image." in str(exc)
 
 
-def test_build_image_delete_image_error(monkeypatch: pytest.MonkeyPatch, clouds_yaml: dict):
+def test_build_image_delete_image_error(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: given a mocked openstack connection that returns existing images and delete_image
         that returns False (failed to delete image).
     act: when bulid_image is called.
     assert: ImageBuildError is raised.
     """
+    monkeypatch.setattr(
+        openstack_manager,
+        "execute_command",
+        MagicMock(spec=openstack_manager.execute_command),
+    )
     mock_connection = MagicMock(spec=openstack_manager.openstack.connection.Connection)
+    mock_connection.search_images.return_value = (
+        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
+    )
     mock_connection.delete_image.return_value = False
     monkeypatch.setattr(
         openstack_manager,
-        "_create_conection",
+        "_create_connection",
         MagicMock(spec=openstack_manager._create_connection, return_value=mock_connection),
     )
 
@@ -196,13 +204,12 @@ def test_build_image_delete_image_error(monkeypatch: pytest.MonkeyPatch, clouds_
             cloud_config=MagicMock(),
             github_client=MagicMock(),
             path=MagicMock(),
-            proxies=MagicMock(),
         )
 
     assert "Failed to delete duplicate image on Openstack." in str(exc)
 
 
-def test_build_image_delete_image_error(monkeypatch: pytest.MonkeyPatch):
+def test_build_image_create_image_error(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: given a mocked connection that raises OpenStackCloudException on create_image.
     act: when bulid_image is called.

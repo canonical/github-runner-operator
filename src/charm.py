@@ -3,6 +3,9 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+# 2024/03/12 The module contains too many lines which are scheduled for refactoring.
+# pylint: disable=too-many-lines
+
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
 import functools
@@ -369,7 +372,7 @@ class GithubRunnerCharm(CharmBase):
                     instance_config=instance_config,
                     proxies=state.proxy_config,
                     dockerhub_mirror=state.charm_config.dockerhub_mirror,
-                    ssh_debug_connections=state.ssh_debug_connections
+                    ssh_debug_connections=state.ssh_debug_connections,
                 )
                 logger.info("OpenStack instance: %s", instance)
             # Test out openstack integration and then go
@@ -420,6 +423,14 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = ActiveStatus()
 
+    def _block_on_openstack_config(self) -> None:
+        """Set unit to blocked status on openstack configuration set."""
+        # Go into BlockedStatus as Openstack is not supported yet
+        self.unit.status = BlockedStatus(
+            "OpenStack integration is not supported yet. "
+            "Please remove the openstack-clouds-yaml config."
+        )
+
     @catch_charm_errors
     def _on_start(self, _event: StartEvent) -> None:
         """Handle the start of the charm.
@@ -430,12 +441,7 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.charm_config.openstack_clouds_yaml:
-            # Test out openstack integration and then go
-            # into BlockedStatus as it is not supported yet
-            self.unit.status = BlockedStatus(
-                "OpenStack integration is not supported yet. "
-                "Please remove the openstack-clouds-yaml config."
-            )
+            self._block_on_openstack_config()
             return
 
         runner_manager = self._get_runner_manager(state)
@@ -546,12 +552,7 @@ class GithubRunnerCharm(CharmBase):
         self._set_reconcile_timer()
 
         if state.charm_config.openstack_clouds_yaml:
-            # Test out openstack integration and then go
-            # into BlockedStatus as it is not supported yet
-            self.unit.status = BlockedStatus(
-                "OpenStack integration is not supported yet. "
-                "Please remove the openstack-clouds-yaml config."
-            )
+            self._block_on_openstack_config()
             return
 
         prev_config_for_flush: dict[str, str] = {}
@@ -654,7 +655,7 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.charm_config.openstack_clouds_yaml:
-            logger.warning("OpenStack integration is not supported yet. Skipping reconcile.")
+            self._block_on_openstack_config()
             return
 
         runner_manager = self._get_runner_manager(state)
@@ -780,12 +781,12 @@ class GithubRunnerCharm(CharmBase):
             event: Event of stopping the charm.
         """
         self._event_timer.disable_event_timer("reconcile-runners")
-
         state = self._setup_state()
 
         if state.charm_config.openstack_clouds_yaml:
+            self._block_on_openstack_config()
             return
-        
+
         runner_manager = self._get_runner_manager(state)
         runner_manager.flush(FlushMode.FLUSH_BUSY)
 
@@ -802,7 +803,6 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             Changes in runner number due to reconciling runners.
         """
-
         if not RunnerManager.runner_bin_path.is_file():
             logger.warning("Unable to reconcile due to missing runner binary")
             raise MissingRunnerBinaryError()

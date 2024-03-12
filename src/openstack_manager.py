@@ -189,8 +189,8 @@ def build_image(
     try:
         conn = _create_connection(cloud_config)
         arch = "amd64" if runner_application["architecture"] == "x64" else "arm64"
+        existing_image: openstack.image.v2.image.Image
         for existing_image in conn.search_images(name_or_id=IMAGE_NAME):
-            existing_image: openstack.image.v2.image.Image
             # images with same name (different ID) can be created and will error during server
             # instantiation.
             if not conn.delete_image(name_or_id=existing_image.id, wait=True):
