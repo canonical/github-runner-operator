@@ -1,11 +1,11 @@
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-{% if proxies.http %}
-HTTP_PROXY={{proxies.http}}
-http_proxy={{proxies.http}}
+{% if proxies.http_proxy %}
+HTTP_PROXY={{proxies.http_proxy}}
+http_proxy={{proxies.http_proxy}}
 {% endif %}
-{% if proxies.https %}
-HTTPS_PROXY={{proxies.https}}
-https_proxy={{proxies.https}}
+{% if proxies.https_proxy %}
+HTTPS_PROXY={{proxies.https_proxy}}
+https_proxy={{proxies.https_proxy}}
 {% endif %}
 {% if proxies.no_proxy %}
 NO_PROXY={{proxies.no_proxy}}

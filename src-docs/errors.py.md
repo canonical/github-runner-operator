@@ -9,6 +9,15 @@ Errors used by the charm.
 
 ---
 
+## <kbd>class</kbd> `CharmInstallError`
+Represents failure in charm installation. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `ConfigurationError`
 Error for juju configuration. 
 

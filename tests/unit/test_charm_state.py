@@ -114,10 +114,10 @@ def test_proxy_config_bool():
     proxy_url = "http://proxy.example.com:8080"
 
     # assert True if http or https is set
-    assert ProxyConfig(http=proxy_url)
-    assert ProxyConfig(https=proxy_url)
-    assert ProxyConfig(http=proxy_url, https=proxy_url)
-    assert ProxyConfig(http=proxy_url, https=proxy_url, no_proxy="localhost")
+    assert ProxyConfig(http_proxy=proxy_url)
+    assert ProxyConfig(https_proxy=proxy_url)
+    assert ProxyConfig(http_proxy=proxy_url, https_proxy=proxy_url)
+    assert ProxyConfig(http_proxy=proxy_url, https_proxy=proxy_url, no_proxy="localhost")
 
     # assert False if otherwise
     assert not ProxyConfig(use_aproxy=False)

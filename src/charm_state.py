@@ -14,7 +14,7 @@ from urllib.parse import urlsplit
 
 import yaml
 from ops import CharmBase
-from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
+from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, parse_obj_as, root_validator
 from pydantic.networks import IPvAnyAddress
 
 import openstack_manager
@@ -384,19 +384,50 @@ class RunnerCharmConfig(BaseModel):
         return values
 
 
+@dataclasses.dataclass
+class HttpProxyEnvVar:
+    """HTTP proxy environment variables.
+
+    Validation is not performed.
+    Intend for propagating the environment variable as is to services used by the charm.
+
+    Used for access the proxy env vars where the state should not be accessed. The state can throw
+    errors based on configuration. Code that should be performed regardless of configuration issues
+    should use this class to access the proxy, e.g., install dependencies.
+
+    Attributes:
+        http_proxy: HTTP proxy environment variable.
+        https_proxy: HTTPS proxy environment variable.
+        no_proxy: No proxy environment variable.
+    """
+
+    http_proxy: str | None
+    https_proxy: str | None
+    no_proxy: str | None
+
+    @classmethod
+    def from_env(cls) -> "HttpProxyEnvVar":
+        """Initialize the HTTP proxy environment variable from env."""
+        http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY")
+        https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY")
+        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY")
+
+        return cls(http_proxy=http_proxy, https_proxy=https_proxy, no_proxy=no_proxy)
+
+
 class ProxyConfig(BaseModel):
     """Proxy configuration.
 
     Attributes:
-        http: HTTP proxy address.
-        https: HTTPS proxy address.
+        http_proxy: HTTP proxy address.
+        https_proxy: HTTPS proxy address.
         no_proxy: Comma-separated list of hosts that should not be proxied.
         use_aproxy: Whether aproxy should be used for the runners.
     """
 
-    http: Optional[AnyHttpUrl]
-    https: Optional[AnyHttpUrl]
-    no_proxy: Optional[str]
+    http_proxy: AnyHttpUrl | None
+    https_proxy: AnyHttpUrl | None
+    no_proxy: str | None
     use_aproxy: bool = False
 
     @classmethod
@@ -409,18 +440,19 @@ class ProxyConfig(BaseModel):
         Returns:
             Current proxy config of the charm.
         """
+        proxy = HttpProxyEnvVar.from_env()
+        http_proxy = parse_obj_as(AnyHttpUrl | None, proxy.http_proxy)
+        https_proxy = parse_obj_as(AnyHttpUrl | None, proxy.https_proxy)
+        no_proxy = proxy.no_proxy
         use_aproxy = bool(charm.config.get("experimental-use-aproxy"))
-        http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY") or None
-        https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
-        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None
 
         # there's no need for no_proxy if there's no http_proxy or https_proxy
         if not (https_proxy or http_proxy) and no_proxy:
             no_proxy = None
 
         return cls(
-            http=http_proxy,
-            https=https_proxy,
+            http_proxy=http_proxy,
+            https_proxy=https_proxy,
             no_proxy=no_proxy,
             use_aproxy=use_aproxy,
         )
@@ -429,7 +461,7 @@ class ProxyConfig(BaseModel):
     def aproxy_address(self) -> Optional[str]:
         """Return the aproxy address."""
         if self.use_aproxy:
-            proxy_address = self.http or self.https
+            proxy_address = self.http_proxy or self.https_proxy
             # assert is only used to make mypy happy
             assert proxy_address is not None  # nosec for [B101:assert_used]
             aproxy_address = f"{proxy_address.host}:{proxy_address.port}"
@@ -455,7 +487,7 @@ class ProxyConfig(BaseModel):
 
     def __bool__(self):
         """Return whether we have a proxy config."""
-        return bool(self.http or self.https)
+        return bool(self.http_proxy or self.https_proxy)
 
     class Config:  # pylint: disable=too-few-public-methods
         """Pydantic model configuration.

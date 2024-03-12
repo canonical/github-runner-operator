@@ -491,8 +491,8 @@ def test_schedule_build_runner_image(
     runner_manager.schedule_build_runner_image()
 
     cronfile = runner_manager.cron_path / "build-runner-image"
-    http = charm_state.proxy_config.http or "''"
-    https = charm_state.proxy_config.https or "''"
+    http = charm_state.proxy_config.http_proxy or "''"
+    https = charm_state.proxy_config.https_proxy or "''"
     no_proxy = charm_state.proxy_config.no_proxy or "''"
 
     cmd = f"/usr/bin/bash {BUILD_IMAGE_SCRIPT_FILENAME.absolute()} {http} {https} {no_proxy}"

@@ -23,7 +23,7 @@ from charm_state import (
     ProxyConfig,
     VirtualMachineResources,
 )
-from errors import LogrotateSetupError, RunnerError, SubprocessError
+from errors import CharmInstallError, LogrotateSetupError, RunnerError, SubprocessError
 from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
@@ -96,8 +96,8 @@ def test_proxy_setting(harness: Harness):
     assert: The proxy configuration are set.
     """
     state = harness.charm._setup_state()
-    assert state.proxy_config.https == TEST_PROXY_SERVER_URL
-    assert state.proxy_config.http == TEST_PROXY_SERVER_URL
+    assert state.proxy_config.https_proxy == TEST_PROXY_SERVER_URL
+    assert state.proxy_config.http_proxy == TEST_PROXY_SERVER_URL
     assert state.proxy_config.no_proxy == "127.0.0.1,localhost"
 
 
@@ -138,7 +138,7 @@ def test_get_runner_manager(harness: Harness):
     assert runner_manager is not None
     assert runner_manager.config.token == "mocktoken"
     assert runner_manager.proxies == ProxyConfig(
-        http=None, https=None, no_proxy=None, use_aproxy=False
+        http_proxy=None, https_proxy=None, no_proxy=None, use_aproxy=False
     )
 
 
@@ -184,13 +184,15 @@ def test_on_install_failure(monkeypatch, harness):
     )
 
     setup_logrotate.side_effect = LogrotateSetupError
-    harness.charm.on.install.emit()
-    assert harness.charm.unit.status == BlockedStatus("Failed to setup logrotate")
+    with pytest.raises(CharmInstallError) as err:
+        harness.charm.on.install.emit()
+    assert "Failed to setup logrotate" in str(err.value)
 
     setup_logrotate.side_effect = None
     GithubRunnerCharm._install_deps = raise_subprocess_error
-    harness.charm.on.install.emit()
-    assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")
+    with pytest.raises(CharmInstallError) as err:
+        harness.charm.on.install.emit()
+    assert "Failed to install dependencies" in str(err.value)
 
 
 def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Path):
