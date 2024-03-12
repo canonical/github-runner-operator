@@ -23,8 +23,10 @@ def test_initialize(clouds_yaml_path: Path, clouds_yaml: dict):
 @pytest.mark.parametrize(
     "invalid_yaml, expected_err_msg",
     [
-        pytest.param({"wrong-key": {"cloud_name": {"auth": {}}}}, "Invalid clouds.yaml."),
-        pytest.param({}, "Invalid clouds.yaml."),
+        pytest.param(
+            {"wrong-key": {"cloud_name": {"auth": {}}}}, "Missing key 'clouds' from config."
+        ),
+        pytest.param({}, "Missing key 'clouds' from config."),
         pytest.param({"clouds": {}}, "No clouds defined in clouds.yaml."),
     ],
 )
