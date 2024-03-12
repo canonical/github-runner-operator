@@ -62,26 +62,6 @@ class GithubClient:
         self._client = GhApi(token=self._token)
 
     @catch_http_errors
-    def get_runner_applications(self, path: GithubPath) -> RunnerApplicationList:
-        """Get list of runner applications available for download.
-
-        Args:
-            path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
-                name.
-        Returns:
-            List of runner applications.
-        """
-        runner_bins: RunnerApplicationList = []
-        if isinstance(path, GithubRepo):
-            runner_bins = self._client.actions.list_runner_applications_for_repo(
-                owner=path.owner, repo=path.repo
-            )
-        if isinstance(path, GithubOrg):
-            runner_bins = self._client.actions.list_runner_applications_for_org(org=path.org)
-
-        return runner_bins
-
-    @catch_http_errors
     def get_runner_application(
         self, path: GithubPath, arch: Arch, os: str = "linux"
     ) -> RunnerApplication:
@@ -100,7 +80,15 @@ class GithubClient:
         Returns:
             The runner application.
         """
-        runner_applications = self.get_runner_applications(path=path)
+        runner_applications: RunnerApplicationList = []
+        if isinstance(path, GithubRepo):
+            runner_applications = self._client.actions.list_runner_applications_for_repo(
+                owner=path.owner, repo=path.repo
+            )
+        if isinstance(path, GithubOrg):
+            runner_applications = self._client.actions.list_runner_applications_for_org(
+                org=path.org
+            )
         logger.debug("Response of runner applications list: %s", runner_applications)
         try:
             return next(
