@@ -25,7 +25,7 @@ def _validate_cloud_config(cloud_config: dict) -> None:
     try:
         clouds = list(cloud_config["clouds"].keys())
     except KeyError as exc:
-        raise OpenStackInvalidConfigError("Invalid clouds.yaml.") from exc
+        raise OpenStackInvalidConfigError("Missing key 'clouds' from config.") from exc
 
     if not clouds:
         raise OpenStackInvalidConfigError("No clouds defined in clouds.yaml.")
