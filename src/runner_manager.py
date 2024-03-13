@@ -42,7 +42,7 @@ REMOVED_RUNNER_LOG_STR = "Removed runner: %s"
 logger = logging.getLogger(__name__)
 
 
-BUILD_IMAGE_SCRIPT_FILENAME = Path("scripts/build-image.sh")
+BUILD_IMAGE_SCRIPT_FILENAME = Path("scripts/build-lxd-image.sh")
 
 IssuedMetricEventsStats = dict[Type[metrics.Event], int]
 

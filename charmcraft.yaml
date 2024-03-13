@@ -13,7 +13,7 @@ parts:
       - rust-all  # for cryptography
       - pkg-config # for cryptography
     prime:
-      - scripts/build-image.sh
+      - scripts/build-lxd-image.sh
       - scripts/build-openstack-image.sh
       - scripts/repo_policy_compliance_service.py
 bases:
