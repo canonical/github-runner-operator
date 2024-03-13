@@ -89,44 +89,77 @@ def list_projects(cloud_config: dict[str, dict]) -> list[Project]:
     return projects
 
 
+def _generate_docker_proxy_unit_file(proxies: Optional[ProxyConfig] = None) -> str:
+    """Generate docker proxy systemd unit file.
+
+    Args:
+        proxies: HTTP proxy settings.
+
+    Returns:
+        Contents of systemd-docker-proxy unit file.
+    """
+    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
+    return environment.get_template("systemd-docker-proxy.j2").render(proxies=proxies)
+
+
+def _generate_docker_client_proxy_config_json(http_proxy: str, https_proxy: str, no_proxy: str):
+    """Generate proxy config.json for docker client.
+
+    Args:
+        http_proxy: HTTP proxy URL.
+        https_proxy: HTTPS proxy URL.
+        no_proxy: URLs to not proxy through.
+
+    Returns:
+        Contents of docker config.json file.
+    """
+
+    return json.dumps(
+        {
+            "proxies": {
+                "default": {
+                    key: value
+                    for key, value in (
+                        ("httpProxy", http_proxy),
+                        ("httpsProxy", https_proxy),
+                        ("noProxy", no_proxy),
+                    )
+                    if value
+                }
+            }
+        }
+    )
+
+
 def _build_image_command(
     runner_info: RunnerApplication, proxies: Optional[ProxyConfig] = None
 ) -> list[str]:
     """Get command for building runner image.
 
+    Args:
+        runner_info: The runner application to fetch runner tar download url.
+        proxies: HTTP proxy settings.
+
     Returns:
         Command to execute to build runner image.
     """
-    http_proxy = proxies.http if (proxies and proxies.http) else ""
-    https_proxy = proxies.https if (proxies and proxies.https) else ""
-    no_proxy = proxies.no_proxy if (proxies and proxies.no_proxy) else ""
+    docker_proxy_service_conf_content = _generate_docker_proxy_unit_file(proxies=proxies)
 
-    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
-    docker_proxy_service_conf_content = environment.get_template("systemd-docker-proxy.j2").render(
-        proxies=proxies
+    http_proxy = str(proxies.http) if (proxies and proxies.http) else ""
+    https_proxy = str(proxies.https) if (proxies and proxies.https) else ""
+    no_proxy = str(proxies.no_proxy) if (proxies and proxies.no_proxy) else ""
+
+    docker_client_proxy_content = _generate_docker_client_proxy_config_json(
+        http_proxy=http_proxy, https_proxy=https_proxy, no_proxy=no_proxy
     )
-    docker_proxy = {
-        "proxies": {
-            "default": {
-                key: value
-                for key, value in (
-                    ("httpProxy", http_proxy),
-                    ("httpsProxy", https_proxy),
-                    ("noProxy", no_proxy),
-                )
-                if value
-            }
-        }
-    }
-    docker_client_proxy_content = json.dumps(docker_proxy)
 
     cmd = [
         "/usr/bin/bash",
         BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME,
         runner_info["download_url"],
-        str(http_proxy),
-        str(https_proxy),
-        str(no_proxy),
+        http_proxy,
+        https_proxy,
+        no_proxy,
         docker_proxy_service_conf_content,
         docker_client_proxy_content,
     ]
