@@ -1,33 +1,29 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import secrets
-from pathlib import Path
+from typing import Optional
 from unittest.mock import MagicMock
 
+import jinja2
 import keystoneauth1.exceptions
 import pytest
-import yaml
 from openstack.identity.v3 import project
 from openstack.test import fakes
 
-import openstack_manager
-from errors import OpenStackInvalidConfigError, OpenStackUnauthorizedError
-
-INVALID_CLOUDS_YAML_ERR_MSG = "Invalid clouds.yaml."
+from errors import OpenStackUnauthorizedError
+from openstack_cloud import openstack_manager
 
 CLOUD_NAME = "microstack"
 
 
-@pytest.fixture(autouse=True, name="clouds_yaml_path")
-def clouds_yaml_path(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
-    """Mocked clouds.yaml path.
+@pytest.fixture(autouse=True, name="openstack_connect_mock")
+def mock_openstack(monkeypatch: pytest.MonkeyPatch, projects) -> MagicMock:
+    """Mock openstack.connect."""
+    mock_connect = MagicMock(spec=openstack_manager.openstack.connect)
+    mock_connect.return_value.list_projects.return_value = projects
+    monkeypatch.setattr("openstack_cloud.openstack_manager.openstack.connect", mock_connect)
 
-    Returns:
-        Path: Mocked clouds.yaml path.
-    """
-    clouds_yaml_path = tmp_path / "clouds.yaml"
-    monkeypatch.setattr("openstack_manager.CLOUDS_YAML_PATH", clouds_yaml_path)
-    return clouds_yaml_path
+    return mock_connect
 
 
 @pytest.fixture(name="projects")
@@ -36,76 +32,47 @@ def projects_fixture() -> list:
     return list(fakes.generate_fake_resources(project.Project, count=3))
 
 
-@pytest.fixture(autouse=True, name="openstack_connect_mock")
-def mock_openstack(monkeypatch: pytest.MonkeyPatch, projects) -> MagicMock:
-    """Mock openstack.connect."""
-    mock_connect = MagicMock(spec=openstack_manager.openstack.connect)
-    mock_connect.return_value.list_projects.return_value = projects
-    monkeypatch.setattr("openstack_manager.openstack.connect", mock_connect)
-
-    return mock_connect
-
-
-def _create_clouds_yaml() -> dict:
-    """Create a fake clouds.yaml."""
-    return {
-        "clouds": {
-            CLOUD_NAME: {
-                "auth": {
-                    "auth_url": secrets.token_hex(16),
-                    "project_name": secrets.token_hex(16),
-                    "project_domain_name": secrets.token_hex(16),
-                    "username": secrets.token_hex(16),
-                    "user_domain_name": secrets.token_hex(16),
-                    "password": secrets.token_hex(16),
-                }
-            }
-        }
-    }
+@pytest.fixture(name="mock_github_client")
+def mock_github_client_fixture() -> MagicMock:
+    """Mocked github client that returns runner application."""
+    mock_github_client = MagicMock(spec=openstack_manager.GithubClient)
+    mock_github_client.get_runner_application.return_value = openstack_manager.RunnerApplication(
+        os="linux",
+        architecture="x64",
+        download_url="http://test_url",
+        filename="test_filename",
+        temp_download_token="test_token",
+    )
+    return mock_github_client
 
 
-def test_initialize(clouds_yaml_path: Path):
+@pytest.fixture(name="patch_execute_command")
+def patch_execute_command_fixture(monkeypatch: pytest.MonkeyPatch):
+    """Patch execute command to a MagicMock instance."""
+    monkeypatch.setattr(
+        openstack_manager,
+        "execute_command",
+        MagicMock(spec=openstack_manager.execute_command),
+    )
+
+
+def test__create_connection(multi_clouds_yaml: dict, openstack_connect_mock: MagicMock):
     """
-    arrange: Mocked clouds.yaml data and path.
-    act: Call initialize.
-    assert: The clouds.yaml file is written to disk.
+    arrange: given a cloud config yaml dict with multiple clouds.
+    act: when _create_connection is called.
+    assert: connection with first cloud in the config is used.
     """
-    clouds_yaml = _create_clouds_yaml()
+    openstack_manager._create_connection(cloud_config=multi_clouds_yaml)
 
-    openstack_manager.initialize(clouds_yaml)
-
-    assert yaml.safe_load(clouds_yaml_path.read_text(encoding="utf-8")) == clouds_yaml
+    openstack_connect_mock.assert_called_once_with(CLOUD_NAME)
 
 
-@pytest.mark.parametrize(
-    "invalid_yaml, expected_err_msg",
-    [
-        pytest.param({"wrong-key": _create_clouds_yaml()["clouds"]}, INVALID_CLOUDS_YAML_ERR_MSG),
-        pytest.param({}, INVALID_CLOUDS_YAML_ERR_MSG),
-        pytest.param({"clouds": {}}, "No clouds defined in clouds.yaml."),
-    ],
-)
-def test_initialize_validation_error(invalid_yaml: dict, expected_err_msg):
-    """
-    arrange: Mocked clouds.yaml data with invalid data.
-    act: Call initialize.
-    assert: InvalidConfigError is raised.
-    """
-
-    with pytest.raises(OpenStackInvalidConfigError) as exc:
-        openstack_manager.initialize(invalid_yaml)
-    assert expected_err_msg in str(exc)
-
-
-def test_list_projects(clouds_yaml_path: Path, openstack_connect_mock: MagicMock, projects):
+def test_list_projects(clouds_yaml: dict, openstack_connect_mock: MagicMock, projects):
     """
     arrange: Mocked clouds.yaml data.
     act: Call initialize and list_projects.
     assert: openstack.connect and list_projects is called and the projects are returned.
     """
-    clouds_yaml = _create_clouds_yaml()
-
-    openstack_manager.initialize(clouds_yaml)
     actual_projects = openstack_manager.list_projects(clouds_yaml)
 
     openstack_connect_mock.assert_called_once_with(CLOUD_NAME)
@@ -113,37 +80,434 @@ def test_list_projects(clouds_yaml_path: Path, openstack_connect_mock: MagicMock
 
 
 def test_list_projects_openstack_uses_first_cloud(
-    clouds_yaml_path: Path, openstack_connect_mock: MagicMock
+    clouds_yaml: dict, openstack_connect_mock: MagicMock
 ):
     """
     arrange: Mocked clouds.yaml data with multiple clouds.
     act: Call initialize and list_projects.
     assert: openstack.connect is called with the first cloud name.
     """
-    clouds_yaml = _create_clouds_yaml()
     clouds_yaml["clouds"]["microstack2"] = clouds_yaml["clouds"][CLOUD_NAME]
 
-    openstack_manager.initialize(clouds_yaml)
     openstack_manager.list_projects(clouds_yaml)
 
     openstack_connect_mock.assert_called_once_with(CLOUD_NAME)
 
 
-def test_list_projects_missing_credentials_error(openstack_connect_mock: MagicMock):
+def test_list_projects_missing_credentials_error(
+    clouds_yaml: dict, openstack_connect_mock: MagicMock
+):
     """
     arrange: Mocked clouds.yaml data and openstack.list_projects raising keystone...Unauthorized.
     act: Call initialize and list_projects.
     assert: UnauthorizedError is raised.
     """
-    cloud_yaml = _create_clouds_yaml()
     openstack_connect_mock.return_value.list_projects.side_effect = (
         keystoneauth1.exceptions.http.Unauthorized
     )
 
-    openstack_manager.initialize(cloud_yaml)
-
     with pytest.raises(OpenStackUnauthorizedError) as exc:
-        openstack_manager.list_projects(cloud_yaml)
+        openstack_manager.list_projects(clouds_yaml)
     assert "Unauthorized to connect to OpenStack." in str(exc)
 
     openstack_connect_mock.assert_called_once_with(CLOUD_NAME)
+
+
+@pytest.mark.parametrize(
+    "arch",
+    [
+        pytest.param("s390x", id="s390x"),
+        pytest.param("riscv64", id="riscv64"),
+        pytest.param("ppc64el", id="ppc64el"),
+        pytest.param("armhf", id="armhf"),
+        pytest.param("test", id="test"),
+    ],
+)
+def test__get_supported_runner_arch_invalid_arch(arch: str):
+    """
+    arrange: given supported architectures.
+    act: when _get_supported_runner_arch is called.
+    assert: supported cloud image architecture type is returned.
+    """
+    with pytest.raises(openstack_manager.UnsupportedArchitectureError) as exc:
+        openstack_manager._get_supported_runner_arch(arch=arch)
+
+    assert arch in str(exc)
+
+
+@pytest.mark.parametrize(
+    "arch, image_arch",
+    [
+        pytest.param("x64", "amd64", id="x64"),
+        pytest.param("arm64", "arm64", id="arm64"),
+    ],
+)
+def test__get_supported_runner_arch(arch: str, image_arch: str):
+    """
+    arrange: given supported architectures.
+    act: when _get_supported_runner_arch is called.
+    assert: supported cloud image architecture type is returned.
+    """
+    assert openstack_manager._get_supported_runner_arch(arch=arch) == image_arch
+
+
+@pytest.mark.parametrize(
+    "proxy_config, dockerhub_mirror, ssh_debug_connections, expected_env_contents",
+    [
+        pytest.param(
+            None,
+            None,
+            None,
+            """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+
+
+
+
+
+LANG=C.UTF-8
+ACTIONS_RUNNER_HOOK_JOB_STARTED=
+""",
+            id="all values empty",
+        ),
+        pytest.param(
+            openstack_manager.ProxyConfig(
+                http="http://test.internal",
+                https="https://test.internal",
+                no_proxy="http://no_proxy.internal",
+            ),
+            None,
+            None,
+            """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+
+HTTP_PROXY=http://test.internal
+http_proxy=http://test.internal
+
+
+HTTPS_PROXY=https://test.internal
+https_proxy=https://test.internal
+
+
+
+NO_PROXY=http://no_proxy.internal
+no_proxy=http://no_proxy.internal
+
+
+LANG=C.UTF-8
+ACTIONS_RUNNER_HOOK_JOB_STARTED=
+""",
+            id="proxy value set",
+        ),
+        pytest.param(
+            None,
+            "http://dockerhub_mirror.test",
+            None,
+            """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+
+
+
+
+
+DOCKERHUB_MIRROR=http://dockerhub_mirror.test
+CONTAINER_REGISTRY_URL=http://dockerhub_mirror.test
+
+LANG=C.UTF-8
+ACTIONS_RUNNER_HOOK_JOB_STARTED=
+""",
+            id="dockerhub mirror set",
+        ),
+        pytest.param(
+            None,
+            None,
+            [
+                openstack_manager.SSHDebugConnection(
+                    host="127.0.0.1",
+                    port=10022,
+                    rsa_fingerprint="SHA256:testrsa",
+                    ed25519_fingerprint="SHA256:tested25519",
+                )
+            ],
+            """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+
+
+
+
+
+LANG=C.UTF-8
+ACTIONS_RUNNER_HOOK_JOB_STARTED=
+
+TMATE_SERVER_HOST=127.0.0.1
+TMATE_SERVER_PORT=10022
+TMATE_SERVER_RSA_FINGERPRINT=SHA256:testrsa
+TMATE_SERVER_ED25519_FINGERPRINT=SHA256:tested25519
+""",
+            id="ssh debug connection set",
+        ),
+        pytest.param(
+            openstack_manager.ProxyConfig(
+                http="http://test.internal",
+                https="https://test.internal",
+                no_proxy="http://no_proxy.internal",
+            ),
+            "http://dockerhub_mirror.test",
+            [
+                openstack_manager.SSHDebugConnection(
+                    host="127.0.0.1",
+                    port=10022,
+                    rsa_fingerprint="SHA256:testrsa",
+                    ed25519_fingerprint="SHA256:tested25519",
+                )
+            ],
+            """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+
+HTTP_PROXY=http://test.internal
+http_proxy=http://test.internal
+
+
+HTTPS_PROXY=https://test.internal
+https_proxy=https://test.internal
+
+
+
+NO_PROXY=http://no_proxy.internal
+no_proxy=http://no_proxy.internal
+
+
+DOCKERHUB_MIRROR=http://dockerhub_mirror.test
+CONTAINER_REGISTRY_URL=http://dockerhub_mirror.test
+
+LANG=C.UTF-8
+ACTIONS_RUNNER_HOOK_JOB_STARTED=
+
+TMATE_SERVER_HOST=127.0.0.1
+TMATE_SERVER_PORT=10022
+TMATE_SERVER_RSA_FINGERPRINT=SHA256:testrsa
+TMATE_SERVER_ED25519_FINGERPRINT=SHA256:tested25519
+""",
+            id="all values set",
+        ),
+    ],
+)
+def test__generate_runner_env(
+    proxy_config: Optional[openstack_manager.ProxyConfig],
+    dockerhub_mirror: Optional[str],
+    ssh_debug_connections: Optional[list[openstack_manager.SSHDebugConnection]],
+    expected_env_contents: str,
+):
+    """
+    arrange: given configuration values for runner environment.
+    act: when _generate_runner_env is called.
+    assert: expected .env contents are generated.
+    """
+    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
+    assert (
+        openstack_manager._generate_runner_env(
+            templates_env=environment,
+            proxies=proxy_config,
+            dockerhub_mirror=dockerhub_mirror,
+            ssh_debug_connections=ssh_debug_connections,
+        )
+        == expected_env_contents
+    )
+
+
+def test__build_image_command():
+    """
+    arrange: given a mock Github runner application and proxy config.
+    act: when _build_image_command is called.
+    assert: command for build image bash script with args are returned.
+    """
+    test_runner_info = openstack_manager.RunnerApplication(
+        os="linux",
+        architecture="x64",
+        download_url=(test_download_url := "https://testdownloadurl.com"),
+        filename="test_filename",
+        temp_download_token=secrets.token_hex(16),
+    )
+    test_proxy_config = openstack_manager.ProxyConfig(
+        http=(test_http_proxy := "http://proxy.test"),
+        https=(test_https_proxy := "https://proxy.test"),
+        no_proxy=(test_no_proxy := "http://no.proxy"),
+        use_aproxy=False,
+    )
+
+    command = openstack_manager._build_image_command(
+        runner_info=test_runner_info, proxies=test_proxy_config
+    )
+    assert command == [
+        "/usr/bin/bash",
+        openstack_manager.BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME,
+        test_download_url,
+        test_http_proxy,
+        test_https_proxy,
+        test_no_proxy,
+        f"""[Service]
+
+Environment="HTTP_PROXY={test_http_proxy}"
+
+
+Environment="HTTPS_PROXY={test_https_proxy}"
+
+
+Environment="NO_PROXY={test_no_proxy}"
+""",
+        f"""{{"proxies": {{"default": {{"httpProxy": "{test_http_proxy}", \
+"httpsProxy": "{test_https_proxy}", "noProxy": "{test_no_proxy}"}}}}}}""",
+    ], "Unexpected build image command."
+
+
+def test_build_image_runner_binary_error():
+    """
+    arrange: given a mocked github client get_runner_application function that raises an error.
+    act: when build_image is called.
+    assert: ImageBuildError is raised.
+    """
+    mock_github_client = MagicMock(spec=openstack_manager.GithubClient)
+    mock_github_client.get_runner_application.side_effect = openstack_manager.RunnerBinaryError
+
+    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
+        openstack_manager.build_image(
+            arch=openstack_manager.Arch.X64,
+            cloud_config=MagicMock(),
+            github_client=mock_github_client,
+            path=MagicMock(),
+        )
+
+    assert "Failed to fetch runner application." in str(exc)
+
+
+def test_build_image_script_error(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: given a monkeypatched execute_command function that raises an error.
+    act: when build_image is called.
+    assert: ImageBuildError is raised.
+    """
+    monkeypatch.setattr(
+        openstack_manager,
+        "execute_command",
+        MagicMock(side_effect=openstack_manager.SubprocessError),
+    )
+
+    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
+        openstack_manager.build_image(
+            arch=openstack_manager.Arch.X64,
+            cloud_config=MagicMock(),
+            github_client=MagicMock(),
+            path=MagicMock(),
+        )
+
+    assert "Failed to build image." in str(exc)
+
+
+@pytest.mark.usefixtures("patch_execute_command")
+def test_build_image_runner_arch_error(
+    monkeypatch: pytest.MonkeyPatch, mock_github_client: MagicMock
+):
+    """
+    arrange: given _get_supported_runner_arch that raises unsupported architecture error.
+    act: when build_image is called.
+    assert: ImageBuildError error is raised with unsupported arch message.
+    """
+    mock_get_supported_runner_arch = MagicMock(
+        spec=openstack_manager._get_supported_runner_arch,
+        side_effect=openstack_manager.UnsupportedArchitectureError(arch="x64"),
+    )
+    monkeypatch.setattr(
+        openstack_manager, "_get_supported_runner_arch", mock_get_supported_runner_arch
+    )
+
+    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
+        openstack_manager.build_image(
+            arch=openstack_manager.Arch.X64,
+            cloud_config=MagicMock(),
+            github_client=mock_github_client,
+            path=MagicMock(),
+        )
+
+    assert "Unsupported architecture" in str(exc)
+
+
+@pytest.mark.usefixtures("patch_execute_command")
+def test_build_image_delete_image_error(
+    monkeypatch: pytest.MonkeyPatch, mock_github_client: MagicMock
+):
+    """
+    arrange: given a mocked openstack connection that returns existing images and delete_image
+        that returns False (failed to delete image).
+    act: when build_image is called.
+    assert: ImageBuildError is raised.
+    """
+    mock_connection = MagicMock(spec=openstack_manager.openstack.connection.Connection)
+    mock_connection.search_images.return_value = (
+        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
+    )
+    mock_connection.delete_image.return_value = False
+    monkeypatch.setattr(
+        openstack_manager,
+        "_create_connection",
+        MagicMock(spec=openstack_manager._create_connection, return_value=mock_connection),
+    )
+
+    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
+        openstack_manager.build_image(
+            arch=openstack_manager.Arch.X64,
+            cloud_config=MagicMock(),
+            github_client=mock_github_client,
+            path=MagicMock(),
+        )
+
+    assert "Failed to delete duplicate image on Openstack." in str(exc)
+
+
+@pytest.mark.usefixtures("patch_execute_command")
+def test_build_image_create_image_error(
+    monkeypatch: pytest.MonkeyPatch, mock_github_client: MagicMock
+):
+    """
+    arrange: given a mocked connection that raises OpenStackCloudException on create_image.
+    act: when build_image is called.
+    assert: ImageBuildError is raised.
+    """
+    mock_connection = MagicMock(spec=openstack_manager.openstack.connection.Connection)
+    mock_connection.create_image.side_effect = openstack_manager.OpenStackCloudException
+    monkeypatch.setattr(
+        openstack_manager,
+        "_create_connection",
+        MagicMock(spec=openstack_manager._create_connection, return_value=mock_connection),
+    )
+
+    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
+        openstack_manager.build_image(
+            arch=openstack_manager.Arch.X64,
+            cloud_config=MagicMock(),
+            github_client=mock_github_client,
+            path=MagicMock(),
+            proxies=None,
+        )
+
+    assert "Failed to upload image." in str(exc)
+
+
+@pytest.mark.usefixtures("patch_execute_command")
+def test_build_image(monkeypatch: pytest.MonkeyPatch, mock_github_client: MagicMock):
+    """
+    arrange: given monkeypatched execute_command and mocked openstack connection.
+    act: when build_image is called.
+    assert: Openstack image is successfully created.
+    """
+    mock_connection = MagicMock(spec=openstack_manager.openstack.connection.Connection)
+    mock_connection.search_images.return_value = (
+        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
+        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
+    )
+    monkeypatch.setattr(
+        openstack_manager,
+        "_create_connection",
+        MagicMock(spec=openstack_manager._create_connection, return_value=mock_connection),
+    )
+
+    openstack_manager.build_image(
+        arch=openstack_manager.Arch.X64,
+        cloud_config=MagicMock(),
+        github_client=mock_github_client,
+        path=MagicMock(),
+    )

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional, TypedDict
+from typing import List, Literal, Optional, TypedDict
 
 from pydantic import BaseModel
 from typing_extensions import NotRequired
@@ -21,6 +21,8 @@ class GitHubRunnerStatus(Enum):
     OFFLINE = "offline"
 
 
+# See response schema for
+# https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#list-runner-applications-for-an-organization
 class RunnerApplication(TypedDict, total=False):
     """Information on the runner application.
 
@@ -34,8 +36,8 @@ class RunnerApplication(TypedDict, total=False):
         sha256_check_sum: SHA256 Checksum of the runner application.
     """
 
-    os: str
-    architecture: str
+    os: Literal["linux", "win", "osx"]
+    architecture: Literal["arm", "arm64", "x64"]
     download_url: str
     filename: str
     temp_download_token: NotRequired[str]

@@ -17,7 +17,7 @@ from ops import CharmBase
 from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
 from pydantic.networks import IPvAnyAddress
 
-import openstack_manager
+import openstack_cloud
 from errors import OpenStackInvalidConfigError
 from firewall import FirewallEntry
 from utilities import get_env_var
@@ -25,7 +25,6 @@ from utilities import get_env_var
 logger = logging.getLogger(__name__)
 
 ARCHITECTURES_ARM64 = {"aarch64", "arm64"}
-
 ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
@@ -185,7 +184,7 @@ class CharmConfig(BaseModel):
     reconcile_interval: int
     denylist: list[FirewallEntry]
     dockerhub_mirror: str | None
-    openstack_clouds_yaml: dict | None
+    openstack_clouds_yaml: dict[str, dict] | None
 
     @classmethod
     def _parse_denylist(cls, charm: CharmBase) -> list[str]:
@@ -245,21 +244,21 @@ class CharmConfig(BaseModel):
         denylist = cls._parse_denylist(charm)
         dockerhub_mirror = cls._parse_dockerhub_mirror(charm)
 
-        openstack_clouds_yaml_str = charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
+        openstack_clouds_yaml_str = charm.config.get("experimental-openstack-clouds-yaml")
         if openstack_clouds_yaml_str:
             try:
                 openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
             except yaml.YAMLError as exc:
-                logger.error("Invalid openstack-clouds-yaml config: %s.", exc)
+                logger.error("Invalid experimental-openstack-clouds-yaml config: %s.", exc)
                 raise CharmConfigInvalidError(
-                    "Invalid openstack-clouds-yaml config. Invalid yaml."
+                    "Invalid experimental-openstack-clouds-yaml config. Invalid yaml."
                 ) from exc
             if (config_type := type(openstack_clouds_yaml)) is not dict:
                 raise CharmConfigInvalidError(
                     f"Invalid openstack config format, expected dict, got {config_type}"
                 )
             try:
-                openstack_manager.initialize(openstack_clouds_yaml)
+                openstack_cloud.initialize(openstack_clouds_yaml)
             except OpenStackInvalidConfigError as exc:
                 logger.error("Invalid openstack config, %s.", exc)
                 raise CharmConfigInvalidError(

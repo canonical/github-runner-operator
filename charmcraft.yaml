@@ -14,6 +14,7 @@ parts:
       - pkg-config # for cryptography
     prime:
       - scripts/build-image.sh
+      - scripts/build-openstack-image.sh
       - scripts/repo_policy_compliance_service.py
 bases:
   - build-on:

@@ -122,22 +122,19 @@ class RunnerManager:
         Args:
             os_name: Name of operating system.
 
+        Raises:
+            RunnerBinaryError: If an error occurred while fetching runner application info.
+
         Returns:
             Information on the runner application.
         """
-        runner_bins = self._clients.github.get_runner_applications(self.config.path)
-
-        logger.debug("Response of runner binary list: %s", runner_bins)
-
         try:
-            arch = self.config.charm_state.arch.value
-            return next(
-                bin for bin in runner_bins if bin["os"] == os_name and bin["architecture"] == arch
+            return self._clients.github.get_runner_application(
+                path=self.config.path, arch=self.config.charm_state.arch.value, os=os_name
             )
-        except StopIteration as err:
-            raise RunnerBinaryError(
-                f"Unable query GitHub runner binary information for {os_name} {arch}"
-            ) from err
+        except RunnerBinaryError:
+            logger.error("Failed to get runner application info.")
+            raise
 
     @retry(tries=5, delay=30, local_logger=logger)
     def update_runner_bin(self, binary: RunnerApplication) -> None:
