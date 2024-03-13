@@ -3,7 +3,7 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-set -e
+set -euo pipefail
 
 # GitHub runner bin args
 RUNNER_TAR_URL="$1"
