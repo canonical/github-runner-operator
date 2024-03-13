@@ -235,12 +235,12 @@ async def test_runner_labels(
 ) -> None:
     """
     arrange: A working application with one runner.
-    act: Change the token to be invalid and set the number of runners to zero.
-    assert: The active runner should be removed, regardless of the invalid new token.
+    act: Change the runner label.
+    assert: A runner with the testing label is found.
     """
     unit = app.units[0]
 
-    test_labels = ("label_test", "additional_label")
+    test_labels = ("label_test", "additional_label", app.name)
     await app.set_config({"labels": f"{test_labels[0]}, {test_labels[1]}"})
     await model.wait_for_idle()
 
