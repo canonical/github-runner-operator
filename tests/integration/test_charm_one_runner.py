@@ -6,6 +6,7 @@ from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio
+from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
@@ -227,6 +228,30 @@ async def test_change_runner_storage(model: Model, app: Application) -> None:
     # 2.
     await app.set_config({"runner-storage": "memory"})
     await model.wait_for_idle(status=ACTIVE, timeout=1 * 60)
+
+
+async def test_runner_labels(
+    model: Model, app: Application, github_repository: Repository
+) -> None:
+    """
+    arrange: A working application with one runner.
+    act: Change the token to be invalid and set the number of runners to zero.
+    assert: The active runner should be removed, regardless of the invalid new token.
+    """
+    unit = app.units[0]
+
+    test_labels = ("label_test", "additional_label")
+    await app.set_config({"labels": f"{test_labels[0]}, {test_labels[1]}"})
+    await model.wait_for_idle()
+
+    await wait_till_num_of_runners(unit, num=1)
+
+    found = False
+    for runner in github_repository.get_self_hosted_runners():
+        if all(label["name"] in test_labels for label in runner.labels()):
+            found = True
+
+    assert found, "Runner with testing label not found."
 
 
 async def test_token_config_changed_insufficient_perms(

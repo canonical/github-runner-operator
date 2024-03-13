@@ -13,6 +13,7 @@ from _pytest.monkeypatch import MonkeyPatch
 import shared_fs
 from charm_state import (
     Arch,
+    CharmConfig,
     CharmState,
     GithubOrg,
     GithubRepo,
@@ -38,12 +39,21 @@ def token_fixture():
     return secrets.token_hex()
 
 
+@pytest.fixture(scope="function", name="charm_config")
+def charm_config_fixture():
+    """Mock charm config instance."""
+    mock_charm_config = MagicMock(spec=CharmConfig)
+    mock_charm_config.labels = ("test",)
+    return mock_charm_config
+
+
 @pytest.fixture(scope="function", name="charm_state")
-def charm_state_fixture():
+def charm_state_fixture(charm_config: MagicMock):
     mock = MagicMock(spec=CharmState)
     mock.is_metrics_logging_available = False
     mock.arch = Arch.X64
     mock.ssh_debug_connections = None
+    mock.charm_config = charm_config
     return mock
 
 

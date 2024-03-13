@@ -103,4 +103,5 @@ class MockGithubRunnerCharmFactory(factory.Factory):
             "dockerhub-mirror": "",
             "runner-storage": "juju-storage",
             "experimental-use-aproxy": False,
+            "labels": "",
         }

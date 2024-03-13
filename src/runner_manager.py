@@ -416,6 +416,7 @@ class RunnerManager:
             app_name=self.app_name,
             dockerhub_mirror=self.config.dockerhub_mirror,
             issue_metrics=self.config.are_metrics_enabled,
+            labels=self.config.charm_state.charm_config.labels,
             lxd_storage_path=self.config.lxd_storage_path,
             path=self.config.path,
             proxies=proxies,
