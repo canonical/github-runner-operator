@@ -152,7 +152,8 @@ class Runner:
             self._configure_runner()
 
             self._register_runner(
-                config.registration_token, labels=[self.config.app_name, config.image]
+                config.registration_token,
+                labels=[self.config.app_name, config.image, *self.config.labels],
             )
             self._start_runner()
         except (RunnerError, LxdError) as err:

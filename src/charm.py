@@ -325,13 +325,13 @@ class GithubRunnerCharm(CharmBase):
             app_name,
             unit,
             RunnerManagerConfig(
-                path=path,
-                token=token,
-                image="jammy",
-                service_token=self.service_token,
-                lxd_storage_path=lxd_storage_path,
                 charm_state=state,
                 dockerhub_mirror=state.charm_config.dockerhub_mirror,
+                image="jammy",
+                lxd_storage_path=lxd_storage_path,
+                path=path,
+                service_token=self.service_token,
+                token=token,
             ),
         )
 

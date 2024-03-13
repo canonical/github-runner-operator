@@ -139,6 +139,7 @@ def runner_fixture(
         path=request.param[0],
         proxies=request.param[1],
         lxd_storage_path=pool_path,
+        labels=("test", "label"),
         dockerhub_mirror=None,
         issue_metrics=False,
         ssh_debug_connections=ssh_debug_connections,
