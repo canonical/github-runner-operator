@@ -244,7 +244,7 @@ class CharmConfig(BaseModel):
         denylist = cls._parse_denylist(charm)
         dockerhub_mirror = cls._parse_dockerhub_mirror(charm)
 
-        openstack_clouds_yaml_str = charm.config.get("experimental-openstack-clouds-yaml")
+        openstack_clouds_yaml_str = charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
         if openstack_clouds_yaml_str:
             try:
                 openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
