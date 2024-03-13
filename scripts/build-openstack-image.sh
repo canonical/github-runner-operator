@@ -44,19 +44,46 @@ cleanup() {
     sudo qemu-nbd --disconnect /dev/nbd0
 }
 
+# Check if proxy variables set, doesn't exist or is a different value then update.
 if [[ -n "$HTTP_PROXY" ]]; then
-    /usr/bin/echo "HTTP_PROXY=$HTTP_PROXY" >> /etc/environment
-    /usr/bin/echo "http_proxy=$HTTP_PROXY" >> /etc/environment
-    /usr/bin/echo "Acquire::http::Proxy \"$HTTP_PROXY\";" >> /etc/apt/apt.conf
+    if ! grep -q "HTTP_PROXY=" /etc/environment || ! grep -q "HTTP_PROXY=$HTTP_PROXY" /etc/environment; then
+        sed -i "/^HTTP_PROXY=/d" /etc/environment
+        echo "HTTP_PROXY=$HTTP_PROXY" >> /etc/environment
+    fi
+    if ! grep -q "http_proxy=" /etc/environment || ! grep -q "http_proxy=$HTTP_PROXY" /etc/environment; then
+        sed -i "/^http_proxy=/d" /etc/environment
+        echo "http_proxy=$HTTP_PROXY" >> /etc/environment
+    fi
+    if ! grep -q "Acquire::http::Proxy" /etc/apt/apt.conf || ! grep -q "Acquire::http::Proxy \"$HTTP_PROXY\";" /etc/apt/apt.conf; then
+        sed -i "/^Acquire::http::Proxy/d" /etc/apt/apt.conf
+        echo "Acquire::http::Proxy \"$HTTP_PROXY\";" >> /etc/apt/apt.conf
+    fi
 fi
+
 if [[ -n "$HTTPS_PROXY" ]]; then
-    /usr/bin/echo "HTTPS_PROXY=$HTTPS_PROXY" >> /etc/environment
-    /usr/bin/echo "https_proxy=$HTTPS_PROXY" >> /etc/environment
-    /usr/bin/echo "Acquire::https::Proxy \"$HTTPS_PROXY\";" >> /etc/apt/apt.conf
+    if ! grep -q "HTTPS_PROXY=" /etc/environment || ! grep -q "HTTPS_PROXY=$HTTPS_PROXY" /etc/environment; then
+        sed -i "/^HTTPS_PROXY=/d" /etc/environment
+        echo "HTTPS_PROXY=$HTTPS_PROXY" >> /etc/environment
+    fi
+    if ! grep -q "https_proxy=" /etc/environment || ! grep -q "https_proxy=$HTTPS_PROXY" /etc/environment; then
+        sed -i "/^https_proxy=/d" /etc/environment
+        echo "https_proxy=$HTTPS_PROXY" >> /etc/environment
+    fi
+    if ! grep -q "Acquire::https::Proxy" /etc/apt/apt.conf || ! grep -q "Acquire::https::Proxy \"$HTTPS_PROXY\";" /etc/apt/apt.conf; then
+        sed -i "/^Acquire::https::Proxy/d" /etc/apt/apt.conf
+        echo "Acquire::https::Proxy \"$HTTPS_PROXY\";" >> /etc/apt/apt.conf
+    fi
 fi
+
 if [[ -n "$NO_PROXY" ]]; then
-    /usr/bin/echo "NO_PROXY=$NO_PROXY" >> /etc/environment
-    /usr/bin/echo "no_proxy=$NO_PROXY" >> /etc/environment
+    if ! grep -q "NO_PROXY=" /etc/environment || ! grep -q "NO_PROXY=$NO_PROXY" /etc/environment; then
+        sed -i "/^NO_PROXY=/d" /etc/environment
+        echo "NO_PROXY=$NO_PROXY" >> /etc/environment
+    fi
+    if ! grep -q "no_proxy=" /etc/environment || ! grep -q "no_proxy=$NO_PROXY" /etc/environment; then
+        sed -i "/^no_proxy=/d" /etc/environment
+        echo "no_proxy=$NO_PROXY" >> /etc/environment
+    fi
 fi
 
 # Architecture args
