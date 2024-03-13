@@ -9,7 +9,7 @@ from dataclasses import dataclass
 
 # subprocess module is used to call image build script.
 from subprocess import SubprocessError  # nosec
-from typing import Iterable, Optional
+from typing import Iterable, Literal, Optional
 
 import jinja2
 import keystoneauth1.exceptions.http
@@ -21,7 +21,7 @@ import openstack.image.v2.image
 from openstack.exceptions import OpenStackCloudException
 from openstack.identity.v3.project import Project
 
-from charm_state import Arch, ProxyConfig, SSHDebugConnection
+from charm_state import Arch, ProxyConfig, SSHDebugConnection, UnsupportedArchitectureError
 from errors import OpenStackUnauthorizedError, RunnerBinaryError
 from github_client import GithubClient
 from github_type import RunnerApplication
@@ -155,13 +155,34 @@ class InstanceConfig:
     openstack_image: openstack.image.v2.image.Image
 
 
+def _get_supported_runner_arch(arch: str) -> Literal["amd64", "arm64"]:
+    """Validate and return supported runner architecture.
+
+    Args:
+        arch: str
+
+    Raises:
+        UnsupportedArchitectureError: If an unsupported architecture was passed.
+
+    Returns:
+        The supported architecture.
+    """
+    match arch:
+        case "x64":
+            return "amd64"
+        case "arm64":
+            return "arm64"
+        case _:
+            raise UnsupportedArchitectureError(arch)
+
+
 def build_image(
     arch: Arch,
     cloud_config: dict[str, dict],
     github_client: GithubClient,
     path: GithubPath,
     proxies: Optional[ProxyConfig] = None,
-) -> openstack.image.v2.image.Image:
+) -> str:
     """Build and upload an image to OpenStack.
 
     Args:
@@ -174,7 +195,7 @@ def build_image(
         ImageBuildError: If there were errors building/creating the image.
 
     Returns:
-        The OpenStack image object.
+        The created OpenStack image id.
     """
     try:
         runner_application = github_client.get_runner_application(path=path, arch=arch)
@@ -187,17 +208,23 @@ def build_image(
         raise ImageBuildError("Failed to build image.") from exc
 
     try:
+        runner_arch = runner_application["architecture"]
+        image_arch = _get_supported_runner_arch(arch=runner_arch)
+    except UnsupportedArchitectureError as exc:
+        raise ImageBuildError(f"Unsupported architecture {runner_arch}") from exc
+
+    try:
         conn = _create_connection(cloud_config)
-        arch = "amd64" if runner_application["architecture"] == "x64" else "arm64"
         existing_image: openstack.image.v2.image.Image
         for existing_image in conn.search_images(name_or_id=IMAGE_NAME):
             # images with same name (different ID) can be created and will error during server
             # instantiation.
             if not conn.delete_image(name_or_id=existing_image.id, wait=True):
                 raise ImageBuildError("Failed to delete duplicate image on Openstack.")
-        return conn.create_image(
-            name=IMAGE_NAME, filename=IMAGE_PATH_TMPL.format(architecture=arch), wait=True
+        image: openstack.image.v2.image.Image = conn.create_image(
+            name=IMAGE_NAME, filename=IMAGE_PATH_TMPL.format(architecture=image_arch), wait=True
         )
+        return image.id
     except OpenStackCloudException as exc:
         raise ImageBuildError("Failed to upload image.") from exc
 
@@ -232,6 +259,53 @@ class InstanceLaunchError(Exception):
     """Exception representing an error during instance launch process."""
 
 
+def _generate_runner_env(
+    templates_env: jinja2.Environment,
+    proxies: Optional[ProxyConfig] = None,
+    dockerhub_mirror: Optional[str] = None,
+    ssh_debug_connections: list[SSHDebugConnection] | None = None,
+) -> str:
+    """Generate Github runner .env file contents.
+
+    Args:
+        templates_env: The jinja template environment.
+        proxies: Proxy values to enable on the Github runner.
+        dockerhub_mirror: The url to Dockerhub to reduce rate limiting.
+        ssh_debug_connections: Tmate SSH debug connection information to load as environment vars.
+
+    Returns:
+        The .env contents to be loaded by Github runner.
+    """
+    return templates_env.get_template("env.j2").render(
+        proxies=proxies,
+        pre_job_script="",
+        dockerhub_mirror=dockerhub_mirror or "",
+        ssh_debug_info=(secrets.choice(ssh_debug_connections) if ssh_debug_connections else None),
+    )
+
+
+def _generate_cloud_init_userdata(
+    templates_env: jinja2.Environment, instance_config: InstanceConfig, runner_env: str
+) -> str:
+    """Generate cloud init userdata to launch at startup.
+
+    Args:
+        templates_env: The jinja template environment.
+        instance_config: The configuration values for Openstack instance to launch.
+        runner_env: The contents of .env to source when launching Github runner.
+
+    Returns:
+        The cloud init userdata script.
+    """
+    return templates_env.get_template("openstack-userdata.sh.j2").render(
+        github_url=f"https://github.com/{instance_config.github_path.path()}",
+        token=instance_config.registration_token,
+        instance_labels=",".join(instance_config.labels),
+        instance_name=instance_config.name,
+        env_contents=runner_env,
+    )
+
+
 @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
 def create_instance(
     cloud_config: dict[str, dict],
@@ -239,7 +313,7 @@ def create_instance(
     proxies: Optional[ProxyConfig] = None,
     dockerhub_mirror: Optional[str] = None,
     ssh_debug_connections: list[SSHDebugConnection] | None = None,
-) -> openstack.compute.v2.server.Server:
+) -> None:
     """Create an OpenStack instance.
 
     Args:
@@ -248,28 +322,22 @@ def create_instance(
 
     Raises:
         InstanceLaunchError: if any errors occurred while launching Openstack instance.
-
-    Returns:
-        The created server.
     """
     environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
-    env_contents = environment.get_template("env.j2").render(
+
+    env_contents = _generate_runner_env(
+        templates_env=environment,
         proxies=proxies,
-        pre_job_script="",
         dockerhub_mirror=dockerhub_mirror,
-        ssh_debug_info=(secrets.choice(ssh_debug_connections) if ssh_debug_connections else None),
+        ssh_debug_connections=ssh_debug_connections,
     )
-    cloud_userdata = environment.get_template("openstack-userdata.sh.j2").render(
-        github_url=f"https://github.com/{instance_config.github_path.path()}",
-        token=instance_config.registration_token,
-        instance_labels=",".join(instance_config.labels),
-        instance_name=instance_config.name,
-        env_contents=env_contents,
+    cloud_userdata = _generate_cloud_init_userdata(
+        templates_env=environment, instance_config=instance_config, runner_env=env_contents
     )
 
     try:
         conn = _create_connection(cloud_config)
-        return conn.create_server(
+        conn.create_server(
             name=instance_config.name,
             image=instance_config.openstack_image,
             flavor="m1.small",
