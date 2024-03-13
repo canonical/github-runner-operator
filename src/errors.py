@@ -158,3 +158,7 @@ class OpenStackInvalidConfigError(OpenStackError):
 
 class OpenStackUnauthorizedError(OpenStackError):
     """Represents an unauthorized connection to OpenStack."""
+
+
+class OpenstackImageBuildError(Exception):
+    """Exception representing an error during image build process."""

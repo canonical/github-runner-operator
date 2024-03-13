@@ -1,8 +1,8 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/openstack_manager.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `openstack_manager.py`
+# <kbd>module</kbd> `openstack_manager`
 Module for handling interactions with OpenStack. 
 
 **Global Variables**
@@ -13,7 +13,7 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_manager.py#L64"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L66"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `list_projects`
 
@@ -35,7 +35,7 @@ It currently returns objects directly from the sdk, which may not be ideal (mapp
 
 ---
 
-<a href="../src/openstack_manager.py#L158"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L177"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
@@ -46,7 +46,7 @@ build_image(
     github_client: GithubClient,
     path: GithubOrg | GithubRepo,
     proxies: Optional[ProxyConfig] = None
-) → Image
+) → str
 ```
 
 Build and upload an image to OpenStack. 
@@ -69,12 +69,12 @@ Build and upload an image to OpenStack.
 
 
 **Returns:**
- The OpenStack image object. 
+ The created OpenStack image id. 
 
 
 ---
 
-<a href="../src/openstack_manager.py#L205"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L230"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
@@ -101,7 +101,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/utilities.py#L235"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L307"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
@@ -112,7 +112,7 @@ create_instance(
     proxies: Optional[ProxyConfig] = None,
     dockerhub_mirror: Optional[str] = None,
     ssh_debug_connections: list[SSHDebugConnection] | None = None
-) → Server
+) → None
 ```
 
 Create an OpenStack instance. 
@@ -131,21 +131,9 @@ Create an OpenStack instance.
  - <b>`InstanceLaunchError`</b>:  if any errors occurred while launching Openstack instance. 
 
 
-
-**Returns:**
- The created server. 
-
-
 ---
 
-## <kbd>class</kbd> `ImageBuildError`
-Exception representing an error during image build process. 
-
-
-
-
-
----
+<a href="../src/openstack_cloud/openstack_manager.py#L137"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `InstanceConfig`
 The configuration values for creating a single runner instance. 
@@ -160,11 +148,31 @@ The configuration values for creating a single runner instance.
  - <b>`github_path`</b>:  The GitHub repo/org path 
  - <b>`openstack_image`</b>:  The Openstack image to use to boot the instance with. 
 
+<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>method</kbd> `__init__`
+
+```python
+__init__(
+    name: str,
+    labels: Iterable[str],
+    registration_token: str,
+    github_path: GithubOrg | GithubRepo,
+    openstack_image: Image
+) → None
+```
+
+
+
+
+
 
 
 
 
 ---
+
+<a href="../src/openstack_cloud/openstack_manager.py#L256"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `InstanceLaunchError`
 Exception representing an error during instance launch process. 
