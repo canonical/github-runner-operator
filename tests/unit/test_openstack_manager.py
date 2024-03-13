@@ -384,7 +384,11 @@ def test_build_image_script_error(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(
         openstack_manager,
         "execute_command",
-        MagicMock(side_effect=openstack_manager.SubprocessError),
+        MagicMock(
+            side_effect=openstack_manager.SubprocessError(
+                cmd=[], return_code=1, stdout="", stderr=""
+            )
+        ),
     )
 
     with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
