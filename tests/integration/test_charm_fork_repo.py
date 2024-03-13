@@ -16,6 +16,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
+from charm_state import PATH_CONFIG_NAME
 from tests.integration.helpers import (
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     get_runner_names,
@@ -95,7 +96,7 @@ async def test_path_config_change(
     """
     unit = app_with_forked_repo.units[0]
 
-    await app_with_forked_repo.set_config({"path": path})
+    await app_with_forked_repo.set_config({PATH_CONFIG_NAME: path})
 
     await reconcile(app=app_with_forked_repo, model=model)
 

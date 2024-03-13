@@ -37,6 +37,11 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 import metrics
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
+    GROUP_CONFIG_NAME,
+    PATH_CONFIG_NAME,
+    RECONCILE_INTERVAL_CONFIG_NAME,
+    TEST_MODE_CONFIG_NAME,
+    TOKEN_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
     GithubPath,
@@ -173,13 +178,13 @@ class GithubRunnerCharm(CharmBase):
         self._event_timer = EventTimer(self.unit.name)
 
         if LXD_PROFILE_YAML.exists():
-            if self.config.get("test-mode") != "insecure":
+            if self.config.get(TEST_MODE_CONFIG_NAME) != "insecure":
                 raise RuntimeError("lxd-profile.yaml detected outside test mode")
             logger.critical("test mode is enabled")
 
         self._stored.set_default(
-            path=self.config["path"],  # for detecting changes
-            token=self.config["token"],  # for detecting changes
+            path=self.config[PATH_CONFIG_NAME],  # for detecting changes
+            token=self.config[TOKEN_CONFIG_NAME],  # for detecting changes
             runner_bin_url=None,
         )
 
@@ -350,7 +355,7 @@ class GithubRunnerCharm(CharmBase):
 
         if state.charm_config.openstack_clouds_yaml:
             # Only build it in test mode since it may interfere with users systems.
-            if self.config.get("test-mode") == "insecure":
+            if self.config.get(TEST_MODE_CONFIG_NAME) == "insecure":
                 self.unit.status = MaintenanceStatus("Building Openstack image")
                 github = GithubClient(token=state.charm_config.token)
                 image = openstack_manager.build_image(
@@ -488,8 +493,8 @@ class GithubRunnerCharm(CharmBase):
         """Set the timer for regular reconciliation checks."""
         self._event_timer.ensure_event_timer(
             event_name="reconcile-runners",
-            interval=int(self.config["reconcile-interval"]),
-            timeout=int(self.config["reconcile-interval"]) - 1,
+            interval=int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
+            timeout=int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]) - 1,
         )
 
     def _ensure_reconcile_timer_is_active(self) -> None:
@@ -557,14 +562,14 @@ class GithubRunnerCharm(CharmBase):
 
         prev_config_for_flush: dict[str, str] = {}
         if state.charm_config.token != self._stored.token:
-            prev_config_for_flush["token"] = str(self._stored.token)
+            prev_config_for_flush[TOKEN_CONFIG_NAME] = str(self._stored.token)
             self._start_services(state.charm_config.token, state.proxy_config)
             self._stored.token = None
-        if self.config["path"] != self._stored.path:
-            prev_config_for_flush["path"] = parse_github_path(
-                self._stored.path, self.config["group"]
+        if self.config[PATH_CONFIG_NAME] != self._stored.path:
+            prev_config_for_flush[PATH_CONFIG_NAME] = parse_github_path(
+                self._stored.path, self.config[GROUP_CONFIG_NAME]
             )
-            self._stored.path = self.config["path"]
+            self._stored.path = self.config[PATH_CONFIG_NAME]
         if prev_config_for_flush:
             prev_runner_manager = self._get_runner_manager(state=state, **prev_config_for_flush)
             if prev_runner_manager:

@@ -16,7 +16,15 @@ from ops.testing import Harness
 
 from charm import GithubRunnerCharm
 from charm_state import (
+    GROUP_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    PATH_CONFIG_NAME,
+    RECONCILE_INTERVAL_CONFIG_NAME,
+    TOKEN_CONFIG_NAME,
+    USE_APROXY_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+    VM_CPU_CONFIG_NAME,
+    VM_DISK_CONFIG_NAME,
     Arch,
     GithubOrg,
     GithubRepo,
@@ -69,7 +77,7 @@ def setup_charm_harness(monkeypatch, runner_bin_path: Path) -> Harness:
         runner_bin_path.touch()
 
     harness = Harness(GithubRunnerCharm)
-    harness.update_config({"path": "mock/repo", "token": "mocktoken"})
+    harness.update_config({PATH_CONFIG_NAME: "mock/repo", TOKEN_CONFIG_NAME: "mocktoken"})
     harness.begin()
     monkeypatch.setattr("runner_manager.RunnerManager.update_runner_bin", stub_update_runner_bin)
     monkeypatch.setattr("runner_manager.RunnerManager._runners_in_pre_job", lambda self: False)
@@ -121,7 +129,7 @@ def test_on_config_changed_failure(harness: Harness):
     act: Fire config changed event to use aproxy without configured http proxy.
     assert: Charm is in blocked state.
     """
-    harness.update_config({"experimental-use-aproxy": True})
+    harness.update_config({USE_APROXY_CONFIG_NAME: True})
 
     assert isinstance(harness.charm.unit.status, BlockedStatus)
     assert "Invalid proxy configuration" in harness.charm.unit.status.message
@@ -261,10 +269,10 @@ class TestCharm(unittest.TestCase):
         harness = Harness(GithubRunnerCharm)
         harness.update_config(
             {
-                "path": "mockorg",
-                "token": "mocktoken",
-                "group": "mockgroup",
-                "reconcile-interval": 5,
+                PATH_CONFIG_NAME: "mockorg",
+                TOKEN_CONFIG_NAME: "mocktoken",
+                GROUP_CONFIG_NAME: "mockgroup",
+                RECONCILE_INTERVAL_CONFIG_NAME: 5,
             }
         )
         harness.begin()
@@ -291,7 +299,11 @@ class TestCharm(unittest.TestCase):
     def test_repo_register(self, run, wt, mkdir, rm):
         harness = Harness(GithubRunnerCharm)
         harness.update_config(
-            {"path": "mockorg/repo", "token": "mocktoken", "reconcile-interval": 5}
+            {
+                PATH_CONFIG_NAME: "mockorg/repo",
+                TOKEN_CONFIG_NAME: "mocktoken",
+                RECONCILE_INTERVAL_CONFIG_NAME: 5,
+            }
         )
         harness.begin()
         harness.charm.on.config_changed.emit()
@@ -325,10 +337,10 @@ class TestCharm(unittest.TestCase):
         mock_rm.download_latest_runner_image = mock_download_latest_runner_image
 
         harness = Harness(GithubRunnerCharm)
-        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+        harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
         harness.begin()
 
-        harness.update_config({"virtual-machines": 10})
+        harness.update_config({VIRTUAL_MACHINES_CONFIG_NAME: 10})
         harness.charm.on.reconcile_runners.emit()
         assert harness.charm.unit.status == BlockedStatus(
             (
@@ -347,11 +359,11 @@ class TestCharm(unittest.TestCase):
         mock_rm.download_latest_runner_image = mock_download_latest_runner_image
 
         harness = Harness(GithubRunnerCharm)
-        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+        harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
         harness.begin()
 
         # update to 0 virtual machines
-        harness.update_config({"virtual-machines": 0})
+        harness.update_config({VIRTUAL_MACHINES_CONFIG_NAME: 0})
         harness.charm.on.reconcile_runners.emit()
         token = harness.charm.service_token
         state = harness.charm._setup_state()
@@ -371,7 +383,9 @@ class TestCharm(unittest.TestCase):
         mock_rm.reset_mock()
 
         # update to 10 VMs with 4 cpu and 7GiB memory
-        harness.update_config({"virtual-machines": 5, "vm-cpu": 4, "vm-disk": "6GiB"})
+        harness.update_config(
+            {VIRTUAL_MACHINES_CONFIG_NAME: 5, VM_CPU_CONFIG_NAME: 4, VM_DISK_CONFIG_NAME: "6GiB"}
+        )
         harness.charm.on.reconcile_runners.emit()
         token = harness.charm.service_token
         state = harness.charm._setup_state()
@@ -414,7 +428,7 @@ class TestCharm(unittest.TestCase):
 
         harness = Harness(GithubRunnerCharm)
 
-        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+        harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
         harness.begin()
 
         event_timer_mock = MagicMock(spec=EventTimer)
@@ -444,7 +458,7 @@ class TestCharm(unittest.TestCase):
     def test_on_stop(self, run, wt, mkdir, rm):
         rm.return_value = mock_rm = MagicMock()
         harness = Harness(GithubRunnerCharm)
-        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+        harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
         harness.begin()
         harness.charm.on.stop.emit()
         mock_rm.flush.assert_called()
@@ -459,7 +473,7 @@ class TestCharm(unittest.TestCase):
         mock_rm.get_latest_runner_bin_url = mock_get_latest_runner_bin_url
 
         harness = Harness(GithubRunnerCharm)
-        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+        harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
         harness.begin()
 
         harness.charm._reconcile_runners = raise_runner_error
@@ -495,8 +509,8 @@ class TestCharm(unittest.TestCase):
         }
         harness.update_config(
             {
-                "path": "mockorg/repo",
-                "token": "mocktoken",
+                PATH_CONFIG_NAME: "mockorg/repo",
+                TOKEN_CONFIG_NAME: "mocktoken",
                 OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(cloud_yaml),
             }
         )
@@ -521,7 +535,7 @@ class TestCharm(unittest.TestCase):
         mock_rm.get_github_info = mock_get_github_info
 
         harness = Harness(GithubRunnerCharm)
-        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+        harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
         harness.begin()
 
         harness.charm._on_check_runners_action(mock_event)
@@ -557,7 +571,7 @@ class TestCharm(unittest.TestCase):
         mock_event.fail.assert_called_with("Missing path configuration")
         mock_event.reset_mock()
 
-        harness.update_config({"path": "mockorg/repo", "token": "mocktoken"})
+        harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
         harness.charm._on_flush_runners_action(mock_event)
         mock_event.set_results.assert_called()
         mock_event.reset_mock()

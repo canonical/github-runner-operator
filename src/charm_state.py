@@ -29,7 +29,20 @@ ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
 
+DENYLIST_CONFIG_NAME = "denylist"
+DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
+GROUP_CONFIG_NAME = "group"
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
+PATH_CONFIG_NAME = "path"
+RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
+RUNNER_STORAGE_CONFIG_NAME = "runner-storage"
+TEST_MODE_CONFIG_NAME = "test-mode"
+TOKEN_CONFIG_NAME = "token"
+USE_APROXY_CONFIG_NAME = "experimental-use-aproxy"
+VIRTUAL_MACHINES_CONFIG_NAME = "virtual-machines"
+VM_CPU_CONFIG_NAME = "vm-cpu"
+VM_MEMORY_CONFIG_NAME = "vm-memory"
+VM_DISK_CONFIG_NAME = "vm-disk"
 
 
 StorageSize = str
@@ -188,7 +201,7 @@ class CharmConfig(BaseModel):
 
     @classmethod
     def _parse_denylist(cls, charm: CharmBase) -> list[str]:
-        denylist_str = charm.config.get("denylist", "")
+        denylist_str = charm.config.get(DENYLIST_CONFIG_NAME, "")
 
         entry_list = [entry.strip() for entry in denylist_str.split(",")]
         denylist = [FirewallEntry.decode(entry) for entry in entry_list if entry]
@@ -204,14 +217,14 @@ class CharmConfig(BaseModel):
         Returns:
             The URL of dockerhub mirror.
         """
-        dockerhub_mirror = charm.config.get("dockerhub-mirror") or None
+        dockerhub_mirror = charm.config.get(DOCKERHUB_MIRROR_CONFIG_NAME) or None
 
         dockerhub_mirror_url = urlsplit(dockerhub_mirror)
         if dockerhub_mirror is not None and dockerhub_mirror_url.scheme != "https":
             raise CharmConfigInvalidError(
                 (
-                    "Only secured registry supported for dockerhub-mirror configuration, the "
-                    "scheme should be https"
+                    f"Only secured registry supported for {DOCKERHUB_MIRROR_CONFIG_NAME} "
+                    "configuration, the scheme should be https"
                 )
             )
         return dockerhub_mirror
@@ -226,20 +239,22 @@ class CharmConfig(BaseModel):
         Returns:
             Current config of the charm.
         """
-        path_str = charm.config.get("path", "")
+        path_str = charm.config.get(PATH_CONFIG_NAME, "")
         if not path_str:
-            raise CharmConfigInvalidError("Missing path configuration")
-        runner_group = charm.config.get("group", "default")
+            raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
+        runner_group = charm.config.get(GROUP_CONFIG_NAME, "default")
         path = parse_github_path(path_str, runner_group)
 
-        token = charm.config.get("token")
+        token = charm.config.get(TOKEN_CONFIG_NAME)
         if not token:
-            raise CharmConfigInvalidError("Missing token configuration")
+            raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
 
         try:
-            reconcile_interval = int(charm.config["reconcile-interval"])
+            reconcile_interval = int(charm.config[RECONCILE_INTERVAL_CONFIG_NAME])
         except ValueError as err:
-            raise CharmConfigInvalidError("The reconcile-interval config must be int") from err
+            raise CharmConfigInvalidError(
+                f"The {RECONCILE_INTERVAL_CONFIG_NAME} config must be int"
+            ) from err
 
         denylist = cls._parse_denylist(charm)
         dockerhub_mirror = cls._parse_dockerhub_mirror(charm)
@@ -249,9 +264,9 @@ class CharmConfig(BaseModel):
             try:
                 openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
             except yaml.YAMLError as exc:
-                logger.error("Invalid experimental-openstack-clouds-yaml config: %s.", exc)
+                logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
                 raise CharmConfigInvalidError(
-                    "Invalid experimental-openstack-clouds-yaml config. Invalid yaml."
+                    f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config. Invalid yaml."
                 ) from exc
             if (config_type := type(openstack_clouds_yaml)) is not dict:
                 raise CharmConfigInvalidError(
@@ -287,14 +302,16 @@ class CharmConfig(BaseModel):
         Returns:
             Modified values in the pydantic model.
         """
-        reconcile_interval = cast(int, values.get("reconcile_interval"))
+        reconcile_interval = cast(int, values.get(RECONCILE_INTERVAL_CONFIG_NAME))
 
         # The EventTimer class sets a timeout of `reconcile_interval` - 1.
         # Therefore the `reconcile_interval` must be at least 2.
         if reconcile_interval < 2:
-            logger.exception("The virtual-machines configuration must be int")
+            logger.exception(
+                f"The {RECONCILE_INTERVAL_CONFIG_NAME} configuration must be greater than 1"
+            )
             raise ValueError(
-                "The reconcile_interval configuration needs to be greater or equal to 2"
+                f"The {RECONCILE_INTERVAL_CONFIG_NAME} configuration needs to be greater or equal to 2"
             )
 
         return values
@@ -324,24 +341,26 @@ class RunnerCharmConfig(BaseModel):
             Current config of the charm.
         """
         try:
-            runner_storage = RunnerStorage(charm.config["runner-storage"])
-        except ValueError as err:
-            raise CharmConfigInvalidError("Invalid runner-storage configuration") from err
-
-        try:
-            virtual_machines = int(charm.config["virtual-machines"])
+            runner_storage = RunnerStorage(charm.config[RUNNER_STORAGE_CONFIG_NAME])
         except ValueError as err:
             raise CharmConfigInvalidError(
-                "The virtual-machines configuration must be int"
+                f"Invalid {RUNNER_STORAGE_CONFIG_NAME} configuration"
             ) from err
 
         try:
-            cpu = int(charm.config["vm-cpu"])
+            virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
         except ValueError as err:
-            raise CharmConfigInvalidError("Invalid vm-cpu configuration") from err
+            raise CharmConfigInvalidError(
+                f"The {VIRTUAL_MACHINES_CONFIG_NAME} configuration must be int"
+            ) from err
+
+        try:
+            cpu = int(charm.config[VM_CPU_CONFIG_NAME])
+        except ValueError as err:
+            raise CharmConfigInvalidError(f"Invalid {VM_CPU_CONFIG_NAME} configuration") from err
 
         virtual_machine_resources = VirtualMachineResources(
-            cpu, charm.config["vm-memory"], charm.config["vm-disk"]
+            cpu, charm.config[VM_MEMORY_CONFIG_NAME], charm.config[VM_DISK_CONFIG_NAME]
         )
 
         return cls(
@@ -361,23 +380,26 @@ class RunnerCharmConfig(BaseModel):
         Returns:
             Modified values in the pydantic model.
         """
-        virtual_machines = cast(int, values.get("virtual_machines"))
+        virtual_machines = cast(int, values.get(VIRTUAL_MACHINES_CONFIG_NAME))
         resources = cast(VirtualMachineResources, values.get("virtual_machine_resources"))
 
         if virtual_machines < 0:
             raise ValueError(
-                "The virtual-machines configuration needs to be greater or equal to 0"
+                f"The {VIRTUAL_MACHINES_CONFIG_NAME} configuration needs to be greater or equal "
+                "to 0"
             )
 
         if resources.cpu < 1:
-            raise ValueError("The vm-cpu configuration needs to be greater than 0")
+            raise ValueError(f"The {VM_CPU_CONFIG_NAME} configuration needs to be greater than 0")
         if not _valid_storage_size_str(resources.memory):
             raise ValueError(
-                "Invalid format for vm-memory configuration, must be int with unit (e.g. MiB, GiB)"
+                f"Invalid format for {VM_MEMORY_CONFIG_NAME} configuration, must be int with unit "
+                "(e.g. MiB, GiB)"
             )
         if not _valid_storage_size_str(resources.disk):
             raise ValueError(
-                "Invalid format for vm-disk configuration, must be int with unit (e.g., MiB, GiB)"
+                f"Invalid format for {VM_DISK_CONFIG_NAME} configuration, must be int with unit "
+                "(e.g., MiB, GiB)"
             )
 
         return values
@@ -408,7 +430,7 @@ class ProxyConfig(BaseModel):
         Returns:
             Current proxy config of the charm.
         """
-        use_aproxy = bool(charm.config.get("experimental-use-aproxy"))
+        use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
         http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY") or None
         https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
         no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None

@@ -13,6 +13,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
+from charm_state import PATH_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
 from runner_metrics import PostJobStatus
 from tests.integration.charm_metrics_helpers import (
     assert_events_after_reconciliation,
@@ -81,7 +82,7 @@ async def test_charm_issues_metrics_after_reconciliation(
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
         The Reconciliation metric has the post job status set to normal.
     """
-    await app.set_config({"path": forked_github_repository.full_name})
+    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
     await ensure_charm_has_runner(app=app, model=model)
 
     # Clear metrics log to make reconciliation event more predictable
@@ -96,7 +97,7 @@ async def test_charm_issues_metrics_after_reconciliation(
     )
 
     # Set the number of virtual machines to 0 to speedup reconciliation
-    await app.set_config({"virtual-machines": "0"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await reconcile(app=app, model=model)
 
     await assert_events_after_reconciliation(
@@ -117,7 +118,7 @@ async def test_charm_remounts_shared_fs(
     act: Dispatch a test workflow and afterwards unmount the shared fs. After that, reconcile.
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
     """
-    await app.set_config({"path": forked_github_repository.full_name})
+    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
     await ensure_charm_has_runner(app=app, model=model)
 
     # Clear metrics log to make reconciliation event more predictable
@@ -136,7 +137,7 @@ async def test_charm_remounts_shared_fs(
     await run_in_unit(unit, f"sudo umount /home/ubuntu/runner-fs/{runner_name}")
 
     # Set the number of virtual machines to 0 to speedup reconciliation
-    await app.set_config({"virtual-machines": "0"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await reconcile(app=app, model=model)
 
     await assert_events_after_reconciliation(

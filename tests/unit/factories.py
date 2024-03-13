@@ -14,7 +14,24 @@ import factory
 import factory.fuzzy
 from pydantic.networks import IPvAnyAddress
 
-from charm_state import COS_AGENT_INTEGRATION_NAME, DEBUG_SSH_INTEGRATION_NAME, SSHDebugConnection
+from charm_state import (
+    COS_AGENT_INTEGRATION_NAME,
+    DEBUG_SSH_INTEGRATION_NAME,
+    DENYLIST_CONFIG_NAME,
+    DOCKERHUB_MIRROR_CONFIG_NAME,
+    GROUP_CONFIG_NAME,
+    PATH_CONFIG_NAME,
+    RECONCILE_INTERVAL_CONFIG_NAME,
+    RUNNER_STORAGE_CONFIG_NAME,
+    TEST_MODE_CONFIG_NAME,
+    TOKEN_CONFIG_NAME,
+    USE_APROXY_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+    VM_CPU_CONFIG_NAME,
+    VM_DISK_CONFIG_NAME,
+    VM_MEMORY_CONFIG_NAME,
+    SSHDebugConnection,
+)
 
 T = TypeVar("T")
 
@@ -90,17 +107,17 @@ class MockGithubRunnerCharmFactory(factory.Factory):
     @factory.sequence
     def config(n):  # noqa: N805
         return {
-            "path": f"mock_path_{n}",
-            "token": f"mock_token_{n}",
-            "group": "default",
-            "virtual-machines": 1,
-            "vm-cpu": 2,
-            "vm-memory": "7GiB",
-            "vm-disk": "10GiB",
-            "reconcile-interval": 10,
-            "test-mode": "",
-            "denylist": "",
-            "dockerhub-mirror": "",
-            "runner-storage": "juju-storage",
-            "experimental-use-aproxy": False,
+            PATH_CONFIG_NAME: f"mock_path_{n}",
+            TOKEN_CONFIG_NAME: f"mock_token_{n}",
+            GROUP_CONFIG_NAME: "default",
+            VIRTUAL_MACHINES_CONFIG_NAME: 1,
+            VM_CPU_CONFIG_NAME: 2,
+            VM_MEMORY_CONFIG_NAME: "7GiB",
+            VM_DISK_CONFIG_NAME: "10GiB",
+            RECONCILE_INTERVAL_CONFIG_NAME: 10,
+            TEST_MODE_CONFIG_NAME: "",
+            DENYLIST_CONFIG_NAME: "",
+            DOCKERHUB_MIRROR_CONFIG_NAME: "",
+            RUNNER_STORAGE_CONFIG_NAME: "juju-storage",
+            USE_APROXY_CONFIG_NAME: False,
         }

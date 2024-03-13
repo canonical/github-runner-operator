@@ -26,6 +26,15 @@ from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
 
+from charm_state import (
+    DENYLIST_CONFIG_NAME,
+    PATH_CONFIG_NAME,
+    RECONCILE_INTERVAL_CONFIG_NAME,
+    RUNNER_STORAGE_CONFIG_NAME,
+    TEST_MODE_CONFIG_NAME,
+    TOKEN_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+)
 from runner import Runner
 from runner_manager import RunnerManager
 from tests.status_name import ACTIVE
@@ -281,7 +290,7 @@ async def ensure_charm_has_runner(app: Application, model: Model) -> None:
         app: The GitHub Runner Charm app to create the runner for.
         model: The machine charm model.
     """
-    await app.set_config({"virtual-machines": "1"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await reconcile(app=app, model=model)
     await wait_till_num_of_runners(unit=app.units[0], num=1)
 
@@ -361,13 +370,13 @@ async def deploy_github_runner_charm(
         storage["runner"] = {"pool": "rootfs", "size": 11}
 
     default_config = {
-        "path": path,
-        "token": token,
-        "virtual-machines": 0,
-        "denylist": "10.10.0.0/16",
-        "test-mode": "insecure",
-        "reconcile-interval": reconcile_interval,
-        "runner-storage": runner_storage,
+        PATH_CONFIG_NAME: path,
+        TOKEN_CONFIG_NAME: token,
+        VIRTUAL_MACHINES_CONFIG_NAME: 0,
+        DENYLIST_CONFIG_NAME: "10.10.0.0/16",
+        TEST_MODE_CONFIG_NAME: "insecure",
+        RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
+        RUNNER_STORAGE_CONFIG_NAME: runner_storage,
     }
 
     if config:

@@ -24,7 +24,11 @@ from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-from charm_state import OPENSTACK_CLOUDS_YAML_CONFIG_NAME
+from charm_state import (
+    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    PATH_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+)
 from github_client import GithubClient
 from tests.integration.helpers import (
     deploy_github_runner_charm,
@@ -295,7 +299,7 @@ async def app_scheduled_events(
         reconcile_interval=8,
     )
 
-    await application.set_config({"virtual-machines": "1"})
+    await application.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await reconcile(app=application, model=model)
 
     return application
@@ -354,7 +358,7 @@ async def app_no_wait_fixture(
         reconcile_interval=60,
         wait_idle=False,
     )
-    await app.set_config({"virtual-machines": "1"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     return app
 
 
@@ -467,7 +471,7 @@ async def app_with_forked_repo(
     """
     app = app_no_runner  # alias for readability as the app will have a runner during the test
 
-    await app.set_config({"path": forked_github_repository.full_name})
+    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
     await ensure_charm_has_runner(app=app, model=model)
 
     return app

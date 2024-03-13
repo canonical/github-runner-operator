@@ -14,6 +14,7 @@ import charm_state
 from charm_state import (
     COS_AGENT_INTEGRATION_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
+    USE_APROXY_CONFIG_NAME,
     Arch,
     CharmConfigInvalidError,
     CharmState,
@@ -83,7 +84,7 @@ def test_aproxy_proxy_missing():
     assert: CharmConfigInvalidError is raised.
     """
     mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config["experimental-use-aproxy"] = "true"
+    mock_charm.config[USE_APROXY_CONFIG_NAME] = "true"
 
     with pytest.raises(CharmConfigInvalidError) as exc:
         CharmState.from_charm(mock_charm)

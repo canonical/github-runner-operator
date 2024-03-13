@@ -12,6 +12,7 @@ from github.WorkflowRun import WorkflowRun
 from juju.application import Application
 from juju.model import Model
 
+from charm_state import DENYLIST_CONFIG_NAME
 from tests.integration.helpers import dispatch_workflow, get_job_logs, get_workflow_runs
 from tests.status_name import ACTIVE
 
@@ -35,7 +36,7 @@ async def test_ssh_debug(
     """
     await app_no_wait.set_config(
         {
-            "denylist": (
+            DENYLIST_CONFIG_NAME: (
                 "0.0.0.0/8,10.0.0.0/8,100.64.0.0/10,169.254.0.0/16,"
                 "172.16.0.0/12,192.0.0.0/24,192.0.2.0/24,192.88.99.0/24,192.168.0.0/16,"
                 "198.18.0.0/15,198.51.100.0/24,203.0.113.0/24,224.0.0.0/4,233.252.0.0/24,"
