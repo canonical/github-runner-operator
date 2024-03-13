@@ -340,6 +340,9 @@ async def deploy_github_runner_charm(
         https_proxy: HTTPS proxy for the application to use.
         no_proxy: No proxy configuration for the application.
         reconcile_interval: Time between reconcile for the application.
+        constraints: The custom machine constraints to use. See DEFAULT_RUNNER_CONSTRAINTS
+            otherwise.
+        config: Additional custom config to use.
         wait_idle: wait for model to become idle.
     """
     subprocess.run(["sudo", "modprobe", "br_netfilter"])

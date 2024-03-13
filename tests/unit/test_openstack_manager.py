@@ -364,7 +364,7 @@ def test_build_image_runner_binary_error():
     mock_github_client = MagicMock(spec=openstack_manager.GithubClient)
     mock_github_client.get_runner_application.side_effect = openstack_manager.RunnerBinaryError
 
-    with pytest.raises(openstack_manager.ImageBuildError) as exc:
+    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
         openstack_manager.build_image(
             arch=openstack_manager.Arch.X64,
             cloud_config=MagicMock(),
@@ -375,7 +375,7 @@ def test_build_image_runner_binary_error():
     assert "Failed to fetch runner application." in str(exc)
 
 
-def test_build_build_image_script_error(monkeypatch: pytest.MonkeyPatch):
+def test_build_image_script_error(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: given a monkeypatched execute_command function that raises an error.
     act: when build_image is called.
@@ -387,7 +387,7 @@ def test_build_build_image_script_error(monkeypatch: pytest.MonkeyPatch):
         MagicMock(side_effect=openstack_manager.SubprocessError),
     )
 
-    with pytest.raises(openstack_manager.ImageBuildError) as exc:
+    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
         openstack_manager.build_image(
             arch=openstack_manager.Arch.X64,
             cloud_config=MagicMock(),
@@ -415,7 +415,7 @@ def test_build_image_runner_arch_error(
         openstack_manager, "_get_supported_runner_arch", mock_get_supported_runner_arch
     )
 
-    with pytest.raises(openstack_manager.ImageBuildError) as exc:
+    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
         openstack_manager.build_image(
             arch=openstack_manager.Arch.X64,
             cloud_config=MagicMock(),
@@ -433,7 +433,7 @@ def test_build_image_delete_image_error(
     """
     arrange: given a mocked openstack connection that returns existing images and delete_image
         that returns False (failed to delete image).
-    act: when bulid_image is called.
+    act: when build_image is called.
     assert: ImageBuildError is raised.
     """
     mock_connection = MagicMock(spec=openstack_manager.openstack.connection.Connection)
@@ -447,7 +447,7 @@ def test_build_image_delete_image_error(
         MagicMock(spec=openstack_manager._create_connection, return_value=mock_connection),
     )
 
-    with pytest.raises(openstack_manager.ImageBuildError) as exc:
+    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
         openstack_manager.build_image(
             arch=openstack_manager.Arch.X64,
             cloud_config=MagicMock(),
@@ -464,7 +464,7 @@ def test_build_image_create_image_error(
 ):
     """
     arrange: given a mocked connection that raises OpenStackCloudException on create_image.
-    act: when bulid_image is called.
+    act: when build_image is called.
     assert: ImageBuildError is raised.
     """
     mock_connection = MagicMock(spec=openstack_manager.openstack.connection.Connection)
@@ -475,7 +475,7 @@ def test_build_image_create_image_error(
         MagicMock(spec=openstack_manager._create_connection, return_value=mock_connection),
     )
 
-    with pytest.raises(openstack_manager.ImageBuildError) as exc:
+    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
         openstack_manager.build_image(
             arch=openstack_manager.Arch.X64,
             cloud_config=MagicMock(),

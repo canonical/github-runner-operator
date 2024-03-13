@@ -6,9 +6,6 @@ import json
 import logging
 import secrets
 from dataclasses import dataclass
-
-# subprocess module is used to call image build script.
-from subprocess import SubprocessError  # nosec
 from typing import Iterable, Literal, Optional
 
 import jinja2
@@ -22,7 +19,12 @@ from openstack.exceptions import OpenStackCloudException
 from openstack.identity.v3.project import Project
 
 from charm_state import Arch, ProxyConfig, SSHDebugConnection, UnsupportedArchitectureError
-from errors import OpenStackUnauthorizedError, RunnerBinaryError
+from errors import (
+    OpenstackImageBuildError,
+    OpenStackUnauthorizedError,
+    RunnerBinaryError,
+    SubprocessError,
+)
 from github_client import GithubClient
 from github_type import RunnerApplication
 from runner_type import GithubPath
@@ -85,10 +87,6 @@ def list_projects(cloud_config: dict[str, dict]) -> list[Project]:
         ) from exc
 
     return projects
-
-
-class ImageBuildError(Exception):
-    """Exception representing an error during image build process."""
 
 
 def _build_image_command(
@@ -200,18 +198,18 @@ def build_image(
     try:
         runner_application = github_client.get_runner_application(path=path, arch=arch)
     except RunnerBinaryError as exc:
-        raise ImageBuildError("Failed to fetch runner application.") from exc
+        raise OpenstackImageBuildError("Failed to fetch runner application.") from exc
 
     try:
         execute_command(_build_image_command(runner_application, proxies), check_exit=True)
     except SubprocessError as exc:
-        raise ImageBuildError("Failed to build image.") from exc
+        raise OpenstackImageBuildError("Failed to build image.") from exc
 
     try:
         runner_arch = runner_application["architecture"]
         image_arch = _get_supported_runner_arch(arch=runner_arch)
     except UnsupportedArchitectureError as exc:
-        raise ImageBuildError(f"Unsupported architecture {runner_arch}") from exc
+        raise OpenstackImageBuildError(f"Unsupported architecture {runner_arch}") from exc
 
     try:
         conn = _create_connection(cloud_config)
@@ -220,13 +218,13 @@ def build_image(
             # images with same name (different ID) can be created and will error during server
             # instantiation.
             if not conn.delete_image(name_or_id=existing_image.id, wait=True):
-                raise ImageBuildError("Failed to delete duplicate image on Openstack.")
+                raise OpenstackImageBuildError("Failed to delete duplicate image on Openstack.")
         image: openstack.image.v2.image.Image = conn.create_image(
             name=IMAGE_NAME, filename=IMAGE_PATH_TMPL.format(architecture=image_arch), wait=True
         )
         return image.id
     except OpenStackCloudException as exc:
-        raise ImageBuildError("Failed to upload image.") from exc
+        raise OpenstackImageBuildError("Failed to upload image.") from exc
 
 
 def create_instance_config(

@@ -3,8 +3,6 @@
 
 """Integration tests for OpenStack integration."""
 
-
-import openstack
 import openstack.connection
 from github.Branch import Branch
 from github.Repository import Repository
