@@ -339,6 +339,21 @@ class GithubRunnerCharm(CharmBase):
             ),
         )
 
+    def _block_on_openstack_config(self, state: CharmState) -> bool:
+        """Set unit to blocked status on openstack configuration set.
+
+        Returns:
+            Whether openstack configuration is enabled.
+        """
+        if state.charm_config.openstack_clouds_yaml:
+            # Go into BlockedStatus as Openstack is not supported yet
+            self.unit.status = BlockedStatus(
+                "OpenStack integration is not supported yet. "
+                "Please remove the openstack-clouds-yaml config."
+            )
+            return True
+        return False
+
     @catch_charm_errors
     def _on_install(self, _event: InstallEvent) -> None:
         """Handle the installation of charm.
@@ -417,21 +432,6 @@ class GithubRunnerCharm(CharmBase):
             return
 
         self.unit.status = ActiveStatus()
-
-    def _block_on_openstack_config(self, state: CharmState) -> bool:
-        """Set unit to blocked status on openstack configuration set.
-
-        Returns:
-            Whether openstack configuration is enabled.
-        """
-        if state.charm_config.openstack_clouds_yaml:
-            # Go into BlockedStatus as Openstack is not supported yet
-            self.unit.status = BlockedStatus(
-                "OpenStack integration is not supported yet. "
-                "Please remove the openstack-clouds-yaml config."
-            )
-            return True
-        return False
 
     @catch_charm_errors
     def _on_start(self, _event: StartEvent) -> None:
