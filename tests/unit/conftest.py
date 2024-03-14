@@ -1,12 +1,13 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+import secrets
 import unittest.mock
 from pathlib import Path
 
 import pytest
 
-import openstack_manager
+import openstack_cloud
 from tests.unit.mock import MockGhapiClient, MockLxdClient, MockRepoPolicyComplianceClient
 
 
@@ -34,7 +35,7 @@ def disk_usage_mock(total_disk):
 
 @pytest.fixture(autouse=True)
 def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_path):
-    openstack_manager_mock = unittest.mock.MagicMock(spec=openstack_manager)
+    openstack_manager_mock = unittest.mock.MagicMock(spec=openstack_cloud)
 
     cron_path = tmp_path / "cron.d"
     cron_path.mkdir()
@@ -56,7 +57,6 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     monkeypatch.setattr("charm.shutil", unittest.mock.MagicMock())
     monkeypatch.setattr("charm.shutil.disk_usage", disk_usage_mock(30 * 1024 * 1024 * 1024))
     monkeypatch.setattr("charm_state.CHARM_STATE_PATH", Path(tmp_path / "charm_state.json"))
-    monkeypatch.setattr("charm_state.openstack_manager", openstack_manager_mock)
     monkeypatch.setattr("event_timer.jinja2", unittest.mock.MagicMock())
     monkeypatch.setattr("event_timer.execute_command", exec_command)
     monkeypatch.setattr(
@@ -83,3 +83,56 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
         "runner_manager.RepoPolicyComplianceClient", MockRepoPolicyComplianceClient
     )
     monkeypatch.setattr("utilities.time", unittest.mock.MagicMock())
+
+
+@pytest.fixture(autouse=True, name="cloud_name")
+def cloud_name_fixture() -> str:
+    """The testing cloud name."""
+    return "microstack"
+
+
+@pytest.fixture(autouse=True, name="clouds_yaml_path")
+def clouds_yaml_path(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
+    """Mocked clouds.yaml path.
+
+    Returns:
+        Path: Mocked clouds.yaml path.
+    """
+    clouds_yaml_path = tmp_path / "clouds.yaml"
+    monkeypatch.setattr("openstack_cloud.CLOUDS_YAML_PATH", clouds_yaml_path)
+    return clouds_yaml_path
+
+
+@pytest.fixture(name="clouds_yaml")
+def clouds_yaml_fixture(cloud_name: str) -> dict:
+    """Testing clouds.yaml."""
+    return {
+        "clouds": {
+            cloud_name: {
+                "auth": {
+                    "auth_url": secrets.token_hex(16),
+                    "project_name": secrets.token_hex(16),
+                    "project_domain_name": secrets.token_hex(16),
+                    "username": secrets.token_hex(16),
+                    "user_domain_name": secrets.token_hex(16),
+                    "password": secrets.token_hex(16),
+                }
+            }
+        }
+    }
+
+
+@pytest.fixture(name="multi_clouds_yaml")
+def multi_clouds_yaml_fixture(clouds_yaml: dict) -> dict:
+    """Testing clouds.yaml with multiple clouds."""
+    clouds_yaml["clouds"]["unused_cloud"] = {
+        "auth": {
+            "auth_url": secrets.token_hex(16),
+            "project_name": secrets.token_hex(16),
+            "project_domain_name": secrets.token_hex(16),
+            "username": secrets.token_hex(16),
+            "user_domain_name": secrets.token_hex(16),
+            "password": secrets.token_hex(16),
+        }
+    }
+    return clouds_yaml
