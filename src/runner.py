@@ -726,7 +726,7 @@ class Runner:
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
-        logger.info("Registering runner %s", self.config.name)
+        logger.info("Registering runner %s, labels: %s", self.config.name, labels)
 
         register_cmd = [
             "/usr/bin/sudo",
