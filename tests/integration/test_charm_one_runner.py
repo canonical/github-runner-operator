@@ -248,7 +248,8 @@ async def test_runner_labels(
 
     found = False
     for runner in github_repository.get_self_hosted_runners():
-        if all(label["name"] in test_labels for label in runner.labels()):
+        runner_labels = tuple(label["name"] for label in runner.labels())
+        if all(test_label in runner_labels for test_label in test_labels):
             found = True
 
     assert found, "Runner with testing label not found."
