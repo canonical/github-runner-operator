@@ -113,7 +113,6 @@ def _generate_docker_client_proxy_config_json(http_proxy: str, https_proxy: str,
     Returns:
         Contents of docker config.json file.
     """
-
     return json.dumps(
         {
             "proxies": {

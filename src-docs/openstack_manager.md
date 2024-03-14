@@ -35,7 +35,7 @@ It currently returns objects directly from the sdk, which may not be ideal (mapp
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L210"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L209"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
@@ -74,7 +74,7 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L263"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L262"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
@@ -101,7 +101,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/utilities.py#L340"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L339"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
@@ -133,7 +133,7 @@ Create an OpenStack instance.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L170"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L169"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `InstanceConfig`
 The configuration values for creating a single runner instance. 
@@ -172,7 +172,7 @@ __init__(
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L289"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L288"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `InstanceLaunchError`
 Exception representing an error during instance launch process. 
