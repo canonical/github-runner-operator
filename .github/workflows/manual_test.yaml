@@ -21,6 +21,7 @@ jobs:
     steps:
       - run: echo hello
       - run: df -h
+      - run: echo $DOCKERHUB_MIRROR
       - run: ping 127.0.0.1
   # - uses: actions/checkout@v4.1.1
   # - uses: canonical/setup-lxd@v0.1.1
