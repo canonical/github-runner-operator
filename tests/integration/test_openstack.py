@@ -4,6 +4,7 @@
 """Integration tests for OpenStack integration."""
 
 import openstack.connection
+import pytest
 from github.Branch import Branch
 from github.Repository import Repository
 from github.WorkflowRun import WorkflowRun
@@ -14,6 +15,9 @@ from openstack.compute.v2.server import Server
 from tests.integration.helpers import DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME, dispatch_workflow
 
 
+# 2024/03/19 - The firewall configuration on openstack will be implemented by follow up PR on
+# launching openstack instances.
+@pytest.mark.xfail(reason="Firewall to be implemented")
 async def test_openstack_integration(
     model: Model,
     app_openstack_runner: Application,
