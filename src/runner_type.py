@@ -37,6 +37,7 @@ class RunnerConfig:  # pylint: disable=too-many-instance-attributes
     Attributes:
         app_name: Application name of the charm.
         issue_metrics: Whether to issue metrics.
+        labels: Custom runner labels.
         lxd_storage_path: Path to be used as LXD storage.
         name: Name of the runner.
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
@@ -48,6 +49,7 @@ class RunnerConfig:  # pylint: disable=too-many-instance-attributes
 
     app_name: str
     issue_metrics: bool
+    labels: tuple[str]
     lxd_storage_path: Path
     name: str
     path: GithubPath

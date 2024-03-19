@@ -36,6 +36,7 @@ Configuration for runner.
  
  - <b>`app_name`</b>:  Application name of the charm. 
  - <b>`issue_metrics`</b>:  Whether to issue metrics. 
+ - <b>`labels`</b>:  Custom runner labels. 
  - <b>`lxd_storage_path`</b>:  Path to be used as LXD storage. 
  - <b>`name`</b>:  Name of the runner. 
  - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name. 
