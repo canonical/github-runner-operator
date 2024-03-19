@@ -48,6 +48,7 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [ARM64](explanation/arm64.md)
   1. [Charm architecture](explanation/charm-architecture.md)
 1. [How To](how-to)
+  1. [How to add custom labels](how-to/add-custom-labels.md)
   1. [How to change repository or organization](how-to/change-path.md)
   1. [How to change GitHub personal access token](how-to/change-token.md)
   1. [How to comply with security requirements](how-to/comply-security.md)

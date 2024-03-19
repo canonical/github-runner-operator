@@ -42,6 +42,14 @@ options:
     description: |
       The organization runner group to register the self-hosted runner under. This has no effect on
       runners under a repository.
+  labels:
+    type: string
+    default: ""
+    description: |
+      Additional comma separated labels to attach to self-hosted runners. By default, the labels
+      "self-hosted", application name (default: "github-runner"), 
+      architecture (i.e. "x64", "arm64"), os (i.e. "linux"), os-flavor (i.e. "jammy") are set.
+      Any labels provided via this configuration will be appended to the default values.
   path:
     type: string
     default: ""

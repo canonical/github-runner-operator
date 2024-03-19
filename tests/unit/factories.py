@@ -20,6 +20,7 @@ from charm_state import (
     DENYLIST_CONFIG_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
     GROUP_CONFIG_NAME,
+    LABELS_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     RUNNER_STORAGE_CONFIG_NAME,
@@ -120,4 +121,5 @@ class MockGithubRunnerCharmFactory(factory.Factory):
             DOCKERHUB_MIRROR_CONFIG_NAME: "",
             RUNNER_STORAGE_CONFIG_NAME: "juju-storage",
             USE_APROXY_CONFIG_NAME: False,
+            LABELS_CONFIG_NAME: "",
         }

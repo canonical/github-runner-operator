@@ -139,6 +139,7 @@ def runner_fixture(
         path=request.param[0],
         proxies=request.param[1],
         lxd_storage_path=pool_path,
+        labels=("test", "label"),
         dockerhub_mirror=None,
         issue_metrics=False,
         ssh_debug_connections=ssh_debug_connections,
@@ -468,6 +469,6 @@ def test_random_ssh_connection_choice(
     second_call_args = runner._clients.jinja.get_template("env.j2").render.call_args.kwargs
 
     assert first_call_args["ssh_debug_info"] != second_call_args["ssh_debug_info"], (
-        "Same ssh debug info found, this may have occurred with a very low priority. "
+        "Same ssh debug info found, this may have occurred with a very low probability. "
         "Just try again."
     )

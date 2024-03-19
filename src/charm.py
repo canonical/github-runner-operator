@@ -38,6 +38,7 @@ import metrics
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     GROUP_CONFIG_NAME,
+    LABELS_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     TEST_MODE_CONFIG_NAME,
@@ -185,6 +186,7 @@ class GithubRunnerCharm(CharmBase):
         self._stored.set_default(
             path=self.config[PATH_CONFIG_NAME],  # for detecting changes
             token=self.config[TOKEN_CONFIG_NAME],  # for detecting changes
+            labels=self.config[LABELS_CONFIG_NAME],  # for detecting changes
             runner_bin_url=None,
         )
 
@@ -334,13 +336,13 @@ class GithubRunnerCharm(CharmBase):
             app_name,
             unit,
             RunnerManagerConfig(
-                path=path,
-                token=token,
-                image="jammy",
-                service_token=self.service_token,
-                lxd_storage_path=lxd_storage_path,
                 charm_state=state,
                 dockerhub_mirror=state.charm_config.dockerhub_mirror,
+                image="jammy",
+                lxd_storage_path=lxd_storage_path,
+                path=path,
+                service_token=self.service_token,
+                token=token,
             ),
         )
 
@@ -561,6 +563,7 @@ class GithubRunnerCharm(CharmBase):
             return
 
         prev_config_for_flush: dict[str, str] = {}
+        should_flush_runners = False
         if state.charm_config.token != self._stored.token:
             prev_config_for_flush[TOKEN_CONFIG_NAME] = str(self._stored.token)
             self._start_services(state.charm_config.token, state.proxy_config)
@@ -570,7 +573,10 @@ class GithubRunnerCharm(CharmBase):
                 self._stored.path, self.config[GROUP_CONFIG_NAME]
             )
             self._stored.path = self.config[PATH_CONFIG_NAME]
-        if prev_config_for_flush:
+        if self.config[LABELS_CONFIG_NAME] != self._stored.labels:
+            should_flush_runners = True
+            self._stored.labels = self.config[LABELS_CONFIG_NAME]
+        if prev_config_for_flush or should_flush_runners:
             prev_runner_manager = self._get_runner_manager(state=state, **prev_config_for_flush)
             if prev_runner_manager:
                 self.unit.status = MaintenanceStatus("Removing runners due to config change")

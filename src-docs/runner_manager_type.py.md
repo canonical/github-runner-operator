@@ -71,13 +71,12 @@ Configuration of runner manager.
 
 **Attributes:**
  
- - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the  GitHub organization name. 
- - <b>`token`</b>:  GitHub personal access token to register runner to the  repository or organization. 
- - <b>`image`</b>:  Name of the image for creating LXD instance. 
- - <b>`service_token`</b>:  Token for accessing local service. 
- - <b>`lxd_storage_path`</b>:  Path to be used as LXD storage. 
- - <b>`proxy_config`</b>:  Proxy configuration. 
  - <b>`charm_state`</b>:  The state of the charm. 
+ - <b>`image`</b>:  Name of the image for creating LXD instance. 
+ - <b>`lxd_storage_path`</b>:  Path to be used as LXD storage. 
+ - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the  GitHub organization name. 
+ - <b>`service_token`</b>:  Token for accessing local service. 
+ - <b>`token`</b>:  GitHub personal access token to register runner to the  repository or organization. 
  - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
 
 
