@@ -10,12 +10,12 @@ import platform
 import re
 from enum import Enum
 from pathlib import Path
-from typing import NamedTuple, Optional, cast
+from typing import NamedTuple, Optional
 from urllib.parse import urlsplit
 
 import yaml
 from ops import CharmBase
-from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
+from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, validator
 from pydantic.networks import IPvAnyAddress
 
 import openstack_cloud
@@ -332,19 +332,17 @@ class CharmConfig(BaseModel):
             token=token,
         )
 
-    @root_validator
+    @validator("reconcile_interval")
     @classmethod
-    def check_fields(cls, values: dict) -> dict:
+    def check_reconcile_interval(cls, reconcile_interval: int) -> int:
         """Validate the general charm configuration.
 
         Args:
-            values: Values in the pydantic model.
+            reconcile_interval: The value of reconcile_interval passed to class instantiation.
 
         Returns:
-            Modified values in the pydantic model.
+            The validated reconcile_interval value.
         """
-        reconcile_interval = cast(int, values.get(RECONCILE_INTERVAL_CONFIG_NAME))
-
         # The EventTimer class sets a timeout of `reconcile_interval` - 1.
         # Therefore the `reconcile_interval` must be at least 2.
         if reconcile_interval < 2:
@@ -355,7 +353,7 @@ class CharmConfig(BaseModel):
                 f"The {RECONCILE_INTERVAL_CONFIG_NAME} configuration needs to be greater or equal to 2"
             )
 
-        return values
+        return reconcile_interval
 
 
 class RunnerCharmConfig(BaseModel):
@@ -410,40 +408,50 @@ class RunnerCharmConfig(BaseModel):
             runner_storage=runner_storage,
         )
 
-    @root_validator
+    @validator("virtual_machines")
     @classmethod
-    def check_fields(cls, values: dict) -> dict:
-        """Validate the runner configuration.
+    def check_virtual_machines(cls, virtual_machines: int) -> dict:
+        """Validate the virtual machines configuration value.
 
         Args:
-            values: Values in the pydantic model.
+            virtual_machines: The virtual machines value to validate.
 
         Returns:
-            Modified values in the pydantic model.
+            Validated virtual_machines value.
         """
-        virtual_machines = cast(int, values.get(VIRTUAL_MACHINES_CONFIG_NAME))
-        resources = cast(VirtualMachineResources, values.get("virtual_machine_resources"))
-
         if virtual_machines < 0:
             raise ValueError(
                 f"The {VIRTUAL_MACHINES_CONFIG_NAME} configuration needs to be greater or equal "
                 "to 0"
             )
 
-        if resources.cpu < 1:
+        return virtual_machines
+
+    @validator("virtual_machine_resources")
+    @classmethod
+    def check_virtual_machine_resources(cls, vm_resources: VirtualMachineResources) -> dict:
+        """Validate the virtual_machine_resources field values.
+
+        Args:
+            vm_resources: the virtual_machine_resources value to validate.
+
+        Returns:
+            The validated virtual_machine_resources value.
+        """
+        if vm_resources.cpu < 1:
             raise ValueError(f"The {VM_CPU_CONFIG_NAME} configuration needs to be greater than 0")
-        if not _valid_storage_size_str(resources.memory):
+        if not _valid_storage_size_str(vm_resources.memory):
             raise ValueError(
                 f"Invalid format for {VM_MEMORY_CONFIG_NAME} configuration, must be int with unit "
                 "(e.g. MiB, GiB)"
             )
-        if not _valid_storage_size_str(resources.disk):
+        if not _valid_storage_size_str(vm_resources.disk):
             raise ValueError(
                 f"Invalid format for {VM_DISK_CONFIG_NAME} configuration, must be int with unit "
                 "(e.g., MiB, GiB)"
             )
 
-        return values
+        return vm_resources
 
 
 class ProxyConfig(BaseModel):
@@ -499,21 +507,22 @@ class ProxyConfig(BaseModel):
             aproxy_address = None
         return aproxy_address
 
-    @root_validator
+    @validator("use_aproxy")
     @classmethod
-    def check_fields(cls, values: dict) -> dict:
+    def check_use_aproxy(cls, use_aproxy: bool, values: dict) -> dict:
         """Validate the proxy configuration.
 
         Args:
+            use_aproxy: Value of use_aproxy variable.
             values: Values in the pydantic model.
 
         Returns:
-            Modified values in the pydantic model.
+            Validated use_aproxy value.
         """
-        if values.get("use_aproxy") and not (values.get("http") or values.get("https")):
+        if use_aproxy and not (values.get("http") or values.get("https")):
             raise ValueError("aproxy requires http or https to be set")
 
-        return values
+        return use_aproxy
 
     def __bool__(self):
         """Return whether we have a proxy config."""

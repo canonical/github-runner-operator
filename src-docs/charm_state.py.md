@@ -85,10 +85,10 @@ Some charm configurations are grouped into other configuration models.
 
 <a href="../src/charm_state.py#L335"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>classmethod</kbd> `check_fields`
+### <kbd>classmethod</kbd> `check_reconcile_interval`
 
 ```python
-check_fields(values: dict) → dict
+check_reconcile_interval(reconcile_interval: int) → int
 ```
 
 Validate the general charm configuration. 
@@ -97,12 +97,12 @@ Validate the general charm configuration.
 
 **Args:**
  
- - <b>`values`</b>:  Values in the pydantic model. 
+ - <b>`reconcile_interval`</b>:  The value of reconcile_interval passed to class instantiation. 
 
 
 
 **Returns:**
- Modified values in the pydantic model. 
+ The validated reconcile_interval value. 
 
 ---
 
@@ -179,7 +179,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L635"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L644"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -292,12 +292,12 @@ Return the aproxy address.
 
 ---
 
-<a href="../src/charm_state.py#L502"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L510"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>classmethod</kbd> `check_fields`
+### <kbd>classmethod</kbd> `check_use_aproxy`
 
 ```python
-check_fields(values: dict) → dict
+check_use_aproxy(use_aproxy: bool, values: dict) → dict
 ```
 
 Validate the proxy configuration. 
@@ -306,16 +306,17 @@ Validate the proxy configuration.
 
 **Args:**
  
+ - <b>`use_aproxy`</b>:  Value of use_aproxy variable. 
  - <b>`values`</b>:  Values in the pydantic model. 
 
 
 
 **Returns:**
- Modified values in the pydantic model. 
+ Validated use_aproxy value. 
 
 ---
 
-<a href="../src/charm_state.py#L464"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L472"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -355,30 +356,53 @@ Runner configurations for the charm.
 
 ---
 
-<a href="../src/charm_state.py#L413"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L430"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>classmethod</kbd> `check_fields`
+### <kbd>classmethod</kbd> `check_virtual_machine_resources`
 
 ```python
-check_fields(values: dict) → dict
+check_virtual_machine_resources(vm_resources: VirtualMachineResources) → dict
 ```
 
-Validate the runner configuration. 
+Validate the virtual_machine_resources field values. 
 
 
 
 **Args:**
  
- - <b>`values`</b>:  Values in the pydantic model. 
+ - <b>`vm_resources`</b>:  the virtual_machine_resources value to validate. 
 
 
 
 **Returns:**
- Modified values in the pydantic model. 
+ The validated virtual_machine_resources value. 
 
 ---
 
-<a href="../src/charm_state.py#L374"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L411"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `check_virtual_machines`
+
+```python
+check_virtual_machines(virtual_machines: int) → dict
+```
+
+Validate the virtual machines configuration value. 
+
+
+
+**Args:**
+ 
+ - <b>`virtual_machines`</b>:  The virtual machines value to validate. 
+
+
+
+**Returns:**
+ Validated virtual_machines value. 
+
+---
+
+<a href="../src/charm_state.py#L372"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -428,7 +452,7 @@ SSH connection information for debug workflow.
 
 ---
 
-<a href="../src/charm_state.py#L582"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L591"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -456,7 +480,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L539"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L548"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
