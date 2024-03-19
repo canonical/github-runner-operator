@@ -21,6 +21,7 @@ from charm_state import (
     DOCKERHUB_MIRROR_CONFIG_NAME,
     GROUP_CONFIG_NAME,
     LABELS_CONFIG_NAME,
+    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     RUNNER_STORAGE_CONFIG_NAME,
@@ -102,24 +103,22 @@ class MockGithubRunnerCharmFactory(factory.Factory):
     unit = factory.SubFactory(MockGithubRunnerCharmUnitFactory)
     app = factory.SubFactory(MockGithubRunnerCharmAppFactory)
     model = factory.SubFactory(MockGithubRunnerCharmModelFactory)
-
-    # Ignore N805 as the first param is not self for Factory Boy sequences.
-    # See: https://factoryboy.readthedocs.io/en/stable/introduction.html#sequences
-    @factory.sequence
-    def config(n):  # noqa: N805
-        return {
-            PATH_CONFIG_NAME: f"mock_path_{n}",
-            TOKEN_CONFIG_NAME: f"mock_token_{n}",
+    config = factory.Dict(
+        {
+            DENYLIST_CONFIG_NAME: "",
+            DOCKERHUB_MIRROR_CONFIG_NAME: "",
             GROUP_CONFIG_NAME: "default",
+            LABELS_CONFIG_NAME: "",
+            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: "",
+            PATH_CONFIG_NAME: factory.Sequence(lambda n: f"mock_path_{n}"),
+            RECONCILE_INTERVAL_CONFIG_NAME: 10,
+            RUNNER_STORAGE_CONFIG_NAME: "juju-storage",
+            TEST_MODE_CONFIG_NAME: "",
+            TOKEN_CONFIG_NAME: factory.Sequence(lambda n: f"mock_token_{n}"),
+            USE_APROXY_CONFIG_NAME: False,
             VIRTUAL_MACHINES_CONFIG_NAME: 1,
             VM_CPU_CONFIG_NAME: 2,
             VM_MEMORY_CONFIG_NAME: "7GiB",
             VM_DISK_CONFIG_NAME: "10GiB",
-            RECONCILE_INTERVAL_CONFIG_NAME: 10,
-            TEST_MODE_CONFIG_NAME: "",
-            DENYLIST_CONFIG_NAME: "",
-            DOCKERHUB_MIRROR_CONFIG_NAME: "",
-            RUNNER_STORAGE_CONFIG_NAME: "juju-storage",
-            USE_APROXY_CONFIG_NAME: False,
-            LABELS_CONFIG_NAME: "",
         }
+    )
