@@ -7,5 +7,9 @@ By using [`juju config`](https://juju.is/docs/juju/juju-config) to change the
 custom labels can be attached to the self-hosted runners.
 
 ```shell
-juju config <APP_NAME> labels=<LABELS_CSV>
+juju config <APP_NAME> labels=<COMMA_SEPARATED_LABELS>
 ```
+
+An example of a COMMA_SEPARATED_LABELS value would be "hello,juju", "hello_juju2,hello_juju3".
+Accepted values are alphanumeric values with underscores (_), whitespaces before and after the the
+word will be automatically trimmed.
