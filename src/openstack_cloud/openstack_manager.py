@@ -5,10 +5,12 @@
 import json
 import logging
 import secrets
+from contextlib import contextmanager
 from dataclasses import dataclass
-from typing import Iterable, Literal, NamedTuple, Optional
+from typing import Generator, Iterable, Literal, NamedTuple, Optional
 
 import jinja2
+import keystoneauth1.exceptions.http
 import openstack
 import openstack.compute.v2.server
 import openstack.connection
@@ -20,6 +22,7 @@ from charm_state import Arch, ProxyConfig, SSHDebugConnection, UnsupportedArchit
 from errors import (
     OpenstackImageBuildError,
     OpenstackInstanceLaunchError,
+    OpenStackUnauthorizedError,
     RunnerBinaryError,
     SubprocessError,
 )
@@ -35,7 +38,10 @@ IMAGE_NAME = "jammy"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 
 
-def _create_connection(cloud_config: dict[str, dict]) -> openstack.connection.Connection:
+@contextmanager
+def _create_connection(
+    cloud_config: dict[str, dict]
+) -> Generator[openstack.connection.Connection, None, None]:
     """Create a connection context managed object, to be used within with statements.
 
     This method should be called with a valid cloud_config. See _validate_cloud_config.
@@ -44,6 +50,9 @@ def _create_connection(cloud_config: dict[str, dict]) -> openstack.connection.Co
 
     Args:
         cloud_config: The configuration in clouds.yaml format to apply.
+
+    Raises:
+        OpenStackUnauthorizedError: if the credentials provided is not authorized.
 
     Returns:
         An openstack.connection.Connection object.
@@ -55,7 +64,12 @@ def _create_connection(cloud_config: dict[str, dict]) -> openstack.connection.Co
 
     # api documents that keystoneauth1.exceptions.MissingRequiredOptions can be raised but
     # I could not reproduce it. Therefore, no catch here for such exception.
-    return openstack.connect(cloud=cloud_name)
+    try:
+        with openstack.connect(cloud=cloud_name) as conn:
+            conn.authorize()
+            yield conn
+    except keystoneauth1.exceptions.http.Unauthorized as exc:
+        raise OpenStackUnauthorizedError("Unauthorized credentials.") from exc
 
 
 class ProxyStringValues(NamedTuple):
