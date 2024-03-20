@@ -162,3 +162,7 @@ class OpenStackUnauthorizedError(OpenStackError):
 
 class OpenstackImageBuildError(Exception):
     """Exception representing an error during image build process."""
+
+
+class OpenstackInstanceLaunchError(Exception):
+    """Exception representing an error during instance launch process."""

@@ -5,12 +5,10 @@ from typing import Optional
 from unittest.mock import MagicMock
 
 import jinja2
-import keystoneauth1.exceptions
 import pytest
 from openstack.identity.v3 import project
 from openstack.test import fakes
 
-from errors import OpenStackUnauthorizedError
 from openstack_cloud import openstack_manager
 
 CLOUD_NAME = "microstack"
@@ -56,61 +54,33 @@ def patch_execute_command_fixture(monkeypatch: pytest.MonkeyPatch):
     )
 
 
-def test__create_connection(multi_clouds_yaml: dict, openstack_connect_mock: MagicMock):
+@pytest.fixture(name="patched_create_connection_context")
+def patched_create_connection_context_fixture(monkeypatch: pytest.MonkeyPatch):
+    """Return a mocked openstack connection context manager and patch create_connection."""
+    mock_connection = MagicMock(spec=openstack_manager.openstack.connection.Connection)
+    monkeypatch.setattr(
+        openstack_manager,
+        "_create_connection",
+        MagicMock(spec=openstack_manager._create_connection, return_value=mock_connection),
+    )
+    return mock_connection.__enter__()
+
+
+def test__create_connection(
+    multi_clouds_yaml: dict, clouds_yaml: dict, cloud_name: str, openstack_connect_mock: MagicMock
+):
     """
-    arrange: given a cloud config yaml dict with multiple clouds.
+    arrange: given a cloud config yaml dict with 1. multiple clouds 2. single cloud.
     act: when _create_connection is called.
     assert: connection with first cloud in the config is used.
     """
+    # 1. multiple clouds
     openstack_manager._create_connection(cloud_config=multi_clouds_yaml)
+    openstack_connect_mock.assert_called_with(CLOUD_NAME)
 
-    openstack_connect_mock.assert_called_once_with(CLOUD_NAME)
-
-
-def test_list_projects(clouds_yaml: dict, openstack_connect_mock: MagicMock, projects):
-    """
-    arrange: Mocked clouds.yaml data.
-    act: Call initialize and list_projects.
-    assert: openstack.connect and list_projects is called and the projects are returned.
-    """
-    actual_projects = openstack_manager.list_projects(clouds_yaml)
-
-    openstack_connect_mock.assert_called_once_with(CLOUD_NAME)
-    assert actual_projects == projects
-
-
-def test_list_projects_openstack_uses_first_cloud(
-    clouds_yaml: dict, openstack_connect_mock: MagicMock
-):
-    """
-    arrange: Mocked clouds.yaml data with multiple clouds.
-    act: Call initialize and list_projects.
-    assert: openstack.connect is called with the first cloud name.
-    """
-    clouds_yaml["clouds"]["microstack2"] = clouds_yaml["clouds"][CLOUD_NAME]
-
-    openstack_manager.list_projects(clouds_yaml)
-
-    openstack_connect_mock.assert_called_once_with(CLOUD_NAME)
-
-
-def test_list_projects_missing_credentials_error(
-    clouds_yaml: dict, openstack_connect_mock: MagicMock
-):
-    """
-    arrange: Mocked clouds.yaml data and openstack.list_projects raising keystone...Unauthorized.
-    act: Call initialize and list_projects.
-    assert: UnauthorizedError is raised.
-    """
-    openstack_connect_mock.return_value.list_projects.side_effect = (
-        keystoneauth1.exceptions.http.Unauthorized
-    )
-
-    with pytest.raises(OpenStackUnauthorizedError) as exc:
-        openstack_manager.list_projects(clouds_yaml)
-    assert "Unauthorized to connect to OpenStack." in str(exc)
-
-    openstack_connect_mock.assert_called_once_with(CLOUD_NAME)
+    # 2. single cloud
+    openstack_manager._create_connection(cloud_config=clouds_yaml)
+    openstack_connect_mock.assert_called_with(cloud_name)
 
 
 @pytest.mark.parametrize(
@@ -432,7 +402,7 @@ def test_build_image_runner_arch_error(
 
 @pytest.mark.usefixtures("patch_execute_command")
 def test_build_image_delete_image_error(
-    monkeypatch: pytest.MonkeyPatch, mock_github_client: MagicMock
+    mock_github_client: MagicMock, patched_create_connection_context: MagicMock
 ):
     """
     arrange: given a mocked openstack connection that returns existing images and delete_image
@@ -440,16 +410,10 @@ def test_build_image_delete_image_error(
     act: when build_image is called.
     assert: ImageBuildError is raised.
     """
-    mock_connection = MagicMock(spec=openstack_manager.openstack.connection.Connection)
-    mock_connection.search_images.return_value = (
+    patched_create_connection_context.search_images.return_value = (
         MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
     )
-    mock_connection.delete_image.return_value = False
-    monkeypatch.setattr(
-        openstack_manager,
-        "_create_connection",
-        MagicMock(spec=openstack_manager._create_connection, return_value=mock_connection),
-    )
+    patched_create_connection_context.delete_image.return_value = False
 
     with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
         openstack_manager.build_image(
@@ -464,19 +428,15 @@ def test_build_image_delete_image_error(
 
 @pytest.mark.usefixtures("patch_execute_command")
 def test_build_image_create_image_error(
-    monkeypatch: pytest.MonkeyPatch, mock_github_client: MagicMock
+    patched_create_connection_context: MagicMock, mock_github_client: MagicMock
 ):
     """
     arrange: given a mocked connection that raises OpenStackCloudException on create_image.
     act: when build_image is called.
     assert: ImageBuildError is raised.
     """
-    mock_connection = MagicMock(spec=openstack_manager.openstack.connection.Connection)
-    mock_connection.create_image.side_effect = openstack_manager.OpenStackCloudException
-    monkeypatch.setattr(
-        openstack_manager,
-        "_create_connection",
-        MagicMock(spec=openstack_manager._create_connection, return_value=mock_connection),
+    patched_create_connection_context.create_image.side_effect = (
+        openstack_manager.OpenStackCloudException
     )
 
     with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
@@ -492,21 +452,15 @@ def test_build_image_create_image_error(
 
 
 @pytest.mark.usefixtures("patch_execute_command")
-def test_build_image(monkeypatch: pytest.MonkeyPatch, mock_github_client: MagicMock):
+def test_build_image(patched_create_connection_context: MagicMock, mock_github_client: MagicMock):
     """
     arrange: given monkeypatched execute_command and mocked openstack connection.
     act: when build_image is called.
     assert: Openstack image is successfully created.
     """
-    mock_connection = MagicMock(spec=openstack_manager.openstack.connection.Connection)
-    mock_connection.search_images.return_value = (
+    patched_create_connection_context.search_images.return_value = (
         MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
         MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-    )
-    monkeypatch.setattr(
-        openstack_manager,
-        "_create_connection",
-        MagicMock(spec=openstack_manager._create_connection, return_value=mock_connection),
     )
 
     openstack_manager.build_image(
