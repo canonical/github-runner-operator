@@ -38,7 +38,8 @@ PATH_CONFIG_NAME = "path"
 RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
 RUNNER_STORAGE_CONFIG_NAME = "runner-storage"
 TEST_MODE_CONFIG_NAME = "test-mode"
-TOKEN_CONFIG_NAME = "token"
+# bandit thinks this is a hardcoded password.
+TOKEN_CONFIG_NAME = "token"  # nosec
 USE_APROXY_CONFIG_NAME = "experimental-use-aproxy"
 VIRTUAL_MACHINES_CONFIG_NAME = "virtual-machines"
 VM_CPU_CONFIG_NAME = "vm-cpu"
@@ -151,7 +152,12 @@ DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 
 
 class RunnerStorage(str, Enum):
-    """Supported storage as runner disk."""
+    """Supported storage as runner disk.
+
+    Attributes:
+        JUJU_STORAGE: Represents runner storage from Juju storage.
+        MEMORY: Represents tempfs storage (ramdisk).
+    """
 
     JUJU_STORAGE = "juju-storage"
     MEMORY = "memory"
@@ -569,7 +575,11 @@ class ProxyConfig(BaseModel):
         return use_aproxy
 
     def __bool__(self):
-        """Return whether we have a proxy config."""
+        """Return whether Whether the proxy config is set.
+
+        Returns:
+            Whether the proxy config is set.
+        """
         return bool(self.http or self.https)
 
     class Config:  # pylint: disable=too-few-public-methods
@@ -638,6 +648,9 @@ class SSHDebugConnection(BaseModel):
 
         Args:
             charm: The charm instance.
+
+        Returns:
+            List of connection information for ssh debug access.
         """
         ssh_debug_connections: list[SSHDebugConnection] = []
         relations = charm.model.relations[DEBUG_SSH_INTEGRATION_NAME]
@@ -675,6 +688,7 @@ class CharmState:
         charm_config: Configuration of the juju charm.
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
+        runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.
     """
 
@@ -691,6 +705,9 @@ class CharmState:
 
         Args:
             charm: The charm instance.
+
+        Raises:
+            CharmConfigInvalidError: If an invalid configuration was set.
 
         Returns:
             Current state of the charm.

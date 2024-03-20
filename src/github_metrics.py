@@ -22,6 +22,9 @@ def job(
         pre_job_metrics: The pre-job metrics.
         runner_name: The name of the runner.
 
+    Raises:
+        GithubMetricsError: If the job for given workflow run is not found.
+
     Returns:
         The job metrics.
     """

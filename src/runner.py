@@ -52,7 +52,13 @@ APROXY_AMD_REVISION = 8
 
 
 class Snap(NamedTuple):
-    """This class represents a snap installation."""
+    """This class represents a snap installation.
+
+    Attributes:
+        name: The snap application name.
+        channel: The channel to install the snap from.
+        revision: The revision number of the snap installation.
+    """
 
     name: str
     channel: str
@@ -63,7 +69,7 @@ class Snap(NamedTuple):
 class WgetExecutable:
     """The executable to be installed through wget.
 
-    Args:
+    Attributes:
         url: The URL of the executable binary.
         cmd: Executable command name. E.g. yq_linux_amd64 -> yq
     """
@@ -76,7 +82,7 @@ class WgetExecutable:
 class CreateRunnerConfig:
     """The configuration values for creating a single runner instance.
 
-    Args:
+    Attributes:
         image: Name of the image to launch the LXD instance with.
         resources: Resource setting for the LXD instance.
         binary_path: Path to the runner binary.
@@ -92,7 +98,16 @@ class CreateRunnerConfig:
 
 
 class Runner:
-    """Single instance of GitHub self-hosted runner."""
+    """Single instance of GitHub self-hosted runner.
+
+    Attributes:
+        runner_application: The runner application directory path
+        env_file: The runner environment source .env file path.
+        config_script: The runner configuration script file path.
+        runner_script: The runner start script file path.
+        pre_job_script: The runner pre_job script file path. This is referenced in the env_file in
+            the ACTIONS_RUNNER_HOOK_JOB_STARTED environment variable.
+    """
 
     runner_application = Path("/home/ubuntu/github-runner")
     env_file = runner_application / ".env"
@@ -272,6 +287,9 @@ class Runner:
             image: Image used to launch the instance hosting the runner.
             resources: Configuration of the virtual machine resources.
             ephemeral: Whether the instance is ephemeral.
+
+        Raises:
+            LxdError: if there was an error creating an LXD instance.
 
         Returns:
             LXD instance of the runner.

@@ -34,6 +34,12 @@ The Github API is accessed to retrieve the job data for the runner.
 
 
 
+**Raises:**
+ 
+ - <b>`GithubMetricsError`</b>:  If the job for given workflow run is not found. 
+
+
+
 **Returns:**
  The job metrics. 
 
