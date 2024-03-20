@@ -65,7 +65,6 @@ def _create_connection(
     # I could not reproduce it. Therefore, no catch here for such exception.
     try:
         with openstack.connect(cloud=cloud_name) as conn:
-            print(conn, conn.authorize)
             conn.authorize()
             yield conn
     # pylint thinks this isn't an exception, but does inherit from Exception class.
