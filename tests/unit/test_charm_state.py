@@ -306,7 +306,7 @@ def test_openstack_config_invalid_yaml():
 
     with pytest.raises(CharmConfigInvalidError) as exc:
         CharmState.from_charm(mock_charm)
-    assert "Invalid openstack-clouds-yaml config. Invalid yaml." in str(exc.value)
+    assert "Invalid experimental-openstack-clouds-yaml config. Invalid yaml." in str(exc.value)
 
 
 @pytest.mark.parametrize(
