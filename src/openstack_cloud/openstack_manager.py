@@ -45,9 +45,6 @@ def _create_connection(cloud_config: dict[str, dict]) -> openstack.connection.Co
     Args:
         cloud_config: The configuration in clouds.yaml format to apply.
 
-    Raises:
-        InvalidConfigError: if the config has not all required information.
-
     Returns:
         An openstack.connection.Connection object.
     """
@@ -57,7 +54,7 @@ def _create_connection(cloud_config: dict[str, dict]) -> openstack.connection.Co
     cloud_name = clouds[0]
 
     # api documents that keystoneauth1.exceptions.MissingRequiredOptions can be raised but
-    # I could not reproduce it. Therefore, no catch here.
+    # I could not reproduce it. Therefore, no catch here for such exception.
     return openstack.connect(cloud=cloud_name)
 
 
