@@ -8,7 +8,7 @@ import logging
 from enum import Enum
 from json import JSONDecodeError
 from pathlib import Path
-from typing import Iterator, Optional, Type
+from typing import Generator, Optional, Type
 
 from pydantic import BaseModel, Field, NonNegativeFloat, ValidationError
 
@@ -29,7 +29,7 @@ RUNNER_INSTALLED_TS_FILE_NAME = "runner-installed.timestamp"
 class PreJobMetrics(BaseModel):
     """Metrics for the pre-job phase of a runner.
 
-    Args:
+    Attributes:
         timestamp: The UNIX time stamp of the time at which the event was originally issued.
         workflow: The workflow name.
         workflow_run_id: The workflow run id.
@@ -45,7 +45,13 @@ class PreJobMetrics(BaseModel):
 
 
 class PostJobStatus(str, Enum):
-    """The status of the post-job phase of a runner."""
+    """The status of the post-job phase of a runner.
+
+    Attributes:
+        NORMAL: Represents a normal post-job.
+        ABNORMAL: Represents an error with post-job.
+        REPO_POLICY_CHECK_FAILURE: Represents an error with repo-policy-compliance check.
+    """
 
     NORMAL = "normal"
     ABNORMAL = "abnormal"
@@ -65,7 +71,7 @@ class CodeInformation(BaseModel):
 class PostJobMetrics(BaseModel):
     """Metrics for the post-job phase of a runner.
 
-    Args:
+    Attributes:
         timestamp: The UNIX time stamp of the time at which the event was originally issued.
         status: The status of the job.
         status_info: More information about the status.
@@ -79,7 +85,7 @@ class PostJobMetrics(BaseModel):
 class RunnerMetrics(BaseModel):
     """Metrics for a runner.
 
-    Args:
+    Attributes:
         installed_timestamp: The UNIX time stamp of the time at which the runner was installed.
         pre_job: The metrics for the pre-job phase.
         post_job: The metrics for the post-job phase.
@@ -181,6 +187,7 @@ def _clean_up_shared_fs(fs: shared_fs.SharedFilesystem) -> None:
     """Clean up the shared filesystem.
 
     Remove all metric files and afterwards the shared filesystem.
+
     Args:
         fs: The shared filesystem for a specific runner.
     """
@@ -226,7 +233,7 @@ def _extract_fs(
     return metrics_from_fs
 
 
-def extract(ignore_runners: set[str]) -> Iterator[RunnerMetrics]:
+def extract(ignore_runners: set[str]) -> Generator[RunnerMetrics, None, None]:
     """Extract metrics from runners.
 
     The metrics are extracted from the shared filesystems of the runners.
@@ -241,8 +248,8 @@ def extract(ignore_runners: set[str]) -> Iterator[RunnerMetrics]:
     Args:
         ignore_runners: The set of runners to ignore.
 
-    Returns:
-        An iterator over the extracted metrics.
+    Yields:
+        Extracted runner metrics of a particular runner.
     """
     for fs in shared_fs.list_all():
         if fs.runner_name not in ignore_runners:

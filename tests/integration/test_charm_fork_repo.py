@@ -32,8 +32,8 @@ async def test_dispatch_workflow_failure(
     forked_github_branch: Branch,
 ) -> None:
     """
-    arrange:
-        1. A forked repository.
+    arrange: \
+        1. A forked repository. \
         2. A working application with one runner on the forked repository.
     act: Trigger a workflow dispatch that fails the repo policy check on a branch
      in the forked repository.

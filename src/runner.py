@@ -112,6 +112,7 @@ class Runner:
         Args:
             clients: Clients to access various services.
             runner_config: Configuration of the runner instance.
+            runner_status: Status info of the given runner.
             instance: LXD instance of the runner if already created.
         """
         # Dependency injection to share the instances across different `Runner` instance.
@@ -343,7 +344,11 @@ class Runner:
 
     @retry(tries=5, delay=10, local_logger=logger)
     def _ensure_runner_storage_pool(self) -> None:
-        """Ensure the runner storage pool exists."""
+        """Ensure the runner storage pool exists.
+
+        Raises:
+            RunnerError: If there was an error creating LXD storage pool.
+        """
         if self._clients.lxd.storage_pools.exists("runner"):
             logger.info("Found existing runner LXD storage pool.")
             return
@@ -447,8 +452,8 @@ class Runner:
     def _start_instance(self) -> None:
         """Start an instance and wait for it to boot.
 
-        Args:
-            reconcile_interval: Time in seconds of period between each reconciliation.
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -460,6 +465,11 @@ class Runner:
 
     @retry(tries=20, delay=30, local_logger=logger)
     def _wait_boot_up(self) -> None:
+        """Wait for LXD instance to boot up.
+
+        Raises:
+            RunnerError: If there was an error while waiting for the runner to boot up.
+        """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
@@ -477,9 +487,11 @@ class Runner:
 
         Args:
             runner_binary: Path to the compressed runner binary.
+            arch: The runner system architecture.
 
         Raises:
             RunnerFileLoadError: Unable to load the runner binary into the runner instance.
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -534,6 +546,9 @@ class Runner:
     def _get_default_ip(self) -> Optional[str]:
         """Get the default IP of the runner.
 
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
+
         Returns:
             The default IP of the runner or None if not found.
         """
@@ -560,6 +575,7 @@ class Runner:
 
         Raises:
             RunnerAproxyError: If unable to configure aproxy.
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -603,7 +619,11 @@ class Runner:
         self.instance.execute(["nft", "-f", "-"], input=nft_input.encode("utf-8"))
 
     def _configure_docker_proxy(self):
-        """Configure docker proxy."""
+        """Configure docker proxy.
+
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
+        """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
@@ -645,6 +665,7 @@ class Runner:
 
         Raises:
             RunnerFileLoadError: Unable to load configuration file on the runner.
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -653,7 +674,10 @@ class Runner:
         startup_contents = self._clients.jinja.get_template("start.j2").render(
             issue_metrics=self._should_render_templates_with_metrics()
         )
-        self._put_file(str(self.runner_script), startup_contents, mode="0755")
+        try:
+            self._put_file(str(self.runner_script), startup_contents, mode="0755")
+        except RunnerFileLoadError:
+            raise
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
 
@@ -722,6 +746,9 @@ class Runner:
         Args:
             registration_token: Registration token request from GitHub.
             labels: Labels to tag the runner with.
+
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -757,7 +784,11 @@ class Runner:
 
     @retry(tries=5, delay=30, local_logger=logger)
     def _start_runner(self) -> None:
-        """Start the GitHub runner."""
+        """Start the GitHub runner.
+
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
+        """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
@@ -780,9 +811,11 @@ class Runner:
         Args:
             filepath: Path to load the file in the runner instance.
             content: Content of the file.
+            mode: File permission setting.
 
         Raises:
             RunnerFileLoadError: Failed to load the file into the runner instance.
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -811,6 +844,10 @@ class Runner:
 
         This is a temporary solution to provide tools not offered by the base ubuntu image. Custom
         images based on the GitHub action runner image will be used in the future.
+
+        Raises:
+            RunnerError: if the runner was not created before calling the method.
+            RunnerCreateError: If there was an error installing a snap.
 
         Args:
             snaps: snaps to be installed.

@@ -94,7 +94,6 @@ async def app_with_prepared_machine_fixture(
     proxy: str,
 ) -> Application:
     """Application with proxy setup and firewall to block all other network access."""
-
     await model.set_config(
         {
             "apt-http-proxy": proxy,

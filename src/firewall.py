@@ -105,7 +105,8 @@ class Firewall:  # pylint: disable=too-few-public-methods
         """Refresh the firewall configuration.
 
         Args:
-            denylist: The list of FirewallEntry objects to allow.
+            denylist: The list of FirewallEntry rules to allow.
+            allowlist: The list of FirewallEntry rules to allow.
         """
         current_acls = [
             acl["name"]

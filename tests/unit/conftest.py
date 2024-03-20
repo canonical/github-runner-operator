@@ -26,7 +26,15 @@ def runner_binary_path_fixture(tmp_path):
     return tmp_path / "github-runner-app"
 
 
-def disk_usage_mock(total_disk):
+def disk_usage_mock(total_disk: int):
+    """Mock disk usage factory.
+
+    Args:
+        total_disk: Total disk size in bytes.
+
+    Returns:
+        A disk usage magic mock instance.
+    """
     disk = unittest.mock.MagicMock()
     disk.total = total_disk
     disk_usage = unittest.mock.MagicMock(return_value=disk)

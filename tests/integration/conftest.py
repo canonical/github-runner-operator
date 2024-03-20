@@ -344,7 +344,7 @@ async def app_no_wait_fixture(
     https_proxy: str,
     no_proxy: str,
 ) -> AsyncIterator[Application]:
-    """GitHub runner charm application without waiting for active."""
+    """Github runner charm application without waiting for active."""
     app: Application = await deploy_github_runner_charm(
         model=model,
         charm_file=charm_file,
@@ -514,7 +514,15 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
     )
 
     def get_branch():
-        """Get newly created branch."""
+        """Get newly created branch.
+
+        Raises:
+            GithubException: if unexpected GithubException has happened apart from repository not \
+                found.
+
+        Returns:
+            New branch if successful, False otherwise.
+        """
         try:
             branch = github_repository.get_branch(test_branch)
         except GithubException as err:

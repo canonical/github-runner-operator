@@ -50,7 +50,7 @@ class LxdInstanceFileManager:
         """Create a directory in the LXD instance.
 
         Args:
-            dir: Name of the directory to create.
+            dir_name: Name of the directory to create.
         """
         self.instance.execute(["/usr/bin/mkdir", "-p", dir_name])
 
@@ -105,7 +105,10 @@ class LxdInstanceFileManager:
             file.write(content)
             file.flush()
 
-            self.push_file(file.name, filepath, mode)
+            try:
+                self.push_file(file.name, filepath, mode)
+            except LxdError:
+                raise
 
     def pull_file(self, source: str, destination: str, is_dir=False) -> None:
         """Pull a file from the LXD instance to the local machine.
@@ -148,7 +151,10 @@ class LxdInstanceFileManager:
             The content of the file.
         """
         with tempfile.NamedTemporaryFile() as file:
-            self.pull_file(filepath, file.name)
+            try:
+                self.pull_file(filepath, file.name)
+            except LxdError:
+                raise
 
             return file.read().decode("utf-8")
 
@@ -351,7 +357,7 @@ class LxdProfileManager:
         Args:
             name: Name of the LXD profile to create.
             config: Configuration of the LXD profile.
-            devices Devices configuration of the LXD profile.
+            devices: Devices configuration of the LXD profile.
 
         Raises:
             LxdError: Unable to create the LXD profile.
@@ -370,6 +376,9 @@ class LxdProfileManager:
 
         Raises:
             LxdError: Unable to get the LXD profile with the name.
+
+        Returns:
+            LXDProfile with given name.
         """
         try:
             return self._pylxd_client.profiles.get(name)
@@ -464,6 +473,9 @@ class LxdStoragePoolManager:
 
         Args:
             name: Name of the storage pool.
+
+        Raises:
+            LxdError: If the storage pool with given name was not found.
 
         Returns:
             The LXD storage pool.

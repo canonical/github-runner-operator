@@ -69,16 +69,22 @@ class SSHDebugInfoFactory(
 
 
 class MockGithubRunnerCharmUnitFactory(factory.Factory):
+    """Mock github-runner charm unit."""  # noqa: DCO060
+
     class Meta:
+        """Configuration for factory."""  # noqa: DCO060
+
         model = MagicMock
 
     name = "github-runner/0"
 
 
 class MockGithubRunnerCharmAppFactory(factory.Factory):
-    """Mock github-runner charm app."""
+    """Mock github-runner charm app."""  # noqa: DCO060
 
     class Meta:
+        """Configuration for factory."""  # noqa: DCO060
+
         model = MagicMock
 
     planned_units = 1
@@ -86,18 +92,25 @@ class MockGithubRunnerCharmAppFactory(factory.Factory):
 
 
 class MockGithubRunnerCharmModelFactory(factory.Factory):
-    """Mock github-runner charm model."""
+    """Mock github-runner charm model."""  # noqa: DCO060
 
     class Meta:
+        """Configuration for factory."""  # noqa: DCO060
+
         model = MagicMock
 
     relations: dict[str, list] = {COS_AGENT_INTEGRATION_NAME: [], DEBUG_SSH_INTEGRATION_NAME: []}
 
 
 class MockGithubRunnerCharmFactory(factory.Factory):
-    """Mock GithubRunnerCharm."""
+    """Mock GithubRunnerCharm."""  # noqa: DCO060
+
+    # Docstrings have been abbreviated for factories, checking for docstrings on model attributes
+    # can be skipped.
 
     class Meta:
+        """Configuration for factory."""  # noqa: DCO060
+
         model = MagicMock
 
     unit = factory.SubFactory(MockGithubRunnerCharmUnitFactory)

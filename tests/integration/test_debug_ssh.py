@@ -29,7 +29,7 @@ async def test_ssh_debug(
     tmate_ssh_server_unit_ip: str,
 ):
     """
-    arrange: given an integrated GitHub-Runner charm and tmate-ssh-server charm with a denylist
+    arrange: given an integrated GitHub-Runner charm and tmate-ssh-server charm with a denylist \
         covering ip ranges of tmate-ssh-server.
     act: when canonical/action-tmate is triggered.
     assert: the ssh connection info from action-log and tmate-ssh-server matches.

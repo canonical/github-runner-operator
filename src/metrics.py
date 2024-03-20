@@ -39,6 +39,7 @@ class Event(BaseModel):
 
         Args:
             camel_case_string: The string to convert.
+
         Returns:
             The converted string.
         """
@@ -54,8 +55,8 @@ class Event(BaseModel):
         """Initialize the event.
 
         Args:
-            *args: The positional arguments to pass to the base class.
-            **kwargs: The keyword arguments to pass to the base class. These are used to set the
+            args: The positional arguments to pass to the base class.
+            kwargs: The keyword arguments to pass to the base class. These are used to set the
                 specific fields. E.g. timestamp=12345 will set the timestamp field to 12345.
         """
         if "event" not in kwargs:
@@ -124,6 +125,7 @@ class RunnerStop(Event):
         status: A string describing the reason for stopping the runner.
         status_info: More information about the status.
         job_duration: The duration of the job in seconds.
+        job_conclusion: The job conclusion, e.g. "success", "neutral", "failure", ...
     """
 
     flavor: str
@@ -177,15 +179,20 @@ def _enable_logrotate() -> None:
     Raises:
         SubprocessError: If the logrotate.timer cannot be enabled and started.
     """
-    execute_command([SYSTEMCTL_PATH, "enable", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True)
-
-    _, retcode = execute_command(
-        [SYSTEMCTL_PATH, "is-active", "--quiet", LOG_ROTATE_TIMER_SYSTEMD_SERVICE]
-    )
-    if retcode != 0:
+    try:
         execute_command(
-            [SYSTEMCTL_PATH, "start", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True
+            [SYSTEMCTL_PATH, "enable", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True
         )
+
+        _, retcode = execute_command(
+            [SYSTEMCTL_PATH, "is-active", "--quiet", LOG_ROTATE_TIMER_SYSTEMD_SERVICE]
+        )
+        if retcode != 0:
+            execute_command(
+                [SYSTEMCTL_PATH, "start", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True
+            )
+    except SubprocessError:
+        raise
 
 
 def _configure_logrotate() -> None:

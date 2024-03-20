@@ -7,7 +7,7 @@ import shutil
 import tarfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterator
+from typing import Generator
 
 from errors import (
     CreateSharedFilesystemError,
@@ -37,8 +37,6 @@ class SharedFilesystem:
     Attributes:
         path: The path of the shared filesystem inside the charm.
         runner_name: The name of the associated runner.
-    Returns:
-        The shared filesystem.
     """
 
     path: Path
@@ -161,11 +159,11 @@ def create(runner_name: str) -> SharedFilesystem:
     return SharedFilesystem(runner_fs_path, runner_name)
 
 
-def list_all() -> Iterator[SharedFilesystem]:
+def list_all() -> Generator[SharedFilesystem, None, None]:
     """List the shared filesystems.
 
-    Returns:
-        An iterator over shared filesystems.
+    Yields:
+        A shared filesystem instance.
     """
     if not FILESYSTEM_BASE_PATH.exists():
         return
@@ -294,4 +292,7 @@ def move_to_quarantine(runner_name: str) -> None:
             f"Failed to archive shared filesystem for runner {runner_name}"
         ) from exc
 
-    delete(runner_name)
+    try:
+        delete(runner_name)
+    except DeleteSharedFilesystemError:
+        raise

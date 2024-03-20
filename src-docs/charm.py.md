@@ -44,7 +44,7 @@ Catch common errors in charm.
 
 ---
 
-<a href="../src/charm.py#L122"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L127"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_action_errors`
 
@@ -73,12 +73,24 @@ Catch common errors in actions.
 ## <kbd>class</kbd> `GithubRunnerCharm`
 Charm for managing GitHub self-hosted runners. 
 
-<a href="../src/charm.py#L167"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+
+**Attributes:**
+ 
+ - <b>`service_token_path`</b>:  The path to token to access local services. 
+ - <b>`repo_check_web_service_path`</b>:  The path to repo-policy-compliance service directory. 
+ - <b>`repo_check_web_service_script`</b>:  The path to repo-policy-compliance web service script. 
+ - <b>`repo_check_systemd_service`</b>:  The path to repo-policy-compliance unit file. 
+ - <b>`juju_storage_path`</b>:  The path to juju storage. 
+ - <b>`ram_pool_path`</b>:  The path to memdisk storage. 
+ - <b>`kernel_module_path`</b>:  The path to kernel modules. 
+
+<a href="../src/charm.py#L187"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
 ```python
-__init__(*args, **kargs) → None
+__init__(*args, **kwargs) → None
 ```
 
 Construct the charm. 
@@ -88,7 +100,13 @@ Construct the charm.
 **Args:**
  
  - <b>`args`</b>:  List of arguments to be passed to the `CharmBase` class. 
- - <b>`kargs`</b>:  List of keyword arguments to be passed to the `CharmBase`  class. 
+ - <b>`kwargs`</b>:  List of keyword arguments to be passed to the `CharmBase`  class. 
+
+
+
+**Raises:**
+ 
+ - <b>`RuntimeError`</b>:  If invalid test configuration was detected. 
 
 
 ---

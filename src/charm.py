@@ -96,6 +96,11 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
 
     @functools.wraps(func)
     def func_with_catch_errors(self, event: EventT) -> None:
+        """Handle errors raised while handling charm events.
+
+        Args:
+            event: The charm event to handle.
+        """
         try:
             func(self, event)
         except ConfigurationError as err:
@@ -133,6 +138,11 @@ def catch_action_errors(
 
     @functools.wraps(func)
     def func_with_catch_errors(self, event: ActionEvent) -> None:
+        """Handle errors raised while handling events.
+
+        Args:
+            event: The action event to catch for errors.
+        """
         try:
             func(self, event)
         except ConfigurationError as err:
@@ -152,7 +162,17 @@ def catch_action_errors(
 
 
 class GithubRunnerCharm(CharmBase):
-    """Charm for managing GitHub self-hosted runners."""
+    """Charm for managing GitHub self-hosted runners.
+
+    Attributes:
+        service_token_path: The path to token to access local services.
+        repo_check_web_service_path: The path to repo-policy-compliance service directory.
+        repo_check_web_service_script: The path to repo-policy-compliance web service script.
+        repo_check_systemd_service: The path to repo-policy-compliance unit file.
+        juju_storage_path: The path to juju storage.
+        ram_pool_path: The path to memdisk storage.
+        kernel_module_path: The path to kernel modules.
+    """
 
     _stored = StoredState()
 
@@ -164,15 +184,18 @@ class GithubRunnerCharm(CharmBase):
     ram_pool_path = Path("/storage/ram")
     kernel_module_path = Path("/etc/modules")
 
-    def __init__(self, *args, **kargs) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         """Construct the charm.
 
         Args:
             args: List of arguments to be passed to the `CharmBase` class.
-            kargs: List of keyword arguments to be passed to the `CharmBase`
+            kwargs: List of keyword arguments to be passed to the `CharmBase`
                 class.
+
+        Raises:
+            RuntimeError: If invalid test configuration was detected.
         """
-        super().__init__(*args, **kargs)
+        super().__init__(*args, **kwargs)
         self._grafana_agent = COSAgentProvider(self)
 
         self.service_token: str | None = None
@@ -211,7 +234,14 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.update_status, self._on_update_status)
 
     def _setup_state(self) -> CharmState:
-        """Set up the charm state."""
+        """Set up the charm state.
+
+        Raises:
+            ConfigurationError: If an invalid charm state has set.
+
+        Returns:
+            The charm state.
+        """
         try:
             return CharmState.from_charm(self)
         except CharmConfigInvalidError as exc:
@@ -257,7 +287,10 @@ class GithubRunnerCharm(CharmBase):
             runner_storage: Type of storage to use for virtual machine hosting the runners.
 
         Raises:
-            RunnerError: Unable to setup storage for runner.
+            ConfigurationError: If there was an error with runner stoarge configuration.
+
+        Returns:
+            Runner storage path.
         """
         match runner_storage:
             case RunnerStorage.MEMORY:
@@ -286,7 +319,10 @@ class GithubRunnerCharm(CharmBase):
         """Ensure services managed by the charm is healthy.
 
         Services managed include:
-         * repo-policy-compliance
+        * repo-policy-compliance
+
+        Raises:
+            SubprocessError: if there was an error starting repo-policy-compliance service.
         """
         logger.info("Checking health of repo-policy-compliance service")
         try:
@@ -347,12 +383,8 @@ class GithubRunnerCharm(CharmBase):
         )
 
     @catch_charm_errors
-    def _on_install(self, _event: InstallEvent) -> None:
-        """Handle the installation of charm.
-
-        Args:
-            event: Event of installing the charm.
-        """
+    def _on_install(self, _: InstallEvent) -> None:
+        """Handle the installation of charm."""
         state = self._setup_state()
 
         if state.charm_config.openstack_clouds_yaml:
@@ -428,6 +460,9 @@ class GithubRunnerCharm(CharmBase):
     def _block_on_openstack_config(self, state: CharmState) -> bool:
         """Set unit to blocked status on openstack configuration set.
 
+        Args:
+            state: The charm state.
+
         Returns:
             Whether openstack configuration is enabled.
         """
@@ -441,12 +476,8 @@ class GithubRunnerCharm(CharmBase):
         return False
 
     @catch_charm_errors
-    def _on_start(self, _event: StartEvent) -> None:
-        """Handle the start of the charm.
-
-        Args:
-            event: Event of starting the charm.
-        """
+    def _on_start(self, _: StartEvent) -> None:
+        """Handle the start of the charm."""
         state = self._setup_state()
 
         if self._block_on_openstack_config(state):
@@ -511,12 +542,8 @@ class GithubRunnerCharm(CharmBase):
                 self._set_reconcile_timer()
 
     @catch_charm_errors
-    def _on_upgrade_charm(self, _event: UpgradeCharmEvent) -> None:
-        """Handle the update of charm.
-
-        Args:
-            event: Event of charm upgrade.
-        """
+    def _on_upgrade_charm(self, _: UpgradeCharmEvent) -> None:
+        """Handle the update of charm."""
         state = self._setup_state()
 
         logger.info("Reinstalling dependencies...")
@@ -550,12 +577,8 @@ class GithubRunnerCharm(CharmBase):
         )
 
     @catch_charm_errors
-    def _on_config_changed(self, _event: ConfigChangedEvent) -> None:
-        """Handle the configuration change.
-
-        Args:
-            event: Event of configuration change.
-        """
+    def _on_config_changed(self, _: ConfigChangedEvent) -> None:
+        """Handle the configuration change."""
         state = self._setup_state()
         self._set_reconcile_timer()
 
@@ -657,12 +680,8 @@ class GithubRunnerCharm(CharmBase):
         return service_updated or runner_bin_updated
 
     @catch_charm_errors
-    def _on_reconcile_runners(self, _event: ReconcileRunnersEvent) -> None:
-        """Handle the reconciliation of runners.
-
-        Args:
-            event: Event of reconciling the runner state.
-        """
+    def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
+        """Handle the reconciliation of runners."""
         state = self._setup_state()
 
         if self._block_on_openstack_config(state):
@@ -688,7 +707,11 @@ class GithubRunnerCharm(CharmBase):
 
     @catch_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:
-        """Handle the action of checking of runner state."""
+        """Handle the action of checking of runner state.
+
+        Args:
+            event: The event fired on check_runners action.
+        """
         state = self._setup_state()
         runner_manager = self._get_runner_manager(state)
         if runner_manager.runner_bin_path is None:
@@ -776,20 +799,12 @@ class GithubRunnerCharm(CharmBase):
 
     @catch_charm_errors
     def _on_update_status(self, _: UpdateStatusEvent) -> None:
-        """Handle the update of charm status.
-
-        Args:
-            event: Event of updating the charm status.
-        """
+        """Handle the update of charm status."""
         self._ensure_reconcile_timer_is_active()
 
     @catch_charm_errors
     def _on_stop(self, _: StopEvent) -> None:
-        """Handle the stopping of the charm.
-
-        Args:
-            event: Event of stopping the charm.
-        """
+        """Handle the stopping of the charm."""
         self._event_timer.disable_event_timer("reconcile-runners")
         state = self._setup_state()
 
@@ -807,14 +822,17 @@ class GithubRunnerCharm(CharmBase):
         Args:
             runner_manager: For querying and managing the runner state.
             num: Target number of virtual machines.
-            resource: Target resource for each virtual machine.
+            resources: Target resource for each virtual machine.
+
+        Raises:
+            MissingRunnerBinaryError: If the runner binary is not found.
 
         Returns:
             Changes in runner number due to reconciling runners.
         """
         if not RunnerManager.runner_bin_path.is_file():
             logger.warning("Unable to reconcile due to missing runner binary")
-            raise MissingRunnerBinaryError()
+            raise MissingRunnerBinaryError("Runner binary not found.")
 
         self.unit.status = MaintenanceStatus("Reconciling runners")
         delta_virtual_machines = runner_manager.reconcile(
@@ -1014,6 +1032,11 @@ class GithubRunnerCharm(CharmBase):
         )
 
     def _apt_install(self, packages: Sequence[str]) -> None:
+        """Execute apt install command.
+
+        Args:
+            packages: The names of apt packages to install.
+        """
         execute_command(["/usr/bin/apt-get", "update"])
 
         _, exit_code = execute_command(

@@ -34,7 +34,7 @@ Parameterize the decorator for adding retry to functions.
  - <b>`delay`</b>:  Time in seconds to wait between retry. 
  - <b>`max_delay`</b>:  Max time in seconds to wait between retry. 
  - <b>`backoff`</b>:  Factor to increase the delay by each retry. 
- - <b>`logger`</b>:  Logger for logging. 
+ - <b>`local_logger`</b>:  Logger for logging. 
 
 
 
@@ -44,7 +44,7 @@ Parameterize the decorator for adding retry to functions.
 
 ---
 
-<a href="../src/utilities.py#L98"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L109"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `secure_run_subprocess`
 
@@ -78,7 +78,7 @@ The command is executed with `subprocess.run`, additional arguments can be passe
 
 ---
 
-<a href="../src/utilities.py#L139"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L150"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `execute_command`
 
@@ -118,7 +118,7 @@ The output is logged if the log level of the logger is set to debug.
 
 ---
 
-<a href="../src/utilities.py#L180"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L191"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `get_env_var`
 
@@ -144,7 +144,7 @@ Looks for all upper-case and all low-case of the `env_var`.
 
 ---
 
-<a href="../src/utilities.py#L194"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L205"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `set_env_var`
 
@@ -166,7 +166,7 @@ Set the all upper case and all low case of the `env_var`.
 
 ---
 
-<a href="../src/utilities.py#L207"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L218"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `bytes_with_unit_to_kib`
 
@@ -181,6 +181,14 @@ Convert a positive integer followed by a unit to number of kibibytes.
 **Args:**
  
  - <b>`num_bytes`</b>:  A positive integer followed by one of the following unit: KiB, MiB, GiB, TiB,  PiB, EiB. 
+
+
+
+**Raises:**
+ 
+ - <b>`ValueError`</b>:  If invalid unit waas detected. 
+
+
 
 **Returns:**
  Number of kilobytes. 

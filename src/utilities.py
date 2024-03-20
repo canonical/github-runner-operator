@@ -40,7 +40,7 @@ def retry(  # pylint: disable=too-many-arguments
         delay: Time in seconds to wait between retry.
         max_delay: Max time in seconds to wait between retry.
         backoff: Factor to increase the delay by each retry.
-        logger: Logger for logging.
+        local_logger: Logger for logging.
 
     Returns:
         The function decorator for retry.
@@ -52,7 +52,7 @@ def retry(  # pylint: disable=too-many-arguments
         """Decorate function with retry.
 
         Args:
-            fn: The function to decorate.
+            func: The function to decorate.
 
         Returns:
             The resulting function with retry added.
@@ -60,7 +60,18 @@ def retry(  # pylint: disable=too-many-arguments
 
         @functools.wraps(func)
         def fn_with_retry(*args, **kwargs) -> ReturnT:
-            """Wrap the function with retries."""
+            """Wrap the function with retries.
+
+            Args:
+                args: The placeholder for decorated function's positional arguments.
+                kwargs: The placeholder for decorated function's key word arguments.
+
+            Raises:
+                RuntimeError: Should be unreachable.
+
+            Returns:
+                Original return type of the decorated function.
+            """
             remain_tries, current_delay = tries, delay
 
             for _ in range(tries):
@@ -210,6 +221,10 @@ def bytes_with_unit_to_kib(num_bytes: str) -> int:
     Args:
         num_bytes: A positive integer followed by one of the following unit: KiB, MiB, GiB, TiB,
             PiB, EiB.
+
+    Raises:
+        ValueError: If invalid unit waas detected.
+
     Returns:
         Number of kilobytes.
     """

@@ -67,7 +67,8 @@ Refresh the firewall configuration.
 
 **Args:**
  
- - <b>`denylist`</b>:  The list of FirewallEntry objects to allow. 
+ - <b>`denylist`</b>:  The list of FirewallEntry rules to allow. 
+ - <b>`allowlist`</b>:  The list of FirewallEntry rules to allow. 
 
 
 ---

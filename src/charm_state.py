@@ -103,6 +103,10 @@ def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
         path_str: GitHub path in string format.
         runner_group: Runner group name for GitHub organization. If the path is
             a repository this argument is ignored.
+
+    Raises:
+        CharmConfigInvalidError: if an invalid path string was given.
+
     Returns:
         GithubPath object representing the GitHub repository, or the GitHub
         organization with runner group information.
@@ -131,7 +135,12 @@ class VirtualMachineResources(NamedTuple):
 
 
 class Arch(str, Enum):
-    """Supported system architectures."""
+    """Supported system architectures.
+
+    Attributes:
+        ARM64: Represents an ARM64 system architecture.
+        X64: Represents an X64/AMD64 system architecture.
+    """
 
     ARM64 = "arm64"
     X64 = "x64"
@@ -186,7 +195,7 @@ def _parse_labels(labels: str) -> tuple[str, ...]:
     """Return valid labels.
 
     Args:
-        label: Comma separated labels string.
+        labels: Comma separated labels string.
 
     Raises:
         ValueError: if any invalid label was found.
@@ -222,7 +231,7 @@ class CharmConfig(BaseModel):
         openstack_clouds_yaml: The openstack clouds.yaml configuration.
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
             name.
-        reconcile_interval: Time between each reconciliation of runners.
+        reconcile_interval: Time between each reconciliation of runners in minutes.
         token: GitHub personal access token for GitHub API.
     """
 
@@ -235,7 +244,15 @@ class CharmConfig(BaseModel):
     token: str
 
     @classmethod
-    def _parse_denylist(cls, charm: CharmBase) -> list[str]:
+    def _parse_denylist(cls, charm: CharmBase) -> list[FirewallEntry]:
+        """Read charm denylist configuration and parse it into firewall deny entries.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            The firewall deny entries.
+        """
         denylist_str = charm.config.get(DENYLIST_CONFIG_NAME, "")
 
         entry_list = [entry.strip() for entry in denylist_str.split(",")]
@@ -246,13 +263,19 @@ class CharmConfig(BaseModel):
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
         """Parse and validate dockerhub mirror URL.
 
-        args:
+        Args:
             charm: The charm instance.
+
+        Raises:
+            CharmConfigInvalidError: if insecure scheme is passed for dockerhub mirror.
 
         Returns:
             The URL of dockerhub mirror.
         """
         dockerhub_mirror = charm.config.get(DOCKERHUB_MIRROR_CONFIG_NAME) or None
+
+        if not dockerhub_mirror:
+            return
 
         dockerhub_mirror_url = urlsplit(dockerhub_mirror)
         if dockerhub_mirror is not None and dockerhub_mirror_url.scheme != "https":
@@ -262,6 +285,7 @@ class CharmConfig(BaseModel):
                     "configuration, the scheme should be https"
                 )
             )
+
         return dockerhub_mirror
 
     @classmethod
@@ -270,6 +294,9 @@ class CharmConfig(BaseModel):
 
         Args:
             charm: The charm instance.
+
+        Raises:
+            CharmConfigInvalidError: If any invalid configuration has been set on the charm.
 
         Returns:
             Current config of the charm.
@@ -340,6 +367,9 @@ class CharmConfig(BaseModel):
         Args:
             reconcile_interval: The value of reconcile_interval passed to class instantiation.
 
+        Raises:
+            ValueError: if an invalid reconcile_interval value of less than 2 has been passed.
+
         Returns:
             The validated reconcile_interval value.
         """
@@ -375,6 +405,9 @@ class RunnerCharmConfig(BaseModel):
 
         Args:
             charm: The charm instance.
+
+        Raises:
+            CharmConfigInvalidError: if an invalid runner charm config has been set on the charm.
 
         Returns:
             Current config of the charm.
@@ -416,6 +449,9 @@ class RunnerCharmConfig(BaseModel):
         Args:
             virtual_machines: The virtual machines value to validate.
 
+        Raises:
+            ValueError: if a negative integer was passed.
+
         Returns:
             Validated virtual_machines value.
         """
@@ -434,6 +470,10 @@ class RunnerCharmConfig(BaseModel):
 
         Args:
             vm_resources: the virtual_machine_resources value to validate.
+
+        Raises:
+            ValueError: if an invalid number of cpu was given or invalid memory/disk size was
+                given.
 
         Returns:
             The validated virtual_machine_resources value.
@@ -458,6 +498,7 @@ class ProxyConfig(BaseModel):
     """Proxy configuration.
 
     Attributes:
+        aproxy_address: The address of aproxy snap instance if use_aproxy is enabled.
         http: HTTP proxy address.
         https: HTTPS proxy address.
         no_proxy: Comma-separated list of hosts that should not be proxied.
@@ -515,6 +556,9 @@ class ProxyConfig(BaseModel):
         Args:
             use_aproxy: Value of use_aproxy variable.
             values: Values in the pydantic model.
+
+        Raises:
+            ValueError: if use_aproxy was set but no http/https was passed.
 
         Returns:
             Validated use_aproxy value.

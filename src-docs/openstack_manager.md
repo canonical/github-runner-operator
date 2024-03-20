@@ -13,7 +13,7 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L66"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L63"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `list_projects`
 
@@ -29,13 +29,25 @@ It currently returns objects directly from the sdk, which may not be ideal (mapp
 
 
 
+**Args:**
+ 
+ - <b>`cloud_config`</b>:  The dict mapping of cloud name to connection configuration. 
+
+
+
+**Raises:**
+ 
+ - <b>`OpenStackUnauthorizedError`</b>:  If there was an authorization error with given cloud config. 
+
+
+
 **Returns:**
-  A list of projects. 
+ A list of projects. 
 
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L177"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L184"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
@@ -55,6 +67,7 @@ Build and upload an image to OpenStack.
 
 **Args:**
  
+ - <b>`arch`</b>:  The system architecture to build the image for. 
  - <b>`cloud_config`</b>:  The cloud configuration to connect OpenStack with. 
  - <b>`github_client`</b>:  The Github client to interact with Github API. 
  - <b>`path`</b>:  Github organisation or repository path. 
@@ -64,7 +77,7 @@ Build and upload an image to OpenStack.
 
 **Raises:**
  
- - <b>`ImageBuildError`</b>:  If there were errors building/creating the image. 
+ - <b>`OpenstackImageBuildError`</b>:  If there were errors building/creating the image. 
 
 
 
@@ -74,7 +87,7 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L230"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L238"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
@@ -94,14 +107,19 @@ Create an instance config from charm data.
 **Args:**
  
  - <b>`unit_name`</b>:  The charm unit name. 
- - <b>`image`</b>:  Ubuntu image flavor. 
+ - <b>`openstack_image`</b>:  The openstack image object to create the instance with. 
  - <b>`path`</b>:  Github organisation or repository path. 
  - <b>`github_client`</b>:  The Github client to interact with Github API. 
 
 
+
+**Returns:**
+ Instance configuration created. 
+
+
 ---
 
-<a href="../src/utilities.py#L307"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L318"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
@@ -123,6 +141,7 @@ Create an OpenStack instance.
  
  - <b>`cloud_config`</b>:  The cloud configuration to connect Openstack with. 
  - <b>`instance_config`</b>:  The configuration values for Openstack instance to launch. 
+ - <b>`proxies`</b>:  HTTP proxy settings. dockerhub_mirror: ssh_debug_connections: 
 
 
 
@@ -133,14 +152,14 @@ Create an OpenStack instance.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L137"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L144"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `InstanceConfig`
 The configuration values for creating a single runner instance. 
 
 
 
-**Args:**
+**Attributes:**
  
  - <b>`name`</b>:  Name of the image to launch the GitHub runner instance with. 
  - <b>`labels`</b>:  The runner instance labels. 
@@ -172,7 +191,7 @@ __init__(
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L256"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L267"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `InstanceLaunchError`
 Exception representing an error during instance launch process. 

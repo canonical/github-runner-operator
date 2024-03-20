@@ -14,12 +14,33 @@ Status of runner on GitHub.
 
 
 
+**Attributes:**
+ 
+ - <b>`ONLINE`</b>:  Represents an online runner status. 
+ - <b>`OFFLINE`</b>:  Represents an offline runner status. 
+
+
+
 
 
 ---
 
 ## <kbd>class</kbd> `JobConclusion`
 Conclusion of a job on GitHub. 
+
+See :https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28#list-workflow-runs-for-a-repository 
+
+
+
+**Attributes:**
+ 
+ - <b>`ACTION_REQUIRED`</b>:  Represents additional action required on the job. 
+ - <b>`CANCELLED`</b>:  Represents a cancelled job status. 
+ - <b>`FAILURE`</b>:  Represents a failed job status. 
+ - <b>`NEUTRAL`</b>:  Represents a job status that can optionally succeed or fail. 
+ - <b>`SKIPPED`</b>:  Represents a skipped job status. 
+ - <b>`SUCCESS`</b>:  Represents a successful job status. 
+ - <b>`TIMED_OUT`</b>:  Represents a job that has timed out. 
 
 
 
@@ -36,6 +57,7 @@ Stats for a job on GitHub.
  
  - <b>`created_at`</b>:  The time the job was created. 
  - <b>`started_at`</b>:  The time the job was started. 
+ - <b>`conclusion`</b>:  The end result of a job. 
 
 
 
@@ -86,6 +108,8 @@ Information on the runner application.
  - <b>`architecture`</b>:  Computer Architecture to run the runner application on. 
  - <b>`download_url`</b>:  URL to download the runner application. 
  - <b>`filename`</b>:  Filename of the runner application. 
+
+OptionalAttributes: 
  - <b>`temp_download_token`</b>:  A short lived bearer token used to download the  runner, if needed. 
  - <b>`sha256_check_sum`</b>:  SHA256 Checksum of the runner application. 
 
@@ -102,11 +126,12 @@ Information on a single self-hosted runner.
 
 **Attributes:**
  
- - <b>`id`</b>:  Unique identifier of the runner. 
- - <b>`name`</b>:  Name of the runner. 
- - <b>`os`</b>:  Operation system of the runner. 
  - <b>`busy`</b>:  Whether the runner is executing a job. 
+ - <b>`id`</b>:  Unique identifier of the runner. 
  - <b>`labels`</b>:  Labels of the runner. 
+ - <b>`os`</b>:  Operation system of the runner. 
+ - <b>`name`</b>:  Name of the runner. 
+ - <b>`status`</b>:  The Github runner status. 
 
 
 

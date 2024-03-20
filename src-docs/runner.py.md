@@ -60,6 +60,7 @@ Construct the runner instance.
  
  - <b>`clients`</b>:  Clients to access various services. 
  - <b>`runner_config`</b>:  Configuration of the runner instance. 
+ - <b>`runner_status`</b>:  Status info of the given runner. 
  - <b>`instance`</b>:  LXD instance of the runner if already created. 
 
 
@@ -67,7 +68,7 @@ Construct the runner instance.
 
 ---
 
-<a href="../src/runner.py#L125"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L126"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `create`
 
@@ -91,7 +92,7 @@ Create the runner instance on LXD and register it on GitHub.
 
 ---
 
-<a href="../src/runner.py#L162"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L163"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `remove`
 

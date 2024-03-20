@@ -108,9 +108,9 @@ def test_proxy_invalid_format():
 
 def test_proxy_config_bool():
     """
-    arrange: Various combinations for ProxyConfig
-    act: Create ProxyConfig object
-    assert: Expected boolean value
+    arrange: Various combinations for ProxyConfig.
+    act: Create ProxyConfig object.
+    assert: Expected boolean value.
     """
     proxy_url = "http://proxy.example.com:8080"
 

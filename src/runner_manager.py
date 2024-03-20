@@ -25,7 +25,6 @@ import runner_logs
 import runner_metrics
 import shared_fs
 from charm_state import VirtualMachineResources
-from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
 from github_client import GithubClient
 from github_type import RunnerApplication, SelfHostedRunner
 from lxd import LxdClient, LxdInstance
@@ -48,7 +47,12 @@ IssuedMetricEventsStats = dict[Type[metrics.Event], int]
 
 
 class RunnerManager:
-    """Manage a group of runners according to configuration."""
+    """Manage a group of runners according to configuration.
+
+    Attributes:
+        runner_bin_path: The github runner app scripts path.
+        cron_path: The path to runner build image cron job.
+    """
 
     runner_bin_path = Path("/home/ubuntu/github-runner-app")
     cron_path = Path("/etc/cron.d")
@@ -132,7 +136,7 @@ class RunnerManager:
             return self._clients.github.get_runner_application(
                 path=self.config.path, arch=self.config.charm_state.arch.value, os=os_name
             )
-        except RunnerBinaryError:
+        except errors.RunnerBinaryError:
             logger.error("Failed to get runner application info.")
             raise
 
@@ -147,6 +151,9 @@ class RunnerManager:
 
         Args:
             binary: Information on the runner binary to download.
+
+        Raises:
+            RunnerBinaryError: If there was an error updating runner binary info.
         """
         logger.info("Downloading runner binary from: %s", binary["download_url"])
 
@@ -155,7 +162,9 @@ class RunnerManager:
             RunnerManager.runner_bin_path.unlink(missing_ok=True)
         except OSError as err:
             logger.exception("Unable to perform file operation on the runner binary path")
-            raise RunnerBinaryError("File operation failed on the runner binary path") from err
+            raise errors.RunnerBinaryError(
+                "File operation failed on the runner binary path"
+            ) from err
 
         try:
             # Download the new file
@@ -169,7 +178,7 @@ class RunnerManager:
 
             if not binary["sha256_checksum"]:
                 logger.error("Checksum for runner binary is not found, unable to verify download.")
-                raise RunnerBinaryError(
+                raise errors.RunnerBinaryError(
                     "Checksum for runner binary is not found in GitHub response."
                 )
 
@@ -183,7 +192,7 @@ class RunnerManager:
                     sha256.update(chunk)
         except requests.RequestException as err:
             logger.exception("Failed to download of runner binary")
-            raise RunnerBinaryError("Failed to download runner binary") from err
+            raise errors.RunnerBinaryError("Failed to download runner binary") from err
 
         logger.info("Finished download of runner binary.")
 
@@ -194,12 +203,12 @@ class RunnerManager:
                 binary["sha256_checksum"],
                 sha256,
             )
-            raise RunnerBinaryError("Checksum mismatch for downloaded runner binary")
+            raise errors.RunnerBinaryError("Checksum mismatch for downloaded runner binary")
 
         # Verify the file integrity.
         if not tarfile.is_tarfile(file.name):
             logger.error("Failed to decompress downloaded GitHub runner binary.")
-            raise RunnerBinaryError("Downloaded runner binary cannot be decompressed.")
+            raise errors.RunnerBinaryError("Downloaded runner binary cannot be decompressed.")
 
         logger.info("Validated newly downloaded runner binary and enabled it.")
 
@@ -216,6 +225,11 @@ class RunnerManager:
         )
 
     def _get_runner_health_states(self) -> RunnerByHealth:
+        """Get all runners sorted into health groups.
+
+        Returns:
+            All runners sorted by health statuses.
+        """
         local_runners = [
             instance
             # Pylint cannot find the `all` method.
@@ -267,7 +281,7 @@ class RunnerManager:
                         duration=ts_after - ts_now,
                     ),
                 )
-            except IssueMetricEventError:
+            except errors.IssueMetricEventError:
                 logger.exception("Failed to issue RunnerInstalled metric")
 
             try:
@@ -373,7 +387,7 @@ class RunnerManager:
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )
             )
-        except IssueMetricEventError:
+        except errors.IssueMetricEventError:
             logger.exception("Failed to issue Reconciliation metric")
 
     def _get_runner_config(self, name: str) -> RunnerConfig:
@@ -427,9 +441,12 @@ class RunnerManager:
         Args:
             count: Number of runners to spawn.
             resources: Configuration of the virtual machine resources.
+
+        Raises:
+            RunnerCreateError: If there was an error spawning new runner.
         """
         if not RunnerManager.runner_bin_path.exists():
-            raise RunnerCreateError("Unable to create runner due to missing runner binary.")
+            raise errors.RunnerCreateError("Unable to create runner due to missing runner binary.")
         logger.info("Getting registration token for GitHub runners.")
         registration_token = self._clients.github.get_runner_registration_token(self.config.path)
         remove_token = self._clients.github.get_runner_remove_token(self.config.path)
@@ -440,7 +457,7 @@ class RunnerManager:
             try:
                 self._create_runner(registration_token, resources, runner)
                 logger.info("Created runner: %s", runner.config.name)
-            except RunnerCreateError:
+            except errors.RunnerCreateError:
                 logger.error("Unable to create runner: %s", runner.config.name)
                 runner.remove(remove_token)
                 logger.info("Cleaned up runner: %s", runner.config.name)
@@ -582,6 +599,10 @@ class RunnerManager:
         Args:
             mode: Strategy for flushing runners.
 
+        Raises:
+            GithubClientError: If there was an error getting remove-token to unregister runners \
+                from GitHub.
+
         Returns:
             Number of runners removed.
         """
@@ -651,6 +672,11 @@ class RunnerManager:
         return f"{self.instance_name}-{suffix}"
 
     def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
+        """Get a mapping of runner name to GitHub self-hosted runner info.
+
+        Returns:
+            A mapping of runner name to GitHub self-hosted runner info.
+        """
         remote_runners_list: list[SelfHostedRunner] = self._clients.github.get_runner_github_info(
             self.config.path
         )
@@ -675,7 +701,16 @@ class RunnerManager:
             local_runner: Optional[LxdInstance],
             remote_runner: Optional[SelfHostedRunner],
         ) -> Runner:
-            """Create runner from information from GitHub and LXD."""
+            """Create runner from information from GitHub and LXD.
+
+            Args:
+                name: Name of the runner.
+                local_runner: The Lxd runner.
+                remote_runner: The Github self hosted runner.
+
+            Returns:
+                Wrapped runner information.
+            """
             logger.debug(
                 (
                     "Found runner %s with GitHub info [status: %s, busy: %s, labels: %s] and LXD "
@@ -744,9 +779,12 @@ class RunnerManager:
         Build container image in test mode, else virtual machine image.
 
         Raises:
-            LxdError: Unable to build the LXD image.
+            SubprocessError: Unable to build the LXD image.
         """
-        execute_command(self._build_image_command())
+        try:
+            execute_command(self._build_image_command())
+        except errors.SubprocessError:
+            raise
 
     def schedule_build_runner_image(self) -> None:
         """Install cron job for building runner image."""

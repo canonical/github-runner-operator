@@ -53,7 +53,6 @@ async def test_charm_issues_runner_installed_metric(app: Application, model: Mod
     act: Config the charm to contain one runner.
     assert: The RunnerInstalled metric is logged.
     """
-
     await ensure_charm_has_runner(app=app, model=model)
 
     metrics_log = await get_metrics_log(app.units[0])

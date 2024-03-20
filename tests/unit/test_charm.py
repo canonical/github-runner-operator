@@ -40,29 +40,78 @@ from runner_manager import RunnerInfo, RunnerManagerConfig
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
 
-def raise_runner_error(*args, **kargs):
+def raise_runner_error(*args, **kwargs):
+    """Stub function to raise RunnerError.
+
+    Args:
+        args: Positional argument placeholder.
+        kwargs: Keyword argument placeholder.
+
+    Raises:
+        RunnerError: Always.
+    """
     raise RunnerError("mock error")
 
 
-def raise_subprocess_error(*args, **kargs):
+def raise_subprocess_error(*args, **kwargs):
+    """Stub function to raise SubprocessError.
+
+    Args:
+        args: Positional argument placeholder.
+        kwargs: Keyword argument placeholder.
+
+    Raises:
+        SubprocessError: Always.
+    """
     raise SubprocessError(cmd=["mock"], return_code=1, stdout="mock stdout", stderr="mock stderr")
 
 
-def raise_url_error(*args, **kargs):
+def raise_url_error(*args, **kwargs):
+    """Stub function to raise URLError.
+
+    Args:
+        args: Positional argument placeholder.
+        kwargs: Keyword argument placeholder.
+
+    Raises:
+        URLError: Always.
+    """
     raise urllib.error.URLError("mock error")
 
 
 def mock_get_latest_runner_bin_url(os_name: str = "linux", arch: Arch = Arch.X64):
+    """Stub function to return test runner_bin_url data.
+
+    Args:
+        os_name: OS name placeholder argument.
+        arch: Architecture placeholder argument.
+
+    Returns:
+        MagicMock runner application.
+    """
     mock = MagicMock()
     mock.download_url = "www.example.com"
     return mock
 
 
 def mock_download_latest_runner_image(*args):
+    """A stub function to download runner latest image.
+
+    Args:
+        args: Placeholder for positional arguments.
+
+    Returns:
+        Latest runner image test URL.
+    """
     return "www.example.com"
 
 
 def mock_get_github_info():
+    """A stub function that returns mock Github runner information.
+
+    Returns:
+        RunnerInfo with different name, statuses, busy values.
+    """
     return [
         RunnerInfo("test runner 0", GitHubRunnerStatus.ONLINE.value, True),
         RunnerInfo("test runner 1", GitHubRunnerStatus.ONLINE.value, False),
@@ -72,8 +121,24 @@ def mock_get_github_info():
     ]
 
 
-def setup_charm_harness(monkeypatch, runner_bin_path: Path) -> Harness:
-    def stub_update_runner_bin(self, binary) -> None:
+def setup_charm_harness(monkeypatch: pytest.MonkeyPatch, runner_bin_path: Path) -> Harness:
+    """Setup harness with patched runner manager methods.
+
+    Args:
+        monkeypatch: Instance of pytest monkeypatch for patching RunnerManager methods.
+        runner_bin_path: Runner binary temporary path fixture.
+
+    Returns:
+        Harness with patched RunnerManager instance.
+    """
+
+    def stub_update_runner_bin(*args, **kwargs) -> None:
+        """Update runner bin stub function.
+
+        Args:
+            args: Placeholder for positional argument values.
+            kwargs: Placeholder for keyword argument values.
+        """
         runner_bin_path.touch()
 
     harness = Harness(GithubRunnerCharm)
@@ -207,7 +272,6 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
     act: when refresh_firewall is called.
     assert: the unit ip addresses are included in allowlist.
     """
-
     runner_binary_path.touch()
 
     relation_id = harness.add_relation("debug-ssh", "tmate-ssh-server")
@@ -261,6 +325,8 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
 # New test should be written with pytest, similar to the above tests.
 # Consider to rewrite test with pytest if the tests below needs to be changed.
 class TestCharm(unittest.TestCase):
+    """Test the GithubRunner charm."""
+
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
@@ -412,10 +478,10 @@ class TestCharm(unittest.TestCase):
     @patch("subprocess.run")
     def test_on_update_status(self, run, wt, mkdir, rm):
         """
-        arrange: reconciliation event timer mocked to be
-          1. active
-          2. inactive
-          3. inactive with error thrown for ensure_event_timer
+        arrange: reconciliation event timer mocked to be \
+          1. active. \
+          2. inactive. \
+          3. inactive with error thrown for ensure_event_timer.
         act: Emit update_status
         assert:
             1. ensure_event_timer is not called.
