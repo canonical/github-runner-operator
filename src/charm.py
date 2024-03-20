@@ -3,6 +3,9 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+# 2024/03/12 The module contains too many lines which are scheduled for refactoring.
+# pylint: disable=too-many-lines
+
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
 import functools
@@ -32,7 +35,6 @@ from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 import metrics
-import openstack_manager
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
@@ -56,7 +58,9 @@ from errors import (
 )
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
+from github_client import GithubClient
 from github_type import GitHubRunnerStatus
+from openstack_cloud import openstack_manager
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_manager_type import FlushMode
@@ -337,6 +341,21 @@ class GithubRunnerCharm(CharmBase):
             ),
         )
 
+    def _block_on_openstack_config(self, state: CharmState) -> bool:
+        """Set unit to blocked status on openstack configuration set.
+
+        Returns:
+            Whether openstack configuration is enabled.
+        """
+        if state.charm_config.openstack_clouds_yaml:
+            # Go into BlockedStatus as Openstack is not supported yet
+            self.unit.status = BlockedStatus(
+                "OpenStack integration is not supported yet. "
+                "Please remove the openstack-clouds-yaml config."
+            )
+            return True
+        return False
+
     @catch_charm_errors
     def _on_install(self, _event: InstallEvent) -> None:
         """Handle the installation of charm.
@@ -345,6 +364,36 @@ class GithubRunnerCharm(CharmBase):
             event: Event of installing the charm.
         """
         state = self._setup_state()
+
+        if state.charm_config.openstack_clouds_yaml:
+            # Only build it in test mode since it may interfere with users systems.
+            if self.config.get("test-mode") == "insecure":
+                self.unit.status = MaintenanceStatus("Building Openstack image")
+                github = GithubClient(token=state.charm_config.token)
+                image = openstack_manager.build_image(
+                    arch=state.arch,
+                    cloud_config=state.charm_config.openstack_clouds_yaml,
+                    github_client=github,
+                    path=state.charm_config.path,
+                    proxies=state.proxy_config,
+                )
+                instance_config = openstack_manager.create_instance_config(
+                    unit_name=self.unit.name,
+                    openstack_image=image,
+                    path=state.charm_config.path,
+                    github_client=github,
+                )
+                self.unit.status = MaintenanceStatus("Creating Openstack test instance")
+                instance = openstack_manager.create_instance(
+                    cloud_config=state.charm_config.openstack_clouds_yaml,
+                    instance_config=instance_config,
+                    proxies=state.proxy_config,
+                    dockerhub_mirror=state.charm_config.dockerhub_mirror,
+                    ssh_debug_connections=state.ssh_debug_connections,
+                )
+                logger.info("OpenStack instance: %s", instance)
+            self._block_on_openstack_config(state)
+            return
 
         self.unit.status = MaintenanceStatus("Installing packages")
         try:
@@ -394,6 +443,10 @@ class GithubRunnerCharm(CharmBase):
             event: Event of starting the charm.
         """
         state = self._setup_state()
+
+        if self._block_on_openstack_config(state):
+            return
+
         runner_manager = self._get_runner_manager(state)
 
         self._check_and_update_dependencies(
@@ -501,6 +554,9 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
         self._set_reconcile_timer()
 
+        if self._block_on_openstack_config(state):
+            return
+
         prev_config_for_flush: dict[str, str] = {}
         should_flush_runners = False
         if state.charm_config.token != self._stored.token:
@@ -524,17 +580,6 @@ class GithubRunnerCharm(CharmBase):
 
         state = self._setup_state()
         self._refresh_firewall(state)
-
-        if state.charm_config.openstack_clouds_yaml:
-            # Test out openstack integration and then go
-            # into BlockedStatus as it is not supported yet
-            projects = openstack_manager.list_projects(state.charm_config.openstack_clouds_yaml)
-            logger.info("OpenStack projects: %s", projects)
-            self.unit.status = BlockedStatus(
-                "OpenStack integration is not supported yet. "
-                "Please remove the openstack-clouds-yaml config."
-            )
-            return
 
         runner_manager = self._get_runner_manager(state)
         self._reconcile_runners(
@@ -614,6 +659,10 @@ class GithubRunnerCharm(CharmBase):
             event: Event of reconciling the runner state.
         """
         state = self._setup_state()
+
+        if self._block_on_openstack_config(state):
+            return
+
         runner_manager = self._get_runner_manager(state)
 
         self._check_and_update_dependencies(
@@ -737,8 +786,11 @@ class GithubRunnerCharm(CharmBase):
             event: Event of stopping the charm.
         """
         self._event_timer.disable_event_timer("reconcile-runners")
-
         state = self._setup_state()
+
+        if self._block_on_openstack_config(state):
+            return
+
         runner_manager = self._get_runner_manager(state)
         runner_manager.flush(FlushMode.FLUSH_BUSY)
 
