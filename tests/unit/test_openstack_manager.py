@@ -72,7 +72,7 @@ def test__create_connection_error(clouds_yaml: dict, openstack_connect_mock: Mag
     openstack_connect_mock.return_value = connection_mock
 
     with pytest.raises(OpenStackUnauthorizedError) as exc:
-        with openstack_manager._create_connection(cloud_config=clouds_yaml) as conn:
+        with openstack_manager._create_connection(cloud_config=clouds_yaml):
             pass
 
     assert "Unauthorized credentials" in str(exc)
