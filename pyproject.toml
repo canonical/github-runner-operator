@@ -4,7 +4,7 @@
 [tool.bandit]
 exclude_dirs = ["/venv/"]
 [tool.bandit.assert_used]
-skips = ["*/*test.py", "*/test_*.py"]
+skips = ["*/*test.py", "*/test_*.py", "*tests/*.py"]
 
 # Testing tools configuration
 [tool.coverage.run]
@@ -12,22 +12,26 @@ branch = true
 omit = [
     # Contains interface for calling LXD. Tested in integration tests and end to end tests.
     "src/lxd.py",
-    # Contains interface for calling repo policy compliance service. Tested in integration test and end to end tests.
+    # Contains interface for calling repo policy compliance service. Tested in integration test 
+    # and end to end tests.
     "src/repo_policy_compliance_client.py",
 ]
 
 [tool.coverage.report]
-fail_under = 38
+fail_under = 100
 show_missing = true
-
 
 [tool.pytest.ini_options]
 minversion = "6.0"
 log_cli_level = "INFO"
 
+[tool.pylint.'MESSAGES CONTROL']
+extension-pkg-whitelist = "pydantic"
+
 # Formatting tools configuration
 [tool.black]
 line-length = 99
+target-version = ["py310"]
 
 [tool.isort]
 line_length = 99
@@ -52,6 +56,12 @@ copyright-author = "Canonical Ltd."
 copyright-regexp = "Copyright\\s\\d{4}([-,]\\d{4})*\\s+%(author)s"
 
 [tool.mypy]
-ignore_missing_imports = true
+check_untyped_defs = true
+disallow_untyped_defs = true
 explicit_package_bases = true
+ignore_missing_imports = true
 namespace_packages = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
