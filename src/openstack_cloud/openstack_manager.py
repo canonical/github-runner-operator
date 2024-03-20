@@ -10,7 +10,6 @@ from dataclasses import dataclass
 from typing import Generator, Iterable, Literal, NamedTuple, Optional
 
 import jinja2
-import keystoneauth1.exceptions.http
 import openstack
 import openstack.compute.v2.server
 import openstack.connection
@@ -66,9 +65,11 @@ def _create_connection(
     # I could not reproduce it. Therefore, no catch here for such exception.
     try:
         with openstack.connect(cloud=cloud_name) as conn:
+            print(conn, conn.authorize)
             conn.authorize()
             yield conn
-    except keystoneauth1.exceptions.http.Unauthorized as exc:
+    # pylint thinks this isn't an exception, but does inherit from Exception class.
+    except openstack.exceptions.HttpException as exc:  # pylint: disable=bad-exception-cause
         raise OpenStackUnauthorizedError("Unauthorized credentials.") from exc
 
 

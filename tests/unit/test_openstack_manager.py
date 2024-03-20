@@ -5,29 +5,22 @@ from typing import Optional
 from unittest.mock import MagicMock
 
 import jinja2
+import openstack.exceptions
 import pytest
-from openstack.identity.v3 import project
-from openstack.test import fakes
 
+from errors import OpenStackUnauthorizedError
 from openstack_cloud import openstack_manager
 
 CLOUD_NAME = "microstack"
 
 
 @pytest.fixture(autouse=True, name="openstack_connect_mock")
-def mock_openstack(monkeypatch: pytest.MonkeyPatch, projects) -> MagicMock:
+def mock_openstack_connect_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     """Mock openstack.connect."""
     mock_connect = MagicMock(spec=openstack_manager.openstack.connect)
-    mock_connect.return_value.list_projects.return_value = projects
     monkeypatch.setattr("openstack_cloud.openstack_manager.openstack.connect", mock_connect)
 
     return mock_connect
-
-
-@pytest.fixture(name="projects")
-def projects_fixture() -> list:
-    """Mocked list of projects."""
-    return list(fakes.generate_fake_resources(project.Project, count=3))
 
 
 @pytest.fixture(name="mock_github_client")
@@ -66,6 +59,25 @@ def patched_create_connection_context_fixture(monkeypatch: pytest.MonkeyPatch):
     return mock_connection.__enter__()
 
 
+def test__create_connection_error(clouds_yaml: dict, openstack_connect_mock: MagicMock):
+    """
+    arrange: given a monkeypatched connection.authorize() function that raises an error.
+    act: when _create_connection is called.
+    assert: OpenStackUnauthorizedError is raised.
+    """
+    connection_mock = MagicMock()
+    connection_context = MagicMock()
+    connection_context.authorize.side_effect = openstack.exceptions.HttpException
+    connection_mock.__enter__.return_value = connection_context
+    openstack_connect_mock.return_value = connection_mock
+
+    with pytest.raises(OpenStackUnauthorizedError) as exc:
+        with openstack_manager._create_connection(cloud_config=clouds_yaml) as conn:
+            pass
+
+    assert "Unauthorized credentials" in str(exc)
+
+
 def test__create_connection(
     multi_clouds_yaml: dict, clouds_yaml: dict, cloud_name: str, openstack_connect_mock: MagicMock
 ):
@@ -75,12 +87,12 @@ def test__create_connection(
     assert: connection with first cloud in the config is used.
     """
     # 1. multiple clouds
-    openstack_manager._create_connection(cloud_config=multi_clouds_yaml)
-    openstack_connect_mock.assert_called_with(CLOUD_NAME)
+    with openstack_manager._create_connection(cloud_config=multi_clouds_yaml):
+        openstack_connect_mock.assert_called_with(cloud=CLOUD_NAME)
 
     # 2. single cloud
-    openstack_manager._create_connection(cloud_config=clouds_yaml)
-    openstack_connect_mock.assert_called_with(cloud_name)
+    with openstack_manager._create_connection(cloud_config=clouds_yaml):
+        openstack_connect_mock.assert_called_with(cloud=cloud_name)
 
 
 @pytest.mark.parametrize(
