@@ -107,7 +107,8 @@ class LxdInstanceFileManager:
 
             try:
                 self.push_file(file.name, filepath, mode)
-            except LxdError:
+            except LxdError as exc:
+                logger.error("Error pushing file to LXD instance, %s", exc)
                 raise
 
     def pull_file(self, source: str, destination: str, is_dir: bool = False) -> None:
@@ -153,7 +154,8 @@ class LxdInstanceFileManager:
         with tempfile.NamedTemporaryFile() as file:
             try:
                 self.pull_file(filepath, file.name)
-            except LxdError:
+            except LxdError as exc:
+                logger.error("Error pulling file from LXD instance, %s", exc)
                 raise
 
             return file.read().decode("utf-8")

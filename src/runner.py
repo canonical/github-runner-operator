@@ -214,7 +214,8 @@ class Runner:
                 logger.info("Force stopping of runner %s", self.config.name)
                 try:
                     self.instance.stop(force=True)
-                except LxdError:
+                except LxdError as exc:
+                    logger.error("Error stopping instance, %s", exc)
                     raise
         else:
             # Delete ephemeral instances that have error or stopped status which LXD failed to
@@ -226,7 +227,8 @@ class Runner:
             )
             try:
                 self.instance.delete(wait=True)
-            except LxdError:
+            except LxdError as exc:
+                logger.error("Error deleting instance, %s", exc)
                 raise
 
     def remove(self, remove_token: Optional[str]) -> None:
@@ -710,7 +712,8 @@ class Runner:
         )
         try:
             self._put_file(str(self.runner_script), startup_contents, mode="0755")
-        except RunnerFileLoadError:
+        except RunnerFileLoadError as exc:
+            logger.error("Error writing file to runner, %s", exc)
             raise
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])

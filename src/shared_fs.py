@@ -322,5 +322,6 @@ def move_to_quarantine(runner_name: str) -> None:
 
     try:
         delete(runner_name)
-    except DeleteSharedFilesystemError:
+    except DeleteSharedFilesystemError as exc:
+        logger.error("Error deleting shared filesystem, %s", exc)
         raise

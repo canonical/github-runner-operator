@@ -788,7 +788,8 @@ class RunnerManager:
         """
         try:
             execute_command(self._build_image_command())
-        except errors.SubprocessError:
+        except errors.SubprocessError as exc:
+            logger.error("Error executing build image command, %s", exc)
             raise
 
     def schedule_build_runner_image(self) -> None:

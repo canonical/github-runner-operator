@@ -191,7 +191,8 @@ def _enable_logrotate() -> None:
             execute_command(
                 [SYSTEMCTL_PATH, "start", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True
             )
-    except SubprocessError:
+    except SubprocessError as exc:
+        logger.error("Error enabling log rotate, %s", exc)
         raise
 
 

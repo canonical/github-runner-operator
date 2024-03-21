@@ -386,7 +386,8 @@ class CharmConfig(BaseModel):
         """
         try:
             github_config = GithubConfig.from_charm(charm)
-        except CharmConfigInvalidError:
+        except CharmConfigInvalidError as exc:
+            logger.error("Invalid Github config, %s", exc)
             raise
 
         try:
@@ -433,10 +434,11 @@ class CharmConfig(BaseModel):
         # Therefore the `reconcile_interval` must be at least 2.
         if reconcile_interval < 2:
             logger.exception(
-                f"The {RECONCILE_INTERVAL_CONFIG_NAME} configuration must be greater than 1"
+                "The %s configuration must be greater than 1", RECONCILE_INTERVAL_CONFIG_NAME
             )
             raise ValueError(
-                f"The {RECONCILE_INTERVAL_CONFIG_NAME} configuration needs to be greater or equal to 2"
+                f"The {RECONCILE_INTERVAL_CONFIG_NAME} configuration needs to be \
+                    greater or equal to 2"
             )
 
         return reconcile_interval
@@ -505,7 +507,8 @@ class RunnerCharmConfig(BaseModel):
             raise CharmConfigInvalidError(
                 f"Invalid {RUNNER_STORAGE_CONFIG_NAME} configuration"
             ) from err
-        except CharmConfigInvalidError:
+        except CharmConfigInvalidError as exc:
+            logger.error("Invalid RunnerStorage config, %s", exc)
             raise
 
         try:
@@ -800,7 +803,7 @@ class CharmState:
         try:
             proxy_config = ProxyConfig.from_charm(charm)
         except (ValidationError, ValueError) as exc:
-            raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}")
+            raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc
 
         try:
             charm_config = CharmConfig.from_charm(charm)

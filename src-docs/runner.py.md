@@ -102,7 +102,7 @@ Create the runner instance on LXD and register it on GitHub.
 
 ---
 
-<a href="../src/runner.py#L232"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L234"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `remove`
 
