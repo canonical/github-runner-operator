@@ -287,6 +287,7 @@ async def test_disabled_apt_daily_upgrades(model: Model, app: Application) -> No
         unit, names[0], "sudo systemctl list-units --no-pager"
     )
     assert ret_code == 0, "Failed to list systemd units"
+    assert stdout, "No units listed in stdout"
 
     assert "apt-daily" not in stdout  # this also checks for apt-daily-upgrade service
     assert "unattended-upgrades" not in stdout
