@@ -10,7 +10,7 @@ import platform
 import re
 from enum import Enum
 from pathlib import Path
-from typing import NamedTuple, Optional
+from typing import NamedTuple, Optional, cast
 from urllib.parse import urlsplit
 
 import yaml
@@ -119,6 +119,45 @@ def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
         owner, repo = paths
         return GithubRepo(owner=owner, repo=repo)
     return GithubOrg(org=path_str, group=runner_group)
+
+
+@dataclasses.dataclass
+class GithubConfig:
+    """Charm configuration related to GitHub.
+
+    Attributes:
+        token: The Github API access token (PAT).
+        path: The Github org/repo path.
+    """
+
+    token: str
+    path: GithubPath
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase):
+        """Get github related charm configuration values from charm.
+
+        Args:
+            charm: The charm instance.
+
+        Raises:
+            CharmConfigInvalidError: If an invalid configuration value was set.
+
+        Returns:
+            The parsed GitHub configuration values.
+        """
+        runner_group = charm.config.get(GROUP_CONFIG_NAME, "default")
+
+        path_str = charm.config.get(PATH_CONFIG_NAME, "")
+        if not path_str:
+            raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
+        path = parse_github_path(path_str, runner_group)
+
+        token = charm.config.get(TOKEN_CONFIG_NAME)
+        if not token:
+            raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
+
+        return cls(token=token, path=path)
 
 
 class VirtualMachineResources(NamedTuple):
@@ -295,6 +334,44 @@ class CharmConfig(BaseModel):
         return dockerhub_mirror
 
     @classmethod
+    def _parse_openstack_clouds_config(cls, charm: CharmBase) -> dict | None:
+        """Parse and validate openstack clouds yaml config value.
+
+        Args:
+            charm: The charm instance.
+
+        Raises:
+            CharmConfigInvalidError: if an invalid Openstack config value was set.
+
+        Returns:
+            The openstack clouds yaml.
+        """
+        openstack_clouds_yaml_str = charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
+        if not openstack_clouds_yaml_str:
+            return None
+
+        try:
+            openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
+        except yaml.YAMLError as exc:
+            logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
+            raise CharmConfigInvalidError(
+                f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config. Invalid yaml."
+            ) from exc
+        if (config_type := type(openstack_clouds_yaml)) is not dict:
+            raise CharmConfigInvalidError(
+                f"Invalid openstack config format, expected dict, got {config_type}"
+            )
+        try:
+            openstack_cloud.initialize(openstack_clouds_yaml)
+        except OpenStackInvalidConfigError as exc:
+            logger.error("Invalid openstack config, %s.", exc)
+            raise CharmConfigInvalidError(
+                "Invalid openstack config. Not able to initialize openstack integration."
+            ) from exc
+
+        return cast(dict, openstack_clouds_yaml)
+
+    @classmethod
     def from_charm(cls, charm: CharmBase) -> "CharmConfig":
         """Initialize the config from charm.
 
@@ -307,15 +384,10 @@ class CharmConfig(BaseModel):
         Returns:
             Current config of the charm.
         """
-        path_str = charm.config.get(PATH_CONFIG_NAME, "")
-        if not path_str:
-            raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
-        runner_group = charm.config.get(GROUP_CONFIG_NAME, "default")
-        path = parse_github_path(path_str, runner_group)
-
-        token = charm.config.get(TOKEN_CONFIG_NAME)
-        if not token:
-            raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
+        try:
+            github_config = GithubConfig.from_charm(charm)
+        except CharmConfigInvalidError:
+            raise
 
         try:
             reconcile_interval = int(charm.config[RECONCILE_INTERVAL_CONFIG_NAME])
@@ -326,29 +398,7 @@ class CharmConfig(BaseModel):
 
         denylist = cls._parse_denylist(charm)
         dockerhub_mirror = cls._parse_dockerhub_mirror(charm)
-
-        openstack_clouds_yaml_str = charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
-        if openstack_clouds_yaml_str:
-            try:
-                openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
-            except yaml.YAMLError as exc:
-                logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
-                raise CharmConfigInvalidError(
-                    f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config. Invalid yaml."
-                ) from exc
-            if (config_type := type(openstack_clouds_yaml)) is not dict:
-                raise CharmConfigInvalidError(
-                    f"Invalid openstack config format, expected dict, got {config_type}"
-                )
-            try:
-                openstack_cloud.initialize(openstack_clouds_yaml)
-            except OpenStackInvalidConfigError as exc:
-                logger.error("Invalid openstack config, %s.", exc)
-                raise CharmConfigInvalidError(
-                    "Invalid openstack config. Not able to initialize openstack integration."
-                ) from exc
-        else:
-            openstack_clouds_yaml = None
+        openstack_clouds_yaml = cls._parse_openstack_clouds_config(charm)
 
         try:
             labels = _parse_labels(charm.config.get(LABELS_CONFIG_NAME, ""))
@@ -360,9 +410,9 @@ class CharmConfig(BaseModel):
             dockerhub_mirror=dockerhub_mirror,
             labels=labels,
             openstack_clouds_yaml=openstack_clouds_yaml,
-            path=path,
+            path=github_config.path,
             reconcile_interval=reconcile_interval,
-            token=token,
+            token=github_config.token,
         )
 
     @validator("reconcile_interval")
@@ -406,6 +456,36 @@ class RunnerCharmConfig(BaseModel):
     runner_storage: RunnerStorage
 
     @classmethod
+    def _check_storage_change(cls, runner_storage: str):
+        """Check whether the storage configuration has changed.
+
+        Args:
+            runner_storage: The current runner_storage config value.
+
+        Raises:
+            CharmConfigInvalidError: If the runner-storage config value has changed after initial
+                deployment.
+        """
+        prev_state = None
+        if CHARM_STATE_PATH.exists():
+            json_data = CHARM_STATE_PATH.read_text(encoding="utf-8")
+            prev_state = json.loads(json_data)
+            logger.info("Previous charm state: %s", prev_state)
+
+        if (
+            prev_state is not None
+            and prev_state["runner_config"]["runner_storage"] != runner_storage
+        ):
+            logger.warning(
+                "Storage option changed from %s to %s, blocking the charm",
+                prev_state["runner_config"]["runner_storage"],
+                runner_storage,
+            )
+            raise CharmConfigInvalidError(
+                "runner-storage config cannot be changed after deployment, redeploy if needed"
+            )
+
+    @classmethod
     def from_charm(cls, charm: CharmBase) -> "RunnerCharmConfig":
         """Initialize the config from charm.
 
@@ -420,10 +500,13 @@ class RunnerCharmConfig(BaseModel):
         """
         try:
             runner_storage = RunnerStorage(charm.config[RUNNER_STORAGE_CONFIG_NAME])
+            cls._check_storage_change(runner_storage=runner_storage)
         except ValueError as err:
             raise CharmConfigInvalidError(
                 f"Invalid {RUNNER_STORAGE_CONFIG_NAME} configuration"
             ) from err
+        except CharmConfigInvalidError:
+            raise
 
         try:
             virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
@@ -712,42 +795,13 @@ class CharmState:
         Returns:
             Current state of the charm.
         """
-        prev_state = None
-        if CHARM_STATE_PATH.exists():
-            json_data = CHARM_STATE_PATH.read_text(encoding="utf-8")
-            prev_state = json.loads(json_data)
-            logger.info("Previous charm state: %s", prev_state)
-
         try:
             proxy_config = ProxyConfig.from_charm(charm)
-        except (ValidationError, ValueError) as exc:
-            logger.error("Invalid proxy config: %s", exc)
-            raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc
-
-        try:
             charm_config = CharmConfig.from_charm(charm)
-        except (ValidationError, ValueError) as exc:
-            logger.error("Invalid charm config: %s", exc)
-            raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
-
-        try:
             runner_config = RunnerCharmConfig.from_charm(charm)
         except (ValidationError, ValueError) as exc:
-            logger.error("Invalid charm config: %s", exc)
+            logger.error("Invalid config: %s", exc)
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
-
-        if (
-            prev_state is not None
-            and prev_state["runner_config"]["runner_storage"] != runner_config.runner_storage
-        ):
-            logger.warning(
-                "Storage option changed from %s to %s, blocking the charm",
-                prev_state["runner_config"]["runner_storage"],
-                runner_config.runner_storage,
-            )
-            raise CharmConfigInvalidError(
-                "runner-storage config cannot be changed after deployment, redeploy if needed"
-            )
 
         try:
             arch = _get_supported_arch()
