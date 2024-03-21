@@ -175,6 +175,60 @@ class Runner:
         except (RunnerError, LxdError) as err:
             raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err
 
+    def _remove_lxd_runner(self, remove_token: Optional[str]):
+        """Remove running LXD runner instance.
+
+        Args:
+            remove_token: The Github remove token to execute removal with config.sh script.
+
+        Raises:
+            LxdError:If there was an error removing LXD runner instance.
+        """
+        logger.info("Executing command to removal of runner and clean up...")
+
+        if not self.instance:
+            return
+
+        if remove_token:
+            self.instance.execute(
+                [
+                    "/usr/bin/sudo",
+                    "-u",
+                    "ubuntu",
+                    str(self.config_script),
+                    "remove",
+                    "--token",
+                    remove_token,
+                ],
+                hide_cmd=True,
+            )
+
+        if self.instance.status == "Running":
+            logger.info("Removing LXD instance of runner: %s", self.config.name)
+            try:
+                self.instance.stop(wait=True, timeout=60)
+            except LxdError:
+                logger.exception(
+                    "Unable to gracefully stop runner %s within timeout.", self.config.name
+                )
+                logger.info("Force stopping of runner %s", self.config.name)
+                try:
+                    self.instance.stop(force=True)
+                except LxdError:
+                    raise
+        else:
+            # Delete ephemeral instances that have error or stopped status which LXD failed to
+            # clean up.
+            logger.warning(
+                "Found runner %s with status %s, forcing deletion",
+                self.config.name,
+                self.instance.status,
+            )
+            try:
+                self.instance.delete(wait=True)
+            except LxdError:
+                raise
+
     def remove(self, remove_token: Optional[str]) -> None:
         """Remove this runner instance from LXD and GitHub.
 
@@ -186,48 +240,10 @@ class Runner:
         """
         logger.info("Removing runner: %s", self.config.name)
 
-        if self.instance:
-            logger.info("Executing command to removal of runner and clean up...")
-
-            if remove_token:
-                self.instance.execute(
-                    [
-                        "/usr/bin/sudo",
-                        "-u",
-                        "ubuntu",
-                        str(self.config_script),
-                        "remove",
-                        "--token",
-                        remove_token,
-                    ],
-                    hide_cmd=True,
-                )
-
-            if self.instance.status == "Running":
-                logger.info("Removing LXD instance of runner: %s", self.config.name)
-                try:
-                    self.instance.stop(wait=True, timeout=60)
-                except LxdError:
-                    logger.exception(
-                        "Unable to gracefully stop runner %s within timeout.", self.config.name
-                    )
-                    logger.info("Force stopping of runner %s", self.config.name)
-                    try:
-                        self.instance.stop(force=True)
-                    except LxdError as err:
-                        raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
-            else:
-                # Delete ephemeral instances that have error or stopped status which LXD failed to
-                # clean up.
-                logger.warning(
-                    "Found runner %s with status %s, forcing deletion",
-                    self.config.name,
-                    self.instance.status,
-                )
-                try:
-                    self.instance.delete(wait=True)
-                except LxdError as err:
-                    raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
+        try:
+            self._remove_lxd_runner(remove_token=remove_token)
+        except LxdError as exc:
+            raise RunnerRemoveError(f"Unable to remove {self.config.name}") from exc
 
         if self.status.runner_id is None:
             return
