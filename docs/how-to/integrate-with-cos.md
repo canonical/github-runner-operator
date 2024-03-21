@@ -47,4 +47,4 @@ The `cos-agent` integration can be consumed by the [grafana-agent](https://charm
    ```
 
 You should now be able to access a Grafana Dashboard named `GitHub Self-Hosted Runner Metrics`, displaying metrics, and another named `System Resources` exhibiting host resources in Grafana.
-Additionally, you can explore Loki logs using Grafana's Explore function. For detailed information about the specific metrics in the `GitHub Self-Hosted Runner Metrics` dashboard, refer to [Metrics](https://charmhub.io/github-runner/docs/cos).
+Additionally, you can explore Loki logs using Grafana's Explore function. For detailed information about the specific metrics in the `GitHub Self-Hosted Runner Metrics` dashboard, refer to [Metrics](https://charmhub.io/github-runner/docs/how-to-integrate-with-cos).

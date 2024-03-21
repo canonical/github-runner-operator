@@ -9,21 +9,21 @@ Some of the charm dependencies upgrades on a schedule to migrate security risks.
 
 The charm maintains a set of ephemeral self-hosted runners, each isolated in a single-use virtual machine instance. In addition, resource limits for the self-hosted runners can be configured.
 
-See [charm architecture](https://charmhub.io/github-runner/docs/charm-architecture) for more information.
+See [charm architecture](https://charmhub.io/github-runner/docs/explanation-charm-architecture) for more information.
 
 The charm also supports observability through the optional `cos-agent` integration.
 Metrics and logs about the runners and the charm itself are collected and sent to the [Canonical Observability Stack](https://charmhub.io/topics/canonical-observability-stack) for analysis and visualisation.
 
 This charm will make operating GitHub self-hosted runners simple and straightforward for DevOps or SRE teams through Juju's clean interface.
 
-The charm enforces a set of GitHub repository settings as best practice. This is planned to be opt-in in the future. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/repo-policy).
+The charm enforces a set of GitHub repository settings as best practice. This is planned to be opt-in in the future. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/how-to-repo-policy).
 
 ## In this documentation
 
 | | |
 |--|--|
-|  [Tutorials](https://charmhub.io/github-runner/docs/quick-start)</br>  Get started - a hands-on introduction to using the GitHub runner charm for new users </br> | [How-to guides](https://charmhub.io/github-runner/docs/run-on-lxd) </br> Step-by-step guides covering key operations and common tasks |
-| [Reference](https://charmhub.io/github-runner/docs/actions) </br> Technical information - specifications, APIs, architecture | [Explanation](https://charmhub.io/github-runner/docs/charm-architecture) </br> Concepts - discussion and clarification of key topics  |
+|  [Tutorials](https://charmhub.io/github-runner/docs/tutorial-quick-start)</br>  Get started - a hands-on introduction to using the GitHub runner charm for new users </br> | [How-to guides](https://charmhub.io/github-runner/docs/how-to-change-path) </br> Step-by-step guides covering key operations and common tasks |
+| [Reference](https://charmhub.io/github-runner/docs/reference-actions) </br> Technical information - specifications, APIs, architecture | [Explanation](https://charmhub.io/github-runner/docs/explanation-charm-architecture) </br> Concepts - discussion and clarification of key topics  |
 
 ## Contributing to this documentation
 
