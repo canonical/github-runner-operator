@@ -95,12 +95,13 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
     """
 
     @functools.wraps(func)
+    # flake8 thinks the event argument description is missing in the docstring.
     def func_with_catch_errors(self, event: EventT) -> None:
         """Handle errors raised while handling charm events.
 
         Args:
             event: The charm event to handle.
-        """
+        """  # noqa: D417
         try:
             func(self, event)
         except ConfigurationError as err:
@@ -137,12 +138,13 @@ def catch_action_errors(
     """
 
     @functools.wraps(func)
+    # flake8 thinks the event argument description is missing in the docstring.
     def func_with_catch_errors(self, event: ActionEvent) -> None:
         """Handle errors raised while handling events.
 
         Args:
             event: The action event to catch for errors.
-        """
+        """  # noqa: D417
         try:
             func(self, event)
         except ConfigurationError as err:
