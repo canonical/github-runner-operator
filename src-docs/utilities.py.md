@@ -52,7 +52,7 @@ Parameterize the decorator for adding retry to functions.
 secure_run_subprocess(
     cmd: Sequence[str],
     hide_cmd: bool = False,
-    **kwargs
+    **kwargs: dict[str, Any]
 ) → CompletedProcess[bytes]
 ```
 
@@ -86,7 +86,7 @@ The command is executed with `subprocess.run`, additional arguments can be passe
 execute_command(
     cmd: Sequence[str],
     check_exit: bool = True,
-    **kwargs
+    **kwargs: Any
 ) → tuple[str, int]
 ```
 

@@ -9,6 +9,7 @@ remove token for runner.
 import functools
 import logging
 from datetime import datetime
+from typing import Callable, ParamSpec, TypeVar
 from urllib.error import HTTPError
 
 from ghapi.all import GhApi, pages
@@ -28,8 +29,13 @@ from github_type import (
 
 logger = logging.getLogger(__name__)
 
+# Parameters of the function decorated with retry
+ParamT = ParamSpec("ParamT")
+# Return type of the function decorated with retry
+ReturnT = TypeVar("ReturnT")
 
-def catch_http_errors(func):
+
+def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, ReturnT]:
     """Catch HTTP errors and raise custom exceptions.
 
     Args:
@@ -40,7 +46,7 @@ def catch_http_errors(func):
     """
 
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args: ParamT.args, **kwargs: ParamT.kwargs) -> ReturnT:
         """Catch common errors when using the GitHub API.
 
         Args:

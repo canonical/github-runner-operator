@@ -98,7 +98,7 @@ class MockLxdProfileManager:
         """
         self.profiles.add(name)
 
-    def exists(self, name) -> bool:
+    def exists(self, name: str) -> bool:
         """Fake implementation of exists method of LxdProfile manager.
 
         Args:
@@ -250,7 +250,7 @@ class MockLxdStoragePoolManager:
         Returns:
             List of all non deleted fake LXD storages.
         """
-        return [pool for pool in self.pools.values() if not pool.delete]
+        return [pool for pool in self.pools.values() if not pool.deleted]
 
     def get(self, name):
         """Get a fake storage pool of given name.
@@ -273,7 +273,7 @@ class MockLxdStoragePoolManager:
             If storage pool of given name exists.
         """
         if name in self.pools:
-            return not self.pools[name].delete
+            return not self.pools[name].deleted
         else:
             return False
 
@@ -295,7 +295,7 @@ class MockLxdStoragePool:
 
     def __init__(self):
         """LXD storage pool fake initialization method."""
-        self.delete = False
+        self.deleted = False
 
     def save(self):
         """LXD storage pool fake save method placeholder."""
@@ -303,7 +303,7 @@ class MockLxdStoragePool:
 
     def delete(self):
         """LXD storage pool fake delete method."""
-        self.delete = True
+        self.deleted = True
 
 
 class MockErrorResponse:

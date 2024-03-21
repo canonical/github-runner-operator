@@ -378,7 +378,7 @@ async def tmate_ssh_server_app_fixture(
 async def tmate_ssh_server_unit_ip_fixture(
     model: Model,
     tmate_ssh_server_app: Application,
-) -> AsyncIterator[str]:
+) -> bytes | str:
     """tmate-ssh-server charm unit ip."""
     status: FullStatus = await model.get_status([tmate_ssh_server_app.name])
     try:

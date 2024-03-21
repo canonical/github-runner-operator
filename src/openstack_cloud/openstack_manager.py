@@ -119,7 +119,9 @@ def _generate_docker_proxy_unit_file(proxies: Optional[ProxyConfig] = None) -> s
     return environment.get_template("systemd-docker-proxy.j2").render(proxies=proxies)
 
 
-def _generate_docker_client_proxy_config_json(http_proxy: str, https_proxy: str, no_proxy: str):
+def _generate_docker_client_proxy_config_json(
+    http_proxy: str, https_proxy: str, no_proxy: str
+) -> str:
     """Generate proxy config.json for docker client.
 
     Args:

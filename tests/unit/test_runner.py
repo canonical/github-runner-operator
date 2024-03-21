@@ -194,6 +194,7 @@ def test_create_lxd_fail(
     token: str,
     binary_path: Path,
     lxd: MockLxdClient,
+    monkeypatch: pytest.MonkeyPatch,
 ):
     """
     arrange: Setup the create runner to fail with lxd error.
@@ -201,7 +202,7 @@ def test_create_lxd_fail(
     assert: Correct exception should be thrown. Any created instance should be
         cleanup.
     """
-    lxd.profiles.exists = mock_lxd_error_func
+    monkeypatch.setattr(lxd.profiles, "exists", mock_lxd_error_func)
 
     with pytest.raises(RunnerCreateError):
         runner.create(

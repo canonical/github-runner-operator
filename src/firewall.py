@@ -101,7 +101,7 @@ class Firewall:  # pylint: disable=too-few-public-methods
         self,
         denylist: typing.Iterable[FirewallEntry],
         allowlist: typing.Iterable[FirewallEntry] | None = None,
-    ):
+    ) -> None:
         """Refresh the firewall configuration.
 
         Args:

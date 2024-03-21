@@ -8,7 +8,7 @@ import logging
 import os
 import subprocess  # nosec B404
 import time
-from typing import Callable, Optional, Sequence, Type, TypeVar
+from typing import Any, Callable, Optional, Sequence, Type, TypeVar
 
 from typing_extensions import ParamSpec
 
@@ -59,7 +59,7 @@ def retry(  # pylint: disable=too-many-arguments
         """
 
         @functools.wraps(func)
-        def fn_with_retry(*args, **kwargs) -> ReturnT:
+        def fn_with_retry(*args: ParamT.args, **kwargs: ParamT.kwargs) -> ReturnT:
             """Wrap the function with retries.
 
             Args:
@@ -107,7 +107,7 @@ def retry(  # pylint: disable=too-many-arguments
 
 
 def secure_run_subprocess(
-    cmd: Sequence[str], hide_cmd: bool = False, **kwargs
+    cmd: Sequence[str], hide_cmd: bool = False, **kwargs: dict[str, Any]
 ) -> subprocess.CompletedProcess[bytes]:
     """Run command in subprocess according to security recommendations.
 
@@ -147,7 +147,7 @@ def secure_run_subprocess(
     return result
 
 
-def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs) -> tuple[str, int]:
+def execute_command(cmd: Sequence[str], check_exit: bool = True, **kwargs: Any) -> tuple[str, int]:
     """Execute a command on a subprocess.
 
     The command is executed with `subprocess.run`, additional arguments can be passed to it as

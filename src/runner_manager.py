@@ -251,7 +251,7 @@ class RunnerManager:
 
     def _create_runner(
         self, registration_token: str, resources: VirtualMachineResources, runner: Runner
-    ):
+    ) -> None:
         """Create a runner.
 
         Issues RunnerInstalled metric if metrics_logging is enabled.
@@ -349,7 +349,7 @@ class RunnerManager:
         metric_stats: IssuedMetricEventsStats,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
-    ):
+    ) -> None:
         """Issue reconciliation metric.
 
         Args:
@@ -435,7 +435,7 @@ class RunnerManager:
             ssh_debug_connections=self.config.charm_state.ssh_debug_connections,
         )
 
-    def _spawn_new_runners(self, count: int, resources: VirtualMachineResources):
+    def _spawn_new_runners(self, count: int, resources: VirtualMachineResources) -> None:
         """Spawn new runners.
 
         Args:
@@ -488,7 +488,9 @@ class RunnerManager:
         else:
             logger.info("There are no idle runners to remove.")
 
-    def _cleanup_offline_runners(self, runner_states: RunnerByHealth, all_runners: list[Runner]):
+    def _cleanup_offline_runners(
+        self, runner_states: RunnerByHealth, all_runners: list[Runner]
+    ) -> None:
         """Cleanup runners that are not running the github run.sh script.
 
         Args:

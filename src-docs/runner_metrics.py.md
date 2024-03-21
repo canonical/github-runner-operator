@@ -14,7 +14,7 @@ Classes and function to extract the metrics from a shared filesystem.
 
 ---
 
-<a href="../src/runner_metrics.py#L236"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_metrics.py#L253"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `extract`
 
@@ -44,7 +44,7 @@ In order to avoid DoS attacks, the file size is also checked.
 
 ---
 
-<a href="../src/runner_metrics.py#L263"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_metrics.py#L280"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_events`
 

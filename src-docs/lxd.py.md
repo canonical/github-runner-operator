@@ -22,7 +22,7 @@ LXD client.
 ### <kbd>function</kbd> `__init__`
 
 ```python
-__init__()
+__init__() → None
 ```
 
 Instantiate the LXD client. 
@@ -62,7 +62,7 @@ Instantiate the LXD image manager.
 ### <kbd>function</kbd> `create`
 
 ```python
-create(name: 'str', path: 'Path')
+create(name: 'str', path: 'Path') → None
 ```
 
 Import a LXD image. 
@@ -159,7 +159,7 @@ execute(
     cmd: 'list[str]',
     cwd: 'Optional[str]' = None,
     hide_cmd: 'bool' = False,
-    **kwargs
+    **kwargs: 'Any'
 ) → Tuple[int, IO, IO]
 ```
 
@@ -293,7 +293,7 @@ Create a directory in the LXD instance.
 ### <kbd>function</kbd> `pull_file`
 
 ```python
-pull_file(source: 'str', destination: 'str', is_dir=False) → None
+pull_file(source: 'str', destination: 'str', is_dir: 'bool' = False) → None
 ```
 
 Pull a file from the LXD instance to the local machine. 
@@ -559,7 +559,7 @@ Instantiate the LXD profile.
 ### <kbd>function</kbd> `delete`
 
 ```python
-delete()
+delete() → None
 ```
 
 Delete the profile. 
@@ -571,7 +571,7 @@ Delete the profile.
 ### <kbd>function</kbd> `save`
 
 ```python
-save()
+save() → None
 ```
 
 Save the current configuration of profile. 
@@ -731,7 +731,7 @@ Instantiate the LXD storage pool.
 ### <kbd>function</kbd> `delete`
 
 ```python
-delete()
+delete() → None
 ```
 
 Delete the storage pool. 
@@ -743,7 +743,7 @@ Delete the storage pool.
 ### <kbd>function</kbd> `save`
 
 ```python
-save()
+save() → None
 ```
 
 Save the current configuration of storage pool. 

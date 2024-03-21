@@ -207,7 +207,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L785"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L787"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -257,7 +257,7 @@ Charm configuration related to GitHub.
 ### <kbd>classmethod</kbd> `from_charm`
 
 ```python
-from_charm(charm: CharmBase)
+from_charm(charm: CharmBase) → GithubConfig
 ```
 
 Get github related charm configuration values from charm. 
@@ -372,12 +372,12 @@ Return the aproxy address.
 
 ---
 
-<a href="../src/charm_state.py#L640"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L642"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_use_aproxy`
 
 ```python
-check_use_aproxy(use_aproxy: bool, values: dict) → dict
+check_use_aproxy(use_aproxy: bool, values: dict) → bool
 ```
 
 Validate the proxy configuration. 
@@ -402,7 +402,7 @@ Validate the proxy configuration.
 
 ---
 
-<a href="../src/charm_state.py#L602"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L604"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -447,7 +447,9 @@ Runner configurations for the charm.
 ### <kbd>classmethod</kbd> `check_virtual_machine_resources`
 
 ```python
-check_virtual_machine_resources(vm_resources: VirtualMachineResources) → dict
+check_virtual_machine_resources(
+    vm_resources: VirtualMachineResources
+) → VirtualMachineResources
 ```
 
 Validate the virtual_machine_resources field values. 
@@ -476,7 +478,7 @@ Validate the virtual_machine_resources field values.
 ### <kbd>classmethod</kbd> `check_virtual_machines`
 
 ```python
-check_virtual_machines(virtual_machines: int) → dict
+check_virtual_machines(virtual_machines: int) → int
 ```
 
 Validate the virtual machines configuration value. 
@@ -563,7 +565,7 @@ SSH connection information for debug workflow.
 
 ---
 
-<a href="../src/charm_state.py#L728"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L730"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -596,7 +598,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L685"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L687"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

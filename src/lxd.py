@@ -12,7 +12,7 @@ import io
 import logging
 import tempfile
 from pathlib import Path
-from typing import IO, Optional, Tuple, Union
+from typing import IO, Any, Optional, Tuple, Union
 
 import pylxd.models
 
@@ -110,7 +110,7 @@ class LxdInstanceFileManager:
             except LxdError:
                 raise
 
-    def pull_file(self, source: str, destination: str, is_dir=False) -> None:
+    def pull_file(self, source: str, destination: str, is_dir: bool = False) -> None:
         """Pull a file from the LXD instance to the local machine.
 
         Args:
@@ -241,7 +241,7 @@ class LxdInstance:
             raise LxdError(f"Unable to delete the LXD instance {self.name}") from err
 
     def execute(
-        self, cmd: list[str], cwd: Optional[str] = None, hide_cmd: bool = False, **kwargs
+        self, cmd: list[str], cwd: Optional[str] = None, hide_cmd: bool = False, **kwargs: Any
     ) -> Tuple[int, IO, IO]:
         """Execute a command within the LXD instance.
 
@@ -407,12 +407,12 @@ class LxdProfile:
         self.devices = self._pylxd_profile.devices
         self.used_by = self._pylxd_profile.used_by
 
-    def save(self):
+    def save(self) -> None:
         """Save the current configuration of profile."""
         self._pylxd_profile.config = self.config
         self._pylxd_profile.save()
 
-    def delete(self):
+    def delete(self) -> None:
         """Delete the profile."""
         self._pylxd_profile.delete()
 
@@ -538,12 +538,12 @@ class LxdStoragePool:
         self.config = self._pylxd_storage_pool.config
         self.managed = self._pylxd_storage_pool.managed
 
-    def save(self):
+    def save(self) -> None:
         """Save the current configuration of storage pool."""
         self._pylxd_storage_pool.config = self.config
         self._pylxd_storage_pool.save()
 
-    def delete(self):
+    def delete(self) -> None:
         """Delete the storage pool."""
         self._pylxd_storage_pool.delete()
 
@@ -559,7 +559,7 @@ class LxdImageManager:  # pylint: disable=too-few-public-methods
         """
         self._pylxd_client = pylxd_client
 
-    def create(self, name: str, path: Path):
+    def create(self, name: str, path: Path) -> None:
         """Import a LXD image.
 
         Args:
@@ -578,7 +578,7 @@ class LxdImageManager:  # pylint: disable=too-few-public-methods
 class LxdClient:  # pylint: disable=too-few-public-methods
     """LXD client."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Instantiate the LXD client."""
         pylxd_client = pylxd.Client()
         self.instances = LxdInstanceManager(pylxd_client)

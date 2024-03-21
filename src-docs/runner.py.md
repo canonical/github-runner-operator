@@ -83,7 +83,7 @@ Construct the runner instance.
 ### <kbd>function</kbd> `create`
 
 ```python
-create(config: CreateRunnerConfig)
+create(config: CreateRunnerConfig) → None
 ```
 
 Create the runner instance on LXD and register it on GitHub. 

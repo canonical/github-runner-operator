@@ -44,7 +44,7 @@ The metric event is logged to the metrics log.
 ## <kbd>function</kbd> `setup_logrotate`
 
 ```python
-setup_logrotate()
+setup_logrotate() → None
 ```
 
 Configure logrotate for the metrics log. 
@@ -90,7 +90,7 @@ Base class for metric events.
 ### <kbd>function</kbd> `__init__`
 
 ```python
-__init__(*args, **kwargs)
+__init__(*args: Any, **kwargs: Any)
 ```
 
 Initialize the event. 
@@ -125,7 +125,7 @@ Metric event for when the charm has finished reconciliation.
 ### <kbd>function</kbd> `__init__`
 
 ```python
-__init__(*args, **kwargs)
+__init__(*args: Any, **kwargs: Any)
 ```
 
 Initialize the event. 
@@ -158,7 +158,7 @@ Metric event for when a runner is installed.
 ### <kbd>function</kbd> `__init__`
 
 ```python
-__init__(*args, **kwargs)
+__init__(*args: Any, **kwargs: Any)
 ```
 
 Initialize the event. 
@@ -195,7 +195,7 @@ Metric event for when a runner is started.
 ### <kbd>function</kbd> `__init__`
 
 ```python
-__init__(*args, **kwargs)
+__init__(*args: Any, **kwargs: Any)
 ```
 
 Initialize the event. 
@@ -234,7 +234,7 @@ Metric event for when a runner is stopped.
 ### <kbd>function</kbd> `__init__`
 
 ```python
-__init__(*args, **kwargs)
+__init__(*args: Any, **kwargs: Any)
 ```
 
 Initialize the event. 

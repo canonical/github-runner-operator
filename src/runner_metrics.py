@@ -118,6 +118,36 @@ def _inspect_file_sizes(fs: shared_fs.SharedFilesystem) -> tuple[Path, ...]:
     )
 
 
+def _extract_metrics_from_fs_file(
+    fs: shared_fs.SharedFilesystem, runner_name: str, filename: str
+) -> dict | None:
+    """Extract metrics from a shared filesystem.
+
+    Args:
+        fs: The shared filesystem for a specific runner.
+        runner_name: The name of the lxd runner to extract metrics from.
+        filename: The metrics filename.
+
+    Raises:
+        CorruptMetricDataError: If there was any errors found within metric.
+
+    Returns:
+        Metrics for the given runner if present.
+    """
+    try:
+        job_metrics = json.loads(fs.path.joinpath(filename).read_text())
+    except FileNotFoundError:
+        logger.warning("%s not found for runner %s.", filename, runner_name)
+        return None
+    except JSONDecodeError as exc:
+        raise CorruptMetricDataError(str(exc)) from exc
+    if not isinstance(job_metrics, dict):
+        raise CorruptMetricDataError(
+            f"{filename} metrics for runner {runner_name} is not a JSON object."
+        )
+    return job_metrics
+
+
 def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerMetrics]:
     """Extract metrics from a shared filesystem.
 
@@ -145,32 +175,19 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
         return None
 
     try:
-        pre_job_metrics = json.loads(fs.path.joinpath(PRE_JOB_METRICS_FILE_NAME).read_text())
+        pre_job_metrics = _extract_metrics_from_fs_file(
+            fs=fs, runner_name=runner_name, filename=PRE_JOB_METRICS_FILE_NAME
+        )
+        if not pre_job_metrics:
+            return None
         logger.debug("Pre-job metrics for runner %s: %s", runner_name, pre_job_metrics)
-    except FileNotFoundError:
-        logger.warning("%s not found for runner %s.", PRE_JOB_METRICS_FILE_NAME, runner_name)
-        return None
-    except JSONDecodeError as exc:
-        raise CorruptMetricDataError(str(exc)) from exc
 
-    try:
-        post_job_metrics = json.loads(fs.path.joinpath(POST_JOB_METRICS_FILE_NAME).read_text())
+        post_job_metrics = _extract_metrics_from_fs_file(
+            fs=fs, runner_name=runner_name, filename=POST_JOB_METRICS_FILE_NAME
+        )
         logger.debug("Post-job metrics for runner %s: %s", runner_name, post_job_metrics)
-    except FileNotFoundError:
-        logger.warning("%s not found for runner %s", POST_JOB_METRICS_FILE_NAME, runner_name)
-        post_job_metrics = None
-    except JSONDecodeError as exc:
-        raise CorruptMetricDataError(str(exc)) from exc
-
-    if not isinstance(pre_job_metrics, dict):
-        raise CorruptMetricDataError(
-            f"Pre-job metrics for runner {runner_name} is not a JSON object."
-        )
-
-    if not isinstance(post_job_metrics, dict) and post_job_metrics is not None:
-        raise CorruptMetricDataError(
-            f"Post-job metrics for runner {runner_name} is not a JSON object."
-        )
+    except CorruptMetricDataError:
+        raise
 
     try:
         return RunnerMetrics(

@@ -138,7 +138,7 @@ class Runner:
 
         self._shared_fs: Optional[shared_fs.SharedFilesystem] = None
 
-    def create(self, config: CreateRunnerConfig):
+    def create(self, config: CreateRunnerConfig) -> None:
         """Create the runner instance on LXD and register it on GitHub.
 
         Args:
@@ -175,7 +175,7 @@ class Runner:
         except (RunnerError, LxdError) as err:
             raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err
 
-    def _remove_lxd_runner(self, remove_token: Optional[str]):
+    def _remove_lxd_runner(self, remove_token: Optional[str]) -> None:
         """Remove running LXD runner instance.
 
         Args:
@@ -652,7 +652,7 @@ class Runner:
         )
         self.instance.execute(["nft", "-f", "-"], input=nft_input.encode("utf-8"))
 
-    def _configure_docker_proxy(self):
+    def _configure_docker_proxy(self) -> None:
         """Configure docker proxy.
 
         Raises:

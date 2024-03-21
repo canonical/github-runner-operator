@@ -4,7 +4,7 @@
 """Models and functions for the metric events."""
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel, NonNegativeFloat
 
@@ -51,7 +51,7 @@ class Event(BaseModel):
                 snake_case_string += char
         return snake_case_string
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any):
         """Initialize the event.
 
         Args:
@@ -211,7 +211,7 @@ def _configure_logrotate() -> None:
     )
 
 
-def setup_logrotate():
+def setup_logrotate() -> None:
     """Configure logrotate for the metrics log.
 
     Raises:

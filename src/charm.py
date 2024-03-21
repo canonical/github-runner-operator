@@ -24,13 +24,14 @@ from ops.charm import (
     ActionEvent,
     CharmBase,
     ConfigChangedEvent,
+    EventBase,
     InstallEvent,
     StartEvent,
     StopEvent,
     UpdateStatusEvent,
     UpgradeCharmEvent,
 )
-from ops.framework import EventBase, StoredState
+from ops.framework import StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
@@ -80,7 +81,7 @@ class ReconcileRunnersEvent(EventBase):
     """Event representing a periodic check to ensure runners are ok."""
 
 
-CharmT = TypeVar("CharmT")
+CharmT = Any
 EventT = TypeVar("EventT")
 
 
@@ -96,7 +97,7 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
 
     @functools.wraps(func)
     # flake8 thinks the event argument description is missing in the docstring.
-    def func_with_catch_errors(self, event: EventT) -> None:
+    def func_with_catch_errors(self: CharmT, event: EventT) -> None:
         """Handle errors raised while handling charm events.
 
         Args:
@@ -139,7 +140,7 @@ def catch_action_errors(
 
     @functools.wraps(func)
     # flake8 thinks the event argument description is missing in the docstring.
-    def func_with_catch_errors(self, event: ActionEvent) -> None:
+    def func_with_catch_errors(self: CharmT, event: ActionEvent) -> None:
         """Handle errors raised while handling events.
 
         Args:
@@ -186,7 +187,7 @@ class GithubRunnerCharm(CharmBase):
     ram_pool_path = Path("/storage/ram")
     kernel_module_path = Path("/etc/modules")
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Construct the charm.
 
         Args:

@@ -134,7 +134,7 @@ class GithubConfig:
     path: GithubPath
 
     @classmethod
-    def from_charm(cls, charm: CharmBase):
+    def from_charm(cls, charm: CharmBase) -> "GithubConfig":
         """Get github related charm configuration values from charm.
 
         Args:
@@ -320,7 +320,7 @@ class CharmConfig(BaseModel):
         dockerhub_mirror = charm.config.get(DOCKERHUB_MIRROR_CONFIG_NAME) or None
 
         if not dockerhub_mirror:
-            return
+            return None
 
         dockerhub_mirror_url = urlsplit(dockerhub_mirror)
         if dockerhub_mirror is not None and dockerhub_mirror_url.scheme != "https":
@@ -456,7 +456,7 @@ class RunnerCharmConfig(BaseModel):
     runner_storage: RunnerStorage
 
     @classmethod
-    def _check_storage_change(cls, runner_storage: str):
+    def _check_storage_change(cls, runner_storage: str) -> None:
         """Check whether the storage configuration has changed.
 
         Args:
@@ -532,7 +532,7 @@ class RunnerCharmConfig(BaseModel):
 
     @validator("virtual_machines")
     @classmethod
-    def check_virtual_machines(cls, virtual_machines: int) -> dict:
+    def check_virtual_machines(cls, virtual_machines: int) -> int:
         """Validate the virtual machines configuration value.
 
         Args:
@@ -554,7 +554,9 @@ class RunnerCharmConfig(BaseModel):
 
     @validator("virtual_machine_resources")
     @classmethod
-    def check_virtual_machine_resources(cls, vm_resources: VirtualMachineResources) -> dict:
+    def check_virtual_machine_resources(
+        cls, vm_resources: VirtualMachineResources
+    ) -> VirtualMachineResources:
         """Validate the virtual_machine_resources field values.
 
         Args:
@@ -639,7 +641,7 @@ class ProxyConfig(BaseModel):
 
     @validator("use_aproxy")
     @classmethod
-    def check_use_aproxy(cls, use_aproxy: bool, values: dict) -> dict:
+    def check_use_aproxy(cls, use_aproxy: bool, values: dict) -> bool:
         """Validate the proxy configuration.
 
         Args:
@@ -657,7 +659,7 @@ class ProxyConfig(BaseModel):
 
         return use_aproxy
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         """Return whether Whether the proxy config is set.
 
         Returns:
