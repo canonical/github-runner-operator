@@ -10,6 +10,8 @@ from pathlib import Path
 from time import sleep
 from typing import Any, AsyncIterator, Iterator, Optional
 
+import openstack
+import openstack.connection
 import pytest
 import pytest_asyncio
 import yaml
@@ -22,6 +24,7 @@ from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
+from charm_state import OPENSTACK_CLOUDS_YAML_CONFIG_NAME
 from github_client import GithubClient
 from tests.integration.helpers import (
     deploy_github_runner_charm,
@@ -48,10 +51,15 @@ def app_name() -> str:
 
 
 @pytest.fixture(scope="module")
-def charm_file(pytestconfig: pytest.Config, loop_device: Optional[str]) -> str:
+def charm_file(
+    pytestconfig: pytest.Config, loop_device: Optional[str], openstack_clouds_yaml: Optional[str]
+) -> str:
     """Path to the built charm."""
     charm = pytestconfig.getoption("--charm-file")
     assert charm, "Please specify the --charm-file command line option"
+
+    if openstack_clouds_yaml:
+        return f"./{charm}"
 
     lxd_profile_str = """config:
     security.nesting: true
@@ -151,6 +159,20 @@ def openstack_clouds_yaml(pytestconfig: pytest.Config) -> Optional[str]:
     return Path(clouds_yaml).read_text(encoding="utf-8") if clouds_yaml else None
 
 
+@pytest.fixture(scope="module", name="openstack_connection")
+def openstack_connection_fixture(
+    openstack_clouds_yaml: Optional[str],
+) -> openstack.connection.Connection:
+    """The openstack connection instance."""
+    assert openstack_clouds_yaml, "Openstack clouds yaml was not provided."
+
+    openstack_clouds_yaml_yaml = yaml.safe_load(openstack_clouds_yaml)
+    clouds_yaml_path = Path.cwd() / "clouds.yaml"
+    clouds_yaml_path.write_text(data=openstack_clouds_yaml, encoding="utf-8")
+    first_cloud = next(iter(openstack_clouds_yaml_yaml["clouds"].keys()))
+    return openstack.connect(first_cloud)
+
+
 @pytest.fixture(scope="module")
 def model(ops_test: OpsTest) -> Model:
     """Juju model used in the test."""
@@ -187,6 +209,42 @@ async def app_no_runner(
         https_proxy=https_proxy,
         no_proxy=no_proxy,
         reconcile_interval=60,
+    )
+    return application
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app_openstack_runner(
+    model: Model,
+    charm_file: str,
+    app_name: str,
+    path: str,
+    token: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
+    openstack_clouds_yaml: str,
+) -> AsyncIterator[Application]:
+    """Application launching VMs and no runners."""
+    application = await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=app_name,
+        path=path,
+        token=token,
+        runner_storage="juju-storage",
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=60,
+        constraints={
+            "root-disk": 20 * 1024,
+            "cores": 4,
+            "mem": 16 * 1024,
+            "virt-type": "virtual-machine",
+        },
+        config={OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml},
+        wait_idle=False,
     )
     return application
 

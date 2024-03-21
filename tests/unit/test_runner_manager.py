@@ -13,6 +13,7 @@ from _pytest.monkeypatch import MonkeyPatch
 import shared_fs
 from charm_state import (
     Arch,
+    CharmConfig,
     CharmState,
     GithubOrg,
     GithubRepo,
@@ -38,12 +39,21 @@ def token_fixture():
     return secrets.token_hex()
 
 
+@pytest.fixture(scope="function", name="charm_config")
+def charm_config_fixture():
+    """Mock charm config instance."""
+    mock_charm_config = MagicMock(spec=CharmConfig)
+    mock_charm_config.labels = ("test",)
+    return mock_charm_config
+
+
 @pytest.fixture(scope="function", name="charm_state")
-def charm_state_fixture():
+def charm_state_fixture(charm_config: MagicMock):
     mock = MagicMock(spec=CharmState)
     mock.is_metrics_logging_available = False
     mock.arch = Arch.X64
     mock.ssh_debug_connections = None
+    mock.charm_config = charm_config
     return mock
 
 
@@ -133,8 +143,7 @@ def test_get_latest_runner_bin_url(runner_manager: RunnerManager, arch: Arch, ch
         download_url=(download_url := "https://www.example.com"),
         filename=(filename := "test_runner_binary"),
     )
-    mock_gh_client.get_runner_applications.return_value = (app,)
-    mock_gh_client.get_runner_applications.return_value = (app,)
+    mock_gh_client.get_runner_application.return_value = app
     runner_manager._clients.github = mock_gh_client
 
     runner_bin = runner_manager.get_latest_runner_bin_url(os_name="linux")
@@ -151,8 +160,7 @@ def test_get_latest_runner_bin_url_missing_binary(runner_manager: RunnerManager)
     assert: Error related to runner bin raised.
     """
     runner_manager._clients.github = MagicMock()
-    runner_manager._clients.github.get_runner_applications.return_value = []
-    runner_manager._clients.github.get_runner_applications.return_value = []
+    runner_manager._clients.github.get_runner_application.side_effect = RunnerBinaryError
 
     with pytest.raises(RunnerBinaryError):
         runner_manager.get_latest_runner_bin_url(os_name="not_exist")
