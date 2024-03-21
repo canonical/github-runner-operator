@@ -488,6 +488,32 @@ class RunnerManager:
         else:
             logger.info("There are no idle runners to remove.")
 
+    def _cleanup_offline_runners(self, runner_states: RunnerByHealth, all_runners: list[Runner]):
+        """Cleanup runners that are not running the github run.sh script.
+
+        Args:
+            runner_states: Runner names grouped by health.
+            all_runners: All currently running runners.
+        """
+        if not runner_states.unhealthy:
+            logger.info("No unhealthy runners.")
+            return
+
+        logger.info("Cleaning up unhealthy runners.")
+        remove_token = self._clients.github.get_runner_remove_token(self.config.path)
+        unhealthy_runners = [
+            runner for runner in all_runners if runner.config.name in set(runner_states.unhealthy)
+        ]
+
+        for runner in unhealthy_runners:
+            if self.config.are_metrics_enabled:
+                try:
+                    runner_logs.get_crashed(runner)
+                except errors.RunnerLogsError:
+                    logger.exception("Failed to get logs of crashed runner %s", runner.config.name)
+            runner.remove(remove_token)
+            logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
+
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
 
@@ -498,18 +524,14 @@ class RunnerManager:
         Returns:
             Difference between intended runners and actual runners.
         """
-        if self.config.are_metrics_enabled:
-            start_ts = time.time()
+        start_ts = time.time()
 
         runners = self._get_runners()
-
         # Add/Remove runners to match the target quantity
         online_runners = [
             runner for runner in runners if runner.status.exist and runner.status.online
         ]
-
         runner_states = self._get_runner_health_states()
-
         logger.info(
             (
                 "Expected runner count: %i, Online count: %i, Offline count: %i, "
@@ -526,26 +548,7 @@ class RunnerManager:
         if self.config.are_metrics_enabled:
             metric_stats = self._issue_runner_metrics()
 
-        # Clean up offline runners
-        if runner_states.unhealthy:
-            logger.info("Cleaning up unhealthy runners.")
-
-            remove_token = self._clients.github.get_runner_remove_token(self.config.path)
-
-            unhealthy_runners = [
-                runner for runner in runners if runner.config.name in set(runner_states.unhealthy)
-            ]
-
-            for runner in unhealthy_runners:
-                if self.config.are_metrics_enabled:
-                    try:
-                        runner_logs.get_crashed(runner)
-                    except errors.RunnerLogsError:
-                        logger.exception(
-                            "Failed to get logs of crashed runner %s", runner.config.name
-                        )
-                runner.remove(remove_token)
-                logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
+        self._cleanup_offline_runners(runner_states=runner_states, all_runners=runners)
 
         delta = quantity - len(runner_states.healthy)
         # Spawn new runners
