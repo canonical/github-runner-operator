@@ -24,6 +24,12 @@ options:
       (https://docs.openstack.org/python-openstackclient/pike/configuration/index.html#clouds-yaml).
       Setting the openstack-clouds-yaml would enable spawning runners on OpenStack, instead of LXD
       vms. This feature is not yet ready and is under development.
+  experimental-openstack-flavour:
+    type: string
+    default: ""
+    description: |
+      (Experimental, under development) The openstack flavour to use to spawn virtual machines. 
+      This feature is not yet ready and is under development.
   experimental-use-aproxy:
     type: boolean
     default: false

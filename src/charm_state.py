@@ -8,7 +8,7 @@ import json
 import logging
 import platform
 import re
-from enum import Enum
+from enum import Enum, auto
 from pathlib import Path
 from typing import NamedTuple, Optional, cast
 from urllib.parse import urlsplit
@@ -134,6 +134,9 @@ class RunnerStorage(str, Enum):
     JUJU_STORAGE = "juju-storage"
     MEMORY = "memory"
 
+class InstanceType(Enum):
+    LOCAL_LXD = auto()
+    OPENSTACK = auto()
 
 class CharmConfigInvalidError(Exception):
     """Raised when charm config is invalid.
@@ -609,6 +612,7 @@ class CharmState:
     charm_config: CharmConfig
     runner_config: RunnerCharmConfig
     ssh_debug_connections: list[SSHDebugConnection]
+    instance_type: InstanceType
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "CharmState":
@@ -667,6 +671,10 @@ class CharmState:
         except ValidationError as exc:
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
+        
+        instance_type = InstanceType.LOCAL_LXD
+        if charm_config.openstack_clouds_yaml is not None:
+            instance_type = InstanceType.OPENSTACK
 
         state = cls(
             arch=arch,
@@ -675,6 +683,7 @@ class CharmState:
             charm_config=charm_config,
             runner_config=runner_config,
             ssh_debug_connections=ssh_debug_connections,
+            instance_type=instance_type,
         )
 
         state_dict = dataclasses.asdict(state)
