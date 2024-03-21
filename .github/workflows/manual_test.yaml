@@ -12,16 +12,16 @@ jobs:
       - run: sudo apt-get update
       - run: sudo apt install -y fio
       - name: seq write
-        run: sudo fio --name=write_throughput --directory=/ --numjobs=4 --size=10G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=write --group_reporting=1 --iodepth_batch_submit=64 --iodepth_batch_complete_max=64
+        run: sudo fio --name=write_throughput --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=write --group_reporting=1 --iodepth_batch_submit=64 --iodepth_batch_complete_max=64
       - run: sudo rm -f /write* /read*
       - name: rand write
-        run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=10G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randwrite --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
+        run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randwrite --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
       - run: sudo rm -f /write* /read*
       - name: seq read
-        run: sudo fio --name=write_throughput --directory=/ --numjobs=4 --size=10G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=read --group_reporting=1 --iodepth_batch_submit=64 --iodepth_batch_complete_max=64
+        run: sudo fio --name=write_throughput --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=read --group_reporting=1 --iodepth_batch_submit=64 --iodepth_batch_complete_max=64
       - run: sudo rm -f /write* /read*
       - name: rand read
-        run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=10G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randread --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
+        run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randread --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
       - run: sudo rm -f /write* /read*
   # self-host-test:
   #   name: self-hosted test
