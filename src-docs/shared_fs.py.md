@@ -95,7 +95,7 @@ Mounts the filesystem if it is not currently mounted.
 
 ---
 
-<a href="../src/shared_fs.py#L223"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L267"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `delete`
 
@@ -120,7 +120,7 @@ Delete the shared filesystem for the runner.
 
 ---
 
-<a href="../src/shared_fs.py#L269"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L297"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `move_to_quarantine`
 
@@ -155,6 +155,15 @@ Shared filesystem between the charm and the runners.
  
  - <b>`path`</b>:  The path of the shared filesystem inside the charm. 
  - <b>`runner_name`</b>:  The name of the associated runner. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `UnmountSharedFilesystemError`
+Represents an error unmounting a shared filesystem. 
 
 
 
