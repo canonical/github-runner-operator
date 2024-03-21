@@ -4,10 +4,7 @@
 """Integration tests for OpenStack integration."""
 
 import openstack.connection
-<<<<<<< HEAD
-=======
 import pytest
->>>>>>> c57beb0daae5a7c242a7eb89409db8b6d815029b
 from github.Branch import Branch
 from github.Repository import Repository
 from github.WorkflowRun import WorkflowRun

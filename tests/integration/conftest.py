@@ -24,15 +24,11 @@ from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-<<<<<<< HEAD
 from charm_state import (
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     PATH_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
 )
-=======
-from charm_state import OPENSTACK_CLOUDS_YAML_CONFIG_NAME
->>>>>>> c57beb0daae5a7c242a7eb89409db8b6d815029b
 from github_client import GithubClient
 from tests.integration.helpers import (
     deploy_github_runner_charm,

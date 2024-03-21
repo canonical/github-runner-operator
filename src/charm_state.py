@@ -797,6 +797,10 @@ class CharmState:
         """
         try:
             proxy_config = ProxyConfig.from_charm(charm)
+        except (ValidationError, ValueError) as exc:
+            raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}")
+
+        try:
             charm_config = CharmConfig.from_charm(charm)
             runner_config = RunnerCharmConfig.from_charm(charm)
         except (ValidationError, ValueError) as exc:

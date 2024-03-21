@@ -1,10 +1,7 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-<<<<<<< HEAD
-=======
 import copy
->>>>>>> c57beb0daae5a7c242a7eb89409db8b6d815029b
 import secrets
 import unittest.mock
 from pathlib import Path
@@ -137,12 +134,8 @@ def clouds_yaml_fixture(cloud_name: str) -> dict:
 @pytest.fixture(name="multi_clouds_yaml")
 def multi_clouds_yaml_fixture(clouds_yaml: dict) -> dict:
     """Testing clouds.yaml with multiple clouds."""
-<<<<<<< HEAD
-    clouds_yaml["clouds"]["unused_cloud"] = {
-=======
     multi_clouds_yaml = copy.deepcopy(clouds_yaml)
     multi_clouds_yaml["clouds"]["unused_cloud"] = {
->>>>>>> c57beb0daae5a7c242a7eb89409db8b6d815029b
         "auth": {
             "auth_url": secrets.token_hex(16),
             "project_name": secrets.token_hex(16),
@@ -152,8 +145,4 @@ def multi_clouds_yaml_fixture(clouds_yaml: dict) -> dict:
             "password": secrets.token_hex(16),
         }
     }
-<<<<<<< HEAD
-    return clouds_yaml
-=======
     return multi_clouds_yaml
->>>>>>> c57beb0daae5a7c242a7eb89409db8b6d815029b

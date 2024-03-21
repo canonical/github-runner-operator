@@ -162,8 +162,6 @@ Exception representing an error during image build process.
 
 ---
 
-<<<<<<< HEAD
-=======
 ## <kbd>class</kbd> `OpenstackInstanceLaunchError`
 Exception representing an error during instance launch process. 
 
@@ -173,7 +171,6 @@ Exception representing an error during instance launch process.
 
 ---
 
->>>>>>> c57beb0daae5a7c242a7eb89409db8b6d815029b
 ## <kbd>class</kbd> `QuarantineSharedFilesystemError`
 Represents an error when the shared filesystem could not be quarantined. 
 

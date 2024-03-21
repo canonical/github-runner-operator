@@ -36,10 +36,6 @@ def test_initialize_validation_error(invalid_yaml: dict, expected_err_msg):
     act: Call initialize.
     assert: InvalidConfigError is raised.
     """
-<<<<<<< HEAD
-=======
-
->>>>>>> c57beb0daae5a7c242a7eb89409db8b6d815029b
     with pytest.raises(OpenStackInvalidConfigError) as exc:
         openstack_cloud.initialize(invalid_yaml)
     assert expected_err_msg in str(exc)

@@ -375,7 +375,6 @@ async def deploy_github_runner_charm(
         storage["runner"] = {"pool": "rootfs", "size": 11}
 
     default_config = {
-<<<<<<< HEAD
         PATH_CONFIG_NAME: path,
         TOKEN_CONFIG_NAME: token,
         VIRTUAL_MACHINES_CONFIG_NAME: 0,
@@ -383,15 +382,6 @@ async def deploy_github_runner_charm(
         TEST_MODE_CONFIG_NAME: "insecure",
         RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
         RUNNER_STORAGE_CONFIG_NAME: runner_storage,
-=======
-        "path": path,
-        "token": token,
-        "virtual-machines": 0,
-        "denylist": "10.10.0.0/16",
-        "test-mode": "insecure",
-        "reconcile-interval": reconcile_interval,
-        "runner-storage": runner_storage,
->>>>>>> c57beb0daae5a7c242a7eb89409db8b6d815029b
     }
 
     if config:
@@ -504,10 +494,7 @@ def _get_latest_run(
     Args:
         workflow: The workflow to get the latest run for.
         start_time: The minimum start time of the run.
-<<<<<<< HEAD
         branch: The branch in which the workflow belongs to.
-=======
->>>>>>> c57beb0daae5a7c242a7eb89409db8b6d815029b
 
     Returns:
         The latest workflow run if the workflow has started. None otherwise.
@@ -525,12 +512,10 @@ def _is_workflow_run_complete(run: WorkflowRun) -> bool:
 
     Args:
         run: The workflow run to check status for.
-<<<<<<< HEAD
 
     Returns:
         Whether the run status is "completed".
-=======
->>>>>>> c57beb0daae5a7c242a7eb89409db8b6d815029b
+
     """
     if run.update():
         return run.status == "completed"

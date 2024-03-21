@@ -53,7 +53,7 @@ def _create_connection(
     Raises:
         OpenStackUnauthorizedError: if the credentials provided is not authorized.
 
-    Returns:
+    Yields:
         An openstack.connection.Connection object.
     """
     clouds = list(cloud_config["clouds"].keys())
