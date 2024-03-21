@@ -6,33 +6,41 @@ on:
   workflow_dispatch:
 
 jobs:
-  # github-test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Echo test
-  #       run: echo hello
-  #     - name: Disk usage
-  #       run: df -h
-  #     - name: CPU usage
-  #       run: lscpu
-  self-host-test:
-    name: self-hosted test
-    runs-on: [self-hosted, edge, jammy]
+  github-test:
+    runs-on: ubuntu-latest
     steps:
-      - run: echo hello
-      - run: df -h
-      - run: echo $DOCKERHUB_MIRROR
-      - name: Install microk8s
-        run: sudo snap install microk8s --classic
-      - name: Wait for microk8s
-        timeout-minutes: 10
-        run: microk8s status --wait-ready
-      - name: Deploy nginx for testing
-        run: microk8s kubectl create deployment nginx --image=nginx
-      - name: Wait for nginx to be ready
-        run: microk8s kubectl rollout status deployment/nginx --timeout=30m
-      - name: Update apt in python docker container
-        run: docker run python:3.10-slim apt-get update
+      - run: sudo apt-get update
+      - run: sudo apt install -y fio
+      - name: seq write
+        run: sudo fio --name=write_throughput --directory=/ --numjobs=4 --size=10G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=write --group_reporting=1 --iodepth_batch_submit=64 --iodepth_batch_complete_max=64
+      - run: sudo rm -f /write* /read*
+      - name: rand write
+        run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=10G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randwrite --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
+      - run: sudo rm -f /write* /read*
+      - name: seq read
+        run: sudo fio --name=write_throughput --directory=/ --numjobs=4 --size=10G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=read --group_reporting=1 --iodepth_batch_submit=64 --iodepth_batch_complete_max=64
+      - run: sudo rm -f /write* /read*
+      - name: rand read
+        run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=10G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randread --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
+      - run: sudo rm -f /write* /read*
+  # self-host-test:
+  #   name: self-hosted test
+  #   runs-on: [self-hosted, edge, jammy]
+  #   steps:
+  #     - run: echo hello
+  #     - run: df -h
+  #     - run: echo $DOCKERHUB_MIRROR
+  #     - name: Install microk8s
+  #       run: sudo snap install microk8s --classic
+  #     - name: Wait for microk8s
+  #       timeout-minutes: 10
+  #       run: microk8s status --wait-ready
+  #     - name: Deploy nginx for testing
+  #       run: microk8s kubectl create deployment nginx --image=nginx
+  #     - name: Wait for nginx to be ready
+  #       run: microk8s kubectl rollout status deployment/nginx --timeout=30m
+  #     - name: Update apt in python docker container
+  #       run: docker run python:3.10-slim apt-get update
   # - uses: actions/checkout@v4.1.1
   # - uses: canonical/setup-lxd@v0.1.1
   # - name: Pack charm
