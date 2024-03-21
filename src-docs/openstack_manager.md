@@ -13,7 +13,7 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L232"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L271"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
@@ -53,7 +53,7 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L290"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L315"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
@@ -85,7 +85,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/utilities.py#L366"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L391"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
@@ -169,6 +169,17 @@ __init__(
 
 
 
+
+
+
+
+
+---
+
+<a href="../src/openstack_cloud/openstack_manager.py#L235"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `ImageDeleteError`
+Represents an error while deleting existing openstack image. 
 
 
 
