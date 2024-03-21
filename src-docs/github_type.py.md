@@ -108,10 +108,8 @@ Information on the runner application.
  - <b>`architecture`</b>:  Computer Architecture to run the runner application on. 
  - <b>`download_url`</b>:  URL to download the runner application. 
  - <b>`filename`</b>:  Filename of the runner application. 
-
-OptionalAttributes: 
  - <b>`temp_download_token`</b>:  A short lived bearer token used to download the  runner, if needed. 
- - <b>`sha256_check_sum`</b>:  SHA256 Checksum of the runner application. 
+ - <b>`sha256_checksum`</b>:  SHA256 Checksum of the runner application. 
 
 
 

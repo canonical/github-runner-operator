@@ -36,11 +36,9 @@ class RunnerApplication(TypedDict, total=False):
         architecture: Computer Architecture to run the runner application on.
         download_url: URL to download the runner application.
         filename: Filename of the runner application.
-
-    OptionalAttributes:
         temp_download_token: A short lived bearer token used to download the
             runner, if needed.
-        sha256_check_sum: SHA256 Checksum of the runner application.
+        sha256_checksum: SHA256 Checksum of the runner application.
     """
 
     os: Literal["linux", "win", "osx"]
@@ -48,8 +46,8 @@ class RunnerApplication(TypedDict, total=False):
     download_url: str
     filename: str
     # flake8-docstrings-complete thinks these attributes should not be described in the docstring.
-    temp_download_token: NotRequired[str]
-    sha256_checksum: NotRequired[str]
+    temp_download_token: NotRequired[str]  # noqa: DCO063
+    sha256_checksum: NotRequired[str]  # noqa: DCO063
 
 
 RunnerApplicationList = List[RunnerApplication]
