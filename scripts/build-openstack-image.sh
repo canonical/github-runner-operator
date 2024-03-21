@@ -146,6 +146,13 @@ DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install docker.io npm python3-pi
 ln -s /usr/bin/python3 /usr/bin/python
 
 # Uninstall unattended-upgrades, to avoid lock errors when unattended-upgrades is active in the runner
+DEBIAN_FRONTEND=noninteractive /usr/bin/systemctl stop apt-daily.timer
+DEBIAN_FRONTEND=noninteractive /usr/bin/systemctl disable apt-daily.timer
+DEBIAN_FRONTEND=noninteractive /usr/bin/systemctl mask apt-daily.service
+DEBIAN_FRONTEND=noninteractive /usr/bin/systemctl stop apt-daily-upgrade.timer
+DEBIAN_FRONTEND=noninteractive /usr/bin/systemctl disable apt-daily-upgrade.timer
+DEBIAN_FRONTEND=noninteractive /usr/bin/systemctl mask apt-daily-upgrade.service
+DEBIAN_FRONTEND=noninteractive /usr/bin/systemctl daemon-reload
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get purge unattended-upgrades -yq
 
 /usr/sbin/useradd -m ubuntu
