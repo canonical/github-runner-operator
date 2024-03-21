@@ -1,3 +1,4 @@
-ignore_files:
-  # Ignore pylintrc as it uses non compliant terminology: whitelist
-  - .pylintrc
+rules:
+  # Ignore whitelist - we are using it to ignore pydantic in pyptoject.toml and pylintrc
+  - name: whitelist
+ 
