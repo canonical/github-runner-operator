@@ -283,7 +283,7 @@ class CharmConfig(BaseModel):
     denylist: list[FirewallEntry]
     dockerhub_mirror: str | None
     labels: tuple[str, ...]
-    openstack_clouds_yaml: dict | None
+    openstack_clouds_yaml: dict[str, dict] | None
     path: GithubPath
     reconcile_interval: int
     token: str

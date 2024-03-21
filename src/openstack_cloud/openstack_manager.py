@@ -5,22 +5,22 @@
 import json
 import logging
 import secrets
+from contextlib import contextmanager
 from dataclasses import dataclass
-from typing import Iterable, Literal, Optional
+from typing import Generator, Iterable, Literal, NamedTuple, Optional
 
 import jinja2
-import keystoneauth1.exceptions.http
 import openstack
 import openstack.compute.v2.server
 import openstack.connection
 import openstack.exceptions
 import openstack.image.v2.image
 from openstack.exceptions import OpenStackCloudException
-from openstack.identity.v3.project import Project
 
 from charm_state import Arch, ProxyConfig, SSHDebugConnection, UnsupportedArchitectureError
 from errors import (
     OpenstackImageBuildError,
+    OpenstackInstanceLaunchError,
     OpenStackUnauthorizedError,
     RunnerBinaryError,
     SubprocessError,
@@ -37,15 +37,21 @@ IMAGE_NAME = "jammy"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 
 
-def _create_connection(cloud_config: dict[str, dict]) -> openstack.connection.Connection:
-    """Create a connection object.
+@contextmanager
+def _create_connection(
+    cloud_config: dict[str, dict]
+) -> Generator[openstack.connection.Connection, None, None]:
+    """Create a connection context managed object, to be used within with statements.
 
-    This method should be called with a valid cloud_config. See def _validate_cloud_config.
+    This method should be called with a valid cloud_config. See _validate_cloud_config.
     Also, this method assumes that the clouds.yaml exists on ~/.config/openstack/clouds.yaml.
     See charm_state.py _write_openstack_config_to_disk.
 
     Args:
         cloud_config: The configuration in clouds.yaml format to apply.
+
+    Raises:
+        OpenStackUnauthorizedError: if the credentials provided is not authorized.
 
     Returns:
         An openstack.connection.Connection object.
@@ -56,40 +62,89 @@ def _create_connection(cloud_config: dict[str, dict]) -> openstack.connection.Co
     cloud_name = clouds[0]
 
     # api documents that keystoneauth1.exceptions.MissingRequiredOptions can be raised but
-    # I could not reproduce it. Therefore, no catch here.
-    return openstack.connect(cloud_name)
+    # I could not reproduce it. Therefore, no catch here for such exception.
+    try:
+        with openstack.connect(cloud=cloud_name) as conn:
+            conn.authorize()
+            yield conn
+    # pylint thinks this isn't an exception, but does inherit from Exception class.
+    except openstack.exceptions.HttpException as exc:  # pylint: disable=bad-exception-cause
+        raise OpenStackUnauthorizedError("Unauthorized credentials.") from exc
 
 
-def list_projects(cloud_config: dict[str, dict]) -> list[Project]:
-    """List all projects in the OpenStack cloud.
+class ProxyStringValues(NamedTuple):
+    """Wrapper class to proxy values to string.
 
-    The purpose of the method is just to try out openstack integration and
-    it may be removed in the future.
+    Attributes:
+        http: HTTP proxy address.
+        https: HTTPS proxy address.
+        no_proxy: Comma-separated list of hosts that should not be proxied.
+    """
 
-    It currently returns objects directly from the sdk,
-    which may not be ideal (mapping to domain objects may be preferable).
+    http: str
+    https: str
+    no_proxy: str
+
+
+def _get_default_proxy_values(proxies: Optional[ProxyConfig] = None) -> ProxyStringValues:
+    """Get default proxy string values, empty string if None.
+
+    Used to parse proxy values for file configurations, empty strings if None.
 
     Args:
-        cloud_config: The dict mapping of cloud name to connection configuration.
-
-    Raises:
-        OpenStackUnauthorizedError: If there was an authorization error with given cloud config.
+        proxies: The proxy configuration information.
 
     Returns:
-        A list of projects.
+        Proxy strings if set, empty string otherwise.
     """
-    conn = _create_connection(cloud_config)
-    try:
-        projects = conn.list_projects()
-        logger.debug("OpenStack connection successful.")
-        logger.debug("Projects: %s", projects)
-        # pylint thinks this isn't an exception
-    except keystoneauth1.exceptions.http.Unauthorized as exc:
-        raise OpenStackUnauthorizedError(  # pylint: disable=bad-exception-cause
-            "Unauthorized to connect to OpenStack."
-        ) from exc
+    if not proxies:
+        return ProxyStringValues(http="", https="", no_proxy="")
+    return ProxyStringValues(
+        http=str(proxies.http or ""),
+        https=str(proxies.https or ""),
+        no_proxy=proxies.no_proxy or "",
+    )
 
-    return projects
+
+def _generate_docker_proxy_unit_file(proxies: Optional[ProxyConfig] = None) -> str:
+    """Generate docker proxy systemd unit file.
+
+    Args:
+        proxies: HTTP proxy settings.
+
+    Returns:
+        Contents of systemd-docker-proxy unit file.
+    """
+    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
+    return environment.get_template("systemd-docker-proxy.j2").render(proxies=proxies)
+
+
+def _generate_docker_client_proxy_config_json(http_proxy: str, https_proxy: str, no_proxy: str):
+    """Generate proxy config.json for docker client.
+
+    Args:
+        http_proxy: HTTP proxy URL.
+        https_proxy: HTTPS proxy URL.
+        no_proxy: URLs to not proxy through.
+
+    Returns:
+        Contents of docker config.json file.
+    """
+    return json.dumps(
+        {
+            "proxies": {
+                "default": {
+                    key: value
+                    for key, value in (
+                        ("httpProxy", http_proxy),
+                        ("httpsProxy", https_proxy),
+                        ("noProxy", no_proxy),
+                    )
+                    if value
+                }
+            }
+        }
+    )
 
 
 def _build_image_command(
@@ -98,42 +153,29 @@ def _build_image_command(
     """Get command for building runner image.
 
     Args:
-        runner_info: Github runner application metadata.
+        runner_info: The runner application to fetch runner tar download url.
         proxies: HTTP proxy settings.
 
     Returns:
         Command to execute to build runner image.
     """
-    http_proxy = proxies.http if (proxies and proxies.http) else ""
-    https_proxy = proxies.https if (proxies and proxies.https) else ""
-    no_proxy = proxies.no_proxy if (proxies and proxies.no_proxy) else ""
+    docker_proxy_service_conf_content = _generate_docker_proxy_unit_file(proxies=proxies)
 
-    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
-    docker_proxy_service_conf_content = environment.get_template("systemd-docker-proxy.j2").render(
-        proxies=proxies
+    proxy_values = _get_default_proxy_values(proxies=proxies)
+
+    docker_client_proxy_content = _generate_docker_client_proxy_config_json(
+        http_proxy=proxy_values.http,
+        https_proxy=proxy_values.https,
+        no_proxy=proxy_values.no_proxy,
     )
-    docker_proxy = {
-        "proxies": {
-            "default": {
-                key: value
-                for key, value in (
-                    ("httpProxy", http_proxy),
-                    ("httpsProxy", https_proxy),
-                    ("noProxy", no_proxy),
-                )
-                if value
-            }
-        }
-    }
-    docker_client_proxy_content = json.dumps(docker_proxy)
 
     cmd = [
         "/usr/bin/bash",
         BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME,
         runner_info["download_url"],
-        str(http_proxy),
-        str(https_proxy),
-        str(no_proxy),
+        proxy_values.http,
+        proxy_values.https,
+        proxy_values.no_proxy,
         docker_proxy_service_conf_content,
         docker_client_proxy_content,
     ]
@@ -162,6 +204,12 @@ class InstanceConfig:
 
 def _get_supported_runner_arch(arch: str) -> Literal["amd64", "arm64"]:
     """Validate and return supported runner architecture.
+
+    The supported runner architecture takes in arch value from Github supported architecture and
+    outputs architectures supported by ubuntu cloud images.
+    See: https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners\
+/about-self-hosted-runners#architectures
+    and https://cloud-images.ubuntu.com/jammy/current/
 
     Args:
         arch: str
@@ -220,17 +268,21 @@ def build_image(
         raise OpenstackImageBuildError(f"Unsupported architecture {runner_arch}") from exc
 
     try:
-        conn = _create_connection(cloud_config)
-        existing_image: openstack.image.v2.image.Image
-        for existing_image in conn.search_images(name_or_id=IMAGE_NAME):
-            # images with same name (different ID) can be created and will error during server
-            # instantiation.
-            if not conn.delete_image(name_or_id=existing_image.id, wait=True):
-                raise OpenstackImageBuildError("Failed to delete duplicate image on Openstack.")
-        image: openstack.image.v2.image.Image = conn.create_image(
-            name=IMAGE_NAME, filename=IMAGE_PATH_TMPL.format(architecture=image_arch), wait=True
-        )
-        return image.id
+        with _create_connection(cloud_config) as conn:
+            existing_image: openstack.image.v2.image.Image
+            for existing_image in conn.search_images(name_or_id=IMAGE_NAME):
+                # images with same name (different ID) can be created and will error during server
+                # instantiation.
+                if not conn.delete_image(name_or_id=existing_image.id, wait=True):
+                    raise OpenstackImageBuildError(
+                        "Failed to delete duplicate image on Openstack."
+                    )
+            image: openstack.image.v2.image.Image = conn.create_image(
+                name=IMAGE_NAME,
+                filename=IMAGE_PATH_TMPL.format(architecture=image_arch),
+                wait=True,
+            )
+            return image.id
     except OpenStackCloudException as exc:
         raise OpenstackImageBuildError("Failed to upload image.") from exc
 
@@ -262,10 +314,6 @@ def create_instance_config(
         github_path=path,
         openstack_image=openstack_image,
     )
-
-
-class InstanceLaunchError(Exception):
-    """Exception representing an error during instance launch process."""
 
 
 def _generate_runner_env(
@@ -333,7 +381,7 @@ def create_instance(
         ssh_debug_connections:
 
     Raises:
-        InstanceLaunchError: if any errors occurred while launching Openstack instance.
+        OpenstackInstanceLaunchError: if any errors occurred while launching Openstack instance.
     """
     environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
 
@@ -348,13 +396,13 @@ def create_instance(
     )
 
     try:
-        conn = _create_connection(cloud_config)
-        conn.create_server(
-            name=instance_config.name,
-            image=instance_config.openstack_image,
-            flavor="m1.small",
-            userdata=cloud_userdata,
-            wait=True,
-        )
+        with _create_connection(cloud_config) as conn:
+            conn.create_server(
+                name=instance_config.name,
+                image=instance_config.openstack_image,
+                flavor="m1.small",
+                userdata=cloud_userdata,
+                wait=True,
+            )
     except OpenStackCloudException as exc:
-        raise InstanceLaunchError("Failed to launch instance.") from exc
+        raise OpenstackInstanceLaunchError("Failed to launch instance.") from exc

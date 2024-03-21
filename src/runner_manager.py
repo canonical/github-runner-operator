@@ -136,7 +136,11 @@ class RunnerManager:
             return self._clients.github.get_runner_application(
                 path=self.config.path, arch=self.config.charm_state.arch.value, os=os_name
             )
+<<<<<<< HEAD
         except errors.RunnerBinaryError:
+=======
+        except RunnerBinaryError:
+>>>>>>> c57beb0daae5a7c242a7eb89409db8b6d815029b
             logger.error("Failed to get runner application info.")
             raise
 

@@ -30,10 +30,14 @@ def _validate_cloud_config(cloud_config: dict) -> CloudConfig:
         cloud_config: The configuration in clouds.yaml format to validate.
 
     Raises:
+<<<<<<< HEAD
         OpenStackInvalidConfigError: if the format of the config is invalid.
 
     Returns:
         A typed cloud_config dictionary.
+=======
+        InvalidConfigError: if the format of the config is invalid.
+>>>>>>> c57beb0daae5a7c242a7eb89409db8b6d815029b
     """
     # dict of format: {clouds: <cloud-name>: <cloud-config>}
     try:
@@ -60,6 +64,7 @@ def initialize(cloud_config: dict) -> None:
 
     Validates config and writes it to disk.
 
+<<<<<<< HEAD
     Raises:
         OpenStackInvalidConfigError: If there was an given cloud config.
 
@@ -70,4 +75,13 @@ def initialize(cloud_config: dict) -> None:
         valid_config = _validate_cloud_config(cloud_config)
     except OpenStackInvalidConfigError:
         raise
+=======
+    Args:
+        cloud_config: The configuration in clouds.yaml format to apply.
+
+    Raises:
+        InvalidConfigError: if the format of the config is invalid.
+    """
+    valid_config = _validate_cloud_config(cloud_config)
+>>>>>>> c57beb0daae5a7c242a7eb89409db8b6d815029b
     _write_config_to_disk(valid_config)
