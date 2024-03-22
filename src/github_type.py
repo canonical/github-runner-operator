@@ -45,9 +45,8 @@ class RunnerApplication(TypedDict, total=False):
     architecture: Literal["arm", "arm64", "x64"]
     download_url: str
     filename: str
-    # flake8-docstrings-complete thinks these attributes should not be described in the docstring.
-    temp_download_token: NotRequired[str]  # noqa: DCO063
-    sha256_checksum: NotRequired[str]  # noqa: DCO063
+    temp_download_token: NotRequired[str]
+    sha256_checksum: NotRequired[str]
 
 
 RunnerApplicationList = List[RunnerApplication]
