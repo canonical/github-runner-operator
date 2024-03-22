@@ -174,10 +174,27 @@ def test_update_runner_bin(runner_manager: RunnerManager):
     """
 
     class MockRequestLibResponse:
-        def __init__(self, *arg, **kargs):
+        """A mock requests library response."""
+
+        def __init__(self, *args, **kwargs):
+            """Initialize successful requests library response.
+
+            Args:
+                args: Placeholder for positional arguments.
+                kwargs: Placeholder for keyword arguments.
+            """
             self.status_code = 200
 
-        def iter_content(self, *arg, **kargs):
+        def iter_content(self, *args, **kwargs):
+            """Mock content iterator reteruning an iterator over a single test runner binary.
+
+            Args:
+                args: Placeholder positional arguments.
+                kwargs: Placeholder keyword arguments.
+
+            Returns:
+                An iterator over a single test runner binary.
+            """
             return iter([TEST_BINARY])
 
     runner_manager.runner_bin_path.unlink(missing_ok=True)
@@ -222,7 +239,11 @@ def test_reconcile_remove_runner(runner_manager: RunnerManager):
     """
 
     def mock_get_runners():
-        """Create three mock runners."""
+        """Create three mock runners.
+
+        Returns:
+            Three mock runners.
+        """
         runners = []
         for _ in range(3):
             # 0 is a mock runner id.
@@ -346,11 +367,11 @@ def test_reconcile_issues_reconciliation_metric_event(
     charm_state: MagicMock,
 ):
     """
-    arrange:
-        - Enable issuing of metrics
-        - Mock timestamps
-        - Mock the result of runner_metrics.issue_event to contain 2 RunnerStart and 1 RunnerStop
-            events, meaning one runner was active and one crashed.
+    arrange: \
+        - Enable issuing of metrics \
+        - Mock timestamps \
+        - Mock the result of runner_metrics.issue_event to contain 2 RunnerStart and 1 RunnerStop \
+            events, meaning one runner was active and one crashed. \
         - Create two online runners , one active and one idle.
     act: Reconcile.
     assert: The expected event is issued. We expect two idle runners and one crashed runner
@@ -367,7 +388,11 @@ def test_reconcile_issues_reconciliation_metric_event(
     active_runner_name = f"{runner_manager.instance_name}-2"
 
     def mock_get_runners():
-        """Create three mock runners where one is busy."""
+        """Create three mock runners where one is busy.
+
+        Returns:
+            Mock runners with one busy runner.
+        """
         runners = []
 
         online_idle_runner = RunnerStatus(runner_id=0, exist=True, online=True, busy=False)
@@ -425,8 +450,8 @@ def test_reconcile_places_timestamp_in_newly_created_runner(
     charm_state: MagicMock,
 ):
     """
-    arrange: Enable issuing of metrics, mock timestamps and
-        create the directory for the shared filesystem.
+    arrange: Enable issuing of metrics, mock timestamps and create the directory for the shared\
+        filesystem.
     act: Reconcile to create a runner.
     assert: The expected timestamp is placed in the shared filesystem.
     """
@@ -448,7 +473,7 @@ def test_reconcile_error_on_placing_timestamp_is_ignored(
     runner_manager: RunnerManager, shared_fs: MagicMock, tmp_path: Path, charm_state: MagicMock
 ):
     """
-    arrange: Enable issuing of metrics and do not create the directory for the shared filesystem
+    arrange: Enable issuing of metrics and do not create the directory for the shared filesystem\
         in order to let a FileNotFoundError to be raised inside the RunnerManager.
     act: Reconcile to create a runner.
     assert: No exception is raised.

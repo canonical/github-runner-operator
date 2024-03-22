@@ -9,6 +9,7 @@ remove token for runner.
 import functools
 import logging
 from datetime import datetime
+from typing import Callable, ParamSpec, TypeVar
 from urllib.error import HTTPError
 
 from ghapi.all import GhApi, pages
@@ -28,12 +29,37 @@ from github_type import (
 
 logger = logging.getLogger(__name__)
 
+# Parameters of the function decorated with retry
+ParamT = ParamSpec("ParamT")
+# Return type of the function decorated with retry
+ReturnT = TypeVar("ReturnT")
 
-def catch_http_errors(func):
-    """Catch HTTP errors and raise custom exceptions."""
+
+def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, ReturnT]:
+    """Catch HTTP errors and raise custom exceptions.
+
+    Args:
+        func: The target function to catch common errors for.
+
+    Returns:
+        The decorated function.
+    """
 
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args: ParamT.args, **kwargs: ParamT.kwargs) -> ReturnT:
+        """Catch common errors when using the GitHub API.
+
+        Args:
+            args: Placeholder for positional arguments.
+            kwargs: Placeholder for keyword arguments.
+
+        Raises:
+            TokenError: If there was an error with the provided token.
+            GithubApiError: If there was an unexpected error using the GitHub API.
+
+        Returns:
+            The decorated function.
+        """
         try:
             return func(*args, **kwargs)
         except HTTPError as exc:
@@ -56,7 +82,6 @@ class GithubClient:
 
         Args:
             token: GitHub personal token for API requests.
-            request_session: Requests session for HTTP requests.
         """
         self._token = token
         self._client = GhApi(token=self._token)
@@ -153,6 +178,9 @@ class GithubClient:
     def get_runner_remove_token(self, path: GithubPath) -> str:
         """Get token from GitHub used for removing runners.
 
+        Args:
+            path: The Github org/repo path.
+
         Returns:
             The removing token.
         """
@@ -219,6 +247,10 @@ class GithubClient:
             path: GitHub repository path in the format '<owner>/<repo>'.
             workflow_run_id: Id of the workflow run.
             runner_name: Name of the runner.
+
+        Raises:
+            TokenError: if there was an error with the Github token crdential provided.
+            JobNotFoundError: If no jobs were found.
 
         Returns:
             Job information.

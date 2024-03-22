@@ -26,6 +26,15 @@ from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
 
+from charm_state import (
+    DENYLIST_CONFIG_NAME,
+    PATH_CONFIG_NAME,
+    RECONCILE_INTERVAL_CONFIG_NAME,
+    RUNNER_STORAGE_CONFIG_NAME,
+    TEST_MODE_CONFIG_NAME,
+    TOKEN_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+)
 from runner import Runner
 from runner_manager import RunnerManager
 from tests.status_name import ACTIVE
@@ -106,10 +115,6 @@ async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> No
     Args:
         unit: Unit instance to check for the LXD profile.
         configs: Configs of the application.
-
-    Raises:
-        AssertionError: Unable to find an LXD profile with matching resource
-            config.
     """
     cpu = configs["vm-cpu"]["value"]
     mem = configs["vm-memory"]["value"]
@@ -159,10 +164,6 @@ async def wait_till_num_of_runners(unit: Unit, num: int) -> None:
     Args:
         unit: Unit instance to check for the LXD profile.
         num: Number of runner instances to check for.
-
-    Raises:
-        AssertionError: Correct number of runners is not found within timeout
-            limit.
     """
     return_code, stdout = await run_in_unit(unit, "lxc list --format json")
     assert return_code == 0
@@ -247,6 +248,12 @@ async def run_in_lxd_instance(
 
 
 async def start_test_http_server(unit: Unit, port: int):
+    """Start test http server.
+
+    Args:
+        unit: The unit to start the test server in.
+        port: Http server port.
+    """
     await run_in_unit(
         unit,
         f"""cat <<EOT >> /etc/systemd/system/test-http-server.service
@@ -281,7 +288,7 @@ async def ensure_charm_has_runner(app: Application, model: Model) -> None:
         app: The GitHub Runner Charm app to create the runner for.
         model: The machine charm model.
     """
-    await app.set_config({"virtual-machines": "1"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await reconcile(app=app, model=model)
     await wait_till_num_of_runners(unit=app.units[0], num=1)
 
@@ -293,6 +300,9 @@ async def get_runner_name(unit: Unit) -> str:
 
     Args:
         unit: The GitHub Runner Charm unit to get the runner name for.
+
+    Returns:
+        The Github runner name deployed in the given unit.
     """
     runners = await get_runner_names(unit)
     assert len(runners) == 1
@@ -336,6 +346,7 @@ async def deploy_github_runner_charm(
         app_name: Application name for the deployment.
         path: Path representing the GitHub repo/org.
         token: GitHub Personal Token for the application to use.
+        runner_storage: Runner storage to use, i.e. "memory" or "juju_storage",
         http_proxy: HTTP proxy for the application to use.
         https_proxy: HTTPS proxy for the application to use.
         no_proxy: No proxy configuration for the application.
@@ -344,6 +355,9 @@ async def deploy_github_runner_charm(
             otherwise.
         config: Additional custom config to use.
         wait_idle: wait for model to become idle.
+
+    Returns:
+        The charm application that was deployed.
     """
     subprocess.run(["sudo", "modprobe", "br_netfilter"])
 
@@ -361,13 +375,13 @@ async def deploy_github_runner_charm(
         storage["runner"] = {"pool": "rootfs", "size": 11}
 
     default_config = {
-        "path": path,
-        "token": token,
-        "virtual-machines": 0,
-        "denylist": "10.10.0.0/16",
-        "test-mode": "insecure",
-        "reconcile-interval": reconcile_interval,
-        "runner-storage": runner_storage,
+        PATH_CONFIG_NAME: path,
+        TOKEN_CONFIG_NAME: token,
+        VIRTUAL_MACHINES_CONFIG_NAME: 0,
+        DENYLIST_CONFIG_NAME: "10.10.0.0/16",
+        TEST_MODE_CONFIG_NAME: "insecure",
+        RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
+        RUNNER_STORAGE_CONFIG_NAME: runner_storage,
     }
 
     if config:
@@ -412,6 +426,9 @@ def get_workflow_runs(
         workflow: The target workflow to get the run for.
         runner_name: The runner name the workflow job is assigned to.
         branch: The branch the workflow is run on.
+
+    Yields:
+        The workflow run.
     """
     if branch is None:
         branch = github.GithubObject.NotSet
@@ -477,6 +494,7 @@ def _get_latest_run(
     Args:
         workflow: The workflow to get the latest run for.
         start_time: The minimum start time of the run.
+        branch: The branch in which the workflow belongs to.
 
     Returns:
         The latest workflow run if the workflow has started. None otherwise.
@@ -494,6 +512,10 @@ def _is_workflow_run_complete(run: WorkflowRun) -> bool:
 
     Args:
         run: The workflow run to check status for.
+
+    Returns:
+        Whether the run status is "completed".
+
     """
     if run.update():
         return run.status == "completed"
@@ -519,6 +541,7 @@ async def dispatch_workflow(
         conclusion: The expected workflow run conclusion.
         workflow_id_or_name: The workflow filename in .github/workflows in main branch to run or
             its id.
+        dispatch_input: Workflow input values.
 
     Returns:
         A completed workflow.

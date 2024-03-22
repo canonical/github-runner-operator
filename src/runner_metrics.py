@@ -8,7 +8,7 @@ import logging
 from enum import Enum
 from json import JSONDecodeError
 from pathlib import Path
-from typing import Iterator, Optional, Type
+from typing import Generator, Optional, Type
 
 from pydantic import BaseModel, Field, NonNegativeFloat, ValidationError
 
@@ -29,7 +29,7 @@ RUNNER_INSTALLED_TS_FILE_NAME = "runner-installed.timestamp"
 class PreJobMetrics(BaseModel):
     """Metrics for the pre-job phase of a runner.
 
-    Args:
+    Attributes:
         timestamp: The UNIX time stamp of the time at which the event was originally issued.
         workflow: The workflow name.
         workflow_run_id: The workflow run id.
@@ -45,7 +45,13 @@ class PreJobMetrics(BaseModel):
 
 
 class PostJobStatus(str, Enum):
-    """The status of the post-job phase of a runner."""
+    """The status of the post-job phase of a runner.
+
+    Attributes:
+        NORMAL: Represents a normal post-job.
+        ABNORMAL: Represents an error with post-job.
+        REPO_POLICY_CHECK_FAILURE: Represents an error with repo-policy-compliance check.
+    """
 
     NORMAL = "normal"
     ABNORMAL = "abnormal"
@@ -65,7 +71,7 @@ class CodeInformation(BaseModel):
 class PostJobMetrics(BaseModel):
     """Metrics for the post-job phase of a runner.
 
-    Args:
+    Attributes:
         timestamp: The UNIX time stamp of the time at which the event was originally issued.
         status: The status of the job.
         status_info: More information about the status.
@@ -79,7 +85,7 @@ class PostJobMetrics(BaseModel):
 class RunnerMetrics(BaseModel):
     """Metrics for a runner.
 
-    Args:
+    Attributes:
         installed_timestamp: The UNIX time stamp of the time at which the runner was installed.
         pre_job: The metrics for the pre-job phase.
         post_job: The metrics for the post-job phase.
@@ -112,6 +118,36 @@ def _inspect_file_sizes(fs: shared_fs.SharedFilesystem) -> tuple[Path, ...]:
     )
 
 
+def _extract_metrics_from_fs_file(
+    fs: shared_fs.SharedFilesystem, runner_name: str, filename: str
+) -> dict | None:
+    """Extract metrics from a shared filesystem.
+
+    Args:
+        fs: The shared filesystem for a specific runner.
+        runner_name: The name of the lxd runner to extract metrics from.
+        filename: The metrics filename.
+
+    Raises:
+        CorruptMetricDataError: If there was any errors found within metric.
+
+    Returns:
+        Metrics for the given runner if present.
+    """
+    try:
+        job_metrics = json.loads(fs.path.joinpath(filename).read_text())
+    except FileNotFoundError:
+        logger.warning("%s not found for runner %s.", filename, runner_name)
+        return None
+    except JSONDecodeError as exc:
+        raise CorruptMetricDataError(str(exc)) from exc
+    if not isinstance(job_metrics, dict):
+        raise CorruptMetricDataError(
+            f"{filename} metrics for runner {runner_name} is not a JSON object."
+        )
+    return job_metrics
+
+
 def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerMetrics]:
     """Extract metrics from a shared filesystem.
 
@@ -139,32 +175,20 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
         return None
 
     try:
-        pre_job_metrics = json.loads(fs.path.joinpath(PRE_JOB_METRICS_FILE_NAME).read_text())
+        pre_job_metrics = _extract_metrics_from_fs_file(
+            fs=fs, runner_name=runner_name, filename=PRE_JOB_METRICS_FILE_NAME
+        )
+        if not pre_job_metrics:
+            return None
         logger.debug("Pre-job metrics for runner %s: %s", runner_name, pre_job_metrics)
-    except FileNotFoundError:
-        logger.warning("%s not found for runner %s.", PRE_JOB_METRICS_FILE_NAME, runner_name)
-        return None
-    except JSONDecodeError as exc:
-        raise CorruptMetricDataError(str(exc)) from exc
 
-    try:
-        post_job_metrics = json.loads(fs.path.joinpath(POST_JOB_METRICS_FILE_NAME).read_text())
+        post_job_metrics = _extract_metrics_from_fs_file(
+            fs=fs, runner_name=runner_name, filename=POST_JOB_METRICS_FILE_NAME
+        )
         logger.debug("Post-job metrics for runner %s: %s", runner_name, post_job_metrics)
-    except FileNotFoundError:
-        logger.warning("%s not found for runner %s", POST_JOB_METRICS_FILE_NAME, runner_name)
-        post_job_metrics = None
-    except JSONDecodeError as exc:
-        raise CorruptMetricDataError(str(exc)) from exc
-
-    if not isinstance(pre_job_metrics, dict):
-        raise CorruptMetricDataError(
-            f"Pre-job metrics for runner {runner_name} is not a JSON object."
-        )
-
-    if not isinstance(post_job_metrics, dict) and post_job_metrics is not None:
-        raise CorruptMetricDataError(
-            f"Post-job metrics for runner {runner_name} is not a JSON object."
-        )
+    except CorruptMetricDataError as exc:
+        logger.error("Error extracting metrics from shared filesystem, %s", exc)
+        raise
 
     try:
         return RunnerMetrics(
@@ -181,6 +205,7 @@ def _clean_up_shared_fs(fs: shared_fs.SharedFilesystem) -> None:
     """Clean up the shared filesystem.
 
     Remove all metric files and afterwards the shared filesystem.
+
     Args:
         fs: The shared filesystem for a specific runner.
     """
@@ -226,7 +251,7 @@ def _extract_fs(
     return metrics_from_fs
 
 
-def extract(ignore_runners: set[str]) -> Iterator[RunnerMetrics]:
+def extract(ignore_runners: set[str]) -> Generator[RunnerMetrics, None, None]:
     """Extract metrics from runners.
 
     The metrics are extracted from the shared filesystems of the runners.
@@ -241,8 +266,8 @@ def extract(ignore_runners: set[str]) -> Iterator[RunnerMetrics]:
     Args:
         ignore_runners: The set of runners to ignore.
 
-    Returns:
-        An iterator over the extracted metrics.
+    Yields:
+        Extracted runner metrics of a particular runner.
     """
     for fs in shared_fs.list_all():
         if fs.runner_name not in ignore_runners:

@@ -3,12 +3,16 @@
 
 """Module for managing Openstack cloud."""
 
+import logging
 from pathlib import Path
 from typing import TypedDict, cast
 
 import yaml
 
 from errors import OpenStackInvalidConfigError
+
+logger = logging.getLogger(__name__)
+
 
 CLOUDS_YAML_PATH = Path(Path.home() / ".config/openstack/clouds.yaml")
 
@@ -30,7 +34,10 @@ def _validate_cloud_config(cloud_config: dict) -> CloudConfig:
         cloud_config: The configuration in clouds.yaml format to validate.
 
     Raises:
-        InvalidConfigError: if the format of the config is invalid.
+        OpenStackInvalidConfigError: if the format of the config is invalid.
+
+    Returns:
+        A typed cloud_config dictionary.
     """
     # dict of format: {clouds: <cloud-name>: <cloud-config>}
     try:
@@ -57,11 +64,15 @@ def initialize(cloud_config: dict) -> None:
 
     Validates config and writes it to disk.
 
+    Raises:
+        OpenStackInvalidConfigError: If there was an given cloud config.
+
     Args:
         cloud_config: The configuration in clouds.yaml format to apply.
-
-    Raises:
-        InvalidConfigError: if the format of the config is invalid.
     """
-    valid_config = _validate_cloud_config(cloud_config)
+    try:
+        valid_config = _validate_cloud_config(cloud_config)
+    except OpenStackInvalidConfigError as exc:
+        logger.error("Error validating cloud config, %s", exc)
+        raise
     _write_config_to_disk(valid_config)
