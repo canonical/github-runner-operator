@@ -441,51 +441,6 @@ def get_workflow_runs(
             yield run
 
 
-async def _wait_until_runner_is_used_up(runner_name: str, unit: Unit):
-    """Wait until the runner is used up.
-
-    Args:
-        runner_name: The runner name to wait for.
-        unit: The unit which contains the runner.
-    """
-    for _ in range(30):
-        runners = await get_runner_names(unit)
-        if runner_name not in runners:
-            break
-        await sleep(30)
-    else:
-        assert False, "Timeout while waiting for the runner to be used up"
-
-
-async def _assert_workflow_run_conclusion(
-    runner_name: str, conclusion: str, workflow: Workflow, start_time: datetime
-):
-    """Assert that the workflow run has the expected conclusion.
-
-    Args:
-        runner_name: The runner name to assert the workflow run conclusion for.
-        conclusion: The expected workflow run conclusion.
-        workflow: The workflow to assert the workflow run conclusion for.
-        start_time: The start time of the workflow.
-    """
-    log_found = False
-    for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
-        latest_job: WorkflowJob = run.jobs()[0]
-        logs = get_job_logs(job=latest_job)
-
-        if runner_name in logs:
-            log_found = True
-            assert latest_job.conclusion == conclusion, (
-                f"Job {latest_job.name} for {runner_name} expected {conclusion}, "
-                f"got {latest_job.conclusion}"
-            )
-
-    assert log_found, (
-        f"No run with runner({runner_name}) log found for workflow({workflow.name}) "
-        f"starting from {start_time} with conclusion {conclusion}"
-    )
-
-
 def _get_latest_run(
     workflow: Workflow, start_time: datetime, branch: Branch | None = None
 ) -> WorkflowRun | None:

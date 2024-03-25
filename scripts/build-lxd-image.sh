@@ -99,6 +99,13 @@ retry '/snap/bin/lxc exec builder -- /usr/bin/nslookup github.com' 'Wait for net
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget unzip gh -yq
 
 # Uninstall unattended-upgrades, to avoid lock errors when unattended-upgrades is active in the runner
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/systemctl stop apt-daily.timer
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/systemctl disable apt-daily.timer
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/systemctl mask apt-daily.service
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/systemctl stop apt-daily-upgrade.timer
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/systemctl disable apt-daily-upgrade.timer
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/systemctl mask apt-daily-upgrade.service
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/systemctl daemon-reload
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get purge unattended-upgrades -yq
 
 if [[ -n "$HTTP_PROXY" ]]; then

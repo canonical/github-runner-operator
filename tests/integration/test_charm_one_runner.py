@@ -265,6 +265,28 @@ async def test_runner_labels(
     assert found, "Runner with testing label not found."
 
 
+async def test_disabled_apt_daily_upgrades(model: Model, app: Application) -> None:
+    """
+    arrange: Given a github runner running on lxd image.
+    act: When the runner is spawned.
+    assert: No apt related background services are running.
+    """
+    await model.wait_for_idle()
+    unit = app.units[0]
+    await wait_till_num_of_runners(unit, num=1)
+    names = await get_runner_names(unit)
+    assert names, "LXD runners not ready"
+
+    ret_code, stdout = await run_in_lxd_instance(
+        unit, names[0], "sudo systemctl list-units --no-pager"
+    )
+    assert ret_code == 0, "Failed to list systemd units"
+    assert stdout, "No units listed in stdout"
+
+    assert "apt-daily" not in stdout  # this also checks for apt-daily-upgrade service
+    assert "unattended-upgrades" not in stdout
+
+
 async def test_token_config_changed_insufficient_perms(
     model: Model, app: Application, token: str
 ) -> None:
