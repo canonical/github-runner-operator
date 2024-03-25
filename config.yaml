@@ -30,6 +30,12 @@ options:
     description: |
       (Experimental, under development) The openstack flavour to use to spawn virtual machines. 
       This feature is not yet ready and is under development.
+  experimental-openstack-network:
+    type: string
+    default: ""
+    description: |
+      (Experimental, under development) The openstack network for virtual machines. This feature 
+      is not yet ready and is under development.
   experimental-use-aproxy:
     type: boolean
     default: false

@@ -27,6 +27,7 @@ bases:
       channel: "22.04"
       architectures:
       - amd64
+      - arm64
   - build-on:
     - name: "ubuntu"
       channel: "22.04"

@@ -41,6 +41,7 @@ from charm_state import (
     CharmConfigInvalidError,
     CharmState,
     GithubPath,
+    InstanceType,
     ProxyConfig,
     RunnerStorage,
     VirtualMachineResources,
@@ -63,7 +64,7 @@ from github_type import GitHubRunnerStatus
 from openstack_cloud import openstack_manager
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
-from runner_manager_type import FlushMode
+from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
 from utilities import bytes_with_unit_to_kib, execute_command, retry
 
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
@@ -292,6 +293,43 @@ class GithubRunnerCharm(CharmBase):
             logger.info("Restart repo-policy-compliance service")
             raise
 
+    def _get_openstack_runner_manager(
+        self, state: CharmState, token: str | None = None, path: GithubPath | None = None
+    ) -> openstack_manager.OpenstackRunnerManager:
+        """Get OpenstackRunnerManager instance.
+
+        TODO: Combine this with `_get_runner_manager` during the runner manager interface refactor.
+
+        Args:
+            state: Charm state.
+            token: GitHub personal access token to manage the runners with. If None the token in
+                charm state is used.
+            path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
+                name. If None the path in charm state is used.
+
+        Returns:
+            An instance of OpenstackRunnerManager.
+        """
+        if token is None:
+            token = state.charm_config.token
+        if path is None:
+            path = state.charm_config.path
+
+        app_name, unit = self.unit.name.rsplit("/", 1)
+        openstack_runner_manager_config = OpenstackRunnerManagerConfig(
+            charm_state=state,
+            path=path,
+            token=token,
+            flavour=state.runner_config.openstack_flavour,
+            network=state.runner_config.openstack_network,
+        )
+        return openstack_manager.OpenstackRunnerManager(
+            app_name,
+            unit,
+            openstack_runner_manager_config,
+            state.charm_config.openstack_clouds_yaml,
+        )
+
     def _get_runner_manager(
         self, state: CharmState, token: str | None = None, path: GithubPath | None = None
     ) -> RunnerManager:
@@ -341,21 +379,6 @@ class GithubRunnerCharm(CharmBase):
             ),
         )
 
-    def _block_on_openstack_config(self, state: CharmState) -> bool:
-        """Set unit to blocked status on openstack configuration set.
-
-        Returns:
-            Whether openstack configuration is enabled.
-        """
-        if state.charm_config.openstack_clouds_yaml:
-            # Go into BlockedStatus as Openstack is not supported yet
-            self.unit.status = BlockedStatus(
-                "OpenStack integration is not supported yet. "
-                "Please remove the openstack-clouds-yaml config."
-            )
-            return True
-        return False
-
     @catch_charm_errors
     def _on_install(self, _event: InstallEvent) -> None:
         """Handle the installation of charm.
@@ -365,35 +388,21 @@ class GithubRunnerCharm(CharmBase):
         """
         state = self._setup_state()
 
-        if state.charm_config.openstack_clouds_yaml:
+        if state.instance_type == InstanceType.OPENSTACK:
             # Only build it in test mode since it may interfere with users systems.
             if self.config.get("test-mode") == "insecure":
                 self.unit.status = MaintenanceStatus("Building Openstack image")
                 github = GithubClient(token=state.charm_config.token)
-                image = openstack_manager.build_image(
+                openstack_manager.build_image(
                     arch=state.arch,
                     cloud_config=state.charm_config.openstack_clouds_yaml,
                     github_client=github,
                     path=state.charm_config.path,
                     proxies=state.proxy_config,
                 )
-                instance_config = openstack_manager.create_instance_config(
-                    unit_name=self.unit.name,
-                    openstack_image=image,
-                    path=state.charm_config.path,
-                    github_client=github,
-                )
-                self.unit.status = MaintenanceStatus("Creating Openstack test instance")
-                instance = openstack_manager.create_instance(
-                    cloud_config=state.charm_config.openstack_clouds_yaml,
-                    instance_config=instance_config,
-                    proxies=state.proxy_config,
-                    dockerhub_mirror=state.charm_config.dockerhub_mirror,
-                    ssh_debug_connections=state.ssh_debug_connections,
-                )
-                logger.info("OpenStack instance: %s", instance)
-            self._block_on_openstack_config(state)
-            return
+                # WIP: Add scheduled building of image during refactor.
+                self.unit.status = ActiveStatus()
+                return
 
         self.unit.status = MaintenanceStatus("Installing packages")
         try:
@@ -444,7 +453,10 @@ class GithubRunnerCharm(CharmBase):
         """
         state = self._setup_state()
 
-        if self._block_on_openstack_config(state):
+        if state.instance_type == InstanceType.OPENSTACK:
+            runner_manager = self._get_openstack_runner_manager(state)
+            runner_manager.reconcile(state.runner_config.virtual_machines)
+            self.unit.status = ActiveStatus()
             return
 
         runner_manager = self._get_runner_manager(state)
@@ -554,9 +566,6 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
         self._set_reconcile_timer()
 
-        if self._block_on_openstack_config(state):
-            return
-
         prev_config_for_flush: dict[str, str] = {}
         should_flush_runners = False
         if state.charm_config.token != self._stored.token:
@@ -579,6 +588,13 @@ class GithubRunnerCharm(CharmBase):
                 prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
 
         state = self._setup_state()
+
+        if state.instance_type == InstanceType.OPENSTACK:
+            runner_manager = self._get_openstack_runner_manager(state)
+            runner_manager.reconcile(state.runner_config.virtual_machines)
+            self.unit.status = ActiveStatus()
+            return
+
         self._refresh_firewall(state)
 
         runner_manager = self._get_runner_manager(state)
@@ -660,7 +676,10 @@ class GithubRunnerCharm(CharmBase):
         """
         state = self._setup_state()
 
-        if self._block_on_openstack_config(state):
+        if state.instance_type == InstanceType.OPENSTACK:
+            runner_manager = self._get_openstack_runner_manager(state)
+            runner_manager.reconcile(state.runner_config.virtual_machines)
+            self.unit.status = ActiveStatus()
             return
 
         runner_manager = self._get_runner_manager(state)
@@ -787,9 +806,6 @@ class GithubRunnerCharm(CharmBase):
         """
         self._event_timer.disable_event_timer("reconcile-runners")
         state = self._setup_state()
-
-        if self._block_on_openstack_config(state):
-            return
 
         runner_manager = self._get_runner_manager(state)
         runner_manager.flush(FlushMode.FLUSH_BUSY)

@@ -13,7 +13,7 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L232"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L237"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
@@ -52,14 +52,15 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L289"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L294"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
 ```python
 create_instance_config(
-    unit_name: str,
-    openstack_image: Image,
+    app_name: str,
+    unit_num: int,
+    openstack_image: str,
     path: GithubOrg | GithubRepo,
     github_client: GithubClient
 ) → InstanceConfig
@@ -79,7 +80,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/utilities.py#L362"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L367"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
@@ -111,7 +112,7 @@ Create an OpenStack instance.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L75"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L80"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `ProxyStringValues`
 Wrapper class to proxy values to string. 
@@ -130,7 +131,7 @@ Wrapper class to proxy values to string.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L186"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L191"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `InstanceConfig`
 The configuration values for creating a single runner instance. 
@@ -155,7 +156,7 @@ __init__(
     labels: Iterable[str],
     registration_token: str,
     github_path: GithubOrg | GithubRepo,
-    openstack_image: Image
+    openstack_image: str
 ) → None
 ```
 
@@ -165,5 +166,91 @@ __init__(
 
 
 
+
+
+---
+
+<a href="../src/openstack_cloud/openstack_manager.py#L409"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `OpenstackRunnerManager`
+Runner manager for OpenStack-based instances. 
+
+
+
+**Attributes:**
+ 
+ - <b>`app_name`</b>:  An name for the set of runners. 
+ - <b>`unit`</b>:  Unit number of the set of runners. 
+ - <b>`instance_name`</b>:  Prefix of the name for the set of runners. 
+ - <b>`flavour`</b>:  OpenStack flavour for defining the runner resources. 
+ - <b>`network`</b>:  OpenStack network for runner network access. 
+
+<a href="../src/openstack_cloud/openstack_manager.py#L420"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>method</kbd> `__init__`
+
+```python
+__init__(
+    app_name: str,
+    unit_num: int,
+    openstack_runner_manager_config: OpenstackRunnerManagerConfig,
+    cloud_config: dict[str, dict]
+)
+```
+
+Construct OpenstackRunnerManager object. 
+
+
+
+**Args:**
+ 
+ - <b>`app_name`</b>:  An name for the set of runners. 
+ - <b>`unit`</b>:  Unit number of the set of runners. 
+ - <b>`openstack_runner_manager_config`</b>:  Configurations related to runner manager. 
+ - <b>`cloud_config`</b>:  The openstack clouds.yaml in dict format. 
+
+
+
+
+---
+
+<a href="../src/openstack_cloud/openstack_manager.py#L442"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>method</kbd> `get_key_path`
+
+```python
+get_key_path(name: str) → Path
+```
+
+Get the filepath for storing private SSH of a runner. 
+
+
+
+**Args:**
+ 
+ - <b>`name`</b>:  The name of the runner. 
+
+---
+
+<a href="../src/openstack_cloud/openstack_manager.py#L558"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>method</kbd> `reconcile`
+
+```python
+reconcile(quantity: int) → int
+```
+
+Reconcile the quantity of runners. 
+
+
+
+**Args:**
+ 
+ - <b>`quantity`</b>:  The number of intended runners. 
+
+
+
+**Returns:**
+ The change in number of runners. 
 
 

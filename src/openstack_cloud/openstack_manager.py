@@ -7,6 +7,7 @@ import logging
 import secrets
 from contextlib import contextmanager
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Generator, Iterable, Literal, NamedTuple, Optional
 
 import jinja2
@@ -15,6 +16,8 @@ import openstack.compute.v2.server
 import openstack.connection
 import openstack.exceptions
 import openstack.image.v2.image
+from fabric import Connection as SshConnection
+from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import OpenStackCloudException
 
 from charm_state import Arch, ProxyConfig, SSHDebugConnection, UnsupportedArchitectureError
@@ -26,8 +29,9 @@ from errors import (
     SubprocessError,
 )
 from github_client import GithubClient
-from github_type import RunnerApplication
-from runner_type import GithubPath
+from github_type import RunnerApplication, SelfHostedRunner
+from runner_manager_type import OpenstackRunnerManagerConfig
+from runner_type import GithubPath, RunnerByHealth, RunnerGithubInfo
 from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
@@ -35,6 +39,7 @@ logger = logging.getLogger(__name__)
 IMAGE_PATH_TMPL = "jammy-server-cloudimg-{architecture}-compressed.img"
 IMAGE_NAME = "jammy"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
+_SSH_KEY_PATH = Path("/root/.ssh")
 
 
 @contextmanager
@@ -199,7 +204,7 @@ class InstanceConfig:
     labels: Iterable[str]
     registration_token: str
     github_path: GithubPath
-    openstack_image: openstack.image.v2.image.Image
+    openstack_image: str
 
 
 def _get_supported_runner_arch(arch: str) -> Literal["amd64", "arm64"]:
@@ -287,8 +292,9 @@ def build_image(
 
 
 def create_instance_config(
-    unit_name: str,
-    openstack_image: openstack.image.v2.image.Image,
+    app_name: str,
+    unit_num: int,
+    openstack_image: str,
     path: GithubPath,
     github_client: GithubClient,
 ) -> InstanceConfig:
@@ -300,7 +306,6 @@ def create_instance_config(
         path: Github organisation or repository path.
         github_client: The Github client to interact with Github API.
     """
-    app_name, unit_num = unit_name.rsplit("/", 1)
     suffix = secrets.token_hex(12)
     registration_token = github_client.get_runner_registration_token(path=path)
     return InstanceConfig(
@@ -399,3 +404,186 @@ def create_instance(
             )
     except OpenStackCloudException as exc:
         raise OpenstackInstanceLaunchError("Failed to launch instance.") from exc
+
+
+class OpenstackRunnerManager:
+    """Runner manager for OpenStack-based instances.
+
+    Attributes:
+        app_name: An name for the set of runners.
+        unit: Unit number of the set of runners.
+        instance_name: Prefix of the name for the set of runners.
+        flavour: OpenStack flavour for defining the runner resources.
+        network: OpenStack network for runner network access.
+    """
+
+    def __init__(
+        self,
+        app_name: str,
+        unit_num: int,
+        openstack_runner_manager_config: OpenstackRunnerManagerConfig,
+        cloud_config: dict[str, dict],
+    ):
+        """Construct OpenstackRunnerManager object.
+
+        Args:
+            app_name: An name for the set of runners.
+            unit: Unit number of the set of runners.
+            openstack_runner_manager_config: Configurations related to runner manager.
+            cloud_config: The openstack clouds.yaml in dict format.
+        """
+        self.app_name = app_name
+        self.unit_num = unit_num
+        self.instance_name = f"{app_name}-{unit_num}"
+        self._config = openstack_runner_manager_config
+        self._cloud_config = cloud_config
+        self._github = GithubClient(token=self._config.token)
+
+    def get_key_path(self, name: str) -> Path:
+        """Get the filepath for storing private SSH of a runner.
+
+        Args:
+            name: The name of the runner.
+        """
+        return _SSH_KEY_PATH / name
+
+    def _setup_runner_keypair(self, conn: OpenstackConnection, name: str):
+        """Set up the SSH keypair for a runner.
+
+        Args:
+            conn: The connection object to access OpenStack cloud.
+            name: The name of the runner.
+        """
+        private_key_path = self.get_key_path(name)
+
+        if private_key_path.exists():
+            logger.warning("Existing private key file for %s found, removing it.", name)
+            private_key_path.unlink()
+
+        keypair = conn.create_keypair(name=name)
+        private_key_path.write_text(keypair.private_key)
+
+    def _create_runner(self, conn: OpenstackConnection) -> None:
+        """Create a runner on OpenStack cloud.
+
+        Args:
+            conn: The connection object to access OpenStack cloud.
+        """
+        environment = jinja2.Environment(
+            loader=jinja2.FileSystemLoader("templates"), autoescape=True
+        )
+
+        env_contents = _generate_runner_env(
+            templates_env=environment,
+            proxies=self._config.charm_state.proxy_config,
+            dockerhub_mirror=self._config.dockerhub_mirror,
+            ssh_debug_connections=self._config.charm_state.ssh_debug_connections,
+        )
+        instance_config = create_instance_config(
+            self.app_name, self.unit_num, IMAGE_NAME, self._config.path, self._github
+        )
+        cloud_userdata = _generate_cloud_init_userdata(
+            templates_env=environment, instance_config=instance_config, runner_env=env_contents
+        )
+
+        self._setup_runner_keypair(conn, instance_config.name)
+        conn.create_server(
+            name=instance_config.name,
+            image=IMAGE_NAME,
+            flavour=self._config.flavour,
+            network=self._config.network,
+            userdata=cloud_userdata,
+            wait=True,
+        )
+
+    def _get_github_runner_info(self) -> tuple[RunnerGithubInfo]:
+        """Get information on GitHub for the runners.
+
+        Returns:
+            Collection of runner GitHub information.
+        """
+        remote_runners_list: list[SelfHostedRunner] = self._github.get_runner_github_info(
+            self._config.path
+        )
+        logger.debug("List of runners found on GitHub:%s", remote_runners_list)
+        return tuple(
+            RunnerGithubInfo(runner.name, runner.id, runner.online, runner.busy)
+            for runner in remote_runners_list
+            if runner.name.startswith(f"{self.instance_name}-")
+        )
+
+    def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
+        """Get status on OpenStack of each runner.
+
+        Args:
+            conn: The connection object to access OpenStack cloud.
+
+        Returns:
+            Runner status grouped by health.
+        """
+        healthy_runner = []
+        unhealthy_runner = []
+        openstack_instances = [
+            instance
+            for instance in conn.list_servers()
+            if instance.name.startswith(f"{self.instance_name}-")
+        ]
+
+        for instance in openstack_instances:
+            healthy = False
+            for address in instance.addresses[self._config.network]:
+                ip = address["addr"]
+                ssh_conn = SshConnection(
+                    host=ip,
+                    user="ubuntu",
+                    connect_kwargs={"key_filename": self.get_key_path(instance.name)},
+                )
+
+                result = ssh_conn.run("ps aux")
+                if not result.ok:
+                    continue
+                if "openstack-userdata.sh" in result.stdout:
+                    healthy = True
+            if healthy:
+                healthy_runner.append(instance.name)
+            else:
+                unhealthy_runner.append(instance.name)
+
+        return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
+
+    def _remove_runners(self):
+        """Remove runners."""
+        raise NotImplementedError()
+
+    def reconcile(self, quantity: int) -> int:
+        """Reconcile the quantity of runners.
+
+        Args:
+            quantity: The number of intended runners.
+
+        Returns:
+            The change in number of runners.
+        """
+        github_info = self._get_github_runner_info()
+        online_runners = [runner.name for runner in github_info if runner.status.online]
+        logger.info("Found %s existing openstack runners", len(online_runners))
+
+        with _create_connection(self._cloud_config) as conn:
+            runner_by_health = self._get_openstack_runner_status(conn)
+
+            # Clean up offline runners.
+            if runner_by_health.unhealthy:
+                self._remove_runners()
+                raise NotImplementedError()
+
+            delta = quantity - len(runner_by_health.healthy)
+
+            # Spawn new runners
+            if delta > 0:
+                self._create_runner(conn)
+            elif delta < 0:
+                self._remove_runners()
+            else:
+                logger.info("No changes to number of runners needed")
+
+            return delta

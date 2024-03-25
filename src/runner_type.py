@@ -73,3 +73,20 @@ class RunnerStatus:
     exist: bool = False
     online: bool = False
     busy: bool = False
+
+
+@dataclass
+class RunnerGithubInfo:
+    """GitHub info of a runner.
+
+    Attributes:
+        runner_name: Name of the runner.
+        runner_id: ID of the runner assigned by GitHub.
+        online: Whether GitHub marks this runner as online.
+        busy: Whether GitHub marks this runner as busy.
+    """
+
+    runner_name: str
+    runner_id: int
+    online: bool
+    busy: bool

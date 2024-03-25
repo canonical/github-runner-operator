@@ -354,10 +354,12 @@ class OpenstackRunnerConfig(BaseModel):
     Attributes:
         virtual_machines: Number of virtual machine-based runner to spawn.
         openstack_flavour: Flavour on openstack to use for virtual machines.
+        openstack_network: Network on openstack to use for virtual machines.
     """
 
     virtual_machines: int
     openstack_flavour: str
+    openstack_network: str
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "OpenstackRunnerConfig":
@@ -377,10 +379,12 @@ class OpenstackRunnerConfig(BaseModel):
             ) from err
 
         openstack_flavour = charm.config["experimental-openstack-flavour"]
+        openstack_network = charm.config["experimental-openstack-network"]
 
         return cls(
             virtual_machines=virtual_machines,
             openstack_flavour=openstack_flavour,
+            openstack_network=openstack_network,
         )
 
 
@@ -685,21 +689,17 @@ class CharmState:
             logger.error("Invalid charm config: %s", exc)
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
-        runner_config: RunnerConfig
-        if charm_config.openstack_clouds_yaml is not None:
-            instance_type = InstanceType.OPENSTACK
-            try:
+        try:
+            runner_config: RunnerConfig
+            if charm_config.openstack_clouds_yaml is not None:
+                instance_type = InstanceType.OPENSTACK
                 runner_config = OpenstackRunnerConfig.from_charm(charm)
-            except (ValidationError, ValueError) as exc:
-                logger.error("Invalid charm config: %s", exc)
-                raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
-        else:
-            instance_type = InstanceType.LOCAL_LXD
-            try:
+            else:
+                instance_type = InstanceType.LOCAL_LXD
                 runner_config = LocalLxdRunnerConfig.from_charm(charm)
-            except (ValidationError, ValueError) as exc:
-                logger.error("Invalid charm config: %s", exc)
-                raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
+        except (ValidationError, ValueError) as exc:
+            logger.error("Invalid charm config: %s", exc)
+            raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
         if (
             prev_state is not None
