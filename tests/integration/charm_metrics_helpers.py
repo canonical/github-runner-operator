@@ -9,15 +9,20 @@ import logging
 from time import sleep
 
 import requests
+from github.Branch import Branch
+from github.GithubException import GithubException
 from github.Repository import Repository
 from github.Workflow import Workflow
+from github.WorkflowJob import WorkflowJob
 from juju.application import Application
 from juju.unit import Unit
 
 from github_type import JobConclusion
 from metrics import METRICS_LOG_PATH
 from runner_metrics import PostJobStatus
-from tests.integration.helpers import get_runner_name, run_in_unit
+from tests.integration.helpers import get_runner_name, run_in_unit, wait_for
+
+logger = logging.getLogger(__name__)
 
 TEST_WORKFLOW_NAMES = [
     "Workflow Dispatch Tests",
@@ -26,29 +31,37 @@ TEST_WORKFLOW_NAMES = [
 ]
 
 
-async def wait_for_workflow_to_start(unit: Unit, workflow: Workflow):
+async def wait_for_workflow_to_start(unit: Unit, workflow: Workflow, branch: Branch | None = None):
     """Wait for the workflow to start.
 
     Args:
         unit: The unit which contains the runner.
         workflow: The workflow to wait for.
+        branch: The branch where the workflow belongs to.
     """
     runner_name = await get_runner_name(unit)
-    for _ in range(30):
-        for run in workflow.get_runs():
-            jobs = run.jobs()
-            if jobs:
-                logs_url = jobs[0].logs_url()
-                logs = requests.get(logs_url).content.decode("utf-8")
 
-                if runner_name in logs:
-                    break
-        else:
-            sleep(30)
-            continue
-        break
-    else:
-        assert False, "Timeout while waiting for the workflow to start"
+    def is_runner_log():
+        """Return whether a log for given runner exists."""
+        for run in workflow.get_runs(branch=branch):
+            jobs = run.jobs()
+            if not jobs:
+                return False
+            try:
+                job: WorkflowJob = jobs[0]
+                logs = requests.get(job.logs_url()).content.decode("utf-8")
+            except GithubException as exc:
+                if exc.status == 410:
+                    logger.warning("Transient github error, %s", exc)
+                    return False
+            if runner_name in logs:
+                return True
+        return False
+
+    try:
+        await wait_for(is_runner_log, timeout=20 * 60, check_interval=30)
+    except TimeoutError as exc:
+        raise TimeoutError("Timeout while waiting for the workflow to start") from exc
 
 
 async def clear_metrics_log(unit: Unit) -> None:
@@ -105,23 +118,29 @@ async def get_metrics_log(unit: Unit) -> str:
     return stdout.strip()
 
 
-async def cancel_workflow_run(unit: Unit, workflow: Workflow):
+async def cancel_workflow_run(unit: Unit, workflow: Workflow, branch: Branch | None = None):
     """Cancel the workflow run.
 
     Args:
         unit: The unit which contains the runner.
         workflow: The workflow to cancel the workflow run for.
+        branch: The branch where the workflow belongs to.
     """
     runner_name = await get_runner_name(unit)
 
-    for run in workflow.get_runs():
+    for run in workflow.get_runs(branch=branch):
         jobs = run.jobs()
-        if jobs:
-            logs_url = jobs[0].logs_url()
-            logs = requests.get(logs_url).content.decode("utf-8")
-
-            if runner_name in logs:
-                run.cancel()
+        if not jobs:
+            continue
+        try:
+            job: WorkflowJob = jobs[0]
+            logs = requests.get(job.logs_url()).content.decode("utf-8")
+        except GithubException as exc:
+            if exc.status == 410:
+                logger.warning("Transient github error, %s", exc)
+                continue
+        if runner_name in logs:
+            run.cancel()
 
 
 async def assert_events_after_reconciliation(
