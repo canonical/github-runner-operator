@@ -120,7 +120,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
 
     # Cancel workflow and wait that the runner is marked offline
     # to avoid errors during reconciliation.
-    await cancel_workflow_run(unit, workflow)
+    await cancel_workflow_run(unit, workflow, branch=forked_github_branch)
     await wait_for_runner_to_be_marked_offline(forked_github_repository, runner_name)
 
     # Set the number of virtual machines to 0 to speedup reconciliation

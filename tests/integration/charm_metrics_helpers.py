@@ -37,6 +37,7 @@ async def wait_for_workflow_to_start(unit: Unit, workflow: Workflow, branch: Bra
     Args:
         unit: The unit which contains the runner.
         workflow: The workflow to wait for.
+        branch: The branch where the workflow belongs to.
     """
     runner_name = await get_runner_name(unit)
 
@@ -117,23 +118,29 @@ async def get_metrics_log(unit: Unit) -> str:
     return stdout.strip()
 
 
-async def cancel_workflow_run(unit: Unit, workflow: Workflow):
+async def cancel_workflow_run(unit: Unit, workflow: Workflow, branch: Branch | None = None):
     """Cancel the workflow run.
 
     Args:
         unit: The unit which contains the runner.
         workflow: The workflow to cancel the workflow run for.
+        branch: The branch where the workflow belongs to.
     """
     runner_name = await get_runner_name(unit)
 
-    for run in workflow.get_runs():
+    for run in workflow.get_runs(branch=branch):
         jobs = run.jobs()
-        if jobs:
-            logs_url = jobs[0].logs_url()
-            logs = requests.get(logs_url).content.decode("utf-8")
-
-            if runner_name in logs:
-                run.cancel()
+        if not jobs:
+            continue
+        try:
+            job: WorkflowJob = jobs[0]
+            logs = requests.get(job.logs_url()).content.decode("utf-8")
+        except GithubException as exc:
+            if exc.status == 410:
+                logger.warning("Transient github error, %s", exc)
+                continue
+        if runner_name in logs:
+            run.cancel()
 
 
 async def assert_events_after_reconciliation(
