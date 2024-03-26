@@ -17,5 +17,6 @@ jobs:
       test-tox-env: integration-juju3.2
       modules: '["test_openstack_one_runner"]'
       self-hosted-runner: true
-      self-hosted-runner-label: two-xlarge
+      self-hosted-runner-label: xlarge
       tmate-debug: true
+      tmate-timeout: 600
