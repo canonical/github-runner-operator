@@ -8,6 +8,7 @@ import json
 import logging
 import platform
 import re
+from enum import Enum
 from pathlib import Path
 from typing import NamedTuple, Optional, cast
 from urllib.parse import urlsplit

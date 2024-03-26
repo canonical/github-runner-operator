@@ -62,6 +62,7 @@ from firewall import Firewall, FirewallEntry
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
 from openstack_cloud import openstack_manager
+from openstack_cloud.openstack_manager import OpenstackRunnerManager
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
@@ -295,7 +296,7 @@ class GithubRunnerCharm(CharmBase):
 
     def _get_openstack_runner_manager(
         self, state: CharmState, token: str | None = None, path: GithubPath | None = None
-    ) -> openstack_manager.OpenstackRunnerManager:
+    ) -> OpenstackRunnerManager:
         """Get OpenstackRunnerManager instance.
 
         TODO: Combine this with `_get_runner_manager` during the runner manager interface refactor.
@@ -323,7 +324,7 @@ class GithubRunnerCharm(CharmBase):
             flavour=state.runner_config.openstack_flavour,
             network=state.runner_config.openstack_network,
         )
-        return openstack_manager.OpenstackRunnerManager(
+        return OpenstackRunnerManager(
             app_name,
             unit,
             openstack_runner_manager_config,
