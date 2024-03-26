@@ -70,11 +70,11 @@ async def clear_metrics_log(unit: Unit) -> None:
     Args:
         unit: The unit to clear the metrics log on.
     """
-    retcode, _ = await run_in_unit(
+    retcode, _, stderr = await run_in_unit(
         unit=unit,
         command=f"if [ -f {METRICS_LOG_PATH} ]; then rm {METRICS_LOG_PATH}; fi",
     )
-    assert retcode == 0, "Failed to clear metrics log"
+    assert retcode == 0, f"Failed to clear metrics log, {stderr}"
 
 
 async def print_loop_device_info(unit: Unit, loop_device: str) -> None:
@@ -84,11 +84,11 @@ async def print_loop_device_info(unit: Unit, loop_device: str) -> None:
         unit: The unit to print the loop device info on.
         loop_device: The loop device to print the info for.
     """
-    retcode, stdout = await run_in_unit(
+    retcode, stdout, stderr = await run_in_unit(
         unit=unit,
         command="sudo losetup -lJ",
     )
-    assert retcode == 0, f"Failed to get loop devices: {stdout}"
+    assert retcode == 0, f"Failed to get loop devices: {stdout} {stderr}"
     assert stdout is not None, "Failed to get loop devices, no stdout message"
     loop_devices_info = json.loads(stdout)
     for loop_device_info in loop_devices_info["loopdevices"]:
@@ -108,11 +108,11 @@ async def get_metrics_log(unit: Unit) -> str:
     Returns:
         The metrics log.
     """
-    retcode, stdout = await run_in_unit(
+    retcode, stdout, stderr = await run_in_unit(
         unit=unit,
         command=f"if [ -f {METRICS_LOG_PATH} ]; then cat {METRICS_LOG_PATH}; else echo ''; fi",
     )
-    assert retcode == 0, f"Failed to get metrics log: {stdout}"
+    assert retcode == 0, f"Failed to get metrics log: {stdout} {stderr}"
     assert stdout is not None, "Failed to get metrics log, no stdout message"
     logging.info("Metrics log: %s", stdout)
     return stdout.strip()
