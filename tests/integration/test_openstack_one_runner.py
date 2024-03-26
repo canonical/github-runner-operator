@@ -18,13 +18,9 @@ async def test_openstack_check_runner(
     app_openstack_runner: Application,
 ):
     """
-    arrange: given a runner with openstack cloud configured.
+    arrange:
     act:
-        1. when the e2e_test_run workflow is created.
-        2. when the servers are listed.
     assert:
-        1. the workflow run completes successfully.
-        2. a server with image name jammy is created.
     """
     unit = app_openstack_runner.units[0]
     await model.wait_for_idle(apps=[app_openstack_runner.name], status=ACTIVE, timeout=40 * 60)
