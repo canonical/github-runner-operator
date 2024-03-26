@@ -110,17 +110,17 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     )
     assert workflow.create_dispatch(forked_github_branch, {"runner": app.name})
 
-    await wait_for_workflow_to_start(unit, workflow)
+    await wait_for_workflow_to_start(unit, workflow, branch=forked_github_branch)
 
     # Make the runner terminate abnormally by killing run.sh
     runner_name = await get_runner_name(unit)
     kill_run_sh_cmd = "pkill -9 run.sh"
-    ret_code, _ = await run_in_lxd_instance(unit, runner_name, kill_run_sh_cmd)
-    assert ret_code == 0, "Failed to kill run.sh"
+    ret_code, stdout, stderr = await run_in_lxd_instance(unit, runner_name, kill_run_sh_cmd)
+    assert ret_code == 0, f"Failed to kill run.sh, {stdout} {stderr}"
 
     # Cancel workflow and wait that the runner is marked offline
     # to avoid errors during reconciliation.
-    await cancel_workflow_run(unit, workflow)
+    await cancel_workflow_run(unit, workflow, branch=forked_github_branch)
     await wait_for_runner_to_be_marked_offline(forked_github_repository, runner_name)
 
     # Set the number of virtual machines to 0 to speedup reconciliation
@@ -151,19 +151,21 @@ async def test_charm_retrieves_logs_from_unhealthy_runners(
     runner_name = await get_runner_name(unit)
 
     kill_start_sh_cmd = "pkill -9 start.sh"
-    ret_code, _ = await run_in_lxd_instance(unit, runner_name, kill_start_sh_cmd)
-    assert ret_code == 0, "Failed to kill start.sh"
+    ret_code, stdout, stderr = await run_in_lxd_instance(unit, runner_name, kill_start_sh_cmd)
+    assert ret_code == 0, f"Failed to kill start.sh, {stdout} {stderr}"
 
     # Set the number of virtual machines to 0 to avoid to speedup reconciliation.
     await app.set_config({"virtual-machines": "0"})
     await reconcile(app=app, model=model)
 
-    ret_code, stdout = await run_in_unit(unit, f"ls {runner_logs.CRASHED_RUNNER_LOGS_DIR_PATH}")
-    assert ret_code == 0, "Failed to list crashed runner logs"
+    ret_code, stdout, stderr = await run_in_unit(
+        unit, f"ls {runner_logs.CRASHED_RUNNER_LOGS_DIR_PATH}"
+    )
+    assert ret_code == 0, f"Failed to list crashed runner logs {stdout} {stderr}"
     assert stdout
     assert runner_name in stdout, "Failed to find crashed runner log"
 
-    ret_code, stdout = await run_in_unit(
+    ret_code, stdout, _ = await run_in_unit(
         unit, f"ls {runner_logs.CRASHED_RUNNER_LOGS_DIR_PATH}/{runner_name}"
     )
     assert ret_code == 0, "Failed to list crashed runner log"
