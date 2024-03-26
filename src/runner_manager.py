@@ -747,11 +747,13 @@ class RunnerManager:
             LxdError: Unable to build the LXD image.
         """
         try:
+            stdout, ret_code = execute_command(["cat", "/etc/apt/sources.list"])
+            logger.error("Before build image command: %s %s", stdout, ret_code)
             execute_command(self._build_image_command())
         # This is for debugging common error in test with build image.
         # This should be removed before merging.
         except SubprocessError as exc:
-            if "Type 'ubuntu' is not known on line 43 in source lis" in str(exc):
+            if "Type 'ubuntu' is not known on line 43 in source list" in str(exc):
                 stdout, ret_code = execute_command(["cat", "/etc/apt/sources.list"])
                 logger.critical("Failed to execute build image command: %s %s", stdout, ret_code)
             raise
