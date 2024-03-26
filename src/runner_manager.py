@@ -25,7 +25,7 @@ import runner_logs
 import runner_metrics
 import shared_fs
 from charm_state import VirtualMachineResources
-from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
+from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError, SubprocessError
 from github_client import GithubClient
 from github_type import RunnerApplication, SelfHostedRunner
 from lxd import LxdClient, LxdInstance
@@ -746,7 +746,15 @@ class RunnerManager:
         Raises:
             LxdError: Unable to build the LXD image.
         """
-        execute_command(self._build_image_command())
+        try:
+            execute_command(self._build_image_command())
+        # This is for debugging common error in test with build image.
+        # This should be removed before merging.
+        except SubprocessError as exc:
+            if "Type 'ubuntu' is not known on line 43 in source lis" in str(exc):
+                stdout, ret_code = execute_command(["cat", "/etc/apt/sources.list"])
+                logger.critical("Failed to execute build image command: %s %s", stdout, ret_code)
+            raise
 
     def schedule_build_runner_image(self) -> None:
         """Install cron job for building runner image."""
