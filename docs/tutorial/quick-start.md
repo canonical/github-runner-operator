@@ -80,7 +80,7 @@ If the workflow failed at the `Set up runner` step with the following message:
 
 > This job has failed to pass a repository policy compliance check as defined in the https://github.com/canonical/repo-policy-compliance repository. The specific failure is listed below. Please update the settings on this project to fix the relevant policy.
 
-The repository setting does not comply with the best practice enforce by the charm. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/repo-policy).
+The repository setting does not comply with the best practice enforce by the charm. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/how-to-repo-policy).
 
 #### Removing the charm
 
