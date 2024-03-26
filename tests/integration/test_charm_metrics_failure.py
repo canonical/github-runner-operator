@@ -110,7 +110,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     )
     assert workflow.create_dispatch(forked_github_branch, {"runner": app.name})
 
-    await wait_for_workflow_to_start(unit, workflow)
+    await wait_for_workflow_to_start(unit, workflow, branch=forked_github_branch)
 
     # Make the runner terminate abnormally by killing run.sh
     runner_name = await get_runner_name(unit)
