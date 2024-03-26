@@ -3,10 +3,7 @@
 
 """Integration tests for OpenStack integration."""
 
-import openstack.connection
 import pytest
-from github.Branch import Branch
-from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
