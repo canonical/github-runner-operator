@@ -47,5 +47,4 @@ sg snap_daemon -c "sunbeam cloud-config" | tee "$clouds_yaml"
 OS_CLIENT_CONFIG_FILE="$clouds_yaml" openstack --os-cloud sunbeam user show demo
 
 juju clouds || echo "Failed to list clouds"
-juju bootstrap localhost lxd
 echo "PYTEST_ADDOPTS=--openstack-clouds-yaml=$clouds_yaml" >> "${GITHUB_ENV}"

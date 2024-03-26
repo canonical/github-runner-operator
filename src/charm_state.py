@@ -135,11 +135,11 @@ class RunnerStorage(str, Enum):
     MEMORY = "memory"
 
 
-class InstanceType(Enum):
+class InstanceType(str, Enum):
     """Type of instance for runner."""
 
-    LOCAL_LXD = auto()
-    OPENSTACK = auto()
+    LOCAL_LXD = "local_lxd"
+    OPENSTACK = "openstack"
 
 
 class CharmConfigInvalidError(Exception):
