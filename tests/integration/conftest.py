@@ -156,7 +156,6 @@ def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
 def openstack_clouds_yaml(pytestconfig: pytest.Config) -> Optional[str]:
     """Configured clouds-yaml setting."""
     clouds_yaml = pytestconfig.getoption("--openstack-clouds-yaml")
-    pytest.set_trace()
     return Path(clouds_yaml).read_text(encoding="utf-8") if clouds_yaml else None
 
 
