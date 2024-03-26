@@ -19,6 +19,7 @@ async def test_openstack_check_runner(
     act:
     assert:
     """
+    pytest.set_trace()
     await model.wait_for_idle(apps=[app_openstack_runner.name], status=ACTIVE, timeout=40 * 60)
     unit = app_openstack_runner.units[0]
 
