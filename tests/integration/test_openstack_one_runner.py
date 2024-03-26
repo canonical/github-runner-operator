@@ -22,7 +22,6 @@ async def test_openstack_check_runner(
     await model.wait_for_idle(apps=[app_openstack_runner.name], status=ACTIVE, timeout=40 * 60)
     unit = app_openstack_runner.units[0]
 
-    pytest.set_trace()
     action = await unit.run_action("check-runners")
     await action.wait()
 
