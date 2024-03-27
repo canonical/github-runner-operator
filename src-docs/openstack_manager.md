@@ -214,6 +214,23 @@ Construct OpenstackRunnerManager object.
 
 ---
 
+<a href="../src/openstack_cloud/openstack_manager.py#L499"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>method</kbd> `get_github_runner_info`
+
+```python
+get_github_runner_info() → tuple[RunnerGithubInfo]
+```
+
+Get information on GitHub for the runners. 
+
+
+
+**Returns:**
+  Collection of runner GitHub information. 
+
+---
+
 <a href="../src/openstack_cloud/openstack_manager.py#L442"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_key_path`

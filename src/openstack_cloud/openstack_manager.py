@@ -496,7 +496,7 @@ class OpenstackRunnerManager:
             wait=True,
         )
 
-    def _get_github_runner_info(self) -> tuple[RunnerGithubInfo]:
+    def get_github_runner_info(self) -> tuple[RunnerGithubInfo]:
         """Get information on GitHub for the runners.
 
         Returns:
@@ -564,7 +564,7 @@ class OpenstackRunnerManager:
         Returns:
             The change in number of runners.
         """
-        github_info = self._get_github_runner_info()
+        github_info = self.get_github_runner_info()
         online_runners = [runner.name for runner in github_info if runner.status.online]
         logger.info("Found %s existing openstack runners", len(online_runners))
 

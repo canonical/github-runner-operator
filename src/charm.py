@@ -526,6 +526,11 @@ class GithubRunnerCharm(CharmBase):
             event: Event of charm upgrade.
         """
         state = self._setup_state()
+        
+        if state.instance_type == InstanceType.OPENSTACK:
+            # No dependency upgrade needed for openstack.
+            # No need to flush runners as there was no dependency upgrade.
+            return
 
         logger.info("Reinstalling dependencies...")
         try:
@@ -582,11 +587,12 @@ class GithubRunnerCharm(CharmBase):
             should_flush_runners = True
             self._stored.labels = self.config[LABELS_CONFIG_NAME]
         if prev_config_for_flush or should_flush_runners:
-            prev_runner_manager = self._get_runner_manager(state=state, **prev_config_for_flush)
-            if prev_runner_manager:
-                self.unit.status = MaintenanceStatus("Removing runners due to config change")
-                # it may be the case that the prev token has expired, so we need to use force flush
-                prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
+            if state.instance_type != InstanceType.OPENSTACK:
+                prev_runner_manager = self._get_runner_manager(state=state, **prev_config_for_flush)
+                if prev_runner_manager:
+                    self.unit.status = MaintenanceStatus("Removing runners due to config change")
+                    # it may be the case that the prev token has expired, so we need to use force flush
+                    prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
 
         state = self._setup_state()
 
@@ -704,16 +710,38 @@ class GithubRunnerCharm(CharmBase):
     @catch_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:
         """Handle the action of checking of runner state."""
+        online = 0
+        offline = 0
+        unknown = 0
+        runner_names = []
+
         state = self._setup_state()
+
+        if state.instance_type == InstanceType.OPENSTACK:
+            openstack_runner_manager = self._get_openstack_runner_manager(state)
+            runner_info = openstack_runner_manager.get_github_runner_info()
+
+            for info in runner_info:
+                if info.online:
+                    online += 1
+                    runner_names.append(info.runner_name)
+                else:
+                    offline += 1
+            event.set_results(
+                {
+                    "online": online,
+                    "offline": offline,
+                    "unknown": unknown,
+                    "runners": ", ".join(runner_names),
+                }
+            )
+            return
+        
         runner_manager = self._get_runner_manager(state)
         if runner_manager.runner_bin_path is None:
             event.fail("Missing runner binary")
             return
 
-        online = 0
-        offline = 0
-        unknown = 0
-        runner_names = []
         runner_info = runner_manager.get_github_info()
         for runner in runner_info:
             if runner.status == GitHubRunnerStatus.ONLINE.value:
@@ -741,6 +769,14 @@ class GithubRunnerCharm(CharmBase):
             event: Action event of reconciling the runner.
         """
         state = self._setup_state()
+        
+        if state.instance_type == InstanceType.OPENSTACK:
+            runner_manager = self._get_openstack_runner_manager(state)
+            
+            delta = runner_manager.reconcile(state.runner_config.virtual_machines)
+            event.set_results(delta)
+            return
+        
         runner_manager = self._get_runner_manager(state)
 
         self._check_and_update_dependencies(
@@ -763,6 +799,11 @@ class GithubRunnerCharm(CharmBase):
             event: Action event of flushing all runners.
         """
         state = self._setup_state()
+
+        if state.instance_type == InstanceType.OPENSTACK:
+            # Flushing not implemented for OpenStack.
+            raise NotImplementedError()
+
         runner_manager = self._get_runner_manager(state)
 
         runner_manager.flush(FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
@@ -783,6 +824,10 @@ class GithubRunnerCharm(CharmBase):
             event: Action event of updating dependencies.
         """
         state = self._setup_state()
+        if state.instance_type == InstanceType.OPENSTACK:
+            # No dependencies managed by the charm for OpenStack-based runners.
+            event.set_results({"flush": False})
+        
         runner_manager = self._get_runner_manager(state)
         flushed = self._check_and_update_dependencies(
             runner_manager, state.charm_config.token, state.proxy_config
@@ -807,6 +852,10 @@ class GithubRunnerCharm(CharmBase):
         """
         self._event_timer.disable_event_timer("reconcile-runners")
         state = self._setup_state()
+        
+        if state.instance_type == InstanceType.OPENSTACK:
+            # Flushing not implemented for OpenStack.
+            raise NotImplementedError()
 
         runner_manager = self._get_runner_manager(state)
         runner_manager.flush(FlushMode.FLUSH_BUSY)
@@ -1040,6 +1089,11 @@ class GithubRunnerCharm(CharmBase):
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
         state = self._setup_state()
+        
+        if state.instance_type == InstanceType.OPENSTACK:
+            # Flushing not implemented for OpenStack.
+            raise NotImplementedError()
+        
         self._refresh_firewall(state)
         runner_manager = self._get_runner_manager(state)
         runner_manager.flush(FlushMode.FLUSH_IDLE)
