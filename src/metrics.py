@@ -125,7 +125,7 @@ class RunnerStop(Event):
         status: A string describing the reason for stopping the runner.
         status_info: More information about the status.
         job_duration: The duration of the job in seconds.
-        job_conclusion: The job conclusion, e.g. "success", "neutral", "failure", ...
+        job_conclusion: The job conclusion, e.g. "success", "failure", ...
     """
 
     flavor: str

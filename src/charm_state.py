@@ -663,7 +663,7 @@ class ProxyConfig(BaseModel):
         return use_aproxy
 
     def __bool__(self) -> bool:
-        """Return whether Whether the proxy config is set.
+        """Return whether the proxy config is set.
 
         Returns:
             Whether the proxy config is set.

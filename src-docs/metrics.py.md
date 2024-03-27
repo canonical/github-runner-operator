@@ -227,7 +227,7 @@ Metric event for when a runner is stopped.
  - <b>`status`</b>:  A string describing the reason for stopping the runner. 
  - <b>`status_info`</b>:  More information about the status. 
  - <b>`job_duration`</b>:  The duration of the job in seconds. 
- - <b>`job_conclusion`</b>:  The job conclusion, e.g. "success", "neutral", "failure", ... 
+ - <b>`job_conclusion`</b>:  The job conclusion, e.g. "success", "failure", ... 
 
 <a href="../src/metrics.py#L54"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 

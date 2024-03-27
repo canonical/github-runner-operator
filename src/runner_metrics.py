@@ -129,7 +129,7 @@ def _extract_metrics_from_fs_file(
         filename: The metrics filename.
 
     Raises:
-        CorruptMetricDataError: If there was any errors found within metric.
+        CorruptMetricDataError: If any errors have been found within the metric.
 
     Returns:
         Metrics for the given runner if present.

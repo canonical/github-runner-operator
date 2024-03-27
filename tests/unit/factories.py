@@ -37,6 +37,9 @@ from charm_state import (
 
 T = TypeVar("T")
 
+# DC060: Docstrings have been abbreviated for factories, checking for docstrings on model
+# attributes can be skipped.
+
 
 class BaseMetaFactory(Generic[T], factory.base.FactoryMetaClass):
     """Used for type hints of factories."""
@@ -52,8 +55,6 @@ class BaseMetaFactory(Generic[T], factory.base.FactoryMetaClass):
 class SSHDebugInfoFactory(
     factory.Factory, metaclass=BaseMetaFactory[SSHDebugConnection]  # type: ignore
 ):
-    # Docstrings have been abbreviated for factories, checking for docstrings on model attributes
-    # can be skipped.
     """Generate PathInfos."""  # noqa: DCO060
 
     class Meta:
@@ -104,9 +105,6 @@ class MockGithubRunnerCharmModelFactory(factory.Factory):
 
 class MockGithubRunnerCharmFactory(factory.Factory):
     """Mock GithubRunnerCharm."""  # noqa: DCO060
-
-    # Docstrings have been abbreviated for factories, checking for docstrings on model attributes
-    # can be skipped.
 
     class Meta:
         """Configuration for factory."""  # noqa: DCO060

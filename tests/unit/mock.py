@@ -73,10 +73,10 @@ class MockLxdInstanceManager:
         return self.instances[name]
 
     def all(self):
-        """Return all instances that has not been deleted.
+        """Return all instances that have not been deleted.
 
         Returns:
-            All Lxd fake instances that has not been deleted.
+            All Lxd fake instances that have not been deleted.
         """
         return [i for i in self.instances.values() if not i.deleted]
 
@@ -278,7 +278,7 @@ class MockLxdStoragePoolManager:
             return False
 
     def create(self, config):
-        """Fake LxdStoragePoolManager create runction.
+        """Fake LxdStoragePoolManager create function.
 
         Args:
             config: The LXD storage pool config.

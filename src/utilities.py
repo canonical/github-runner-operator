@@ -223,7 +223,7 @@ def bytes_with_unit_to_kib(num_bytes: str) -> int:
             PiB, EiB.
 
     Raises:
-        ValueError: If invalid unit waas detected.
+        ValueError: If invalid unit was detected.
 
     Returns:
         Number of kilobytes.

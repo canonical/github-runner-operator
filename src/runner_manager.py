@@ -11,7 +11,7 @@ import tarfile
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Dict, Iterator, Optional, Type
+from typing import Iterator, Optional, Type
 
 import jinja2
 import requests
@@ -676,7 +676,7 @@ class RunnerManager:
         suffix = secrets.token_hex(12)
         return f"{self.instance_name}-{suffix}"
 
-    def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
+    def _get_runner_github_info(self) -> dict[str, SelfHostedRunner]:
         """Get a mapping of runner name to GitHub self-hosted runner info.
 
         Returns:

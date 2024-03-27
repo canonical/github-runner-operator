@@ -186,7 +186,7 @@ def test_update_runner_bin(runner_manager: RunnerManager):
             self.status_code = 200
 
         def iter_content(self, *args, **kwargs):
-            """Mock content iterator reteruning an iterator over a single test runner binary.
+            """Mock content iterator returning an iterator over a single test runner binary.
 
             Args:
                 args: Placeholder positional arguments.

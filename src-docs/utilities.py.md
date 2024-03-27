@@ -186,7 +186,7 @@ Convert a positive integer followed by a unit to number of kibibytes.
 
 **Raises:**
  
- - <b>`ValueError`</b>:  If invalid unit waas detected. 
+ - <b>`ValueError`</b>:  If invalid unit was detected. 
 
 
 
