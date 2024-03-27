@@ -44,13 +44,15 @@ async def test_update_interval(model: Model, app_scheduled_events: Application) 
     unit = app_scheduled_events.units[0]
     assert await check_runner_binary_exists(unit)
 
-    await run_in_unit(unit, f"rm -f {RunnerManager.runner_bin_path}")
+    ret_code, stdout, stderr = await run_in_unit(unit, f"rm -f {RunnerManager.runner_bin_path}")
+    assert ret_code == 0, f"Failed to remove runner binary {stdout} {stderr}"
     assert not await check_runner_binary_exists(unit)
 
     runner_names = await get_runner_names(unit)
     assert len(runner_names) == 1
     runner_name = runner_names[0]
-    await run_in_unit(unit, f"lxc stop --force {runner_name}")
+    ret_code, stdout, stderr = await run_in_unit(unit, f"lxc stop --force {runner_name}")
+    assert ret_code == 0, f"Failed to stop lxd instance, {stdout} {stderr}"
     await wait_till_num_of_runners(unit, 0)
 
     await sleep(10 * 60)
