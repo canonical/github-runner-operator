@@ -39,7 +39,6 @@ jobs:
     secrets: inherit
     with:
       juju-channel: 3.2/stable
-      # The script with setup an LXD juju env.
       pre-run-script: scripts/setup-microstack.sh
       # Setup the microk8s for microstack deployment. The tests runs on LXD.
       provider: microk8s
