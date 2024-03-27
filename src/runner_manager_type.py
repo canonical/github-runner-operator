@@ -97,6 +97,7 @@ class OpenstackRunnerManagerConfig:
             repository or organization.
         flavour: OpenStack flavour for defining the runner resources.
         network: OpenStack network for runner network access.
+        dockerhub_mirror: URL of dockerhub mirror to use.
     """
 
     charm_state: CharmState
@@ -104,6 +105,7 @@ class OpenstackRunnerManagerConfig:
     token: str
     flavour: str
     network: str
+    dockerhub_mirror: str | None
 
 
 @dataclass

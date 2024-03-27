@@ -283,6 +283,9 @@ async def ensure_charm_has_runner(app: Application, model: Model) -> None:
     """
     await app.set_config({"virtual-machines": "1"})
     await reconcile(app=app, model=model)
+    # TODO: Remove
+    import pytest
+    pytest.set_trace()
     await wait_till_num_of_runners(unit=app.units[0], num=1)
 
 

@@ -246,6 +246,8 @@ async def app_openstack_runner(
         config={OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml},
         wait_idle=False,
     )
+    await model.wait_for_idle(apps=[app_openstack_runner.name], status=ACTIVE, timeout=40 * 60)
+
     return application
 
 

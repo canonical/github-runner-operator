@@ -40,6 +40,7 @@ Configuration of runner manager.
  - <b>`token`</b>:  GitHub personal access token to register runner to the  repository or organization. 
  - <b>`flavour`</b>:  OpenStack flavour for defining the runner resources. 
  - <b>`network`</b>:  OpenStack network for runner network access. 
+ - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
 
 
 

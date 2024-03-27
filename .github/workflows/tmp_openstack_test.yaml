@@ -15,7 +15,7 @@ jobs:
       channel: 1.26-strict/stable
       microk8s-addons: "dns ingress hostpath-storage"
       test-tox-env: integration-juju3.2
-      modules: '["test_openstack_one_runner"]'
+      modules: '["test_openstack_runner"]'
       self-hosted-runner: true
       self-hosted-runner-label: xlarge
       tmate-debug: true
