@@ -31,7 +31,6 @@ from juju.unit import Unit
 from runner import Runner
 from runner_manager import RunnerManager
 from tests.status_name import ACTIVE
-from utilities import retry
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
 DISPATCH_CRASH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_crash_test.yaml"
@@ -160,8 +159,7 @@ async def get_runner_names(unit: Unit) -> tuple[str, ...]:
     return tuple(runner["name"] for runner in lxc_instance)
 
 
-@retry(exception=AssertionError, tries=30, delay=30, local_logger=logger)
-async def wait_till_num_of_runners(unit: Unit, num: int) -> None:
+async def wait_till_num_of_runners(unit: Unit, num: int, timeout: int = 10 * 60) -> None:
     """Wait and check the number of runners.
 
     Args:
@@ -172,16 +170,37 @@ async def wait_till_num_of_runners(unit: Unit, num: int) -> None:
         AssertionError: Correct number of runners is not found within timeout
             limit.
     """
-    return_code, stdout, _ = await run_in_unit(unit, "lxc list --format json")
-    assert return_code == 0
-    assert stdout is not None
 
-    lxc_instance = json.loads(stdout)
-    assert (
-        len(lxc_instance) == num
-    ), f"Current number of runners: {len(lxc_instance)} Expected number of runner: {num}"
+    async def get_lxc_instances() -> None | list[dict]:
+        """Get lxc instances list info.
 
-    for instance in lxc_instance:
+        Returns:
+            List of lxc instance dictionaries, None if failed to get list.
+        """
+        return_code, stdout, _ = await run_in_unit(unit, "lxc list --format json")
+        if return_code != 0 or not stdout:
+            logger.error("Failed to run lxc list, %s", return_code)
+            return None
+        return json.loads(stdout)
+
+    async def is_desired_num_runners():
+        """Return whether there are desired number of lxc instances running.
+
+        Returns:
+            Whether the desired number of lxc runners have been reached.
+        """
+        lxc_instances = await get_lxc_instances()
+        if lxc_instances is None:
+            return False
+        return len(lxc_instances) == num
+
+    await wait_for(is_desired_num_runners, timeout=timeout, check_interval=30)
+
+    instances = await get_lxc_instances()
+    if not instances:
+        return
+
+    for instance in instances:
         return_code, stdout, _ = await run_in_unit(unit, f"lxc exec {instance['name']} -- ps aux")
         assert return_code == 0
 
