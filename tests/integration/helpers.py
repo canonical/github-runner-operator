@@ -5,6 +5,7 @@
 
 import inspect
 import json
+import logging
 import subprocess
 import time
 import typing
@@ -39,6 +40,8 @@ DISPATCH_WAIT_TEST_WORKFLOW_FILENAME = "workflow_dispatch_wait_test.yaml"
 DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME = "e2e_test_run.yaml"
 
 DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15}
+
+logger = logging.getLogger(__name__)
 
 
 async def check_runner_binary_exists(unit: Unit) -> bool:
@@ -157,7 +160,7 @@ async def get_runner_names(unit: Unit) -> tuple[str, ...]:
     return tuple(runner["name"] for runner in lxc_instance)
 
 
-@retry(tries=30, delay=30)
+@retry(exception=AssertionError, tries=30, delay=30, local_logger=logger)
 async def wait_till_num_of_runners(unit: Unit, num: int) -> None:
     """Wait and check the number of runners.
 
