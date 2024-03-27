@@ -156,7 +156,7 @@ async def get_runner_names(unit: Unit) -> tuple[str, ...]:
     assert stdout is not None
 
     lxc_instance: list[dict[str, str]] = json.loads(stdout)
-    return tuple(runner["name"] for runner in lxc_instance)
+    return tuple(runner["name"] for runner in lxc_instance if runner["name"] != "builder")
 
 
 async def wait_till_num_of_runners(unit: Unit, num: int, timeout: int = 10 * 60) -> None:
