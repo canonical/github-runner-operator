@@ -753,7 +753,7 @@ class RunnerManager:
         except SubprocessError as exc:
             if "Type 'ubuntu' is not known on line 43 in source list" in str(exc):
                 stdout, ret_code = execute_command(
-                    ["/snap/bin/lxc", "exec", "builder", "--", "cat /etc/apt/sources.list"]
+                    ["/snap/bin/lxc", "exec", "builder", "cat", "/etc/apt/sources.list"]
                 )
                 logger.critical("Failed to execute build image command: %s %s", stdout, ret_code)
             raise
