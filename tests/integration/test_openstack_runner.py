@@ -3,12 +3,10 @@
 
 """Integration tests for OpenStack integration."""
 
-import pytest
 from juju.application import Application
 from juju.model import Model
 
 from tests.integration.helpers import ensure_charm_has_runner
-from tests.status_name import ACTIVE
 
 
 async def test_openstack_check_runner(
@@ -30,13 +28,14 @@ async def test_openstack_check_runner(
     assert action.results["unknown"] == "0"
     assert action.results["runners"] == "[]"
 
+
 async def test_openstack_reconcile_one_runner(
     model: Model,
     app_openstack_runner: Application,
 ):
     """
     arrange: An app connected to an OpenStack cloud with no runners.
-    act: Change number of runners to one and reconcile. 
+    act: Change number of runners to one and reconcile.
     assert: One runner is spawned.
     """
     ensure_charm_has_runner(app_openstack_runner, model)

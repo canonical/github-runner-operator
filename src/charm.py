@@ -594,7 +594,7 @@ class GithubRunnerCharm(CharmBase):
                 )
                 if prev_runner_manager:
                     self.unit.status = MaintenanceStatus("Removing runners due to config change")
-                    # it may be the case that the prev token has expired, so we need to use force flush
+                    # Flush runner in case the prev token has expired.
                     prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
 
         state = self._setup_state()
