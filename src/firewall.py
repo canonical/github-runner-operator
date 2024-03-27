@@ -101,11 +101,12 @@ class Firewall:  # pylint: disable=too-few-public-methods
         self,
         denylist: typing.Iterable[FirewallEntry],
         allowlist: typing.Iterable[FirewallEntry] | None = None,
-    ):
+    ) -> None:
         """Refresh the firewall configuration.
 
         Args:
-            denylist: The list of FirewallEntry objects to allow.
+            denylist: The list of FirewallEntry rules to allow.
+            allowlist: The list of FirewallEntry rules to allow.
         """
         current_acls = [
             acl["name"]

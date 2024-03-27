@@ -16,6 +16,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
+from charm_state import PATH_CONFIG_NAME
 from tests.integration.helpers import (
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     get_runner_names,
@@ -31,8 +32,8 @@ async def test_dispatch_workflow_failure(
     forked_github_branch: Branch,
 ) -> None:
     """
-    arrange:
-        1. A forked repository.
+    arrange: \
+        1. A forked repository. \
         2. A working application with one runner on the forked repository.
     act: Trigger a workflow dispatch that fails the repo policy check on a branch
      in the forked repository.
@@ -95,7 +96,7 @@ async def test_path_config_change(
     """
     unit = app_with_forked_repo.units[0]
 
-    await app_with_forked_repo.set_config({"path": path})
+    await app_with_forked_repo.set_config({PATH_CONFIG_NAME: path})
 
     await reconcile(app=app_with_forked_repo, model=model)
 

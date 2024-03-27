@@ -33,7 +33,6 @@ def test_job(pre_job_metrics: PreJobMetrics):
     act: Call job.
     assert: the job metrics are returned.
     """
-
     github_client = MagicMock(spec=GithubClient)
     runner_name = secrets.token_hex(16)
     created_at = datetime(2021, 10, 1, 0, 0, 0, tzinfo=timezone.utc)

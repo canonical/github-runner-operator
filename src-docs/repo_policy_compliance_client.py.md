@@ -54,7 +54,13 @@ Get a single-use token for repo policy compliance check.
 
 
 
+**Raises:**
+ 
+ - <b>`HTTPError`</b>:  If there was an error getting one-time token from repo-policy-compliance                 service. 
+
+
+
 **Returns:**
-  The one-time token to be used in a single request of repo policy compliance check. 
+ The one-time token to be used in a single request of repo policy compliance check. 
 
 

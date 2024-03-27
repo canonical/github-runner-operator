@@ -24,7 +24,6 @@ JobStatsRawData = namedtuple(
 @pytest.fixture(name="job_stats_raw")
 def job_stats_fixture() -> JobStatsRawData:
     """Create a JobStats object."""
-
     runner_name = secrets.token_hex(16)
     return JobStatsRawData(
         created_at="2021-10-01T00:00:00Z",
@@ -88,8 +87,8 @@ def _mock_multiple_pages_for_job_response(
 
 def test_get_job_info(github_client: GithubClient, job_stats_raw: JobStatsRawData):
     """
-    arrange: A mocked Github Client that returns one page of jobs containing one job
-     with the runner.
+    arrange: A mocked Github Client that returns one page of jobs containing one job \
+        with the runner.
     act: Call get_job_info.
     assert: The correct JobStats object is returned.
     """
@@ -109,8 +108,8 @@ def test_get_job_info(github_client: GithubClient, job_stats_raw: JobStatsRawDat
 
 def test_get_job_info_no_conclusion(github_client: GithubClient, job_stats_raw: JobStatsRawData):
     """
-    arrange: A mocked Github Client that returns one page of jobs containing one job
-     with the runner with conclusion set to None.
+    arrange: A mocked Github Client that returns one page of jobs containing one job \
+        with the runner with conclusion set to None.
     act: Call get_job_info.
     assert: JobStats object with conclusion set to None is returned.
     """
@@ -142,8 +141,8 @@ def test_github_api_pagination_multiple_pages(
     github_client: GithubClient, job_stats_raw: JobStatsRawData
 ):
     """
-    arrange: A mocked Github Client that returns multiple pages of jobs containing
-     one job with the runner.
+    arrange: A mocked Github Client that returns multiple pages of jobs containing \
+        one job with the runner.
     act: Call get_job_info.
     assert: The correct JobStats object is returned.
     """
@@ -169,8 +168,8 @@ def test_github_api_pagination_job_not_found(
     github_client: GithubClient, job_stats_raw: JobStatsRawData
 ):
     """
-    arrange: A mocked Github Client that returns multiple pages of jobs containing
-     no job with the runner.
+    arrange: A mocked Github Client that returns multiple pages of jobs containing \
+        no job with the runner.
     act: Call get_job_info.
     assert: An exception is raised.
     """

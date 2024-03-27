@@ -8,7 +8,11 @@ from pytest import Parser
 
 
 def pytest_addoption(parser: Parser):
-    """Add options to pytest parser."""
+    """Add options to pytest parser.
+
+    Args:
+        parser: The pytest argument parser.
+    """
     parser.addoption(
         "--path",
         action="store",

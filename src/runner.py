@@ -52,7 +52,13 @@ APROXY_AMD_REVISION = 8
 
 
 class Snap(NamedTuple):
-    """This class represents a snap installation."""
+    """This class represents a snap installation.
+
+    Attributes:
+        name: The snap application name.
+        channel: The channel to install the snap from.
+        revision: The revision number of the snap installation.
+    """
 
     name: str
     channel: str
@@ -63,7 +69,7 @@ class Snap(NamedTuple):
 class WgetExecutable:
     """The executable to be installed through wget.
 
-    Args:
+    Attributes:
         url: The URL of the executable binary.
         cmd: Executable command name. E.g. yq_linux_amd64 -> yq
     """
@@ -76,7 +82,7 @@ class WgetExecutable:
 class CreateRunnerConfig:
     """The configuration values for creating a single runner instance.
 
-    Args:
+    Attributes:
         image: Name of the image to launch the LXD instance with.
         resources: Resource setting for the LXD instance.
         binary_path: Path to the runner binary.
@@ -92,7 +98,16 @@ class CreateRunnerConfig:
 
 
 class Runner:
-    """Single instance of GitHub self-hosted runner."""
+    """Single instance of GitHub self-hosted runner.
+
+    Attributes:
+        runner_application: The runner application directory path
+        env_file: The runner environment source .env file path.
+        config_script: The runner configuration script file path.
+        runner_script: The runner start script file path.
+        pre_job_script: The runner pre_job script file path. This is referenced in the env_file in
+            the ACTIONS_RUNNER_HOOK_JOB_STARTED environment variable.
+    """
 
     runner_application = Path("/home/ubuntu/github-runner")
     env_file = runner_application / ".env"
@@ -112,6 +127,7 @@ class Runner:
         Args:
             clients: Clients to access various services.
             runner_config: Configuration of the runner instance.
+            runner_status: Status info of the given runner.
             instance: LXD instance of the runner if already created.
         """
         # Dependency injection to share the instances across different `Runner` instance.
@@ -122,7 +138,7 @@ class Runner:
 
         self._shared_fs: Optional[shared_fs.SharedFilesystem] = None
 
-    def create(self, config: CreateRunnerConfig):
+    def create(self, config: CreateRunnerConfig) -> None:
         """Create the runner instance on LXD and register it on GitHub.
 
         Args:
@@ -159,6 +175,62 @@ class Runner:
         except (RunnerError, LxdError) as err:
             raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err
 
+    def _remove_lxd_runner(self, remove_token: Optional[str]) -> None:
+        """Remove running LXD runner instance.
+
+        Args:
+            remove_token: The Github remove token to execute removal with config.sh script.
+
+        Raises:
+            LxdError:If there was an error removing LXD runner instance.
+        """
+        logger.info("Executing command to removal of runner and clean up...")
+
+        if not self.instance:
+            return
+
+        if remove_token:
+            self.instance.execute(
+                [
+                    "/usr/bin/sudo",
+                    "-u",
+                    "ubuntu",
+                    str(self.config_script),
+                    "remove",
+                    "--token",
+                    remove_token,
+                ],
+                hide_cmd=True,
+            )
+
+        if self.instance.status == "Running":
+            logger.info("Removing LXD instance of runner: %s", self.config.name)
+            try:
+                self.instance.stop(wait=True, timeout=60)
+            except LxdError:
+                logger.exception(
+                    "Unable to gracefully stop runner %s within timeout.", self.config.name
+                )
+                logger.info("Force stopping of runner %s", self.config.name)
+                try:
+                    self.instance.stop(force=True)
+                except LxdError as exc:
+                    logger.error("Error stopping instance, %s", exc)
+                    raise
+        else:
+            # Delete ephemeral instances that have error or stopped status which LXD failed to
+            # clean up.
+            logger.warning(
+                "Found runner %s with status %s, forcing deletion",
+                self.config.name,
+                self.instance.status,
+            )
+            try:
+                self.instance.delete(wait=True)
+            except LxdError as exc:
+                logger.error("Error deleting instance, %s", exc)
+                raise
+
     def remove(self, remove_token: Optional[str]) -> None:
         """Remove this runner instance from LXD and GitHub.
 
@@ -170,48 +242,10 @@ class Runner:
         """
         logger.info("Removing runner: %s", self.config.name)
 
-        if self.instance:
-            logger.info("Executing command to removal of runner and clean up...")
-
-            if remove_token:
-                self.instance.execute(
-                    [
-                        "/usr/bin/sudo",
-                        "-u",
-                        "ubuntu",
-                        str(self.config_script),
-                        "remove",
-                        "--token",
-                        remove_token,
-                    ],
-                    hide_cmd=True,
-                )
-
-            if self.instance.status == "Running":
-                logger.info("Removing LXD instance of runner: %s", self.config.name)
-                try:
-                    self.instance.stop(wait=True, timeout=60)
-                except LxdError:
-                    logger.exception(
-                        "Unable to gracefully stop runner %s within timeout.", self.config.name
-                    )
-                    logger.info("Force stopping of runner %s", self.config.name)
-                    try:
-                        self.instance.stop(force=True)
-                    except LxdError as err:
-                        raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
-            else:
-                # Delete ephemeral instances that have error or stopped status which LXD failed to
-                # clean up.
-                logger.warning(
-                    "Found runner %s with status %s, forcing deletion",
-                    self.config.name,
-                    self.instance.status,
-                )
-                try:
-                    self.instance.delete(wait=True)
-                except LxdError as err:
-                    raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
+        try:
+            self._remove_lxd_runner(remove_token=remove_token)
+        except LxdError as exc:
+            raise RunnerRemoveError(f"Unable to remove {self.config.name}") from exc
 
         if self.status.runner_id is None:
             return
@@ -271,6 +305,9 @@ class Runner:
             image: Image used to launch the instance hosting the runner.
             resources: Configuration of the virtual machine resources.
             ephemeral: Whether the instance is ephemeral.
+
+        Raises:
+            LxdError: if there was an error creating an LXD instance.
 
         Returns:
             LXD instance of the runner.
@@ -343,7 +380,11 @@ class Runner:
 
     @retry(tries=5, delay=10, local_logger=logger)
     def _ensure_runner_storage_pool(self) -> None:
-        """Ensure the runner storage pool exists."""
+        """Ensure the runner storage pool exists.
+
+        Raises:
+            RunnerError: If there was an error creating LXD storage pool.
+        """
         if self._clients.lxd.storage_pools.exists("runner"):
             logger.info("Found existing runner LXD storage pool.")
             return
@@ -447,8 +488,8 @@ class Runner:
     def _start_instance(self) -> None:
         """Start an instance and wait for it to boot.
 
-        Args:
-            reconcile_interval: Time in seconds of period between each reconciliation.
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -460,6 +501,11 @@ class Runner:
 
     @retry(tries=20, delay=30, local_logger=logger)
     def _wait_boot_up(self) -> None:
+        """Wait for LXD instance to boot up.
+
+        Raises:
+            RunnerError: If there was an error while waiting for the runner to boot up.
+        """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
@@ -477,9 +523,11 @@ class Runner:
 
         Args:
             runner_binary: Path to the compressed runner binary.
+            arch: The runner system architecture.
 
         Raises:
             RunnerFileLoadError: Unable to load the runner binary into the runner instance.
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -534,6 +582,9 @@ class Runner:
     def _get_default_ip(self) -> Optional[str]:
         """Get the default IP of the runner.
 
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
+
         Returns:
             The default IP of the runner or None if not found.
         """
@@ -560,6 +611,7 @@ class Runner:
 
         Raises:
             RunnerAproxyError: If unable to configure aproxy.
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -602,8 +654,12 @@ class Runner:
         )
         self.instance.execute(["nft", "-f", "-"], input=nft_input.encode("utf-8"))
 
-    def _configure_docker_proxy(self):
-        """Configure docker proxy."""
+    def _configure_docker_proxy(self) -> None:
+        """Configure docker proxy.
+
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
+        """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
@@ -645,6 +701,7 @@ class Runner:
 
         Raises:
             RunnerFileLoadError: Unable to load configuration file on the runner.
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -653,7 +710,11 @@ class Runner:
         startup_contents = self._clients.jinja.get_template("start.j2").render(
             issue_metrics=self._should_render_templates_with_metrics()
         )
-        self._put_file(str(self.runner_script), startup_contents, mode="0755")
+        try:
+            self._put_file(str(self.runner_script), startup_contents, mode="0755")
+        except RunnerFileLoadError as exc:
+            logger.error("Error writing file to runner, %s", exc)
+            raise
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
 
@@ -722,6 +783,9 @@ class Runner:
         Args:
             registration_token: Registration token request from GitHub.
             labels: Labels to tag the runner with.
+
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -757,7 +821,11 @@ class Runner:
 
     @retry(tries=5, delay=30, local_logger=logger)
     def _start_runner(self) -> None:
-        """Start the GitHub runner."""
+        """Start the GitHub runner.
+
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
+        """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
@@ -780,9 +848,11 @@ class Runner:
         Args:
             filepath: Path to load the file in the runner instance.
             content: Content of the file.
+            mode: File permission setting.
 
         Raises:
             RunnerFileLoadError: Failed to load the file into the runner instance.
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -811,6 +881,10 @@ class Runner:
 
         This is a temporary solution to provide tools not offered by the base ubuntu image. Custom
         images based on the GitHub action runner image will be used in the future.
+
+        Raises:
+            RunnerError: if the runner was not created before calling the method.
+            RunnerCreateError: If there was an error installing a snap.
 
         Args:
             snaps: snaps to be installed.

@@ -17,9 +17,7 @@ MOUNTPOINT_FAILURE_EXIT_CODE = 1
 
 @pytest.fixture(autouse=True, name="filesystem_paths")
 def filesystem_paths_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> dict[str, Path]:
-    """
-    Mock the hardcoded filesystem paths.
-    """
+    """Mock the hardcoded filesystem paths."""
     fs_path = tmp_path / "runner-fs"
     fs_images_path = tmp_path / "images"
     fs_quarantine_path = tmp_path / "quarantine"
@@ -35,6 +33,20 @@ def exc_command_fixture(monkeypatch: MonkeyPatch) -> Mock:
     exc_cmd_mock = Mock(return_value=("", 0))
     monkeypatch.setattr("shared_fs.execute_command", exc_cmd_mock)
     return exc_cmd_mock
+
+
+def exc_cmd_side_effect(*args, **_):
+    """Mock command to return NOT_A_MOUNTPOINT exit code.
+
+    Args:
+        args: Positional argument placeholder.
+
+    Returns:
+        Fake exc_cmd return values.
+    """
+    if args[0][0] == "mountpoint":
+        return "", shared_fs.DIR_NO_MOUNTPOINT_EXIT_CODE
+    return "", 0
 
 
 def test_create_creates_directory():
@@ -110,8 +122,8 @@ def test_list_shared_filesystems_empty():
 
 def test_list_shared_filesystems_ignore_unmounted_fs(exc_cmd_mock: MagicMock):
     """
-    arrange: Create shared filesystems for multiple runners and mock mountpoint cmd
-     to return NOT_A_MOUNTPOINT exit code for a dedicated runner.
+    arrange: Create shared filesystems for multiple runners and mock mountpoint cmd \
+        to return NOT_A_MOUNTPOINT exit code for a dedicated runner.
     act: Call list.
     assert: A generator listing all the shared filesystems except the one of the dedicated runner
      is returned.
@@ -123,6 +135,14 @@ def test_list_shared_filesystems_ignore_unmounted_fs(exc_cmd_mock: MagicMock):
     runner_with_mount_failure = runner_names[0]
 
     def exc_cmd_side_effect(*args, **_):
+        """Mock command to return NOT_A_MOUNTPOINT exit code.
+
+        Args:
+            args: Positional argument placeholder.
+
+        Returns:
+            Fake exc_cmd return values.
+        """
         if args[0][0] == "mountpoint" and runner_with_mount_failure in args[0][2]:
             return "", MOUNTPOINT_FAILURE_EXIT_CODE
         return "", 0
@@ -164,18 +184,13 @@ def test_delete_raises_error():
 
 def test_delete_filesystem_ignores_unmounted_filesystem(exc_cmd_mock: MagicMock):
     """
-    arrange: Create a shared filesystem for a runner and mock mountpoint cmd
-     to return NOT_A_MOUNTPOINT exit code.
+    arrange: Create a shared filesystem for a runner and mock mountpoint cmd \
+        to return NOT_A_MOUNTPOINT exit code.
     act: Call delete.
     assert: The shared filesystem is deleted.
     """
     runner_name = secrets.token_hex(16)
     shared_fs.create(runner_name)
-
-    def exc_cmd_side_effect(*args, **_):
-        if args[0][0] == "mountpoint":
-            return "", shared_fs.DIR_NO_MOUNTPOINT_EXIT_CODE
-        return "", 0
 
     exc_cmd_mock.side_effect = exc_cmd_side_effect
 
@@ -214,18 +229,13 @@ def test_get_raises_error_if_not_found():
 
 def test_get_mounts_if_unmounted(exc_cmd_mock: MagicMock):
     """
-    arrange: Given a runner name and a mock mountpoint cmd
-     which returns NOT_A_MOUNTPOINT exit code.
+    arrange: Given a runner name and a mock mountpoint cmd which returns NOT_A_MOUNTPOINT \
+        exit code.
     act: Call create and get.
     assert: The shared filesystem is mounted.
     """
     runner_name = secrets.token_hex(16)
     shared_fs.create(runner_name)
-
-    def exc_cmd_side_effect(*args, **_):
-        if args[0][0] == "mountpoint":
-            return "", shared_fs.DIR_NO_MOUNTPOINT_EXIT_CODE
-        return "", 0
 
     exc_cmd_mock.side_effect = exc_cmd_side_effect
 

@@ -13,7 +13,12 @@ from charm_state import GithubPath, SSHDebugConnection
 
 @dataclass
 class RunnerByHealth:
-    """Set of runners LXD instance by health state."""
+    """Set of runners LXD instance by health state.
+
+    Attributes:
+        healthy: Runners that are correctly running runner script.
+        unhealthy: Runners that are not running runner script.
+    """
 
     healthy: tuple[str]
     unhealthy: tuple[str]
@@ -21,7 +26,14 @@ class RunnerByHealth:
 
 @dataclass
 class ProxySetting:
-    """Represent HTTP-related proxy settings."""
+    """Represent HTTP-related proxy settings.
+
+    Attributes:
+        no_proxy: The comma separated URLs to not go through proxy.
+        http: HTTP proxy URL.
+        https: HTTPS proxy URL.
+        aproxy_address: Aproxy URL.
+    """
 
     no_proxy: Optional[str]
     http: Optional[str]

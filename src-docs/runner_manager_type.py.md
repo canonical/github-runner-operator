@@ -57,6 +57,7 @@ Clients for accessing various services.
  - <b>`github`</b>:  Used to query GitHub API. 
  - <b>`jinja`</b>:  Used for templating. 
  - <b>`lxd`</b>:  Used to interact with LXD API. 
+ - <b>`repo`</b>:  Used to interact with repo-policy-compliance API. 
 
 
 
@@ -71,6 +72,7 @@ Configuration of runner manager.
 
 **Attributes:**
  
+ - <b>`are_metrics_enabled`</b>:  Whether metrics for the runners should be collected. 
  - <b>`charm_state`</b>:  The state of the charm. 
  - <b>`image`</b>:  Name of the image for creating LXD instance. 
  - <b>`lxd_storage_path`</b>:  Path to be used as LXD storage. 

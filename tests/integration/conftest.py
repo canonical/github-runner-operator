@@ -24,7 +24,11 @@ from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-from charm_state import OPENSTACK_CLOUDS_YAML_CONFIG_NAME
+from charm_state import (
+    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    PATH_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+)
 from github_client import GithubClient
 from tests.integration.helpers import (
     deploy_github_runner_charm,
@@ -295,7 +299,7 @@ async def app_scheduled_events(
         reconcile_interval=8,
     )
 
-    await application.set_config({"virtual-machines": "1"})
+    await application.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await reconcile(app=application, model=model)
 
     return application
@@ -340,7 +344,7 @@ async def app_no_wait_fixture(
     https_proxy: str,
     no_proxy: str,
 ) -> AsyncIterator[Application]:
-    """GitHub runner charm application without waiting for active."""
+    """Github runner charm application without waiting for active."""
     app: Application = await deploy_github_runner_charm(
         model=model,
         charm_file=charm_file,
@@ -354,7 +358,7 @@ async def app_no_wait_fixture(
         reconcile_interval=60,
         wait_idle=False,
     )
-    await app.set_config({"virtual-machines": "1"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     return app
 
 
@@ -374,7 +378,7 @@ async def tmate_ssh_server_app_fixture(
 async def tmate_ssh_server_unit_ip_fixture(
     model: Model,
     tmate_ssh_server_app: Application,
-) -> AsyncIterator[str]:
+) -> bytes | str:
     """tmate-ssh-server charm unit ip."""
     status: FullStatus = await model.get_status([tmate_ssh_server_app.name])
     try:
@@ -467,7 +471,7 @@ async def app_with_forked_repo(
     """
     app = app_no_runner  # alias for readability as the app will have a runner during the test
 
-    await app.set_config({"path": forked_github_repository.full_name})
+    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
     await ensure_charm_has_runner(app=app, model=model)
 
     return app
@@ -510,7 +514,15 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
     )
 
     def get_branch():
-        """Get newly created branch."""
+        """Get newly created branch.
+
+        Raises:
+            GithubException: if unexpected GithubException has happened apart from repository not \
+                found.
+
+        Returns:
+            New branch if successful, False otherwise.
+        """
         try:
             branch = github_repository.get_branch(test_branch)
         except GithubException as err:

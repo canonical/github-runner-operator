@@ -7,6 +7,7 @@ import pytest
 from juju.application import Application
 from juju.model import Model
 
+from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers import reconcile, wait_till_num_of_runners
 
 
@@ -18,7 +19,7 @@ async def test_spawn_one_runner(model: Model, app_juju_storage: Application) -> 
     act: Spawn one runner.
     assert: One runner should exist.
     """
-    await app_juju_storage.set_config({"virtual-machines": "1"})
+    await app_juju_storage.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await reconcile(app=app_juju_storage, model=model)
 
     await wait_till_num_of_runners(unit=app_juju_storage.units[0], num=1)

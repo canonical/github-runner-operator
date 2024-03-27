@@ -12,7 +12,7 @@ Models and functions for the metric events.
 
 ---
 
-<a href="../src/metrics.py#L156"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L158"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 
@@ -39,12 +39,12 @@ The metric event is logged to the metrics log.
 
 ---
 
-<a href="../src/metrics.py#L207"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L215"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `setup_logrotate`
 
 ```python
-setup_logrotate()
+setup_logrotate() → None
 ```
 
 Configure logrotate for the metrics log. 
@@ -85,12 +85,12 @@ Base class for metric events.
  - <b>`timestamp`</b>:  The UNIX time stamp of the time at which the event was originally issued. 
  - <b>`event`</b>:  The name of the event. Will be set to the class name in snake case if not provided. 
 
-<a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L54"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
 ```python
-__init__(*args, **kwargs)
+__init__(*args: Any, **kwargs: Any)
 ```
 
 Initialize the event. 
@@ -99,8 +99,8 @@ Initialize the event.
 
 **Args:**
  
- - <b>`*args`</b>:  The positional arguments to pass to the base class. 
- - <b>`**kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
+ - <b>`args`</b>:  The positional arguments to pass to the base class. 
+ - <b>`kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
 
 
 
@@ -120,12 +120,12 @@ Metric event for when the charm has finished reconciliation.
  - <b>`idle_runners`</b>:  The number of idle runners. 
  - <b>`duration`</b>:  The duration of the reconciliation in seconds. 
 
-<a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L54"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
 ```python
-__init__(*args, **kwargs)
+__init__(*args: Any, **kwargs: Any)
 ```
 
 Initialize the event. 
@@ -134,8 +134,8 @@ Initialize the event.
 
 **Args:**
  
- - <b>`*args`</b>:  The positional arguments to pass to the base class. 
- - <b>`**kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
+ - <b>`args`</b>:  The positional arguments to pass to the base class. 
+ - <b>`kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
 
 
 
@@ -153,12 +153,12 @@ Metric event for when a runner is installed.
  - <b>`flavor`</b>:  Describes the characteristics of the runner.  The flavor could be for example "small". 
  - <b>`duration`</b>:  The duration of the installation in seconds. 
 
-<a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L54"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
 ```python
-__init__(*args, **kwargs)
+__init__(*args: Any, **kwargs: Any)
 ```
 
 Initialize the event. 
@@ -167,8 +167,8 @@ Initialize the event.
 
 **Args:**
  
- - <b>`*args`</b>:  The positional arguments to pass to the base class. 
- - <b>`**kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
+ - <b>`args`</b>:  The positional arguments to pass to the base class. 
+ - <b>`kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
 
 
 
@@ -190,12 +190,12 @@ Metric event for when a runner is started.
  - <b>`idle`</b>:  The idle time in seconds. 
  - <b>`queue_duration`</b>:  The time in seconds it took before the runner picked up the job.  This is optional as we rely on the Github API and there may be problems  retrieving the data. 
 
-<a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L54"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
 ```python
-__init__(*args, **kwargs)
+__init__(*args: Any, **kwargs: Any)
 ```
 
 Initialize the event. 
@@ -204,8 +204,8 @@ Initialize the event.
 
 **Args:**
  
- - <b>`*args`</b>:  The positional arguments to pass to the base class. 
- - <b>`**kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
+ - <b>`args`</b>:  The positional arguments to pass to the base class. 
+ - <b>`kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
 
 
 
@@ -227,13 +227,14 @@ Metric event for when a runner is stopped.
  - <b>`status`</b>:  A string describing the reason for stopping the runner. 
  - <b>`status_info`</b>:  More information about the status. 
  - <b>`job_duration`</b>:  The duration of the job in seconds. 
+ - <b>`job_conclusion`</b>:  The job conclusion, e.g. "success", "failure", ... 
 
-<a href="../src/metrics.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics.py#L54"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
 ```python
-__init__(*args, **kwargs)
+__init__(*args: Any, **kwargs: Any)
 ```
 
 Initialize the event. 
@@ -242,8 +243,8 @@ Initialize the event.
 
 **Args:**
  
- - <b>`*args`</b>:  The positional arguments to pass to the base class. 
- - <b>`**kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
+ - <b>`args`</b>:  The positional arguments to pass to the base class. 
+ - <b>`kwargs`</b>:  The keyword arguments to pass to the base class. These are used to set the  specific fields. E.g. timestamp=12345 will set the timestamp field to 12345. 
 
 
 
