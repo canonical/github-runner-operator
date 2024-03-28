@@ -1,7 +1,9 @@
 name: integration-tests
 
 on:
-  pull_request:
+  # TODO: Re-enable
+  # pull_request:
+  workflow_dispatch:
 
 jobs:
   # test option values defined at test/conftest.py are passed on via repository secret
@@ -38,10 +40,11 @@ jobs:
     with:
       juju-channel: 3.2/stable
       pre-run-script: scripts/setup-microstack.sh
+      # Setup the microk8s for microstack deployment. The tests runs on LXD.
       provider: microk8s
       channel: 1.26-strict/stable
       microk8s-addons: "dns ingress hostpath-storage"
       test-tox-env: integration-juju3.2
-      modules: '["test_openstack"]'
+      modules: '["test_openstack_runner"]'
       self-hosted-runner: true
-      self-hosted-runner-label: two-xlarge
+      self-hosted-runner-label: xlarge

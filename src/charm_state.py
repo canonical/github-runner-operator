@@ -31,6 +31,8 @@ ARCHITECTURES_X86 = {"x86_64"}
 CHARM_STATE_PATH = Path("charm_state.json")
 
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
+OPENSTACK_NETWORK_CONFIG_NAME = "experimental-openstack-network"
+OPENSTACK_FLAVOR_CONFIG_NAME = "experimental-openstack-flavor"
 
 LABELS_CONFIG_NAME = "labels"
 
@@ -133,6 +135,13 @@ class RunnerStorage(str, Enum):
 
     JUJU_STORAGE = "juju-storage"
     MEMORY = "memory"
+
+
+class InstanceType(str, Enum):
+    """Type of instance for runner."""
+
+    LOCAL_LXD = "local_lxd"
+    OPENSTACK = "openstack"
 
 
 class CharmConfigInvalidError(Exception):
@@ -341,8 +350,48 @@ class CharmConfig(BaseModel):
         return values
 
 
-class RunnerCharmConfig(BaseModel):
-    """Runner configurations for the charm.
+class OpenstackRunnerConfig(BaseModel):
+    """Runner configuration for OpenStack Instances.
+
+    Attributes:
+        virtual_machines: Number of virtual machine-based runner to spawn.
+        openstack_flavor: flavor on openstack to use for virtual machines.
+        openstack_network: Network on openstack to use for virtual machines.
+    """
+
+    virtual_machines: int
+    openstack_flavor: str
+    openstack_network: str
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "OpenstackRunnerConfig":
+        """Initialize the config from charm.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            Openstack runner config of the charm.
+        """
+        try:
+            virtual_machines = int(charm.config["virtual-machines"])
+        except ValueError as err:
+            raise CharmConfigInvalidError(
+                "The virtual-machines configuration must be int"
+            ) from err
+
+        openstack_flavor = charm.config[OPENSTACK_FLAVOR_CONFIG_NAME]
+        openstack_network = charm.config[OPENSTACK_NETWORK_CONFIG_NAME]
+
+        return cls(
+            virtual_machines=virtual_machines,
+            openstack_flavor=openstack_flavor,
+            openstack_network=openstack_network,
+        )
+
+
+class LocalLxdRunnerConfig(BaseModel):
+    """Runner configurations for local LXD instances.
 
     Attributes:
         virtual_machines: Number of virtual machine-based runner to spawn.
@@ -355,14 +404,14 @@ class RunnerCharmConfig(BaseModel):
     runner_storage: RunnerStorage
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "RunnerCharmConfig":
+    def from_charm(cls, charm: CharmBase) -> "LocalLxdRunnerConfig":
         """Initialize the config from charm.
 
         Args:
             charm: The charm instance.
 
         Returns:
-            Current config of the charm.
+            Local LXD runner config of the charm.
         """
         try:
             runner_storage = RunnerStorage(charm.config["runner-storage"])
@@ -422,6 +471,9 @@ class RunnerCharmConfig(BaseModel):
             )
 
         return values
+
+
+RunnerConfig = OpenstackRunnerConfig | LocalLxdRunnerConfig
 
 
 class ProxyConfig(BaseModel):
@@ -606,8 +658,9 @@ class CharmState:
     arch: Arch
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
+    instance_type: InstanceType
     charm_config: CharmConfig
-    runner_config: RunnerCharmConfig
+    runner_config: RunnerConfig
     ssh_debug_connections: list[SSHDebugConnection]
 
     @classmethod
@@ -639,13 +692,20 @@ class CharmState:
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
         try:
-            runner_config = RunnerCharmConfig.from_charm(charm)
+            runner_config: RunnerConfig
+            if charm_config.openstack_clouds_yaml is not None:
+                instance_type = InstanceType.OPENSTACK
+                runner_config = OpenstackRunnerConfig.from_charm(charm)
+            else:
+                instance_type = InstanceType.LOCAL_LXD
+                runner_config = LocalLxdRunnerConfig.from_charm(charm)
         except (ValidationError, ValueError) as exc:
             logger.error("Invalid charm config: %s", exc)
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
         if (
             prev_state is not None
+            and isinstance(runner_config, LocalLxdRunnerConfig)
             and prev_state["runner_config"]["runner_storage"] != runner_config.runner_storage
         ):
             logger.warning(
@@ -662,6 +722,7 @@ class CharmState:
         except UnsupportedArchitectureError as exc:
             logger.error("Unsupported architecture: %s", exc.arch)
             raise CharmConfigInvalidError(f"Unsupported architecture {exc.arch}") from exc
+
         try:
             ssh_debug_connections = SSHDebugConnection.from_charm(charm)
         except ValidationError as exc:
@@ -675,6 +736,7 @@ class CharmState:
             charm_config=charm_config,
             runner_config=runner_config,
             ssh_debug_connections=ssh_debug_connections,
+            instance_type=instance_type,
         )
 
         state_dict = dataclasses.asdict(state)

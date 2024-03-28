@@ -17,6 +17,7 @@ from charm_state import (
     Arch,
     CharmConfigInvalidError,
     CharmState,
+    InstanceType,
     ProxyConfig,
     SSHDebugConnection,
 )
@@ -291,6 +292,7 @@ def test_openstack_config(clouds_yaml: dict):
     mock_charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = json.dumps(clouds_yaml)
     state = CharmState.from_charm(mock_charm)
     assert state.charm_config.openstack_clouds_yaml == clouds_yaml
+    assert state.instance_type == InstanceType.OPENSTACK
 
 
 def test_openstack_config_invalid_yaml():

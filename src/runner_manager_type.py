@@ -86,6 +86,29 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
 
 
 @dataclass
+class OpenstackRunnerManagerConfig:
+    """Configuration of runner manager.
+
+    Attributes:
+        charm_state: The state of the charm.
+        path: GitHub repository path in the format '<owner>/<repo>', or the
+            GitHub organization name.
+        token: GitHub personal access token to register runner to the
+            repository or organization.
+        flavor: OpenStack flavor for defining the runner resources.
+        network: OpenStack network for runner network access.
+        dockerhub_mirror: URL of dockerhub mirror to use.
+    """
+
+    charm_state: CharmState
+    path: GithubPath
+    token: str
+    flavor: str
+    network: str
+    dockerhub_mirror: str | None
+
+
+@dataclass
 class RunnerInfo:
     """Information from GitHub of a runner.
 

@@ -50,6 +50,24 @@ Configuration for runner.
 
 ---
 
+## <kbd>class</kbd> `RunnerGithubInfo`
+GitHub info of a runner. 
+
+
+
+**Attributes:**
+ 
+ - <b>`runner_name`</b>:  Name of the runner. 
+ - <b>`runner_id`</b>:  ID of the runner assigned by GitHub. 
+ - <b>`online`</b>:  Whether GitHub marks this runner as online. 
+ - <b>`busy`</b>:  Whether GitHub marks this runner as busy. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `RunnerStatus`
 Status of runner. 
 
