@@ -182,7 +182,7 @@ Runner manager for OpenStack-based instances.
  - <b>`app_name`</b>:  An name for the set of runners. 
  - <b>`unit`</b>:  Unit number of the set of runners. 
  - <b>`instance_name`</b>:  Prefix of the name for the set of runners. 
- - <b>`flavour`</b>:  OpenStack flavour for defining the runner resources. 
+ - <b>`flavor`</b>:  OpenStack flavor for defining the runner resources. 
  - <b>`network`</b>:  OpenStack network for runner network access. 
 
 <a href="../src/openstack_cloud/openstack_manager.py#L420"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>

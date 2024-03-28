@@ -31,6 +31,8 @@ ARCHITECTURES_X86 = {"x86_64"}
 CHARM_STATE_PATH = Path("charm_state.json")
 
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
+OPENSTACK_NETWORK_CONFIG_NAME = "experimental-openstack-network"
+OPENSTACK_FLAVOR_CONFIG_NAME = "experimental-openstack-flavor"
 
 LABELS_CONFIG_NAME = "labels"
 
@@ -353,12 +355,12 @@ class OpenstackRunnerConfig(BaseModel):
 
     Attributes:
         virtual_machines: Number of virtual machine-based runner to spawn.
-        openstack_flavour: Flavour on openstack to use for virtual machines.
+        openstack_flavor: flavor on openstack to use for virtual machines.
         openstack_network: Network on openstack to use for virtual machines.
     """
 
     virtual_machines: int
-    openstack_flavour: str
+    openstack_flavor: str
     openstack_network: str
 
     @classmethod
@@ -378,12 +380,12 @@ class OpenstackRunnerConfig(BaseModel):
                 "The virtual-machines configuration must be int"
             ) from err
 
-        openstack_flavour = charm.config["experimental-openstack-flavour"]
-        openstack_network = charm.config["experimental-openstack-network"]
+        openstack_flavor = charm.config[OPENSTACK_FLAVOR_CONFIG_NAME]
+        openstack_network = charm.config[OPENSTACK_NETWORK_CONFIG_NAME]
 
         return cls(
             virtual_machines=virtual_machines,
-            openstack_flavour=openstack_flavour,
+            openstack_flavor=openstack_flavor,
             openstack_network=openstack_network,
         )
 

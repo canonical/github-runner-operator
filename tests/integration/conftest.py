@@ -22,9 +22,14 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
+from openstack.compute.v2.flavor import Flavor as OpenstackFlavor
 from pytest_operator.plugin import OpsTest
 
-from charm_state import OPENSTACK_CLOUDS_YAML_CONFIG_NAME
+from charm_state import (
+    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    OPENSTACK_FLAVOR_CONFIG_NAME,
+    OPENSTACK_NETWORK_CONFIG_NAME,
+)
 from github_client import GithubClient
 from tests.integration.helpers import (
     deploy_github_runner_charm,
@@ -173,6 +178,14 @@ def openstack_connection_fixture(
     return openstack.connect(first_cloud)
 
 
+@pytest.fixture(scope="module", name="openstack_flavor")
+def openstack_flavor_fixture(
+    openstack_connection: openstack.connection.Connection,
+) -> OpenstackFlavor:
+    """Name of the openstack flavor for runner."""
+    return openstack_connection.create_flavor("runner", 4096, 2, 12)
+
+
 @pytest.fixture(scope="module")
 def model(ops_test: OpsTest) -> Model:
     """Juju model used in the test."""
@@ -224,6 +237,7 @@ async def app_openstack_runner(
     https_proxy: str,
     no_proxy: str,
     openstack_clouds_yaml: str,
+    openstack_flavor: OpenstackFlavor,
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
     application = await deploy_github_runner_charm(
@@ -243,10 +257,14 @@ async def app_openstack_runner(
             "mem": 16 * 1024,
             "virt-type": "virtual-machine",
         },
-        config={OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml},
+        config={
+            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml,
+            OPENSTACK_NETWORK_CONFIG_NAME: "demo_network",
+            OPENSTACK_FLAVOR_CONFIG_NAME: openstack_flavor.name,
+        },
         wait_idle=False,
     )
-    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=40 * 60)
+    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=60 * 60)
 
     return application
 

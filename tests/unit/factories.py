@@ -103,7 +103,7 @@ class MockGithubRunnerCharmFactory(factory.Factory):
             "dockerhub-mirror": "",
             "runner-storage": "juju-storage",
             "experimental-use-aproxy": False,
-            "experimental-openstack-flavour": "m1.small",
+            "experimental-openstack-flavor": "m1.small",
             "experimental-openstack-network": "external",
             "labels": "",
         }

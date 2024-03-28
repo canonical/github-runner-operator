@@ -413,7 +413,7 @@ class OpenstackRunnerManager:
         app_name: An name for the set of runners.
         unit: Unit number of the set of runners.
         instance_name: Prefix of the name for the set of runners.
-        flavour: OpenStack flavour for defining the runner resources.
+        flavor: OpenStack flavor for defining the runner resources.
         network: OpenStack network for runner network access.
     """
 
@@ -490,7 +490,7 @@ class OpenstackRunnerManager:
         conn.create_server(
             name=instance_config.name,
             image=IMAGE_NAME,
-            flavour=self._config.flavour,
+            flavor=self._config.flavor,
             network=self._config.network,
             userdata=cloud_userdata,
             wait=True,

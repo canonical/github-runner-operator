@@ -95,7 +95,7 @@ class OpenstackRunnerManagerConfig:
             GitHub organization name.
         token: GitHub personal access token to register runner to the
             repository or organization.
-        flavour: OpenStack flavour for defining the runner resources.
+        flavor: OpenStack flavor for defining the runner resources.
         network: OpenStack network for runner network access.
         dockerhub_mirror: URL of dockerhub mirror to use.
     """
@@ -103,7 +103,7 @@ class OpenstackRunnerManagerConfig:
     charm_state: CharmState
     path: GithubPath
     token: str
-    flavour: str
+    flavor: str
     network: str
     dockerhub_mirror: str | None
 

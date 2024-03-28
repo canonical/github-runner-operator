@@ -38,4 +38,4 @@ async def test_openstack_reconcile_one_runner(
     act: Change number of runners to one and reconcile.
     assert: One runner is spawned.
     """
-    ensure_charm_has_runner(app_openstack_runner, model)
+    await ensure_charm_has_runner(app_openstack_runner, model)
