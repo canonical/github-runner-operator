@@ -19,8 +19,8 @@ jobs:
           channel: 1.26-strict/stable
           microk8s-addons: "dns ingress hostpath-storage" 
           juju-channel: 3.2/stable
-      - name: Run pre-run scripts
-        run: bash -xe scripts/setup-microstack.sh
+      # - name: Run pre-run scripts
+      #   run: bash -xe scripts/setup-microstack.sh
       - name: Tmate debugging session (self-hosted)
         uses: canonical/action-tmate@main
         timeout-minutes: 1800
