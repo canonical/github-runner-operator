@@ -45,7 +45,7 @@ clouds_yaml="${PWD}/clouds.yaml"
 # Use admin account for access to create flavors, etc.
 sg snap_daemon -c "sunbeam cloud-config --admin" | tee "$clouds_yaml"
 # Test connection
-OS_CLIENT_CONFIG_FILE="$clouds_yaml" openstack --os-cloud sunbeam user show demo
+OS_CLIENT_CONFIG_FILE="$clouds_yaml" openstack --os-cloud sunbeam user show admin
 
 juju clouds || echo "Failed to list clouds"
 juju bootstrap localhost lxd
