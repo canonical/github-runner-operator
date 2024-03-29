@@ -538,7 +538,7 @@ class OpenstackRunnerManager:
                 ssh_conn = SshConnection(
                     host=ip,
                     user="ubuntu",
-                    connect_kwargs={"key_filename": self.get_key_path(instance.name)},
+                    connect_kwargs={"key_filename": str(self.get_key_path(instance.name))},
                 )
 
                 result = ssh_conn.run("ps aux")

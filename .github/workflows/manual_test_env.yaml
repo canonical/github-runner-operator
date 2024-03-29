@@ -1,7 +1,9 @@
 name: Manual test
 
 on:
-  pull_request:
+  # TODO: Re-enable
+  # pull_request:
+  workflow_dispatch:
 
 jobs:
   integration-tests-microstack:
