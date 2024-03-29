@@ -12,6 +12,7 @@ from typing import Any, AsyncIterator, Iterator, Optional
 
 import openstack
 import openstack.connection
+from openstack.exceptions import ConflictException
 import pytest
 import pytest_asyncio
 import yaml
@@ -183,7 +184,13 @@ def openstack_flavor_fixture(
     openstack_connection: openstack.connection.Connection,
 ) -> OpenstackFlavor:
     """Name of the openstack flavor for runner."""
-    return openstack_connection.create_flavor("runner", 4096, 2, 12)
+    flavor_name = "runner"
+    try:
+        openstack_connection.create_flavor(flavor_name, 4096, 2, 10)
+    except ConflictException:
+        # Do nothing if flavor already exists.
+        pass
+    return flavor_name
 
 
 @pytest.fixture(scope="module")
@@ -259,7 +266,7 @@ async def app_openstack_runner(
         },
         config={
             OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml,
-            OPENSTACK_NETWORK_CONFIG_NAME: "demo_network",
+            OPENSTACK_NETWORK_CONFIG_NAME: "demo-network",
             OPENSTACK_FLAVOR_CONFIG_NAME: openstack_flavor.name,
         },
         wait_idle=False,
