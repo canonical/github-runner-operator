@@ -39,7 +39,7 @@ logger = logging.getLogger(__name__)
 IMAGE_PATH_TMPL = "jammy-server-cloudimg-{architecture}-compressed.img"
 IMAGE_NAME = "jammy"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
-_SSH_KEY_PATH = Path("/root/.ssh")
+_SSH_KEY_PATH = Path("/home/ubuntu/.ssh")
 
 
 @contextmanager
@@ -445,7 +445,7 @@ class OpenstackRunnerManager:
         Args:
             name: The name of the runner.
         """
-        return _SSH_KEY_PATH / name
+        return _SSH_KEY_PATH / f"runner-{name}.key"
 
     def _setup_runner_keypair(self, conn: OpenstackConnection, name: str):
         """Set up the SSH keypair for a runner.

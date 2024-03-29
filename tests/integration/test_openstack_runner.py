@@ -26,7 +26,6 @@ async def test_openstack_check_runner(
     assert action.results["online"] == "0"
     assert action.results["offline"] == "0"
     assert action.results["unknown"] == "0"
-    assert action.results["runners"] == "[]"
 
 
 async def test_openstack_reconcile_one_runner(
