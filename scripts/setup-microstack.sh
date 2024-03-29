@@ -42,7 +42,8 @@ retry 'sudo -g snap_daemon sunbeam cluster bootstrap --accept-defaults' 'Waiting
 # 2024/03/11 Demo user setup should be removed after openstack server creation PR.
 retry 'sudo -g snap_daemon sunbeam configure --accept-defaults --openrc demo-openrc' 'Configuring sunbeam cluster' 3
 clouds_yaml="${PWD}/clouds.yaml"
-sg snap_daemon -c "sunbeam cloud-config" | tee "$clouds_yaml"
+# Use admin account for access to create flavors, etc.
+sg snap_daemon -c "sunbeam cloud-config --admin" | tee "$clouds_yaml"
 # Test connection
 OS_CLIENT_CONFIG_FILE="$clouds_yaml" openstack --os-cloud sunbeam user show demo
 
