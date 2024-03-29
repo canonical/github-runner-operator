@@ -12,7 +12,6 @@ from typing import Any, AsyncIterator, Iterator, Optional
 
 import openstack
 import openstack.connection
-from openstack.exceptions import ConflictException
 import pytest
 import pytest_asyncio
 import yaml
@@ -23,7 +22,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
-from openstack.compute.v2.flavor import Flavor as OpenstackFlavor
+from openstack.exceptions import ConflictException
 from pytest_operator.plugin import OpsTest
 
 from charm_state import (
@@ -182,7 +181,7 @@ def openstack_connection_fixture(
 @pytest.fixture(scope="module", name="openstack_flavor")
 def openstack_flavor_fixture(
     openstack_connection: openstack.connection.Connection,
-) -> OpenstackFlavor:
+) -> str:
     """Name of the openstack flavor for runner."""
     flavor_name = "runner"
     try:
@@ -244,7 +243,7 @@ async def app_openstack_runner(
     https_proxy: str,
     no_proxy: str,
     openstack_clouds_yaml: str,
-    openstack_flavor: OpenstackFlavor,
+    openstack_flavor: str,
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
     application = await deploy_github_runner_charm(
@@ -267,7 +266,7 @@ async def app_openstack_runner(
         config={
             OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml,
             OPENSTACK_NETWORK_CONFIG_NAME: "demo-network",
-            OPENSTACK_FLAVOR_CONFIG_NAME: openstack_flavor.name,
+            OPENSTACK_FLAVOR_CONFIG_NAME: openstack_flavor,
         },
         wait_idle=False,
     )

@@ -29,7 +29,7 @@ from errors import (
     SubprocessError,
 )
 from github_client import GithubClient
-from github_type import RunnerApplication, SelfHostedRunner
+from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
 from runner_manager_type import OpenstackRunnerManagerConfig
 from runner_type import GithubPath, RunnerByHealth, RunnerGithubInfo
 from utilities import execute_command, retry
@@ -507,7 +507,9 @@ class OpenstackRunnerManager:
         )
         logger.debug("List of runners found on GitHub:%s", remote_runners_list)
         return tuple(
-            RunnerGithubInfo(runner.name, runner.id, runner.online, runner.busy)
+            RunnerGithubInfo(
+                runner.name, runner.id, runner.status == GitHubRunnerStatus.ONLINE, runner.busy
+            )
             for runner in remote_runners_list
             if runner.name.startswith(f"{self.instance_name}-")
         )
@@ -565,7 +567,7 @@ class OpenstackRunnerManager:
             The change in number of runners.
         """
         github_info = self.get_github_runner_info()
-        online_runners = [runner.name for runner in github_info if runner.status.online]
+        online_runners = [runner.name for runner in github_info if runner.online]
         logger.info("Found %s existing openstack runners", len(online_runners))
 
         with _create_connection(self._cloud_config) as conn:

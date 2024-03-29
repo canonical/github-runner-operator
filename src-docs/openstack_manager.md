@@ -249,7 +249,7 @@ Get the filepath for storing private SSH of a runner.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L558"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L560"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `reconcile`
 
