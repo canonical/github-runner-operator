@@ -9,11 +9,12 @@ Module for handling interactions with OpenStack.
 ---------------
 - **IMAGE_PATH_TMPL**
 - **IMAGE_NAME**
+- **SECURITY_GROUP_NAME**
 - **BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME**
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L237"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L238"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
@@ -52,7 +53,7 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L294"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L295"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
@@ -80,7 +81,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/utilities.py#L367"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L368"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
@@ -112,7 +113,7 @@ Create an OpenStack instance.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L80"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L81"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `ProxyStringValues`
 Wrapper class to proxy values to string. 
@@ -131,7 +132,7 @@ Wrapper class to proxy values to string.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L191"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L192"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `InstanceConfig`
 The configuration values for creating a single runner instance. 
@@ -170,7 +171,7 @@ __init__(
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L409"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L410"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackRunnerManager`
 Runner manager for OpenStack-based instances. 
@@ -185,7 +186,7 @@ Runner manager for OpenStack-based instances.
  - <b>`flavor`</b>:  OpenStack flavor for defining the runner resources. 
  - <b>`network`</b>:  OpenStack network for runner network access. 
 
-<a href="../src/openstack_cloud/openstack_manager.py#L420"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L421"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -214,7 +215,7 @@ Construct OpenstackRunnerManager object.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L499"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L546"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_github_runner_info`
 
@@ -231,7 +232,7 @@ Get information on GitHub for the runners.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L442"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L443"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_key_path`
 
@@ -249,7 +250,7 @@ Get the filepath for storing private SSH of a runner.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L560"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L607"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `reconcile`
 

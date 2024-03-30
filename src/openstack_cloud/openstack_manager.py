@@ -38,6 +38,7 @@ logger = logging.getLogger(__name__)
 
 IMAGE_PATH_TMPL = "jammy-server-cloudimg-{architecture}-compressed.img"
 IMAGE_NAME = "jammy"
+SECURITY_GROUP_NAME = "runner-policy"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 _SSH_KEY_PATH = Path("/home/ubuntu/.ssh")
 
@@ -447,6 +448,50 @@ class OpenstackRunnerManager:
         """
         return _SSH_KEY_PATH / f"runner-{name}.key"
 
+    def _ensure_security_group(self, conn: OpenstackConnection):
+        """Ensure runner security group exists.
+
+        Args:
+            conn: The connection object to access OpenStack cloud.
+        """
+        rule_exists_icmp = False
+        rule_exists_ssh = False
+
+        existing_security_group = conn.get_security_group(name_or_id=SECURITY_GROUP_NAME)
+        if existing_security_group is None:
+            conn.create_security_group(
+                name=SECURITY_GROUP_NAME, description="For GitHub self-hosted runners."
+            )
+        else:
+            existing_rules = existing_security_group["security_group_rules"]
+            for rule in existing_rules:
+                if rule["protocol"] == "icmp":
+                    logger.debug("Found ICMP rule for security group")
+                    rule_exists_icmp = True
+                if (
+                    rule["protocol"] == "tcp"
+                    and rule["port_range_min"] == rule["port_range_max"] == 22
+                ):
+                    logger.debug("Found SSH rule for security group")
+                    rule_exists_ssh = True
+
+        if not rule_exists_icmp:
+            conn.create_security_group_rule(
+                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                protocol="icmp",
+                direction="ingress",
+                ethertype="IPv4",
+            )
+        if not rule_exists_ssh:
+            conn.create_security_group_rule(
+                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                port_range_min="22",
+                port_range_max="22",
+                protocol="tcp",
+                direction="ingress",
+                ethertype="IPv4",
+            )
+
     def _setup_runner_keypair(self, conn: OpenstackConnection, name: str):
         """Set up the SSH keypair for a runner.
 
@@ -491,7 +536,9 @@ class OpenstackRunnerManager:
             name=instance_config.name,
             image=IMAGE_NAME,
             flavor=self._config.flavor,
+            ip_pool="default",
             network=self._config.network,
+            security_groups=["default", SECURITY_GROUP_NAME],
             userdata=cloud_userdata,
             wait=True,
         )
