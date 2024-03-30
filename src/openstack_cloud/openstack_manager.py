@@ -457,12 +457,8 @@ class OpenstackRunnerManager:
         rule_exists_icmp = False
         rule_exists_ssh = False
 
-        existing_security_group = conn.get_security_group(name_or_id=SECURITY_GROUP_NAME)
-        if existing_security_group is None:
-            conn.create_security_group(
-                name=SECURITY_GROUP_NAME, description="For GitHub self-hosted runners."
-            )
-        else:
+        try:
+            existing_security_group = conn.get_security_group(name_or_id=SECURITY_GROUP_NAME)
             existing_rules = existing_security_group["security_group_rules"]
             for rule in existing_rules:
                 if rule["protocol"] == "icmp":
@@ -474,6 +470,11 @@ class OpenstackRunnerManager:
                 ):
                     logger.debug("Found SSH rule for security group")
                     rule_exists_ssh = True
+        except openstack.exceptions.BadRequestException:
+            logger.info("Security group for runner not found, creating it")
+            conn.create_security_group(
+                name=SECURITY_GROUP_NAME, description="For GitHub self-hosted runners."
+            )
 
         if not rule_exists_icmp:
             conn.create_security_group_rule(
