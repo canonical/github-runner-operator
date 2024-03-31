@@ -19,6 +19,7 @@ import openstack.image.v2.image
 from fabric import Connection as SshConnection
 from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import OpenStackCloudException
+from paramiko.ssh_exception import NoValidConnectionsError
 
 from charm_state import Arch, ProxyConfig, SSHDebugConnection, UnsupportedArchitectureError
 from errors import (
@@ -593,11 +594,34 @@ class OpenstackRunnerManager:
                     connect_kwargs={"key_filename": str(self.get_key_path(instance.name))},
                 )
 
-                result = ssh_conn.run("ps aux")
-                if not result.ok:
-                    continue
-                if "openstack-userdata.sh" in result.stdout:
-                    healthy = True
+                try:
+                    result = ssh_conn.run("ps aux")
+                    logger.debug(
+                        "Output of `ps aux` on %s stderr: %s", instance.name, result.stderr
+                    )
+                    logger.debug(
+                        "Output of `ps aux` on %s stdout: %s", instance.name, result.stdout
+                    )
+                    if not result.ok:
+                        logger.warning(
+                            "List process failed on %s with: %s", instance.name, result.stderr
+                        )
+                        continue
+
+                    if "openstack-userdata.sh" in result.stdout:
+                        logger.info("Runner process found to be healthy on %s", instance.name)
+                        healthy = True
+                        break
+                except NoValidConnectionsError:
+                    logger.info("Unable to SSH into %s with address %s", instance.name, ip)
+                    # Looping over all IP and trying SSH.
+                else:
+                    logger.error(
+                        "Unable to SSH into %s with any address on network %s",
+                        instance.name,
+                        self._config.network,
+                    )
+
             if healthy:
                 healthy_runner.append(instance.name)
             else:
