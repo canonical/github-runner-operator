@@ -542,6 +542,7 @@ class OpenstackRunnerManager:
         conn.create_server(
             name=instance_config.name,
             image=IMAGE_NAME,
+            key_name=instance_config.name,
             flavor=self._config.flavor,
             network=self._config.network,
             security_groups=[SECURITY_GROUP_NAME],
