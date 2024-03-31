@@ -457,24 +457,28 @@ class OpenstackRunnerManager:
         rule_exists_icmp = False
         rule_exists_ssh = False
 
-        try:
-            existing_security_group = conn.get_security_group(name_or_id=SECURITY_GROUP_NAME)
+        existing_security_group = conn.get_security_group(name_or_id=SECURITY_GROUP_NAME)
+        if existing_security_group is None:
+            logger.info("Security group %s not found, creating it", SECURITY_GROUP_NAME)
+            conn.create_security_group(
+                name=SECURITY_GROUP_NAME, description="For GitHub self-hosted runners."
+            )
+        else:
             existing_rules = existing_security_group["security_group_rules"]
             for rule in existing_rules:
                 if rule["protocol"] == "icmp":
-                    logger.debug("Found ICMP rule for security group")
+                    logger.debug(
+                        "Found ICMP rule in existing security group %s", SECURITY_GROUP_NAME
+                    )
                     rule_exists_icmp = True
                 if (
                     rule["protocol"] == "tcp"
                     and rule["port_range_min"] == rule["port_range_max"] == 22
                 ):
-                    logger.debug("Found SSH rule for security group")
+                    logger.debug(
+                        "Found SSH rule in existing security group %s", SECURITY_GROUP_NAME
+                    )
                     rule_exists_ssh = True
-        except openstack.exceptions.BadRequestException:
-            logger.info("Security group for runner not found, creating it")
-            conn.create_security_group(
-                name=SECURITY_GROUP_NAME, description="For GitHub self-hosted runners."
-            )
 
         if not rule_exists_icmp:
             conn.create_security_group_rule(
@@ -532,6 +536,7 @@ class OpenstackRunnerManager:
             templates_env=environment, instance_config=instance_config, runner_env=env_contents
         )
 
+        self._ensure_security_group(conn)
         self._setup_runner_keypair(conn, instance_config.name)
         conn.create_server(
             name=instance_config.name,
