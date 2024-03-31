@@ -542,9 +542,8 @@ class OpenstackRunnerManager:
             name=instance_config.name,
             image=IMAGE_NAME,
             flavor=self._config.flavor,
-            ip_pool="default",
             network=self._config.network,
-            security_groups=["default", SECURITY_GROUP_NAME],
+            security_groups=[SECURITY_GROUP_NAME],
             userdata=cloud_userdata,
             wait=True,
         )
