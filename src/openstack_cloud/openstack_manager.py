@@ -27,6 +27,7 @@ from errors import (
     OpenstackInstanceLaunchError,
     OpenStackUnauthorizedError,
     RunnerBinaryError,
+    RunnerStartError,
     SubprocessError,
 )
 from github_client import GithubClient
@@ -442,7 +443,7 @@ class OpenstackRunnerManager:
         self._cloud_config = cloud_config
         self._github = GithubClient(token=self._config.token)
 
-    def get_key_path(self, name: str) -> Path:
+    def _get_key_path(self, name: str) -> Path:
         """Get the filepath for storing private SSH of a runner.
 
         Args:
@@ -507,7 +508,7 @@ class OpenstackRunnerManager:
             conn: The connection object to access OpenStack cloud.
             name: The name of the runner.
         """
-        private_key_path = self.get_key_path(name)
+        private_key_path = self._get_key_path(name)
 
         if private_key_path.exists():
             logger.warning("Existing private key file for %s found, removing it.", name)
@@ -515,6 +516,60 @@ class OpenstackRunnerManager:
 
         keypair = conn.create_keypair(name=name)
         private_key_path.write_text(keypair.private_key)
+
+    def _ssh_health_check(self, instance_name: str, addresses: Iterable[str]) -> bool:
+        """Use SSH to check whether runner application is running.
+
+        Args:
+            instance_name: The name of the instance to check.
+            addresses: The IP addresses to try SSH.
+        """
+        for addr in addresses:
+            ssh_conn = SshConnection(
+                host=addr,
+                user="ubuntu",
+                connect_kwargs={"key_filename": str(self._get_key_path(instance_name))},
+            )
+
+            try:
+                result = ssh_conn.run("ps aux")
+                logger.debug("Output of `ps aux` on %s stderr: %s", instance_name, result.stderr)
+                logger.debug("Output of `ps aux` on %s stdout: %s", instance_name, result.stdout)
+                if not result.ok:
+                    logger.warning("List all process command failed on %s ", instance_name)
+                    continue
+
+                if "/bin/bash /home/ubuntu/actions-runner/run.sh" in result.stdout:
+                    logger.info("Runner process found to be healthy on %s", instance_name)
+                    return True
+
+            except NoValidConnectionsError:
+                logger.info("Unable to SSH into %s with address %s", instance_name, addr)
+                # Looping over all IP and trying SSH.
+
+        logger.error(
+            "Unable to SSH into %s with any address on network %s",
+            instance_name,
+            self._config.network,
+        )
+        return False
+
+    @retry(tries=10, delay=30, local_logger=logger)
+    def _wait_until_runner_process_running(
+        self, instance_name: str, addresses: Iterable[str]
+    ) -> None:
+        """Wait until the runner process is running.
+
+        The waiting to done by the retry declarator.
+
+        Args:
+            instance_name: The name of the instance to wait on.
+            addresses: The IP addresses to try SSH into.
+        """
+        if not self._ssh_health_check(instance_name, addresses):
+            raise RunnerStartError(
+                f"Openstack runner {instance_name} unable to start runner application"
+            )
 
     def _create_runner(self, conn: OpenstackConnection) -> None:
         """Create a runner on OpenStack cloud.
@@ -541,7 +596,7 @@ class OpenstackRunnerManager:
 
         self._ensure_security_group(conn)
         self._setup_runner_keypair(conn, instance_config.name)
-        conn.create_server(
+        instance = conn.create_server(
             name=instance_config.name,
             image=IMAGE_NAME,
             key_name=instance_config.name,
@@ -551,6 +606,8 @@ class OpenstackRunnerManager:
             userdata=cloud_userdata,
             wait=True,
         )
+        addresses = [address["addr"] for address in instance.addresses[self._config.network]]
+        self._ssh_health_check(instance.name, addresses)
 
     def get_github_runner_info(self) -> tuple[RunnerGithubInfo]:
         """Get information on GitHub for the runners.
@@ -588,44 +645,8 @@ class OpenstackRunnerManager:
         ]
 
         for instance in openstack_instances:
-            healthy = False
-            for address in instance.addresses[self._config.network]:
-                ip = address["addr"]
-                ssh_conn = SshConnection(
-                    host=ip,
-                    user="ubuntu",
-                    connect_kwargs={"key_filename": str(self.get_key_path(instance.name))},
-                )
-
-                try:
-                    result = ssh_conn.run("ps aux")
-                    logger.debug(
-                        "Output of `ps aux` on %s stderr: %s", instance.name, result.stderr
-                    )
-                    logger.debug(
-                        "Output of `ps aux` on %s stdout: %s", instance.name, result.stdout
-                    )
-                    if not result.ok:
-                        logger.warning(
-                            "List process failed on %s with: %s", instance.name, result.stderr
-                        )
-                        continue
-
-                    if "/bin/bash /home/ubuntu/actions-runner/run.sh" in result.stdout:
-                        logger.info("Runner process found to be healthy on %s", instance.name)
-                        healthy = True
-                        break
-                except NoValidConnectionsError:
-                    logger.info("Unable to SSH into %s with address %s", instance.name, ip)
-                    # Looping over all IP and trying SSH.
-            else:
-                logger.error(
-                    "Unable to SSH into %s with any address on network %s",
-                    instance.name,
-                    self._config.network,
-                )
-
-            if healthy:
+            addresses = [address["addr"] for address in instance.addresses[self._config.network]]
+            if self._ssh_health_check(instance.name, addresses):
                 healthy_runner.append(instance.name)
             else:
                 unhealthy_runner.append(instance.name)
