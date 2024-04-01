@@ -609,19 +609,19 @@ class OpenstackRunnerManager:
                         )
                         continue
 
-                    if "openstack-userdata.sh" in result.stdout:
+                    if "/bin/bash /home/ubuntu/actions-runner/run.sh" in result.stdout:
                         logger.info("Runner process found to be healthy on %s", instance.name)
                         healthy = True
                         break
                 except NoValidConnectionsError:
                     logger.info("Unable to SSH into %s with address %s", instance.name, ip)
                     # Looping over all IP and trying SSH.
-                else:
-                    logger.error(
-                        "Unable to SSH into %s with any address on network %s",
-                        instance.name,
-                        self._config.network,
-                    )
+            else:
+                logger.error(
+                    "Unable to SSH into %s with any address on network %s",
+                    instance.name,
+                    self._config.network,
+                )
 
             if healthy:
                 healthy_runner.append(instance.name)
@@ -655,8 +655,6 @@ class OpenstackRunnerManager:
             # Spawn new runners
             if delta > 0:
                 self._create_runner(conn)
-            elif delta < 0:
-                self._remove_runners()
             else:
                 logger.info("No changes to number of runners needed")
 
