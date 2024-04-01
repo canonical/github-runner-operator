@@ -274,6 +274,19 @@ EOT""",
         assert False, "Timeout waiting for HTTP server to start up"
 
 
+async def set_app_runner_amount(app: Application, model: Model, num_runners: int) -> None:
+    """Reconcile the application to a runner amount.
+
+    Args:
+        app: The GitHub Runner Charm app to create the runner for.
+        model: The machine charm model.
+        num_runners: The number of runners.
+    """
+    await app.set_config({"virtual-machines": f"{num_runners}"})
+    await reconcile(app=app, model=model)
+    await wait_till_num_of_runners(unit=app.units[0], num=num_runners)
+
+
 async def ensure_charm_has_runner(app: Application, model: Model) -> None:
     """Reconcile the charm to contain one runner.
 
@@ -281,13 +294,7 @@ async def ensure_charm_has_runner(app: Application, model: Model) -> None:
         app: The GitHub Runner Charm app to create the runner for.
         model: The machine charm model.
     """
-    await app.set_config({"virtual-machines": "1"})
-    await reconcile(app=app, model=model)
-    # TODO: Remove
-    import pytest
-
-    pytest.set_trace()
-    await wait_till_num_of_runners(unit=app.units[0], num=1)
+    await set_app_runner_amount(app, model, 1)
 
 
 async def get_runner_name(unit: Unit) -> str:

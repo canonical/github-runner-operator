@@ -6,7 +6,7 @@
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import ensure_charm_has_runner
+from tests.integration.helpers import set_app_runner_amount
 
 
 async def test_openstack_check_runner(
@@ -34,7 +34,29 @@ async def test_openstack_reconcile_one_runner(
 ):
     """
     arrange: An app connected to an OpenStack cloud with no runners.
-    act: Change number of runners to one and reconcile.
-    assert: One runner is spawned.
+    act:
+        1. Change number of runners to one and reconcile.
+        2. Run check-runners action.
+        3. Change number of runners to zero.
+    assert:
+        1. One runner is spawned.
+        2. One online runner.
+        3. No runners.
     """
-    await ensure_charm_has_runner(app_openstack_runner, model)
+    unit = app_openstack_runner.units[0]
+
+    # 1.
+    # The function sets charm config to one runner and runs reconcile action.
+    # Waits until one runner is spawned.
+    await set_app_runner_amount(app_openstack_runner, model, 1)
+
+    # 2.
+    action = await unit.run_action("check-runners")
+    await action.wait()
+
+    assert action.status == "completed"
+    assert action.results["online"] == "1"
+    assert action.results["offline"] == "0"
+    assert action.results["unknown"] == "0"
+
+    await set_app_runner_amount(app_openstack_runner, model, 0)

@@ -39,7 +39,8 @@ logger = logging.getLogger(__name__)
 
 IMAGE_PATH_TMPL = "jammy-server-cloudimg-{architecture}-compressed.img"
 IMAGE_NAME = "jammy"
-SECURITY_GROUP_NAME = "runner-policy"
+# Update the version when security group rules are modified.
+SECURITY_GROUP_NAME = "github-runner-charm-v1"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 _SSH_KEY_PATH = Path("/home/ubuntu/.ssh")
 
@@ -462,7 +463,8 @@ class OpenstackRunnerManager:
         if existing_security_group is None:
             logger.info("Security group %s not found, creating it", SECURITY_GROUP_NAME)
             conn.create_security_group(
-                name=SECURITY_GROUP_NAME, description="For GitHub self-hosted runners."
+                name=SECURITY_GROUP_NAME,
+                description="For servers managed by the github-runner charm.",
             )
         else:
             existing_rules = existing_security_group["security_group_rules"]
