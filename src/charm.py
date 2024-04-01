@@ -391,20 +391,18 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
-            # Only build it in test mode since it may interfere with users systems.
-            if self.config.get("test-mode") == "insecure":
-                self.unit.status = MaintenanceStatus("Building Openstack image")
-                github = GithubClient(token=state.charm_config.token)
-                openstack_manager.build_image(
-                    arch=state.arch,
-                    cloud_config=state.charm_config.openstack_clouds_yaml,
-                    github_client=github,
-                    path=state.charm_config.path,
-                    proxies=state.proxy_config,
-                )
-                # WIP: Add scheduled building of image during refactor.
-                self.unit.status = ActiveStatus()
-                return
+            self.unit.status = MaintenanceStatus("Building Openstack image")
+            github = GithubClient(token=state.charm_config.token)
+            openstack_manager.build_image(
+                arch=state.arch,
+                cloud_config=state.charm_config.openstack_clouds_yaml,
+                github_client=github,
+                path=state.charm_config.path,
+                proxies=state.proxy_config,
+            )
+            # WIP: Add scheduled building of image during refactor.
+            self.unit.status = ActiveStatus()
+            return
 
         self.unit.status = MaintenanceStatus("Installing packages")
         try:
