@@ -630,10 +630,6 @@ class OpenstackRunnerManager:
 
         return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
 
-    def _remove_runners(self):
-        """Remove runners."""
-        raise NotImplementedError()
-
     def reconcile(self, quantity: int) -> int:
         """Reconcile the quantity of runners.
 
@@ -652,7 +648,6 @@ class OpenstackRunnerManager:
 
             # Clean up offline runners.
             if runner_by_health.unhealthy:
-                self._remove_runners()
                 raise NotImplementedError()
 
             delta = quantity - len(runner_by_health.healthy)
