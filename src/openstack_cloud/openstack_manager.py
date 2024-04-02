@@ -34,7 +34,7 @@ from github_client import GithubClient
 from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
 from runner_manager_type import OpenstackRunnerManagerConfig
 from runner_type import GithubPath, RunnerByHealth, RunnerGithubInfo
-from utilities import execute_command, retry
+from utilities import execute_command, retry, set_env_var
 
 logger = logging.getLogger(__name__)
 
@@ -436,6 +436,15 @@ class OpenstackRunnerManager:
             openstack_runner_manager_config: Configurations related to runner manager.
             cloud_config: The openstack clouds.yaml in dict format.
         """
+        # Setting the env var to this process and any child process spawned.
+        proxies = openstack_runner_manager_config.charm_state.proxy_config
+        if no_proxy := proxies.no_proxy:
+            set_env_var("NO_PROXY", no_proxy)
+        if http_proxy := proxies.http:
+            set_env_var("HTTP_PROXY", http_proxy)
+        if https_proxy := proxies.https:
+            set_env_var("HTTPS_PROXY", https_proxy)
+
         self.app_name = app_name
         self.unit_num = unit_num
         self.instance_name = f"{app_name}-{unit_num}"
@@ -668,10 +677,6 @@ class OpenstackRunnerManager:
 
         with _create_connection(self._cloud_config) as conn:
             runner_by_health = self._get_openstack_runner_status(conn)
-
-            # Clean up offline runners.
-            if runner_by_health.unhealthy:
-                raise NotImplementedError()
 
             delta = quantity - len(runner_by_health.healthy)
 
