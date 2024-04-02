@@ -8,7 +8,7 @@ jobs:
   # INTEGRATION_TEST_ARGS to operator-workflows automatically.
   integration-tests-juju2:
     name: Integration test with juju 2.9
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@fix/upload-artifact
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
       juju-channel: 2.9/stable
