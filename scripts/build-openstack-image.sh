@@ -54,10 +54,6 @@ if [[ -n "$HTTP_PROXY" ]]; then
         sed -i "/^http_proxy=/d" /etc/environment
         echo "http_proxy=$HTTP_PROXY" >> /etc/environment
     fi
-    if ! grep -q "Acquire::http::Proxy" /etc/apt/apt.conf || ! grep -q "Acquire::http::Proxy \"$HTTP_PROXY\";" /etc/apt/apt.conf; then
-        sed -i "/^Acquire::http::Proxy/d" /etc/apt/apt.conf
-        echo "Acquire::http::Proxy \"$HTTP_PROXY\";" >> /etc/apt/apt.conf
-    fi
 fi
 
 if [[ -n "$HTTPS_PROXY" ]]; then
@@ -68,10 +64,6 @@ if [[ -n "$HTTPS_PROXY" ]]; then
     if ! grep -q "https_proxy=" /etc/environment || ! grep -q "https_proxy=$HTTPS_PROXY" /etc/environment; then
         sed -i "/^https_proxy=/d" /etc/environment
         echo "https_proxy=$HTTPS_PROXY" >> /etc/environment
-    fi
-    if ! grep -q "Acquire::https::Proxy" /etc/apt/apt.conf || ! grep -q "Acquire::https::Proxy \"$HTTPS_PROXY\";" /etc/apt/apt.conf; then
-        sed -i "/^Acquire::https::Proxy/d" /etc/apt/apt.conf
-        echo "Acquire::https::Proxy \"$HTTPS_PROXY\";" >> /etc/apt/apt.conf
     fi
 fi
 

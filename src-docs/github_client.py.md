@@ -41,14 +41,13 @@ Instantiate the GiHub API client.
 **Args:**
  
  - <b>`token`</b>:  GitHub personal token for API requests. 
- - <b>`request_session`</b>:  Requests session for HTTP requests. 
 
 
 
 
 ---
 
-<a href="../src/github_client.py#L194"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_client.py#L193"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `delete_runner`
 
@@ -67,7 +66,7 @@ Delete the self-hosted runner from GitHub.
 
 ---
 
-<a href="../src/github_client.py#L215"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_client.py#L214"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_job_info`
 
@@ -96,7 +95,7 @@ Get information about a job for a specific workflow run.
 
 ---
 
-<a href="../src/github_client.py#L64"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_client.py#L63"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_runner_application`
 
@@ -131,7 +130,7 @@ Get runner application available for download for given arch.
 
 ---
 
-<a href="../src/github_client.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_client.py#L103"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_runner_github_info`
 
@@ -154,7 +153,7 @@ Get runner information on GitHub under a repo or org.
 
 ---
 
-<a href="../src/github_client.py#L171"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_client.py#L170"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_runner_registration_token`
 
@@ -177,7 +176,7 @@ Get token from GitHub used for registering runners.
 
 ---
 
-<a href="../src/github_client.py#L152"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_client.py#L151"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_runner_remove_token`
 

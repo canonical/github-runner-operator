@@ -39,9 +39,10 @@ from utilities import execute_command, retry, set_env_var
 logger = logging.getLogger(__name__)
 
 IMAGE_PATH_TMPL = "jammy-server-cloudimg-{architecture}-compressed.img"
-IMAGE_NAME = "jammy"
-# Update the version when security group rules are modified.
-SECURITY_GROUP_NAME = "github-runner-charm-v1"
+# Update the version when the image are modified.
+IMAGE_NAME = "github-runner-jammy-v1"
+# Update the version when the security group rules are modified.
+SECURITY_GROUP_NAME = "github-runner-v1"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 _SSH_KEY_PATH = Path("/home/ubuntu/.ssh")
 

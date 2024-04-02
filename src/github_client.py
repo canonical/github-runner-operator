@@ -56,7 +56,6 @@ class GithubClient:
 
         Args:
             token: GitHub personal token for API requests.
-            request_session: Requests session for HTTP requests.
         """
         self._token = token
         self._client = GhApi(token=self._token)
