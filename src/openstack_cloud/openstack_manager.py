@@ -575,10 +575,18 @@ class OpenstackRunnerManager:
             instance_name: The name of the instance to wait on.
             addresses: The IP addresses to try SSH into.
         """
-        if not self._ssh_health_check(instance_name, addresses):
+        try:
+            if not self._ssh_health_check(instance_name, addresses):
+                raise RunnerStartError(
+                    (
+                        "Unable to find running process of runner application on openstack runner "
+                        f"{instance_name}"
+                    )
+                )
+        except TimeoutError as err:
             raise RunnerStartError(
-                f"Openstack runner {instance_name} unable to start runner application"
-            )
+                f"Unable to connect to openstack runner {instance_name}"
+            ) from err
 
     def _create_runner(self, conn: OpenstackConnection) -> None:
         """Create a runner on OpenStack cloud.
