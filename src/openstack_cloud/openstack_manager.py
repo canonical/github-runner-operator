@@ -259,6 +259,16 @@ def build_image(
     Returns:
         The created OpenStack image id.
     """
+    # Setting the env var to this process and any child process spawned.
+    # Needed for GitHub API with GhApi used by GithubClient class.
+    if proxies is not None:
+        if no_proxy := proxies.no_proxy:
+            set_env_var("NO_PROXY", no_proxy)
+        if http_proxy := proxies.http:
+            set_env_var("HTTP_PROXY", http_proxy)
+        if https_proxy := proxies.https:
+            set_env_var("HTTPS_PROXY", https_proxy)
+
     try:
         runner_application = github_client.get_runner_application(path=path, arch=arch)
     except RunnerBinaryError as exc:
@@ -624,7 +634,7 @@ class OpenstackRunnerManager:
             wait=True,
         )
         addresses = [address["addr"] for address in instance.addresses[self._config.network]]
-        self._ssh_health_check(instance.name, addresses)
+        self._wait_until_runner_process_running(instance.name, addresses)
 
     def get_github_runner_info(self) -> tuple[RunnerGithubInfo]:
         """Get information on GitHub for the runners.
