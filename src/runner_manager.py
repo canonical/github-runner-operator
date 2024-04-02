@@ -18,13 +18,22 @@ import requests
 import requests.adapters
 import urllib3
 
-import errors
 import github_metrics
 import metrics
 import runner_logs
 import runner_metrics
 import shared_fs
 from charm_state import VirtualMachineResources
+from errors import (
+    GetSharedFilesystemError,
+    GithubClientError,
+    GithubMetricsError,
+    IssueMetricEventError,
+    RunnerBinaryError,
+    RunnerCreateError,
+    RunnerLogsError,
+    SubprocessError,
+)
 from github_client import GithubClient
 from github_type import RunnerApplication, SelfHostedRunner
 from lxd import LxdClient, LxdInstance
@@ -136,7 +145,7 @@ class RunnerManager:
             return self._clients.github.get_runner_application(
                 path=self.config.path, arch=self.config.charm_state.arch.value, os=os_name
             )
-        except errors.RunnerBinaryError:
+        except RunnerBinaryError:
             logger.error("Failed to get runner application info.")
             raise
 
@@ -162,9 +171,7 @@ class RunnerManager:
             RunnerManager.runner_bin_path.unlink(missing_ok=True)
         except OSError as err:
             logger.exception("Unable to perform file operation on the runner binary path")
-            raise errors.RunnerBinaryError(
-                "File operation failed on the runner binary path"
-            ) from err
+            raise RunnerBinaryError("File operation failed on the runner binary path") from err
 
         try:
             # Download the new file
@@ -178,7 +185,7 @@ class RunnerManager:
 
             if not binary["sha256_checksum"]:
                 logger.error("Checksum for runner binary is not found, unable to verify download.")
-                raise errors.RunnerBinaryError(
+                raise RunnerBinaryError(
                     "Checksum for runner binary is not found in GitHub response."
                 )
 
@@ -192,7 +199,7 @@ class RunnerManager:
                     sha256.update(chunk)
         except requests.RequestException as err:
             logger.exception("Failed to download of runner binary")
-            raise errors.RunnerBinaryError("Failed to download runner binary") from err
+            raise RunnerBinaryError("Failed to download runner binary") from err
 
         logger.info("Finished download of runner binary.")
 
@@ -203,12 +210,12 @@ class RunnerManager:
                 binary["sha256_checksum"],
                 sha256,
             )
-            raise errors.RunnerBinaryError("Checksum mismatch for downloaded runner binary")
+            raise RunnerBinaryError("Checksum mismatch for downloaded runner binary")
 
         # Verify the file integrity.
         if not tarfile.is_tarfile(file.name):
             logger.error("Failed to decompress downloaded GitHub runner binary.")
-            raise errors.RunnerBinaryError("Downloaded runner binary cannot be decompressed.")
+            raise RunnerBinaryError("Downloaded runner binary cannot be decompressed.")
 
         logger.info("Validated newly downloaded runner binary and enabled it.")
 
@@ -281,12 +288,12 @@ class RunnerManager:
                         duration=ts_after - ts_now,
                     ),
                 )
-            except errors.IssueMetricEventError:
+            except IssueMetricEventError:
                 logger.exception("Failed to issue RunnerInstalled metric")
 
             try:
                 fs = shared_fs.get(runner.config.name)
-            except errors.GetSharedFilesystemError:
+            except GetSharedFilesystemError:
                 logger.exception(
                     "Failed to get shared filesystem for runner %s, "
                     "will not be able to issue all metrics.",
@@ -331,7 +338,7 @@ class RunnerManager:
                     pre_job_metrics=extracted_metrics.pre_job,
                     runner_name=extracted_metrics.runner_name,
                 )
-            except errors.GithubMetricsError:
+            except GithubMetricsError:
                 logger.exception("Failed to calculate job metrics")
                 job_metrics = None
 
@@ -387,7 +394,7 @@ class RunnerManager:
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )
             )
-        except errors.IssueMetricEventError:
+        except IssueMetricEventError:
             logger.exception("Failed to issue Reconciliation metric")
 
     def _get_runner_config(self, name: str) -> RunnerConfig:
@@ -446,7 +453,7 @@ class RunnerManager:
             RunnerCreateError: If there was an error spawning new runner.
         """
         if not RunnerManager.runner_bin_path.exists():
-            raise errors.RunnerCreateError("Unable to create runner due to missing runner binary.")
+            raise RunnerCreateError("Unable to create runner due to missing runner binary.")
         logger.info("Getting registration token for GitHub runners.")
         registration_token = self._clients.github.get_runner_registration_token(self.config.path)
         remove_token = self._clients.github.get_runner_remove_token(self.config.path)
@@ -457,7 +464,7 @@ class RunnerManager:
             try:
                 self._create_runner(registration_token, resources, runner)
                 logger.info("Created runner: %s", runner.config.name)
-            except errors.RunnerCreateError:
+            except RunnerCreateError:
                 logger.error("Unable to create runner: %s", runner.config.name)
                 runner.remove(remove_token)
                 logger.info("Cleaned up runner: %s", runner.config.name)
@@ -511,7 +518,7 @@ class RunnerManager:
             if self.config.are_metrics_enabled:
                 try:
                     runner_logs.get_crashed(runner)
-                except errors.RunnerLogsError:
+                except RunnerLogsError:
                     logger.exception("Failed to get logs of crashed runner %s", runner.config.name)
             runner.remove(remove_token)
             logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
@@ -613,7 +620,7 @@ class RunnerManager:
         """
         try:
             remove_token = self._clients.github.get_runner_remove_token(self.config.path)
-        except errors.GithubClientError:
+        except GithubClientError:
             logger.exception("Failed to get remove-token to unregister runners from GitHub.")
             if mode != FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK:
                 raise
@@ -788,7 +795,7 @@ class RunnerManager:
         """
         try:
             execute_command(self._build_image_command())
-        except errors.SubprocessError as exc:
+        except SubprocessError as exc:
             logger.error("Error executing build image command, %s", exc)
             raise
 

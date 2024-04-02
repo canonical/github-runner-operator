@@ -8,9 +8,14 @@ from unittest.mock import MagicMock, Mock
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
-import errors
 import shared_fs
-from errors import SubprocessError
+from errors import (
+    CreateSharedFilesystemError,
+    DeleteSharedFilesystemError,
+    GetSharedFilesystemError,
+    QuarantineSharedFilesystemError,
+    SubprocessError,
+)
 
 MOUNTPOINT_FAILURE_EXIT_CODE = 1
 
@@ -74,7 +79,7 @@ def test_create_raises_exception(exc_cmd_mock: MagicMock):
         cmd=["mock"], return_code=1, stdout="mock stdout", stderr="mock stderr"
     )
 
-    with pytest.raises(errors.CreateSharedFilesystemError):
+    with pytest.raises(CreateSharedFilesystemError):
         shared_fs.create(runner_name)
 
 
@@ -87,7 +92,7 @@ def test_create_raises_exception_if_already_exists():
     runner_name = secrets.token_hex(16)
     shared_fs.create(runner_name)
 
-    with pytest.raises(errors.CreateSharedFilesystemError):
+    with pytest.raises(CreateSharedFilesystemError):
         shared_fs.create(runner_name)
 
 
@@ -166,7 +171,7 @@ def test_delete_filesystem():
 
     shared_fs.delete(runner_name)
 
-    with pytest.raises(errors.GetSharedFilesystemError):
+    with pytest.raises(GetSharedFilesystemError):
         shared_fs.get(runner_name)
 
 
@@ -178,7 +183,7 @@ def test_delete_raises_error():
     """
     runner_name = secrets.token_hex(16)
 
-    with pytest.raises(errors.DeleteSharedFilesystemError):
+    with pytest.raises(DeleteSharedFilesystemError):
         shared_fs.delete(runner_name)
 
 
@@ -196,7 +201,7 @@ def test_delete_filesystem_ignores_unmounted_filesystem(exc_cmd_mock: MagicMock)
 
     shared_fs.delete(runner_name)
 
-    with pytest.raises(errors.GetSharedFilesystemError):
+    with pytest.raises(GetSharedFilesystemError):
         shared_fs.get(runner_name)
 
 
@@ -223,7 +228,7 @@ def test_get_raises_error_if_not_found():
     """
     runner_name = secrets.token_hex(16)
 
-    with pytest.raises(errors.GetSharedFilesystemError):
+    with pytest.raises(GetSharedFilesystemError):
         shared_fs.get(runner_name)
 
 
@@ -282,5 +287,5 @@ def test_quarantine_raises_error():
     """
     runner_name = secrets.token_hex(16)
 
-    with pytest.raises(errors.QuarantineSharedFilesystemError):
+    with pytest.raises(QuarantineSharedFilesystemError):
         shared_fs.move_to_quarantine(runner_name)

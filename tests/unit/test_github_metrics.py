@@ -6,8 +6,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-import errors
 import github_metrics
+from errors import GithubMetricsError, JobNotFoundError
 from github_client import GithubClient
 from github_type import JobConclusion, JobStats
 from runner_metrics import PreJobMetrics
@@ -60,9 +60,9 @@ def test_job_job_not_found(pre_job_metrics: PreJobMetrics):
     """
     github_client = MagicMock(spec=GithubClient)
     runner_name = secrets.token_hex(16)
-    github_client.get_job_info.side_effect = errors.JobNotFoundError("Job not found")
+    github_client.get_job_info.side_effect = JobNotFoundError("Job not found")
 
-    with pytest.raises(errors.GithubMetricsError):
+    with pytest.raises(GithubMetricsError):
         github_metrics.job(
             github_client=github_client, pre_job_metrics=pre_job_metrics, runner_name=runner_name
         )

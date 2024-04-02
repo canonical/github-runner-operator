@@ -16,8 +16,8 @@ from ghapi.all import GhApi, pages
 from ghapi.page import paged
 from typing_extensions import assert_never
 
-import errors
 from charm_state import Arch, GithubOrg, GithubPath, GithubRepo
+from errors import GithubApiError, JobNotFoundError, RunnerBinaryError, TokenError
 from github_type import (
     JobStats,
     RegistrationToken,
@@ -68,8 +68,8 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
                     msg = "Invalid token."
                 else:
                     msg = "Provided token has not enough permissions or has reached rate-limit."
-                raise errors.TokenError(msg) from exc
-            raise errors.GithubApiError from exc
+                raise TokenError(msg) from exc
+            raise GithubApiError from exc
 
     return wrapper
 
@@ -122,7 +122,7 @@ class GithubClient:
                 if bin["os"] == os and bin["architecture"] == arch
             )
         except StopIteration as err:
-            raise errors.RunnerBinaryError(
+            raise RunnerBinaryError(
                 f"Unable query GitHub runner binary information for {os} {arch}"
             ) from err
 
@@ -286,10 +286,10 @@ class GithubClient:
 
         except HTTPError as exc:
             if exc.code in (401, 403):
-                raise errors.TokenError from exc
-            raise errors.JobNotFoundError(
+                raise TokenError from exc
+            raise JobNotFoundError(
                 f"Could not find job for runner {runner_name}. "
                 f"Could not list jobs for workflow run {workflow_run_id}"
             ) from exc
 
-        raise errors.JobNotFoundError(f"Could not find job for runner {runner_name}.")
+        raise JobNotFoundError(f"Could not find job for runner {runner_name}.")

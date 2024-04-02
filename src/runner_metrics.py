@@ -12,10 +12,9 @@ from typing import Generator, Optional, Type
 
 from pydantic import BaseModel, Field, NonNegativeFloat, ValidationError
 
-import errors
 import metrics
 import shared_fs
-from errors import CorruptMetricDataError
+from errors import CorruptMetricDataError, DeleteSharedFilesystemError, IssueMetricEventError
 from metrics_type import GithubJobMetrics
 
 logger = logging.getLogger(__name__)
@@ -222,7 +221,7 @@ def _clean_up_shared_fs(fs: shared_fs.SharedFilesystem) -> None:
 
     try:
         shared_fs.delete(fs.runner_name)
-    except errors.DeleteSharedFilesystemError:
+    except DeleteSharedFilesystemError:
         logger.exception("Could not delete shared filesystem for runner %s.", fs.runner_name)
 
 
@@ -304,7 +303,7 @@ def issue_events(
     )
     try:
         metrics.issue_event(runner_start_event)
-    except errors.IssueMetricEventError:
+    except IssueMetricEventError:
         logger.exception(
             "Not able to issue RunnerStart metric for runner %s. "
             "Will not issue RunnerStop metric.",
@@ -329,7 +328,7 @@ def issue_events(
         )
         try:
             metrics.issue_event(runner_stop_event)
-        except errors.IssueMetricEventError:
+        except IssueMetricEventError:
             logger.exception(
                 "Not able to issue RunnerStop metric for runner %s.", runner_metrics.runner_name
             )

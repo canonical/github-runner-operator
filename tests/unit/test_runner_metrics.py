@@ -7,11 +7,11 @@ from unittest.mock import MagicMock, call
 
 import pytest
 
-import errors
 import metrics
 import metrics_type
 import runner_metrics
 import shared_fs
+from errors import DeleteSharedFilesystemError, IssueMetricEventError
 from github_type import JobConclusion
 from metrics import RunnerStart, RunnerStop
 from runner_metrics import (
@@ -429,7 +429,7 @@ def test_extract_ignores_failure_on_shared_fs_cleanup(
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    shared_fs_mock.delete.side_effect = errors.DeleteSharedFilesystemError(
+    shared_fs_mock.delete.side_effect = DeleteSharedFilesystemError(
         "Failed to delete shared filesystem"
     )
 
@@ -531,7 +531,7 @@ def test_issue_events_returns_empty_set_on_issue_event_failure(
     runner_name = secrets.token_hex(16)
     runner_metrics_data = _create_metrics_data(runner_name)
 
-    issue_event_mock.side_effect = [errors.IssueMetricEventError("Failed to issue metric"), None]
+    issue_event_mock.side_effect = [IssueMetricEventError("Failed to issue metric"), None]
 
     flavor = secrets.token_hex(16)
     job_metrics = metrics_type.GithubJobMetrics(
