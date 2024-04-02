@@ -594,7 +594,7 @@ class OpenstackRunnerManager:
                         f"{instance_name}"
                     )
                 )
-        except TimeoutError as err:
+        except (openstack.exceptions.ResourceTimeout, TimeoutError) as err:
             raise RunnerStartError(
                 f"Unable to connect to openstack runner {instance_name}"
             ) from err

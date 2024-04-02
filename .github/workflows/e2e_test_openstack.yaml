@@ -1,0 +1,81 @@
+name: End-to-End Openstack Test
+
+on:
+  pull_request:
+
+jobs:
+  build-charm:
+    name: Build Charm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Remove Unnecessary Components
+        run: |
+          rm -rf .git
+          rm -rf .github
+
+      - name: Write lxd-profile.yaml
+        run: |
+          cat << EOF > ./lxd-profile.yaml
+          config:
+            security.nesting: true
+            security.privileged: true
+            raw.lxc: |
+              lxc.apparmor.profile=unconfined
+              lxc.mount.auto=proc:rw sys:rw cgroup:rw
+              lxc.cgroup.devices.allow=a
+              lxc.cap.drop=
+          devices:
+            kmsg:
+              path: /dev/kmsg
+              source: /dev/kmsg
+              type: unix-char
+          EOF
+
+      - name: Cache github-runner Charm
+        uses: actions/cache@v4
+        id: cache-charm
+        with:
+          path: github-runner_ubuntu-22.04-amd64.charm
+          key: github-runner-charm-${{ hashFiles('**/*') }}
+
+      - name: Setup LXD
+        if: steps.cache-charm.outputs.cache-hit != 'true'
+        uses: canonical/setup-lxd@main
+
+      - name: Install charmcraft
+        if: steps.cache-charm.outputs.cache-hit != 'true'
+        run: sudo snap install charmcraft --classic
+
+      - name: Pack github-runner Charm
+        if: steps.cache-charm.outputs.cache-hit != 'true'
+        run: charmcraft pack || ( cat ~/.local/state/charmcraft/log/* && exit 1 )
+
+      - name: Upload github-runner Charm
+        uses: actions/upload-artifact@v4
+        with:
+          name: dangerous-test-only-github-runner_ubuntu-22.04-amd64.charm
+          path: github-runner_ubuntu-22.04-amd64.charm
+
+  run-id:
+    name: Generate Run ID
+    runs-on: ubuntu-latest
+    outputs:
+      run-id: ${{ steps.run-id.outputs.run-id }}
+    steps:
+      - name: Generate Run ID
+        id: run-id
+        run: |
+          echo "run-id=e2e-$(LC_ALL=C tr -dc 'a-z' < /dev/urandom | head -c4)" >> $GITHUB_OUTPUT
+
+  deploy-e2e-test-runner:
+    name: Deploy End-to-End Test OpenStack Runner (${{ matrix.event.name }})
+    runs-on: ["self-hosted", "xlarge", "x64"]
+    needs: [build-charm, run-id]
+    steps:
+      - name: Setup Lxd Juju Controller
+        uses: charmed-kubernetes/actions-operator@main
+        with:
+          juju-channel: 3.1/stable
+          provider: lxd
