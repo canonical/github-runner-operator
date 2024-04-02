@@ -387,8 +387,7 @@ class CharmConfig(BaseModel):
         try:
             github_config = GithubConfig.from_charm(charm)
         except CharmConfigInvalidError as exc:
-            logger.error("Invalid Github config, %s", exc)
-            raise
+            raise CharmConfigInvalidError(f"Invalid Github config, {str(exc)}") from exc
 
         try:
             reconcile_interval = int(charm.config[RECONCILE_INTERVAL_CONFIG_NAME])
@@ -508,8 +507,7 @@ class RunnerCharmConfig(BaseModel):
                 f"Invalid {RUNNER_STORAGE_CONFIG_NAME} configuration"
             ) from err
         except CharmConfigInvalidError as exc:
-            logger.error("Invalid RunnerStorage config, %s", exc)
-            raise
+            raise CharmConfigInvalidError(f"Invalid runner storage config, {str(exc)}") from exc
 
         try:
             virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
@@ -809,7 +807,6 @@ class CharmState:
             charm_config = CharmConfig.from_charm(charm)
             runner_config = RunnerCharmConfig.from_charm(charm)
         except (ValidationError, ValueError) as exc:
-            logger.error("Invalid config: %s", exc)
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
         try:

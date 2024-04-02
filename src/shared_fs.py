@@ -322,6 +322,6 @@ def move_to_quarantine(runner_name: str) -> None:
 
     try:
         delete(runner_name)
-    except DeleteSharedFilesystemError as exc:
-        logger.error("Error deleting shared filesystem, %s", exc)
+    # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+    except DeleteSharedFilesystemError:  # pylint: disable=try-except-raise
         raise

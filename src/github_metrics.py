@@ -3,8 +3,8 @@
 
 """Functions to calculate metrics from data retrieved from GitHub."""
 
-import errors
 from charm_state import GithubRepo
+from errors import GithubMetricsError, JobNotFoundError
 from github_client import GithubClient
 from metrics_type import GithubJobMetrics
 from runner_metrics import PreJobMetrics
@@ -36,8 +36,8 @@ def job(
             workflow_run_id=pre_job_metrics.workflow_run_id,
             runner_name=runner_name,
         )
-    except errors.JobNotFoundError as exc:
-        raise errors.GithubMetricsError from exc
+    except JobNotFoundError as exc:
+        raise GithubMetricsError from exc
     queue_duration = (job_info.started_at - job_info.created_at).total_seconds()
 
     return GithubJobMetrics(queue_duration=queue_duration, conclusion=job_info.conclusion)

@@ -621,7 +621,7 @@ class TestCharm(unittest.TestCase):
 
         # No config
         harness.charm._on_check_runners_action(mock_event)
-        mock_event.fail.assert_called_with("Missing path configuration")
+        mock_event.fail.assert_called_with("Invalid Github config, Missing path configuration")
 
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")
@@ -634,7 +634,7 @@ class TestCharm(unittest.TestCase):
         harness.begin()
 
         harness.charm._on_flush_runners_action(mock_event)
-        mock_event.fail.assert_called_with("Missing path configuration")
+        mock_event.fail.assert_called_with("Invalid Github config, Missing path configuration")
         mock_event.reset_mock()
 
         harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})

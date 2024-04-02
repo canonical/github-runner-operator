@@ -266,8 +266,8 @@ def _put_image(cloud_config: dict[str, dict], image_arch: SupportedCloudImageArc
                 wait=True,
             )
             return image.id
-    except OpenStackCloudException as exc:
-        logger.error("Unexpected Openstack exception while handling images, %s", exc)
+    # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+    except OpenStackCloudException:  # pylint: disable=try-except-raise
         raise
 
 

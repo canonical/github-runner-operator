@@ -107,8 +107,8 @@ class LxdInstanceFileManager:
 
             try:
                 self.push_file(file.name, filepath, mode)
-            except LxdError as exc:
-                logger.error("Error pushing file to LXD instance, %s", exc)
+            # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+            except LxdError:  # pylint: disable=try-except-raise
                 raise
 
     def pull_file(self, source: str, destination: str, is_dir: bool = False) -> None:
@@ -154,8 +154,8 @@ class LxdInstanceFileManager:
         with tempfile.NamedTemporaryFile() as file:
             try:
                 self.pull_file(filepath, file.name)
-            except LxdError as exc:
-                logger.error("Error pulling file from LXD instance, %s", exc)
+            # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+            except LxdError:  # pylint: disable=try-except-raise
                 raise
 
             return file.read().decode("utf-8")
