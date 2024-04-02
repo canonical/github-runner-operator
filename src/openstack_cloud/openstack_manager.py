@@ -27,6 +27,7 @@ from errors import (
     OpenstackInstanceLaunchError,
     OpenStackUnauthorizedError,
     RunnerBinaryError,
+    RunnerCreateError,
     RunnerStartError,
     SubprocessError,
 )
@@ -594,7 +595,7 @@ class OpenstackRunnerManager:
                         f"{instance_name}"
                     )
                 )
-        except (openstack.exceptions.ResourceTimeout, TimeoutError) as err:
+        except TimeoutError as err:
             raise RunnerStartError(
                 f"Unable to connect to openstack runner {instance_name}"
             ) from err
@@ -624,16 +625,31 @@ class OpenstackRunnerManager:
 
         self._ensure_security_group(conn)
         self._setup_runner_keypair(conn, instance_config.name)
-        instance = conn.create_server(
-            name=instance_config.name,
-            image=IMAGE_NAME,
-            key_name=instance_config.name,
-            flavor=self._config.flavor,
-            network=self._config.network,
-            security_groups=[SECURITY_GROUP_NAME],
-            userdata=cloud_userdata,
-            wait=True,
-        )
+        try:
+            instance = conn.create_server(
+                name=instance_config.name,
+                image=IMAGE_NAME,
+                key_name=instance_config.name,
+                flavor=self._config.flavor,
+                network=self._config.network,
+                security_groups=[SECURITY_GROUP_NAME],
+                userdata=cloud_userdata,
+                timeout=180,
+                wait=True,
+            )
+        except openstack.exceptions.ResourceTimeout as err:
+            logger.exception("Timeout creating OpenStack runner %s", instance_config.name)
+            try:
+                conn.delete_server(name_or_id=instance_config.name, wait=True)
+            except openstack.exceptions.SDKException:
+                logger.critical(
+                    "Cleanup of creation failure runner %s has failed", instance_config.name
+                )
+                # Reconcile will attempt to cleanup again prior to spawning new runners.
+            raise RunnerCreateError(
+                f"Timeout creating OpenStack runner {instance_config.name}"
+            ) from err
+
         addresses = [address["addr"] for address in instance.addresses[self._config.network]]
         self._wait_until_runner_process_running(instance.name, addresses)
 
