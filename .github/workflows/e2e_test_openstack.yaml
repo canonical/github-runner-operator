@@ -73,9 +73,389 @@ jobs:
     name: Deploy End-to-End Test OpenStack Runner (${{ matrix.event.name }})
     runs-on: ["self-hosted", "xlarge", "x64"]
     needs: [build-charm, run-id]
+    strategy:
+      matrix:
+        event:
+          - name: pull_request
+            abbreviation: pr
+          - name: workflow_dispatch
+            abbreviation: wd
+          - name: push
+            abbreviation: push
+          - name: schedule
+            abbreviation: sd
+          - name: issues
+            abbreviation: is
     steps:
+      - name: Install GitHub Cli
+        run: which gh || sudo apt install gh -y
+      - name: Check rate limit
+        env:
+          GH_TOKEN: ${{ (matrix.event.name == 'issues' || matrix.event.name == 'schedule') && secrets.E2E_TESTING_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          # Check rate limit, this check does not count against the primary rate limit:
+          # https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28#checking-the-status-of-your-rate-limit
+          gh api \
+              --method GET \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" --jq ".resources.core" \
+              /rate_limit
+
       - name: Setup Lxd Juju Controller
         uses: charmed-kubernetes/actions-operator@main
         with:
-          juju-channel: 3.1/stable
-          provider: lxd
+          juju-channel: 3.2/stable
+          provider: microk8s
+          microk8s-addons: "dns ingress hostpath-storage"
+          channel: 1.26-strict/stable
+
+      - name: Setup microstack
+        run: bash -xe scripts/setup-microstack.sh
+
+      - name: Create Testing Juju Model
+        run: juju add-model testing
+      - name: Set Testing Model Proxy Configuration
+        run: |
+          juju model-config juju-http-proxy=$http_proxy
+          juju model-config juju-https-proxy=$https_proxy
+          juju model-config juju-no-proxy=$no_proxy
+      - name: Change Testing Model Logging Level
+        run: juju model-config logging-config="<root>=INFO;unit=DEBUG"
+
+      - name: Download github-runner Charm
+        uses: actions/download-artifact@v4
+        with:
+          name: dangerous-test-only-github-runner_ubuntu-22.04-amd64.charm
+      - name: Copy github-runner Charm
+        run: |
+          cp  github-runner_ubuntu-22.04-amd64.charm /home/$USER/github-runner_ubuntu-22.04-amd64.charm
+      
+      - name: Generate Runner Name
+        id: runner-name
+        run: echo name=${{ matrix.event.abbreviation }}-${{ needs.run-id.outputs.run-id }}${{ github.run_attempt }} >> $GITHUB_OUTPUT
+      
+      - name: Create Runner OpenStack Flavor
+        run: |
+          OS_CLIENT_CONFIG_FILE="clouds.yaml" openstack --os-cloud sunbeam flavor create runner --ram 16384 --disk 20 --vcpus 16
+        
+      - name: Deploy github-runner Charm (Pull Request, Workflow Dispatch and Push)
+        if: matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push' || matrix.event.name == 'pull_request'
+        run: |
+          CLOUDS_YAML="`cat clouds.yaml`"
+          juju deploy /home/$USER/github-runner_ubuntu-22.04-amd64.charm \
+            ${{ steps.runner-name.outputs.name }} \
+            --base ubuntu@22.04 \
+            --config path=${{ secrets.E2E_TESTING_REPO }} \
+            --config token=${{ secrets.E2E_TESTING_TOKEN }} \
+            --config virtual-machines=1 \
+            --config test-mode=insecure \
+            --config experimental-openstack-clouds-yaml="$CLOUDS_YAML" \
+            --config experimental-openstack-network=demo-network \
+            --config experimental-openstack-flavor=runner
+            
+      - name: Checkout branch (Issues, Schedule)
+        if: matrix.event.name == 'issues' || matrix.event.name == 'schedule'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.E2E_TESTING_TOKEN }}
+      - name: Create temporary orphan branch (Issues, Schedule)
+        if: matrix.event.name == 'issues' || matrix.event.name == 'schedule'
+        run: |
+          # We dont need all content for the test, so create an orphan branch.
+          git checkout --orphan ${{ steps.runner-name.outputs.name }}
+          git reset
+
+          WF_FILE=".github/workflows/schedule_issues_test.yaml"
+          # Replace workflow event in schedule_issues_test.yaml
+          if [[ ${{ matrix.event.name }} == 'schedule' ]]; then
+            sed -i "s/workflow_dispatch:/schedule:\n  - cron: '*\/5 * * * *'/" $WF_FILE
+          else
+            sed -i "s/workflow_dispatch:/issues:\n    types: [opened]/" $WF_FILE
+          fi
+          git add $WF_FILE
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit -m"Add ${{matrix.event.name}} workflow"
+          git push origin ${{ steps.runner-name.outputs.name }}
+      - name: Deploy github-runner Charm (Issues, Schedule)
+        if: matrix.event.name == 'issues' || matrix.event.name == 'schedule'
+        env:
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+        run: |
+          # GitHub does not allow to create multiple forks of the same repo under the same user,
+          # so we need to create a new repository and push the branch to it.
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /user/repos \
+            -f name=${{ steps.runner-name.outputs.name }}
+
+          TESTING_REPO=${{ secrets.E2E_TESTING_TOKEN_ORG }}/${{ steps.runner-name.outputs.name }}
+
+          # Create registration token in order to allow listing of runner binaries
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            repos/${TESTING_REPO}/actions/runners/registration-token
+
+          # Push the orphan branch to the newly created repo.
+          git pull origin ${{ steps.runner-name.outputs.name }}
+          git remote add testing https://github.com/${TESTING_REPO}.git
+          git push testing ${{ steps.runner-name.outputs.name }}:main
+
+          juju deploy /home/$USER/github-runner_ubuntu-22.04-amd64.charm \
+            ${{ steps.runner-name.outputs.name }}
+            --config path=$TESTING_REPO \
+            --config token=${{ secrets.E2E_TESTING_TOKEN }} \
+            --config virtual-machines=1 \
+            --config test-mode=insecure \
+            --config experimental-openstack-clouds-yaml="$CLOUDS_YAML" \
+            --config experimental-openstack-network=demo-network \
+            --config experimental-openstack-flavor=runner
+            
+      - name: Watch github-runner (Pull Request)
+        if: matrix.event.name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        timeout-minutes: 30
+        run: |
+          juju debug-log --replay --tail &
+
+          while :; do
+            JOBS=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ secrets.E2E_TESTING_REPO }}/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs)
+            CONCLUSION=$(echo $JOBS | jq -r '.jobs[] | select(.name == "End-to-End Test / End-to-End Test Run") | .conclusion')
+            STATUS=$(echo $JOBS | jq -r '.jobs[] | select(.name == "End-to-End Test / End-to-End Test Run") | .status')
+            if [[ $STATUS != "queued" && $STATUS != "in_progress" ]]; then
+              break
+            fi
+            sleep 10
+          done
+          if [[ $STATUS != "completed" || $CONCLUSION != "success" ]]; then
+            echo "test workflow failed with status: $STATUS, conclusion: $CONCLUSION"
+            kill $(jobs -p)
+            exit 1
+          fi
+
+      - name: Trigger workflow (Workflow Dispatch and Push)
+        if: matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push'
+        env:
+          # push requires E2E_TESTING_TOKEN, because if GITHUB_TOKEN is used, no workflow is triggered for a push:
+          # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
+          GH_TOKEN: ${{ matrix.event.name == 'workflow_dispatch' && secrets.GITHUB_TOKEN || secrets.E2E_TESTING_TOKEN }}
+        run: |
+          # Base any future branches on the current branch
+          REF_SHA=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ secrets.E2E_TESTING_REPO }}/git/ref/heads/$GITHUB_HEAD_REF \
+            --jq .object.sha)
+
+          # Create a temporary reference/branch
+          # For push, this should trigger the "Push Event Tests" workflow automatically
+          # because the test is run for branches matching the pattern "push-e2e-*"
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ secrets.E2E_TESTING_REPO }}/git/refs \
+            -f ref='refs/heads/${{ steps.runner-name.outputs.name }}' \
+            -f sha=$REF_SHA
+
+          # For workflow_dispatch, we need to trigger the "Workflow Dispatch Tests" workflow manually
+          if ${{ matrix.event.name == 'workflow_dispatch' }}; then
+            gh workflow run workflow_dispatch_test.yaml \
+              -R ${{ secrets.E2E_TESTING_REPO }} \
+              --ref ${{ steps.runner-name.outputs.name }} \
+              -f runner=${{ steps.runner-name.outputs.name }}
+          fi
+
+      - name: Watch github-runner (Workflow Dispatch and Push)
+        if: matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          juju debug-log --replay --tail &
+
+          get-workflow-status() {
+              # Search recent workflow runs for the one designated by the run-id ref
+              output=$(gh run list \
+                        -R ${{ secrets.E2E_TESTING_REPO }} \
+                        -L 100 \
+                        --json headBranch,status \
+                        --jq '[.[] | select(.headBranch=="${{ steps.runner-name.outputs.name }}")]')
+
+              # Workflows that have not started have no status
+              if [ $(echo "$output" | jq 'length') -eq 0 ]
+              then
+                  echo "not_started"
+              else
+                  # Parse output with jq to get the status field of the first object
+                  status=$(echo "$output" | jq -r '.[0].status')
+                  echo "$status"
+              fi
+          }
+
+          # Wait for the workflow to start while checking its status
+          for i in {1..360}
+          do
+            status=$(get-workflow-status)
+            echo "workflow status: $status"
+            if [[ $status != "not_started" && $status != "queued" && $status != "in_progress" ]]; then
+              break
+            fi
+            sleep 10
+          done
+
+          # Make sure the workflow was completed or else consider it failed
+          conclusion=$(gh run list \
+            -R ${{ secrets.E2E_TESTING_REPO }} \
+            -L 100 \
+            --json headBranch,conclusion \
+            --jq '.[] | select(.headBranch=="${{ steps.runner-name.outputs.name }}") | .conclusion')
+
+          if [[ $status != "completed" || $conclusion != "success" ]]; then
+            echo "test workflow failed with status: $status, conclusion: $conclusion"
+            kill $(jobs -p)
+            exit 1
+          else
+            echo "Workflow completed with status: $status, conclusion: $conclusion, run-id: ${{ steps.runner-name.outputs.name }}"
+            kill $(jobs -p)
+          fi
+
+      - name: Trigger workflow and watch github-runner (Issues, Schedule)
+        if:  matrix.event.name == 'issues' || matrix.event.name == 'schedule'
+        env:
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+        run: |
+          juju debug-log --replay --tail &
+
+          TESTING_REPO=${{ secrets.E2E_TESTING_TOKEN_ORG }}/${{ steps.runner-name.outputs.name }}
+
+          # For issues, we need to trigger the workflow by opening an issue
+            if ${{ matrix.event.name == 'issues' }}; then
+                gh api \
+                --method POST \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                /repos/${TESTING_REPO}/issues \
+                -f title="Test issue ${{ steps.runner-name.outputs.name }}"
+            fi
+
+          get-workflow-status() {
+              # Search recent workflow runs for the one designated by the run-id ref
+              output=$(gh run list \
+                        -R ${TESTING_REPO} \
+                        -L 100 \
+                        --json headBranch,status,createdAt \
+                        --jq '[.[] | select(.headBranch=="main")] | sort_by(.createdAt)')
+
+              # Workflows that have not started have no status
+              if [ $(echo "$output" | jq 'length') -eq 0 ]
+              then
+                  echo "not_started"
+              else
+                  # Parse output with jq to get the status field of the first object
+                  status=$(echo "$output" | jq -r '.[0].status')
+                  echo "$status"
+              fi
+          }
+
+          # Wait for the workflow to start while checking its status
+          for i in {1..360}
+          do
+            status=$(get-workflow-status)
+            echo "workflow status: $status"
+            if [[ $status != "not_started" && $status != "queued" && $status != "in_progress" ]]; then
+              break
+            fi
+            sleep 10
+          done
+
+          # Make sure the workflow was completed or else consider it failed
+          runs=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${TESTING_REPO}/actions/runs \
+            --jq '[.workflow_runs[] | select(.head_branch=="main")] | sort_by(.created_at)')
+          conclusion=$(echo $runs | jq -r '.[0].conclusion')
+          wf_run_id=$(echo $runs | jq -r '.[0].id')
+
+          logs_filename=${{matrix.event.name}}-workflow-logs.zip
+          # We retrieve the logs because the testing repo is deleted at the end of the test
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${TESTING_REPO}/actions/runs/${wf_run_id}/logs > ${logs_filename} \
+              || (echo "Failed to retrieve logs from schedule tests" && rm ${logs_filename})
+
+
+          if [[ $status != "completed" || $conclusion != "success" ]]; then
+            echo "test workflow failed with status: $status, conclusion: $conclusion"
+            kill $(jobs -p)
+            exit 1
+          else
+            echo "Workflow completed with status: $status, conclusion: $conclusion, run-id: ${{ steps.runner-name.outputs.name }}"
+            kill $(jobs -p)
+          fi
+      - name: Upload test logs (Issues, Schedule)
+        if: always() && (matrix.event.name == 'issues' || matrix.event.name == 'schedule')
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{matrix.event.name}}-workflow-logs.zip
+          path: ${{matrix.event.name}}-workflow-logs.zip
+          if-no-files-found: ignore
+
+      - name: Show Firewall Rules
+        run: |
+          juju ssh ${{ steps.runner-name.outputs.name }}/0 sudo nft list ruleset
+
+      - name: Clean Up (Workflow Dispatch and Push)
+        if: always() && (matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api \
+          --method DELETE \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          "/repos/${{ secrets.E2E_TESTING_REPO }}/git/refs/heads/${{ steps.runner-name.outputs.name }}"
+          echo "Deleted ref ${{ steps.runner-name.outputs.name }}"
+
+      - name: Clean Up (Issues, Schedule)
+        if: always() && (matrix.event.name == 'issues' || matrix.event.name == 'schedule')
+        env:
+          GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
+        run: |
+          set +e
+
+          gh api \
+          --method DELETE \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          "/repos/${{ secrets.E2E_TESTING_REPO }}/git/refs/heads/${{ steps.runner-name.outputs.name }}" \
+          && echo "Deleted ref ${{ steps.runner-name.outputs.name }}"
+
+          TESTING_REPO=${{ secrets.E2E_TESTING_TOKEN_ORG }}/${{ steps.runner-name.outputs.name }}
+
+          set -e
+
+          gh api \
+          --method DELETE \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          "/repos/${TESTING_REPO}"
+
+          echo "Deleted repo ${TESTING_REPO}"
+
+  e2e-test:
+    name: End-to-End Test
+    needs: [build-charm, run-id]
+    uses: ./.github/workflows/e2e_test_run.yaml
+    with:
+      runner-tag: "pr-${{ needs.run-id.outputs.run-id }}${{ github.run_attempt}}"
