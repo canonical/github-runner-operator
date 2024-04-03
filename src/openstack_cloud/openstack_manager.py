@@ -679,8 +679,8 @@ class OpenstackRunnerManager:
 
     def _get_ssh_connections(
         self, instance: openstack.compute.v2.server.Server
-    ) -> Generator[SshConnection]:
-        """Gets ssh connections within a network for a given openstack instance.
+    ) -> Generator[SshConnection, None, None]:
+        """Get ssh connections within a network for a given openstack instance.
 
         Yields:
             Openstack SSH connections.
@@ -690,7 +690,7 @@ class OpenstackRunnerManager:
             yield SshConnection(
                 host=ip,
                 user="ubuntu",
-                connect_kwargs={"key_filename": self.get_key_path(instance.name)},
+                connect_kwargs={"key_filename": self._get_key_path(instance.name)},
             )
 
     def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
@@ -735,10 +735,14 @@ class OpenstackRunnerManager:
             if not result.ok:
                 continue
             return
-        raise GithubRunnerRemoveError("Failed to remove runner %s from Github.", instance.name)
+        raise GithubRunnerRemoveError(f"Failed to remove runner {instance.name} from Github.")
 
     def _remove_runners(
-        self, conn: OpenstackConnection, instance_names: Iterable[str], remove_token: str | None
+        self,
+        conn: OpenstackConnection,
+        instance_names: Iterable[str],
+        remove_token: str | None = None,
+        num_to_remove: int | float | None = None,
     ) -> None:
         """Delete runners on Openstack.
 
@@ -748,8 +752,13 @@ class OpenstackRunnerManager:
             conn: The Openstack connection instance.
             instance_names: The Openstack server names to delete.
             remove_token: The GitHub runner remove token.
+            num_to_remove: Remove a specified number of runners. Remove all if None.
         """
+        if num_to_remove is None:
+            num_to_remove = float("inf")
         for instance_name in instance_names:
+            if num_to_remove < 1:
+                break
             server: openstack.compute.v2.server.Server = conn.get_server(name_or_id=instance_name)
             try:
                 self._remove_from_github(instance=server, remove_token=remove_token)
@@ -759,9 +768,12 @@ class OpenstackRunnerManager:
             try:
                 if not conn.delete_server(name_or_id=instance_name, wait=True, delete_ips=True):
                     logger.warning("Server does not exist %s", instance_name)
+                    num_to_remove -= 1
+                    continue
             except SDKException as exc:
                 logger.error("Something wrong deleting the server %s, %s", instance_name, str(exc))
                 continue
+            num_to_remove -= 1
 
     def reconcile(self, quantity: int) -> int:
         """Reconcile the quantity of runners.
@@ -790,8 +802,9 @@ class OpenstackRunnerManager:
             elif delta < 0:
                 self._remove_runners(
                     conn=conn,
-                    instance_names=runner_by_health.healthy[delta:],
+                    instance_names=runner_by_health.healthy,
                     remove_token=self._github.get_runner_remove_token(path=self._config.path),
+                    num_to_remove=abs(delta),
                 )
             else:
                 logger.info("No changes to number of runners needed")
