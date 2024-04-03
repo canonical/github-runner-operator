@@ -6,7 +6,7 @@
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import set_app_runner_amount
+from tests.integration.helpers import reconcile 
 
 
 async def test_openstack_check_runner(
@@ -35,9 +35,8 @@ async def test_openstack_reconcile_one_runner(
     """
     arrange: An app connected to an OpenStack cloud with no runners.
     act:
-        1. Change number of runners to one and reconcile.
-        2. Run check-runners action.
-        3. Change number of runners to zero.
+        1. Change number of runners to one and reconcile and run check-runners action.
+        3. Change number of runners to zero and run check-runners action.
     assert:
         1. One runner is spawned.
         2. One online runner.
@@ -46,11 +45,10 @@ async def test_openstack_reconcile_one_runner(
     unit = app_openstack_runner.units[0]
 
     # 1.
-    # The function sets charm config to one runner and runs reconcile action.
     # Waits until one runner is spawned.
-    await set_app_runner_amount(app_openstack_runner, model, 1)
+    await app_openstack_runner.set_config({"virtual-machines": "1"})
+    await reconcile(app=app_openstack_runner, model=model)
 
-    # 2.
     action = await unit.run_action("check-runners")
     await action.wait()
 
@@ -59,4 +57,14 @@ async def test_openstack_reconcile_one_runner(
     assert action.results["offline"] == "0"
     assert action.results["unknown"] == "0"
 
-    await set_app_runner_amount(app_openstack_runner, model, 0)
+    # 2.
+    await app_openstack_runner.set_config({"virtual-machines": "0"})
+    await reconcile(app=app_openstack_runner, model=model)
+
+    action = await unit.run_action("check-runners")
+    await action.wait()
+
+    assert action.status == "completed"
+    assert action.results["online"] == "1"
+    assert action.results["offline"] == "0"
+    assert action.results["unknown"] == "0"
