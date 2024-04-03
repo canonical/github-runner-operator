@@ -185,8 +185,8 @@ def _extract_metrics_from_fs(fs: shared_fs.SharedFilesystem) -> Optional[RunnerM
             fs=fs, runner_name=runner_name, filename=POST_JOB_METRICS_FILE_NAME
         )
         logger.debug("Post-job metrics for runner %s: %s", runner_name, post_job_metrics)
-    except CorruptMetricDataError as exc:
-        logger.error("Error extracting metrics from shared filesystem, %s", exc)
+    # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+    except CorruptMetricDataError:  # pylint: disable=try-except-raise
         raise
 
     try:
