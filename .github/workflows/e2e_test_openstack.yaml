@@ -110,7 +110,7 @@ jobs:
           channel: 1.26-strict/stable
 
       - name: Setup microstack
-        run: bash -xe script/setup-microstack.sh
+        run: bash -xe scripts/setup-microstack.sh
 
       - name: Create Testing Juju Model
         run: juju add-model testing
