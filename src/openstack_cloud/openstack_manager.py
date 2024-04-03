@@ -241,6 +241,29 @@ def _get_supported_runner_arch(arch: str) -> Literal["amd64", "arm64"]:
             raise UnsupportedArchitectureError(arch)
 
 
+def _get_openstack_architecture(arch: Arch) -> str:
+    """Get openstack architecture.
+
+    See https://docs.openstack.org/glance/latest/admin/useful-image-properties.html
+
+    Args:
+        arch: The architecture the runner is running on.
+
+    Raises:
+        UnsupportedArchitectureError: If an unsupported architecture was passed.
+
+    Returns:
+        The architecture formatted for openstack image property.
+    """
+    match arch:
+        case arch.X64:
+            return "x86_64"
+        case arch.ARM64:
+            return "aarch64"
+        case _:
+            raise UnsupportedArchitectureError(arch)
+
+
 def build_image(
     arch: Arch,
     cloud_config: dict[str, dict],
@@ -302,6 +325,7 @@ def build_image(
                 name=IMAGE_NAME,
                 filename=IMAGE_PATH_TMPL.format(architecture=image_arch),
                 wait=True,
+                properties={"architecture": _get_openstack_architecture(arch=arch)},
             )
             return image.id
     except OpenStackCloudException as exc:
