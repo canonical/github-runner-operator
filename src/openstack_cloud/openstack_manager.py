@@ -23,9 +23,9 @@ from paramiko.ssh_exception import NoValidConnectionsError
 
 from charm_state import Arch, ProxyConfig, SSHDebugConnection, UnsupportedArchitectureError
 from errors import (
+    OpenStackError,
     OpenstackImageBuildError,
     OpenstackInstanceLaunchError,
-    OpenStackUnauthorizedError,
     RunnerBinaryError,
     RunnerCreateError,
     RunnerStartError,
@@ -80,7 +80,8 @@ def _create_connection(
             yield conn
     # pylint thinks this isn't an exception, but does inherit from Exception class.
     except openstack.exceptions.HttpException as exc:  # pylint: disable=bad-exception-cause
-        raise OpenStackUnauthorizedError("Unauthorized credentials.") from exc
+        logger.exception("OpenStack API call failure")
+        raise OpenStackError("Failed OpenStack API call") from exc
 
 
 class ProxyStringValues(NamedTuple):
