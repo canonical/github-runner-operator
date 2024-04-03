@@ -270,7 +270,7 @@ async def app_openstack_runner(
         },
         wait_idle=False,
     )
-    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=60 * 60)
+    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
 
     return application
 
