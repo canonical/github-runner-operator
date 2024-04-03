@@ -333,7 +333,7 @@ class GithubRunnerCharm(CharmBase):
             RunnerManagerConfig(
                 charm_state=state,
                 dockerhub_mirror=state.charm_config.dockerhub_mirror,
-                image="jammy",
+                image=state.runner_config.base_image.value,
                 lxd_storage_path=lxd_storage_path,
                 path=path,
                 service_token=self.service_token,

@@ -733,6 +733,7 @@ class RunnerManager:
             http_proxy,
             https_proxy,
             no_proxy,
+            self.config.image,
         ]
         if LXD_PROFILE_YAML.exists():
             cmd += ["test"]

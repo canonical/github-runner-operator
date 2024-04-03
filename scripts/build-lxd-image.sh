@@ -51,7 +51,8 @@ cleanup() {
 HTTP_PROXY="$1"
 HTTPS_PROXY="$2"
 NO_PROXY="$3"
-MODE="$4"
+BASE_IMAGE="$4"
+MODE="$5"
 
 if [[ -n "$HTTP_PROXY" ]]; then
     /snap/bin/lxc config set core.proxy_http "$HTTP_PROXY"
@@ -63,9 +64,9 @@ fi
 cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD VM of previous run' 10
 
 if [[ "$MODE" == "test" ]]; then
-    retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --device root,size=5GiB' 'Starting LXD container'
+    retry "/snap/bin/lxc launch ubuntu-daily:$BASE_IMAGE builder --device root,size=5GiB" 'Starting LXD container'
 else
-    retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --vm --device root,size=8GiB' 'Starting LXD VM'
+    retry "/snap/bin/lxc launch ubuntu-daily:$BASE_IMAGE builder --vm --device root,size=8GiB" 'Starting LXD VM'
 fi
 retry '/snap/bin/lxc exec builder -- /usr/bin/who' 'Wait for lxd agent to be ready' 30
 if [[ -n "$HTTP_PROXY" ]]; then
@@ -146,9 +147,9 @@ fi
 /snap/bin/lxc publish builder --alias builder --reuse -f
 
 # Swap in the built image
-/snap/bin/lxc image alias rename jammy old-jammy || true
-/snap/bin/lxc image alias rename builder jammy
-/snap/bin/lxc image delete old-jammy || true
+/snap/bin/lxc image alias rename $BASE_IMAGE old-$BASE_IMAGE || true
+/snap/bin/lxc image alias rename builder $BASE_IMAGE
+/snap/bin/lxc image delete old-$BASE_IMAGE || true
 
 # Clean up LXD instance
 cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD instance' 10
