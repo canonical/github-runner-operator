@@ -35,10 +35,10 @@ retry() {
 sudo snap remove kubectl
 # Install microstack
 sudo snap install openstack --channel 2023.1 --devmode
-sunbeam prepare-node-script | bash -x
+timeout 180 sunbeam prepare-node-script | bash -x
 sleep 10
-# The following can take a while....
-retry 'sudo -g snap_daemon sunbeam cluster bootstrap --accept-defaults' 'Waiting for cluster bootstrap to complete' 1
+# The following can takes around 30 mins..., set timeout 35 mins.
+timeout 2100 sudo -g snap_daemon sunbeam cluster bootstrap --accept-defaults
 # 2024/03/11 Demo user setup should be removed after openstack server creation PR.
 retry 'sudo -g snap_daemon sunbeam configure --accept-defaults --openrc demo-openrc' 'Configuring sunbeam cluster' 1
 clouds_yaml="${PWD}/clouds.yaml"
