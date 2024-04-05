@@ -530,7 +530,6 @@ class GithubRunnerCharm(CharmBase):
             return
 
         runner_manager = self._get_runner_manager(state)
-
         runner_manager.schedule_build_runner_image()
 
         logger.info("Flushing the runners...")
