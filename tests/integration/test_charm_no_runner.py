@@ -191,3 +191,16 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     await reconcile(app=app, model=model)
 
     await wait_till_num_of_runners(unit, 0)
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_charm_upgrade(model: Model, app_no_runner: Application, charm_file: str) -> None:
+    """
+    arrange: A working application with no runners.
+    act: Upgrade the charm.
+    assert: Upgrade should not fail.
+    """
+    await app_no_runner.refresh(path=charm_file)
+
+    await model.wait_for_idle(status=ACTIVE, idle_period=60)
