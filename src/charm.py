@@ -546,6 +546,11 @@ class GithubRunnerCharm(CharmBase):
             state.runner_config.virtual_machine_resources,
         )
 
+        # Ensure an update of the systemd timer for reconciliation event is written to disk.
+        # upgrade_charm event is not followed by a config changed event (which updates the timer)
+        # so the timer would otherwise not be updated.
+        self._set_reconcile_timer()
+
     @catch_charm_errors
     def _on_config_changed(self, _event: ConfigChangedEvent) -> None:
         """Handle the configuration change.
