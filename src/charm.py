@@ -417,22 +417,6 @@ class GithubRunnerCharm(CharmBase):
         runner_manager.build_runner_image()
         runner_manager.schedule_build_runner_image()
 
-        self.unit.status = MaintenanceStatus("Downloading runner binary")
-        try:
-            runner_info = runner_manager.get_latest_runner_bin_url()
-            logger.info(
-                "Downloading %s from: %s", runner_info["filename"], runner_info["download_url"]
-            )
-            self._stored.runner_bin_url = runner_info["download_url"]
-            runner_manager.update_runner_bin(runner_info)
-        # Safe guard against transient unexpected error.
-        except RunnerBinaryError as err:
-            logger.exception("Failed to update runner binary")
-            # Failure to download runner binary is a transient error.
-            # The charm automatically update runner binary on a schedule.
-            self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
-            return
-
         self.unit.status = ActiveStatus()
 
     @catch_charm_errors
