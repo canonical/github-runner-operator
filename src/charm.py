@@ -51,9 +51,10 @@ from errors import (
     LogrotateSetupError,
     MissingRunnerBinaryError,
     OpenStackUnauthorizedError,
+    RunnerBinaryError,
     RunnerError,
     SubprocessError,
-    TokenError, RunnerBinaryError,
+    TokenError,
 )
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
