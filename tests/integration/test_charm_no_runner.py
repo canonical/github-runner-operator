@@ -203,4 +203,4 @@ async def test_charm_upgrade(model: Model, app_no_runner: Application, charm_fil
     """
     await app_no_runner.refresh(path=charm_file)
 
-    await model.wait_for_idle(status=ACTIVE, idle_period=60)
+    await model.wait_for_idle(status=ACTIVE, idle_period=30)
