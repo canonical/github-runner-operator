@@ -109,6 +109,7 @@ jobs:
           microk8s-addons: "dns ingress hostpath-storage"
           channel: 1.26-strict/stable
 
+      - uses: actions/checkout@v4.1.1
       - name: Setup microstack
         run: bash -xe scripts/setup-microstack.sh
 

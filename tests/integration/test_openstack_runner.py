@@ -6,7 +6,7 @@
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers import reconcile 
+from tests.integration.helpers import reconcile
 
 
 async def test_openstack_check_runner(
