@@ -537,6 +537,8 @@ class GithubRunnerCharm(CharmBase):
         if not runner_manager:
             return
 
+        runner_manager.schedule_build_runner_image()
+
         runner_manager.flush(FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
         self._reconcile_runners(
             runner_manager,
