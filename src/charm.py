@@ -518,8 +518,6 @@ class GithubRunnerCharm(CharmBase):
         self._refresh_firewall(state)
         logger.info("Flushing the runners...")
         runner_manager = self._get_runner_manager(state)
-        if not runner_manager:
-            return
 
         runner_manager.schedule_build_runner_image()
 
