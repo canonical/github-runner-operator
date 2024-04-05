@@ -525,6 +525,9 @@ class GithubRunnerCharm(CharmBase):
         """
         state = self._setup_state()
 
+        if self._block_on_openstack_config(state):
+            return
+
         logger.info("Reinstalling dependencies...")
         if not self._common_install_code(state):
             return
