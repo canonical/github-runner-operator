@@ -356,6 +356,31 @@ class GithubRunnerCharm(CharmBase):
             return True
         return False
 
+    def _common_install_code(self, state: CharmState) -> bool:
+        """Installation code shared between install and upgrade hook
+
+        Returns:
+            Whether the installation code was successful.
+        """
+        self.unit.status = MaintenanceStatus("Installing packages")
+        try:
+            # The `_start_services`, `_install_deps` includes retry.
+            self._install_deps()
+            self._start_services(state.charm_config.token, state.proxy_config)
+            metrics.setup_logrotate()
+        except (LogrotateSetupError, SubprocessError) as err:
+            logger.exception(err)
+            if isinstance(err, LogrotateSetupError):
+                msg = "Failed to setup logrotate"
+            else:
+                msg = "Failed to install dependencies"
+            self.unit.status = BlockedStatus(msg)
+            return False
+
+        self._refresh_firewall(state)
+
+        return True
+
     @catch_charm_errors
     def _on_install(self, _event: InstallEvent) -> None:
         """Handle the installation of charm.
@@ -395,25 +420,11 @@ class GithubRunnerCharm(CharmBase):
             self._block_on_openstack_config(state)
             return
 
-        self.unit.status = MaintenanceStatus("Installing packages")
-        try:
-            # The `_start_services`, `_install_deps` includes retry.
-            self._install_deps()
-            self._start_services(state.charm_config.token, state.proxy_config)
-            metrics.setup_logrotate()
-        except (LogrotateSetupError, SubprocessError) as err:
-            logger.exception(err)
-            if isinstance(err, LogrotateSetupError):
-                msg = "Failed to setup logrotate"
-            else:
-                msg = "Failed to install dependencies"
-            self.unit.status = BlockedStatus(msg)
+        if not self._common_install_code(state):
             return
 
-        self._refresh_firewall(state)
-        runner_manager = self._get_runner_manager(state)
-
         self.unit.status = MaintenanceStatus("Building runner image")
+        runner_manager = self._get_runner_manager(state)
         runner_manager.build_runner_image()
         runner_manager.schedule_build_runner_image()
 
@@ -462,7 +473,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             now: Whether the reboot should trigger at end of event handler or now.
         """
-        logger.info("Upgrading kernel (if available)")
+        logger.info("Updating kernel (if available)")
         self._apt_install(["linux-generic"])
 
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
@@ -499,28 +510,14 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         logger.info("Reinstalling dependencies...")
-        try:
-            # The `_start_services`, `_install_deps` includes retry.
-            self._install_deps()
-            self._start_services(state.charm_config.token, state.proxy_config)
-            metrics.setup_logrotate()
-        except (LogrotateSetupError, SubprocessError) as err:
-            logger.exception(err)
-
-            if isinstance(err, LogrotateSetupError):
-                msg = "Failed to setup logrotate"
-            else:
-                msg = "Failed to install dependencies"
-            self.unit.status = BlockedStatus(msg)
+        if not self._common_install_code(state):
             return
 
-        state = self._setup_state()
-        self._refresh_firewall(state)
-        logger.info("Flushing the runners...")
         runner_manager = self._get_runner_manager(state)
 
         runner_manager.schedule_build_runner_image()
 
+        logger.info("Flushing the runners...")
         runner_manager.flush(FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
         self._reconcile_runners(
             runner_manager,
