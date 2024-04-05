@@ -28,6 +28,7 @@ from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
 from runner_manager import RunnerInfo, RunnerManagerConfig
+
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
 
@@ -103,15 +104,13 @@ def test_proxy_setting(harness: Harness):
 @pytest.mark.parametrize(
     "hook",
     [
-        pytest.param(
-            "install", id="Install"
-        ),
-        pytest.param(
-            "upgrade_charm", id="Upgrade"
-        ),
+        pytest.param("install", id="Install"),
+        pytest.param("upgrade_charm", id="Upgrade"),
     ],
 )
-def test_common_install_code(hook: str, harness: Harness, exec_command: MagicMock, monkeypatch: pytest.MonkeyPatch):
+def test_common_install_code(
+    hook: str, harness: Harness, exec_command: MagicMock, monkeypatch: pytest.MonkeyPatch
+):
     """
     arrange: Set up charm.
     act: Fire install/upgrade event.
@@ -119,12 +118,15 @@ def test_common_install_code(hook: str, harness: Harness, exec_command: MagicMoc
     """
 
     monkeypatch.setattr("charm.metrics.setup_logrotate", setup_logrotate := MagicMock())
-    monkeypatch.setattr("runner_manager.RunnerManager.schedule_build_runner_image", schedule_build_runner_image:=MagicMock())
+    monkeypatch.setattr(
+        "runner_manager.RunnerManager.schedule_build_runner_image",
+        schedule_build_runner_image := MagicMock(),
+    )
     getattr(harness.charm.on, hook).emit()
     calls = [
         call(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"]),
         call(["/snap/bin/lxd", "init", "--auto"]),
-        call(["/usr/bin/systemctl", "enable", "repo-policy-compliance"])
+        call(["/usr/bin/systemctl", "enable", "repo-policy-compliance"]),
     ]
 
     exec_command.assert_has_calls(calls, any_order=True)

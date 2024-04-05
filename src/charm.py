@@ -51,7 +51,6 @@ from errors import (
     LogrotateSetupError,
     MissingRunnerBinaryError,
     OpenStackUnauthorizedError,
-    RunnerBinaryError,
     RunnerError,
     SubprocessError,
     TokenError,
@@ -357,7 +356,7 @@ class GithubRunnerCharm(CharmBase):
         return False
 
     def _common_install_code(self, state: CharmState) -> bool:
-        """Installation code shared between install and upgrade hook
+        """Installation code shared between install and upgrade hook.
 
         Returns:
             Whether the installation code was successful.
