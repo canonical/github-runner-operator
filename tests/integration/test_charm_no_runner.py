@@ -13,6 +13,7 @@ from tests.integration.helpers import (
     install_repo_policy_compliance_from_git_source,
     reconcile,
     remove_runner_bin,
+    run_in_unit,
     wait_till_num_of_runners,
 )
 from tests.status_name import ACTIVE
@@ -199,8 +200,21 @@ async def test_charm_upgrade(model: Model, app_no_runner: Application, charm_fil
     """
     arrange: A working application with no runners.
     act: Upgrade the charm.
-    assert: Upgrade should not fail.
+    assert: The upgrade_charm hook ran successfully.
     """
     await app_no_runner.refresh(path=charm_file)
 
-    await model.wait_for_idle(status=ACTIVE, idle_period=30)
+    # It may take some time between the charm upgrade and the run of the upgrade charm hook,
+    # so set the idle_period high.
+    await model.wait_for_idle(status=ACTIVE, idle_period=60)
+    unit = app_no_runner.units[0]
+    unit_name_without_slash = unit.name.replace("/", "-")
+    ret_code, stdout = await run_in_unit(
+        unit=unit, command=f"cat /var/log/juju/unit-{unit_name_without_slash}.log"
+    )
+    assert ret_code == 0, f"Failed to read the log file: {stdout}"
+    assert stdout, "Log file is empty."
+    assert "Emitting Juju event upgrade_charm." in stdout, "upgrade_charm event not yet fired."
+    # There may be a race condition: if the hook is executed shortly after idle,
+    # it may not have finished yet, so check for idle again.
+    await model.wait_for_idle(status=ACTIVE)
