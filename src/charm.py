@@ -478,7 +478,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             now: Whether the reboot should trigger at end of event handler or now.
         """
-        logger.info("Upgrading kernel")
+        logger.info("Installing a newer kernel (if available)")
         self._apt_install(["linux-generic"])
 
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
