@@ -14,7 +14,7 @@ from pydantic import BaseModel
 from typing_extensions import NotRequired
 
 
-class GitHubRunnerStatus(Enum):
+class GitHubRunnerStatus(str, Enum):
     """Status of runner on GitHub."""
 
     ONLINE = "online"

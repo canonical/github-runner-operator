@@ -453,6 +453,10 @@ class GithubRunnerRemoveError(Exception):
     """Represents an error removing registered runner from Github."""
 
 
+_INSTANCE_STATUS_SHUTOFF = "SHUTOFF"
+_INSTANCE_STATUS_ACTIVE = "ACTIVE"
+
+
 class OpenstackRunnerManager:
     """Runner manager for OpenStack-based instances.
 
@@ -569,20 +573,14 @@ class OpenstackRunnerManager:
         keypair = conn.create_keypair(name=name)
         private_key_path.write_text(keypair.private_key)
 
-    def _ssh_health_check(self, instance_name: str, addresses: Iterable[str]) -> bool:
+    def _ssh_health_check(self, instance: openstack.compute.v2.server.Server) -> bool:
         """Use SSH to check whether runner application is running.
 
         Args:
-            instance_name: The name of the instance to check.
-            addresses: The IP addresses to try SSH.
+            instance: The openstack compute instance to check connections.
         """
-        for addr in addresses:
-            ssh_conn = SshConnection(
-                host=addr,
-                user="ubuntu",
-                connect_kwargs={"key_filename": str(self._get_key_path(instance_name))},
-            )
-
+        for ssh_conn in self._get_ssh_connections(instance=instance):
+            instance_name = instance.instance_name
             try:
                 result = ssh_conn.run("ps aux")
                 logger.debug("Output of `ps aux` on %s stderr: %s", instance_name, result.stderr)
@@ -591,12 +589,12 @@ class OpenstackRunnerManager:
                     logger.warning("List all process command failed on %s ", instance_name)
                     continue
 
-                if "openstack-userdata.sh" in result.stdout:
+                if "/bin/bash /home/ubuntu/actions-runner/run.sh" in result.stdout:
                     logger.info("Runner process found to be healthy on %s", instance_name)
                     return True
 
             except NoValidConnectionsError:
-                logger.info("Unable to SSH into %s with address %s", instance_name, addr)
+                logger.info("Unable to SSH into %s with address %s", instance_name, ssh_conn.host)
                 # Looping over all IP and trying SSH.
 
         logger.error(
@@ -608,18 +606,21 @@ class OpenstackRunnerManager:
 
     @retry(tries=10, delay=30, local_logger=logger)
     def _wait_until_runner_process_running(
-        self, instance_name: str, addresses: Iterable[str]
+        self, conn: OpenstackConnection, instance_name: str
     ) -> None:
         """Wait until the runner process is running.
 
         The waiting to done by the retry declarator.
 
         Args:
+            conn: The openstack connection instance.
             instance_name: The name of the instance to wait on.
-            addresses: The IP addresses to try SSH into.
         """
         try:
-            if not self._ssh_health_check(instance_name, addresses):
+            server: openstack.compute.v2.server.Server = conn.get_server(instance_name)
+            if server.status != _INSTANCE_STATUS_ACTIVE or not self._ssh_health_check(
+                instance=server
+            ):
                 raise RunnerStartError(
                     (
                         "Unable to find running process of runner application on openstack runner "
@@ -681,8 +682,7 @@ class OpenstackRunnerManager:
                 f"Timeout creating OpenStack runner {instance_config.name}"
             ) from err
 
-        addresses = [address["addr"] for address in instance.addresses[self._config.network]]
-        self._wait_until_runner_process_running(instance.name, addresses)
+        self._wait_until_runner_process_running(conn, instance.name)
 
     def get_github_runner_info(self) -> tuple[RunnerGithubInfo]:
         """Get information on GitHub for the runners.
@@ -696,7 +696,10 @@ class OpenstackRunnerManager:
         logger.debug("List of runners found on GitHub:%s", remote_runners_list)
         return tuple(
             RunnerGithubInfo(
-                runner.name, runner.id, runner.status == GitHubRunnerStatus.ONLINE, runner.busy
+                runner.name,
+                runner.id,
+                runner.status == GitHubRunnerStatus.ONLINE,
+                runner.busy,
             )
             for runner in remote_runners_list
             if runner.name.startswith(f"{self.instance_name}-")
@@ -707,6 +710,9 @@ class OpenstackRunnerManager:
     ) -> Generator[SshConnection, None, None]:
         """Get ssh connections within a network for a given openstack instance.
 
+        Args:
+            instance: The Openstack server instance.
+
         Yields:
             Openstack SSH connections.
         """
@@ -715,11 +721,11 @@ class OpenstackRunnerManager:
             yield SshConnection(
                 host=ip,
                 user="ubuntu",
-                connect_kwargs={"key_filename": self._get_key_path(instance.name)},
+                connect_kwargs={"key_filename": str(self._get_key_path(instance.name))},
             )
 
     def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
-        """Get status on OpenStack of each runner.
+        """Get status on OpenStack of each runne=r.
 
         Args:
             conn: The connection object to access OpenStack cloud.
@@ -736,11 +742,14 @@ class OpenstackRunnerManager:
         ]
 
         for instance in openstack_instances:
-            addresses = [address["addr"] for address in instance.addresses[self._config.network]]
-            if self._ssh_health_check(instance.name, addresses):
-                healthy_runner.append(instance.name)
-            else:
+            server: openstack.compute.v2.server.Server = conn.get_server(instance.instance_name)
+            # SHUTOFF runners are runners that have completed executing jobs.
+            if server.status == _INSTANCE_STATUS_SHUTOFF or not self._ssh_health_check(
+                instance=server
+            ):
                 unhealthy_runner.append(instance.name)
+            else:
+                healthy_runner.append(instance.name)
 
         return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
 
@@ -756,10 +765,18 @@ class OpenstackRunnerManager:
         if not remove_token:
             return
         for ssh_conn in self._get_ssh_connections(instance=instance):
-            result: Result = ssh_conn.run(f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}")
-            if not result.ok:
+            try:
+                result: Result = ssh_conn.run(
+                    f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}"
+                )
+                if not result.ok:
+                    continue
+                return
+            except NoValidConnectionsError:
+                logger.info(
+                    "Unable to SSH into %s with address %s", instance.instance_name, ssh_conn.host
+                )
                 continue
-            return
         raise GithubRunnerRemoveError(f"Failed to remove runner {instance.name} from Github.")
 
     def _remove_runners(
@@ -789,7 +806,7 @@ class OpenstackRunnerManager:
                 self._remove_from_github(instance=server, remove_token=remove_token)
             except GithubRunnerRemoveError as exc:
                 logger.warning("Failed to remove runner from Github %s, %s", instance_name, exc)
-                continue
+
             try:
                 if not conn.delete_server(name_or_id=instance_name, wait=True, delete_ips=True):
                     logger.warning("Server does not exist %s", instance_name)
@@ -816,8 +833,12 @@ class OpenstackRunnerManager:
         with _create_connection(self._cloud_config) as conn:
             runner_by_health = self._get_openstack_runner_status(conn)
 
-            # Clean up offline runners.
-            self._remove_runners(conn=conn, instance_names=runner_by_health.unhealthy)
+            # Clean up offline (SHUTOFF) runners or unhealthy (no connection/cloud-init script)
+            # runners.
+            remove_token = self._github.get_runner_remove_token(path=self._config.path)
+            self._remove_runners(
+                conn=conn, instance_names=runner_by_health.unhealthy, remove_token=remove_token
+            )
 
             delta = quantity - len(runner_by_health.healthy)
 
@@ -828,9 +849,22 @@ class OpenstackRunnerManager:
                 self._remove_runners(
                     conn=conn,
                     instance_names=runner_by_health.healthy,
-                    remove_token=self._github.get_runner_remove_token(path=self._config.path),
+                    remove_token=remove_token,
                     num_to_remove=abs(delta),
                 )
             else:
                 logger.info("No changes to number of runners needed")
             return delta
+
+    def flush(self) -> int:
+        """Flush Openstack servers."""
+        with _create_connection(self._cloud_config) as conn:
+            runner_by_health = self._get_openstack_runner_status(conn)
+            remove_token = self._github.get_runner_remove_token(path=self._config.path)
+            runners_to_delete = (*runner_by_health.healthy, *runner_by_health.unhealthy)
+            self._remove_runners(
+                conn=conn,
+                instance_names=runners_to_delete,
+                remove_token=remove_token,
+            )
+            return len(runners_to_delete)

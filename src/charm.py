@@ -454,8 +454,8 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
-            runner_manager = self._get_openstack_runner_manager(state)
-            runner_manager.reconcile(state.runner_config.virtual_machines)
+            openstack_runner_manager = self._get_openstack_runner_manager(state)
+            openstack_runner_manager.reconcile(state.runner_config.virtual_machines)
             self.unit.status = ActiveStatus()
             return
 
@@ -598,8 +598,8 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
-            runner_manager = self._get_openstack_runner_manager(state)
-            runner_manager.reconcile(state.runner_config.virtual_machines)
+            openstack_runner_manager = self._get_openstack_runner_manager(state)
+            openstack_runner_manager.reconcile(state.runner_config.virtual_machines)
             self.unit.status = ActiveStatus()
             return
 
@@ -775,7 +775,7 @@ class GithubRunnerCharm(CharmBase):
             runner_manager = self._get_openstack_runner_manager(state)
 
             delta = runner_manager.reconcile(state.runner_config.virtual_machines)
-            event.set_results(delta)
+            event.set_results({"delta": {"virtual-machines": delta}})
             return
 
         runner_manager = self._get_runner_manager(state)
@@ -803,7 +803,10 @@ class GithubRunnerCharm(CharmBase):
 
         if state.instance_type == InstanceType.OPENSTACK:
             # Flushing not implemented for OpenStack.
-            raise NotImplementedError()
+            runner_manager = self._get_openstack_runner_manager(state)
+            flushed = runner_manager.flush()
+            event.set_results({"delta": {"virtual-machines": flushed}})
+            return
 
         runner_manager = self._get_runner_manager(state)
 
@@ -855,8 +858,9 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
-            # Flushing not implemented for OpenStack.
-            raise NotImplementedError()
+            runner_manager = self._get_openstack_runner_manager(state)
+            runner_manager.flush()
+            return
 
         runner_manager = self._get_runner_manager(state)
         runner_manager.flush(FlushMode.FLUSH_BUSY)
