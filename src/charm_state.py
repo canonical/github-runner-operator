@@ -233,7 +233,7 @@ def _valid_storage_size_str(size: str) -> bool:
     return size[-3:] in valid_suffixes and size[:-3].isdigit()
 
 
-WORD_ONLY_REGEX = re.compile("^\\w+$")
+WORD_ONLY_REGEX = re.compile("^[\\w\\-]+$")
 
 
 def _parse_labels(labels: str) -> tuple[str, ...]:

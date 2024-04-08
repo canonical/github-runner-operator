@@ -372,8 +372,14 @@ def test__parse_labels_invalid_labels(label_str: str, falsy_labels: tuple[str]):
         pytest.param(" a, b,   c", ("a", "b", "c"), id="comma separated labels with space"),
         pytest.param("1234", ("1234",), id="numeric label"),
         pytest.param("_", ("_",), id="underscore"),
+        pytest.param("-", ("-",), id="dash only"),
         pytest.param("_test_", ("_test_",), id="alphabetical with underscore"),
         pytest.param("_test1234_", ("_test1234_",), id="alphanumeric with underscore"),
+        pytest.param("x-large", ("x-large",), id="dash word"),
+        pytest.param("x-large, two-xlarge", ("x-large", "two-xlarge"), id="dash words"),
+        pytest.param(
+            "x-large_1, two-xlarge", ("x-large_1", "two-xlarge"), id="dash underscore words"
+        ),
     ],
 )
 def test__parse_labels(label_str: str, expected_labels: tuple[str]):
