@@ -773,10 +773,14 @@ class OpenstackRunnerManager:
         ]
 
         for instance in openstack_instances:
-            server: openstack.compute.v2.server.Server = conn.get_server(instance.instance_name)
+            server: openstack.compute.v2.server.Server | None = conn.get_server(
+                instance.instance_name
+            )
             # SHUTOFF runners are runners that have completed executing jobs.
-            if server.status == _INSTANCE_STATUS_SHUTOFF or not self._ssh_health_check(
-                instance=server
+            if (
+                not server
+                or server.status == _INSTANCE_STATUS_SHUTOFF
+                or not self._ssh_health_check(instance=server)
             ):
                 unhealthy_runner.append(instance.name)
             else:
