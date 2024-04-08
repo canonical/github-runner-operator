@@ -70,7 +70,9 @@ class EventTimer:
             loader=jinja2.FileSystemLoader("templates"), autoescape=True
         )
 
-    def _render_event_template(self, template_type: str, event_name: str, context: EventConfig):
+    def _render_event_template(
+        self, template_type: str, event_name: str, context: EventConfig
+    ) -> None:
         """Write event configuration files to systemd path.
 
         Args:
@@ -105,7 +107,9 @@ class EventTimer:
 
         return ret_code == 0
 
-    def ensure_event_timer(self, event_name: str, interval: int, timeout: Optional[int] = None):
+    def ensure_event_timer(
+        self, event_name: str, interval: int, timeout: Optional[int] = None
+    ) -> None:
         """Ensure that a systemd service and timer are registered to dispatch the given event.
 
         The interval is how frequently, in minutes, the event should be dispatched.
@@ -144,7 +148,7 @@ class EventTimer:
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
             raise TimerEnableError(f"Unable to enable systemd timer {systemd_timer}") from ex
 
-    def disable_event_timer(self, event_name: str):
+    def disable_event_timer(self, event_name: str) -> None:
         """Disable the systemd timer for the given event.
 
         Args:

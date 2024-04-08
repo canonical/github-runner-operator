@@ -417,7 +417,7 @@ def test_build_image_delete_image_error(
     mock_github_client: MagicMock, patched_create_connection_context: MagicMock
 ):
     """
-    arrange: given a mocked openstack connection that returns existing images and delete_image
+    arrange: given a mocked openstack connection that returns existing images and delete_image \
         that returns False (failed to delete image).
     act: when build_image is called.
     assert: ImageBuildError is raised.

@@ -15,7 +15,12 @@ from typing_extensions import NotRequired
 
 
 class GitHubRunnerStatus(str, Enum):
-    """Status of runner on GitHub."""
+    """Status of runner on GitHub.
+
+    Attributes:
+        ONLINE: Represents an online runner status.
+        OFFLINE: Represents an offline runner status.
+    """
 
     ONLINE = "online"
     OFFLINE = "offline"
@@ -33,7 +38,7 @@ class RunnerApplication(TypedDict, total=False):
         filename: Filename of the runner application.
         temp_download_token: A short lived bearer token used to download the
             runner, if needed.
-        sha256_check_sum: SHA256 Checksum of the runner application.
+        sha256_checksum: SHA256 Checksum of the runner application.
     """
 
     os: Literal["linux", "win", "osx"]
@@ -66,19 +71,20 @@ class SelfHostedRunner(TypedDict):
     """Information on a single self-hosted runner.
 
     Attributes:
-        id: Unique identifier of the runner.
-        name: Name of the runner.
-        os: Operation system of the runner.
         busy: Whether the runner is executing a job.
+        id: Unique identifier of the runner.
         labels: Labels of the runner.
+        os: Operation system of the runner.
+        name: Name of the runner.
+        status: The Github runner status.
     """
 
-    id: int
-    name: str
-    os: str
-    status: GitHubRunnerStatus
     busy: bool
+    id: int
     labels: list[SelfHostedRunnerLabel]
+    os: str
+    name: str
+    status: GitHubRunnerStatus
 
 
 class SelfHostedRunnerList(TypedDict):
@@ -118,15 +124,28 @@ class RemoveToken(TypedDict):
 
 
 class JobConclusion(str, Enum):
-    """Conclusion of a job on GitHub."""
+    """Conclusion of a job on GitHub.
 
-    SUCCESS = "success"
+    See :https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28\
+#list-workflow-runs-for-a-repository
+
+    Attributes:
+        ACTION_REQUIRED: Represents additional action required on the job.
+        CANCELLED: Represents a cancelled job status.
+        FAILURE: Represents a failed job status.
+        NEUTRAL: Represents a job status that can optionally succeed or fail.
+        SKIPPED: Represents a skipped job status.
+        SUCCESS: Represents a successful job status.
+        TIMED_OUT: Represents a job that has timed out.
+    """
+
+    ACTION_REQUIRED = "action_required"
+    CANCELLED = "cancelled"
     FAILURE = "failure"
     NEUTRAL = "neutral"
-    CANCELLED = "cancelled"
     SKIPPED = "skipped"
+    SUCCESS = "success"
     TIMED_OUT = "timed_out"
-    ACTION_REQUIRED = "action_required"
 
 
 class JobStats(BaseModel):
@@ -135,6 +154,7 @@ class JobStats(BaseModel):
     Attributes:
         created_at: The time the job was created.
         started_at: The time the job was started.
+        conclusion: The end result of a job.
     """
 
     created_at: datetime

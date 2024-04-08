@@ -66,7 +66,7 @@ def _create_connection(
     Raises:
         OpenStackUnauthorizedError: if the credentials provided is not authorized.
 
-    Returns:
+    Yields:
         An openstack.connection.Connection object.
     """
     clouds = list(cloud_config["clouds"].keys())
@@ -133,7 +133,9 @@ def _generate_docker_proxy_unit_file(proxies: Optional[ProxyConfig] = None) -> s
     return environment.get_template("systemd-docker-proxy.j2").render(proxies=proxies)
 
 
-def _generate_docker_client_proxy_config_json(http_proxy: str, https_proxy: str, no_proxy: str):
+def _generate_docker_client_proxy_config_json(
+    http_proxy: str, https_proxy: str, no_proxy: str
+) -> str:
     """Generate proxy config.json for docker client.
 
     Args:
@@ -201,7 +203,7 @@ def _build_image_command(
 class InstanceConfig:
     """The configuration values for creating a single runner instance.
 
-    Args:
+    Attributes:
         name: Name of the image to launch the GitHub runner instance with.
         labels: The runner instance labels.
         registration_token: Token for registering the runner on GitHub.
@@ -216,7 +218,10 @@ class InstanceConfig:
     openstack_image: str
 
 
-def _get_supported_runner_arch(arch: str) -> Literal["amd64", "arm64"]:
+SupportedCloudImageArch = Literal["amd64", "arm64"]
+
+
+def _get_supported_runner_arch(arch: str) -> SupportedCloudImageArch:
     """Validate and return supported runner architecture.
 
     The supported runner architecture takes in arch value from Github supported architecture and
@@ -318,13 +323,14 @@ def build_image(
     """Build and upload an image to OpenStack.
 
     Args:
+        arch: The system architecture to build the image for.
         cloud_config: The cloud configuration to connect OpenStack with.
         github_client: The Github client to interact with Github API.
         path: Github organisation or repository path.
         proxies: HTTP proxy settings.
 
     Raises:
-        ImageBuildError: If there were errors building/creating the image.
+        OpenstackImageBuildError: If there were errors building/creating the image.
 
     Returns:
         The created OpenStack image id.
@@ -376,9 +382,12 @@ def create_instance_config(
 
     Args:
         unit_name: The charm unit name.
-        image: Ubuntu image flavor.
+        openstack_image: The openstack image object to create the instance with.
         path: Github organisation or repository path.
         github_client: The Github client to interact with Github API.
+
+    Returns:
+        Instance configuration created.
     """
     suffix = secrets.token_hex(12)
     registration_token = github_client.get_runner_registration_token(path=path)
@@ -451,6 +460,9 @@ def create_instance(
     Args:
         cloud_config: The cloud configuration to connect Openstack with.
         instance_config: The configuration values for Openstack instance to launch.
+        proxies: HTTP proxy settings.
+        dockerhub_mirror:
+        ssh_debug_connections:
 
     Raises:
         OpenstackInstanceLaunchError: if any errors occurred while launching Openstack instance.
