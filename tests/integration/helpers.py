@@ -10,7 +10,8 @@ import time
 import typing
 from asyncio import sleep
 from datetime import datetime, timezone
-from typing import Any, Awaitable, Callable, Union
+from functools import partial
+from typing import Any, Awaitable, Callable, ParamSpec, TypeVar, cast
 
 import github
 import juju.version
@@ -34,6 +35,9 @@ DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
 DISPATCH_CRASH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_crash_test.yaml"
 DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME = "workflow_dispatch_failure_test.yaml"
 DISPATCH_WAIT_TEST_WORKFLOW_FILENAME = "workflow_dispatch_wait_test.yaml"
+DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME = "e2e_test_run.yaml"
+
+DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15}
 
 
 async def check_runner_binary_exists(unit: Unit) -> bool:
@@ -320,6 +324,8 @@ async def deploy_github_runner_charm(
     https_proxy: str,
     no_proxy: str,
     reconcile_interval: int,
+    constraints: dict | None = None,
+    config: dict | None = None,
     wait_idle: bool = True,
 ) -> Application:
     """Deploy github-runner charm.
@@ -334,6 +340,9 @@ async def deploy_github_runner_charm(
         https_proxy: HTTPS proxy for the application to use.
         no_proxy: No proxy configuration for the application.
         reconcile_interval: Time between reconcile for the application.
+        constraints: The custom machine constraints to use. See DEFAULT_RUNNER_CONSTRAINTS
+            otherwise.
+        config: Additional custom config to use.
         wait_idle: wait for model to become idle.
     """
     subprocess.run(["sudo", "modprobe", "br_netfilter"])
@@ -351,20 +360,25 @@ async def deploy_github_runner_charm(
     if runner_storage == "juju-storage":
         storage["runner"] = {"pool": "rootfs", "size": 11}
 
+    default_config = {
+        "path": path,
+        "token": token,
+        "virtual-machines": 0,
+        "denylist": "10.10.0.0/16",
+        "test-mode": "insecure",
+        "reconcile-interval": reconcile_interval,
+        "runner-storage": runner_storage,
+    }
+
+    if config:
+        default_config.update(config)
+
     application = await model.deploy(
         charm_file,
         application_name=app_name,
         series="jammy",
-        config={
-            "path": path,
-            "token": token,
-            "virtual-machines": 0,
-            "denylist": "10.10.0.0/16",
-            "test-mode": "insecure",
-            "reconcile-interval": reconcile_interval,
-            "runner-storage": runner_storage,
-        },
-        constraints={"root-disk": 15},
+        config=default_config,
+        constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
         storage=storage,
     )
 
@@ -410,70 +424,35 @@ def get_workflow_runs(
             yield run
 
 
-async def _wait_until_runner_is_used_up(runner_name: str, unit: Unit):
-    """Wait until the runner is used up.
+def _get_latest_run(
+    workflow: Workflow, start_time: datetime, branch: Branch | None = None
+) -> WorkflowRun | None:
+    """Get the latest run after start_time.
 
     Args:
-        runner_name: The runner name to wait for.
-        unit: The unit which contains the runner.
+        workflow: The workflow to get the latest run for.
+        start_time: The minimum start time of the run.
+
+    Returns:
+        The latest workflow run if the workflow has started. None otherwise.
     """
-    for _ in range(30):
-        runners = await get_runner_names(unit)
-        if runner_name not in runners:
-            break
-        await sleep(30)
-    else:
-        assert False, "Timeout while waiting for the runner to be used up"
+    try:
+        return workflow.get_runs(
+            branch=branch, created=f">={start_time.isoformat(timespec='seconds')}"
+        )[0]
+    except IndexError:
+        return None
 
 
-async def _assert_workflow_run_conclusion(
-    runner_name: str, conclusion: str, workflow: Workflow, start_time: datetime
-):
-    """Assert that the workflow run has the expected conclusion.
+def _is_workflow_run_complete(run: WorkflowRun) -> bool:
+    """Wait for the workflow status to turn to complete.
 
     Args:
-        runner_name: The runner name to assert the workflow run conclusion for.
-        conclusion: The expected workflow run conclusion.
-        workflow: The workflow to assert the workflow run conclusion for.
-        start_time: The start time of the workflow.
+        run: The workflow run to check status for.
     """
-    log_found = False
-    for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
-        latest_job: WorkflowJob = run.jobs()[0]
-        logs = get_job_logs(job=latest_job)
-
-        if runner_name in logs:
-            log_found = True
-            assert latest_job.conclusion == conclusion, (
-                f"Job {latest_job.name} for {runner_name} expected {conclusion}, "
-                f"got {latest_job.conclusion}"
-            )
-
-    assert log_found, (
-        f"No run with runner({runner_name}) log found for workflow({workflow.name}) "
-        f"starting from {start_time} with conclusion {conclusion}"
-    )
-
-
-async def _wait_for_workflow_to_complete(
-    unit: Unit, workflow: Workflow, conclusion: str, start_time: datetime
-):
-    """Wait for the workflow to complete.
-
-    Args:
-        unit: The unit which contains the runner.
-        workflow: The workflow to wait for.
-        conclusion: The workflow conclusion to wait for.
-        start_time: The start time of the workflow.
-    """
-    runner_name = await get_runner_name(unit)
-    await _wait_until_runner_is_used_up(runner_name, unit)
-    # Wait for the workflow log to contain the conclusion
-    await sleep(120)
-
-    await _assert_workflow_run_conclusion(
-        runner_name=runner_name, conclusion=conclusion, workflow=workflow, start_time=start_time
-    )
+    if run.update():
+        return run.status == "completed"
+    return False
 
 
 async def dispatch_workflow(
@@ -482,6 +461,7 @@ async def dispatch_workflow(
     github_repository: Repository,
     conclusion: str,
     workflow_id_or_name: str,
+    dispatch_input: dict | None = None,
 ):
     """Dispatch a workflow on a branch for the runner to run.
 
@@ -503,18 +483,34 @@ async def dispatch_workflow(
     workflow = github_repository.get_workflow(id_or_file_name=workflow_id_or_name)
 
     # The `create_dispatch` returns True on success.
-    assert workflow.create_dispatch(branch, {"runner": app.name})
-    await _wait_for_workflow_to_complete(
-        unit=app.units[0], workflow=workflow, conclusion=conclusion, start_time=start_time
+    assert workflow.create_dispatch(
+        branch, dispatch_input or {"runner": app.name}
+    ), "Failed to create workflow"
+
+    # There is a very small chance of selecting a run not created by the dispatch above.
+    run = await wait_for(
+        partial(_get_latest_run, workflow=workflow, start_time=start_time, branch=branch)
     )
+    assert run, f"Run not found for workflow: {workflow.name} ({workflow.id})"
+    await wait_for(partial(_is_workflow_run_complete, run=run), timeout=60 * 30, check_interval=60)
+
+    # The run object is updated by _is_workflow_run_complete function above.
+    assert (
+        run.conclusion == conclusion
+    ), f"Unexpected run conclusion, expected: {conclusion}, got: {run.conclusion}"
+
     return workflow
 
 
+P = ParamSpec("P")
+R = TypeVar("R")
+
+
 async def wait_for(
-    func: Callable[[], Union[Awaitable, Any]],
+    func: Callable[P, R],
     timeout: int = 300,
     check_interval: int = 10,
-) -> Any:
+) -> R:
     """Wait for function execution to become truthy.
 
     Args:
@@ -532,7 +528,7 @@ async def wait_for(
     is_awaitable = inspect.iscoroutinefunction(func)
     while time.time() < deadline:
         if is_awaitable:
-            if result := await func():
+            if result := await cast(Awaitable, func()):
                 return result
         else:
             if result := func():
@@ -541,7 +537,7 @@ async def wait_for(
 
     # final check before raising TimeoutError.
     if is_awaitable:
-        if result := await func():
+        if result := await cast(Awaitable, func()):
             return result
     else:
         if result := func():

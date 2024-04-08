@@ -7,6 +7,7 @@ import dataclasses
 import json
 import logging
 import platform
+import re
 from enum import Enum
 from pathlib import Path
 from typing import NamedTuple, Optional, cast
@@ -17,7 +18,7 @@ from ops import CharmBase
 from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
 from pydantic.networks import IPvAnyAddress
 
-import openstack_manager
+import openstack_cloud
 from errors import OpenStackInvalidConfigError
 from firewall import FirewallEntry
 from utilities import get_env_var
@@ -25,13 +26,13 @@ from utilities import get_env_var
 logger = logging.getLogger(__name__)
 
 ARCHITECTURES_ARM64 = {"aarch64", "arm64"}
-
 ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
 
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
 
+LABELS_CONFIG_NAME = "labels"
 
 StorageSize = str
 """Representation of storage size with KiB, MiB, GiB, TiB, PiB, EiB as unit."""
@@ -165,27 +166,60 @@ def _valid_storage_size_str(size: str) -> bool:
     return size[-3:] in valid_suffixes and size[:-3].isdigit()
 
 
+WORD_ONLY_REGEX = re.compile("^\\w+$")
+
+
+def _parse_labels(labels: str) -> tuple[str, ...]:
+    """Return valid labels.
+
+    Args:
+        label: Comma separated labels string.
+
+    Raises:
+        ValueError: if any invalid label was found.
+
+    Returns:
+        Labels consisting of alphanumeric and underscore only.
+    """
+    invalid_labels = []
+    valid_labels = []
+    for label in labels.split(","):
+        if not label:
+            continue
+        if not WORD_ONLY_REGEX.match(stripped_label := label.strip()):
+            invalid_labels.append(stripped_label)
+        else:
+            valid_labels.append(stripped_label)
+
+    if invalid_labels:
+        raise ValueError(f"Invalid labels {','.join(invalid_labels)} found.")
+
+    return tuple(valid_labels)
+
+
 class CharmConfig(BaseModel):
     """General charm configuration.
 
     Some charm configurations are grouped into other configuration models.
 
     Attributes:
-        path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
-            name.
-        token: GitHub personal access token for GitHub API.
-        reconcile_interval: Time between each reconciliation of runners.
         denylist: List of IPv4 to block the runners from accessing.
         dockerhub_mirror: Private docker registry as dockerhub mirror for the runners to use.
+        labels: Additional runner labels to append to default (i.e. os, flavor, architecture).
         openstack_clouds_yaml: The openstack clouds.yaml configuration.
+        path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
+            name.
+        reconcile_interval: Time between each reconciliation of runners.
+        token: GitHub personal access token for GitHub API.
     """
 
-    path: GithubPath
-    token: str
-    reconcile_interval: int
     denylist: list[FirewallEntry]
     dockerhub_mirror: str | None
-    openstack_clouds_yaml: dict | None
+    labels: tuple[str, ...]
+    openstack_clouds_yaml: dict[str, dict] | None
+    path: GithubPath
+    reconcile_interval: int
+    token: str
 
     @classmethod
     def _parse_denylist(cls, charm: CharmBase) -> list[str]:
@@ -250,16 +284,16 @@ class CharmConfig(BaseModel):
             try:
                 openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
             except yaml.YAMLError as exc:
-                logger.error("Invalid openstack-clouds-yaml config: %s.", exc)
+                logger.error("Invalid experimental-openstack-clouds-yaml config: %s.", exc)
                 raise CharmConfigInvalidError(
-                    "Invalid openstack-clouds-yaml config. Invalid yaml."
+                    "Invalid experimental-openstack-clouds-yaml config. Invalid yaml."
                 ) from exc
             if (config_type := type(openstack_clouds_yaml)) is not dict:
                 raise CharmConfigInvalidError(
                     f"Invalid openstack config format, expected dict, got {config_type}"
                 )
             try:
-                openstack_manager.initialize(openstack_clouds_yaml)
+                openstack_cloud.initialize(openstack_clouds_yaml)
             except OpenStackInvalidConfigError as exc:
                 logger.error("Invalid openstack config, %s.", exc)
                 raise CharmConfigInvalidError(
@@ -268,13 +302,19 @@ class CharmConfig(BaseModel):
         else:
             openstack_clouds_yaml = None
 
+        try:
+            labels = _parse_labels(charm.config.get(LABELS_CONFIG_NAME, ""))
+        except ValueError as exc:
+            raise CharmConfigInvalidError(f"Invalid {LABELS_CONFIG_NAME} config: {exc}") from exc
+
         return cls(
-            path=path,
-            token=token,
-            reconcile_interval=reconcile_interval,
             denylist=denylist,
             dockerhub_mirror=dockerhub_mirror,
+            labels=labels,
             openstack_clouds_yaml=openstack_clouds_yaml,
+            path=path,
+            reconcile_interval=reconcile_interval,
+            token=token,
         )
 
     @root_validator
