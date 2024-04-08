@@ -648,9 +648,11 @@ class OpenstackRunnerManager:
             instance_name: The name of the instance to wait on.
         """
         try:
-            server: openstack.compute.v2.server.Server = conn.get_server(instance_name)
-            if server.status != _INSTANCE_STATUS_ACTIVE or not self._ssh_health_check(
-                instance=server
+            server: openstack.compute.v2.server.Server | None = conn.get_server(instance_name)
+            if (
+                not server
+                or server.status != _INSTANCE_STATUS_ACTIVE
+                or not self._ssh_health_check(instance=server)
             ):
                 raise RunnerStartError(
                     (
@@ -836,7 +838,13 @@ class OpenstackRunnerManager:
         for instance_name in instance_names:
             if num_to_remove < 1:
                 break
-            server: openstack.compute.v2.server.Server = conn.get_server(name_or_id=instance_name)
+            server: openstack.compute.v2.server.Server | None = conn.get_server(
+                name_or_id=instance_name
+            )
+            if not server:
+                logger.warning("Server %s does not exist.", instance_name)
+                continue
+
             try:
                 self._remove_from_github(instance=server, remove_token=remove_token)
             except GithubRunnerRemoveError as exc:
@@ -844,8 +852,7 @@ class OpenstackRunnerManager:
 
             try:
                 if not conn.delete_server(name_or_id=instance_name, wait=True, delete_ips=True):
-                    logger.warning("Server does not exist %s", instance_name)
-                    num_to_remove -= 1
+                    logger.warning("Server %s no longer exists.", instance_name)
                     continue
             except SDKException as exc:
                 logger.error("Something wrong deleting the server %s, %s", instance_name, str(exc))
