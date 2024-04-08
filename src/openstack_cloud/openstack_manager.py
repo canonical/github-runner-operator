@@ -858,7 +858,7 @@ class OpenstackRunnerManager:
             The change in number of runners.
         """
         github_info = self.get_github_runner_info()
-        online_runners = [runner.name for runner in github_info if runner.online]
+        online_runners = [runner for runner in github_info if runner.online]
         logger.info("Found %s existing openstack runners", len(online_runners))
 
         with _create_connection(self._cloud_config) as conn:
