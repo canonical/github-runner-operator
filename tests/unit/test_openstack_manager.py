@@ -460,7 +460,7 @@ def test_build_image_create_image_error(
             proxies=None,
         )
 
-    assert "Failed to upload image." in str(exc)
+    assert "Failed to update image" in str(exc)
 
 
 @pytest.mark.usefixtures("patch_execute_command")

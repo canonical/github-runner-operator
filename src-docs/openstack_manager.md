@@ -14,7 +14,7 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L269"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L311"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
@@ -53,7 +53,7 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L337"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L368"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
@@ -81,7 +81,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/utilities.py#L410"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L441"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
@@ -171,7 +171,18 @@ __init__(
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L452"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L269"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `OpenstackUpdateImageError`
+Represents an error while updating image on Openstack. 
+
+
+
+
+
+---
+
+<a href="../src/openstack_cloud/openstack_manager.py#L483"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `GithubRunnerRemoveError`
 Represents an error removing registered runner from Github. 
@@ -182,7 +193,7 @@ Represents an error removing registered runner from Github.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L460"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L491"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackRunnerManager`
 Runner manager for OpenStack-based instances. 
@@ -197,7 +208,7 @@ Runner manager for OpenStack-based instances.
  - <b>`flavor`</b>:  OpenStack flavor for defining the runner resources. 
  - <b>`network`</b>:  OpenStack network for runner network access. 
 
-<a href="../src/openstack_cloud/openstack_manager.py#L471"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L502"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -226,7 +237,7 @@ Construct OpenstackRunnerManager object.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L859"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L890"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `flush`
 
@@ -238,7 +249,7 @@ Flush Openstack servers.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L687"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L718"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_github_runner_info`
 
@@ -255,7 +266,7 @@ Get information on GitHub for the runners.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L820"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L851"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `reconcile`
 

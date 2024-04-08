@@ -266,6 +266,48 @@ def _get_openstack_architecture(arch: Arch) -> str:
             raise UnsupportedArchitectureError(arch)
 
 
+class OpenstackUpdateImageError(Exception):
+    """Represents an error while updating image on Openstack."""
+
+
+@retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
+def _update_image(
+    cloud_config: dict[str, dict], ubuntu_image_arch: str, openstack_image_arch: str
+):
+    """Update the openstack image if it exists, create new otherwise.
+
+    Args:
+        cloud_config: The cloud configuration to connect OpenStack with.
+        ubuntu_image_arch: The cloud-image architecture.
+        openstack_image_arch: The Openstack image architecture.
+
+    Raises:
+        OpenstackUpdateImageError: If there was an error interacting with images on Openstack.
+
+    Returns:
+        The created image ID.
+    """
+    try:
+        with _create_connection(cloud_config) as conn:
+            existing_image: openstack.image.v2.image.Image
+            for existing_image in conn.search_images(name_or_id=IMAGE_NAME):
+                # images with same name (different ID) can be created and will error during server
+                # instantiation.
+                if not conn.delete_image(name_or_id=existing_image.id, wait=True):
+                    raise OpenstackUpdateImageError(
+                        "Failed to delete duplicate image on Openstack."
+                    )
+            image: openstack.image.v2.image.Image = conn.create_image(
+                name=IMAGE_NAME,
+                filename=IMAGE_PATH_TMPL.format(architecture=ubuntu_image_arch),
+                wait=True,
+                properties={"architecture": openstack_image_arch},
+            )
+            return image.id
+    except OpenStackCloudException as exc:
+        raise OpenstackUpdateImageError("Failed to upload image.") from exc
+
+
 def build_image(
     arch: Arch,
     cloud_config: dict[str, dict],
@@ -314,24 +356,13 @@ def build_image(
         raise OpenstackImageBuildError(f"Unsupported architecture {runner_arch}") from exc
 
     try:
-        with _create_connection(cloud_config) as conn:
-            existing_image: openstack.image.v2.image.Image
-            for existing_image in conn.search_images(name_or_id=IMAGE_NAME):
-                # images with same name (different ID) can be created and will error during server
-                # instantiation.
-                if not conn.delete_image(name_or_id=existing_image.id, wait=True):
-                    raise OpenstackImageBuildError(
-                        "Failed to delete duplicate image on Openstack."
-                    )
-            image: openstack.image.v2.image.Image = conn.create_image(
-                name=IMAGE_NAME,
-                filename=IMAGE_PATH_TMPL.format(architecture=image_arch),
-                wait=True,
-                properties={"architecture": _get_openstack_architecture(arch=arch)},
-            )
-            return image.id
-    except OpenStackCloudException as exc:
-        raise OpenstackImageBuildError("Failed to upload image.") from exc
+        return _update_image(
+            cloud_config=cloud_config,
+            ubuntu_image_arch=image_arch,
+            openstack_image_arch=_get_openstack_architecture(arch),
+        )
+    except OpenstackUpdateImageError as exc:
+        raise OpenstackImageBuildError(f"Failed to update image, {exc}") from exc
 
 
 def create_instance_config(
