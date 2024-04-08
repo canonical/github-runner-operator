@@ -208,8 +208,12 @@ async def test_charm_upgrade(model: Model, app_no_runner: Application, charm_fil
     unit = app_no_runner.units[0]
     unit_name_without_slash = unit.name.replace("/", "-")
 
-    async def is_upgrade_charm_event_emitted():
-        """Check if the upgrade_charm event is emitted."""
+    async def is_upgrade_charm_event_emitted() -> bool:
+        """Check if the upgrade_charm event is emitted.
+
+        Returns:
+            bool: True if the event is emitted, False otherwise.
+        """
         ret_code, stdout = await run_in_unit(
             unit=unit, command=f"cat /var/log/juju/unit-{unit_name_without_slash}.log"
         )
