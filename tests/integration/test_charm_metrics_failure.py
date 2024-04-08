@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Integration tests for metrics/logs assuming Github workflow failures or a runner crash."""
+import time
 from typing import AsyncIterator
 
 import pytest
@@ -108,9 +109,12 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     workflow = forked_github_repository.get_workflow(
         id_or_file_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME
     )
+    dispatch_time = time.time()
     assert workflow.create_dispatch(forked_github_branch, {"runner": app.name})
 
-    await wait_for_workflow_to_start(unit, workflow, branch=forked_github_branch)
+    await wait_for_workflow_to_start(
+        unit, workflow, branch=forked_github_branch, started_time=dispatch_time
+    )
 
     # Make the runner terminate abnormally by killing run.sh
     runner_name = await get_runner_name(unit)

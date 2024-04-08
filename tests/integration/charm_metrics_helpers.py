@@ -4,6 +4,7 @@
 """Utilities for charm metrics integration tests."""
 
 
+import datetime
 import json
 import logging
 from time import sleep
@@ -31,19 +32,28 @@ TEST_WORKFLOW_NAMES = [
 ]
 
 
-async def wait_for_workflow_to_start(unit: Unit, workflow: Workflow, branch: Branch | None = None):
+async def wait_for_workflow_to_start(
+    unit: Unit, workflow: Workflow, branch: Branch | None = None, started_time: float | None = None
+):
     """Wait for the workflow to start.
 
     Args:
         unit: The unit which contains the runner.
         workflow: The workflow to wait for.
         branch: The branch where the workflow belongs to.
+        started_time: The time in seconds since epoch the job was started.
     """
     runner_name = await get_runner_name(unit)
+    created_at = (
+        None
+        if not started_time
+        # convert to integer since GH API takes up to seconds.
+        else f">={datetime.datetime.fromtimestamp(int(started_time)).isoformat()}"
+    )
 
     def is_runner_log():
         """Return whether a log for given runner exists."""
-        for run in workflow.get_runs(branch=branch):
+        for run in workflow.get_runs(branch=branch, created=created_at):
             jobs = run.jobs()
             if not jobs:
                 return False
