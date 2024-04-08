@@ -71,8 +71,12 @@ def setup_charm_harness(monkeypatch, runner_bin_path: Path) -> Harness:
     harness = Harness(GithubRunnerCharm)
     harness.update_config({"path": "mock/repo", "token": "mocktoken"})
     harness.begin()
-    monkeypatch.setattr("runner_manager.RunnerManager.update_runner_bin", stub_update_runner_bin)
-    monkeypatch.setattr("runner_manager.RunnerManager._runners_in_pre_job", lambda self: False)
+    monkeypatch.setattr(
+        "lxd_cloud.runner_manager.RunnerManager.update_runner_bin", stub_update_runner_bin
+    )
+    monkeypatch.setattr(
+        "lxd_cloud.runner_manager.RunnerManager._runners_in_pre_job", lambda self: False
+    )
     return harness
 
 

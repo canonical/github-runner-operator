@@ -11,11 +11,11 @@ from unittest.mock import MagicMock
 import jinja2
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
-from runner_manager_type import RunnerManagerClients
 
 from charm_state import GithubOrg, GithubRepo, SSHDebugConnection, VirtualMachineResources
 from errors import CreateSharedFilesystemError, RunnerCreateError, RunnerRemoveError
 from lxd_cloud.runner import CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
+from lxd_cloud.runner_manager_type import RunnerManagerClients
 from lxd_cloud.shared_fs import SharedFilesystem
 from runner_type import ProxySetting
 from tests.unit.factories import SSHDebugInfoFactory
@@ -63,7 +63,7 @@ def mock_lxd_client_fixture():
 def shared_fs_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     """Mock the module for handling the Shared Filesystem."""
     mock = MagicMock()
-    monkeypatch.setattr("runner.shared_fs", mock)
+    monkeypatch.setattr("lxd_cloud.runner.shared_fs", mock)
     return mock
 
 
@@ -71,7 +71,7 @@ def shared_fs_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
 def exc_command_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     """Mock the execution of a command."""
     exc_cmd_mock = MagicMock()
-    monkeypatch.setattr("runner.execute_command", exc_cmd_mock)
+    monkeypatch.setattr("lxd_cloud.runner.execute_command", exc_cmd_mock)
     return exc_cmd_mock
 
 

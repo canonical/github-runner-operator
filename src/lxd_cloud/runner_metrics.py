@@ -13,9 +13,8 @@ from typing import Iterator, Optional, Type
 from pydantic import BaseModel, Field, NonNegativeFloat, ValidationError
 
 import errors
-import lxd_cloud.metrics as metrics
-import lxd_cloud.shared_fs as shared_fs
 from errors import CorruptMetricDataError
+from lxd_cloud import metrics, shared_fs
 from metrics_type import GithubJobMetrics
 
 logger = logging.getLogger(__name__)

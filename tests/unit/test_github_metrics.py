@@ -10,7 +10,7 @@ import errors
 import github_metrics
 from github_client import GithubClient
 from github_type import JobConclusion, JobStats
-from runner_metrics import PreJobMetrics
+from lxd_cloud.runner_metrics import PreJobMetrics
 
 
 @pytest.fixture(name="pre_job_metrics")

@@ -23,9 +23,9 @@ def filesystem_paths_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> dict[s
     fs_path = tmp_path / "runner-fs"
     fs_images_path = tmp_path / "images"
     fs_quarantine_path = tmp_path / "quarantine"
-    monkeypatch.setattr("shared_fs.FILESYSTEM_BASE_PATH", fs_path)
-    monkeypatch.setattr("shared_fs.FILESYSTEM_IMAGES_PATH", fs_images_path)
-    monkeypatch.setattr("shared_fs.FILESYSTEM_QUARANTINE_PATH", fs_quarantine_path)
+    monkeypatch.setattr("lxd_cloud.shared_fs.FILESYSTEM_BASE_PATH", fs_path)
+    monkeypatch.setattr("lxd_cloud.shared_fs.FILESYSTEM_IMAGES_PATH", fs_images_path)
+    monkeypatch.setattr("lxd_cloud.shared_fs.FILESYSTEM_QUARANTINE_PATH", fs_quarantine_path)
     return {"base": fs_path, "images": fs_images_path, "quarantine": fs_quarantine_path}
 
 
@@ -33,7 +33,7 @@ def filesystem_paths_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> dict[s
 def exc_command_fixture(monkeypatch: MonkeyPatch) -> Mock:
     """Mock the execution of a command."""
     exc_cmd_mock = Mock(return_value=("", 0))
-    monkeypatch.setattr("shared_fs.execute_command", exc_cmd_mock)
+    monkeypatch.setattr("lxd_cloud.shared_fs.execute_command", exc_cmd_mock)
     return exc_cmd_mock
 
 

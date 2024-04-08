@@ -9,7 +9,6 @@ from unittest.mock import MagicMock, call
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
-from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 
 import lxd_cloud.shared_fs as shared_fs
 from charm_state import (
@@ -30,11 +29,12 @@ from lxd_cloud.runner_manager import (
     RunnerManager,
     RunnerManagerConfig,
 )
+from lxd_cloud.runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from lxd_cloud.shared_fs import SharedFilesystem
 from runner_type import RunnerByHealth
 from tests.unit.mock import TEST_BINARY
 
-RUNNER_MANAGER_TIME_MODULE = "runner_manager.time.time"
+RUNNER_MANAGER_TIME_MODULE = "lxd_cloud.runner_manager.time.time"
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
 
@@ -80,7 +80,7 @@ def charm_state_fixture(charm_config: MagicMock):
 def runner_manager_fixture(request, tmp_path, monkeypatch, token, charm_state):
     charm_state.proxy_config = request.param[1]
     monkeypatch.setattr(
-        "runner_manager.RunnerManager.runner_bin_path", tmp_path / "mock_runner_binary"
+        "lxd_cloud.runner_manager.RunnerManager.runner_bin_path", tmp_path / "mock_runner_binary"
     )
     pool_path = tmp_path / "test_storage"
     pool_path.mkdir(exist_ok=True)
@@ -105,7 +105,7 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token, charm_state):
 def issue_event_mock_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     """Mock the issue_event function."""
     issue_event_mock = MagicMock()
-    monkeypatch.setattr("metrics.issue_event", issue_event_mock)
+    monkeypatch.setattr("lxd_cloud.metrics.issue_event", issue_event_mock)
     return issue_event_mock
 
 
@@ -113,8 +113,8 @@ def issue_event_mock_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
 def shared_fs_fixture(tmp_path: Path, monkeypatch: MonkeyPatch) -> MagicMock:
     """Mock the shared filesystem module."""
     shared_fs_mock = MagicMock(spec=shared_fs)
-    monkeypatch.setattr("runner_manager.shared_fs", shared_fs_mock)
-    monkeypatch.setattr("runner.shared_fs", shared_fs_mock)
+    monkeypatch.setattr("lxd_cloud.runner_manager.shared_fs", shared_fs_mock)
+    monkeypatch.setattr("lxd_cloud.runner.shared_fs", shared_fs_mock)
     return shared_fs_mock
 
 
@@ -122,7 +122,7 @@ def shared_fs_fixture(tmp_path: Path, monkeypatch: MonkeyPatch) -> MagicMock:
 def runner_metrics_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     """Mock the runner metrics module."""
     runner_metrics_mock = MagicMock()
-    monkeypatch.setattr("runner_manager.runner_metrics", runner_metrics_mock)
+    monkeypatch.setattr("lxd_cloud.runner_manager.runner_metrics", runner_metrics_mock)
     return runner_metrics_mock
 
 

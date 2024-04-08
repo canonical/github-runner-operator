@@ -6,27 +6,25 @@ from pathlib import Path
 from unittest.mock import MagicMock, call
 
 import pytest
-import runner_metrics
-from runner_metrics import (
+
+import errors
+import metrics_type
+from github_type import JobConclusion
+from lxd_cloud import metrics, runner_metrics, shared_fs
+from lxd_cloud.metrics import RunnerStart, RunnerStop
+from lxd_cloud.runner_metrics import (
     RUNNER_INSTALLED_TS_FILE_NAME,
     PostJobMetrics,
     PreJobMetrics,
     RunnerMetrics,
 )
 
-import errors
-import lxd_cloud.metrics as metrics
-import lxd_cloud.shared_fs as shared_fs
-import metrics_type
-from github_type import JobConclusion
-from lxd_cloud.metrics import RunnerStart, RunnerStop
-
 
 @pytest.fixture(autouse=True, name="issue_event_mock")
 def issue_event_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     """Mock the issue_event function."""
     issue_event_mock = MagicMock()
-    monkeypatch.setattr("metrics.issue_event", issue_event_mock)
+    monkeypatch.setattr("lxd_cloud.metrics.issue_event", issue_event_mock)
     return issue_event_mock
 
 
@@ -34,7 +32,7 @@ def issue_event_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
 def shared_fs_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     """Mock the issue_event function."""
     shared_fs_mock = MagicMock(spec=shared_fs)
-    monkeypatch.setattr("runner_metrics.shared_fs", shared_fs_mock)
+    monkeypatch.setattr("lxd_cloud.runner_metrics.shared_fs", shared_fs_mock)
     return shared_fs_mock
 
 

@@ -13,7 +13,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from runner_metrics import PostJobStatus
+from lxd_cloud.runner_metrics import PostJobStatus
 from tests.integration.charm_metrics_helpers import (
     assert_events_after_reconciliation,
     clear_metrics_log,

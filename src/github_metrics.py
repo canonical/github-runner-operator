@@ -6,8 +6,8 @@
 import errors
 from charm_state import GithubRepo
 from github_client import GithubClient
+from lxd_cloud.runner_metrics import PreJobMetrics
 from metrics_type import GithubJobMetrics
-from runner_metrics import PreJobMetrics
 
 
 def job(

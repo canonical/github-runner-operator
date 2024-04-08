@@ -34,7 +34,6 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-import lxd_cloud.metrics as metrics
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
@@ -58,6 +57,7 @@ from errors import (
 )
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
+from lxd_cloud import metrics
 from lxd_cloud.event_timer import EventTimer, TimerStatusError
 from lxd_cloud.firewall import Firewall, FirewallEntry
 from lxd_cloud.runner import LXD_PROFILE_YAML

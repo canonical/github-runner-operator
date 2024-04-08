@@ -16,20 +16,15 @@ from typing import Dict, Iterator, Optional, Type
 import jinja2
 import requests
 import requests.adapters
-import runner_metrics
 import urllib3
-from runner_manager_type import FlushMode, RunnerInfo, RunnerManagerClients, RunnerManagerConfig
-from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 
 import errors
 import github_metrics
-import lxd_cloud.metrics as metrics
-import lxd_cloud.runner_logs as runner_logs
-import lxd_cloud.shared_fs as shared_fs
 from charm_state import VirtualMachineResources
 from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
 from github_client import GithubClient
 from github_type import RunnerApplication, SelfHostedRunner
+from lxd_cloud import metrics, runner_logs, runner_metrics, shared_fs
 from lxd_cloud.lxd import LxdClient, LxdInstance
 from lxd_cloud.repo_policy_compliance_client import RepoPolicyComplianceClient
 from lxd_cloud.runner import (
@@ -39,6 +34,13 @@ from lxd_cloud.runner import (
     RunnerConfig,
     RunnerStatus,
 )
+from lxd_cloud.runner_manager_type import (
+    FlushMode,
+    RunnerInfo,
+    RunnerManagerClients,
+    RunnerManagerConfig,
+)
+from lxd_cloud.runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import ProxySetting as RunnerProxySetting
 from runner_type import RunnerByHealth
 from utilities import execute_command, retry, set_env_var
