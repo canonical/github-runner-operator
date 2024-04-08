@@ -14,7 +14,7 @@ from tests.integration.helpers import (
     reconcile,
     remove_runner_bin,
     run_in_unit,
-    wait_till_num_of_runners,
+    wait_till_num_of_runners, wait_for,
 )
 from tests.status_name import ACTIVE
 
@@ -204,17 +204,15 @@ async def test_charm_upgrade(model: Model, app_no_runner: Application, charm_fil
     """
     await app_no_runner.refresh(path=charm_file)
 
-    # It may take some time between the charm upgrade and the run of the upgrade charm hook,
-    # so set the idle_period high.
-    await model.wait_for_idle(status=ACTIVE, idle_period=60)
     unit = app_no_runner.units[0]
     unit_name_without_slash = unit.name.replace("/", "-")
-    ret_code, stdout = await run_in_unit(
-        unit=unit, command=f"cat /var/log/juju/unit-{unit_name_without_slash}.log"
-    )
-    assert ret_code == 0, f"Failed to read the log file: {stdout}"
-    assert stdout, "Log file is empty."
-    assert "Emitting Juju event upgrade_charm." in stdout, "upgrade_charm event not yet fired."
-    # There may be a race condition: if the hook is executed shortly after idle,
-    # it may not have finished yet, so check for idle again.
+
+    async def is_upgrade_charm_event_emitted():
+        ret_code, stdout = await run_in_unit(
+            unit=unit, command=f"cat /var/log/juju/unit-{unit_name_without_slash}.log"
+        )
+        assert ret_code == 0, f"Failed to read the log file: {stdout}"
+        return stdout is not None and "Emitting Juju event upgrade_charm." in stdout
+
+    await wait_for(is_upgrade_charm_event_emitted, timeout=360, check_interval=60)
     await model.wait_for_idle(status=ACTIVE)
