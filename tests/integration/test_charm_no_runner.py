@@ -14,7 +14,8 @@ from tests.integration.helpers import (
     reconcile,
     remove_runner_bin,
     run_in_unit,
-    wait_till_num_of_runners, wait_for,
+    wait_for,
+    wait_till_num_of_runners,
 )
 from tests.status_name import ACTIVE
 
@@ -208,6 +209,7 @@ async def test_charm_upgrade(model: Model, app_no_runner: Application, charm_fil
     unit_name_without_slash = unit.name.replace("/", "-")
 
     async def is_upgrade_charm_event_emitted():
+        """Check if the upgrade_charm event is emitted."""
         ret_code, stdout = await run_in_unit(
             unit=unit, command=f"cat /var/log/juju/unit-{unit_name_without_slash}.log"
         )
