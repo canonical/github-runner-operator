@@ -5,9 +5,9 @@ from unittest.mock import MagicMock, call
 
 import pytest
 
-import runner_logs
+import lxd_cloud.runner_logs as runner_logs
 from errors import LxdError, RunnerLogsError
-from runner_logs import get_crashed
+from lxd_cloud.runner_logs import get_crashed
 
 
 @pytest.fixture(name="log_dir_base_path")

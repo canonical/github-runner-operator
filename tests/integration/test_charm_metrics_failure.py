@@ -11,7 +11,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-import runner_logs
+import lxd_cloud.runner_logs as runner_logs
 from runner_metrics import PostJobStatus
 from tests.integration.charm_metrics_helpers import (
     assert_events_after_reconciliation,

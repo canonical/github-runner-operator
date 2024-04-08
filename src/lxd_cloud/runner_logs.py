@@ -10,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 
 from errors import LxdError, RunnerLogsError
-from runner import Runner
+from lxd_cloud.runner import Runner
 
 CRASHED_RUNNER_LOGS_DIR_PATH = Path("/var/log/github-runner-crashed")
 DIAG_DIR_PATH = Path("/home/ubuntu/github-runner/_diag")

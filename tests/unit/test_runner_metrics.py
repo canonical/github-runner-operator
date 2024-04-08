@@ -6,20 +6,20 @@ from pathlib import Path
 from unittest.mock import MagicMock, call
 
 import pytest
-
-import errors
-import metrics
-import metrics_type
 import runner_metrics
-import shared_fs
-from github_type import JobConclusion
-from metrics import RunnerStart, RunnerStop
 from runner_metrics import (
     RUNNER_INSTALLED_TS_FILE_NAME,
     PostJobMetrics,
     PreJobMetrics,
     RunnerMetrics,
 )
+
+import errors
+import lxd_cloud.metrics as metrics
+import lxd_cloud.shared_fs as shared_fs
+import metrics_type
+from github_type import JobConclusion
+from lxd_cloud.metrics import RunnerStart, RunnerStop
 
 
 @pytest.fixture(autouse=True, name="issue_event_mock")

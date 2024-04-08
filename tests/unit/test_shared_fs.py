@@ -9,7 +9,7 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 import errors
-import shared_fs
+import lxd_cloud.shared_fs as shared_fs
 from errors import SubprocessError
 
 MOUNTPOINT_FAILURE_EXIT_CODE = 1

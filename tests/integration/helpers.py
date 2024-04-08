@@ -26,8 +26,8 @@ from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
 
-from runner import Runner
-from runner_manager import RunnerManager
+from lxd_cloud.runner import Runner
+from lxd_cloud.runner_manager import RunnerManager
 from tests.status_name import ACTIVE
 from utilities import retry
 

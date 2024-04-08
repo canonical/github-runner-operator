@@ -12,8 +12,8 @@ import jinja2
 from charm_state import CharmState, GithubPath
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
-from lxd import LxdClient
-from repo_policy_compliance_client import RepoPolicyComplianceClient
+from lxd_cloud.lxd import LxdClient
+from lxd_cloud.repo_policy_compliance_client import RepoPolicyComplianceClient
 
 
 class FlushMode(Enum):

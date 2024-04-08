@@ -7,7 +7,7 @@ from ipaddress import IPv4Network
 
 import pytest
 
-from firewall import Firewall
+from lxd_cloud.firewall import Firewall
 
 
 @pytest.mark.parametrize(

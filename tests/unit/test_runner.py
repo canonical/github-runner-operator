@@ -11,13 +11,13 @@ from unittest.mock import MagicMock
 import jinja2
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
+from runner_manager_type import RunnerManagerClients
 
 from charm_state import GithubOrg, GithubRepo, SSHDebugConnection, VirtualMachineResources
 from errors import CreateSharedFilesystemError, RunnerCreateError, RunnerRemoveError
-from runner import CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
-from runner_manager_type import RunnerManagerClients
+from lxd_cloud.runner import CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
+from lxd_cloud.shared_fs import SharedFilesystem
 from runner_type import ProxySetting
-from shared_fs import SharedFilesystem
 from tests.unit.factories import SSHDebugInfoFactory
 from tests.unit.mock import (
     MockLxdClient,

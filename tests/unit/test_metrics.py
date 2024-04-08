@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, call
 
 import pytest
 
-import metrics
+import lxd_cloud.metrics as metrics
 from errors import LogrotateSetupError, SubprocessError
 
 TEST_LOKI_PUSH_API_URL = "http://loki:3100/api/prom/push"

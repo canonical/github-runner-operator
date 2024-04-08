@@ -2,7 +2,7 @@
 #  See LICENSE file for licensing details.
 import secrets
 
-from event_timer import EventTimer
+from lxd_cloud.event_timer import EventTimer
 
 
 def test_is_active_true():

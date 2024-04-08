@@ -9,8 +9,9 @@ from unittest.mock import MagicMock, call
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
+from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 
-import shared_fs
+import lxd_cloud.shared_fs as shared_fs
 from charm_state import (
     Arch,
     CharmConfig,
@@ -22,12 +23,15 @@ from charm_state import (
 )
 from errors import IssueMetricEventError, RunnerBinaryError
 from github_type import RunnerApplication
-from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
-from runner import Runner, RunnerStatus
-from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerManagerConfig
-from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
+from lxd_cloud.metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
+from lxd_cloud.runner import Runner, RunnerStatus
+from lxd_cloud.runner_manager import (
+    BUILD_IMAGE_SCRIPT_FILENAME,
+    RunnerManager,
+    RunnerManagerConfig,
+)
+from lxd_cloud.shared_fs import SharedFilesystem
 from runner_type import RunnerByHealth
-from shared_fs import SharedFilesystem
 from tests.unit.mock import TEST_BINARY
 
 RUNNER_MANAGER_TIME_MODULE = "runner_manager.time.time"

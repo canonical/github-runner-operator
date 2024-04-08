@@ -17,7 +17,7 @@ from typing import IO, Optional, Tuple, Union
 import pylxd.models
 
 from errors import LxdError, SubprocessError
-from lxd_type import (
+from lxd_cloud.lxd_type import (
     LxdInstanceConfig,
     LxdNetwork,
     LxdResourceProfileConfig,

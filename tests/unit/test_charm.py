@@ -24,10 +24,10 @@ from charm_state import (
     VirtualMachineResources,
 )
 from errors import LogrotateSetupError, RunnerError, SubprocessError
-from event_timer import EventTimer, TimerEnableError
-from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
-from runner_manager import RunnerInfo, RunnerManagerConfig
+from lxd_cloud.event_timer import EventTimer, TimerEnableError
+from lxd_cloud.firewall import FirewallEntry
+from lxd_cloud.runner_manager import RunnerInfo, RunnerManagerConfig
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 

@@ -21,8 +21,9 @@ from pathlib import Path
 from typing import Iterable, NamedTuple, Optional, Sequence
 
 import yaml
+from runner_manager_type import RunnerManagerClients
 
-import shared_fs
+import lxd_cloud.shared_fs as shared_fs
 from charm_state import Arch, GithubOrg, SSHDebugConnection, VirtualMachineResources
 from errors import (
     CreateSharedFilesystemError,
@@ -35,9 +36,8 @@ from errors import (
     RunnerRemoveError,
     SubprocessError,
 )
-from lxd import LxdInstance
-from lxd_type import LxdInstanceConfig
-from runner_manager_type import RunnerManagerClients
+from lxd_cloud.lxd import LxdInstance
+from lxd_cloud.lxd_type import LxdInstanceConfig
 from runner_type import RunnerConfig, RunnerStatus
 from utilities import execute_command, retry
 

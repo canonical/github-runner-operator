@@ -20,7 +20,7 @@ from pydantic.networks import IPvAnyAddress
 
 import openstack_cloud
 from errors import OpenStackInvalidConfigError
-from firewall import FirewallEntry
+from lxd_cloud.firewall import FirewallEntry
 from utilities import get_env_var
 
 logger = logging.getLogger(__name__)

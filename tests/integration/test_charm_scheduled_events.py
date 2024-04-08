@@ -13,7 +13,7 @@ import pytest
 from juju.application import Application
 from juju.model import Model
 
-from runner_manager import RunnerManager
+from lxd_cloud.runner_manager import RunnerManager
 from tests.integration.helpers import (
     check_runner_binary_exists,
     get_runner_names,

@@ -13,10 +13,10 @@ from github.Repository import Repository
 from github.Workflow import Workflow
 from juju.application import Application
 from juju.unit import Unit
+from runner_metrics import PostJobStatus
 
 from github_type import JobConclusion
-from metrics import METRICS_LOG_PATH
-from runner_metrics import PostJobStatus
+from lxd_cloud.metrics import METRICS_LOG_PATH
 from tests.integration.helpers import get_runner_name, run_in_unit
 
 TEST_WORKFLOW_NAMES = [

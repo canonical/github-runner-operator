@@ -13,8 +13,8 @@ from typing import IO, Optional, Sequence, Union
 
 from errors import LxdError, RunnerError
 from github_type import RegistrationToken, RemoveToken, RunnerApplication
-from lxd_type import LxdNetwork
-from runner import LxdInstanceConfig
+from lxd_cloud.lxd_type import LxdNetwork
+from lxd_cloud.runner import LxdInstanceConfig
 
 logger = logging.getLogger(__name__)
 

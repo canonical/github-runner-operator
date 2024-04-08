@@ -34,7 +34,7 @@ from ops.framework import EventBase, StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-import metrics
+import lxd_cloud.metrics as metrics
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
@@ -56,14 +56,14 @@ from errors import (
     SubprocessError,
     TokenError,
 )
-from event_timer import EventTimer, TimerStatusError
-from firewall import Firewall, FirewallEntry
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
+from lxd_cloud.event_timer import EventTimer, TimerStatusError
+from lxd_cloud.firewall import Firewall, FirewallEntry
+from lxd_cloud.runner import LXD_PROFILE_YAML
+from lxd_cloud.runner_manager import RunnerManager, RunnerManagerConfig
+from lxd_cloud.runner_manager_type import FlushMode
 from openstack_cloud import openstack_manager
-from runner import LXD_PROFILE_YAML
-from runner_manager import RunnerManager, RunnerManagerConfig
-from runner_manager_type import FlushMode
 from utilities import bytes_with_unit_to_kib, execute_command, retry
 
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
