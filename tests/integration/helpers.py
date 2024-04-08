@@ -11,7 +11,7 @@ import typing
 from asyncio import sleep
 from datetime import datetime, timezone
 from functools import partial
-from typing import Any, Awaitable, Callable, ParamSpec, TypeVar, cast
+from typing import Any, Awaitable, Callable, TypeVar, cast
 
 import github
 import juju.version
@@ -502,12 +502,12 @@ async def dispatch_workflow(
     return workflow
 
 
-P = ParamSpec("P")
+P = typing.ParamSpec("P")
 R = TypeVar("R")
 
 
 async def wait_for(
-    func: Callable[P, R],
+    func: Callable[P, R] | Callable[P, Awaitable[R]],
     timeout: int = 300,
     check_interval: int = 10,
 ) -> R:
@@ -532,7 +532,7 @@ async def wait_for(
                 return result
         else:
             if result := func():
-                return result
+                return cast(R, result)
         time.sleep(check_interval)
 
     # final check before raising TimeoutError.
@@ -541,5 +541,5 @@ async def wait_for(
             return result
     else:
         if result := func():
-            return result
+            return cast(R, result)
     raise TimeoutError()
