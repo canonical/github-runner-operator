@@ -356,6 +356,30 @@ class GithubRunnerCharm(CharmBase):
             return True
         return False
 
+    def _common_install_code(self, state: CharmState) -> None:
+        """Installation code shared between install and upgrade hook.
+
+        Raises:
+            LogrotateSetupError: Failed to setup logrotate.
+            SubprocessError: Failed to install dependencies.
+        """
+        self.unit.status = MaintenanceStatus("Installing packages")
+        try:
+            # The `_start_services`, `_install_deps` includes retry.
+            self._install_deps()
+            self._start_services(state.charm_config.token, state.proxy_config)
+        except SubprocessError:
+            logger.error("Failed to install dependencies")
+            raise
+
+        try:
+            metrics.setup_logrotate()
+        except LogrotateSetupError:
+            logger.error("Failed to setup logrotate")
+            raise
+
+        self._refresh_firewall(state)
+
     @catch_charm_errors
     def _on_install(self, _event: InstallEvent) -> None:
         """Handle the installation of charm.
@@ -395,25 +419,10 @@ class GithubRunnerCharm(CharmBase):
             self._block_on_openstack_config(state)
             return
 
-        self.unit.status = MaintenanceStatus("Installing packages")
-        try:
-            # The `_start_services`, `_install_deps` includes retry.
-            self._install_deps()
-            self._start_services(state.charm_config.token, state.proxy_config)
-            metrics.setup_logrotate()
-        except (LogrotateSetupError, SubprocessError) as err:
-            logger.exception(err)
-            if isinstance(err, LogrotateSetupError):
-                msg = "Failed to setup logrotate"
-            else:
-                msg = "Failed to install dependencies"
-            self.unit.status = BlockedStatus(msg)
-            return
-
-        self._refresh_firewall(state)
-        runner_manager = self._get_runner_manager(state)
+        self._common_install_code(state)
 
         self.unit.status = MaintenanceStatus("Building runner image")
+        runner_manager = self._get_runner_manager(state)
         runner_manager.build_runner_image()
         runner_manager.schedule_build_runner_image()
 
@@ -478,7 +487,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             now: Whether the reboot should trigger at end of event handler or now.
         """
-        logger.info("Upgrading kernel")
+        logger.info("Updating kernel (if available)")
         self._apt_install(["linux-generic"])
 
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
@@ -514,35 +523,27 @@ class GithubRunnerCharm(CharmBase):
         """
         state = self._setup_state()
 
+        if self._block_on_openstack_config(state):
+            return
+
         logger.info("Reinstalling dependencies...")
-        try:
-            # The `_start_services`, `_install_deps` includes retry.
-            self._install_deps()
-            self._start_services(state.charm_config.token, state.proxy_config)
-            metrics.setup_logrotate()
-        except (LogrotateSetupError, SubprocessError) as err:
-            logger.exception(err)
+        self._common_install_code(state)
 
-            if isinstance(err, LogrotateSetupError):
-                msg = "Failed to setup logrotate"
-            else:
-                msg = "Failed to install dependencies"
-            self.unit.status = BlockedStatus(msg)
-            return
-
-        state = self._setup_state()
-        self._refresh_firewall(state)
-        logger.info("Flushing the runners...")
         runner_manager = self._get_runner_manager(state)
-        if not runner_manager:
-            return
+        runner_manager.schedule_build_runner_image()
 
+        logger.info("Flushing the runners...")
         runner_manager.flush(FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
         self._reconcile_runners(
             runner_manager,
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
         )
+
+        # Ensure that an update to the systemd timer for reconciliation event is written to disk.
+        # The upgrade_charm event is not necessarily followed by a config changed event
+        # (which updates the timer), so we need to explicitly update the timer here.
+        self._set_reconcile_timer()
 
     @catch_charm_errors
     def _on_config_changed(self, _event: ConfigChangedEvent) -> None:

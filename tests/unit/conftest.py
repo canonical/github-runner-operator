@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-import openstack_cloud
+from openstack_cloud import openstack_manager
 from tests.unit.mock import MockGhapiClient, MockLxdClient, MockRepoPolicyComplianceClient
 
 
@@ -36,7 +36,7 @@ def disk_usage_mock(total_disk):
 
 @pytest.fixture(autouse=True)
 def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_path):
-    openstack_manager_mock = unittest.mock.MagicMock(spec=openstack_cloud)
+    openstack_manager_mock = unittest.mock.MagicMock(spec=openstack_manager)
 
     cron_path = tmp_path / "cron.d"
     cron_path.mkdir()

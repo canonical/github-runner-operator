@@ -101,18 +101,37 @@ def test_proxy_setting(harness: Harness):
     assert state.proxy_config.no_proxy == "127.0.0.1,localhost"
 
 
-def test_install(harness: Harness, exec_command: MagicMock):
+@pytest.mark.parametrize(
+    "hook",
+    [
+        pytest.param("install", id="Install"),
+        pytest.param("upgrade_charm", id="Upgrade"),
+    ],
+)
+def test_common_install_code(
+    hook: str, harness: Harness, exec_command: MagicMock, monkeypatch: pytest.MonkeyPatch
+):
     """
     arrange: Set up charm.
-    act: Fire install event.
-    assert: Some install commands are run on the mock.
+    act: Fire install/upgrade event.
+    assert: Common install commands are run on the mock.
     """
-    harness.charm.on.install.emit()
+
+    monkeypatch.setattr("charm.metrics.setup_logrotate", setup_logrotate := MagicMock())
+    monkeypatch.setattr(
+        "runner_manager.RunnerManager.schedule_build_runner_image",
+        schedule_build_runner_image := MagicMock(),
+    )
+    getattr(harness.charm.on, hook).emit()
     calls = [
         call(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"]),
         call(["/snap/bin/lxd", "init", "--auto"]),
+        call(["/usr/bin/systemctl", "enable", "repo-policy-compliance"]),
     ]
+
     exec_command.assert_has_calls(calls, any_order=True)
+    setup_logrotate.assert_called_once()
+    schedule_build_runner_image.assert_called_once()
 
 
 def test_on_config_changed_failure(harness: Harness):
@@ -169,28 +188,35 @@ def test_on_flush_runners_action_success(harness: Harness, runner_binary_path: P
     mock_event.set_results.assert_called()
 
 
-def test_on_install_failure(monkeypatch, harness):
+@pytest.mark.parametrize(
+    "hook",
+    [
+        pytest.param("install", id="Install"),
+        pytest.param("upgrade_charm", id="Upgrade"),
+    ],
+)
+def test_on_install_failure(hook: str, harness: Harness, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Charm with mock setup_logrotate.
     act:
         1. Mock setup_logrotate fails.
-        2. Charm in block state.
-    assert:
-        1. Mock _install_deps raises error.
-        2. Charm in block state.
+        2. Mock _install_deps raises error.
+    assert: Charm goes into error state in both cases.
     """
     monkeypatch.setattr(
         "charm.metrics.setup_logrotate", setup_logrotate := unittest.mock.MagicMock()
     )
 
-    setup_logrotate.side_effect = LogrotateSetupError
-    harness.charm.on.install.emit()
-    assert harness.charm.unit.status == BlockedStatus("Failed to setup logrotate")
+    setup_logrotate.side_effect = LogrotateSetupError("Failed to setup logrotate")
+    with pytest.raises(LogrotateSetupError) as exc:
+        getattr(harness.charm.on, hook).emit()
+    assert str(exc.value) == "Failed to setup logrotate"
 
     setup_logrotate.side_effect = None
-    GithubRunnerCharm._install_deps = raise_subprocess_error
-    harness.charm.on.install.emit()
-    assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")
+    monkeypatch.setattr(GithubRunnerCharm, "_install_deps", raise_subprocess_error)
+    with pytest.raises(SubprocessError) as exc:
+        getattr(harness.charm.on, hook).emit()
+    assert "mock stderr" in str(exc.value)
 
 
 def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Path):
