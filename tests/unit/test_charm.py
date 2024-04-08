@@ -188,28 +188,35 @@ def test_on_flush_runners_action_success(harness: Harness, runner_binary_path: P
     mock_event.set_results.assert_called()
 
 
-def test_on_install_failure(monkeypatch, harness):
+@pytest.mark.parametrize(
+    "hook",
+    [
+        pytest.param("install", id="Install"),
+        pytest.param("upgrade_charm", id="Upgrade"),
+    ],
+)
+def test_on_install_failure(hook: str, harness: Harness, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Charm with mock setup_logrotate.
     act:
         1. Mock setup_logrotate fails.
-        2. Charm in block state.
-    assert:
-        1. Mock _install_deps raises error.
-        2. Charm in block state.
+        2. Mock _install_deps raises error.
+    assert: Charm goes into error state in both cases.
     """
     monkeypatch.setattr(
         "charm.metrics.setup_logrotate", setup_logrotate := unittest.mock.MagicMock()
     )
 
-    setup_logrotate.side_effect = LogrotateSetupError
-    harness.charm.on.install.emit()
-    assert harness.charm.unit.status == BlockedStatus("Failed to setup logrotate")
+    setup_logrotate.side_effect = LogrotateSetupError("Failed to setup logrotate")
+    with pytest.raises(LogrotateSetupError) as exc:
+        getattr(harness.charm.on, hook).emit()
+    assert str(exc.value) == "Failed to setup logrotate"
 
     setup_logrotate.side_effect = None
-    GithubRunnerCharm._install_deps = raise_subprocess_error
-    harness.charm.on.install.emit()
-    assert harness.charm.unit.status == BlockedStatus("Failed to install dependencies")
+    monkeypatch.setattr(GithubRunnerCharm, "_install_deps", raise_subprocess_error)
+    with pytest.raises(SubprocessError) as exc:
+        getattr(harness.charm.on, hook).emit()
+    assert "mock stderr" in str(exc.value)
 
 
 def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Path):

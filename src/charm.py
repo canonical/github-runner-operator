@@ -356,30 +356,29 @@ class GithubRunnerCharm(CharmBase):
             return True
         return False
 
-    def _common_install_code(self, state: CharmState) -> bool:
+    def _common_install_code(self, state: CharmState) -> None:
         """Installation code shared between install and upgrade hook.
 
-        Returns:
-            Whether the installation code was successful.
+        Raises:
+            LogrotateSetupError: Failed to setup logrotate.
+            SubprocessError: Failed to install dependencies.
         """
         self.unit.status = MaintenanceStatus("Installing packages")
         try:
             # The `_start_services`, `_install_deps` includes retry.
             self._install_deps()
             self._start_services(state.charm_config.token, state.proxy_config)
+        except SubprocessError:
+            logger.error("Failed to install dependencies")
+            raise
+
+        try:
             metrics.setup_logrotate()
-        except (LogrotateSetupError, SubprocessError) as err:
-            logger.exception(err)
-            if isinstance(err, LogrotateSetupError):
-                msg = "Failed to setup logrotate"
-            else:
-                msg = "Failed to install dependencies"
-            self.unit.status = BlockedStatus(msg)
-            return False
+        except LogrotateSetupError:
+            logger.error("Failed to setup logrotate")
+            raise
 
         self._refresh_firewall(state)
-
-        return True
 
     @catch_charm_errors
     def _on_install(self, _event: InstallEvent) -> None:
@@ -420,8 +419,7 @@ class GithubRunnerCharm(CharmBase):
             self._block_on_openstack_config(state)
             return
 
-        if not self._common_install_code(state):
-            return
+        self._common_install_code(state)
 
         self.unit.status = MaintenanceStatus("Building runner image")
         runner_manager = self._get_runner_manager(state)
@@ -529,8 +527,7 @@ class GithubRunnerCharm(CharmBase):
             return
 
         logger.info("Reinstalling dependencies...")
-        if not self._common_install_code(state):
-            return
+        self._common_install_code(state)
 
         runner_manager = self._get_runner_manager(state)
         runner_manager.schedule_build_runner_image()
