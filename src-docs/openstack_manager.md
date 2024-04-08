@@ -13,17 +13,16 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L232"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L257"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
 ```python
 build_image(
-    arch: Arch,
     cloud_config: dict[str, dict],
     github_client: GithubClient,
     path: GithubOrg | GithubRepo,
-    proxies: Optional[ProxyConfig] = None
+    config: BuildImageConfig
 ) → str
 ```
 
@@ -36,7 +35,7 @@ Build and upload an image to OpenStack.
  - <b>`cloud_config`</b>:  The cloud configuration to connect OpenStack with. 
  - <b>`github_client`</b>:  The Github client to interact with Github API. 
  - <b>`path`</b>:  Github organisation or repository path. 
- - <b>`proxies`</b>:  HTTP proxy settings. 
+ - <b>`config`</b>:  The image build configuration values. 
 
 
 
@@ -52,7 +51,7 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L289"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L316"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
@@ -79,7 +78,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/utilities.py#L362"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L389"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
@@ -111,7 +110,7 @@ Create an OpenStack instance.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L75"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L81"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `ProxyStringValues`
 Wrapper class to proxy values to string. 
@@ -130,7 +129,7 @@ Wrapper class to proxy values to string.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L186"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L196"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `InstanceConfig`
 The configuration values for creating a single runner instance. 
@@ -156,6 +155,35 @@ __init__(
     registration_token: str,
     github_path: GithubOrg | GithubRepo,
     openstack_image: Image
+) → None
+```
+
+
+
+
+
+
+
+
+
+---
+
+<a href="../src/openstack_cloud/openstack_manager.py#L242"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `BuildImageConfig`
+The configuration values for building openstack image. 
+
+Attrs:  arch: The image architecture to build for.  base_image: The ubuntu image to use as image build base.  proxies: HTTP proxy settings. 
+
+<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>method</kbd> `__init__`
+
+```python
+__init__(
+    arch: Arch,
+    base_image: BaseImage,
+    proxies: Optional[ProxyConfig] = None
 ) → None
 ```
 

@@ -213,8 +213,8 @@ async def app_no_runner(
     return application
 
 
-@pytest_asyncio.fixture(scope="module")
-async def app_openstack_runner(
+@pytest_asyncio.fixture(scope="function", name="app_openstack_runner")
+async def app_openstack_runner_fixture(
     model: Model,
     charm_file: str,
     app_name: str,

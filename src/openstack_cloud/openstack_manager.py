@@ -17,7 +17,13 @@ import openstack.exceptions
 import openstack.image.v2.image
 from openstack.exceptions import OpenStackCloudException
 
-from charm_state import Arch, ProxyConfig, SSHDebugConnection, UnsupportedArchitectureError
+from charm_state import (
+    Arch,
+    BaseImage,
+    ProxyConfig,
+    SSHDebugConnection,
+    UnsupportedArchitectureError,
+)
 from errors import (
     OpenstackImageBuildError,
     OpenstackInstanceLaunchError,
@@ -148,13 +154,16 @@ def _generate_docker_client_proxy_config_json(http_proxy: str, https_proxy: str,
 
 
 def _build_image_command(
-    runner_info: RunnerApplication, proxies: Optional[ProxyConfig] = None
+    runner_info: RunnerApplication,
+    base_image: BaseImage,
+    proxies: Optional[ProxyConfig] = None,
 ) -> list[str]:
     """Get command for building runner image.
 
     Args:
         runner_info: The runner application to fetch runner tar download url.
         proxies: HTTP proxy settings.
+        base: The ubuntu base image to use.
 
     Returns:
         Command to execute to build runner image.
@@ -178,6 +187,7 @@ def _build_image_command(
         proxy_values.no_proxy,
         docker_proxy_service_conf_content,
         docker_client_proxy_content,
+        str(base_image),
     ]
 
     return cmd
@@ -202,7 +212,7 @@ class InstanceConfig:
     openstack_image: openstack.image.v2.image.Image
 
 
-def _get_supported_runner_arch(arch: str) -> Literal["amd64", "arm64"]:
+def _get_supported_runner_arch(arch: Arch) -> Literal["amd64", "arm64"]:
     """Validate and return supported runner architecture.
 
     The supported runner architecture takes in arch value from Github supported architecture and
@@ -212,7 +222,7 @@ def _get_supported_runner_arch(arch: str) -> Literal["amd64", "arm64"]:
     and https://cloud-images.ubuntu.com/jammy/current/
 
     Args:
-        arch: str
+        arch: The compute architecture to check support for.
 
     Raises:
         UnsupportedArchitectureError: If an unsupported architecture was passed.
@@ -221,20 +231,34 @@ def _get_supported_runner_arch(arch: str) -> Literal["amd64", "arm64"]:
         The supported architecture.
     """
     match arch:
-        case "x64":
+        case Arch.X64:
             return "amd64"
-        case "arm64":
+        case Arch.ARM64:
             return "arm64"
         case _:
             raise UnsupportedArchitectureError(arch)
 
 
+@dataclass
+class BuildImageConfig:
+    """The configuration values for building openstack image.
+
+    Attrs:
+        arch: The image architecture to build for.
+        base_image: The ubuntu image to use as image build base.
+        proxies: HTTP proxy settings.
+    """
+
+    arch: Arch
+    base_image: BaseImage
+    proxies: Optional[ProxyConfig] = None
+
+
 def build_image(
-    arch: Arch,
     cloud_config: dict[str, dict],
     github_client: GithubClient,
     path: GithubPath,
-    proxies: Optional[ProxyConfig] = None,
+    config: BuildImageConfig,
 ) -> str:
     """Build and upload an image to OpenStack.
 
@@ -242,7 +266,7 @@ def build_image(
         cloud_config: The cloud configuration to connect OpenStack with.
         github_client: The Github client to interact with Github API.
         path: Github organisation or repository path.
-        proxies: HTTP proxy settings.
+        config: The image build configuration values.
 
     Raises:
         ImageBuildError: If there were errors building/creating the image.
@@ -251,18 +275,21 @@ def build_image(
         The created OpenStack image id.
     """
     try:
-        runner_application = github_client.get_runner_application(path=path, arch=arch)
+        runner_application = github_client.get_runner_application(path=path, arch=config.arch)
     except RunnerBinaryError as exc:
         raise OpenstackImageBuildError("Failed to fetch runner application.") from exc
 
     try:
-        execute_command(_build_image_command(runner_application, proxies), check_exit=True)
+        execute_command(
+            _build_image_command(runner_application, config.base_image, config.proxies),
+            check_exit=True,
+        )
     except SubprocessError as exc:
         raise OpenstackImageBuildError("Failed to build image.") from exc
 
+    runner_arch = runner_application["architecture"]
     try:
-        runner_arch = runner_application["architecture"]
-        image_arch = _get_supported_runner_arch(arch=runner_arch)
+        image_arch = _get_supported_runner_arch(arch=config.arch)
     except UnsupportedArchitectureError as exc:
         raise OpenstackImageBuildError(f"Unsupported architecture {runner_arch}") from exc
 

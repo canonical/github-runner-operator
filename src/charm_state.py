@@ -351,6 +351,10 @@ class BaseImage(str, Enum):
     JAMMY = "jammy"
     NOBLE = "noble"
 
+    def __str__(self) -> str:
+        """Interpolate to string value."""
+        return self.value
+
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "BaseImage":
         """Retrieve the base image tag from charm.
