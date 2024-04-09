@@ -33,7 +33,7 @@ def get_crashed(runner: Runner) -> None:
         RunnerLogsError: If the runner logs could not be pulled.
     """
     logger.info("Pulling the logs of the crashed runner %s.", runner.config.name)
-    if runner.instance is None:
+    if runner.instance is None or runner.instance.status != "Running":
         raise RunnerLogsError(
             f"Cannot pull the logs for {runner.config.name} as runner has no running instance."
         )

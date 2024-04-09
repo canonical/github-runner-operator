@@ -12,7 +12,7 @@ import io
 import logging
 import tempfile
 from pathlib import Path
-from typing import IO, Any, Optional, Tuple, Union
+from typing import IO, Any, Literal, Optional, Tuple, Union
 
 import pylxd.models
 
@@ -182,8 +182,11 @@ class LxdInstance:
         self.files = LxdInstanceFileManager(self)
 
     @property
-    def status(self) -> str:
+    def status(self) -> Literal["Running", "Stopped", "Frozen", "Error"]:
         """Status of the LXD instance.
+
+        See: https://github.com/canonical/lxd/blob/25f756c73089f7ad7d2fa9221d9843c01ce1fe9b/\
+            shared/api/instance_state.go#L32C21-L32C54
 
         Returns:
             Status of the LXD instance.
