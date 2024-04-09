@@ -24,7 +24,7 @@ jobs:
       pre-run-script: scripts/pre-integration-test.sh
       provider: lxd
       test-tox-env: integration-juju2.9
-      modules: ${{ env.LXD_TEST_MODULES }}
+      modules: ${{ LXD_TEST_MODULES }}
   integration-tests:
     name: Integration test with juju 3.1
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
@@ -34,7 +34,7 @@ jobs:
       pre-run-script: scripts/pre-integration-test.sh
       provider: lxd
       test-tox-env: integration-juju3.1
-      modules: ${{ env.LXD_TEST_MODULES }}
+      modules: ${{ LXD_TEST_MODULES }}
   # openstack tests use microstack, whose setup is kind of special
   # - due to the huge resource requirements, we use self-hosted runners for these tests
   # - microstack requires juju 3.2 and microk8s 1.26
@@ -51,6 +51,6 @@ jobs:
       channel: 1.26-strict/stable
       microk8s-addons: "dns ingress hostpath-storage"
       test-tox-env: integration-juju3.2
-      modules: ${{ env.OPENSTACK_TEST_MODULES }}
+      modules: ${{ OPENSTACK_TEST_MODULES }}
       self-hosted-runner: true
       self-hosted-runner-label: two-xlarge
