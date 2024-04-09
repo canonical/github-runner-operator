@@ -66,12 +66,12 @@ async def test_network_access(app: Application) -> None:
     names = await get_runner_names(unit)
     assert names
 
-    return_code, stdout = await run_in_unit(unit, "lxc network get lxdbr0 ipv4.address")
-    assert return_code == 0
+    return_code, stdout, stderr = await run_in_unit(unit, "lxc network get lxdbr0 ipv4.address")
+    assert return_code == 0, f"Failed to get network address {stdout} {stderr}"
     assert stdout is not None
     host_ip, _ = stdout.split("/", 1)
 
-    return_code, stdout = await run_in_lxd_instance(
+    return_code, stdout, _ = await run_in_lxd_instance(
         unit, names[0], f"curl http://{host_ip}:{port}"
     )
 
@@ -174,11 +174,13 @@ async def test_token_config_changed(model: Model, app: Application, token_alt: s
     await app.set_config({TOKEN_CONFIG_NAME: token_alt})
     await model.wait_for_idle(status=ACTIVE, timeout=30 * 60)
 
-    return_code, stdout = await run_in_unit(
+    return_code, stdout, stderr = await run_in_unit(
         unit, "cat /etc/systemd/system/repo-policy-compliance.service"
     )
 
-    assert return_code == 0
+    assert (
+        return_code == 0
+    ), f"Failed to get repo-policy-compliance unit file contents {stdout} {stderr}"
     assert stdout is not None
     assert f"GITHUB_TOKEN={token_alt}" in stdout
 
@@ -208,8 +210,10 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
     await reconcile(app=app, model=model)
     await wait_till_num_of_runners(unit, 0)
 
-    exit_code, _ = await run_in_unit(unit, f"rm -rf {GithubRunnerCharm.ram_pool_path}/*")
-    assert exit_code == 0
+    exit_code, stdout, stderr = await run_in_unit(
+        unit, f"rm -rf {GithubRunnerCharm.ram_pool_path}/*"
+    )
+    assert exit_code == 0, f"Failed to delete ram pool {stdout} {stderr}"
 
     # 2.
     await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
@@ -282,10 +286,10 @@ async def test_disabled_apt_daily_upgrades(model: Model, app: Application) -> No
     names = await get_runner_names(unit)
     assert names, "LXD runners not ready"
 
-    ret_code, stdout = await run_in_lxd_instance(
+    ret_code, stdout, stderr = await run_in_lxd_instance(
         unit, names[0], "sudo systemctl list-units --no-pager"
     )
-    assert ret_code == 0, "Failed to list systemd units"
+    assert ret_code == 0, f"Failed to list systemd units {stdout} {stderr}"
     assert stdout, "No units listed in stdout"
 
     assert "apt-daily" not in stdout  # this also checks for apt-daily-upgrade service
