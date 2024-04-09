@@ -15,6 +15,15 @@ from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
 
+from charm_state import (
+    DENYLIST_CONFIG_NAME,
+    PATH_CONFIG_NAME,
+    RECONCILE_INTERVAL_CONFIG_NAME,
+    TEST_MODE_CONFIG_NAME,
+    TOKEN_CONFIG_NAME,
+    USE_APROXY_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+)
 from tests.integration.helpers import (
     ensure_charm_has_runner,
     get_runner_names,
@@ -85,7 +94,6 @@ async def app_with_prepared_machine_fixture(
     proxy: str,
 ) -> Application:
     """Application with proxy setup and firewall to block all other network access."""
-
     await model.set_config(
         {
             "apt-http-proxy": proxy,
@@ -158,12 +166,12 @@ EOT"""
         application_name=app_name,
         series="jammy",
         config={
-            "path": path,
-            "token": token,
-            "virtual-machines": 0,
-            "denylist": "10.10.0.0/16",
-            "test-mode": "insecure",
-            "reconcile-interval": 60,
+            PATH_CONFIG_NAME: path,
+            TOKEN_CONFIG_NAME: token,
+            VIRTUAL_MACHINES_CONFIG_NAME: 0,
+            DENYLIST_CONFIG_NAME: "10.10.0.0/16",
+            TEST_MODE_CONFIG_NAME: "insecure",
+            RECONCILE_INTERVAL_CONFIG_NAME: 60,
         },
         constraints={"root-disk": 15},
         to=machine.id,
@@ -194,7 +202,7 @@ async def app_fixture(
     """
     await app_with_prepared_machine.set_config(
         {
-            "virtual-machines": "0",
+            VIRTUAL_MACHINES_CONFIG_NAME: "0",
         }
     )
     await reconcile(app=app_with_prepared_machine, model=model)
@@ -339,7 +347,7 @@ async def test_usage_of_aproxy(model: Model, app: Application, proxy_logs_filepa
     """
     await app.set_config(
         {
-            "experimental-use-aproxy": "true",
+            USE_APROXY_CONFIG_NAME: "true",
         }
     )
     await ensure_charm_has_runner(app, model)
@@ -396,7 +404,7 @@ async def test_use_proxy_without_aproxy(
     """
     await app.set_config(
         {
-            "experimental-use-aproxy": "false",
+            USE_APROXY_CONFIG_NAME: "false",
         }
     )
     await ensure_charm_has_runner(app, model)

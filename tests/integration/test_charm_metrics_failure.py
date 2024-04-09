@@ -13,6 +13,7 @@ from juju.application import Application
 from juju.model import Model
 
 import runner_logs
+from charm_state import PATH_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
 from runner_metrics import PostJobStatus
 from tests.integration.charm_metrics_helpers import (
     assert_events_after_reconciliation,
@@ -62,7 +63,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
         The Reconciliation metric has the post job status set to failure.
     """
-    await app.set_config({"path": forked_github_repository.full_name})
+    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
     await ensure_charm_has_runner(app=app, model=model)
 
     # Clear metrics log to make reconciliation event more predictable
@@ -77,7 +78,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     )
 
     # Set the number of virtual machines to 0 to speedup reconciliation
-    await app.set_config({"virtual-machines": "0"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await reconcile(app=app, model=model)
 
     await assert_events_after_reconciliation(
@@ -101,7 +102,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
         The Reconciliation metric has the post job status set to Abnormal.
     """
-    await app.set_config({"path": forked_github_repository.full_name})
+    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
     await ensure_charm_has_runner(app=app, model=model)
 
     unit = app.units[0]
@@ -128,7 +129,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     await wait_for_runner_to_be_marked_offline(forked_github_repository, runner_name)
 
     # Set the number of virtual machines to 0 to speedup reconciliation
-    await app.set_config({"virtual-machines": "0"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await reconcile(app=app, model=model)
 
     await assert_events_after_reconciliation(
@@ -159,7 +160,7 @@ async def test_charm_retrieves_logs_from_unhealthy_runners(
     assert ret_code == 0, f"Failed to kill start.sh, {stdout} {stderr}"
 
     # Set the number of virtual machines to 0 to avoid to speedup reconciliation.
-    await app.set_config({"virtual-machines": "0"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await reconcile(app=app, model=model)
 
     ret_code, stdout, stderr = await run_in_unit(
