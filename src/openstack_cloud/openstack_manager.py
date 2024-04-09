@@ -248,7 +248,7 @@ def _get_supported_runner_arch(arch: str) -> SupportedCloudImageArch:
 class BuildImageConfig:
     """The configuration values for building openstack image.
 
-    Attrs:
+    Attributes:
         arch: The image architecture to build for.
         base_image: The ubuntu image to use as image build base.
         proxies: HTTP proxy settings.
