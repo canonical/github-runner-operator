@@ -35,7 +35,8 @@ def get_crashed(runner: Runner) -> None:
     logger.info("Pulling the logs of the crashed runner %s.", runner.config.name)
     if runner.instance is None or runner.instance.status != "Running":
         raise RunnerLogsError(
-            f"Cannot pull the logs for {runner.config.name} as runner has no running instance."
+            f"Cannot pull the logs for {runner.config.name} as runner has no running instance. "
+            f"Current status: {runner.instance.status if runner.instance else "None"}"
         )
 
     target_log_path = CRASHED_RUNNER_LOGS_DIR_PATH / runner.config.name
