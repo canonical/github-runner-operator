@@ -170,6 +170,7 @@ async def wait_till_num_of_runners(unit: Unit, num: int, timeout: int = 10 * 60)
     Args:
         unit: Unit instance to check for the LXD profile.
         num: Number of runner instances to check for.
+        timeout: Number of seconds to wait for the runners.
     """
 
     async def get_lxc_instances() -> None | list[dict]:
@@ -568,7 +569,7 @@ R = TypeVar("R")
 
 async def wait_for(
     func: Callable[P, R],
-    timeout: int = 300,
+    timeout: int | float = 300,
     check_interval: int = 10,
 ) -> R:
     """Wait for function execution to become truthy.

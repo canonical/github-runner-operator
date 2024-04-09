@@ -33,7 +33,11 @@ TEST_WORKFLOW_NAMES = [
 
 
 async def wait_for_workflow_to_start(
-    unit: Unit, workflow: Workflow, branch: Branch | None = None, started_time: float | None = None
+    unit: Unit,
+    workflow: Workflow,
+    branch: Branch | None = None,
+    started_time: float | None = None,
+    timeout: int = 20 * 60,
 ):
     """Wait for the workflow to start.
 
@@ -42,6 +46,10 @@ async def wait_for_workflow_to_start(
         workflow: The workflow to wait for.
         branch: The branch where the workflow belongs to.
         started_time: The time in seconds since epoch the job was started.
+        timeout: Timeout in seconds to wait for the workflow to start.
+
+    Raises:
+        TimeoutError: If the workflow didn't start for specified time period.
     """
     runner_name = await get_runner_name(unit)
     created_at = (
@@ -52,7 +60,11 @@ async def wait_for_workflow_to_start(
     )
 
     def is_runner_log():
-        """Return whether a log for given runner exists."""
+        """Return whether a log for given runner exists.
+
+        Returns:
+            Whether the log exists.
+        """
         for run in workflow.get_runs(branch=branch, created=created_at):
             jobs = run.jobs()
             if not jobs:
@@ -69,7 +81,7 @@ async def wait_for_workflow_to_start(
         return False
 
     try:
-        await wait_for(is_runner_log, timeout=20 * 60, check_interval=30)
+        await wait_for(is_runner_log, timeout=timeout, check_interval=30)
     except TimeoutError as exc:
         raise TimeoutError("Timeout while waiting for the workflow to start") from exc
 
