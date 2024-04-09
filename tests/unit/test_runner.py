@@ -164,7 +164,6 @@ def test_create(
     act: Create a runner.
     assert: An lxd instance for the runner is created.
     """
-
     runner.create(
         config=CreateRunnerConfig(
             image="test_image",
@@ -195,6 +194,7 @@ def test_create_lxd_fail(
     token: str,
     binary_path: Path,
     lxd: MockLxdClient,
+    monkeypatch: pytest.MonkeyPatch,
 ):
     """
     arrange: Setup the create runner to fail with lxd error.
@@ -202,7 +202,7 @@ def test_create_lxd_fail(
     assert: Correct exception should be thrown. Any created instance should be
         cleanup.
     """
-    lxd.profiles.exists = mock_lxd_error_func
+    monkeypatch.setattr(lxd.profiles, "exists", mock_lxd_error_func)
 
     with pytest.raises(RunnerCreateError):
         runner.create(
@@ -259,7 +259,6 @@ def test_create_with_metrics(
     assert: The command for adding a device has been executed and the templates are
         rendered to issue metrics.
     """
-
     runner.config.issue_metrics = True
     shared_fs.create.return_value = SharedFilesystem(
         path=Path("/home/ubuntu/shared_fs"), runner_name="test_runner"
@@ -303,8 +302,8 @@ def test_create_with_metrics_and_shared_fs_error(
     shared_fs: MagicMock,
 ):
     """
-    arrange: Config the runner to issue metrics and mock the shared filesystem module
-     to throw an expected error.
+    arrange: Config the runner to issue metrics and mock the shared filesystem module\
+        to throw an expected error.
     act: Create a runner.
     assert: The runner is created despite the error on the shared filesystem.
     """
@@ -336,7 +335,6 @@ def test_remove(
     act: Remove the runner.
     assert: The lxd instance for the runner is removed.
     """
-
     runner.create(
         config=CreateRunnerConfig(
             image="test_image",
@@ -386,7 +384,6 @@ def test_remove_none(
     act: Remove the runner.
     assert: The lxd instance for the runner is removed.
     """
-
     runner.remove(token)
     assert len(lxd.instances.all()) == 0
 
