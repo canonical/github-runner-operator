@@ -180,7 +180,13 @@ __init__(
 ## <kbd>class</kbd> `BuildImageConfig`
 The configuration values for building openstack image. 
 
-Attrs:  arch: The image architecture to build for.  base_image: The ubuntu image to use as image build base.  proxies: HTTP proxy settings. 
+
+
+**Attributes:**
+ 
+ - <b>`arch`</b>:  The image architecture to build for. 
+ - <b>`base_image`</b>:  The ubuntu image to use as image build base. 
+ - <b>`proxies`</b>:  HTTP proxy settings. 
 
 <a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
