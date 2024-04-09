@@ -1158,8 +1158,10 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
-            # Flushing not implemented for OpenStack.
-            raise NotImplementedError()
+            runner_manager = self._get_openstack_runner_manager(state)
+            # TODO: Should be flush idle.
+            runner_manager.flush()
+            runner_manager.reconcile(state.runner_config.virtual_machines)
 
         self._refresh_firewall(state)
         runner_manager = self._get_runner_manager(state)

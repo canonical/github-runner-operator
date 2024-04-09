@@ -64,7 +64,7 @@ def _create_connection(
         cloud_config: The configuration in clouds.yaml format to apply.
 
     Raises:
-        OpenStackUnauthorizedError: if the credentials provided is not authorized.
+        OpenStackError: if the credentials provided is not authorized.
 
     Yields:
         An openstack.connection.Connection object.
@@ -381,7 +381,8 @@ def create_instance_config(
     """Create an instance config from charm data.
 
     Args:
-        unit_name: The charm unit name.
+        app_name: The juju application name.
+        unit_num: The juju unit number.
         openstack_image: The openstack image object to create the instance with.
         path: Github organisation or repository path.
         github_client: The Github client to interact with Github API.
@@ -504,11 +505,9 @@ class OpenstackRunnerManager:
     """Runner manager for OpenStack-based instances.
 
     Attributes:
-        app_name: An name for the set of runners.
-        unit: Unit number of the set of runners.
+        app_name: The juju application name.
+        unit_num: The juju unit number.
         instance_name: Prefix of the name for the set of runners.
-        flavor: OpenStack flavor for defining the runner resources.
-        network: OpenStack network for runner network access.
     """
 
     def __init__(
@@ -521,8 +520,8 @@ class OpenstackRunnerManager:
         """Construct OpenstackRunnerManager object.
 
         Args:
-            app_name: An name for the set of runners.
-            unit: Unit number of the set of runners.
+            app_name: The juju application name.
+            unit_num: The juju unit number.
             openstack_runner_manager_config: Configurations related to runner manager.
             cloud_config: The openstack clouds.yaml in dict format.
         """
@@ -860,7 +859,32 @@ class OpenstackRunnerManager:
             except SDKException as exc:
                 logger.error("Something wrong deleting the server %s, %s", instance_name, str(exc))
                 continue
+
+            # Attempt to delete the keys. This is place at the end of deletion, so we can access the instances that
+            # failed to delete on previous tries.
+            self._get_key_path(instance_name).unlink(missing_ok=True)
             num_to_remove -= 1
+
+    def _clean_up_keys(self, conn: OpenstackConnection, exclude_instances: Iterable[str]) -> None:
+        """Delete all SSH keys except the specified instances.
+
+        Args:
+            conn: The Openstack connection instance.
+            exclude_instances: The keys of these instance will not be deleted.
+        """
+        exclude_filename = set(self._get_key_path(instance) for instance in exclude_instances)
+
+        for path in _SSH_KEY_PATH.iterdir():
+            # Find key file from this application.
+            if (
+                path.is_file()
+                and path.name.startswith(self.instance_name)
+                and path.name.endswith(".key")
+            ):
+                if path.name in exclude_filename:
+                    continue
+
+                path.unlink()
 
     def reconcile(self, quantity: int) -> int:
         """Reconcile the quantity of runners.
@@ -884,6 +908,8 @@ class OpenstackRunnerManager:
             self._remove_runners(
                 conn=conn, instance_names=runner_by_health.unhealthy, remove_token=remove_token
             )
+            # Clean up orphan keys, e.g., If openstack instance is removed externally the key would not be deleted.
+            self._clean_up_keys(conn, runner_by_health.healthy)
 
             delta = quantity - len(runner_by_health.healthy)
 

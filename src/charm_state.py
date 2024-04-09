@@ -205,7 +205,12 @@ class RunnerStorage(str, Enum):
 
 
 class InstanceType(str, Enum):
-    """Type of instance for runner."""
+    """Type of instance for runner.
+
+    Attributes:
+        LOCAL_LXD: LXD instance on the local juju machine.
+        OPENSTACK: OpenStack instance on a cloud.
+    """
 
     LOCAL_LXD = "local_lxd"
     OPENSTACK = "openstack"
@@ -471,6 +476,10 @@ class OpenstackRunnerConfig(BaseModel):
 
         Args:
             charm: The charm instance.
+
+        Raises:
+            CharmConfigInvalidError: Error with charm configuration virtual-machines not of int
+                type.
 
         Returns:
             Openstack runner config of the charm.
@@ -826,6 +835,7 @@ class CharmState:
         charm_config: Configuration of the juju charm.
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
+        instance_type: The type of instances, e.g., local lxd, openstack.
         runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.
     """
@@ -837,6 +847,24 @@ class CharmState:
     charm_config: CharmConfig
     runner_config: RunnerConfig
     ssh_debug_connections: list[SSHDebugConnection]
+
+    @classmethod
+    def _store_state(cls, state: "CharmState") -> None:
+        """Store the state of the charm to disk.
+        
+        Args:
+            state: The state of the charm.
+        """
+        state_dict = dataclasses.asdict(state)
+        # Convert pydantic object to python object serializable by json module.
+        state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
+        state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
+        state_dict["runner_config"] = json.loads(state_dict["runner_config"].json())
+        state_dict["ssh_debug_connections"] = [
+            debug_info.json() for debug_info in state_dict["ssh_debug_connections"]
+        ]
+        json_data = json.dumps(state_dict, ensure_ascii=False)
+        CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "CharmState":
@@ -895,15 +923,6 @@ class CharmState:
             instance_type=instance_type,
         )
 
-        state_dict = dataclasses.asdict(state)
-        # Convert pydantic object to python object serializable by json module.
-        state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
-        state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
-        state_dict["runner_config"] = json.loads(state_dict["runner_config"].json())
-        state_dict["ssh_debug_connections"] = [
-            debug_info.json() for debug_info in state_dict["ssh_debug_connections"]
-        ]
-        json_data = json.dumps(state_dict, ensure_ascii=False)
-        CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
+        cls._store_state(state)
 
         return state

@@ -74,7 +74,8 @@ Create an instance config from charm data.
 
 **Args:**
  
- - <b>`unit_name`</b>:  The charm unit name. 
+ - <b>`app_name`</b>:  The juju application name. 
+ - <b>`unit_num`</b>:  The juju unit number. 
  - <b>`openstack_image`</b>:  The openstack image object to create the instance with. 
  - <b>`path`</b>:  Github organisation or repository path. 
  - <b>`github_client`</b>:  The Github client to interact with Github API. 
@@ -87,7 +88,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/utilities.py#L450"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L451"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
@@ -189,7 +190,7 @@ Represents an error while updating image on Openstack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L495"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L496"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `GithubRunnerRemoveError`
 Represents an error removing registered runner from Github. 
@@ -200,7 +201,7 @@ Represents an error removing registered runner from Github.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L503"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L504"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackRunnerManager`
 Runner manager for OpenStack-based instances. 
@@ -209,13 +210,11 @@ Runner manager for OpenStack-based instances.
 
 **Attributes:**
  
- - <b>`app_name`</b>:  An name for the set of runners. 
- - <b>`unit`</b>:  Unit number of the set of runners. 
+ - <b>`app_name`</b>:  The juju application name. 
+ - <b>`unit_num`</b>:  The juju unit number. 
  - <b>`instance_name`</b>:  Prefix of the name for the set of runners. 
- - <b>`flavor`</b>:  OpenStack flavor for defining the runner resources. 
- - <b>`network`</b>:  OpenStack network for runner network access. 
 
-<a href="../src/openstack_cloud/openstack_manager.py#L514"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L513"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -234,8 +233,8 @@ Construct OpenstackRunnerManager object.
 
 **Args:**
  
- - <b>`app_name`</b>:  An name for the set of runners. 
- - <b>`unit`</b>:  Unit number of the set of runners. 
+ - <b>`app_name`</b>:  The juju application name. 
+ - <b>`unit_num`</b>:  The juju unit number. 
  - <b>`openstack_runner_manager_config`</b>:  Configurations related to runner manager. 
  - <b>`cloud_config`</b>:  The openstack clouds.yaml in dict format. 
 
@@ -244,7 +243,7 @@ Construct OpenstackRunnerManager object.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L904"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L930"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `flush`
 
@@ -256,7 +255,7 @@ Flush Openstack servers.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L732"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L731"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_github_runner_info`
 
@@ -273,7 +272,7 @@ Get information on GitHub for the runners.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L865"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L889"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `reconcile`
 
