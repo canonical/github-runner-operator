@@ -470,20 +470,17 @@ class BaseImage(str, Enum):
         Returns:
             The base image configuration of the charm.
         """
-        image_name = charm.config.get(BASE_IMAGE_CONFIG_NAME, "jammy").lower().strip()
-        try:
-            return cls(image_name)
-        except ValueError as exc:
-            if image_name in LTS_IMAGE_VERSION_TAG_MAP:
-                return cls(LTS_IMAGE_VERSION_TAG_MAP[image_name])
-            raise ValueError(f"Unsupported base image: {image_name}") from exc
+        image_name = charm.config.get(BASE_IMAGE_CONFIG_NAME).lower().strip()
+        if image_name in LTS_IMAGE_VERSION_TAG_MAP:
+            return cls(LTS_IMAGE_VERSION_TAG_MAP[image_name])
+        return cls(image_name)
 
 
 class RunnerCharmConfig(BaseModel):
     """Runner configurations for the charm.
 
     Attributes:
-        base_image: The ubuntu base image to run the runner viertual machines on.
+        base_image: The ubuntu base image to run the runner virtual machines on.
         virtual_machines: Number of virtual machine-based runner to spawn.
         virtual_machine_resources: Hardware resource used by one virtual machine for a runner.
         runner_storage: Storage to be used as disk for the runner.
@@ -827,7 +824,7 @@ class CharmState:
         logger.info("Previous charm state: %s", prev_state)
 
         if prev_state["runner_config"]["runner_storage"] != runner_storage:
-            logger.warning(
+            logger.error(
                 "Storage option changed from %s to %s, blocking the charm",
                 prev_state["runner_config"]["runner_storage"],
                 runner_storage,
@@ -836,7 +833,7 @@ class CharmState:
                 msg="runner-storage config cannot be changed after deployment, redeploy if needed"
             )
         if prev_state["runner_config"]["base_image"] != base_image.value:
-            logger.warning(
+            logger.error(
                 "Base image option changed from %s to %s, blocking the charm",
                 prev_state["runner_config"]["base_image"],
                 runner_storage,
