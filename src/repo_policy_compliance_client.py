@@ -35,6 +35,10 @@ class RepoPolicyComplianceClient:  # pylint: disable=too-few-public-methods
     def get_one_time_token(self) -> str:
         """Get a single-use token for repo policy compliance check.
 
+        Raises:
+            HTTPError: If there was an error getting one-time token from repo-policy-compliance \
+                service.
+
         Returns:
             The one-time token to be used in a single request of repo policy compliance check.
         """

@@ -442,7 +442,7 @@ def test_build_image_delete_image_error(
     build_image_config: openstack_manager.BuildImageConfig,
 ):
     """
-    arrange: given a mocked openstack connection that returns existing images and delete_image
+    arrange: given a mocked openstack connection that returns existing images and delete_image \
         that returns False (failed to delete image).
     act: when build_image is called.
     assert: ImageBuildError is raised.
@@ -486,7 +486,7 @@ def test_build_image_create_image_error(
             config=build_image_config,
         )
 
-    assert "Failed to upload image." in str(exc)
+    assert "Failed to upload image" in str(exc)
 
 
 @pytest.mark.usefixtures("patch_execute_command")

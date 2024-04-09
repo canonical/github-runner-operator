@@ -15,7 +15,7 @@ from urllib.parse import urlsplit
 
 import yaml
 from ops import CharmBase
-from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, root_validator
+from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, validator
 from pydantic.networks import IPvAnyAddress
 
 import openstack_cloud
@@ -31,7 +31,21 @@ ARCHITECTURES_X86 = {"x86_64"}
 CHARM_STATE_PATH = Path("charm_state.json")
 
 BASE_IMAGE_CONFIG_NAME = "base-image"
+DENYLIST_CONFIG_NAME = "denylist"
+DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
+GROUP_CONFIG_NAME = "group"
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
+PATH_CONFIG_NAME = "path"
+RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
+RUNNER_STORAGE_CONFIG_NAME = "runner-storage"
+TEST_MODE_CONFIG_NAME = "test-mode"
+# bandit thinks this is a hardcoded password.
+TOKEN_CONFIG_NAME = "token"  # nosec
+USE_APROXY_CONFIG_NAME = "experimental-use-aproxy"
+VIRTUAL_MACHINES_CONFIG_NAME = "virtual-machines"
+VM_CPU_CONFIG_NAME = "vm-cpu"
+VM_MEMORY_CONFIG_NAME = "vm-memory"
+VM_DISK_CONFIG_NAME = "vm-disk"
 
 LABELS_CONFIG_NAME = "labels"
 
@@ -91,6 +105,10 @@ def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
         path_str: GitHub path in string format.
         runner_group: Runner group name for GitHub organization. If the path is
             a repository this argument is ignored.
+
+    Raises:
+        CharmConfigInvalidError: if an invalid path string was given.
+
     Returns:
         GithubPath object representing the GitHub repository, or the GitHub
         organization with runner group information.
@@ -102,6 +120,45 @@ def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
         owner, repo = paths
         return GithubRepo(owner=owner, repo=repo)
     return GithubOrg(org=path_str, group=runner_group)
+
+
+@dataclasses.dataclass
+class GithubConfig:
+    """Charm configuration related to GitHub.
+
+    Attributes:
+        token: The Github API access token (PAT).
+        path: The Github org/repo path.
+    """
+
+    token: str
+    path: GithubPath
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "GithubConfig":
+        """Get github related charm configuration values from charm.
+
+        Args:
+            charm: The charm instance.
+
+        Raises:
+            CharmConfigInvalidError: If an invalid configuration value was set.
+
+        Returns:
+            The parsed GitHub configuration values.
+        """
+        runner_group = charm.config.get(GROUP_CONFIG_NAME, "default")
+
+        path_str = charm.config.get(PATH_CONFIG_NAME, "")
+        if not path_str:
+            raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
+        path = parse_github_path(path_str, runner_group)
+
+        token = charm.config.get(TOKEN_CONFIG_NAME)
+        if not token:
+            raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
+
+        return cls(token=token, path=path)
 
 
 class VirtualMachineResources(NamedTuple):
@@ -119,7 +176,12 @@ class VirtualMachineResources(NamedTuple):
 
 
 class Arch(str, Enum):
-    """Supported system architectures."""
+    """Supported system architectures.
+
+    Attributes:
+        ARM64: Represents an ARM64 system architecture.
+        X64: Represents an X64/AMD64 system architecture.
+    """
 
     ARM64 = "arm64"
     X64 = "x64"
@@ -130,7 +192,12 @@ DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 
 
 class RunnerStorage(str, Enum):
-    """Supported storage as runner disk."""
+    """Supported storage as runner disk.
+
+    Attributes:
+        JUJU_STORAGE: Represents runner storage from Juju storage.
+        MEMORY: Represents tempfs storage (ramdisk).
+    """
 
     JUJU_STORAGE = "juju-storage"
     MEMORY = "memory"
@@ -174,7 +241,7 @@ def _parse_labels(labels: str) -> tuple[str, ...]:
     """Return valid labels.
 
     Args:
-        label: Comma separated labels string.
+        labels: Comma separated labels string.
 
     Raises:
         ValueError: if any invalid label was found.
@@ -210,7 +277,7 @@ class CharmConfig(BaseModel):
         openstack_clouds_yaml: The openstack clouds.yaml configuration.
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
             name.
-        reconcile_interval: Time between each reconciliation of runners.
+        reconcile_interval: Time between each reconciliation of runners in minutes.
         token: GitHub personal access token for GitHub API.
     """
 
@@ -223,8 +290,16 @@ class CharmConfig(BaseModel):
     token: str
 
     @classmethod
-    def _parse_denylist(cls, charm: CharmBase) -> list[str]:
-        denylist_str = charm.config.get("denylist", "")
+    def _parse_denylist(cls, charm: CharmBase) -> list[FirewallEntry]:
+        """Read charm denylist configuration and parse it into firewall deny entries.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            The firewall deny entries.
+        """
+        denylist_str = charm.config.get(DENYLIST_CONFIG_NAME, "")
 
         entry_list = [entry.strip() for entry in denylist_str.split(",")]
         denylist = [FirewallEntry.decode(entry) for entry in entry_list if entry]
@@ -234,23 +309,68 @@ class CharmConfig(BaseModel):
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
         """Parse and validate dockerhub mirror URL.
 
-        args:
+        Args:
             charm: The charm instance.
+
+        Raises:
+            CharmConfigInvalidError: if insecure scheme is passed for dockerhub mirror.
 
         Returns:
             The URL of dockerhub mirror.
         """
-        dockerhub_mirror = charm.config.get("dockerhub-mirror") or None
+        dockerhub_mirror = charm.config.get(DOCKERHUB_MIRROR_CONFIG_NAME) or None
+
+        if not dockerhub_mirror:
+            return None
 
         dockerhub_mirror_url = urlsplit(dockerhub_mirror)
         if dockerhub_mirror is not None and dockerhub_mirror_url.scheme != "https":
             raise CharmConfigInvalidError(
                 (
-                    "Only secured registry supported for dockerhub-mirror configuration, the "
-                    "scheme should be https"
+                    f"Only secured registry supported for {DOCKERHUB_MIRROR_CONFIG_NAME} "
+                    "configuration, the scheme should be https"
                 )
             )
+
         return dockerhub_mirror
+
+    @classmethod
+    def _parse_openstack_clouds_config(cls, charm: CharmBase) -> dict | None:
+        """Parse and validate openstack clouds yaml config value.
+
+        Args:
+            charm: The charm instance.
+
+        Raises:
+            CharmConfigInvalidError: if an invalid Openstack config value was set.
+
+        Returns:
+            The openstack clouds yaml.
+        """
+        openstack_clouds_yaml_str = charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
+        if not openstack_clouds_yaml_str:
+            return None
+
+        try:
+            openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
+        except yaml.YAMLError as exc:
+            logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
+            raise CharmConfigInvalidError(
+                f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config. Invalid yaml."
+            ) from exc
+        if (config_type := type(openstack_clouds_yaml)) is not dict:
+            raise CharmConfigInvalidError(
+                f"Invalid openstack config format, expected dict, got {config_type}"
+            )
+        try:
+            openstack_cloud.initialize(openstack_clouds_yaml)
+        except OpenStackInvalidConfigError as exc:
+            logger.error("Invalid openstack config, %s.", exc)
+            raise CharmConfigInvalidError(
+                "Invalid openstack config. Not able to initialize openstack integration."
+            ) from exc
+
+        return cast(dict, openstack_clouds_yaml)
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "CharmConfig":
@@ -259,49 +379,27 @@ class CharmConfig(BaseModel):
         Args:
             charm: The charm instance.
 
+        Raises:
+            CharmConfigInvalidError: If any invalid configuration has been set on the charm.
+
         Returns:
             Current config of the charm.
         """
-        path_str = charm.config.get("path", "")
-        if not path_str:
-            raise CharmConfigInvalidError("Missing path configuration")
-        runner_group = charm.config.get("group", "default")
-        path = parse_github_path(path_str, runner_group)
-
-        token = charm.config.get("token")
-        if not token:
-            raise CharmConfigInvalidError("Missing token configuration")
+        try:
+            github_config = GithubConfig.from_charm(charm)
+        except CharmConfigInvalidError as exc:
+            raise CharmConfigInvalidError(f"Invalid Github config, {str(exc)}") from exc
 
         try:
-            reconcile_interval = int(charm.config["reconcile-interval"])
+            reconcile_interval = int(charm.config[RECONCILE_INTERVAL_CONFIG_NAME])
         except ValueError as err:
-            raise CharmConfigInvalidError("The reconcile-interval config must be int") from err
+            raise CharmConfigInvalidError(
+                f"The {RECONCILE_INTERVAL_CONFIG_NAME} config must be int"
+            ) from err
 
         denylist = cls._parse_denylist(charm)
         dockerhub_mirror = cls._parse_dockerhub_mirror(charm)
-
-        openstack_clouds_yaml_str = charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
-        if openstack_clouds_yaml_str:
-            try:
-                openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
-            except yaml.YAMLError as exc:
-                logger.error("Invalid experimental-openstack-clouds-yaml config: %s.", exc)
-                raise CharmConfigInvalidError(
-                    "Invalid experimental-openstack-clouds-yaml config. Invalid yaml."
-                ) from exc
-            if (config_type := type(openstack_clouds_yaml)) is not dict:
-                raise CharmConfigInvalidError(
-                    f"Invalid openstack config format, expected dict, got {config_type}"
-                )
-            try:
-                openstack_cloud.initialize(openstack_clouds_yaml)
-            except OpenStackInvalidConfigError as exc:
-                logger.error("Invalid openstack config, %s.", exc)
-                raise CharmConfigInvalidError(
-                    "Invalid openstack config. Not able to initialize openstack integration."
-                ) from exc
-        else:
-            openstack_clouds_yaml = None
+        openstack_clouds_yaml = cls._parse_openstack_clouds_config(charm)
 
         try:
             labels = _parse_labels(charm.config.get(LABELS_CONFIG_NAME, ""))
@@ -313,33 +411,37 @@ class CharmConfig(BaseModel):
             dockerhub_mirror=dockerhub_mirror,
             labels=labels,
             openstack_clouds_yaml=openstack_clouds_yaml,
-            path=path,
+            path=github_config.path,
             reconcile_interval=reconcile_interval,
-            token=token,
+            token=github_config.token,
         )
 
-    @root_validator
+    @validator("reconcile_interval")
     @classmethod
-    def check_fields(cls, values: dict) -> dict:
+    def check_reconcile_interval(cls, reconcile_interval: int) -> int:
         """Validate the general charm configuration.
 
         Args:
-            values: Values in the pydantic model.
+            reconcile_interval: The value of reconcile_interval passed to class instantiation.
+
+        Raises:
+            ValueError: if an invalid reconcile_interval value of less than 2 has been passed.
 
         Returns:
-            Modified values in the pydantic model.
+            The validated reconcile_interval value.
         """
-        reconcile_interval = cast(int, values.get("reconcile_interval"))
-
         # The EventTimer class sets a timeout of `reconcile_interval` - 1.
         # Therefore the `reconcile_interval` must be at least 2.
         if reconcile_interval < 2:
-            logger.exception("The virtual-machines configuration must be int")
+            logger.exception(
+                "The %s configuration must be greater than 1", RECONCILE_INTERVAL_CONFIG_NAME
+            )
             raise ValueError(
-                "The reconcile_interval configuration needs to be greater or equal to 2"
+                f"The {RECONCILE_INTERVAL_CONFIG_NAME} configuration needs to be \
+                    greater or equal to 2"
             )
 
-        return values
+        return reconcile_interval
 
 
 LTS_IMAGE_VERSION_TAG_MAP = {"22.04": "jammy", "24.04": "noble"}
@@ -399,6 +501,9 @@ class RunnerCharmConfig(BaseModel):
         Args:
             charm: The charm instance.
 
+        Raises:
+            CharmConfigInvalidError: if an invalid runner charm config has been set on the charm.
+
         Returns:
             Current config of the charm.
         """
@@ -408,24 +513,28 @@ class RunnerCharmConfig(BaseModel):
             raise CharmConfigInvalidError("Invalid base image") from err
 
         try:
-            runner_storage = RunnerStorage(charm.config["runner-storage"])
-        except ValueError as err:
-            raise CharmConfigInvalidError("Invalid runner-storage configuration") from err
-
-        try:
-            virtual_machines = int(charm.config["virtual-machines"])
+            runner_storage = RunnerStorage(charm.config[RUNNER_STORAGE_CONFIG_NAME])
         except ValueError as err:
             raise CharmConfigInvalidError(
-                "The virtual-machines configuration must be int"
+                f"Invalid {RUNNER_STORAGE_CONFIG_NAME} configuration"
+            ) from err
+        except CharmConfigInvalidError as exc:
+            raise CharmConfigInvalidError(f"Invalid runner storage config, {str(exc)}") from exc
+
+        try:
+            virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
+        except ValueError as err:
+            raise CharmConfigInvalidError(
+                f"The {VIRTUAL_MACHINES_CONFIG_NAME} configuration must be int"
             ) from err
 
         try:
-            cpu = int(charm.config["vm-cpu"])
+            cpu = int(charm.config[VM_CPU_CONFIG_NAME])
         except ValueError as err:
-            raise CharmConfigInvalidError("Invalid vm-cpu configuration") from err
+            raise CharmConfigInvalidError(f"Invalid {VM_CPU_CONFIG_NAME} configuration") from err
 
         virtual_machine_resources = VirtualMachineResources(
-            cpu, charm.config["vm-memory"], charm.config["vm-disk"]
+            cpu, charm.config[VM_MEMORY_CONFIG_NAME], charm.config[VM_DISK_CONFIG_NAME]
         )
 
         return cls(
@@ -435,43 +544,66 @@ class RunnerCharmConfig(BaseModel):
             runner_storage=runner_storage,
         )
 
-    @root_validator
+    @validator("virtual_machines")
     @classmethod
-    def check_fields(cls, values: dict) -> dict:
-        """Validate the runner configuration.
+    def check_virtual_machines(cls, virtual_machines: int) -> int:
+        """Validate the virtual machines configuration value.
 
         Args:
-            values: Values in the pydantic model.
+            virtual_machines: The virtual machines value to validate.
+
+        Raises:
+            ValueError: if a negative integer was passed.
 
         Returns:
-            Modified values in the pydantic model.
+            Validated virtual_machines value.
         """
-        virtual_machines = cast(int, values.get("virtual_machines"))
-        resources = cast(VirtualMachineResources, values.get("virtual_machine_resources"))
-
         if virtual_machines < 0:
             raise ValueError(
-                "The virtual-machines configuration needs to be greater or equal to 0"
+                f"The {VIRTUAL_MACHINES_CONFIG_NAME} configuration needs to be greater or equal "
+                "to 0"
             )
 
-        if resources.cpu < 1:
-            raise ValueError("The vm-cpu configuration needs to be greater than 0")
-        if not _valid_storage_size_str(resources.memory):
+        return virtual_machines
+
+    @validator("virtual_machine_resources")
+    @classmethod
+    def check_virtual_machine_resources(
+        cls, vm_resources: VirtualMachineResources
+    ) -> VirtualMachineResources:
+        """Validate the virtual_machine_resources field values.
+
+        Args:
+            vm_resources: the virtual_machine_resources value to validate.
+
+        Raises:
+            ValueError: if an invalid number of cpu was given or invalid memory/disk size was
+                given.
+
+        Returns:
+            The validated virtual_machine_resources value.
+        """
+        if vm_resources.cpu < 1:
+            raise ValueError(f"The {VM_CPU_CONFIG_NAME} configuration needs to be greater than 0")
+        if not _valid_storage_size_str(vm_resources.memory):
             raise ValueError(
-                "Invalid format for vm-memory configuration, must be int with unit (e.g. MiB, GiB)"
+                f"Invalid format for {VM_MEMORY_CONFIG_NAME} configuration, must be int with unit "
+                "(e.g. MiB, GiB)"
             )
-        if not _valid_storage_size_str(resources.disk):
+        if not _valid_storage_size_str(vm_resources.disk):
             raise ValueError(
-                "Invalid format for vm-disk configuration, must be int with unit (e.g., MiB, GiB)"
+                f"Invalid format for {VM_DISK_CONFIG_NAME} configuration, must be int with unit "
+                "(e.g., MiB, GiB)"
             )
 
-        return values
+        return vm_resources
 
 
 class ProxyConfig(BaseModel):
     """Proxy configuration.
 
     Attributes:
+        aproxy_address: The address of aproxy snap instance if use_aproxy is enabled.
         http: HTTP proxy address.
         https: HTTPS proxy address.
         no_proxy: Comma-separated list of hosts that should not be proxied.
@@ -493,7 +625,7 @@ class ProxyConfig(BaseModel):
         Returns:
             Current proxy config of the charm.
         """
-        use_aproxy = bool(charm.config.get("experimental-use-aproxy"))
+        use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
         http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY") or None
         https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
         no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None
@@ -521,24 +653,32 @@ class ProxyConfig(BaseModel):
             aproxy_address = None
         return aproxy_address
 
-    @root_validator
+    @validator("use_aproxy")
     @classmethod
-    def check_fields(cls, values: dict) -> dict:
+    def check_use_aproxy(cls, use_aproxy: bool, values: dict) -> bool:
         """Validate the proxy configuration.
 
         Args:
+            use_aproxy: Value of use_aproxy variable.
             values: Values in the pydantic model.
 
+        Raises:
+            ValueError: if use_aproxy was set but no http/https was passed.
+
         Returns:
-            Modified values in the pydantic model.
+            Validated use_aproxy value.
         """
-        if values.get("use_aproxy") and not (values.get("http") or values.get("https")):
+        if use_aproxy and not (values.get("http") or values.get("https")):
             raise ValueError("aproxy requires http or https to be set")
 
-        return values
+        return use_aproxy
 
-    def __bool__(self):
-        """Return whether we have a proxy config."""
+    def __bool__(self) -> bool:
+        """Return whether the proxy config is set.
+
+        Returns:
+            Whether the proxy config is set.
+        """
         return bool(self.http or self.https)
 
     class Config:  # pylint: disable=too-few-public-methods
@@ -607,6 +747,9 @@ class SSHDebugConnection(BaseModel):
 
         Args:
             charm: The charm instance.
+
+        Returns:
+            List of connection information for ssh debug access.
         """
         ssh_debug_connections: list[SSHDebugConnection] = []
         relations = charm.model.relations[DEBUG_SSH_INTEGRATION_NAME]
@@ -656,6 +799,7 @@ class CharmState:
         charm_config: Configuration of the juju charm.
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
+        runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.
     """
 
@@ -668,15 +812,20 @@ class CharmState:
 
     @classmethod
     def _check_immutable_config_change(
-        cls, prev_state: dict | None, runner_storage: RunnerStorage, base_image: BaseImage
+        cls, runner_storage: RunnerStorage, base_image: BaseImage
     ) -> None:
         """Ensure immutable config has not changed.
 
         Raises:
             ImmutableConfigChangedError: If an immutable configuration has changed.
         """
-        if not prev_state:
+        if not CHARM_STATE_PATH.exists():
             return
+
+        json_data = CHARM_STATE_PATH.read_text(encoding="utf-8")
+        prev_state = json.loads(json_data)
+        logger.info("Previous charm state: %s", prev_state)
+
         if prev_state["runner_config"]["runner_storage"] != runner_storage:
             logger.warning(
                 "Storage option changed from %s to %s, blocking the charm",
@@ -703,36 +852,25 @@ class CharmState:
         Args:
             charm: The charm instance.
 
+        Raises:
+            CharmConfigInvalidError: If an invalid configuration was set.
+
         Returns:
             Current state of the charm.
         """
-        prev_state = None
-        if CHARM_STATE_PATH.exists():
-            json_data = CHARM_STATE_PATH.read_text(encoding="utf-8")
-            prev_state = json.loads(json_data)
-            logger.info("Previous charm state: %s", prev_state)
-
         try:
             proxy_config = ProxyConfig.from_charm(charm)
         except (ValidationError, ValueError) as exc:
-            logger.error("Invalid proxy config: %s", exc)
             raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc
 
         try:
             charm_config = CharmConfig.from_charm(charm)
-        except (ValidationError, ValueError) as exc:
-            logger.error("Invalid charm config: %s", exc)
-            raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
-
-        try:
             runner_config = RunnerCharmConfig.from_charm(charm)
         except (ValidationError, ValueError) as exc:
-            logger.error("Invalid charm config: %s", exc)
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
         try:
             cls._check_immutable_config_change(
-                prev_state=prev_state,
                 runner_storage=runner_config.runner_storage,
                 base_image=runner_config.base_image,
             )

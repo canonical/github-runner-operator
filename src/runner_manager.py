@@ -11,21 +11,29 @@ import tarfile
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Dict, Iterator, Optional, Type
+from typing import Iterator, Optional, Type
 
 import jinja2
 import requests
 import requests.adapters
 import urllib3
 
-import errors
 import github_metrics
 import metrics
 import runner_logs
 import runner_metrics
 import shared_fs
 from charm_state import VirtualMachineResources
-from errors import IssueMetricEventError, RunnerBinaryError, RunnerCreateError
+from errors import (
+    GetSharedFilesystemError,
+    GithubClientError,
+    GithubMetricsError,
+    IssueMetricEventError,
+    RunnerBinaryError,
+    RunnerCreateError,
+    RunnerLogsError,
+    SubprocessError,
+)
 from github_client import GithubClient
 from github_type import RunnerApplication, SelfHostedRunner
 from lxd import LxdClient, LxdInstance
@@ -48,7 +56,12 @@ IssuedMetricEventsStats = dict[Type[metrics.Event], int]
 
 
 class RunnerManager:
-    """Manage a group of runners according to configuration."""
+    """Manage a group of runners according to configuration.
+
+    Attributes:
+        runner_bin_path: The github runner app scripts path.
+        cron_path: The path to runner build image cron job.
+    """
 
     runner_bin_path = Path("/home/ubuntu/github-runner-app")
     cron_path = Path("/etc/cron.d")
@@ -147,6 +160,9 @@ class RunnerManager:
 
         Args:
             binary: Information on the runner binary to download.
+
+        Raises:
+            RunnerBinaryError: If there was an error updating runner binary info.
         """
         logger.info("Downloading runner binary from: %s", binary["download_url"])
 
@@ -216,6 +232,11 @@ class RunnerManager:
         )
 
     def _get_runner_health_states(self) -> RunnerByHealth:
+        """Get all runners sorted into health groups.
+
+        Returns:
+            All runners sorted by health statuses.
+        """
         local_runners = [
             instance
             # Pylint cannot find the `all` method.
@@ -237,7 +258,7 @@ class RunnerManager:
 
     def _create_runner(
         self, registration_token: str, resources: VirtualMachineResources, runner: Runner
-    ):
+    ) -> None:
         """Create a runner.
 
         Issues RunnerInstalled metric if metrics_logging is enabled.
@@ -272,7 +293,7 @@ class RunnerManager:
 
             try:
                 fs = shared_fs.get(runner.config.name)
-            except errors.GetSharedFilesystemError:
+            except GetSharedFilesystemError:
                 logger.exception(
                     "Failed to get shared filesystem for runner %s, "
                     "will not be able to issue all metrics.",
@@ -317,7 +338,7 @@ class RunnerManager:
                     pre_job_metrics=extracted_metrics.pre_job,
                     runner_name=extracted_metrics.runner_name,
                 )
-            except errors.GithubMetricsError:
+            except GithubMetricsError:
                 logger.exception("Failed to calculate job metrics")
                 job_metrics = None
 
@@ -335,7 +356,7 @@ class RunnerManager:
         metric_stats: IssuedMetricEventsStats,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
-    ):
+    ) -> None:
         """Issue reconciliation metric.
 
         Args:
@@ -421,12 +442,15 @@ class RunnerManager:
             ssh_debug_connections=self.config.charm_state.ssh_debug_connections,
         )
 
-    def _spawn_new_runners(self, count: int, resources: VirtualMachineResources):
+    def _spawn_new_runners(self, count: int, resources: VirtualMachineResources) -> None:
         """Spawn new runners.
 
         Args:
             count: Number of runners to spawn.
             resources: Configuration of the virtual machine resources.
+
+        Raises:
+            RunnerCreateError: If there was an error spawning new runner.
         """
         if not RunnerManager.runner_bin_path.exists():
             raise RunnerCreateError("Unable to create runner due to missing runner binary.")
@@ -471,6 +495,34 @@ class RunnerManager:
         else:
             logger.info("There are no idle runners to remove.")
 
+    def _cleanup_offline_runners(
+        self, runner_states: RunnerByHealth, all_runners: list[Runner]
+    ) -> None:
+        """Cleanup runners that are not running the github run.sh script.
+
+        Args:
+            runner_states: Runner names grouped by health.
+            all_runners: All currently running runners.
+        """
+        if not runner_states.unhealthy:
+            logger.info("No unhealthy runners.")
+            return
+
+        logger.info("Cleaning up unhealthy runners.")
+        remove_token = self._clients.github.get_runner_remove_token(self.config.path)
+        unhealthy_runners = [
+            runner for runner in all_runners if runner.config.name in set(runner_states.unhealthy)
+        ]
+
+        for runner in unhealthy_runners:
+            if self.config.are_metrics_enabled:
+                try:
+                    runner_logs.get_crashed(runner)
+                except RunnerLogsError:
+                    logger.exception("Failed to get logs of crashed runner %s", runner.config.name)
+            runner.remove(remove_token)
+            logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
+
     def reconcile(self, quantity: int, resources: VirtualMachineResources) -> int:
         """Bring runners in line with target.
 
@@ -481,18 +533,14 @@ class RunnerManager:
         Returns:
             Difference between intended runners and actual runners.
         """
-        if self.config.are_metrics_enabled:
-            start_ts = time.time()
+        start_ts = time.time()
 
         runners = self._get_runners()
-
         # Add/Remove runners to match the target quantity
         online_runners = [
             runner for runner in runners if runner.status.exist and runner.status.online
         ]
-
         runner_states = self._get_runner_health_states()
-
         logger.info(
             (
                 "Expected runner count: %i, Online count: %i, Offline count: %i, "
@@ -509,26 +557,7 @@ class RunnerManager:
         if self.config.are_metrics_enabled:
             metric_stats = self._issue_runner_metrics()
 
-        # Clean up offline runners
-        if runner_states.unhealthy:
-            logger.info("Cleaning up unhealthy runners.")
-
-            remove_token = self._clients.github.get_runner_remove_token(self.config.path)
-
-            unhealthy_runners = [
-                runner for runner in runners if runner.config.name in set(runner_states.unhealthy)
-            ]
-
-            for runner in unhealthy_runners:
-                if self.config.are_metrics_enabled:
-                    try:
-                        runner_logs.get_crashed(runner)
-                    except errors.RunnerLogsError:
-                        logger.exception(
-                            "Failed to get logs of crashed runner %s", runner.config.name
-                        )
-                runner.remove(remove_token)
-                logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
+        self._cleanup_offline_runners(runner_states=runner_states, all_runners=runners)
 
         delta = quantity - len(runner_states.healthy)
         # Spawn new runners
@@ -582,12 +611,16 @@ class RunnerManager:
         Args:
             mode: Strategy for flushing runners.
 
+        Raises:
+            GithubClientError: If there was an error getting remove-token to unregister runners \
+                from GitHub.
+
         Returns:
             Number of runners removed.
         """
         try:
             remove_token = self._clients.github.get_runner_remove_token(self.config.path)
-        except errors.GithubClientError:
+        except GithubClientError:
             logger.exception("Failed to get remove-token to unregister runners from GitHub.")
             if mode != FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK:
                 raise
@@ -650,7 +683,12 @@ class RunnerManager:
         suffix = secrets.token_hex(12)
         return f"{self.instance_name}-{suffix}"
 
-    def _get_runner_github_info(self) -> Dict[str, SelfHostedRunner]:
+    def _get_runner_github_info(self) -> dict[str, SelfHostedRunner]:
+        """Get a mapping of runner name to GitHub self-hosted runner info.
+
+        Returns:
+            A mapping of runner name to GitHub self-hosted runner info.
+        """
         remote_runners_list: list[SelfHostedRunner] = self._clients.github.get_runner_github_info(
             self.config.path
         )
@@ -675,7 +713,16 @@ class RunnerManager:
             local_runner: Optional[LxdInstance],
             remote_runner: Optional[SelfHostedRunner],
         ) -> Runner:
-            """Create runner from information from GitHub and LXD."""
+            """Create runner from information from GitHub and LXD.
+
+            Args:
+                name: Name of the runner.
+                local_runner: The Lxd runner.
+                remote_runner: The Github self hosted runner.
+
+            Returns:
+                Wrapped runner information.
+            """
             logger.debug(
                 (
                     "Found runner %s with GitHub info [status: %s, busy: %s, labels: %s] and LXD "
@@ -745,9 +792,13 @@ class RunnerManager:
         Build container image in test mode, else virtual machine image.
 
         Raises:
-            LxdError: Unable to build the LXD image.
+            SubprocessError: Unable to build the LXD image.
         """
-        execute_command(self._build_image_command())
+        try:
+            execute_command(self._build_image_command())
+        except SubprocessError as exc:
+            logger.error("Error executing build image command, %s", exc)
+            raise
 
     def schedule_build_runner_image(self) -> None:
         """Install cron job for building runner image."""
