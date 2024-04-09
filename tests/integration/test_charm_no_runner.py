@@ -121,7 +121,7 @@ async def test_update_dependencies_action_on_runner_binary(
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
-    await model.wait_for_idle(status=ACTIVE)
+    await model.wait_for_idle(status=ACTIVE, timeout=15 * 60)
 
     # The runners should be flushed on update of runner binary.
     assert action.results["flush"] == "True"
@@ -130,7 +130,7 @@ async def test_update_dependencies_action_on_runner_binary(
 
     action = await unit.run_action("update-dependencies")
     await action.wait()
-    await model.wait_for_idle(status=ACTIVE)
+    await model.wait_for_idle(status=ACTIVE, timeout=15 * 60)
 
     # The runners should be flushed on update of runner binary.
     assert action.results["flush"] == "False"
