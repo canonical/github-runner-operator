@@ -114,7 +114,7 @@ def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
         organization with runner group information.
     """
     if "/" in path_str:
-        paths = path_str.split("/")
+        paths = tuple(segment for segment in path_str.split("/") if segment)
         if len(paths) != 2:
             raise CharmConfigInvalidError(f"Invalid path configuration {path_str}")
         owner, repo = paths
@@ -448,13 +448,22 @@ LTS_IMAGE_VERSION_TAG_MAP = {"22.04": "jammy", "24.04": "noble"}
 
 
 class BaseImage(str, Enum):
-    """The ubuntu OS base image to build and deploy runners on."""
+    """The ubuntu OS base image to build and deploy runners on.
+
+    Attributes:
+        JAMMY: The jammy ubuntu LTS image.
+        NOBLE: The noble ubuntu LTS image.
+    """
 
     JAMMY = "jammy"
     NOBLE = "noble"
 
     def __str__(self) -> str:
-        """Interpolate to string value."""
+        """Interpolate to string value.
+
+        Returns:
+            The enum string value.
+        """
         return self.value
 
     @classmethod
@@ -464,13 +473,10 @@ class BaseImage(str, Enum):
         Args:
             charm: The charm instance.
 
-        Raises:
-            ValueError if an unsupporte base image is passed in.
-
         Returns:
             The base image configuration of the charm.
         """
-        image_name = charm.config.get(BASE_IMAGE_CONFIG_NAME).lower().strip()
+        image_name = charm.config.get(BASE_IMAGE_CONFIG_NAME, "jammy").lower().strip()
         if image_name in LTS_IMAGE_VERSION_TAG_MAP:
             return cls(LTS_IMAGE_VERSION_TAG_MAP[image_name])
         return cls(image_name)
@@ -813,6 +819,10 @@ class CharmState:
     ) -> None:
         """Ensure immutable config has not changed.
 
+        Args:
+            runner_storage: The current runner_storage configuration.
+            base_image: The current base_image configuration.
+
         Raises:
             ImmutableConfigChangedError: If an immutable configuration has changed.
         """
@@ -863,14 +873,12 @@ class CharmState:
         try:
             charm_config = CharmConfig.from_charm(charm)
             runner_config = RunnerCharmConfig.from_charm(charm)
-        except (ValidationError, ValueError) as exc:
-            raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
-
-        try:
             cls._check_immutable_config_change(
                 runner_storage=runner_config.runner_storage,
                 base_image=runner_config.base_image,
             )
+        except (ValidationError, ValueError) as exc:
+            raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
         except ImmutableConfigChangedError as exc:
             raise CharmConfigInvalidError(exc.msg) from exc
 

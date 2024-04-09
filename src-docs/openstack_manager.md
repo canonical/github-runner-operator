@@ -32,7 +32,6 @@ Build and upload an image to OpenStack.
 
 **Args:**
  
- - <b>`arch`</b>:  The system architecture to build the image for. 
  - <b>`cloud_config`</b>:  The cloud configuration to connect OpenStack with. 
  - <b>`github_client`</b>:  The Github client to interact with Github API. 
  - <b>`path`</b>:  Github organisation or repository path. 
@@ -52,7 +51,7 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L345"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L344"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
@@ -84,7 +83,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/utilities.py#L421"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L420"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 

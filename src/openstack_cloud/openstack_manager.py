@@ -164,8 +164,8 @@ def _build_image_command(
 
     Args:
         runner_info: The runner application to fetch runner tar download url.
+        base_image: The ubuntu base image to use.
         proxies: HTTP proxy settings.
-        base: The ubuntu base image to use.
 
     Returns:
         Command to execute to build runner image.
@@ -305,7 +305,6 @@ def build_image(
     """Build and upload an image to OpenStack.
 
     Args:
-        arch: The system architecture to build the image for.
         cloud_config: The cloud configuration to connect OpenStack with.
         github_client: The Github client to interact with Github API.
         path: Github organisation or repository path.
