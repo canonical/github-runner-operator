@@ -11,6 +11,14 @@ from juju.application import Application
 from juju.model import Model
 
 from charm import GithubRunnerCharm
+from charm_state import (
+    RUNNER_STORAGE_CONFIG_NAME,
+    TOKEN_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+    VM_CPU_CONFIG_NAME,
+    VM_DISK_CONFIG_NAME,
+    VM_MEMORY_CONFIG_NAME,
+)
 from tests.integration.helpers import (
     assert_resource_lxd_profile,
     ensure_charm_has_runner,
@@ -106,7 +114,9 @@ async def test_flush_runner_and_resource_config(app: Application) -> None:
     await assert_resource_lxd_profile(unit, configs)
 
     # 3.
-    await app.set_config({"vm-cpu": "1", "vm-memory": "3GiB", "vm-disk": "8GiB"})
+    await app.set_config(
+        {VM_CPU_CONFIG_NAME: "1", VM_MEMORY_CONFIG_NAME: "3GiB", VM_DISK_CONFIG_NAME: "8GiB"}
+    )
 
     # 4.
     action = await app.units[0].run_action("flush-runners")
@@ -156,7 +166,7 @@ async def test_token_config_changed(model: Model, app: Application, token_alt: s
     """
     unit = app.units[0]
 
-    await app.set_config({"token": token_alt})
+    await app.set_config({TOKEN_CONFIG_NAME: token_alt})
     await model.wait_for_idle(status=ACTIVE, timeout=30 * 60)
 
     return_code, stdout = await run_in_unit(
@@ -188,7 +198,7 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
     unit = app.units[0]
 
     # 1.
-    await app.set_config({"virtual-machines": "0"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
 
     await reconcile(app=app, model=model)
     await wait_till_num_of_runners(unit, 0)
@@ -197,7 +207,7 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
     assert exit_code == 0
 
     # 2.
-    await app.set_config({"virtual-machines": "1"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
 
     await reconcile(app=app, model=model)
 
@@ -219,14 +229,14 @@ async def test_change_runner_storage(model: Model, app: Application) -> None:
     unit = app.units[0]
 
     # 1.
-    await app.set_config({"runner-storage": "juju-storage"})
+    await app.set_config({RUNNER_STORAGE_CONFIG_NAME: "juju-storage"})
     await model.wait_for_idle(status=BLOCKED, timeout=1 * 60)
     assert (
         "runner-storage config cannot be changed after deployment" in unit.workload_status_message
     )
 
     # 2.
-    await app.set_config({"runner-storage": "memory"})
+    await app.set_config({RUNNER_STORAGE_CONFIG_NAME: "memory"})
     await model.wait_for_idle(status=ACTIVE, timeout=1 * 60)
 
 
@@ -287,7 +297,7 @@ async def test_token_config_changed_insufficient_perms(
     """
     unit = app.units[0]
 
-    await app.set_config({"token": "invalid-token", "virtual-machines": "0"})
+    await app.set_config({TOKEN_CONFIG_NAME: "invalid-token", VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await model.wait_for_idle()
 
     await wait_till_num_of_runners(unit, num=0)
