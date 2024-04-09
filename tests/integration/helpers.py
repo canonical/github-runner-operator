@@ -289,7 +289,7 @@ async def set_app_runner_amount(app: Application, model: Model, num_runners: int
         model: The machine charm model.
         num_runners: The number of runners.
     """
-    await app.set_config({"virtual-machines": f"{num_runners}"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
     await reconcile(app=app, model=model)
     await wait_till_num_of_runners(unit=app.units[0], num=num_runners)
 

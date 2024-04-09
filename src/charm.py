@@ -83,11 +83,12 @@ class ReconcileRunnersEvent(EventBase):
     """Event representing a periodic check to ensure runners are ok."""
 
 
-CharmT = Any
 EventT = TypeVar("EventT")
 
 
-def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[CharmT, EventT], None]:
+def catch_charm_errors(
+    func: Callable[["GithubRunnerCharm", EventT], None]
+) -> Callable[["GithubRunnerCharm", EventT], None]:
     """Catch common errors in charm.
 
     Args:
@@ -99,7 +100,7 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
 
     @functools.wraps(func)
     # flake8 thinks the event argument description is missing in the docstring.
-    def func_with_catch_errors(self: CharmT, event: EventT) -> None:
+    def func_with_catch_errors(self: "GithubRunnerCharm", event: EventT) -> None:
         """Handle errors raised while handling charm events.
 
         Args:
@@ -129,8 +130,8 @@ def catch_charm_errors(func: Callable[[CharmT, EventT], None]) -> Callable[[Char
 
 
 def catch_action_errors(
-    func: Callable[[CharmT, ActionEvent], None]
-) -> Callable[[CharmT, ActionEvent], None]:
+    func: Callable[["GithubRunnerCharm", ActionEvent], None]
+) -> Callable[["GithubRunnerCharm", ActionEvent], None]:
     """Catch common errors in actions.
 
     Args:
@@ -142,7 +143,7 @@ def catch_action_errors(
 
     @functools.wraps(func)
     # flake8 thinks the event argument description is missing in the docstring.
-    def func_with_catch_errors(self: CharmT, event: ActionEvent) -> None:
+    def func_with_catch_errors(self: "GithubRunnerCharm", event: ActionEvent) -> None:
         """Handle errors raised while handling events.
 
         Args:

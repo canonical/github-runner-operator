@@ -18,14 +18,14 @@ Charm for creating and managing GitHub self-hosted runner instances.
 
 ---
 
-<a href="../src/charm.py#L90"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L89"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_charm_errors`
 
 ```python
 catch_charm_errors(
-    func: Callable[[Any, ~EventT], NoneType]
-) → Callable[[Any, ~EventT], NoneType]
+    func: Callable[[ForwardRef('GithubRunnerCharm'), ~EventT], NoneType]
+) → Callable[[ForwardRef('GithubRunnerCharm'), ~EventT], NoneType]
 ```
 
 Catch common errors in charm. 
@@ -44,14 +44,14 @@ Catch common errors in charm.
 
 ---
 
-<a href="../src/charm.py#L131"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L132"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_action_errors`
 
 ```python
 catch_action_errors(
-    func: Callable[[Any, ActionEvent], NoneType]
-) → Callable[[Any, ActionEvent], NoneType]
+    func: Callable[[ForwardRef('GithubRunnerCharm'), ActionEvent], NoneType]
+) → Callable[[ForwardRef('GithubRunnerCharm'), ActionEvent], NoneType]
 ```
 
 Catch common errors in actions. 
@@ -85,7 +85,7 @@ Charm for managing GitHub self-hosted runners.
  - <b>`ram_pool_path`</b>:  The path to memdisk storage. 
  - <b>`kernel_module_path`</b>:  The path to kernel modules. 
 
-<a href="../src/charm.py#L192"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L193"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
