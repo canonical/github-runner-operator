@@ -147,9 +147,9 @@ fi
 /snap/bin/lxc publish builder --alias builder --reuse -f
 
 # Swap in the built image
-/snap/bin/lxc image alias rename $BASE_IMAGE old-$BASE_IMAGE || true
-/snap/bin/lxc image alias rename builder $BASE_IMAGE
-/snap/bin/lxc image delete old-$BASE_IMAGE || true
+/snap/bin/lxc image alias rename "$BASE_IMAGE" "old-$BASE_IMAGE" || true
+/snap/bin/lxc image alias rename builder "$BASE_IMAGE"
+/snap/bin/lxc image delete "old-$BASE_IMAGE" || true
 
 # Clean up LXD instance
 cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD instance' 10

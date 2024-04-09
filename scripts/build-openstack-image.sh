@@ -113,11 +113,11 @@ retry "sudo wget https://cloud-images.ubuntu.com/$BASE_IMAGE/current/$BASE_IMAGE
     -O $BASE_IMAGE-server-cloudimg-$BIN_ARCH.img" "Downloading cloud image" 3
 
 # resize image - installing dependencies requires more disk space
-sudo qemu-img resize $BASE_IMAGE-server-cloudimg-$BIN_ARCH.img +1.5G
+sudo qemu-img resize "$BASE_IMAGE-server-cloudimg-$BIN_ARCH.img" +1.5G
 
 # mount nbd
 echo "Connecting network block device to image"
-sudo qemu-nbd --connect=/dev/nbd0 $BASE_IMAGE-server-cloudimg-$BIN_ARCH.img
+sudo qemu-nbd --connect=/dev/nbd0 "$BASE_IMAGE-server-cloudimg-$BIN_ARCH.img"
 sudo mkdir -p /mnt/ubuntu-image
 retry "sudo mount -o rw /dev/nbd0p1 /mnt/ubuntu-image" "Mounting nbd0p1 device" 3
 
@@ -209,4 +209,4 @@ sudo sync
 cleanup
 
 # Reduce image size by removing sparse space & compressing
-sudo virt-sparsify --compress $BASE_IMAGE-server-cloudimg-$BIN_ARCH.img $BASE_IMAGE-server-cloudimg-$BIN_ARCH-compressed.img
+sudo virt-sparsify --compress "$BASE_IMAGE-server-cloudimg-$BIN_ARCH.img" "$BASE_IMAGE-server-cloudimg-$BIN_ARCH-compressed.img"
