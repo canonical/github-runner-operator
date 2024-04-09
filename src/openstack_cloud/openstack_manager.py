@@ -8,7 +8,7 @@ import secrets
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Generator, Iterable, Literal, NamedTuple, Optional
+from typing import Generator, Iterable, Literal, NamedTuple, Optional, cast
 
 import jinja2
 import openstack
@@ -17,8 +17,9 @@ import openstack.connection
 import openstack.exceptions
 import openstack.image.v2.image
 from fabric import Connection as SshConnection
+from invoke.runners import Result
 from openstack.connection import Connection as OpenstackConnection
-from openstack.exceptions import OpenStackCloudException
+from openstack.exceptions import OpenStackCloudException, SDKException
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from charm_state import Arch, ProxyConfig, SSHDebugConnection, UnsupportedArchitectureError
@@ -46,6 +47,7 @@ IMAGE_NAME = "github-runner-jammy-v1"
 SECURITY_GROUP_NAME = "github-runner-v1"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 _SSH_KEY_PATH = Path("/home/ubuntu/.ssh")
+_CONFIG_SCRIPT_PATH = Path("/home/ubuntu/actions-runner/config.sh")
 
 
 @contextmanager
@@ -64,7 +66,7 @@ def _create_connection(
     Raises:
         OpenStackUnauthorizedError: if the credentials provided is not authorized.
 
-    Returns:
+    Yields:
         An openstack.connection.Connection object.
     """
     clouds = list(cloud_config["clouds"].keys())
@@ -131,7 +133,9 @@ def _generate_docker_proxy_unit_file(proxies: Optional[ProxyConfig] = None) -> s
     return environment.get_template("systemd-docker-proxy.j2").render(proxies=proxies)
 
 
-def _generate_docker_client_proxy_config_json(http_proxy: str, https_proxy: str, no_proxy: str):
+def _generate_docker_client_proxy_config_json(
+    http_proxy: str, https_proxy: str, no_proxy: str
+) -> str:
     """Generate proxy config.json for docker client.
 
     Args:
@@ -199,7 +203,7 @@ def _build_image_command(
 class InstanceConfig:
     """The configuration values for creating a single runner instance.
 
-    Args:
+    Attributes:
         name: Name of the image to launch the GitHub runner instance with.
         labels: The runner instance labels.
         registration_token: Token for registering the runner on GitHub.
@@ -214,7 +218,10 @@ class InstanceConfig:
     openstack_image: str
 
 
-def _get_supported_runner_arch(arch: str) -> Literal["amd64", "arm64"]:
+SupportedCloudImageArch = Literal["amd64", "arm64"]
+
+
+def _get_supported_runner_arch(arch: str) -> SupportedCloudImageArch:
     """Validate and return supported runner architecture.
 
     The supported runner architecture takes in arch value from Github supported architecture and
@@ -264,6 +271,48 @@ def _get_openstack_architecture(arch: Arch) -> str:
             raise UnsupportedArchitectureError(arch)
 
 
+class OpenstackUpdateImageError(Exception):
+    """Represents an error while updating image on Openstack."""
+
+
+@retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
+def _update_image(
+    cloud_config: dict[str, dict], ubuntu_image_arch: str, openstack_image_arch: str
+):
+    """Update the openstack image if it exists, create new otherwise.
+
+    Args:
+        cloud_config: The cloud configuration to connect OpenStack with.
+        ubuntu_image_arch: The cloud-image architecture.
+        openstack_image_arch: The Openstack image architecture.
+
+    Raises:
+        OpenstackUpdateImageError: If there was an error interacting with images on Openstack.
+
+    Returns:
+        The created image ID.
+    """
+    try:
+        with _create_connection(cloud_config) as conn:
+            existing_image: openstack.image.v2.image.Image
+            for existing_image in conn.search_images(name_or_id=IMAGE_NAME):
+                # images with same name (different ID) can be created and will error during server
+                # instantiation.
+                if not conn.delete_image(name_or_id=existing_image.id, wait=True):
+                    raise OpenstackUpdateImageError(
+                        "Failed to delete duplicate image on Openstack."
+                    )
+            image: openstack.image.v2.image.Image = conn.create_image(
+                name=IMAGE_NAME,
+                filename=IMAGE_PATH_TMPL.format(architecture=ubuntu_image_arch),
+                wait=True,
+                properties={"architecture": openstack_image_arch},
+            )
+            return image.id
+    except OpenStackCloudException as exc:
+        raise OpenstackUpdateImageError("Failed to upload image.") from exc
+
+
 def build_image(
     arch: Arch,
     cloud_config: dict[str, dict],
@@ -274,13 +323,14 @@ def build_image(
     """Build and upload an image to OpenStack.
 
     Args:
+        arch: The system architecture to build the image for.
         cloud_config: The cloud configuration to connect OpenStack with.
         github_client: The Github client to interact with Github API.
         path: Github organisation or repository path.
         proxies: HTTP proxy settings.
 
     Raises:
-        ImageBuildError: If there were errors building/creating the image.
+        OpenstackImageBuildError: If there were errors building/creating the image.
 
     Returns:
         The created OpenStack image id.
@@ -312,24 +362,13 @@ def build_image(
         raise OpenstackImageBuildError(f"Unsupported architecture {runner_arch}") from exc
 
     try:
-        with _create_connection(cloud_config) as conn:
-            existing_image: openstack.image.v2.image.Image
-            for existing_image in conn.search_images(name_or_id=IMAGE_NAME):
-                # images with same name (different ID) can be created and will error during server
-                # instantiation.
-                if not conn.delete_image(name_or_id=existing_image.id, wait=True):
-                    raise OpenstackImageBuildError(
-                        "Failed to delete duplicate image on Openstack."
-                    )
-            image: openstack.image.v2.image.Image = conn.create_image(
-                name=IMAGE_NAME,
-                filename=IMAGE_PATH_TMPL.format(architecture=image_arch),
-                wait=True,
-                properties={"architecture": _get_openstack_architecture(arch=arch)},
-            )
-            return image.id
-    except OpenStackCloudException as exc:
-        raise OpenstackImageBuildError("Failed to upload image.") from exc
+        return _update_image(
+            cloud_config=cloud_config,
+            ubuntu_image_arch=image_arch,
+            openstack_image_arch=_get_openstack_architecture(arch),
+        )
+    except OpenstackUpdateImageError as exc:
+        raise OpenstackImageBuildError(f"Failed to update image, {exc}") from exc
 
 
 def create_instance_config(
@@ -343,9 +382,12 @@ def create_instance_config(
 
     Args:
         unit_name: The charm unit name.
-        image: Ubuntu image flavor.
+        openstack_image: The openstack image object to create the instance with.
         path: Github organisation or repository path.
         github_client: The Github client to interact with Github API.
+
+    Returns:
+        Instance configuration created.
     """
     suffix = secrets.token_hex(12)
     registration_token = github_client.get_runner_registration_token(path=path)
@@ -418,6 +460,9 @@ def create_instance(
     Args:
         cloud_config: The cloud configuration to connect Openstack with.
         instance_config: The configuration values for Openstack instance to launch.
+        proxies: HTTP proxy settings.
+        dockerhub_mirror:
+        ssh_debug_connections:
 
     Raises:
         OpenstackInstanceLaunchError: if any errors occurred while launching Openstack instance.
@@ -445,6 +490,14 @@ def create_instance(
             )
     except OpenStackCloudException as exc:
         raise OpenstackInstanceLaunchError("Failed to launch instance.") from exc
+
+
+class GithubRunnerRemoveError(Exception):
+    """Represents an error removing registered runner from Github."""
+
+
+_INSTANCE_STATUS_SHUTOFF = "SHUTOFF"
+_INSTANCE_STATUS_ACTIVE = "ACTIVE"
 
 
 class OpenstackRunnerManager:
@@ -563,20 +616,14 @@ class OpenstackRunnerManager:
         keypair = conn.create_keypair(name=name)
         private_key_path.write_text(keypair.private_key)
 
-    def _ssh_health_check(self, instance_name: str, addresses: Iterable[str]) -> bool:
+    def _ssh_health_check(self, instance: openstack.compute.v2.server.Server) -> bool:
         """Use SSH to check whether runner application is running.
 
         Args:
-            instance_name: The name of the instance to check.
-            addresses: The IP addresses to try SSH.
+            instance: The openstack compute instance to check connections.
         """
-        for addr in addresses:
-            ssh_conn = SshConnection(
-                host=addr,
-                user="ubuntu",
-                connect_kwargs={"key_filename": str(self._get_key_path(instance_name))},
-            )
-
+        for ssh_conn in self._get_ssh_connections(instance=instance):
+            instance_name = instance.instance_name
             try:
                 result = ssh_conn.run("ps aux")
                 logger.debug("Output of `ps aux` on %s stderr: %s", instance_name, result.stderr)
@@ -590,7 +637,7 @@ class OpenstackRunnerManager:
                     return True
 
             except NoValidConnectionsError:
-                logger.info("Unable to SSH into %s with address %s", instance_name, addr)
+                logger.info("Unable to SSH into %s with address %s", instance_name, ssh_conn.host)
                 # Looping over all IP and trying SSH.
 
         logger.error(
@@ -602,18 +649,21 @@ class OpenstackRunnerManager:
 
     @retry(tries=10, delay=30, local_logger=logger)
     def _wait_until_runner_process_running(
-        self, instance_name: str, addresses: Iterable[str]
+        self, conn: OpenstackConnection, instance_name: str
     ) -> None:
         """Wait until the runner process is running.
 
         The waiting to done by the retry declarator.
 
         Args:
+            conn: The openstack connection instance.
             instance_name: The name of the instance to wait on.
-            addresses: The IP addresses to try SSH into.
         """
         try:
-            if not self._ssh_health_check(instance_name, addresses):
+            server: openstack.compute.v2.server.Server = conn.get_server(instance_name)
+            if server.status != _INSTANCE_STATUS_ACTIVE or not self._ssh_health_check(
+                instance=server
+            ):
                 raise RunnerStartError(
                     (
                         "Unable to find running process of runner application on openstack runner "
@@ -675,8 +725,7 @@ class OpenstackRunnerManager:
                 f"Timeout creating OpenStack runner {instance_config.name}"
             ) from err
 
-        addresses = [address["addr"] for address in instance.addresses[self._config.network]]
-        self._wait_until_runner_process_running(instance.name, addresses)
+        self._wait_until_runner_process_running(conn, instance.name)
 
     def get_github_runner_info(self) -> tuple[RunnerGithubInfo]:
         """Get information on GitHub for the runners.
@@ -690,14 +739,36 @@ class OpenstackRunnerManager:
         logger.debug("List of runners found on GitHub:%s", remote_runners_list)
         return tuple(
             RunnerGithubInfo(
-                runner.name, runner.id, runner.status == GitHubRunnerStatus.ONLINE, runner.busy
+                runner.name,
+                runner.id,
+                runner.status == GitHubRunnerStatus.ONLINE,
+                runner.busy,
             )
             for runner in remote_runners_list
             if runner.name.startswith(f"{self.instance_name}-")
         )
 
+    def _get_ssh_connections(
+        self, instance: openstack.compute.v2.server.Server
+    ) -> Generator[SshConnection, None, None]:
+        """Get ssh connections within a network for a given openstack instance.
+
+        Args:
+            instance: The Openstack server instance.
+
+        Yields:
+            Openstack SSH connections.
+        """
+        for address in instance.addresses[self._config.network]:
+            ip = address["addr"]
+            yield SshConnection(
+                host=ip,
+                user="ubuntu",
+                connect_kwargs={"key_filename": str(self._get_key_path(instance.name))},
+            )
+
     def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
-        """Get status on OpenStack of each runner.
+        """Get status on OpenStack of each runne=r.
 
         Args:
             conn: The connection object to access OpenStack cloud.
@@ -709,18 +780,85 @@ class OpenstackRunnerManager:
         unhealthy_runner = []
         openstack_instances = [
             instance
-            for instance in conn.list_servers()
+            for instance in cast(list[openstack.compute.v2.server.Server], conn.list_servers())
             if instance.name.startswith(f"{self.instance_name}-")
         ]
 
         for instance in openstack_instances:
-            addresses = [address["addr"] for address in instance.addresses[self._config.network]]
-            if self._ssh_health_check(instance.name, addresses):
-                healthy_runner.append(instance.name)
-            else:
+            server: openstack.compute.v2.server.Server = conn.get_server(instance.instance_name)
+            # SHUTOFF runners are runners that have completed executing jobs.
+            if server.status == _INSTANCE_STATUS_SHUTOFF or not self._ssh_health_check(
+                instance=server
+            ):
                 unhealthy_runner.append(instance.name)
+            else:
+                healthy_runner.append(instance.name)
 
         return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
+
+    def _remove_from_github(
+        self, instance: openstack.compute.v2.server.Server, remove_token: str | None
+    ) -> None:
+        """Run Github runner removal script.
+
+        Args:
+            instance: The Openstack server instance.
+            remove_token: The GitHub instance removal token.
+        """
+        if not remove_token:
+            return
+        for ssh_conn in self._get_ssh_connections(instance=instance):
+            try:
+                result: Result = ssh_conn.run(
+                    f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}"
+                )
+                if not result.ok:
+                    continue
+                return
+            except NoValidConnectionsError:
+                logger.info(
+                    "Unable to SSH into %s with address %s", instance.instance_name, ssh_conn.host
+                )
+                continue
+        raise GithubRunnerRemoveError(f"Failed to remove runner {instance.name} from Github.")
+
+    def _remove_runners(
+        self,
+        conn: OpenstackConnection,
+        instance_names: Iterable[str],
+        remove_token: str | None = None,
+        num_to_remove: int | float | None = None,
+    ) -> None:
+        """Delete runners on Openstack.
+
+        Removes the registered runner from Github if remove_token is provided.
+
+        Args:
+            conn: The Openstack connection instance.
+            instance_names: The Openstack server names to delete.
+            remove_token: The GitHub runner remove token.
+            num_to_remove: Remove a specified number of runners. Remove all if None.
+        """
+        if num_to_remove is None:
+            num_to_remove = float("inf")
+        for instance_name in instance_names:
+            if num_to_remove < 1:
+                break
+            server: openstack.compute.v2.server.Server = conn.get_server(name_or_id=instance_name)
+            try:
+                self._remove_from_github(instance=server, remove_token=remove_token)
+            except GithubRunnerRemoveError as exc:
+                logger.warning("Failed to remove runner from Github %s, %s", instance_name, exc)
+
+            try:
+                if not conn.delete_server(name_or_id=instance_name, wait=True, delete_ips=True):
+                    logger.warning("Server does not exist %s", instance_name)
+                    num_to_remove -= 1
+                    continue
+            except SDKException as exc:
+                logger.error("Something wrong deleting the server %s, %s", instance_name, str(exc))
+                continue
+            num_to_remove -= 1
 
     def reconcile(self, quantity: int) -> int:
         """Reconcile the quantity of runners.
@@ -732,18 +870,44 @@ class OpenstackRunnerManager:
             The change in number of runners.
         """
         github_info = self.get_github_runner_info()
-        online_runners = [runner.name for runner in github_info if runner.online]
+        online_runners = [runner for runner in github_info if runner.online]
         logger.info("Found %s existing openstack runners", len(online_runners))
 
         with _create_connection(self._cloud_config) as conn:
             runner_by_health = self._get_openstack_runner_status(conn)
+
+            # Clean up offline (SHUTOFF) runners or unhealthy (no connection/cloud-init script)
+            # runners.
+            remove_token = self._github.get_runner_remove_token(path=self._config.path)
+            self._remove_runners(
+                conn=conn, instance_names=runner_by_health.unhealthy, remove_token=remove_token
+            )
 
             delta = quantity - len(runner_by_health.healthy)
 
             # Spawn new runners
             if delta > 0:
                 self._create_runner(conn)
+            elif delta < 0:
+                self._remove_runners(
+                    conn=conn,
+                    instance_names=runner_by_health.healthy,
+                    remove_token=remove_token,
+                    num_to_remove=abs(delta),
+                )
             else:
                 logger.info("No changes to number of runners needed")
-
             return delta
+
+    def flush(self) -> int:
+        """Flush Openstack servers."""
+        with _create_connection(self._cloud_config) as conn:
+            runner_by_health = self._get_openstack_runner_status(conn)
+            remove_token = self._github.get_runner_remove_token(path=self._config.path)
+            runners_to_delete = (*runner_by_health.healthy, *runner_by_health.unhealthy)
+            self._remove_runners(
+                conn=conn,
+                instance_names=runners_to_delete,
+                remove_token=remove_token,
+            )
+            return len(runners_to_delete)

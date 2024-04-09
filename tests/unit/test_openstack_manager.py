@@ -8,7 +8,7 @@ import jinja2
 import openstack.exceptions
 import pytest
 
-from errors import OpenStackUnauthorizedError
+from errors import OpenStackError
 from openstack_cloud import openstack_manager
 
 CLOUD_NAME = "microstack"
@@ -71,11 +71,11 @@ def test__create_connection_error(clouds_yaml: dict, openstack_connect_mock: Mag
     connection_mock.__enter__.return_value = connection_context
     openstack_connect_mock.return_value = connection_mock
 
-    with pytest.raises(OpenStackUnauthorizedError) as exc:
+    with pytest.raises(OpenStackError) as exc:
         with openstack_manager._create_connection(cloud_config=clouds_yaml):
             pass
 
-    assert "Unauthorized credentials" in str(exc)
+    assert "Failed OpenStack API call" in str(exc)
 
 
 def test__create_connection(
@@ -417,7 +417,7 @@ def test_build_image_delete_image_error(
     mock_github_client: MagicMock, patched_create_connection_context: MagicMock
 ):
     """
-    arrange: given a mocked openstack connection that returns existing images and delete_image
+    arrange: given a mocked openstack connection that returns existing images and delete_image \
         that returns False (failed to delete image).
     act: when build_image is called.
     assert: ImageBuildError is raised.
@@ -460,7 +460,7 @@ def test_build_image_create_image_error(
             proxies=None,
         )
 
-    assert "Failed to upload image." in str(exc)
+    assert "Failed to update image" in str(exc)
 
 
 @pytest.mark.usefixtures("patch_execute_command")

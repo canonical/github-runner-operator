@@ -7,11 +7,11 @@ from unittest.mock import MagicMock, call
 
 import pytest
 
-import errors
 import metrics
 import metrics_type
 import runner_metrics
 import shared_fs
+from errors import DeleteSharedFilesystemError, IssueMetricEventError
 from github_type import JobConclusion
 from metrics import RunnerStart, RunnerStop
 from runner_metrics import (
@@ -47,7 +47,14 @@ def runner_fs_base_fixture(tmp_path: Path) -> Path:
 
 
 def _create_metrics_data(runner_name: str) -> RunnerMetrics:
-    """Create a RunnerMetrics object that is suitable for most tests."""
+    """Create a RunnerMetrics object that is suitable for most tests.
+
+    Args:
+        runner_name: The test runner name.
+
+    Returns:
+        Test metrics data.
+    """
     return RunnerMetrics(
         installed_timestamp=1,
         pre_job=PreJobMetrics(
@@ -63,7 +70,14 @@ def _create_metrics_data(runner_name: str) -> RunnerMetrics:
 
 
 def _create_runner_fs_base(tmp_path: Path):
-    """Create a runner filesystem base."""
+    """Create a runner filesystem base.
+
+    Args:
+        tmp_path: The temporary path to create test runner filesystem under.
+
+    Returns:
+        The runner filesystem temporary path.
+    """
     runner_fs_base = tmp_path / "runner-fs"
     runner_fs_base.mkdir(exist_ok=True)
     return runner_fs_base
@@ -83,9 +97,13 @@ def _create_runner_files(
 
     Args:
         runner_fs_base: The base path of the shared fs.
+        runner_name: The runner name.
         pre_job_data: The pre-job metrics data.
         post_job_data: The post-job metrics data.
         installed_timestamp: The installed timestamp.
+
+    Returns:
+        A SharedFilesystem instance.
     """
     runner_fs = runner_fs_base / runner_name
     runner_fs.mkdir()
@@ -119,10 +137,10 @@ def _create_runner_files(
 
 def test_extract(shared_fs_mock: MagicMock, runner_fs_base: Path):
     """
-    arrange:
-        1. A runner with all metrics inside shared fs
-        2. A runner with only pre-job metrics inside shared fs
-        3. A runner with no metrics except installed_timestamp inside shared fs
+    arrange: \
+        1. A runner with all metrics inside shared fs. \
+        2. A runner with only pre-job metrics inside shared fs. \
+        3. A runner with no metrics except installed_timestamp inside shared fs.
     act: Call extract
     assert: All shared filesystems are removed and for runners
         1. + 2. metrics are extracted
@@ -207,12 +225,12 @@ def test_extract_ignores_runners(shared_fs_mock: MagicMock, runner_fs_base: Path
 
 def test_extract_corrupt_data(runner_fs_base: Path, shared_fs_mock: MagicMock):
     """
-    arrange:
-        1. A runner with non-compliant pre-job metrics inside shared fs
-        2. A runner with non-json post-job metrics inside shared fs
-        3. A runner with json array post-job metrics inside shared fs
-        4. A runner with no real timestamp in installed_timestamp file inside shared fs
-    act: Call extract
+    arrange: \
+        1. A runner with non-compliant pre-job metrics inside shared fs. \
+        2. A runner with non-json post-job metrics inside shared fs. \
+        3. A runner with json array post-job metrics inside shared fs. \
+        4. A runner with no real timestamp in installed_timestamp file inside shared fs.
+    act: Call extract.
     assert: No metrics are extracted is issued and shared filesystems are quarantined in all cases.
     """
     runner_name = secrets.token_hex(16)
@@ -411,7 +429,7 @@ def test_extract_ignores_failure_on_shared_fs_cleanup(
     )
     shared_fs_mock.list_all.return_value = [runner_fs]
 
-    shared_fs_mock.delete.side_effect = errors.DeleteSharedFilesystemError(
+    shared_fs_mock.delete.side_effect = DeleteSharedFilesystemError(
         "Failed to delete shared filesystem"
     )
 
@@ -513,7 +531,7 @@ def test_issue_events_returns_empty_set_on_issue_event_failure(
     runner_name = secrets.token_hex(16)
     runner_metrics_data = _create_metrics_data(runner_name)
 
-    issue_event_mock.side_effect = [errors.IssueMetricEventError("Failed to issue metric"), None]
+    issue_event_mock.side_effect = [IssueMetricEventError("Failed to issue metric"), None]
 
     flavor = secrets.token_hex(16)
     job_metrics = metrics_type.GithubJobMetrics(

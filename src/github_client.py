@@ -9,14 +9,15 @@ remove token for runner.
 import functools
 import logging
 from datetime import datetime
+from typing import Callable, ParamSpec, TypeVar
 from urllib.error import HTTPError
 
 from ghapi.all import GhApi, pages
 from ghapi.page import paged
 from typing_extensions import assert_never
 
-import errors
 from charm_state import Arch, GithubOrg, GithubPath, GithubRepo
+from errors import GithubApiError, JobNotFoundError, RunnerBinaryError, TokenError
 from github_type import (
     JobStats,
     RegistrationToken,
@@ -28,12 +29,37 @@ from github_type import (
 
 logger = logging.getLogger(__name__)
 
+# Parameters of the function decorated with retry
+ParamT = ParamSpec("ParamT")
+# Return type of the function decorated with retry
+ReturnT = TypeVar("ReturnT")
 
-def catch_http_errors(func):
-    """Catch HTTP errors and raise custom exceptions."""
+
+def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, ReturnT]:
+    """Catch HTTP errors and raise custom exceptions.
+
+    Args:
+        func: The target function to catch common errors for.
+
+    Returns:
+        The decorated function.
+    """
 
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args: ParamT.args, **kwargs: ParamT.kwargs) -> ReturnT:
+        """Catch common errors when using the GitHub API.
+
+        Args:
+            args: Placeholder for positional arguments.
+            kwargs: Placeholder for keyword arguments.
+
+        Raises:
+            TokenError: If there was an error with the provided token.
+            GithubApiError: If there was an unexpected error using the GitHub API.
+
+        Returns:
+            The decorated function.
+        """
         try:
             return func(*args, **kwargs)
         except HTTPError as exc:
@@ -42,8 +68,8 @@ def catch_http_errors(func):
                     msg = "Invalid token."
                 else:
                     msg = "Provided token has not enough permissions or has reached rate-limit."
-                raise errors.TokenError(msg) from exc
-            raise errors.GithubApiError from exc
+                raise TokenError(msg) from exc
+            raise GithubApiError from exc
 
     return wrapper
 
@@ -96,7 +122,7 @@ class GithubClient:
                 if bin["os"] == os and bin["architecture"] == arch
             )
         except StopIteration as err:
-            raise errors.RunnerBinaryError(
+            raise RunnerBinaryError(
                 f"Unable query GitHub runner binary information for {os} {arch}"
             ) from err
 
@@ -151,6 +177,9 @@ class GithubClient:
     @catch_http_errors
     def get_runner_remove_token(self, path: GithubPath) -> str:
         """Get token from GitHub used for removing runners.
+
+        Args:
+            path: The Github org/repo path.
 
         Returns:
             The removing token.
@@ -219,6 +248,10 @@ class GithubClient:
             workflow_run_id: Id of the workflow run.
             runner_name: Name of the runner.
 
+        Raises:
+            TokenError: if there was an error with the Github token crdential provided.
+            JobNotFoundError: If no jobs were found.
+
         Returns:
             Job information.
         """
@@ -253,10 +286,10 @@ class GithubClient:
 
         except HTTPError as exc:
             if exc.code in (401, 403):
-                raise errors.TokenError from exc
-            raise errors.JobNotFoundError(
+                raise TokenError from exc
+            raise JobNotFoundError(
                 f"Could not find job for runner {runner_name}. "
                 f"Could not list jobs for workflow run {workflow_run_id}"
             ) from exc
 
-        raise errors.JobNotFoundError(f"Could not find job for runner {runner_name}.")
+        raise JobNotFoundError(f"Could not find job for runner {runner_name}.")

@@ -46,6 +46,7 @@ class RunnerManagerClients:
         github: Used to query GitHub API.
         jinja: Used for templating.
         lxd: Used to interact with LXD API.
+        repo: Used to interact with repo-policy-compliance API.
     """
 
     github: GithubClient
@@ -60,6 +61,7 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     """Configuration of runner manager.
 
     Attributes:
+        are_metrics_enabled: Whether metrics for the runners should be collected.
         charm_state: The state of the charm.
         image: Name of the image for creating LXD instance.
         lxd_storage_path: Path to be used as LXD storage.

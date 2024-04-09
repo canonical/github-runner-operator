@@ -20,9 +20,9 @@ def log_dir_base_path_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
 
 def test_get_crashed(log_dir_base_path: Path):
     """
-    arrange: Mock the Runner instance and the base log directory path
-    act: Get the logs of the crashed runner
-    assert: The expected log directory is created and logs are pulled
+    arrange: Mock the Runner instance and the base log directory path.
+    act: Get the logs of the crashed runner.
+    assert: The expected log directory is created and logs are pulled.
     """
     runner = MagicMock()
     runner.config.name = "test-runner"
@@ -45,9 +45,9 @@ def test_get_crashed(log_dir_base_path: Path):
 
 def test_get_crashed_no_instance(log_dir_base_path: Path):
     """
-    arrange: Mock the Runner instance to be None
-    act: Get the logs of the crashed runner
-    assert: A RunnerLogsError is raised
+    arrange: Mock the Runner instance to be None.
+    act: Get the logs of the crashed runner.
+    assert: A RunnerLogsError is raised.
     """
     runner = MagicMock()
     runner.config.name = "test-runner"
@@ -63,9 +63,9 @@ def test_get_crashed_no_instance(log_dir_base_path: Path):
 
 def test_get_crashed_lxd_error(log_dir_base_path: Path):
     """
-    arrange: Mock the Runner instance to raise an LxdError
-    act: Get the logs of the crashed runner
-    assert: A RunnerLogsError is raised
+    arrange: Mock the Runner instance to raise an LxdError.
+    act: Get the logs of the crashed runner.
+    assert: A RunnerLogsError is raised.
     """
     runner = MagicMock()
     runner.config.name = "test-runner"
@@ -80,9 +80,9 @@ def test_get_crashed_lxd_error(log_dir_base_path: Path):
 
 def test_remove_outdated_crashed(log_dir_base_path: Path, monkeypatch: pytest.MonkeyPatch):
     """
-    arrange: Mock the base log directory path
-    act: Remove the logs of the crashed runner
-    assert: The expected logs are removed
+    arrange: Mock the base log directory path.
+    act: Remove the logs of the crashed runner.
+    assert: The expected logs are removed.
     """
     monkeypatch.setattr(runner_logs, "OUTDATED_LOGS_IN_SECONDS", 0)
 
