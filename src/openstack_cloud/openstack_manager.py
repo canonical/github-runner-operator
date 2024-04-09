@@ -12,12 +12,12 @@ from typing import Generator, Iterable, Literal, NamedTuple, Optional, cast
 
 import jinja2
 import openstack
-import openstack.compute.v2.server
 import openstack.connection
 import openstack.exceptions
 import openstack.image.v2.image
 from fabric import Connection as SshConnection
 from invoke.runners import Result
+from openstack.compute.v2.server import Server
 from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import OpenStackCloudException, SDKException
 from paramiko.ssh_exception import NoValidConnectionsError
@@ -616,7 +616,7 @@ class OpenstackRunnerManager:
         keypair = conn.create_keypair(name=name)
         private_key_path.write_text(keypair.private_key)
 
-    def _ssh_health_check(self, instance: openstack.compute.v2.server.Server) -> bool:
+    def _ssh_health_check(self, instance: Server) -> bool:
         """Use SSH to check whether runner application is running.
 
         Args:
@@ -660,9 +660,11 @@ class OpenstackRunnerManager:
             instance_name: The name of the instance to wait on.
         """
         try:
-            server: openstack.compute.v2.server.Server = conn.get_server(instance_name)
-            if server.status != _INSTANCE_STATUS_ACTIVE or not self._ssh_health_check(
-                instance=server
+            server: Server | None = conn.get_server(instance_name)
+            if (
+                not server
+                or server.status != _INSTANCE_STATUS_ACTIVE
+                or not self._ssh_health_check(instance=server)
             ):
                 raise RunnerStartError(
                     (
@@ -748,9 +750,7 @@ class OpenstackRunnerManager:
             if runner.name.startswith(f"{self.instance_name}-")
         )
 
-    def _get_ssh_connections(
-        self, instance: openstack.compute.v2.server.Server
-    ) -> Generator[SshConnection, None, None]:
+    def _get_ssh_connections(self, instance: Server) -> Generator[SshConnection, None, None]:
         """Get ssh connections within a network for a given openstack instance.
 
         Args:
@@ -780,12 +780,14 @@ class OpenstackRunnerManager:
         unhealthy_runner = []
         openstack_instances = [
             instance
-            for instance in cast(list[openstack.compute.v2.server.Server], conn.list_servers())
+            for instance in cast(list[Server], conn.list_servers())
             if instance.name.startswith(f"{self.instance_name}-")
         ]
 
         for instance in openstack_instances:
-            server: openstack.compute.v2.server.Server = conn.get_server(instance.instance_name)
+            server: Server | None = conn.get_server(instance.instance_name)
+            if not server:
+                continue
             # SHUTOFF runners are runners that have completed executing jobs.
             if server.status == _INSTANCE_STATUS_SHUTOFF or not self._ssh_health_check(
                 instance=server
@@ -796,9 +798,7 @@ class OpenstackRunnerManager:
 
         return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
 
-    def _remove_from_github(
-        self, instance: openstack.compute.v2.server.Server, remove_token: str | None
-    ) -> None:
+    def _remove_from_github(self, instance: Server, remove_token: str | None) -> None:
         """Run Github runner removal script.
 
         Args:
@@ -844,7 +844,9 @@ class OpenstackRunnerManager:
         for instance_name in instance_names:
             if num_to_remove < 1:
                 break
-            server: openstack.compute.v2.server.Server = conn.get_server(name_or_id=instance_name)
+            server: Server | None = conn.get_server(name_or_id=instance_name)
+            if not server:
+                continue
             try:
                 self._remove_from_github(instance=server, remove_token=remove_token)
             except GithubRunnerRemoveError as exc:
