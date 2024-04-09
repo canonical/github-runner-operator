@@ -189,7 +189,6 @@ def test_common_install_code(
     act: Fire install/upgrade event.
     assert: Common install commands are run on the mock.
     """
-
     monkeypatch.setattr("charm.metrics.setup_logrotate", setup_logrotate := MagicMock())
     monkeypatch.setattr(
         "runner_manager.RunnerManager.schedule_build_runner_image",

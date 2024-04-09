@@ -407,6 +407,9 @@ class GithubRunnerCharm(CharmBase):
     def _common_install_code(self, state: CharmState) -> None:
         """Installation code shared between install and upgrade hook.
 
+        Args:
+            state: The charm state instance.
+
         Raises:
             LogrotateSetupError: Failed to setup logrotate.
             SubprocessError: Failed to install dependencies.
