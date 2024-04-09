@@ -221,7 +221,6 @@ async def app_no_runner(
 async def app_openstack_runner_fixture(
     model: Model,
     charm_file: str,
-    app_name: str,
     path: str,
     token: str,
     http_proxy: str,
@@ -232,8 +231,8 @@ async def app_openstack_runner_fixture(
     """Application launching VMs and no runners."""
     application = await deploy_github_runner_charm(
         model=model,
+        app_name=f"integration-id{secrets.token_hex(2)}",
         charm_file=charm_file,
-        app_name=app_name,
         path=path,
         token=token,
         runner_storage="juju-storage",
