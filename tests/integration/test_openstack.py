@@ -62,16 +62,9 @@ async def test_openstack_integration(
     assert server.image.name == "jammy"
 
 
-@pytest.mark.parametrize(
-    "image",
-    [
-        pytest.param("noble", id="noble"),
-    ],
-)
-async def test_runner_base_image(
+async def test_noble_base_image(
     model: Model,
     app_openstack_runner: Application,
-    image: str,
     github_repository: Repository,
     test_github_branch: Branch,
 ) -> None:
@@ -82,7 +75,7 @@ async def test_runner_base_image(
     """
     await app_openstack_runner.set_config(
         {
-            BASE_IMAGE_CONFIG_NAME: image,
+            BASE_IMAGE_CONFIG_NAME: "noble",
         }
     )
     await ensure_charm_has_runner(app_openstack_runner, model)

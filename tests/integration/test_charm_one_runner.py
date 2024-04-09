@@ -308,16 +308,9 @@ async def test_token_config_changed_insufficient_perms(
     await wait_till_num_of_runners(unit, num=0)
 
 
-@pytest.mark.parametrize(
-    "image",
-    [
-        pytest.param("noble", id="noble"),
-    ],
-)
 async def test_runner_base_image(
     model: Model,
     app_no_runner: Application,
-    image: str,
     github_repository: Repository,
     test_github_branch: Branch,
 ) -> None:
@@ -328,7 +321,7 @@ async def test_runner_base_image(
     """
     await app_no_runner.set_config(
         {
-            BASE_IMAGE_CONFIG_NAME: image,
+            BASE_IMAGE_CONFIG_NAME: "noble",
         }
     )
     await ensure_charm_has_runner(app_no_runner, model)
