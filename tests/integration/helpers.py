@@ -5,6 +5,7 @@
 
 import inspect
 import json
+import logging
 import subprocess
 import time
 import typing
@@ -22,6 +23,7 @@ from github.Repository import Repository
 from github.Workflow import Workflow
 from github.WorkflowJob import WorkflowJob
 from github.WorkflowRun import WorkflowRun
+from juju.action import Action
 from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
@@ -38,7 +40,6 @@ from charm_state import (
 from runner import Runner
 from runner_manager import RunnerManager
 from tests.status_name import ACTIVE
-from utilities import retry
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
 DISPATCH_CRASH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_crash_test.yaml"
@@ -47,6 +48,8 @@ DISPATCH_WAIT_TEST_WORKFLOW_FILENAME = "workflow_dispatch_wait_test.yaml"
 DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME = "e2e_test_run.yaml"
 
 DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15}
+
+logger = logging.getLogger(__name__)
 
 
 async def check_runner_binary_exists(unit: Unit) -> bool:
@@ -58,7 +61,7 @@ async def check_runner_binary_exists(unit: Unit) -> bool:
     Returns:
         Whether the runner binary file exists in the charm.
     """
-    return_code, _ = await run_in_unit(unit, f"test -f {RunnerManager.runner_bin_path}")
+    return_code, _, _ = await run_in_unit(unit, f"test -f {RunnerManager.runner_bin_path}")
     return return_code == 0
 
 
@@ -71,10 +74,12 @@ async def get_repo_policy_compliance_pip_info(unit: Unit) -> None | str:
     Returns:
         If repo-policy-compliance is installed, returns the pip show output, else returns none.
     """
-    return_code, stdout = await run_in_unit(unit, "python3 -m pip show repo-policy-compliance")
+    return_code, stdout, stderr = await run_in_unit(
+        unit, "python3 -m pip show repo-policy-compliance"
+    )
 
     if return_code == 0:
-        return stdout
+        return stdout or stderr
 
     return None
 
@@ -86,14 +91,16 @@ async def install_repo_policy_compliance_from_git_source(unit: Unit, source: Non
         unit: Unit instance to check for the LXD profile.
         source: The git source to install the package. If none the package is removed.
     """
-    return_code, stdout = await run_in_unit(
+    return_code, stdout, stderr = await run_in_unit(
         unit, "python3 -m pip uninstall --yes repo-policy-compliance"
     )
-    assert return_code == 0, f"Failed to uninstall repo-policy-compliance: {stdout}"
+    assert return_code == 0, f"Failed to uninstall repo-policy-compliance: {stdout} {stderr}"
 
     if source:
-        return_code, _ = await run_in_unit(unit, f"python3 -m pip install {source}")
-        assert return_code == 0
+        return_code, stdout, stderr = await run_in_unit(unit, f"python3 -m pip install {source}")
+        assert (
+            return_code == 0
+        ), f"Failed to install repo-policy-compliance from source, {stdout} {stderr}"
 
 
 async def remove_runner_bin(unit: Unit) -> None:
@@ -105,7 +112,7 @@ async def remove_runner_bin(unit: Unit) -> None:
     await run_in_unit(unit, f"rm {RunnerManager.runner_bin_path}")
 
     # No file should exists under with the filename.
-    return_code, _ = await run_in_unit(unit, f"test -f {RunnerManager.runner_bin_path}")
+    return_code, _, _ = await run_in_unit(unit, f"test -f {RunnerManager.runner_bin_path}")
     assert return_code != 0
 
 
@@ -122,7 +129,7 @@ async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> No
     resource_profile_name = Runner._get_resource_profile_name(cpu, mem, disk)
 
     # Verify the profile exists.
-    return_code, stdout = await run_in_unit(unit, "lxc profile list --format json")
+    return_code, stdout, _ = await run_in_unit(unit, "lxc profile list --format json")
     assert return_code == 0
     assert stdout is not None
     profiles = json.loads(stdout)
@@ -130,7 +137,7 @@ async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> No
     assert resource_profile_name in profile_names
 
     # Verify the profile contains the correct resource settings.
-    return_code, stdout = await run_in_unit(unit, f"lxc profile show {resource_profile_name}")
+    return_code, stdout, _ = await run_in_unit(unit, f"lxc profile show {resource_profile_name}")
     assert return_code == 0
     assert stdout is not None
     profile_content = yaml.safe_load(stdout)
@@ -148,34 +155,55 @@ async def get_runner_names(unit: Unit) -> tuple[str, ...]:
     Returns:
         Tuple of runner names.
     """
-    return_code, stdout = await run_in_unit(unit, "lxc list --format json")
+    return_code, stdout, _ = await run_in_unit(unit, "lxc list --format json")
 
     assert return_code == 0
     assert stdout is not None
 
     lxc_instance: list[dict[str, str]] = json.loads(stdout)
-    return tuple(runner["name"] for runner in lxc_instance)
+    return tuple(runner["name"] for runner in lxc_instance if runner["name"] != "builder")
 
 
-@retry(tries=30, delay=30)
-async def wait_till_num_of_runners(unit: Unit, num: int) -> None:
+async def wait_till_num_of_runners(unit: Unit, num: int, timeout: int = 10 * 60) -> None:
     """Wait and check the number of runners.
 
     Args:
         unit: Unit instance to check for the LXD profile.
         num: Number of runner instances to check for.
+        timeout: Number of seconds to wait for the runners.
     """
-    return_code, stdout = await run_in_unit(unit, "lxc list --format json")
-    assert return_code == 0
-    assert stdout is not None
 
-    lxc_instance = json.loads(stdout)
-    assert (
-        len(lxc_instance) == num
-    ), f"Current number of runners: {len(lxc_instance)} Expected number of runner: {num}"
+    async def get_lxc_instances() -> None | list[dict]:
+        """Get lxc instances list info.
 
-    for instance in lxc_instance:
-        return_code, stdout = await run_in_unit(unit, f"lxc exec {instance['name']} -- ps aux")
+        Returns:
+            List of lxc instance dictionaries, None if failed to get list.
+        """
+        return_code, stdout, _ = await run_in_unit(unit, "lxc list --format json")
+        if return_code != 0 or not stdout:
+            logger.error("Failed to run lxc list, %s", return_code)
+            return None
+        return json.loads(stdout)
+
+    async def is_desired_num_runners():
+        """Return whether there are desired number of lxc instances running.
+
+        Returns:
+            Whether the desired number of lxc runners have been reached.
+        """
+        lxc_instances = await get_lxc_instances()
+        if lxc_instances is None:
+            return False
+        return len(lxc_instances) == num
+
+    await wait_for(is_desired_num_runners, timeout=timeout, check_interval=30)
+
+    instances = await get_lxc_instances()
+    if not instances:
+        return
+
+    for instance in instances:
+        return_code, stdout, _ = await run_in_unit(unit, f"lxc exec {instance['name']} -- ps aux")
         assert return_code == 0
 
         assert stdout is not None
@@ -193,7 +221,9 @@ def on_juju_2() -> bool:
     return not hasattr(juju.version, "SUPPORTED_MAJOR_VERSION")
 
 
-async def run_in_unit(unit: Unit, command: str, timeout=None) -> tuple[int, str | None]:
+async def run_in_unit(
+    unit: Unit, command: str, timeout=None
+) -> tuple[int, str | None, str | None]:
     """Run command in juju unit.
 
     Compatible with juju 3 and juju 2.
@@ -204,16 +234,24 @@ async def run_in_unit(unit: Unit, command: str, timeout=None) -> tuple[int, str 
         timeout: Amount of time to wait for the execution.
 
     Returns:
-        Tuple of return code and stdout.
+        Tuple of return code, stdout and stderr.
     """
-    action = await unit.run(command, timeout)
+    action: Action = await unit.run(command, timeout)
 
     # For compatibility with juju 2.
     if on_juju_2():
-        return (int(action.results["Code"]), action.results.get("Stdout", None))
+        return (
+            int(action.results["Code"]),
+            action.results.get("Stdout", None),
+            action.results.get("Stderr", None),
+        )
 
     await action.wait()
-    return (action.results["return-code"], action.results.get("stdout", None))
+    return (
+        action.results["return-code"],
+        action.results.get("stdout", None),
+        action.results.get("stderr", None),
+    )
 
 
 async def run_in_lxd_instance(
@@ -223,7 +261,7 @@ async def run_in_lxd_instance(
     env: dict[str, str] | None = None,
     cwd: str | None = None,
     timeout: int | None = None,
-) -> tuple[int, str | None]:
+) -> tuple[int, str | None, str | None]:
     """Run command in LXD instance of a juju unit.
 
     Args:
@@ -273,7 +311,7 @@ EOT""",
 
     # Test the HTTP server
     for _ in range(10):
-        return_code, stdout = await run_in_unit(unit, f"curl http://localhost:{port}")
+        return_code, stdout, _ = await run_in_unit(unit, f"curl http://localhost:{port}")
         if return_code == 0 and stdout:
             break
         await sleep(3)
@@ -542,7 +580,7 @@ R = TypeVar("R")
 
 async def wait_for(
     func: Callable[P, R],
-    timeout: int = 300,
+    timeout: int | float = 300,
     check_interval: int = 10,
 ) -> R:
     """Wait for function execution to become truthy.
