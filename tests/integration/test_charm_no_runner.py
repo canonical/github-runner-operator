@@ -7,6 +7,7 @@ import pytest
 from juju.application import Application
 from juju.model import Model
 
+from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers import (
     check_runner_binary_exists,
     get_repo_policy_compliance_pip_info,
@@ -181,14 +182,14 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     unit = app.units[0]
 
     # 1.
-    await app.set_config({"virtual-machines": "1"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
 
     await reconcile(app=app, model=model)
 
     await wait_till_num_of_runners(unit, 1)
 
     # 2.
-    await app.set_config({"virtual-machines": "0"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
 
     await reconcile(app=app, model=model)
 

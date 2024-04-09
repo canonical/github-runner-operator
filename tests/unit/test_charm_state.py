@@ -14,6 +14,7 @@ import charm_state
 from charm_state import (
     COS_AGENT_INTEGRATION_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
+    USE_APROXY_CONFIG_NAME,
     Arch,
     CharmConfigInvalidError,
     CharmState,
@@ -83,7 +84,7 @@ def test_aproxy_proxy_missing():
     assert: CharmConfigInvalidError is raised.
     """
     mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config["experimental-use-aproxy"] = "true"
+    mock_charm.config[USE_APROXY_CONFIG_NAME] = "true"
 
     with pytest.raises(CharmConfigInvalidError) as exc:
         CharmState.from_charm(mock_charm)
@@ -107,9 +108,9 @@ def test_proxy_invalid_format():
 
 def test_proxy_config_bool():
     """
-    arrange: Various combinations for ProxyConfig
-    act: Create ProxyConfig object
-    assert: Expected boolean value
+    arrange: Various combinations for ProxyConfig.
+    act: Create ProxyConfig object.
+    assert: Expected boolean value.
     """
     proxy_url = "http://proxy.example.com:8080"
 
@@ -371,8 +372,14 @@ def test__parse_labels_invalid_labels(label_str: str, falsy_labels: tuple[str]):
         pytest.param(" a, b,   c", ("a", "b", "c"), id="comma separated labels with space"),
         pytest.param("1234", ("1234",), id="numeric label"),
         pytest.param("_", ("_",), id="underscore"),
+        pytest.param("-", ("-",), id="dash only"),
         pytest.param("_test_", ("_test_",), id="alphabetical with underscore"),
         pytest.param("_test1234_", ("_test1234_",), id="alphanumeric with underscore"),
+        pytest.param("x-large", ("x-large",), id="dash word"),
+        pytest.param("x-large, two-xlarge", ("x-large", "two-xlarge"), id="dash words"),
+        pytest.param(
+            "x-large_1, two-xlarge", ("x-large_1", "two-xlarge"), id="dash underscore words"
+        ),
     ],
 )
 def test__parse_labels(label_str: str, expected_labels: tuple[str]):

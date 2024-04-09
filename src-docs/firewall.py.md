@@ -58,7 +58,7 @@ Get the host IP address for the corresponding LXD network.
 refresh_firewall(
     denylist: Iterable[FirewallEntry],
     allowlist: Optional[Iterable[FirewallEntry]] = None
-)
+) → None
 ```
 
 Refresh the firewall configuration. 
@@ -67,7 +67,8 @@ Refresh the firewall configuration.
 
 **Args:**
  
- - <b>`denylist`</b>:  The list of FirewallEntry objects to allow. 
+ - <b>`denylist`</b>:  The list of FirewallEntry rules to allow. 
+ - <b>`allowlist`</b>:  The list of FirewallEntry rules to allow. 
 
 
 ---
