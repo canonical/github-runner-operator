@@ -10,6 +10,8 @@ from pathlib import Path
 from time import sleep
 from typing import Any, AsyncIterator, Iterator, Optional
 
+import openstack
+import openstack.connection
 import pytest
 import pytest_asyncio
 import yaml
@@ -22,6 +24,11 @@ from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
+from charm_state import (
+    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    PATH_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+)
 from github_client import GithubClient
 from tests.integration.helpers import (
     deploy_github_runner_charm,
@@ -48,10 +55,15 @@ def app_name() -> str:
 
 
 @pytest.fixture(scope="module")
-def charm_file(pytestconfig: pytest.Config, loop_device: Optional[str]) -> str:
+def charm_file(
+    pytestconfig: pytest.Config, loop_device: Optional[str], openstack_clouds_yaml: Optional[str]
+) -> str:
     """Path to the built charm."""
     charm = pytestconfig.getoption("--charm-file")
     assert charm, "Please specify the --charm-file command line option"
+
+    if openstack_clouds_yaml:
+        return f"./{charm}"
 
     lxd_profile_str = """config:
     security.nesting: true
@@ -151,6 +163,20 @@ def openstack_clouds_yaml(pytestconfig: pytest.Config) -> Optional[str]:
     return Path(clouds_yaml).read_text(encoding="utf-8") if clouds_yaml else None
 
 
+@pytest.fixture(scope="module", name="openstack_connection")
+def openstack_connection_fixture(
+    openstack_clouds_yaml: Optional[str],
+) -> openstack.connection.Connection:
+    """The openstack connection instance."""
+    assert openstack_clouds_yaml, "Openstack clouds yaml was not provided."
+
+    openstack_clouds_yaml_yaml = yaml.safe_load(openstack_clouds_yaml)
+    clouds_yaml_path = Path.cwd() / "clouds.yaml"
+    clouds_yaml_path.write_text(data=openstack_clouds_yaml, encoding="utf-8")
+    first_cloud = next(iter(openstack_clouds_yaml_yaml["clouds"].keys()))
+    return openstack.connect(first_cloud)
+
+
 @pytest.fixture(scope="module")
 def model(ops_test: OpsTest) -> Model:
     """Juju model used in the test."""
@@ -187,6 +213,42 @@ async def app_no_runner(
         https_proxy=https_proxy,
         no_proxy=no_proxy,
         reconcile_interval=60,
+    )
+    return application
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app_openstack_runner(
+    model: Model,
+    charm_file: str,
+    app_name: str,
+    path: str,
+    token: str,
+    http_proxy: str,
+    https_proxy: str,
+    no_proxy: str,
+    openstack_clouds_yaml: str,
+) -> AsyncIterator[Application]:
+    """Application launching VMs and no runners."""
+    application = await deploy_github_runner_charm(
+        model=model,
+        charm_file=charm_file,
+        app_name=app_name,
+        path=path,
+        token=token,
+        runner_storage="juju-storage",
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        reconcile_interval=60,
+        constraints={
+            "root-disk": 20 * 1024,
+            "cores": 4,
+            "mem": 16 * 1024,
+            "virt-type": "virtual-machine",
+        },
+        config={OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml},
+        wait_idle=False,
     )
     return application
 
@@ -237,7 +299,7 @@ async def app_scheduled_events(
         reconcile_interval=8,
     )
 
-    await application.set_config({"virtual-machines": "1"})
+    await application.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await reconcile(app=application, model=model)
 
     return application
@@ -282,7 +344,7 @@ async def app_no_wait_fixture(
     https_proxy: str,
     no_proxy: str,
 ) -> AsyncIterator[Application]:
-    """GitHub runner charm application without waiting for active."""
+    """Github runner charm application without waiting for active."""
     app: Application = await deploy_github_runner_charm(
         model=model,
         charm_file=charm_file,
@@ -296,7 +358,7 @@ async def app_no_wait_fixture(
         reconcile_interval=60,
         wait_idle=False,
     )
-    await app.set_config({"virtual-machines": "1"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     return app
 
 
@@ -316,7 +378,7 @@ async def tmate_ssh_server_app_fixture(
 async def tmate_ssh_server_unit_ip_fixture(
     model: Model,
     tmate_ssh_server_app: Application,
-) -> AsyncIterator[str]:
+) -> bytes | str:
     """tmate-ssh-server charm unit ip."""
     status: FullStatus = await model.get_status([tmate_ssh_server_app.name])
     try:
@@ -409,7 +471,7 @@ async def app_with_forked_repo(
     """
     app = app_no_runner  # alias for readability as the app will have a runner during the test
 
-    await app.set_config({"path": forked_github_repository.full_name})
+    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
     await ensure_charm_has_runner(app=app, model=model)
 
     return app
@@ -452,7 +514,15 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
     )
 
     def get_branch():
-        """Get newly created branch."""
+        """Get newly created branch.
+
+        Raises:
+            GithubException: if unexpected GithubException has happened apart from repository not \
+                found.
+
+        Returns:
+            New branch if successful, False otherwise.
+        """
         try:
             branch = github_repository.get_branch(test_branch)
         except GithubException as err:

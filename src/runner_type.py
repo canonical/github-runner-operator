@@ -13,7 +13,12 @@ from charm_state import GithubPath, SSHDebugConnection
 
 @dataclass
 class RunnerByHealth:
-    """Set of runners LXD instance by health state."""
+    """Set of runners LXD instance by health state.
+
+    Attributes:
+        healthy: Runners that are correctly running runner script.
+        unhealthy: Runners that are not running runner script.
+    """
 
     healthy: tuple[str]
     unhealthy: tuple[str]
@@ -21,7 +26,14 @@ class RunnerByHealth:
 
 @dataclass
 class ProxySetting:
-    """Represent HTTP-related proxy settings."""
+    """Represent HTTP-related proxy settings.
+
+    Attributes:
+        no_proxy: The comma separated URLs to not go through proxy.
+        http: HTTP proxy URL.
+        https: HTTPS proxy URL.
+        aproxy_address: Aproxy URL.
+    """
 
     no_proxy: Optional[str]
     http: Optional[str]
@@ -37,6 +49,7 @@ class RunnerConfig:  # pylint: disable=too-many-instance-attributes
     Attributes:
         app_name: Application name of the charm.
         issue_metrics: Whether to issue metrics.
+        labels: Custom runner labels.
         lxd_storage_path: Path to be used as LXD storage.
         name: Name of the runner.
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
@@ -48,6 +61,7 @@ class RunnerConfig:  # pylint: disable=too-many-instance-attributes
 
     app_name: str
     issue_metrics: bool
+    labels: tuple[str]
     lxd_storage_path: Path
     name: str
     path: GithubPath

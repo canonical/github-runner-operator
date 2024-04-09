@@ -3,38 +3,55 @@
 
 """Integration tests for OpenStack integration."""
 
-
-import yaml
+import openstack.connection
+import pytest
+from github.Branch import Branch
+from github.Repository import Repository
+from github.WorkflowRun import WorkflowRun
 from juju.application import Application
 from juju.model import Model
+from openstack.compute.v2.server import Server
 
-from charm_state import OPENSTACK_CLOUDS_YAML_CONFIG_NAME
-from tests.integration.helpers import run_in_unit
+from tests.integration.helpers import DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME, dispatch_workflow
 
 
+# 2024/03/19 - The firewall configuration on openstack will be implemented by follow up PR on
+# launching openstack instances.
+@pytest.mark.xfail(reason="Firewall to be implemented")
 async def test_openstack_integration(
-    model: Model, app_no_runner: Application, openstack_clouds_yaml: str
+    model: Model,
+    app_openstack_runner: Application,
+    openstack_connection: openstack.connection.Connection,
+    github_repository: Repository,
+    test_github_branch: Branch,
 ):
     """
-    arrange: Load the OpenStack clouds.yaml config. Parse project name from the config.
-    act: Set the openstack-clouds-yaml config in the charm
-    assert: Check the unit log for successful OpenStack connection and that the project is listed.
+    arrange: given a runner with openstack cloud configured.
+    act:
+        1. when the e2e_test_run workflow is created.
+        2. when the servers are listed.
+    assert:
+        1. the workflow run completes successfully.
+        2. a server with image name jammy is created.
     """
-    openstack_clouds_yaml_yaml = yaml.safe_load(openstack_clouds_yaml)
-    first_cloud = next(iter(openstack_clouds_yaml_yaml["clouds"].values()))
-    project_name = first_cloud["auth"]["project_name"]
+    await model.wait_for_idle(apps=[app_openstack_runner.name], status="blocked", timeout=40 * 60)
 
-    await app_no_runner.set_config({OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml})
-    await model.wait_for_idle(apps=[app_no_runner.name])
-
-    unit = app_no_runner.units[0]
-    unit_name_with_dash = unit.name.replace("/", "-")
-    ret_code, unit_log = await run_in_unit(
-        unit=unit,
-        command=f"cat /var/log/juju/unit-{unit_name_with_dash}.log",
+    # 1. when the e2e_test_run workflow is created.
+    workflow = await dispatch_workflow(
+        app=app_openstack_runner,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
+        dispatch_input={"runner-tag": app_openstack_runner.name},
     )
-    assert ret_code == 0, "Failed to read the unit log"
-    assert unit_log is not None, "Failed to read the unit log, no stdout message"
-    assert "OpenStack connection successful." in unit_log
-    assert "OpenStack projects:" in unit_log
-    assert project_name in unit_log
+    # 1. the workflow run completes successfully.
+    workflow_run: WorkflowRun = workflow.get_runs()[0]
+    assert workflow_run.status == "success"
+
+    # 2. when the servers are listed.
+    servers = openstack_connection.list_servers(detailed=True)
+    assert len(servers) == 1, f"Unexpected number of servers: {len(servers)}"
+    server: Server = servers[0]
+    # 2. a server with image name jammy is created.
+    assert server.image.name == "jammy"

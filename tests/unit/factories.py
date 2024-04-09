@@ -14,9 +14,31 @@ import factory
 import factory.fuzzy
 from pydantic.networks import IPvAnyAddress
 
-from charm_state import COS_AGENT_INTEGRATION_NAME, DEBUG_SSH_INTEGRATION_NAME, SSHDebugConnection
+from charm_state import (
+    COS_AGENT_INTEGRATION_NAME,
+    DEBUG_SSH_INTEGRATION_NAME,
+    DENYLIST_CONFIG_NAME,
+    DOCKERHUB_MIRROR_CONFIG_NAME,
+    GROUP_CONFIG_NAME,
+    LABELS_CONFIG_NAME,
+    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    PATH_CONFIG_NAME,
+    RECONCILE_INTERVAL_CONFIG_NAME,
+    RUNNER_STORAGE_CONFIG_NAME,
+    TEST_MODE_CONFIG_NAME,
+    TOKEN_CONFIG_NAME,
+    USE_APROXY_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+    VM_CPU_CONFIG_NAME,
+    VM_DISK_CONFIG_NAME,
+    VM_MEMORY_CONFIG_NAME,
+    SSHDebugConnection,
+)
 
 T = TypeVar("T")
+
+# DC060: Docstrings have been abbreviated for factories, checking for docstrings on model
+# attributes can be skipped.
 
 
 class BaseMetaFactory(Generic[T], factory.base.FactoryMetaClass):
@@ -33,8 +55,6 @@ class BaseMetaFactory(Generic[T], factory.base.FactoryMetaClass):
 class SSHDebugInfoFactory(
     factory.Factory, metaclass=BaseMetaFactory[SSHDebugConnection]  # type: ignore
 ):
-    # Docstrings have been abbreviated for factories, checking for docstrings on model attributes
-    # can be skipped.
     """Generate PathInfos."""  # noqa: DCO060
 
     class Meta:
@@ -50,16 +70,22 @@ class SSHDebugInfoFactory(
 
 
 class MockGithubRunnerCharmUnitFactory(factory.Factory):
+    """Mock github-runner charm unit."""  # noqa: DCO060
+
     class Meta:
+        """Configuration for factory."""  # noqa: DCO060
+
         model = MagicMock
 
     name = "github-runner/0"
 
 
 class MockGithubRunnerCharmAppFactory(factory.Factory):
-    """Mock github-runner charm app."""
+    """Mock github-runner charm app."""  # noqa: DCO060
 
     class Meta:
+        """Configuration for factory."""  # noqa: DCO060
+
         model = MagicMock
 
     planned_units = 1
@@ -67,40 +93,43 @@ class MockGithubRunnerCharmAppFactory(factory.Factory):
 
 
 class MockGithubRunnerCharmModelFactory(factory.Factory):
-    """Mock github-runner charm model."""
+    """Mock github-runner charm model."""  # noqa: DCO060
 
     class Meta:
+        """Configuration for factory."""  # noqa: DCO060
+
         model = MagicMock
 
     relations: dict[str, list] = {COS_AGENT_INTEGRATION_NAME: [], DEBUG_SSH_INTEGRATION_NAME: []}
 
 
 class MockGithubRunnerCharmFactory(factory.Factory):
-    """Mock GithubRunnerCharm."""
+    """Mock GithubRunnerCharm."""  # noqa: DCO060
 
     class Meta:
+        """Configuration for factory."""  # noqa: DCO060
+
         model = MagicMock
 
     unit = factory.SubFactory(MockGithubRunnerCharmUnitFactory)
     app = factory.SubFactory(MockGithubRunnerCharmAppFactory)
     model = factory.SubFactory(MockGithubRunnerCharmModelFactory)
-
-    # Ignore N805 as the first param is not self for Factory Boy sequences.
-    # See: https://factoryboy.readthedocs.io/en/stable/introduction.html#sequences
-    @factory.sequence
-    def config(n):  # noqa: N805
-        return {
-            "path": f"mock_path_{n}",
-            "token": f"mock_token_{n}",
-            "group": "default",
-            "virtual-machines": 1,
-            "vm-cpu": 2,
-            "vm-memory": "7GiB",
-            "vm-disk": "10GiB",
-            "reconcile-interval": 10,
-            "test-mode": "",
-            "denylist": "",
-            "dockerhub-mirror": "",
-            "runner-storage": "juju-storage",
-            "experimental-use-aproxy": False,
+    config = factory.Dict(
+        {
+            DENYLIST_CONFIG_NAME: "",
+            DOCKERHUB_MIRROR_CONFIG_NAME: "",
+            GROUP_CONFIG_NAME: "default",
+            LABELS_CONFIG_NAME: "",
+            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: "",
+            PATH_CONFIG_NAME: factory.Sequence(lambda n: f"mock_path_{n}"),
+            RECONCILE_INTERVAL_CONFIG_NAME: 10,
+            RUNNER_STORAGE_CONFIG_NAME: "juju-storage",
+            TEST_MODE_CONFIG_NAME: "",
+            TOKEN_CONFIG_NAME: factory.Sequence(lambda n: f"mock_token_{n}"),
+            USE_APROXY_CONFIG_NAME: False,
+            VIRTUAL_MACHINES_CONFIG_NAME: 1,
+            VM_CPU_CONFIG_NAME: 2,
+            VM_MEMORY_CONFIG_NAME: "7GiB",
+            VM_DISK_CONFIG_NAME: "10GiB",
         }
+    )

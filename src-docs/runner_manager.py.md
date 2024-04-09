@@ -16,7 +16,14 @@ Runner Manager manages the runners on LXD and GitHub.
 ## <kbd>class</kbd> `RunnerManager`
 Manage a group of runners according to configuration. 
 
-<a href="../src/runner_manager.py#L56"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+
+**Attributes:**
+ 
+ - <b>`runner_bin_path`</b>:  The github runner app scripts path. 
+ - <b>`cron_path`</b>:  The path to runner build image cron job. 
+
+<a href="../src/runner_manager.py#L69"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -43,7 +50,7 @@ Construct RunnerManager object for creating and managing runners.
 
 ---
 
-<a href="../src/runner_manager.py#L743"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L788"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `build_runner_image`
 
@@ -59,11 +66,11 @@ Build container image in test mode, else virtual machine image.
 
 **Raises:**
  
- - <b>`LxdError`</b>:  Unable to build the LXD image. 
+ - <b>`SubprocessError`</b>:  Unable to build the LXD image. 
 
 ---
 
-<a href="../src/runner_manager.py#L108"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L121"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `check_runner_bin`
 
@@ -80,7 +87,7 @@ Check if runner binary exists.
 
 ---
 
-<a href="../src/runner_manager.py#L581"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L608"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `flush`
 
@@ -98,12 +105,18 @@ Remove existing runners.
 
 
 
+**Raises:**
+ 
+ - <b>`GithubClientError`</b>:  If there was an error getting remove-token to unregister runners                 from GitHub. 
+
+
+
 **Returns:**
  Number of runners removed. 
 
 ---
 
-<a href="../src/runner_manager.py#L209"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L222"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_github_info`
 
@@ -120,7 +133,7 @@ Get information on the runners from GitHub.
 
 ---
 
-<a href="../src/utilities.py#L116"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L129"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_latest_runner_bin_url`
 
@@ -140,12 +153,18 @@ The runner binary URL changes when a new version is available.
 
 
 
+**Raises:**
+ 
+ - <b>`RunnerBinaryError`</b>:  If an error occurred while fetching runner application info. 
+
+
+
 **Returns:**
  Information on the runner application. 
 
 ---
 
-<a href="../src/runner_manager.py#L476"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L526"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `reconcile`
 
@@ -169,7 +188,7 @@ Bring runners in line with target.
 
 ---
 
-<a href="../src/runner_manager.py#L753"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L802"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `schedule_build_runner_image`
 
@@ -181,7 +200,7 @@ Install cron job for building runner image.
 
 ---
 
-<a href="../src/utilities.py#L142"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L152"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `update_runner_bin`
 
@@ -198,5 +217,11 @@ Remove the existing runner binary to prevent it from being used. This is done to
 **Args:**
  
  - <b>`binary`</b>:  Information on the runner binary to download. 
+
+
+
+**Raises:**
+ 
+ - <b>`RunnerBinaryError`</b>:  If there was an error updating runner binary info. 
 
 

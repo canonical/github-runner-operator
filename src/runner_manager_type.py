@@ -46,6 +46,7 @@ class RunnerManagerClients:
         github: Used to query GitHub API.
         jinja: Used for templating.
         lxd: Used to interact with LXD API.
+        repo: Used to interact with repo-policy-compliance API.
     """
 
     github: GithubClient
@@ -60,24 +61,24 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     """Configuration of runner manager.
 
     Attributes:
+        are_metrics_enabled: Whether metrics for the runners should be collected.
+        charm_state: The state of the charm.
+        image: Name of the image for creating LXD instance.
+        lxd_storage_path: Path to be used as LXD storage.
         path: GitHub repository path in the format '<owner>/<repo>', or the
             GitHub organization name.
+        service_token: Token for accessing local service.
         token: GitHub personal access token to register runner to the
             repository or organization.
-        image: Name of the image for creating LXD instance.
-        service_token: Token for accessing local service.
-        lxd_storage_path: Path to be used as LXD storage.
-        proxy_config: Proxy configuration.
-        charm_state: The state of the charm.
         dockerhub_mirror: URL of dockerhub mirror to use.
     """
 
-    path: GithubPath
-    token: str
-    image: str
-    service_token: str
-    lxd_storage_path: Path
     charm_state: CharmState
+    image: str
+    lxd_storage_path: Path
+    path: GithubPath
+    service_token: str
+    token: str
     dockerhub_mirror: str | None = None
 
     @property

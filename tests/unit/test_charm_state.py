@@ -14,6 +14,7 @@ import charm_state
 from charm_state import (
     COS_AGENT_INTEGRATION_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
+    USE_APROXY_CONFIG_NAME,
     Arch,
     CharmConfigInvalidError,
     CharmState,
@@ -83,7 +84,7 @@ def test_aproxy_proxy_missing():
     assert: CharmConfigInvalidError is raised.
     """
     mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config["experimental-use-aproxy"] = "true"
+    mock_charm.config[USE_APROXY_CONFIG_NAME] = "true"
 
     with pytest.raises(CharmConfigInvalidError) as exc:
         CharmState.from_charm(mock_charm)
@@ -107,9 +108,9 @@ def test_proxy_invalid_format():
 
 def test_proxy_config_bool():
     """
-    arrange: Various combinations for ProxyConfig
-    act: Create ProxyConfig object
-    assert: Expected boolean value
+    arrange: Various combinations for ProxyConfig.
+    act: Create ProxyConfig object.
+    assert: Expected boolean value.
     """
     proxy_url = "http://proxy.example.com:8080"
 
@@ -306,7 +307,7 @@ def test_openstack_config_invalid_yaml():
 
     with pytest.raises(CharmConfigInvalidError) as exc:
         CharmState.from_charm(mock_charm)
-    assert "Invalid openstack-clouds-yaml config. Invalid yaml." in str(exc.value)
+    assert "Invalid experimental-openstack-clouds-yaml config. Invalid yaml." in str(exc.value)
 
 
 @pytest.mark.parametrize(
@@ -337,3 +338,54 @@ def test_openstack_config_invalid_format(clouds_yaml: Any, expected_err_msg: str
     with pytest.raises(CharmConfigInvalidError) as exc:
         CharmState.from_charm(mock_charm)
     assert expected_err_msg in str(exc)
+
+
+@pytest.mark.parametrize(
+    "label_str, falsy_labels",
+    [
+        pytest.param("$invalid", ("$invalid",), id="invalid label"),
+        pytest.param("$invalid, valid", ("$invalid",), id="invalid label with valid"),
+        pytest.param(
+            "$invalid, valid, *next", ("$invalid", "*next"), id="invalid labels with valid"
+        ),
+    ],
+)
+def test__parse_labels_invalid_labels(label_str: str, falsy_labels: tuple[str]):
+    """
+    arrange: given labels composed of non-alphanumeric or underscore.
+    act: when _parse_labels is called.
+    assert: ValueError with invalid labels are raised.
+    """
+    with pytest.raises(ValueError) as exc:
+        charm_state._parse_labels(labels=label_str)
+
+    assert all(label in str(exc) for label in falsy_labels)
+
+
+@pytest.mark.parametrize(
+    "label_str, expected_labels",
+    [
+        pytest.param("", tuple(), id="empty"),
+        pytest.param("a", ("a",), id="single label"),
+        pytest.param("a ", ("a",), id="single label with space"),
+        pytest.param("a,b,c", ("a", "b", "c"), id="comma separated labels"),
+        pytest.param(" a, b,   c", ("a", "b", "c"), id="comma separated labels with space"),
+        pytest.param("1234", ("1234",), id="numeric label"),
+        pytest.param("_", ("_",), id="underscore"),
+        pytest.param("-", ("-",), id="dash only"),
+        pytest.param("_test_", ("_test_",), id="alphabetical with underscore"),
+        pytest.param("_test1234_", ("_test1234_",), id="alphanumeric with underscore"),
+        pytest.param("x-large", ("x-large",), id="dash word"),
+        pytest.param("x-large, two-xlarge", ("x-large", "two-xlarge"), id="dash words"),
+        pytest.param(
+            "x-large_1, two-xlarge", ("x-large_1", "two-xlarge"), id="dash underscore words"
+        ),
+    ],
+)
+def test__parse_labels(label_str: str, expected_labels: tuple[str]):
+    """
+    arrange: given a comma separated label strings.
+    act: when _parse_labels is called.
+    assert: expected labels are returned.
+    """
+    assert charm_state._parse_labels(labels=label_str) == expected_labels

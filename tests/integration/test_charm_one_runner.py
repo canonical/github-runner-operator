@@ -6,10 +6,19 @@ from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio
+from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
 from charm import GithubRunnerCharm
+from charm_state import (
+    RUNNER_STORAGE_CONFIG_NAME,
+    TOKEN_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+    VM_CPU_CONFIG_NAME,
+    VM_DISK_CONFIG_NAME,
+    VM_MEMORY_CONFIG_NAME,
+)
 from tests.integration.helpers import (
     assert_resource_lxd_profile,
     ensure_charm_has_runner,
@@ -52,12 +61,12 @@ async def test_network_access(app: Application) -> None:
     names = await get_runner_names(unit)
     assert names
 
-    return_code, stdout = await run_in_unit(unit, "lxc network get lxdbr0 ipv4.address")
-    assert return_code == 0
+    return_code, stdout, stderr = await run_in_unit(unit, "lxc network get lxdbr0 ipv4.address")
+    assert return_code == 0, f"Failed to get network address {stdout} {stderr}"
     assert stdout is not None
     host_ip, _ = stdout.split("/", 1)
 
-    return_code, stdout = await run_in_lxd_instance(
+    return_code, stdout, _ = await run_in_lxd_instance(
         unit, names[0], f"curl http://{host_ip}:{port}"
     )
 
@@ -105,7 +114,9 @@ async def test_flush_runner_and_resource_config(app: Application) -> None:
     await assert_resource_lxd_profile(unit, configs)
 
     # 3.
-    await app.set_config({"vm-cpu": "1", "vm-memory": "3GiB", "vm-disk": "8GiB"})
+    await app.set_config(
+        {VM_CPU_CONFIG_NAME: "1", VM_MEMORY_CONFIG_NAME: "3GiB", VM_DISK_CONFIG_NAME: "8GiB"}
+    )
 
     # 4.
     action = await app.units[0].run_action("flush-runners")
@@ -155,14 +166,16 @@ async def test_token_config_changed(model: Model, app: Application, token_alt: s
     """
     unit = app.units[0]
 
-    await app.set_config({"token": token_alt})
+    await app.set_config({TOKEN_CONFIG_NAME: token_alt})
     await model.wait_for_idle(status=ACTIVE, timeout=30 * 60)
 
-    return_code, stdout = await run_in_unit(
+    return_code, stdout, stderr = await run_in_unit(
         unit, "cat /etc/systemd/system/repo-policy-compliance.service"
     )
 
-    assert return_code == 0
+    assert (
+        return_code == 0
+    ), f"Failed to get repo-policy-compliance unit file contents {stdout} {stderr}"
     assert stdout is not None
     assert f"GITHUB_TOKEN={token_alt}" in stdout
 
@@ -187,16 +200,18 @@ async def test_reconcile_runners_with_lxd_storage_pool_failure(
     unit = app.units[0]
 
     # 1.
-    await app.set_config({"virtual-machines": "0"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
 
     await reconcile(app=app, model=model)
     await wait_till_num_of_runners(unit, 0)
 
-    exit_code, _ = await run_in_unit(unit, f"rm -rf {GithubRunnerCharm.ram_pool_path}/*")
-    assert exit_code == 0
+    exit_code, stdout, stderr = await run_in_unit(
+        unit, f"rm -rf {GithubRunnerCharm.ram_pool_path}/*"
+    )
+    assert exit_code == 0, f"Failed to delete ram pool {stdout} {stderr}"
 
     # 2.
-    await app.set_config({"virtual-machines": "1"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
 
     await reconcile(app=app, model=model)
 
@@ -218,15 +233,62 @@ async def test_change_runner_storage(model: Model, app: Application) -> None:
     unit = app.units[0]
 
     # 1.
-    await app.set_config({"runner-storage": "juju-storage"})
+    await app.set_config({RUNNER_STORAGE_CONFIG_NAME: "juju-storage"})
     await model.wait_for_idle(status=BLOCKED, timeout=1 * 60)
     assert (
         "runner-storage config cannot be changed after deployment" in unit.workload_status_message
     )
 
     # 2.
-    await app.set_config({"runner-storage": "memory"})
+    await app.set_config({RUNNER_STORAGE_CONFIG_NAME: "memory"})
     await model.wait_for_idle(status=ACTIVE, timeout=1 * 60)
+
+
+async def test_runner_labels(
+    model: Model, app: Application, github_repository: Repository
+) -> None:
+    """
+    arrange: A working application with one runner.
+    act: Change the runner label.
+    assert: A runner with the testing label is found.
+    """
+    unit = app.units[0]
+
+    test_labels = ("label_test", "additional_label", app.name)
+    await app.set_config({"labels": f"{test_labels[0]}, {test_labels[1]}"})
+    await model.wait_for_idle()
+
+    await wait_till_num_of_runners(unit, num=1)
+
+    found = False
+    for runner in github_repository.get_self_hosted_runners():
+        runner_labels = tuple(label["name"] for label in runner.labels())
+        if all(test_label in runner_labels for test_label in test_labels):
+            found = True
+
+    assert found, "Runner with testing label not found."
+
+
+async def test_disabled_apt_daily_upgrades(model: Model, app: Application) -> None:
+    """
+    arrange: Given a github runner running on lxd image.
+    act: When the runner is spawned.
+    assert: No apt related background services are running.
+    """
+    await model.wait_for_idle()
+    unit = app.units[0]
+    await wait_till_num_of_runners(unit, num=1)
+    names = await get_runner_names(unit)
+    assert names, "LXD runners not ready"
+
+    ret_code, stdout, stderr = await run_in_lxd_instance(
+        unit, names[0], "sudo systemctl list-units --no-pager"
+    )
+    assert ret_code == 0, f"Failed to list systemd units {stdout} {stderr}"
+    assert stdout, "No units listed in stdout"
+
+    assert "apt-daily" not in stdout  # this also checks for apt-daily-upgrade service
+    assert "unattended-upgrades" not in stdout
 
 
 async def test_token_config_changed_insufficient_perms(
@@ -239,7 +301,7 @@ async def test_token_config_changed_insufficient_perms(
     """
     unit = app.units[0]
 
-    await app.set_config({"token": "invalid-token", "virtual-machines": "0"})
+    await app.set_config({TOKEN_CONFIG_NAME: "invalid-token", VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await model.wait_for_idle()
 
     await wait_till_num_of_runners(unit, num=0)

@@ -14,12 +14,28 @@ Represent HTTP-related proxy settings.
 
 
 
+**Attributes:**
+ 
+ - <b>`no_proxy`</b>:  The comma separated URLs to not go through proxy. 
+ - <b>`http`</b>:  HTTP proxy URL. 
+ - <b>`https`</b>:  HTTPS proxy URL. 
+ - <b>`aproxy_address`</b>:  Aproxy URL. 
+
+
+
 
 
 ---
 
 ## <kbd>class</kbd> `RunnerByHealth`
 Set of runners LXD instance by health state. 
+
+
+
+**Attributes:**
+ 
+ - <b>`healthy`</b>:  Runners that are correctly running runner script. 
+ - <b>`unhealthy`</b>:  Runners that are not running runner script. 
 
 
 
@@ -36,6 +52,7 @@ Configuration for runner.
  
  - <b>`app_name`</b>:  Application name of the charm. 
  - <b>`issue_metrics`</b>:  Whether to issue metrics. 
+ - <b>`labels`</b>:  Custom runner labels. 
  - <b>`lxd_storage_path`</b>:  Path to be used as LXD storage. 
  - <b>`name`</b>:  Name of the runner. 
  - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name. 
