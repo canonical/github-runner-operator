@@ -215,10 +215,10 @@ async def test_charm_upgrade(model: Model, app_no_runner: Application, charm_fil
         Returns:
             bool: True if the event is emitted, False otherwise.
         """
-        ret_code, stdout = await run_in_unit(
+        ret_code, stdout, stderr = await run_in_unit(
             unit=unit, command=f"cat /var/log/juju/unit-{unit_name_without_slash}.log"
         )
-        assert ret_code == 0, f"Failed to read the log file: {stdout}"
+        assert ret_code == 0, f"Failed to read the log file: {stderr}"
         return stdout is not None and "Emitting Juju event upgrade_charm." in stdout
 
     await wait_for(is_upgrade_charm_event_emitted, timeout=360, check_interval=60)
