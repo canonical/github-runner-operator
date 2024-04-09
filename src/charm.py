@@ -332,7 +332,7 @@ class GithubRunnerCharm(CharmBase):
         try:
             execute_command(["/usr/bin/systemctl", "is-active", "repo-policy-compliance"])
         except SubprocessError:
-            logger.exception("Found inactive repo-policy-compliance service")
+            logger.exception("Found inactive repo-policy-compliance service.")
             execute_command(["/usr/bin/systemctl", "restart", "repo-policy-compliance"])
             logger.info("Restart repo-policy-compliance service")
             raise
