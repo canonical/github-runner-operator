@@ -26,6 +26,7 @@ def test_get_crashed(log_dir_base_path: Path):
     """
     runner = MagicMock()
     runner.config.name = "test-runner"
+    runner.instance.status = "Running"
     runner.instance.files.pull_file = MagicMock()
 
     get_crashed(runner)
@@ -69,6 +70,7 @@ def test_get_crashed_lxd_error(log_dir_base_path: Path):
     """
     runner = MagicMock()
     runner.config.name = "test-runner"
+    runner.instance.status = "Running"
     runner.instance.files.pull_file = MagicMock(side_effect=LxdError("Cannot pull file"))
 
     with pytest.raises(RunnerLogsError) as exc_info:

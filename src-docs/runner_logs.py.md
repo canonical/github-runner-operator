@@ -38,7 +38,7 @@ Expects the runner to have an instance.
 
 ---
 
-<a href="../src/runner_logs.py#L51"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_logs.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `remove_outdated_crashed`
 
