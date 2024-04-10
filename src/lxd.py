@@ -575,16 +575,23 @@ class LxdImageManager:  # pylint: disable=too-few-public-methods
         if result.returncode != 0:
             raise LxdError(result.stdout.decode("utf-8"))
 
-    def exists(self, name: str) -> bool:
+    def exists(self, alias: str) -> bool:
         """Check if an image with the given name exists.
 
         Args:
-            name: Name of the image to check.
+            alias: Alias name of the image to check.
 
         Returns:
             Whether the image exists.
         """
-        return self._pylxd_client.images.exists(name)
+        # There is no direct method to check if an image exists by alias in pylxd, we therefore
+        # use the pylxd client to get the image by alias and catch the NotFound exception.
+        try:
+            self._pylxd_client.images.get_by_alias(alias)
+        except pylxd.exceptions.NotFound:
+            return False
+
+        return True
 
 
 # Disable pylint as the public methods of this class are split into instances and profiles.
