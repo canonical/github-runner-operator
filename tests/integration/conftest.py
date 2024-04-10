@@ -8,7 +8,7 @@ import secrets
 import zipfile
 from pathlib import Path
 from time import sleep
-from typing import Any, AsyncIterator, Iterator, Optional
+from typing import Any, AsyncGenerator, AsyncIterator, Generator, Iterator, Optional
 
 import openstack
 import openstack.connection
@@ -22,6 +22,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
+from openstack.compute.v2.server import Server
 from pytest_operator.plugin import OpsTest
 
 from charm_state import (
@@ -166,7 +167,7 @@ def openstack_clouds_yaml(pytestconfig: pytest.Config) -> Optional[str]:
 @pytest.fixture(scope="module", name="openstack_connection")
 def openstack_connection_fixture(
     openstack_clouds_yaml: Optional[str],
-) -> openstack.connection.Connection:
+) -> Generator[openstack.connection.Connection, None, None]:
     """The openstack connection instance."""
     assert openstack_clouds_yaml, "Openstack clouds yaml was not provided."
 
@@ -174,7 +175,12 @@ def openstack_connection_fixture(
     clouds_yaml_path = Path.cwd() / "clouds.yaml"
     clouds_yaml_path.write_text(data=openstack_clouds_yaml, encoding="utf-8")
     first_cloud = next(iter(openstack_clouds_yaml_yaml["clouds"].keys()))
-    return openstack.connect(first_cloud)
+    with openstack.connect(first_cloud) as conn:
+        yield conn
+
+        server: Server
+        for server in conn.list_servers():
+            conn.delete_server(server.name)
 
 
 @pytest.fixture(scope="module")
@@ -227,7 +233,7 @@ async def app_openstack_runner_fixture(
     https_proxy: str,
     no_proxy: str,
     openstack_clouds_yaml: str,
-) -> AsyncIterator[Application]:
+) -> AsyncGenerator[Application, None]:
     """Application launching VMs and no runners."""
     application = await deploy_github_runner_charm(
         model=model,
@@ -249,7 +255,9 @@ async def app_openstack_runner_fixture(
         config={OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml},
         wait_idle=False,
     )
-    return application
+    yield application
+
+    model.remove_application(application.name)
 
 
 @pytest_asyncio.fixture(scope="module")
