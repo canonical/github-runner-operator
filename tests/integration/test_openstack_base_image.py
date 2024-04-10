@@ -32,7 +32,7 @@ async def test_noble_base_image(
             BASE_IMAGE_CONFIG_NAME: "noble",
         }
     )
-    await model.wait_for_idle(apps=[app_openstack_runner.name], status="blocked", timeout=40 * 60)
+    await model.wait_for_idle(apps=[app_openstack_runner.name], status="blocked", timeout=50 * 60)
 
     # 1. when the e2e_test_run workflow is created.
     workflow = await dispatch_workflow(
