@@ -544,8 +544,8 @@ def test_has_runner_image(runner_manager: RunnerManager):
         3. runner image with correct name exists.
     act: Check if runner image exists.
     assert:
-        1 and 2. True is returned.
-        3. False is returned.
+        1 and 2. False is returned.
+        3. True is returned.
     """
     assert not runner_manager.has_runner_image()
 

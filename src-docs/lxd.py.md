@@ -17,7 +17,7 @@ The LxdClient class offers a low-level interface to isolate the underlying imple
 ## <kbd>class</kbd> `LxdClient`
 LXD client. 
 
-<a href="../src/lxd.py#L594"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L601"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -87,7 +87,7 @@ Import a LXD image.
 ### <kbd>function</kbd> `exists`
 
 ```python
-exists(name: 'str') → bool
+exists(alias: 'str') → bool
 ```
 
 Check if an image with the given name exists. 
@@ -96,7 +96,7 @@ Check if an image with the given name exists.
 
 **Args:**
  
- - <b>`name`</b>:  Name of the image to check. 
+ - <b>`alias`</b>:  Alias name of the image to check. 
 
 
 
