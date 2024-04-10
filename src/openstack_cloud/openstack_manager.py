@@ -722,7 +722,7 @@ class OpenstackRunnerManager:
                 network=self._config.network,
                 security_groups=[SECURITY_GROUP_NAME],
                 userdata=cloud_userdata,
-                timeout=180,
+                timeout=300,
                 wait=True,
             )
         except openstack.exceptions.ResourceTimeout as err:
