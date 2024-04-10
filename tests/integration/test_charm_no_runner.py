@@ -2,6 +2,8 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm with no runner."""
+import json
+from datetime import datetime, timezone
 
 import pytest
 from juju.application import Application
@@ -202,12 +204,15 @@ async def test_charm_upgrade(model: Model, app_no_runner: Application, charm_fil
     """
     arrange: A working application with no runners.
     act: Upgrade the charm.
-    assert: The upgrade_charm hook ran successfully.
+    assert: The upgrade_charm hook ran successfully and the image has not been rebuilt.
     """
+    start_time = datetime.now(tz=timezone.utc)
+
     await app_no_runner.refresh(path=charm_file)
 
     unit = app_no_runner.units[0]
     unit_name_without_slash = unit.name.replace("/", "-")
+    juju_unit_log_file = f"/var/log/juju/unit-{unit_name_without_slash}.log"
 
     async def is_upgrade_charm_event_emitted() -> bool:
         """Check if the upgrade_charm event is emitted.
@@ -216,10 +221,27 @@ async def test_charm_upgrade(model: Model, app_no_runner: Application, charm_fil
             bool: True if the event is emitted, False otherwise.
         """
         ret_code, stdout, stderr = await run_in_unit(
-            unit=unit, command=f"cat /var/log/juju/unit-{unit_name_without_slash}.log"
+            unit=unit, command=f"cat {juju_unit_log_file}"
         )
         assert ret_code == 0, f"Failed to read the log file: {stderr}"
         return stdout is not None and "Emitting Juju event upgrade_charm." in stdout
 
     await wait_for(is_upgrade_charm_event_emitted, timeout=360, check_interval=60)
     await model.wait_for_idle(status=ACTIVE)
+
+    ret_code, stdout, stderr = await run_in_unit(
+        unit=unit, command="/snap/bin/lxc image list --format json"
+    )
+    assert ret_code == 0, f"Failed to read the image list: {stderr}"
+    assert stdout is not None, f"Failed to read the image list: {stderr}"
+    images = json.loads(stdout)
+    jammy_image = next(
+        (image for image in images if "jammy" in {alias["name"] for alias in image["aliases"]}),
+        None,
+    )
+    assert jammy_image is not None, "Jammy image not found."
+    # len("2024-04-10T00:00:00") == 19
+    assert (
+        datetime.fromisoformat(jammy_image["created_at"][:19]).replace(tzinfo=timezone.utc)
+        <= start_time
+    ), f"Image has been rebuilt after the upgrade: {jammy_image['created_at'][:19]} > {start_time}"
