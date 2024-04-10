@@ -13,11 +13,7 @@ from juju.model import Model
 from openstack.compute.v2.server import Server
 
 from charm_state import BASE_IMAGE_CONFIG_NAME
-from tests.integration.helpers import (
-    DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
-    dispatch_workflow,
-    ensure_charm_has_runner,
-)
+from tests.integration.helpers import DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME, dispatch_workflow
 
 
 # 2024/03/19 - The firewall configuration on openstack will be implemented by follow up PR on
@@ -65,6 +61,7 @@ async def test_openstack_integration(
 async def test_noble_base_image(
     model: Model,
     app_openstack_runner: Application,
+    openstack_connection: openstack.connection.Connection,
     github_repository: Repository,
     test_github_branch: Branch,
 ) -> None:
@@ -78,7 +75,9 @@ async def test_noble_base_image(
             BASE_IMAGE_CONFIG_NAME: "noble",
         }
     )
-    await ensure_charm_has_runner(app_openstack_runner, model)
+    await model.wait_for_idle(apps=[app_openstack_runner.name], status="blocked", timeout=40 * 60)
+
+    # 1. when the e2e_test_run workflow is created.
     workflow = await dispatch_workflow(
         app=app_openstack_runner,
         branch=test_github_branch,
@@ -87,6 +86,13 @@ async def test_noble_base_image(
         workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
         dispatch_input={"runner-tag": app_openstack_runner.name},
     )
-
+    # 1. the workflow run completes successfully.
     workflow_run: WorkflowRun = workflow.get_runs()[0]
     assert workflow_run.status == "success"
+
+    # 2. when the servers are listed.
+    servers = openstack_connection.list_servers(detailed=True)
+    assert len(servers) == 1, f"Unexpected number of servers: {len(servers)}"
+    server: Server = servers[0]
+    # 2. a server with image name noble is created.
+    assert server.image.name == "noble"

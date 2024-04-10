@@ -38,8 +38,9 @@ from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
 
-IMAGE_PATH_TMPL = "jammy-server-cloudimg-{architecture}-compressed.img"
-IMAGE_NAME = "jammy"
+IMAGE_PATH_TMPL = "{base_image}-server-cloudimg-{architecture}-compressed.img"
+# Update the version when the image are modified.
+IMAGE_NAME_TMPL = "github-runner-{base_image}-v1"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 
 
@@ -263,12 +264,15 @@ class ImageDeleteError(Exception):
     """Represents an error while deleting existing openstack image."""
 
 
-def _put_image(cloud_config: dict[str, dict], image_arch: SupportedCloudImageArch) -> str:
+def _put_image(
+    cloud_config: dict[str, dict], image_arch: SupportedCloudImageArch, base_image: BaseImage
+) -> str:
     """Create or replace the image with existing name.
 
     Args:
         cloud_config: The cloud configuration to connect OpenStack with.
         image_arch: Ubuntu cloud image architecture.
+        base_image: The ubuntu base image to use.
 
     Raises:
         ImageDeleteError: If there was an error deleting the image.
@@ -280,14 +284,18 @@ def _put_image(cloud_config: dict[str, dict], image_arch: SupportedCloudImageArc
     try:
         with _create_connection(cloud_config) as conn:
             existing_image: openstack.image.v2.image.Image
-            for existing_image in conn.search_images(name_or_id=IMAGE_NAME):
+            for existing_image in conn.search_images(
+                name_or_id=IMAGE_NAME_TMPL.format(base_image=base_image)
+            ):
                 # images with same name (different ID) can be created and will error during server
                 # instantiation.
                 if not conn.delete_image(name_or_id=existing_image.id, wait=True):
                     raise ImageDeleteError("Failed to delete duplicate image on Openstack.")
             image: openstack.image.v2.image.Image = conn.create_image(
-                name=IMAGE_NAME,
-                filename=IMAGE_PATH_TMPL.format(architecture=image_arch),
+                name=IMAGE_NAME_TMPL.format(base_image=base_image.value),
+                filename=IMAGE_PATH_TMPL.format(
+                    architecture=image_arch, base_image=base_image.value
+                ),
                 wait=True,
             )
             return image.id
@@ -336,7 +344,9 @@ def build_image(
         raise OpenstackImageBuildError(f"Unsupported architecture {runner_arch}") from exc
 
     try:
-        return _put_image(cloud_config=cloud_config, image_arch=image_arch)
+        return _put_image(
+            cloud_config=cloud_config, image_arch=image_arch, base_image=config.base_image
+        )
     except (ImageDeleteError, OpenStackCloudException) as exc:
         raise OpenstackImageBuildError(f"Failed to upload image: {str(exc)}") from exc
 
