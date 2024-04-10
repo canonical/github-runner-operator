@@ -713,6 +713,8 @@ class OpenstackRunnerManager:
 
         self._ensure_security_group(conn)
         self._setup_runner_keypair(conn, instance_config.name)
+
+        logger.info("Creating runner %s", instance_config.name)
         try:
             instance = conn.create_server(
                 name=instance_config.name,
@@ -738,7 +740,9 @@ class OpenstackRunnerManager:
                 f"Timeout creating OpenStack runner {instance_config.name}"
             ) from err
 
+        logger.info("Waiting runner %s to come online", instance_config.name)
         self._wait_until_runner_process_running(conn, instance.name)
+        logger.info("Finished creating runner %s", instance_config.name)
 
     def get_github_runner_info(self) -> tuple[RunnerGithubInfo]:
         """Get information on GitHub for the runners.
@@ -916,6 +920,9 @@ class OpenstackRunnerManager:
 
         with _create_connection(self._cloud_config) as conn:
             runner_by_health = self._get_openstack_runner_status(conn)
+            logger.info("Found %s healthy runner and %s unhealthy runner", len(runner_by_health.healthy),len(runner_by_health.unhealthy))
+            logger.debug("Healthy runner: %s", runner_by_health.healthy)
+            logger.debug("Unhealthy runner: %s", runner_by_health.unhealthy)
 
             # Clean up offline (SHUTOFF) runners or unhealthy (no connection/cloud-init script)
             # runners.
@@ -925,7 +932,8 @@ class OpenstackRunnerManager:
             )
             # Clean up orphan keys, e.g., If openstack instance is removed externally the key
             # would not be deleted.
-            self._clean_up_keys(conn, runner_by_health.healthy)
+            # TODO: temp remove
+            # self._clean_up_keys(conn, runner_by_health.healthy)
 
             delta = quantity - len(runner_by_health.healthy)
 
