@@ -21,7 +21,7 @@ from tests.integration.helpers import (
 
 async def test_runner_base_image(
     model: Model,
-    app_no_runner: Application,
+    app_no_wait: Application,
     github_repository: Repository,
     test_github_branch: Branch,
 ) -> None:
@@ -30,26 +30,27 @@ async def test_runner_base_image(
     act: Dispatch a workflow.
     assert: A runner is created with noble OS base and the workflow job is successfully run.
     """
-    await app_no_runner.set_config(
+    await app_no_wait.set_config(
         {
             BASE_IMAGE_CONFIG_NAME: "noble",
         }
     )
-    await ensure_charm_has_runner(app_no_runner, model)
+    await model.wait_for_idle(apps=[app_no_wait.name], timeout=35 * 60)
+    await ensure_charm_has_runner(app_no_wait, model)
 
-    unit = app_no_runner.units[0]
+    unit = app_no_wait.units[0]
     runner_name = await get_runner_name(unit)
     code, stdout, stderr = await run_in_lxd_instance(unit, runner_name, "lsb_release -a")
     assert code == 0, f"Unable to get release name, {stdout} {stderr}"
     assert "noble" in str(stdout)
 
     workflow = await dispatch_workflow(
-        app=app_no_runner,
+        app=app_no_wait,
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
-        dispatch_input={"runner-tag": app_no_runner.name},
+        dispatch_input={"runner-tag": app_no_wait.name},
     )
 
     workflow_run: WorkflowRun = workflow.get_runs()[0]
