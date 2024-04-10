@@ -924,15 +924,15 @@ class OpenstackRunnerManager:
             logger.debug("Healthy runner: %s", runner_by_health.healthy)
             logger.debug("Unhealthy runner: %s", runner_by_health.unhealthy)
 
+            # TODO: temp remove
             # Clean up offline (SHUTOFF) runners or unhealthy (no connection/cloud-init script)
             # runners.
-            remove_token = self._github.get_runner_remove_token(path=self._config.path)
-            self._remove_runners(
-                conn=conn, instance_names=runner_by_health.unhealthy, remove_token=remove_token
-            )
+            # remove_token = self._github.get_runner_remove_token(path=self._config.path)
+            # self._remove_runners(
+            #     conn=conn, instance_names=runner_by_health.unhealthy, remove_token=remove_token
+            # )
             # Clean up orphan keys, e.g., If openstack instance is removed externally the key
             # would not be deleted.
-            # TODO: temp remove
             # self._clean_up_keys(conn, runner_by_health.healthy)
 
             delta = quantity - len(runner_by_health.healthy)
@@ -941,12 +941,13 @@ class OpenstackRunnerManager:
             if delta > 0:
                 self._create_runner(conn)
             elif delta < 0:
-                self._remove_runners(
-                    conn=conn,
-                    instance_names=runner_by_health.healthy,
-                    remove_token=remove_token,
-                    num_to_remove=abs(delta),
-                )
+                # self._remove_runners(
+                #     conn=conn,
+                #     instance_names=runner_by_health.healthy,
+                #     remove_token=remove_token,
+                #     num_to_remove=abs(delta),
+                # )
+                pass
             else:
                 logger.info("No changes to number of runners needed")
             return delta
