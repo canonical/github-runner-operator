@@ -218,7 +218,7 @@ def test_common_install_code(
         pytest.param("upgrade_charm", id="Upgrade"),
     ],
 )
-def test_install_code_does_not_rebuild_image(
+def test_common_install_code_does_not_rebuild_image(
     hook: str, harness: Harness, monkeypatch: pytest.MonkeyPatch
 ):
     """
