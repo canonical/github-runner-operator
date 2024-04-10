@@ -9,6 +9,7 @@ import hashlib
 import io
 import logging
 import secrets
+from pathlib import Path
 from typing import IO, Optional, Sequence, Union
 
 from errors import LxdError, RunnerError
@@ -39,6 +40,7 @@ class MockLxdClient:
         self.profiles = MockLxdProfileManager()
         self.networks = MockLxdNetworkManager()
         self.storage_pools = MockLxdStoragePoolManager()
+        self.images = MockLxdImageManager()
 
 
 class MockLxdInstanceManager:
@@ -304,6 +306,38 @@ class MockLxdStoragePool:
     def delete(self):
         """LXD storage pool fake delete method."""
         self.deleted = True
+
+
+class MockLxdImageManager:
+    """Mock the behavior of LXD images."""
+
+    def __init__(self, images: set[str] | None = None):
+        """Fake init implementation for LxdImageManager.
+
+        Args:
+            images: Set of images to initialize.
+        """
+        self.images: set[str] = images or set()
+
+    def create(self, name: str, _: Path) -> None:
+        """Import an LXD image into the fake set.
+
+        Args:
+            name: Alias for the image.
+            _: Path of the LXD image file.
+        """
+        self.images.add(name)
+
+    def exists(self, name: str) -> bool:
+        """Check if an image with the given name exists.
+
+        Args:
+            name: image name.
+
+        Returns:
+            Whether the image exists.
+        """
+        return name in self.images
 
 
 class MockErrorResponse:

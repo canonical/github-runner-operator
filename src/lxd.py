@@ -575,6 +575,17 @@ class LxdImageManager:  # pylint: disable=too-few-public-methods
         if result.returncode != 0:
             raise LxdError(result.stdout.decode("utf-8"))
 
+    def exists(self, name: str) -> bool:
+        """Check if an image with the given name exists.
+
+        Args:
+            name: Name of the image to check.
+
+        Returns:
+            Whether the image exists.
+        """
+        return self._pylxd_client.images.exists(name)
+
 
 # Disable pylint as the public methods of this class are split into instances and profiles.
 class LxdClient:  # pylint: disable=too-few-public-methods

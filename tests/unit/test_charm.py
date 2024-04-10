@@ -146,6 +146,7 @@ def setup_charm_harness(monkeypatch: pytest.MonkeyPatch, runner_bin_path: Path) 
     harness.begin()
     monkeypatch.setattr("runner_manager.RunnerManager.update_runner_bin", stub_update_runner_bin)
     monkeypatch.setattr("runner_manager.RunnerManager._runners_in_pre_job", lambda self: False)
+    monkeypatch.setattr("charm.EventTimer.ensure_event_timer", MagicMock())
     return harness
 
 
@@ -194,6 +195,9 @@ def test_common_install_code(
         "runner_manager.RunnerManager.schedule_build_runner_image",
         schedule_build_runner_image := MagicMock(),
     )
+    event_timer_mock = MagicMock(spec=EventTimer)
+    harness.charm._event_timer = event_timer_mock
+
     getattr(harness.charm.on, hook).emit()
     calls = [
         call(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"]),
@@ -204,6 +208,35 @@ def test_common_install_code(
     exec_command.assert_has_calls(calls, any_order=True)
     setup_logrotate.assert_called_once()
     schedule_build_runner_image.assert_called_once()
+    event_timer_mock.ensure_event_timer.assert_called_once()
+
+
+@pytest.mark.parametrize(
+    "hook",
+    [
+        pytest.param("install", id="Install"),
+        pytest.param("upgrade_charm", id="Upgrade"),
+    ],
+)
+def test_install_code_does_not_rebuild_image(
+    hook: str, harness: Harness, monkeypatch: pytest.MonkeyPatch
+):
+    """
+    arrange: Set up charm and runner manager to not have runner image.
+    act: Fire upgrade event.
+    assert: Image is not rebuilt.
+    """
+    monkeypatch.setattr(
+        "runner_manager.RunnerManager.build_runner_image",
+        build_runner_image := MagicMock(),
+    )
+    monkeypatch.setattr(
+        "runner_manager.RunnerManager.has_runner_image",
+        MagicMock(return_value=True),
+    )
+    getattr(harness.charm.on, hook).emit()
+
+    assert not build_runner_image.called
 
 
 def test_on_config_changed_failure(harness: Harness):

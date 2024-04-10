@@ -404,7 +404,7 @@ class GithubRunnerCharm(CharmBase):
             return True
         return False
 
-    def _common_install_code(self, state: CharmState) -> None:
+    def _common_install_code(self, state: CharmState) -> bool:
         """Installation code shared between install and upgrade hook.
 
         Args:
@@ -413,29 +413,10 @@ class GithubRunnerCharm(CharmBase):
         Raises:
             LogrotateSetupError: Failed to setup logrotate.
             SubprocessError: Failed to install dependencies.
+
+        Returns:
+            True if installation was successful, False otherwise.
         """
-        self.unit.status = MaintenanceStatus("Installing packages")
-        try:
-            # The `_start_services`, `_install_deps` includes retry.
-            self._install_deps()
-            self._start_services(state.charm_config.token, state.proxy_config)
-        except SubprocessError:
-            logger.error("Failed to install dependencies")
-            raise
-
-        try:
-            metrics.setup_logrotate()
-        except LogrotateSetupError:
-            logger.error("Failed to setup logrotate")
-            raise
-
-        self._refresh_firewall(state)
-
-    @catch_charm_errors
-    def _on_install(self, _: InstallEvent) -> None:
-        """Handle the installation of charm."""
-        state = self._setup_state()
-
         if state.charm_config.openstack_clouds_yaml:
             # Only build it in test mode since it may interfere with users systems.
             if self.config.get(TEST_MODE_CONFIG_NAME) == "insecure":
@@ -463,15 +444,32 @@ class GithubRunnerCharm(CharmBase):
                     ssh_debug_connections=state.ssh_debug_connections,
                 )
                 logger.info("OpenStack instance: %s", instance)
-            self._block_on_openstack_config(state)
-            return
+            return not self._block_on_openstack_config(state)
 
-        self._common_install_code(state)
+        self.unit.status = MaintenanceStatus("Installing packages")
+        try:
+            # The `_start_services`, `_install_deps` includes retry.
+            self._install_deps()
+            self._start_services(state.charm_config.token, state.proxy_config)
+        except SubprocessError:
+            logger.error("Failed to install dependencies")
+            raise
 
-        self.unit.status = MaintenanceStatus("Building runner image")
+        try:
+            metrics.setup_logrotate()
+        except LogrotateSetupError:
+            logger.error("Failed to setup logrotate")
+            raise
+
+        self._refresh_firewall(state)
+
         runner_manager = self._get_runner_manager(state)
-        runner_manager.build_runner_image()
+        if not runner_manager.has_runner_image():
+            self.unit.status = MaintenanceStatus("Building runner image")
+            runner_manager.build_runner_image()
         runner_manager.schedule_build_runner_image()
+
+        self._set_reconcile_timer()
 
         self.unit.status = MaintenanceStatus("Downloading runner binary")
         try:
@@ -487,9 +485,16 @@ class GithubRunnerCharm(CharmBase):
             # Failure to download runner binary is a transient error.
             # The charm automatically update runner binary on a schedule.
             self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
-            return
+            return False
 
         self.unit.status = ActiveStatus()
+        return True
+
+    @catch_charm_errors
+    def _on_install(self, _: InstallEvent) -> None:
+        """Handle the installation of charm."""
+        state = self._setup_state()
+        self._common_install_code(state)
 
     @catch_charm_errors
     def _on_start(self, _: StartEvent) -> None:
@@ -562,15 +567,11 @@ class GithubRunnerCharm(CharmBase):
         """Handle the update of charm."""
         state = self._setup_state()
 
-        if self._block_on_openstack_config(state):
+        logger.info("Reinstalling dependencies...")
+        if not self._common_install_code(state):
             return
 
-        logger.info("Reinstalling dependencies...")
-        self._common_install_code(state)
-
         runner_manager = self._get_runner_manager(state)
-        runner_manager.schedule_build_runner_image()
-
         logger.info("Flushing the runners...")
         runner_manager.flush(FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
         self._reconcile_runners(
