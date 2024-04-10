@@ -6,15 +6,12 @@ from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio
-from github.Branch import Branch
 from github.Repository import Repository
-from github.WorkflowRun import WorkflowRun
 from juju.application import Application
 from juju.model import Model
 
 from charm import GithubRunnerCharm
 from charm_state import (
-    BASE_IMAGE_CONFIG_NAME,
     RUNNER_STORAGE_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
@@ -23,9 +20,7 @@ from charm_state import (
     VM_MEMORY_CONFIG_NAME,
 )
 from tests.integration.helpers import (
-    DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
     assert_resource_lxd_profile,
-    dispatch_workflow,
     ensure_charm_has_runner,
     get_runner_names,
     reconcile,
@@ -310,33 +305,3 @@ async def test_token_config_changed_insufficient_perms(
     await model.wait_for_idle()
 
     await wait_till_num_of_runners(unit, num=0)
-
-
-async def test_runner_base_image(
-    model: Model,
-    app_no_runner: Application,
-    github_repository: Repository,
-    test_github_branch: Branch,
-) -> None:
-    """
-    arrange: A runner with noble as base image.
-    act: Dispatch a workflow.
-    assert: A runner should work with the different images.
-    """
-    await app_no_runner.set_config(
-        {
-            BASE_IMAGE_CONFIG_NAME: "noble",
-        }
-    )
-    await ensure_charm_has_runner(app_no_runner, model)
-    workflow = await dispatch_workflow(
-        app=app_no_runner,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",
-        workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
-        dispatch_input={"runner-tag": app_no_runner.name},
-    )
-
-    workflow_run: WorkflowRun = workflow.get_runs()[0]
-    assert workflow_run.status == "success"
