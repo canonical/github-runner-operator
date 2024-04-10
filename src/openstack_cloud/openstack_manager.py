@@ -724,12 +724,17 @@ class OpenstackRunnerManager:
                 network=self._config.network,
                 security_groups=[SECURITY_GROUP_NAME],
                 userdata=cloud_userdata,
-                timeout=300,
+                auto_ip=False,
+                timeout=120,
                 wait=True,
             )
         except openstack.exceptions.ResourceTimeout as err:
             logger.exception("Timeout creating OpenStack runner %s", instance_config.name)
             try:
+                logger.info(
+                    "Attempting to remove OpenStack runner %s that timeout on creation",
+                    instance_config.name,
+                )
                 conn.delete_server(name_or_id=instance_config.name, wait=True)
             except openstack.exceptions.SDKException:
                 logger.critical(
@@ -791,9 +796,6 @@ class OpenstackRunnerManager:
         Returns:
             Runner status grouped by health.
         """
-        # TODO: REMOVE
-        logger.debug("LIST SERVER: %s", conn.list_servers())
-
         healthy_runner = []
         unhealthy_runner = []
         openstack_instances = [
@@ -867,6 +869,8 @@ class OpenstackRunnerManager:
         for instance_name in instance_names:
             if num_to_remove < 1:
                 break
+            logger.info("Attempting to remove OpenStack runner %s", instance_name)
+
             server: Server | None = conn.get_server(name_or_id=instance_name)
             if not server:
                 continue
