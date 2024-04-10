@@ -629,6 +629,7 @@ class GithubRunnerCharm(CharmBase):
         if state.instance_type == InstanceType.OPENSTACK:
             openstack_runner_manager = self._get_openstack_runner_manager(state)
             openstack_runner_manager.reconcile(state.runner_config.virtual_machines)
+            # TODO: Flush on token changes.
             self.unit.status = ActiveStatus()
             return
 
