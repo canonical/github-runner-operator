@@ -807,7 +807,7 @@ class OpenstackRunnerManager:
         logger.debug("Found openstack instances: %s", openstack_instances)
 
         for instance in openstack_instances:
-            server: Server | None = conn.get_server(instance.instance_name)
+            server: Server | None = conn.get_server(instance.name)
             if not server:
                 continue
             # SHUTOFF runners are runners that have completed executing jobs.
