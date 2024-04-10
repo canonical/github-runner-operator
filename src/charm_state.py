@@ -851,7 +851,7 @@ class CharmState:
     @classmethod
     def _store_state(cls, state: "CharmState") -> None:
         """Store the state of the charm to disk.
-        
+
         Args:
             state: The state of the charm.
         """

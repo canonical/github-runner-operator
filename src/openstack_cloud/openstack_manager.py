@@ -546,6 +546,9 @@ class OpenstackRunnerManager:
 
         Args:
             name: The name of the runner.
+
+        Returns:
+            Path to reserved for the key file of the runner.
         """
         return _SSH_KEY_PATH / f"runner-{name}.key"
 
@@ -620,6 +623,9 @@ class OpenstackRunnerManager:
 
         Args:
             instance: The openstack compute instance to check connections.
+
+        Returns:
+            Whether the runner application is running.
         """
         for ssh_conn in self._get_ssh_connections(instance=instance):
             instance_name = instance.instance_name
@@ -657,6 +663,9 @@ class OpenstackRunnerManager:
         Args:
             conn: The openstack connection instance.
             instance_name: The name of the instance to wait on.
+
+        Raises:
+            RunnerStartError: Unable perform health check of the runner application.
         """
         try:
             server: Server | None = conn.get_server(instance_name)
@@ -681,6 +690,9 @@ class OpenstackRunnerManager:
 
         Args:
             conn: The connection object to access OpenStack cloud.
+        
+        Raises:
+            RunnerCreateError: Unable to create the OpenStack runner.
         """
         environment = jinja2.Environment(
             loader=jinja2.FileSystemLoader("templates"), autoescape=True
@@ -803,6 +815,9 @@ class OpenstackRunnerManager:
         Args:
             instance: The Openstack server instance.
             remove_token: The GitHub instance removal token.
+
+        Raises:
+            GithubRunnerRemoveError: Unable to remove runner from GitHub.
         """
         if not remove_token:
             return
@@ -860,8 +875,8 @@ class OpenstackRunnerManager:
                 logger.error("Something wrong deleting the server %s, %s", instance_name, str(exc))
                 continue
 
-            # Attempt to delete the keys. This is place at the end of deletion, so we can access the instances that
-            # failed to delete on previous tries.
+            # Attempt to delete the keys. This is place at the end of deletion, so we can access
+            # the instances that failed to delete on previous tries.
             self._get_key_path(instance_name).unlink(missing_ok=True)
             num_to_remove -= 1
 
@@ -908,7 +923,8 @@ class OpenstackRunnerManager:
             self._remove_runners(
                 conn=conn, instance_names=runner_by_health.unhealthy, remove_token=remove_token
             )
-            # Clean up orphan keys, e.g., If openstack instance is removed externally the key would not be deleted.
+            # Clean up orphan keys, e.g., If openstack instance is removed externally the key
+            # would not be deleted.
             self._clean_up_keys(conn, runner_by_health.healthy)
 
             delta = quantity - len(runner_by_health.healthy)
@@ -928,7 +944,11 @@ class OpenstackRunnerManager:
             return delta
 
     def flush(self) -> int:
-        """Flush Openstack servers."""
+        """Flush Openstack servers.
+
+        Returns:
+            The number of runners flushed.
+        """
         with _create_connection(self._cloud_config) as conn:
             runner_by_health = self._get_openstack_runner_status(conn)
             remove_token = self._github.get_runner_remove_token(path=self._config.path)
