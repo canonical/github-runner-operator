@@ -164,7 +164,7 @@ def openstack_clouds_yaml(pytestconfig: pytest.Config) -> Optional[str]:
     return Path(clouds_yaml).read_text(encoding="utf-8") if clouds_yaml else None
 
 
-@pytest.fixture(scope="module", name="openstack_connection")
+@pytest.fixture(scope="function", name="openstack_connection")
 def openstack_connection_fixture(
     openstack_clouds_yaml: Optional[str],
 ) -> Generator[openstack.connection.Connection, None, None]:
