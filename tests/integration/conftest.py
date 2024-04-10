@@ -267,6 +267,7 @@ async def app_openstack_runner(
         },
         config={
             OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml,
+            # this is set by microstack sunbeam, see scripts/setup-microstack.sh
             OPENSTACK_NETWORK_CONFIG_NAME: "demo-network",
             OPENSTACK_FLAVOR_CONFIG_NAME: openstack_flavor,
         },
