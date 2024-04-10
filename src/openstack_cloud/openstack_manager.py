@@ -690,7 +690,7 @@ class OpenstackRunnerManager:
 
         Args:
             conn: The connection object to access OpenStack cloud.
-        
+
         Raises:
             RunnerCreateError: Unable to create the OpenStack runner.
         """
@@ -783,7 +783,7 @@ class OpenstackRunnerManager:
             )
 
     def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
-        """Get status on OpenStack of each runne=r.
+        """Get status on OpenStack of each runner.
 
         Args:
             conn: The connection object to access OpenStack cloud.
@@ -791,6 +791,9 @@ class OpenstackRunnerManager:
         Returns:
             Runner status grouped by health.
         """
+        # TODO: REMOVE
+        logger.debug("LIST SERVER: %s", conn.list_servers())
+
         healthy_runner = []
         unhealthy_runner = []
         openstack_instances = [
@@ -798,6 +801,8 @@ class OpenstackRunnerManager:
             for instance in cast(list[Server], conn.list_servers())
             if instance.name.startswith(f"{self.instance_name}-")
         ]
+
+        logger.debug("Found openstack instances: %s", openstack_instances)
 
         for instance in openstack_instances:
             server: Server | None = conn.get_server(instance.instance_name)
@@ -916,24 +921,30 @@ class OpenstackRunnerManager:
         """
         github_info = self.get_github_runner_info()
         online_runners = [runner for runner in github_info if runner.online]
+        offline_runners = [runner for runner in github_info if not runner.online]
         logger.info("Found %s existing openstack runners", len(online_runners))
+        logger.info("Found %s existing offline openstack runners", len(offline_runners))
 
         with _create_connection(self._cloud_config) as conn:
             runner_by_health = self._get_openstack_runner_status(conn)
-            logger.info("Found %s healthy runner and %s unhealthy runner", len(runner_by_health.healthy),len(runner_by_health.unhealthy))
+            logger.info(
+                "Found %s healthy runner and %s unhealthy runner",
+                len(runner_by_health.healthy),
+                len(runner_by_health.unhealthy),
+            )
             logger.debug("Healthy runner: %s", runner_by_health.healthy)
             logger.debug("Unhealthy runner: %s", runner_by_health.unhealthy)
 
-            # TODO: temp remove
             # Clean up offline (SHUTOFF) runners or unhealthy (no connection/cloud-init script)
             # runners.
-            # remove_token = self._github.get_runner_remove_token(path=self._config.path)
-            # self._remove_runners(
-            #     conn=conn, instance_names=runner_by_health.unhealthy, remove_token=remove_token
-            # )
+            remove_token = self._github.get_runner_remove_token(path=self._config.path)
+            instance_to_remove = (*runner_by_health.unhealthy, *offline_runners)
+            self._remove_runners(
+                conn=conn, instance_names=instance_to_remove, remove_token=remove_token
+            )
             # Clean up orphan keys, e.g., If openstack instance is removed externally the key
             # would not be deleted.
-            # self._clean_up_keys(conn, runner_by_health.healthy)
+            self._clean_up_keys(conn, runner_by_health.healthy)
 
             delta = quantity - len(runner_by_health.healthy)
 
@@ -941,12 +952,12 @@ class OpenstackRunnerManager:
             if delta > 0:
                 self._create_runner(conn)
             elif delta < 0:
-                # self._remove_runners(
-                #     conn=conn,
-                #     instance_names=runner_by_health.healthy,
-                #     remove_token=remove_token,
-                #     num_to_remove=abs(delta),
-                # )
+                self._remove_runners(
+                    conn=conn,
+                    instance_names=runner_by_health.healthy,
+                    remove_token=remove_token,
+                    num_to_remove=abs(delta),
+                )
                 pass
             else:
                 logger.info("No changes to number of runners needed")
