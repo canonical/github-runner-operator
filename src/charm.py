@@ -432,31 +432,17 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
-            if self.config.get(TEST_MODE_CONFIG_NAME) == "insecure":
-                self.unit.status = MaintenanceStatus("Building Openstack image")
-                github = GithubClient(token=state.charm_config.token)
-                image = openstack_manager.build_image(
-                    arch=state.arch,
-                    cloud_config=state.charm_config.openstack_clouds_yaml,
-                    github_client=github,
-                    path=state.charm_config.path,
-                    proxies=state.proxy_config,
-                )
-                instance_config = openstack_manager.create_instance_config(
-                    unit_name=self.unit.name,
-                    openstack_image=image,
-                    path=state.charm_config.path,
-                    github_client=github,
-                )
-                self.unit.status = MaintenanceStatus("Creating Openstack test instance")
-                instance = openstack_manager.create_instance(
-                    cloud_config=state.charm_config.openstack_clouds_yaml,
-                    instance_config=instance_config,
-                    proxies=state.proxy_config,
-                    dockerhub_mirror=state.charm_config.dockerhub_mirror,
-                    ssh_debug_connections=state.ssh_debug_connections,
-                )
-                logger.info("OpenStack instance: %s", instance)
+            self.unit.status = MaintenanceStatus("Building Openstack image")
+            github = GithubClient(token=state.charm_config.token)
+            openstack_manager.build_image(
+                arch=state.arch,
+                cloud_config=state.charm_config.openstack_clouds_yaml,
+                github_client=github,
+                path=state.charm_config.path,
+                proxies=state.proxy_config,
+            )
+            # WIP: Add scheduled building of image during refactor.
+            self.unit.status = ActiveStatus()
             return
 
         self.unit.status = MaintenanceStatus("Installing packages")
