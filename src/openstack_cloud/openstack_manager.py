@@ -465,6 +465,7 @@ def create_instance(
                 name=instance_config.name,
                 image=instance_config.openstack_image,
                 flavor="m1.small",
+                network="demo-network",
                 userdata=cloud_userdata,
                 wait=True,
             )
