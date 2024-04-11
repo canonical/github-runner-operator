@@ -807,6 +807,17 @@ class OpenstackRunnerManager:
                     f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}"
                 )
                 if not result.ok:
+                    logger.warning(
+                        (
+                            "Unable to run removal script on instance %s, "
+                            "exit code: %s, stdout: %s, stderr: %s"
+                        ),
+                        instance.instance_name,
+                        ssh_conn.host,
+                        result.return_code,
+                        result.stdout,
+                        result.stderr,
+                    )
                     continue
                 return
             except NoValidConnectionsError:
