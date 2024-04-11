@@ -206,6 +206,7 @@ class InstanceConfig:
         registration_token: Token for registering the runner on GitHub.
         github_path: The GitHub repo/org path
         openstack_image: The Openstack image to use to boot the instance with.
+        base_image: The ubuntu image to use as image build base.
     """
 
     name: str
@@ -213,6 +214,7 @@ class InstanceConfig:
     registration_token: str
     github_path: GithubPath
     openstack_image: openstack.image.v2.image.Image
+    base_image: BaseImage
 
 
 SupportedCloudImageArch = Literal["amd64", "arm64"]
@@ -356,6 +358,7 @@ def create_instance_config(
     openstack_image: openstack.image.v2.image.Image,
     path: GithubPath,
     github_client: GithubClient,
+    base_image: BaseImage,
 ) -> InstanceConfig:
     """Create an instance config from charm data.
 
@@ -373,10 +376,11 @@ def create_instance_config(
     registration_token = github_client.get_runner_registration_token(path=path)
     return InstanceConfig(
         name=f"{app_name}-{unit_num}-{suffix}",
-        labels=(app_name, "jammy"),
+        labels=(app_name, base_image.value),
         registration_token=registration_token,
         github_path=path,
         openstack_image=openstack_image,
+        base_image=base_image,
     )
 
 

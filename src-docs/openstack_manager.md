@@ -13,7 +13,7 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L307"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L309"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
@@ -51,7 +51,7 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L354"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L356"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
@@ -60,7 +60,8 @@ create_instance_config(
     unit_name: str,
     openstack_image: Image,
     path: GithubOrg | GithubRepo,
-    github_client: GithubClient
+    github_client: GithubClient,
+    base_image: BaseImage
 ) → InstanceConfig
 ```
 
@@ -83,7 +84,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/utilities.py#L430"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L434"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
@@ -149,6 +150,7 @@ The configuration values for creating a single runner instance.
  - <b>`registration_token`</b>:  Token for registering the runner on GitHub. 
  - <b>`github_path`</b>:  The GitHub repo/org path 
  - <b>`openstack_image`</b>:  The Openstack image to use to boot the instance with. 
+ - <b>`base_image`</b>:  The ubuntu image to use as image build base. 
 
 <a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
@@ -160,7 +162,8 @@ __init__(
     labels: Iterable[str],
     registration_token: str,
     github_path: GithubOrg | GithubRepo,
-    openstack_image: Image
+    openstack_image: Image,
+    base_image: BaseImage
 ) → None
 ```
 
@@ -174,7 +177,7 @@ __init__(
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L248"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L250"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `BuildImageConfig`
 The configuration values for building openstack image. 
@@ -209,7 +212,7 @@ __init__(
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L263"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L265"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `ImageDeleteError`
 Represents an error while deleting existing openstack image. 

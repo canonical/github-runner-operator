@@ -429,6 +429,7 @@ class GithubRunnerCharm(CharmBase):
                     openstack_image=image,
                     path=state.charm_config.path,
                     github_client=github,
+                    base_image=state.runner_config.base_image,
                 )
                 self.unit.status = MaintenanceStatus("Creating Openstack test instance")
                 instance = openstack_manager.create_instance(
