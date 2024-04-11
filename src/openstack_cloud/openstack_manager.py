@@ -367,6 +367,7 @@ def create_instance_config(
         openstack_image: The openstack image object to create the instance with.
         path: Github organisation or repository path.
         github_client: The Github client to interact with Github API.
+        base_image: The ubuntu base image to use.
 
     Returns:
         Instance configuration created.

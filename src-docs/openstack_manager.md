@@ -75,6 +75,7 @@ Create an instance config from charm data.
  - <b>`openstack_image`</b>:  The openstack image object to create the instance with. 
  - <b>`path`</b>:  Github organisation or repository path. 
  - <b>`github_client`</b>:  The Github client to interact with Github API. 
+ - <b>`base_image`</b>:  The ubuntu base image to use. 
 
 
 
@@ -84,7 +85,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/utilities.py#L434"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L435"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance`
 
