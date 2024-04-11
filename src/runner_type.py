@@ -13,7 +13,7 @@ from charm_state import GithubPath, SSHDebugConnection
 
 @dataclass
 class RunnerByHealth:
-    """Set of runners LXD instance by health state.
+    """Set of runners instance by health state.
 
     Attributes:
         healthy: Runners that are correctly running runner script.

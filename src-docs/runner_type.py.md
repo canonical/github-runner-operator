@@ -28,7 +28,7 @@ Represent HTTP-related proxy settings.
 ---
 
 ## <kbd>class</kbd> `RunnerByHealth`
-Set of runners LXD instance by health state. 
+Set of runners instance by health state. 
 
 
 
