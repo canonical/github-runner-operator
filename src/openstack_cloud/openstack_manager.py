@@ -24,6 +24,7 @@ from paramiko.ssh_exception import NoValidConnectionsError
 
 from charm_state import Arch, ProxyConfig, SSHDebugConnection, UnsupportedArchitectureError
 from errors import (
+    GithubClientError,
     OpenStackError,
     OpenstackImageBuildError,
     OpenstackInstanceLaunchError,
@@ -690,7 +691,7 @@ class OpenstackRunnerManager:
 
         Args:
             conn: The connection object to access OpenStack cloud.
-        
+
         Raises:
             RunnerCreateError: Unable to create the OpenStack runner.
         """
@@ -713,6 +714,8 @@ class OpenstackRunnerManager:
 
         self._ensure_security_group(conn)
         self._setup_runner_keypair(conn, instance_config.name)
+
+        logger.info("Creating runner %s", instance_config.name)
         try:
             instance = conn.create_server(
                 name=instance_config.name,
@@ -722,12 +725,17 @@ class OpenstackRunnerManager:
                 network=self._config.network,
                 security_groups=[SECURITY_GROUP_NAME],
                 userdata=cloud_userdata,
-                timeout=300,
+                auto_ip=False,
+                timeout=120,
                 wait=True,
             )
         except openstack.exceptions.ResourceTimeout as err:
             logger.exception("Timeout creating OpenStack runner %s", instance_config.name)
             try:
+                logger.info(
+                    "Attempting to remove OpenStack runner %s that timeout on creation",
+                    instance_config.name,
+                )
                 conn.delete_server(name_or_id=instance_config.name, wait=True)
             except openstack.exceptions.SDKException:
                 logger.critical(
@@ -738,7 +746,9 @@ class OpenstackRunnerManager:
                 f"Timeout creating OpenStack runner {instance_config.name}"
             ) from err
 
+        logger.info("Waiting runner %s to come online", instance_config.name)
         self._wait_until_runner_process_running(conn, instance.name)
+        logger.info("Finished creating runner %s", instance_config.name)
 
     def get_github_runner_info(self) -> tuple[RunnerGithubInfo]:
         """Get information on GitHub for the runners.
@@ -779,7 +789,7 @@ class OpenstackRunnerManager:
             )
 
     def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
-        """Get status on OpenStack of each runne=r.
+        """Get status on OpenStack of each runner.
 
         Args:
             conn: The connection object to access OpenStack cloud.
@@ -795,8 +805,10 @@ class OpenstackRunnerManager:
             if instance.name.startswith(f"{self.instance_name}-")
         ]
 
+        logger.debug("Found openstack instances: %s", openstack_instances)
+
         for instance in openstack_instances:
-            server: Server | None = conn.get_server(instance.instance_name)
+            server: Server | None = conn.get_server(instance.name)
             if not server:
                 continue
             # SHUTOFF runners are runners that have completed executing jobs.
@@ -808,33 +820,6 @@ class OpenstackRunnerManager:
                 healthy_runner.append(instance.name)
 
         return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
-
-    def _remove_from_github(self, instance: Server, remove_token: str | None) -> None:
-        """Run Github runner removal script.
-
-        Args:
-            instance: The Openstack server instance.
-            remove_token: The GitHub instance removal token.
-
-        Raises:
-            GithubRunnerRemoveError: Unable to remove runner from GitHub.
-        """
-        if not remove_token:
-            return
-        for ssh_conn in self._get_ssh_connections(instance=instance):
-            try:
-                result: Result = ssh_conn.run(
-                    f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}"
-                )
-                if not result.ok:
-                    continue
-                return
-            except NoValidConnectionsError:
-                logger.info(
-                    "Unable to SSH into %s with address %s", instance.instance_name, ssh_conn.host
-                )
-                continue
-        raise GithubRunnerRemoveError(f"Failed to remove runner {instance.name} from Github.")
 
     def _remove_runners(
         self,
@@ -855,17 +840,22 @@ class OpenstackRunnerManager:
         """
         if num_to_remove is None:
             num_to_remove = float("inf")
+        
+        name_to_github_id = {runner["name"]: runner["id"]  for runner in self._github.get_runner_github_info(self._config.path)}
+        
         for instance_name in instance_names:
             if num_to_remove < 1:
                 break
+            logger.info("Attempting to remove OpenStack runner %s", instance_name)
+
+            try:
+                self._github.delete_runner(self._config.path, name_to_github_id[instance_name])
+            except GithubClientError as exc:
+                logger.warning("Failed to remove runner from Github %s, %s", instance_name, exc)
+
             server: Server | None = conn.get_server(name_or_id=instance_name)
             if not server:
                 continue
-            try:
-                self._remove_from_github(instance=server, remove_token=remove_token)
-            except GithubRunnerRemoveError as exc:
-                logger.warning("Failed to remove runner from Github %s, %s", instance_name, exc)
-
             try:
                 if not conn.delete_server(name_or_id=instance_name, wait=True, delete_ips=True):
                     logger.warning("Server does not exist %s", instance_name)
@@ -887,6 +877,7 @@ class OpenstackRunnerManager:
             conn: The Openstack connection instance.
             exclude_instances: The keys of these instance will not be deleted.
         """
+        logger.info("Cleaning up SSH keys")
         exclude_filename = set(self._get_key_path(instance) for instance in exclude_instances)
 
         for path in _SSH_KEY_PATH.iterdir():
@@ -912,16 +903,26 @@ class OpenstackRunnerManager:
         """
         github_info = self.get_github_runner_info()
         online_runners = [runner for runner in github_info if runner.online]
+        offline_runners = [runner for runner in github_info if not runner.online]
         logger.info("Found %s existing openstack runners", len(online_runners))
+        logger.info("Found %s existing offline openstack runners", len(offline_runners))
 
         with _create_connection(self._cloud_config) as conn:
             runner_by_health = self._get_openstack_runner_status(conn)
+            logger.info(
+                "Found %s healthy runner and %s unhealthy runner",
+                len(runner_by_health.healthy),
+                len(runner_by_health.unhealthy),
+            )
+            logger.debug("Healthy runner: %s", runner_by_health.healthy)
+            logger.debug("Unhealthy runner: %s", runner_by_health.unhealthy)
 
             # Clean up offline (SHUTOFF) runners or unhealthy (no connection/cloud-init script)
             # runners.
             remove_token = self._github.get_runner_remove_token(path=self._config.path)
+            instance_to_remove = (*runner_by_health.unhealthy, *offline_runners)
             self._remove_runners(
-                conn=conn, instance_names=runner_by_health.unhealthy, remove_token=remove_token
+                conn=conn, instance_names=instance_to_remove, remove_token=remove_token
             )
             # Clean up orphan keys, e.g., If openstack instance is removed externally the key
             # would not be deleted.
@@ -931,14 +932,17 @@ class OpenstackRunnerManager:
 
             # Spawn new runners
             if delta > 0:
+                logger.info("Creating %s OpenStack runners", delta)
                 self._create_runner(conn)
             elif delta < 0:
+                logger.info("Removing %s OpenStack runners", delta)
                 self._remove_runners(
                     conn=conn,
                     instance_names=runner_by_health.healthy,
                     remove_token=remove_token,
                     num_to_remove=abs(delta),
                 )
+                pass
             else:
                 logger.info("No changes to number of runners needed")
             return delta
@@ -949,6 +953,7 @@ class OpenstackRunnerManager:
         Returns:
             The number of runners flushed.
         """
+        logger.info("Flushing OpenStack all runners")
         with _create_connection(self._cloud_config) as conn:
             runner_by_health = self._get_openstack_runner_status(conn)
             remove_token = self._github.get_runner_remove_token(path=self._config.path)
