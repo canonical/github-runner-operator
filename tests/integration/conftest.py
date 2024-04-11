@@ -8,7 +8,7 @@ import secrets
 import zipfile
 from pathlib import Path
 from time import sleep
-from typing import Any, AsyncIterator, Iterator, Optional
+from typing import Any, AsyncIterator, Generator, Iterator, Optional
 
 import openstack
 import openstack.connection
@@ -169,7 +169,7 @@ def openstack_clouds_yaml(pytestconfig: pytest.Config) -> Optional[str]:
 @pytest.fixture(scope="module", name="openstack_connection")
 def openstack_connection_fixture(
     openstack_clouds_yaml: Optional[str],
-) -> openstack.connection.Connection:
+) -> Generator[openstack.connection.Connection, None, None]:
     """The openstack connection instance."""
     assert openstack_clouds_yaml, "Openstack clouds yaml was not provided."
 
@@ -177,7 +177,8 @@ def openstack_connection_fixture(
     clouds_yaml_path = Path.cwd() / "clouds.yaml"
     clouds_yaml_path.write_text(data=openstack_clouds_yaml, encoding="utf-8")
     first_cloud = next(iter(openstack_clouds_yaml_yaml["clouds"].keys()))
-    return openstack.connect(first_cloud)
+    with openstack.connect(first_cloud) as conn:
+        yield conn
 
 
 @pytest.fixture(scope="module", name="openstack_flavor")
@@ -261,8 +262,8 @@ async def app_openstack_runner(
         reconcile_interval=60,
         constraints={
             "root-disk": 20 * 1024,
-            "cores": 4,
-            "mem": 16 * 1024,
+            "cores": 3,
+            "mem": 12 * 1024,
             "virt-type": "virtual-machine",
         },
         config={
