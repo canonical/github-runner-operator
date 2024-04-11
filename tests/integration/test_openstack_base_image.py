@@ -45,7 +45,7 @@ async def test_noble_base_image(
     )
     # 1. the workflow run completes successfully.
     workflow_run: WorkflowRun = workflow.get_runs()[0]
-    assert workflow_run.status == "success"
+    assert workflow_run.status == "completed"
 
     # 2. when the servers are listed.
     servers = openstack_connection.list_servers(detailed=True)

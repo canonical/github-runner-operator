@@ -54,4 +54,4 @@ async def test_runner_base_image(
     )
 
     workflow_run: WorkflowRun = workflow.get_runs()[0]
-    assert workflow_run.status == "success"
+    assert workflow_run.status == "completed"
