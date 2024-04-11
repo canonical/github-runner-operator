@@ -866,8 +866,10 @@ class CharmState:
         json_data = json.dumps(state_dict, ensure_ascii=False)
         CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
 
+    # Ignore the flake8 function too complex (C901). The function does not have much logic, the
+    # lint is likely triggered with the multiple try-excepts, which are needed.
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "CharmState":
+    def from_charm(cls, charm: CharmBase) -> "CharmState":  # noqa: C901
         """Initialize the state from charm.
 
         Args:
