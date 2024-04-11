@@ -827,7 +827,7 @@ class OpenstackRunnerManager:
 
         return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
 
-    def _remove_from_github(self, instance: Server, remove_token: str | None) -> None:
+    def _run_github_removal_script(self, instance: Server, remove_token: str | None) -> None:
         """Run Github runner removal script.
 
         Args:
@@ -858,7 +858,7 @@ class OpenstackRunnerManager:
         self,
         conn: OpenstackConnection,
         instance_name: str,
-        github_id: int,
+        github_id: int | None = None,
         remove_token: str | None = None,
     ) -> None:
         """Remove one OpenStack runner.
@@ -877,12 +877,12 @@ class OpenstackRunnerManager:
 
         if server.status == _INSTANCE_STATUS_ACTIVE:
             try:
-                self._remove_from_github(instance=server, remove_token=remove_token)
+                self._run_github_removal_script(instance=server, remove_token=remove_token)
             except GithubRunnerRemoveError as exc:
                 logger.warning(
                     "Failed to run GitHub runner removal script %s, %s", instance_name, exc
                 )
-        else:
+        elif github_id is not None:        
             try:
                 self._github.delete_runner(self._config.path, github_id)
             except GithubClientError as exc:
@@ -921,9 +921,10 @@ class OpenstackRunnerManager:
         for instance_name in instance_names:
             if num_to_remove < 1:
                 break
-
+            
+            github_id = name_to_github_id.get(instance_name, None)
             self._remove_one_runner(
-                conn, instance_name, name_to_github_id[instance_name], remove_token
+                conn, instance_name, github_id, remove_token
             )
 
             # Attempt to delete the keys. This is place at the end of deletion, so we can access
