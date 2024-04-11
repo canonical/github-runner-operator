@@ -366,6 +366,7 @@ class GithubRunnerCharm(CharmBase):
             charm_state=state,
             path=path,
             token=token,
+            labels=state.charm_config.labels,
             flavor=state.runner_config.openstack_flavor,
             network=state.runner_config.openstack_network,
             dockerhub_mirror=state.charm_config.dockerhub_mirror,
