@@ -1,6 +1,9 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+# 2024/04/11 The module contains too many lines which are scheduled for refactoring.
+# pylint: disable=too-many-lines
+
 """Module for handling interactions with OpenStack."""
 import json
 import logging
@@ -279,7 +282,7 @@ class OpenstackUpdateImageError(Exception):
 @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
 def _update_image(
     cloud_config: dict[str, dict], ubuntu_image_arch: str, openstack_image_arch: str
-):
+) -> int:
     """Update the openstack image if it exists, create new otherwise.
 
     Args:
@@ -314,7 +317,9 @@ def _update_image(
         raise OpenstackUpdateImageError("Failed to upload image.") from exc
 
 
-def build_image(
+# Ignore the flake8 function too complex (C901). The function does not have much logic, the lint
+# is likely triggered with the multiple try-excepts, which are needed.
+def build_image(  # noqa: C901
     arch: Arch,
     cloud_config: dict[str, dict],
     github_client: GithubClient,
@@ -553,7 +558,7 @@ class OpenstackRunnerManager:
         """
         return _SSH_KEY_PATH / f"runner-{name}.key"
 
-    def _ensure_security_group(self, conn: OpenstackConnection):
+    def _ensure_security_group(self, conn: OpenstackConnection) -> None:
         """Ensure runner security group exists.
 
         Args:
@@ -603,7 +608,7 @@ class OpenstackRunnerManager:
                 ethertype="IPv4",
             )
 
-    def _setup_runner_keypair(self, conn: OpenstackConnection, name: str):
+    def _setup_runner_keypair(self, conn: OpenstackConnection, name: str) -> None:
         """Set up the SSH keypair for a runner.
 
         Args:
@@ -821,6 +826,73 @@ class OpenstackRunnerManager:
 
         return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
 
+    def _remove_from_github(self, instance: Server, remove_token: str | None) -> None:
+        """Run Github runner removal script.
+
+        Args:
+            instance: The Openstack server instance.
+            remove_token: The GitHub instance removal token.
+
+        Raises:
+            GithubRunnerRemoveError: Unable to remove runner from GitHub.
+        """
+        if not remove_token:
+            return
+        for ssh_conn in self._get_ssh_connections(instance=instance):
+            try:
+                result: Result = ssh_conn.run(
+                    f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}"
+                )
+                if not result.ok:
+                    continue
+                return
+            except NoValidConnectionsError:
+                logger.info(
+                    "Unable to SSH into %s with address %s", instance.instance_name, ssh_conn.host
+                )
+                continue
+        raise GithubRunnerRemoveError(f"Failed to remove runner {instance.name} from Github.")
+
+    def _remove_one_runner(
+        self,
+        conn: OpenstackConnection,
+        instance_name: str,
+        github_id: int,
+        remove_token: str | None = None,
+    ) -> None:
+        """Remove one OpenStack runner.
+
+        Args:
+            conn: The Openstack connection instance.
+            instance_name: The Openstack server name to delete.
+            github_id: The runner id on GitHub.
+            remove_token: The GitHub runner remove token.
+        """
+        logger.info("Attempting to remove OpenStack runner %s", instance_name)
+
+        server: Server | None = conn.get_server(name_or_id=instance_name)
+        if server is None:
+            return
+
+        if server.status == _INSTANCE_STATUS_ACTIVE:
+            try:
+                self._remove_from_github(instance=server, remove_token=remove_token)
+            except GithubRunnerRemoveError as exc:
+                logger.warning(
+                    "Failed to run GitHub runner removal script %s, %s", instance_name, exc
+                )
+        else:
+            try:
+                self._github.delete_runner(self._config.path, github_id)
+            except GithubClientError as exc:
+                logger.warning("Failed to remove runner from Github %s, %s", instance_name, exc)
+
+        try:
+            if not conn.delete_server(name_or_id=instance_name, wait=True, delete_ips=True):
+                logger.warning("Server does not exist %s", instance_name)
+        except SDKException as exc:
+            logger.error("Something wrong deleting the server %s, %s", instance_name, str(exc))
+
     def _remove_runners(
         self,
         conn: OpenstackConnection,
@@ -840,30 +912,18 @@ class OpenstackRunnerManager:
         """
         if num_to_remove is None:
             num_to_remove = float("inf")
-        
-        name_to_github_id = {runner["name"]: runner["id"]  for runner in self._github.get_runner_github_info(self._config.path)}
-        
+
+        name_to_github_id = {
+            runner["name"]: runner["id"]
+            for runner in self._github.get_runner_github_info(self._config.path)
+        }
         for instance_name in instance_names:
             if num_to_remove < 1:
                 break
-            logger.info("Attempting to remove OpenStack runner %s", instance_name)
 
-            try:
-                self._github.delete_runner(self._config.path, name_to_github_id[instance_name])
-            except GithubClientError as exc:
-                logger.warning("Failed to remove runner from Github %s, %s", instance_name, exc)
-
-            server: Server | None = conn.get_server(name_or_id=instance_name)
-            if not server:
-                continue
-            try:
-                if not conn.delete_server(name_or_id=instance_name, wait=True, delete_ips=True):
-                    logger.warning("Server does not exist %s", instance_name)
-                    num_to_remove -= 1
-                    continue
-            except SDKException as exc:
-                logger.error("Something wrong deleting the server %s, %s", instance_name, str(exc))
-                continue
+            self._remove_one_runner(
+                conn, instance_name, name_to_github_id[instance_name], remove_token
+            )
 
             # Attempt to delete the keys. This is place at the end of deletion, so we can access
             # the instances that failed to delete on previous tries.
@@ -889,6 +949,12 @@ class OpenstackRunnerManager:
             ):
                 if path.name in exclude_filename:
                     continue
+
+                keypair_name = path.name.split(".")[0]
+                try:
+                    conn.delete_keypair(keypair_name)
+                except openstack.exceptions.SDKException:
+                    logger.exception("Unable to delete OpenStack keypair %s", keypair_name)
 
                 path.unlink()
 
@@ -942,7 +1008,6 @@ class OpenstackRunnerManager:
                     remove_token=remove_token,
                     num_to_remove=abs(delta),
                 )
-                pass
             else:
                 logger.info("No changes to number of runners needed")
             return delta
