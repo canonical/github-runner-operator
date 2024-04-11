@@ -6,6 +6,7 @@
 from dataclasses import dataclass
 from enum import Enum, auto
 from pathlib import Path
+from typing import Iterable
 
 import jinja2
 
@@ -95,6 +96,7 @@ class OpenstackRunnerManagerConfig:
         charm_state: The state of the charm.
         path: GitHub repository path in the format '<owner>/<repo>', or the
             GitHub organization name.
+        labels: Additional labels for the runners.
         token: GitHub personal access token to register runner to the
             repository or organization.
         flavor: OpenStack flavor for defining the runner resources.
@@ -104,6 +106,7 @@ class OpenstackRunnerManagerConfig:
 
     charm_state: CharmState
     path: GithubPath
+    labels: Iterable[str]
     token: str
     flavor: str
     network: str

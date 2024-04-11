@@ -30,7 +30,6 @@ from errors import (
     GithubClientError,
     OpenStackError,
     OpenstackImageBuildError,
-    OpenstackInstanceLaunchError,
     RunnerBinaryError,
     RunnerCreateError,
     RunnerStartError,
@@ -377,11 +376,13 @@ def build_image(  # noqa: C901
         raise OpenstackImageBuildError(f"Failed to update image, {exc}") from exc
 
 
-def create_instance_config(
+# Disable too many arguments, as they are needed to create the dataclass.
+def create_instance_config(  # pylint: disable=too-many-arguments
     app_name: str,
     unit_num: int,
     openstack_image: str,
     path: GithubPath,
+    labels: Iterable[str],
     github_client: GithubClient,
 ) -> InstanceConfig:
     """Create an instance config from charm data.
@@ -391,6 +392,7 @@ def create_instance_config(
         unit_num: The juju unit number.
         openstack_image: The openstack image object to create the instance with.
         path: Github organisation or repository path.
+        labels: Addition labels for the runner.
         github_client: The Github client to interact with Github API.
 
     Returns:
@@ -400,7 +402,7 @@ def create_instance_config(
     registration_token = github_client.get_runner_registration_token(path=path)
     return InstanceConfig(
         name=f"{app_name}-{unit_num}-{suffix}",
-        labels=("jammy"),
+        labels=("jammy", *labels),
         registration_token=registration_token,
         github_path=path,
         openstack_image=openstack_image,
@@ -452,51 +454,6 @@ def _generate_cloud_init_userdata(
         instance_name=instance_config.name,
         env_contents=runner_env,
     )
-
-
-@retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
-def create_instance(
-    cloud_config: dict[str, dict],
-    instance_config: InstanceConfig,
-    proxies: Optional[ProxyConfig] = None,
-    dockerhub_mirror: Optional[str] = None,
-    ssh_debug_connections: list[SSHDebugConnection] | None = None,
-) -> None:
-    """Create an OpenStack instance.
-
-    Args:
-        cloud_config: The cloud configuration to connect Openstack with.
-        instance_config: The configuration values for Openstack instance to launch.
-        proxies: HTTP proxy settings.
-        dockerhub_mirror:
-        ssh_debug_connections:
-
-    Raises:
-        OpenstackInstanceLaunchError: if any errors occurred while launching Openstack instance.
-    """
-    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
-
-    env_contents = _generate_runner_env(
-        templates_env=environment,
-        proxies=proxies,
-        dockerhub_mirror=dockerhub_mirror,
-        ssh_debug_connections=ssh_debug_connections,
-    )
-    cloud_userdata = _generate_cloud_init_userdata(
-        templates_env=environment, instance_config=instance_config, runner_env=env_contents
-    )
-
-    try:
-        with _create_connection(cloud_config) as conn:
-            conn.create_server(
-                name=instance_config.name,
-                image=instance_config.openstack_image,
-                flavor="m1.small",
-                userdata=cloud_userdata,
-                wait=True,
-            )
-    except OpenStackCloudException as exc:
-        raise OpenstackInstanceLaunchError("Failed to launch instance.") from exc
 
 
 class GithubRunnerRemoveError(Exception):
@@ -711,7 +668,12 @@ class OpenstackRunnerManager:
             ssh_debug_connections=self._config.charm_state.ssh_debug_connections,
         )
         instance_config = create_instance_config(
-            self.app_name, self.unit_num, IMAGE_NAME, self._config.path, self._github
+            self.app_name,
+            self.unit_num,
+            IMAGE_NAME,
+            self._config.path,
+            self._config.labels,
+            self._github,
         )
         cloud_userdata = _generate_cloud_init_userdata(
             templates_env=environment, instance_config=instance_config, runner_env=env_contents
@@ -852,6 +814,8 @@ class OpenstackRunnerManager:
                     "Unable to SSH into %s with address %s", instance.instance_name, ssh_conn.host
                 )
                 continue
+
+        logger.warning("Failed to run GitHub runner removal script %s", instance.instance_name)
         raise GithubRunnerRemoveError(f"Failed to remove runner {instance.name} from Github.")
 
     def _remove_one_runner(
@@ -876,13 +840,8 @@ class OpenstackRunnerManager:
             return
 
         if server.status == _INSTANCE_STATUS_ACTIVE:
-            try:
-                self._run_github_removal_script(instance=server, remove_token=remove_token)
-            except GithubRunnerRemoveError as exc:
-                logger.warning(
-                    "Failed to run GitHub runner removal script %s, %s", instance_name, exc
-                )
-        elif github_id is not None:        
+            self._run_github_removal_script(instance=server, remove_token=remove_token)
+        elif github_id is not None:
             try:
                 self._github.delete_runner(self._config.path, github_id)
             except GithubClientError as exc:
@@ -921,11 +880,9 @@ class OpenstackRunnerManager:
         for instance_name in instance_names:
             if num_to_remove < 1:
                 break
-            
+
             github_id = name_to_github_id.get(instance_name, None)
-            self._remove_one_runner(
-                conn, instance_name, github_id, remove_token
-            )
+            self._remove_one_runner(conn, instance_name, github_id, remove_token)
 
             # Attempt to delete the keys. This is place at the end of deletion, so we can access
             # the instances that failed to delete on previous tries.
