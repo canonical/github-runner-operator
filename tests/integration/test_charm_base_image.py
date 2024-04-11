@@ -16,6 +16,7 @@ from tests.integration.helpers import (
     ensure_charm_has_runner,
     get_runner_name,
     run_in_lxd_instance,
+    wait_for,
 )
 
 
@@ -38,12 +39,14 @@ async def test_runner_base_image(
     await model.wait_for_idle(apps=[app_no_wait.name], timeout=35 * 60)
     await ensure_charm_has_runner(app_no_wait, model)
 
+    #  Runner with noble base image is created
     unit = app_no_wait.units[0]
     runner_name = await get_runner_name(unit)
     code, stdout, stderr = await run_in_lxd_instance(unit, runner_name, "lsb_release -a")
     assert code == 0, f"Unable to get release name, {stdout} {stderr}"
     assert "noble" in str(stdout)
 
+    # Workflow completes successfully
     workflow = await dispatch_workflow(
         app=app_no_wait,
         branch=test_github_branch,
@@ -52,6 +55,4 @@ async def test_runner_base_image(
         workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
         dispatch_input={"runner-tag": app_no_wait.name},
     )
-
-    workflow_run: WorkflowRun = workflow.get_runs()[0]
-    assert workflow_run.status == "completed"
+    wait_for(lambda: workflow.get_runs()[0].status == "completed")
