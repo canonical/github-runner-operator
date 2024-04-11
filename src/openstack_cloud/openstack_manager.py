@@ -400,7 +400,7 @@ def create_instance_config(
     registration_token = github_client.get_runner_registration_token(path=path)
     return InstanceConfig(
         name=f"{app_name}-{unit_num}-{suffix}",
-        labels=(app_name, "jammy"),
+        labels=("jammy"),
         registration_token=registration_token,
         github_path=path,
         openstack_image=openstack_image,
