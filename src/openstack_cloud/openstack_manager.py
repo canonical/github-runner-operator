@@ -791,6 +791,7 @@ class OpenstackRunnerManager:
                 host=ip,
                 user="ubuntu",
                 connect_kwargs={"key_filename": str(self._get_key_path(instance.name))},
+                connect_timeout=10,
             )
 
     def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
