@@ -6,7 +6,6 @@
 import openstack.connection
 from github.Branch import Branch
 from github.Repository import Repository
-from github.WorkflowRun import WorkflowRun
 from juju.application import Application
 from juju.model import Model
 from openstack.compute.v2.server import Server
@@ -53,4 +52,4 @@ async def test_noble_base_image(
         workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
         dispatch_input={"runner-tag": app_openstack_runner.name},
     )
-    wait_for(lambda: workflow.get_runs()[0].status == "completed")
+    await wait_for(lambda: workflow.get_runs()[0].status == "completed")

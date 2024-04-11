@@ -5,7 +5,6 @@
 
 from github.Branch import Branch
 from github.Repository import Repository
-from github.WorkflowRun import WorkflowRun
 from juju.application import Application
 from juju.model import Model
 
@@ -55,4 +54,4 @@ async def test_runner_base_image(
         workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
         dispatch_input={"runner-tag": app_no_wait.name},
     )
-    wait_for(lambda: workflow.get_runs()[0].status == "completed")
+    await wait_for(lambda: workflow.get_runs()[0].status == "completed")
