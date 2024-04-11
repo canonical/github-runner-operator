@@ -75,6 +75,7 @@ jobs:
         run: yq --version
       - name: apt update
         run: sudo apt-get update -y
+      # Use pipx for 24.04 noble, check-jsonschema breaks OS system packages.
       - name: install pipx
         run: sudo apt-get install -y pipx
       - name: install check-jsonschema
@@ -84,6 +85,7 @@ jobs:
       - name: gh version
         run: gh --version
       # `check-jsonschema` is installed using pip. The directory `~/.local/bin` needs to be added to PATH.
+      # ~/.local/bin is added to path runner env through in scripts/env.j2
       - name: test check-jsonschema
         run: check-jsonschema --version
       - name: Test Firewall
