@@ -41,7 +41,7 @@ async def test_noble_base_image(
     servers = openstack_connection.list_servers(detailed=True)
     assert len(servers) == 1, f"Unexpected number of servers: {len(servers)}"
     server: Server = servers[0]
-    assert "noble" in server.image.name
+    assert "noble" in openstack_connection.get_image(server.image.id).name
 
     # Workflow completes successfully
     workflow = await dispatch_workflow(
