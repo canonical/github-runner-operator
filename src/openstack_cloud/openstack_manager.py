@@ -475,4 +475,6 @@ def create_instance(
                 wait=True,
             )
         except OpenStackCloudException as exc:
+            if not conn.delete_server(instance_config.name):
+                logger.error("Failed to delete server %s", instance_config.name)
             raise OpenstackInstanceLaunchError("Failed to launch instance.") from exc
