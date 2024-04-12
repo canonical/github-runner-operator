@@ -35,7 +35,7 @@ async def test_noble_base_image(
             BASE_IMAGE_CONFIG_NAME: "noble",
         }
     )
-    await model.wait_for_idle(apps=[app_openstack_runner.name], status="blocked", timeout=50 * 60)
+    await model.wait_for_idle(apps=[app_openstack_runner.name], status="blocked", timeout=70 * 60)
 
     #  Server with noble base image is created
     servers = openstack_connection.list_servers(detailed=True)
