@@ -469,7 +469,7 @@ def create_instance(
             conn.create_server(
                 name=instance_config.name,
                 image=instance_config.openstack_image,
-                flavor="m1.tiny",
+                flavor="m1.small",
                 network="demo-network",
                 userdata=cloud_userdata,
                 wait=True,
