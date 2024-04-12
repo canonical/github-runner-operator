@@ -464,15 +464,15 @@ def create_instance(
         templates_env=environment, instance_config=instance_config, runner_env=env_contents
     )
 
-    try:
-        with _create_connection(cloud_config) as conn:
+    with _create_connection(cloud_config) as conn:
+        try:
             conn.create_server(
                 name=instance_config.name,
                 image=instance_config.openstack_image,
-                flavor="m1.small",
+                flavor="m1.tiny",
                 network="demo-network",
                 userdata=cloud_userdata,
                 wait=True,
             )
-    except OpenStackCloudException as exc:
-        raise OpenstackInstanceLaunchError("Failed to launch instance.") from exc
+        except OpenStackCloudException as exc:
+            raise OpenstackInstanceLaunchError("Failed to launch instance.") from exc
