@@ -747,6 +747,13 @@ class OpenstackRunnerManager:
         Yields:
             Openstack SSH connections.
         """
+        if not cast(dict, instance.addresses).get(self._config.network, None):
+            logger.error(
+                "Instance %s created under invalid or no network %s",
+                instance.instance_name,
+                instance.addresses,
+            )
+            return
         for address in instance.addresses[self._config.network]:
             ip = address["addr"]
             yield SshConnection(
@@ -813,7 +820,6 @@ class OpenstackRunnerManager:
                             "exit code: %s, stdout: %s, stderr: %s"
                         ),
                         instance.instance_name,
-                        ssh_conn.host,
                         result.return_code,
                         result.stdout,
                         result.stderr,
@@ -956,7 +962,10 @@ class OpenstackRunnerManager:
             # Clean up offline (SHUTOFF) runners or unhealthy (no connection/cloud-init script)
             # runners.
             remove_token = self._github.get_runner_remove_token(path=self._config.path)
-            instance_to_remove = (*runner_by_health.unhealthy, *offline_runners)
+            instance_to_remove = (
+                *runner_by_health.unhealthy,
+                *(runner.runner_name for runner in offline_runners),
+            )
             self._remove_runners(
                 conn=conn, instance_names=instance_to_remove, remove_token=remove_token
             )
