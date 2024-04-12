@@ -20,8 +20,8 @@ class RunnerByHealth:
         unhealthy: Runners that are not running runner script.
     """
 
-    healthy: tuple[str]
-    unhealthy: tuple[str]
+    healthy: tuple[str, ...]
+    unhealthy: tuple[str, ...]
 
 
 @dataclass
