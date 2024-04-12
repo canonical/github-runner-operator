@@ -629,6 +629,7 @@ class GithubRunnerCharm(CharmBase):
 
         if state.instance_type == InstanceType.OPENSTACK:
             openstack_runner_manager = self._get_openstack_runner_manager(state)
+            openstack_runner_manager.flush()
             openstack_runner_manager.reconcile(state.runner_config.virtual_machines)
             # 2024/04/12: Flush on token changes.
             self.unit.status = ActiveStatus()
@@ -637,15 +638,14 @@ class GithubRunnerCharm(CharmBase):
         self._refresh_firewall(state)
 
         runner_manager = self._get_runner_manager(state)
+        if state.charm_config.token != self._stored.token:
+            runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
+            self._stored.token = state.charm_config.token
         self._reconcile_runners(
             runner_manager,
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
         )
-        if state.charm_config.token != self._stored.token:
-            runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
-            self._stored.token = state.charm_config.token
-
         self.unit.status = ActiveStatus()
 
     def _check_and_update_dependencies(
