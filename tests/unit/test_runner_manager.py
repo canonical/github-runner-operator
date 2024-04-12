@@ -28,7 +28,9 @@ from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerMan
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import RunnerByHealth
 from shared_fs import SharedFilesystem
-from tests.unit.mock import TEST_BINARY
+from tests.unit.mock import TEST_BINARY, MockLxdImageManager
+
+IMAGE_NAME = "jammy"
 
 RUNNER_MANAGER_TIME_MODULE = "runner_manager.time.time"
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
@@ -87,7 +89,7 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token, charm_state):
         RunnerManagerConfig(
             path=request.param[0],
             token=token,
-            image="jammy",
+            image=IMAGE_NAME,
             service_token=secrets.token_hex(16),
             lxd_storage_path=pool_path,
             charm_state=charm_state,
@@ -532,3 +534,23 @@ def test_schedule_build_runner_image(
 
     assert cronfile.exists()
     assert cronfile.read_text() == f"4 4,10,16,22 * * * ubuntu {cmd}\n"
+
+
+def test_has_runner_image(runner_manager: RunnerManager):
+    """
+    arrange: Multiple setups.
+        1. no runner image exists.
+        2. runner image with wrong name exists.
+        3. runner image with correct name exists.
+    act: Check if runner image exists.
+    assert:
+        1 and 2. False is returned.
+        3. True is returned.
+    """
+    assert not runner_manager.has_runner_image()
+
+    runner_manager._clients.lxd.images = MockLxdImageManager({"hirsute"})
+    assert not runner_manager.has_runner_image()
+
+    runner_manager._clients.lxd.images = MockLxdImageManager({IMAGE_NAME})
+    assert runner_manager.has_runner_image()

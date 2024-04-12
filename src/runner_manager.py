@@ -785,6 +785,14 @@ class RunnerManager:
             cmd += ["test"]
         return cmd
 
+    def has_runner_image(self) -> bool:
+        """Check if the runner image exists.
+
+        Returns:
+            Whether the runner image exists.
+        """
+        return self._clients.lxd.images.exists(self.config.image)
+
     def build_runner_image(self) -> None:
         """Build the LXD image for hosting runner.
 
