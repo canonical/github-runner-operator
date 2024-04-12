@@ -11,7 +11,7 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 import yaml
-from ops.model import BlockedStatus, MaintenanceStatus
+from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
@@ -549,10 +549,11 @@ class TestCharm(unittest.TestCase):
         )
 
     @patch("charm.RunnerManager")
+    @patch("charm.OpenstackRunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_on_config_changed_openstack_clouds_yaml(self, run, wt, mkdir, rm):
+    def test_on_config_changed_openstack_clouds_yaml(self, run, wt, mkdir, orm, rm):
         """
         arrange: Setup mocked charm.
         act: Fire config changed event to use openstack-clouds-yaml.
@@ -585,10 +586,8 @@ class TestCharm(unittest.TestCase):
 
         harness.charm.on.config_changed.emit()
 
-        assert harness.charm.unit.status == BlockedStatus(
-            "OpenStack integration is not supported yet. "
-            "Please remove the openstack-clouds-yaml config."
-        )
+        orm.return_value.reconcile.assert_called_once()
+        assert harness.charm.unit.status == ActiveStatus()
 
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")

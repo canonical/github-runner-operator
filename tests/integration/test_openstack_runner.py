@@ -122,7 +122,7 @@ async def test_token_config_changed(
     await app_openstack_runner.set_config({TOKEN_CONFIG_NAME: token_alt})
     await model.wait_for_idle(status=ACTIVE, timeout=30 * 60)
 
-    servers: list[Server] = openstack_connection.list_servers()
+    servers = openstack_connection.list_servers()
     assert len(servers) == 1, f"Invalid number of servers found, expected 1, got {len(servers)}"
     assert (
         server_id != servers[0].id
