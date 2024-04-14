@@ -432,7 +432,7 @@ def _generate_cloud_init_userdata(
     )
 
 
-@retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
+# @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
 def create_instance(
     cloud_config: dict[str, dict],
     instance_config: InstanceConfig,
@@ -473,8 +473,9 @@ def create_instance(
                 network="demo-network",
                 userdata=cloud_userdata,
                 wait=True,
+                timeout=1200,
             )
         except OpenStackCloudException as exc:
-            if not conn.delete_server(instance_config.name):
-                logger.error("Failed to delete server %s", instance_config.name)
+            # if not conn.delete_server(instance_config.name):
+            #     logger.error("Failed to delete server %s", instance_config.name)
             raise OpenstackInstanceLaunchError("Failed to launch instance.") from exc
