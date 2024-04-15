@@ -13,8 +13,8 @@ options:
     type: string
     default: ""
     description: >-
-      The private docker registry configured as dockerhub mirror to be used by the runners. If set 
-      a message will be displayed prior to job execution on self-hosted runner informing users to 
+      The private docker registry configured as dockerhub mirror to be used by the runners. If set
+      a message will be displayed prior to job execution on self-hosted runner informing users to
       use the provided registry.
   experimental-openstack-clouds-yaml:
     type: string
@@ -23,28 +23,35 @@ options:
       (Experimental, under development) The openstack clouds.yaml
       (https://docs.openstack.org/python-openstackclient/pike/configuration/index.html#clouds-yaml).
       Setting the openstack-clouds-yaml would enable spawning runners on OpenStack, instead of LXD
-      vms. This feature is not yet ready and is under development.
+      vms. Providing a valid clouds.yaml will enable OpenStack integration. This feature is not yet
+      ready and is under development.
   experimental-openstack-flavor:
     type: string
     default: ""
     description: |
-      (Experimental, under development) The openstack flavor to use to spawn virtual machines. 
+      (Experimental, under development) The openstack flavor to use to spawn virtual machines.
       This feature is not yet ready and is under development.
   experimental-openstack-network:
     type: string
     default: ""
     description: |
-      (Experimental, under development) The openstack network for virtual machines. This feature 
+      (Experimental, under development) The openstack network for virtual machines. This feature
       is not yet ready and is under development.
+  experiential-openstack-image-build-unit:
+    type: int
+    default: -1
+    description: >-
+      (Experimental, may be removed) The unit that performs the OpenStack image build. All other units will
+      have the image build disabled. Will only take effect with OpenStack integration enabled.
   experimental-use-aproxy:
     type: boolean
     default: false
     description: >-
       (Experimental, may be removed) When set to true, aproxy (https://github.com/canonical/aproxy)
-      will be installed within the runners. It will forward all HTTP(S) traffic to standard ports 
-      (80, 443) to a proxy server configured by the juju model config 'juju-http-proxy' 
+      will be installed within the runners. It will forward all HTTP(S) traffic to standard ports
+      (80, 443) to a proxy server configured by the juju model config 'juju-http-proxy'
       (or, if this is not set, 'juju-https-proxy' will be used).
-      This is useful when the charm is deployed in a network that requires a proxy to access the 
+      This is useful when the charm is deployed in a network that requires a proxy to access the
       internet.
       Note that you should not specify a proxy server listening on port 80 or 443, as all traffic
       to these ports is relayed to aproxy, which would cause an infinite loop.
@@ -59,32 +66,32 @@ options:
     default: ""
     description: >-
       Additional comma separated labels to attach to self-hosted runners. By default, the labels
-      "self-hosted", application name (default: "github-runner"), 
+      "self-hosted", application name (default: "github-runner"),
       architecture (i.e. "x64", "arm64"), os (i.e. "linux"), os-flavor (i.e. "jammy") are set.
       Any labels provided via this configuration will be appended to the default values.
   path:
     type: string
     default: ""
     description: >-
-      The organization or the repository to register the self-hosted runners. For organization the 
-      path would be the name of the organization. For repository the path should be in the 
+      The organization or the repository to register the self-hosted runners. For organization the
+      path would be the name of the organization. For repository the path should be in the
       "{owner}/{repo}" format.
   reconcile-interval:
     type: int
     default: 10
     description: >-
-      Minutes between each reconciliation of the current runners state and their targeted state. 
-      On reconciliation, the charm polls the state of runners and see if actions are needed. A 
-      random delay of 25% is added. Changes to this time interval will apply when next interval is 
-      triggered. Prior to reconciliation, any packages, and services used by the software will be 
+      Minutes between each reconciliation of the current runners state and their targeted state.
+      On reconciliation, the charm polls the state of runners and see if actions are needed. A
+      random delay of 25% is added. Changes to this time interval will apply when next interval is
+      triggered. Prior to reconciliation, any packages, and services used by the software will be
       updated.
   runner-storage:
     type: string
     default: "juju-storage"
     description: >-
-      The storage for runner LXD instance to mount as disk. Can be "memory" or "juju-storage". If 
-      set to "memory", memory-based storage created with tmpfs will be used as disk for LXD 
-      instances. If set to "juju-storage", storage provided by juju will be used as disk for LXD 
+      The storage for runner LXD instance to mount as disk. Can be "memory" or "juju-storage". If
+      set to "memory", memory-based storage created with tmpfs will be used as disk for LXD
+      instances. If set to "juju-storage", storage provided by juju will be used as disk for LXD
       instances. This configuration cannot be changed after deployment. The charm needs to be
       redeployed to change the storage option.
   test-mode:

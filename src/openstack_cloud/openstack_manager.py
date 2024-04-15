@@ -25,7 +25,13 @@ from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import OpenStackCloudException, SDKException
 from paramiko.ssh_exception import NoValidConnectionsError
 
-from charm_state import Arch, GithubRepo, ProxyConfig, SSHDebugConnection, UnsupportedArchitectureError
+from charm_state import (
+    Arch,
+    GithubRepo,
+    ProxyConfig,
+    SSHDebugConnection,
+    UnsupportedArchitectureError,
+)
 from errors import (
     GithubClientError,
     OpenStackError,

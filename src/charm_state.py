@@ -37,6 +37,7 @@ LABELS_CONFIG_NAME = "labels"
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
 OPENSTACK_NETWORK_CONFIG_NAME = "experimental-openstack-network"
 OPENSTACK_FLAVOR_CONFIG_NAME = "experimental-openstack-flavor"
+OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME = "experiential-openstack-image-build-unit"
 PATH_CONFIG_NAME = "path"
 RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
 RUNNER_STORAGE_CONFIG_NAME = "runner-storage"
@@ -469,6 +470,7 @@ class OpenstackRunnerConfig(BaseModel):
     virtual_machines: int
     openstack_flavor: str
     openstack_network: str
+    build_image: bool
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "OpenstackRunnerConfig":
@@ -494,10 +496,15 @@ class OpenstackRunnerConfig(BaseModel):
         openstack_flavor = charm.config[OPENSTACK_FLAVOR_CONFIG_NAME]
         openstack_network = charm.config[OPENSTACK_NETWORK_CONFIG_NAME]
 
+        openstack_image_build_unit = int(charm.config[OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME])
+        _, unit_num = charm.unit.name.rsplit("/", 1)
+        build_image = openstack_image_build_unit == unit_num
+
         return cls(
             virtual_machines=virtual_machines,
             openstack_flavor=openstack_flavor,
             openstack_network=openstack_network,
+            build_image=build_image,
         )
 
 
