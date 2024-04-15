@@ -152,7 +152,8 @@ def _generate_docker_client_proxy_config_json(
                     if value
                 }
             }
-        }
+        },
+        indent=4,
     )
 
 
@@ -205,7 +206,7 @@ class InstanceConfig:
         labels: The runner instance labels.
         registration_token: Token for registering the runner on GitHub.
         github_path: The GitHub repo/org path
-        openstack_image: The Openstack image to use to boot the instance with.
+        openstack_image_id: The Openstack image id to use to boot the instance with.
         base_image: The ubuntu image to use as image build base.
     """
 
@@ -213,7 +214,7 @@ class InstanceConfig:
     labels: Iterable[str]
     registration_token: str
     github_path: GithubPath
-    openstack_image: openstack.image.v2.image.Image
+    openstack_image_id: str
     base_image: BaseImage
 
 
@@ -355,7 +356,7 @@ def build_image(
 
 def create_instance_config(
     unit_name: str,
-    openstack_image: openstack.image.v2.image.Image,
+    openstack_image_id: str,
     path: GithubPath,
     github_client: GithubClient,
     base_image: BaseImage,
@@ -364,7 +365,7 @@ def create_instance_config(
 
     Args:
         unit_name: The charm unit name.
-        openstack_image: The openstack image object to create the instance with.
+        openstack_image_id: The openstack image id to create the instance with.
         path: Github organisation or repository path.
         github_client: The Github client to interact with Github API.
         base_image: The ubuntu base image to use.
@@ -380,7 +381,7 @@ def create_instance_config(
         labels=(app_name, base_image.value),
         registration_token=registration_token,
         github_path=path,
-        openstack_image=openstack_image,
+        openstack_image_id=openstack_image_id,
         base_image=base_image,
     )
 
@@ -468,7 +469,7 @@ def create_instance(
         try:
             conn.create_server(
                 name=instance_config.name,
-                image=instance_config.openstack_image,
+                image=instance_config.openstack_image_id,
                 flavor="m1.small",
                 network="demo-network",
                 userdata=cloud_userdata,
