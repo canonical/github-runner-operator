@@ -433,9 +433,9 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
-            self.unit.status = MaintenanceStatus("Building Openstack image")
             github = GithubClient(token=state.charm_config.token)
             if state.runner_config.build_image:
+                self.unit.status = MaintenanceStatus("Building Openstack image")
                 openstack_manager.build_image(
                     arch=state.arch,
                     cloud_config=state.charm_config.openstack_clouds_yaml,

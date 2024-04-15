@@ -6,13 +6,18 @@ set -e
 su - ubuntu -c 'cd ~/actions-runner && echo "{{ env_contents }}" > .env'
 
 # Create the runner and start the configuration experience
+{% if runner_group %}
 su - ubuntu -c "cd ~/actions-runner && ./config.sh \
     --url {{ github_url }} \
-{% if runner_group %}
     --runnergroup {{ runner_group }} \
-{% endif %}
     --token {{ token }} --ephemeral --unattended \
     --labels {{ instance_labels }} --name {{ instance_name }}"
+{% else %}
+su - ubuntu -c "cd ~/actions-runner && ./config.sh \
+    --url {{ github_url }} \
+    --token {{ token }} --ephemeral --unattended \
+    --labels {{ instance_labels }} --name {{ instance_name }}"
+{% endif %}
 
 # Run runner
 su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh"
