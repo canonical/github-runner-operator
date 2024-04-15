@@ -903,6 +903,10 @@ class OpenstackRunnerManager:
 
             # Attempt to delete the keys. This is place at the end of deletion, so we can access
             # the instances that failed to delete on previous tries.
+            try:
+                conn.delete_keypair(instance_name)
+            except openstack.exceptions.SDKException:
+                logger.exception("Unable to delete OpenStack keypair %s", instance_name)
             self._get_key_path(instance_name).unlink(missing_ok=True)
             num_to_remove -= 1
 
@@ -930,7 +934,10 @@ class OpenstackRunnerManager:
                 try:
                     conn.delete_keypair(keypair_name)
                 except openstack.exceptions.SDKException:
-                    logger.exception("Unable to delete OpenStack keypair %s", keypair_name)
+                    logger.warning(
+                        "Unable to delete OpenStack keypair associated with deleted key file %s ",
+                        path.name,
+                    )
 
                 path.unlink()
 
