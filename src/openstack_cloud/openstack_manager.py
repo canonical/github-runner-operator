@@ -36,6 +36,7 @@ from errors import (
     GithubClientError,
     OpenStackError,
     OpenstackImageBuildError,
+    OpenstackInstanceLaunchError,
     RunnerBinaryError,
     RunnerCreateError,
     RunnerStartError,
@@ -995,6 +996,16 @@ class OpenstackRunnerManager:
 
             # Spawn new runners
             if delta > 0:
+                # Skip this reconcile if image not present.
+                try:
+                    if conn.get_image(name_or_id=IMAGE_NAME) is None:
+                        logger.warning("No OpenStack runner was spawned due to image needed not found")
+                        return 0
+                except openstack.exceptions.SDKException as exc:
+                    # Will be resolved by charm integration with image build charm.
+                    logger.exception("Multiple image named %s found", IMAGE_NAME)
+                    raise OpenstackInstanceLaunchError("Multiple image found, unable to determine the image to use")
+
                 logger.info("Creating %s OpenStack runners", delta)
                 self._create_runner(conn)
             elif delta < 0:
