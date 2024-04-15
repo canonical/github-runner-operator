@@ -9,7 +9,7 @@ su - ubuntu -c 'cd ~/actions-runner && echo "{{ env_contents }}" > .env'
 {% if runner_group %}
 su - ubuntu -c "cd ~/actions-runner && ./config.sh \
     --url {{ github_url }} \
-    --runnergroup {{ runner_group }} \
+    --runnergroup '{{ runner_group }}' \
     --token {{ token }} --ephemeral --unattended \
     --labels {{ instance_labels }} --name {{ instance_name }}"
 {% else %}
