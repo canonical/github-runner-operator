@@ -25,7 +25,7 @@ from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import OpenStackCloudException, SDKException
 from paramiko.ssh_exception import NoValidConnectionsError
 
-from charm_state import Arch, ProxyConfig, SSHDebugConnection, UnsupportedArchitectureError
+from charm_state import Arch, GithubRepo, ProxyConfig, SSHDebugConnection, UnsupportedArchitectureError
 from errors import (
     GithubClientError,
     OpenStackError,
@@ -210,7 +210,7 @@ class InstanceConfig:
         name: Name of the image to launch the GitHub runner instance with.
         labels: The runner instance labels.
         registration_token: Token for registering the runner on GitHub.
-        github_path: The GitHub repo/org path
+        github_path: The GitHub repo/org path to register the runner.
         openstack_image: The Openstack image to use to boot the instance with.
     """
 
@@ -447,8 +447,13 @@ def _generate_cloud_init_userdata(
     Returns:
         The cloud init userdata script.
     """
+    runner_group = None
+    if isinstance(instance_config.github_path, GithubRepo):
+        runner_group = instance_config.github_path.group
+
     return templates_env.get_template("openstack-userdata.sh.j2").render(
         github_url=f"https://github.com/{instance_config.github_path.path()}",
+        runner_group=runner_group,
         token=instance_config.registration_token,
         instance_labels=",".join(instance_config.labels),
         instance_name=instance_config.name,
