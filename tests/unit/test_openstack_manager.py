@@ -1,6 +1,7 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import secrets
+import textwrap
 from typing import Optional
 from unittest.mock import MagicMock
 
@@ -350,8 +351,19 @@ Environment="HTTPS_PROXY={test_https_proxy}"
 
 Environment="NO_PROXY={test_no_proxy}"
 """,
-        f"""{{"proxies": {{"default": {{"httpProxy": "{test_http_proxy}", \
-"httpsProxy": "{test_https_proxy}", "noProxy": "{test_no_proxy}"}}}}}}""",
+        textwrap.dedent(
+            f"""
+        {{
+            "proxies": {{
+                "default": {{
+                    "httpProxy": "{test_http_proxy}",
+                    "httpsProxy": "{test_https_proxy}",
+                    "noProxy": "{test_no_proxy}"
+                }}
+            }}
+        }}
+        """
+        ).strip(),
         test_base_image.value,
     ], "Unexpected build image command."
 
