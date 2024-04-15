@@ -25,7 +25,7 @@ jobs:
     #   - run: sudo rm -f /write* /read*
   self-host-test:
     name: self-hosted test
-    runs-on: [self-hosted, openstack-arm]
+    runs-on: [self-hosted, openstack-arm, ARM64]
     steps:
       - run: lscpu
       - run: echo hello
@@ -35,7 +35,7 @@ jobs:
         run: sudo snap install microk8s --classic
   self-host-test-org:
     name: self-hosted test
-    runs-on: [self-hosted, medium]
+    runs-on: [self-hosted, ARM64, medium]
     steps:
       - run: lscpu
       - run: echo hello
