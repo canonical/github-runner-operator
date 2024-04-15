@@ -27,7 +27,7 @@ from paramiko.ssh_exception import NoValidConnectionsError
 
 from charm_state import (
     Arch,
-    GithubRepo,
+    GithubOrg,
     ProxyConfig,
     SSHDebugConnection,
     UnsupportedArchitectureError,
@@ -455,7 +455,7 @@ def _generate_cloud_init_userdata(
         The cloud init userdata script.
     """
     runner_group = None
-    if isinstance(instance_config.github_path, GithubRepo):
+    if isinstance(instance_config.github_path, GithubOrg):
         runner_group = instance_config.github_path.group
 
     return templates_env.get_template("openstack-userdata.sh.j2").render(
@@ -959,6 +959,9 @@ class OpenstackRunnerManager:
         Args:
             quantity: The number of intended runners.
 
+        Raises:
+            OpenstackInstanceLaunchError: Unable to launch OpenStack instance.
+
         Returns:
             The change in number of runners.
         """
@@ -999,12 +1002,16 @@ class OpenstackRunnerManager:
                 # Skip this reconcile if image not present.
                 try:
                     if conn.get_image(name_or_id=IMAGE_NAME) is None:
-                        logger.warning("No OpenStack runner was spawned due to image needed not found")
+                        logger.warning(
+                            "No OpenStack runner was spawned due to image needed not found"
+                        )
                         return 0
                 except openstack.exceptions.SDKException as exc:
                     # Will be resolved by charm integration with image build charm.
                     logger.exception("Multiple image named %s found", IMAGE_NAME)
-                    raise OpenstackInstanceLaunchError("Multiple image found, unable to determine the image to use")
+                    raise OpenstackInstanceLaunchError(
+                        "Multiple image found, unable to determine the image to use"
+                    ) from exc
 
                 logger.info("Creating %s OpenStack runners", delta)
                 self._create_runner(conn)

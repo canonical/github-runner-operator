@@ -211,7 +211,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L878"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L879"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -384,7 +384,7 @@ Runner configurations for local LXD instances.
 
 ---
 
-<a href="../src/charm_state.py#L621"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L622"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_virtual_machine_resources`
 
@@ -415,7 +415,7 @@ Validate the virtual_machine_resources field values.
 
 ---
 
-<a href="../src/charm_state.py#L599"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L600"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_virtual_machines`
 
@@ -444,7 +444,7 @@ Validate the virtual machines configuration value.
 
 ---
 
-<a href="../src/charm_state.py#L554"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L555"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -484,13 +484,14 @@ Runner configuration for OpenStack Instances.
  - <b>`virtual_machines`</b>:  Number of virtual machine-based runner to spawn. 
  - <b>`openstack_flavor`</b>:  flavor on openstack to use for virtual machines. 
  - <b>`openstack_network`</b>:  Network on openstack to use for virtual machines. 
+ - <b>`build_image`</b>:  Whether to build the image on this juju unit. 
 
 
 
 
 ---
 
-<a href="../src/charm_state.py#L475"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L476"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -544,7 +545,7 @@ Return the aproxy address.
 
 ---
 
-<a href="../src/charm_state.py#L711"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L712"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_use_aproxy`
 
@@ -574,7 +575,7 @@ Validate the proxy configuration.
 
 ---
 
-<a href="../src/charm_state.py#L673"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L674"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -631,7 +632,7 @@ SSH connection information for debug workflow.
 
 ---
 
-<a href="../src/charm_state.py#L799"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L800"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -664,7 +665,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L756"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L757"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

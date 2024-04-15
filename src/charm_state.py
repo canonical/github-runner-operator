@@ -465,6 +465,7 @@ class OpenstackRunnerConfig(BaseModel):
         virtual_machines: Number of virtual machine-based runner to spawn.
         openstack_flavor: flavor on openstack to use for virtual machines.
         openstack_network: Network on openstack to use for virtual machines.
+        build_image: Whether to build the image on this juju unit.
     """
 
     virtual_machines: int
