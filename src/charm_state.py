@@ -497,7 +497,7 @@ class OpenstackRunnerConfig(BaseModel):
         openstack_flavor = charm.config[OPENSTACK_FLAVOR_CONFIG_NAME]
         openstack_network = charm.config[OPENSTACK_NETWORK_CONFIG_NAME]
 
-        openstack_image_build_unit = int(charm.config[OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME])
+        openstack_image_build_unit = str(charm.config[OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME])
         _, unit_num = charm.unit.name.rsplit("/", 1)
         build_image = openstack_image_build_unit == unit_num
 
