@@ -427,16 +427,25 @@ class GithubRunnerCharm(CharmBase):
             ),
         )
 
-    @catch_charm_errors
-    def _on_install(self, _: InstallEvent) -> None:
-        """Handle the installation of charm."""
-        state = self._setup_state()
+    def _common_install_code(self, state: CharmState) -> bool:
+        """Installation code shared between install and upgrade hook.
 
-        if state.instance_type == InstanceType.OPENSTACK:
-            github = GithubClient(token=state.charm_config.token)
-            if state.runner_config.build_image:
+        Args:
+            state: The charm state instance.
+
+        Raises:
+            LogrotateSetupError: Failed to setup logrotate.
+            SubprocessError: Failed to install dependencies.
+
+        Returns:
+            True if installation was successful, False otherwise.
+        """
+        if state.charm_config.openstack_clouds_yaml:
+            # Only build it in test mode since it may interfere with users systems.
+            if self.config.get(TEST_MODE_CONFIG_NAME) == "insecure":
                 self.unit.status = MaintenanceStatus("Building Openstack image")
-                openstack_manager.build_image(
+                github = GithubClient(token=state.charm_config.token)
+                image = openstack_manager.build_image(
                     arch=state.arch,
                     cloud_config=state.charm_config.openstack_clouds_yaml,
                     github_client=github,
@@ -452,22 +461,25 @@ class GithubRunnerCharm(CharmBase):
             # The `_start_services`, `_install_deps` includes retry.
             self._install_deps()
             self._start_services(state.charm_config.token, state.proxy_config)
+        except SubprocessError:
+            logger.error("Failed to install dependencies")
+            raise
+
+        try:
             metrics.setup_logrotate()
-        except (LogrotateSetupError, SubprocessError) as err:
-            logger.exception(err)
-            if isinstance(err, LogrotateSetupError):
-                msg = "Failed to setup logrotate"
-            else:
-                msg = "Failed to install dependencies"
-            self.unit.status = BlockedStatus(msg)
-            return
+        except LogrotateSetupError:
+            logger.error("Failed to setup logrotate")
+            raise
 
         self._refresh_firewall(state)
-        runner_manager = self._get_runner_manager(state)
 
-        self.unit.status = MaintenanceStatus("Building runner image")
-        runner_manager.build_runner_image()
+        runner_manager = self._get_runner_manager(state)
+        if not runner_manager.has_runner_image():
+            self.unit.status = MaintenanceStatus("Building runner image")
+            runner_manager.build_runner_image()
         runner_manager.schedule_build_runner_image()
+
+        self._set_reconcile_timer()
 
         self.unit.status = MaintenanceStatus("Downloading runner binary")
         try:
@@ -483,9 +495,16 @@ class GithubRunnerCharm(CharmBase):
             # Failure to download runner binary is a transient error.
             # The charm automatically update runner binary on a schedule.
             self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
-            return
+            return False
 
         self.unit.status = ActiveStatus()
+        return True
+
+    @catch_charm_errors
+    def _on_install(self, _: InstallEvent) -> None:
+        """Handle the installation of charm."""
+        state = self._setup_state()
+        self._common_install_code(state)
 
     @catch_charm_errors
     def _on_start(self, _: StartEvent) -> None:
@@ -529,7 +548,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             now: Whether the reboot should trigger at end of event handler or now.
         """
-        logger.info("Upgrading kernel")
+        logger.info("Updating kernel (if available)")
         self._apt_install(["linux-generic"])
 
         _, exit_code = execute_command(["ls", "/var/run/reboot-required"], check_exit=False)
@@ -561,34 +580,18 @@ class GithubRunnerCharm(CharmBase):
         """Handle the update of charm."""
         state = self._setup_state()
 
+
+        logger.info("Reinstalling dependencies...")
+        if not self._common_install_code(state):
+            return
+
         if state.instance_type == InstanceType.OPENSTACK:
             # No dependency upgrade needed for openstack.
             # No need to flush runners as there was no dependency upgrade.
             return
 
-        logger.info("Reinstalling dependencies...")
-        try:
-            # The `_start_services`, `_install_deps` includes retry.
-            self._install_deps()
-            self._start_services(state.charm_config.token, state.proxy_config)
-            metrics.setup_logrotate()
-        except (LogrotateSetupError, SubprocessError) as err:
-            logger.exception(err)
-
-            if isinstance(err, LogrotateSetupError):
-                msg = "Failed to setup logrotate"
-            else:
-                msg = "Failed to install dependencies"
-            self.unit.status = BlockedStatus(msg)
-            return
-
-        state = self._setup_state()
-        self._refresh_firewall(state)
-        logger.info("Flushing the runners...")
         runner_manager = self._get_runner_manager(state)
-        if not runner_manager:
-            return
-
+        logger.info("Flushing the runners...")
         runner_manager.flush(FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
         self._reconcile_runners(
             runner_manager,

@@ -560,7 +560,7 @@ async def dispatch_workflow(
     ), "Failed to create workflow"
 
     # There is a very small chance of selecting a run not created by the dispatch above.
-    run = await wait_for(
+    run: WorkflowRun | None = await wait_for(
         partial(_get_latest_run, workflow=workflow, start_time=start_time, branch=branch)
     )
     assert run, f"Run not found for workflow: {workflow.name} ({workflow.id})"
@@ -576,10 +576,11 @@ async def dispatch_workflow(
 
 P = ParamSpec("P")
 R = TypeVar("R")
+S = Callable[P, R] | Callable[P, Awaitable[R]]
 
 
 async def wait_for(
-    func: Callable[P, R],
+    func: S,
     timeout: int | float = 300,
     check_interval: int = 10,
 ) -> R:
@@ -604,7 +605,7 @@ async def wait_for(
                 return result
         else:
             if result := func():
-                return result
+                return cast(R, result)
         time.sleep(check_interval)
 
     # final check before raising TimeoutError.
@@ -613,5 +614,5 @@ async def wait_for(
             return result
     else:
         if result := func():
-            return result
+            return cast(R, result)
     raise TimeoutError()
