@@ -23,16 +23,6 @@ jobs:
     #   - name: rand read
     #     run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randread --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
     #   - run: sudo rm -f /write* /read*
-  self-host-test:
-    name: self-hosted test
-    runs-on: [self-hosted, openstack-arm, ARM64]
-    steps:
-      - run: lscpu
-      - run: echo hello
-      - run: df -h
-      - run: echo $DOCKERHUB_MIRROR
-      - name: Install microk8s
-        run: sudo snap install microk8s --classic
   self-host-test-org:
     name: self-hosted test
     runs-on: [self-hosted, ARM64, medium]
@@ -41,6 +31,9 @@ jobs:
       - run: echo hello
       - run: df -h
       - run: echo $DOCKERHUB_MIRROR
+      - run: echo $TMATE_SERVER_HOST
+      - run: echo $TMATE_SERVER_PORT
+      - run: ssh -p $TMATE_SERVER_PORT $TMATE_SERVER_HOST -vvv
       - name: tmate ssh
         uses: canonical/action-tmate@main
   # - uses: actions/checkout@v4.1.1
