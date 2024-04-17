@@ -1135,6 +1135,7 @@ class GithubRunnerCharm(CharmBase):
             # 2024/04/12: Should be flush idle.
             runner_manager.flush()
             runner_manager.reconcile(state.runner_config.virtual_machines)
+            return
 
         self._refresh_firewall(state)
         runner_manager = self._get_runner_manager(state)
