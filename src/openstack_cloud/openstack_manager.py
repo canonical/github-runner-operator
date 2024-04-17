@@ -641,7 +641,7 @@ class OpenstackRunnerManager:
 
         logger.error(
             "Unable to SSH into %s with any address on network %s",
-            instance_name,
+            instance.instance_name,
             self._config.network,
         )
         return False
