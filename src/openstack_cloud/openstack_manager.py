@@ -591,7 +591,7 @@ class OpenstackRunnerManager:
                 port_range_min="10022",
                 port_range_max="10022",
                 protocol="tcp",
-                direction="ingress",
+                direction="egress",
                 ethertype="IPv4",
             )
 
