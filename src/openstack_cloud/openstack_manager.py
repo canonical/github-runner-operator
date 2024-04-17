@@ -51,9 +51,9 @@ from utilities import execute_command, retry, set_env_var
 logger = logging.getLogger(__name__)
 
 IMAGE_PATH_TMPL = "jammy-server-cloudimg-{architecture}-compressed.img"
-# Update the version when the image are modified.
+# Update the version when the image is not backward compatible.
 IMAGE_NAME = "github-runner-jammy-v1"
-# Update the version when the security group rules are modified.
+# Update the version when the security group rules are not backward compatible.
 SECURITY_GROUP_NAME = "github-runner-v1"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 _SSH_KEY_PATH = Path("/home/ubuntu/.ssh")
@@ -535,6 +535,7 @@ class OpenstackRunnerManager:
         """
         rule_exists_icmp = False
         rule_exists_ssh = False
+        rule_exists_tmate_ssh = False
 
         existing_security_group = conn.get_security_group(name_or_id=SECURITY_GROUP_NAME)
         if existing_security_group is None:
@@ -559,6 +560,14 @@ class OpenstackRunnerManager:
                         "Found SSH rule in existing security group %s", SECURITY_GROUP_NAME
                     )
                     rule_exists_ssh = True
+                if (
+                    rule["protocol"] == "tcp"
+                    and rule["port_range_min"] == rule["port_range_max"] == 10022
+                ):
+                    logger.debug(
+                        "Found tmate SSH rule in existing security group %s", SECURITY_GROUP_NAME
+                    )
+                    rule_exists_tmate_ssh = True
 
         if not rule_exists_icmp:
             conn.create_security_group_rule(
@@ -576,6 +585,16 @@ class OpenstackRunnerManager:
                 direction="ingress",
                 ethertype="IPv4",
             )
+        if not rule_exists_tmate_ssh:
+            conn.create_security_group_rule(
+                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                port_range_min="10022",
+                port_range_max="10022",
+                protocol="tcp",
+                direction="ingress",
+                ethertype="IPv4",
+            )
+
 
     def _setup_runner_keypair(self, conn: OpenstackConnection, name: str) -> None:
         """Set up the SSH keypair for a runner.
