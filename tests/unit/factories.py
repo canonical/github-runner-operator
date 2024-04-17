@@ -23,6 +23,7 @@ from charm_state import (
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
+    OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
@@ -79,7 +80,7 @@ class MockGithubRunnerCharmUnitFactory(factory.Factory):
 
         model = MagicMock
 
-    name = "github-runner/0"
+    # The name attribute is special for MagicMock. Must be set after object creation.
 
 
 class MockGithubRunnerCharmAppFactory(factory.Factory):
@@ -90,8 +91,8 @@ class MockGithubRunnerCharmAppFactory(factory.Factory):
 
         model = MagicMock
 
-    planned_units = 1
-    name = "github-runner"
+    planned_units: int = 1
+    # The name attribute is special for MagicMock. Must be set after object creation.
 
 
 class MockGithubRunnerCharmModelFactory(factory.Factory):
@@ -125,6 +126,7 @@ class MockGithubRunnerCharmFactory(factory.Factory):
             OPENSTACK_CLOUDS_YAML_CONFIG_NAME: "",
             OPENSTACK_NETWORK_CONFIG_NAME: "external",
             OPENSTACK_FLAVOR_CONFIG_NAME: "m1.small",
+            OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME: -1,
             PATH_CONFIG_NAME: factory.Sequence(lambda n: f"mock_path_{n}"),
             RECONCILE_INTERVAL_CONFIG_NAME: 10,
             RUNNER_STORAGE_CONFIG_NAME: "juju-storage",
@@ -137,3 +139,16 @@ class MockGithubRunnerCharmFactory(factory.Factory):
             VM_DISK_CONFIG_NAME: "10GiB",
         }
     )
+
+
+def get_mock_github_runner_charm() -> MagicMock:
+    """Create a MagicMock of github-runner charm.
+
+    Returns:
+        The MagicMock object with github-runner charm attributes.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    # The name attribute is special for MagicMock. Must be set after object creation.
+    mock_charm.unit.name = "github-runner/0"
+    mock_charm.app.name = "github-runner"
+    return mock_charm
