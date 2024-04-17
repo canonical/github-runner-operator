@@ -2,17 +2,22 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm with no runner."""
+import json
+from datetime import datetime, timezone
 
 import pytest
 from juju.application import Application
 from juju.model import Model
 
+from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers import (
     check_runner_binary_exists,
     get_repo_policy_compliance_pip_info,
     install_repo_policy_compliance_from_git_source,
     reconcile,
     remove_runner_bin,
+    run_in_unit,
+    wait_for,
     wait_till_num_of_runners,
 )
 from tests.status_name import ACTIVE
@@ -179,15 +184,64 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
     unit = app.units[0]
 
     # 1.
-    await app.set_config({"virtual-machines": "1"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
 
     await reconcile(app=app, model=model)
 
     await wait_till_num_of_runners(unit, 1)
 
     # 2.
-    await app.set_config({"virtual-machines": "0"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
 
     await reconcile(app=app, model=model)
 
     await wait_till_num_of_runners(unit, 0)
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_charm_upgrade(model: Model, app_no_runner: Application, charm_file: str) -> None:
+    """
+    arrange: A working application with no runners.
+    act: Upgrade the charm.
+    assert: The upgrade_charm hook ran successfully and the image has not been rebuilt.
+    """
+    start_time = datetime.now(tz=timezone.utc)
+
+    await app_no_runner.refresh(path=charm_file)
+
+    unit = app_no_runner.units[0]
+    unit_name_without_slash = unit.name.replace("/", "-")
+    juju_unit_log_file = f"/var/log/juju/unit-{unit_name_without_slash}.log"
+
+    async def is_upgrade_charm_event_emitted() -> bool:
+        """Check if the upgrade_charm event is emitted.
+
+        Returns:
+            bool: True if the event is emitted, False otherwise.
+        """
+        ret_code, stdout, stderr = await run_in_unit(
+            unit=unit, command=f"cat {juju_unit_log_file}"
+        )
+        assert ret_code == 0, f"Failed to read the log file: {stderr}"
+        return stdout is not None and "Emitting Juju event upgrade_charm." in stdout
+
+    await wait_for(is_upgrade_charm_event_emitted, timeout=360, check_interval=60)
+    await model.wait_for_idle(status=ACTIVE)
+
+    ret_code, stdout, stderr = await run_in_unit(
+        unit=unit, command="/snap/bin/lxc image list --format json"
+    )
+    assert ret_code == 0, f"Failed to read the image list: {stderr}"
+    assert stdout is not None, f"Failed to read the image list: {stderr}"
+    images = json.loads(stdout)
+    jammy_image = next(
+        (image for image in images if "jammy" in {alias["name"] for alias in image["aliases"]}),
+        None,
+    )
+    assert jammy_image is not None, "Jammy image not found."
+    # len("2024-04-10T00:00:00") == 19
+    assert (
+        datetime.fromisoformat(jammy_image["created_at"][:19]).replace(tzinfo=timezone.utc)
+        <= start_time
+    ), f"Image has been rebuilt after the upgrade: {jammy_image['created_at'][:19]} > {start_time}"

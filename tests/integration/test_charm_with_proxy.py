@@ -15,6 +15,15 @@ from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
 
+from charm_state import (
+    DENYLIST_CONFIG_NAME,
+    PATH_CONFIG_NAME,
+    RECONCILE_INTERVAL_CONFIG_NAME,
+    TEST_MODE_CONFIG_NAME,
+    TOKEN_CONFIG_NAME,
+    USE_APROXY_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+)
 from tests.integration.helpers import (
     ensure_charm_has_runner,
     get_runner_names,
@@ -85,7 +94,6 @@ async def app_with_prepared_machine_fixture(
     proxy: str,
 ) -> Application:
     """Application with proxy setup and firewall to block all other network access."""
-
     await model.set_config(
         {
             "apt-http-proxy": proxy,
@@ -158,12 +166,12 @@ EOT"""
         application_name=app_name,
         series="jammy",
         config={
-            "path": path,
-            "token": token,
-            "virtual-machines": 0,
-            "denylist": "10.10.0.0/16",
-            "test-mode": "insecure",
-            "reconcile-interval": 60,
+            PATH_CONFIG_NAME: path,
+            TOKEN_CONFIG_NAME: token,
+            VIRTUAL_MACHINES_CONFIG_NAME: 0,
+            DENYLIST_CONFIG_NAME: "10.10.0.0/16",
+            TEST_MODE_CONFIG_NAME: "insecure",
+            RECONCILE_INTERVAL_CONFIG_NAME: 60,
         },
         constraints={"root-disk": 15},
         to=machine.id,
@@ -194,7 +202,7 @@ async def app_fixture(
     """
     await app_with_prepared_machine.set_config(
         {
-            "virtual-machines": "0",
+            VIRTUAL_MACHINES_CONFIG_NAME: "0",
         }
     )
     await reconcile(app=app_with_prepared_machine, model=model)
@@ -231,8 +239,8 @@ async def _assert_proxy_vars_in_file(unit: Unit, runner_name: str, file_path: st
         file_path: The path to the file to check for proxy environment variables.
         not_set: Whether the proxy environment variables should be set or not.
     """
-    return_code, stdout = await run_in_lxd_instance(unit, runner_name, f"cat {file_path}")
-    assert return_code == 0, "Failed to read file"
+    return_code, stdout, stderr = await run_in_lxd_instance(unit, runner_name, f"cat {file_path}")
+    assert return_code == 0, f"Failed to read file {stdout} {stderr}"
     assert stdout, "File is empty"
     _assert_proxy_var_in(stdout, not_in=not_set)
 
@@ -245,7 +253,7 @@ async def _assert_docker_proxy_vars(unit: Unit, runner_name: str, not_set=False)
         runner_name: The name of the runner.
         not_set: Whether the proxy environment variables should be set or not.
     """
-    return_code, _ = await run_in_lxd_instance(
+    return_code, _, _ = await run_in_lxd_instance(
         unit, runner_name, "docker run --rm alpine sh -c 'env | grep -i  _PROXY'"
     )
     assert return_code == (1 if not_set else 0)
@@ -296,14 +304,16 @@ async def _get_aproxy_logs(unit: Unit, runner_name: str) -> Optional[str]:
     Returns:
         The aproxy logs if existent, otherwise None.
     """
-    return_code, stdout = await run_in_lxd_instance(
+    return_code, stdout, stderr = await run_in_lxd_instance(
         unit, runner_name, "snap logs aproxy.aproxy -n=all"
     )
-    assert return_code == 0, "Failed to get aproxy logs"
+    assert return_code == 0, f"Failed to get aproxy logs {stdout} {stderr}"
     return stdout
 
 
-async def _curl_as_ubuntu_user(unit: Unit, runner_name: str, url: str) -> tuple[int, str | None]:
+async def _curl_as_ubuntu_user(
+    unit: Unit, runner_name: str, url: str
+) -> tuple[int, str | None, str | None]:
     """Run curl as a logged in ubuntu user.
 
     This should simulate the bevahiour of a curl inside the runner with environment variables set.
@@ -314,7 +324,7 @@ async def _curl_as_ubuntu_user(unit: Unit, runner_name: str, url: str) -> tuple[
         url: The URL to curl.
 
     Returns:
-        The return code and stdout of the curl command.
+        The return code, stdout, stderr of the curl command.
     """
     return await run_in_lxd_instance(
         unit,
@@ -337,7 +347,7 @@ async def test_usage_of_aproxy(model: Model, app: Application, proxy_logs_filepa
     """
     await app.set_config(
         {
-            "experimental-use-aproxy": "true",
+            USE_APROXY_CONFIG_NAME: "true",
         }
     )
     await ensure_charm_has_runner(app, model)
@@ -350,20 +360,22 @@ async def test_usage_of_aproxy(model: Model, app: Application, proxy_logs_filepa
     _clear_tinyproxy_log(proxy_logs_filepath)
 
     # 1. URL with standard port, should succeed, gets intercepted by aproxy
-    return_code, stdout = await _curl_as_ubuntu_user(unit, runner_name, "http://canonical.com")
+    return_code, stdout, stderr = await _curl_as_ubuntu_user(
+        unit, runner_name, "http://canonical.com"
+    )
     assert (
         return_code == 0
-    ), f"Expected successful connection to http://canonical.com. Error msg: {stdout}"
+    ), f"Expected successful connection to http://canonical.com. Error msg: {stdout} {stderr}"
 
     # 2. URL with non-standard port, should fail, request does not get intercepted by aproxy
-    return_code, stdout = await _curl_as_ubuntu_user(
+    return_code, stdout, stderr = await _curl_as_ubuntu_user(
         unit,
         runner_name,
         f"http://canonical.com:{NON_STANDARD_PORT}",
     )
     assert return_code == 7, (
         f"Expected cannot connect error for http://canonical.com:{NON_STANDARD_PORT}. "
-        f"Error msg: {stdout}"
+        f"Error msg: {stdout} {stderr}"
     )
 
     aproxy_logs = await _get_aproxy_logs(unit, runner_name)
@@ -392,7 +404,7 @@ async def test_use_proxy_without_aproxy(
     """
     await app.set_config(
         {
-            "experimental-use-aproxy": "false",
+            USE_APROXY_CONFIG_NAME: "false",
         }
     )
     await ensure_charm_has_runner(app, model)
@@ -407,10 +419,12 @@ async def test_use_proxy_without_aproxy(
     _clear_tinyproxy_log(proxy_logs_filepath)
 
     # 1. URL with standard port, should succeed
-    return_code, stdout = await _curl_as_ubuntu_user(unit, runner_name, "http://canonical.com")
+    return_code, stdout, stderr = await _curl_as_ubuntu_user(
+        unit, runner_name, "http://canonical.com"
+    )
     assert (
         return_code == 0
-    ), f"Expected successful connection to http://canonical.com. Error msg: {stdout}"
+    ), f"Expected successful connection to http://canonical.com. Error msg: {stdout} {stderr}"
 
     # 2. URL with non-standard port, should return an error message by the proxy like this:
     #
@@ -423,14 +437,14 @@ async def test_use_proxy_without_aproxy(
     # <p><em>Generated by tinyproxy version 1.11.0.</em></p>
     # </body>
     # </html>
-    return_code, stdout = await _curl_as_ubuntu_user(
+    return_code, stdout, stderr = await _curl_as_ubuntu_user(
         unit,
         runner_name,
         f"http://canonical.com:{NON_STANDARD_PORT}",
     )
     assert return_code == 0, (
         f"Expected error response from proxy for http://canonical.com:{NON_STANDARD_PORT}. "
-        f"Error msg: {stdout}"
+        f"Error msg: {stdout} {stderr}"
     )
 
     proxy_logs = proxy_logs_filepath.read_text(encoding="utf-8")

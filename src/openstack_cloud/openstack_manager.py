@@ -53,7 +53,7 @@ def _create_connection(
     Raises:
         OpenStackUnauthorizedError: if the credentials provided is not authorized.
 
-    Returns:
+    Yields:
         An openstack.connection.Connection object.
     """
     clouds = list(cloud_config["clouds"].keys())
@@ -119,7 +119,9 @@ def _generate_docker_proxy_unit_file(proxies: Optional[ProxyConfig] = None) -> s
     return environment.get_template("systemd-docker-proxy.j2").render(proxies=proxies)
 
 
-def _generate_docker_client_proxy_config_json(http_proxy: str, https_proxy: str, no_proxy: str):
+def _generate_docker_client_proxy_config_json(
+    http_proxy: str, https_proxy: str, no_proxy: str
+) -> str:
     """Generate proxy config.json for docker client.
 
     Args:
@@ -187,7 +189,7 @@ def _build_image_command(
 class InstanceConfig:
     """The configuration values for creating a single runner instance.
 
-    Args:
+    Attributes:
         name: Name of the image to launch the GitHub runner instance with.
         labels: The runner instance labels.
         registration_token: Token for registering the runner on GitHub.
@@ -202,7 +204,10 @@ class InstanceConfig:
     openstack_image: openstack.image.v2.image.Image
 
 
-def _get_supported_runner_arch(arch: str) -> Literal["amd64", "arm64"]:
+SupportedCloudImageArch = Literal["amd64", "arm64"]
+
+
+def _get_supported_runner_arch(arch: str) -> SupportedCloudImageArch:
     """Validate and return supported runner architecture.
 
     The supported runner architecture takes in arch value from Github supported architecture and
@@ -229,6 +234,43 @@ def _get_supported_runner_arch(arch: str) -> Literal["amd64", "arm64"]:
             raise UnsupportedArchitectureError(arch)
 
 
+class ImageDeleteError(Exception):
+    """Represents an error while deleting existing openstack image."""
+
+
+def _put_image(cloud_config: dict[str, dict], image_arch: SupportedCloudImageArch) -> str:
+    """Create or replace the image with existing name.
+
+    Args:
+        cloud_config: The cloud configuration to connect OpenStack with.
+        image_arch: Ubuntu cloud image architecture.
+
+    Raises:
+        ImageDeleteError: If there was an error deleting the image.
+        OpenStackCloudException: If there was an error communicating with the Openstack API.
+
+    Returns:
+        The ID of the image created.
+    """
+    try:
+        with _create_connection(cloud_config) as conn:
+            existing_image: openstack.image.v2.image.Image
+            for existing_image in conn.search_images(name_or_id=IMAGE_NAME):
+                # images with same name (different ID) can be created and will error during server
+                # instantiation.
+                if not conn.delete_image(name_or_id=existing_image.id, wait=True):
+                    raise ImageDeleteError("Failed to delete duplicate image on Openstack.")
+            image: openstack.image.v2.image.Image = conn.create_image(
+                name=IMAGE_NAME,
+                filename=IMAGE_PATH_TMPL.format(architecture=image_arch),
+                wait=True,
+            )
+            return image.id
+    # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+    except OpenStackCloudException:  # pylint: disable=try-except-raise
+        raise
+
+
 def build_image(
     arch: Arch,
     cloud_config: dict[str, dict],
@@ -239,13 +281,14 @@ def build_image(
     """Build and upload an image to OpenStack.
 
     Args:
+        arch: The system architecture to build the image for.
         cloud_config: The cloud configuration to connect OpenStack with.
         github_client: The Github client to interact with Github API.
         path: Github organisation or repository path.
         proxies: HTTP proxy settings.
 
     Raises:
-        ImageBuildError: If there were errors building/creating the image.
+        OpenstackImageBuildError: If there were errors building/creating the image.
 
     Returns:
         The created OpenStack image id.
@@ -267,23 +310,9 @@ def build_image(
         raise OpenstackImageBuildError(f"Unsupported architecture {runner_arch}") from exc
 
     try:
-        with _create_connection(cloud_config) as conn:
-            existing_image: openstack.image.v2.image.Image
-            for existing_image in conn.search_images(name_or_id=IMAGE_NAME):
-                # images with same name (different ID) can be created and will error during server
-                # instantiation.
-                if not conn.delete_image(name_or_id=existing_image.id, wait=True):
-                    raise OpenstackImageBuildError(
-                        "Failed to delete duplicate image on Openstack."
-                    )
-            image: openstack.image.v2.image.Image = conn.create_image(
-                name=IMAGE_NAME,
-                filename=IMAGE_PATH_TMPL.format(architecture=image_arch),
-                wait=True,
-            )
-            return image.id
-    except OpenStackCloudException as exc:
-        raise OpenstackImageBuildError("Failed to upload image.") from exc
+        return _put_image(cloud_config=cloud_config, image_arch=image_arch)
+    except (ImageDeleteError, OpenStackCloudException) as exc:
+        raise OpenstackImageBuildError(f"Failed to upload image: {str(exc)}") from exc
 
 
 def create_instance_config(
@@ -296,9 +325,12 @@ def create_instance_config(
 
     Args:
         unit_name: The charm unit name.
-        image: Ubuntu image flavor.
+        openstack_image: The openstack image object to create the instance with.
         path: Github organisation or repository path.
         github_client: The Github client to interact with Github API.
+
+    Returns:
+        Instance configuration created.
     """
     app_name, unit_num = unit_name.rsplit("/", 1)
     suffix = secrets.token_hex(12)
@@ -372,6 +404,9 @@ def create_instance(
     Args:
         cloud_config: The cloud configuration to connect Openstack with.
         instance_config: The configuration values for Openstack instance to launch.
+        proxies: HTTP proxy settings.
+        dockerhub_mirror:
+        ssh_debug_connections:
 
     Raises:
         OpenstackInstanceLaunchError: if any errors occurred while launching Openstack instance.

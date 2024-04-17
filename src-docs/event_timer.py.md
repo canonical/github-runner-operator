@@ -61,12 +61,12 @@ Construct the timer manager.
 
 ---
 
-<a href="../src/event_timer.py#L147"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L151"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `disable_event_timer`
 
 ```python
-disable_event_timer(event_name: str)
+disable_event_timer(event_name: str) → None
 ```
 
 Disable the systemd timer for the given event. 
@@ -85,7 +85,7 @@ Disable the systemd timer for the given event.
 
 ---
 
-<a href="../src/event_timer.py#L108"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L110"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `ensure_event_timer`
 
@@ -94,7 +94,7 @@ ensure_event_timer(
     event_name: str,
     interval: int,
     timeout: Optional[int] = None
-)
+) → None
 ```
 
 Ensure that a systemd service and timer are registered to dispatch the given event. 
@@ -119,7 +119,7 @@ The timeout is the number of seconds before an event is timed out. If not set or
 
 ---
 
-<a href="../src/event_timer.py#L85"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L87"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `is_active`
 
