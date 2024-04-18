@@ -8,10 +8,10 @@ on:
 jobs:
   self-host-x64:
     name: self-hosted x64 test
-    runs-on: [self-hosted, X64, large]
+    runs-on: [self-hosted, ARM64, large]
     steps:
       - name: tmate ssh
-        uses: canonical/action-tmate@main
+        uses: canonical/action-tmate@debug
   # github-test:
   # runs-on: ubuntu-latest
   # steps:
