@@ -7,22 +7,22 @@ on:
 
 jobs:
   # github-test:
-    # runs-on: ubuntu-latest
-    # steps:
-    #   - run: sudo apt-get update
-    #   - run: sudo apt install -y fio
-    #   - name: seq write
-    #     run: sudo fio --name=write_throughput --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=write --group_reporting=1 --iodepth_batch_submit=64 --iodepth_batch_complete_max=64
-    #   - run: sudo rm -f /write* /read*
-    #   - name: rand write
-    #     run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randwrite --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
-    #   - run: sudo rm -f /write* /read*
-    #   - name: seq read
-    #     run: sudo fio --name=write_throughput --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=read --group_reporting=1 --iodepth_batch_submit=64 --iodepth_batch_complete_max=64
-    #   - run: sudo rm -f /write* /read*
-    #   - name: rand read
-    #     run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randread --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
-    #   - run: sudo rm -f /write* /read*
+  # runs-on: ubuntu-latest
+  # steps:
+  #   - run: sudo apt-get update
+  #   - run: sudo apt install -y fio
+  #   - name: seq write
+  #     run: sudo fio --name=write_throughput --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=write --group_reporting=1 --iodepth_batch_submit=64 --iodepth_batch_complete_max=64
+  #   - run: sudo rm -f /write* /read*
+  #   - name: rand write
+  #     run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randwrite --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
+  #   - run: sudo rm -f /write* /read*
+  #   - name: seq read
+  #     run: sudo fio --name=write_throughput --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=1M --iodepth=64 --rw=read --group_reporting=1 --iodepth_batch_submit=64 --iodepth_batch_complete_max=64
+  #   - run: sudo rm -f /write* /read*
+  #   - name: rand read
+  #     run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randread --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
+  #   - run: sudo rm -f /write* /read*
   self-host-test-org:
     name: self-hosted test
     runs-on: [self-hosted, ARM64, medium]
@@ -39,7 +39,7 @@ jobs:
       - name: Test network connection to tmate ssh server
         run: nc -vz $TMATE_SERVER_HOST $TMATE_SERVER_PORT
       - name: Test download tmate binary
-        run: wget https://github.com/tmate-io/tmate/releases/download/2.4.0/tmate-2.4.0-static-linux-amd64.tar.xz
+        run: wget https://github.com/tmate-io/tmate/releases/download/2.4.0/tmate-2.4.0-static-linux-arm64.tar.xz
       - name: tmate ssh
         uses: canonical/action-tmate@main
       - if: always()
