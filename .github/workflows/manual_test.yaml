@@ -39,7 +39,9 @@ jobs:
       # - name: Test network connection to tmate ssh server
       #   run: nc -vz $TMATE_SERVER_HOST $TMATE_SERVER_PORT
       - name: Test download tmate binary
-        run: wget https://github.com/tmate-io/tmate/releases/download/2.4.0/tmate-2.4.0-static-linux-arm64v8.tar.xz
+        run: |
+          wget https://github.com/tmate-io/tmate/releases/download/2.4.0/tmate-2.4.0-static-linux-arm64v8.tar.xz
+          echo "success"
       - name: tmate ssh
         uses: canonical/action-tmate@debug
       - if: always()
