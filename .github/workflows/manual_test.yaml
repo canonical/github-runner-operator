@@ -32,7 +32,7 @@ jobs:
   self-host-test-org:
     name: self-hosted test
     runs-on: [self-hosted, ARM64, medium]
-    steps:
+    steps: 
       # - run: lscpu
       # - run: df -h
       # - run: echo $HTTP_PROXY
