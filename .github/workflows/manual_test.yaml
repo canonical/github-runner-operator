@@ -36,8 +36,8 @@ jobs:
       - run: echo $TMATE_SERVER_HOST
       - run: echo $TMATE_SERVER_PORT
       - run: sudo apt install netcat
-      - run: Test network connection to tmate ssh server
-      - run: nc -vz $TMATE_SERVER_PORT $TMATE_SERVER_HOST
+      - name: Test network connection to tmate ssh server
+        run: nc -vz $TMATE_SERVER_PORT $TMATE_SERVER_HOST
       - name: Test download tmate binary
         run: wget https://github.com/tmate-io/tmate/releases/download/2.4.0/tmate-2.4.0-static-linux-amd64.tar.xz
       - name: tmate ssh
