@@ -41,7 +41,7 @@ jobs:
       - name: Test download tmate binary
         run: wget https://github.com/tmate-io/tmate/releases/download/2.4.0/tmate-2.4.0-static-linux-arm64.tar.xz
       - name: tmate ssh
-        uses: canonical/action-tmate@main
+        uses: canonical/action-tmate@debug
       - if: always()
         run: ssh -p $TMATE_SERVER_PORT $TMATE_SERVER_HOST -vvv
   # - uses: actions/checkout@v4.1.1
