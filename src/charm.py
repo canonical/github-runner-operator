@@ -580,7 +580,6 @@ class GithubRunnerCharm(CharmBase):
         """Handle the update of charm."""
         state = self._setup_state()
 
-
         logger.info("Reinstalling dependencies...")
         if not self._common_install_code(state):
             return

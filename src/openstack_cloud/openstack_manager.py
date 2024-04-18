@@ -595,7 +595,6 @@ class OpenstackRunnerManager:
                 ethertype="IPv4",
             )
 
-
     def _setup_runner_keypair(self, conn: OpenstackConnection, name: str) -> None:
         """Set up the SSH keypair for a runner.
 
