@@ -46,7 +46,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const keys = github.rest.users.listPublicKeysForUser({username: context.actor});
+            const keys = await github.rest.users.listPublicKeysForUser({username: context.actor});
             console.log(keys)
       - name: tmate ssh
         uses: canonical/action-tmate@debug
