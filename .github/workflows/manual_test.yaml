@@ -27,17 +27,17 @@ jobs:
     name: self-hosted test
     runs-on: [self-hosted, ARM64, medium]
     steps:
-      - run: lscpu
-      - run: df -h
-      - run: echo $HTTP_PROXY
-      - run: echo $HTTPS_PROXY
-      - run: echo $NO_PROXY
-      - run: echo $DOCKERHUB_MIRROR
-      - run: echo $TMATE_SERVER_HOST
-      - run: echo $TMATE_SERVER_PORT
-      - run: sudo apt install netcat
-      - name: Test network connection to tmate ssh server
-        run: nc -vz $TMATE_SERVER_HOST $TMATE_SERVER_PORT
+      # - run: lscpu
+      # - run: df -h
+      # - run: echo $HTTP_PROXY
+      # - run: echo $HTTPS_PROXY
+      # - run: echo $NO_PROXY
+      # - run: echo $DOCKERHUB_MIRROR
+      # - run: echo $TMATE_SERVER_HOST
+      # - run: echo $TMATE_SERVER_PORT
+      # - run: sudo apt install netcat
+      # - name: Test network connection to tmate ssh server
+      #   run: nc -vz $TMATE_SERVER_HOST $TMATE_SERVER_PORT
       - name: Test download tmate binary
         run: wget https://github.com/tmate-io/tmate/releases/download/2.4.0/tmate-2.4.0-static-linux-arm64v8.tar.xz
       - name: tmate ssh
