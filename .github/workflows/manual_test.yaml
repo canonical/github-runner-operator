@@ -33,9 +33,10 @@ jobs:
       - run: echo $DOCKERHUB_MIRROR
       - run: echo $TMATE_SERVER_HOST
       - run: echo $TMATE_SERVER_PORT
-      - run: ssh -p $TMATE_SERVER_PORT $TMATE_SERVER_HOST -vvv
       - name: tmate ssh
         uses: canonical/action-tmate@main
+      - if: always()
+        run: ssh -p $TMATE_SERVER_PORT $TMATE_SERVER_HOST -vvv
   # - uses: actions/checkout@v4.1.1
   # - uses: canonical/setup-lxd@v0.1.1
   # - name: Pack charm
