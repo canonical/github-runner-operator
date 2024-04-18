@@ -41,13 +41,6 @@ jobs:
       - name: Test download tmate binary
         run: |
           wget https://github.com/tmate-io/tmate/releases/download/2.4.0/tmate-2.4.0-static-linux-arm64v8.tar.xz
-          echo "success"
-      - name: View context attributes
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const keys = await github.rest.users.listPublicKeysForUser({username: context.actor});
-            console.log(keys)
       - name: tmate ssh
         uses: canonical/action-tmate@debug
       - if: always()
