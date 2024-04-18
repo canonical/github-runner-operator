@@ -8,7 +8,7 @@ on:
 jobs:
   self-host-x64:
     name: self-hosted x64 test
-    runs-on: [self-hosted, ARM64, large]
+    runs-on: [self-hosted, X64, large]
     steps:
       - name: tmate ssh
         uses: canonical/action-tmate@debug
@@ -44,10 +44,6 @@ jobs:
       # - run: sudo apt install netcat
       # - name: Test network connection to tmate ssh server
       #   run: nc -vz $TMATE_SERVER_HOST $TMATE_SERVER_PORT
-      - name: Test download tmate binary
-        run: |
-          wget https://github.com/tmate-io/tmate/releases/download/2.4.0/tmate-2.4.0-static-linux-arm64v8.tar.xz
-          echo "success"
       - name: tmate ssh
         uses: canonical/action-tmate@debug
       - if: always()
