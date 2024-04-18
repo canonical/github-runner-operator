@@ -28,8 +28,11 @@ jobs:
     runs-on: [self-hosted, ARM64, medium]
     steps:
       - run: lscpu
-      - run: echo hello
       - run: df -h
+      - run: echo $HTTP_PROXY
+      - run: echo $HTTPS_PROXY
+      - run: echo $NO_PROXY
+      - run: curl https://github.com -vvv
       - run: echo $DOCKERHUB_MIRROR
       - run: echo $TMATE_SERVER_HOST
       - run: echo $TMATE_SERVER_PORT
