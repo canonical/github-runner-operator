@@ -8,6 +8,7 @@
 import json
 import logging
 import secrets
+import time
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
@@ -25,6 +26,7 @@ from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import OpenStackCloudException, SDKException
 from paramiko.ssh_exception import NoValidConnectionsError
 
+import metrics
 from charm_state import (
     Arch,
     GithubOrg,
@@ -34,6 +36,7 @@ from charm_state import (
 )
 from errors import (
     GithubClientError,
+    IssueMetricEventError,
     OpenStackError,
     OpenstackImageBuildError,
     OpenstackInstanceLaunchError,
@@ -595,7 +598,6 @@ class OpenstackRunnerManager:
                 ethertype="IPv4",
             )
 
-
     def _setup_runner_keypair(self, conn: OpenstackConnection, name: str) -> None:
         """Set up the SSH keypair for a runner.
 
@@ -688,6 +690,7 @@ class OpenstackRunnerManager:
         Raises:
             RunnerCreateError: Unable to create the OpenStack runner.
         """
+        ts_now = time.time()
         environment = jinja2.Environment(
             loader=jinja2.FileSystemLoader("templates"), autoescape=True
         )
@@ -747,6 +750,17 @@ class OpenstackRunnerManager:
         logger.info("Waiting runner %s to come online", instance_config.name)
         self._wait_until_runner_process_running(conn, instance.name)
         logger.info("Finished creating runner %s", instance_config.name)
+        ts_after = time.time()
+        try:
+            metrics.issue_event(
+                event=metrics.RunnerInstalled(
+                    timestamp=ts_after,
+                    flavor=self.app_name,
+                    duration=ts_after - ts_now,
+                ),
+            )
+        except IssueMetricEventError:
+            logger.exception("Failed to issue RunnerInstalled metric")
 
     def get_github_runner_info(self) -> tuple[RunnerGithubInfo]:
         """Get information on GitHub for the runners.

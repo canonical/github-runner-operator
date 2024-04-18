@@ -1,14 +1,19 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import secrets
+from pathlib import Path
 from typing import Optional
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, call
 
 import jinja2
 import openstack.exceptions
 import pytest
+from openstack.compute.v2.keypair import Keypair
 
+import metrics
+from charm_state import CharmState, ProxyConfig
 from errors import OpenStackError
+from metrics import RunnerInstalled
 from openstack_cloud import openstack_manager
 
 CLOUD_NAME = "microstack"
@@ -480,4 +485,55 @@ def test_build_image(patched_create_connection_context: MagicMock, mock_github_c
         cloud_config=MagicMock(),
         github_client=mock_github_client,
         path=MagicMock(),
+    )
+
+
+def test_reconcile_issues_runner_installed_event(
+    monkeypatch: pytest.MonkeyPatch,
+    mock_github_client: MagicMock,
+    patched_create_connection_context: MagicMock,
+    tmp_path: Path,
+):
+    """
+    arrange: Enable issuing of metrics and mock timestamps.
+    act: Reconcile to create a runner.
+    assert: The expected event is issued.
+    """
+    t_mock = MagicMock(return_value=12345)
+    issue_event_mock = MagicMock(spec=metrics.issue_event)
+    monkeypatch.setattr(openstack_manager.time, "time", t_mock)
+    monkeypatch.setattr(openstack_manager.metrics, "issue_event", issue_event_mock)
+
+    app_name = secrets.token_hex(16)
+    charm_state = MagicMock(spec=CharmState)
+    charm_state.proxy_config = ProxyConfig()
+    charm_state.ssh_debug_connections = MagicMock()
+    os_runner_manager_config = openstack_manager.OpenstackRunnerManagerConfig(
+        charm_state=charm_state,
+        path=MagicMock(),
+        labels=[],
+        token=secrets.token_hex(16),
+        flavor=app_name,
+        network=secrets.token_hex(16),
+        dockerhub_mirror=None,
+    )
+    patched_create_connection_context.create_keypair.return_value = Keypair(private_key="test_key")
+    server_mock = MagicMock()
+    server_mock.status = openstack_manager._INSTANCE_STATUS_ACTIVE
+    patched_create_connection_context.get_server.return_value = server_mock
+
+    os_runner_manager = openstack_manager.OpenstackRunnerManager(
+        app_name=app_name,
+        unit_num=0,
+        openstack_runner_manager_config=os_runner_manager_config,
+        cloud_config={},
+    )
+    os_runner_manager._github = mock_github_client
+    os_runner_manager._ssh_health_check = MagicMock(return_value=True)
+
+    monkeypatch.setattr(openstack_manager, "_SSH_KEY_PATH", tmp_path)
+    os_runner_manager.reconcile(quantity=1)
+
+    issue_event_mock.assert_has_calls(
+        [call(event=RunnerInstalled(timestamp=12345, flavor=app_name, duration=0))]
     )
