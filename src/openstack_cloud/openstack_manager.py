@@ -11,6 +11,7 @@ import secrets
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
+from time import sleep
 from typing import Generator, Iterable, Literal, NamedTuple, Optional, cast
 
 import jinja2
@@ -651,7 +652,7 @@ class OpenstackRunnerManager:
         )
         return False
 
-    @retry(tries=10, delay=30, local_logger=logger)
+    @retry(tries=10, delay=60, local_logger=logger)
     def _wait_until_runner_process_running(
         self, conn: OpenstackConnection, instance_name: str
     ) -> None:
