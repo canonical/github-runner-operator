@@ -31,13 +31,14 @@ jobs:
   #   - run: sudo rm -f /write* /read*
   self-host-test-arm64:
     name: self-hosted arm64 test
-    runs-on: [self-hosted, ARM64, medium]
+    runs-on: [self-hosted, ARM64, large]
     steps:
-      # - run: lscpu
-      # - run: df -h
-      # - run: echo $HTTP_PROXY
-      # - run: echo $HTTPS_PROXY
-      # - run: echo $NO_PROXY
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: echo $HTTP_PROXY
+      - run: echo $HTTPS_PROXY
+      - run: echo $NO_PROXY
       - run: echo $DOCKERHUB_MIRROR
       - run: nc -vz github-runner-dockerhub-cache.canonical.com 5000
       - run: curl $DOCKERHUB_MIRROR -vvv
@@ -46,8 +47,8 @@ jobs:
       # - run: echo $TMATE_SERVER_HOST
       # - run: echo $TMATE_SERVER_PORT
       # - run: sudo apt install netcat
-      # - name: Test network connection to tmate ssh server
-      #   run: nc -vz $TMATE_SERVER_HOST $TMATE_SERVER_PORT
+      - name: Test network connection to tmate ssh server
+        run: nc -vz $TMATE_SERVER_HOST $TMATE_SERVER_PORT
       - name: tmate ssh
         uses: canonical/action-tmate@debug
       - if: always()
