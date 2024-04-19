@@ -418,15 +418,15 @@ def create_instance_config(  # pylint: disable=too-many-arguments
 
 def _generate_runner_env(
     templates_env: jinja2.Environment,
-    proxies: Optional[ProxyConfig] = None,
     dockerhub_mirror: Optional[str] = None,
     ssh_debug_connections: list[SSHDebugConnection] | None = None,
 ) -> str:
     """Generate Github runner .env file contents.
 
+    Proxy configuration are handled by aproxy.
+
     Args:
         templates_env: The jinja template environment.
-        proxies: Proxy values to enable on the Github runner.
         dockerhub_mirror: The url to Dockerhub to reduce rate limiting.
         ssh_debug_connections: Tmate SSH debug connection information to load as environment vars.
 
@@ -434,7 +434,6 @@ def _generate_runner_env(
         The .env contents to be loaded by Github runner.
     """
     return templates_env.get_template("env.j2").render(
-        proxies=proxies,
         pre_job_script="",
         dockerhub_mirror=dockerhub_mirror or "",
         ssh_debug_info=(secrets.choice(ssh_debug_connections) if ssh_debug_connections else None),
@@ -442,7 +441,10 @@ def _generate_runner_env(
 
 
 def _generate_cloud_init_userdata(
-    templates_env: jinja2.Environment, instance_config: InstanceConfig, runner_env: str
+    templates_env: jinja2.Environment,
+    instance_config: InstanceConfig,
+    runner_env: str,
+    proxies: Optional[ProxyConfig] = None,
 ) -> str:
     """Generate cloud init userdata to launch at startup.
 
@@ -450,6 +452,7 @@ def _generate_cloud_init_userdata(
         templates_env: The jinja template environment.
         instance_config: The configuration values for Openstack instance to launch.
         runner_env: The contents of .env to source when launching Github runner.
+        proxies: Proxy values to enable on the Github runner.
 
     Returns:
         The cloud init userdata script.
@@ -465,6 +468,7 @@ def _generate_cloud_init_userdata(
         instance_labels=",".join(instance_config.labels),
         instance_name=instance_config.name,
         env_contents=runner_env,
+        proxies=proxies,
     )
 
 
@@ -693,7 +697,6 @@ class OpenstackRunnerManager:
 
         env_contents = _generate_runner_env(
             templates_env=environment,
-            proxies=self._config.charm_state.proxy_config,
             dockerhub_mirror=self._config.dockerhub_mirror,
             ssh_debug_connections=self._config.charm_state.ssh_debug_connections,
         )
@@ -706,7 +709,10 @@ class OpenstackRunnerManager:
             self._github,
         )
         cloud_userdata = _generate_cloud_init_userdata(
-            templates_env=environment, instance_config=instance_config, runner_env=env_contents
+            templates_env=environment,
+            instance_config=instance_config,
+            runner_env=env_contents,
+            proxies=self._config.charm_state.proxy_config,
         )
 
         self._ensure_security_group(conn)
