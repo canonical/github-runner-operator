@@ -971,6 +971,9 @@ class OpenstackRunnerManager:
                 "Unable to SSH into %s with address %s", instance.instance_name, ssh_conn.host
             )
             return False
+        except FileNotFoundError:
+            logger.info("File %s not found on %s", file_path, instance.instance_name)
+            return False
 
         if not result.ok:
             logger.warning(
