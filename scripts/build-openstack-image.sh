@@ -137,9 +137,7 @@ DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get upgrade -yq
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget unzip gh snapd -yq
 ln -s /usr/bin/python3 /usr/bin/python
 
-sudo /usr/bin/snap set system proxy.http="$HTTP_PROXY"
-sudo /usr/bin/snap set system proxy.https="$HTTPS_PROXY"
-sudo /usr/bin/snap install aproxy --channel=edge
+# Snap installation cannot work in chroot env: https://forum.snapcraft.io/t/installing-a-snap-in-chrooted-enviornment/19048/2
 
 # Uninstall unattended-upgrades, to avoid lock errors when unattended-upgrades is active in the runner
 DEBIAN_FRONTEND=noninteractive /usr/bin/systemctl stop apt-daily.timer
