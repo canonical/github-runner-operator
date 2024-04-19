@@ -6,12 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  self-host-x64:
-    name: self-hosted x64 test
-    runs-on: [self-hosted, X64, large]
-    steps:
-      - name: tmate ssh
-        uses: canonical/action-tmate@debug
+  # self-host-x64:
+  #   name: self-hosted x64 test
+  #   runs-on: [self-hosted, X64, large]
+  #   steps:
+  #     - name: tmate ssh
+  #       uses: canonical/action-tmate@debug
   # github-test:
   # runs-on: ubuntu-latest
   # steps:
@@ -29,16 +29,21 @@ jobs:
   #   - name: rand read
   #     run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randread --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
   #   - run: sudo rm -f /write* /read*
-  self-host-test-org:
-    name: self-hosted test
+  self-host-test-arm64:
+    name: self-hosted arm64 test
     runs-on: [self-hosted, ARM64, medium]
-    steps: 
+    steps:
       # - run: lscpu
       # - run: df -h
       # - run: echo $HTTP_PROXY
       # - run: echo $HTTPS_PROXY
       # - run: echo $NO_PROXY
-      # - run: echo $DOCKERHUB_MIRROR
+      - run: echo $DOCKERHUB_MIRROR
+      - run: nc -vz github-runner-dockerhub-cache.canonical.com 5000
+      - run: nc -vz github-runner-dockerhub-cache.canonical.com 5000
+      - run: curl $DOCKERHUB_MIRROR -vvv
+      - run: sudo apt install docker.io -yq
+      - run: sudo docker image pull github-runner-dockerhub-cache.canonical.com:5000/python
       # - run: echo $TMATE_SERVER_HOST
       # - run: echo $TMATE_SERVER_PORT
       # - run: sudo apt install netcat
