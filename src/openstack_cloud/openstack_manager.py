@@ -437,6 +437,7 @@ def _generate_runner_env(
         pre_job_script="",
         dockerhub_mirror=dockerhub_mirror or "",
         ssh_debug_info=(secrets.choice(ssh_debug_connections) if ssh_debug_connections else None),
+        proxies={},
     )
 
 
