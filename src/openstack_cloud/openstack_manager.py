@@ -65,6 +65,9 @@ BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 _SSH_KEY_PATH = Path("/home/ubuntu/.ssh")
 _CONFIG_SCRIPT_PATH = Path("/home/ubuntu/actions-runner/config.sh")
 
+RUNNER_APPLICATION = Path("/home/ubuntu/github-runner")
+METRICS_EXCHANGE_PATH = Path("/home/ubuntu/metrics-exchange")
+PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
 
 @contextmanager
 def _create_connection(
@@ -441,14 +444,14 @@ def _generate_runner_env(
     """
     return templates_env.get_template("env.j2").render(
         proxies=proxies,
-        pre_job_script="",
+        pre_job_script=str(PRE_JOB_SCRIPT),
         dockerhub_mirror=dockerhub_mirror or "",
         ssh_debug_info=(secrets.choice(ssh_debug_connections) if ssh_debug_connections else None),
     )
 
 
 def _generate_cloud_init_userdata(
-    templates_env: jinja2.Environment, instance_config: InstanceConfig, runner_env: str
+    templates_env: jinja2.Environment, instance_config: InstanceConfig, runner_env: str, pre_job_contents: str, metrics_exchange_path: str
 ) -> str:
     """Generate cloud init userdata to launch at startup.
 
@@ -456,6 +459,8 @@ def _generate_cloud_init_userdata(
         templates_env: The jinja template environment.
         instance_config: The configuration values for Openstack instance to launch.
         runner_env: The contents of .env to source when launching Github runner.
+        pre_job_contents: The contents of pre-job script to run before starting the job.
+        metrics_exchange_path: The path to the metrics exchange directory.
 
     Returns:
         The cloud init userdata script.
@@ -471,6 +476,8 @@ def _generate_cloud_init_userdata(
         instance_labels=",".join(instance_config.labels),
         instance_name=instance_config.name,
         env_contents=runner_env,
+        pre_job_contents=pre_job_contents,
+        metrics_exchange_path=metrics_exchange_path
     )
 
 
@@ -705,6 +712,11 @@ class OpenstackRunnerManager:
             dockerhub_mirror=self._config.dockerhub_mirror,
             ssh_debug_connections=self._config.charm_state.ssh_debug_connections,
         )
+        pre_job_contents = environment.get_template("pre-job.j2").render(
+            issue_metrics=True,
+            do_repo_policy_check=True,
+            metrics_exchange_path=str(METRICS_EXCHANGE_PATH)
+        )
         instance_config = create_instance_config(
             self.app_name,
             self.unit_num,
@@ -714,7 +726,8 @@ class OpenstackRunnerManager:
             self._github,
         )
         cloud_userdata = _generate_cloud_init_userdata(
-            templates_env=environment, instance_config=instance_config, runner_env=env_contents
+            templates_env=environment, instance_config=instance_config, runner_env=env_contents, pre_job_contents=pre_job_contents,
+            metrics_exchange_path=str(METRICS_EXCHANGE_PATH)
         )
 
         self._ensure_security_group(conn)
@@ -926,6 +939,7 @@ class OpenstackRunnerManager:
             return
 
         if server.status == _INSTANCE_STATUS_ACTIVE:
+            self._pull_metrics(server)
             self._run_github_removal_script(instance=server, remove_token=remove_token)
         elif github_id is not None:
             try:
@@ -939,6 +953,38 @@ class OpenstackRunnerManager:
         except SDKException as exc:
             logger.error("Something wrong deleting the server %s, %s", instance_name, str(exc))
 
+    def _pull_metrics(self, instance: Server) -> None:
+        for ssh_conn in self._get_ssh_connections(instance=instance):
+            if not self._pull_file(ssh_conn, instance, str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json")):
+                continue
+            if not self._pull_file(ssh_conn, instance, str(METRICS_EXCHANGE_PATH / "post-job-metrics.json")):
+                continue
+            return
+
+        logger.error("Failed to fetch runner metrics for  %s . Will not be able to issue metrics.", instance.instance_name)
+
+    def _pull_file(self, ssh_conn: SshConnection, instance: Server, file_path: str) -> bool:
+        try:
+            result: Result = ssh_conn.get(file_path)
+        except NoValidConnectionsError:
+            logger.info(
+                "Unable to SSH into %s with address %s", instance.instance_name, ssh_conn.host
+            )
+            return False
+
+        if not result.ok:
+            logger.warning(
+                (
+                    "Unable to fetch pre-job-metrics.json on instance %s, "
+                    "exit code: %s, stdout: %s, stderr: %s"
+                ),
+                instance.instance_name,
+                result.return_code,
+                result.stdout,
+                result.stderr,
+            )
+
+        return result.ok
     def _remove_runners(
         self,
         conn: OpenstackConnection,

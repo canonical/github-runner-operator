@@ -50,6 +50,7 @@ LXDBR_DNSMASQ_LEASES_FILE = Path("/var/snap/lxd/common/lxd/networks/lxdbr0/dnsma
 APROXY_ARM_REVISION = 9
 APROXY_AMD_REVISION = 8
 
+METRICS_EXCHANGE_PATH = Path("/metrics-exchange")
 
 class Snap(NamedTuple):
     """This class represents a snap installation.
@@ -284,7 +285,7 @@ class Runner:
                     "metrics",
                     "disk",
                     f"source={path}",
-                    "path=/metrics-exchange",
+                    f"path={METRICS_EXCHANGE_PATH}",
                 ],
                 check_exit=True,
             )
@@ -726,6 +727,8 @@ class Runner:
             host_ip=host_ip,
             one_time_token=one_time_token,
             issue_metrics=self._should_render_templates_with_metrics(),
+            metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
+            do_repo_policy_check=True
         )
         self._put_file(str(self.pre_job_script), pre_job_contents)
         self.instance.execute(
