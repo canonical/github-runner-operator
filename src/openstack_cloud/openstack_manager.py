@@ -35,6 +35,7 @@ from charm_state import (
     UnsupportedArchitectureError,
 )
 from errors import (
+    CreateMetricsStorageError,
     GithubClientError,
     IssueMetricEventError,
     OpenStackError,
@@ -47,7 +48,9 @@ from errors import (
 )
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
+from openstack_cloud import metrics_storage
 from runner_manager_type import OpenstackRunnerManagerConfig
+from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import GithubPath, RunnerByHealth, RunnerGithubInfo
 from utilities import execute_command, retry, set_env_var
 
@@ -530,6 +533,7 @@ class OpenstackRunnerManager:
         """
         return _SSH_KEY_PATH / f"runner-{name}.key"
 
+    # TODO: sonarlint gives python:S3776 : Cognitive Complexity of function is too high.
     def _ensure_security_group(self, conn: OpenstackConnection) -> None:
         """Ensure runner security group exists.
 
@@ -761,6 +765,26 @@ class OpenstackRunnerManager:
             )
         except IssueMetricEventError:
             logger.exception("Failed to issue RunnerInstalled metric")
+
+        try:
+            storage = metrics_storage.create(instance_config.name)
+        except CreateMetricsStorageError:
+            logger.exception(
+                "Failed to get shared filesystem for runner %s, "
+                "will not be able to issue all metrics.",
+                instance_config.name,
+            )
+        else:
+            try:
+                (storage.path / RUNNER_INSTALLED_TS_FILE_NAME).write_text(
+                    str(ts_after), encoding="utf-8"
+                )
+            except FileNotFoundError:
+                logger.exception(
+                    "Failed to write runner-installed.timestamp into shared filesystem "
+                    "for runner %s, will not be able to issue all metrics.",
+                    instance_config.name,
+                )
 
     def get_github_runner_info(self) -> tuple[RunnerGithubInfo]:
         """Get information on GitHub for the runners.

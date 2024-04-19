@@ -92,8 +92,16 @@ class LogrotateSetupError(Exception):
     """Represents an error raised when logrotate cannot be setup."""
 
 
-class SharedFilesystemError(Exception):
+class MetricsStorageError(Exception):
+    """Base class for all metrics storage errors."""
+
+
+class SharedFilesystemError(MetricsStorageError):
     """Base class for all shared filesystem errors."""
+
+
+class CreateMetricsStorageError(MetricsStorageError):
+    """Represents an error when the metrics storage could not be created."""
 
 
 class CreateSharedFilesystemError(SharedFilesystemError):

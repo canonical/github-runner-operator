@@ -4,7 +4,7 @@
 """Classes and functions defining the metrics storage."""
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Protocol, Iterator, Callable
+from typing import Callable, Iterator, Protocol
 
 
 @dataclass
@@ -21,7 +21,7 @@ class MetricsStorage:
 
 
 class StorageManager(Protocol):
-    """Storage manager interface
+    """A protocol defining the methods for managing the metrics storage.
 
     Attributes:
         create: Method to create a new storage. Returns the created storage.
@@ -31,6 +31,7 @@ class StorageManager(Protocol):
         delete: Method to delete a storage by name.
         move_to_quarantine: Method to move a storage to quarantine.
     """
+
     create: Callable[[str], MetricsStorage]
     list_all: Callable[[], Iterator[MetricsStorage]]
     get: Callable[[str], MetricsStorage]

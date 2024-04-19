@@ -14,7 +14,9 @@ import metrics
 from charm_state import CharmState, ProxyConfig
 from errors import OpenStackError
 from metrics import RunnerInstalled
+from metrics_common.storage import MetricsStorage
 from openstack_cloud import openstack_manager
+from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 
 CLOUD_NAME = "microstack"
 
@@ -62,6 +64,52 @@ def patched_create_connection_context_fixture(monkeypatch: pytest.MonkeyPatch):
         MagicMock(spec=openstack_manager._create_connection, return_value=mock_connection),
     )
     return mock_connection.__enter__()
+
+
+@pytest.fixture(name="openstack_manager_for_reconcile")
+def openstack_manager_for_reconcile_fixture(
+    monkeypatch: pytest.MonkeyPatch,
+    mock_github_client: MagicMock,
+    patched_create_connection_context: MagicMock,
+    tmp_path: Path,
+):
+    """Create a mocked openstack manager for the reconcile tests."""
+    t_mock = MagicMock(return_value=12345)
+    monkeypatch.setattr(openstack_manager.time, "time", t_mock)
+
+    issue_event_mock = MagicMock(spec=metrics.issue_event)
+    monkeypatch.setattr(openstack_manager.metrics, "issue_event", issue_event_mock)
+
+    app_name = secrets.token_hex(16)
+    charm_state = MagicMock(spec=CharmState)
+    charm_state.proxy_config = ProxyConfig()
+    charm_state.ssh_debug_connections = MagicMock()
+    os_runner_manager_config = openstack_manager.OpenstackRunnerManagerConfig(
+        charm_state=charm_state,
+        path=MagicMock(),
+        labels=[],
+        token=secrets.token_hex(16),
+        flavor=app_name,
+        network=secrets.token_hex(16),
+        dockerhub_mirror=None,
+    )
+    patched_create_connection_context.create_keypair.return_value = Keypair(private_key="test_key")
+    server_mock = MagicMock()
+    server_mock.status = openstack_manager._INSTANCE_STATUS_ACTIVE
+    patched_create_connection_context.get_server.return_value = server_mock
+
+    os_runner_manager = openstack_manager.OpenstackRunnerManager(
+        app_name=app_name,
+        unit_num=0,
+        openstack_runner_manager_config=os_runner_manager_config,
+        cloud_config={},
+    )
+    os_runner_manager._github = mock_github_client
+    os_runner_manager._ssh_health_check = MagicMock(return_value=True)
+
+    monkeypatch.setattr(openstack_manager, "_SSH_KEY_PATH", tmp_path)
+
+    return os_runner_manager
 
 
 def test__create_connection_error(clouds_yaml: dict, openstack_connect_mock: MagicMock):
@@ -489,51 +537,68 @@ def test_build_image(patched_create_connection_context: MagicMock, mock_github_c
 
 
 def test_reconcile_issues_runner_installed_event(
-    monkeypatch: pytest.MonkeyPatch,
-    mock_github_client: MagicMock,
-    patched_create_connection_context: MagicMock,
-    tmp_path: Path,
+    openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager,
 ):
     """
-    arrange: Enable issuing of metrics and mock timestamps.
+    arrange: Mock openstack manager for reconcile.
     act: Reconcile to create a runner.
     assert: The expected event is issued.
     """
-    t_mock = MagicMock(return_value=12345)
-    issue_event_mock = MagicMock(spec=metrics.issue_event)
-    monkeypatch.setattr(openstack_manager.time, "time", t_mock)
-    monkeypatch.setattr(openstack_manager.metrics, "issue_event", issue_event_mock)
 
-    app_name = secrets.token_hex(16)
-    charm_state = MagicMock(spec=CharmState)
-    charm_state.proxy_config = ProxyConfig()
-    charm_state.ssh_debug_connections = MagicMock()
-    os_runner_manager_config = openstack_manager.OpenstackRunnerManagerConfig(
-        charm_state=charm_state,
-        path=MagicMock(),
-        labels=[],
-        token=secrets.token_hex(16),
-        flavor=app_name,
-        network=secrets.token_hex(16),
-        dockerhub_mirror=None,
+    openstack_manager_for_reconcile.reconcile(quantity=1)
+
+    openstack_manager.metrics.issue_event.assert_has_calls(
+        [
+            call(
+                event=RunnerInstalled(
+                    timestamp=openstack_manager.time.time(),
+                    flavor=openstack_manager_for_reconcile.app_name,
+                    duration=0,
+                )
+            )
+        ]
     )
-    patched_create_connection_context.create_keypair.return_value = Keypair(private_key="test_key")
-    server_mock = MagicMock()
-    server_mock.status = openstack_manager._INSTANCE_STATUS_ACTIVE
-    patched_create_connection_context.get_server.return_value = server_mock
 
-    os_runner_manager = openstack_manager.OpenstackRunnerManager(
-        app_name=app_name,
-        unit_num=0,
-        openstack_runner_manager_config=os_runner_manager_config,
-        cloud_config={},
+
+def test_reconcile_places_timestamp_in_metrics_storage(
+    openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+):
+    """
+    arrange: Mock timestamps and create the directory for the shared filesystem.
+    act: Reconcile to create a runner.
+    assert: The expected timestamp is placed in the shared filesystem.
+    """
+    runner_metrics_path = tmp_path / "runner_fs"
+    runner_metrics_path.mkdir()
+    ms = MetricsStorage(path=runner_metrics_path, runner_name="test_runner")
+    monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
+
+    openstack_manager_for_reconcile.reconcile(quantity=1)
+
+    assert (ms.path / RUNNER_INSTALLED_TS_FILE_NAME).exists()
+    assert (ms.path / RUNNER_INSTALLED_TS_FILE_NAME).read_text() == str(
+        openstack_manager.time.time()
     )
-    os_runner_manager._github = mock_github_client
-    os_runner_manager._ssh_health_check = MagicMock(return_value=True)
 
-    monkeypatch.setattr(openstack_manager, "_SSH_KEY_PATH", tmp_path)
-    os_runner_manager.reconcile(quantity=1)
 
-    issue_event_mock.assert_has_calls(
-        [call(event=RunnerInstalled(timestamp=12345, flavor=app_name, duration=0))]
-    )
+def test_reconcile_error_on_placing_timestamp_is_ignored(
+    openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+):
+    """
+    arrange: Do not create the directory for the shared filesystem\
+        in order to let a FileNotFoundError to be raised inside the RunnerManager.
+    act: Reconcile to create a runner.
+    assert: No exception is raised.
+    """
+    runner_metrics_path = tmp_path / "runner_fs"
+    runner_metrics_path.mkdir()
+    ms = MetricsStorage(path=runner_metrics_path, runner_name="test_runner")
+    monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
+
+    openstack_manager_for_reconcile.reconcile(quantity=1)
+
+    assert not (ms.path / RUNNER_INSTALLED_TS_FILE_NAME).exists()
