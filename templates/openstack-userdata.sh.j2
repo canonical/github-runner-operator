@@ -8,9 +8,6 @@ su - ubuntu -c 'cd ~/actions-runner && echo "{{ env_contents }}" > .env'
 # Prepare metrics
 su - ubuntu -c 'mkdir "{{ metrics_exchange_path }}"'
 
-# Write pre-job.sh
-su - ubuntu -c 'echo "{{ pre_job_contents }}" > /home/ubuntu/github-runner/pre-job.sh'
-
 # Create the runner and start the configuration experience
 {% if runner_group %}
 su - ubuntu -c "cd ~/actions-runner && ./config.sh \
@@ -25,42 +22,8 @@ su - ubuntu -c "cd ~/actions-runner && ./config.sh \
     --labels {{ instance_labels }} --name {{ instance_name }}"
 {% endif %}
 
-
-write_post_metrics(){
-    # Expects the exit code of the run.sh script as the first argument.
-
-    # Only write the post-job metrics if the file does not already exist - which may indicate
-    # that the job has failed inside pre-job.
-
-    if [ -f {{ metrics_exchange_path}}/post-job-metrics.json ]; then
-        return
-    fi
-
-    timestamp=$(date +%s)
-
-    # Write the post-job metrics using status abnormal and exit code if exit code is non-zero
-    if [ "$1" != "0" ]; then
-        sudu -g ubuntu -u ubuntu jq -n \
-          --argjson timestamp "$timestamp" \
-          --arg status "abnormal" \
-          --argjson exit_code "$1" \
-          '{
-            "timestamp": $timestamp,
-            "status": $status,
-            "status_info": {code: $exit_code}
-          }' > "{{ metrics_exchange_path}}/post-job-metrics.json"
-        return
-    else
-        # If exit code is zero, write the post-job metrics using status normal
-        sudo -g ubuntu -u ubuntu jq -n \
-          --argjson timestamp "$timestamp" \
-          '{
-            "timestamp": $timestamp,
-            "status": "normal"
-          }' > "{{ metrics_exchange_path }}/post-job-metrics.json"
-    fi
-}
+su -u ubuntu -c 'echo "pre-job-test" > "{{ metrics_exchange_path }}/pre-job-metrics.json"'
+su -u ubuntu -c 'echo "post-job-test" > "{{ metrics_exchange_path }}/post-job-metrics.json"'
 
 # Run runner
 su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh"
-write_post_metrics $?

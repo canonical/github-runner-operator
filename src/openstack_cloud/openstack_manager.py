@@ -444,14 +444,14 @@ def _generate_runner_env(
     """
     return templates_env.get_template("env.j2").render(
         proxies=proxies,
-        pre_job_script=str(PRE_JOB_SCRIPT),
+        pre_job_script="",
         dockerhub_mirror=dockerhub_mirror or "",
         ssh_debug_info=(secrets.choice(ssh_debug_connections) if ssh_debug_connections else None),
     )
 
 
 def _generate_cloud_init_userdata(
-    templates_env: jinja2.Environment, instance_config: InstanceConfig, runner_env: str, pre_job_contents: str, metrics_exchange_path: str
+    templates_env: jinja2.Environment, instance_config: InstanceConfig, runner_env: str, pre_job_contents: str
 ) -> str:
     """Generate cloud init userdata to launch at startup.
 
@@ -460,7 +460,6 @@ def _generate_cloud_init_userdata(
         instance_config: The configuration values for Openstack instance to launch.
         runner_env: The contents of .env to source when launching Github runner.
         pre_job_contents: The contents of pre-job script to run before starting the job.
-        metrics_exchange_path: The path to the metrics exchange directory.
 
     Returns:
         The cloud init userdata script.
@@ -476,8 +475,7 @@ def _generate_cloud_init_userdata(
         instance_labels=",".join(instance_config.labels),
         instance_name=instance_config.name,
         env_contents=runner_env,
-        pre_job_contents=pre_job_contents,
-        metrics_exchange_path=metrics_exchange_path
+        metrics_exchange_path=str(METRICS_EXCHANGE_PATH)
     )
 
 
@@ -727,7 +725,6 @@ class OpenstackRunnerManager:
         )
         cloud_userdata = _generate_cloud_init_userdata(
             templates_env=environment, instance_config=instance_config, runner_env=env_contents, pre_job_contents=pre_job_contents,
-            metrics_exchange_path=str(METRICS_EXCHANGE_PATH)
         )
 
         self._ensure_security_group(conn)
