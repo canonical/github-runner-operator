@@ -52,7 +52,7 @@ logger = logging.getLogger(__name__)
 
 IMAGE_PATH_TMPL = "jammy-server-cloudimg-{architecture}-compressed.img"
 # Update the version when the image is not backward compatible.
-IMAGE_NAME = "github-runner-jammy-v1"
+IMAGE_NAME = "github-runner-jammy-v2"
 # Update the version when the security group rules are not backward compatible.
 SECURITY_GROUP_NAME = "github-runner-v1"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
