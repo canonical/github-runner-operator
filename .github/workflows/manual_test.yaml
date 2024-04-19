@@ -6,12 +6,22 @@ on:
   workflow_dispatch:
 
 jobs:
-  # self-host-x64:
-  #   name: self-hosted x64 test
-  #   runs-on: [self-hosted, X64, large]
-  #   steps:
-  #     - name: tmate ssh
-  #       uses: canonical/action-tmate@debug
+  self-host-stg:
+    name: self-hosted stg test
+    runs-on: [self-hosted, ARM64, test-arm]
+    steps:
+      - run: echo $HTTP_PROXY
+      - run: echo $HTTPS_PROXY
+      - run: echo $NO_PROXY
+      - run: curl https://github.com
+      - name: tmate ssh
+        uses: canonical/action-tmate@debug
+  self-host-x64:
+    name: self-hosted x64 test
+    runs-on: [self-hosted, X64, large]
+    steps:
+      - name: tmate ssh
+        uses: canonical/action-tmate@debug
   # github-test:
   # runs-on: ubuntu-latest
   # steps:
