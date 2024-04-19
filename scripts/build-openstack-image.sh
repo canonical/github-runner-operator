@@ -134,10 +134,12 @@ set -e
 df -h # print disk free space
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get update -yq
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get upgrade -yq
-DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget unzip gh -yq
+DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget unzip gh snapd -yq
 ln -s /usr/bin/python3 /usr/bin/python
 
-/usr/bin/snap install aproxy --channel=edge
+sudo /usr/bin/snap set system proxy.http="$HTTP_PROXY"
+sudo /usr/bin/snap set system proxy.https="$HTTPS_PROXY"
+sudo /usr/bin/snap install aproxy --channel=edge
 
 # Uninstall unattended-upgrades, to avoid lock errors when unattended-upgrades is active in the runner
 DEBIAN_FRONTEND=noninteractive /usr/bin/systemctl stop apt-daily.timer
