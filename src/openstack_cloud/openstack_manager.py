@@ -640,12 +640,12 @@ class OpenstackRunnerManager:
                     logger.info("Runner process found to be healthy on %s", instance_name)
                     return True
 
-            except NoValidConnectionsError:
-                logger.info("Unable to SSH into %s with address %s", instance_name, ssh_conn.host)
+            except NoValidConnectionsError as exc:
+                logger.warning("Unable to SSH into %s with address %s", instance_name, ssh_conn.host, exc_info=exc)
                 # Looping over all IP and trying SSH.
 
-        logger.error(
-            "Unable to SSH into %s with any address on network %s",
+        logger.warning(
+            "Health check failed on %s with any address on network %s",
             instance.instance_name,
             self._config.network,
         )

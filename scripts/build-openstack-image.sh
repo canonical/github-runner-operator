@@ -137,7 +137,7 @@ DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get upgrade -yq
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget unzip gh -yq
 ln -s /usr/bin/python3 /usr/bin/python
 
-/usr/bin/snap install aproxy
+/usr/bin/snap install aproxy --channel=edge
 
 # Uninstall unattended-upgrades, to avoid lock errors when unattended-upgrades is active in the runner
 DEBIAN_FRONTEND=noninteractive /usr/bin/systemctl stop apt-daily.timer

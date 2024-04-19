@@ -5,7 +5,7 @@ set -e
 # Write .env contents
 su - ubuntu -c 'cd ~/actions-runner && echo "{{ env_contents }}" > .env'
 
-{% if proxies.http or proxies.https %}
+{% if proxies.http %}
 snap set aproxy proxy={{ proxies.http }} listen=:54969
 sudo nft -f - << EOF
 define default-ip = $(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
