@@ -471,7 +471,7 @@ def _generate_cloud_init_userdata(
         instance_labels=",".join(instance_config.labels),
         instance_name=instance_config.name,
         env_contents=runner_env,
-        proxies=proxies,
+        aproxy_address=proxies.aproxy_address,
     )
 
 

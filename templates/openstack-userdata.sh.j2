@@ -5,9 +5,9 @@ set -e
 # Write .env contents
 su - ubuntu -c 'cd ~/actions-runner && echo "{{ env_contents }}" > .env'
 
-{% if proxies.http %}
+{% if aproxy_address %}
 snap install aproxy --edge
-snap set aproxy proxy={{ proxies.http }} listen=:54969
+snap set aproxy proxy={{ aproxy_address }} listen=:54969
 nft -f - << EOF
 define default-ip = $(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
 define private-ips = { 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }
