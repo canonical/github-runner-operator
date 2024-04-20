@@ -22,8 +22,8 @@ su - ubuntu -c "cd ~/actions-runner && ./config.sh \
     --labels {{ instance_labels }} --name {{ instance_name }}"
 {% endif %}
 
-su -u ubuntu -c 'echo "pre-job-test" > "{{ metrics_exchange_path }}/pre-job-metrics.json"'
-su -u ubuntu -c 'echo "post-job-test" > "{{ metrics_exchange_path }}/post-job-metrics.json"'
+su - ubuntu -c 'echo "pre-job-test" > "{{ metrics_exchange_path }}/pre-job-metrics.json"'
+su - ubuntu -c 'echo "post-job-test" > "{{ metrics_exchange_path }}/post-job-metrics.json"'
 
 # Run runner
 su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh"
