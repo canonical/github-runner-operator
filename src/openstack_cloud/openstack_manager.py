@@ -713,7 +713,7 @@ class OpenstackRunnerManager:
         )
         pre_job_contents = environment.get_template("pre-job.j2").render(
             issue_metrics=True,
-            do_repo_policy_check=True,
+            do_repo_policy_check=False,
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH)
         )
         instance_config = create_instance_config(
