@@ -65,7 +65,7 @@ BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 _SSH_KEY_PATH = Path("/home/ubuntu/.ssh")
 _CONFIG_SCRIPT_PATH = Path("/home/ubuntu/actions-runner/config.sh")
 
-RUNNER_APPLICATION = Path("/home/ubuntu/github-runner")
+RUNNER_APPLICATION = Path("/home/ubuntu/actions-runner")
 METRICS_EXCHANGE_PATH = Path("/home/ubuntu/metrics-exchange")
 PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
 
