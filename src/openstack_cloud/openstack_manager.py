@@ -44,7 +44,7 @@ from errors import (
     RunnerBinaryError,
     RunnerCreateError,
     RunnerStartError,
-    SubprocessError,
+    SubprocessError, GetMetricsStorageError,
 )
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
@@ -954,7 +954,7 @@ class OpenstackRunnerManager:
     def _pull_metrics(self, instance: Server, instance_name: str) -> None:
         try:
             storage = metrics_storage.get(instance_name)
-        except CreateMetricsStorageError:
+        except GetMetricsStorageError:
             logger.exception(
                 "Failed to get shared metrics storage for runner %s, "
                 "will not be able to issue all metrics.",

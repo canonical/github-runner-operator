@@ -110,7 +110,7 @@ def get(runner_name: str) -> MetricsStorage:
         The shared filesystem object.
 
     Raises:
-        GetSharedFilesystemError: If the shared filesystem could not be retrieved/mounted.
+        GetMetricsStorageError: If the storage does not exist.
     """
     runner_fs_path = _get_runner_fs_path(runner_name)
     if not runner_fs_path.exists():
