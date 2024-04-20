@@ -9,7 +9,7 @@ su - ubuntu -c 'cd ~/actions-runner && echo "{{ env_contents }}" > .env'
 su - ubuntu -c 'mkdir "{{ metrics_exchange_path }}"'
 
 # Insert pre-job script
-cat << 'EOF' | su - ubuntu -c 'tee /home/ubuntu/github-runner/pre-job.sh'
+cat << 'EOF' | su - ubuntu -c 'tee /home/ubuntu/actions-runner/pre-job.sh'
 {{ pre_job_contents }}
 EOF
 
