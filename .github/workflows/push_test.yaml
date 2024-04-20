@@ -8,7 +8,7 @@ on:
 
 jobs:
   push-event-tests:
-    runs-on: [self-hosted, linux, cos-test]
+    runs-on: [self-hosted, linux, x64, cos-test]
     steps:
       - name: Echo runner name
         run: |
