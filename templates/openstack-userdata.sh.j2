@@ -10,9 +10,7 @@ su - ubuntu -c 'mkdir "{{ metrics_exchange_path }}"'
 
 # Insert pre-job script
 cat << 'EOF' | su - ubuntu -c 'tee /home/ubuntu/actions-runner/pre-job.sh'
-{%  raw %}
-{{ pre_job_contents }}
-{%  endraw %}
+{{ pre_job_contents | safe }}
 EOF
 
 # Create the runner and start the configuration experience
