@@ -464,6 +464,11 @@ def _generate_cloud_init_userdata(
     if isinstance(instance_config.github_path, GithubOrg):
         runner_group = instance_config.github_path.group
 
+    # 2024/04/20: Testing enabling aproxy if proxy is set for OpenStack runners.
+    # Planned to apply to all type of runners in the future.
+    if proxies.http is not None or proxies.https is not None:
+        proxies.use_aproxy = True
+
     return templates_env.get_template("openstack-userdata.sh.j2").render(
         github_url=f"https://github.com/{instance_config.github_path.path()}",
         runner_group=runner_group,
