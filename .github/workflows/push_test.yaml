@@ -1,14 +1,17 @@
 name: Push Event Tests
 
+# TODO revert to original state, only test for cos integration
 on:
   push:
-    branches:
-      - push-e2e-*
+#    branches:
+#      - push-e2e-*
 
 jobs:
   push-event-tests:
-    runs-on: [self-hosted, linux, x64, "${{ github.ref_name }}"]
+    runs-on: [self-hosted, linux, x64, cos-test]
     steps:
       - name: Echo runner name
         run: |
-          echo "Hello, runner: ${{ github.ref_name }}"
+          ls /home/ubuntu/metrics-exchange
+          cat /home/ubuntu/metrics-exchange/pre-job-metrics.json || true
+          cat /home/ubuntu/metrics-exchange/post-job-metrics.json || true
