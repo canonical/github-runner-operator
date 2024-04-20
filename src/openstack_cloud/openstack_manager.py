@@ -936,7 +936,7 @@ class OpenstackRunnerManager:
             return
 
         if server.status == _INSTANCE_STATUS_ACTIVE:
-            self._pull_metrics(server)
+            self._pull_metrics(server, instance_name)
             self._run_github_removal_script(instance=server, remove_token=remove_token)
         elif github_id is not None:
             try:
@@ -950,41 +950,40 @@ class OpenstackRunnerManager:
         except SDKException as exc:
             logger.error("Something wrong deleting the server %s, %s", instance_name, str(exc))
 
-    def _pull_metrics(self, instance: Server) -> None:
+    def _pull_metrics(self, instance: Server, instance_name: str) -> None:
+        try:
+            storage = metrics_storage.get(instance_name)
+        except CreateMetricsStorageError:
+            logger.exception(
+                "Failed to get shared metrics storage for runner %s, "
+                "will not be able to issue all metrics.",
+                instance_name,
+            )
+            return
+
         for ssh_conn in self._get_ssh_connections(instance=instance):
-            if not self._pull_file(ssh_conn, instance, str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json")):
+            if not self._pull_file(ssh_conn, instance, str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"), str(storage.path / "pre-job-metrics.json")):
                 continue
-            if not self._pull_file(ssh_conn, instance, str(METRICS_EXCHANGE_PATH / "post-job-metrics.json")):
+            if not self._pull_file(ssh_conn, instance, str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"), str(storage.path / "post-job-metrics.json")):
                 continue
             return
 
         logger.error("Failed to fetch runner metrics for  %s . Will not be able to issue metrics.", instance.instance_name)
 
-    def _pull_file(self, ssh_conn: SshConnection, instance: Server, file_path: str) -> bool:
+    def _pull_file(self, ssh_conn: SshConnection, instance: Server, file_path: str, local_path: str) -> bool:
         try:
-            result: Result = ssh_conn.get(file_path)
+            ssh_conn.get(remote=file_path, local=local_path)
         except NoValidConnectionsError:
             logger.info(
                 "Unable to SSH into %s with address %s", instance.instance_name, ssh_conn.host
             )
             return False
-        except FileNotFoundError:
-            logger.info("File %s not found on %s", file_path, instance.instance_name)
+        except OSError as exc:
+            logger.info("Error retrieving file %s on %s: %s", file_path, instance.instance_name, str(exc))
             return False
 
-        if not result.ok:
-            logger.warning(
-                (
-                    "Unable to fetch pre-job-metrics.json on instance %s, "
-                    "exit code: %s, stdout: %s, stderr: %s"
-                ),
-                instance.instance_name,
-                result.return_code,
-                result.stdout,
-                result.stderr,
-            )
+        return True
 
-        return result.ok
     def _remove_runners(
         self,
         conn: OpenstackConnection,

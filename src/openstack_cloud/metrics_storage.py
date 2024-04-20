@@ -16,7 +16,7 @@ from errors import (
     GetSharedFilesystemError,
     QuarantineSharedFilesystemError,
     SharedFilesystemMountError,
-    SubprocessError,
+    SubprocessError, GetMetricsStorageError,
 )
 from metrics_common.storage import MetricsStorage
 from utilities import execute_command
@@ -71,7 +71,7 @@ def create(runner_name: str) -> MetricsStorage:
     try:
         runner_fs_path.mkdir()
     except FileExistsError as exc:
-        raise CreateSharedFilesystemError(
+        raise CreateMetricsStorageError(
             f"Shared filesystem for runner {runner_name} already exists."
         ) from exc
 
@@ -98,25 +98,25 @@ def create(runner_name: str) -> MetricsStorage:
 #             yield fs
 #
 #
-# def get(runner_name: str) -> SharedFilesystem:
-#     """Get the shared filesystem for the runner.
-#
-#     Mounts the filesystem if it is not currently mounted.
-#
-#     Args:
-#         runner_name: The name of the runner.
-#
-#     Returns:
-#         The shared filesystem object.
-#
-#     Raises:
-#         GetSharedFilesystemError: If the shared filesystem could not be retrieved/mounted.
-#     """
-#     runner_fs_path = _get_runner_fs_path(runner_name)
-#     if not runner_fs_path.exists():
-#         raise GetSharedFilesystemError(f"Shared filesystem for runner {runner_name} not found.")
-#
-#     return SharedFilesystem(runner_fs_path, runner_name)
+def get(runner_name: str) -> MetricsStorage:
+    """Get the shared filesystem for the runner.
+
+    Mounts the filesystem if it is not currently mounted.
+
+    Args:
+        runner_name: The name of the runner.
+
+    Returns:
+        The shared filesystem object.
+
+    Raises:
+        GetSharedFilesystemError: If the shared filesystem could not be retrieved/mounted.
+    """
+    runner_fs_path = _get_runner_fs_path(runner_name)
+    if not runner_fs_path.exists():
+        raise GetMetricsStorageError(f"Shared filesystem for runner {runner_name} not found.")
+
+    return MetricsStorage(runner_fs_path, runner_name)
 #
 #
 # def delete(runner_name: str) -> None:

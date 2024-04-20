@@ -111,6 +111,8 @@ class CreateSharedFilesystemError(SharedFilesystemError):
 class DeleteSharedFilesystemError(SharedFilesystemError):
     """Represents an error when the shared filesystem could not be deleted."""
 
+class GetMetricsStorageError(MetricsStorageError):
+    """Represents an error when the metrics storage could not be retrieved."""
 
 class GetSharedFilesystemError(SharedFilesystemError):
     """Represents an error when the shared filesystem could not be retrieved."""
