@@ -44,10 +44,10 @@ def _get_runner_fs_path(runner_name: str) -> Path:
 
 
 def create(runner_name: str) -> MetricsStorage:
-    """Create a shared filesystem for the runner.
+    """Create metrics storage for the runner.
 
     The method is not idempotent and will raise an exception
-    if the shared filesystem already exists.
+    if the storage already exists.
 
     Args:
         runner_name: The name of the runner.
@@ -63,7 +63,7 @@ def create(runner_name: str) -> MetricsStorage:
         FILESYSTEM_QUARANTINE_PATH.mkdir(exist_ok=True)
     except OSError as exc:
         raise CreateMetricsStorageError(
-            "Failed to create shared filesystem base path or images path"
+            "Failed to create metrics storage directories"
         ) from exc
 
     runner_fs_path = _get_runner_fs_path(runner_name)
@@ -72,7 +72,7 @@ def create(runner_name: str) -> MetricsStorage:
         runner_fs_path.mkdir()
     except FileExistsError as exc:
         raise CreateMetricsStorageError(
-            f"Shared filesystem for runner {runner_name} already exists."
+            f"Metrics storage for runner {runner_name} already exists."
         ) from exc
 
     return MetricsStorage(runner_fs_path, runner_name)
@@ -99,15 +99,13 @@ def create(runner_name: str) -> MetricsStorage:
 #
 #
 def get(runner_name: str) -> MetricsStorage:
-    """Get the shared filesystem for the runner.
-
-    Mounts the filesystem if it is not currently mounted.
+    """Get the metrics storage for the runner.
 
     Args:
         runner_name: The name of the runner.
 
     Returns:
-        The shared filesystem object.
+        The metrics storage object.
 
     Raises:
         GetMetricsStorageError: If the storage does not exist.
