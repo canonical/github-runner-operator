@@ -808,7 +808,7 @@ class OpenstackRunnerManager:
                     instance_config.name,
                 )
 
-    def get_github_runner_info(self) -> tuple[RunnerGithubInfo]:
+    def get_github_runner_info(self) -> tuple[RunnerGithubInfo, ...]:
         """Get information on GitHub for the runners.
 
         Returns:
@@ -820,13 +820,13 @@ class OpenstackRunnerManager:
         logger.debug("List of runners found on GitHub:%s", remote_runners_list)
         return tuple(
             RunnerGithubInfo(
-                runner.name,
-                runner.id,
-                runner.status == GitHubRunnerStatus.ONLINE,
-                runner.busy,
+                runner["name"],
+                runner["id"],
+                runner["status"] == GitHubRunnerStatus.ONLINE,
+                runner["busy"],
             )
             for runner in remote_runners_list
-            if runner.name.startswith(f"{self.instance_name}-")
+            if runner["name"].startswith(f"{self.instance_name}-")
         )
 
     def _get_ssh_connections(self, instance: Server) -> Iterator[SshConnection]:
