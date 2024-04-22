@@ -26,7 +26,9 @@ from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import OpenStackCloudException, SDKException
 from paramiko.ssh_exception import NoValidConnectionsError
 
+import github_metrics
 import metrics
+import runner_metrics
 from charm_state import (
     Arch,
     GithubOrg,
@@ -44,11 +46,12 @@ from errors import (
     RunnerBinaryError,
     RunnerCreateError,
     RunnerStartError,
-    SubprocessError, GetMetricsStorageError,
+    SubprocessError, GetMetricsStorageError, GithubMetricsError,
 )
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
 from openstack_cloud import metrics_storage
+from runner_manager import IssuedMetricEventsStats
 from runner_manager_type import OpenstackRunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import GithubPath, RunnerByHealth, RunnerGithubInfo
@@ -990,6 +993,7 @@ class OpenstackRunnerManager:
             Whether the file was successfully pulled.
         """
         try:
+            # TODO : add filesize check
             ssh_conn.get(remote=file_path, local=local_path)
         except NoValidConnectionsError:
             logger.info(
@@ -1145,6 +1149,9 @@ class OpenstackRunnerManager:
                 )
             else:
                 logger.info("No changes to number of runners needed")
+
+            self._issue_runner_metrics()
+
             return delta
 
     def flush(self) -> int:
@@ -1164,3 +1171,30 @@ class OpenstackRunnerManager:
                 remove_token=remove_token,
             )
             return len(runners_to_delete)
+
+    def _issue_runner_metrics(self) -> IssuedMetricEventsStats:
+        """Issue runner metrics.
+
+        Returns:
+            The stats of issued metric events.
+        """
+        total_stats: IssuedMetricEventsStats = {}
+        for extracted_metrics in runner_metrics.extract(metrics_storage_manager=metrics_storage, ignore_runners=set()):
+            try:
+                job_metrics = github_metrics.job(
+                    github_client=self._github,
+                    pre_job_metrics=extracted_metrics.pre_job,
+                    runner_name=extracted_metrics.runner_name,
+                )
+            except GithubMetricsError:
+                logger.exception("Failed to calculate job metrics")
+                job_metrics = None
+
+            issued_events = runner_metrics.issue_events(
+                runner_metrics=extracted_metrics,
+                job_metrics=job_metrics,
+                flavor=self.app_name,
+            )
+            for event_type in issued_events:
+                total_stats[event_type] = total_stats.get(event_type, 0) + 1
+        return total_stats
