@@ -5,7 +5,6 @@
 import logging
 import shutil
 from pathlib import Path
-from typing import Iterator
 
 from errors import (
     CreateMetricsStorageError,
@@ -14,7 +13,12 @@ from errors import (
     SharedFilesystemMountError,
     SubprocessError,
 )
-from metrics_common.storage import FILESYSTEM_QUARANTINE_PATH, MetricsStorage
+
+# we import list_all to have it available as public api of the module
+from metrics_common.storage import list_all  # noqa: F401 # pylint: disable=unused-import
+from metrics_common.storage import MetricsStorage
+from metrics_common.storage import create as create_storage
+from metrics_common.storage import get as get_storage
 from utilities import execute_command
 
 DIR_NO_MOUNTPOINT_EXIT_CODE = 32
@@ -108,23 +112,11 @@ def create(runner_name: str) -> MetricsStorage:
     Raises:
         CreateMetricsStorageError: If the creation of the shared filesystem fails.
     """
+    ms = create_storage(runner_name)
     try:
-        FILESYSTEM_BASE_PATH.mkdir(exist_ok=True)
         FILESYSTEM_IMAGES_PATH.mkdir(exist_ok=True)
-        FILESYSTEM_QUARANTINE_PATH.mkdir(exist_ok=True)
     except OSError as exc:
-        raise CreateMetricsStorageError(
-            "Failed to create shared filesystem base path or images path"
-        ) from exc
-
-    runner_fs_path = _get_runner_fs_path(runner_name)
-
-    try:
-        runner_fs_path.mkdir()
-    except FileExistsError as exc:
-        raise CreateMetricsStorageError(
-            f"Shared filesystem for runner {runner_name} already exists."
-        ) from exc
+        raise CreateMetricsStorageError("Failed to create shared filesystem images path") from exc
 
     runner_img_path = _get_runner_image_path(runner_name)
 
@@ -134,32 +126,13 @@ def create(runner_name: str) -> MetricsStorage:
             check_exit=True,
         )
         execute_command(["mkfs.ext4", f"{runner_img_path}"], check_exit=True)
-        _mount(runner_fs_path=runner_fs_path, runner_image_path=runner_img_path)
-        execute_command(["sudo", "chown", FILESYSTEM_OWNER, str(runner_fs_path)], check_exit=True)
+        _mount(runner_fs_path=ms.path, runner_image_path=runner_img_path)
+        execute_command(["sudo", "chown", FILESYSTEM_OWNER, str(ms.path)], check_exit=True)
     except (SubprocessError, SharedFilesystemMountError) as exc:
         raise CreateMetricsStorageError(
             f"Failed to create shared filesystem for runner {runner_name}"
         ) from exc
-    return MetricsStorage(runner_fs_path, runner_name)
-
-
-def list_all() -> Iterator[MetricsStorage]:
-    """List the shared filesystems.
-
-    Yields:
-        A shared filesystem instance.
-    """
-    if not FILESYSTEM_BASE_PATH.exists():
-        return
-
-    directories = (entry for entry in FILESYSTEM_BASE_PATH.iterdir() if entry.is_dir())
-    for directory in directories:
-        try:
-            fs = get(runner_name=directory.name)
-        except GetMetricsStorageError:
-            logger.error("Failed to get shared filesystem for runner %s", directory.name)
-        else:
-            yield fs
+    return ms
 
 
 def get(runner_name: str) -> MetricsStorage:
@@ -176,12 +149,10 @@ def get(runner_name: str) -> MetricsStorage:
     Raises:
         GetMetricsStorageError: If the shared filesystem could not be retrieved/mounted.
     """
-    runner_fs_path = _get_runner_fs_path(runner_name)
-    if not runner_fs_path.exists():
-        raise GetMetricsStorageError(f"Shared filesystem for runner {runner_name} not found.")
+    ms = get_storage(runner_name)
 
     try:
-        is_mounted = _is_mountpoint(runner_fs_path)
+        is_mounted = _is_mountpoint(ms.path)
     except SharedFilesystemMountError as exc:
         raise GetMetricsStorageError(
             f"Failed to determine if shared filesystem is mounted for runner {runner_name}"
@@ -195,13 +166,13 @@ def get(runner_name: str) -> MetricsStorage:
         )
         runner_img_path = _get_runner_image_path(runner_name)
         try:
-            _mount(runner_fs_path=runner_fs_path, runner_image_path=runner_img_path)
+            _mount(runner_fs_path=ms.path, runner_image_path=runner_img_path)
         except SharedFilesystemMountError as exc:
             raise GetMetricsStorageError(
                 f"Shared filesystem for runner {runner_name} could not be mounted."
             ) from exc
 
-    return MetricsStorage(runner_fs_path, runner_name)
+    return ms
 
 
 class UnmountSharedFilesystemError(Exception):

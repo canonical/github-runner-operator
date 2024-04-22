@@ -52,7 +52,7 @@ from errors import (
 )
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
-from openstack_cloud import metrics_storage
+from metrics_common import storage as metrics_storage
 from runner_manager import IssuedMetricEventsStats
 from runner_manager_type import OpenstackRunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
