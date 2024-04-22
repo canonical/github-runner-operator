@@ -210,7 +210,7 @@ def test__get_supported_runner_arch(arch: str, image_arch: str):
 
 
 LANG=C.UTF-8
-ACTIONS_RUNNER_HOOK_JOB_STARTED=
+ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
 """,
             id="all values empty",
         ),
@@ -238,7 +238,7 @@ no_proxy=http://no_proxy.internal
 
 
 LANG=C.UTF-8
-ACTIONS_RUNNER_HOOK_JOB_STARTED=
+ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
 """,
             id="proxy value set",
         ),
@@ -256,7 +256,7 @@ DOCKERHUB_MIRROR=http://dockerhub_mirror.test
 CONTAINER_REGISTRY_URL=http://dockerhub_mirror.test
 
 LANG=C.UTF-8
-ACTIONS_RUNNER_HOOK_JOB_STARTED=
+ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
 """,
             id="dockerhub mirror set",
         ),
@@ -278,7 +278,7 @@ ACTIONS_RUNNER_HOOK_JOB_STARTED=
 
 
 LANG=C.UTF-8
-ACTIONS_RUNNER_HOOK_JOB_STARTED=
+ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
 
 TMATE_SERVER_HOST=127.0.0.1
 TMATE_SERVER_PORT=10022
@@ -321,7 +321,7 @@ DOCKERHUB_MIRROR=http://dockerhub_mirror.test
 CONTAINER_REGISTRY_URL=http://dockerhub_mirror.test
 
 LANG=C.UTF-8
-ACTIONS_RUNNER_HOOK_JOB_STARTED=
+ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
 
 TMATE_SERVER_HOST=127.0.0.1
 TMATE_SERVER_PORT=10022
@@ -556,7 +556,7 @@ def test_reconcile_issues_runner_installed_event(
     """
     openstack_manager_for_reconcile.reconcile(quantity=1)
 
-    openstack_manager.metrics.issue_event.assert_has_calls(
+    openstack_manager.metric_events.issue_event.assert_has_calls(
         [
             call(
                 event=metric_events.RunnerInstalled(
@@ -604,7 +604,7 @@ def test_reconcile_error_on_placing_timestamp_is_ignored(
     assert: No exception is raised.
     """
     runner_metrics_path = tmp_path / "runner_fs"
-    runner_metrics_path.mkdir()
+
     ms = MetricsStorage(path=runner_metrics_path, runner_name="test_runner")
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
 

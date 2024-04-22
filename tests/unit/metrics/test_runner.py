@@ -224,7 +224,7 @@ def test_extract_ignores_runners(runner_fs_base: Path):
     assert extracted_metrics == runner_metrics_data[1:2] + runner_metrics_data[3:]
 
 
-def test_extract_corrupt_data(runner_fs_base: Path):
+def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: \
         1. A runner with non-compliant pre-job metrics inside shared fs. \
@@ -248,6 +248,8 @@ def test_extract_corrupt_data(runner_fs_base: Path):
     )
     metrics_storage_manager = MagicMock()
     metrics_storage_manager.list_all.return_value = [runner_fs]
+    move_to_quarantine_mock = MagicMock()
+    monkeypatch.setattr(runner_metrics, "move_to_quarantine", move_to_quarantine_mock)
 
     extracted_metrics = list(
         runner_metrics.extract(
@@ -256,7 +258,7 @@ def test_extract_corrupt_data(runner_fs_base: Path):
     )
 
     assert not extracted_metrics
-    metrics_storage_manager.move_to_quarantine.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
 
     # 2. Runner has non-json post-job metrics inside shared fs
     runner_name = secrets.token_hex(16)
@@ -277,7 +279,7 @@ def test_extract_corrupt_data(runner_fs_base: Path):
         )
     )
     assert not extracted_metrics
-    metrics_storage_manager.move_to_quarantine.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
 
     # 3. Runner has json post-job metrics but a json array (not object) inside shared fs.
     runner_name = secrets.token_hex(16)
@@ -298,7 +300,7 @@ def test_extract_corrupt_data(runner_fs_base: Path):
         )
     )
     assert not extracted_metrics
-    metrics_storage_manager.move_to_quarantine.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
 
     # 4. Runner has not a timestamp in installed_timestamp file inside shared fs
     runner_name = secrets.token_hex(16)
@@ -320,11 +322,11 @@ def test_extract_corrupt_data(runner_fs_base: Path):
     )
     assert not extracted_metrics
 
-    metrics_storage_manager.move_to_quarantine.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
 
 
 def test_extract_raises_error_for_too_large_files(
-    runner_fs_base: Path, issue_event_mock: MagicMock
+    runner_fs_base: Path, issue_event_mock: MagicMock, monkeypatch: pytest.MonkeyPatch
 ):
     """
     arrange: Runners with too large metric and timestamp files.
@@ -350,6 +352,9 @@ def test_extract_raises_error_for_too_large_files(
 
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
+    move_to_quarantine_mock = MagicMock()
+    monkeypatch.setattr(runner_metrics, "move_to_quarantine", move_to_quarantine_mock)
+
     extracted_metrics = list(
         runner_metrics.extract(
             metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
@@ -357,7 +362,7 @@ def test_extract_raises_error_for_too_large_files(
     )
     assert not extracted_metrics
 
-    metrics_storage_manager.move_to_quarantine.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
 
     # 2. Runner has a post-job metrics file that is too large
     runner_name = secrets.token_hex(16)
@@ -382,7 +387,8 @@ def test_extract_raises_error_for_too_large_files(
 
     assert not extracted_metrics
 
-    metrics_storage_manager.move_to_quarantine.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
+
 
     # 3. Runner has an installed_timestamp file that is too large
     runner_name = secrets.token_hex(16)
@@ -406,7 +412,7 @@ def test_extract_raises_error_for_too_large_files(
     )
 
     assert not extracted_metrics
-    metrics_storage_manager.move_to_quarantine.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
 
 
 def test_extract_ignores_filesystems_without_ts(runner_fs_base: Path):
