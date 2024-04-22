@@ -74,6 +74,12 @@ PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
 MAX_METRICS_FILE_SIZE = 1024
 
 
+class PullFileError(Exception):
+    """Represents an error while pulling a file from the runner instance."""
+
+    def __init__(self, reason: str):
+        super().__init__(reason)
+
 @contextmanager
 def _create_connection(
     cloud_config: dict[str, dict]
@@ -974,60 +980,49 @@ class OpenstackRunnerManager:
             return
 
         for ssh_conn in self._get_ssh_connections(instance=instance):
-            if not self._pull_file(ssh_conn=ssh_conn, instance=instance, file_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"), local_path=str(storage.path / "pre-job-metrics.json"), max_size=MAX_METRICS_FILE_SIZE):
+            try:
+                self._pull_file(ssh_conn=ssh_conn, remote_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"), local_path=str(storage.path / "pre-job-metrics.json"), max_size=MAX_METRICS_FILE_SIZE)
+                self._pull_file(ssh_conn=ssh_conn, remote_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"), local_path=str(storage.path / "post-job-metrics.json"), max_size=MAX_METRICS_FILE_SIZE)
+                return
+            except PullFileError as exc:
+                logger.warning("Failed to pull metrics for %s: %s . Will not be able to issue metrics", instance_name, exc)
+                return
+            except NoValidConnectionsError:
+                logger.info(
+                    "Unable to SSH into %s with address %s", instance_name, ssh_conn.host
+                )
                 continue
-            if not self._pull_file(ssh_conn=ssh_conn, instance=instance, file_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"), local_path=str(storage.path / "post-job-metrics.json"), max_size=MAX_METRICS_FILE_SIZE):
-                continue
-            return
 
-        logger.error("Failed to fetch runner metrics for  %s . Will not be able to issue metrics.", instance.instance_name)
-
-    def _pull_file(self, ssh_conn: SshConnection, instance: Server, file_path: str, local_path: str, max_size: int) -> bool:
+    def _pull_file(self, ssh_conn: SshConnection, remote_path: str, local_path: str, max_size: int):
         """Pull file from the runner instance.
 
         Args:
             ssh_conn: The SSH connection instance.
-            instance: The Openstack server instance.
-            file_path: The file path on the runner instance.
+            remote_path: The file path on the runner instance.
             local_path: The local path to store the file.
             max_size: If the file is larger than this, it will not be pulled.
 
-        Returns:
-            Whether the file was successfully pulled.
+        Raises:
+            PullFileError: Unable to pull the file from the runner instance.
         """
-        try:
-            result = ssh_conn.run(f"stat -c %s {file_path}", warn=True)
-            if not result.ok:
-                logger.warning("Unable to get file size of %s on %s", file_path, instance.instance_name)
-                return False
-        except NoValidConnectionsError:
-            logger.warning(
-                "Unable to SSH into %s with address %s", instance.instance_name, ssh_conn.host
-            )
-            return False
+        result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True)
+        if not result.ok:
+            raise PullFileError(reason=f"Unable to get file size of {remote_path}")
 
+        stdout = result.stdout
         try:
-            stdout = result.stdout.strip()
+            stdout.strip()
             size = int(stdout)
             if size > max_size:
-                logger.error("File %s on %s is too large to fetch (size %d > %d)", file_path, instance.instance_name, size, max_size)
-                return False
+                raise PullFileError(reason=f"File size of {remote_path} too large {size} > {max_size}")
         except ValueError:
-            logger.error("Invalid file size for %s on %s: %s", file_path, instance.instance_name, stdout)
-            return False
+            raise PullFileError(reason=f"Invalid file size for {remote_path}: {stdout}")
 
         try:
-            ssh_conn.get(remote=file_path, local=local_path)
-        except NoValidConnectionsError:
-            logger.warning(
-                "Unable to SSH into %s with address %s", instance.instance_name, ssh_conn.host
-            )
-            return False
+            ssh_conn.get(remote=remote_path, local=local_path)
         except OSError as exc:
-            logger.info("Error retrieving file %s on %s: %s", file_path, instance.instance_name, str(exc))
-            return False
+            raise PullFileError(reason=f"Unable to retrieve file {remote_path}") from exc
 
-        return True
 
     def _remove_runners(
         self,
