@@ -7,11 +7,7 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 import openstack_cloud.metrics_storage as metrics_storage
-from errors import (
-    CreateMetricsStorageError,
-    DeleteMetricsStorageError,
-    GetMetricsStorageError,
-)
+from errors import CreateMetricsStorageError, DeleteMetricsStorageError, GetMetricsStorageError
 from metrics_common.storage import MetricsStorage
 
 MOUNTPOINT_FAILURE_EXIT_CODE = 1

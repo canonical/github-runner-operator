@@ -37,6 +37,7 @@ from errors import (
 )
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
+from metrics_common.storage import MetricsStorage
 from runner_manager_type import RunnerManagerClients
 from runner_type import RunnerConfig, RunnerStatus
 from utilities import execute_command, retry
@@ -51,6 +52,7 @@ APROXY_ARM_REVISION = 9
 APROXY_AMD_REVISION = 8
 
 METRICS_EXCHANGE_PATH = Path("/metrics-exchange")
+
 
 class Snap(NamedTuple):
     """This class represents a snap installation.
@@ -137,7 +139,7 @@ class Runner:
         self.status = runner_status
         self.instance = instance
 
-        self._shared_fs: Optional[shared_fs.SharedFilesystem] = None
+        self._shared_fs: Optional[MetricsStorage] = None
 
     def create(self, config: CreateRunnerConfig) -> None:
         """Create the runner instance on LXD and register it on GitHub.
@@ -728,7 +730,7 @@ class Runner:
             one_time_token=one_time_token,
             issue_metrics=self._should_render_templates_with_metrics(),
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
-            do_repo_policy_check=True
+            do_repo_policy_check=True,
         )
         self._put_file(str(self.pre_job_script), pre_job_contents)
         self.instance.execute(

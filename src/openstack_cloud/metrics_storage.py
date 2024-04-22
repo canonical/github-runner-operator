@@ -7,12 +7,8 @@ import shutil
 from pathlib import Path
 from typing import Iterator
 
-from errors import (
-    CreateMetricsStorageError,
-    DeleteMetricsStorageError,
-    GetMetricsStorageError,
-)
-from metrics_common.storage import MetricsStorage, FILESYSTEM_QUARANTINE_PATH
+from errors import CreateMetricsStorageError, DeleteMetricsStorageError, GetMetricsStorageError
+from metrics_common.storage import FILESYSTEM_QUARANTINE_PATH, MetricsStorage
 
 DIR_NO_MOUNTPOINT_EXIT_CODE = 32
 
@@ -54,9 +50,7 @@ def create(runner_name: str) -> MetricsStorage:
         FILESYSTEM_BASE_PATH.mkdir(exist_ok=True)
         FILESYSTEM_QUARANTINE_PATH.mkdir(exist_ok=True)
     except OSError as exc:
-        raise CreateMetricsStorageError(
-            "Failed to create metrics storage directories"
-        ) from exc
+        raise CreateMetricsStorageError("Failed to create metrics storage directories") from exc
 
     runner_fs_path = _get_runner_fs_path(runner_name)
 

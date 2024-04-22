@@ -12,7 +12,7 @@ import time
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Generator, Iterable, Literal, NamedTuple, Optional, cast, Iterator
+from typing import Generator, Iterable, Iterator, Literal, NamedTuple, Optional, cast
 
 import jinja2
 import openstack
@@ -38,7 +38,9 @@ from charm_state import (
 )
 from errors import (
     CreateMetricsStorageError,
+    GetMetricsStorageError,
     GithubClientError,
+    GithubMetricsError,
     IssueMetricEventError,
     OpenStackError,
     OpenstackImageBuildError,
@@ -46,7 +48,7 @@ from errors import (
     RunnerBinaryError,
     RunnerCreateError,
     RunnerStartError,
-    SubprocessError, GetMetricsStorageError, GithubMetricsError,
+    SubprocessError,
 )
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
@@ -78,7 +80,13 @@ class PullFileError(Exception):
     """Represents an error while pulling a file from the runner instance."""
 
     def __init__(self, reason: str):
+        """Construct PullFileError object.
+
+        Args:
+            reason: The reason for the error.
+        """
         super().__init__(reason)
+
 
 @contextmanager
 def _create_connection(
@@ -462,7 +470,10 @@ def _generate_runner_env(
 
 
 def _generate_cloud_init_userdata(
-    templates_env: jinja2.Environment, instance_config: InstanceConfig, runner_env: str, pre_job_contents: str
+    templates_env: jinja2.Environment,
+    instance_config: InstanceConfig,
+    runner_env: str,
+    pre_job_contents: str,
 ) -> str:
     """Generate cloud init userdata to launch at startup.
 
@@ -487,7 +498,7 @@ def _generate_cloud_init_userdata(
         instance_name=instance_config.name,
         env_contents=runner_env,
         pre_job_contents=pre_job_contents,
-        metrics_exchange_path=str(METRICS_EXCHANGE_PATH)
+        metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
     )
 
 
@@ -550,6 +561,7 @@ class OpenstackRunnerManager:
         """
         return _SSH_KEY_PATH / f"runner-{name}.key"
 
+    # pylint: disable=fixme
     # TODO: sonarlint gives python:S3776 : Cognitive Complexity of function is too high.
     def _ensure_security_group(self, conn: OpenstackConnection) -> None:
         """Ensure runner security group exists.
@@ -725,7 +737,7 @@ class OpenstackRunnerManager:
         pre_job_contents = environment.get_template("pre-job.j2").render(
             issue_metrics=True,
             do_repo_policy_check=False,
-            metrics_exchange_path=str(METRICS_EXCHANGE_PATH)
+            metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
         )
         instance_config = create_instance_config(
             self.app_name,
@@ -736,7 +748,10 @@ class OpenstackRunnerManager:
             self._github,
         )
         cloud_userdata = _generate_cloud_init_userdata(
-            templates_env=environment, instance_config=instance_config, runner_env=env_contents, pre_job_contents=pre_job_contents,
+            templates_env=environment,
+            instance_config=instance_config,
+            runner_env=env_contents,
+            pre_job_contents=pre_job_contents,
         )
 
         self._ensure_security_group(conn)
@@ -777,36 +792,9 @@ class OpenstackRunnerManager:
         self._wait_until_runner_process_running(conn, instance.name)
         logger.info("Finished creating runner %s", instance_config.name)
         ts_after = time.time()
-        try:
-            metrics.issue_event(
-                event=metrics.RunnerInstalled(
-                    timestamp=ts_after,
-                    flavor=self.app_name,
-                    duration=ts_after - ts_now,
-                ),
-            )
-        except IssueMetricEventError:
-            logger.exception("Failed to issue RunnerInstalled metric")
-
-        try:
-            storage = metrics_storage.create(instance_config.name)
-        except CreateMetricsStorageError:
-            logger.exception(
-                "Failed to get shared filesystem for runner %s, "
-                "will not be able to issue all metrics.",
-                instance_config.name,
-            )
-        else:
-            try:
-                (storage.path / RUNNER_INSTALLED_TS_FILE_NAME).write_text(
-                    str(ts_after), encoding="utf-8"
-                )
-            except FileNotFoundError:
-                logger.exception(
-                    "Failed to write runner-installed.timestamp into shared filesystem "
-                    "for runner %s, will not be able to issue all metrics.",
-                    instance_config.name,
-                )
+        self._issue_runner_installed_metric(
+            instance_config=instance_config, install_end_ts=ts_after, install_start_ts=ts_now
+        )
 
     def get_github_runner_info(self) -> tuple[RunnerGithubInfo, ...]:
         """Get information on GitHub for the runners.
@@ -981,19 +969,33 @@ class OpenstackRunnerManager:
 
         for ssh_conn in self._get_ssh_connections(instance=instance):
             try:
-                self._pull_file(ssh_conn=ssh_conn, remote_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"), local_path=str(storage.path / "pre-job-metrics.json"), max_size=MAX_METRICS_FILE_SIZE)
-                self._pull_file(ssh_conn=ssh_conn, remote_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"), local_path=str(storage.path / "post-job-metrics.json"), max_size=MAX_METRICS_FILE_SIZE)
+                self._pull_file(
+                    ssh_conn=ssh_conn,
+                    remote_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"),
+                    local_path=str(storage.path / "pre-job-metrics.json"),
+                    max_size=MAX_METRICS_FILE_SIZE,
+                )
+                self._pull_file(
+                    ssh_conn=ssh_conn,
+                    remote_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"),
+                    local_path=str(storage.path / "post-job-metrics.json"),
+                    max_size=MAX_METRICS_FILE_SIZE,
+                )
                 return
             except PullFileError as exc:
-                logger.warning("Failed to pull metrics for %s: %s . Will not be able to issue metrics", instance_name, exc)
+                logger.warning(
+                    "Failed to pull metrics for %s: %s . Will not be able to issue metrics",
+                    instance_name,
+                    exc,
+                )
                 return
             except NoValidConnectionsError:
-                logger.info(
-                    "Unable to SSH into %s with address %s", instance_name, ssh_conn.host
-                )
+                logger.info("Unable to SSH into %s with address %s", instance_name, ssh_conn.host)
                 continue
 
-    def _pull_file(self, ssh_conn: SshConnection, remote_path: str, local_path: str, max_size: int):
+    def _pull_file(
+        self, ssh_conn: SshConnection, remote_path: str, local_path: str, max_size: int
+    ) -> None:
         """Pull file from the runner instance.
 
         Args:
@@ -1014,15 +1016,16 @@ class OpenstackRunnerManager:
             stdout.strip()
             size = int(stdout)
             if size > max_size:
-                raise PullFileError(reason=f"File size of {remote_path} too large {size} > {max_size}")
-        except ValueError:
-            raise PullFileError(reason=f"Invalid file size for {remote_path}: {stdout}")
+                raise PullFileError(
+                    reason=f"File size of {remote_path} too large {size} > {max_size}"
+                )
+        except ValueError as exc:
+            raise PullFileError(reason=f"Invalid file size for {remote_path}: {stdout}") from exc
 
         try:
             ssh_conn.get(remote=remote_path, local=local_path)
         except OSError as exc:
             raise PullFileError(reason=f"Unable to retrieve file {remote_path}") from exc
-
 
     def _remove_runners(
         self,
@@ -1171,9 +1174,9 @@ class OpenstackRunnerManager:
                 logger.info("No changes to number of runners needed")
 
             end_ts = time.time()
-            self._issue_metrics(ssh_connection=conn,
-                reconciliation_start_ts=start_ts,
-                reconciliation_end_ts=end_ts)
+            self._issue_reconciliation_metrics(
+                ssh_connection=conn, reconciliation_start_ts=start_ts, reconciliation_end_ts=end_ts
+            )
 
             return delta
 
@@ -1195,10 +1198,52 @@ class OpenstackRunnerManager:
             )
             return len(runners_to_delete)
 
-    def _issue_metrics(self,
+    def _issue_runner_installed_metric(
+        self, instance_config: InstanceConfig, install_start_ts: float, install_end_ts: float
+    ) -> None:
+        """Issue RunnerInstalled metric.
+
+        Args:
+            instance_config: The configuration values for Openstack instance.
+            install_start_ts: The timestamp when the installation started.
+            install_end_ts: The timestamp when the installation ended.
+        """
+        try:
+            metrics.issue_event(
+                event=metrics.RunnerInstalled(
+                    timestamp=install_start_ts,
+                    flavor=self.app_name,
+                    duration=install_end_ts - install_start_ts,
+                ),
+            )
+        except IssueMetricEventError:
+            logger.exception("Failed to issue RunnerInstalled metric")
+        try:
+            storage = metrics_storage.create(instance_config.name)
+        except CreateMetricsStorageError:
+            logger.exception(
+                "Failed to get shared filesystem for runner %s, "
+                "will not be able to issue all metrics.",
+                instance_config.name,
+            )
+        else:
+            try:
+                (storage.path / RUNNER_INSTALLED_TS_FILE_NAME).write_text(
+                    str(install_end_ts), encoding="utf-8"
+                )
+            except FileNotFoundError:
+                logger.exception(
+                    "Failed to write runner-installed.timestamp into shared filesystem "
+                    "for runner %s, will not be able to issue all metrics.",
+                    instance_config.name,
+                )
+
+    def _issue_reconciliation_metrics(
+        self,
         ssh_connection: SshConnection,
         reconciliation_start_ts: float,
-        reconciliation_end_ts: float) -> None:
+        reconciliation_end_ts: float,
+    ) -> None:
         """Issue all reconciliation related metrics.
 
         This includes the metrics for the runners and the reconciliation metric itself.
@@ -1218,14 +1263,19 @@ class OpenstackRunnerManager:
             runner_states=runner_states,
         )
 
-    def _issue_runner_metrics(self, runner_states) -> IssuedMetricEventsStats:
+    def _issue_runner_metrics(self, runner_states: RunnerByHealth) -> IssuedMetricEventsStats:
         """Issue runner metrics.
+
+        Args:
+            runner_states: The states of the runners.
 
         Returns:
             The stats of issued metric events.
         """
         total_stats: IssuedMetricEventsStats = {}
-        for extracted_metrics in runner_metrics.extract(metrics_storage_manager=metrics_storage, ignore_runners=set(runner_states.healthy)):
+        for extracted_metrics in runner_metrics.extract(
+            metrics_storage_manager=metrics_storage, ignore_runners=set(runner_states.healthy)
+        ):
             try:
                 job_metrics = github_metrics.job(
                     github_client=self._github,
@@ -1250,7 +1300,7 @@ class OpenstackRunnerManager:
         metric_stats: IssuedMetricEventsStats,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
-        runner_states: RunnerByHealth
+        runner_states: RunnerByHealth,
     ) -> None:
         """Issue reconciliation metric.
 
@@ -1258,13 +1308,12 @@ class OpenstackRunnerManager:
             metric_stats: The stats of issued metric events.
             reconciliation_start_ts: The timestamp of when reconciliation started.
             reconciliation_end_ts: The timestamp of when reconciliation ended.
+            runner_states: The states of the runners.
         """
         github_info = self.get_github_runner_info()
         online_runners = [runner for runner in github_info if runner.online]
         offline_runner_names = {runner.runner_name for runner in github_info if not runner.online}
-        active_runner_names = {
-            runner.runner_name for runner in online_runners if runner.busy
-        }
+        active_runner_names = {runner.runner_name for runner in online_runners if runner.busy}
         healthy_runners = set(runner_states.healthy)
 
         active_count = len(active_runner_names)

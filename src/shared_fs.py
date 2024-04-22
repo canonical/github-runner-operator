@@ -4,7 +4,6 @@
 """Classes and functions to operate on the shared filesystem between the charm and the runners."""
 import logging
 import shutil
-import tarfile
 from pathlib import Path
 from typing import Iterator
 
@@ -15,7 +14,7 @@ from errors import (
     SharedFilesystemMountError,
     SubprocessError,
 )
-from metrics_common.storage import MetricsStorage, FILESYSTEM_QUARANTINE_PATH
+from metrics_common.storage import FILESYSTEM_QUARANTINE_PATH, MetricsStorage
 from utilities import execute_command
 
 DIR_NO_MOUNTPOINT_EXIT_CODE = 32
@@ -107,7 +106,7 @@ def create(runner_name: str) -> MetricsStorage:
         The shared filesystem object.
 
     Raises:
-        CreateSharedFilesystemError: If the creation of the shared filesystem fails.
+        CreateMetricsStorageError: If the creation of the shared filesystem fails.
     """
     try:
         FILESYSTEM_BASE_PATH.mkdir(exist_ok=True)
@@ -175,7 +174,7 @@ def get(runner_name: str) -> MetricsStorage:
         The shared filesystem object.
 
     Raises:
-        GetSharedFilesystemError: If the shared filesystem could not be retrieved/mounted.
+        GetMetricsStorageError: If the shared filesystem could not be retrieved/mounted.
     """
     runner_fs_path = _get_runner_fs_path(runner_name)
     if not runner_fs_path.exists():
@@ -256,7 +255,7 @@ def delete(runner_name: str) -> None:
         runner_name: The name of the runner.
 
     Raises:
-        DeleteSharedFilesystemError: If the shared filesystem could not be deleted.
+        DeleteMetricsStorageError: If the shared filesystem could not be deleted.
     """
     try:
         runner_fs_path = _unmount_runner_fs_path(runner_name=runner_name)

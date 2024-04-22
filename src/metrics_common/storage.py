@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Iterator, Protocol
 
-from errors import GetMetricsStorageError, QuarantineMetricsStorageError, DeleteMetricsStorageError
+from errors import DeleteMetricsStorageError, GetMetricsStorageError, QuarantineMetricsStorageError
 
 FILESYSTEM_QUARANTINE_PATH = Path("/home/ubuntu/runner-fs-quarantine")
 
@@ -25,7 +25,7 @@ class MetricsStorage:
     runner_name: str
 
 
-class StorageManager(Protocol):
+class StorageManager(Protocol):  # pylint: disable=too-few-public-methods
     """A protocol defining the methods for managing the metrics storage.
 
     Attributes:

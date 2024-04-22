@@ -1,7 +1,6 @@
 # Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import secrets
-import tarfile
 from pathlib import Path
 from unittest.mock import MagicMock, Mock
 
@@ -179,7 +178,7 @@ def test_delete_raises_error():
     """
     arrange: Nothing.
     act: Call delete.
-    assert: A DeleteSharedFileSystemError is raised.
+    assert: A DeleteMetricsStorageError is raised.
     """
     runner_name = secrets.token_hex(16)
 

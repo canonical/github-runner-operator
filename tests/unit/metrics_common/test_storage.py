@@ -37,7 +37,9 @@ def test_quarantine(filesystem_paths: dict[str, Path], tmp_path: Path):
     with (filesystem_paths["runner"] / runner_name / "test.txt").open("w", encoding="utf-8") as f:
         f.write("foo bar")
 
-    storage_manager.get.return_value = MetricsStorage(runner_name=runner_name, path=filesystem_paths["runner"].joinpath(runner_name))
+    storage_manager.get.return_value = MetricsStorage(
+        runner_name=runner_name, path=filesystem_paths["runner"].joinpath(runner_name)
+    )
 
     storage.move_to_quarantine(storage_manager, runner_name)
 
@@ -51,14 +53,15 @@ def test_quarantine(filesystem_paths: dict[str, Path], tmp_path: Path):
 
 def test_quarantine_raises_error(filesystem_paths: dict[str, Path]):
     """
-    arrange: No specific storage is created for the runner
+    arrange: No specific storage is created for the runner.
     act: Call quarantine.
     assert: A QuarantineMetricsStorageError is raised.
     """
     runner_name = secrets.token_hex(16)
     storage_manager = MagicMock()
-    storage_manager.get.return_value = MetricsStorage(runner_name=runner_name, path=filesystem_paths["runner"].joinpath(runner_name))
-
+    storage_manager.get.return_value = MetricsStorage(
+        runner_name=runner_name, path=filesystem_paths["runner"].joinpath(runner_name)
+    )
 
     with pytest.raises(QuarantineMetricsStorageError):
         storage.move_to_quarantine(storage_manager, runner_name)

@@ -8,14 +8,15 @@ import logging
 from enum import Enum
 from json import JSONDecodeError
 from pathlib import Path
-from typing import Optional, Type, Iterator
+from typing import Iterator, Optional, Type
 
 from pydantic import BaseModel, Field, NonNegativeFloat, ValidationError
 
 import metrics
-from errors import CorruptMetricDataError, IssueMetricEventError, DeleteMetricsStorageError
-from metrics_common.storage import StorageManager as MetricsStorageManager, MetricsStorage, \
-    move_to_quarantine
+from errors import CorruptMetricDataError, DeleteMetricsStorageError, IssueMetricEventError
+from metrics_common.storage import MetricsStorage
+from metrics_common.storage import StorageManager as MetricsStorageManager
+from metrics_common.storage import move_to_quarantine
 from metrics_type import GithubJobMetrics
 
 logger = logging.getLogger(__name__)
@@ -168,7 +169,9 @@ def _extract_metrics_from_fs(metrics_storage: MetricsStorage) -> Optional[Runner
 
     runner_name = metrics_storage.runner_name
     try:
-        installed_timestamp = metrics_storage.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).read_text()
+        installed_timestamp = metrics_storage.path.joinpath(
+            RUNNER_INSTALLED_TS_FILE_NAME
+        ).read_text()
         logger.debug("Runner %s installed at %s", runner_name, installed_timestamp)
     except FileNotFoundError:
         logger.exception("installed_timestamp not found for runner %s", runner_name)
@@ -176,14 +179,18 @@ def _extract_metrics_from_fs(metrics_storage: MetricsStorage) -> Optional[Runner
 
     try:
         pre_job_metrics = _extract_metrics_from_fs_file(
-            metrics_storage=metrics_storage, runner_name=runner_name, filename=PRE_JOB_METRICS_FILE_NAME
+            metrics_storage=metrics_storage,
+            runner_name=runner_name,
+            filename=PRE_JOB_METRICS_FILE_NAME,
         )
         if not pre_job_metrics:
             return None
         logger.debug("Pre-job metrics for runner %s: %s", runner_name, pre_job_metrics)
 
         post_job_metrics = _extract_metrics_from_fs_file(
-            metrics_storage=metrics_storage, runner_name=runner_name, filename=POST_JOB_METRICS_FILE_NAME
+            metrics_storage=metrics_storage,
+            runner_name=runner_name,
+            filename=POST_JOB_METRICS_FILE_NAME,
         )
         logger.debug("Post-job metrics for runner %s: %s", runner_name, post_job_metrics)
     # 2024/04/02 - We should define a new error, wrap it and re-raise it.
@@ -201,7 +208,9 @@ def _extract_metrics_from_fs(metrics_storage: MetricsStorage) -> Optional[Runner
         raise CorruptMetricDataError(str(exc)) from exc
 
 
-def _clean_up_shared_fs(metrics_storage_manager: MetricsStorageManager, metrics_storage: MetricsStorage) -> None:
+def _clean_up_shared_fs(
+    metrics_storage_manager: MetricsStorageManager, metrics_storage: MetricsStorage
+) -> None:
     """Clean up the shared filesystem.
 
     Remove all metric files and afterwards the shared filesystem.
@@ -224,7 +233,9 @@ def _clean_up_shared_fs(metrics_storage_manager: MetricsStorageManager, metrics_
     try:
         metrics_storage_manager.delete(metrics_storage.runner_name)
     except DeleteMetricsStorageError:
-        logger.exception("Could not delete shared filesystem for runner %s.", metrics_storage.runner_name)
+        logger.exception(
+            "Could not delete shared filesystem for runner %s.", metrics_storage.runner_name
+        )
 
 
 def _extract_fs(
@@ -250,11 +261,15 @@ def _extract_fs(
         return None
 
     logger.debug("Cleaning up shared filesystem for runner %s", runner_name)
-    _clean_up_shared_fs(metrics_storage_manager=metrics_storage_manager, metrics_storage=metrics_storage)
+    _clean_up_shared_fs(
+        metrics_storage_manager=metrics_storage_manager, metrics_storage=metrics_storage
+    )
     return metrics_from_fs
 
 
-def extract(metrics_storage_manager: MetricsStorageManager, ignore_runners: set[str]) -> Iterator[RunnerMetrics]:
+def extract(
+    metrics_storage_manager: MetricsStorageManager, ignore_runners: set[str]
+) -> Iterator[RunnerMetrics]:
     """Extract metrics from runners.
 
     The metrics are extracted from the shared filesystems of the runners.
@@ -275,7 +290,9 @@ def extract(metrics_storage_manager: MetricsStorageManager, ignore_runners: set[
     """
     for ms in metrics_storage_manager.list_all():
         if ms.runner_name not in ignore_runners:
-            runner_metrics = _extract_fs(metrics_storage_manager=metrics_storage_manager, metrics_storage=ms)
+            runner_metrics = _extract_fs(
+                metrics_storage_manager=metrics_storage_manager, metrics_storage=ms
+            )
             if not runner_metrics:
                 logger.warning("Not able to issue metrics for runner %s", ms.runner_name)
             else:

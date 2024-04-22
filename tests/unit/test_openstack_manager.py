@@ -1,7 +1,6 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import secrets
-from itertools import cycle
 from pathlib import Path
 from typing import Optional
 from unittest.mock import MagicMock, call
@@ -15,7 +14,7 @@ from openstack.compute.v2.keypair import Keypair
 import metrics
 from charm_state import CharmState, ProxyConfig
 from errors import OpenStackError
-from github_type import SelfHostedRunner, GitHubRunnerStatus
+from github_type import GitHubRunnerStatus, SelfHostedRunner
 from metrics import RunnerInstalled
 from metrics_common.storage import MetricsStorage
 from openstack_cloud import openstack_manager
@@ -90,7 +89,6 @@ def openstack_manager_for_reconcile_fixture(
 
     github_metrics_mock = MagicMock(openstack_manager.github_metrics)
     monkeypatch.setattr(openstack_manager, "github_metrics", github_metrics_mock)
-
 
     app_name = secrets.token_hex(16)
     charm_state = MagicMock(spec=CharmState)
@@ -557,7 +555,6 @@ def test_reconcile_issues_runner_installed_event(
     act: Reconcile to create a runner.
     assert: The expected event is issued.
     """
-
     openstack_manager_for_reconcile.reconcile(quantity=1)
 
     openstack_manager.metrics.issue_event.assert_has_calls(
@@ -634,10 +631,16 @@ def test_reconcile_pulls_metric_files(
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
     ssh_conn_mock = MagicMock(spec=openstack_manager.SshConnection)
     ssh_conn_mock.get.side_effect = lambda remote, local: Path(local).write_text("written")
-    ssh_conn_mock.run.side_effect = lambda cmd, **kwargs: Result(stdout="1") if cmd.startswith("stat") else Result()
+    ssh_conn_mock.run.side_effect = lambda cmd, **kwargs: (
+        Result(stdout="1") if cmd.startswith("stat") else Result()
+    )
     ssh_conn_mock.run.return_value = Result()
-    openstack_manager_for_reconcile._get_ssh_connections.return_value = ((ssh_conn_mock) for _ in range(10))
-    openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=()))
+    openstack_manager_for_reconcile._get_ssh_connections.return_value = (
+        (ssh_conn_mock) for _ in range(10)
+    )
+    openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
+        return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
+    )
 
     openstack_manager_for_reconcile.reconcile(quantity=0)
 
@@ -663,10 +666,16 @@ def test_reconcile_does_not_pull_too_large_files(
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
     ssh_conn_mock = MagicMock(spec=openstack_manager.SshConnection)
-    ssh_conn_mock.run.side_effect = lambda cmd, **kwargs: Result(stdout=f"{MAX_METRICS_FILE_SIZE + 1}") if cmd.startswith("stat") else Result()
+    ssh_conn_mock.run.side_effect = lambda cmd, **kwargs: (
+        Result(stdout=f"{MAX_METRICS_FILE_SIZE + 1}") if cmd.startswith("stat") else Result()
+    )
     ssh_conn_mock.get.side_effect = lambda remote, local: Path(local).write_text("written")
-    openstack_manager_for_reconcile._get_ssh_connections.return_value = ((ssh_conn_mock) for _ in range(10))
-    openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=()))
+    openstack_manager_for_reconcile._get_ssh_connections.return_value = (
+        (ssh_conn_mock) for _ in range(10)
+    )
+    openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
+        return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
+    )
 
     openstack_manager_for_reconcile.reconcile(quantity=0)
 
@@ -675,7 +684,7 @@ def test_reconcile_does_not_pull_too_large_files(
 
 
 def test_reconcile_issue_reconciliation_metrics(
-        openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager,
+    openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager,
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ):
@@ -691,17 +700,33 @@ def test_reconcile_issue_reconciliation_metrics(
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
     ssh_conn_mock = MagicMock(spec=openstack_manager.SshConnection)
     ssh_conn_mock.get.side_effect = lambda remote, local: Path(local).write_text("written")
-    ssh_conn_mock.run.side_effect = lambda cmd, **kwargs: Result(stdout="1") if cmd.startswith("stat") else Result()
+    ssh_conn_mock.run.side_effect = lambda cmd, **kwargs: (
+        Result(stdout="1") if cmd.startswith("stat") else Result()
+    )
     ssh_conn_mock.run.return_value = Result()
-    openstack_manager_for_reconcile._get_ssh_connections.return_value = ((ssh_conn_mock) for _ in range(10))
-    openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=()))
+    openstack_manager_for_reconcile._get_ssh_connections.return_value = (
+        (ssh_conn_mock) for _ in range(10)
+    )
+    openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
+        return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
+    )
 
     openstack_manager.runner_metrics.extract.return_value = (MagicMock() for _ in range(2))
-    openstack_manager.runner_metrics.issue_events.side_effect = [{metrics.RunnerStart,
-                                                                  metrics.RunnerStop}, {
-                                                                     metrics.RunnerStart}]
+    openstack_manager.runner_metrics.issue_events.side_effect = [
+        {metrics.RunnerStart, metrics.RunnerStop},
+        {metrics.RunnerStart},
+    ]
 
-    openstack_manager_for_reconcile._github.get_runner_github_info.return_value = [SelfHostedRunner(busy=False, id=1, labels=[], os="linux", name=f"{openstack_manager_for_reconcile.instance_name}-test_runner", status=GitHubRunnerStatus.ONLINE)]
+    openstack_manager_for_reconcile._github.get_runner_github_info.return_value = [
+        SelfHostedRunner(
+            busy=False,
+            id=1,
+            labels=[],
+            os="linux",
+            name=f"{openstack_manager_for_reconcile.instance_name}-test_runner",
+            status=GitHubRunnerStatus.ONLINE,
+        )
+    ]
     openstack_manager_for_reconcile.reconcile(quantity=0)
 
     openstack_manager.metrics.issue_event.assert_has_calls(

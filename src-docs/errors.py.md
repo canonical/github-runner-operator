@@ -27,7 +27,7 @@ Represents an error with the data being corrupt.
 
 ---
 
-## <kbd>class</kbd> `CreateSharedFilesystemError`
+## <kbd>class</kbd> `CreateMetricsStorageError`
 Represents an error when the shared filesystem could not be created. 
 
 
@@ -36,7 +36,7 @@ Represents an error when the shared filesystem could not be created.
 
 ---
 
-## <kbd>class</kbd> `DeleteSharedFilesystemError`
+## <kbd>class</kbd> `DeleteMetricsStorageError`
 Represents an error when the shared filesystem could not be deleted. 
 
 
@@ -45,7 +45,7 @@ Represents an error when the shared filesystem could not be deleted.
 
 ---
 
-## <kbd>class</kbd> `GetSharedFilesystemError`
+## <kbd>class</kbd> `GetMetricsStorageError`
 Represents an error when the shared filesystem could not be retrieved. 
 
 

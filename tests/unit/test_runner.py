@@ -13,7 +13,7 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 from charm_state import GithubOrg, GithubRepo, SSHDebugConnection, VirtualMachineResources
-from errors import CreateSharedFilesystemError, RunnerCreateError, RunnerRemoveError
+from errors import CreateMetricsStorageError, RunnerCreateError, RunnerRemoveError
 from runner import CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerManagerClients
 from runner_type import ProxySetting
@@ -308,7 +308,7 @@ def test_create_with_metrics_and_shared_fs_error(
     assert: The runner is created despite the error on the shared filesystem.
     """
     runner.config.issue_metrics = True
-    shared_fs.create.side_effect = CreateSharedFilesystemError("")
+    shared_fs.create.side_effect = CreateMetricsStorageError("")
 
     runner.create(
         config=CreateRunnerConfig(

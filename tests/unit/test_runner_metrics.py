@@ -11,7 +11,7 @@ import metrics
 import metrics_type
 import runner_metrics
 import shared_fs
-from errors import DeleteSharedFilesystemError, IssueMetricEventError
+from errors import DeleteMetricsStorageError, IssueMetricEventError
 from github_type import JobConclusion
 from metrics import RunnerStart, RunnerStop
 from runner_metrics import (
@@ -169,7 +169,11 @@ def test_extract(runner_fs_base: Path):
     metrics_storage_manager = MagicMock()
     metrics_storage_manager.list_all.return_value = [runner1_fs, runner2_fs, runner3_fs]
 
-    extracted_metrics = list(runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, ignore_runners=set()))
+    extracted_metrics = list(
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
 
     assert extracted_metrics == [
         runner_all_metrics,
@@ -212,7 +216,11 @@ def test_extract_ignores_runners(runner_fs_base: Path):
 
     ignore_runners = {runner_filesystems[0].runner_name, runner_filesystems[2].runner_name}
 
-    extracted_metrics = list(runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, ignore_runners=ignore_runners))
+    extracted_metrics = list(
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=ignore_runners
+        )
+    )
 
     assert extracted_metrics == runner_metrics_data[1:2] + runner_metrics_data[3:]
 
@@ -243,8 +251,10 @@ def test_extract_corrupt_data(runner_fs_base: Path):
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
     extracted_metrics = list(
-        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager,
-                               ignore_runners=set()))
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
 
     assert not extracted_metrics
     metrics_storage_manager.move_to_quarantine.assert_any_call(runner_fs.runner_name)
@@ -263,8 +273,10 @@ def test_extract_corrupt_data(runner_fs_base: Path):
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
     extracted_metrics = list(
-        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager,
-                               ignore_runners=set()))
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
     assert not extracted_metrics
     metrics_storage_manager.move_to_quarantine.assert_any_call(runner_fs.runner_name)
 
@@ -282,8 +294,10 @@ def test_extract_corrupt_data(runner_fs_base: Path):
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
     extracted_metrics = list(
-        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager,
-                               ignore_runners=set()))
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
     assert not extracted_metrics
     metrics_storage_manager.move_to_quarantine.assert_any_call(runner_fs.runner_name)
 
@@ -301,8 +315,10 @@ def test_extract_corrupt_data(runner_fs_base: Path):
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
     extracted_metrics = list(
-        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager,
-                               ignore_runners=set()))
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
     assert not extracted_metrics
 
     metrics_storage_manager.move_to_quarantine.assert_any_call(runner_fs.runner_name)
@@ -335,7 +351,11 @@ def test_extract_raises_error_for_too_large_files(
 
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
-    extracted_metrics = list(runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, ignore_runners=set()))
+    extracted_metrics = list(
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
     assert not extracted_metrics
 
     metrics_storage_manager.move_to_quarantine.assert_any_call(runner_fs.runner_name)
@@ -356,8 +376,10 @@ def test_extract_raises_error_for_too_large_files(
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
     extracted_metrics = list(
-        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager,
-                               ignore_runners=set()))
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
 
     assert not extracted_metrics
 
@@ -379,8 +401,10 @@ def test_extract_raises_error_for_too_large_files(
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
     extracted_metrics = list(
-        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager,
-                               ignore_runners=set()))
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
 
     assert not extracted_metrics
     metrics_storage_manager.move_to_quarantine.assert_any_call(runner_fs.runner_name)
@@ -416,7 +440,11 @@ def test_extract_ignores_filesystems_without_ts(runner_fs_base: Path):
     metrics_storage_manager = MagicMock()
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
-    extracted_metrics = list(runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, ignore_runners=set()))
+    extracted_metrics = list(
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
     assert not extracted_metrics
     metrics_storage_manager.delete.assert_called_once_with(runner_fs.runner_name)
 
@@ -443,11 +471,13 @@ def test_extract_ignores_failure_on_shared_fs_cleanup(
 
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
-    metrics_storage_manager.delete.side_effect = DeleteSharedFilesystemError(
+    metrics_storage_manager.delete.side_effect = DeleteMetricsStorageError(
         "Failed to delete shared filesystem"
     )
 
-    extracted_metrics = runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, ignore_runners=set())
+    extracted_metrics = runner_metrics.extract(
+        metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+    )
     assert list(extracted_metrics) == [runner_metrics_data]
 
     assert "Failed to delete shared filesystem" in caplog.text
