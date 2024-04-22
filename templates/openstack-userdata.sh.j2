@@ -42,7 +42,7 @@ write_post_metrics(){
 
     # Write the post-job metrics using status abnormal and exit code if exit code is non-zero
     if [ "$1" != "0" ]; then
-        sudu -g ubuntu -u ubuntu jq -n \
+        sudo -g ubuntu -u ubuntu jq -n \
           --argjson timestamp "$timestamp" \
           --arg status "abnormal" \
           --argjson exit_code "$1" \
