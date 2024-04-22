@@ -130,15 +130,15 @@ jobs:
       - name: Copy github-runner Charm
         run: |
           cp  github-runner_ubuntu-22.04-amd64.charm /home/$USER/github-runner_ubuntu-22.04-amd64.charm
-      
+
       - name: Generate Runner Name
         id: runner-name
         run: echo name=${{ matrix.event.abbreviation }}-${{ needs.run-id.outputs.run-id }}${{ github.run_attempt }} >> $GITHUB_OUTPUT
-      
+
       - name: Create Runner OpenStack Flavor
         run: |
           OS_CLIENT_CONFIG_FILE="clouds.yaml" openstack --os-cloud sunbeam flavor create runner --ram 16384 --disk 20 --vcpus 16
-        
+
       - name: Deploy github-runner Charm (Pull Request, Workflow Dispatch and Push)
         if: matrix.event.name == 'workflow_dispatch' || matrix.event.name == 'push' || matrix.event.name == 'pull_request'
         run: |
@@ -153,7 +153,7 @@ jobs:
             --config experimental-openstack-clouds-yaml="$CLOUDS_YAML" \
             --config experimental-openstack-network=demo-network \
             --config experimental-openstack-flavor=runner
-            
+
       - name: Checkout branch (Issues, Schedule)
         if: matrix.event.name == 'issues' || matrix.event.name == 'schedule'
         uses: actions/checkout@v4
@@ -208,7 +208,7 @@ jobs:
           git push testing ${{ steps.runner-name.outputs.name }}:main
 
           juju deploy /home/$USER/github-runner_ubuntu-22.04-amd64.charm \
-            ${{ steps.runner-name.outputs.name }}
+            ${{ steps.runner-name.outputs.name }} \
             --config path=$TESTING_REPO \
             --config token=${{ secrets.E2E_TESTING_TOKEN }} \
             --config virtual-machines=1 \
@@ -216,7 +216,7 @@ jobs:
             --config experimental-openstack-clouds-yaml="$CLOUDS_YAML" \
             --config experimental-openstack-network=demo-network \
             --config experimental-openstack-flavor=runner
-            
+
       - name: Watch github-runner (Pull Request)
         if: matrix.event.name == 'pull_request'
         env:
