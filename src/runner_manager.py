@@ -25,7 +25,7 @@ import runner_metrics
 import shared_fs
 from charm_state import VirtualMachineResources
 from errors import (
-    GetSharedFilesystemError,
+    GetMetricsStorageError,
     GithubClientError,
     GithubMetricsError,
     IssueMetricEventError,
@@ -293,7 +293,7 @@ class RunnerManager:
 
             try:
                 fs = shared_fs.get(runner.config.name)
-            except GetSharedFilesystemError:
+            except GetMetricsStorageError:
                 logger.exception(
                     "Failed to get shared filesystem for runner %s, "
                     "will not be able to issue all metrics.",

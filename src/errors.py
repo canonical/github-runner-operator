@@ -104,22 +104,16 @@ class CreateMetricsStorageError(MetricsStorageError):
     """Represents an error when the metrics storage could not be created."""
 
 
-class CreateSharedFilesystemError(SharedFilesystemError):
-    """Represents an error when the shared filesystem could not be created."""
+class DeleteMetricsStorageError(MetricsStorageError):
+    """Represents an error when the metrics storage could not be deleted."""
 
-
-class DeleteSharedFilesystemError(SharedFilesystemError):
-    """Represents an error when the shared filesystem could not be deleted."""
 
 class GetMetricsStorageError(MetricsStorageError):
     """Represents an error when the metrics storage could not be retrieved."""
 
-class GetSharedFilesystemError(SharedFilesystemError):
-    """Represents an error when the shared filesystem could not be retrieved."""
 
-
-class QuarantineSharedFilesystemError(SharedFilesystemError):
-    """Represents an error when the shared filesystem could not be quarantined."""
+class QuarantineMetricsStorageError(MetricsStorageError):
+    """Represents an error when the metrics storage could not be quarantined."""
 
 
 class SharedFilesystemMountError(SharedFilesystemError):

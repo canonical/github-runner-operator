@@ -13,9 +13,9 @@ from typing import Optional, Type, Iterator
 from pydantic import BaseModel, Field, NonNegativeFloat, ValidationError
 
 import metrics
-import shared_fs
-from errors import CorruptMetricDataError, DeleteSharedFilesystemError, IssueMetricEventError
-from metrics_common.storage import StorageManager as MetricsStorageManager, MetricsStorage
+from errors import CorruptMetricDataError, IssueMetricEventError, DeleteMetricsStorageError
+from metrics_common.storage import StorageManager as MetricsStorageManager, MetricsStorage, \
+    move_to_quarantine
 from metrics_type import GithubJobMetrics
 
 logger = logging.getLogger(__name__)
@@ -223,7 +223,7 @@ def _clean_up_shared_fs(metrics_storage_manager: MetricsStorageManager, metrics_
 
     try:
         metrics_storage_manager.delete(metrics_storage.runner_name)
-    except DeleteSharedFilesystemError:
+    except DeleteMetricsStorageError:
         logger.exception("Could not delete shared filesystem for runner %s.", metrics_storage.runner_name)
 
 
@@ -246,7 +246,7 @@ def _extract_fs(
         metrics_from_fs = _extract_metrics_from_fs(metrics_storage)
     except CorruptMetricDataError:
         logger.exception("Corrupt metric data found for runner %s", runner_name)
-        metrics_storage_manager.move_to_quarantine(runner_name)
+        move_to_quarantine(metrics_storage_manager, runner_name)
         return None
 
     logger.debug("Cleaning up shared filesystem for runner %s", runner_name)

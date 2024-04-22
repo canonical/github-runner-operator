@@ -5,18 +5,17 @@
 import logging
 import shutil
 import tarfile
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Generator
+from typing import Iterator
 
 from errors import (
-    CreateSharedFilesystemError,
-    DeleteSharedFilesystemError,
-    GetSharedFilesystemError,
-    QuarantineSharedFilesystemError,
+    CreateMetricsStorageError,
+    DeleteMetricsStorageError,
+    GetMetricsStorageError,
     SharedFilesystemMountError,
     SubprocessError,
 )
+from metrics_common.storage import MetricsStorage, FILESYSTEM_QUARANTINE_PATH
 from utilities import execute_command
 
 DIR_NO_MOUNTPOINT_EXIT_CODE = 32
@@ -26,21 +25,7 @@ logger = logging.getLogger(__name__)
 FILESYSTEM_OWNER = "ubuntu:ubuntu"
 FILESYSTEM_BASE_PATH = Path("/home/ubuntu/runner-fs")
 FILESYSTEM_IMAGES_PATH = Path("/home/ubuntu/runner-fs-images")
-FILESYSTEM_QUARANTINE_PATH = Path("/home/ubuntu/runner-fs-quarantine")
 FILESYSTEM_SIZE = "1M"
-
-
-@dataclass
-class SharedFilesystem:
-    """Shared filesystem between the charm and the runners.
-
-    Attributes:
-        path: The path of the shared filesystem inside the charm.
-        runner_name: The name of the associated runner.
-    """
-
-    path: Path
-    runner_name: str
 
 
 def _get_runner_image_path(runner_name: str) -> Path:
@@ -109,7 +94,7 @@ def _mount(runner_fs_path: Path, runner_image_path: Path) -> None:
         ) from exc
 
 
-def create(runner_name: str) -> SharedFilesystem:
+def create(runner_name: str) -> MetricsStorage:
     """Create a shared filesystem for the runner.
 
     The method is not idempotent and will raise an exception
@@ -129,7 +114,7 @@ def create(runner_name: str) -> SharedFilesystem:
         FILESYSTEM_IMAGES_PATH.mkdir(exist_ok=True)
         FILESYSTEM_QUARANTINE_PATH.mkdir(exist_ok=True)
     except OSError as exc:
-        raise CreateSharedFilesystemError(
+        raise CreateMetricsStorageError(
             "Failed to create shared filesystem base path or images path"
         ) from exc
 
@@ -138,7 +123,7 @@ def create(runner_name: str) -> SharedFilesystem:
     try:
         runner_fs_path.mkdir()
     except FileExistsError as exc:
-        raise CreateSharedFilesystemError(
+        raise CreateMetricsStorageError(
             f"Shared filesystem for runner {runner_name} already exists."
         ) from exc
 
@@ -153,13 +138,13 @@ def create(runner_name: str) -> SharedFilesystem:
         _mount(runner_fs_path=runner_fs_path, runner_image_path=runner_img_path)
         execute_command(["sudo", "chown", FILESYSTEM_OWNER, str(runner_fs_path)], check_exit=True)
     except (SubprocessError, SharedFilesystemMountError) as exc:
-        raise CreateSharedFilesystemError(
+        raise CreateMetricsStorageError(
             f"Failed to create shared filesystem for runner {runner_name}"
         ) from exc
-    return SharedFilesystem(runner_fs_path, runner_name)
+    return MetricsStorage(runner_fs_path, runner_name)
 
 
-def list_all() -> Generator[SharedFilesystem, None, None]:
+def list_all() -> Iterator[MetricsStorage]:
     """List the shared filesystems.
 
     Yields:
@@ -172,13 +157,13 @@ def list_all() -> Generator[SharedFilesystem, None, None]:
     for directory in directories:
         try:
             fs = get(runner_name=directory.name)
-        except GetSharedFilesystemError:
+        except GetMetricsStorageError:
             logger.error("Failed to get shared filesystem for runner %s", directory.name)
         else:
             yield fs
 
 
-def get(runner_name: str) -> SharedFilesystem:
+def get(runner_name: str) -> MetricsStorage:
     """Get the shared filesystem for the runner.
 
     Mounts the filesystem if it is not currently mounted.
@@ -194,12 +179,12 @@ def get(runner_name: str) -> SharedFilesystem:
     """
     runner_fs_path = _get_runner_fs_path(runner_name)
     if not runner_fs_path.exists():
-        raise GetSharedFilesystemError(f"Shared filesystem for runner {runner_name} not found.")
+        raise GetMetricsStorageError(f"Shared filesystem for runner {runner_name} not found.")
 
     try:
         is_mounted = _is_mountpoint(runner_fs_path)
     except SharedFilesystemMountError as exc:
-        raise GetSharedFilesystemError(
+        raise GetMetricsStorageError(
             f"Failed to determine if shared filesystem is mounted for runner {runner_name}"
         ) from exc
 
@@ -213,11 +198,11 @@ def get(runner_name: str) -> SharedFilesystem:
         try:
             _mount(runner_fs_path=runner_fs_path, runner_image_path=runner_img_path)
         except SharedFilesystemMountError as exc:
-            raise GetSharedFilesystemError(
+            raise GetMetricsStorageError(
                 f"Shared filesystem for runner {runner_name} could not be mounted."
             ) from exc
 
-    return SharedFilesystem(runner_fs_path, runner_name)
+    return MetricsStorage(runner_fs_path, runner_name)
 
 
 class UnmountSharedFilesystemError(Exception):
@@ -276,7 +261,7 @@ def delete(runner_name: str) -> None:
     try:
         runner_fs_path = _unmount_runner_fs_path(runner_name=runner_name)
     except UnmountSharedFilesystemError as exc:
-        raise DeleteSharedFilesystemError(
+        raise DeleteMetricsStorageError(
             f"Unexpected error while deleting shared Filesystem: {str(exc)}"
         ) from exc
 
@@ -284,44 +269,11 @@ def delete(runner_name: str) -> None:
     try:
         runner_image_path.unlink(missing_ok=True)
     except OSError as exc:
-        raise DeleteSharedFilesystemError(
+        raise DeleteMetricsStorageError(
             "Failed to remove runner image for shared filesystem"
         ) from exc
 
     try:
         shutil.rmtree(runner_fs_path)
     except OSError as exc:
-        raise DeleteSharedFilesystemError("Failed to remove shared filesystem") from exc
-
-
-def move_to_quarantine(runner_name: str) -> None:
-    """Archive the shared filesystem for the runner and delete it.
-
-    Args:
-        runner_name: The name of the runner.
-
-    Raises:
-        QuarantineSharedFilesystemError: If the shared filesystem could not be quarantined.
-        DeleteSharedFilesystemError: If the shared filesystem could not be deleted.
-    """
-    try:
-        runner_fs = get(runner_name)
-    except GetSharedFilesystemError as exc:
-        raise QuarantineSharedFilesystemError(
-            f"Failed to get shared filesystem for runner {runner_name}"
-        ) from exc
-
-    tarfile_path = FILESYSTEM_QUARANTINE_PATH.joinpath(runner_name).with_suffix(".tar.gz")
-    try:
-        with tarfile.open(tarfile_path, "w:gz") as tar:
-            tar.add(runner_fs.path, arcname=runner_fs.path.name)
-    except OSError as exc:
-        raise QuarantineSharedFilesystemError(
-            f"Failed to archive shared filesystem for runner {runner_name}"
-        ) from exc
-
-    try:
-        delete(runner_name)
-    # 2024/04/02 - We should define a new error, wrap it and re-raise it.
-    except DeleteSharedFilesystemError:  # pylint: disable=try-except-raise
-        raise
+        raise DeleteMetricsStorageError("Failed to remove shared filesystem") from exc

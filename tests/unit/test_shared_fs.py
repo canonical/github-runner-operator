@@ -10,12 +10,12 @@ from _pytest.monkeypatch import MonkeyPatch
 
 import shared_fs
 from errors import (
-    CreateSharedFilesystemError,
-    DeleteSharedFilesystemError,
-    GetSharedFilesystemError,
-    QuarantineSharedFilesystemError,
+    CreateMetricsStorageError,
+    DeleteMetricsStorageError,
+    GetMetricsStorageError,
     SubprocessError,
 )
+from metrics_common.storage import MetricsStorage
 
 MOUNTPOINT_FAILURE_EXIT_CODE = 1
 
@@ -79,7 +79,7 @@ def test_create_raises_exception(exc_cmd_mock: MagicMock):
         cmd=["mock"], return_code=1, stdout="mock stdout", stderr="mock stderr"
     )
 
-    with pytest.raises(CreateSharedFilesystemError):
+    with pytest.raises(CreateMetricsStorageError):
         shared_fs.create(runner_name)
 
 
@@ -92,7 +92,7 @@ def test_create_raises_exception_if_already_exists():
     runner_name = secrets.token_hex(16)
     shared_fs.create(runner_name)
 
-    with pytest.raises(CreateSharedFilesystemError):
+    with pytest.raises(CreateMetricsStorageError):
         shared_fs.create(runner_name)
 
 
@@ -110,7 +110,7 @@ def test_list_shared_filesystems():
 
     assert len(fs_list) == 3
     for fs in fs_list:
-        assert isinstance(fs, shared_fs.SharedFilesystem)
+        assert isinstance(fs, MetricsStorage)
         assert fs.runner_name in runner_names
 
 
@@ -171,7 +171,7 @@ def test_delete_filesystem():
 
     shared_fs.delete(runner_name)
 
-    with pytest.raises(GetSharedFilesystemError):
+    with pytest.raises(GetMetricsStorageError):
         shared_fs.get(runner_name)
 
 
@@ -183,7 +183,7 @@ def test_delete_raises_error():
     """
     runner_name = secrets.token_hex(16)
 
-    with pytest.raises(DeleteSharedFilesystemError):
+    with pytest.raises(DeleteMetricsStorageError):
         shared_fs.delete(runner_name)
 
 
@@ -201,7 +201,7 @@ def test_delete_filesystem_ignores_unmounted_filesystem(exc_cmd_mock: MagicMock)
 
     shared_fs.delete(runner_name)
 
-    with pytest.raises(GetSharedFilesystemError):
+    with pytest.raises(GetMetricsStorageError):
         shared_fs.get(runner_name)
 
 
@@ -216,7 +216,7 @@ def test_get_shared_filesystem():
     shared_fs.create(runner_name)
     fs = shared_fs.get(runner_name)
 
-    assert isinstance(fs, shared_fs.SharedFilesystem)
+    assert isinstance(fs, MetricsStorage)
     assert fs.runner_name == runner_name
 
 
@@ -224,11 +224,11 @@ def test_get_raises_error_if_not_found():
     """
     arrange: Nothing.
     act: Call get.
-    assert: A GetSharedFilesystemError is raised.
+    assert: A GetMetricsStorageError is raised.
     """
     runner_name = secrets.token_hex(16)
 
-    with pytest.raises(GetSharedFilesystemError):
+    with pytest.raises(GetMetricsStorageError):
         shared_fs.get(runner_name)
 
 
@@ -257,35 +257,3 @@ def test_get_mounts_if_unmounted(exc_cmd_mock: MagicMock):
         ],
         check_exit=True,
     )
-
-
-def test_quarantine(filesystem_paths: dict[str, Path], tmp_path: Path):
-    """
-    arrange: Create a shared filesystem for a runner with a file in it.
-    act: Call quarantine.
-    assert: The shared filesystem is moved to the quarantine.
-    """
-    runner_name = secrets.token_hex(16)
-    fs = shared_fs.create(runner_name)
-    fs.path.joinpath("test.txt").write_text("foo bar")
-
-    shared_fs.move_to_quarantine(runner_name)
-
-    tarfile_path = filesystem_paths["quarantine"].joinpath(runner_name).with_suffix(".tar.gz")
-    assert tarfile_path.exists()
-    tarfile.open(tarfile_path).extractall(path=tmp_path)
-    assert tmp_path.joinpath(f"{runner_name}/test.txt").exists()
-    assert tmp_path.joinpath(f"{runner_name}/test.txt").read_text(encoding="utf-8") == "foo bar"
-    assert not fs.path.exists()
-
-
-def test_quarantine_raises_error():
-    """
-    arrange: Nothing.
-    act: Call quarantine.
-    assert: A QuarantineSharedFilesystemError is raised.
-    """
-    runner_name = secrets.token_hex(16)
-
-    with pytest.raises(QuarantineSharedFilesystemError):
-        shared_fs.move_to_quarantine(runner_name)

@@ -25,7 +25,7 @@ import yaml
 import shared_fs
 from charm_state import Arch, GithubOrg, SSHDebugConnection, VirtualMachineResources
 from errors import (
-    CreateSharedFilesystemError,
+    CreateMetricsStorageError,
     GithubClientError,
     LxdError,
     RunnerAproxyError,
@@ -153,7 +153,7 @@ class Runner:
         if self.config.issue_metrics:
             try:
                 self._shared_fs = shared_fs.create(self.config.name)
-            except CreateSharedFilesystemError:
+            except CreateMetricsStorageError:
                 logger.exception(
                     "Unable to create shared filesystem for runner %s. "
                     "Will not create metrics for this runner.",
