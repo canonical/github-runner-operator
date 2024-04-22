@@ -12,8 +12,8 @@ from errors import (
     GetMetricsStorageError,
     QuarantineMetricsStorageError,
 )
-from metrics_common import storage
-from metrics_common.storage import MetricsStorage
+from metrics import storage
+from metrics.storage import MetricsStorage
 
 
 @pytest.fixture(autouse=True, name="filesystem_paths")

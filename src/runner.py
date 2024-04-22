@@ -37,7 +37,7 @@ from errors import (
 )
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
-from metrics_common.storage import MetricsStorage
+from metrics.storage import MetricsStorage
 from runner_manager_type import RunnerManagerClients
 from runner_type import RunnerConfig, RunnerStatus
 from utilities import execute_command, retry

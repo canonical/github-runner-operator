@@ -1,4 +1,4 @@
-# Copyright 2024 Canonical Ltd.
+#  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Classes and function to extract the metrics from a shared filesystem."""
@@ -12,12 +12,12 @@ from typing import Iterator, Optional, Type
 
 from pydantic import BaseModel, Field, NonNegativeFloat, ValidationError
 
-import metrics
 from errors import CorruptMetricDataError, DeleteMetricsStorageError, IssueMetricEventError
-from metrics_common.storage import MetricsStorage
-from metrics_common.storage import StorageManager as MetricsStorageManager
-from metrics_common.storage import move_to_quarantine
-from metrics_type import GithubJobMetrics
+from metrics import events as metric_events
+from metrics.storage import MetricsStorage
+from metrics.storage import StorageManager as MetricsStorageManager
+from metrics.storage import move_to_quarantine
+from metrics.type import GithubJobMetrics
 
 logger = logging.getLogger(__name__)
 
@@ -303,7 +303,7 @@ def issue_events(
     runner_metrics: RunnerMetrics,
     flavor: str,
     job_metrics: Optional[GithubJobMetrics],
-) -> set[Type[metrics.Event]]:
+) -> set[Type[metric_events.Event]]:
     """Issue the metrics events for a runner.
 
     Args:
@@ -314,7 +314,7 @@ def issue_events(
     Returns:
         A set of issued events.
     """
-    runner_start_event = metrics.RunnerStart(
+    runner_start_event = metric_events.RunnerStart(
         timestamp=runner_metrics.pre_job.timestamp,
         flavor=flavor,
         workflow=runner_metrics.pre_job.workflow,
@@ -324,7 +324,7 @@ def issue_events(
         queue_duration=job_metrics.queue_duration if job_metrics else None,
     )
     try:
-        metrics.issue_event(runner_start_event)
+        metric_events.issue_event(runner_start_event)
     except IssueMetricEventError:
         logger.exception(
             "Not able to issue RunnerStart metric for runner %s. "
@@ -334,10 +334,10 @@ def issue_events(
         # Return to not issuing RunnerStop metrics if RunnerStart metric could not be issued.
         return set()
 
-    issued_events = {metrics.RunnerStart}
+    issued_events = {metric_events.RunnerStart}
 
     if runner_metrics.post_job:
-        runner_stop_event = metrics.RunnerStop(
+        runner_stop_event = metric_events.RunnerStop(
             timestamp=runner_metrics.post_job.timestamp,
             flavor=flavor,
             workflow=runner_metrics.pre_job.workflow,
@@ -349,13 +349,13 @@ def issue_events(
             job_conclusion=job_metrics.conclusion if job_metrics else None,
         )
         try:
-            metrics.issue_event(runner_stop_event)
+            metric_events.issue_event(runner_stop_event)
         except IssueMetricEventError:
             logger.exception(
                 "Not able to issue RunnerStop metric for runner %s.", runner_metrics.runner_name
             )
             return issued_events
 
-        issued_events.add(metrics.RunnerStop)
+        issued_events.add(metric_events.RunnerStop)
 
     return issued_events

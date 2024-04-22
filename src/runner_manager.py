@@ -18,10 +18,7 @@ import requests
 import requests.adapters
 import urllib3
 
-import github_metrics
-import metrics
 import runner_logs
-import runner_metrics
 import shared_fs
 from charm_state import VirtualMachineResources
 from errors import (
@@ -37,10 +34,13 @@ from errors import (
 from github_client import GithubClient
 from github_type import RunnerApplication, SelfHostedRunner
 from lxd import LxdClient, LxdInstance
+from metrics import events as metric_events
+from metrics import github as github_metrics
+from metrics import runner as runner_metrics
+from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import FlushMode, RunnerInfo, RunnerManagerClients, RunnerManagerConfig
-from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import ProxySetting as RunnerProxySetting
 from runner_type import RunnerByHealth
 from utilities import execute_command, retry, set_env_var
@@ -52,7 +52,7 @@ logger = logging.getLogger(__name__)
 
 BUILD_IMAGE_SCRIPT_FILENAME = Path("scripts/build-lxd-image.sh")
 
-IssuedMetricEventsStats = dict[Type[metrics.Event], int]
+IssuedMetricEventsStats = dict[Type[metric_events.Event], int]
 
 
 class RunnerManager:
@@ -281,8 +281,8 @@ class RunnerManager:
             )
             ts_after = time.time()
             try:
-                metrics.issue_event(
-                    event=metrics.RunnerInstalled(
+                metric_events.issue_event(
+                    event=metric_events.RunnerInstalled(
                         timestamp=ts_after,
                         flavor=self.app_name,
                         duration=ts_after - ts_now,
@@ -386,12 +386,12 @@ class RunnerManager:
         idle_offline_count = len((offline_runner_names & healthy_runners) - active_runner_names)
 
         try:
-            metrics.issue_event(
-                event=metrics.Reconciliation(
+            metric_events.issue_event(
+                event=metric_events.Reconciliation(
                     timestamp=time.time(),
                     flavor=self.app_name,
-                    crashed_runners=metric_stats.get(metrics.RunnerStart, 0)
-                    - metric_stats.get(metrics.RunnerStop, 0),
+                    crashed_runners=metric_stats.get(metric_events.RunnerStart, 0)
+                    - metric_stats.get(metric_events.RunnerStop, 0),
                     idle_runners=idle_online_count + idle_offline_count,
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )

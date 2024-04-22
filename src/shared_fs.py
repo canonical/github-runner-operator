@@ -15,10 +15,10 @@ from errors import (
 )
 
 # we import list_all to have it available as public api of the module
-from metrics_common.storage import list_all  # noqa: F401 # pylint: disable=unused-import
-from metrics_common.storage import MetricsStorage
-from metrics_common.storage import create as create_storage
-from metrics_common.storage import get as get_storage
+from metrics.storage import list_all  # noqa: F401 # pylint: disable=unused-import
+from metrics.storage import MetricsStorage
+from metrics.storage import create as create_storage
+from metrics.storage import get as get_storage
 from utilities import execute_command
 
 DIR_NO_MOUNTPOINT_EXIT_CODE = 32

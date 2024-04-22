@@ -14,7 +14,7 @@ from errors import (
     GetMetricsStorageError,
     SubprocessError,
 )
-from metrics_common.storage import MetricsStorage
+from metrics.storage import MetricsStorage
 
 MOUNTPOINT_FAILURE_EXIT_CODE = 1
 

@@ -14,7 +14,7 @@ from juju.model import Model
 
 import runner_logs
 from charm_state import PATH_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
-from runner_metrics import PostJobStatus
+from metrics.runner_metrics import PostJobStatus
 from tests.integration.charm_metrics_helpers import (
     assert_events_after_reconciliation,
     cancel_workflow_run,

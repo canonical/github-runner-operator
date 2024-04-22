@@ -35,9 +35,6 @@ from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import OpenStackCloudException, SDKException
 from paramiko.ssh_exception import NoValidConnectionsError
 
-import github_metrics
-import metrics
-import runner_metrics
 from charm_state import (
     Arch,
     GithubOrg,
@@ -61,10 +58,13 @@ from errors import (
 )
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
-from metrics_common import storage as metrics_storage
+from metrics import events as metric_events
+from metrics import github as github_metrics
+from metrics import runner as runner_metrics
+from metrics import storage as metrics_storage
+from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_manager import IssuedMetricEventsStats
 from runner_manager_type import OpenstackRunnerManagerConfig
-from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import GithubPath, RunnerByHealth, RunnerGithubInfo
 from utilities import execute_command, retry, set_env_var
 
@@ -1218,8 +1218,8 @@ class OpenstackRunnerManager:
             install_end_ts: The timestamp when the installation ended.
         """
         try:
-            metrics.issue_event(
-                event=metrics.RunnerInstalled(
+            metric_events.issue_event(
+                event=metric_events.RunnerInstalled(
                     timestamp=install_start_ts,
                     flavor=self.app_name,
                     duration=install_end_ts - install_start_ts,
@@ -1330,12 +1330,12 @@ class OpenstackRunnerManager:
         idle_offline_count = len((offline_runner_names & healthy_runners) - active_runner_names)
 
         try:
-            metrics.issue_event(
-                event=metrics.Reconciliation(
+            metric_events.issue_event(
+                event=metric_events.Reconciliation(
                     timestamp=time.time(),
                     flavor=self.app_name,
-                    crashed_runners=metric_stats.get(metrics.RunnerStart, 0)
-                    - metric_stats.get(metrics.RunnerStop, 0),
+                    crashed_runners=metric_stats.get(metric_events.RunnerStart, 0)
+                    - metric_stats.get(metric_events.RunnerStop, 0),
                     idle_runners=idle_online_count + idle_offline_count,
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )

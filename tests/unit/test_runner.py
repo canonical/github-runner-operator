@@ -14,10 +14,10 @@ from _pytest.monkeypatch import MonkeyPatch
 
 from charm_state import GithubOrg, GithubRepo, SSHDebugConnection, VirtualMachineResources
 from errors import CreateMetricsStorageError, RunnerCreateError, RunnerRemoveError
+from metrics.storage import MetricsStorage
 from runner import CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerManagerClients
 from runner_type import ProxySetting
-from shared_fs import SharedFilesystem
 from tests.unit.factories import SSHDebugInfoFactory
 from tests.unit.mock import (
     MockLxdClient,
@@ -260,7 +260,7 @@ def test_create_with_metrics(
         rendered to issue metrics.
     """
     runner.config.issue_metrics = True
-    shared_fs.create.return_value = SharedFilesystem(
+    shared_fs.create.return_value = MetricsStorage(
         path=Path("/home/ubuntu/shared_fs"), runner_name="test_runner"
     )
     runner.create(

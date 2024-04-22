@@ -11,15 +11,14 @@ import pytest
 from invoke import Result
 from openstack.compute.v2.keypair import Keypair
 
-import metrics
 from charm_state import CharmState, ProxyConfig
 from errors import OpenStackError
 from github_type import GitHubRunnerStatus, SelfHostedRunner
-from metrics import RunnerInstalled
-from metrics_common.storage import MetricsStorage
+from metrics import events as metric_events
+from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
+from metrics.storage import MetricsStorage
 from openstack_cloud import openstack_manager
 from openstack_cloud.openstack_manager import MAX_METRICS_FILE_SIZE
-from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import RunnerByHealth
 
 CLOUD_NAME = "microstack"
@@ -81,8 +80,8 @@ def openstack_manager_for_reconcile_fixture(
     t_mock = MagicMock(return_value=12345)
     monkeypatch.setattr(openstack_manager.time, "time", t_mock)
 
-    issue_event_mock = MagicMock(spec=metrics.issue_event)
-    monkeypatch.setattr(openstack_manager.metrics, "issue_event", issue_event_mock)
+    issue_event_mock = MagicMock(spec=metric_events.issue_event)
+    monkeypatch.setattr(openstack_manager.metric_events, "issue_event", issue_event_mock)
 
     runner_metrics_mock = MagicMock(openstack_manager.runner_metrics)
     monkeypatch.setattr(openstack_manager, "runner_metrics", runner_metrics_mock)
@@ -560,7 +559,7 @@ def test_reconcile_issues_runner_installed_event(
     openstack_manager.metrics.issue_event.assert_has_calls(
         [
             call(
-                event=RunnerInstalled(
+                event=metric_events.RunnerInstalled(
                     timestamp=openstack_manager.time.time(),
                     flavor=openstack_manager_for_reconcile.app_name,
                     duration=0,
@@ -713,8 +712,8 @@ def test_reconcile_issue_reconciliation_metrics(
 
     openstack_manager.runner_metrics.extract.return_value = (MagicMock() for _ in range(2))
     openstack_manager.runner_metrics.issue_events.side_effect = [
-        {metrics.RunnerStart, metrics.RunnerStop},
-        {metrics.RunnerStart},
+        {metric_events.RunnerStart, metric_events.RunnerStop},
+        {metric_events.RunnerStart},
     ]
 
     openstack_manager_for_reconcile._github.get_runner_github_info.return_value = [
@@ -729,10 +728,10 @@ def test_reconcile_issue_reconciliation_metrics(
     ]
     openstack_manager_for_reconcile.reconcile(quantity=0)
 
-    openstack_manager.metrics.issue_event.assert_has_calls(
+    openstack_manager.metric_events.issue_event.assert_has_calls(
         [
             call(
-                event=metrics.Reconciliation(
+                event=metric_events.Reconciliation(
                     timestamp=12345,
                     flavor=openstack_manager_for_reconcile.app_name,
                     crashed_runners=1,

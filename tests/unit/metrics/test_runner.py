@@ -7,26 +7,25 @@ from unittest.mock import MagicMock, call
 
 import pytest
 
-import metrics
-import metrics_type
-import runner_metrics
 import shared_fs
 from errors import DeleteMetricsStorageError, IssueMetricEventError
 from github_type import JobConclusion
-from metrics import RunnerStart, RunnerStop
-from runner_metrics import (
+from metrics import events as metric_events, type as metrics_type, runner as runner_metrics
+from metrics.events import RunnerStart, RunnerStop
+from metrics.runner import (
     RUNNER_INSTALLED_TS_FILE_NAME,
     PostJobMetrics,
     PreJobMetrics,
     RunnerMetrics,
 )
+from metrics.storage import MetricsStorage
 
 
 @pytest.fixture(autouse=True, name="issue_event_mock")
 def issue_event_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     """Mock the issue_event function."""
     issue_event_mock = MagicMock()
-    monkeypatch.setattr("metrics.issue_event", issue_event_mock)
+    monkeypatch.setattr("metrics.events.issue_event", issue_event_mock)
     return issue_event_mock
 
 
@@ -81,7 +80,7 @@ def _create_runner_files(
     pre_job_data: str | bytes | None,
     post_job_data: str | bytes | None,
     installed_timestamp: str | bytes | None,
-) -> shared_fs.SharedFilesystem:
+) -> MetricsStorage:
     """Create runner files inside shared fs.
 
     If the data is bytes, the file is written as binary, otherwise as text.
@@ -124,7 +123,7 @@ def _create_runner_files(
             runner_fs.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).write_text(
                 installed_timestamp, encoding="utf-8"
             )
-    return shared_fs.SharedFilesystem(path=runner_fs, runner_name=runner_name)
+    return MetricsStorage(path=runner_fs, runner_name=runner_name)
 
 
 def test_extract(runner_fs_base: Path):
@@ -499,7 +498,7 @@ def test_issue_events(issue_event_mock: MagicMock):
     issued_metrics = runner_metrics.issue_events(
         runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
     )
-    assert issued_metrics == {metrics.RunnerStart, metrics.RunnerStop}
+    assert issued_metrics == {metric_events.RunnerStart, metric_events.RunnerStop}
     issue_event_mock.assert_has_calls(
         [
             # 1. Runner
@@ -548,7 +547,7 @@ def test_issue_events_no_post_job_metrics(issue_event_mock: MagicMock):
     issued_metrics = runner_metrics.issue_events(
         runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
     )
-    assert issued_metrics == {metrics.RunnerStart}
+    assert issued_metrics == {metric_events.RunnerStart}
 
     issue_event_mock.assert_called_once_with(
         RunnerStart(
