@@ -103,7 +103,7 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token, charm_state):
 def issue_event_mock_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     """Mock the issue_event function."""
     issue_event_mock = MagicMock()
-    monkeypatch.setattr("metrics.issue_event", issue_event_mock)
+    monkeypatch.setattr("metrics.events.issue_event", issue_event_mock)
     return issue_event_mock
 
 
