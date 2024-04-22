@@ -12,7 +12,7 @@ import time
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Generator, Iterable, Literal, NamedTuple, Optional, cast
+from typing import Generator, Iterable, Literal, NamedTuple, Optional, cast, Iterator
 
 import jinja2
 import openstack
@@ -818,7 +818,7 @@ class OpenstackRunnerManager:
             if runner.name.startswith(f"{self.instance_name}-")
         )
 
-    def _get_ssh_connections(self, instance: Server) -> Generator[SshConnection, None, None]:
+    def _get_ssh_connections(self, instance: Server) -> Iterator[SshConnection]:
         """Get ssh connections within a network for a given openstack instance.
 
         Args:
@@ -952,6 +952,12 @@ class OpenstackRunnerManager:
             logger.error("Something wrong deleting the server %s, %s", instance_name, str(exc))
 
     def _pull_metrics(self, instance: Server, instance_name: str) -> None:
+        """Pull metrics from the runner into the respective storage for the runner.
+
+        Args:
+            instance: The Openstack server instance.
+            instance_name: The Openstack server name.
+        """
         try:
             storage = metrics_storage.get(instance_name)
         except GetMetricsStorageError:
@@ -972,6 +978,17 @@ class OpenstackRunnerManager:
         logger.error("Failed to fetch runner metrics for  %s . Will not be able to issue metrics.", instance.instance_name)
 
     def _pull_file(self, ssh_conn: SshConnection, instance: Server, file_path: str, local_path: str) -> bool:
+        """Pull file from the runner instance.
+
+        Args:
+            ssh_conn: The SSH connection instance.
+            instance: The Openstack server instance.
+            file_path: The file path on the runner instance.
+            local_path: The local path to store the file.
+
+        Returns:
+            Whether the file was successfully pulled.
+        """
         try:
             ssh_conn.get(remote=file_path, local=local_path)
         except NoValidConnectionsError:

@@ -1,6 +1,7 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import secrets
+from itertools import cycle
 from pathlib import Path
 from typing import Optional
 from unittest.mock import MagicMock, call
@@ -8,6 +9,7 @@ from unittest.mock import MagicMock, call
 import jinja2
 import openstack.exceptions
 import pytest
+from invoke import Result
 from openstack.compute.v2.keypair import Keypair
 
 import metrics
@@ -17,6 +19,7 @@ from metrics import RunnerInstalled
 from metrics_common.storage import MetricsStorage
 from openstack_cloud import openstack_manager
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
+from runner_type import RunnerByHealth
 
 CLOUD_NAME = "microstack"
 
@@ -106,6 +109,8 @@ def openstack_manager_for_reconcile_fixture(
     )
     os_runner_manager._github = mock_github_client
     os_runner_manager._ssh_health_check = MagicMock(return_value=True)
+    os_runner_manager._get_ssh_connections = MagicMock(return_value=True)
+
 
     monkeypatch.setattr(openstack_manager, "_SSH_KEY_PATH", tmp_path)
 
@@ -566,7 +571,7 @@ def test_reconcile_places_timestamp_in_metrics_storage(
     tmp_path: Path,
 ):
     """
-    arrange: Mock timestamps and create the directory for the shared filesystem.
+    arrange: Mock timestamps and create the directory for the metrics storage.
     act: Reconcile to create a runner.
     assert: The expected timestamp is placed in the shared filesystem.
     """
@@ -589,8 +594,8 @@ def test_reconcile_error_on_placing_timestamp_is_ignored(
     tmp_path: Path,
 ):
     """
-    arrange: Do not create the directory for the shared filesystem\
-        in order to let a FileNotFoundError to be raised inside the RunnerManager.
+    arrange: Do not create the directory for the metrics storage\
+        in order to let a FileNotFoundError to be raised inside the OpenstackRunnerManager.
     act: Reconcile to create a runner.
     assert: No exception is raised.
     """
@@ -602,3 +607,32 @@ def test_reconcile_error_on_placing_timestamp_is_ignored(
     openstack_manager_for_reconcile.reconcile(quantity=1)
 
     assert not (ms.path / RUNNER_INSTALLED_TS_FILE_NAME).exists()
+
+
+def test_reconcile_pulls_metric_files(
+    openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+):
+    """
+    arrange: Mock the metrics storage and the ssh connection.
+    act: Reconcile to create a runner.
+    assert: The expected metric files are pulled from the shared filesystem.
+    """
+    runner_metrics_path = tmp_path / "runner_fs"
+    runner_metrics_path.mkdir()
+    ms = MetricsStorage(path=runner_metrics_path, runner_name="test_runner")
+    monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
+    monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
+    ssh_conn_mock = MagicMock(spec=openstack_manager.SshConnection)
+    ssh_conn_mock.get.side_effect = lambda remote, local: Path(local).write_text("written")
+    ssh_conn_mock.run.return_value = Result()
+    openstack_manager_for_reconcile._get_ssh_connections.return_value = cycle((ssh_conn_mock,))
+    openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=()))
+
+    openstack_manager_for_reconcile.reconcile(quantity=0)
+
+    assert (ms.path / "pre-job-metrics.json").exists()
+    assert (ms.path / "pre-job-metrics.json").read_text() == "written"
+    assert (ms.path / "post-job-metrics.json").exists()
+    assert (ms.path / "post-job-metrics.json").read_text() == "written"
