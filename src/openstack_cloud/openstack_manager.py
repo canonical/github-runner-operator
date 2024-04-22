@@ -71,6 +71,8 @@ _CONFIG_SCRIPT_PATH = Path("/home/ubuntu/actions-runner/config.sh")
 RUNNER_APPLICATION = Path("/home/ubuntu/actions-runner")
 METRICS_EXCHANGE_PATH = Path("/home/ubuntu/metrics-exchange")
 PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
+MAX_METRICS_FILE_SIZE = 1024
+
 
 @contextmanager
 def _create_connection(
@@ -972,15 +974,15 @@ class OpenstackRunnerManager:
             return
 
         for ssh_conn in self._get_ssh_connections(instance=instance):
-            if not self._pull_file(ssh_conn, instance, str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"), str(storage.path / "pre-job-metrics.json")):
+            if not self._pull_file(ssh_conn=ssh_conn, instance=instance, file_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"), local_path=str(storage.path / "pre-job-metrics.json"), max_size=MAX_METRICS_FILE_SIZE):
                 continue
-            if not self._pull_file(ssh_conn, instance, str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"), str(storage.path / "post-job-metrics.json")):
+            if not self._pull_file(ssh_conn=ssh_conn, instance=instance, file_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"), local_path=str(storage.path / "post-job-metrics.json"), max_size=MAX_METRICS_FILE_SIZE):
                 continue
             return
 
         logger.error("Failed to fetch runner metrics for  %s . Will not be able to issue metrics.", instance.instance_name)
 
-    def _pull_file(self, ssh_conn: SshConnection, instance: Server, file_path: str, local_path: str) -> bool:
+    def _pull_file(self, ssh_conn: SshConnection, instance: Server, file_path: str, local_path: str, max_size: int) -> bool:
         """Pull file from the runner instance.
 
         Args:
@@ -988,15 +990,36 @@ class OpenstackRunnerManager:
             instance: The Openstack server instance.
             file_path: The file path on the runner instance.
             local_path: The local path to store the file.
+            max_size: If the file is larger than this, it will not be pulled.
 
         Returns:
             Whether the file was successfully pulled.
         """
         try:
-            # TODO : add filesize check
+            result = ssh_conn.run(f"stat -c %s {file_path}", warn=True)
+            if not result.ok:
+                logger.warning("Unable to get file size of %s on %s", file_path, instance.instance_name)
+                return False
+        except NoValidConnectionsError:
+            logger.warning(
+                "Unable to SSH into %s with address %s", instance.instance_name, ssh_conn.host
+            )
+            return False
+
+        try:
+            stdout = result.stdout.strip()
+            size = int(stdout)
+            if size > max_size:
+                logger.error("File %s on %s is too large to fetch (size %d > %d)", file_path, instance.instance_name, size, max_size)
+                return False
+        except ValueError:
+            logger.error("Invalid file size for %s on %s: %s", file_path, instance.instance_name, stdout)
+            return False
+
+        try:
             ssh_conn.get(remote=file_path, local=local_path)
         except NoValidConnectionsError:
-            logger.info(
+            logger.warning(
                 "Unable to SSH into %s with address %s", instance.instance_name, ssh_conn.host
             )
             return False
@@ -1153,13 +1176,9 @@ class OpenstackRunnerManager:
                 logger.info("No changes to number of runners needed")
 
             end_ts = time.time()
-            metric_stats = self._issue_runner_metrics()
-            self._issue_reconciliation_metric(
-                ssh_connection=conn,
-                metric_stats=metric_stats,
+            self._issue_metrics(ssh_connection=conn,
                 reconciliation_start_ts=start_ts,
-                reconciliation_end_ts=end_ts,
-            )
+                reconciliation_end_ts=end_ts)
 
             return delta
 
@@ -1181,14 +1200,37 @@ class OpenstackRunnerManager:
             )
             return len(runners_to_delete)
 
-    def _issue_runner_metrics(self) -> IssuedMetricEventsStats:
+    def _issue_metrics(self,
+        ssh_connection: SshConnection,
+        reconciliation_start_ts: float,
+        reconciliation_end_ts: float) -> None:
+        """Issue all reconciliation related metrics.
+
+        This includes the metrics for the runners and the reconciliation metric itself.
+
+        Args:
+            ssh_connection: The SSH connection to the runner instance.
+            reconciliation_start_ts: The timestamp of when reconciliation started.
+            reconciliation_end_ts: The timestamp of when reconciliation ended.
+        """
+        runner_states = self._get_openstack_runner_status(ssh_connection)
+
+        metric_stats = self._issue_runner_metrics(runner_states)
+        self._issue_reconciliation_metric(
+            metric_stats=metric_stats,
+            reconciliation_start_ts=reconciliation_start_ts,
+            reconciliation_end_ts=reconciliation_end_ts,
+            runner_states=runner_states,
+        )
+
+    def _issue_runner_metrics(self, runner_states) -> IssuedMetricEventsStats:
         """Issue runner metrics.
 
         Returns:
             The stats of issued metric events.
         """
         total_stats: IssuedMetricEventsStats = {}
-        for extracted_metrics in runner_metrics.extract(metrics_storage_manager=metrics_storage, ignore_runners=set()):
+        for extracted_metrics in runner_metrics.extract(metrics_storage_manager=metrics_storage, ignore_runners=set(runner_states.healthy)):
             try:
                 job_metrics = github_metrics.job(
                     github_client=self._github,
@@ -1210,15 +1252,14 @@ class OpenstackRunnerManager:
 
     def _issue_reconciliation_metric(
         self,
-        ssh_connection: SshConnection,
         metric_stats: IssuedMetricEventsStats,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
+        runner_states: RunnerByHealth
     ) -> None:
         """Issue reconciliation metric.
 
         Args:
-            ssh_connection: The SSH connection to the runner instance.
             metric_stats: The stats of issued metric events.
             reconciliation_start_ts: The timestamp of when reconciliation started.
             reconciliation_end_ts: The timestamp of when reconciliation ended.
@@ -1229,7 +1270,6 @@ class OpenstackRunnerManager:
         active_runner_names = {
             runner.runner_name for runner in online_runners if runner.busy
         }
-        runner_states = self._get_openstack_runner_status(ssh_connection)
         healthy_runners = set(runner_states.healthy)
 
         active_count = len(active_runner_names)
