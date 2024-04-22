@@ -1089,6 +1089,8 @@ class OpenstackRunnerManager:
         Returns:
             The change in number of runners.
         """
+        start_ts = time.time()
+
         github_info = self.get_github_runner_info()
         online_runners = [runner for runner in github_info if runner.online]
         offline_runners = [runner for runner in github_info if not runner.online]
@@ -1150,7 +1152,14 @@ class OpenstackRunnerManager:
             else:
                 logger.info("No changes to number of runners needed")
 
-            self._issue_runner_metrics()
+            end_ts = time.time()
+            metric_stats = self._issue_runner_metrics()
+            self._issue_reconciliation_metric(
+                ssh_connection=conn,
+                metric_stats=metric_stats,
+                reconciliation_start_ts=start_ts,
+                reconciliation_end_ts=end_ts,
+            )
 
             return delta
 
@@ -1198,3 +1207,45 @@ class OpenstackRunnerManager:
             for event_type in issued_events:
                 total_stats[event_type] = total_stats.get(event_type, 0) + 1
         return total_stats
+
+    def _issue_reconciliation_metric(
+        self,
+        ssh_connection: SshConnection,
+        metric_stats: IssuedMetricEventsStats,
+        reconciliation_start_ts: float,
+        reconciliation_end_ts: float,
+    ) -> None:
+        """Issue reconciliation metric.
+
+        Args:
+            ssh_connection: The SSH connection to the runner instance.
+            metric_stats: The stats of issued metric events.
+            reconciliation_start_ts: The timestamp of when reconciliation started.
+            reconciliation_end_ts: The timestamp of when reconciliation ended.
+        """
+        github_info = self.get_github_runner_info()
+        online_runners = [runner for runner in github_info if runner.online]
+        offline_runner_names = {runner.runner_name for runner in github_info if not runner.online}
+        active_runner_names = {
+            runner.runner_name for runner in online_runners if runner.busy
+        }
+        runner_states = self._get_openstack_runner_status(ssh_connection)
+        healthy_runners = set(runner_states.healthy)
+
+        active_count = len(active_runner_names)
+        idle_online_count = len(online_runners) - active_count
+        idle_offline_count = len((offline_runner_names & healthy_runners) - active_runner_names)
+
+        try:
+            metrics.issue_event(
+                event=metrics.Reconciliation(
+                    timestamp=time.time(),
+                    flavor=self.app_name,
+                    crashed_runners=metric_stats.get(metrics.RunnerStart, 0)
+                    - metric_stats.get(metrics.RunnerStop, 0),
+                    idle_runners=idle_online_count + idle_offline_count,
+                    duration=reconciliation_end_ts - reconciliation_start_ts,
+                )
+            )
+        except IssueMetricEventError:
+            logger.exception("Failed to issue Reconciliation metric")
