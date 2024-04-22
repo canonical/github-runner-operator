@@ -51,7 +51,7 @@ jobs:
   #   - run: sudo rm -f /write* /read*
   self-host-test-arm64:
     name: self-hosted arm64 test
-    runs-on: [self-hosted, ARM64, large]
+    runs-on: [self-hosted, ARM64, medium]
     steps:
       # - run: lscpu
       # - run: df -h
