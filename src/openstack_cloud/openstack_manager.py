@@ -4,6 +4,15 @@
 # 2024/04/11 The module contains too many lines which are scheduled for refactoring.
 # pylint: disable=too-many-lines
 
+# 2024/04/22 The module contains duplicate code which is scheduled for refactoring.
+# Lines related to issuing metrics are duplicated:
+#  ==openstack_cloud.openstack_manager:[1320:1337]
+#  ==runner_manager:[383:413]
+#  ==openstack_cloud.openstack_manager:[1283:1314]
+#  ==runner_manager:[339:368]
+
+# pylint: disable=duplicate-code
+
 """Module for handling interactions with OpenStack."""
 import json
 import logging
