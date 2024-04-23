@@ -619,7 +619,7 @@ class OpenstackRunnerManager:
         keypair = conn.create_keypair(name=name)
         private_key_path.write_text(keypair.private_key)
 
-    def _ssh_health_check(self, instance: Server) -> bool:
+    def _ssh_health_check(self, server: Server) -> bool:
         """Use SSH to check whether runner application is running.
 
         Args:
@@ -628,24 +628,23 @@ class OpenstackRunnerManager:
         Returns:
             Whether the runner application is running.
         """
-        for ssh_conn in self._get_ssh_connections(instance=instance):
-            instance_name = instance.instance_name
+        for ssh_conn in self._get_ssh_connections(server=server):
             try:
                 result = ssh_conn.run("ps aux")
-                logger.debug("Output of `ps aux` on %s stderr: %s", instance_name, result.stderr)
-                logger.debug("Output of `ps aux` on %s stdout: %s", instance_name, result.stdout)
+                logger.debug("Output of `ps aux` on %s stderr: %s", server.name, result.stderr)
+                logger.debug("Output of `ps aux` on %s stdout: %s", server.name, result.stdout)
                 if not result.ok:
-                    logger.warning("List all process command failed on %s ", instance_name)
+                    logger.warning("List all process command failed on %s ", server.name)
                     continue
 
                 if "/bin/bash /home/ubuntu/actions-runner/run.sh" in result.stdout:
-                    logger.info("Runner process found to be healthy on %s", instance_name)
+                    logger.info("Runner process found to be healthy on %s", server.name)
                     return True
 
             except NoValidConnectionsError as exc:
                 logger.warning(
                     "Unable to SSH into %s with address %s",
-                    instance_name,
+                    server.name,
                     ssh_conn.host,
                     exc_info=exc,
                 )
@@ -653,7 +652,7 @@ class OpenstackRunnerManager:
 
         logger.warning(
             "Health check failed on %s with any address on network %s",
-            instance.instance_name,
+            server.name,
             self._config.network,
         )
         return False
@@ -678,7 +677,7 @@ class OpenstackRunnerManager:
             if (
                 not server
                 or server.status != _INSTANCE_STATUS_ACTIVE
-                or not self._ssh_health_check(instance=server)
+                or not self._ssh_health_check(server=server)
             ):
                 raise RunnerStartError(
                     (
@@ -783,28 +782,39 @@ class OpenstackRunnerManager:
             if runner.name.startswith(f"{self.instance_name}-")
         )
 
-    def _get_ssh_connections(self, instance: Server) -> Generator[SshConnection, None, None]:
+    def _get_ssh_connections(self, server: Server) -> Generator[SshConnection, None, None]:
         """Get ssh connections within a network for a given openstack instance.
 
         Args:
             instance: The Openstack server instance.
 
         Yields:
-            Openstack SSH connections.
+            SSH connections to OpenStack server instance.
         """
-        if not cast(dict, instance.addresses).get(self._config.network, None):
-            logger.error(
+        if not server.key_name:
+            logger.warning("Unable to create SSH connection as no valid keypair found for %s", server.name)
+            return
+
+        if not cast(dict, server.addresses).get(self._config.network, None):
+            logger.warning(
                 "Instance %s created under invalid or no network %s",
-                instance.instance_name,
-                instance.addresses,
+                server.name,
+                server.addresses,
             )
             return
-        for address in instance.addresses[self._config.network]:
+
+        for address in server.addresses[self._config.network]:
             ip = address["addr"]
+
+            key_path = self._get_key_path(server.name)
+            if not key_path.exists():
+                logger.warning("Skipping SSH to server %s with missing key file %s", server.name, str(key_path))
+                continue
+
             yield SshConnection(
                 host=ip,
                 user="ubuntu",
-                connect_kwargs={"key_filename": str(self._get_key_path(instance.name))},
+                connect_kwargs={"key_filename": str(key_path)},
                 connect_timeout=10,
             )
 
@@ -833,7 +843,7 @@ class OpenstackRunnerManager:
                 continue
             # SHUTOFF runners are runners that have completed executing jobs.
             if server.status == _INSTANCE_STATUS_SHUTOFF or not self._ssh_health_check(
-                instance=server
+                server=server
             ):
                 unhealthy_runner.append(instance.name)
             else:
@@ -853,7 +863,7 @@ class OpenstackRunnerManager:
         """
         if not remove_token:
             return
-        for ssh_conn in self._get_ssh_connections(instance=instance):
+        for ssh_conn in self._get_ssh_connections(server=instance):
             try:
                 result: Result = ssh_conn.run(
                     f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}"
@@ -996,7 +1006,7 @@ class OpenstackRunnerManager:
             conn: The Openstack connection instance.
             exclude_instances: The keys of these instance will not be deleted.
         """
-        logger.info("Cleaning up SSH keys")
+        logger.info("Cleaning up SSH key files")
         exclude_filename = set(self._get_key_path(instance) for instance in exclude_instances)
 
         for path in _SSH_KEY_PATH.iterdir():
@@ -1029,6 +1039,7 @@ class OpenstackRunnerManager:
             conn: The Openstack connection instance.
             exclude_instances: The keys of these instance will not be deleted.
         """
+        logger.info("Cleaning up openstack keypairs")
         keypairs = conn.list_keypairs()
         for key in keypairs:
             # The `name` attribute is of resource.Body type.
@@ -1059,7 +1070,7 @@ class OpenstackRunnerManager:
         github_info = self.get_github_runner_info()
         online_runners = [runner for runner in github_info if runner.online]
         offline_runners = [runner for runner in github_info if not runner.online]
-        logger.info("Found %s existing openstack runners", len(online_runners))
+        logger.info("Found %s existing online openstack runners", len(online_runners))
         logger.info("Found %s existing offline openstack runners", len(offline_runners))
 
         with _create_connection(self._cloud_config) as conn:
