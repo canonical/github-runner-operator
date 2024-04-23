@@ -623,7 +623,7 @@ class OpenstackRunnerManager:
         """Use SSH to check whether runner application is running.
 
         Args:
-            instance: The openstack compute instance to check connections.
+            server: The openstack server instance to check connections.
 
         Returns:
             Whether the runner application is running.
@@ -786,13 +786,15 @@ class OpenstackRunnerManager:
         """Get ssh connections within a network for a given openstack instance.
 
         Args:
-            instance: The Openstack server instance.
+            server: The Openstack server instance.
 
         Yields:
             SSH connections to OpenStack server instance.
         """
         if not server.key_name:
-            logger.warning("Unable to create SSH connection as no valid keypair found for %s", server.name)
+            logger.warning(
+                "Unable to create SSH connection as no valid keypair found for %s", server.name
+            )
             return
 
         if not cast(dict, server.addresses).get(self._config.network, None):
@@ -808,7 +810,11 @@ class OpenstackRunnerManager:
 
             key_path = self._get_key_path(server.name)
             if not key_path.exists():
-                logger.warning("Skipping SSH to server %s with missing key file %s", server.name, str(key_path))
+                logger.warning(
+                    "Skipping SSH to server %s with missing key file %s",
+                    server.name,
+                    str(key_path),
+                )
                 continue
 
             yield SshConnection(
