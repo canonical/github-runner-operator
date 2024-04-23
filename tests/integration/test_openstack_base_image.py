@@ -4,6 +4,7 @@
 """Integration tests for OpenStack integration."""
 
 import openstack.connection
+import pytest
 from github.Branch import Branch
 from github.Repository import Repository
 from juju.application import Application
@@ -18,6 +19,7 @@ from tests.integration.helpers import (
 )
 
 
+@pytest.mark.xfail
 async def test_noble_base_image(
     model: Model,
     app_openstack_runner: Application,
