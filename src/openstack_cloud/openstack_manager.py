@@ -11,7 +11,6 @@ import secrets
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from time import sleep
 from typing import Generator, Iterable, Literal, NamedTuple, Optional, cast
 
 import invoke
@@ -465,6 +464,7 @@ def _generate_cloud_init_userdata(
     if isinstance(instance_config.github_path, GithubOrg):
         runner_group = instance_config.github_path.group
 
+    aproxy_address = proxies.aproxy_address if proxies is not None else None
     return templates_env.get_template("openstack-userdata.sh.j2").render(
         github_url=f"https://github.com/{instance_config.github_path.path()}",
         runner_group=runner_group,
@@ -472,7 +472,7 @@ def _generate_cloud_init_userdata(
         instance_labels=",".join(instance_config.labels),
         instance_name=instance_config.name,
         env_contents=runner_env,
-        aproxy_address=proxies.aproxy_address,
+        aproxy_address=aproxy_address,
     )
 
 
@@ -643,7 +643,12 @@ class OpenstackRunnerManager:
                     return True
 
             except NoValidConnectionsError as exc:
-                logger.warning("Unable to SSH into %s with address %s", instance_name, ssh_conn.host, exc_info=exc)
+                logger.warning(
+                    "Unable to SSH into %s with address %s",
+                    instance_name,
+                    ssh_conn.host,
+                    exc_info=exc,
+                )
                 # Looping over all IP and trying SSH.
 
         logger.warning(
@@ -875,6 +880,39 @@ class OpenstackRunnerManager:
         logger.warning("Failed to run GitHub runner removal script %s", instance.instance_name)
         raise GithubRunnerRemoveError(f"Failed to remove runner {instance.name} from Github.")
 
+    def _remove_openstack_runner(
+        self,
+        conn: OpenstackConnection,
+        server: Server,
+        remove_token: str | None = None,
+    ) -> None:
+        """Remove a OpenStack server hosting the GitHub runner application.
+
+        Args:
+            conn: The Openstack connection instance.
+            server: The Openstack server.
+            remove_token: The GitHub runner remove token.
+        """
+        # 2024/04/23: The broad except clause is for logging purposes.
+        # Will be removed in future versions.
+        try:
+            self._run_github_removal_script(instance=server, remove_token=remove_token)
+        except (TimeoutError, invoke.exceptions.UnexpectedExit) as exc:
+            logger.warning("Failed to run runner removal script for %s, %s", server.name, exc)
+        except Exception:  # pylint: disable=broad-exception-caught
+            logger.critical(
+                "Found unexpected exception, please contact the developers", exc_info=True
+            )
+        try:
+            if not conn.delete_server(name_or_id=server.name, wait=True, delete_ips=True):
+                logger.warning("Server does not exist %s", server.name)
+        except SDKException as exc:
+            logger.error("Something wrong deleting the server %s, %s", server.name, exc)
+        except Exception:  # pylint: disable=broad-exception-caught
+            logger.critical(
+                "Found unexpected exception, please contact the developers", exc_info=True
+            )
+
     def _remove_one_runner(
         self,
         conn: OpenstackConnection,
@@ -895,29 +933,19 @@ class OpenstackRunnerManager:
         server: Server | None = conn.get_server(name_or_id=instance_name)
 
         if server is not None:
-            try:
-                self._run_github_removal_script(instance=server, remove_token=remove_token)
-            except (TimeoutError, invoke.exceptions.UnexpectedExit) as exc:
-                logger.warning("Failed to run runner removal script for %s, %s", instance_name, exc)
-            except Exception:
-                logger.critical("Found unexpected exception, please contact the developers", exc_info=True)
+            self._remove_openstack_runner(conn, server, remove_token)
 
         if github_id is not None:
+            # 2024/04/23: The broad except clause is for logging purposes.
+            # Will be removed in future versions.
             try:
                 self._github.delete_runner(self._config.path, github_id)
             except GithubClientError as exc:
                 logger.warning("Failed to remove runner from Github %s, %s", instance_name, exc)
-            except Exception:
-                logger.critical("Found unexpected exception, please contact the developers", exc_info=True)
-
-        if server is not None:
-            try:
-                if not conn.delete_server(name_or_id=instance_name, wait=True, delete_ips=True):
-                    logger.warning("Server does not exist %s", instance_name)
-            except SDKException as exc:
-                logger.error("Something wrong deleting the server %s, %s", instance_name, exc)
-            except Exception:
-                logger.critical("Found unexpected exception, please contact the developers", exc_info=True)
+            except Exception:  # pylint: disable=broad-exception-caught
+                logger.critical(
+                    "Found unexpected exception, please contact the developers", exc_info=True
+                )
 
     def _remove_runners(
         self,
@@ -959,7 +987,9 @@ class OpenstackRunnerManager:
             self._get_key_path(instance_name).unlink(missing_ok=True)
             num_to_remove -= 1
 
-    def _clean_up_keys_files(self, conn: OpenstackConnection, exclude_instances: Iterable[str]) -> None:
+    def _clean_up_keys_files(
+        self, conn: OpenstackConnection, exclude_instances: Iterable[str]
+    ) -> None:
         """Delete all SSH key files except the specified instances.
 
         Args:
@@ -990,7 +1020,9 @@ class OpenstackRunnerManager:
 
                 path.unlink()
 
-    def _clean_up_openstack_keypairs(self, conn: OpenstackConnection, exclude_instances: Iterable[str]) -> None:
+    def _clean_up_openstack_keypairs(
+        self, conn: OpenstackConnection, exclude_instances: Iterable[str]
+    ) -> None:
         """Delete all OpenStack keypairs except the specified instances.
 
         Args:
@@ -1011,7 +1043,6 @@ class OpenstackRunnerManager:
                         "Unable to delete OpenStack keypair associated with deleted key file %s ",
                         key.name,
                     )
-
 
     def reconcile(self, quantity: int) -> int:
         """Reconcile the quantity of runners.
