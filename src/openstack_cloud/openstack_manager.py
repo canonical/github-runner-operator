@@ -85,7 +85,7 @@ PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
 MAX_METRICS_FILE_SIZE = 1024
 
 
-class PullFileError(Exception):
+class _PullFileError(Exception):
     """Represents an error while pulling a file from the runner instance."""
 
     def __init__(self, reason: str):
@@ -991,7 +991,7 @@ class OpenstackRunnerManager:
                     max_size=MAX_METRICS_FILE_SIZE,
                 )
                 return
-            except PullFileError as exc:
+            except _PullFileError as exc:
                 logger.warning(
                     "Failed to pull metrics for %s: %s . Will not be able to issue metrics",
                     instance_name,
@@ -1018,23 +1018,23 @@ class OpenstackRunnerManager:
         """
         result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True)
         if not result.ok:
-            raise PullFileError(reason=f"Unable to get file size of {remote_path}")
+            raise _PullFileError(reason=f"Unable to get file size of {remote_path}")
 
         stdout = result.stdout
         try:
             stdout.strip()
             size = int(stdout)
             if size > max_size:
-                raise PullFileError(
+                raise _PullFileError(
                     reason=f"File size of {remote_path} too large {size} > {max_size}"
                 )
         except ValueError as exc:
-            raise PullFileError(reason=f"Invalid file size for {remote_path}: {stdout}") from exc
+            raise _PullFileError(reason=f"Invalid file size for {remote_path}: {stdout}") from exc
 
         try:
             ssh_conn.get(remote=remote_path, local=local_path)
         except OSError as exc:
-            raise PullFileError(reason=f"Unable to retrieve file {remote_path}") from exc
+            raise _PullFileError(reason=f"Unable to retrieve file {remote_path}") from exc
 
     def _remove_runners(
         self,
