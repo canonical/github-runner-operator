@@ -12,8 +12,8 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-import runner_logs
 from charm_state import PATH_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
+from metrics import runner_logs
 from metrics.runner import PostJobStatus
 from tests.integration.charm_metrics_helpers import (
     assert_events_after_reconciliation,
@@ -163,15 +163,13 @@ async def test_charm_retrieves_logs_from_unhealthy_runners(
     await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await reconcile(app=app, model=model)
 
-    ret_code, stdout, stderr = await run_in_unit(
-        unit, f"ls {runner_logs.CRASHED_RUNNER_LOGS_DIR_PATH}"
-    )
+    ret_code, stdout, stderr = await run_in_unit(unit, f"ls {runner_logs.RUNNER_LOGS_DIR_PATH}")
     assert ret_code == 0, f"Failed to list crashed runner logs {stdout} {stderr}"
     assert stdout
     assert runner_name in stdout, "Failed to find crashed runner log"
 
     ret_code, stdout, _ = await run_in_unit(
-        unit, f"ls {runner_logs.CRASHED_RUNNER_LOGS_DIR_PATH}/{runner_name}"
+        unit, f"ls {runner_logs.RUNNER_LOGS_DIR_PATH}/{runner_name}"
     )
     assert ret_code == 0, "Failed to list crashed runner log"
     assert stdout

@@ -18,7 +18,6 @@ import requests
 import requests.adapters
 import urllib3
 
-import runner_logs
 import shared_fs
 from charm_state import VirtualMachineResources
 from errors import (
@@ -37,6 +36,7 @@ from lxd import LxdClient, LxdInstance
 from metrics import events as metric_events
 from metrics import github as github_metrics
 from metrics import runner as runner_metrics
+from metrics import runner_logs
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
@@ -519,7 +519,8 @@ class RunnerManager:
         for runner in unhealthy_runners:
             if self.config.are_metrics_enabled:
                 try:
-                    runner_logs.get_crashed(runner)
+                    logger.info("Pulling the logs of the crashed runner %s.", runner.config.name)
+                    runner.pull_logs()
                 except RunnerLogsError:
                     logger.exception("Failed to get logs of crashed runner %s", runner.config.name)
             runner.remove(remove_token)
@@ -555,7 +556,7 @@ class RunnerManager:
             len(runner_states.unhealthy),
         )
 
-        runner_logs.remove_outdated_crashed()
+        runner_logs.remove_outdated()
         if self.config.are_metrics_enabled:
             metric_stats = self._issue_runner_metrics()
 

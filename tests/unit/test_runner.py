@@ -6,16 +6,24 @@
 import secrets
 import unittest
 from pathlib import Path
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, call
 
 import jinja2
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
+import metrics.runner_logs
 from charm_state import GithubOrg, GithubRepo, SSHDebugConnection, VirtualMachineResources
-from errors import CreateMetricsStorageError, RunnerCreateError, RunnerRemoveError
+from errors import (
+    CreateMetricsStorageError,
+    LxdError,
+    RunnerCreateError,
+    RunnerLogsError,
+    RunnerRemoveError,
+)
+from lxd import LxdInstance, LxdInstanceFileManager
 from metrics.storage import MetricsStorage
-from runner import CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
+from runner import DIAG_DIR_PATH, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerManagerClients
 from runner_type import ProxySetting
 from tests.unit.factories import SSHDebugInfoFactory
@@ -73,6 +81,32 @@ def exc_command_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     exc_cmd_mock = MagicMock()
     monkeypatch.setattr("runner.execute_command", exc_cmd_mock)
     return exc_cmd_mock
+
+
+@pytest.fixture(name="log_dir_base_path")
+def log_dir_base_path_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Mock the create_logs_dir function and return the base path of the log directory."""
+    log_dir_base_path = tmp_path / "log_dir"
+
+    def create_logs_dir(runner_name: str) -> Path:
+        """Create the directory to store the logs of the crashed runners.
+
+        Args:
+            runner_name: The name of the runner.
+
+        Returns:
+            The path to the directory where the logs of the crashed runners will be stored.
+        """
+        target_log_path = log_dir_base_path / runner_name
+        target_log_path.mkdir(parents=True, exist_ok=True)
+
+        return target_log_path
+
+    create_logs_dir_mock = MagicMock(spec=metrics.runner_logs.create_logs_dir)
+    create_logs_dir_mock.side_effect = create_logs_dir
+    monkeypatch.setattr("runner.create_logs_dir", create_logs_dir_mock)
+
+    return log_dir_base_path
 
 
 @pytest.fixture(scope="function", name="jinja")
@@ -144,12 +178,10 @@ def runner_fixture(
         issue_metrics=False,
         ssh_debug_connections=ssh_debug_connections,
     )
+    lxd_instance_mock = MagicMock(spec=LxdInstance)
+    lxd_instance_mock.files = MagicMock(LxdInstanceFileManager)
     status = RunnerStatus()
-    return Runner(
-        client,
-        config,
-        status,
-    )
+    return Runner(client, config, status, lxd_instance_mock)
 
 
 def test_create(
@@ -469,3 +501,62 @@ def test_random_ssh_connection_choice(
         "Same ssh debug info found, this may have occurred with a very low probability. "
         "Just try again."
     )
+
+
+def test_pull_logs(runner: Runner, log_dir_base_path: Path):
+    """
+    arrange: Mock the Runner instance and the base log directory path.
+    act: Get the logs of the runner.
+    assert: The expected log directory is created and logs are pulled.
+    """
+    runner.config.name = "test-runner"
+    runner.instance.files.pull_file = MagicMock()
+
+    runner.pull_logs()
+
+    assert log_dir_base_path.exists()
+
+    log_dir_path = log_dir_base_path / "test-runner"
+    log_dir_base_path.exists()
+
+    runner.instance.files.pull_file.assert_has_calls(
+        [
+            call(str(DIAG_DIR_PATH), str(log_dir_path), is_dir=True),
+            call(str(metrics.runner_logs.SYSLOG_PATH), str(log_dir_path)),
+        ]
+    )
+
+
+@pytest.mark.usefixtures("log_dir_base_path")
+def test_pull_logs_no_instance(runner: Runner):
+    """
+    arrange: Mock the Runner instance to be None.
+    act: Get the logs of the crashed runner.
+    assert: A RunnerLogsError is raised.
+    """
+    runner.config.name = "test-runner"
+    runner.instance = None
+
+    with pytest.raises(RunnerLogsError) as exc_info:
+        runner.pull_logs()
+
+    assert "Cannot pull the logs for test-runner as runner has no running instance." in str(
+        exc_info.value
+    )
+
+
+@pytest.mark.usefixtures("log_dir_base_path")
+def test_pull_logs_lxd_error(runner: Runner):
+    """
+    arrange: Mock the Runner instance to raise an LxdError.
+    act: Get the logs of the crashed runner.
+    assert: A RunnerLogsError is raised.
+    """
+    runner.config.name = "test-runner"
+    runner.instance.files.pull_file = MagicMock(side_effect=LxdError("Cannot pull file"))
+
+    with pytest.raises(RunnerLogsError) as exc_info:
+        runner.pull_logs()
+
+    assert "Cannot pull the logs for test-runner." in str(exc_info.value)
+    assert "Cannot pull file" in str(exc_info.value.__cause__)

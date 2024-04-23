@@ -32,11 +32,13 @@ from errors import (
     RunnerCreateError,
     RunnerError,
     RunnerFileLoadError,
+    RunnerLogsError,
     RunnerRemoveError,
     SubprocessError,
 )
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
+from metrics.runner_logs import SYSLOG_PATH, create_logs_dir
 from metrics.storage import MetricsStorage
 from runner_manager_type import RunnerManagerClients
 from runner_type import RunnerConfig, RunnerStatus
@@ -52,6 +54,7 @@ APROXY_ARM_REVISION = 9
 APROXY_AMD_REVISION = 8
 
 METRICS_EXCHANGE_PATH = Path("/metrics-exchange")
+DIAG_DIR_PATH = Path("/home/ubuntu/github-runner/_diag")
 
 
 class Snap(NamedTuple):
@@ -268,6 +271,27 @@ class Runner:
             logger.exception("Unable the remove runner on GitHub: %s", self.config.name)
             # This can occur when attempting to remove a busy runner.
             # The caller should retry later, after GitHub mark the runner as offline.
+
+    def pull_logs(self) -> None:
+        """Pull the logs of the runner into a directory.
+
+        Expects the runner to have an instance.
+
+        Raises:
+            RunnerLogsError: If the runner logs could not be pulled.
+        """
+        if self.instance is None:
+            raise RunnerLogsError(
+                f"Cannot pull the logs for {self.config.name} as runner has no running instance."
+            )
+
+        target_log_path = create_logs_dir(self.config.name)
+
+        try:
+            self.instance.files.pull_file(str(DIAG_DIR_PATH), str(target_log_path), is_dir=True)
+            self.instance.files.pull_file(str(SYSLOG_PATH), str(target_log_path))
+        except LxdError as exc:
+            raise RunnerLogsError(f"Cannot pull the logs for {self.config.name}.") from exc
 
     def _add_shared_filesystem(self, path: Path) -> None:
         """Add the shared filesystem to the runner instance.
