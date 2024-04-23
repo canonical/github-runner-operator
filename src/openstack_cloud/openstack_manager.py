@@ -923,8 +923,8 @@ class OpenstackRunnerManager:
         """
         try:
             self._run_github_removal_script(server=server, remove_token=remove_token)
-        except (TimeoutError, invoke.exceptions.UnexpectedExit) as exc:
-            logger.warning("Failed to run runner removal script for %s, %s", server.name, exc)
+        except (TimeoutError, invoke.exceptions.UnexpectedExit, GithubRunnerRemoveError) as exc:
+            logger.warning("Failed to run runner removal script for %s", server.name, exc_info=True)
         # 2024/04/23: The broad except clause is for logging purposes.
         # Will be removed in future versions.
         except Exception:  # pylint: disable=broad-exception-caught
@@ -1029,6 +1029,8 @@ class OpenstackRunnerManager:
         logger.info("Cleaning up SSH key files")
         exclude_filename = set(self._get_key_path(instance) for instance in exclude_instances)
 
+        total = 0
+        deleted = 0
         for path in _SSH_KEY_PATH.iterdir():
             # Find key file from this application.
             if (
@@ -1036,6 +1038,7 @@ class OpenstackRunnerManager:
                 and path.name.startswith(self.instance_name)
                 and path.name.endswith(".key")
             ):
+                total += 1
                 if path.name in exclude_filename:
                     continue
 
@@ -1049,6 +1052,8 @@ class OpenstackRunnerManager:
                     )
 
                 path.unlink()
+                deleted += 1
+        logger.info("Found %s key files, clean up %s key files", total, deleted)
 
     def _clean_up_openstack_keypairs(
         self, conn: OpenstackConnection, exclude_instances: Iterable[str]
