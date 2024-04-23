@@ -44,5 +44,4 @@ su - ubuntu -c "cd ~/actions-runner && ./config.sh \
 # Run runner
 su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh"
 
-# Shutdown
-sudo systemctl poweroff -i
+su - ubuntu -c "touch /home/ubuntu/run-completed"

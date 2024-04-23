@@ -14,6 +14,7 @@ from pathlib import Path
 from time import sleep
 from typing import Generator, Iterable, Literal, NamedTuple, Optional, cast
 
+import invoke
 import jinja2
 import openstack
 import openstack.connection
@@ -892,22 +893,31 @@ class OpenstackRunnerManager:
         logger.info("Attempting to remove OpenStack runner %s", instance_name)
 
         server: Server | None = conn.get_server(name_or_id=instance_name)
-        if server is None:
-            return
 
-        if server.status == _INSTANCE_STATUS_ACTIVE:
-            self._run_github_removal_script(instance=server, remove_token=remove_token)
-        elif github_id is not None:
+        if server is not None:
+            try:
+                self._run_github_removal_script(instance=server, remove_token=remove_token)
+            except (TimeoutError, invoke.exceptions.UnexpectedExit) as exc:
+                logger.warning("Failed to run runner removal script for %s, %s", instance_name, exc)
+            except Exception:
+                logger.critical("Found unexpected exception, please contact the developers", exc_info=True)
+
+        if github_id is not None:
             try:
                 self._github.delete_runner(self._config.path, github_id)
             except GithubClientError as exc:
                 logger.warning("Failed to remove runner from Github %s, %s", instance_name, exc)
+            except Exception:
+                logger.critical("Found unexpected exception, please contact the developers", exc_info=True)
 
-        try:
-            if not conn.delete_server(name_or_id=instance_name, wait=True, delete_ips=True):
-                logger.warning("Server does not exist %s", instance_name)
-        except SDKException as exc:
-            logger.error("Something wrong deleting the server %s, %s", instance_name, str(exc))
+        if server is not None:
+            try:
+                if not conn.delete_server(name_or_id=instance_name, wait=True, delete_ips=True):
+                    logger.warning("Server does not exist %s", instance_name)
+            except SDKException as exc:
+                logger.error("Something wrong deleting the server %s, %s", instance_name, exc)
+            except Exception:
+                logger.critical("Found unexpected exception, please contact the developers", exc_info=True)
 
     def _remove_runners(
         self,
@@ -949,8 +959,8 @@ class OpenstackRunnerManager:
             self._get_key_path(instance_name).unlink(missing_ok=True)
             num_to_remove -= 1
 
-    def _clean_up_keys(self, conn: OpenstackConnection, exclude_instances: Iterable[str]) -> None:
-        """Delete all SSH keys except the specified instances.
+    def _clean_up_keys_files(self, conn: OpenstackConnection, exclude_instances: Iterable[str]) -> None:
+        """Delete all SSH key files except the specified instances.
 
         Args:
             conn: The Openstack connection instance.
@@ -979,6 +989,29 @@ class OpenstackRunnerManager:
                     )
 
                 path.unlink()
+
+    def _clean_up_openstack_keypairs(self, conn: OpenstackConnection, exclude_instances: Iterable[str]) -> None:
+        """Delete all OpenStack keypairs except the specified instances.
+
+        Args:
+            conn: The Openstack connection instance.
+            exclude_instances: The keys of these instance will not be deleted.
+        """
+        keypairs = conn.list_keypairs()
+        for key in keypairs:
+            # The `name` attribute is of resource.Body type.
+            if key.name and str(key.name).startswith(self.instance_name):
+                if str(key.name) in exclude_instances:
+                    continue
+
+                try:
+                    conn.delete_keypair(key.name)
+                except openstack.exceptions.SDKException:
+                    logger.warning(
+                        "Unable to delete OpenStack keypair associated with deleted key file %s ",
+                        key.name,
+                    )
+
 
     def reconcile(self, quantity: int) -> int:
         """Reconcile the quantity of runners.
@@ -1020,7 +1053,8 @@ class OpenstackRunnerManager:
             )
             # Clean up orphan keys, e.g., If openstack instance is removed externally the key
             # would not be deleted.
-            self._clean_up_keys(conn, runner_by_health.healthy)
+            self._clean_up_keys_files(conn, runner_by_health.healthy)
+            self._clean_up_openstack_keypairs(conn, runner_by_health.healthy)
 
             delta = quantity - len(runner_by_health.healthy)
 
