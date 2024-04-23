@@ -531,7 +531,7 @@ def test_pull_logs(runner: Runner, log_dir_base_path: Path):
 def test_pull_logs_no_instance(runner: Runner):
     """
     arrange: Mock the Runner instance to be None.
-    act: Get the logs of the crashed runner.
+    act: Get the logs of the runner.
     assert: A RunnerLogsError is raised.
     """
     runner.config.name = "test-runner"
@@ -549,7 +549,7 @@ def test_pull_logs_no_instance(runner: Runner):
 def test_pull_logs_lxd_error(runner: Runner):
     """
     arrange: Mock the Runner instance to raise an LxdError.
-    act: Get the logs of the crashed runner.
+    act: Get the logs of the runner.
     assert: A RunnerLogsError is raised.
     """
     runner.config.name = "test-runner"

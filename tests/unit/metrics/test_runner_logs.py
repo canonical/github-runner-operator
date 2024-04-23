@@ -18,7 +18,7 @@ def log_dir_base_path_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
 def test_remove_outdated_crashed(log_dir_base_path: Path, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Mock the base log directory path.
-    act: Remove the logs of the crashed runner.
+    act: Remove the logs of the runner.
     assert: The expected logs are removed.
     """
     monkeypatch.setattr(runner_logs, "OUTDATED_LOGS_IN_SECONDS", 0)

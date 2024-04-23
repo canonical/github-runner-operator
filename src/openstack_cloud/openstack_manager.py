@@ -1014,7 +1014,7 @@ class OpenstackRunnerManager:
                 return
             except _PullFileError as exc:
                 logger.warning(
-                    "Failed to pull metrics for %s: %s . Will not be able to issue metrics",
+                    "Failed to pull metrics for %s: %s . Will not be able to issue all metrics",
                     instance_name,
                     exc,
                 )
