@@ -24,6 +24,7 @@ from invoke.runners import Result
 from openstack.compute.v2.server import Server
 from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import OpenStackCloudException, SDKException
+import paramiko
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from charm_state import (
@@ -630,7 +631,7 @@ class OpenstackRunnerManager:
         """
         for ssh_conn in self._get_ssh_connections(server=server):
             try:
-                result = ssh_conn.run("ps aux")
+                result = ssh_conn.run("ps aux", warn=True)
                 logger.debug("Output of `ps aux` on %s stderr: %s", server.name, result.stderr)
                 logger.debug("Output of `ps aux` on %s stdout: %s", server.name, result.stdout)
                 if not result.ok:
@@ -641,12 +642,12 @@ class OpenstackRunnerManager:
                     logger.info("Runner process found to be healthy on %s", server.name)
                     return True
 
-            except NoValidConnectionsError as exc:
+            except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException):
                 logger.warning(
                     "Unable to SSH into %s with address %s",
                     server.name,
                     ssh_conn.host,
-                    exc_info=exc,
+                    exc_info=True,
                 )
                 # Looping over all IP and trying SSH.
 
@@ -857,11 +858,11 @@ class OpenstackRunnerManager:
 
         return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
 
-    def _run_github_removal_script(self, instance: Server, remove_token: str | None) -> None:
+    def _run_github_removal_script(self, server: Server, remove_token: str | None) -> None:
         """Run Github runner removal script.
 
         Args:
-            instance: The Openstack server instance.
+            server: The Openstack server instance.
             remove_token: The GitHub instance removal token.
 
         Raises:
@@ -869,10 +870,11 @@ class OpenstackRunnerManager:
         """
         if not remove_token:
             return
-        for ssh_conn in self._get_ssh_connections(server=instance):
+        for ssh_conn in self._get_ssh_connections(server=server):
             try:
                 result: Result = ssh_conn.run(
-                    f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}"
+                    f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}",
+                    warn=True,
                 )
                 if not result.ok:
                     logger.warning(
@@ -880,21 +882,21 @@ class OpenstackRunnerManager:
                             "Unable to run removal script on instance %s, "
                             "exit code: %s, stdout: %s, stderr: %s"
                         ),
-                        instance.instance_name,
+                        server.name,
                         result.return_code,
                         result.stdout,
                         result.stderr,
                     )
                     continue
                 return
-            except NoValidConnectionsError:
+            except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException):
                 logger.info(
-                    "Unable to SSH into %s with address %s", instance.instance_name, ssh_conn.host
+                    "Unable to SSH into %s with address %s", server.name, ssh_conn.host, exc_info=True
                 )
                 continue
 
-        logger.warning("Failed to run GitHub runner removal script %s", instance.instance_name)
-        raise GithubRunnerRemoveError(f"Failed to remove runner {instance.name} from Github.")
+        logger.warning("Failed to run GitHub runner removal script %s", server.name)
+        raise GithubRunnerRemoveError(f"Failed to remove runner {server.name} from Github.")
 
     def _remove_openstack_runner(
         self,
@@ -912,7 +914,7 @@ class OpenstackRunnerManager:
         # 2024/04/23: The broad except clause is for logging purposes.
         # Will be removed in future versions.
         try:
-            self._run_github_removal_script(instance=server, remove_token=remove_token)
+            self._run_github_removal_script(server=server, remove_token=remove_token)
         except (TimeoutError, invoke.exceptions.UnexpectedExit) as exc:
             logger.warning("Failed to run runner removal script for %s, %s", server.name, exc)
         except Exception:  # pylint: disable=broad-exception-caught
