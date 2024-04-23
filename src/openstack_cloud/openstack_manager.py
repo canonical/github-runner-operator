@@ -19,12 +19,12 @@ import openstack
 import openstack.connection
 import openstack.exceptions
 import openstack.image.v2.image
+import paramiko
 from fabric import Connection as SshConnection
 from invoke.runners import Result
 from openstack.compute.v2.server import Server
 from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import OpenStackCloudException, SDKException
-import paramiko
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from charm_state import (
@@ -891,7 +891,17 @@ class OpenstackRunnerManager:
                 return
             except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException):
                 logger.info(
-                    "Unable to SSH into %s with address %s", server.name, ssh_conn.host, exc_info=True
+                    "Unable to SSH into %s with address %s",
+                    server.name,
+                    ssh_conn.host,
+                    exc_info=True,
+                )
+                continue
+            # 2024/04/23: The broad except clause is for logging purposes.
+            # Will be removed in future versions.
+            except Exception:  # pylint: disable=broad-exception-caught
+                logger.critical(
+                    "Found unexpected exception, please contact the developers", exc_info=True
                 )
                 continue
 
@@ -911,12 +921,12 @@ class OpenstackRunnerManager:
             server: The Openstack server.
             remove_token: The GitHub runner remove token.
         """
-        # 2024/04/23: The broad except clause is for logging purposes.
-        # Will be removed in future versions.
         try:
             self._run_github_removal_script(server=server, remove_token=remove_token)
         except (TimeoutError, invoke.exceptions.UnexpectedExit) as exc:
             logger.warning("Failed to run runner removal script for %s, %s", server.name, exc)
+        # 2024/04/23: The broad except clause is for logging purposes.
+        # Will be removed in future versions.
         except Exception:  # pylint: disable=broad-exception-caught
             logger.critical(
                 "Found unexpected exception, please contact the developers", exc_info=True
@@ -926,6 +936,8 @@ class OpenstackRunnerManager:
                 logger.warning("Server does not exist %s", server.name)
         except SDKException as exc:
             logger.error("Something wrong deleting the server %s, %s", server.name, exc)
+        # 2024/04/23: The broad except clause is for logging purposes.
+        # Will be removed in future versions.
         except Exception:  # pylint: disable=broad-exception-caught
             logger.critical(
                 "Found unexpected exception, please contact the developers", exc_info=True
@@ -954,12 +966,12 @@ class OpenstackRunnerManager:
             self._remove_openstack_runner(conn, server, remove_token)
 
         if github_id is not None:
-            # 2024/04/23: The broad except clause is for logging purposes.
-            # Will be removed in future versions.
             try:
                 self._github.delete_runner(self._config.path, github_id)
             except GithubClientError as exc:
                 logger.warning("Failed to remove runner from Github %s, %s", instance_name, exc)
+            # 2024/04/23: The broad except clause is for logging purposes.
+            # Will be removed in future versions.
             except Exception:  # pylint: disable=broad-exception-caught
                 logger.critical(
                     "Found unexpected exception, please contact the developers", exc_info=True
