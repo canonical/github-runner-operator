@@ -440,9 +440,8 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             True if installation was successful, False otherwise.
         """
-        if state.charm_config.openstack_clouds_yaml:
-            # Only build it in test mode since it may interfere with users systems.
-            if self.config.get(TEST_MODE_CONFIG_NAME) == "insecure":
+        if state.instance_type == InstanceType.OPENSTACK:
+            if state.runner_config.build_image:
                 self.unit.status = MaintenanceStatus("Building Openstack image")
                 github = GithubClient(token=state.charm_config.token)
                 openstack_manager.build_image(

@@ -134,8 +134,10 @@ set -e
 df -h # print disk free space
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get update -yq
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get upgrade -yq
-DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget unzip gh -yq
+DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget unzip gh snapd -yq
 ln -s /usr/bin/python3 /usr/bin/python
+
+# Snap installation cannot work in chroot env: https://forum.snapcraft.io/t/installing-a-snap-in-chrooted-enviornment/19048/2
 
 # Uninstall unattended-upgrades, to avoid lock errors when unattended-upgrades is active in the runner
 DEBIAN_FRONTEND=noninteractive /usr/bin/systemctl stop apt-daily.timer
@@ -148,29 +150,11 @@ DEBIAN_FRONTEND=noninteractive /usr/bin/systemctl daemon-reload
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get purge unattended-upgrades -yq
 
 /usr/sbin/useradd -m ubuntu
-/usr/bin/npm install --global yarn 
+/usr/bin/npm install --global yarn
 /usr/sbin/groupadd microk8s
 /usr/sbin/usermod -aG microk8s ubuntu
 /usr/sbin/usermod -aG docker ubuntu
 /usr/bin/chmod 777 /usr/local/bin
-
-# Proxy configs
-if [[ -n "$HTTP_PROXY" ]]; then
-    /usr/bin/npm config set proxy "$HTTP_PROXY"
-fi
-if [[ -n "$HTTPS_PROXY" ]]; then
-    /usr/bin/npm config set https-proxy "$HTTPS_PROXY"
-fi
-if [[ -n "$DOCKER_PROXY_SERVICE_CONF" ]]; then
-    mkdir -p /etc/systemd/system/docker.service.d
-    echo "$DOCKER_PROXY_SERVICE_CONF" > /etc/systemd/system/docker.service.d/http-proxy.conf
-fi
-if [[ -n "$DOCKER_PROXY_CONF" ]]; then
-    mkdir -p /root/.docker
-    echo "$DOCKER_PROXY_CONF" > /root/.docker/config.json
-    mkdir -p /home/ubuntu/.docker
-    echo "$DOCKER_PROXY_CONF" > /home/ubuntu/.docker/config.json
-fi
 
 # Reduce image size
 /usr/bin/npm cache clean --force
@@ -182,7 +166,7 @@ DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get clean
 /usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums_hashes_order -O checksums_hashes_order
 /usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/extract-checksum.sh -O extract-checksum.sh
 /usr/bin/bash extract-checksum.sh SHA-256 "yq_linux_$BIN_ARCH" | /usr/bin/awk '{print \$2,\$1}' | /usr/bin/sha256sum -c | /usr/bin/grep OK
-rm checksums checksums_hashes_order extract-checksum.sh 
+rm checksums checksums_hashes_order extract-checksum.sh
 /usr/bin/chmod 755 yq_linux_$BIN_ARCH
 /usr/bin/mv yq_linux_$BIN_ARCH /usr/bin/yq
 

@@ -21,6 +21,8 @@ import time
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
+from time import sleep
+from typing import Generator, Iterable, Literal, NamedTuple, Optional, cast
 from typing import Generator, Iterable, Iterator, Literal, NamedTuple, Optional, cast
 
 import jinja2
@@ -467,15 +469,15 @@ def create_instance_config(  # pylint: disable=too-many-arguments
 
 def _generate_runner_env(
     templates_env: jinja2.Environment,
-    proxies: Optional[ProxyConfig] = None,
     dockerhub_mirror: Optional[str] = None,
     ssh_debug_connections: list[SSHDebugConnection] | None = None,
 ) -> str:
     """Generate Github runner .env file contents.
 
+    Proxy configuration are handled by aproxy.
+
     Args:
         templates_env: The jinja template environment.
-        proxies: Proxy values to enable on the Github runner.
         dockerhub_mirror: The url to Dockerhub to reduce rate limiting.
         ssh_debug_connections: Tmate SSH debug connection information to load as environment vars.
 
@@ -483,10 +485,11 @@ def _generate_runner_env(
         The .env contents to be loaded by Github runner.
     """
     return templates_env.get_template("env.j2").render(
-        proxies=proxies,
         pre_job_script=str(PRE_JOB_SCRIPT),
         dockerhub_mirror=dockerhub_mirror or "",
         ssh_debug_info=(secrets.choice(ssh_debug_connections) if ssh_debug_connections else None),
+        # Proxies are handled by aproxy.
+        proxies={},
     )
 
 
@@ -495,6 +498,7 @@ def _generate_cloud_init_userdata(
     instance_config: InstanceConfig,
     runner_env: str,
     pre_job_contents: str,
+    proxies: Optional[ProxyConfig] = None,
 ) -> str:
     """Generate cloud init userdata to launch at startup.
 
@@ -503,6 +507,7 @@ def _generate_cloud_init_userdata(
         instance_config: The configuration values for Openstack instance to launch.
         runner_env: The contents of .env to source when launching Github runner.
         pre_job_contents: The contents of pre-job script to run before starting the job.
+        proxies: Proxy values to enable on the Github runner.
 
     Returns:
         The cloud init userdata script.
@@ -520,6 +525,7 @@ def _generate_cloud_init_userdata(
         env_contents=runner_env,
         pre_job_contents=pre_job_contents,
         metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
+        aproxy_address=proxies.aproxy_address,
     )
 
 
@@ -691,18 +697,18 @@ class OpenstackRunnerManager:
                     logger.info("Runner process found to be healthy on %s", instance_name)
                     return True
 
-            except NoValidConnectionsError:
-                logger.info("Unable to SSH into %s with address %s", instance_name, ssh_conn.host)
+            except NoValidConnectionsError as exc:
+                logger.warning("Unable to SSH into %s with address %s", instance_name, ssh_conn.host, exc_info=exc)
                 # Looping over all IP and trying SSH.
 
-        logger.error(
-            "Unable to SSH into %s with any address on network %s",
+        logger.warning(
+            "Health check failed on %s with any address on network %s",
             instance.instance_name,
             self._config.network,
         )
         return False
 
-    @retry(tries=10, delay=30, local_logger=logger)
+    @retry(tries=10, delay=60, local_logger=logger)
     def _wait_until_runner_process_running(
         self, conn: OpenstackConnection, instance_name: str
     ) -> None:
@@ -751,7 +757,6 @@ class OpenstackRunnerManager:
 
         env_contents = _generate_runner_env(
             templates_env=environment,
-            proxies=self._config.charm_state.proxy_config,
             dockerhub_mirror=self._config.dockerhub_mirror,
             ssh_debug_connections=self._config.charm_state.ssh_debug_connections,
         )
@@ -773,6 +778,7 @@ class OpenstackRunnerManager:
             instance_config=instance_config,
             runner_env=env_contents,
             pre_job_contents=pre_job_contents,
+            proxies=self._config.charm_state.proxy_config,
         )
 
         self._ensure_security_group(conn)
