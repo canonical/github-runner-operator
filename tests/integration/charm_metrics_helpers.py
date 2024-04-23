@@ -19,8 +19,8 @@ from juju.application import Application
 from juju.unit import Unit
 
 from github_type import JobConclusion
-from metrics.metrics import METRICS_LOG_PATH
-from metrics.runner_metrics import PostJobStatus
+from metrics.events import METRICS_LOG_PATH
+from metrics.runner import PostJobStatus
 from tests.integration.helpers import get_runner_name, run_in_unit, wait_for
 
 logger = logging.getLogger(__name__)
