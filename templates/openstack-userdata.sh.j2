@@ -8,7 +8,7 @@ su - ubuntu -c 'cd ~/actions-runner && echo "{{ env_contents }}" > .env'
 {% if aproxy_address %}
 snap install aproxy --edge
 snap set aproxy proxy={{ aproxy_address }} listen=:54969
-nft -f - << EOF
+cat << EOF > /etc/nftables.conf
 define default-ip = $(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
 define private-ips = { 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }
 table ip aproxy
@@ -25,6 +25,8 @@ table ip aproxy {
       }
 }
 EOF
+systemctl enable nftables.service
+nft -f /etc/nftables.conf
 {% endif %}
 
 # Create the runner and start the configuration experience
