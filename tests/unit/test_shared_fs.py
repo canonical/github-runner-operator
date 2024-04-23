@@ -30,7 +30,9 @@ def filesystem_paths_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> dict[s
 
 
 @pytest.fixture(autouse=True, name="metrics_storage_mock")
-def metrics_storage_fixture(monkeypatch: MonkeyPatch, filesystem_paths: dict[str, Path]) -> MagicMock:
+def metrics_storage_fixture(
+    monkeypatch: MonkeyPatch, filesystem_paths: dict[str, Path]
+) -> MagicMock:
     """Mock the metrics storage."""
     metrics_storage_mock = MagicMock()
     monkeypatch.setattr(shared_fs, "metrics_storage", metrics_storage_mock)
@@ -38,15 +40,45 @@ def metrics_storage_fixture(monkeypatch: MonkeyPatch, filesystem_paths: dict[str
     fs_base_path.mkdir()
 
     def create(runner_name: str) -> MetricsStorage:
+        """Create metrics storage for the runner.
+
+        Args:
+            runner_name: The name of the runner.
+
+        Raises:
+            CreateMetricsStorageError: If the creation of the metrics storage fails.
+
+        Returns:
+            The metrics storage.
+        """
         if (fs_base_path / runner_name).exists():
             raise CreateMetricsStorageError("Filesystem already exists")
         (fs_base_path / runner_name).mkdir()
         return MetricsStorage(fs_base_path, runner_name)
 
     def list_all():
-        return (MetricsStorage(runner_dir, str(runner_dir.name)) for runner_dir in fs_base_path.iterdir())
+        """List all shared filesystems.
+
+        Returns:
+            A generator of metrics storage objects.
+        """
+        return (
+            MetricsStorage(runner_dir, str(runner_dir.name))
+            for runner_dir in fs_base_path.iterdir()
+        )
 
     def get(runner_name: str) -> MetricsStorage:
+        """Get the metrics storage for the runner.
+
+        Args:
+            runner_name: The name of the runner.
+
+        Raises:
+            GetMetricsStorageError: If the filesystem is not found.
+
+        Returns:
+            The metrics storage.
+        """
         if not (fs_base_path / runner_name).exists():
             raise GetMetricsStorageError("Filesystem not found")
         return MetricsStorage(fs_base_path / runner_name, runner_name)
@@ -54,7 +86,9 @@ def metrics_storage_fixture(monkeypatch: MonkeyPatch, filesystem_paths: dict[str
     metrics_storage_mock.create.side_effect = create
     metrics_storage_mock.get.side_effect = get
     metrics_storage_mock.list_all.side_effect = list_all
-    metrics_storage_mock.delete.side_effect = lambda runner_name: shutil.rmtree(fs_base_path / runner_name)
+    metrics_storage_mock.delete.side_effect = lambda runner_name: shutil.rmtree(
+        fs_base_path / runner_name
+    )
 
     return metrics_storage_mock
 
@@ -88,7 +122,6 @@ def test_create_creates_directory():
     assert: The shared filesystem path is created.
     """
     runner_name = secrets.token_hex(16)
-
 
     fs = shared_fs.create(runner_name)
 

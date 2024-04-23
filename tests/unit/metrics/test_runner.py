@@ -7,10 +7,11 @@ from unittest.mock import MagicMock, call
 
 import pytest
 
-import shared_fs
 from errors import DeleteMetricsStorageError, IssueMetricEventError
 from github_type import JobConclusion
-from metrics import events as metric_events, type as metrics_type, runner as runner_metrics
+from metrics import events as metric_events
+from metrics import runner as runner_metrics
+from metrics import type as metrics_type
 from metrics.events import RunnerStart, RunnerStop
 from metrics.runner import (
     RUNNER_INSTALLED_TS_FILE_NAME,
@@ -388,7 +389,6 @@ def test_extract_raises_error_for_too_large_files(
     assert not extracted_metrics
 
     move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
-
 
     # 3. Runner has an installed_timestamp file that is too large
     runner_name = secrets.token_hex(16)

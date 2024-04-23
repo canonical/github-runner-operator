@@ -7,6 +7,7 @@ import shutil
 from pathlib import Path
 from typing import Iterator
 
+import metrics.storage as metrics_storage
 from errors import (
     CreateMetricsStorageError,
     DeleteMetricsStorageError,
@@ -14,8 +15,6 @@ from errors import (
     SharedFilesystemMountError,
     SubprocessError,
 )
-
-import metrics.storage as metrics_storage
 from utilities import execute_command
 
 DIR_NO_MOUNTPOINT_EXIT_CODE = 32
@@ -145,7 +144,8 @@ def delete(runner_name: str) -> None:
         _unmount_runner_fs_path(runner_fs_path)
     except _UnmountSharedFilesystemError as exc:
         raise DeleteMetricsStorageError(
-            f"Unexpected error while deleting shared Filesystem for runner {runner_name}: {str(exc)}"
+            "Unexpected error while deleting shared Filesystem for runner "
+            f"{runner_name}: {str(exc)}"
         ) from exc
 
     runner_image_path = _get_runner_image_path(runner_name)
@@ -159,7 +159,9 @@ def delete(runner_name: str) -> None:
     try:
         shutil.rmtree(runner_fs_path)
     except OSError as exc:
-        raise DeleteMetricsStorageError(f"Failed to remove shared filesystem for runner {runner_name}") from exc
+        raise DeleteMetricsStorageError(
+            f"Failed to remove shared filesystem for runner {runner_name}"
+        ) from exc
 
 
 def _unmount_runner_fs_path(runner_fs_path: Path) -> Path:
@@ -175,9 +177,7 @@ def _unmount_runner_fs_path(runner_fs_path: Path) -> Path:
         The runner shared filesystem path that was unmounted.
     """
     if not runner_fs_path.exists():
-        raise _UnmountSharedFilesystemError(
-            f"Shared filesystem '{runner_fs_path}' not found."
-        )
+        raise _UnmountSharedFilesystemError(f"Shared filesystem '{runner_fs_path}' not found.")
     try:
         is_mounted = _is_mountpoint(runner_fs_path)
     except SharedFilesystemMountError as exc:
@@ -241,6 +241,7 @@ def _mount(runner_fs_path: Path, runner_image_path: Path) -> None:
         raise SharedFilesystemMountError(
             f"Failed to mount shared filesystem {runner_fs_path}"
         ) from exc
+
 
 def _get_runner_image_path(runner_name: str) -> Path:
     """Get the path of the runner image.

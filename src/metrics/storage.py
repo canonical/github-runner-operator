@@ -153,7 +153,9 @@ def delete(runner_name: str) -> None:
     try:
         shutil.rmtree(runner_fs_path)
     except OSError as exc:
-        raise DeleteMetricsStorageError(f"Failed to remove metrics storage for runner {runner_name}") from exc
+        raise DeleteMetricsStorageError(
+            f"Failed to remove metrics storage for runner {runner_name}"
+        ) from exc
 
 
 def move_to_quarantine(storage_manager: StorageManager, runner_name: str) -> None:
