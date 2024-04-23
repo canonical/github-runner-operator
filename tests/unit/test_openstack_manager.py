@@ -224,17 +224,8 @@ ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
             None,
             """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 
-HTTP_PROXY=http://test.internal
-http_proxy=http://test.internal
 
 
-HTTPS_PROXY=https://test.internal
-https_proxy=https://test.internal
-
-
-
-NO_PROXY=http://no_proxy.internal
-no_proxy=http://no_proxy.internal
 
 
 LANG=C.UTF-8
@@ -304,17 +295,8 @@ TMATE_SERVER_ED25519_FINGERPRINT=SHA256:tested25519
             ],
             """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 
-HTTP_PROXY=http://test.internal
-http_proxy=http://test.internal
 
 
-HTTPS_PROXY=https://test.internal
-https_proxy=https://test.internal
-
-
-
-NO_PROXY=http://no_proxy.internal
-no_proxy=http://no_proxy.internal
 
 
 DOCKERHUB_MIRROR=http://dockerhub_mirror.test
@@ -347,7 +329,6 @@ def test__generate_runner_env(
     assert (
         openstack_manager._generate_runner_env(
             templates_env=environment,
-            proxies=proxy_config,
             dockerhub_mirror=dockerhub_mirror,
             ssh_debug_connections=ssh_debug_connections,
         )

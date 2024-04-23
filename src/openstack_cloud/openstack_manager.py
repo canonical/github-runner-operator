@@ -21,8 +21,6 @@ import time
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from time import sleep
-from typing import Generator, Iterable, Literal, NamedTuple, Optional, cast
 from typing import Generator, Iterable, Iterator, Literal, NamedTuple, Optional, cast
 
 import jinja2
@@ -498,7 +496,7 @@ def _generate_cloud_init_userdata(
     instance_config: InstanceConfig,
     runner_env: str,
     pre_job_contents: str,
-    proxies: Optional[ProxyConfig] = None,
+    proxies: ProxyConfig,
 ) -> str:
     """Generate cloud init userdata to launch at startup.
 
@@ -698,7 +696,12 @@ class OpenstackRunnerManager:
                     return True
 
             except NoValidConnectionsError as exc:
-                logger.warning("Unable to SSH into %s with address %s", instance_name, ssh_conn.host, exc_info=exc)
+                logger.warning(
+                    "Unable to SSH into %s with address %s",
+                    instance_name,
+                    ssh_conn.host,
+                    exc_info=exc,
+                )
                 # Looping over all IP and trying SSH.
 
         logger.warning(
