@@ -97,6 +97,18 @@ class _PullFileError(Exception):
         super().__init__(reason)
 
 
+class _SSHError(Exception):
+    """Represents an error while interacting with SSH."""
+
+    def __init__(self, reason: str):
+        """Construct SSHErrors object.
+
+        Args:
+            reason: The reason for the error.
+        """
+        super().__init__(reason)
+
+
 @contextmanager
 def _create_connection(
     cloud_config: dict[str, dict]
@@ -998,8 +1010,8 @@ class OpenstackRunnerManager:
                     exc,
                 )
                 return
-            except NoValidConnectionsError:
-                logger.info("Unable to SSH into %s with address %s", instance_name, ssh_conn.host)
+            except _SSHError as exc:
+                logger.info("Failed to pull metrics for %s: %s", instance_name, exc)
                 continue
 
     def _pull_file(
@@ -1014,9 +1026,13 @@ class OpenstackRunnerManager:
             max_size: If the file is larger than this, it will not be pulled.
 
         Raises:
-            PullFileError: Unable to pull the file from the runner instance.
+            _PullFileError: Unable to pull the file from the runner instance.
+            _SSHError: Issue with SSH connection.
         """
-        result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True)
+        try:
+            result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True)
+        except NoValidConnectionsError as exc:
+            raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
         if not result.ok:
             raise _PullFileError(reason=f"Unable to get file size of {remote_path}")
 
@@ -1033,6 +1049,8 @@ class OpenstackRunnerManager:
 
         try:
             ssh_conn.get(remote=remote_path, local=local_path)
+        except NoValidConnectionsError as exc:
+            raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
         except OSError as exc:
             raise _PullFileError(reason=f"Unable to retrieve file {remote_path}") from exc
 
