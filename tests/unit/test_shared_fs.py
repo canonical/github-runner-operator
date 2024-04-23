@@ -1,6 +1,7 @@
 # Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import secrets
+import shutil
 from pathlib import Path
 from unittest.mock import MagicMock, Mock
 
@@ -24,11 +25,38 @@ def filesystem_paths_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> dict[s
     """Mock the hardcoded filesystem paths."""
     fs_path = tmp_path / "runner-fs"
     fs_images_path = tmp_path / "images"
-    fs_quarantine_path = tmp_path / "quarantine"
-    monkeypatch.setattr("shared_fs.FILESYSTEM_BASE_PATH", fs_path)
     monkeypatch.setattr("shared_fs.FILESYSTEM_IMAGES_PATH", fs_images_path)
-    monkeypatch.setattr("shared_fs.FILESYSTEM_QUARANTINE_PATH", fs_quarantine_path)
-    return {"base": fs_path, "images": fs_images_path, "quarantine": fs_quarantine_path}
+    return {"base": fs_path, "images": fs_images_path}
+
+
+@pytest.fixture(autouse=True, name="metrics_storage_mock")
+def metrics_storage_fixture(monkeypatch: MonkeyPatch, filesystem_paths: dict[str, Path]) -> MagicMock:
+    """Mock the metrics storage."""
+    metrics_storage_mock = MagicMock()
+    monkeypatch.setattr(shared_fs, "metrics_storage", metrics_storage_mock)
+    fs_base_path = filesystem_paths["base"]
+    fs_base_path.mkdir()
+
+    def create(runner_name: str) -> MetricsStorage:
+        if (fs_base_path / runner_name).exists():
+            raise CreateMetricsStorageError("Filesystem already exists")
+        (fs_base_path / runner_name).mkdir()
+        return MetricsStorage(fs_base_path, runner_name)
+
+    def list_all():
+        return (MetricsStorage(runner_dir, str(runner_dir.name)) for runner_dir in fs_base_path.iterdir())
+
+    def get(runner_name: str) -> MetricsStorage:
+        if not (fs_base_path / runner_name).exists():
+            raise GetMetricsStorageError("Filesystem not found")
+        return MetricsStorage(fs_base_path / runner_name, runner_name)
+
+    metrics_storage_mock.create.side_effect = create
+    metrics_storage_mock.get.side_effect = get
+    metrics_storage_mock.list_all.side_effect = list_all
+    metrics_storage_mock.delete.side_effect = lambda runner_name: shutil.rmtree(fs_base_path / runner_name)
+
+    return metrics_storage_mock
 
 
 @pytest.fixture(autouse=True, name="exc_cmd_mock")
@@ -60,6 +88,7 @@ def test_create_creates_directory():
     assert: The shared filesystem path is created.
     """
     runner_name = secrets.token_hex(16)
+
 
     fs = shared_fs.create(runner_name)
 
@@ -208,7 +237,7 @@ def test_get_shared_filesystem():
     """
     arrange: Given a runner name.
     act: Call create and get.
-    assert: A shared filesystem object for this runner is returned.
+    assert: A metrics storage object for this runner is returned.
     """
     runner_name = secrets.token_hex(16)
 
@@ -231,7 +260,7 @@ def test_get_raises_error_if_not_found():
         shared_fs.get(runner_name)
 
 
-def test_get_mounts_if_unmounted(exc_cmd_mock: MagicMock):
+def test_get_mounts_if_unmounted(filesystem_paths: dict[str, Path], exc_cmd_mock: MagicMock):
     """
     arrange: Given a runner name and a mock mountpoint cmd which returns NOT_A_MOUNTPOINT \
         exit code.
@@ -252,7 +281,7 @@ def test_get_mounts_if_unmounted(exc_cmd_mock: MagicMock):
             "-o",
             "loop",
             str(shared_fs._get_runner_image_path(runner_name)),
-            str(shared_fs._get_runner_fs_path(runner_name)),
+            str(filesystem_paths["base"] / runner_name),
         ],
         check_exit=True,
     )

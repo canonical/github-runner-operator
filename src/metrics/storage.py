@@ -115,7 +115,7 @@ def list_all() -> Iterator[MetricsStorage]:
         try:
             fs = get(runner_name=directory.name)
         except GetMetricsStorageError:
-            logger.error("Failed to get shared filesystem for runner %s", directory.name)
+            logger.error("Failed to get metrics storage for runner %s", directory.name)
         else:
             yield fs
 
@@ -134,7 +134,7 @@ def get(runner_name: str) -> MetricsStorage:
     """
     runner_fs_path = _get_runner_fs_path(runner_name)
     if not runner_fs_path.exists():
-        raise GetMetricsStorageError(f"Shared filesystem for runner {runner_name} not found.")
+        raise GetMetricsStorageError(f"Metrics storage for runner {runner_name} not found.")
 
     return MetricsStorage(runner_fs_path, runner_name)
 
@@ -153,7 +153,7 @@ def delete(runner_name: str) -> None:
     try:
         shutil.rmtree(runner_fs_path)
     except OSError as exc:
-        raise DeleteMetricsStorageError("Failed to remove metrics storage") from exc
+        raise DeleteMetricsStorageError(f"Failed to remove metrics storage for runner {runner_name}") from exc
 
 
 def move_to_quarantine(storage_manager: StorageManager, runner_name: str) -> None:
