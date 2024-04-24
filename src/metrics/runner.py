@@ -1,7 +1,7 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
-"""Classes and function to extract the metrics from a shared filesystem."""
+"""Classes and function to extract the metrics from storage and issue runner metrics events."""
 
 import json
 import logging
@@ -99,185 +99,17 @@ class RunnerMetrics(BaseModel):
     runner_name: str
 
 
-def _inspect_file_sizes(metrics_storage: MetricsStorage) -> tuple[Path, ...]:
-    """Inspect the file sizes of the shared filesystem.
-
-    Args:
-        metrics_storage: The shared filesystem for a specific runner.
-
-    Returns:
-        A tuple of files whose size is larger than the limit.
-    """
-    files: list[Path] = [
-        metrics_storage.path.joinpath(PRE_JOB_METRICS_FILE_NAME),
-        metrics_storage.path.joinpath(POST_JOB_METRICS_FILE_NAME),
-        metrics_storage.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME),
-    ]
-
-    return tuple(
-        filter(lambda file: file.exists() and file.stat().st_size > FILE_SIZE_BYTES_LIMIT, files)
-    )
-
-
-def _extract_metrics_from_fs_file(
-    metrics_storage: MetricsStorage, runner_name: str, filename: str
-) -> dict | None:
-    """Extract metrics from a shared filesystem.
-
-    Args:
-        metrics_storage: The shared filesystem for a specific runner.
-        runner_name: The name of the lxd runner to extract metrics from.
-        filename: The metrics filename.
-
-    Raises:
-        CorruptMetricDataError: If any errors have been found within the metric.
-
-    Returns:
-        Metrics for the given runner if present.
-    """
-    try:
-        job_metrics = json.loads(metrics_storage.path.joinpath(filename).read_text())
-    except FileNotFoundError:
-        logger.warning("%s not found for runner %s.", filename, runner_name)
-        return None
-    except JSONDecodeError as exc:
-        raise CorruptMetricDataError(str(exc)) from exc
-    if not isinstance(job_metrics, dict):
-        raise CorruptMetricDataError(
-            f"{filename} metrics for runner {runner_name} is not a JSON object."
-        )
-    return job_metrics
-
-
-def _extract_metrics_from_fs(metrics_storage: MetricsStorage) -> Optional[RunnerMetrics]:
-    """Extract metrics from a shared filesystem.
-
-    Args:
-        metrics_storage: The shared filesystem for a specific runner.
-
-    Returns:
-        The extracted metrics if at least the pre-job metrics are present.
-
-    Raises:
-        CorruptMetricDataError: Raised if one of the files is not valid or too large.
-    """
-    if too_large_files := _inspect_file_sizes(metrics_storage):
-        raise CorruptMetricDataError(
-            f"File size of {too_large_files} is too large. "
-            f"The limit is {FILE_SIZE_BYTES_LIMIT} bytes."
-        )
-
-    runner_name = metrics_storage.runner_name
-    try:
-        installed_timestamp = metrics_storage.path.joinpath(
-            RUNNER_INSTALLED_TS_FILE_NAME
-        ).read_text()
-        logger.debug("Runner %s installed at %s", runner_name, installed_timestamp)
-    except FileNotFoundError:
-        logger.exception("installed_timestamp not found for runner %s", runner_name)
-        return None
-
-    try:
-        pre_job_metrics = _extract_metrics_from_fs_file(
-            metrics_storage=metrics_storage,
-            runner_name=runner_name,
-            filename=PRE_JOB_METRICS_FILE_NAME,
-        )
-        if not pre_job_metrics:
-            return None
-        logger.debug("Pre-job metrics for runner %s: %s", runner_name, pre_job_metrics)
-
-        post_job_metrics = _extract_metrics_from_fs_file(
-            metrics_storage=metrics_storage,
-            runner_name=runner_name,
-            filename=POST_JOB_METRICS_FILE_NAME,
-        )
-        logger.debug("Post-job metrics for runner %s: %s", runner_name, post_job_metrics)
-    # 2024/04/02 - We should define a new error, wrap it and re-raise it.
-    except CorruptMetricDataError:  # pylint: disable=try-except-raise
-        raise
-
-    try:
-        return RunnerMetrics(
-            installed_timestamp=installed_timestamp,
-            pre_job=PreJobMetrics(**pre_job_metrics),
-            post_job=PostJobMetrics(**post_job_metrics) if post_job_metrics else None,
-            runner_name=runner_name,
-        )
-    except ValidationError as exc:
-        raise CorruptMetricDataError(str(exc)) from exc
-
-
-def _clean_up_shared_fs(
-    metrics_storage_manager: MetricsStorageManager, metrics_storage: MetricsStorage
-) -> None:
-    """Clean up the shared filesystem.
-
-    Remove all metric files and afterwards the shared filesystem.
-
-    Args:
-        metrics_storage_manager: The metrics storage manager.
-        metrics_storage: The shared filesystem for a specific runner.
-    """
-    try:
-        metrics_storage.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).unlink(missing_ok=True)
-        metrics_storage.path.joinpath(PRE_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
-        metrics_storage.path.joinpath(POST_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
-    except OSError:
-        logger.exception(
-            "Could not remove metric files for runner %s, "
-            "this may lead to duplicate metrics issued",
-            metrics_storage.runner_name,
-        )
-
-    try:
-        metrics_storage_manager.delete(metrics_storage.runner_name)
-    except DeleteMetricsStorageError:
-        logger.exception(
-            "Could not delete shared filesystem for runner %s.", metrics_storage.runner_name
-        )
-
-
-def _extract_fs(
-    metrics_storage_manager: MetricsStorageManager,
-    metrics_storage: MetricsStorage,
-) -> Optional[RunnerMetrics]:
-    """Extract metrics from a shared filesystem.
-
-    Args:
-        metrics_storage_manager: The metrics storage manager.
-        metrics_storage: The metrics storage for a specific runner.
-
-    Returns:
-        The extracted metrics if at least the pre-job metrics are present.
-    """
-    runner_name = metrics_storage.runner_name
-    try:
-        logger.debug("Extracting metrics from shared filesystem for runner %s", runner_name)
-        metrics_from_fs = _extract_metrics_from_fs(metrics_storage)
-    except CorruptMetricDataError:
-        logger.exception("Corrupt metric data found for runner %s", runner_name)
-        move_to_quarantine(metrics_storage_manager, runner_name)
-        return None
-
-    logger.debug("Cleaning up shared filesystem for runner %s", runner_name)
-    _clean_up_shared_fs(
-        metrics_storage_manager=metrics_storage_manager, metrics_storage=metrics_storage
-    )
-    return metrics_from_fs
-
-
 def extract(
     metrics_storage_manager: MetricsStorageManager, ignore_runners: set[str]
 ) -> Iterator[RunnerMetrics]:
     """Extract metrics from runners.
 
-    The metrics are extracted from the shared filesystems of the runners.
-    Orphan shared filesystems are cleaned up.
+    The metrics are extracted from the metrics storage of the runners.
+    Orphan storages are cleaned up.
 
-    If corrupt data is found, the metrics are not processed further and the filesystem is moved
+    If corrupt data is found, the metrics are not processed further and the storage is moved
     to a special quarantine directory, as this may indicate that a malicious
-    runner is trying to manipulate the shared file system.
+    runner is trying to manipulate the files on the storage.
 
     In order to avoid DoS attacks, the file size is also checked.
 
@@ -290,7 +122,7 @@ def extract(
     """
     for ms in metrics_storage_manager.list_all():
         if ms.runner_name not in ignore_runners:
-            runner_metrics = _extract_fs(
+            runner_metrics = _extract_storage(
                 metrics_storage_manager=metrics_storage_manager, metrics_storage=ms
             )
             if not runner_metrics:
@@ -359,3 +191,166 @@ def issue_events(
         issued_events.add(metric_events.RunnerStop)
 
     return issued_events
+
+
+def _extract_storage(
+    metrics_storage_manager: MetricsStorageManager,
+    metrics_storage: MetricsStorage,
+) -> Optional[RunnerMetrics]:
+    """Extract metrics from a metrics storage.
+
+    Args:
+        metrics_storage_manager: The metrics storage manager.
+        metrics_storage: The metrics storage for a specific runner.
+
+    Returns:
+        The extracted metrics if at least the pre-job metrics are present.
+    """
+    runner_name = metrics_storage.runner_name
+    try:
+        logger.debug("Extracting metrics from metrics storage for runner %s", runner_name)
+        metrics_from_fs = _extract_metrics_from_storage(metrics_storage)
+    except CorruptMetricDataError:
+        logger.exception("Corrupt metric data found for runner %s", runner_name)
+        move_to_quarantine(metrics_storage_manager, runner_name)
+        return None
+
+    logger.debug("Cleaning metrics storage for runner %s", runner_name)
+    _clean_up_storage(
+        metrics_storage_manager=metrics_storage_manager, metrics_storage=metrics_storage
+    )
+    return metrics_from_fs
+
+
+def _extract_metrics_from_storage(metrics_storage: MetricsStorage) -> Optional[RunnerMetrics]:
+    """Extract metrics from metrics storage for a runner.
+
+    Args:
+        metrics_storage: The metrics storage for a specific runner.
+
+    Returns:
+        The extracted metrics if at least the pre-job metrics are present.
+
+    Raises:
+        CorruptMetricDataError: Raised if one of the files is not valid or too large.
+    """
+    if too_large_files := _inspect_file_sizes(metrics_storage):
+        raise CorruptMetricDataError(
+            f"File size of {too_large_files} is too large. "
+            f"The limit is {FILE_SIZE_BYTES_LIMIT} bytes."
+        )
+
+    runner_name = metrics_storage.runner_name
+    try:
+        installed_timestamp = metrics_storage.path.joinpath(
+            RUNNER_INSTALLED_TS_FILE_NAME
+        ).read_text()
+        logger.debug("Runner %s installed at %s", runner_name, installed_timestamp)
+    except FileNotFoundError:
+        logger.exception("installed_timestamp not found for runner %s", runner_name)
+        return None
+
+    try:
+        pre_job_metrics = _extract_file_from_storage(
+            metrics_storage=metrics_storage, filename=PRE_JOB_METRICS_FILE_NAME
+        )
+        if not pre_job_metrics:
+            return None
+        logger.debug("Pre-job metrics for runner %s: %s", runner_name, pre_job_metrics)
+
+        post_job_metrics = _extract_file_from_storage(
+            metrics_storage=metrics_storage, filename=POST_JOB_METRICS_FILE_NAME
+        )
+        logger.debug("Post-job metrics for runner %s: %s", runner_name, post_job_metrics)
+    # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+    except CorruptMetricDataError:  # pylint: disable=try-except-raise
+        raise
+
+    try:
+        return RunnerMetrics(
+            installed_timestamp=installed_timestamp,
+            pre_job=PreJobMetrics(**pre_job_metrics),
+            post_job=PostJobMetrics(**post_job_metrics) if post_job_metrics else None,
+            runner_name=runner_name,
+        )
+    except ValidationError as exc:
+        raise CorruptMetricDataError(str(exc)) from exc
+
+
+def _inspect_file_sizes(metrics_storage: MetricsStorage) -> tuple[Path, ...]:
+    """Inspect the file sizes of the metrics storage.
+
+    Args:
+        metrics_storage: The metrics storage for a specific runner.
+
+    Returns:
+        A tuple of files whose size is larger than the limit.
+    """
+    files: list[Path] = [
+        metrics_storage.path.joinpath(PRE_JOB_METRICS_FILE_NAME),
+        metrics_storage.path.joinpath(POST_JOB_METRICS_FILE_NAME),
+        metrics_storage.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME),
+    ]
+
+    return tuple(
+        filter(lambda file: file.exists() and file.stat().st_size > FILE_SIZE_BYTES_LIMIT, files)
+    )
+
+
+def _extract_file_from_storage(metrics_storage: MetricsStorage, filename: str) -> dict | None:
+    """Extract a particular metric file from metrics storage.
+
+    Args:
+        metrics_storage: The metrics storage for a specific runner.
+        filename: The metrics filename.
+
+    Raises:
+        CorruptMetricDataError: If any errors have been found within the metric.
+
+    Returns:
+        Metrics for the given runner if present.
+    """
+    try:
+        job_metrics = json.loads(
+            metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+        )
+    except FileNotFoundError:
+        logger.warning("%s not found for runner %s.", filename, metrics_storage.runner_name)
+        return None
+    except JSONDecodeError as exc:
+        raise CorruptMetricDataError(str(exc)) from exc
+    if not isinstance(job_metrics, dict):
+        raise CorruptMetricDataError(
+            f"{filename} metrics for runner {metrics_storage.runner_name} is not a JSON object."
+        )
+    return job_metrics
+
+
+def _clean_up_storage(
+    metrics_storage_manager: MetricsStorageManager, metrics_storage: MetricsStorage
+) -> None:
+    """Clean up the metrics storage.
+
+    Remove all metric files and afterwards the storage.
+
+    Args:
+        metrics_storage_manager: The metrics storage manager.
+        metrics_storage: The metrics storage for a specific runner.
+    """
+    try:
+        metrics_storage.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).unlink(missing_ok=True)
+        metrics_storage.path.joinpath(PRE_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
+        metrics_storage.path.joinpath(POST_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
+    except OSError:
+        logger.exception(
+            "Could not remove metric files for runner %s, "
+            "this may lead to duplicate metrics issued",
+            metrics_storage.runner_name,
+        )
+
+    try:
+        metrics_storage_manager.delete(metrics_storage.runner_name)
+    except DeleteMetricsStorageError:
+        logger.exception(
+            "Could not delete metrics storage for runner %s.", metrics_storage.runner_name
+        )

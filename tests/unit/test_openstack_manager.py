@@ -383,7 +383,7 @@ def test__build_image_command():
         test_http_proxy,
         test_https_proxy,
         test_no_proxy,
-], "Unexpected build image command."
+    ], "Unexpected build image command."
 
 
 def test_build_image_runner_binary_error():
