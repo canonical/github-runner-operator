@@ -12,7 +12,7 @@ jobs:
     steps:
       - run: lxd init --auto
       - run: lxc list
-      - run: cat /home/ubuntu/.docker/config.json
+      - run: groups
       - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
       - run: docker pull jujusolutions/charm-base:ubuntu-20.04
   # self-host-x64:
