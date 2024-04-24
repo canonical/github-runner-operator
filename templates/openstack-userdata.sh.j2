@@ -25,7 +25,7 @@ table ip aproxy {
       }
 }
 EOF
-systemctl enable nftables.service:w
+systemctl enable nftables.service
 
 nft -f /etc/nftables.conf
 {% endif %}
