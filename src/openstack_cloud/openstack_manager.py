@@ -1259,7 +1259,7 @@ class OpenstackRunnerManager:
         """
         try:
             result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True)
-        except NoValidConnectionsError as exc:
+        except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException) as exc:
             raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
         if not result.ok:
             raise _PullFileError(reason=f"Unable to get file size of {remote_path}")
@@ -1277,7 +1277,7 @@ class OpenstackRunnerManager:
 
         try:
             ssh_conn.get(remote=remote_path, local=local_path)
-        except NoValidConnectionsError as exc:
+        except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException) as exc:
             raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
         except OSError as exc:
             raise _PullFileError(reason=f"Unable to retrieve file {remote_path}") from exc
