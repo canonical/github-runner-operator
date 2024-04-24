@@ -427,7 +427,8 @@ class GithubRunnerCharm(CharmBase):
             ),
         )
 
-    def _common_install_code(self, state: CharmState) -> bool:
+    # Pending refactor for RunnerManager class which will unify logic for OpenStack and LXD.
+    def _common_install_code(self, state: CharmState) -> bool:  # noqa: C901
         """Installation code shared between install and upgrade hook.
 
         Args:
@@ -659,7 +660,7 @@ class GithubRunnerCharm(CharmBase):
     def _check_and_update_local_lxd_dependencies(
         self, runner_manager: RunnerManager, token: str, proxy_config: ProxyConfig
     ) -> bool:
-        """Checks and updates runner binary and services for local LXD runners.
+        """Check and update runner binary and services for local LXD runners.
 
         The runners are flushed if needed.
 
@@ -717,6 +718,7 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
         """Handle the reconciliation of runners."""
+        self.unit.status = MaintenanceStatus("Reconciling runners")
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
@@ -808,12 +810,14 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Action event of reconciling the runner.
         """
+        self.unit.status = MaintenanceStatus("Reconciling runners")
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
             runner_manager = self._get_openstack_runner_manager(state)
 
             delta = runner_manager.reconcile(state.runner_config.virtual_machines)
+            self.unit.status = ActiveStatus()
             event.set_results({"delta": {"virtual-machines": delta}})
             return
 
@@ -828,6 +832,7 @@ class GithubRunnerCharm(CharmBase):
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
         )
+        self.unit.status = ActiveStatus()
         self._on_check_runners_action(event)
         event.set_results(delta)
 

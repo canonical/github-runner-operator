@@ -5,7 +5,6 @@
 # pylint: disable=too-many-lines
 
 """Module for handling interactions with OpenStack."""
-import json
 import logging
 import secrets
 from contextlib import contextmanager
@@ -132,49 +131,6 @@ def _get_default_proxy_values(proxies: Optional[ProxyConfig] = None) -> ProxyStr
     )
 
 
-def _generate_docker_proxy_unit_file(proxies: Optional[ProxyConfig] = None) -> str:
-    """Generate docker proxy systemd unit file.
-
-    Args:
-        proxies: HTTP proxy settings.
-
-    Returns:
-        Contents of systemd-docker-proxy unit file.
-    """
-    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
-    return environment.get_template("systemd-docker-proxy.j2").render(proxies=proxies)
-
-
-def _generate_docker_client_proxy_config_json(
-    http_proxy: str, https_proxy: str, no_proxy: str
-) -> str:
-    """Generate proxy config.json for docker client.
-
-    Args:
-        http_proxy: HTTP proxy URL.
-        https_proxy: HTTPS proxy URL.
-        no_proxy: URLs to not proxy through.
-
-    Returns:
-        Contents of docker config.json file.
-    """
-    return json.dumps(
-        {
-            "proxies": {
-                "default": {
-                    key: value
-                    for key, value in (
-                        ("httpProxy", http_proxy),
-                        ("httpsProxy", https_proxy),
-                        ("noProxy", no_proxy),
-                    )
-                    if value
-                }
-            }
-        }
-    )
-
-
 def _build_image_command(
     runner_info: RunnerApplication, proxies: Optional[ProxyConfig] = None
 ) -> list[str]:
@@ -187,16 +143,7 @@ def _build_image_command(
     Returns:
         Command to execute to build runner image.
     """
-    docker_proxy_service_conf_content = _generate_docker_proxy_unit_file(proxies=proxies)
-
     proxy_values = _get_default_proxy_values(proxies=proxies)
-
-    docker_client_proxy_content = _generate_docker_client_proxy_config_json(
-        http_proxy=proxy_values.http,
-        https_proxy=proxy_values.https,
-        no_proxy=proxy_values.no_proxy,
-    )
-
     cmd = [
         "/usr/bin/bash",
         BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME,
@@ -204,10 +151,7 @@ def _build_image_command(
         proxy_values.http,
         proxy_values.https,
         proxy_values.no_proxy,
-        docker_proxy_service_conf_content,
-        docker_client_proxy_content,
     ]
-
     return cmd
 
 
@@ -449,6 +393,7 @@ def _generate_cloud_init_userdata(
     instance_config: InstanceConfig,
     runner_env: str,
     proxies: Optional[ProxyConfig] = None,
+    dockerhub_mirror: Optional[str] = None,
 ) -> str:
     """Generate cloud init userdata to launch at startup.
 
@@ -457,6 +402,7 @@ def _generate_cloud_init_userdata(
         instance_config: The configuration values for Openstack instance to launch.
         runner_env: The contents of .env to source when launching Github runner.
         proxies: Proxy values to enable on the Github runner.
+        dockerhub_mirror: URL to dockerhub mirror.
 
     Returns:
         The cloud init userdata script.
@@ -474,6 +420,7 @@ def _generate_cloud_init_userdata(
         instance_name=instance_config.name,
         env_contents=runner_env,
         aproxy_address=aproxy_address,
+        dockerhub_mirror=dockerhub_mirror,
     )
 
 
@@ -722,6 +669,7 @@ class OpenstackRunnerManager:
             instance_config=instance_config,
             runner_env=env_contents,
             proxies=self._config.charm_state.proxy_config,
+            dockerhub_mirror=self._config.dockerhub_mirror,
         )
 
         self._ensure_security_group(conn)
@@ -923,8 +871,10 @@ class OpenstackRunnerManager:
         """
         try:
             self._run_github_removal_script(server=server, remove_token=remove_token)
-        except (TimeoutError, invoke.exceptions.UnexpectedExit, GithubRunnerRemoveError) as exc:
-            logger.warning("Failed to run runner removal script for %s", server.name, exc_info=True)
+        except (TimeoutError, invoke.exceptions.UnexpectedExit, GithubRunnerRemoveError):
+            logger.warning(
+                "Failed to run runner removal script for %s", server.name, exc_info=True
+            )
         # 2024/04/23: The broad except clause is for logging purposes.
         # Will be removed in future versions.
         except Exception:  # pylint: disable=broad-exception-caught
@@ -1142,7 +1092,8 @@ class OpenstackRunnerManager:
                     ) from exc
 
                 logger.info("Creating %s OpenStack runners", delta)
-                self._create_runner(conn)
+                for _ in range(delta):
+                    self._create_runner(conn)
             elif delta < 0:
                 logger.info("Removing %s OpenStack runners", delta)
                 self._remove_runners(
