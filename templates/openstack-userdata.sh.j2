@@ -25,8 +25,15 @@ table ip aproxy {
       }
 }
 EOF
-systemctl enable nftables.service
+systemctl enable nftables.service:w
+
 nft -f /etc/nftables.conf
+{% endif %}
+
+adduser ubuntu lxd
+
+{% if dockerhub_mirror %}
+echo "{\"registry-mirrors\": [\"{ dockerhub_mirror }\"]}" > /etc/docker/daemon.json
 {% endif %}
 
 # Create the runner and start the configuration experience

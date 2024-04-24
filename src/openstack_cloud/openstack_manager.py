@@ -722,6 +722,7 @@ class OpenstackRunnerManager:
             instance_config=instance_config,
             runner_env=env_contents,
             proxies=self._config.charm_state.proxy_config,
+            dockerhub_mirror=self._config.dockerhub_mirror,
         )
 
         self._ensure_security_group(conn)
@@ -1142,7 +1143,8 @@ class OpenstackRunnerManager:
                     ) from exc
 
                 logger.info("Creating %s OpenStack runners", delta)
-                self._create_runner(conn)
+                for _ in range(delta):
+                    self._create_runner(conn)
             elif delta < 0:
                 logger.info("Removing %s OpenStack runners", delta)
                 self._remove_runners(
