@@ -989,8 +989,10 @@ class OpenstackRunnerManager:
         """
         try:
             self._run_github_removal_script(server=server, remove_token=remove_token)
-        except (TimeoutError, invoke.exceptions.UnexpectedExit, GithubRunnerRemoveError) as exc:
-            logger.warning("Failed to run runner removal script for %s", server.name, exc_info=True)
+        except (TimeoutError, invoke.exceptions.UnexpectedExit, GithubRunnerRemoveError):
+            logger.warning(
+                "Failed to run runner removal script for %s", server.name, exc_info=True
+            )
         # 2024/04/23: The broad except clause is for logging purposes.
         # Will be removed in future versions.
         except Exception:  # pylint: disable=broad-exception-caught
@@ -1043,89 +1045,6 @@ class OpenstackRunnerManager:
                 logger.critical(
                     "Found unexpected exception, please contact the developers", exc_info=True
                 )
-
-    def _pull_metrics(self, instance: Server, instance_name: str) -> None:
-        """Pull metrics from the runner into the respective storage for the runner.
-
-        Args:
-            instance: The Openstack server instance.
-            instance_name: The Openstack server name.
-        """
-        try:
-            storage = metrics_storage.get(instance_name)
-        except GetMetricsStorageError:
-            logger.exception(
-                "Failed to get shared metrics storage for runner %s, "
-                "will not be able to issue all metrics.",
-                instance_name,
-            )
-            return
-
-        for ssh_conn in self._get_ssh_connections(server=instance):
-            try:
-                self._pull_file(
-                    ssh_conn=ssh_conn,
-                    remote_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"),
-                    local_path=str(storage.path / "pre-job-metrics.json"),
-                    max_size=MAX_METRICS_FILE_SIZE,
-                )
-                self._pull_file(
-                    ssh_conn=ssh_conn,
-                    remote_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"),
-                    local_path=str(storage.path / "post-job-metrics.json"),
-                    max_size=MAX_METRICS_FILE_SIZE,
-                )
-                return
-            except _PullFileError as exc:
-                logger.warning(
-                    "Failed to pull metrics for %s: %s . Will not be able to issue all metrics",
-                    instance_name,
-                    exc,
-                )
-                return
-            except _SSHError as exc:
-                logger.info("Failed to pull metrics for %s: %s", instance_name, exc)
-                continue
-
-    def _pull_file(
-        self, ssh_conn: SshConnection, remote_path: str, local_path: str, max_size: int
-    ) -> None:
-        """Pull file from the runner instance.
-
-        Args:
-            ssh_conn: The SSH connection instance.
-            remote_path: The file path on the runner instance.
-            local_path: The local path to store the file.
-            max_size: If the file is larger than this, it will not be pulled.
-
-        Raises:
-            _PullFileError: Unable to pull the file from the runner instance.
-            _SSHError: Issue with SSH connection.
-        """
-        try:
-            result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True)
-        except NoValidConnectionsError as exc:
-            raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
-        if not result.ok:
-            raise _PullFileError(reason=f"Unable to get file size of {remote_path}")
-
-        stdout = result.stdout
-        try:
-            stdout.strip()
-            size = int(stdout)
-            if size > max_size:
-                raise _PullFileError(
-                    reason=f"File size of {remote_path} too large {size} > {max_size}"
-                )
-        except ValueError as exc:
-            raise _PullFileError(reason=f"Invalid file size for {remote_path}: {stdout}") from exc
-
-        try:
-            ssh_conn.get(remote=remote_path, local=local_path)
-        except NoValidConnectionsError as exc:
-            raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
-        except OSError as exc:
-            raise _PullFileError(reason=f"Unable to retrieve file {remote_path}") from exc
 
     def _remove_runners(
         self,
@@ -1330,6 +1249,89 @@ class OpenstackRunnerManager:
                 remove_token=remove_token,
             )
             return len(runners_to_delete)
+
+    def _pull_metrics(self, server: Server, instance_name: str) -> None:
+        """Pull metrics from the runner into the respective storage for the runner.
+
+        Args:
+            server: The Openstack server instance.
+            instance_name: The Openstack server name.
+        """
+        try:
+            storage = metrics_storage.get(instance_name)
+        except GetMetricsStorageError:
+            logger.exception(
+                "Failed to get shared metrics storage for runner %s, "
+                "will not be able to issue all metrics.",
+                instance_name,
+            )
+            return
+
+        for ssh_conn in self._get_ssh_connections(server=server):
+            try:
+                self._pull_file(
+                    ssh_conn=ssh_conn,
+                    remote_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"),
+                    local_path=str(storage.path / "pre-job-metrics.json"),
+                    max_size=MAX_METRICS_FILE_SIZE,
+                )
+                self._pull_file(
+                    ssh_conn=ssh_conn,
+                    remote_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"),
+                    local_path=str(storage.path / "post-job-metrics.json"),
+                    max_size=MAX_METRICS_FILE_SIZE,
+                )
+                return
+            except _PullFileError as exc:
+                logger.warning(
+                    "Failed to pull metrics for %s: %s . Will not be able to issue all metrics",
+                    instance_name,
+                    exc,
+                )
+                return
+            except _SSHError as exc:
+                logger.info("Failed to pull metrics for %s: %s", instance_name, exc)
+                continue
+
+    def _pull_file(
+        self, ssh_conn: SshConnection, remote_path: str, local_path: str, max_size: int
+    ) -> None:
+        """Pull file from the runner instance.
+
+        Args:
+            ssh_conn: The SSH connection instance.
+            remote_path: The file path on the runner instance.
+            local_path: The local path to store the file.
+            max_size: If the file is larger than this, it will not be pulled.
+
+        Raises:
+            _PullFileError: Unable to pull the file from the runner instance.
+            _SSHError: Issue with SSH connection.
+        """
+        try:
+            result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True)
+        except NoValidConnectionsError as exc:
+            raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
+        if not result.ok:
+            raise _PullFileError(reason=f"Unable to get file size of {remote_path}")
+
+        stdout = result.stdout
+        try:
+            stdout.strip()
+            size = int(stdout)
+            if size > max_size:
+                raise _PullFileError(
+                    reason=f"File size of {remote_path} too large {size} > {max_size}"
+                )
+        except ValueError as exc:
+            raise _PullFileError(reason=f"Invalid file size for {remote_path}: {stdout}") from exc
+
+        try:
+            ssh_conn.get(remote=remote_path, local=local_path)
+        except NoValidConnectionsError as exc:
+            raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
+        except OSError as exc:
+            raise _PullFileError(reason=f"Unable to retrieve file {remote_path}") from exc
 
     def _issue_runner_installed_metric(
         self, instance_config: InstanceConfig, install_start_ts: float, install_end_ts: float

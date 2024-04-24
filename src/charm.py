@@ -427,7 +427,8 @@ class GithubRunnerCharm(CharmBase):
             ),
         )
 
-    def _common_install_code(self, state: CharmState) -> bool:
+    # Following method is too complex and should be refactored
+    def _common_install_code(self, state: CharmState) -> bool:  # noqa: C901
         """Installation code shared between install and upgrade hook.
 
         Args:
@@ -659,7 +660,7 @@ class GithubRunnerCharm(CharmBase):
     def _check_and_update_local_lxd_dependencies(
         self, runner_manager: RunnerManager, token: str, proxy_config: ProxyConfig
     ) -> bool:
-        """Checks and updates runner binary and services for local LXD runners.
+        """Check and update runner binary and services for local LXD runners.
 
         The runners are flushed if needed.
 
