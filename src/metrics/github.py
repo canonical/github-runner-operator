@@ -6,9 +6,8 @@
 from charm_state import GithubRepo
 from errors import GithubMetricsError, JobNotFoundError
 from github_client import GithubClient
+from metrics.runner import PreJobMetrics
 from metrics.type import GithubJobMetrics
-
-from .runner import PreJobMetrics
 
 
 def job(
