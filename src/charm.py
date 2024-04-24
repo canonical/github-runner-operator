@@ -808,12 +808,14 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Action event of reconciling the runner.
         """
+        self.unit.status = MaintenanceStatus("Reconciling runners")
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
             runner_manager = self._get_openstack_runner_manager(state)
 
             delta = runner_manager.reconcile(state.runner_config.virtual_machines)
+            self.unit.status = ActiveStatus()
             event.set_results({"delta": {"virtual-machines": delta}})
             return
 
@@ -828,6 +830,7 @@ class GithubRunnerCharm(CharmBase):
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
         )
+        self.unit.status = ActiveStatus()
         self._on_check_runners_action(event)
         event.set_results(delta)
 
