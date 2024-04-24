@@ -717,6 +717,7 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
         """Handle the reconciliation of runners."""
+        self.unit.status = MaintenanceStatus("Reconciling runners")
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
