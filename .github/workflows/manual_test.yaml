@@ -13,6 +13,7 @@ jobs:
       - run: lxd init --auto
       - run: lxc list
       - run: groups
+      - run: cat /etc/docker/daemon.json
       - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
       - run: docker pull jujusolutions/charm-base:ubuntu-20.04
   # self-host-x64:
@@ -78,8 +79,8 @@ jobs:
       #     EOF
       # - run: nc -vz github-runner-dockerhub-cache.canonical.com 5000
       # - run: curl $DOCKERHUB_MIRROR -vvv
-      - run: sudo apt install docker.io -yq
-      - run : docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
+      # - run: sudo apt install docker.io -yq
+      # - run : docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
       # - run : docker pull python
       # - run: echo $TMATE_SERVER_HOST
       # - run: echo $TMATE_SERVER_PORT
