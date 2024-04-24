@@ -110,6 +110,47 @@ class _SSHError(Exception):
         super().__init__(reason)
 
 
+@dataclass
+class InstanceConfig:
+    """The configuration values for creating a single runner instance.
+
+    Attributes:
+        name: Name of the image to launch the GitHub runner instance with.
+        labels: The runner instance labels.
+        registration_token: Token for registering the runner on GitHub.
+        github_path: The GitHub repo/org path to register the runner.
+        openstack_image: The Openstack image to use to boot the instance with.
+    """
+
+    name: str
+    labels: Iterable[str]
+    registration_token: str
+    github_path: GithubPath
+    openstack_image: str
+
+
+SupportedCloudImageArch = Literal["amd64", "arm64"]
+
+
+@dataclass
+class _CloudInitUserData:
+    """Dataclass to hold cloud init userdata.
+
+    Attributes:
+        instance_config: The configuration values for Openstack instance to launch.
+        runner_env: The contents of .env to source when launching Github runner.
+        pre_job_contents: The contents of pre-job script to run before starting the job.
+        proxies: Proxy values to enable on the Github runner.
+        dockerhub_mirror: URL to dockerhub mirror.
+    """
+
+    instance_config: InstanceConfig
+    runner_env: str
+    pre_job_contents: str
+    proxies: Optional[ProxyConfig] = None
+    dockerhub_mirror: Optional[str] = None
+
+
 @contextmanager
 def _create_connection(
     cloud_config: dict[str, dict]
@@ -202,28 +243,6 @@ def _build_image_command(
         proxy_values.no_proxy,
     ]
     return cmd
-
-
-@dataclass
-class InstanceConfig:
-    """The configuration values for creating a single runner instance.
-
-    Attributes:
-        name: Name of the image to launch the GitHub runner instance with.
-        labels: The runner instance labels.
-        registration_token: Token for registering the runner on GitHub.
-        github_path: The GitHub repo/org path to register the runner.
-        openstack_image: The Openstack image to use to boot the instance with.
-    """
-
-    name: str
-    labels: Iterable[str]
-    registration_token: str
-    github_path: GithubPath
-    openstack_image: str
-
-
-SupportedCloudImageArch = Literal["amd64", "arm64"]
 
 
 def _get_supported_runner_arch(arch: str) -> SupportedCloudImageArch:
@@ -439,26 +458,21 @@ def _generate_runner_env(
 
 def _generate_cloud_init_userdata(
     templates_env: jinja2.Environment,
-    instance_config: InstanceConfig,
-    runner_env: str,
-    pre_job_contents: str,
-    proxies: Optional[ProxyConfig] = None,
-    dockerhub_mirror: Optional[str] = None,
+    cloud_init_userdata: _CloudInitUserData,
 ) -> str:
     """Generate cloud init userdata to launch at startup.
 
     Args:
         templates_env: The jinja template environment.
-        instance_config: The configuration values for Openstack instance to launch.
-        runner_env: The contents of .env to source when launching Github runner.
-        pre_job_contents: The contents of pre-job script to run before starting the job.
-        proxies: Proxy values to enable on the Github runner.
-        dockerhub_mirror: URL to dockerhub mirror.
+        cloud_init_userdata: The dataclass containing the cloud init userdata.
 
     Returns:
         The cloud init userdata script.
     """
     runner_group = None
+    instance_config = cloud_init_userdata.instance_config
+    proxies = cloud_init_userdata.proxies
+
     if isinstance(instance_config.github_path, GithubOrg):
         runner_group = instance_config.github_path.group
 
@@ -469,11 +483,11 @@ def _generate_cloud_init_userdata(
         token=instance_config.registration_token,
         instance_labels=",".join(instance_config.labels),
         instance_name=instance_config.name,
-        env_contents=runner_env,
-        pre_job_contents=pre_job_contents,
+        env_contents=cloud_init_userdata.runner_env,
+        pre_job_contents=cloud_init_userdata.pre_job_contents,
         metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
         aproxy_address=aproxy_address,
-        dockerhub_mirror=dockerhub_mirror,
+        dockerhub_mirror=cloud_init_userdata.dockerhub_mirror,
     )
 
 
@@ -725,13 +739,16 @@ class OpenstackRunnerManager:
             self._config.labels,
             self._github,
         )
-        cloud_userdata = _generate_cloud_init_userdata(
-            templates_env=environment,
+        cloud_user_data = _CloudInitUserData(
             instance_config=instance_config,
             runner_env=env_contents,
             pre_job_contents=pre_job_contents,
             proxies=self._config.charm_state.proxy_config,
             dockerhub_mirror=self._config.dockerhub_mirror,
+        )
+        cloud_userdata_str = _generate_cloud_init_userdata(
+            templates_env=environment,
+            cloud_init_userdata=cloud_user_data,
         )
 
         self._ensure_security_group(conn)
@@ -746,7 +763,7 @@ class OpenstackRunnerManager:
                 flavor=self._config.flavor,
                 network=self._config.network,
                 security_groups=[SECURITY_GROUP_NAME],
-                userdata=cloud_userdata,
+                userdata=cloud_userdata_str,
                 auto_ip=False,
                 timeout=120,
                 wait=True,
