@@ -5,7 +5,6 @@
 # pylint: disable=too-many-lines
 
 """Module for handling interactions with OpenStack."""
-import json
 import logging
 import secrets
 from contextlib import contextmanager
@@ -132,49 +131,6 @@ def _get_default_proxy_values(proxies: Optional[ProxyConfig] = None) -> ProxyStr
     )
 
 
-def _generate_docker_proxy_unit_file(proxies: Optional[ProxyConfig] = None) -> str:
-    """Generate docker proxy systemd unit file.
-
-    Args:
-        proxies: HTTP proxy settings.
-
-    Returns:
-        Contents of systemd-docker-proxy unit file.
-    """
-    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
-    return environment.get_template("systemd-docker-proxy.j2").render(proxies=proxies)
-
-
-def _generate_docker_client_proxy_config_json(
-    http_proxy: str, https_proxy: str, no_proxy: str
-) -> str:
-    """Generate proxy config.json for docker client.
-
-    Args:
-        http_proxy: HTTP proxy URL.
-        https_proxy: HTTPS proxy URL.
-        no_proxy: URLs to not proxy through.
-
-    Returns:
-        Contents of docker config.json file.
-    """
-    return json.dumps(
-        {
-            "proxies": {
-                "default": {
-                    key: value
-                    for key, value in (
-                        ("httpProxy", http_proxy),
-                        ("httpsProxy", https_proxy),
-                        ("noProxy", no_proxy),
-                    )
-                    if value
-                }
-            }
-        }
-    )
-
-
 def _build_image_command(
     runner_info: RunnerApplication, proxies: Optional[ProxyConfig] = None
 ) -> list[str]:
@@ -187,16 +143,7 @@ def _build_image_command(
     Returns:
         Command to execute to build runner image.
     """
-    docker_proxy_service_conf_content = _generate_docker_proxy_unit_file(proxies=proxies)
-
     proxy_values = _get_default_proxy_values(proxies=proxies)
-
-    docker_client_proxy_content = _generate_docker_client_proxy_config_json(
-        http_proxy=proxy_values.http,
-        https_proxy=proxy_values.https,
-        no_proxy=proxy_values.no_proxy,
-    )
-
     cmd = [
         "/usr/bin/bash",
         BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME,
@@ -204,10 +151,7 @@ def _build_image_command(
         proxy_values.http,
         proxy_values.https,
         proxy_values.no_proxy,
-        docker_proxy_service_conf_content,
-        docker_client_proxy_content,
     ]
-
     return cmd
 
 
