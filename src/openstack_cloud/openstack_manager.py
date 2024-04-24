@@ -793,7 +793,7 @@ class OpenstackRunnerManager:
             SSH connections to OpenStack server instance.
         """
         if not server.key_name:
-            logger.warning(
+            logger.error(
                 "Unable to create SSH connection as no valid keypair found for %s", server.name
             )
             return
@@ -811,7 +811,7 @@ class OpenstackRunnerManager:
 
             key_path = self._get_key_path(server.name)
             if not key_path.exists():
-                logger.warning(
+                logger.error(
                     "Skipping SSH to server %s with missing key file %s",
                     server.name,
                     str(key_path),
