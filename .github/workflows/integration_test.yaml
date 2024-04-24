@@ -1,7 +1,8 @@
 name: integration-tests
 
 on:
-  pull_request:
+  # TODO: Re-enable
+  # pull_request:
   workflow_dispatch:
 
 jobs:
@@ -32,18 +33,18 @@ jobs:
   # - microstack requires juju 3.2 and microk8s 1.26
   # - microk8s needs to be preconfigured with the actions operator to work properly with the dockerhub cache
   # - we need to disable the rbac addon for microk8s, otherwise the setup will fail
-#  integration-tests-microstack:
-#    name: Integration test using microstack
-#    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-#    secrets: inherit
-#    with:
-#      juju-channel: 3.2/stable
-#      pre-run-script: scripts/setup-microstack.sh
-#      # Setup the microk8s for microstack deployment. The tests runs on LXD.
-#      provider: microk8s
-#      channel: 1.26-strict/stable
-#      microk8s-addons: "dns ingress hostpath-storage"
-#      test-tox-env: integration-juju3.2
-#      modules: '["test_openstack_runner"]'
-#      self-hosted-runner: true
-#      self-hosted-runner-label: xlarge
+  integration-tests-microstack:
+    name: Integration test using microstack
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    secrets: inherit
+    with:
+      juju-channel: 3.2/stable
+      pre-run-script: scripts/setup-microstack.sh
+      # Setup the microk8s for microstack deployment. The tests runs on LXD.
+      provider: microk8s
+      channel: 1.26-strict/stable
+      microk8s-addons: "dns ingress hostpath-storage"
+      test-tox-env: integration-juju3.2
+      modules: '["test_openstack_runner"]'
+      self-hosted-runner: true
+      self-hosted-runner-label: xlarge
