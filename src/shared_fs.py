@@ -7,7 +7,7 @@ import shutil
 import tarfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterator
+from typing import Generator
 
 from errors import (
     CreateSharedFilesystemError,
@@ -37,8 +37,6 @@ class SharedFilesystem:
     Attributes:
         path: The path of the shared filesystem inside the charm.
         runner_name: The name of the associated runner.
-    Returns:
-        The shared filesystem.
     """
 
     path: Path
@@ -161,11 +159,11 @@ def create(runner_name: str) -> SharedFilesystem:
     return SharedFilesystem(runner_fs_path, runner_name)
 
 
-def list_all() -> Iterator[SharedFilesystem]:
+def list_all() -> Generator[SharedFilesystem, None, None]:
     """List the shared filesystems.
 
-    Returns:
-        An iterator over shared filesystems.
+    Yields:
+        A shared filesystem instance.
     """
     if not FILESYSTEM_BASE_PATH.exists():
         return
@@ -222,24 +220,31 @@ def get(runner_name: str) -> SharedFilesystem:
     return SharedFilesystem(runner_fs_path, runner_name)
 
 
-def delete(runner_name: str) -> None:
-    """Delete the shared filesystem for the runner.
+class UnmountSharedFilesystemError(Exception):
+    """Represents an error unmounting a shared filesystem."""
+
+
+def _unmount_runner_fs_path(runner_name: str) -> Path:
+    """Unmount shared filesystem for given runner.
 
     Args:
-        runner_name: The name of the runner.
+        runner_name: The name of the runner to unmount shared fs for.
 
     Raises:
-        DeleteSharedFilesystemError: If the shared filesystem could not be deleted.
+        UnmountSharedFilesystemError: If there was an error trying to unmount shared filesystem.
+
+    Returns:
+        The runner shared filesystem path that was unmounted.
     """
     runner_fs_path = _get_runner_fs_path(runner_name)
     if not runner_fs_path.exists():
-        raise DeleteSharedFilesystemError(f"Shared filesystem for runner {runner_name} not found.")
-    runner_image_path = _get_runner_image_path(runner_name)
-
+        raise UnmountSharedFilesystemError(
+            f"Shared filesystem for runner {runner_name} not found."
+        )
     try:
         is_mounted = _is_mountpoint(runner_fs_path)
     except SharedFilesystemMountError as exc:
-        raise DeleteSharedFilesystemError(
+        raise UnmountSharedFilesystemError(
             f"Failed to determine if shared filesystem is mounted for runner {runner_name}"
         ) from exc
 
@@ -252,9 +257,30 @@ def delete(runner_name: str) -> None:
                 check_exit=True,
             )
         except SubprocessError as exc:
-            raise DeleteSharedFilesystemError(
+            raise UnmountSharedFilesystemError(
                 f"Failed to unmount shared filesystem for runner {runner_name}"
             ) from exc
+
+    return runner_fs_path
+
+
+def delete(runner_name: str) -> None:
+    """Delete the shared filesystem for the runner.
+
+    Args:
+        runner_name: The name of the runner.
+
+    Raises:
+        DeleteSharedFilesystemError: If the shared filesystem could not be deleted.
+    """
+    try:
+        runner_fs_path = _unmount_runner_fs_path(runner_name=runner_name)
+    except UnmountSharedFilesystemError as exc:
+        raise DeleteSharedFilesystemError(
+            f"Unexpected error while deleting shared Filesystem: {str(exc)}"
+        ) from exc
+
+    runner_image_path = _get_runner_image_path(runner_name)
     try:
         runner_image_path.unlink(missing_ok=True)
     except OSError as exc:
@@ -294,4 +320,8 @@ def move_to_quarantine(runner_name: str) -> None:
             f"Failed to archive shared filesystem for runner {runner_name}"
         ) from exc
 
-    delete(runner_name)
+    try:
+        delete(runner_name)
+    # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+    except DeleteSharedFilesystemError:  # pylint: disable=try-except-raise
+        raise

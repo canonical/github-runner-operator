@@ -21,7 +21,7 @@ on:
 jobs:
   e2e-test:
     name: End-to-End Test Run
-    runs-on: [self-hosted, linux, x64, jammy, "${{ inputs.runner-tag }}"]
+    runs-on: [self-hosted, linux, x64, "${{ inputs.runner-tag }}"]
     steps:
       # Snapd can have some issues in privileged LXD containers without setting
       # security.nesting=True and this.
@@ -73,13 +73,19 @@ jobs:
         run: jq --version
       - name: yq version
         run: yq --version
+      - name: apt update
+        run: sudo apt-get update -y
+      # Use pipx for 24.04 noble, check-jsonschema breaks OS system packages.
+      - name: install pipx
+        run: sudo apt-get install -y pipx
       - name: install check-jsonschema
-        run: python3 -m pip install check-jsonschema
+        run: python3 -m pip install check-jsonschema || pipx install check-jsonschema
       - name: unzip version
         run: unzip -v
       - name: gh version
         run: gh --version
       # `check-jsonschema` is installed using pip. The directory `~/.local/bin` needs to be added to PATH.
+      # ~/.local/bin is added to path runner env through in scripts/env.j2
       - name: test check-jsonschema
         run: check-jsonschema --version
       - name: Test Firewall

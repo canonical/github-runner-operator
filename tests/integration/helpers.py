@@ -5,6 +5,7 @@
 
 import inspect
 import json
+import logging
 import subprocess
 import time
 import typing
@@ -22,14 +23,23 @@ from github.Repository import Repository
 from github.Workflow import Workflow
 from github.WorkflowJob import WorkflowJob
 from github.WorkflowRun import WorkflowRun
+from juju.action import Action
 from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
 
+from charm_state import (
+    DENYLIST_CONFIG_NAME,
+    PATH_CONFIG_NAME,
+    RECONCILE_INTERVAL_CONFIG_NAME,
+    RUNNER_STORAGE_CONFIG_NAME,
+    TEST_MODE_CONFIG_NAME,
+    TOKEN_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+)
 from runner import Runner
 from runner_manager import RunnerManager
 from tests.status_name import ACTIVE
-from utilities import retry
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
 DISPATCH_CRASH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_crash_test.yaml"
@@ -38,6 +48,8 @@ DISPATCH_WAIT_TEST_WORKFLOW_FILENAME = "workflow_dispatch_wait_test.yaml"
 DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME = "e2e_test_run.yaml"
 
 DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15}
+
+logger = logging.getLogger(__name__)
 
 
 async def check_runner_binary_exists(unit: Unit) -> bool:
@@ -49,7 +61,7 @@ async def check_runner_binary_exists(unit: Unit) -> bool:
     Returns:
         Whether the runner binary file exists in the charm.
     """
-    return_code, _ = await run_in_unit(unit, f"test -f {RunnerManager.runner_bin_path}")
+    return_code, _, _ = await run_in_unit(unit, f"test -f {RunnerManager.runner_bin_path}")
     return return_code == 0
 
 
@@ -62,10 +74,12 @@ async def get_repo_policy_compliance_pip_info(unit: Unit) -> None | str:
     Returns:
         If repo-policy-compliance is installed, returns the pip show output, else returns none.
     """
-    return_code, stdout = await run_in_unit(unit, "python3 -m pip show repo-policy-compliance")
+    return_code, stdout, stderr = await run_in_unit(
+        unit, "python3 -m pip show repo-policy-compliance"
+    )
 
     if return_code == 0:
-        return stdout
+        return stdout or stderr
 
     return None
 
@@ -77,14 +91,16 @@ async def install_repo_policy_compliance_from_git_source(unit: Unit, source: Non
         unit: Unit instance to check for the LXD profile.
         source: The git source to install the package. If none the package is removed.
     """
-    return_code, stdout = await run_in_unit(
+    return_code, stdout, stderr = await run_in_unit(
         unit, "python3 -m pip uninstall --yes repo-policy-compliance"
     )
-    assert return_code == 0, f"Failed to uninstall repo-policy-compliance: {stdout}"
+    assert return_code == 0, f"Failed to uninstall repo-policy-compliance: {stdout} {stderr}"
 
     if source:
-        return_code, _ = await run_in_unit(unit, f"python3 -m pip install {source}")
-        assert return_code == 0
+        return_code, stdout, stderr = await run_in_unit(unit, f"python3 -m pip install {source}")
+        assert (
+            return_code == 0
+        ), f"Failed to install repo-policy-compliance from source, {stdout} {stderr}"
 
 
 async def remove_runner_bin(unit: Unit) -> None:
@@ -96,7 +112,7 @@ async def remove_runner_bin(unit: Unit) -> None:
     await run_in_unit(unit, f"rm {RunnerManager.runner_bin_path}")
 
     # No file should exists under with the filename.
-    return_code, _ = await run_in_unit(unit, f"test -f {RunnerManager.runner_bin_path}")
+    return_code, _, _ = await run_in_unit(unit, f"test -f {RunnerManager.runner_bin_path}")
     assert return_code != 0
 
 
@@ -106,10 +122,6 @@ async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> No
     Args:
         unit: Unit instance to check for the LXD profile.
         configs: Configs of the application.
-
-    Raises:
-        AssertionError: Unable to find an LXD profile with matching resource
-            config.
     """
     cpu = configs["vm-cpu"]["value"]
     mem = configs["vm-memory"]["value"]
@@ -117,7 +129,7 @@ async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> No
     resource_profile_name = Runner._get_resource_profile_name(cpu, mem, disk)
 
     # Verify the profile exists.
-    return_code, stdout = await run_in_unit(unit, "lxc profile list --format json")
+    return_code, stdout, _ = await run_in_unit(unit, "lxc profile list --format json")
     assert return_code == 0
     assert stdout is not None
     profiles = json.loads(stdout)
@@ -125,7 +137,7 @@ async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> No
     assert resource_profile_name in profile_names
 
     # Verify the profile contains the correct resource settings.
-    return_code, stdout = await run_in_unit(unit, f"lxc profile show {resource_profile_name}")
+    return_code, stdout, _ = await run_in_unit(unit, f"lxc profile show {resource_profile_name}")
     assert return_code == 0
     assert stdout is not None
     profile_content = yaml.safe_load(stdout)
@@ -143,38 +155,55 @@ async def get_runner_names(unit: Unit) -> tuple[str, ...]:
     Returns:
         Tuple of runner names.
     """
-    return_code, stdout = await run_in_unit(unit, "lxc list --format json")
+    return_code, stdout, _ = await run_in_unit(unit, "lxc list --format json")
 
     assert return_code == 0
     assert stdout is not None
 
     lxc_instance: list[dict[str, str]] = json.loads(stdout)
-    return tuple(runner["name"] for runner in lxc_instance)
+    return tuple(runner["name"] for runner in lxc_instance if runner["name"] != "builder")
 
 
-@retry(tries=30, delay=30)
-async def wait_till_num_of_runners(unit: Unit, num: int) -> None:
+async def wait_till_num_of_runners(unit: Unit, num: int, timeout: int = 10 * 60) -> None:
     """Wait and check the number of runners.
 
     Args:
         unit: Unit instance to check for the LXD profile.
         num: Number of runner instances to check for.
-
-    Raises:
-        AssertionError: Correct number of runners is not found within timeout
-            limit.
+        timeout: Number of seconds to wait for the runners.
     """
-    return_code, stdout = await run_in_unit(unit, "lxc list --format json")
-    assert return_code == 0
-    assert stdout is not None
 
-    lxc_instance = json.loads(stdout)
-    assert (
-        len(lxc_instance) == num
-    ), f"Current number of runners: {len(lxc_instance)} Expected number of runner: {num}"
+    async def get_lxc_instances() -> None | list[dict]:
+        """Get lxc instances list info.
 
-    for instance in lxc_instance:
-        return_code, stdout = await run_in_unit(unit, f"lxc exec {instance['name']} -- ps aux")
+        Returns:
+            List of lxc instance dictionaries, None if failed to get list.
+        """
+        return_code, stdout, _ = await run_in_unit(unit, "lxc list --format json")
+        if return_code != 0 or not stdout:
+            logger.error("Failed to run lxc list, %s", return_code)
+            return None
+        return json.loads(stdout)
+
+    async def is_desired_num_runners():
+        """Return whether there are desired number of lxc instances running.
+
+        Returns:
+            Whether the desired number of lxc runners have been reached.
+        """
+        lxc_instances = await get_lxc_instances()
+        if lxc_instances is None:
+            return False
+        return len(lxc_instances) == num
+
+    await wait_for(is_desired_num_runners, timeout=timeout, check_interval=30)
+
+    instances = await get_lxc_instances()
+    if not instances:
+        return
+
+    for instance in instances:
+        return_code, stdout, _ = await run_in_unit(unit, f"lxc exec {instance['name']} -- ps aux")
         assert return_code == 0
 
         assert stdout is not None
@@ -192,7 +221,9 @@ def on_juju_2() -> bool:
     return not hasattr(juju.version, "SUPPORTED_MAJOR_VERSION")
 
 
-async def run_in_unit(unit: Unit, command: str, timeout=None) -> tuple[int, str | None]:
+async def run_in_unit(
+    unit: Unit, command: str, timeout=None
+) -> tuple[int, str | None, str | None]:
     """Run command in juju unit.
 
     Compatible with juju 3 and juju 2.
@@ -203,16 +234,24 @@ async def run_in_unit(unit: Unit, command: str, timeout=None) -> tuple[int, str 
         timeout: Amount of time to wait for the execution.
 
     Returns:
-        Tuple of return code and stdout.
+        Tuple of return code, stdout and stderr.
     """
-    action = await unit.run(command, timeout)
+    action: Action = await unit.run(command, timeout)
 
     # For compatibility with juju 2.
     if on_juju_2():
-        return (int(action.results["Code"]), action.results.get("Stdout", None))
+        return (
+            int(action.results["Code"]),
+            action.results.get("Stdout", None),
+            action.results.get("Stderr", None),
+        )
 
     await action.wait()
-    return (action.results["return-code"], action.results.get("stdout", None))
+    return (
+        action.results["return-code"],
+        action.results.get("stdout", None),
+        action.results.get("stderr", None),
+    )
 
 
 async def run_in_lxd_instance(
@@ -222,7 +261,7 @@ async def run_in_lxd_instance(
     env: dict[str, str] | None = None,
     cwd: str | None = None,
     timeout: int | None = None,
-) -> tuple[int, str | None]:
+) -> tuple[int, str | None, str | None]:
     """Run command in LXD instance of a juju unit.
 
     Args:
@@ -247,6 +286,12 @@ async def run_in_lxd_instance(
 
 
 async def start_test_http_server(unit: Unit, port: int):
+    """Start test http server.
+
+    Args:
+        unit: The unit to start the test server in.
+        port: Http server port.
+    """
     await run_in_unit(
         unit,
         f"""cat <<EOT >> /etc/systemd/system/test-http-server.service
@@ -266,7 +311,7 @@ EOT""",
 
     # Test the HTTP server
     for _ in range(10):
-        return_code, stdout = await run_in_unit(unit, f"curl http://localhost:{port}")
+        return_code, stdout, _ = await run_in_unit(unit, f"curl http://localhost:{port}")
         if return_code == 0 and stdout:
             break
         await sleep(3)
@@ -281,7 +326,7 @@ async def ensure_charm_has_runner(app: Application, model: Model) -> None:
         app: The GitHub Runner Charm app to create the runner for.
         model: The machine charm model.
     """
-    await app.set_config({"virtual-machines": "1"})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await reconcile(app=app, model=model)
     await wait_till_num_of_runners(unit=app.units[0], num=1)
 
@@ -293,6 +338,9 @@ async def get_runner_name(unit: Unit) -> str:
 
     Args:
         unit: The GitHub Runner Charm unit to get the runner name for.
+
+    Returns:
+        The Github runner name deployed in the given unit.
     """
     runners = await get_runner_names(unit)
     assert len(runners) == 1
@@ -336,6 +384,7 @@ async def deploy_github_runner_charm(
         app_name: Application name for the deployment.
         path: Path representing the GitHub repo/org.
         token: GitHub Personal Token for the application to use.
+        runner_storage: Runner storage to use, i.e. "memory" or "juju_storage",
         http_proxy: HTTP proxy for the application to use.
         https_proxy: HTTPS proxy for the application to use.
         no_proxy: No proxy configuration for the application.
@@ -344,6 +393,9 @@ async def deploy_github_runner_charm(
             otherwise.
         config: Additional custom config to use.
         wait_idle: wait for model to become idle.
+
+    Returns:
+        The charm application that was deployed.
     """
     subprocess.run(["sudo", "modprobe", "br_netfilter"])
 
@@ -361,13 +413,13 @@ async def deploy_github_runner_charm(
         storage["runner"] = {"pool": "rootfs", "size": 11}
 
     default_config = {
-        "path": path,
-        "token": token,
-        "virtual-machines": 0,
-        "denylist": "10.10.0.0/16",
-        "test-mode": "insecure",
-        "reconcile-interval": reconcile_interval,
-        "runner-storage": runner_storage,
+        PATH_CONFIG_NAME: path,
+        TOKEN_CONFIG_NAME: token,
+        VIRTUAL_MACHINES_CONFIG_NAME: 0,
+        DENYLIST_CONFIG_NAME: "10.10.0.0/16",
+        TEST_MODE_CONFIG_NAME: "insecure",
+        RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
+        RUNNER_STORAGE_CONFIG_NAME: runner_storage,
     }
 
     if config:
@@ -412,6 +464,9 @@ def get_workflow_runs(
         workflow: The target workflow to get the run for.
         runner_name: The runner name the workflow job is assigned to.
         branch: The branch the workflow is run on.
+
+    Yields:
+        The workflow run.
     """
     if branch is None:
         branch = github.GithubObject.NotSet
@@ -432,6 +487,7 @@ def _get_latest_run(
     Args:
         workflow: The workflow to get the latest run for.
         start_time: The minimum start time of the run.
+        branch: The branch in which the workflow belongs to.
 
     Returns:
         The latest workflow run if the workflow has started. None otherwise.
@@ -449,6 +505,10 @@ def _is_workflow_run_complete(run: WorkflowRun) -> bool:
 
     Args:
         run: The workflow run to check status for.
+
+    Returns:
+        Whether the run status is "completed".
+
     """
     if run.update():
         return run.status == "completed"
@@ -474,6 +534,7 @@ async def dispatch_workflow(
         conclusion: The expected workflow run conclusion.
         workflow_id_or_name: The workflow filename in .github/workflows in main branch to run or
             its id.
+        dispatch_input: Workflow input values.
 
     Returns:
         A completed workflow.
@@ -488,7 +549,7 @@ async def dispatch_workflow(
     ), "Failed to create workflow"
 
     # There is a very small chance of selecting a run not created by the dispatch above.
-    run = await wait_for(
+    run: WorkflowRun | None = await wait_for(
         partial(_get_latest_run, workflow=workflow, start_time=start_time, branch=branch)
     )
     assert run, f"Run not found for workflow: {workflow.name} ({workflow.id})"
@@ -504,11 +565,12 @@ async def dispatch_workflow(
 
 P = ParamSpec("P")
 R = TypeVar("R")
+S = Callable[P, R] | Callable[P, Awaitable[R]]
 
 
 async def wait_for(
-    func: Callable[P, R],
-    timeout: int = 300,
+    func: S,
+    timeout: int | float = 300,
     check_interval: int = 10,
 ) -> R:
     """Wait for function execution to become truthy.
@@ -532,7 +594,7 @@ async def wait_for(
                 return result
         else:
             if result := func():
-                return result
+                return cast(R, result)
         time.sleep(check_interval)
 
     # final check before raising TimeoutError.
@@ -541,5 +603,5 @@ async def wait_for(
             return result
     else:
         if result := func():
-            return result
+            return cast(R, result)
     raise TimeoutError()

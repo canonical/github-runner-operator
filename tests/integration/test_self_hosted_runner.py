@@ -12,7 +12,12 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from charm_state import GithubRepo
+from charm_state import (
+    DOCKERHUB_MIRROR_CONFIG_NAME,
+    PATH_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+    GithubRepo,
+)
 from github_client import GithubClient
 from tests.integration.helpers import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
@@ -48,7 +53,9 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
     fake_url = "https://example.com:5000"
 
     # 1.
-    await app_runner.set_config({"virtual-machines": "1", "dockerhub-mirror": fake_url})
+    await app_runner.set_config(
+        {VIRTUAL_MACHINES_CONFIG_NAME: "1", DOCKERHUB_MIRROR_CONFIG_NAME: fake_url}
+    )
     action = await unit.run_action("reconcile-runners")
     await action.wait()
     await model.wait_for_idle(status=ACTIVE)
@@ -57,10 +64,10 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
 
     runner_to_be_used = names[0]
 
-    return_code, stdout = await run_in_lxd_instance(
+    return_code, stdout, stderr = await run_in_lxd_instance(
         unit, runner_to_be_used, "cat /etc/docker/daemon.json"
     )
-    assert return_code == 0
+    assert return_code == 0, f"Failed to get docker daemon contents, {stdout} {stderr}"
     assert stdout is not None
     assert "registry-mirrors" in stdout
     assert fake_url in stdout
@@ -120,7 +127,7 @@ async def test_flush_busy_runner(
     config = await app_runner.get_config()
 
     await app_runner.set_config(
-        {"path": forked_github_repository.full_name, "virtual-machines": "1"}
+        {PATH_CONFIG_NAME: forked_github_repository.full_name, VIRTUAL_MACHINES_CONFIG_NAME: "1"}
     )
     await reconcile(app=app_runner, model=model)
     await wait_till_num_of_runners(unit, 1)
@@ -176,6 +183,8 @@ async def test_flush_busy_runner(
     assert runner_to_be_used not in names, "Found a runner that should be flushed"
 
     # Ensure the app_runner is back to 0 runners.
-    await app_runner.set_config({"virtual-machines": "0", "path": config["path"]})
+    await app_runner.set_config(
+        {VIRTUAL_MACHINES_CONFIG_NAME: "0", PATH_CONFIG_NAME: config[PATH_CONFIG_NAME]}
+    )
     await reconcile(app=app_runner, model=model)
     await wait_till_num_of_runners(unit, 0)

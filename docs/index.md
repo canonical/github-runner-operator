@@ -11,6 +11,8 @@ The charm maintains a set of ephemeral self-hosted runners, each isolated in a s
 
 See [charm architecture](https://charmhub.io/github-runner/docs/explanation-charm-architecture) for more information.
 
+The charm operates in a stateless manner. It can be redeployed without losing any data and there is no need to backup the charm's state.
+
 The charm also supports observability through the optional `cos-agent` integration.
 Metrics and logs about the runners and the charm itself are collected and sent to the [Canonical Observability Stack](https://charmhub.io/topics/canonical-observability-stack) for analysis and visualisation.
 
@@ -63,6 +65,7 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [ARM64](reference/arm64.md)
   1. [Configurations](reference/configurations.md)
   1. [COS Integration](reference/cos.md)
+  1. [External Access](reference/external-access.md)
 1. [Tutorial](tutorial)
   1. [Managing resource usage](tutorial/managing-resource-usage.md)
   1. [Quick start](tutorial/quick-start.md)

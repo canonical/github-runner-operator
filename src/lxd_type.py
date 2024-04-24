@@ -35,17 +35,33 @@ LxdResourceProfileDevices = dict[str, LxdResourceProfileDevicesDisk]
 
 
 class LxdInstanceConfigSource(TypedDict):
-    """Configuration for source image in the LXD instance."""
+    """Configuration for source image in the LXD instance.
+
+    Attributes:
+        type: Type of source configuration, e.g. image, disk
+        server: The source server URL, e.g. https://cloud-images.ubuntu.com/releases
+        protocol: Protocol of the configuration, e.g. simplestreams
+        alias: Alias for configuration.
+    """
 
     type: str
-    mode: str
     server: str
     protocol: str
     alias: str
 
 
 class LxdInstanceConfig(TypedDict):
-    """Configuration for the LXD instance."""
+    """Configuration for the LXD instance.
+
+    See https://documentation.ubuntu.com/lxd/en/latest/howto/instances_create/
+
+    Attributes:
+        name: Name of the instance.
+        type: Instance type, i.e. "container" or "virtual-machine".
+        source: Instance creation source configuration.
+        ephemeral: Whether the container should be deleted after a single run.
+        profiles: List of LXD profiles applied to the instance.
+    """
 
     name: str
     type: str
@@ -63,14 +79,27 @@ LxdNetworkConfig.__doc__ = "Represent LXD network configuration."
 
 
 class LxdStoragePoolConfig(TypedDict):
-    """Configuration of the storage pool."""
+    """Configuration of the storage pool.
+
+    Attributes:
+        source: The storage pool configuration source image.
+        size: The size of the storage pool, e.g. 30GiB
+    """
 
     source: str
     size: str
 
 
 class LxdStoragePoolConfiguration(TypedDict):
-    """Configuration for LXD storage pool."""
+    """Configuration for LXD storage pool.
+
+    Attributes:
+        name: The storage pool name.
+        driver: The storage driver being used, i.e. "dir", "btrfs", ... . See \
+            https://documentation.ubuntu.com/lxd/en/stable-5.0/reference/storage_drivers/ \
+            for more information.
+        config: The storage pool configuration.
+    """
 
     name: str
     driver: str
@@ -79,7 +108,16 @@ class LxdStoragePoolConfiguration(TypedDict):
 
 @dataclass
 class LxdNetwork:
-    """LXD network information."""
+    """LXD network information.
+
+    Attributes:
+        name: The name of LXD network.
+        description: LXD network descriptor.
+        type: Network type, i.e. "bridge", "physical"
+        config: The LXD network configuration values.
+        managed: Whether the network is being managed by lxd.
+        used_by: Number of instances using the network.
+    """
 
     name: str
     description: str

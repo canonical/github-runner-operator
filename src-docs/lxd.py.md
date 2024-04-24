@@ -17,12 +17,12 @@ The LxdClient class offers a low-level interface to isolate the underlying imple
 ## <kbd>class</kbd> `LxdClient`
 LXD client. 
 
-<a href="../src/lxd.py#L569"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L601"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
 ```python
-__init__()
+__init__() → None
 ```
 
 Instantiate the LXD client. 
@@ -36,7 +36,7 @@ Instantiate the LXD client.
 ## <kbd>class</kbd> `LxdImageManager`
 LXD image manager. 
 
-<a href="../src/lxd.py#L542"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L556"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -57,12 +57,12 @@ Instantiate the LXD image manager.
 
 ---
 
-<a href="../src/lxd.py#L550"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L564"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `create`
 
 ```python
-create(name: 'str', path: 'Path')
+create(name: 'str', path: 'Path') → None
 ```
 
 Import a LXD image. 
@@ -80,6 +80,29 @@ Import a LXD image.
  
  - <b>`LxdError`</b>:  Unable to import the file as LXD image. 
 
+---
+
+<a href="../src/lxd.py#L578"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `exists`
+
+```python
+exists(alias: 'str') → bool
+```
+
+Check if an image with the given name exists. 
+
+
+
+**Args:**
+ 
+ - <b>`alias`</b>:  Alias name of the image to check. 
+
+
+
+**Returns:**
+ Whether the image exists. 
+
 
 ---
 
@@ -94,7 +117,7 @@ An LXD instance.
  - <b>`files`</b> (LxdInstanceFiles):  Manager for the files on the LXD instance. 
  - <b>`status`</b> (str):  Status of the LXD instance. 
 
-<a href="../src/lxd.py#L165"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L173"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -126,7 +149,7 @@ Status of the LXD instance.
 
 ---
 
-<a href="../src/lxd.py#L221"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L229"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `delete`
 
@@ -150,7 +173,7 @@ Delete the LXD instance.
 
 ---
 
-<a href="../src/lxd.py#L237"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L245"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `execute`
 
@@ -159,7 +182,7 @@ execute(
     cmd: 'list[str]',
     cwd: 'Optional[str]' = None,
     hide_cmd: 'bool' = False,
-    **kwargs
+    **kwargs: 'Any'
 ) → Tuple[int, IO, IO]
 ```
 
@@ -187,7 +210,7 @@ The command is executed with `subprocess.run`, additional arguments can be passe
 
 ---
 
-<a href="../src/lxd.py#L185"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L193"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `start`
 
@@ -213,7 +236,7 @@ Start the LXD instance.
 
 ---
 
-<a href="../src/lxd.py#L203"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L211"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `stop`
 
@@ -284,16 +307,16 @@ Create a directory in the LXD instance.
 
 **Args:**
  
- - <b>`dir`</b>:  Name of the directory to create. 
+ - <b>`dir_name`</b>:  Name of the directory to create. 
 
 ---
 
-<a href="../src/lxd.py#L110"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L114"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `pull_file`
 
 ```python
-pull_file(source: 'str', destination: 'str', is_dir=False) → None
+pull_file(source: 'str', destination: 'str', is_dir: 'bool' = False) → None
 ```
 
 Pull a file from the LXD instance to the local machine. 
@@ -344,7 +367,7 @@ Push a file to the LXD instance.
 
 ---
 
-<a href="../src/lxd.py#L138"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L142"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `read_file`
 
@@ -407,7 +430,7 @@ Write a file with the given content into the LXD instance.
 ## <kbd>class</kbd> `LxdInstanceManager`
 LXD instance manager. 
 
-<a href="../src/lxd.py#L272"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L280"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -428,7 +451,7 @@ Instantiate the LXD instance manager.
 
 ---
 
-<a href="../src/lxd.py#L280"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L288"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `all`
 
@@ -451,7 +474,7 @@ Get list of LXD instances.
 
 ---
 
-<a href="../src/lxd.py#L295"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L303"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `create`
 
@@ -485,7 +508,7 @@ Create an LXD instance.
 ## <kbd>class</kbd> `LxdNetworkManager`
 LXD network manager. 
 
-<a href="../src/lxd.py#L415"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L426"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -506,7 +529,7 @@ Instantiate the LXD profile manager.
 
 ---
 
-<a href="../src/lxd.py#L423"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L434"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get`
 
@@ -533,7 +556,7 @@ Get the LXD network information.
 ## <kbd>class</kbd> `LxdProfile`
 LXD profile. 
 
-<a href="../src/lxd.py#L384"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L395"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -554,24 +577,24 @@ Instantiate the LXD profile.
 
 ---
 
-<a href="../src/lxd.py#L406"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L417"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `delete`
 
 ```python
-delete()
+delete() → None
 ```
 
 Delete the profile. 
 
 ---
 
-<a href="../src/lxd.py#L401"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L412"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `save`
 
 ```python
-save()
+save() → None
 ```
 
 Save the current configuration of profile. 
@@ -582,7 +605,7 @@ Save the current configuration of profile.
 ## <kbd>class</kbd> `LxdProfileManager`
 LXD profile manager. 
 
-<a href="../src/lxd.py#L320"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L328"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -603,7 +626,7 @@ Instantiate the LXD profile manager.
 
 ---
 
-<a href="../src/lxd.py#L346"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L354"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `create`
 
@@ -622,7 +645,8 @@ Create an LXD profile.
 **Args:**
  
  - <b>`name`</b>:  Name of the LXD profile to create. 
- - <b>`config`</b>:  Configuration of the LXD profile. devices Devices configuration of the LXD profile. 
+ - <b>`config`</b>:  Configuration of the LXD profile. 
+ - <b>`devices`</b>:  Devices configuration of the LXD profile. 
 
 
 
@@ -632,7 +656,7 @@ Create an LXD profile.
 
 ---
 
-<a href="../src/lxd.py#L328"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L336"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `exists`
 
@@ -661,7 +685,7 @@ Check whether an LXD profile of a given name exists.
 
 ---
 
-<a href="../src/lxd.py#L365"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L373"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get`
 
@@ -684,6 +708,11 @@ Get an LXD profile.
  - <b>`LxdError`</b>:  Unable to get the LXD profile with the name. 
 
 
+
+**Returns:**
+ LXDProfile with given name. 
+
+
 ---
 
 ## <kbd>class</kbd> `LxdStoragePool`
@@ -699,7 +728,7 @@ An LXD storage pool.
  - <b>`config`</b> (dict[str, any]):  Dictionary of the configuration of the  storage pool. 
  - <b>`managed`</b> (bool):  Whether LXD manages the storage pool. 
 
-<a href="../src/lxd.py#L512"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L526"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -720,24 +749,24 @@ Instantiate the LXD storage pool.
 
 ---
 
-<a href="../src/lxd.py#L534"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L548"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `delete`
 
 ```python
-delete()
+delete() → None
 ```
 
 Delete the storage pool. 
 
 ---
 
-<a href="../src/lxd.py#L529"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L543"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `save`
 
 ```python
-save()
+save() → None
 ```
 
 Save the current configuration of storage pool. 
@@ -748,7 +777,7 @@ Save the current configuration of storage pool.
 ## <kbd>class</kbd> `LxdStoragePoolManager`
 LXD storage pool manager. 
 
-<a href="../src/lxd.py#L446"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L457"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -769,7 +798,7 @@ Instantiate the LXD storage pool manager.
 
 ---
 
-<a href="../src/lxd.py#L454"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L465"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `all`
 
@@ -786,7 +815,7 @@ Get all LXD storage pool.
 
 ---
 
-<a href="../src/lxd.py#L488"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L502"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `create`
 
@@ -809,7 +838,7 @@ Create an LXD storage pool.
 
 ---
 
-<a href="../src/lxd.py#L477"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L491"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `exists`
 
@@ -832,7 +861,7 @@ Check if an LXD storage pool exists.
 
 ---
 
-<a href="../src/lxd.py#L462"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/lxd.py#L473"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get`
 
@@ -847,6 +876,12 @@ Get an LXD storage pool.
 **Args:**
  
  - <b>`name`</b>:  Name of the storage pool. 
+
+
+
+**Raises:**
+ 
+ - <b>`LxdError`</b>:  If the storage pool with given name was not found. 
 
 
 
