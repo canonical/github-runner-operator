@@ -449,6 +449,7 @@ def _generate_cloud_init_userdata(
     instance_config: InstanceConfig,
     runner_env: str,
     proxies: Optional[ProxyConfig] = None,
+    dockerhub_mirror: Optional[str] = None,
 ) -> str:
     """Generate cloud init userdata to launch at startup.
 
@@ -457,6 +458,7 @@ def _generate_cloud_init_userdata(
         instance_config: The configuration values for Openstack instance to launch.
         runner_env: The contents of .env to source when launching Github runner.
         proxies: Proxy values to enable on the Github runner.
+        dockerhub_mirror: URL to dockerhub mirror.
 
     Returns:
         The cloud init userdata script.
@@ -474,6 +476,7 @@ def _generate_cloud_init_userdata(
         instance_name=instance_config.name,
         env_contents=runner_env,
         aproxy_address=aproxy_address,
+        dockerhub_mirror=dockerhub_mirror,
     )
 
 
@@ -924,8 +927,10 @@ class OpenstackRunnerManager:
         """
         try:
             self._run_github_removal_script(server=server, remove_token=remove_token)
-        except (TimeoutError, invoke.exceptions.UnexpectedExit, GithubRunnerRemoveError) as exc:
-            logger.warning("Failed to run runner removal script for %s", server.name, exc_info=True)
+        except (TimeoutError, invoke.exceptions.UnexpectedExit, GithubRunnerRemoveError):
+            logger.warning(
+                "Failed to run runner removal script for %s", server.name, exc_info=True
+            )
         # 2024/04/23: The broad except clause is for logging purposes.
         # Will be removed in future versions.
         except Exception:  # pylint: disable=broad-exception-caught
