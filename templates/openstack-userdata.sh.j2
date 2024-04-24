@@ -32,7 +32,7 @@ nft -f /etc/nftables.conf
 adduser ubuntu lxd
 
 {% if dockerhub_mirror %}
-echo "{\"registry-mirrors\": [\"{ dockerhub_mirror }\"]}" > /etc/docker/daemon.json
+echo "{\"registry-mirrors\": [\"{{ dockerhub_mirror }}\"]}" > /etc/docker/daemon.json
 {% endif %}
 
 # Create the runner and start the configuration experience
