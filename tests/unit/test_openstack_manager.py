@@ -69,12 +69,27 @@ def patched_create_connection_context_fixture(monkeypatch: pytest.MonkeyPatch):
     return mock_connection.__enter__()
 
 
+@pytest.fixture(name="ssh_connection_mock")
+def ssh_connection_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
+    """Return a mocked ssh connection."""
+    test_file_content = secrets.token_hex(16)
+    ssh_conn_mock = MagicMock(spec=openstack_manager.SshConnection)
+    ssh_conn_mock.get.side_effect = lambda remote, local: Path(local).write_text(test_file_content)
+    ssh_conn_mock.run.side_effect = lambda cmd, **kwargs: (
+        Result(stdout="1") if cmd.startswith("stat") else Result()
+    )
+    ssh_conn_mock.run.return_value = Result()
+
+    return ssh_conn_mock
+
+
 @pytest.fixture(name="openstack_manager_for_reconcile")
 def openstack_manager_for_reconcile_fixture(
     monkeypatch: pytest.MonkeyPatch,
     mock_github_client: MagicMock,
     patched_create_connection_context: MagicMock,
     tmp_path: Path,
+    ssh_connection_mock: MagicMock,
 ):
     """Create a mocked openstack manager for the reconcile tests."""
     t_mock = MagicMock(return_value=12345)
@@ -115,7 +130,9 @@ def openstack_manager_for_reconcile_fixture(
     )
     os_runner_manager._github = mock_github_client
     os_runner_manager._ssh_health_check = MagicMock(return_value=True)
-    os_runner_manager._get_ssh_connections = MagicMock(return_value=True)
+    os_runner_manager._get_ssh_connections = MagicMock(
+        return_value=(ssh_connection_mock for _ in range(10))
+    )
 
     monkeypatch.setattr(openstack_manager, "_SSH_KEY_PATH", tmp_path)
 
@@ -598,6 +615,7 @@ def test_reconcile_pulls_metric_files(
     openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager,
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
+    ssh_connection_mock: MagicMock,
 ):
     """
     arrange: Mock the metrics storage and the ssh connection.
@@ -609,31 +627,27 @@ def test_reconcile_pulls_metric_files(
     ms = MetricsStorage(path=runner_metrics_path, runner_name="test_runner")
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
-    ssh_conn_mock = MagicMock(spec=openstack_manager.SshConnection)
-    ssh_conn_mock.get.side_effect = lambda remote, local: Path(local).write_text("written")
-    ssh_conn_mock.run.side_effect = lambda cmd, **kwargs: (
-        Result(stdout="1") if cmd.startswith("stat") else Result()
-    )
-    ssh_conn_mock.run.return_value = Result()
-    openstack_manager_for_reconcile._get_ssh_connections.return_value = (
-        (ssh_conn_mock) for _ in range(10)
-    )
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
         return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
+    )
+    test_file_content = secrets.token_hex(16)
+    ssh_connection_mock.get.side_effect = lambda remote, local: Path(local).write_text(
+        test_file_content
     )
 
     openstack_manager_for_reconcile.reconcile(quantity=0)
 
     assert (ms.path / "pre-job-metrics.json").exists()
-    assert (ms.path / "pre-job-metrics.json").read_text() == "written"
+    assert (ms.path / "pre-job-metrics.json").read_text() == test_file_content
     assert (ms.path / "post-job-metrics.json").exists()
-    assert (ms.path / "post-job-metrics.json").read_text() == "written"
+    assert (ms.path / "post-job-metrics.json").read_text() == test_file_content
 
 
 def test_reconcile_does_not_pull_too_large_files(
     openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager,
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
+    ssh_connection_mock: MagicMock,
 ):
     """
     arrange: Mock the metrics storage and the ssh connection to return a file that is too large.
@@ -645,13 +659,8 @@ def test_reconcile_does_not_pull_too_large_files(
     ms = MetricsStorage(path=runner_metrics_path, runner_name="test_runner")
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
-    ssh_conn_mock = MagicMock(spec=openstack_manager.SshConnection)
-    ssh_conn_mock.run.side_effect = lambda cmd, **kwargs: (
+    ssh_connection_mock.run.side_effect = lambda cmd, **kwargs: (
         Result(stdout=f"{MAX_METRICS_FILE_SIZE + 1}") if cmd.startswith("stat") else Result()
-    )
-    ssh_conn_mock.get.side_effect = lambda remote, local: Path(local).write_text("written")
-    openstack_manager_for_reconcile._get_ssh_connections.return_value = (
-        (ssh_conn_mock) for _ in range(10)
     )
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
         return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
@@ -678,15 +687,6 @@ def test_reconcile_issue_reconciliation_metrics(
     ms = MetricsStorage(path=runner_metrics_path, runner_name="test_runner")
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
-    ssh_conn_mock = MagicMock(spec=openstack_manager.SshConnection)
-    ssh_conn_mock.get.side_effect = lambda remote, local: Path(local).write_text("written")
-    ssh_conn_mock.run.side_effect = lambda cmd, **kwargs: (
-        Result(stdout="1") if cmd.startswith("stat") else Result()
-    )
-    ssh_conn_mock.run.return_value = Result()
-    openstack_manager_for_reconcile._get_ssh_connections.return_value = (
-        (ssh_conn_mock) for _ in range(10)
-    )
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
         return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
     )
