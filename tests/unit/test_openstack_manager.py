@@ -383,19 +383,7 @@ def test__build_image_command():
         test_http_proxy,
         test_https_proxy,
         test_no_proxy,
-        f"""[Service]
-
-Environment="HTTP_PROXY={test_http_proxy}"
-
-
-Environment="HTTPS_PROXY={test_https_proxy}"
-
-
-Environment="NO_PROXY={test_no_proxy}"
-""",
-        f"""{{"proxies": {{"default": {{"httpProxy": "{test_http_proxy}", \
-"httpsProxy": "{test_https_proxy}", "noProxy": "{test_no_proxy}"}}}}}}""",
-    ], "Unexpected build image command."
+], "Unexpected build image command."
 
 
 def test_build_image_runner_binary_error():
