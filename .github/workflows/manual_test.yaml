@@ -6,19 +6,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  # self-host-stg:
-  #   name: self-hosted stg test
-  #   runs-on: [self-hosted, ARM64, test-arm]
-  #   steps:
-  #     - run: echo $HTTP_PROXY
-  #     - run: echo $HTTPS_PROXY
-  #     - run: echo $NO_PROXY
-  #     - run: curl https://github.com
-  #     - run: sudo apt -yq install neovim
-  #     - run: sudo snap install microk8s --classic --channel=1.30
-  #     - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
-  #     - name: tmate ssh
-  #       uses: canonical/action-tmate@debug
+  self-host-stg:
+    name: self-hosted stg test
+    runs-on: [self-hosted, ARM64, test-arm]
+    steps:
+      - run: lxd init --auto
+      - run: lxc list
+      - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
+      - run: docker pull jujusolutions/charm-base:ubuntu-20.04 -l debug -d
   # self-host-x64:
   #   name: self-hosted x64 test
   #   runs-on: [self-hosted, X64, large, jammy]
