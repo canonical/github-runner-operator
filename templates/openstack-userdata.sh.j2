@@ -29,6 +29,12 @@ systemctl enable nftables.service
 nft -f /etc/nftables.conf
 {% endif %}
 
+adduser ubuntu lxd
+
+{% if dockerhub_mirror %}
+echo "{\"registry-mirrors\": [\"{{ dockerhub_mirror }}\"]}" > /etc/docker/daemon.json
+{% endif %}
+
 # Prepare metrics
 su - ubuntu -c 'mkdir "{{ metrics_exchange_path }}"'
 
@@ -92,4 +98,3 @@ su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh"
 write_post_metrics $?
 
 su - ubuntu -c "touch /home/ubuntu/run-completed"
-
