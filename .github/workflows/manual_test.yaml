@@ -12,8 +12,9 @@ jobs:
     steps:
       - run: lxd init --auto
       - run: lxc list
+      - run: cat /home/ubuntu/.docker/config.json
       - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
-      - run: docker pull jujusolutions/charm-base:ubuntu-20.04 -l debug -d
+      - run: docker pull jujusolutions/charm-base:ubuntu-20.04
   # self-host-x64:
   #   name: self-hosted x64 test
   #   runs-on: [self-hosted, X64, large, jammy]
