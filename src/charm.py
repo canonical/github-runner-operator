@@ -440,6 +440,12 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             True if installation was successful, False otherwise.
         """
+        try:
+            self._install_deps()
+        except SubprocessError:
+            logger.error("Failed to install charm dependencies")
+            raise
+
         if state.instance_type == InstanceType.OPENSTACK:
             if state.runner_config.build_image:
                 self.unit.status = MaintenanceStatus("Building Openstack image")
@@ -458,10 +464,10 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Installing packages")
         try:
             # The `_start_services`, `_install_deps` includes retry.
-            self._install_deps()
+            self._install_local_lxd_deps()
             self._start_services(state.charm_config.token, state.proxy_config)
         except SubprocessError:
-            logger.error("Failed to install dependencies")
+            logger.error("Failed to install or start local LXD runner dependencies")
             raise
 
         try:
@@ -518,7 +524,7 @@ class GithubRunnerCharm(CharmBase):
 
         runner_manager = self._get_runner_manager(state)
 
-        self._check_and_update_dependencies(
+        self._check_and_update_local_lxd_dependencies(
             runner_manager, state.charm_config.token, state.proxy_config
         )
 
@@ -650,10 +656,10 @@ class GithubRunnerCharm(CharmBase):
         )
         self.unit.status = ActiveStatus()
 
-    def _check_and_update_dependencies(
+    def _check_and_update_local_lxd_dependencies(
         self, runner_manager: RunnerManager, token: str, proxy_config: ProxyConfig
     ) -> bool:
-        """Check and updates runner binary and services.
+        """Checks and updates runner binary and services for local LXD runners.
 
         The runners are flushed if needed.
 
@@ -721,7 +727,7 @@ class GithubRunnerCharm(CharmBase):
 
         runner_manager = self._get_runner_manager(state)
 
-        self._check_and_update_dependencies(
+        self._check_and_update_local_lxd_dependencies(
             runner_manager, state.charm_config.token, state.proxy_config
         )
 
@@ -813,7 +819,7 @@ class GithubRunnerCharm(CharmBase):
 
         runner_manager = self._get_runner_manager(state)
 
-        self._check_and_update_dependencies(
+        self._check_and_update_local_lxd_dependencies(
             runner_manager, state.charm_config.token, state.proxy_config
         )
 
@@ -866,7 +872,7 @@ class GithubRunnerCharm(CharmBase):
             event.set_results({"flush": False})
 
         runner_manager = self._get_runner_manager(state)
-        flushed = self._check_and_update_dependencies(
+        flushed = self._check_and_update_local_lxd_dependencies(
             runner_manager, state.charm_config.token, state.proxy_config
         )
         event.set_results({"flush": flushed})
@@ -982,12 +988,17 @@ class GithubRunnerCharm(CharmBase):
         with self.kernel_module_path.open("a", encoding="utf-8") as modules_file:
             modules_file.write("br_netfilter\n")
 
-    @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _install_deps(self) -> None:
-        """Install dependencies."""
+        """Install dependences for the charm."""
+        logger.info("Installing charm dependencies.")
+        self._apt_install(["run-one"])
+
+    @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
+    def _install_local_lxd_deps(self) -> None:
+        """Install dependencies for running local LXD runners."""
         state = self._setup_state()
 
-        logger.info("Installing charm dependencies.")
+        logger.info("Installing local LXD runner dependencies.")
         # Snap and Apt will use any proxies configured in the Juju model.
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
         # Install dependencies used by repo-policy-compliance and the firewall
@@ -1029,7 +1040,7 @@ class GithubRunnerCharm(CharmBase):
                 "security.port_isolation=true",
             ]
         )
-        logger.info("Finished installing charm dependencies.")
+        logger.info("Finished installing local LXD runner dependencies.")
 
     @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _start_services(self, token: str, proxy_config: ProxyConfig) -> None:
