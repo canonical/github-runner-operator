@@ -1,4 +1,4 @@
-# Copyright 2024 Canonical Ltd.
+#  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Functions to calculate metrics from data retrieved from GitHub."""
@@ -6,8 +6,8 @@
 from charm_state import GithubRepo
 from errors import GithubMetricsError, JobNotFoundError
 from github_client import GithubClient
-from metrics_type import GithubJobMetrics
-from runner_metrics import PreJobMetrics
+from metrics.runner import PreJobMetrics
+from metrics.type import GithubJobMetrics
 
 
 def job(

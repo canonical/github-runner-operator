@@ -40,7 +40,7 @@ The method is not idempotent and will raise an exception if the shared filesyste
 
 **Raises:**
  
- - <b>`CreateSharedFilesystemError`</b>:  If the creation of the shared filesystem fails. 
+ - <b>`CreateMetricsStorageError`</b>:  If the creation of the shared filesystem fails. 
 
 
 ---
@@ -90,7 +90,7 @@ Mounts the filesystem if it is not currently mounted.
 
 **Raises:**
  
- - <b>`GetSharedFilesystemError`</b>:  If the shared filesystem could not be retrieved/mounted. 
+ - <b>`GetMetricsStorageError`</b>:  If the shared filesystem could not be retrieved/mounted. 
 
 
 ---
@@ -115,7 +115,7 @@ Delete the shared filesystem for the runner.
 
 **Raises:**
  
- - <b>`DeleteSharedFilesystemError`</b>:  If the shared filesystem could not be deleted. 
+ - <b>`DeleteMetricsStorageError`</b>:  If the shared filesystem could not be deleted. 
 
 
 ---
@@ -141,7 +141,7 @@ Archive the shared filesystem for the runner and delete it.
 **Raises:**
  
  - <b>`QuarantineSharedFilesystemError`</b>:  If the shared filesystem could not be quarantined. 
- - <b>`DeleteSharedFilesystemError`</b>:  If the shared filesystem could not be deleted. 
+ - <b>`DeleteMetricsStorageError`</b>:  If the shared filesystem could not be deleted. 
 
 
 ---
