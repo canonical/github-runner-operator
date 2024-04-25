@@ -35,6 +35,14 @@ adduser ubuntu lxd
 echo "{\"registry-mirrors\": [\"{{ dockerhub_mirror }}\"]}" > /etc/docker/daemon.json
 {% endif %}
 
+# Prepare metrics
+su - ubuntu -c 'mkdir "{{ metrics_exchange_path }}"'
+
+# Insert pre-job script
+cat << 'EOF' | su - ubuntu -c 'tee /home/ubuntu/actions-runner/pre-job.sh'
+{{ pre_job_contents | safe }}
+EOF
+
 # Create the runner and start the configuration experience
 {% if runner_group %}
 su - ubuntu -c "cd ~/actions-runner && ./config.sh \
@@ -49,7 +57,44 @@ su - ubuntu -c "cd ~/actions-runner && ./config.sh \
     --labels {{ instance_labels }} --name {{ instance_name }}"
 {% endif %}
 
+
+write_post_metrics(){
+    # Expects the exit code of the run.sh script as the first argument.
+
+    # Only write the post-job metrics if the file does not already exist - which may indicate
+    # that the job has failed inside pre-job.
+
+    if [ -f {{ metrics_exchange_path}}/post-job-metrics.json ]; then
+        return
+    fi
+
+    timestamp=$(date +%s)
+
+    # Write the post-job metrics using status abnormal and exit code if exit code is non-zero
+    if [ "$1" != "0" ]; then
+        sudo -g ubuntu -u ubuntu jq -n \
+          --argjson timestamp "$timestamp" \
+          --arg status "abnormal" \
+          --argjson exit_code "$1" \
+          '{
+            "timestamp": $timestamp,
+            "status": $status,
+            "status_info": {code: $exit_code}
+          }' > "{{ metrics_exchange_path}}/post-job-metrics.json"
+        return
+    else
+        # If exit code is zero, write the post-job metrics using status normal
+        sudo -g ubuntu -u ubuntu jq -n \
+          --argjson timestamp "$timestamp" \
+          '{
+            "timestamp": $timestamp,
+            "status": "normal"
+          }' > "{{ metrics_exchange_path }}/post-job-metrics.json"
+    fi
+}
+
 # Run runner
 su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh"
+write_post_metrics $?
 
 su - ubuntu -c "touch /home/ubuntu/run-completed"

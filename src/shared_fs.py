@@ -4,16 +4,14 @@
 """Classes and functions to operate on the shared filesystem between the charm and the runners."""
 import logging
 import shutil
-import tarfile
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Generator
+from typing import Iterator
 
+import metrics.storage as metrics_storage
 from errors import (
-    CreateSharedFilesystemError,
-    DeleteSharedFilesystemError,
-    GetSharedFilesystemError,
-    QuarantineSharedFilesystemError,
+    CreateMetricsStorageError,
+    DeleteMetricsStorageError,
+    GetMetricsStorageError,
     SharedFilesystemMountError,
     SubprocessError,
 )
@@ -24,47 +22,183 @@ DIR_NO_MOUNTPOINT_EXIT_CODE = 32
 logger = logging.getLogger(__name__)
 
 FILESYSTEM_OWNER = "ubuntu:ubuntu"
-FILESYSTEM_BASE_PATH = Path("/home/ubuntu/runner-fs")
 FILESYSTEM_IMAGES_PATH = Path("/home/ubuntu/runner-fs-images")
-FILESYSTEM_QUARANTINE_PATH = Path("/home/ubuntu/runner-fs-quarantine")
 FILESYSTEM_SIZE = "1M"
 
 
-@dataclass
-class SharedFilesystem:
-    """Shared filesystem between the charm and the runners.
-
-    Attributes:
-        path: The path of the shared filesystem inside the charm.
-        runner_name: The name of the associated runner.
-    """
-
-    path: Path
-    runner_name: str
+class _UnmountSharedFilesystemError(Exception):
+    """Represents an error unmounting a shared filesystem."""
 
 
-def _get_runner_image_path(runner_name: str) -> Path:
-    """Get the path of the runner image.
+def create(runner_name: str) -> metrics_storage.MetricsStorage:
+    """Create a shared filesystem for the runner.
+
+    The method is not idempotent and will raise an exception
+    if the shared filesystem already exists.
 
     Args:
         runner_name: The name of the runner.
 
     Returns:
-        The path of the runner image.
+        The shared filesystem object.
+
+    Raises:
+        CreateMetricsStorageError: If the creation of the shared filesystem fails.
     """
-    return FILESYSTEM_IMAGES_PATH / f"{runner_name}.img"
+    ms = metrics_storage.create(runner_name)
+    try:
+        FILESYSTEM_IMAGES_PATH.mkdir(exist_ok=True)
+    except OSError as exc:
+        raise CreateMetricsStorageError("Failed to create shared filesystem images path") from exc
+
+    runner_img_path = _get_runner_image_path(runner_name)
+
+    try:
+        execute_command(
+            ["dd", "if=/dev/zero", f"of={runner_img_path}", f"bs={FILESYSTEM_SIZE}", "count=1"],
+            check_exit=True,
+        )
+        execute_command(["mkfs.ext4", f"{runner_img_path}"], check_exit=True)
+        _mount(runner_fs_path=ms.path, runner_image_path=runner_img_path)
+        execute_command(["sudo", "chown", FILESYSTEM_OWNER, str(ms.path)], check_exit=True)
+    except (SubprocessError, SharedFilesystemMountError) as exc:
+        raise CreateMetricsStorageError(
+            f"Failed to create shared filesystem for runner {runner_name}"
+        ) from exc
+    return ms
 
 
-def _get_runner_fs_path(runner_name: str) -> Path:
-    """Get the path of the runner shared filesystem.
+def list_all() -> Iterator[metrics_storage.MetricsStorage]:
+    """List all the metric storages.
+
+    Yields:
+        A metrics storage object.
+    """
+    for ms in metrics_storage.list_all():
+        try:
+            # we try to check if it is mounted by using this module's get function
+            get(ms.runner_name)
+        except GetMetricsStorageError:
+            logger.error("Failed to get shared filesystem for runner %s", ms.runner_name)
+        else:
+            yield ms
+
+
+def get(runner_name: str) -> metrics_storage.MetricsStorage:
+    """Get the shared filesystem for the runner.
+
+    Mounts the filesystem if it is not currently mounted.
 
     Args:
         runner_name: The name of the runner.
 
     Returns:
-        The path of the runner shared filesystem.
+        The shared filesystem object.
+
+    Raises:
+        GetMetricsStorageError: If the shared filesystem could not be retrieved/mounted.
     """
-    return FILESYSTEM_BASE_PATH / runner_name
+    ms = metrics_storage.get(runner_name)
+
+    try:
+        is_mounted = _is_mountpoint(ms.path)
+    except SharedFilesystemMountError as exc:
+        raise GetMetricsStorageError(
+            f"Failed to determine if shared filesystem is mounted for runner {runner_name}"
+        ) from exc
+
+    if not is_mounted:
+        logger.info(
+            "Shared filesystem for runner %s is not mounted (may happen after reboot). "
+            "Will be mounted now.",
+            runner_name,
+        )
+        runner_img_path = _get_runner_image_path(runner_name)
+        try:
+            _mount(runner_fs_path=ms.path, runner_image_path=runner_img_path)
+        except SharedFilesystemMountError as exc:
+            raise GetMetricsStorageError(
+                f"Shared filesystem for runner {runner_name} could not be mounted."
+            ) from exc
+
+    return ms
+
+
+def delete(runner_name: str) -> None:
+    """Delete the shared filesystem for the runner.
+
+    Args:
+        runner_name: The name of the runner.
+
+    Raises:
+        DeleteMetricsStorageError: If the shared filesystem could not be deleted.
+    """
+    try:
+        runner_fs_path = metrics_storage.get(runner_name).path
+    except GetMetricsStorageError as exc:
+        raise DeleteMetricsStorageError(
+            f"Failed to get shared filesystem for runner {runner_name}"
+        ) from exc
+
+    try:
+        _unmount_runner_fs_path(runner_fs_path)
+    except _UnmountSharedFilesystemError as exc:
+        raise DeleteMetricsStorageError(
+            "Unexpected error while deleting shared Filesystem for runner "
+            f"{runner_name}: {str(exc)}"
+        ) from exc
+
+    runner_image_path = _get_runner_image_path(runner_name)
+    try:
+        runner_image_path.unlink(missing_ok=True)
+    except OSError as exc:
+        raise DeleteMetricsStorageError(
+            f"Failed to remove runner image for shared filesystem of runner {runner_name}"
+        ) from exc
+
+    try:
+        shutil.rmtree(runner_fs_path)
+    except OSError as exc:
+        raise DeleteMetricsStorageError(
+            f"Failed to remove shared filesystem for runner {runner_name}"
+        ) from exc
+
+
+def _unmount_runner_fs_path(runner_fs_path: Path) -> Path:
+    """Unmount shared filesystem for given runner.
+
+    Args:
+        runner_fs_path: The path to unmount.
+
+    Raises:
+        _UnmountSharedFilesystemError: If there was an error trying to unmount shared filesystem.
+
+    Returns:
+        The runner shared filesystem path that was unmounted.
+    """
+    if not runner_fs_path.exists():
+        raise _UnmountSharedFilesystemError(f"Shared filesystem '{runner_fs_path}' not found.")
+    try:
+        is_mounted = _is_mountpoint(runner_fs_path)
+    except SharedFilesystemMountError as exc:
+        raise _UnmountSharedFilesystemError(
+            f"Failed to determine if shared filesystem is mounted {runner_fs_path}"
+        ) from exc
+
+    if not is_mounted:
+        logger.warning("Shared filesystem for runner %s is not mounted", runner_fs_path)
+    else:
+        try:
+            execute_command(
+                ["sudo", "umount", str(runner_fs_path)],
+                check_exit=True,
+            )
+        except SubprocessError as exc:
+            raise _UnmountSharedFilesystemError(
+                f"Failed to unmount shared filesystem for runner {runner_fs_path}"
+            ) from exc
+
+    return runner_fs_path
 
 
 def _is_mountpoint(path: Path) -> bool:
@@ -109,219 +243,13 @@ def _mount(runner_fs_path: Path, runner_image_path: Path) -> None:
         ) from exc
 
 
-def create(runner_name: str) -> SharedFilesystem:
-    """Create a shared filesystem for the runner.
-
-    The method is not idempotent and will raise an exception
-    if the shared filesystem already exists.
+def _get_runner_image_path(runner_name: str) -> Path:
+    """Get the path of the runner image.
 
     Args:
         runner_name: The name of the runner.
 
     Returns:
-        The shared filesystem object.
-
-    Raises:
-        CreateSharedFilesystemError: If the creation of the shared filesystem fails.
+        The path of the runner image.
     """
-    try:
-        FILESYSTEM_BASE_PATH.mkdir(exist_ok=True)
-        FILESYSTEM_IMAGES_PATH.mkdir(exist_ok=True)
-        FILESYSTEM_QUARANTINE_PATH.mkdir(exist_ok=True)
-    except OSError as exc:
-        raise CreateSharedFilesystemError(
-            "Failed to create shared filesystem base path or images path"
-        ) from exc
-
-    runner_fs_path = _get_runner_fs_path(runner_name)
-
-    try:
-        runner_fs_path.mkdir()
-    except FileExistsError as exc:
-        raise CreateSharedFilesystemError(
-            f"Shared filesystem for runner {runner_name} already exists."
-        ) from exc
-
-    runner_img_path = _get_runner_image_path(runner_name)
-
-    try:
-        execute_command(
-            ["dd", "if=/dev/zero", f"of={runner_img_path}", f"bs={FILESYSTEM_SIZE}", "count=1"],
-            check_exit=True,
-        )
-        execute_command(["mkfs.ext4", f"{runner_img_path}"], check_exit=True)
-        _mount(runner_fs_path=runner_fs_path, runner_image_path=runner_img_path)
-        execute_command(["sudo", "chown", FILESYSTEM_OWNER, str(runner_fs_path)], check_exit=True)
-    except (SubprocessError, SharedFilesystemMountError) as exc:
-        raise CreateSharedFilesystemError(
-            f"Failed to create shared filesystem for runner {runner_name}"
-        ) from exc
-    return SharedFilesystem(runner_fs_path, runner_name)
-
-
-def list_all() -> Generator[SharedFilesystem, None, None]:
-    """List the shared filesystems.
-
-    Yields:
-        A shared filesystem instance.
-    """
-    if not FILESYSTEM_BASE_PATH.exists():
-        return
-
-    directories = (entry for entry in FILESYSTEM_BASE_PATH.iterdir() if entry.is_dir())
-    for directory in directories:
-        try:
-            fs = get(runner_name=directory.name)
-        except GetSharedFilesystemError:
-            logger.error("Failed to get shared filesystem for runner %s", directory.name)
-        else:
-            yield fs
-
-
-def get(runner_name: str) -> SharedFilesystem:
-    """Get the shared filesystem for the runner.
-
-    Mounts the filesystem if it is not currently mounted.
-
-    Args:
-        runner_name: The name of the runner.
-
-    Returns:
-        The shared filesystem object.
-
-    Raises:
-        GetSharedFilesystemError: If the shared filesystem could not be retrieved/mounted.
-    """
-    runner_fs_path = _get_runner_fs_path(runner_name)
-    if not runner_fs_path.exists():
-        raise GetSharedFilesystemError(f"Shared filesystem for runner {runner_name} not found.")
-
-    try:
-        is_mounted = _is_mountpoint(runner_fs_path)
-    except SharedFilesystemMountError as exc:
-        raise GetSharedFilesystemError(
-            f"Failed to determine if shared filesystem is mounted for runner {runner_name}"
-        ) from exc
-
-    if not is_mounted:
-        logger.info(
-            "Shared filesystem for runner %s is not mounted (may happen after reboot). "
-            "Will be mounted now.",
-            runner_name,
-        )
-        runner_img_path = _get_runner_image_path(runner_name)
-        try:
-            _mount(runner_fs_path=runner_fs_path, runner_image_path=runner_img_path)
-        except SharedFilesystemMountError as exc:
-            raise GetSharedFilesystemError(
-                f"Shared filesystem for runner {runner_name} could not be mounted."
-            ) from exc
-
-    return SharedFilesystem(runner_fs_path, runner_name)
-
-
-class UnmountSharedFilesystemError(Exception):
-    """Represents an error unmounting a shared filesystem."""
-
-
-def _unmount_runner_fs_path(runner_name: str) -> Path:
-    """Unmount shared filesystem for given runner.
-
-    Args:
-        runner_name: The name of the runner to unmount shared fs for.
-
-    Raises:
-        UnmountSharedFilesystemError: If there was an error trying to unmount shared filesystem.
-
-    Returns:
-        The runner shared filesystem path that was unmounted.
-    """
-    runner_fs_path = _get_runner_fs_path(runner_name)
-    if not runner_fs_path.exists():
-        raise UnmountSharedFilesystemError(
-            f"Shared filesystem for runner {runner_name} not found."
-        )
-    try:
-        is_mounted = _is_mountpoint(runner_fs_path)
-    except SharedFilesystemMountError as exc:
-        raise UnmountSharedFilesystemError(
-            f"Failed to determine if shared filesystem is mounted for runner {runner_name}"
-        ) from exc
-
-    if not is_mounted:
-        logger.warning("Shared filesystem for runner %s is not mounted", runner_name)
-    else:
-        try:
-            execute_command(
-                ["sudo", "umount", str(runner_fs_path)],
-                check_exit=True,
-            )
-        except SubprocessError as exc:
-            raise UnmountSharedFilesystemError(
-                f"Failed to unmount shared filesystem for runner {runner_name}"
-            ) from exc
-
-    return runner_fs_path
-
-
-def delete(runner_name: str) -> None:
-    """Delete the shared filesystem for the runner.
-
-    Args:
-        runner_name: The name of the runner.
-
-    Raises:
-        DeleteSharedFilesystemError: If the shared filesystem could not be deleted.
-    """
-    try:
-        runner_fs_path = _unmount_runner_fs_path(runner_name=runner_name)
-    except UnmountSharedFilesystemError as exc:
-        raise DeleteSharedFilesystemError(
-            f"Unexpected error while deleting shared Filesystem: {str(exc)}"
-        ) from exc
-
-    runner_image_path = _get_runner_image_path(runner_name)
-    try:
-        runner_image_path.unlink(missing_ok=True)
-    except OSError as exc:
-        raise DeleteSharedFilesystemError(
-            "Failed to remove runner image for shared filesystem"
-        ) from exc
-
-    try:
-        shutil.rmtree(runner_fs_path)
-    except OSError as exc:
-        raise DeleteSharedFilesystemError("Failed to remove shared filesystem") from exc
-
-
-def move_to_quarantine(runner_name: str) -> None:
-    """Archive the shared filesystem for the runner and delete it.
-
-    Args:
-        runner_name: The name of the runner.
-
-    Raises:
-        QuarantineSharedFilesystemError: If the shared filesystem could not be quarantined.
-        DeleteSharedFilesystemError: If the shared filesystem could not be deleted.
-    """
-    try:
-        runner_fs = get(runner_name)
-    except GetSharedFilesystemError as exc:
-        raise QuarantineSharedFilesystemError(
-            f"Failed to get shared filesystem for runner {runner_name}"
-        ) from exc
-
-    tarfile_path = FILESYSTEM_QUARANTINE_PATH.joinpath(runner_name).with_suffix(".tar.gz")
-    try:
-        with tarfile.open(tarfile_path, "w:gz") as tar:
-            tar.add(runner_fs.path, arcname=runner_fs.path.name)
-    except OSError as exc:
-        raise QuarantineSharedFilesystemError(
-            f"Failed to archive shared filesystem for runner {runner_name}"
-        ) from exc
-
-    try:
-        delete(runner_name)
-    # 2024/04/02 - We should define a new error, wrap it and re-raise it.
-    except DeleteSharedFilesystemError:  # pylint: disable=try-except-raise
-        raise
+    return FILESYSTEM_IMAGES_PATH / f"{runner_name}.img"

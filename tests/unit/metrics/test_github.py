@@ -1,4 +1,4 @@
-# Copyright 2024 Canonical Ltd.
+#  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import secrets
 from datetime import datetime, timedelta, timezone
@@ -6,11 +6,11 @@ from unittest.mock import MagicMock
 
 import pytest
 
-import github_metrics
 from errors import GithubMetricsError, JobNotFoundError
 from github_client import GithubClient
 from github_type import JobConclusion, JobStats
-from runner_metrics import PreJobMetrics
+from metrics import github as github_metrics
+from metrics.runner import PreJobMetrics
 
 
 @pytest.fixture(name="pre_job_metrics")

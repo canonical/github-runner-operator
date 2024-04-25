@@ -18,112 +18,114 @@ jq -n \
     "event": $event,
     "timestamp": $timestamp,
     "workflow_run_id": $workflow_run_id
-  }' > /metrics-exchange/pre-job-metrics.json || true
+  }' > "{{ metrics_exchange_path }}/pre-job-metrics.json" || true
 {% endif %}
 
+{% if do_repo_policy_check %}
 
-# Log common env variables.
-logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
-  GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}, \
-  GITHUB_SHA: ${GITHUB_SHA}"
+    # Log common env variables.
+    logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
+      GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}, \
+      GITHUB_SHA: ${GITHUB_SHA}"
 
-# Prepare curl arguments
-CURL_ARGS=(
-  --silent
-  --show-error
-  --max-time 60
-  --noproxy '*'
-  --fail-with-body
-  -o repo_check_output.txt
-  --stderr repo_check_error.txt
-  --write-out "%{http_code}"
-  -H 'Authorization: Bearer {{one_time_token}}'
-  -H 'Content-Type: application/json'
-)
+    # Prepare curl arguments
+    CURL_ARGS=(
+      --silent
+      --show-error
+      --max-time 60
+      --noproxy '*'
+      --fail-with-body
+      -o repo_check_output.txt
+      --stderr repo_check_error.txt
+      --write-out "%{http_code}"
+      -H 'Authorization: Bearer {{one_time_token}}'
+      -H 'Content-Type: application/json'
+    )
 
-# Set REPO_CHECK to a failure code as a safe guard.
-REPO_CHECK=1
+    # Set REPO_CHECK to a failure code as a safe guard.
+    REPO_CHECK=1
 
-# Special Workflow dispatch repo-policy-compliance service check designed to fail:
-if [[ "${GITHUB_WORKFLOW}" == "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7" ]]; then
-  logger -s "Running the test workflow for integration tests, this test is configured to fail"
+    # Special Workflow dispatch repo-policy-compliance service check designed to fail:
+    if [[ "${GITHUB_WORKFLOW}" == "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7" ]]; then
+      logger -s "Running the test workflow for integration tests, this test is configured to fail"
 
-  REPO_CHECK_HTTP_CODE=$(curl "${CURL_ARGS[@]}" \
-      -X POST \
-      http://{{host_ip}}:8080/always-fail/check-run)
-  REPO_CHECK=$?
+      REPO_CHECK_HTTP_CODE=$(curl "${CURL_ARGS[@]}" \
+          -X POST \
+          http://{{host_ip}}:8080/always-fail/check-run)
+      REPO_CHECK=$?
 
-# Pull request - Request repo-policy-compliance service check:
-elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
+    # Pull request - Request repo-policy-compliance service check:
+    elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
 
-  GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.repo.full_name')
-  COMMIT_SHA=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.sha')
+      GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.repo.full_name')
+      COMMIT_SHA=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.sha')
 
-  logger -s " \
-  GITHUB_SOURCE_REPOSITORY: ${GITHUB_SOURCE_REPOSITORY} \
-  GITHUB_BASE_REF: ${GITHUB_BASE_REF}, \
-  GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}, \
-  COMMIT_SHA: ${COMMIT_SHA}"
+      logger -s " \
+      GITHUB_SOURCE_REPOSITORY: ${GITHUB_SOURCE_REPOSITORY} \
+      GITHUB_BASE_REF: ${GITHUB_BASE_REF}, \
+      GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}, \
+      COMMIT_SHA: ${COMMIT_SHA}"
 
-  REPO_CHECK_HTTP_CODE=$(curl "${CURL_ARGS[@]}" \
-      -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_HEAD_REF}\", \"commit_sha\": \"${COMMIT_SHA}\"}" \
-      http://{{host_ip}}:8080/pull_request/check-run)
-  REPO_CHECK=$?
+      REPO_CHECK_HTTP_CODE=$(curl "${CURL_ARGS[@]}" \
+          -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_HEAD_REF}\", \"commit_sha\": \"${COMMIT_SHA}\"}" \
+          http://{{host_ip}}:8080/pull_request/check-run)
+      REPO_CHECK=$?
 
-else
-  # Workflow dispatch, Push and Schedule use their respective endpoints, all other events use default by default.
-  CHECK_NAME="default"
-  if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "push" ]] || [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
-    CHECK_NAME="${GITHUB_EVENT_NAME}"
-  fi
+    else
+      # Workflow dispatch, Push and Schedule use their respective endpoints, all other events use default by default.
+      CHECK_NAME="default"
+      if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "push" ]] || [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
+        CHECK_NAME="${GITHUB_EVENT_NAME}"
+      fi
 
-  logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
+      logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
 
-  REPO_CHECK_HTTP_CODE=$(curl "${CURL_ARGS[@]}" \
-      -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\"}" \
-      http://{{host_ip}}:8080/${CHECK_NAME}/check-run)
-  REPO_CHECK=$?
+      REPO_CHECK_HTTP_CODE=$(curl "${CURL_ARGS[@]}" \
+          -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\"}" \
+          http://{{host_ip}}:8080/${CHECK_NAME}/check-run)
+      REPO_CHECK=$?
 
-fi
-
-if [[ $REPO_CHECK -ne 0 ]]; then
-    if [[ -s repo_check_output.txt ]]; then
-        logger -p user.error -s -f repo_check_output.txt
     fi
-    if [[ -s repo_check_error.txt ]]; then
-        logger -p user.error -s -f repo_check_error.txt
+
+    if [[ $REPO_CHECK -ne 0 ]]; then
+        if [[ -s repo_check_output.txt ]]; then
+            logger -p user.error -s -f repo_check_output.txt
+        fi
+        if [[ -s repo_check_error.txt ]]; then
+            logger -p user.error -s -f repo_check_error.txt
+        fi
+      logger -p user.error -s "Stopping execution of jobs due to repository setup is not compliant with policies."
+      logger -p user.error -s "This runner will be stopped or lost, please fix the setup of the repository, then rerun this job."
+
+      # Killing the runner.Listener process to stop the runner application. This will prevent jobs from being executed.
+      pkill -2 Runner.Listener
+
+
+        {% if issue_metrics %}
+            # Write Post Job metrics with status "repo-policy-check-failure" .
+            # We write it here, rather than relying on the post-job script,
+            # as it may not run due to the poweroff command below.
+            post_job_timestamp=$(date +%s)
+
+            jq -n \
+              --argjson timestamp "$post_job_timestamp" \
+              --argjson http_code "$REPO_CHECK_HTTP_CODE" \
+              '{
+                "timestamp": $timestamp,
+                "status": "repo-policy-check-failure",
+                "status_info": {code: $http_code}
+              }' > "{{ metrics_exchange_path }}/post-job-metrics.json" || true
+        {% endif %}
+
+      # Shutdown the instance as a safe guard. The time delay is needed for the runner application to upload the logs.
+      bash -c "sleep 10; sudo systemctl poweroff -i" &
+
+      exit 1
+
     fi
-  logger -p user.error -s "Stopping execution of jobs due to repository setup is not compliant with policies."
-  logger -p user.error -s "This runner will be stopped or lost, please fix the setup of the repository, then rerun this job."
 
-  # Killing the runner.Listener process to stop the runner application. This will prevent jobs from being executed.
-  pkill -2 Runner.Listener
-
-
-    {% if issue_metrics %}
-        # Write Post Job metrics with status "repo-policy-check-failure" .
-        # We write it here, rather than relying on the post-job script,
-        # as it may not run due to the poweroff command below.
-        post_job_timestamp=$(date +%s)
-
-        jq -n \
-          --argjson timestamp "$post_job_timestamp" \
-          --argjson http_code "$REPO_CHECK_HTTP_CODE" \
-          '{
-            "timestamp": $timestamp,
-            "status": "repo-policy-check-failure",
-            "status_info": {code: $http_code}
-          }' > /metrics-exchange/post-job-metrics.json || true
-    {% endif %}
-
-  # Shutdown the instance as a safe guard. The time delay is needed for the runner application to upload the logs.
-  bash -c "sleep 10; sudo systemctl poweroff -i" &
-
-  exit 1
-
-fi
-
-logger -s "The repository setup check has passed, proceeding to execute jobs"
+    logger -s "The repository setup check has passed, proceeding to execute jobs"
+{% endif %}
 
 if [[ -n "$DOCKERHUB_MIRROR" ]]; then
   logger -s "A private docker registry is setup as a dockerhub mirror for this self-hosted runner."

@@ -35,7 +35,7 @@ from ops.framework import StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
-import metrics
+import metrics.events as metric_events
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     GROUP_CONFIG_NAME,
@@ -472,7 +472,7 @@ class GithubRunnerCharm(CharmBase):
             raise
 
         try:
-            metrics.setup_logrotate()
+            metric_events.setup_logrotate()
         except LogrotateSetupError:
             logger.error("Failed to setup logrotate")
             raise
