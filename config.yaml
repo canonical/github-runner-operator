@@ -86,6 +86,20 @@ options:
       random delay of 25% is added. Changes to this time interval will apply when next interval is
       triggered. Prior to reconciliation, any packages, and services used by the software will be
       updated.
+  repo-policy-compliance-url:
+    type: string
+    default: ""
+    description: >-
+      The URL to the repository-policy-compliance service. This option requires the 
+      repo-policy-compliance-token to be set. If not set, the repository-policy-compliance service
+      will not be used.
+  repo-policy-compliance-token:
+    type: string
+    default: ""
+    description: >-
+      The token to authenticate with the repository-policy-compliance service in order to 
+      generate one-time-tokens. This option requires the repo-policy-compliance-url to be set.
+      If not set, the repository-policy-compliance service will not be used.
   runner-storage:
     type: string
     default: "juju-storage"
