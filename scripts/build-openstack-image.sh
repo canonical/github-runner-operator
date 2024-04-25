@@ -14,6 +14,7 @@ HTTPS_PROXY="$3"
 NO_PROXY="$4"
 DOCKER_PROXY_SERVICE_CONF="$5"
 DOCKER_PROXY_CONF="$6"
+BASE_IMAGE="$7"
 
 # retry function
 retry() {
@@ -108,15 +109,15 @@ sudo modprobe nbd
 # cleanup any existing mounts
 cleanup
 
-retry "sudo wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-$BIN_ARCH.img \
-    -O jammy-server-cloudimg-$BIN_ARCH.img" "Downloading cloud image" 3
+retry "sudo wget https://cloud-images.ubuntu.com/$BASE_IMAGE/current/$BASE_IMAGE-server-cloudimg-$BIN_ARCH.img \
+    -O $BASE_IMAGE-server-cloudimg-$BIN_ARCH.img" "Downloading cloud image" 3
 
 # resize image - installing dependencies requires more disk space
-sudo qemu-img resize jammy-server-cloudimg-$BIN_ARCH.img +1.5G
+sudo qemu-img resize "$BASE_IMAGE-server-cloudimg-$BIN_ARCH.img" +1.5G
 
 # mount nbd
 echo "Connecting network block device to image"
-sudo qemu-nbd --connect=/dev/nbd0 jammy-server-cloudimg-$BIN_ARCH.img
+sudo qemu-nbd --connect=/dev/nbd0 "$BASE_IMAGE-server-cloudimg-$BIN_ARCH.img"
 sudo mkdir -p /mnt/ubuntu-image
 retry "sudo mount -o rw /dev/nbd0p1 /mnt/ubuntu-image" "Mounting nbd0p1 device" 3
 
@@ -208,4 +209,4 @@ sudo sync
 cleanup
 
 # Reduce image size by removing sparse space & compressing
-sudo virt-sparsify --compress jammy-server-cloudimg-$BIN_ARCH.img jammy-server-cloudimg-$BIN_ARCH-compressed.img
+sudo virt-sparsify --compress "$BASE_IMAGE-server-cloudimg-$BIN_ARCH.img" "$BASE_IMAGE-server-cloudimg-$BIN_ARCH-compressed.img"

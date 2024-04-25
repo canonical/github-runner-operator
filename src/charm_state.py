@@ -30,6 +30,7 @@ ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
 
+BASE_IMAGE_CONFIG_NAME = "base-image"
 DENYLIST_CONFIG_NAME = "denylist"
 DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
 GROUP_CONFIG_NAME = "group"
@@ -113,7 +114,7 @@ def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
         organization with runner group information.
     """
     if "/" in path_str:
-        paths = path_str.split("/")
+        paths = tuple(segment for segment in path_str.split("/") if segment)
         if len(paths) != 2:
             raise CharmConfigInvalidError(f"Invalid path configuration {path_str}")
         owner, repo = paths
@@ -443,48 +444,58 @@ class CharmConfig(BaseModel):
         return reconcile_interval
 
 
+LTS_IMAGE_VERSION_TAG_MAP = {"22.04": "jammy", "24.04": "noble"}
+
+
+class BaseImage(str, Enum):
+    """The ubuntu OS base image to build and deploy runners on.
+
+    Attributes:
+        JAMMY: The jammy ubuntu LTS image.
+        NOBLE: The noble ubuntu LTS image.
+    """
+
+    JAMMY = "jammy"
+    NOBLE = "noble"
+
+    def __str__(self) -> str:
+        """Interpolate to string value.
+
+        Returns:
+            The enum string value.
+        """
+        return self.value
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "BaseImage":
+        """Retrieve the base image tag from charm.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            The base image configuration of the charm.
+        """
+        image_name = charm.config.get(BASE_IMAGE_CONFIG_NAME, "jammy").lower().strip()
+        if image_name in LTS_IMAGE_VERSION_TAG_MAP:
+            return cls(LTS_IMAGE_VERSION_TAG_MAP[image_name])
+        return cls(image_name)
+
+
 class RunnerCharmConfig(BaseModel):
     """Runner configurations for the charm.
 
     Attributes:
+        base_image: The ubuntu base image to run the runner virtual machines on.
         virtual_machines: Number of virtual machine-based runner to spawn.
         virtual_machine_resources: Hardware resource used by one virtual machine for a runner.
         runner_storage: Storage to be used as disk for the runner.
     """
 
+    base_image: BaseImage
     virtual_machines: int
     virtual_machine_resources: VirtualMachineResources
     runner_storage: RunnerStorage
-
-    @classmethod
-    def _check_storage_change(cls, runner_storage: str) -> None:
-        """Check whether the storage configuration has changed.
-
-        Args:
-            runner_storage: The current runner_storage config value.
-
-        Raises:
-            CharmConfigInvalidError: If the runner-storage config value has changed after initial
-                deployment.
-        """
-        prev_state = None
-        if CHARM_STATE_PATH.exists():
-            json_data = CHARM_STATE_PATH.read_text(encoding="utf-8")
-            prev_state = json.loads(json_data)
-            logger.info("Previous charm state: %s", prev_state)
-
-        if (
-            prev_state is not None
-            and prev_state["runner_config"]["runner_storage"] != runner_storage
-        ):
-            logger.warning(
-                "Storage option changed from %s to %s, blocking the charm",
-                prev_state["runner_config"]["runner_storage"],
-                runner_storage,
-            )
-            raise CharmConfigInvalidError(
-                "runner-storage config cannot be changed after deployment, redeploy if needed"
-            )
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "RunnerCharmConfig":
@@ -500,8 +511,12 @@ class RunnerCharmConfig(BaseModel):
             Current config of the charm.
         """
         try:
+            base_image = BaseImage.from_charm(charm)
+        except ValueError as err:
+            raise CharmConfigInvalidError("Invalid base image") from err
+
+        try:
             runner_storage = RunnerStorage(charm.config[RUNNER_STORAGE_CONFIG_NAME])
-            cls._check_storage_change(runner_storage=runner_storage)
         except ValueError as err:
             raise CharmConfigInvalidError(
                 f"Invalid {RUNNER_STORAGE_CONFIG_NAME} configuration"
@@ -526,6 +541,7 @@ class RunnerCharmConfig(BaseModel):
         )
 
         return cls(
+            base_image=base_image,
             virtual_machines=virtual_machines,
             virtual_machine_resources=virtual_machine_resources,
             runner_storage=runner_storage,
@@ -765,6 +781,18 @@ class SSHDebugConnection(BaseModel):
         return ssh_debug_connections
 
 
+class ImmutableConfigChangedError(Exception):
+    """Represents an error when changing immutable charm state."""
+
+    def __init__(self, msg: str):
+        """Initialize a new instance of the ImmutableConfigChangedError exception.
+
+        Args:
+            msg: Explanation of the error.
+        """
+        self.msg = msg
+
+
 @dataclasses.dataclass(frozen=True)
 class CharmState:
     """The charm state.
@@ -784,6 +812,45 @@ class CharmState:
     charm_config: CharmConfig
     runner_config: RunnerCharmConfig
     ssh_debug_connections: list[SSHDebugConnection]
+
+    @classmethod
+    def _check_immutable_config_change(
+        cls, runner_storage: RunnerStorage, base_image: BaseImage
+    ) -> None:
+        """Ensure immutable config has not changed.
+
+        Args:
+            runner_storage: The current runner_storage configuration.
+            base_image: The current base_image configuration.
+
+        Raises:
+            ImmutableConfigChangedError: If an immutable configuration has changed.
+        """
+        if not CHARM_STATE_PATH.exists():
+            return
+
+        json_data = CHARM_STATE_PATH.read_text(encoding="utf-8")
+        prev_state = json.loads(json_data)
+        logger.info("Previous charm state: %s", prev_state)
+
+        if prev_state["runner_config"]["runner_storage"] != runner_storage:
+            logger.error(
+                "Storage option changed from %s to %s, blocking the charm",
+                prev_state["runner_config"]["runner_storage"],
+                runner_storage,
+            )
+            raise ImmutableConfigChangedError(
+                msg="runner-storage config cannot be changed after deployment, redeploy if needed"
+            )
+        if prev_state["runner_config"]["base_image"] != base_image.value:
+            logger.error(
+                "Base image option changed from %s to %s, blocking the charm",
+                prev_state["runner_config"]["base_image"],
+                runner_storage,
+            )
+            raise ImmutableConfigChangedError(
+                msg="base-image config cannot be changed after deployment, redeploy if needed"
+            )
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "CharmState":
@@ -806,8 +873,14 @@ class CharmState:
         try:
             charm_config = CharmConfig.from_charm(charm)
             runner_config = RunnerCharmConfig.from_charm(charm)
+            cls._check_immutable_config_change(
+                runner_storage=runner_config.runner_storage,
+                base_image=runner_config.base_image,
+            )
         except (ValidationError, ValueError) as exc:
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
+        except ImmutableConfigChangedError as exc:
+            raise CharmConfigInvalidError(exc.msg) from exc
 
         try:
             arch = _get_supported_arch()

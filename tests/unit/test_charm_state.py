@@ -12,8 +12,11 @@ import pytest
 
 import charm_state
 from charm_state import (
+    BASE_IMAGE_CONFIG_NAME,
     COS_AGENT_INTEGRATION_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
+    PATH_CONFIG_NAME,
+    TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
     Arch,
     CharmConfigInvalidError,
@@ -45,6 +48,47 @@ def clouds_yaml() -> dict:
             }
         }
     }
+
+
+@pytest.mark.parametrize(
+    "invalid_path",
+    [
+        pytest.param("canonical/", id="org only"),
+        pytest.param("/github-runner-operator", id="repository only"),
+    ],
+)
+def test_parse_github_path_invalid_path(invalid_path: str):
+    """
+    arrange: Given an invalid Github path.
+    act: when parse_github_path is called.
+    assert: CharmConfigInvalidError is raised.
+    """
+    with pytest.raises(CharmConfigInvalidError) as exc:
+        charm_state.parse_github_path(invalid_path, MagicMock())
+
+    assert "Invalid path configuration" in str(exc)
+
+
+@pytest.mark.parametrize(
+    "missing_config",
+    [
+        pytest.param(PATH_CONFIG_NAME, id="missing path"),
+        pytest.param(TOKEN_CONFIG_NAME, id="missing token"),
+    ],
+)
+def test_github_config_from_charm_missing_token(missing_config: str):
+    """
+    arrange: Given charm with missing token config.
+    act: when GithubConfig.from_charm is called.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[missing_config] = ""
+
+    with pytest.raises(CharmConfigInvalidError) as exc:
+        charm_state.GithubConfig.from_charm(mock_charm)
+
+    assert f"Missing {missing_config} configuration" in str(exc)
 
 
 def test_metrics_logging_available_true():
@@ -89,6 +133,48 @@ def test_aproxy_proxy_missing():
     with pytest.raises(CharmConfigInvalidError) as exc:
         CharmState.from_charm(mock_charm)
     assert "Invalid proxy configuration" in str(exc.value)
+
+
+@pytest.mark.parametrize(
+    "image",
+    [
+        pytest.param("eagle", id="non existent image"),
+        pytest.param("bionic", id="unsupported image"),
+    ],
+)
+def test_invalid_base_image(image: str):
+    """
+    arrange: Given an invalid base configuration.
+    act: Retrieve state from charm.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[BASE_IMAGE_CONFIG_NAME] = image
+
+    with pytest.raises(CharmConfigInvalidError) as exc:
+        charm_state.RunnerCharmConfig.from_charm(mock_charm)
+    assert "Invalid base image" in str(exc.value)
+
+
+@pytest.mark.parametrize(
+    "image, expected_base_image",
+    [
+        pytest.param("jammy", charm_state.BaseImage.JAMMY, id="jammy"),
+        pytest.param("22.04", charm_state.BaseImage.JAMMY, id="jammy tag"),
+        pytest.param("noble", charm_state.BaseImage.NOBLE, id="noble"),
+        pytest.param("24.04", charm_state.BaseImage.NOBLE, id="noble tag"),
+    ],
+)
+def test_base_image(image: str, expected_base_image: charm_state.BaseImage):
+    """
+    arrange: Given supported base image configuration.
+    act: Retrieve state from charm.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[BASE_IMAGE_CONFIG_NAME] = image
+
+    assert charm_state.BaseImage.from_charm(mock_charm) == expected_base_image
 
 
 def test_proxy_invalid_format():

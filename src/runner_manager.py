@@ -780,6 +780,7 @@ class RunnerManager:
             http_proxy,
             https_proxy,
             no_proxy,
+            self.config.image,
         ]
         if LXD_PROFILE_YAML.exists():
             cmd += ["test"]
@@ -793,6 +794,7 @@ class RunnerManager:
         """
         return self._clients.lxd.images.exists(self.config.image)
 
+    @retry(tries=3, delay=30, local_logger=logger)
     def build_runner_image(self) -> None:
         """Build the LXD image for hosting runner.
 
