@@ -270,7 +270,7 @@ async def app_openstack_runner(
         config={
             OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml,
             # this is set by microstack sunbeam, see scripts/setup-microstack.sh
-            OPENSTACK_NETWORK_CONFIG_NAME: "demo-network",
+            OPENSTACK_NETWORK_CONFIG_NAME: "external-network",
             OPENSTACK_FLAVOR_CONFIG_NAME: openstack_flavor,
             # Integration test is done in a clean env, the unit number is always 0.
             OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME: 0,
