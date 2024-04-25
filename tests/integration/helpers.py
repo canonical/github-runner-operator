@@ -550,7 +550,8 @@ async def dispatch_workflow(
 
     # There is a very small chance of selecting a run not created by the dispatch above.
     run: WorkflowRun | None = await wait_for(
-        partial(_get_latest_run, workflow=workflow, start_time=start_time, branch=branch)
+        partial(_get_latest_run, workflow=workflow, start_time=start_time, branch=branch),
+        timeout=10 * 60,
     )
     assert run, f"Run not found for workflow: {workflow.name} ({workflow.id})"
     await wait_for(partial(_is_workflow_run_complete, run=run), timeout=60 * 30, check_interval=60)

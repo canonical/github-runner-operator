@@ -17,7 +17,13 @@ import openstack.exceptions
 import openstack.image.v2.image
 from openstack.exceptions import OpenStackCloudException
 
-from charm_state import Arch, ProxyConfig, SSHDebugConnection, UnsupportedArchitectureError
+from charm_state import (
+    Arch,
+    BaseImage,
+    ProxyConfig,
+    SSHDebugConnection,
+    UnsupportedArchitectureError,
+)
 from errors import (
     OpenstackImageBuildError,
     OpenstackInstanceLaunchError,
@@ -32,8 +38,9 @@ from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
 
-IMAGE_PATH_TMPL = "jammy-server-cloudimg-{architecture}-compressed.img"
-IMAGE_NAME = "jammy"
+IMAGE_PATH_TMPL = "{base_image}-server-cloudimg-{architecture}-compressed.img"
+# Update the version when the image are modified.
+IMAGE_NAME_TMPL = "github-runner-{base_image}-v1"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 
 
@@ -145,17 +152,21 @@ def _generate_docker_client_proxy_config_json(
                     if value
                 }
             }
-        }
+        },
+        indent=4,
     )
 
 
 def _build_image_command(
-    runner_info: RunnerApplication, proxies: Optional[ProxyConfig] = None
+    runner_info: RunnerApplication,
+    base_image: BaseImage,
+    proxies: Optional[ProxyConfig] = None,
 ) -> list[str]:
     """Get command for building runner image.
 
     Args:
         runner_info: The runner application to fetch runner tar download url.
+        base_image: The ubuntu base image to use.
         proxies: HTTP proxy settings.
 
     Returns:
@@ -180,6 +191,7 @@ def _build_image_command(
         proxy_values.no_proxy,
         docker_proxy_service_conf_content,
         docker_client_proxy_content,
+        str(base_image),
     ]
 
     return cmd
@@ -194,14 +206,16 @@ class InstanceConfig:
         labels: The runner instance labels.
         registration_token: Token for registering the runner on GitHub.
         github_path: The GitHub repo/org path
-        openstack_image: The Openstack image to use to boot the instance with.
+        openstack_image_id: The Openstack image id to use to boot the instance with.
+        base_image: The ubuntu image to use as image build base.
     """
 
     name: str
     labels: Iterable[str]
     registration_token: str
     github_path: GithubPath
-    openstack_image: openstack.image.v2.image.Image
+    openstack_image_id: str
+    base_image: BaseImage
 
 
 SupportedCloudImageArch = Literal["amd64", "arm64"]
@@ -217,7 +231,7 @@ def _get_supported_runner_arch(arch: str) -> SupportedCloudImageArch:
     and https://cloud-images.ubuntu.com/jammy/current/
 
     Args:
-        arch: str
+        arch: The compute architecture to check support for.
 
     Raises:
         UnsupportedArchitectureError: If an unsupported architecture was passed.
@@ -226,24 +240,42 @@ def _get_supported_runner_arch(arch: str) -> SupportedCloudImageArch:
         The supported architecture.
     """
     match arch:
-        case "x64":
+        case Arch.X64:
             return "amd64"
-        case "arm64":
+        case Arch.ARM64:
             return "arm64"
         case _:
             raise UnsupportedArchitectureError(arch)
+
+
+@dataclass
+class BuildImageConfig:
+    """The configuration values for building openstack image.
+
+    Attributes:
+        arch: The image architecture to build for.
+        base_image: The ubuntu image to use as image build base.
+        proxies: HTTP proxy settings.
+    """
+
+    arch: Arch
+    base_image: BaseImage
+    proxies: Optional[ProxyConfig] = None
 
 
 class ImageDeleteError(Exception):
     """Represents an error while deleting existing openstack image."""
 
 
-def _put_image(cloud_config: dict[str, dict], image_arch: SupportedCloudImageArch) -> str:
+def _put_image(
+    cloud_config: dict[str, dict], image_arch: SupportedCloudImageArch, base_image: BaseImage
+) -> str:
     """Create or replace the image with existing name.
 
     Args:
         cloud_config: The cloud configuration to connect OpenStack with.
         image_arch: Ubuntu cloud image architecture.
+        base_image: The ubuntu base image to use.
 
     Raises:
         ImageDeleteError: If there was an error deleting the image.
@@ -255,14 +287,18 @@ def _put_image(cloud_config: dict[str, dict], image_arch: SupportedCloudImageArc
     try:
         with _create_connection(cloud_config) as conn:
             existing_image: openstack.image.v2.image.Image
-            for existing_image in conn.search_images(name_or_id=IMAGE_NAME):
+            for existing_image in conn.search_images(
+                name_or_id=IMAGE_NAME_TMPL.format(base_image=base_image)
+            ):
                 # images with same name (different ID) can be created and will error during server
                 # instantiation.
                 if not conn.delete_image(name_or_id=existing_image.id, wait=True):
                     raise ImageDeleteError("Failed to delete duplicate image on Openstack.")
             image: openstack.image.v2.image.Image = conn.create_image(
-                name=IMAGE_NAME,
-                filename=IMAGE_PATH_TMPL.format(architecture=image_arch),
+                name=IMAGE_NAME_TMPL.format(base_image=base_image.value),
+                filename=IMAGE_PATH_TMPL.format(
+                    architecture=image_arch, base_image=base_image.value
+                ),
                 wait=True,
             )
             return image.id
@@ -272,20 +308,18 @@ def _put_image(cloud_config: dict[str, dict], image_arch: SupportedCloudImageArc
 
 
 def build_image(
-    arch: Arch,
     cloud_config: dict[str, dict],
     github_client: GithubClient,
     path: GithubPath,
-    proxies: Optional[ProxyConfig] = None,
+    config: BuildImageConfig,
 ) -> str:
     """Build and upload an image to OpenStack.
 
     Args:
-        arch: The system architecture to build the image for.
         cloud_config: The cloud configuration to connect OpenStack with.
         github_client: The Github client to interact with Github API.
         path: Github organisation or repository path.
-        proxies: HTTP proxy settings.
+        config: The image build configuration values.
 
     Raises:
         OpenstackImageBuildError: If there were errors building/creating the image.
@@ -294,40 +328,47 @@ def build_image(
         The created OpenStack image id.
     """
     try:
-        runner_application = github_client.get_runner_application(path=path, arch=arch)
+        runner_application = github_client.get_runner_application(path=path, arch=config.arch)
     except RunnerBinaryError as exc:
         raise OpenstackImageBuildError("Failed to fetch runner application.") from exc
 
     try:
-        execute_command(_build_image_command(runner_application, proxies), check_exit=True)
+        execute_command(
+            _build_image_command(runner_application, config.base_image, config.proxies),
+            check_exit=True,
+        )
     except SubprocessError as exc:
         raise OpenstackImageBuildError("Failed to build image.") from exc
 
+    runner_arch = runner_application["architecture"]
     try:
-        runner_arch = runner_application["architecture"]
-        image_arch = _get_supported_runner_arch(arch=runner_arch)
+        image_arch = _get_supported_runner_arch(arch=config.arch)
     except UnsupportedArchitectureError as exc:
         raise OpenstackImageBuildError(f"Unsupported architecture {runner_arch}") from exc
 
     try:
-        return _put_image(cloud_config=cloud_config, image_arch=image_arch)
+        return _put_image(
+            cloud_config=cloud_config, image_arch=image_arch, base_image=config.base_image
+        )
     except (ImageDeleteError, OpenStackCloudException) as exc:
         raise OpenstackImageBuildError(f"Failed to upload image: {str(exc)}") from exc
 
 
 def create_instance_config(
     unit_name: str,
-    openstack_image: openstack.image.v2.image.Image,
+    openstack_image_id: str,
     path: GithubPath,
     github_client: GithubClient,
+    base_image: BaseImage,
 ) -> InstanceConfig:
     """Create an instance config from charm data.
 
     Args:
         unit_name: The charm unit name.
-        openstack_image: The openstack image object to create the instance with.
+        openstack_image_id: The openstack image id to create the instance with.
         path: Github organisation or repository path.
         github_client: The Github client to interact with Github API.
+        base_image: The ubuntu base image to use.
 
     Returns:
         Instance configuration created.
@@ -337,10 +378,11 @@ def create_instance_config(
     registration_token = github_client.get_runner_registration_token(path=path)
     return InstanceConfig(
         name=f"{app_name}-{unit_num}-{suffix}",
-        labels=(app_name, "jammy"),
+        labels=(app_name, base_image.value),
         registration_token=registration_token,
         github_path=path,
-        openstack_image=openstack_image,
+        openstack_image_id=openstack_image_id,
+        base_image=base_image,
     )
 
 
@@ -423,14 +465,18 @@ def create_instance(
         templates_env=environment, instance_config=instance_config, runner_env=env_contents
     )
 
-    try:
-        with _create_connection(cloud_config) as conn:
+    with _create_connection(cloud_config) as conn:
+        try:
             conn.create_server(
                 name=instance_config.name,
-                image=instance_config.openstack_image,
+                image=instance_config.openstack_image_id,
                 flavor="m1.small",
+                network="demo-network",
                 userdata=cloud_userdata,
                 wait=True,
+                timeout=1200,
             )
-    except OpenStackCloudException as exc:
-        raise OpenstackInstanceLaunchError("Failed to launch instance.") from exc
+        except OpenStackCloudException as exc:
+            if not conn.delete_server(instance_config.name):
+                logger.error("Failed to delete server %s", instance_config.name)
+            raise OpenstackInstanceLaunchError("Failed to launch instance.") from exc

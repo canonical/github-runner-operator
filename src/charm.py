@@ -378,7 +378,7 @@ class GithubRunnerCharm(CharmBase):
             RunnerManagerConfig(
                 charm_state=state,
                 dockerhub_mirror=state.charm_config.dockerhub_mirror,
-                image="jammy",
+                image=state.runner_config.base_image.value,
                 lxd_storage_path=lxd_storage_path,
                 path=path,
                 service_token=self.service_token,
@@ -422,18 +422,22 @@ class GithubRunnerCharm(CharmBase):
             if self.config.get(TEST_MODE_CONFIG_NAME) == "insecure":
                 self.unit.status = MaintenanceStatus("Building Openstack image")
                 github = GithubClient(token=state.charm_config.token)
-                image = openstack_manager.build_image(
-                    arch=state.arch,
+                image_id = openstack_manager.build_image(
                     cloud_config=state.charm_config.openstack_clouds_yaml,
                     github_client=github,
                     path=state.charm_config.path,
-                    proxies=state.proxy_config,
+                    config=openstack_manager.BuildImageConfig(
+                        arch=state.arch,
+                        base_image=state.runner_config.base_image,
+                        proxies=state.proxy_config,
+                    ),
                 )
                 instance_config = openstack_manager.create_instance_config(
                     unit_name=self.unit.name,
-                    openstack_image=image,
+                    openstack_image_id=image_id,
                     path=state.charm_config.path,
                     github_client=github,
+                    base_image=state.runner_config.base_image,
                 )
                 self.unit.status = MaintenanceStatus("Creating Openstack test instance")
                 instance = openstack_manager.create_instance(

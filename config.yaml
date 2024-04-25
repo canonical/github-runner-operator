@@ -2,6 +2,13 @@
 # See LICENSE file for licensing details.
 
 options:
+  base-image:
+    type: string
+    default: "jammy"
+    description: >-
+      The base ubuntu OS image to use for the runners. Codename (e.g. "jammy") or version tag
+      (e.g. 22.04) is supported as input. Currently only supports LTS versions of jammy and higher, 
+      i.e. jammy, noble.
   denylist:
     type: string
     default: ""
