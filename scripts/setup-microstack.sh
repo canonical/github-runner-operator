@@ -76,11 +76,11 @@ external_network:
   # CIDR of network to use for external networking
   cidr: 10.20.20.0/24
   # IP address of default gateway for external network
-  gateway:
+  gateway: 10.20.20.1
   # Start of IP allocation range for external network
-  start:
+  start: 10.20.20.2
   # End of IP allocation range for external network
-  end:
+  end: 10.20.20.254
   # Network type for access to external network
   network_type: flat
   # VLAN ID to use for external network
