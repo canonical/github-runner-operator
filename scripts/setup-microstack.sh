@@ -95,8 +95,9 @@ microceph_config:
 EOF
 
 sudo snap install openstack --channel 2023.1 --devmode
-timeout 180 sunbeam prepare-node-script | bash -x
 sudo usermod -a -G snap_daemon $USER
+newgrp snap_daemon
+timeout 180 sunbeam prepare-node-script | bash -x
 # The following can takes around 30 mins..., set timeout 45 mins.
 timeout 2700 sudo -g snap_daemon sunbeam cluster bootstrap -p preseed.yaml
 sudo -g snap_daemon sunbeam configure -p preseed.yaml --openrc demo-openrc
