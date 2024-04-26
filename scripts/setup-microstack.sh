@@ -50,7 +50,7 @@ user:
   # Username to use for access to OpenStack
   username: demo
   # Password to use for access to OpenStack
-  password: QNBy8XQqV3Lu
+  password: WrbXB7QQ1xt6
   # Network range to use for project network
   cidr: 192.168.122.0/24
   # List of nameservers guests should use for DNS resolution
@@ -64,9 +64,9 @@ user:
 #   # CIDR of OpenStack external network - arbitrary but must not be in use
 #   cidr: 10.20.20.0/24
 #   # Start of IP allocation range for external network
-#   start: 10.20.20.2
+#   start:
 #   # End of IP allocation range for external network
-#   end: 10.20.20.254
+#   end:
 #   # Network type for access to external network
 #   network_type: flat
 #   # VLAN ID to use for external network
@@ -76,20 +76,20 @@ external_network:
   # CIDR of network to use for external networking
   cidr: 10.20.20.0/24
   # IP address of default gateway for external network
-  gateway: 10.20.20.1
+  gateway:
   # Start of IP allocation range for external network
-  start: 10.20.20.2
+  start:
   # End of IP allocation range for external network
-  end: 10.20.20.254
+  end:
   # Network type for access to external network
   network_type: flat
   # VLAN ID to use for external network
   segmentation_id:
   # Free network interface that will be configured for external traffic
-  nic: $(ip -o -4 route show to default | awk '{print $5}')
+  nic:
 # MicroCeph config
 microceph_config:
-  microstack.multipass:
+  xlarge-65-fcf6d077952556bfbe067957.lxd:
     # Disks to attach to MicroCeph
     osd_devices:
 EOF
@@ -99,8 +99,8 @@ sudo usermod -a -G snap_daemon $USER
 newgrp snap_daemon
 timeout 180 sunbeam prepare-node-script | bash -x
 # The following can takes around 30 mins..., set timeout 45 mins.
-timeout 2700 sudo -g snap_daemon sunbeam cluster bootstrap -p preseed.yaml --accept-defaults
-sudo -g snap_daemon sunbeam configure -p preseed.yaml --openrc demo-openrc --accept-defaults
+timeout 2700 sudo -g snap_daemon sunbeam cluster bootstrap -p preseed.yaml
+sudo -g snap_daemon sunbeam configure -p preseed.yaml --openrc demo-openrc
 # The microstack should be running now.
 clouds_yaml="${PWD}/clouds.yaml"
 # Use admin account for access to create flavors, etc.
