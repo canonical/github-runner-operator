@@ -99,8 +99,8 @@ sudo usermod -a -G snap_daemon $USER
 newgrp snap_daemon
 timeout 180 sunbeam prepare-node-script | bash -x
 # The following can takes around 30 mins..., set timeout 45 mins.
-timeout 2700 sudo -g snap_daemon sunbeam cluster bootstrap -p preseed.yaml
-sudo -g snap_daemon sunbeam configure -p preseed.yaml --openrc demo-openrc
+timeout 2700 sudo -g snap_daemon sunbeam cluster bootstrap -p preseed.yaml --accept-defaults
+sudo -g snap_daemon sunbeam configure -p preseed.yaml --openrc demo-openrc --accept-defaults
 # The microstack should be running now.
 clouds_yaml="${PWD}/clouds.yaml"
 # Use admin account for access to create flavors, etc.
