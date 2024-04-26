@@ -96,19 +96,11 @@ EOF
 
 sudo snap install openstack --channel 2023.1 --devmode
 timeout 180 sunbeam prepare-node-script | bash -x
-<<<<<<< Updated upstream
-sleep 10
-# The following can takes around 30 mins..., set timeout 60 mins.
-timeout 3600 sudo -g snap_daemon sunbeam cluster bootstrap --accept-defaults
-# 2024/03/11 Demo user setup should be removed after openstack server creation PR.
-retry 'sudo -g snap_daemon sunbeam configure --accept-defaults --openrc demo-openrc' 'Configuring sunbeam cluster' 1
-=======
 sudo usermod -a -G snap_daemon $USER
 # The following can takes around 30 mins..., set timeout 45 mins.
 timeout 2700 sudo -g snap_daemon sunbeam cluster bootstrap -p preseed.yaml
 sudo -g snap_daemon sunbeam configure -p preseed.yaml --openrc demo-openrc
 # The microstack should be running now.
->>>>>>> Stashed changes
 clouds_yaml="${PWD}/clouds.yaml"
 # Use admin account for access to create flavors, etc.
 sg snap_daemon -c "sunbeam cloud-config --admin" | tee "$clouds_yaml"
