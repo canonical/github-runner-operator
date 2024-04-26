@@ -101,21 +101,11 @@ class RunnerManager:
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
 
-        # The repo policy compliance service is on localhost and should not have any proxies
-        # setting configured. The is a separated requests Session as the other one configured
-        # according proxies setting provided by user.
-        local_session = requests.Session()
-        local_session.mount("http://", adapter)
-        local_session.mount("https://", adapter)
-        local_session.trust_env = False
-
         self._clients = RunnerManagerClients(
             GithubClient(token=self.config.token),
             jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True),
             LxdClient(),
-            RepoPolicyComplianceClient(
-                local_session, "http://127.0.0.1:8080", self.config.service_token
-            ),
+            RepoPolicyComplianceClient("http://127.0.0.1:8080", self.config.service_token),
         )
 
     def check_runner_bin(self) -> bool:

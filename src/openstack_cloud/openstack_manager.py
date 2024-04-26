@@ -64,6 +64,7 @@ from metrics import github as github_metrics
 from metrics import runner as runner_metrics
 from metrics import storage as metrics_storage
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
+from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner_manager import IssuedMetricEventsStats
 from runner_manager_type import OpenstackRunnerManagerConfig
 from runner_type import GithubPath, RunnerByHealth, RunnerGithubInfo
@@ -538,11 +539,14 @@ class OpenstackRunnerManager:
         self._config = openstack_runner_manager_config
         self._cloud_config = cloud_config
         self._github = GithubClient(token=self._config.token)
-        self._repo_policy_client = (
-            RepoPolicyComplianceClient(
-                local_session, "http://127.0.0.1:8080", self._config.service_token
-            ),
-        )
+
+        self._repo_policy_client = None
+        if (
+            repo_policy_config := openstack_runner_manager_config.charm_state.charm_config.repo_policy_compliance
+        ):
+            self._repo_policy_client = RepoPolicyComplianceClient(
+                url=repo_policy_config.url, charm_token=repo_policy_config.token
+            )
 
     def _get_key_path(self, name: str) -> Path:
         """Get the filepath for storing private SSH of a runner.
@@ -731,15 +735,21 @@ class OpenstackRunnerManager:
             dockerhub_mirror=self._config.dockerhub_mirror,
             ssh_debug_connections=self._config.charm_state.ssh_debug_connections,
         )
-        one_time_token = self._clients.repo.get_one_time_token()
 
-        pre_job_contents = environment.get_template("pre-job.j2").render(
-            issue_metrics=True,
-            repo_policy_base_url=repo_policy_base_url,
-            repo_policy_one_time_token=one_time_token,
-            do_repo_policy_check=False,
-            metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
-        )
+        pre_job_contents_dict = {
+            "issue_metrics": True,
+            "metrics_exchange_path": str(METRICS_EXCHANGE_PATH),
+            "do_repo_policy_check": False,
+        }
+        if self._repo_policy_client:
+            pre_job_contents_dict.update(
+                {
+                    "repo_policy_base_url": self._repo_policy_client.base_url,
+                    "repo_policy_one_time_token": self._repo_policy_client.get_one_time_token(),
+                    "do_repo_policy_check": True,
+                }
+            )
+        pre_job_contents = environment.get_template("pre-job.j2").render(pre_job_contents_dict)
         instance_config = create_instance_config(
             self.app_name,
             self.unit_num,
