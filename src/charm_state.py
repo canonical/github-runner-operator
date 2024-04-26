@@ -938,12 +938,12 @@ class CharmState:
         """
         try:
             proxy_config = ProxyConfig.from_charm(charm)
-        except (ValidationError, ValueError) as exc:
+        except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc
 
         try:
             charm_config = CharmConfig.from_charm(charm)
-        except (ValidationError, ValueError) as exc:
+        except ValueError as exc:
             logger.error("Invalid charm config: %s", exc)
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
@@ -955,7 +955,7 @@ class CharmState:
             else:
                 instance_type = InstanceType.LOCAL_LXD
                 runner_config = LocalLxdRunnerConfig.from_charm(charm)
-        except (ValidationError, ValueError) as exc:
+        except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
         try:
