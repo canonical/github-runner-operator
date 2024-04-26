@@ -40,6 +40,8 @@ OPENSTACK_FLAVOR_CONFIG_NAME = "experimental-openstack-flavor"
 OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME = "experiential-openstack-image-build-unit"
 PATH_CONFIG_NAME = "path"
 RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
+REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"
+REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME = "repo-policy-compliance-url"
 RUNNER_STORAGE_CONFIG_NAME = "runner-storage"
 TEST_MODE_CONFIG_NAME = "test-mode"
 # bandit thinks this is a hardcoded password.
@@ -279,6 +281,44 @@ def _parse_labels(labels: str) -> tuple[str, ...]:
     return tuple(valid_labels)
 
 
+class RepoPolicyComplianceConfig(BaseModel):
+    """Configuration for the repo policy compliance service.
+
+    Attributes:
+        token: Token for the repo policy compliance service.
+        url: URL of the repo policy compliance service.
+    """
+
+    token: str
+    url: AnyHttpUrl
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "RepoPolicyComplianceConfig":
+        """Initialize the config from charm.
+
+        Args:
+            charm: The charm instance.
+
+        Raises:
+            CharmConfigInvalidError: If an invalid configuration was set.
+
+        Returns:
+            Current repo-policy-compliance config.
+        """
+        token = charm.config.get(REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME)
+        if not token:
+            raise CharmConfigInvalidError(
+                f"Missing {REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME} configuration"
+            )
+        url = charm.config.get(REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME)
+        if not url:
+            raise CharmConfigInvalidError(
+                f"Missing {REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME} configuration"
+            )
+
+        return cls(url=url, token=token)
+
+
 class CharmConfig(BaseModel):
     """General charm configuration.
 
@@ -301,6 +341,7 @@ class CharmConfig(BaseModel):
     openstack_clouds_yaml: dict[str, dict] | None
     path: GithubPath
     reconcile_interval: int
+    repo_policy_compliance: RepoPolicyComplianceConfig | None
     token: str
 
     @classmethod
@@ -420,6 +461,11 @@ class CharmConfig(BaseModel):
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid {LABELS_CONFIG_NAME} config: {exc}") from exc
 
+        if charm.config.get(REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME) or charm.config.get(
+            REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME
+        ):
+            repo_policy_compliance = RepoPolicyComplianceConfig.from_charm(charm)
+
         return cls(
             denylist=denylist,
             dockerhub_mirror=dockerhub_mirror,
@@ -427,6 +473,7 @@ class CharmConfig(BaseModel):
             openstack_clouds_yaml=openstack_clouds_yaml,
             path=github_config.path,
             reconcile_interval=reconcile_interval,
+            repo_policy_compliance=repo_policy_compliance,
             token=github_config.token,
         )
 

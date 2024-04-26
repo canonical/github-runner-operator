@@ -538,6 +538,11 @@ class OpenstackRunnerManager:
         self._config = openstack_runner_manager_config
         self._cloud_config = cloud_config
         self._github = GithubClient(token=self._config.token)
+        self._repo_policy_client = (
+            RepoPolicyComplianceClient(
+                local_session, "http://127.0.0.1:8080", self._config.service_token
+            ),
+        )
 
     def _get_key_path(self, name: str) -> Path:
         """Get the filepath for storing private SSH of a runner.
@@ -726,8 +731,12 @@ class OpenstackRunnerManager:
             dockerhub_mirror=self._config.dockerhub_mirror,
             ssh_debug_connections=self._config.charm_state.ssh_debug_connections,
         )
+        one_time_token = self._clients.repo.get_one_time_token()
+
         pre_job_contents = environment.get_template("pre-job.j2").render(
             issue_metrics=True,
+            repo_policy_base_url=repo_policy_base_url,
+            repo_policy_one_time_token=one_time_token,
             do_repo_policy_check=False,
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
         )

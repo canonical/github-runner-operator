@@ -391,3 +391,59 @@ def test__parse_labels(label_str: str, expected_labels: tuple[str]):
     assert: expected labels are returned.
     """
     assert charm_state._parse_labels(labels=label_str) == expected_labels
+
+
+def test_repo_policy_config():
+    """
+    arrange: Setup mocked charm with repo-policy-compliance config.
+    act: Retrieve state from charm.
+    assert: repo-policy-compliance config is parsed correctly.
+    """
+    token = secrets.token_hex(16)
+    mock_charm = get_mock_github_runner_charm()
+    mock_charm.config[charm_state.REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME] = token
+    mock_charm.config[charm_state.REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME] = "http://example.com"
+
+    state = CharmState.from_charm(mock_charm)
+
+    assert state.charm_config.repo_policy_compliance.token == token
+    assert state.charm_config.repo_policy_compliance.url == "http://example.com"
+
+
+@pytest.mark.parametrize(
+    "token, url, expected_err_msg",
+    [
+        pytest.param(
+            "token",
+            "invalid-url",
+            "invalid or missing URL scheme",
+            id="invalid url scheme",
+        ),
+        pytest.param(
+            None,
+            "http://example.com",
+            f"Missing {charm_state.REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME} configuration",
+            id="missing token",
+        ),
+        pytest.param(
+            "token",
+            None,
+            f"Missing {charm_state.REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME} configuration",
+            id="missing url",
+        ),
+    ],
+)
+def test_repo_policy_config_invalid(token: str, url: str, expected_err_msg: str):
+    """
+    arrange: Setup mocked charm with repo-policy-compliance config.
+    act: Retrieve state from charm.
+    assert: CharmConfigInvalidError is raised and expected error message is in the exception.
+    """
+    mock_charm = get_mock_github_runner_charm()
+    if token:
+        mock_charm.config[charm_state.REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME] = token
+    if url:
+        mock_charm.config[charm_state.REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME] = url
+    with pytest.raises(CharmConfigInvalidError) as exc:
+        CharmState.from_charm(mock_charm)
+    assert expected_err_msg in str(exc)
