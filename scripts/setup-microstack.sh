@@ -58,7 +58,7 @@ user:
   # Enable ping and SSH access to instances?
   security_group_rules: True
   # Local or remote access to VMs
-  remote_access_location: local
+  remote_access_location: remote
 # # Local Access
 # external_network:
 #   # CIDR of OpenStack external network - arbitrary but must not be in use
