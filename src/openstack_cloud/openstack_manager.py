@@ -715,13 +715,13 @@ class OpenstackRunnerManager:
         """Arguments for _create_runner method.
 
         Attributes:
-            conn: The connection object to access OpenStack cloud.
+            cloud_config: The clouds.yaml containing the OpenStack credentials. The first cloud
+                in the file will be used.
             app_name: The juju application name.
             unit_num: The juju unit number.
             config: Configurations related to runner manager.
         """
-
-        conn: OpenstackConnection
+        cloud_config: dict[str, dict]
         app_name: str
         unit_num: int
         config: OpenstackRunnerManagerConfig
@@ -773,43 +773,44 @@ class OpenstackRunnerManager:
             cloud_init_userdata=cloud_user_data,
         )
 
-        OpenstackRunnerManager._ensure_security_group(args.conn)
-        OpenstackRunnerManager._setup_runner_keypair(args.conn, instance_config.name)
+        with _create_connection(cloud_config=args.cloud_config) as conn:
+            OpenstackRunnerManager._ensure_security_group(conn)
+            OpenstackRunnerManager._setup_runner_keypair(conn, instance_config.name)
 
-        logger.info("Creating runner %s", instance_config.name)
-        try:
-            instance = args.conn.create_server(
-                name=instance_config.name,
-                image=IMAGE_NAME,
-                key_name=instance_config.name,
-                flavor=args.config.flavor,
-                network=args.config.network,
-                security_groups=[SECURITY_GROUP_NAME],
-                userdata=cloud_userdata_str,
-                auto_ip=False,
-                timeout=120,
-                wait=True,
-            )
-        except openstack.exceptions.ResourceTimeout as err:
-            logger.exception("Timeout creating OpenStack runner %s", instance_config.name)
+            logger.info("Creating runner %s", instance_config.name)
             try:
-                logger.info(
-                    "Attempting to remove OpenStack runner %s that timeout on creation",
-                    instance_config.name,
+                instance = conn.create_server(
+                    name=instance_config.name,
+                    image=IMAGE_NAME,
+                    key_name=instance_config.name,
+                    flavor=args.config.flavor,
+                    network=args.config.network,
+                    security_groups=[SECURITY_GROUP_NAME],
+                    userdata=cloud_userdata_str,
+                    auto_ip=False,
+                    timeout=120,
+                    wait=True,
                 )
-                args.conn.delete_server(name_or_id=instance_config.name, wait=True)
-            except openstack.exceptions.SDKException:
-                logger.critical(
-                    "Cleanup of creation failure runner %s has failed", instance_config.name
-                )
-                # Reconcile will attempt to cleanup again prior to spawning new runners.
-            raise RunnerCreateError(
-                f"Timeout creating OpenStack runner {instance_config.name}"
-            ) from err
+            except openstack.exceptions.ResourceTimeout as err:
+                logger.exception("Timeout creating OpenStack runner %s", instance_config.name)
+                try:
+                    logger.info(
+                        "Attempting to remove OpenStack runner %s that timeout on creation",
+                        instance_config.name,
+                    )
+                    conn.delete_server(name_or_id=instance_config.name, wait=True)
+                except openstack.exceptions.SDKException:
+                    logger.critical(
+                        "Cleanup of creation failure runner %s has failed", instance_config.name
+                    )
+                    # Reconcile will attempt to cleanup again prior to spawning new runners.
+                raise RunnerCreateError(
+                    f"Timeout creating OpenStack runner {instance_config.name}"
+                ) from err
 
-        logger.info("Waiting runner %s to come online", instance_config.name)
-        OpenstackRunnerManager._wait_until_runner_process_running(args.conn, instance.name)
-        logger.info("Finished creating runner %s", instance_config.name)
+            logger.info("Waiting runner %s to come online", instance_config.name)
+            OpenstackRunnerManager._wait_until_runner_process_running(conn, instance.name)
+            logger.info("Finished creating runner %s", instance_config.name)
         ts_after = time.time()
         OpenstackRunnerManager._issue_runner_installed_metric(
             app_name=args.app_name,
@@ -1206,7 +1207,7 @@ class OpenstackRunnerManager:
                 logger.info("Creating %s OpenStack runners", delta)
                 args = [
                     OpenstackRunnerManager._CreateRunnerArgs(
-                        conn, self.app_name, self.unit_num, self._config
+                        self._cloud_config, self.app_name, self.unit_num, self._config
                     )
                     for _ in range(delta)
                 ]
