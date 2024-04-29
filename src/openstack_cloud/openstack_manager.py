@@ -19,8 +19,9 @@ import secrets
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass
+from multiprocessing import Pool
 from pathlib import Path
-from typing import Generator, Iterable, Iterator, Literal, NamedTuple, Optional, cast
+from typing import Iterable, Iterator, Literal, NamedTuple, Optional, cast
 
 import invoke
 import jinja2
@@ -153,9 +154,7 @@ class _CloudInitUserData:
 
 
 @contextmanager
-def _create_connection(
-    cloud_config: dict[str, dict]
-) -> Generator[openstack.connection.Connection, None, None]:
+def _create_connection(cloud_config: dict[str, dict]) -> Iterator[openstack.connection.Connection]:
     """Create a connection context managed object, to be used within with statements.
 
     This method should be called with a valid cloud_config. See _validate_cloud_config.
@@ -405,7 +404,7 @@ def create_instance_config(  # pylint: disable=too-many-arguments
     openstack_image: str,
     path: GithubPath,
     labels: Iterable[str],
-    github_client: GithubClient,
+    github_token: str,
 ) -> InstanceConfig:
     """Create an instance config from charm data.
 
@@ -415,11 +414,12 @@ def create_instance_config(  # pylint: disable=too-many-arguments
         openstack_image: The openstack image object to create the instance with.
         path: Github organisation or repository path.
         labels: Addition labels for the runner.
-        github_client: The Github client to interact with Github API.
+        github_token: The Github PAT for interaction with Github API.
 
     Returns:
         Instance configuration created.
     """
+    github_client = GithubClient(token=github_token)
     suffix = secrets.token_hex(12)
     registration_token = github_client.get_runner_registration_token(path=path)
     return InstanceConfig(
@@ -548,7 +548,8 @@ class OpenstackRunnerManager:
                 url=repo_policy_config.url, charm_token=repo_policy_config.token
             )
 
-    def _get_key_path(self, name: str) -> Path:
+    @staticmethod
+    def _get_key_path(name: str) -> Path:
         """Get the filepath for storing private SSH of a runner.
 
         Args:
@@ -559,9 +560,8 @@ class OpenstackRunnerManager:
         """
         return _SSH_KEY_PATH / f"runner-{name}.key"
 
-    # pylint: disable=fixme
-    # TODO: sonarlint gives python:S3776 : Cognitive Complexity of function is too high.
-    def _ensure_security_group(self, conn: OpenstackConnection) -> None:
+    @staticmethod
+    def _ensure_security_group(conn: OpenstackConnection) -> None:
         """Ensure runner security group exists.
 
         Args:
@@ -629,14 +629,15 @@ class OpenstackRunnerManager:
                 ethertype="IPv4",
             )
 
-    def _setup_runner_keypair(self, conn: OpenstackConnection, name: str) -> None:
+    @staticmethod
+    def _setup_runner_keypair(conn: OpenstackConnection, name: str) -> None:
         """Set up the SSH keypair for a runner.
 
         Args:
             conn: The connection object to access OpenStack cloud.
             name: The name of the runner.
         """
-        private_key_path = self._get_key_path(name)
+        private_key_path = OpenstackRunnerManager._get_key_path(name)
 
         if private_key_path.exists():
             logger.warning("Existing private key file for %s found, removing it.", name)
@@ -645,7 +646,8 @@ class OpenstackRunnerManager:
         keypair = conn.create_keypair(name=name)
         private_key_path.write_text(keypair.private_key)
 
-    def _ssh_health_check(self, server: Server) -> bool:
+    @staticmethod
+    def _ssh_health_check(server: Server) -> bool:
         """Use SSH to check whether runner application is running.
 
         Args:
@@ -654,7 +656,9 @@ class OpenstackRunnerManager:
         Returns:
             Whether the runner application is running.
         """
-        for ssh_conn in self._get_ssh_connections(server=server):
+        addresses = []
+        for ssh_conn in OpenstackRunnerManager._get_ssh_connections(server=server):
+            addresses.append(ssh_conn.host)
             try:
                 result = ssh_conn.run("ps aux", warn=True)
                 logger.debug("Output of `ps aux` on %s stderr: %s", server.name, result.stderr)
@@ -677,16 +681,15 @@ class OpenstackRunnerManager:
                 # Looping over all IP and trying SSH.
 
         logger.warning(
-            "Health check failed on %s with any address on network %s",
+            "Health check failed on %s with all of the following addresses: %s",
             server.name,
-            self._config.network,
+            addresses,
         )
         return False
 
     @retry(tries=10, delay=60, local_logger=logger)
-    def _wait_until_runner_process_running(
-        self, conn: OpenstackConnection, instance_name: str
-    ) -> None:
+    @staticmethod
+    def _wait_until_runner_process_running(conn: OpenstackConnection, instance_name: str) -> None:
         """Wait until the runner process is running.
 
         The waiting to done by the retry declarator.
@@ -703,7 +706,7 @@ class OpenstackRunnerManager:
             if (
                 not server
                 or server.status != _INSTANCE_STATUS_ACTIVE
-                or not self._ssh_health_check(server=server)
+                or not OpenstackRunnerManager._ssh_health_check(server=server)
             ):
                 raise RunnerStartError(
                     (
@@ -716,11 +719,30 @@ class OpenstackRunnerManager:
                 f"Unable to connect to openstack runner {instance_name}"
             ) from err
 
-    def _create_runner(self, conn: OpenstackConnection) -> None:
+    @dataclass
+    class _CreateRunnerArgs:
+        """Arguments for _create_runner method.
+
+        Attributes:
+            cloud_config: The clouds.yaml containing the OpenStack credentials. The first cloud
+                in the file will be used.
+            app_name: The juju application name.
+            unit_num: The juju unit number.
+            config: Configurations related to runner manager.
+        """
+        cloud_config: dict[str, dict]
+        app_name: str
+        unit_num: int
+        config: OpenstackRunnerManagerConfig
+
+    @staticmethod
+    def _create_runner(args: _CreateRunnerArgs) -> None:
         """Create a runner on OpenStack cloud.
 
+        Arguments are gathered into a dataclass due to Pool.map needing one argument functions.
+
         Args:
-            conn: The connection object to access OpenStack cloud.
+            args: Arguments of the method.
 
         Raises:
             RunnerCreateError: Unable to create the OpenStack runner.
@@ -732,8 +754,8 @@ class OpenstackRunnerManager:
 
         env_contents = _generate_runner_env(
             templates_env=environment,
-            dockerhub_mirror=self._config.dockerhub_mirror,
-            ssh_debug_connections=self._config.charm_state.ssh_debug_connections,
+            dockerhub_mirror=args.config.dockerhub_mirror,
+            ssh_debug_connections=args.config.charm_state.ssh_debug_connections,
         )
 
         pre_job_contents_dict = {
@@ -751,65 +773,69 @@ class OpenstackRunnerManager:
             )
         pre_job_contents = environment.get_template("pre-job.j2").render(pre_job_contents_dict)
         instance_config = create_instance_config(
-            self.app_name,
-            self.unit_num,
+            args.app_name,
+            args.unit_num,
             IMAGE_NAME,
-            self._config.path,
-            self._config.labels,
-            self._github,
+            args.config.path,
+            args.config.labels,
+            args.config.token,
         )
         cloud_user_data = _CloudInitUserData(
             instance_config=instance_config,
             runner_env=env_contents,
             pre_job_contents=pre_job_contents,
-            proxies=self._config.charm_state.proxy_config,
-            dockerhub_mirror=self._config.dockerhub_mirror,
+            proxies=args.config.charm_state.proxy_config,
+            dockerhub_mirror=args.config.dockerhub_mirror,
         )
         cloud_userdata_str = _generate_cloud_init_userdata(
             templates_env=environment,
             cloud_init_userdata=cloud_user_data,
         )
 
-        self._ensure_security_group(conn)
-        self._setup_runner_keypair(conn, instance_config.name)
+        with _create_connection(cloud_config=args.cloud_config) as conn:
+            OpenstackRunnerManager._ensure_security_group(conn)
+            OpenstackRunnerManager._setup_runner_keypair(conn, instance_config.name)
 
-        logger.info("Creating runner %s", instance_config.name)
-        try:
-            instance = conn.create_server(
-                name=instance_config.name,
-                image=IMAGE_NAME,
-                key_name=instance_config.name,
-                flavor=self._config.flavor,
-                network=self._config.network,
-                security_groups=[SECURITY_GROUP_NAME],
-                userdata=cloud_userdata_str,
-                auto_ip=False,
-                timeout=120,
-                wait=True,
-            )
-        except openstack.exceptions.ResourceTimeout as err:
-            logger.exception("Timeout creating OpenStack runner %s", instance_config.name)
+            logger.info("Creating runner %s", instance_config.name)
             try:
-                logger.info(
-                    "Attempting to remove OpenStack runner %s that timeout on creation",
-                    instance_config.name,
+                instance = conn.create_server(
+                    name=instance_config.name,
+                    image=IMAGE_NAME,
+                    key_name=instance_config.name,
+                    flavor=args.config.flavor,
+                    network=args.config.network,
+                    security_groups=[SECURITY_GROUP_NAME],
+                    userdata=cloud_userdata_str,
+                    auto_ip=False,
+                    timeout=120,
+                    wait=True,
                 )
-                conn.delete_server(name_or_id=instance_config.name, wait=True)
-            except openstack.exceptions.SDKException:
-                logger.critical(
-                    "Cleanup of creation failure runner %s has failed", instance_config.name
-                )
-                # Reconcile will attempt to cleanup again prior to spawning new runners.
-            raise RunnerCreateError(
-                f"Timeout creating OpenStack runner {instance_config.name}"
-            ) from err
+            except openstack.exceptions.ResourceTimeout as err:
+                logger.exception("Timeout creating OpenStack runner %s", instance_config.name)
+                try:
+                    logger.info(
+                        "Attempting to remove OpenStack runner %s that timeout on creation",
+                        instance_config.name,
+                    )
+                    conn.delete_server(name_or_id=instance_config.name, wait=True)
+                except openstack.exceptions.SDKException:
+                    logger.critical(
+                        "Cleanup of creation failure runner %s has failed", instance_config.name
+                    )
+                    # Reconcile will attempt to cleanup again prior to spawning new runners.
+                raise RunnerCreateError(
+                    f"Timeout creating OpenStack runner {instance_config.name}"
+                ) from err
 
-        logger.info("Waiting runner %s to come online", instance_config.name)
-        self._wait_until_runner_process_running(conn, instance.name)
-        logger.info("Finished creating runner %s", instance_config.name)
+            logger.info("Waiting runner %s to come online", instance_config.name)
+            OpenstackRunnerManager._wait_until_runner_process_running(conn, instance.name)
+            logger.info("Finished creating runner %s", instance_config.name)
         ts_after = time.time()
-        self._issue_runner_installed_metric(
-            instance_config=instance_config, install_end_ts=ts_after, install_start_ts=ts_now
+        OpenstackRunnerManager._issue_runner_installed_metric(
+            app_name=args.app_name,
+            instance_config=instance_config,
+            install_end_ts=ts_after,
+            install_start_ts=ts_now,
         )
 
     def get_github_runner_info(self) -> tuple[RunnerGithubInfo, ...]:
@@ -833,7 +859,8 @@ class OpenstackRunnerManager:
             if runner["name"].startswith(f"{self.instance_name}-")
         )
 
-    def _get_ssh_connections(self, server: Server) -> Iterator[SshConnection]:
+    @staticmethod
+    def _get_ssh_connections(server: Server) -> Iterator[SshConnection]:
         """Get ssh connections within a network for a given openstack instance.
 
         Args:
@@ -848,32 +875,30 @@ class OpenstackRunnerManager:
             )
             return
 
-        if not cast(dict, server.addresses).get(self._config.network, None):
-            logger.warning(
-                "Instance %s created under invalid or no network %s",
-                server.name,
-                server.addresses,
-            )
+        network_address_list = server.addresses.values()
+        if not network_address_list:
+            logger.error("No addresses to connect to for OpenStack server %s", server.name)
             return
 
-        for address in server.addresses[self._config.network]:
-            ip = address["addr"]
+        for network_addresses in network_address_list:
+            for address in network_addresses:
+                ip = address["addr"]
 
-            key_path = self._get_key_path(server.name)
-            if not key_path.exists():
-                logger.error(
-                    "Skipping SSH to server %s with missing key file %s",
-                    server.name,
-                    str(key_path),
+                key_path = OpenstackRunnerManager._get_key_path(server.name)
+                if not key_path.exists():
+                    logger.error(
+                        "Skipping SSH to server %s with missing key file %s",
+                        server.name,
+                        str(key_path),
+                    )
+                    continue
+
+                yield SshConnection(
+                    host=ip,
+                    user="ubuntu",
+                    connect_kwargs={"key_filename": str(key_path)},
+                    connect_timeout=10,
                 )
-                continue
-
-            yield SshConnection(
-                host=ip,
-                user="ubuntu",
-                connect_kwargs={"key_filename": str(key_path)},
-                connect_timeout=10,
-            )
 
     def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
         """Get status on OpenStack of each runner.
@@ -899,8 +924,9 @@ class OpenstackRunnerManager:
             if not server:
                 continue
             # SHUTOFF runners are runners that have completed executing jobs.
-            if server.status == _INSTANCE_STATUS_SHUTOFF or not self._ssh_health_check(
-                server=server
+            if (
+                server.status == _INSTANCE_STATUS_SHUTOFF
+                or not OpenstackRunnerManager._ssh_health_check(server=server)
             ):
                 unhealthy_runner.append(instance.name)
             else:
@@ -920,7 +946,7 @@ class OpenstackRunnerManager:
         """
         if not remove_token:
             return
-        for ssh_conn in self._get_ssh_connections(server=server):
+        for ssh_conn in OpenstackRunnerManager._get_ssh_connections(server=server):
             try:
                 result: Result = ssh_conn.run(
                     f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}",
@@ -1067,7 +1093,7 @@ class OpenstackRunnerManager:
                 conn.delete_keypair(instance_name)
             except openstack.exceptions.SDKException:
                 logger.exception("Unable to delete OpenStack keypair %s", instance_name)
-            self._get_key_path(instance_name).unlink(missing_ok=True)
+            OpenstackRunnerManager._get_key_path(instance_name).unlink(missing_ok=True)
             num_to_remove -= 1
 
     def _clean_up_keys_files(
@@ -1080,7 +1106,9 @@ class OpenstackRunnerManager:
             exclude_instances: The keys of these instance will not be deleted.
         """
         logger.info("Cleaning up SSH key files")
-        exclude_filename = set(self._get_key_path(instance) for instance in exclude_instances)
+        exclude_filename = set(
+            OpenstackRunnerManager._get_key_path(instance) for instance in exclude_instances
+        )
 
         total = 0
         deleted = 0
@@ -1197,8 +1225,18 @@ class OpenstackRunnerManager:
                     ) from exc
 
                 logger.info("Creating %s OpenStack runners", delta)
-                for _ in range(delta):
-                    self._create_runner(conn)
+                args = [
+                    OpenstackRunnerManager._CreateRunnerArgs(
+                        self._cloud_config, self.app_name, self.unit_num, self._config
+                    )
+                    for _ in range(delta)
+                ]
+                with Pool(processes=min(delta, 10)) as pool:
+                    pool.map(
+                        func=OpenstackRunnerManager._create_runner,
+                        iterable=args,
+                    )
+
             elif delta < 0:
                 logger.info("Removing %s OpenStack runners", delta)
                 self._remove_runners(
@@ -1318,12 +1356,17 @@ class OpenstackRunnerManager:
         except OSError as exc:
             raise _PullFileError(reason=f"Unable to retrieve file {remote_path}") from exc
 
+    @staticmethod
     def _issue_runner_installed_metric(
-        self, instance_config: InstanceConfig, install_start_ts: float, install_end_ts: float
+        app_name: str,
+        instance_config: InstanceConfig,
+        install_start_ts: float,
+        install_end_ts: float,
     ) -> None:
         """Issue RunnerInstalled metric.
 
         Args:
+            app_name: The juju application name.
             instance_config: The configuration values for Openstack instance.
             install_start_ts: The timestamp when the installation started.
             install_end_ts: The timestamp when the installation ended.
@@ -1332,7 +1375,7 @@ class OpenstackRunnerManager:
             metric_events.issue_event(
                 event=metric_events.RunnerInstalled(
                     timestamp=install_start_ts,
-                    flavor=self.app_name,
+                    flavor=app_name,
                     duration=install_end_ts - install_start_ts,
                 ),
             )
