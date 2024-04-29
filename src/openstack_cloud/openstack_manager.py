@@ -499,113 +499,6 @@ _INSTANCE_STATUS_SHUTOFF = "SHUTOFF"
 _INSTANCE_STATUS_ACTIVE = "ACTIVE"
 
 
-@dataclass
-class _CreateRunnerArgs:
-    """Arguments for _create_runner method.
-
-    Attributes:
-        conn: The connection object to access OpenStack cloud.
-        app_name: The juju application name.
-        unit_num: The juju unit number.
-        config: Configurations related to runner manager.
-    """
-
-    conn: OpenstackConnection
-    app_name: str
-    unit_num: int
-    config: OpenstackRunnerManagerConfig
-
-
-def _create_runner(args: _CreateRunnerArgs) -> None:
-    """Create a runner on OpenStack cloud.
-
-    Arguments are gathered into a dataclass due to Pool.map needing one argument functions.
-
-    Args:
-        args: Arguments of the method.
-
-    Raises:
-        RunnerCreateError: Unable to create the OpenStack runner.
-    """
-    ts_now = time.time()
-    environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
-
-    env_contents = _generate_runner_env(
-        templates_env=environment,
-        dockerhub_mirror=args.config.dockerhub_mirror,
-        ssh_debug_connections=args.config.charm_state.ssh_debug_connections,
-    )
-    pre_job_contents = environment.get_template("pre-job.j2").render(
-        issue_metrics=True,
-        do_repo_policy_check=False,
-        metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
-    )
-    instance_config = create_instance_config(
-        args.app_name,
-        args.unit_num,
-        IMAGE_NAME,
-        args.config.path,
-        args.config.labels,
-        args.config.token,
-    )
-    cloud_user_data = _CloudInitUserData(
-        instance_config=instance_config,
-        runner_env=env_contents,
-        pre_job_contents=pre_job_contents,
-        proxies=args.config.charm_state.proxy_config,
-        dockerhub_mirror=args.config.dockerhub_mirror,
-    )
-    cloud_userdata_str = _generate_cloud_init_userdata(
-        templates_env=environment,
-        cloud_init_userdata=cloud_user_data,
-    )
-
-    OpenstackRunnerManager._ensure_security_group(args.conn)
-    OpenstackRunnerManager._setup_runner_keypair(args.conn, instance_config.name)
-
-    logger.info("Creating runner %s", instance_config.name)
-    try:
-        instance = args.conn.create_server(
-            name=instance_config.name,
-            image=IMAGE_NAME,
-            key_name=instance_config.name,
-            flavor=args.config.flavor,
-            network=args.config.network,
-            security_groups=[SECURITY_GROUP_NAME],
-            userdata=cloud_userdata_str,
-            auto_ip=False,
-            timeout=120,
-            wait=True,
-        )
-    except openstack.exceptions.ResourceTimeout as err:
-        logger.exception("Timeout creating OpenStack runner %s", instance_config.name)
-        try:
-            logger.info(
-                "Attempting to remove OpenStack runner %s that timeout on creation",
-                instance_config.name,
-            )
-            args.conn.delete_server(name_or_id=instance_config.name, wait=True)
-        except openstack.exceptions.SDKException:
-            logger.critical(
-                "Cleanup of creation failure runner %s has failed", instance_config.name
-            )
-            # Reconcile will attempt to cleanup again prior to spawning new runners.
-        raise RunnerCreateError(
-            f"Timeout creating OpenStack runner {instance_config.name}"
-        ) from err
-
-    logger.info("Waiting runner %s to come online", instance_config.name)
-    OpenstackRunnerManager._wait_until_runner_process_running(args.conn, instance.name)
-    logger.info("Finished creating runner %s", instance_config.name)
-    ts_after = time.time()
-    OpenstackRunnerManager._issue_runner_installed_metric(
-        app_name=args.app_name,
-        instance_config=instance_config,
-        install_end_ts=ts_after,
-        install_start_ts=ts_now,
-    )
-
-
 class OpenstackRunnerManager:
     """Runner manager for OpenStack-based instances.
 
@@ -816,6 +709,114 @@ class OpenstackRunnerManager:
             raise RunnerStartError(
                 f"Unable to connect to openstack runner {instance_name}"
             ) from err
+
+    @dataclass
+    class _CreateRunnerArgs:
+        """Arguments for _create_runner method.
+
+        Attributes:
+            conn: The connection object to access OpenStack cloud.
+            app_name: The juju application name.
+            unit_num: The juju unit number.
+            config: Configurations related to runner manager.
+        """
+
+        conn: OpenstackConnection
+        app_name: str
+        unit_num: int
+        config: OpenstackRunnerManagerConfig
+
+    @staticmethod
+    def _create_runner(args: _CreateRunnerArgs) -> None:
+        """Create a runner on OpenStack cloud.
+
+        Arguments are gathered into a dataclass due to Pool.map needing one argument functions.
+
+        Args:
+            args: Arguments of the method.
+
+        Raises:
+            RunnerCreateError: Unable to create the OpenStack runner.
+        """
+        ts_now = time.time()
+        environment = jinja2.Environment(
+            loader=jinja2.FileSystemLoader("templates"), autoescape=True
+        )
+
+        env_contents = _generate_runner_env(
+            templates_env=environment,
+            dockerhub_mirror=args.config.dockerhub_mirror,
+            ssh_debug_connections=args.config.charm_state.ssh_debug_connections,
+        )
+        pre_job_contents = environment.get_template("pre-job.j2").render(
+            issue_metrics=True,
+            do_repo_policy_check=False,
+            metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
+        )
+        instance_config = create_instance_config(
+            args.app_name,
+            args.unit_num,
+            IMAGE_NAME,
+            args.config.path,
+            args.config.labels,
+            args.config.token,
+        )
+        cloud_user_data = _CloudInitUserData(
+            instance_config=instance_config,
+            runner_env=env_contents,
+            pre_job_contents=pre_job_contents,
+            proxies=args.config.charm_state.proxy_config,
+            dockerhub_mirror=args.config.dockerhub_mirror,
+        )
+        cloud_userdata_str = _generate_cloud_init_userdata(
+            templates_env=environment,
+            cloud_init_userdata=cloud_user_data,
+        )
+
+        OpenstackRunnerManager._ensure_security_group(args.conn)
+        OpenstackRunnerManager._setup_runner_keypair(args.conn, instance_config.name)
+
+        logger.info("Creating runner %s", instance_config.name)
+        try:
+            instance = args.conn.create_server(
+                name=instance_config.name,
+                image=IMAGE_NAME,
+                key_name=instance_config.name,
+                flavor=args.config.flavor,
+                network=args.config.network,
+                security_groups=[SECURITY_GROUP_NAME],
+                userdata=cloud_userdata_str,
+                auto_ip=False,
+                timeout=120,
+                wait=True,
+            )
+        except openstack.exceptions.ResourceTimeout as err:
+            logger.exception("Timeout creating OpenStack runner %s", instance_config.name)
+            try:
+                logger.info(
+                    "Attempting to remove OpenStack runner %s that timeout on creation",
+                    instance_config.name,
+                )
+                args.conn.delete_server(name_or_id=instance_config.name, wait=True)
+            except openstack.exceptions.SDKException:
+                logger.critical(
+                    "Cleanup of creation failure runner %s has failed", instance_config.name
+                )
+                # Reconcile will attempt to cleanup again prior to spawning new runners.
+            raise RunnerCreateError(
+                f"Timeout creating OpenStack runner {instance_config.name}"
+            ) from err
+
+        logger.info("Waiting runner %s to come online", instance_config.name)
+        OpenstackRunnerManager._wait_until_runner_process_running(args.conn, instance.name)
+        logger.info("Finished creating runner %s", instance_config.name)
+        ts_after = time.time()
+        OpenstackRunnerManager._issue_runner_installed_metric(
+            app_name=args.app_name,
+            instance_config=instance_config,
+            install_end_ts=ts_after,
+            install_start_ts=ts_now,
+        )
 
     def get_github_runner_info(self) -> tuple[RunnerGithubInfo, ...]:
         """Get information on GitHub for the runners.
@@ -1204,12 +1205,14 @@ class OpenstackRunnerManager:
 
                 logger.info("Creating %s OpenStack runners", delta)
                 args = [
-                    _CreateRunnerArgs(conn, self.app_name, self.unit_num, self._config)
+                    OpenstackRunnerManager._CreateRunnerArgs(
+                        conn, self.app_name, self.unit_num, self._config
+                    )
                     for _ in range(delta)
                 ]
                 with Pool(processes=min(delta, 10)) as pool:
                     pool.map(
-                        func=_create_runner,
+                        func=OpenstackRunnerManager._create_runner,
                         iterable=args,
                     )
 
