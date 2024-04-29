@@ -403,7 +403,7 @@ def create_instance_config(  # pylint: disable=too-many-arguments
     openstack_image: str,
     path: GithubPath,
     labels: Iterable[str],
-    github_client: GithubClient,
+    github_token: str,
 ) -> InstanceConfig:
     """Create an instance config from charm data.
 
@@ -413,11 +413,12 @@ def create_instance_config(  # pylint: disable=too-many-arguments
         openstack_image: The openstack image object to create the instance with.
         path: Github organisation or repository path.
         labels: Addition labels for the runner.
-        github_client: The Github client to interact with Github API.
+        github_token: The Github PAT for interaction with Github API.
 
     Returns:
         Instance configuration created.
     """
+    github_client = GithubClient(token=github_token)
     suffix = secrets.token_hex(12)
     registration_token = github_client.get_runner_registration_token(path=path)
     return InstanceConfig(
@@ -718,14 +719,12 @@ class OpenstackRunnerManager:
             app_name: The juju application name.
             unit_num: The juju unit number.
             config: Configurations related to runner manager.
-            github: The GithubClient for GitHub API.
         """
 
         conn: OpenstackConnection
         app_name: str
         unit_num: int
         config: OpenstackRunnerManagerConfig
-        github: GithubClient
 
     @staticmethod
     def _create_runner(args: _CreateRunnerArgs) -> None:
@@ -760,7 +759,7 @@ class OpenstackRunnerManager:
             IMAGE_NAME,
             args.config.path,
             args.config.labels,
-            args.github,
+            args.config.token,
         )
         cloud_user_data = _CloudInitUserData(
             instance_config=instance_config,
@@ -1207,7 +1206,7 @@ class OpenstackRunnerManager:
                 logger.info("Creating %s OpenStack runners", delta)
                 args = [
                     OpenstackRunnerManager._CreateRunnerArgs(
-                        conn, self.app_name, self.unit_num, self._config, self._github
+                        conn, self.app_name, self.unit_num, self._config
                     )
                     for _ in range(delta)
                 ]
