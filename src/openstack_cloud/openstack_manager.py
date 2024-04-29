@@ -1205,10 +1205,16 @@ class OpenstackRunnerManager:
                     ) from exc
 
                 logger.info("Creating %s OpenStack runners", delta)
+                args = [
+                    OpenstackRunnerManager._CreateRunnerArgs(
+                        conn, self.app_name, self.unit_num, self._config, self._github
+                    )
+                    for _ in range(delta)
+                ]
                 with Pool(processes=min(delta, 10)) as pool:
                     pool.map(
                         func=OpenstackRunnerManager._create_runner,
-                        iterable=(conn, self.app_name, self.unit_num, self._config, self._github),
+                        iterable=args,
                     )
 
             elif delta < 0:
