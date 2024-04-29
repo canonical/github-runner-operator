@@ -6,19 +6,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  self-host-stg:
-    name: self-hosted stg test
-    runs-on: [self-hosted, ARM64, test-arm]
-    strategy:
-      matrix:
-        index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    steps:
-      - run: lxd init --auto
-      - run: lxc list
-      - run: groups
-      - run: cat /etc/docker/daemon.json
-      - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
-      - run: docker pull jujusolutions/charm-base:ubuntu-20.04
+  # self-host-stg:
+  #   name: self-hosted stg test
+  #   runs-on: [self-hosted, ARM64, test-arm]
+  #   strategy:
+  #     matrix:
+  #       index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  #   steps:
+  #     - run: lxd init --auto
+  #     - run: lxc list
+  #     - run: groups
+  #     - run: cat /etc/docker/daemon.json
+  #     - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
+  #     - run: docker pull jujusolutions/charm-base:ubuntu-20.04
   # self-host-x64:
   #   name: self-hosted x64 test
   #   runs-on: [self-hosted, X64, large, jammy]
@@ -49,17 +49,20 @@ jobs:
   #   - name: rand read
   #     run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randread --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
   #   - run: sudo rm -f /write* /read*
-  # self-host-test-arm64:
-  #   name: self-hosted arm64 test
-  #   runs-on: [self-hosted, ARM64, medium]
-  #   steps:
-  #     - run: lscpu
-  #     - run: df -h
-  #     - run: free -h
-  #     - run: echo $HTTP_PROXY
-  #     - run: echo $HTTPS_PROXY
-  #     - run: echo $NO_PROXY
-  #     - run: echo $DOCKERHUB_MIRROR
+  self-host-test-arm64:
+    name: self-hosted arm64 test
+    runs-on: [self-hosted, ARM64, medium]
+    strategy:
+      matrix:
+        index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: echo $HTTP_PROXY
+      - run: echo $HTTPS_PROXY
+      - run: echo $NO_PROXY
+      - run: echo $DOCKERHUB_MIRROR
   # - run: sudo snap install aproxy --edge
   # - run: sudo snap set aproxy proxy=squid.internal:3128 listen=:54969
   # - run: |-
