@@ -856,29 +856,30 @@ class OpenstackRunnerManager:
             )
             return
 
-        addresses = server.addresses.values()
-        if not addresses:
+        network_address_list = server.addresses.values()
+        if not network_address_list:
             logger.error("No addresses to connect to for OpenStack server %s", server.name)
             return
 
-        for address in addresses:
-            ip = address["addr"]
+        for network_addresses in network_address_list:
+            for address in network_addresses:
+                ip = address["addr"]
 
-            key_path = OpenstackRunnerManager._get_key_path(server.name)
-            if not key_path.exists():
-                logger.error(
-                    "Skipping SSH to server %s with missing key file %s",
-                    server.name,
-                    str(key_path),
+                key_path = OpenstackRunnerManager._get_key_path(server.name)
+                if not key_path.exists():
+                    logger.error(
+                        "Skipping SSH to server %s with missing key file %s",
+                        server.name,
+                        str(key_path),
+                    )
+                    continue
+
+                yield SshConnection(
+                    host=ip,
+                    user="ubuntu",
+                    connect_kwargs={"key_filename": str(key_path)},
+                    connect_timeout=10,
                 )
-                continue
-
-            yield SshConnection(
-                host=ip,
-                user="ubuntu",
-                connect_kwargs={"key_filename": str(key_path)},
-                connect_timeout=10,
-            )
 
     def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
         """Get status on OpenStack of each runner.
