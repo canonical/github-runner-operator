@@ -625,10 +625,9 @@ class Runner:
         )
         exit_code, stdout, _ = self.instance.execute(["snap", "logs", "aproxy.aproxy", "-n=all"])
         stdout_message = stdout.read().decode("utf-8")
-        if (
-            exit_code != 0
-            or "Started Service for snap application aproxy.aproxy" not in stdout_message
-            or "Started snap.aproxy.aproxy.service" not in stdout_message
+        if exit_code != 0 or (
+            "Started Service for snap application aproxy.aproxy" not in stdout_message
+            and "Started snap.aproxy.aproxy.service" not in stdout_message
         ):
             raise RunnerAproxyError("Aproxy service did not configure correctly")
 
