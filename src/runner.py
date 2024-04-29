@@ -628,7 +628,7 @@ class Runner:
         if (
             exit_code != 0
             or "Started Service for snap application aproxy.aproxy" not in stdout_message
-            or "Service for snap application aproxy.aproxy" not in stdout_message
+            or "Started snap.aproxy.aproxy.service" not in stdout_message
         ):
             raise RunnerAproxyError("Aproxy service did not configure correctly")
 
