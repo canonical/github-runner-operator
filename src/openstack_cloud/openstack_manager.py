@@ -540,14 +540,6 @@ class OpenstackRunnerManager:
         self._cloud_config = cloud_config
         self._github = GithubClient(token=self._config.token)
 
-        self._repo_policy_client = None
-        if (
-            repo_policy_config := openstack_runner_manager_config.charm_state.charm_config.repo_policy_compliance
-        ):
-            self._repo_policy_client = RepoPolicyComplianceClient(
-                url=repo_policy_config.url, charm_token=repo_policy_config.token
-            )
-
     @staticmethod
     def _get_key_path(name: str) -> Path:
         """Get the filepath for storing private SSH of a runner.
@@ -730,6 +722,7 @@ class OpenstackRunnerManager:
             unit_num: The juju unit number.
             config: Configurations related to runner manager.
         """
+
         cloud_config: dict[str, dict]
         app_name: str
         unit_num: int
@@ -763,11 +756,14 @@ class OpenstackRunnerManager:
             "metrics_exchange_path": str(METRICS_EXCHANGE_PATH),
             "do_repo_policy_check": False,
         }
-        if self._repo_policy_client:
+        if repo_policy_config := args.config.charm_state.charm_config.repo_policy_compliance:
+            repo_policy_client = RepoPolicyComplianceClient(
+                url=repo_policy_config.url, charm_token=repo_policy_config.token
+            )
             pre_job_contents_dict.update(
                 {
-                    "repo_policy_base_url": self._repo_policy_client.base_url,
-                    "repo_policy_one_time_token": self._repo_policy_client.get_one_time_token(),
+                    "repo_policy_base_url": repo_policy_client.base_url,
+                    "repo_policy_one_time_token": repo_policy_client.get_one_time_token(),
                     "do_repo_policy_check": True,
                 }
             )
@@ -1227,7 +1223,10 @@ class OpenstackRunnerManager:
                 logger.info("Creating %s OpenStack runners", delta)
                 args = [
                     OpenstackRunnerManager._CreateRunnerArgs(
-                        self._cloud_config, self.app_name, self.unit_num, self._config
+                        cloud_config=self._cloud_config,
+                        app_name=self.app_name,
+                        unit_num=self.unit_num,
+                        config=self._config,
                     )
                     for _ in range(delta)
                 ]

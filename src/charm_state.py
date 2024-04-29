@@ -316,7 +316,8 @@ class RepoPolicyComplianceConfig(BaseModel):
                 f"Missing {REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME} configuration"
             )
 
-        return cls(url=url, token=token)
+        # pydantic allows string to be passed as AnyHttpUrl, mypy complains about it
+        return cls(url=url, token=token)  # type: ignore
 
 
 class CharmConfig(BaseModel):
@@ -332,6 +333,7 @@ class CharmConfig(BaseModel):
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
             name.
         reconcile_interval: Time between each reconciliation of runners in minutes.
+        repo_policy_compliance: Configuration for the repo policy compliance service.
         token: GitHub personal access token for GitHub API.
     """
 

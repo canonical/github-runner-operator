@@ -57,7 +57,6 @@ class RepoPolicyComplianceClient:  # pylint: disable=too-few-public-methods
         Returns:
             A new requests session with retries and no proxy settings.
         """
-
         # The repo policy compliance service is on localhost and should not have any proxies
         # setting configured.
         adapter = requests.adapters.HTTPAdapter(
