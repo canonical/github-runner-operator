@@ -545,7 +545,12 @@ async def app_with_grafana_agent_integrated_fixture(
     """Setup the charm to be integrated with grafana-agent using the cos-agent integration."""
     # Pin grafana agent revisions since the recent releases are not compatible with juju 2.9
     # (due to usage of juju secrets)
-    grafana_agent = await model.deploy("grafana-agent", channel="latest/edge", revision=105)
+    grafana_agent = await model.deploy(
+        "grafana-agent",
+        channel="latest/edge",
+        revision=105,
+        series="jammy",
+    )
     await model.relate(f"{app_no_runner.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
     await model.wait_for_idle(apps=[app_no_runner.name], status=ACTIVE)
     await model.wait_for_idle(apps=[grafana_agent.name])
