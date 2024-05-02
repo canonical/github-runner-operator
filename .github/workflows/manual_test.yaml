@@ -17,8 +17,7 @@ jobs:
       - uses: canonical/setup-lxd@v0.1.1
       - run: lxd init --auto
       - run: lxc list
-      - run: sudo snap install juju
-      - run: time sudo snap install juju
+      - run: time juju bootstrap localhost localhost
   #     - run: groups
   #     - run: cat /etc/docker/daemon.json
   #     - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
@@ -69,10 +68,11 @@ jobs:
       # - run: echo $NO_PROXY
       # - run: echo $DOCKERHUB_MIRROR
       - uses: canonical/setup-lxd@v0.1.1
-      - run: lxd init --auto
       - run: time sudo snap install juju
         if: ${{ always() }}
+      - run: lxd init --auto
       - run: lxc list
+      - run: time juju bootstrap localhost localhost
   # - run: sudo snap install aproxy --edge
   # - run: sudo snap set aproxy proxy=squid.internal:3128 listen=:54969
   # - run: |-
