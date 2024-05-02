@@ -57,8 +57,9 @@ class RepoPolicyComplianceClient:  # pylint: disable=too-few-public-methods
         Returns:
             A new requests session with retries and no proxy settings.
         """
-        # The repo policy compliance service is on localhost and should not have any proxies
-        # setting configured.
+        # The repo policy compliance service might be on localhost and should not have any proxies
+        # setting configured. This can be changed in the future when we also rely on an
+        # external service for LXD cloud.
         adapter = requests.adapters.HTTPAdapter(
             max_retries=urllib3.Retry(
                 total=3, backoff_factor=0.3, status_forcelist=[500, 502, 503, 504]
