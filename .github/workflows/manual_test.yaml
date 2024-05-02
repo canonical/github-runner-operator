@@ -67,6 +67,7 @@ jobs:
       # - run: echo $HTTPS_PROXY
       # - run: echo $NO_PROXY
       # - run: echo $DOCKERHUB_MIRROR
+      - uses: canonical/setup-lxd@v0.1.1
       - run: time sudo snap install juju
       - run: lxd init --auto
       - run: lxc list
