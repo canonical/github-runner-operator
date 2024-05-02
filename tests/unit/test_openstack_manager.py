@@ -44,6 +44,7 @@ def mock_github_client_fixture() -> MagicMock:
         filename="test_filename",
         temp_download_token="test_token",
     )
+    mock_github_client.get_runner_registration_token.return_value = "test_token"
     return mock_github_client
 
 
@@ -104,10 +105,23 @@ def openstack_manager_for_reconcile_fixture(
     github_metrics_mock = MagicMock(openstack_manager.github_metrics)
     monkeypatch.setattr(openstack_manager, "github_metrics", github_metrics_mock)
 
+    monkeypatch.setattr(
+        openstack_manager, "GithubClient", MagicMock(return_value=mock_github_client)
+    )
+
+    pool_mock = MagicMock()
+    pool_mock.__enter__.return_value = pool_mock
+    pool_mock.map.side_effect = lambda func, iterable: func(*iterable)
+    pool_cls_mock = MagicMock()
+    pool_cls_mock.return_value = pool_mock
+    monkeypatch.setattr(openstack_manager, "Pool", pool_cls_mock)
+
     app_name = secrets.token_hex(16)
     charm_state = MagicMock(spec=CharmState)
     charm_state.proxy_config = ProxyConfig()
     charm_state.ssh_debug_connections = MagicMock()
+    charm_state.charm_config = MagicMock()
+    charm_state.charm_config.repo_policy_compliance = None
     os_runner_manager_config = openstack_manager.OpenstackRunnerManagerConfig(
         charm_state=charm_state,
         path=MagicMock(),
@@ -128,10 +142,12 @@ def openstack_manager_for_reconcile_fixture(
         openstack_runner_manager_config=os_runner_manager_config,
         cloud_config={},
     )
-    os_runner_manager._github = mock_github_client
     os_runner_manager._ssh_health_check = MagicMock(return_value=True)
     os_runner_manager._get_ssh_connections = MagicMock(
         return_value=(ssh_connection_mock for _ in range(10))
+    )
+    monkeypatch.setattr(
+        openstack_manager.OpenstackRunnerManager, "_wait_until_runner_process_running", MagicMock()
     )
 
     monkeypatch.setattr(openstack_manager, "_SSH_KEY_PATH", tmp_path)

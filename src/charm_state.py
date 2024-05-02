@@ -40,7 +40,8 @@ OPENSTACK_FLAVOR_CONFIG_NAME = "experimental-openstack-flavor"
 OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME = "experiential-openstack-image-build-unit"
 PATH_CONFIG_NAME = "path"
 RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
-REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"
+# bandit thinks this is a hardcoded password
+REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"  # nosec
 REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME = "repo-policy-compliance-url"
 RUNNER_STORAGE_CONFIG_NAME = "runner-storage"
 TEST_MODE_CONFIG_NAME = "test-mode"
@@ -464,6 +465,7 @@ class CharmConfig(BaseModel):
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid {LABELS_CONFIG_NAME} config: {exc}") from exc
 
+        repo_policy_compliance = None
         if charm.config.get(REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME) or charm.config.get(
             REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME
         ):
