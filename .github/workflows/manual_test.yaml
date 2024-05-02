@@ -68,8 +68,8 @@ jobs:
       # - run: echo $NO_PROXY
       # - run: echo $DOCKERHUB_MIRROR
       - uses: canonical/setup-lxd@v0.1.1
-      - run: time sudo snap install juju
       - run: lxd init --auto
+      - run: time sudo snap install juju
       - run: lxc list
   # - run: sudo snap install aproxy --edge
   # - run: sudo snap set aproxy proxy=squid.internal:3128 listen=:54969
