@@ -14,6 +14,7 @@ jobs:
         # index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         index: [0]
     steps:
+      - uses: canonical/setup-lxd@v0.1.1
       - run: lxd init --auto
       - run: lxc list
       - run: sudo snap install juju
