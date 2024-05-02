@@ -152,13 +152,13 @@ class GithubConfig:
         path_str = charm.config.get(PATH_CONFIG_NAME, "")
         if not path_str:
             raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
-        path = parse_github_path(path_str, runner_group)
+        path = parse_github_path(cast(str, path_str), cast(str, runner_group))
 
         token = charm.config.get(TOKEN_CONFIG_NAME)
         if not token:
             raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
 
-        return cls(token=token, path=path)
+        return cls(token=cast(str, token), path=path)
 
 
 class VirtualMachineResources(NamedTuple):
@@ -299,7 +299,7 @@ class CharmConfig(BaseModel):
         Returns:
             The firewall deny entries.
         """
-        denylist_str = charm.config.get(DENYLIST_CONFIG_NAME, "")
+        denylist_str = cast(str, charm.config.get(DENYLIST_CONFIG_NAME, ""))
 
         entry_list = [entry.strip() for entry in denylist_str.split(",")]
         denylist = [FirewallEntry.decode(entry) for entry in entry_list if entry]
@@ -323,8 +323,9 @@ class CharmConfig(BaseModel):
         if not dockerhub_mirror:
             return None
 
+        dockerhub_mirror = cast(str, dockerhub_mirror)
         dockerhub_mirror_url = urlsplit(dockerhub_mirror)
-        if dockerhub_mirror is not None and dockerhub_mirror_url.scheme != "https":
+        if dockerhub_mirror_url.scheme != "https":
             raise CharmConfigInvalidError(
                 (
                     f"Only secured registry supported for {DOCKERHUB_MIRROR_CONFIG_NAME} "
@@ -352,7 +353,7 @@ class CharmConfig(BaseModel):
             return None
 
         try:
-            openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
+            openstack_clouds_yaml = yaml.safe_load(cast(str, openstack_clouds_yaml_str))
         except yaml.YAMLError as exc:
             logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
             raise CharmConfigInvalidError(
@@ -402,7 +403,7 @@ class CharmConfig(BaseModel):
         openstack_clouds_yaml = cls._parse_openstack_clouds_config(charm)
 
         try:
-            labels = _parse_labels(charm.config.get(LABELS_CONFIG_NAME, ""))
+            labels = _parse_labels(cast(str, charm.config.get(LABELS_CONFIG_NAME, "")))
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid {LABELS_CONFIG_NAME} config: {exc}") from exc
 
@@ -537,7 +538,9 @@ class RunnerCharmConfig(BaseModel):
             raise CharmConfigInvalidError(f"Invalid {VM_CPU_CONFIG_NAME} configuration") from err
 
         virtual_machine_resources = VirtualMachineResources(
-            cpu, charm.config[VM_MEMORY_CONFIG_NAME], charm.config[VM_DISK_CONFIG_NAME]
+            cpu,
+            cast(str, charm.config[VM_MEMORY_CONFIG_NAME]),
+            cast(str, charm.config[VM_DISK_CONFIG_NAME]),
         )
 
         return cls(
@@ -771,9 +774,11 @@ class SSHDebugConnection(BaseModel):
                 )
                 continue
             ssh_debug_connections.append(
+                # pydantic allows string to be passed as IPvAnyAddress and as int,
+                # mypy complains about it
                 SSHDebugConnection(
-                    host=host,
-                    port=port,
+                    host=host,  # type: ignore
+                    port=port,  # type: ignore
                     rsa_fingerprint=rsa_fingerprint,
                     ed25519_fingerprint=ed25519_fingerprint,
                 )
