@@ -11,7 +11,7 @@ import pytest
 from invoke import Result
 from openstack.compute.v2.keypair import Keypair
 
-from charm_state import CharmState, ProxyConfig
+from charm_state import CharmState, ProxyConfig, RepoPolicyComplianceConfig
 from errors import OpenStackError
 from github_type import GitHubRunnerStatus, SelfHostedRunner
 from metrics import events as metric_events
@@ -108,6 +108,11 @@ def openstack_manager_for_reconcile_fixture(
     monkeypatch.setattr(
         openstack_manager, "GithubClient", MagicMock(return_value=mock_github_client)
     )
+
+    runner_metrics_path = tmp_path / "runner_fs"
+    ms = MetricsStorage(path=runner_metrics_path, runner_name="test_runner")
+    monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
+    monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
 
     pool_mock = MagicMock()
     pool_mock.__enter__.return_value = pool_mock
@@ -726,3 +731,38 @@ def test_reconcile_issue_reconciliation_metrics(
             )
         ]
     )
+
+
+def test_repo_policy_config(
+    openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager,
+    monkeypatch: pytest.MonkeyPatch,
+    patched_create_connection_context: MagicMock,
+):
+    """
+    arrange: Mock the repo policy compliance config.
+    act: Reconcile to create a runner.
+    assert: The expected url and one-time-token is present in the pre-job script in \
+        the cloud-init data.
+    """
+    test_url = "http://test.url"
+    token = secrets.token_hex(16)
+    one_time_token = secrets.token_hex(16)
+    openstack_manager_for_reconcile._config.charm_state.charm_config.repo_policy_compliance = (
+        RepoPolicyComplianceConfig(url=test_url, token=token)
+    )
+    repo_policy_compliance_client_mock = MagicMock(
+        spec=openstack_manager.RepoPolicyComplianceClient
+    )
+    repo_policy_compliance_client_mock.base_url = test_url
+    repo_policy_compliance_client_mock.get_one_time_token.return_value = one_time_token
+    repo_policy_compliance_cls_mock = MagicMock(return_value=repo_policy_compliance_client_mock)
+    monkeypatch.setattr(
+        openstack_manager, "RepoPolicyComplianceClient", repo_policy_compliance_cls_mock
+    )
+
+    openstack_manager_for_reconcile.reconcile(quantity=1)
+
+    cloud_init_data_str = patched_create_connection_context.create_server.call_args[1]["userdata"]
+    repo_policy_compliance_client_mock.get_one_time_token.assert_called_once()
+    assert one_time_token in cloud_init_data_str
+    assert test_url in cloud_init_data_str
