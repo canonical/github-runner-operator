@@ -19,6 +19,8 @@ jobs:
         if: ${{ always() }}
       - run: lxc list
         if: ${{ always() }}
+      - run: time sudo snap install juju
+        if: ${{ always() }}
       - run: time juju bootstrap localhost localhost
         if: ${{ always() }}
   #     - run: groups
