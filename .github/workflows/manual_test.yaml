@@ -56,17 +56,19 @@ jobs:
         # index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         index: [0]
     steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: echo $HTTP_PROXY
-      - run: echo $HTTPS_PROXY
-      - run: echo $NO_PROXY
-      - run: echo $DOCKERHUB_MIRROR
+      # - run: lscpu
+      # - run: df -h
+      # - run: free -h
+      # - run: echo $HTTP_PROXY
+      # - run: echo $HTTPS_PROXY
+      # - run: echo $NO_PROXY
+      # - run: echo $DOCKERHUB_MIRROR
       - uses: canonical/setup-lxd@v0.1.1
       - run: lxd init --auto
         if: ${{ always() }}
       - run: lxc list
+        if: ${{ always() }}
+      - run: time sudo snap install juju
         if: ${{ always() }}
       - run: time juju bootstrap localhost localhost
         if: ${{ always() }}
