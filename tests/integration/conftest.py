@@ -30,7 +30,7 @@ from charm_state import (
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
     PATH_CONFIG_NAME,
-    VIRTUAL_MACHINES_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME, USE_APROXY_CONFIG_NAME,
 )
 from github_client import GithubClient
 from tests.integration.helpers import (
@@ -51,10 +51,16 @@ def metadata() -> dict[str, Any]:
 
 
 @pytest.fixture(scope="module")
-def app_name() -> str:
+def existing_app(pytestconfig: pytest.Config) -> Optional[str]:
+    """The existing application name to use for the test."""
+    return pytestconfig.getoption("--use-existing-app")
+
+
+@pytest.fixture(scope="module")
+def app_name(existing_app: Optional[str]) -> str:
     """Randomized application name."""
     # Randomized app name to avoid collision when runner is connecting to GitHub.
-    return f"integration-id{secrets.token_hex(2)}"
+    return existing_app or f"integration-id{secrets.token_hex(2)}"
 
 
 @pytest.fixture(scope="module")
@@ -195,11 +201,16 @@ def openstack_flavor_fixture(
     return flavor_name
 
 
-@pytest.fixture(scope="module")
-def model(ops_test: OpsTest) -> Model:
+@pytest_asyncio.fixture(scope="module")
+async def model() -> Model:
     """Juju model used in the test."""
-    assert ops_test.model is not None
-    return ops_test.model
+    m = Model()
+    await m.connect()
+    # assert ops_test.model is not None
+    # return ops_test.model
+    yield m
+
+    await m.disconnect()
 
 
 @pytest.fixture(scope="module")
@@ -246,34 +257,39 @@ async def app_openstack_runner(
     https_proxy: str,
     no_proxy: str,
     openstack_clouds_yaml: str,
-    openstack_flavor: str,
+    # openstack_flavor: str,   #outcomment for local dev testing
+    existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
-    application = await deploy_github_runner_charm(
-        model=model,
-        charm_file=charm_file,
-        app_name=app_name,
-        path=path,
-        token=token,
-        runner_storage="juju-storage",
-        http_proxy=http_proxy,
-        https_proxy=https_proxy,
-        no_proxy=no_proxy,
-        reconcile_interval=60,
-        constraints={
-            "root-disk": 20 * 1024,
-            "cores": 3,
-            "mem": 12 * 1024,
-            "virt-type": "virtual-machine",
-        },
-        config={
-            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml,
-            # this is set by microstack sunbeam, see scripts/setup-microstack.sh
-            OPENSTACK_NETWORK_CONFIG_NAME: "demo-network",
-            OPENSTACK_FLAVOR_CONFIG_NAME: openstack_flavor,
-        },
-        wait_idle=False,
-    )
+    if existing_app:
+        application = model.applications[existing_app]
+    else:
+        application = await deploy_github_runner_charm(
+            model=model,
+            charm_file=charm_file,
+            app_name=app_name,
+            path=path,
+            token=token,
+            runner_storage="juju-storage",
+            http_proxy=http_proxy,
+            https_proxy=https_proxy,
+            no_proxy=no_proxy,
+            reconcile_interval=60,
+            constraints={
+                "root-disk": 50 * 1024,
+                "cores": 4,
+                "mem": 16 * 1024,
+                "arch": "arm64",
+            },
+            config={
+                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml,
+                # hardcode the following for local dev testing, reenable later
+                OPENSTACK_NETWORK_CONFIG_NAME: "FIXME",
+                OPENSTACK_FLAVOR_CONFIG_NAME: "FIXME",
+                USE_APROXY_CONFIG_NAME: "true",
+            },
+            wait_idle=False,
+        )
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
 
     return application

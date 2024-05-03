@@ -408,16 +408,16 @@ async def deploy_github_runner_charm(
     Returns:
         The charm application that was deployed.
     """
-    subprocess.run(["sudo", "modprobe", "br_netfilter"])
+    # subprocess.run(["sudo", "modprobe", "br_netfilter"])
 
-    await model.set_config(
-        {
-            "juju-http-proxy": http_proxy,
-            "juju-https-proxy": https_proxy,
-            "juju-no-proxy": no_proxy,
-            "logging-config": "<root>=INFO;unit=DEBUG",
-        }
-    )
+    # await model.set_config(
+    #     {
+    #         "juju-http-proxy": http_proxy,
+    #         "juju-https-proxy": https_proxy,
+    #         "juju-no-proxy": no_proxy,
+    #         "logging-config": "<root>=INFO;unit=DEBUG",
+    #     }
+    # )
 
     storage = {}
     if runner_storage == "juju-storage":
@@ -427,7 +427,7 @@ async def deploy_github_runner_charm(
         PATH_CONFIG_NAME: path,
         TOKEN_CONFIG_NAME: token,
         VIRTUAL_MACHINES_CONFIG_NAME: 0,
-        DENYLIST_CONFIG_NAME: "10.10.0.0/16",
+        # DENYLIST_CONFIG_NAME: "10.10.0.0/16",
         TEST_MODE_CONFIG_NAME: "insecure",
         RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
         RUNNER_STORAGE_CONFIG_NAME: runner_storage,

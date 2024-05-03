@@ -47,22 +47,22 @@ async def app_fixture(
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_charm_issues_runner_installed_metric(app: Application, model: Model):
+async def test_charm_issues_runner_installed_metric(app_openstack_runner: Application, model: Model):
     """
     arrange: A charm without runners integrated with grafana-agent using the cos-agent integration.
     act: Config the charm to contain one runner.
     assert: The RunnerInstalled metric is logged.
     """
-    await ensure_charm_has_runner(app=app, model=model)
+    await ensure_charm_has_runner(app=app_openstack_runner, model=model)
 
-    metrics_log = await get_metrics_log(app.units[0])
+    metrics_log = await get_metrics_log(app_openstack_runner.units[0])
     log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
     events = set(map(lambda line: line.get("event"), log_lines))
     assert "runner_installed" in events, "runner_installed event has not been logged"
 
     for metric_log in log_lines:
         if metric_log.get("event") == "runner_installed":
-            assert metric_log.get("flavor") == app.name
+            assert metric_log.get("flavor") == app_openstack_runner.name
             assert metric_log.get("event") == "runner_installed"
             assert metric_log.get("duration") >= 0
 
