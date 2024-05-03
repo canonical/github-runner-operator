@@ -8,7 +8,7 @@ on:
 jobs:
   self-host-stg:
     name: self-hosted stg test
-    runs-on: [self-hosted, ARM64, adm-test]
+    runs-on: [self-hosted, ARM64, arm-test]
     strategy:
       matrix:
         # index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
