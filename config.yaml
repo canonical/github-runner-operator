@@ -13,9 +13,9 @@ options:
     type: string
     default: ""
     description: >-
-      The private docker registry configured as dockerhub mirror to be used by the runners. If set
-      a message will be displayed prior to job execution on self-hosted runner informing users to
-      use the provided registry.
+      The URL to the private docker registry configured as the dockerhub mirror to be used by the 
+      runners. If set a message will be displayed prior to job execution on self-hosted runner 
+      informing users to use the provided registry. You must use https:// as the protocol.
   experimental-openstack-clouds-yaml:
     type: string
     default: ""

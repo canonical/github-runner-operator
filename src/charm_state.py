@@ -11,7 +11,6 @@ import re
 from enum import Enum
 from pathlib import Path
 from typing import NamedTuple, Optional, cast
-from urllib.parse import urlsplit
 
 import yaml
 from ops import CharmBase
@@ -56,6 +55,16 @@ VM_DISK_CONFIG_NAME = "vm-disk"
 
 StorageSize = str
 """Representation of storage size with KiB, MiB, GiB, TiB, PiB, EiB as unit."""
+
+
+class AnyHttpsUrl(AnyHttpUrl):
+    """Represents an HTTPS URL.
+
+    Attributes:
+        allowed_schemes: Allowed schemes for the URL.
+    """
+
+    allowed_schemes = {"https"}
 
 
 @dataclasses.dataclass
@@ -339,7 +348,7 @@ class CharmConfig(BaseModel):
     """
 
     denylist: list[FirewallEntry]
-    dockerhub_mirror: str | None
+    dockerhub_mirror: AnyHttpsUrl | None
     labels: tuple[str, ...]
     openstack_clouds_yaml: dict[str, dict] | None
     path: GithubPath
@@ -362,36 +371,6 @@ class CharmConfig(BaseModel):
         entry_list = [entry.strip() for entry in denylist_str.split(",")]
         denylist = [FirewallEntry.decode(entry) for entry in entry_list if entry]
         return denylist
-
-    @classmethod
-    def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
-        """Parse and validate dockerhub mirror URL.
-
-        Args:
-            charm: The charm instance.
-
-        Raises:
-            CharmConfigInvalidError: if insecure scheme is passed for dockerhub mirror.
-
-        Returns:
-            The URL of dockerhub mirror.
-        """
-        dockerhub_mirror = charm.config.get(DOCKERHUB_MIRROR_CONFIG_NAME) or None
-
-        if not dockerhub_mirror:
-            return None
-
-        dockerhub_mirror = cast(str, dockerhub_mirror)
-        dockerhub_mirror_url = urlsplit(dockerhub_mirror)
-        if dockerhub_mirror_url.scheme != "https":
-            raise CharmConfigInvalidError(
-                (
-                    f"Only secured registry supported for {DOCKERHUB_MIRROR_CONFIG_NAME} "
-                    "configuration, the scheme should be https"
-                )
-            )
-
-        return dockerhub_mirror
 
     @classmethod
     def _parse_openstack_clouds_config(cls, charm: CharmBase) -> dict | None:
@@ -457,7 +436,7 @@ class CharmConfig(BaseModel):
             ) from err
 
         denylist = cls._parse_denylist(charm)
-        dockerhub_mirror = cls._parse_dockerhub_mirror(charm)
+        dockerhub_mirror = cast(str, charm.config.get(DOCKERHUB_MIRROR_CONFIG_NAME, "")) or None
         openstack_clouds_yaml = cls._parse_openstack_clouds_config(charm)
 
         try:
@@ -475,9 +454,10 @@ class CharmConfig(BaseModel):
                 )
             repo_policy_compliance = RepoPolicyComplianceConfig.from_charm(charm)
 
+        # pydantic allows to pass str as AnyHttpUrl, mypy complains about it
         return cls(
             denylist=denylist,
-            dockerhub_mirror=dockerhub_mirror,
+            dockerhub_mirror=dockerhub_mirror,  # type: ignore
             labels=labels,
             openstack_clouds_yaml=openstack_clouds_yaml,
             path=github_config.path,

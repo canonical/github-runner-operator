@@ -466,3 +466,18 @@ def test_repo_policy_config_without_openstack():
         CharmState.from_charm(mock_charm)
 
     assert "Cannot use repo-policy-compliance config without using OpenStack." in str(exc)
+
+
+def test_dockerhub_mirror_without_https():
+    """
+    arrange: Setup mocked charm with dockerhub-mirror-url config without https.
+    act: Retrieve state from charm.
+    assert: CharmConfigInvalidError is raised with expected error message.
+    """
+    mock_charm = get_mock_github_runner_charm()
+    mock_charm.config[charm_state.DOCKERHUB_MIRROR_CONFIG_NAME] = "http://example.com"
+
+    with pytest.raises(CharmConfigInvalidError) as exc:
+        CharmState.from_charm(mock_charm)
+
+    assert "URL scheme not permitted" in str(exc)

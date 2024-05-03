@@ -34,7 +34,7 @@ State of the Charm.
 
 ---
 
-<a href="../src/charm_state.py#L106"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L115"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `parse_github_path`
 
@@ -61,6 +61,21 @@ Parse GitHub path.
 
 **Returns:**
  GithubPath object representing the GitHub repository, or the GitHub organization with runner group information. 
+
+
+---
+
+## <kbd>class</kbd> `AnyHttpsUrl`
+Represents an HTTPS URL. 
+
+
+
+**Attributes:**
+ 
+ - <b>`allowed_schemes`</b>:  Allowed schemes for the URL. 
+
+
+
 
 
 ---
@@ -104,7 +119,7 @@ Some charm configurations are grouped into other configuration models.
 
 ---
 
-<a href="../src/charm_state.py#L489"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L469"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_reconcile_interval`
 
@@ -133,7 +148,7 @@ Validate the general charm configuration.
 
 ---
 
-<a href="../src/charm_state.py#L434"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L413"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -172,7 +187,7 @@ Raised when charm config is invalid.
  
  - <b>`msg`</b>:  Explanation of the error. 
 
-<a href="../src/charm_state.py#L230"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L239"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -214,7 +229,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L939"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L919"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -259,7 +274,7 @@ Charm configuration related to GitHub.
 
 ---
 
-<a href="../src/charm_state.py#L142"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L151"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -304,7 +319,7 @@ Represent GitHub organization.
 
 ---
 
-<a href="../src/charm_state.py#L94"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L103"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `path`
 
@@ -337,7 +352,7 @@ Represent GitHub repository.
 
 ---
 
-<a href="../src/charm_state.py#L73"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L82"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `path`
 
@@ -387,7 +402,7 @@ Runner configurations for local LXD instances.
 
 ---
 
-<a href="../src/charm_state.py#L680"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L660"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_virtual_machine_resources`
 
@@ -418,7 +433,7 @@ Validate the virtual_machine_resources field values.
 
 ---
 
-<a href="../src/charm_state.py#L658"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L638"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_virtual_machines`
 
@@ -447,7 +462,7 @@ Validate the virtual machines configuration value.
 
 ---
 
-<a href="../src/charm_state.py#L611"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L591"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -494,7 +509,7 @@ Runner configuration for OpenStack Instances.
 
 ---
 
-<a href="../src/charm_state.py#L532"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L512"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -548,7 +563,7 @@ Return the aproxy address.
 
 ---
 
-<a href="../src/charm_state.py#L770"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L750"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_use_aproxy`
 
@@ -578,7 +593,7 @@ Validate the proxy configuration.
 
 ---
 
-<a href="../src/charm_state.py#L732"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L712"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -617,7 +632,7 @@ Configuration for the repo policy compliance service.
 
 ---
 
-<a href="../src/charm_state.py#L296"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L305"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -680,7 +695,7 @@ SSH connection information for debug workflow.
 
 ---
 
-<a href="../src/charm_state.py#L858"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L838"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -713,7 +728,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L815"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L795"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
