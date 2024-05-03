@@ -393,7 +393,7 @@ def test__parse_labels(label_str: str, expected_labels: tuple[str]):
     assert charm_state._parse_labels(labels=label_str) == expected_labels
 
 
-def test_repo_policy_config():
+def test_repo_policy_config(clouds_yaml: dict):
     """
     arrange: Setup mocked charm with repo-policy-compliance config.
     act: Retrieve state from charm.
@@ -401,6 +401,7 @@ def test_repo_policy_config():
     """
     token = secrets.token_hex(16)
     mock_charm = get_mock_github_runner_charm()
+    mock_charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = json.dumps(clouds_yaml)
     mock_charm.config[charm_state.REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME] = token
     mock_charm.config[charm_state.REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME] = "http://example.com"
 
@@ -433,13 +434,14 @@ def test_repo_policy_config():
         ),
     ],
 )
-def test_repo_policy_config_invalid(token: str, url: str, expected_err_msg: str):
+def test_repo_policy_config_invalid(clouds_yaml: str, token: str, url: str, expected_err_msg: str):
     """
     arrange: Setup mocked charm with repo-policy-compliance config.
     act: Retrieve state from charm.
     assert: CharmConfigInvalidError is raised and expected error message is in the exception.
     """
     mock_charm = get_mock_github_runner_charm()
+    mock_charm.config[charm_state.OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = json.dumps(clouds_yaml)
     if token:
         mock_charm.config[charm_state.REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME] = token
     if url:
@@ -447,3 +449,20 @@ def test_repo_policy_config_invalid(token: str, url: str, expected_err_msg: str)
     with pytest.raises(CharmConfigInvalidError) as exc:
         CharmState.from_charm(mock_charm)
     assert expected_err_msg in str(exc)
+
+
+def test_repo_policy_config_without_openstack():
+    """
+    arrange: Setup mocked charm with repo-policy-compliance config and not Openstack.
+    act: Retrieve state from charm.
+    assert: CharmConfigInvalidError is raised with expected error message.
+    """
+    token = secrets.token_hex(16)
+    mock_charm = get_mock_github_runner_charm()
+    mock_charm.config[charm_state.REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME] = token
+    mock_charm.config[charm_state.REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME] = "http://example.com"
+
+    with pytest.raises(CharmConfigInvalidError) as exc:
+        CharmState.from_charm(mock_charm)
+
+    assert "Cannot use repo-policy-compliance config without using OpenStack." in str(exc)

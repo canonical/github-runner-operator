@@ -469,6 +469,10 @@ class CharmConfig(BaseModel):
         if charm.config.get(REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME) or charm.config.get(
             REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME
         ):
+            if not openstack_clouds_yaml:
+                raise CharmConfigInvalidError(
+                    "Cannot use repo-policy-compliance config without using OpenStack."
+                )
             repo_policy_compliance = RepoPolicyComplianceConfig.from_charm(charm)
 
         return cls(

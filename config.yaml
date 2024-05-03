@@ -97,7 +97,7 @@ options:
     description: >-
       The URL to the repository-policy-compliance service. This option requires the 
       repo-policy-compliance-token to be set. If not set, the repository-policy-compliance service
-      will not be used. This option is currently only effective when using OpenStack Cloud.
+      will not be used. This option is only supported when using OpenStack Cloud.
   runner-storage:
     type: string
     default: "juju-storage"
