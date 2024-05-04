@@ -10,7 +10,7 @@ on:
 
 jobs:
   workflow-dispatch-tests:
-    runs-on: [self-hosted, linux, x64, "${{ inputs.runner }}"]
+    runs-on: [self-hosted, linux, "${{ inputs.runner }}"]
     steps:
       - name: Sleep for an hour to give the integration test some time to crash the runner.
         run: |
