@@ -30,7 +30,7 @@ from charm_state import (
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
     PATH_CONFIG_NAME,
-    VIRTUAL_MACHINES_CONFIG_NAME, USE_APROXY_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME, USE_APROXY_CONFIG_NAME, LABELS_CONFIG_NAME,
 )
 from github_client import GithubClient
 from tests.integration.helpers import (
@@ -287,6 +287,7 @@ async def app_openstack_runner(
                 OPENSTACK_NETWORK_CONFIG_NAME: "FIXME",
                 OPENSTACK_FLAVOR_CONFIG_NAME: "FIXME",
                 USE_APROXY_CONFIG_NAME: "true",
+                LABELS_CONFIG_NAME: app_name
             },
             wait_idle=False,
         )
@@ -582,12 +583,12 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
 
 @pytest_asyncio.fixture(scope="module", name="app_with_grafana_agent")
 async def app_with_grafana_agent_integrated_fixture(
-    model: Model, app_no_runner: Application
+    model: Model, app_openstack_runner: Application
 ) -> AsyncIterator[Application]:
     """Setup the charm to be integrated with grafana-agent using the cos-agent integration."""
-    grafana_agent = await model.deploy("grafana-agent", channel="latest/edge")
-    await model.relate(f"{app_no_runner.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
-    await model.wait_for_idle(apps=[app_no_runner.name], status=ACTIVE)
+    grafana_agent = await model.deploy("grafana-agent", application_name=f"grafana-agent-{app_openstack_runner.name}", channel="latest/edge", revision=108)
+    await model.relate(f"{app_openstack_runner.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
+    await model.wait_for_idle(apps=[app_openstack_runner.name], status=ACTIVE)
     await model.wait_for_idle(apps=[grafana_agent.name])
 
-    yield app_no_runner
+    yield app_openstack_runner
