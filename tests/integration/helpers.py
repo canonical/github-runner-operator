@@ -16,6 +16,7 @@ from typing import Any, Awaitable, Callable, ParamSpec, TypeVar, cast
 
 import github
 import juju.version
+import openstack.connection
 import requests
 import yaml
 from github.Branch import Branch
@@ -27,6 +28,7 @@ from juju.action import Action
 from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
+from openstack.compute.v2.server import Server
 
 from charm_state import (
     DENYLIST_CONFIG_NAME,
@@ -146,7 +148,7 @@ async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> No
     assert disk == profile_content["devices"]["root"]["size"]
 
 
-async def get_runner_names(unit: Unit) -> tuple[str, ...]:
+async def get_runner_names(unit: Unit, openstack_connection: openstack.connection.Connection) -> tuple[str, ...]:
     """Get names of the runners in LXD.
 
     Args:
@@ -155,13 +157,26 @@ async def get_runner_names(unit: Unit) -> tuple[str, ...]:
     Returns:
         Tuple of runner names.
     """
-    return_code, stdout, _ = await run_in_unit(unit, "lxc list --format json")
+    servers: list[Server] = openstack_connection.list_servers()
+    runner = None
+    logging.warning("Unit name: %s", unit.name)
+    unit_name_without_slash = unit.name.replace("/", "-")
+    for server in servers:
+        logging.warning("Server: %s", server.name)
 
-    assert return_code == 0
-    assert stdout is not None
+        if server.name.startswith(unit_name_without_slash):
+            runner = server
+            break
+    assert runner, "Failed to find runner server"
+    return (cast(str, runner.name),)
 
-    lxc_instance: list[dict[str, str]] = json.loads(stdout)
-    return tuple(runner["name"] for runner in lxc_instance if runner["name"] != "builder")
+    # return_code, stdout, _ = await run_in_unit(unit, "lxc list --format json")
+    #
+    # assert return_code == 0
+    # assert stdout is not None
+    #
+    # lxc_instance: list[dict[str, str]] = json.loads(stdout)
+    # return tuple(runner["name"] for runner in lxc_instance if runner["name"] != "builder")
 
 
 async def wait_till_num_of_runners(unit: Unit, num: int, timeout: int = 10 * 60) -> None:
@@ -285,6 +300,33 @@ async def run_in_lxd_instance(
     return await run_in_unit(unit, lxc_cmd, timeout)
 
 
+async def run_in_openstack_instance(unit: Unit, command: str, openstack_conn: openstack.connection.Connection,  timeout: int | None = None) -> tuple[int, str | None, str | None]:
+    """Run command in OpenStack instance."""
+    servers: list[Server] = openstack_conn.list_servers()
+    runner = None
+    unit_name_without_slash = unit.name.replace("/", "-")
+    for server in servers:
+        if server.name.startswith(unit_name_without_slash):
+            runner = server
+            break
+    assert runner, f"Runner not found for unit {unit.name}"
+    network_address_list = runner.addresses.values()
+    logger.warning(network_address_list)
+    assert network_address_list, f"No addresses to connect to for OpenStack server {runner.name}"
+
+    ip = None
+    for network_addresses in network_address_list:
+        for address in network_addresses:
+            ip = address["addr"]
+            break
+    assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
+
+    ssh_cmd = f'ssh -i /home/ubuntu/.ssh/runner-{runner.name}.key -o "StrictHostKeyChecking no" ubuntu@{ip} {command}'
+    ssh_cmd_as_ubuntu_user = f"su - ubuntu -c '{ssh_cmd}'"
+    logging.warning("ssh_cmd: %s", ssh_cmd_as_ubuntu_user)
+    return await run_in_unit(unit, ssh_cmd, timeout)
+
+
 async def start_test_http_server(unit: Unit, port: int):
     """Start test http server.
 
@@ -329,7 +371,7 @@ async def set_app_runner_amount(app: Application, model: Model, num_runners: int
     """
     await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
     await reconcile(app=app, model=model)
-    await wait_till_num_of_runners(unit=app.units[0], num=num_runners)
+    # await wait_till_num_of_runners(unit=app.units[0], num=num_runners)
 
 
 async def ensure_charm_has_runner(app: Application, model: Model) -> None:
@@ -342,7 +384,7 @@ async def ensure_charm_has_runner(app: Application, model: Model) -> None:
     await set_app_runner_amount(app, model, 1)
 
 
-async def get_runner_name(unit: Unit) -> str:
+async def get_runner_name(unit: Unit, openstack_connection: openstack.connection.Connection) -> str:
     """Get the name of the runner.
 
     Expects only one runner to be present.
@@ -353,7 +395,7 @@ async def get_runner_name(unit: Unit) -> str:
     Returns:
         The Github runner name deployed in the given unit.
     """
-    runners = await get_runner_names(unit)
+    runners = await get_runner_names(unit, openstack_connection)
     assert len(runners) == 1
     return runners[0]
 

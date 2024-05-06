@@ -3,7 +3,9 @@
 
 """Integration tests for metrics/logs assuming Github workflow failures or a runner crash."""
 import time
-from typing import AsyncIterator
+from typing import AsyncIterator, cast
+
+import openstack.connection
 
 import pytest
 import pytest_asyncio
@@ -11,6 +13,7 @@ from github.Branch import Branch
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
+from openstack.compute.v2.server import Server
 
 from charm_state import PATH_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
 from metrics import runner_logs
@@ -31,7 +34,7 @@ from tests.integration.helpers import (
     get_runner_name,
     reconcile,
     run_in_lxd_instance,
-    run_in_unit,
+    run_in_unit, run_in_openstack_instance,
 )
 
 
@@ -95,6 +98,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     app: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
+openstack_connection: openstack.connection.Connection,
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
@@ -114,18 +118,18 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     assert workflow.create_dispatch(forked_github_branch, {"runner": app.name})
 
     await wait_for_workflow_to_start(
-        unit, workflow, branch=forked_github_branch, started_time=dispatch_time
+        unit, workflow, branch=forked_github_branch, started_time=dispatch_time, openstack_connection=openstack_connection
     )
 
     # Make the runner terminate abnormally by killing run.sh
-    runner_name = await get_runner_name(unit)
+    runner_name = await get_runner_name(unit, openstack_connection)
     kill_run_sh_cmd = "pkill -9 run.sh"
-    ret_code, stdout, stderr = await run_in_lxd_instance(unit, runner_name, kill_run_sh_cmd)
-    assert ret_code == 0, f"Failed to kill run.sh, {stdout} {stderr}"
+    ret_code, stdout, stderr = await run_in_openstack_instance(unit=unit, command=kill_run_sh_cmd, openstack_conn=openstack_connection)
+    assert ret_code == 0, f"Failed to kill run.sh: {stderr}"
 
     # Cancel workflow and wait that the runner is marked offline
     # to avoid errors during reconciliation.
-    await cancel_workflow_run(unit, workflow, branch=forked_github_branch)
+    await cancel_workflow_run(unit, workflow, branch=forked_github_branch, openstack_connection=openstack_connection)
     await wait_for_runner_to_be_marked_offline(forked_github_repository, runner_name)
 
     # Set the number of virtual machines to 0 to speedup reconciliation

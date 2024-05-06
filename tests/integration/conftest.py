@@ -583,12 +583,13 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
 
 @pytest_asyncio.fixture(scope="module", name="app_with_grafana_agent")
 async def app_with_grafana_agent_integrated_fixture(
-    model: Model, app_openstack_runner: Application
+    model: Model, app_openstack_runner: Application, existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
     """Setup the charm to be integrated with grafana-agent using the cos-agent integration."""
-    grafana_agent = await model.deploy("grafana-agent", application_name=f"grafana-agent-{app_openstack_runner.name}", channel="latest/edge", revision=108)
-    await model.relate(f"{app_openstack_runner.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
-    await model.wait_for_idle(apps=[app_openstack_runner.name], status=ACTIVE)
-    await model.wait_for_idle(apps=[grafana_agent.name])
+    if not existing_app:
+        grafana_agent = await model.deploy("grafana-agent", application_name=f"grafana-agent-{app_openstack_runner.name}", channel="latest/edge", revision=108)
+        await model.relate(f"{app_openstack_runner.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
+        await model.wait_for_idle(apps=[app_openstack_runner.name], status=ACTIVE)
+        await model.wait_for_idle(apps=[grafana_agent.name])
 
     yield app_openstack_runner

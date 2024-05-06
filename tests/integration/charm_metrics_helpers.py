@@ -3,7 +3,7 @@
 
 """Utilities for charm metrics integration tests."""
 
-
+import openstack.connection
 import datetime
 import json
 import logging
@@ -38,6 +38,7 @@ async def wait_for_workflow_to_start(
     branch: Branch | None = None,
     started_time: float | None = None,
     timeout: int = 20 * 60,
+    openstack_connection: openstack.connection.Connection | None = None,
 ):
     """Wait for the workflow to start.
 
@@ -51,12 +52,12 @@ async def wait_for_workflow_to_start(
     Raises:
         TimeoutError: If the workflow didn't start for specified time period.
     """
-    runner_name = await get_runner_name(unit)
+    runner_name = await get_runner_name(unit, openstack_connection=openstack_connection)
     created_at = (
         None
         if not started_time
         # convert to integer since GH API takes up to seconds.
-        else f">={datetime.datetime.fromtimestamp(int(started_time)).isoformat()}"
+        else f">={datetime.datetime.fromtimestamp(int(started_time), tz=datetime.timezone.utc).isoformat()}"
     )
 
     def is_runner_log():
@@ -140,7 +141,7 @@ async def get_metrics_log(unit: Unit) -> str:
     return stdout.strip()
 
 
-async def cancel_workflow_run(unit: Unit, workflow: Workflow, branch: Branch | None = None):
+async def cancel_workflow_run(unit: Unit, workflow: Workflow, branch: Branch | None = None, openstack_connection: openstack.connection.Connection | None = None):
     """Cancel the workflow run.
 
     Args:
@@ -148,7 +149,7 @@ async def cancel_workflow_run(unit: Unit, workflow: Workflow, branch: Branch | N
         workflow: The workflow to cancel the workflow run for.
         branch: The branch where the workflow belongs to.
     """
-    runner_name = await get_runner_name(unit)
+    runner_name = await get_runner_name(unit, openstack_connection=openstack_connection)
 
     for run in workflow.get_runs(branch=branch):
         jobs = run.jobs()
