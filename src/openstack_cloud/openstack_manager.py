@@ -16,6 +16,7 @@
 """Module for handling interactions with OpenStack."""
 import logging
 import secrets
+import shutil
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -638,6 +639,8 @@ class OpenstackRunnerManager:
 
         keypair = conn.create_keypair(name=name)
         private_key_path.write_text(keypair.private_key)
+        shutil.chown(private_key_path, user="ubuntu", group="ubuntu")
+        private_key_path.chmod(0o400)
 
     @staticmethod
     def _ssh_health_check(server: Server) -> bool:
