@@ -585,7 +585,7 @@ async def app_with_grafana_agent_integrated_fixture(
 ) -> AsyncIterator[Application]:
     """Setup the charm to be integrated with grafana-agent using the cos-agent integration."""
     if not existing_app:
-        grafana_agent = await model.deploy("grafana-agent", application_name=f"grafana-agent-{basic_app.name}", channel="latest/edge", revision=108)
+        grafana_agent = await model.deploy("grafana-agent", application_name=f"grafana-agent-{basic_app.name}", channel="latest/edge")
         await model.relate(f"{basic_app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
         await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE)
         await model.wait_for_idle(apps=[grafana_agent.name])
