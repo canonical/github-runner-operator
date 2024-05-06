@@ -99,7 +99,6 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     app: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
-    openstack_connection: openstack.connection.Connection,
     request: pytest.FixtureRequest
 ):
     """
@@ -110,6 +109,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     """
     openstack_marker = request.node.get_closest_marker("openstack")
     if openstack_marker:
+        openstack_connection = request.getfixturevalue("openstack_connection")
         helper = OpenStackInstanceHelper(openstack_connection=openstack_connection)
     else:
         helper = tests.integration.helpers_lxd
