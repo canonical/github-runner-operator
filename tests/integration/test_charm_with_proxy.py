@@ -94,20 +94,20 @@ async def app_with_prepared_machine_fixture(
     proxy: str,
 ) -> Application:
     """Application with proxy setup and firewall to block all other network access."""
-    # await model.set_config(
-    #     {
-    #         "apt-http-proxy": proxy,
-    #         "apt-https-proxy": proxy,
-    #         "apt-no-proxy": NO_PROXY,
-    #         "juju-http-proxy": proxy,
-    #         "juju-https-proxy": proxy,
-    #         "juju-no-proxy": NO_PROXY,
-    #         "snap-http-proxy": proxy,
-    #         "snap-https-proxy": proxy,
-    #         "snap-no-proxy": NO_PROXY,
-    #         "logging-config": "<root>=INFO;unit=DEBUG",
-    #     }
-    # )
+    await model.set_config(
+        {
+            "apt-http-proxy": proxy,
+            "apt-https-proxy": proxy,
+            "apt-no-proxy": NO_PROXY,
+            "juju-http-proxy": proxy,
+            "juju-https-proxy": proxy,
+            "juju-no-proxy": NO_PROXY,
+            "snap-http-proxy": proxy,
+            "snap-https-proxy": proxy,
+            "snap-no-proxy": NO_PROXY,
+            "logging-config": "<root>=INFO;unit=DEBUG",
+        }
+    )
 
     machine = await model.add_machine(constraints={"root-disk": 15}, series="jammy")
     # Wait until juju agent has the hostname of the machine.
