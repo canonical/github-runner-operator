@@ -35,16 +35,17 @@ TEST_WORKFLOW_NAMES = [
 async def wait_for_workflow_to_start(
     unit: Unit,
     workflow: Workflow,
+    helper,
     branch: Branch | None = None,
     started_time: float | None = None,
     timeout: int = 20 * 60,
-    openstack_connection: openstack.connection.Connection | None = None,
 ):
     """Wait for the workflow to start.
 
     Args:
         unit: The unit which contains the runner.
         workflow: The workflow to wait for.
+        helper: The instance helper to get the runner name.
         branch: The branch where the workflow belongs to.
         started_time: The time in seconds since epoch the job was started.
         timeout: Timeout in seconds to wait for the workflow to start.
@@ -52,7 +53,7 @@ async def wait_for_workflow_to_start(
     Raises:
         TimeoutError: If the workflow didn't start for specified time period.
     """
-    runner_name = await get_runner_name(unit, openstack_connection=openstack_connection)
+    runner_name = await helper.get_runner_name(unit)
     created_at = (
         None
         if not started_time
@@ -141,7 +142,7 @@ async def get_metrics_log(unit: Unit) -> str:
     return stdout.strip()
 
 
-async def cancel_workflow_run(unit: Unit, workflow: Workflow, branch: Branch | None = None, openstack_connection: openstack.connection.Connection | None = None):
+async def cancel_workflow_run(unit: Unit, workflow: Workflow, helper,  branch: Branch | None = None):
     """Cancel the workflow run.
 
     Args:
@@ -149,7 +150,7 @@ async def cancel_workflow_run(unit: Unit, workflow: Workflow, branch: Branch | N
         workflow: The workflow to cancel the workflow run for.
         branch: The branch where the workflow belongs to.
     """
-    runner_name = await get_runner_name(unit, openstack_connection=openstack_connection)
+    runner_name = await helper.get_runner_name(unit)
 
     for run in workflow.get_runs(branch=branch):
         jobs = run.jobs()

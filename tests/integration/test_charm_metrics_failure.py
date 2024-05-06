@@ -13,7 +13,6 @@ from github.Branch import Branch
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
-from openstack.compute.v2.server import Server
 
 from charm_state import PATH_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
 from metrics import runner_logs
@@ -34,8 +33,9 @@ from tests.integration.helpers import (
     get_runner_name,
     reconcile,
     run_in_lxd_instance,
-    run_in_unit, run_in_openstack_instance,
-)
+    run_in_unit, )
+import tests.integration.helpers_lxd
+from tests.integration.helpers_openstack import OpenStackInstanceHelper
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -91,6 +91,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     )
 
 
+@pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_metrics_for_abnormal_termination(
@@ -98,7 +99,8 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     app: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
-openstack_connection: openstack.connection.Connection,
+    openstack_connection: openstack.connection.Connection,
+    request: pytest.FixtureRequest
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
@@ -106,8 +108,13 @@ openstack_connection: openstack.connection.Connection,
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
         The Reconciliation metric has the post job status set to Abnormal.
     """
+    openstack_marker = request.node.get_closest_marker("openstack")
+    if openstack_marker:
+        helper = OpenStackInstanceHelper(openstack_connection=openstack_connection)
+    else:
+        helper = tests.integration.helpers_lxd
     await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-    await ensure_charm_has_runner(app=app, model=model)
+    await helper.ensure_charm_has_runner(app=app, model=model)
 
     unit = app.units[0]
 
@@ -118,18 +125,18 @@ openstack_connection: openstack.connection.Connection,
     assert workflow.create_dispatch(forked_github_branch, {"runner": app.name})
 
     await wait_for_workflow_to_start(
-        unit, workflow, branch=forked_github_branch, started_time=dispatch_time, openstack_connection=openstack_connection
+        unit, workflow, branch=forked_github_branch, started_time=dispatch_time, helper=helper
     )
 
     # Make the runner terminate abnormally by killing run.sh
-    runner_name = await get_runner_name(unit, openstack_connection)
+    runner_name = await helper.get_runner_name(unit)
     kill_run_sh_cmd = "pkill -9 run.sh"
-    ret_code, stdout, stderr = await run_in_openstack_instance(unit=unit, command=kill_run_sh_cmd, openstack_conn=openstack_connection)
+    ret_code, _, stderr = await helper.run_in_instance(unit=unit, command=kill_run_sh_cmd)
     assert ret_code == 0, f"Failed to kill run.sh: {stderr}"
 
     # Cancel workflow and wait that the runner is marked offline
     # to avoid errors during reconciliation.
-    await cancel_workflow_run(unit, workflow, branch=forked_github_branch, openstack_connection=openstack_connection)
+    await cancel_workflow_run(unit, workflow, branch=forked_github_branch, helper=helper)
     await wait_for_runner_to_be_marked_offline(forked_github_repository, runner_name)
 
     # Set the number of virtual machines to 0 to speedup reconciliation
