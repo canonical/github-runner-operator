@@ -24,6 +24,8 @@ from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
 from openstack.exceptions import ConflictException
 from pytest_operator.plugin import OpsTest
+import nest_asyncio
+nest_asyncio.apply()
 
 from charm_state import (
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
@@ -583,13 +585,30 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
 
 @pytest_asyncio.fixture(scope="module", name="app_with_grafana_agent")
 async def app_with_grafana_agent_integrated_fixture(
-    model: Model, app_openstack_runner: Application, existing_app: Optional[str],
+    model: Model, basic_app: Application, existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
     """Setup the charm to be integrated with grafana-agent using the cos-agent integration."""
     if not existing_app:
-        grafana_agent = await model.deploy("grafana-agent", application_name=f"grafana-agent-{app_openstack_runner.name}", channel="latest/edge", revision=108)
-        await model.relate(f"{app_openstack_runner.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
-        await model.wait_for_idle(apps=[app_openstack_runner.name], status=ACTIVE)
+        grafana_agent = await model.deploy("grafana-agent", application_name=f"grafana-agent-{basic_app.name}", channel="latest/edge", revision=108)
+        await model.relate(f"{basic_app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
+        await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE)
         await model.wait_for_idle(apps=[grafana_agent.name])
 
-    yield app_openstack_runner
+    yield basic_app
+
+
+@pytest_asyncio.fixture(scope="module", name="basic_app")
+async def basic_app_fixture(request: pytest.FixtureRequest, pytestconfig: pytest.Config) -> Application:
+    """Setup the charm with the basic configuration."""
+    # Due to scope beeing module we cannot use request.node.get_closes_marker as openstack
+    # mark is not available in this scope.
+    openstack_marker = pytestconfig.getoption('-m') == 'openstack'
+    logging.warning("openstack_marker: %s", openstack_marker)
+
+    if openstack_marker:
+        app = request.getfixturevalue("app_openstack_runner")
+        logging.warning(app)
+    else:
+        app = request.getfixturevalue("app_no_runner")
+        logging.warning(app)
+    return app
