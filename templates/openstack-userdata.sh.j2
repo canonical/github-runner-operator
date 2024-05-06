@@ -97,7 +97,6 @@ write_post_metrics(){
 }
 
 # Run runner
-su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh"
-write_post_metrics $?
+su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh"; write_post_metrics $?
 
 su - ubuntu -c "touch /home/ubuntu/run-completed"
