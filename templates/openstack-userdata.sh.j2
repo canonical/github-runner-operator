@@ -30,9 +30,12 @@ nft -f /etc/nftables.conf
 {% endif %}
 
 adduser ubuntu lxd
+adduser ubuntu adm
 
 {% if dockerhub_mirror %}
 echo "{\"registry-mirrors\": [\"{{ dockerhub_mirror }}\"]}" > /etc/docker/daemon.json
+sudo systemctl daemon-reload
+sudo systemctl restart docker
 {% endif %}
 
 # Prepare metrics
