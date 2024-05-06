@@ -99,7 +99,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     app: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
-    request: pytest.FixtureRequest
+    helper,
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
@@ -107,12 +107,6 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
         The Reconciliation metric has the post job status set to Abnormal.
     """
-    openstack_marker = request.node.get_closest_marker("openstack")
-    if openstack_marker:
-        openstack_connection = request.getfixturevalue("openstack_connection")
-        helper = OpenStackInstanceHelper(openstack_connection=openstack_connection)
-    else:
-        helper = tests.integration.helpers_lxd
     await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
     await helper.ensure_charm_has_runner(app=app, model=model)
 

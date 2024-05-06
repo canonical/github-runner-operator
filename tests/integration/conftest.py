@@ -25,6 +25,10 @@ from juju.model import Model
 from openstack.exceptions import ConflictException
 from pytest_operator.plugin import OpsTest
 import nest_asyncio
+
+import tests.integration.helpers_lxd
+from tests.integration.helpers_openstack import OpenStackInstanceHelper
+
 nest_asyncio.apply()
 
 from charm_state import (
@@ -599,12 +603,21 @@ async def basic_app_fixture(request: pytest.FixtureRequest, pytestconfig: pytest
     # Due to scope beeing module we cannot use request.node.get_closes_marker as openstack
     # mark is not available in this scope.
     openstack_marker = pytestconfig.getoption('-m') == 'openstack'
-    logging.warning("openstack_marker: %s", openstack_marker)
 
     if openstack_marker:
         app = request.getfixturevalue("app_openstack_runner")
-        logging.warning(app)
     else:
         app = request.getfixturevalue("app_no_runner")
-        logging.warning(app)
     return app
+
+
+@pytest_asyncio.fixture(scope="function", name="helper")
+async def helper_fixture(request: pytest.FixtureRequest):
+    """Instance helper fixture"""
+    openstack_marker = request.node.get_closest_marker("openstack")
+    if openstack_marker:
+        openstack_connection = request.getfixturevalue("openstack_connection")
+        helper = OpenStackInstanceHelper(openstack_connection=openstack_connection)
+    else:
+        helper = tests.integration.helpers_lxd
+    return helper

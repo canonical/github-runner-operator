@@ -48,13 +48,13 @@ async def app_fixture(
 @pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_charm_issues_runner_installed_metric(app: Application, model: Model):
+async def test_charm_issues_runner_installed_metric(app: Application, model: Model, helper):
     """
     arrange: A charm integrated with grafana-agent using the cos-agent integration.
     act: Config the charm to contain one runner.
     assert: The RunnerInstalled metric is logged.
     """
-    await ensure_charm_has_runner(app=app, model=model)
+    await helper.ensure_charm_has_runner(app=app, model=model)
 
     metrics_log = await get_metrics_log(app.units[0])
     log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
@@ -76,6 +76,7 @@ async def test_charm_issues_metrics_after_reconciliation(
     app: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
+    helper
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
@@ -84,7 +85,7 @@ async def test_charm_issues_metrics_after_reconciliation(
         The Reconciliation metric has the post job status set to normal.
     """
     await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-    await ensure_charm_has_runner(app=app, model=model)
+    await helper.ensure_charm_has_runner(app=app, model=model)
 
     # Clear metrics log to make reconciliation event more predictable
     unit = app.units[0]
