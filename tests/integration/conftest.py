@@ -203,16 +203,12 @@ def openstack_flavor_fixture(
     return flavor_name
 
 
-@pytest_asyncio.fixture(scope="module")
-async def model() -> Model:
+@pytest.fixture(scope="module")
+def model(ops_test: OpsTest) -> Model:
     """Juju model used in the test."""
-    m = Model()
-    await m.connect()
-    # assert ops_test.model is not None
-    # return ops_test.model
-    yield m
+    assert ops_test.model is not None
+    return ops_test.model
 
-    await m.disconnect()
 
 
 @pytest.fixture(scope="module")
