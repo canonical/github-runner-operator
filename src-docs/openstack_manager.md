@@ -16,7 +16,7 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L342"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L341"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `build_image`
 
@@ -56,7 +56,7 @@ Build and upload an image to OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L401"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L400"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
@@ -67,7 +67,7 @@ create_instance_config(
     openstack_image: str,
     path: GithubOrg | GithubRepo,
     labels: Iterable[str],
-    github_client: GithubClient
+    github_token: str
 ) → InstanceConfig
 ```
 
@@ -82,7 +82,7 @@ Create an instance config from charm data.
  - <b>`openstack_image`</b>:  The openstack image object to create the instance with. 
  - <b>`path`</b>:  Github organisation or repository path. 
  - <b>`labels`</b>:  Addition labels for the runner. 
- - <b>`github_client`</b>:  The Github client to interact with Github API. 
+ - <b>`github_token`</b>:  The Github PAT for interaction with Github API. 
 
 
 
@@ -92,7 +92,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L113"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L114"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `InstanceConfig`
 The configuration values for creating a single runner instance. 
@@ -131,7 +131,7 @@ __init__(
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L190"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L189"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `ProxyStringValues`
 Wrapper class to proxy values to string. 
@@ -150,7 +150,7 @@ Wrapper class to proxy values to string.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L298"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L297"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackUpdateImageError`
 Represents an error while updating image on Openstack. 
@@ -214,7 +214,7 @@ Construct OpenstackRunnerManager object.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L1201"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L1239"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `flush`
 
@@ -231,7 +231,7 @@ Flush Openstack servers.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L796"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L822"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_github_runner_info`
 
@@ -248,7 +248,7 @@ Get information on GitHub for the runners.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L1117"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L1145"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `reconcile`
 
