@@ -750,8 +750,8 @@ class Runner:
         host_ip, _ = bridge_address_range.split("/")
         one_time_token = self._clients.repo.get_one_time_token()
         pre_job_contents = self._clients.jinja.get_template("pre-job.j2").render(
-            host_ip=host_ip,
-            one_time_token=one_time_token,
+            repo_policy_base_url=f"http://{host_ip}:8080",
+            repo_policy_one_time_token=one_time_token,
             issue_metrics=self._should_render_templates_with_metrics(),
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
             do_repo_policy_check=True,

@@ -38,7 +38,7 @@ jq -n \
       -o repo_check_output.txt
       --stderr repo_check_error.txt
       --write-out "%{http_code}"
-      -H 'Authorization: Bearer {{one_time_token}}'
+      -H 'Authorization: Bearer {{repo_policy_one_time_token}}'
       -H 'Content-Type: application/json'
     )
 
@@ -51,7 +51,7 @@ jq -n \
 
       REPO_CHECK_HTTP_CODE=$(curl "${CURL_ARGS[@]}" \
           -X POST \
-          http://{{host_ip}}:8080/always-fail/check-run)
+          {{repo_policy_base_url}}/always-fail/check-run)
       REPO_CHECK=$?
 
     # Pull request - Request repo-policy-compliance service check:
@@ -68,7 +68,7 @@ jq -n \
 
       REPO_CHECK_HTTP_CODE=$(curl "${CURL_ARGS[@]}" \
           -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_HEAD_REF}\", \"commit_sha\": \"${COMMIT_SHA}\"}" \
-          http://{{host_ip}}:8080/pull_request/check-run)
+          {{repo_policy_base_url}}/pull_request/check-run)
       REPO_CHECK=$?
 
     else
@@ -82,7 +82,7 @@ jq -n \
 
       REPO_CHECK_HTTP_CODE=$(curl "${CURL_ARGS[@]}" \
           -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\"}" \
-          http://{{host_ip}}:8080/${CHECK_NAME}/check-run)
+          {{repo_policy_base_url}}/${CHECK_NAME}/check-run)
       REPO_CHECK=$?
 
     fi

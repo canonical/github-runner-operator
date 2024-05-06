@@ -13,9 +13,9 @@ options:
     type: string
     default: ""
     description: >-
-      The private docker registry configured as dockerhub mirror to be used by the runners. If set
-      a message will be displayed prior to job execution on self-hosted runner informing users to
-      use the provided registry.
+      The URL to the private docker registry configured as the dockerhub mirror to be used by the 
+      runners. If set a message will be displayed prior to job execution on self-hosted runner 
+      informing users to use the provided registry. You must use https:// as the protocol.
   experimental-openstack-clouds-yaml:
     type: string
     default: ""
@@ -86,6 +86,18 @@ options:
       random delay of 25% is added. Changes to this time interval will apply when next interval is
       triggered. Prior to reconciliation, any packages, and services used by the software will be
       updated.
+  repo-policy-compliance-token:
+    type: string
+    description: >-
+      The token to authenticate with the repository-policy-compliance service in order to 
+      generate one-time-tokens. This option requires the repo-policy-compliance-url to be set.
+      If not set, the repository-policy-compliance service will not be used.
+  repo-policy-compliance-url:
+    type: string
+    description: >-
+      The URL to the repository-policy-compliance service. This option requires the 
+      repo-policy-compliance-token to be set. If not set, the repository-policy-compliance service
+      will not be used. This option is only supported when using OpenStack Cloud.
   runner-storage:
     type: string
     default: "juju-storage"

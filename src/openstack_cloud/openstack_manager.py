@@ -39,6 +39,7 @@ from paramiko.ssh_exception import NoValidConnectionsError
 
 from charm_state import (
     Arch,
+    CharmState,
     GithubOrg,
     ProxyConfig,
     SSHDebugConnection,
@@ -65,6 +66,7 @@ from metrics import github as github_metrics
 from metrics import runner as runner_metrics
 from metrics import storage as metrics_storage
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
+from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner_manager import IssuedMetricEventsStats
 from runner_manager_type import OpenstackRunnerManagerConfig
 from runner_type import GithubPath, RunnerByHealth, RunnerGithubInfo
@@ -721,6 +723,7 @@ class OpenstackRunnerManager:
             unit_num: The juju unit number.
             config: Configurations related to runner manager.
         """
+
         cloud_config: dict[str, dict]
         app_name: str
         unit_num: int
@@ -748,10 +751,9 @@ class OpenstackRunnerManager:
             dockerhub_mirror=args.config.dockerhub_mirror,
             ssh_debug_connections=args.config.charm_state.ssh_debug_connections,
         )
-        pre_job_contents = environment.get_template("pre-job.j2").render(
-            issue_metrics=True,
-            do_repo_policy_check=False,
-            metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
+
+        pre_job_contents = OpenstackRunnerManager._render_pre_job_contents(
+            charm_state=args.config.charm_state, templates_env=environment
         )
         instance_config = create_instance_config(
             args.app_name,
@@ -818,6 +820,38 @@ class OpenstackRunnerManager:
             install_end_ts=ts_after,
             install_start_ts=ts_now,
         )
+
+    @staticmethod
+    def _render_pre_job_contents(
+        charm_state: CharmState, templates_env: jinja2.Environment
+    ) -> str:
+        """Render the pre-job script contents.
+
+        Args:
+            charm_state: The charm state object.
+            templates_env: The jinja template environment.
+
+        Returns:
+            The rendered pre-job script contents.
+        """
+        pre_job_contents_dict = {
+            "issue_metrics": True,
+            "metrics_exchange_path": str(METRICS_EXCHANGE_PATH),
+            "do_repo_policy_check": False,
+        }
+        if repo_policy_config := charm_state.charm_config.repo_policy_compliance:
+            repo_policy_client = RepoPolicyComplianceClient(
+                url=repo_policy_config.url, charm_token=repo_policy_config.token
+            )
+            pre_job_contents_dict.update(
+                {
+                    "repo_policy_base_url": repo_policy_client.base_url,
+                    "repo_policy_one_time_token": repo_policy_client.get_one_time_token(),
+                    "do_repo_policy_check": True,
+                }
+            )
+        pre_job_contents = templates_env.get_template("pre-job.j2").render(pre_job_contents_dict)
+        return pre_job_contents
 
     def get_github_runner_info(self) -> tuple[RunnerGithubInfo, ...]:
         """Get information on GitHub for the runners.
@@ -1208,7 +1242,10 @@ class OpenstackRunnerManager:
                 logger.info("Creating %s OpenStack runners", delta)
                 args = [
                     OpenstackRunnerManager._CreateRunnerArgs(
-                        self._cloud_config, self.app_name, self.unit_num, self._config
+                        cloud_config=self._cloud_config,
+                        app_name=self.app_name,
+                        unit_num=self.unit_num,
+                        config=self._config,
                     )
                     for _ in range(delta)
                 ]
