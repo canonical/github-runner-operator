@@ -3,12 +3,13 @@
 
 """Integration tests for github-runner charm with juju-storage as disk."""
 
+from test.integration.helpers.common import reconcile, wait_till_num_of_runners
+
 import pytest
 from juju.application import Application
 from juju.model import Model
 
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers import reconcile, wait_till_num_of_runners
 
 
 @pytest.mark.asyncio

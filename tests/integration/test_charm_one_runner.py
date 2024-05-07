@@ -2,6 +2,16 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm containing one runner."""
+from test.integration.helpers.common import (
+    assert_resource_lxd_profile,
+    ensure_charm_has_runner,
+    get_runner_names,
+    reconcile,
+    run_in_lxd_instance,
+    run_in_unit,
+    start_test_http_server,
+    wait_till_num_of_runners,
+)
 from typing import AsyncIterator
 
 import pytest
@@ -18,16 +28,6 @@ from charm_state import (
     VM_CPU_CONFIG_NAME,
     VM_DISK_CONFIG_NAME,
     VM_MEMORY_CONFIG_NAME,
-)
-from tests.integration.helpers import (
-    assert_resource_lxd_profile,
-    ensure_charm_has_runner,
-    get_runner_names,
-    reconcile,
-    run_in_lxd_instance,
-    run_in_unit,
-    start_test_http_server,
-    wait_till_num_of_runners,
 )
 from tests.status_name import ACTIVE, BLOCKED
 

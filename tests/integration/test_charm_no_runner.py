@@ -4,13 +4,7 @@
 """Integration tests for github-runner charm with no runner."""
 import json
 from datetime import datetime, timezone
-
-import pytest
-from juju.application import Application
-from juju.model import Model
-
-from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers import (
+from test.integration.helpers.common import (
     check_runner_binary_exists,
     get_repo_policy_compliance_pip_info,
     install_repo_policy_compliance_from_git_source,
@@ -20,6 +14,12 @@ from tests.integration.helpers import (
     wait_for,
     wait_till_num_of_runners,
 )
+
+import pytest
+from juju.application import Application
+from juju.model import Model
+
+from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.status_name import ACTIVE
 
 REPO_POLICY_COMPLIANCE_VER_0_2_GIT_SOURCE = (

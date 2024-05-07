@@ -7,6 +7,11 @@ The forked repo is configured to fail the repo-policy-compliance check.
 """
 
 from datetime import datetime, timezone
+from test.integration.helpers.common import (
+    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
+    get_runner_names,
+    reconcile,
+)
 from time import sleep
 
 import pytest
@@ -17,11 +22,6 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import PATH_CONFIG_NAME
-from tests.integration.helpers import (
-    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
-    get_runner_names,
-    reconcile,
-)
 
 
 @pytest.mark.asyncio

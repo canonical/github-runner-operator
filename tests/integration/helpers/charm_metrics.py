@@ -3,7 +3,6 @@
 
 """Utilities for charm metrics integration tests."""
 
-import openstack.connection
 import datetime
 import json
 import logging
@@ -21,7 +20,7 @@ from juju.unit import Unit
 from github_type import JobConclusion
 from metrics.events import METRICS_LOG_PATH
 from metrics.runner import PostJobStatus
-from tests.integration.helpers import get_runner_name, run_in_unit, wait_for
+from tests.integration.helpers.common import InstanceHelper, run_in_unit, wait_for
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +34,7 @@ TEST_WORKFLOW_NAMES = [
 async def wait_for_workflow_to_start(
     unit: Unit,
     workflow: Workflow,
-    helper,
+    instance_helper: InstanceHelper,
     branch: Branch | None = None,
     started_time: float | None = None,
     timeout: int = 20 * 60,
@@ -45,7 +44,7 @@ async def wait_for_workflow_to_start(
     Args:
         unit: The unit which contains the runner.
         workflow: The workflow to wait for.
-        helper: The instance helper to get the runner name.
+        instance_helper: The instance helper to get the runner name.
         branch: The branch where the workflow belongs to.
         started_time: The time in seconds since epoch the job was started.
         timeout: Timeout in seconds to wait for the workflow to start.
@@ -53,7 +52,7 @@ async def wait_for_workflow_to_start(
     Raises:
         TimeoutError: If the workflow didn't start for specified time period.
     """
-    runner_name = await helper.get_runner_name(unit)
+    runner_name = await instance_helper.get_runner_name(unit)
     created_at = (
         None
         if not started_time
@@ -142,15 +141,18 @@ async def get_metrics_log(unit: Unit) -> str:
     return stdout.strip()
 
 
-async def cancel_workflow_run(unit: Unit, workflow: Workflow, helper,  branch: Branch | None = None):
+async def cancel_workflow_run(
+    unit: Unit, workflow: Workflow, instance_helper: InstanceHelper, branch: Branch | None = None
+):
     """Cancel the workflow run.
 
     Args:
         unit: The unit which contains the runner.
         workflow: The workflow to cancel the workflow run for.
+        instance_helper: The instance helper to get the runner name.
         branch: The branch where the workflow belongs to.
     """
-    runner_name = await helper.get_runner_name(unit)
+    runner_name = await instance_helper.get_runner_name(unit)
 
     for run in workflow.get_runs(branch=branch):
         jobs = run.jobs()

@@ -15,20 +15,20 @@ from juju.model import Model
 
 from charm_state import PATH_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
 from metrics.runner import PostJobStatus
-from tests.integration.charm_metrics_helpers import (
+from tests.integration.helpers.charm_metrics import (
     assert_events_after_reconciliation,
     clear_metrics_log,
     get_metrics_log,
     print_loop_device_info,
 )
-from tests.integration.helpers import (
+from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
+    InstanceHelper,
     dispatch_workflow,
-    ensure_charm_has_runner,
-    get_runner_name,
     reconcile,
     run_in_unit,
 )
+from tests.integration.helpers.lxd import ensure_charm_has_runner, get_runner_name
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -48,13 +48,15 @@ async def app_fixture(
 @pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_charm_issues_runner_installed_metric(app: Application, model: Model, helper):
+async def test_charm_issues_runner_installed_metric(
+    app: Application, model: Model, instance_helper: InstanceHelper
+):
     """
     arrange: A charm integrated with grafana-agent using the cos-agent integration.
     act: Config the charm to contain one runner.
     assert: The RunnerInstalled metric is logged.
     """
-    await helper.ensure_charm_has_runner(app=app, model=model)
+    await instance_helper.ensure_charm_has_runner(app, model)
 
     metrics_log = await get_metrics_log(app.units[0])
     log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
@@ -76,7 +78,7 @@ async def test_charm_issues_metrics_after_reconciliation(
     app: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
-    helper
+    instance_helper: InstanceHelper,
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
@@ -85,7 +87,7 @@ async def test_charm_issues_metrics_after_reconciliation(
         The Reconciliation metric has the post job status set to normal.
     """
     await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-    await helper.ensure_charm_has_runner(app=app, model=model)
+    await instance_helper.ensure_charm_has_runner(app, model)
 
     # Clear metrics log to make reconciliation event more predictable
     unit = app.units[0]

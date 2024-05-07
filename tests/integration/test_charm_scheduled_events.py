@@ -8,18 +8,18 @@ scheduled events are in its own module.
 """
 
 from asyncio import sleep
+from test.integration.helpers.common import (
+    check_runner_binary_exists,
+    get_runner_names,
+    run_in_unit,
+    wait_till_num_of_runners,
+)
 
 import pytest
 from juju.application import Application
 from juju.model import Model
 
 from runner_manager import RunnerManager
-from tests.integration.helpers import (
-    check_runner_binary_exists,
-    get_runner_names,
-    run_in_unit,
-    wait_till_num_of_runners,
-)
 from tests.status_name import ACTIVE
 
 

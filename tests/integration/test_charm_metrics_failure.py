@@ -3,9 +3,17 @@
 
 """Integration tests for metrics/logs assuming Github workflow failures or a runner crash."""
 import time
-from typing import AsyncIterator, cast
-
-import openstack.connection
+from test.integration.helpers.common import (
+    DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
+    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
+    dispatch_workflow,
+    ensure_charm_has_runner,
+    get_runner_name,
+    reconcile,
+    run_in_lxd_instance,
+    run_in_unit,
+)
+from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio
@@ -17,7 +25,7 @@ from juju.model import Model
 from charm_state import PATH_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
 from metrics import runner_logs
 from metrics.runner import PostJobStatus
-from tests.integration.charm_metrics_helpers import (
+from tests.integration.helpers.charm_metrics_helpers import (
     assert_events_after_reconciliation,
     cancel_workflow_run,
     clear_metrics_log,
@@ -25,17 +33,7 @@ from tests.integration.charm_metrics_helpers import (
     wait_for_runner_to_be_marked_offline,
     wait_for_workflow_to_start,
 )
-from tests.integration.helpers import (
-    DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
-    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
-    dispatch_workflow,
-    ensure_charm_has_runner,
-    get_runner_name,
-    reconcile,
-    run_in_lxd_instance,
-    run_in_unit, )
-import tests.integration.helpers_lxd
-from tests.integration.helpers_openstack import OpenStackInstanceHelper
+from tests.integration.helpers.common import InstanceHelper
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -99,7 +97,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     app: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
-    helper,
+    instance_helper: InstanceHelper,
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
@@ -108,7 +106,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
         The Reconciliation metric has the post job status set to Abnormal.
     """
     await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-    await helper.ensure_charm_has_runner(app=app, model=model)
+    await instance_helper.ensure_charm_has_runner(app, model)
 
     unit = app.units[0]
 
@@ -119,18 +117,22 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     assert workflow.create_dispatch(forked_github_branch, {"runner": app.name})
 
     await wait_for_workflow_to_start(
-        unit, workflow, branch=forked_github_branch, started_time=dispatch_time, helper=helper
+        unit,
+        workflow,
+        branch=forked_github_branch,
+        started_time=dispatch_time,
+        helper=instance_helper,
     )
 
     # Make the runner terminate abnormally by killing run.sh
-    runner_name = await helper.get_runner_name(unit)
+    runner_name = await instance_helper.get_runner_name(unit)
     kill_run_sh_cmd = "pkill -9 run.sh"
-    ret_code, _, stderr = await helper.run_in_instance(unit=unit, command=kill_run_sh_cmd)
+    ret_code, _, stderr = await instance_helper.run_in_instance(unit, kill_run_sh_cmd)
     assert ret_code == 0, f"Failed to kill run.sh: {stderr}"
 
     # Cancel workflow and wait that the runner is marked offline
     # to avoid errors during reconciliation.
-    await cancel_workflow_run(unit, workflow, branch=forked_github_branch, helper=helper)
+    await cancel_workflow_run(unit, workflow, branch=forked_github_branch, helper=instance_helper)
     await wait_for_runner_to_be_marked_offline(forked_github_repository, runner_name)
 
     # Set the number of virtual machines to 0 to speedup reconciliation

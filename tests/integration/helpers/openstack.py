@@ -10,22 +10,45 @@ from juju.unit import Unit
 from openstack.compute.v2.server import Server
 
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers import logger, run_in_unit, reconcile
+from tests.integration.helpers.common import InstanceHelper, reconcile, run_in_unit
+
+logger = logging.getLogger(__name__)
 
 
-class OpenStackInstanceHelper:
+class OpenStackInstanceHelper(InstanceHelper):
+    """Helper class to interact with OpenStack instances."""
 
     def __init__(self, openstack_connection: openstack.connection.Connection):
+        """Initialize OpenStackInstanceHelper.
+
+        Args:
+            openstack_connection: OpenStack connection object.
+        """
         self.openstack_connection = openstack_connection
 
-    async def run_in_instance(self, unit: Unit, command: str,
-    timeout: int | None = None,) -> tuple[int, str | None, str | None]:
-        """Run command in OpenStack instance."""
+    async def run_in_instance(
+        self,
+        unit: Unit,
+        command: str,
+        timeout: int | None = None,
+    ) -> tuple[int, str | None, str | None]:
+        """Run command in OpenStack instance.
+
+        Args:
+            unit: Juju unit to execute the command in.
+            command: Command to execute.
+            timeout: Amount of time to wait for the execution.
+
+        Returns:
+            Tuple of return code, stdout and stderr.
+        """
         runner = self._get_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
         network_address_list = runner.addresses.values()
         logger.warning(network_address_list)
-        assert network_address_list, f"No addresses to connect to for OpenStack server {runner.name}"
+        assert (
+            network_address_list
+        ), f"No addresses to connect to for OpenStack server {runner.name}"
 
         ip = None
         for network_addresses in network_address_list:
@@ -39,18 +62,17 @@ class OpenStackInstanceHelper:
         logging.warning("ssh_cmd: %s", ssh_cmd_as_ubuntu_user)
         return await run_in_unit(unit, ssh_cmd, timeout)
 
-    @staticmethod
-    async def ensure_charm_has_runner(app: Application, model: Model) -> None:
+    async def ensure_charm_has_runner(self, app: Application, model: Model) -> None:
         """Reconcile the charm to contain one runner.
 
         Args:
             app: The GitHub Runner Charm app to create the runner for.
             model: The machine charm model.
         """
-        await OpenStackInstanceHelper.set_app_runner_amount(app, model, 1)
+        await OpenStackInstanceHelper._set_app_runner_amount(app, model, 1)
 
     @staticmethod
-    async def set_app_runner_amount(app: Application, model: Model, num_runners: int) -> None:
+    async def _set_app_runner_amount(app: Application, model: Model, num_runners: int) -> None:
         """Reconcile the application to a runner amount.
 
         Args:
@@ -72,11 +94,11 @@ class OpenStackInstanceHelper:
         Returns:
             The Github runner name deployed in the given unit.
         """
-        runners = await self.get_runner_names(unit)
+        runners = await self._get_runner_names(unit)
         assert len(runners) == 1
         return runners[0]
 
-    async def get_runner_names(self, unit: Unit) -> tuple[str, ...]:
+    async def _get_runner_names(self, unit: Unit) -> tuple[str, ...]:
         """Get names of the runners in LXD.
 
         Args:
@@ -90,6 +112,14 @@ class OpenStackInstanceHelper:
         return (cast(str, runner.name),)
 
     def _get_runner(self, unit: Unit) -> Server | None:
+        """Get the runner server.
+
+        Args:
+            unit: The unit to get the runner for.
+
+        Returns:
+            The runner server.
+        """
         servers: list[Server] = self.openstack_connection.list_servers()
         runner = None
         unit_name_without_slash = unit.name.replace("/", "-")

@@ -10,6 +10,7 @@ from pathlib import Path
 from time import sleep
 from typing import Any, AsyncIterator, Generator, Iterator, Optional
 
+import nest_asyncio
 import openstack
 import openstack.connection
 import pytest
@@ -24,28 +25,28 @@ from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
 from openstack.exceptions import ConflictException
 from pytest_operator.plugin import OpsTest
-import nest_asyncio
-
-import tests.integration.helpers_lxd
-from tests.integration.helpers_openstack import OpenStackInstanceHelper
-
-nest_asyncio.apply()
 
 from charm_state import (
+    LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
     PATH_CONFIG_NAME,
-    VIRTUAL_MACHINES_CONFIG_NAME, USE_APROXY_CONFIG_NAME, LABELS_CONFIG_NAME,
+    USE_APROXY_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
 )
 from github_client import GithubClient
-from tests.integration.helpers import (
+from tests.integration.helpers.common import (
+    InstanceHelper,
     deploy_github_runner_charm,
-    ensure_charm_has_runner,
     reconcile,
     wait_for,
 )
+from tests.integration.helpers.lxd import LXDInstanceHelper, ensure_charm_has_runner
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 from tests.status_name import ACTIVE
+
+nest_asyncio.apply()
 
 
 @pytest.fixture(scope="module")
@@ -214,7 +215,6 @@ def model(ops_test: OpsTest) -> Model:
     return ops_test.model
 
 
-
 @pytest.fixture(scope="module")
 def runner_manager_github_client(token: str) -> GithubClient:
     return GithubClient(token=token)
@@ -289,7 +289,7 @@ async def app_openstack_runner(
                 OPENSTACK_NETWORK_CONFIG_NAME: "FIXME",
                 OPENSTACK_FLAVOR_CONFIG_NAME: "FIXME",
                 USE_APROXY_CONFIG_NAME: "true",
-                LABELS_CONFIG_NAME: app_name
+                LABELS_CONFIG_NAME: app_name,
             },
             wait_idle=False,
         )
@@ -585,11 +585,18 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
 
 @pytest_asyncio.fixture(scope="module", name="app_with_grafana_agent")
 async def app_with_grafana_agent_integrated_fixture(
-    model: Model, basic_app: Application, existing_app: Optional[str],
+    model: Model,
+    basic_app: Application,
+    existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
     """Setup the charm to be integrated with grafana-agent using the cos-agent integration."""
     if not existing_app:
-        grafana_agent = await model.deploy("grafana-agent", application_name=f"grafana-agent-{basic_app.name}", channel="latest/edge")
+        grafana_agent = await model.deploy(
+            "grafana-agent",
+            application_name=f"grafana-agent-{basic_app.name}",
+            channel="latest/edge",
+            revision=108,
+        )
         await model.relate(f"{basic_app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
         await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE)
         await model.wait_for_idle(apps=[grafana_agent.name])
@@ -598,11 +605,13 @@ async def app_with_grafana_agent_integrated_fixture(
 
 
 @pytest_asyncio.fixture(scope="module", name="basic_app")
-async def basic_app_fixture(request: pytest.FixtureRequest, pytestconfig: pytest.Config) -> Application:
+async def basic_app_fixture(
+    request: pytest.FixtureRequest, pytestconfig: pytest.Config
+) -> Application:
     """Setup the charm with the basic configuration."""
-    # Due to scope beeing module we cannot use request.node.get_closes_marker as openstack
+    # Due to scope being module we cannot use request.node.get_closes_marker as openstack
     # mark is not available in this scope.
-    openstack_marker = pytestconfig.getoption('-m') == 'openstack'
+    openstack_marker = pytestconfig.getoption("-m") == "openstack"
 
     if openstack_marker:
         app = request.getfixturevalue("app_openstack_runner")
@@ -611,13 +620,14 @@ async def basic_app_fixture(request: pytest.FixtureRequest, pytestconfig: pytest
     return app
 
 
-@pytest_asyncio.fixture(scope="function", name="helper")
-async def helper_fixture(request: pytest.FixtureRequest):
-    """Instance helper fixture"""
+@pytest_asyncio.fixture(scope="function", name="instance_helper")
+async def instance_helper_fixture(request: pytest.FixtureRequest) -> InstanceHelper:
+    """Instance helper fixture."""
     openstack_marker = request.node.get_closest_marker("openstack")
+    helper: InstanceHelper
     if openstack_marker:
         openstack_connection = request.getfixturevalue("openstack_connection")
         helper = OpenStackInstanceHelper(openstack_connection=openstack_connection)
     else:
-        helper = tests.integration.helpers_lxd
+        helper = LXDInstanceHelper()
     return helper
