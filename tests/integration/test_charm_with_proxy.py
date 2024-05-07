@@ -6,7 +6,7 @@ import logging
 import subprocess
 from asyncio import sleep
 from pathlib import Path
-from test.integration.helpers.common import (
+from tests.integration.helpers.lxd import (
     ensure_charm_has_runner,
     get_runner_names,
     reconcile,

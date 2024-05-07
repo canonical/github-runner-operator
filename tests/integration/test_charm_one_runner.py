@@ -2,7 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm containing one runner."""
-from test.integration.helpers.common import (
+from tests.integration.helpers.lxd import (
     assert_resource_lxd_profile,
     ensure_charm_has_runner,
     get_runner_names,

@@ -8,8 +8,9 @@ scheduled events are in its own module.
 """
 
 from asyncio import sleep
-from test.integration.helpers.common import (
-    check_runner_binary_exists,
+
+from tests.integration.helpers.common import check_runner_binary_exists
+from tests.integration.helpers.lxd import (
     get_runner_names,
     run_in_unit,
     wait_till_num_of_runners,

@@ -3,7 +3,7 @@
 
 """Integration tests for OpenStack integration."""
 
-from test.integration.helpers.common import (
+from tests.integration.helpers.common import (
     DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
     dispatch_workflow,
 )

@@ -4,7 +4,7 @@
 """Integration tests for github-runner charm with ssh-debug integration."""
 import logging
 from datetime import datetime, timedelta
-from test.integration.helpers.common import dispatch_workflow, get_job_logs, get_workflow_runs
+from tests.integration.helpers.common import dispatch_workflow, get_job_logs, get_workflow_runs
 
 from dateutil.tz import tzutc
 from github.Branch import Branch
