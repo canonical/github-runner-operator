@@ -12,6 +12,7 @@ jobs:
     secrets: inherit
     with:
       juju-channel: 3.1/stable
+      provider: lxd
       test-tox-env: integration-juju3.1
       extra-arguments: '--openstack'
       modules: '["test_openstack_runner"]'
