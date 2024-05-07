@@ -721,6 +721,7 @@ class OpenstackRunnerManager:
             unit_num: The juju unit number.
             config: Configurations related to runner manager.
         """
+
         cloud_config: dict[str, dict]
         app_name: str
         unit_num: int

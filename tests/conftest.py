@@ -5,6 +5,7 @@
 
 
 import argparse
+
 from pytest import Parser
 
 
@@ -84,7 +85,7 @@ def pytest_addoption(parser: Parser):
         help="The Openstack user domain name to use.",
     )
     parser.addoption(
-        "--openstack-user-name",
+        "--openstack-username",
         action="store",
         help="The Openstack user to authenticate as.",
     )
@@ -98,4 +99,14 @@ def pytest_addoption(parser: Parser):
         default=False,
         action="store_true",
         help="Use OpenStack as virtualization, spawns runners on OpenStack servers for testing.",
+    )
+    parser.addoption(
+        "--openstack-flavor-name",
+        action="store",
+        help="The OpenStack flavor to create server with.",
+    )
+    parser.addoption(
+        "--openstack-network-name",
+        action="store",
+        help="The OpenStack the servers are created with.",
     )

@@ -162,11 +162,27 @@ def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
 
 
 @pytest.fixture(scope="module")
-def openstack_clouds_yaml(pytestconfig: pytest.Config) -> Optional[str]:
+def openstack_network(pytestconfig: pytest.Config) -> Optional[str]:
+    """Get OpenStack network for runner VMs."""
+    use_openstack = pytestconfig.getoption("--openstack")
+    if not use_openstack:
+        raise ValueError("OpenStack option not set, OpenStack network should not be accessed")
+
+
+@pytest.fixture(scope="module")
+def openstack_flavor(pytestconfig: pytest.Config) -> Optional[str]:
+    """Get OpenStack flavor for runner VMs."""
+    use_openstack = pytestconfig.getoption("--openstack")
+    if not use_openstack:
+        raise ValueError("OpenStack option not set, OpenStack flavor should not be accessed")
+
+
+@pytest.fixture(scope="module")
+def openstack_clouds_yaml(pytestconfig: pytest.Config) -> str:
     """Configured clouds-yaml setting."""
     use_openstack = pytestconfig.getoption("--openstack")
     if not use_openstack:
-        return None
+        raise ValueError("OpenStack option not set, clouds.yaml should not be accessed")
 
     openstack_clouds_yaml = pytestconfig.getoption("--openstack-clouds-yaml")
     if openstack_clouds_yaml:
@@ -181,7 +197,15 @@ def openstack_clouds_yaml(pytestconfig: pytest.Config) -> Optional[str]:
     username = pytestconfig.getoption("--openstack-username")
     region_name = pytestconfig.getoption("--openstack-region-name")
 
-    if auth_url and password and project_domain_name and project_name and user_domain_name and username and region_name:
+    if (
+        auth_url
+        and password
+        and project_domain_name
+        and project_name
+        and user_domain_name
+        and username
+        and region_name
+    ):
         logging.info("Found all openstack credential needed, constructing clouds.yaml")
         return string.Template(
             Path("templates/clouds.yaml.tmpl").read_text(encoding="utf-8")
@@ -197,7 +221,8 @@ def openstack_clouds_yaml(pytestconfig: pytest.Config) -> Optional[str]:
             }
         )
 
-    logging.info("Openstack credentials not found")
+    logging.error("Openstack credentials not found")
+    raise ValueError("OpenStack enabled with OpenStack options not set")
 
 
 @pytest.fixture(scope="module", name="openstack_connection")
@@ -213,20 +238,6 @@ def openstack_connection_fixture(
     first_cloud = next(iter(openstack_clouds_yaml_yaml["clouds"].keys()))
     with openstack.connect(first_cloud) as conn:
         yield conn
-
-
-@pytest.fixture(scope="module", name="openstack_flavor")
-def openstack_flavor_fixture(
-    openstack_connection: openstack.connection.Connection,
-) -> str:
-    """Name of the openstack flavor for runner."""
-    flavor_name = "runner"
-    try:
-        openstack_connection.create_flavor(flavor_name, 4096, 2, 10)
-    except ConflictException:
-        # Do nothing if flavor already exists.
-        pass
-    return flavor_name
 
 
 @pytest.fixture(scope="module")
@@ -281,6 +292,7 @@ async def app_openstack_runner(
     no_proxy: str,
     openstack_clouds_yaml: str,
     openstack_flavor: str,
+    openstack_network: str,
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
     application = await deploy_github_runner_charm(
@@ -303,7 +315,7 @@ async def app_openstack_runner(
         config={
             OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml,
             # this is set by microstack sunbeam, see scripts/setup-microstack.sh
-            OPENSTACK_NETWORK_CONFIG_NAME: "external-network",
+            OPENSTACK_NETWORK_CONFIG_NAME: openstack_network,
             OPENSTACK_FLAVOR_CONFIG_NAME: openstack_flavor,
             # Integration test is done in a clean env, the unit number is always 0.
             OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME: 0,

@@ -12,6 +12,7 @@ jobs:
     secrets: inherit
     with:
       juju-channel: 3.1/stable
+      # LXD not used. Set to `lxd` to prevent the lengthy microk8s installation by default.
       provider: lxd
       test-tox-env: integration-juju3.1
       extra-arguments: '--openstack'
