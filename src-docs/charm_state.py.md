@@ -16,7 +16,6 @@ State of the Charm.
 - **OPENSTACK_CLOUDS_YAML_CONFIG_NAME**
 - **OPENSTACK_NETWORK_CONFIG_NAME**
 - **OPENSTACK_FLAVOR_CONFIG_NAME**
-- **OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME**
 - **PATH_CONFIG_NAME**
 - **RECONCILE_INTERVAL_CONFIG_NAME**
 - **REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME**
@@ -29,6 +28,7 @@ State of the Charm.
 - **VM_CPU_CONFIG_NAME**
 - **VM_MEMORY_CONFIG_NAME**
 - **VM_DISK_CONFIG_NAME**
+- **IMAGE_RELATION_NAME**
 - **COS_AGENT_INTEGRATION_NAME**
 - **DEBUG_SSH_INTEGRATION_NAME**
 
@@ -229,7 +229,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L919"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L931"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -395,14 +395,13 @@ Runner configurations for local LXD instances.
  
  - <b>`virtual_machines`</b>:  Number of virtual machine-based runner to spawn. 
  - <b>`virtual_machine_resources`</b>:  Hardware resource used by one virtual machine for a runner. 
- - <b>`runner_storage`</b>:  Storage to be used as disk for the runner. 
 
 
 
 
 ---
 
-<a href="../src/charm_state.py#L660"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L672"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_virtual_machine_resources`
 
@@ -433,7 +432,7 @@ Validate the virtual_machine_resources field values.
 
 ---
 
-<a href="../src/charm_state.py#L638"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L650"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_virtual_machines`
 
@@ -462,7 +461,7 @@ Validate the virtual machines configuration value.
 
 ---
 
-<a href="../src/charm_state.py#L591"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L603"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -502,14 +501,14 @@ Runner configuration for OpenStack Instances.
  - <b>`virtual_machines`</b>:  Number of virtual machine-based runner to spawn. 
  - <b>`openstack_flavor`</b>:  flavor on openstack to use for virtual machines. 
  - <b>`openstack_network`</b>:  Network on openstack to use for virtual machines. 
- - <b>`build_image`</b>:  Whether to build the image on this juju unit. 
+ - <b>`image_id`</b>:  Image ID to use from image builder. Empty string represents not ready, None  represents no relation. 
 
 
 
 
 ---
 
-<a href="../src/charm_state.py#L512"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L530"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -563,7 +562,7 @@ Return the aproxy address.
 
 ---
 
-<a href="../src/charm_state.py#L750"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L762"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_use_aproxy`
 
@@ -593,7 +592,7 @@ Validate the proxy configuration.
 
 ---
 
-<a href="../src/charm_state.py#L712"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L724"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -695,7 +694,7 @@ SSH connection information for debug workflow.
 
 ---
 
-<a href="../src/charm_state.py#L838"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L850"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -728,7 +727,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L795"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L807"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

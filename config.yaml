@@ -37,13 +37,6 @@ options:
     description: |
       (Experimental, under development) The openstack network for virtual machines. This feature
       is not yet ready and is under development.
-  experiential-openstack-image-build-unit:
-    type: int
-    default: -1
-    description: >-
-      (Experimental, tmp workaround, will be removed in the future) The unit that performs the
-      OpenStack image build. All other units will have the image build disabled. Cannot be changed
-      after deployment. Will only take effect with OpenStack integration enabled.
   experimental-use-aproxy:
     type: boolean
     default: false

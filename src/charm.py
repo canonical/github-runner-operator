@@ -33,7 +33,6 @@ from ops.charm import (
 )
 from ops.framework import StoredState
 from ops.main import main
-from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 
 import metrics.events as metric_events
 from charm_state import (
@@ -65,9 +64,7 @@ from errors import (
 )
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
-from github_client import GithubClient
 from github_type import GitHubRunnerStatus
-from openstack_cloud import openstack_manager
 from openstack_cloud.openstack_manager import OpenstackRunnerManager
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
@@ -110,19 +107,19 @@ def catch_charm_errors(
             func(self, event)
         except ConfigurationError as err:
             logger.exception("Issue with charm configuration")
-            self.unit.status = BlockedStatus(str(err))
+            self.unit.status = ops.BlockedStatus(str(err))
         except TokenError as err:
             logger.exception("Issue with GitHub token")
-            self.unit.status = BlockedStatus(str(err))
+            self.unit.status = ops.BlockedStatus(str(err))
         except MissingRunnerBinaryError:
             logger.exception("Missing runner binary")
-            self.unit.status = MaintenanceStatus(
+            self.unit.status = ops.MaintenanceStatus(
                 "GitHub runner application not downloaded; the charm will retry download on "
                 "reconcile interval"
             )
         except OpenStackUnauthorizedError:
             logger.exception("Unauthorized OpenStack connection")
-            self.unit.status = BlockedStatus(
+            self.unit.status = ops.BlockedStatus(
                 "Unauthorized OpenStack connection. Check credentials."
             )
 
@@ -153,7 +150,7 @@ def catch_action_errors(
             func(self, event)
         except ConfigurationError as err:
             logger.exception("Issue with charm configuration")
-            self.unit.status = BlockedStatus(str(err))
+            self.unit.status = ops.BlockedStatus(str(err))
             event.fail(str(err))
         except MissingRunnerBinaryError:
             logger.exception("Missing runner binary")
@@ -161,7 +158,7 @@ def catch_action_errors(
                 "GitHub runner application not downloaded; the charm will retry download on "
                 "reconcile interval"
             )
-            self.unit.status = MaintenanceStatus(err_msg)
+            self.unit.status = ops.MaintenanceStatus(err_msg)
             event.fail(err_msg)
 
     return func_with_catch_errors
@@ -448,21 +445,14 @@ class GithubRunnerCharm(CharmBase):
             raise
 
         if state.instance_type == InstanceType.OPENSTACK:
-            if state.runner_config.build_image:
-                self.unit.status = MaintenanceStatus("Building Openstack image")
-                github = GithubClient(token=state.charm_config.token)
-                openstack_manager.build_image(
-                    arch=state.arch,
-                    cloud_config=state.charm_config.openstack_clouds_yaml,
-                    github_client=github,
-                    path=state.charm_config.path,
-                    proxies=state.proxy_config,
-                )
+            if state.runner_config.image_id is None:
                 # WIP: Add scheduled building of image during refactor.
-                self.unit.status = ActiveStatus()
+                self.unit.status = ops.BlockedStatus("No Image relation found.")
+            if not state.runner_config.image_id:
+                self.unit.status = ops.WaitingStatus("Waiting for image id to be set.")
             return True
 
-        self.unit.status = MaintenanceStatus("Installing packages")
+        self.unit.status = ops.MaintenanceStatus("Installing packages")
         try:
             # The `_start_services`, `_install_deps` includes retry.
             self._install_local_lxd_deps()
@@ -481,13 +471,13 @@ class GithubRunnerCharm(CharmBase):
 
         runner_manager = self._get_runner_manager(state)
         if not runner_manager.has_runner_image():
-            self.unit.status = MaintenanceStatus("Building runner image")
+            self.unit.status = ops.MaintenanceStatus("Building runner image")
             runner_manager.build_runner_image()
         runner_manager.schedule_build_runner_image()
 
         self._set_reconcile_timer()
 
-        self.unit.status = MaintenanceStatus("Downloading runner binary")
+        self.unit.status = ops.MaintenanceStatus("Downloading runner binary")
         try:
             runner_info = runner_manager.get_latest_runner_bin_url()
             logger.info(
@@ -500,10 +490,10 @@ class GithubRunnerCharm(CharmBase):
             logger.exception("Failed to update runner binary")
             # Failure to download runner binary is a transient error.
             # The charm automatically update runner binary on a schedule.
-            self.unit.status = MaintenanceStatus(f"Failed to update runner binary: {err}")
+            self.unit.status = ops.MaintenanceStatus(f"Failed to update runner binary: {err}")
             return False
 
-        self.unit.status = ActiveStatus()
+        self.unit.status = ops.ActiveStatus()
         return True
 
     @catch_charm_errors
@@ -520,7 +510,7 @@ class GithubRunnerCharm(CharmBase):
         if state.instance_type == InstanceType.OPENSTACK:
             openstack_runner_manager = self._get_openstack_runner_manager(state)
             openstack_runner_manager.reconcile(state.runner_config.virtual_machines)
-            self.unit.status = ActiveStatus()
+            self.unit.status = ops.ActiveStatus()
             return
 
         runner_manager = self._get_runner_manager(state)
@@ -529,7 +519,7 @@ class GithubRunnerCharm(CharmBase):
             runner_manager, state.charm_config.token, state.proxy_config
         )
 
-        self.unit.status = MaintenanceStatus("Starting runners")
+        self.unit.status = ops.MaintenanceStatus("Starting runners")
         try:
             runner_manager.flush(FlushMode.FLUSH_IDLE)
             self._reconcile_runners(
@@ -539,10 +529,10 @@ class GithubRunnerCharm(CharmBase):
             )
         except RunnerError as err:
             logger.exception("Failed to start runners")
-            self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")
+            self.unit.status = ops.MaintenanceStatus(f"Failed to start runners: {err}")
             return
 
-        self.unit.status = ActiveStatus()
+        self.unit.status = ops.ActiveStatus()
 
     def _update_kernel(self, now: bool = False) -> None:
         """Update the Linux kernel if new version is available.
@@ -630,7 +620,9 @@ class GithubRunnerCharm(CharmBase):
                     state=state, **prev_config_for_flush
                 )
                 if prev_runner_manager:
-                    self.unit.status = MaintenanceStatus("Removing runners due to config change")
+                    self.unit.status = ops.MaintenanceStatus(
+                        "Removing runners due to config change"
+                    )
                     # Flush runner in case the prev token has expired.
                     prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
 
@@ -641,7 +633,7 @@ class GithubRunnerCharm(CharmBase):
             openstack_runner_manager.flush()
             openstack_runner_manager.reconcile(state.runner_config.virtual_machines)
             # 2024/04/12: Flush on token changes.
-            self.unit.status = ActiveStatus()
+            self.unit.status = ops.ActiveStatus()
             return
 
         self._refresh_firewall(state)
@@ -655,7 +647,7 @@ class GithubRunnerCharm(CharmBase):
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
         )
-        self.unit.status = ActiveStatus()
+        self.unit.status = ops.ActiveStatus()
 
     def _check_and_update_local_lxd_dependencies(
         self, runner_manager: RunnerManager, token: str, proxy_config: ProxyConfig
@@ -672,19 +664,19 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             Whether the runner binary or the services was updated.
         """
-        self.unit.status = MaintenanceStatus("Checking for updates")
+        self.unit.status = ops.MaintenanceStatus("Checking for updates")
 
         # Check if the runner binary file exists.
         if not runner_manager.check_runner_bin():
             self._stored.runner_bin_url = None
         try:
-            self.unit.status = MaintenanceStatus("Checking for runner binary updates")
+            self.unit.status = ops.MaintenanceStatus("Checking for runner binary updates")
             runner_info = runner_manager.get_latest_runner_bin_url()
         except urllib.error.URLError as err:
             logger.exception("Failed to check for runner updates")
             # Failure to download runner binary is a transient error.
             # The charm automatically update runner binary on a schedule.
-            self.unit.status = MaintenanceStatus(f"Failed to check for runner updates: {err}")
+            self.unit.status = ops.MaintenanceStatus(f"Failed to check for runner updates: {err}")
             return False
 
         logger.debug(
@@ -694,12 +686,12 @@ class GithubRunnerCharm(CharmBase):
         )
         runner_bin_updated = False
         if runner_info.download_url != self._stored.runner_bin_url:
-            self.unit.status = MaintenanceStatus("Updating runner binary")
+            self.unit.status = ops.MaintenanceStatus("Updating runner binary")
             runner_manager.update_runner_bin(runner_info)
             self._stored.runner_bin_url = runner_info.download_url
             runner_bin_updated = True
 
-        self.unit.status = MaintenanceStatus("Checking for service updates")
+        self.unit.status = ops.MaintenanceStatus("Checking for service updates")
         service_updated = self._install_repo_policy_compliance(proxy_config)
 
         if service_updated or runner_bin_updated:
@@ -708,23 +700,23 @@ class GithubRunnerCharm(CharmBase):
                 service_updated,
                 runner_bin_updated,
             )
-            self.unit.status = MaintenanceStatus("Flushing runners due to updated deps")
+            self.unit.status = ops.MaintenanceStatus("Flushing runners due to updated deps")
             runner_manager.flush(FlushMode.FLUSH_IDLE_WAIT_REPO_CHECK)
             self._start_services(token, proxy_config)
 
-        self.unit.status = ActiveStatus()
+        self.unit.status = ops.ActiveStatus()
         return service_updated or runner_bin_updated
 
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
         """Handle the reconciliation of runners."""
-        self.unit.status = MaintenanceStatus("Reconciling runners")
+        self.unit.status = ops.MaintenanceStatus("Reconciling runners")
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
             runner_manager = self._get_openstack_runner_manager(state)
             runner_manager.reconcile(state.runner_config.virtual_machines)
-            self.unit.status = ActiveStatus()
+            self.unit.status = ops.ActiveStatus()
             return
 
         runner_manager = self._get_runner_manager(state)
@@ -743,7 +735,7 @@ class GithubRunnerCharm(CharmBase):
             state.runner_config.virtual_machine_resources,
         )
 
-        self.unit.status = ActiveStatus()
+        self.unit.status = ops.ActiveStatus()
 
     @catch_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:
@@ -810,14 +802,14 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Action event of reconciling the runner.
         """
-        self.unit.status = MaintenanceStatus("Reconciling runners")
+        self.unit.status = ops.MaintenanceStatus("Reconciling runners")
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
             runner_manager = self._get_openstack_runner_manager(state)
 
             delta = runner_manager.reconcile(state.runner_config.virtual_machines)
-            self.unit.status = ActiveStatus()
+            self.unit.status = ops.ActiveStatus()
             event.set_results({"delta": {"virtual-machines": delta}})
             return
 
@@ -832,7 +824,7 @@ class GithubRunnerCharm(CharmBase):
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
         )
-        self.unit.status = ActiveStatus()
+        self.unit.status = ops.ActiveStatus()
         self._on_check_runners_action(event)
         event.set_results(delta)
 
@@ -921,13 +913,13 @@ class GithubRunnerCharm(CharmBase):
             logger.warning("Unable to reconcile due to missing runner binary")
             raise MissingRunnerBinaryError("Runner binary not found.")
 
-        self.unit.status = MaintenanceStatus("Reconciling runners")
+        self.unit.status = ops.MaintenanceStatus("Reconciling runners")
         delta_virtual_machines = runner_manager.reconcile(
             num,
             resources,
         )
 
-        self.unit.status = ActiveStatus()
+        self.unit.status = ops.ActiveStatus()
         return {"delta": {"virtual-machines": delta_virtual_machines}}
 
     def _install_repo_policy_compliance(self, proxy_config: ProxyConfig) -> bool:

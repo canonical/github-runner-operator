@@ -12,8 +12,8 @@ from enum import Enum
 from pathlib import Path
 from typing import NamedTuple, Optional, cast
 
+import ops
 import yaml
-from ops import CharmBase
 from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, validator
 from pydantic.networks import IPvAnyAddress
 
@@ -36,7 +36,6 @@ LABELS_CONFIG_NAME = "labels"
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
 OPENSTACK_NETWORK_CONFIG_NAME = "experimental-openstack-network"
 OPENSTACK_FLAVOR_CONFIG_NAME = "experimental-openstack-flavor"
-OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME = "experiential-openstack-image-build-unit"
 PATH_CONFIG_NAME = "path"
 RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
 # bandit thinks this is a hardcoded password
@@ -52,6 +51,7 @@ VM_CPU_CONFIG_NAME = "vm-cpu"
 VM_MEMORY_CONFIG_NAME = "vm-memory"
 VM_DISK_CONFIG_NAME = "vm-disk"
 
+IMAGE_RELATION_NAME = "image"
 
 StorageSize = str
 """Representation of storage size with KiB, MiB, GiB, TiB, PiB, EiB as unit."""
@@ -149,7 +149,7 @@ class GithubConfig:
     path: GithubPath
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "GithubConfig":
+    def from_charm(cls, charm: ops.CharmBase) -> "GithubConfig":
         """Get github related charm configuration values from charm.
 
         Args:
@@ -303,7 +303,7 @@ class RepoPolicyComplianceConfig(BaseModel):
     url: AnyHttpUrl
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "RepoPolicyComplianceConfig":
+    def from_charm(cls, charm: ops.CharmBase) -> "RepoPolicyComplianceConfig":
         """Initialize the config from charm.
 
         Args:
@@ -357,7 +357,7 @@ class CharmConfig(BaseModel):
     token: str
 
     @classmethod
-    def _parse_denylist(cls, charm: CharmBase) -> list[FirewallEntry]:
+    def _parse_denylist(cls, charm: ops.CharmBase) -> list[FirewallEntry]:
         """Read charm denylist configuration and parse it into firewall deny entries.
 
         Args:
@@ -373,7 +373,7 @@ class CharmConfig(BaseModel):
         return denylist
 
     @classmethod
-    def _parse_openstack_clouds_config(cls, charm: CharmBase) -> dict | None:
+    def _parse_openstack_clouds_config(cls, charm: ops.CharmBase) -> dict | None:
         """Parse and validate openstack clouds yaml config value.
 
         Args:
@@ -411,7 +411,7 @@ class CharmConfig(BaseModel):
         return cast(dict, openstack_clouds_yaml)
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "CharmConfig":
+    def from_charm(cls, charm: ops.CharmBase) -> "CharmConfig":
         """Initialize the config from charm.
 
         Args:
@@ -494,6 +494,23 @@ class CharmConfig(BaseModel):
         return reconcile_interval
 
 
+def _image_id_from_relation(charm: ops.CharmBase) -> str | None:
+    """Retrieve Openstack image id from relation.
+
+    Args:
+        charm: The charm instance.
+
+    Returns:
+        The image ID if exists, empty string if not yet ready, None if no relation found.
+    """
+    if not (relation := charm.model.get_relation(IMAGE_RELATION_NAME)):
+        return None
+    unit: ops.Unit = next(iter(relation.units))
+    if not relation.data[unit]:
+        return ""
+    return relation.data[unit].get("id", "")
+
+
 class OpenstackRunnerConfig(BaseModel):
     """Runner configuration for OpenStack Instances.
 
@@ -501,16 +518,17 @@ class OpenstackRunnerConfig(BaseModel):
         virtual_machines: Number of virtual machine-based runner to spawn.
         openstack_flavor: flavor on openstack to use for virtual machines.
         openstack_network: Network on openstack to use for virtual machines.
-        build_image: Whether to build the image on this juju unit.
+        image_id: Image ID to use from image builder. Empty string represents not ready, None
+            represents no relation.
     """
 
     virtual_machines: int
     openstack_flavor: str
     openstack_network: str
-    build_image: bool
+    image_id: str | None
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "OpenstackRunnerConfig":
+    def from_charm(cls, charm: ops.CharmBase) -> "OpenstackRunnerConfig":
         """Initialize the config from charm.
 
         Args:
@@ -533,15 +551,11 @@ class OpenstackRunnerConfig(BaseModel):
         openstack_flavor = charm.config[OPENSTACK_FLAVOR_CONFIG_NAME]
         openstack_network = charm.config[OPENSTACK_NETWORK_CONFIG_NAME]
 
-        openstack_image_build_unit = str(charm.config[OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME])
-        _, unit_num = charm.unit.name.rsplit("/", 1)
-        build_image = openstack_image_build_unit == unit_num
-
         return cls(
             virtual_machines=virtual_machines,
             openstack_flavor=cast(str, openstack_flavor),
             openstack_network=cast(str, openstack_network),
-            build_image=build_image,
+            image_id=_image_id_from_relation(charm=charm),
         )
 
 
@@ -551,12 +565,10 @@ class LocalLxdRunnerConfig(BaseModel):
     Attributes:
         virtual_machines: Number of virtual machine-based runner to spawn.
         virtual_machine_resources: Hardware resource used by one virtual machine for a runner.
-        runner_storage: Storage to be used as disk for the runner.
     """
 
     virtual_machines: int
     virtual_machine_resources: VirtualMachineResources
-    runner_storage: RunnerStorage
 
     @classmethod
     def _check_storage_change(cls, runner_storage: str) -> None:
@@ -589,7 +601,7 @@ class LocalLxdRunnerConfig(BaseModel):
             )
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "LocalLxdRunnerConfig":
+    def from_charm(cls, charm: ops.CharmBase) -> "LocalLxdRunnerConfig":
         """Initialize the config from charm.
 
         Args:
@@ -710,7 +722,7 @@ class ProxyConfig(BaseModel):
     use_aproxy: bool = False
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "ProxyConfig":
+    def from_charm(cls, charm: ops.CharmBase) -> "ProxyConfig":
         """Initialize the proxy config from charm.
 
         Args:
@@ -836,7 +848,7 @@ class SSHDebugConnection(BaseModel):
     ed25519_fingerprint: str = Field(pattern="^SHA256:.*")
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> list["SSHDebugConnection"]:
+    def from_charm(cls, charm: ops.CharmBase) -> list["SSHDebugConnection"]:
         """Initialize the SSHDebugInfo from charm relation data.
 
         Args:
@@ -917,7 +929,7 @@ class CharmState:
     # Ignore the flake8 function too complex (C901). The function does not have much logic, the
     # lint is likely triggered with the multiple try-excepts, which are needed.
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "CharmState":  # noqa: C901
+    def from_charm(cls, charm: ops.CharmBase) -> "CharmState":  # noqa: C901
         """Initialize the state from charm.
 
         Args:
