@@ -3,6 +3,8 @@
 
 """Integration tests for metrics/logs assuming Github workflow failures or a runner crash."""
 import time
+from asyncio import sleep
+
 from tests.integration.helpers.common import (
     DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
@@ -122,6 +124,9 @@ async def test_charm_issues_metrics_for_abnormal_termination(
         started_time=dispatch_time,
         instance_helper=instance_helper,
     )
+
+    # Wait a bit to ensure pre-job script has been executed.
+    await sleep(5)
 
     # Make the runner terminate abnormally by killing run.sh
     runner_name = await instance_helper.get_runner_name(unit)

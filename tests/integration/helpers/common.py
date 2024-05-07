@@ -218,7 +218,7 @@ async def deploy_github_runner_charm(
     constraints: dict | None = None,
     config: dict | None = None,
     wait_idle: bool = True,
-    local_lxd: bool = True,
+    use_local_lxd: bool = True,
 ) -> Application:
     """Deploy github-runner charm.
 
@@ -237,12 +237,12 @@ async def deploy_github_runner_charm(
             otherwise.
         config: Additional custom config to use.
         wait_idle: wait for model to become idle.
-        local_lxd: Whether to use local LXD or not.
+        use_local_lxd: Whether to use local LXD or not.
 
     Returns:
         The charm application that was deployed.
     """
-    if local_lxd:
+    if use_local_lxd:
         subprocess.run(["sudo", "modprobe", "br_netfilter"])
 
     await model.set_config(
@@ -266,7 +266,7 @@ async def deploy_github_runner_charm(
         RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
         RUNNER_STORAGE_CONFIG_NAME: runner_storage,
     }
-    if local_lxd:
+    if use_local_lxd:
         default_config[DENYLIST_CONFIG_NAME] = "10.10.0.0/16"
 
     if config:
