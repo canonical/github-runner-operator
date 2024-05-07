@@ -1,6 +1,7 @@
 import subprocess
 import logging
 import json
+from time import sleep
 
 import boto3
 
@@ -29,6 +30,8 @@ if __name__ == "__main__":
     key = json.loads(output)["keys"][0]
     key_id = key["access_key"]
     secret_key = key["secret_key"]
+    print("Wait for 60 seconds")
+    sleep(60)
     print("Creating microceph bucket")
     boto3.client(
         "s3",
