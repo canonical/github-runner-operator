@@ -5,6 +5,7 @@
 import logging
 import random
 import secrets
+import string
 import zipfile
 from pathlib import Path
 from time import sleep
@@ -163,8 +164,40 @@ def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
 @pytest.fixture(scope="module")
 def openstack_clouds_yaml(pytestconfig: pytest.Config) -> Optional[str]:
     """Configured clouds-yaml setting."""
-    clouds_yaml = pytestconfig.getoption("--openstack-clouds-yaml")
-    return Path(clouds_yaml).read_text(encoding="utf-8") if clouds_yaml else None
+    use_openstack = pytestconfig.getoption("--openstack")
+    if not use_openstack:
+        return None
+
+    openstack_clouds_yaml = pytestconfig.getoption("--openstack-clouds-yaml")
+    if openstack_clouds_yaml:
+        logging.info("Found --openstack-clouds-yaml value, using it as clouds.yaml")
+        return openstack_clouds_yaml
+
+    auth_url = pytestconfig.getoption("--openstack-auth-url")
+    password = pytestconfig.getoption("--openstack-password")
+    project_domain_name = pytestconfig.getoption("--openstack-project-domain-name")
+    project_name = pytestconfig.getoption("--openstack-project-name")
+    user_domain_name = pytestconfig.getoption("--openstack-user-domain-name")
+    username = pytestconfig.getoption("--openstack-username")
+    region_name = pytestconfig.getoption("--openstack-region-name")
+
+    if auth_url and password and project_domain_name and project_name and user_domain_name and username and region_name:
+        logging.info("Found all openstack credential needed, constructing clouds.yaml")
+        return string.Template(
+            Path("templates/clouds.yaml.tmpl").read_text(encoding="utf-8")
+        ).substitute(
+            {
+                "auth_url": auth_url,
+                "password": password,
+                "project_domain_name": project_domain_name,
+                "project_name": project_name,
+                "user_domain_name": user_domain_name,
+                "username": username,
+                "region_name": region_name,
+            }
+        )
+
+    logging.info("Openstack credentials not found")
 
 
 @pytest.fixture(scope="module", name="openstack_connection")
