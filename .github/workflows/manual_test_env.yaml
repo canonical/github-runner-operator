@@ -11,8 +11,8 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
-      juju-channel: 3.2/stable
-      test-tox-env: integration-juju3.2
+      juju-channel: 3.1/stable
+      test-tox-env: integration-juju3.1
       extra-arguments: '--openstack'
       modules: '["test_openstack_runner"]'
       self-hosted-runner: true
