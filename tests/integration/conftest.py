@@ -259,7 +259,7 @@ async def app_openstack_runner(
     https_proxy: str,
     no_proxy: str,
     openstack_clouds_yaml: str,
-    # openstack_flavor: str,   #outcomment for local dev testing
+    openstack_flavor: str,
     existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
@@ -285,9 +285,9 @@ async def app_openstack_runner(
             },
             config={
                 OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml,
-                # hardcode the following for local dev testing, reenable later
-                OPENSTACK_NETWORK_CONFIG_NAME: "FIXME",
-                OPENSTACK_FLAVOR_CONFIG_NAME: "FIXME",
+                # this is set by microstack sunbeam, see scripts/setup-microstack.sh
+                OPENSTACK_NETWORK_CONFIG_NAME: "demo-network",
+                OPENSTACK_FLAVOR_CONFIG_NAME: openstack_flavor,
                 USE_APROXY_CONFIG_NAME: "true",
                 LABELS_CONFIG_NAME: app_name,
             },

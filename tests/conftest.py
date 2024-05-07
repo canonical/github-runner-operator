@@ -61,6 +61,6 @@ def pytest_addoption(parser: Parser):
         "--use-existing-app",
         action="store",
         help="The existing app to use. "
-             "This will skip deployment of the charm and use the existing app. "
-             "Useful for local testing.",
+        "This will skip deployment of the charm and use the existing app. "
+        "Useful for local testing.",
     )
