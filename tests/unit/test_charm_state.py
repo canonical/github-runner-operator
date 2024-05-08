@@ -784,7 +784,7 @@ def test___bool__(http: str | None, https: str | None, expected_result: bool):
     "http, https, no_proxy",
     [
         pytest.param(None, None, "localhost"),
-        pytest.param(None, "http://interal.proxy", None),
+        pytest.param(None, "http://internal.proxy", None),
     ],
 )
 def test_proxy_config_from_charm(
