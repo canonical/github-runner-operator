@@ -59,6 +59,16 @@ def pytest_addoption(parser: Parser):
     )
     # Private endpoint options
     parser.addoption(
+        "--openstack-network-name",
+        action="store",
+        help="The Openstack network to create testing instances under.",
+    )
+    parser.addoption(
+        "--openstack-flavor-name",
+        action="store",
+        help="The Openstack flavor to create testing instances with.",
+    )
+    parser.addoption(
         "--openstack-auth-url",
         action="store",
         help="The URL to Openstack authentication service, i.e. keystone.",
