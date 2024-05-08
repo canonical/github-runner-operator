@@ -39,7 +39,7 @@ from tests.integration.helpers import (
     reconcile,
     wait_for,
 )
-from tests.status_name import ACTIVE
+from tests.status_name import ACTIVE, WAITING
 
 
 @pytest.fixture(scope="module")
@@ -274,9 +274,18 @@ async def app_openstack_runner(
         },
         wait_idle=False,
     )
-    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
+    # The charm falls into waiting status for image relation to be ready.
+    await model.wait_for_idle(apps=[application.name], status=WAITING, timeout=90 * 60)
 
     return application
+
+
+@pytest_asyncio.fixure(scope="module", name="app_image_builder")
+async def app_image_builder_fixture(model: Model):
+    """The GitHub runner image builder application."""
+    image_builder = await model.deploy("github-runner-image-builder", channel="latest/edge")
+    await model.wait_for_idle(apps=[image_builder.name], timeout=60 * 45)
+    return image_builder
 
 
 @pytest_asyncio.fixture(scope="module")

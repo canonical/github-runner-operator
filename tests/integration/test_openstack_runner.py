@@ -13,6 +13,20 @@ from charm_state import TOKEN_CONFIG_NAME
 from tests.integration.helpers import ACTIVE, reconcile
 
 
+async def test_openstack_image_relation(
+    model: Model, app_openstack_runner: Application, app_image_builder: Application
+):
+    """
+    arrange: Given an app configured to use Openstack, waiting for image to be ready.
+    act: When image builder is related and an image is provided over the relation.
+    assert: The unit becomes active.
+    """
+    await model.integrate(f"{app_openstack_runner.name}:image", f"{app_image_builder.name}:image")
+    await model.wait_for_idle(
+        apps=[app_openstack_runner.name, app_image_builder.name], wait_for_active=True
+    )
+
+
 async def test_openstack_check_runner(
     app_openstack_runner: Application,
 ):
