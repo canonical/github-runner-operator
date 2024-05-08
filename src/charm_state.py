@@ -147,14 +147,14 @@ class GithubConfig:
         Returns:
             The parsed GitHub configuration values.
         """
-        runner_group = charm.config.get(GROUP_CONFIG_NAME, "default")
+        runner_group = cast(str, charm.config.get(GROUP_CONFIG_NAME, "default"))
 
-        path_str = charm.config.get(PATH_CONFIG_NAME, "")
+        path_str = cast(str, charm.config.get(PATH_CONFIG_NAME, ""))
         if not path_str:
             raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
         path = parse_github_path(path_str, runner_group)
 
-        token = charm.config.get(TOKEN_CONFIG_NAME)
+        token = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
         if not token:
             raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
 
@@ -300,7 +300,7 @@ class CharmConfig(BaseModel):
         Returns:
             The firewall deny entries.
         """
-        denylist_str = charm.config.get(DENYLIST_CONFIG_NAME, "")
+        denylist_str = cast(str, charm.config.get(DENYLIST_CONFIG_NAME, ""))
 
         entry_list = [entry.strip() for entry in denylist_str.split(",")]
         denylist = [FirewallEntry.decode(entry) for entry in entry_list if entry]
@@ -319,7 +319,9 @@ class CharmConfig(BaseModel):
         Returns:
             The URL of dockerhub mirror.
         """
-        dockerhub_mirror = charm.config.get(DOCKERHUB_MIRROR_CONFIG_NAME) or None
+        dockerhub_mirror: str | None = (
+            cast(str, charm.config.get(DOCKERHUB_MIRROR_CONFIG_NAME)) or None
+        )
 
         if not dockerhub_mirror:
             return None
@@ -348,7 +350,9 @@ class CharmConfig(BaseModel):
         Returns:
             The openstack clouds yaml.
         """
-        openstack_clouds_yaml_str = charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
+        openstack_clouds_yaml_str: str | None = cast(
+            str, charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
+        )
         if not openstack_clouds_yaml_str:
             return None
 
@@ -430,7 +434,7 @@ class CharmConfig(BaseModel):
         openstack_clouds_yaml = cls._parse_openstack_clouds_config(charm)
 
         try:
-            labels = _parse_labels(charm.config.get(LABELS_CONFIG_NAME, ""))
+            labels = _parse_labels(cast(str, charm.config.get(LABELS_CONFIG_NAME, "")))
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid {LABELS_CONFIG_NAME} config: {exc}") from exc
 
@@ -477,7 +481,7 @@ class BaseImage(str, Enum):
         Returns:
             The base image configuration of the charm.
         """
-        image_name = charm.config.get(BASE_IMAGE_CONFIG_NAME, "jammy").lower().strip()
+        image_name = cast(str, charm.config.get(BASE_IMAGE_CONFIG_NAME, "jammy")).lower().strip()
         if image_name in LTS_IMAGE_VERSION_TAG_MAP:
             return cls(LTS_IMAGE_VERSION_TAG_MAP[image_name])
         return cls(image_name)
@@ -590,7 +594,9 @@ class RunnerCharmConfig(BaseModel):
             raise CharmConfigInvalidError(f"Invalid {VM_CPU_CONFIG_NAME} configuration") from err
 
         virtual_machine_resources = VirtualMachineResources(
-            cpu, charm.config[VM_MEMORY_CONFIG_NAME], charm.config[VM_DISK_CONFIG_NAME]
+            cpu,
+            cast(str, charm.config[VM_MEMORY_CONFIG_NAME]),
+            cast(str, charm.config[VM_DISK_CONFIG_NAME]),
         )
 
         return cls(
@@ -776,9 +782,10 @@ class SSHDebugConnection(BaseModel):
                 )
                 continue
             ssh_debug_connections.append(
+                # Mypy doesn't know that Pydantic handles type conversions.
                 SSHDebugConnection(
-                    host=host,
-                    port=port,
+                    host=host,  # type: ignore
+                    port=port,  # type: ignore
                     rsa_fingerprint=rsa_fingerprint,
                     ed25519_fingerprint=ed25519_fingerprint,
                 )

@@ -969,7 +969,8 @@ def test_check_immutable_config_change_base_image_changed(
     mock_charm_state_path, mock_charm_state_data, monkeypatch: pytest.MonkeyPatch
 ):
     """
-    arrange: Mock CHARM_STATE_PATH and read_text method to return previous state with different base image.
+    arrange: Mock CHARM_STATE_PATH and read_text method to return previous state with different \
+        base image.
     act: Call _check_immutable_config_change method.
     assert: Ensure ImmutableConfigChangedError is raised.
     """
@@ -1005,7 +1006,7 @@ def test_check_immutable_config(
 
 
 class MockModel(BaseModel):
-    pass
+    """A Mock model class used for pydantic error testing."""
 
 
 @pytest.mark.parametrize(
