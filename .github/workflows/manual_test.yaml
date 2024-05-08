@@ -63,7 +63,7 @@ jobs:
       matrix:
         index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     steps:
-      - run: watch -n 30 curl -sIXGET https://github.com
+      - run: bash scripts/test_hardware.sh
     #   - name: tmate ssh
     #     uses: canonical/action-tmate@debug
       # - run: lscpu
