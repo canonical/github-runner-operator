@@ -6,12 +6,6 @@ import logging
 import subprocess
 from asyncio import sleep
 from pathlib import Path
-from tests.integration.helpers.lxd import (
-    ensure_charm_has_runner,
-    get_runner_names,
-    reconcile,
-    run_in_lxd_instance,
-)
 from typing import AsyncIterator, Optional
 from urllib.parse import urlparse
 
@@ -29,6 +23,12 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
+)
+from tests.integration.helpers.lxd import (
+    ensure_charm_has_runner,
+    get_runner_names,
+    reconcile,
+    run_in_lxd_instance,
 )
 from tests.status_name import ACTIVE
 from utilities import execute_command

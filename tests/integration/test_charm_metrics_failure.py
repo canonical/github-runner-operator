@@ -3,15 +3,6 @@
 
 """Integration tests for metrics/logs assuming Github workflow failures or a runner crash."""
 import time
-from asyncio import sleep
-
-from tests.integration.helpers.common import (
-    DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
-    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
-    dispatch_workflow,
-    reconcile,
-    run_in_unit,
-)
 from typing import AsyncIterator
 
 import pytest
@@ -32,9 +23,19 @@ from tests.integration.helpers.charm_metrics import (
     wait_for_runner_to_be_marked_offline,
     wait_for_workflow_to_start,
 )
-from tests.integration.helpers.common import InstanceHelper
-from tests.integration.helpers.lxd import ensure_charm_has_runner, get_runner_name, \
-    run_in_lxd_instance
+from tests.integration.helpers.common import (
+    DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
+    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
+    InstanceHelper,
+    dispatch_workflow,
+    reconcile,
+    run_in_unit,
+)
+from tests.integration.helpers.lxd import (
+    ensure_charm_has_runner,
+    get_runner_name,
+    run_in_lxd_instance,
+)
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -125,9 +126,6 @@ async def test_charm_issues_metrics_for_abnormal_termination(
         instance_helper=instance_helper,
     )
 
-    # Wait a bit to ensure pre-job script has been executed.
-    await sleep(5)
-
     # Make the runner terminate abnormally by killing run.sh
     runner_name = await instance_helper.get_runner_name(unit)
     kill_run_sh_cmd = "pkill -9 run.sh"
@@ -136,7 +134,9 @@ async def test_charm_issues_metrics_for_abnormal_termination(
 
     # Cancel workflow and wait that the runner is marked offline
     # to avoid errors during reconciliation.
-    await cancel_workflow_run(unit, workflow, branch=forked_github_branch, instance_helper=instance_helper)
+    await cancel_workflow_run(
+        unit, workflow, branch=forked_github_branch, instance_helper=instance_helper
+    )
     await wait_for_runner_to_be_marked_offline(forked_github_repository, runner_name)
 
     # Set the number of virtual machines to 0 to speedup reconciliation

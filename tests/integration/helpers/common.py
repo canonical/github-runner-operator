@@ -51,7 +51,6 @@ logger = logging.getLogger(__name__)
 class InstanceHelper(typing.Protocol):
     """Helper for running commands in instances."""
 
-    # noqa
     async def run_in_instance(
         self, unit: Unit, command: str, timeout: int | None = None
     ) -> tuple[int, str | None, str | None]:

@@ -2,7 +2,6 @@
 #  See LICENSE file for licensing details.
 import json
 import logging
-from asyncio import sleep
 from typing import Any
 
 import yaml
@@ -209,9 +208,14 @@ EOT""",
     await run_in_unit(unit, "/usr/bin/systemctl start test-http-server")
 
     async def server_is_ready() -> bool:
-        """Check if the server is ready."""
+        """Check if the server is ready.
+
+        Returns:
+            Whether the server is ready.
+        """
         return_code, stdout, _ = await run_in_unit(unit, f"curl http://localhost:{port}")
-        return return_code == 0 and stdout
+        return return_code == 0 and bool(stdout)
+
     await wait_for(server_is_ready, timeout=30, check_interval=3)
 
 
