@@ -252,9 +252,10 @@ def _parse_labels(labels: str) -> tuple[str, ...]:
     invalid_labels = []
     valid_labels = []
     for label in labels.split(","):
-        if not label:
+        stripped_label = label.strip()
+        if not stripped_label:
             continue
-        if not WORD_ONLY_REGEX.match(stripped_label := label.strip()):
+        if not WORD_ONLY_REGEX.match(stripped_label):
             invalid_labels.append(stripped_label)
         else:
             valid_labels.append(stripped_label)
@@ -372,6 +373,33 @@ class CharmConfig(BaseModel):
 
         return cast(dict, openstack_clouds_yaml)
 
+    @validator("reconcile_interval")
+    @classmethod
+    def check_reconcile_interval(cls, reconcile_interval: int) -> int:
+        """Validate the general charm configuration.
+
+        Args:
+            reconcile_interval: The value of reconcile_interval passed to class instantiation.
+
+        Raises:
+            ValueError: if an invalid reconcile_interval value of less than 2 has been passed.
+
+        Returns:
+            The validated reconcile_interval value.
+        """
+        # The EventTimer class sets a timeout of `reconcile_interval` - 1.
+        # Therefore the `reconcile_interval` must be at least 2.
+        if reconcile_interval < 2:
+            logger.exception(
+                "The %s configuration must be greater than 1", RECONCILE_INTERVAL_CONFIG_NAME
+            )
+            raise ValueError(
+                f"The {RECONCILE_INTERVAL_CONFIG_NAME} configuration needs to be greater or equal"
+                " to 2"
+            )
+
+        return reconcile_interval
+
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "CharmConfig":
         """Initialize the config from charm.
@@ -415,33 +443,6 @@ class CharmConfig(BaseModel):
             reconcile_interval=reconcile_interval,
             token=github_config.token,
         )
-
-    @validator("reconcile_interval")
-    @classmethod
-    def check_reconcile_interval(cls, reconcile_interval: int) -> int:
-        """Validate the general charm configuration.
-
-        Args:
-            reconcile_interval: The value of reconcile_interval passed to class instantiation.
-
-        Raises:
-            ValueError: if an invalid reconcile_interval value of less than 2 has been passed.
-
-        Returns:
-            The validated reconcile_interval value.
-        """
-        # The EventTimer class sets a timeout of `reconcile_interval` - 1.
-        # Therefore the `reconcile_interval` must be at least 2.
-        if reconcile_interval < 2:
-            logger.exception(
-                "The %s configuration must be greater than 1", RECONCILE_INTERVAL_CONFIG_NAME
-            )
-            raise ValueError(
-                f"The {RECONCILE_INTERVAL_CONFIG_NAME} configuration needs to be \
-                    greater or equal to 2"
-            )
-
-        return reconcile_interval
 
 
 LTS_IMAGE_VERSION_TAG_MAP = {"22.04": "jammy", "24.04": "noble"}
@@ -497,56 +498,6 @@ class RunnerCharmConfig(BaseModel):
     virtual_machine_resources: VirtualMachineResources
     runner_storage: RunnerStorage
 
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "RunnerCharmConfig":
-        """Initialize the config from charm.
-
-        Args:
-            charm: The charm instance.
-
-        Raises:
-            CharmConfigInvalidError: if an invalid runner charm config has been set on the charm.
-
-        Returns:
-            Current config of the charm.
-        """
-        try:
-            base_image = BaseImage.from_charm(charm)
-        except ValueError as err:
-            raise CharmConfigInvalidError("Invalid base image") from err
-
-        try:
-            runner_storage = RunnerStorage(charm.config[RUNNER_STORAGE_CONFIG_NAME])
-        except ValueError as err:
-            raise CharmConfigInvalidError(
-                f"Invalid {RUNNER_STORAGE_CONFIG_NAME} configuration"
-            ) from err
-        except CharmConfigInvalidError as exc:
-            raise CharmConfigInvalidError(f"Invalid runner storage config, {str(exc)}") from exc
-
-        try:
-            virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
-        except ValueError as err:
-            raise CharmConfigInvalidError(
-                f"The {VIRTUAL_MACHINES_CONFIG_NAME} configuration must be int"
-            ) from err
-
-        try:
-            cpu = int(charm.config[VM_CPU_CONFIG_NAME])
-        except ValueError as err:
-            raise CharmConfigInvalidError(f"Invalid {VM_CPU_CONFIG_NAME} configuration") from err
-
-        virtual_machine_resources = VirtualMachineResources(
-            cpu, charm.config[VM_MEMORY_CONFIG_NAME], charm.config[VM_DISK_CONFIG_NAME]
-        )
-
-        return cls(
-            base_image=base_image,
-            virtual_machines=virtual_machines,
-            virtual_machine_resources=virtual_machine_resources,
-            runner_storage=runner_storage,
-        )
-
     @validator("virtual_machines")
     @classmethod
     def check_virtual_machines(cls, virtual_machines: int) -> int:
@@ -601,6 +552,54 @@ class RunnerCharmConfig(BaseModel):
 
         return vm_resources
 
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "RunnerCharmConfig":
+        """Initialize the config from charm.
+
+        Args:
+            charm: The charm instance.
+
+        Raises:
+            CharmConfigInvalidError: if an invalid runner charm config has been set on the charm.
+
+        Returns:
+            Current config of the charm.
+        """
+        try:
+            base_image = BaseImage.from_charm(charm)
+        except ValueError as err:
+            raise CharmConfigInvalidError("Invalid base image") from err
+
+        try:
+            runner_storage = RunnerStorage(charm.config[RUNNER_STORAGE_CONFIG_NAME])
+        except ValueError as err:
+            raise CharmConfigInvalidError(
+                f"Invalid {RUNNER_STORAGE_CONFIG_NAME} configuration"
+            ) from err
+
+        try:
+            virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
+        except ValueError as err:
+            raise CharmConfigInvalidError(
+                f"The {VIRTUAL_MACHINES_CONFIG_NAME} configuration must be int"
+            ) from err
+
+        try:
+            cpu = int(charm.config[VM_CPU_CONFIG_NAME])
+        except ValueError as err:
+            raise CharmConfigInvalidError(f"Invalid {VM_CPU_CONFIG_NAME} configuration") from err
+
+        virtual_machine_resources = VirtualMachineResources(
+            cpu, charm.config[VM_MEMORY_CONFIG_NAME], charm.config[VM_DISK_CONFIG_NAME]
+        )
+
+        return cls(
+            base_image=base_image,
+            virtual_machines=virtual_machines,
+            virtual_machine_resources=virtual_machine_resources,
+            runner_storage=runner_storage,
+        )
+
 
 class ProxyConfig(BaseModel):
     """Proxy configuration.
@@ -618,40 +617,20 @@ class ProxyConfig(BaseModel):
     no_proxy: Optional[str]
     use_aproxy: bool = False
 
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "ProxyConfig":
-        """Initialize the proxy config from charm.
-
-        Args:
-            charm: The charm instance.
-
-        Returns:
-            Current proxy config of the charm.
-        """
-        use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
-        http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY") or None
-        https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
-        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None
-
-        # there's no need for no_proxy if there's no http_proxy or https_proxy
-        if not (https_proxy or http_proxy) and no_proxy:
-            no_proxy = None
-
-        return cls(
-            http=http_proxy,
-            https=https_proxy,
-            no_proxy=no_proxy,
-            use_aproxy=use_aproxy,
-        )
-
     @property
     def aproxy_address(self) -> Optional[str]:
         """Return the aproxy address."""
         if self.use_aproxy:
             proxy_address = self.http or self.https
             # assert is only used to make mypy happy
-            assert proxy_address is not None  # nosec for [B101:assert_used]
-            aproxy_address = f"{proxy_address.host}:{proxy_address.port}"
+            assert (
+                proxy_address is not None and proxy_address.host is not None
+            )  # nosec for [B101:assert_used]
+            aproxy_address = (
+                proxy_address.host
+                if not proxy_address.port
+                else f"{proxy_address.host}:{proxy_address.port}"
+            )
         else:
             aproxy_address = None
         return aproxy_address
@@ -683,6 +662,32 @@ class ProxyConfig(BaseModel):
             Whether the proxy config is set.
         """
         return bool(self.http or self.https)
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "ProxyConfig":
+        """Initialize the proxy config from charm.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            Current proxy config of the charm.
+        """
+        use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
+        http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY") or None
+        https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
+        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None
+
+        # there's no need for no_proxy if there's no http_proxy or https_proxy
+        if not (https_proxy or http_proxy) and no_proxy:
+            no_proxy = None
+
+        return cls(
+            http=http_proxy,
+            https=https_proxy,
+            no_proxy=no_proxy,
+            use_aproxy=use_aproxy,
+        )
 
     class Config:  # pylint: disable=too-few-public-methods
         """Pydantic model configuration.
