@@ -280,8 +280,8 @@ async def app_openstack_runner(
     return application
 
 
-@pytest_asyncio.fixure(scope="module", name="app_image_builder")
-async def app_image_builder_fixture(model: Model):
+@pytest_asyncio.fixture(scope="module", name="app_image_builder")
+async def app_image_builder_fixture(model: Model) -> Application:
     """The GitHub runner image builder application."""
     image_builder = await model.deploy("github-runner-image-builder", channel="latest/edge")
     await model.wait_for_idle(apps=[image_builder.name], timeout=60 * 45)
