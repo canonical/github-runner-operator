@@ -46,6 +46,8 @@ from tests.integration.helpers.lxd import LXDInstanceHelper, ensure_charm_has_ru
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 from tests.status_name import ACTIVE
 
+# The following line is required because we are using request.getfixturevalue in conjunction
+# with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
 nest_asyncio.apply()
 
 
