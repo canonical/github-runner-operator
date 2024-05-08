@@ -59,7 +59,7 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     monkeypatch.setattr(
         "charm.GithubRunnerCharm.repo_check_systemd_service", tmp_path / "systemd_service"
     )
-    monkeypatch.setattr("charm.openstack_manager", openstack_manager_mock)
+    monkeypatch.setattr("charm.OpenstackRunnerManager", openstack_manager_mock)
     monkeypatch.setattr("charm.GithubRunnerCharm.kernel_module_path", tmp_path / "modules")
     monkeypatch.setattr("charm.GithubRunnerCharm._update_kernel", lambda self, now: None)
     monkeypatch.setattr("charm.execute_command", exec_command)

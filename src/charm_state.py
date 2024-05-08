@@ -503,7 +503,8 @@ def _image_id_from_relation(charm: ops.CharmBase) -> str | None:
     Returns:
         The image ID if exists, empty string if not yet ready, None if no relation found.
     """
-    if not (relation := charm.model.get_relation(IMAGE_RELATION_NAME)):
+    relations = charm.model.relations[IMAGE_RELATION_NAME]
+    if not relations or not (relation := relations[0]).units:
         return None
     unit: ops.Unit = next(iter(relation.units))
     if not relation.data[unit]:
@@ -565,10 +566,12 @@ class LocalLxdRunnerConfig(BaseModel):
     Attributes:
         virtual_machines: Number of virtual machine-based runner to spawn.
         virtual_machine_resources: Hardware resource used by one virtual machine for a runner.
+        runner_storage: The Runner storage to use, i.e. juju-storage or memory.
     """
 
     virtual_machines: int
     virtual_machine_resources: VirtualMachineResources
+    runner_storage: RunnerStorage
 
     @classmethod
     def _check_storage_change(cls, runner_storage: str) -> None:
