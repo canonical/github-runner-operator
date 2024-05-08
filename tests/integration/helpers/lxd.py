@@ -193,7 +193,7 @@ async def start_test_http_server(unit: Unit, port: int):
     """
     await run_in_unit(
         unit,
-        f"""cat <<EOT >> /etc/systemd/system/test-http-server.service
+        f"""cat <<EOT > /etc/systemd/system/test-http-server.service
 [Unit]
 Description=Simple HTTP server for testing
 After=network.target
