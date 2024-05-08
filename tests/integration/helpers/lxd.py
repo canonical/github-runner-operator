@@ -208,14 +208,11 @@ EOT""",
     await run_in_unit(unit, "/usr/bin/systemctl daemon-reload")
     await run_in_unit(unit, "/usr/bin/systemctl start test-http-server")
 
-    # Test the HTTP server
-    for _ in range(10):
+    async def server_is_ready() -> bool:
+        """Check if the server is ready."""
         return_code, stdout, _ = await run_in_unit(unit, f"curl http://localhost:{port}")
-        if return_code == 0 and stdout:
-            break
-        await sleep(3)
-    else:
-        assert False, "Timeout waiting for HTTP server to start up"
+        return return_code == 0 and stdout
+    await wait_for(server_is_ready, timeout=30, check_interval=3)
 
 
 async def set_app_runner_amount(app: Application, model: Model, num_runners: int) -> None:
