@@ -1357,6 +1357,17 @@ class OpenstackRunnerManager:
         except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException) as exc:
             raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
         if not result.ok:
+            logger.warning(
+                (
+                    "Unable to get file size of %s on instance %s, "
+                    "exit code: %s, stdout: %s, stderr: %s"
+                ),
+                remote_path,
+                ssh_conn.host,
+                result.return_code,
+                result.stdout,
+                result.stderr,
+            )
             raise _PullFileError(reason=f"Unable to get file size of {remote_path}")
 
         stdout = result.stdout
