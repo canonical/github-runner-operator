@@ -1198,9 +1198,9 @@ class OpenstackRunnerManager:
         start_ts = time.time()
 
         github_info = self.get_github_runner_info()
-        online_runners = [runner for runner in github_info if runner.online]
-        offline_runners = [runner for runner in github_info if not runner.online]
-        busy_runners = [runner for runner in github_info if runner.busy]
+        online_runners = [runner.runner_name for runner in github_info if runner.online]
+        offline_runners = [runner.runner_name for runner in github_info if not runner.online]
+        busy_runners = [runner.runner_name for runner in github_info if runner.busy]
         logger.info("Found %s online and %s offline openstack runners, %s of the runners are busy", len(online_runners), len(offline_runners), len(busy_runners))
         logger.debug("Online runner: %s", online_runners)
         logger.debug("Offline runner: %s", offline_runners)
@@ -1221,7 +1221,7 @@ class OpenstackRunnerManager:
             remove_token = self._github.get_runner_remove_token(path=self._config.path)
             instance_to_remove = (
                 *runner_by_health.unhealthy,
-                *(runner.runner_name for runner in offline_runners),
+                *offline_runners,
             )
             # For busy runners let GitHub decide whether the runner should be removed.
             busy_runners_set = set(busy_runners)
