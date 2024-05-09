@@ -1249,7 +1249,7 @@ class OpenstackRunnerManager:
                 *offline_runners,
             )
             # For busy runners let GitHub decide whether the runner should be removed.
-            instance_to_remove = (
+            instance_to_remove = tuple(
                 runner for runner in instance_to_remove if runner not in busy_runners_set
             )
             logger.debug("Removing following runners with issues %s", instance_to_remove)
