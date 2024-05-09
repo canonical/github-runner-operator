@@ -17,6 +17,7 @@ jobs:
       - run: cat /etc/docker/daemon.json
       - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
       - run: docker pull jujusolutions/charm-base:ubuntu-20.04
+      - run: sleep 3600
   # self-host-x64:
   #   name: self-hosted x64 test
   #   strategy:
