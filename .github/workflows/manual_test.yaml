@@ -6,18 +6,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  self-host-stg:
-    name: self-hosted stg test
-    runs-on: [self-hosted, ARM64, test-arm]
-    strategy:
-      matrix:
-        index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    steps:
-      - run: groups
-      - run: cat /etc/docker/daemon.json
-      - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
-      - run: docker pull jujusolutions/charm-base:ubuntu-20.04
-      - run: sleep 3600
+  # self-host-stg:
+  #   name: self-hosted stg test
+  #   runs-on: [self-hosted, ARM64, test-arm]
+  #   strategy:
+  #     matrix:
+  #       index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  #   steps:
+  #     - run: groups
+  #     - run: cat /etc/docker/daemon.json
+  #     - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
+  #     - run: docker pull jujusolutions/charm-base:ubuntu-20.04
+  #     - run: sleep 3600
   # self-host-x64:
   #   name: self-hosted x64 test
   #   strategy:
@@ -55,14 +55,16 @@ jobs:
   #   - name: rand read
   #     run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randread --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
   #   - run: sudo rm -f /write* /read*
-  # self-host-test-arm64:
-  #   name: self-hosted arm64 test
-  #   runs-on: [self-hosted, ARM64, medium]
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-  #   steps:
+  self-host-test-arm64:
+    name: self-hosted arm64 test
+    runs-on: [self-hosted, ARM64, medium]
+    strategy:
+      fail-fast: false
+      matrix:
+        # index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        index: [0]
+    steps:
+      - run: docker pull rust
   #     - uses: actions/checkout@v4
   #     - run: bash scripts/test_hardware.sh
     #   - name: tmate ssh
