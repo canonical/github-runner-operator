@@ -1060,11 +1060,15 @@ class OpenstackRunnerManager:
         server: Server | None = conn.get_server(name_or_id=instance_name)
 
         if server is not None:
-            logger.info("Pulling metrics and deleting server for OpenStack runner %s", instance_name)
+            logger.info(
+                "Pulling metrics and deleting server for OpenStack runner %s", instance_name
+            )
             self._pull_metrics(server, instance_name)
             self._remove_openstack_runner(conn, server, remove_token)
         else:
-            logger.info("Not found server for OpenStack runner %s marked for deletion", instance_name)
+            logger.info(
+                "Not found server for OpenStack runner %s marked for deletion", instance_name
+            )
 
         if github_id is not None:
             try:
@@ -1201,7 +1205,12 @@ class OpenstackRunnerManager:
         online_runners = [runner.runner_name for runner in github_info if runner.online]
         offline_runners = [runner.runner_name for runner in github_info if not runner.online]
         busy_runners = [runner.runner_name for runner in github_info if runner.busy]
-        logger.info("Found %s online and %s offline openstack runners, %s of the runners are busy", len(online_runners), len(offline_runners), len(busy_runners))
+        logger.info(
+            "Found %s online and %s offline openstack runners, %s of the runners are busy",
+            len(online_runners),
+            len(offline_runners),
+            len(busy_runners),
+        )
         logger.debug("Online runner: %s", online_runners)
         logger.debug("Offline runner: %s", offline_runners)
         logger.debug("Busy runner: %s", busy_runners)
@@ -1225,7 +1234,9 @@ class OpenstackRunnerManager:
             )
             # For busy runners let GitHub decide whether the runner should be removed.
             busy_runners_set = set(busy_runners)
-            instance_to_remove = (runner for runner in instance_to_remove if runner not in busy_runners_set)
+            instance_to_remove = (
+                runner for runner in instance_to_remove if runner not in busy_runners_set
+            )
             logger.debug("Removing following runners with issues %s", instance_to_remove)
             self._remove_runners(
                 conn=conn, instance_names=instance_to_remove, remove_token=remove_token
