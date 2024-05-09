@@ -294,7 +294,7 @@ async def app_openstack_runner(
                 LABELS_CONFIG_NAME: app_name,
             },
             wait_idle=False,
-            use_local_lxd=False
+            use_local_lxd=False,
         )
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
 

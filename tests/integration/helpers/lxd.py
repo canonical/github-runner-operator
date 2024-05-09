@@ -212,6 +212,7 @@ EOT""",
         """Check if the server is ready."""
         return_code, stdout, _ = await run_in_unit(unit, f"curl http://localhost:{port}")
         return return_code == 0 and stdout
+
     await wait_for(server_is_ready, timeout=30, check_interval=3)
 
 

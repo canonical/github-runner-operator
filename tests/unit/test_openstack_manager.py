@@ -535,7 +535,10 @@ def test_build_image_create_image_error(
 
 
 @pytest.mark.usefixtures("patch_execute_command")
-def test_build_image(patched_create_connection_context: MagicMock, mock_github_client: MagicMock):
+def test_build_image(
+    patched_create_connection_context: MagicMock,
+    mock_github_client: MagicMock,
+):
     """
     arrange: given monkeypatched execute_command and mocked openstack connection.
     act: when build_image is called.
@@ -551,6 +554,97 @@ def test_build_image(patched_create_connection_context: MagicMock, mock_github_c
         cloud_config=MagicMock(),
         github_client=mock_github_client,
         path=MagicMock(),
+    )
+
+
+@pytest.mark.usefixtures("patch_execute_command")
+def test_build_image_on_arm64(
+    patched_create_connection_context: MagicMock, mock_github_client: MagicMock
+):
+    """
+    arrange: given monkeypatched execute_command and mocked openstack connection.
+    act: when build_image is called on arm64.
+    assert: Openstack image is successfully created.
+    """
+    patched_create_connection_context.search_images.return_value = (
+        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
+        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
+    )
+
+    openstack_manager.build_image(
+        arch=openstack_manager.Arch.ARM64,
+        cloud_config=MagicMock(),
+        github_client=mock_github_client,
+        path=MagicMock(),
+    )
+
+
+@pytest.mark.usefixtures("patch_execute_command")
+def test_build_image_on_unsupported_arch(
+    patched_create_connection_context: MagicMock, mock_github_client: MagicMock
+):
+    """
+    arrange: given monkeypatched execute_command and mocked openstack connection.
+    act: when build_image is called on unknown architecture.
+    assert: UnsupportedArchitectureError is raised.
+    """
+    patched_create_connection_context.search_images.return_value = (
+        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
+        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
+    )
+
+    with pytest.raises(openstack_manager.UnsupportedArchitectureError) as exc:
+        openstack_manager.build_image(
+            # Use mock to represent unknown architecture.
+            arch=MagicMock(),
+            cloud_config=MagicMock(),
+            github_client=mock_github_client,
+            path=MagicMock(),
+        )
+
+
+@pytest.mark.usefixtures("patch_execute_command")
+def test_build_image_with_proxy_config(
+    patched_create_connection_context: MagicMock, mock_github_client: MagicMock
+):
+    """
+    arrange: given monkeypatched execute_command and mocked openstack connection.
+    act: when build_image is called with various valid ProxyConfig objects.
+    assert: Openstack image is successfully created.
+    """
+    patched_create_connection_context.search_images.return_value = (
+        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
+        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
+    )
+
+    test_proxy_config = openstack_manager.ProxyConfig(
+        http=(test_http_proxy := None),
+        https=(test_https_proxy := None),
+        no_proxy=(test_no_proxy := None),
+        use_aproxy=False,
+    )
+
+    openstack_manager.build_image(
+        arch=openstack_manager.Arch.ARM64,
+        cloud_config=MagicMock(),
+        github_client=mock_github_client,
+        path=MagicMock(),
+        proxies=test_proxy_config,
+    )
+
+    test_proxy_config = openstack_manager.ProxyConfig(
+        http=(test_http_proxy := "http://proxy.test"),
+        https=(test_https_proxy := "https://proxy.test"),
+        no_proxy=(test_no_proxy := "http://no.proxy"),
+        use_aproxy=False,
+    )
+
+    openstack_manager.build_image(
+        arch=openstack_manager.Arch.ARM64,
+        cloud_config=MagicMock(),
+        github_client=mock_github_client,
+        path=MagicMock(),
+        proxies=test_proxy_config,
     )
 
 
@@ -767,3 +861,25 @@ def test_repo_policy_config(
     repo_policy_compliance_client_mock.get_one_time_token.assert_called_once()
     assert one_time_token in cloud_init_data_str
     assert test_url in cloud_init_data_str
+
+
+def test__ensure_security_group_with_existing_rules(
+    openstack_connect_mock: openstack.connection.Connection,
+):
+    """
+    arrange: Mock OpenStack connection with the security rules created.
+    act: Run `_ensure_security_group`.
+    assert: The security rules are not created again.
+    """
+    openstack_connect_mock.create_security_group_rule = MagicMock()
+    openstack_connect_mock.get_security_group = MagicMock()
+    openstack_connect_mock.get_security_group.return_value = {
+        "security_group_rules": [
+            {"protocol": "icmp"},
+            {"protocol": "tcp", "port_range_min": 22, "port_range_max": 22},
+            {"protocol": "tcp", "port_range_min": 10022, "port_range_max": 10022},
+        ]
+    }
+
+    openstack_manager.OpenstackRunnerManager._ensure_security_group(openstack_connect_mock)
+    openstack_connect_mock.create_security_group_rule.assert_not_called()
