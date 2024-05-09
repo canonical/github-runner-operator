@@ -10,6 +10,7 @@ from pathlib import Path
 from time import sleep
 from typing import Any, AsyncIterator, Generator, Iterator, Optional
 
+import nest_asyncio
 import openstack
 import openstack.connection
 import pytest
@@ -26,20 +27,28 @@ from openstack.exceptions import ConflictException
 from pytest_operator.plugin import OpsTest
 
 from charm_state import (
+    LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
     PATH_CONFIG_NAME,
+    USE_APROXY_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
 )
 from github_client import GithubClient
-from tests.integration.helpers import (
+from tests.integration.helpers.common import (
+    InstanceHelper,
     deploy_github_runner_charm,
-    ensure_charm_has_runner,
     reconcile,
     wait_for,
 )
+from tests.integration.helpers.lxd import LXDInstanceHelper, ensure_charm_has_runner
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 from tests.status_name import ACTIVE
+
+# The following line is required because we are using request.getfixturevalue in conjunction
+# with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
+nest_asyncio.apply()
 
 
 @pytest.fixture(scope="module")
@@ -51,10 +60,16 @@ def metadata() -> dict[str, Any]:
 
 
 @pytest.fixture(scope="module")
-def app_name() -> str:
+def existing_app(pytestconfig: pytest.Config) -> Optional[str]:
+    """The existing application name to use for the test."""
+    return pytestconfig.getoption("--use-existing-app")
+
+
+@pytest.fixture(scope="module")
+def app_name(existing_app: Optional[str]) -> str:
     """Randomized application name."""
     # Randomized app name to avoid collision when runner is connecting to GitHub.
-    return f"integration-id{secrets.token_hex(2)}"
+    return existing_app or f"integration-id{secrets.token_hex(2)}"
 
 
 @pytest.fixture(scope="module")
@@ -247,33 +262,40 @@ async def app_openstack_runner(
     no_proxy: str,
     openstack_clouds_yaml: str,
     openstack_flavor: str,
+    existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
-    application = await deploy_github_runner_charm(
-        model=model,
-        charm_file=charm_file,
-        app_name=app_name,
-        path=path,
-        token=token,
-        runner_storage="juju-storage",
-        http_proxy=http_proxy,
-        https_proxy=https_proxy,
-        no_proxy=no_proxy,
-        reconcile_interval=60,
-        constraints={
-            "root-disk": 20 * 1024,
-            "cores": 3,
-            "mem": 12 * 1024,
-            "virt-type": "virtual-machine",
-        },
-        config={
-            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml,
-            # this is set by microstack sunbeam, see scripts/setup-microstack.sh
-            OPENSTACK_NETWORK_CONFIG_NAME: "demo-network",
-            OPENSTACK_FLAVOR_CONFIG_NAME: openstack_flavor,
-        },
-        wait_idle=False,
-    )
+    if existing_app:
+        application = model.applications[existing_app]
+    else:
+        application = await deploy_github_runner_charm(
+            model=model,
+            charm_file=charm_file,
+            app_name=app_name,
+            path=path,
+            token=token,
+            runner_storage="juju-storage",
+            http_proxy=http_proxy,
+            https_proxy=https_proxy,
+            no_proxy=no_proxy,
+            reconcile_interval=60,
+            constraints={
+                "root-disk": 50 * 1024,
+                "cores": 4,
+                "mem": 16 * 1024,
+                "arch": "arm64",
+            },
+            config={
+                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml,
+                # this is set by microstack sunbeam, see scripts/setup-microstack.sh
+                OPENSTACK_NETWORK_CONFIG_NAME: "demo-network",
+                OPENSTACK_FLAVOR_CONFIG_NAME: openstack_flavor,
+                USE_APROXY_CONFIG_NAME: "true",
+                LABELS_CONFIG_NAME: app_name,
+            },
+            wait_idle=False,
+            use_local_lxd=False,
+        )
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
 
     return application
@@ -566,12 +588,49 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
 
 @pytest_asyncio.fixture(scope="module", name="app_with_grafana_agent")
 async def app_with_grafana_agent_integrated_fixture(
-    model: Model, app_no_runner: Application
+    model: Model,
+    basic_app: Application,
+    existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
     """Setup the charm to be integrated with grafana-agent using the cos-agent integration."""
-    grafana_agent = await model.deploy("grafana-agent", channel="latest/edge")
-    await model.relate(f"{app_no_runner.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
-    await model.wait_for_idle(apps=[app_no_runner.name], status=ACTIVE)
-    await model.wait_for_idle(apps=[grafana_agent.name])
+    if not existing_app:
+        grafana_agent = await model.deploy(
+            "grafana-agent",
+            application_name=f"grafana-agent-{basic_app.name}",
+            channel="latest/edge",
+            revision=108,
+        )
+        await model.relate(f"{basic_app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
+        await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE)
+        await model.wait_for_idle(apps=[grafana_agent.name])
 
-    yield app_no_runner
+    yield basic_app
+
+
+@pytest_asyncio.fixture(scope="module", name="basic_app")
+async def basic_app_fixture(
+    request: pytest.FixtureRequest, pytestconfig: pytest.Config
+) -> Application:
+    """Setup the charm with the basic configuration."""
+    # Due to scope being module we cannot use request.node.get_closes_marker as openstack
+    # mark is not available in this scope.
+    openstack_marker = pytestconfig.getoption("-m") == "openstack"
+
+    if openstack_marker:
+        app = request.getfixturevalue("app_openstack_runner")
+    else:
+        app = request.getfixturevalue("app_no_runner")
+    return app
+
+
+@pytest_asyncio.fixture(scope="function", name="instance_helper")
+async def instance_helper_fixture(request: pytest.FixtureRequest) -> InstanceHelper:
+    """Instance helper fixture."""
+    openstack_marker = request.node.get_closest_marker("openstack")
+    helper: InstanceHelper
+    if openstack_marker:
+        openstack_connection = request.getfixturevalue("openstack_connection")
+        helper = OpenStackInstanceHelper(openstack_connection=openstack_connection)
+    else:
+        helper = LXDInstanceHelper()
+    return helper

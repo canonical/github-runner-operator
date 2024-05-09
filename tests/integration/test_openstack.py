@@ -12,7 +12,10 @@ from juju.application import Application
 from juju.model import Model
 from openstack.compute.v2.server import Server
 
-from tests.integration.helpers import DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME, dispatch_workflow
+from tests.integration.helpers.common import (
+    DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
+    dispatch_workflow,
+)
 
 
 # 2024/03/19 - The firewall configuration on openstack will be implemented by follow up PR on

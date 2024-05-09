@@ -17,11 +17,8 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import PATH_CONFIG_NAME
-from tests.integration.helpers import (
-    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
-    get_runner_names,
-    reconcile,
-)
+from tests.integration.helpers.common import DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME, reconcile
+from tests.integration.helpers.lxd import get_runner_names
 
 
 @pytest.mark.asyncio

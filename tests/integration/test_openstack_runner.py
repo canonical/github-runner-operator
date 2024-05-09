@@ -10,7 +10,7 @@ from openstack.compute.v2.server import Server
 from openstack.connection import Connection as OpenstackConnection
 
 from charm_state import TOKEN_CONFIG_NAME
-from tests.integration.helpers import ACTIVE, reconcile
+from tests.integration.helpers.common import ACTIVE, reconcile
 
 
 async def test_openstack_check_runner(
