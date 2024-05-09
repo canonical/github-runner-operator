@@ -685,19 +685,31 @@ class OpenstackRunnerManager:
 
     @retry(tries=10, delay=60, local_logger=logger)
     @staticmethod
-    def _wait_until_runner_process_running(conn: OpenstackConnection, instance_name: str) -> None:
+    def _wait_until_runner_process_running(
+        conn: OpenstackConnection, github_token: str, github_path: GithubPath, instance_name: str
+    ) -> None:
         """Wait until the runner process is running.
 
         The waiting to done by the retry declarator.
 
         Args:
             conn: The openstack connection instance.
+            github_token: The GitHub personal token.
+            github_path: The GitHub org or repo path.
             instance_name: The name of the instance to wait on.
 
         Raises:
             RunnerStartError: Unable perform health check of the runner application.
         """
         try:
+            github = GithubClient(token=github_token)
+            runner_names = set(
+                runner.name for runner in github.get_runner_github_info(github_path)
+            )
+            # If the runner is on GitHub, it should be functional.
+            if instance_name in runner_names:
+                return
+
             server: Server | None = conn.get_server(instance_name)
             if (
                 not server
@@ -814,7 +826,9 @@ class OpenstackRunnerManager:
                 ) from err
 
             logger.info("Waiting runner %s to come online", instance_config.name)
-            OpenstackRunnerManager._wait_until_runner_process_running(conn, instance.name)
+            OpenstackRunnerManager._wait_until_runner_process_running(
+                conn, args.config.token, args.config.path, instance.name
+            )
             logger.info("Finished creating runner %s", instance_config.name)
         ts_after = time.time()
         OpenstackRunnerManager._issue_runner_installed_metric(
