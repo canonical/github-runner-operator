@@ -1238,7 +1238,7 @@ class OpenstackRunnerManager:
 
             healthy_runners_set = set(runner_by_health.healthy)
             busy_runners_set = set(busy_runners)
-            busy_unhealthy_runners = set(runner_by_health.unhealthy).union(busy_runners_set)
+            busy_unhealthy_runners = set(runner_by_health.unhealthy).intersection(busy_runners_set)
             if busy_unhealthy_runners:
                 logger.warning("Found unhealthy busy runners %s", busy_unhealthy_runners)
 
