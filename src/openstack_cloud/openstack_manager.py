@@ -878,6 +878,8 @@ class OpenstackRunnerManager:
     def _get_ssh_connections(server: Server) -> Iterator[SshConnection]:
         """Get ssh connections within a network for a given openstack instance.
 
+        The SSH connection will attempt to establish connection until the timeout configured.
+
         Args:
             server: The Openstack server instance.
 
@@ -912,7 +914,7 @@ class OpenstackRunnerManager:
                     host=ip,
                     user="ubuntu",
                     connect_kwargs={"key_filename": str(key_path)},
-                    connect_timeout=10,
+                    connect_timeout=30,
                 )
 
     def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
@@ -938,7 +940,6 @@ class OpenstackRunnerManager:
             server: Server | None = conn.get_server(instance.name)
             if not server:
                 continue
-            # SHUTOFF runners are runners that have completed executing jobs.
             if (
                 server.status == _INSTANCE_STATUS_SHUTOFF
                 or not OpenstackRunnerManager._ssh_health_check(server=server)
@@ -1056,8 +1057,11 @@ class OpenstackRunnerManager:
         server: Server | None = conn.get_server(name_or_id=instance_name)
 
         if server is not None:
+            logger.info("Pulling metrics and deleting server for OpenStack runner %s", instance_name)
             self._pull_metrics(server, instance_name)
             self._remove_openstack_runner(conn, server, remove_token)
+        else:
+            logger.info("Not found server for OpenStack runner %s marked for deletion", instance_name)
 
         if github_id is not None:
             try:
@@ -1193,8 +1197,11 @@ class OpenstackRunnerManager:
         github_info = self.get_github_runner_info()
         online_runners = [runner for runner in github_info if runner.online]
         offline_runners = [runner for runner in github_info if not runner.online]
-        logger.info("Found %s existing online openstack runners", len(online_runners))
-        logger.info("Found %s existing offline openstack runners", len(offline_runners))
+        busy_runners = [runner for runner in github_info if runner.busy]
+        logger.info("Found %s online and %s offline openstack runners, %s of the runners are busy", len(online_runners), len(offline_runners), len(busy_runners))
+        logger.debug("Online runner: %s", online_runners)
+        logger.debug("Offline runner: %s", offline_runners)
+        logger.debug("Busy runner: %s", busy_runners)
 
         with _create_connection(self._cloud_config) as conn:
             runner_by_health = self._get_openstack_runner_status(conn)
@@ -1213,6 +1220,10 @@ class OpenstackRunnerManager:
                 *runner_by_health.unhealthy,
                 *(runner.runner_name for runner in offline_runners),
             )
+            # For busy runners let GitHub decide whether the runner should be removed.
+            busy_runners_set = set(busy_runners)
+            instance_to_remove = (runner for runner in instance_to_remove if runner not in busy_runners_set)
+            logger.debug("Removing following runners with issues %s", instance_to_remove)
             self._remove_runners(
                 conn=conn, instance_names=instance_to_remove, remove_token=remove_token
             )
