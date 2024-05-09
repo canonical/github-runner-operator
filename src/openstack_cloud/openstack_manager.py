@@ -931,11 +931,7 @@ class OpenstackRunnerManager:
         """
         healthy_runner = []
         unhealthy_runner = []
-        openstack_instances = [
-            instance
-            for instance in cast(list[Server], conn.list_servers())
-            if instance.name.startswith(f"{self.instance_name}-")
-        ]
+        openstack_instances = self._get_openstack_instances(conn)
 
         logger.debug("Found openstack instances: %s", openstack_instances)
 
@@ -952,6 +948,21 @@ class OpenstackRunnerManager:
                 healthy_runner.append(instance.name)
 
         return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
+
+    def _get_openstack_instances(self, conn: OpenstackConnection) -> list[Server]:
+        """Get the OpenStack servers managed by this unit.
+
+        Args:
+            conn: The connection object to access OpenStack cloud.
+
+        Returns:
+            List of OpenStack instances.
+        """
+        return [
+            instance
+            for instance in cast(list[Server], conn.list_servers())
+            if instance.name.startswith(f"{self.instance_name}-")
+        ]
 
     def _run_github_removal_script(self, server: Server, remove_token: str | None) -> None:
         """Run Github runner removal script.
@@ -1225,6 +1236,11 @@ class OpenstackRunnerManager:
             logger.debug("Healthy runner: %s", runner_by_health.healthy)
             logger.debug("Unhealthy runner: %s", runner_by_health.unhealthy)
 
+            busy_runners_set = set(busy_runners)
+            busy_unhealthy_runners = set(runner_by_health.unhealthy).union(busy_runners_set)
+            if busy_unhealthy_runners:
+                logger.warning("Found unhealthy busy runners %s", busy_unhealthy_runners)
+
             # Clean up offline (SHUTOFF) runners or unhealthy (no connection/cloud-init script)
             # runners.
             remove_token = self._github.get_runner_remove_token(path=self._config.path)
@@ -1233,7 +1249,6 @@ class OpenstackRunnerManager:
                 *offline_runners,
             )
             # For busy runners let GitHub decide whether the runner should be removed.
-            busy_runners_set = set(busy_runners)
             instance_to_remove = (
                 runner for runner in instance_to_remove if runner not in busy_runners_set
             )
@@ -1246,7 +1261,9 @@ class OpenstackRunnerManager:
             self._clean_up_keys_files(conn, runner_by_health.healthy)
             self._clean_up_openstack_keypairs(conn, runner_by_health.healthy)
 
-            delta = quantity - len(runner_by_health.healthy)
+            # Get the number of OpenStack servers. This is not calculated due to there might be removal failures.
+            servers = self._get_openstack_instances(conn)
+            delta = quantity - len(servers)
 
             # Spawn new runners
             if delta > 0:
