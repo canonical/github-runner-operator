@@ -19,7 +19,7 @@ from charm_state import (
     VM_DISK_CONFIG_NAME,
     VM_MEMORY_CONFIG_NAME,
 )
-from tests.integration.helpers import (
+from tests.integration.helpers.lxd import (
     assert_resource_lxd_profile,
     ensure_charm_has_runner,
     get_runner_names,

@@ -16,6 +16,7 @@
 """Module for handling interactions with OpenStack."""
 import logging
 import secrets
+import shutil
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -638,6 +639,8 @@ class OpenstackRunnerManager:
 
         keypair = conn.create_keypair(name=name)
         private_key_path.write_text(keypair.private_key)
+        shutil.chown(private_key_path, user="ubuntu", group="ubuntu")
+        private_key_path.chmod(0o400)
 
     @staticmethod
     def _ssh_health_check(server: Server) -> bool:
@@ -1365,6 +1368,17 @@ class OpenstackRunnerManager:
         except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException) as exc:
             raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
         if not result.ok:
+            logger.warning(
+                (
+                    "Unable to get file size of %s on instance %s, "
+                    "exit code: %s, stdout: %s, stderr: %s"
+                ),
+                remote_path,
+                ssh_conn.host,
+                result.return_code,
+                result.stdout,
+                result.stderr,
+            )
             raise _PullFileError(reason=f"Unable to get file size of {remote_path}")
 
         stdout = result.stdout

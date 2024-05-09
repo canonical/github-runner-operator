@@ -156,6 +156,7 @@ def openstack_manager_for_reconcile_fixture(
     )
 
     monkeypatch.setattr(openstack_manager, "_SSH_KEY_PATH", tmp_path)
+    monkeypatch.setattr(openstack_manager.shutil, "chown", MagicMock())
 
     return os_runner_manager
 
