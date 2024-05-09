@@ -1236,6 +1236,7 @@ class OpenstackRunnerManager:
             logger.debug("Healthy runner: %s", runner_by_health.healthy)
             logger.debug("Unhealthy runner: %s", runner_by_health.unhealthy)
 
+            healthy_runners_set =set(runner_by_health.healthy)
             busy_runners_set = set(busy_runners)
             busy_unhealthy_runners = set(runner_by_health.unhealthy).union(busy_runners_set)
             if busy_unhealthy_runners:
@@ -1247,6 +1248,11 @@ class OpenstackRunnerManager:
             instance_to_remove = (
                 *runner_by_health.unhealthy,
                 *offline_runners,
+            )
+            # Possible for a healthy runner to be appear as offline for sometime as GitHub can be
+            # slow to update the status.
+            instance_to_remove = tuple(
+                runner for runner in instance_to_remove if runner not in healthy_runners_set
             )
             # For busy runners let GitHub decide whether the runner should be removed.
             instance_to_remove = tuple(
