@@ -18,7 +18,7 @@ from runner import CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerManagerClients
 from runner_type import ProxySetting
 from shared_fs import SharedFilesystem
-from tests.unit.factories import SSHDebugInfoFactory
+from tests.unit.factories import SSHDebugConnectionFactory
 from tests.unit.mock import (
     MockLxdClient,
     MockRepoPolicyComplianceClient,
@@ -96,7 +96,7 @@ def jinja2_environment_fixture() -> MagicMock:
 @pytest.fixture(scope="function", name="ssh_debug_connections")
 def ssh_debug_connections_fixture() -> list[SSHDebugConnection]:
     """A list of randomly generated ssh_debug_connections."""
-    return SSHDebugInfoFactory.create_batch(size=100)
+    return SSHDebugConnectionFactory.create_batch(size=100)
 
 
 @pytest.fixture(

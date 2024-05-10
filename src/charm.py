@@ -614,7 +614,6 @@ class GithubRunnerCharm(CharmBase):
                 # it may be the case that the prev token has expired, so we need to use force flush
                 prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
 
-        state = self._setup_state()
         self._refresh_firewall(state)
 
         runner_manager = self._get_runner_manager(state)
@@ -923,19 +922,23 @@ class GithubRunnerCharm(CharmBase):
         # Snap and Apt will use any proxies configured in the Juju model.
         # Binding for snap, apt, and lxd init commands are not available so subprocess.run used.
         # Install dependencies used by repo-policy-compliance and the firewall
-        self._apt_install(["gunicorn", "python3-pip", "nftables"])
-        # Install repo-policy-compliance package
-        self._install_repo_policy_compliance(state.proxy_config)
-        execute_command(
-            ["/usr/bin/apt-get", "remove", "-qy", "lxd", "lxd-client"], check_exit=False
-        )
         self._apt_install(
             [
+                # repo policy compliance deps
+                "gunicorn",
+                "python3-pip",
+                "nftables",
+                # image builder deps
                 "cpu-checker",
                 "libvirt-clients",
                 "libvirt-daemon-driver-qemu",
                 "apparmor-utils",
-            ],
+            ]
+        )
+        # Install repo-policy-compliance package
+        self._install_repo_policy_compliance(state.proxy_config)
+        execute_command(
+            ["/usr/bin/apt-get", "remove", "-qy", "lxd", "lxd-client"], check_exit=False
         )
         execute_command(["/usr/bin/snap", "install", "lxd", "--channel=latest/stable"])
         execute_command(["/usr/bin/snap", "refresh", "lxd", "--channel=latest/stable"])

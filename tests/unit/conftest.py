@@ -61,7 +61,6 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     )
     monkeypatch.setattr("charm.openstack_manager", openstack_manager_mock)
     monkeypatch.setattr("charm.GithubRunnerCharm.kernel_module_path", tmp_path / "modules")
-    monkeypatch.setattr("charm.GithubRunnerCharm._update_kernel", lambda self, now: None)
     monkeypatch.setattr("charm.execute_command", exec_command)
     monkeypatch.setattr("charm.shutil", unittest.mock.MagicMock())
     monkeypatch.setattr("charm.shutil.disk_usage", disk_usage_mock(30 * 1024 * 1024 * 1024))
