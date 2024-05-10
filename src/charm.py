@@ -303,6 +303,9 @@ class GithubRunnerCharm(CharmBase):
                 self._create_memory_storage(self.ram_pool_path, size)
             case RunnerStorage.JUJU_STORAGE:
                 path = self.juju_storage_path
+            # Unreachable code - to ensure coverage is happy.
+            case _:  # pragma: nocover
+                raise NotImplementedError()
 
         # tmpfs storage is not created if required size is 0.
         if size > 0:
@@ -419,7 +422,8 @@ class GithubRunnerCharm(CharmBase):
         """
         if state.charm_config.openstack_clouds_yaml:
             # Only build it in test mode since it may interfere with users systems.
-            if self.config.get(TEST_MODE_CONFIG_NAME) == "insecure":
+            # Skip testing since this is for testing purposes only.
+            if self.config.get(TEST_MODE_CONFIG_NAME) == "insecure":  # pragma: nocover
                 self.unit.status = MaintenanceStatus("Building Openstack image")
                 github = GithubClient(token=state.charm_config.token)
                 image_id = openstack_manager.build_image(
@@ -452,7 +456,7 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = MaintenanceStatus("Installing packages")
         try:
-            # The `_start_services`, `_install_deps` includes retry.
+            # The `_install_deps`, `_start_services` includes retry.
             self._install_deps()
             self._start_services(state.charm_config.token, state.proxy_config)
         except SubprocessError:
@@ -609,10 +613,9 @@ class GithubRunnerCharm(CharmBase):
             self._stored.labels = self.config[LABELS_CONFIG_NAME]
         if prev_config_for_flush or should_flush_runners:
             prev_runner_manager = self._get_runner_manager(state=state, **prev_config_for_flush)
-            if prev_runner_manager:
-                self.unit.status = MaintenanceStatus("Removing runners due to config change")
-                # it may be the case that the prev token has expired, so we need to use force flush
-                prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
+            self.unit.status = MaintenanceStatus("Removing runners due to config change")
+            # it may be the case that the prev token has expired, so we need to use force flush
+            prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
 
         self._refresh_firewall(state)
 

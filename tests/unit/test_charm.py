@@ -11,24 +11,30 @@ import pytest
 
 import charm
 from charm import (
+    LABELS_CONFIG_NAME,
+    PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     RECONCILE_RUNNERS_EVENT,
+    TEST_MODE_CONFIG_NAME,
     CharmConfigInvalidError,
     ConfigurationError,
     FlushMode,
     GithubRunnerCharm,
     GitHubRunnerStatus,
+    LogrotateSetupError,
     MissingRunnerBinaryError,
     OpenStackUnauthorizedError,
     ProxyConfig,
+    RunnerBinaryError,
     RunnerError,
     RunnerManager,
     RunnerManagerConfig,
     RunnerStorage,
     SubprocessError,
+    TimerStatusError,
     TokenError,
 )
-from charm_state import TEST_MODE_CONFIG_NAME
+from charm_state import GithubRepo
 from tests.unit.factories import CharmStateFactory, ProxyConfigFactory, RunnerInfoFactory
 
 
@@ -161,6 +167,38 @@ def test_action_error_handling(
     mock_action_event.fail.assert_called_once_with(error_message)
 
 
+def test___init___lxd_profile_in_non_test_mode(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """
+    arrange: Mock LXD_PROFILE_YAML to simulate non-testing scenario.
+    act: Instantiate the charm class.
+    assert: Ensure RuntimeError is raised.
+    """
+    monkeypatch.setattr(charm, "LXD_PROFILE_YAML", MagicMock())
+
+    with pytest.raises(RuntimeError):
+        harness = ops.testing.Harness(GithubRunnerCharm)
+        harness.begin()
+
+
+def test___init___lxd_profile_in_test_mode(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+):
+    """
+    arrange: Mock LXD_PROFILE_YAML to simulate non-testing scenario.
+    act: Instantiate the charm class.
+    assert: Ensure RuntimeError is raised.
+    """
+    monkeypatch.setattr(charm, "LXD_PROFILE_YAML", MagicMock())
+
+    harness = ops.testing.Harness(GithubRunnerCharm)
+    harness.update_config({TEST_MODE_CONFIG_NAME: "insecure"})
+    harness.begin()
+
+    assert "test mode is enabled" in caplog.messages
+
+
 def test_setup_state_invalid_cases(mock_charm: GithubRunnerCharm, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Mock CharmState to raise the specified exceptions.
@@ -178,24 +216,34 @@ def test_setup_state_invalid_cases(mock_charm: GithubRunnerCharm, monkeypatch: p
     assert "Invalid state" in str(exc_info.value)
 
 
+@pytest.mark.parametrize(
+    "path_exist_pre, path_exist_post",
+    [
+        pytest.param(False, False, id="path does not exist pre/post"),
+        pytest.param(False, True, id="path does not exists pre, exists post"),
+        pytest.param(True, True, id="path exists pre/post"),
+        pytest.param(True, False, id="path exists pre, does not exist post"),
+    ],
+)
 def test_create_memory_storage_failure(
-    tmp_path: Path, mock_charm: GithubRunnerCharm, monkeypatch: pytest.MonkeyPatch
+    path_exist_pre: bool,
+    path_exist_post: bool,
+    mock_charm: GithubRunnerCharm,
+    monkeypatch: pytest.MonkeyPatch,
 ):
     """
     arrange: Mock execute_command to simulate an OSError.
     act: When _create_memory_storage is called.
-    assert: Ensure RunnerError is raised with the appropriate message.
+    assert: Ensure RunnerError is raised and existing storage is deleted if any.
     """
-    monkeypatch.setattr(
-        charm,
-        "execute_command",
-        MagicMock(side_effect=OSError("Failed to execute command")),
-    )
-    path = tmp_path / "test_storage"
+    execute_command_mock = MagicMock(side_effect=OSError("Failed to execute command"))
+    monkeypatch.setattr(charm, "execute_command", execute_command_mock)
+    mock_path = MagicMock()
+    mock_path.exists = MagicMock(side_effect=[path_exist_pre, path_exist_post])
     size = 1024  # 1MB
 
     with pytest.raises(RunnerError) as exc_info:
-        mock_charm._create_memory_storage(path, size)
+        mock_charm._create_memory_storage(mock_path, size)
     assert str(exc_info.value) == "Failed to configure runner storage"
 
 
@@ -329,7 +377,18 @@ def test_ensure_service_health_inactive(
         )
 
 
-def test_get_runner_manager(mock_charm: GithubRunnerCharm):
+@pytest.mark.parametrize(
+    "token, path, service_token",
+    [
+        pytest.param(
+            secrets.token_hex(4), GithubRepo(owner="test", repo="test"), secrets.token_hex(4)
+        ),
+        pytest.param(None, None, None),
+    ],
+)
+def test_get_runner_manager(
+    mock_charm: GithubRunnerCharm, token: str, path: GithubRepo, service_token: str
+):
     """
     arrange: Set up the charm instance, charm state, and mock necessary methods.
     act: Call the _get_runner_manager method with the given arguments.
@@ -342,13 +401,11 @@ def test_get_runner_manager(mock_charm: GithubRunnerCharm):
     )  # Mocking the return value of _ensure_runner_storage
     test_token = secrets.token_hex(16)
     mock_charm._get_service_token = MagicMock(return_value=test_token)
-    mock_charm.service_token = PropertyMock(
-        return_value=None
-    )  # Mocking the service_token property
+    mock_charm.service_token = service_token
     mock_state = CharmStateFactory()
     mock_charm.unit.name = "test_app/0"
 
-    runner_manager = mock_charm._get_runner_manager(mock_state)
+    runner_manager = mock_charm._get_runner_manager(mock_state, token=token, path=path)
 
     assert runner_manager.app_name == "test_app"
     assert isinstance(runner_manager.config, RunnerManagerConfig)
@@ -429,25 +486,91 @@ def test_common_install_code_with_openstack(
     openstack_mock.create_instance.assert_called()
 
 
-def test_common_install_code_without_openstack(
+def test_common_install_code_lxd_start_services_error(
     mock_charm: GithubRunnerCharm, monkeypatch: pytest.MonkeyPatch
 ):
     """
-    arrange: Set up the charm instance, charm state, and mock necessary methods for non-OpenStack \
-        scenario.
+    arrange: Set up the charm state, and mock start_services method that raises an error.
+    act: Call the _common_install_code method.
+    assert: Ensure SubprocessError is raised.
+    """
+    mock_state = CharmStateFactory()
+    mock_state.charm_config.openstack_clouds_yaml = None
+    monkeypatch.setattr(charm.metrics, "setup_logrotate", MagicMock())
+    mock_charm._stored = MagicMock()
+    mock_charm._install_deps = MagicMock()
+    mock_charm._start_services = MagicMock(side_effect=SubprocessError([], 1, "", ""))
+
+    with pytest.raises(SubprocessError):
+        mock_charm._common_install_code(mock_state)
+
+
+def test_common_install_code_lxd_setup_logrotate_error(
+    mock_charm: GithubRunnerCharm, monkeypatch: pytest.MonkeyPatch
+):
+    """
+    arrange: Set up the charm state, and mock setup_logrotate function that raises an error.
+    act: Call the _common_install_code method.
+    assert: Ensure LogrotateSetupError is raised.
+    """
+    mock_state = CharmStateFactory()
+    mock_state.charm_config.openstack_clouds_yaml = None
+    mock_charm._stored = MagicMock()
+    mock_charm._install_deps = MagicMock()
+    mock_charm._start_services = MagicMock()
+    monkeypatch.setattr(
+        charm.metrics, "setup_logrotate", MagicMock(side_effect=LogrotateSetupError)
+    )
+
+    with pytest.raises(LogrotateSetupError):
+        mock_charm._common_install_code(mock_state)
+
+
+def test_common_install_code_update_runner_bin_error(
+    mock_charm: GithubRunnerCharm, monkeypatch: pytest.MonkeyPatch
+):
+    """
+    arrange: Set up the charm state, and mock update_runner_bin method that raises an error.
+    act: Call the _common_install_code method.
+    assert: Ensure LogrotateSetupError is raised.
+    """
+    mock_state = CharmStateFactory()
+    mock_state.charm_config.openstack_clouds_yaml = None
+    monkeypatch.setattr(charm.metrics, "setup_logrotate", MagicMock())
+    mock_charm._stored = MagicMock()
+    mock_charm._install_deps = MagicMock()
+    mock_charm._start_services = MagicMock()
+    mock_charm._refresh_firewall = MagicMock()
+    runner_manager_mock = MagicMock()
+    runner_manager_mock.update_runner_bin.side_effect = RunnerBinaryError
+    mock_charm._get_runner_manager = MagicMock(return_value=runner_manager_mock)
+    mock_charm._set_reconcile_timer = MagicMock()
+
+    assert not mock_charm._common_install_code(mock_state)
+
+
+@pytest.mark.parametrize(
+    "has_runner_image",
+    [pytest.param(True, id="has runner image"), pytest.param(False, id="no runner image")],
+)
+def test_common_install_code_lxd(
+    has_runner_image: bool, mock_charm: GithubRunnerCharm, monkeypatch: pytest.MonkeyPatch
+):
+    """
+    arrange: Set up the charm state, and mock necessary methods for lxd scenario.
     act: Call the _common_install_code method.
     assert: Ensure that the appropriate methods are called and status is set correctly.
     """
     mock_state = CharmStateFactory()
     mock_state.charm_config.openstack_clouds_yaml = None
-    # Mocking necessary methods
     monkeypatch.setattr(charm.metrics, "setup_logrotate", log_rotate_mock := MagicMock())
     mock_charm._stored = MagicMock()
     mock_charm._install_deps = (install_mock := MagicMock())
     mock_charm._start_services = (start_services_mock := MagicMock())
     mock_charm._refresh_firewall = (refresh_firewall_mock := MagicMock())
-    mock_charm._get_runner_manager = MagicMock(return_value=(runner_manager_mock := MagicMock()))
-    mock_charm._get_runner_manager.return_value.has_runner_image.return_value = False
+    runner_manager_mock = MagicMock()
+    mock_charm._get_runner_manager = MagicMock(return_value=runner_manager_mock)
+    runner_manager_mock.has_runner_image.return_value = has_runner_image
     mock_charm._set_reconcile_timer = (reconcile_timer_mock := MagicMock())
 
     result = mock_charm._common_install_code(mock_state)
@@ -457,7 +580,11 @@ def test_common_install_code_without_openstack(
     start_services_mock.assert_called()
     log_rotate_mock.assert_called()
     refresh_firewall_mock.assert_called()
-    runner_manager_mock.build_runner_image.assert_called()
+    (
+        runner_manager_mock.build_runner_image.assert_called()
+        if not has_runner_image
+        else runner_manager_mock.build_runner_image.assert_not_called()
+    )
     runner_manager_mock.schedule_build_runner_image.assert_called()
     runner_manager_mock.get_latest_runner_bin_url.assert_called()
     runner_manager_mock.update_runner_bin.assert_called()
@@ -477,6 +604,43 @@ def test__on_install(mock_charm: GithubRunnerCharm):
 
     mock_setup_state.assert_called_once()
     mock_common_install_code.assert_called_once()
+
+
+def test__on_start_openstack(mock_charm: GithubRunnerCharm):
+    """
+    arrange: Mock _block_on_openstack_config method that returns False.
+    act: Call _on_start method.
+    assert: Verify the mocks are not called.
+    """
+    mock_charm._setup_state = (mock_setup_state := MagicMock())
+    mock_charm._block_on_openstack_config = (
+        mock_block_on_openstack_config := MagicMock(return_value=True)
+    )
+    mock_charm._get_runner_manager = MagicMock()
+
+    mock_charm._on_start(MagicMock())
+
+    mock_setup_state.assert_called_once()
+    mock_block_on_openstack_config.assert_called_once()
+    mock_charm._get_runner_manager.assert_not_called()
+
+
+def test__on_start_reconcile_error(mock_charm: GithubRunnerCharm):
+    """
+    arrange: Set up mock _reconcile_runners method that raises an error.
+    act: Call _on_start method.
+    assert: Verify the unit is in MaintenanceStatus.
+    """
+    mock_charm._setup_state = MagicMock()
+    mock_charm._block_on_openstack_config = MagicMock(return_value=False)
+    mock_charm._get_runner_manager = MagicMock(return_value=(mock_runner_manager := MagicMock()))
+    mock_charm._check_and_update_dependencies = MagicMock()
+    mock_runner_manager.flush = MagicMock()
+    mock_charm._reconcile_runners = MagicMock(side_effect=RunnerError)
+
+    mock_charm._on_start(MagicMock())
+
+    assert isinstance(mock_charm.unit.status, ops.MaintenanceStatus)
 
 
 def test__on_start(mock_charm: GithubRunnerCharm):
@@ -560,6 +724,21 @@ def test__set_reconcile_timer(mock_charm: GithubRunnerCharm, harness: ops.testin
     )
 
 
+def test__ensure_reconcile_timer_is_active_timer_error(
+    mock_charm: GithubRunnerCharm, caplog: pytest.LogCaptureFixture
+):
+    """
+    arrange: Set up mock for _event_timer.is_active that raises TimerStatusError.
+    act: Call _ensure_reconcile_timer_is_active method.
+    assert: Verify that the event is logged.
+    """
+    mock_charm._event_timer.is_active = MagicMock(side_effect=TimerStatusError)
+
+    mock_charm._ensure_reconcile_timer_is_active()
+
+    assert "Failed to check the reconciliation event timer status" in caplog.messages
+
+
 def test__ensure_reconcile_timer_is_active_timer_is_inactive(mock_charm: GithubRunnerCharm):
     """
     arrange: Set up mock for _event_timer.is_active and _set_reconcile_timer methods.
@@ -590,6 +769,23 @@ def test__ensure_reconcile_timer_is_active_timer_is_active(mock_charm: GithubRun
 
     mock_is_active.assert_called_once_with(RECONCILE_RUNNERS_EVENT)
     mock_set_reconcile_timer.assert_not_called()
+
+
+def test__on_upgrade_charm_common_install_code_fail(mock_charm: GithubRunnerCharm):
+    """
+    arrange: Set up mock for _common_install_code that returns False, representing failure.
+    act: Call _on_upgrade_charm method.
+    assert: Verify that execution is stopped.
+    """
+    mock_charm._setup_state = (mock_setup_state := MagicMock())
+    mock_charm._common_install_code = (mock_common_install_code := MagicMock(return_value=False))
+    mock_charm._get_runner_manager = MagicMock()
+
+    mock_charm._on_upgrade_charm(MagicMock())
+
+    mock_setup_state.assert_called_once()
+    mock_common_install_code.assert_called_once_with(mock_setup_state.return_value)
+    mock_charm._get_runner_manager.assert_not_called()
 
 
 def test__on_upgrade_charm(mock_charm: GithubRunnerCharm):
@@ -628,7 +824,7 @@ def test__on_config_changed_reconcile_timer_is_set(mock_charm: GithubRunnerCharm
     mock_charm._set_reconcile_timer.assert_called_once()
 
 
-def test__on_config_changed_no_openstack_config(mock_charm: GithubRunnerCharm):
+def test__on_config_changed_lxd_config_unchanged(mock_charm: GithubRunnerCharm):
     """
     arrange: Set up mock for _setup_state, _block_on_openstack_config, _get_runner_manager,\
         _refresh_firewall, and _reconcile_runners methods.
@@ -638,9 +834,14 @@ def test__on_config_changed_no_openstack_config(mock_charm: GithubRunnerCharm):
     """
     mock_state = CharmStateFactory()
     mock_charm._setup_state = MagicMock(return_value=mock_state)
+    mock_charm._stored = MagicMock()
+    mock_charm._stored.token = mock_state.charm_config.token
+    mock_charm._stored.path = mock_charm.config[PATH_CONFIG_NAME]
+    mock_charm._stored.labels = mock_charm.config[LABELS_CONFIG_NAME]
     mock_charm._set_reconcile_timer = MagicMock()
     mock_charm._block_on_openstack_config = MagicMock(return_value=False)
-    mock_charm._get_runner_manager = MagicMock()
+    runner_manager_mock = MagicMock()
+    mock_charm._get_runner_manager = MagicMock(return_value=runner_manager_mock)
     mock_charm._refresh_firewall = MagicMock()
     mock_charm._reconcile_runners = MagicMock()
 
@@ -650,6 +851,35 @@ def test__on_config_changed_no_openstack_config(mock_charm: GithubRunnerCharm):
     mock_charm._get_runner_manager.assert_called()
     mock_charm._refresh_firewall.assert_called_once()
     mock_charm._reconcile_runners.assert_called_once()
+
+
+def test__on_config_changed_lxd(mock_charm: GithubRunnerCharm, harness: ops.testing.Harness):
+    """
+    arrange: Set up mock for _setup_state, _block_on_openstack_config, _get_runner_manager,\
+        _refresh_firewall, and _reconcile_runners methods.
+    act: Call _on_config_changed method.
+    assert: Verify that _setup_state, _block_on_openstack_config, _get_runner_manager,\
+        _refresh_firewall, and _reconcile_runners methods are called.
+    """
+    harness.update_config(
+        {
+            PATH_CONFIG_NAME: "changed",
+            LABELS_CONFIG_NAME: "changed",
+        }
+    )
+    mock_state = CharmStateFactory()
+    mock_charm._setup_state = MagicMock(return_value=mock_state)
+    mock_charm._set_reconcile_timer = MagicMock()
+    mock_charm._block_on_openstack_config = MagicMock(return_value=False)
+    runner_manager_mock = MagicMock()
+    mock_charm._get_runner_manager = MagicMock(return_value=runner_manager_mock)
+    mock_charm._refresh_firewall = MagicMock()
+    mock_charm._reconcile_runners = MagicMock()
+
+    mock_charm._on_config_changed(MagicMock())
+
+    assert mock_charm._stored.path == "changed"
+    assert mock_charm._stored.labels == "changed"
 
 
 def test__check_and_update_dependencies_with_updates(mock_charm: GithubRunnerCharm):
