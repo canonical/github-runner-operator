@@ -394,7 +394,7 @@ class CharmConfig(BaseModel):
         # The EventTimer class sets a timeout of `reconcile_interval` - 1.
         # Therefore the `reconcile_interval` must be at least 2.
         if reconcile_interval < 2:
-            logger.exception(
+            logger.error(
                 "The %s configuration must be greater than 1", RECONCILE_INTERVAL_CONFIG_NAME
             )
             raise ValueError(
