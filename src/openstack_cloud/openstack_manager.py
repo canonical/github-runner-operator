@@ -1262,7 +1262,8 @@ class OpenstackRunnerManager:
             self._clean_up_keys_files(conn, runner_by_health.healthy)
             self._clean_up_openstack_keypairs(conn, runner_by_health.healthy)
 
-            # Get the number of OpenStack servers. This is not calculated due to there might be removal failures.
+            # Get the number of OpenStack servers.
+            # This is not calculated due to there might be removal failures.
             servers = self._get_openstack_instances(conn)
             delta = quantity - len(servers)
 

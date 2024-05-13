@@ -2,15 +2,27 @@
 #  See LICENSE file for licensing details.
 
 """Integration tests for OpenStack integration."""
+import secrets
 
 import pytest
+from github.Branch import Branch
+from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 from openstack.compute.v2.server import Server
 from openstack.connection import Connection as OpenstackConnection
 
 from charm_state import TOKEN_CONFIG_NAME
-from tests.integration.helpers.common import ACTIVE, reconcile
+from tests.integration.helpers.common import (
+    ACTIVE,
+    DISPATCH_TEST_WORKFLOW_FILENAME,
+    dispatch_workflow,
+    install_repo_policy_compliance_from_git_source,
+    reconcile,
+    run_in_unit,
+    start_repo_policy,
+)
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 
 async def test_openstack_check_runner(
@@ -127,3 +139,54 @@ async def test_token_config_changed(
     assert (
         server_id != servers[0].id
     ), f"Expected new runner spawned, same server id found {server_id}"
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_repo_policy_enabled(
+    model: Model,
+    app_openstack_runner: Application,
+    openstack_connection: OpenstackConnection,
+    forked_github_repository: Repository,
+    forked_github_branch: Branch,
+) -> None:
+    """
+    arrange: A working application with one runner and repo policy enabled.
+    act: Dispatch a workflow.
+    assert: Run has successfully passed.
+    """
+    unit = app_openstack_runner.units[0]
+    await install_repo_policy_compliance_from_git_source(
+        unit=unit, source="git+https://github.com/canonical/repo-policy-compliance"
+    )
+    await start_repo_policy(unit=unit)
+    instance_helper = OpenStackInstanceHelper(openstack_connection)
+    token = secrets.token_hex(16)
+
+    # Get default ip using following commands
+    ret_code, stdout, stderr = await run_in_unit(
+        unit=unit,
+        command=(
+            "/bin/bash"
+            "-c"
+            r"ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') |"
+            r" grep -oP 'src \K\S+'"
+        ),
+    )
+    assert ret_code == 0, f"Failed to get default ip: {stderr}"
+    assert stdout, "Failed to get default ip"
+    default_ip = stdout.strip()
+    await app_openstack_runner.set_config(
+        {"repo-policy-compliance-url": f"http://{default_ip}:8080"}
+    )
+    await app_openstack_runner.set_config({"repo-policy-compliance-token": token})
+
+    await instance_helper.ensure_charm_has_runner(app=app_openstack_runner, model=model)
+
+    await dispatch_workflow(
+        app=app_openstack_runner,
+        branch=forked_github_branch,
+        github_repository=forked_github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+    )

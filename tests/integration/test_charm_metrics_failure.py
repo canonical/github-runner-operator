@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Integration tests for metrics/logs assuming Github workflow failures or a runner crash."""
+import secrets
 import time
 from typing import AsyncIterator
 
@@ -28,14 +29,17 @@ from tests.integration.helpers.common import (
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     InstanceHelper,
     dispatch_workflow,
+    install_repo_policy_compliance_from_git_source,
     reconcile,
     run_in_unit,
+    start_repo_policy,
 )
 from tests.integration.helpers.lxd import (
     ensure_charm_has_runner,
     get_runner_name,
     run_in_lxd_instance,
 )
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -52,6 +56,7 @@ async def app_fixture(
     yield app_with_grafana_agent
 
 
+@pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_metrics_for_failed_repo_policy(
@@ -59,6 +64,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     app: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
+    instance_helper: InstanceHelper,
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
@@ -66,8 +72,33 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
         The Reconciliation metric has the post job status set to failure.
     """
-    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-    await ensure_charm_has_runner(app=app, model=model)
+    if isinstance(instance_helper, OpenStackInstanceHelper):
+        unit = app.units[0]
+        await install_repo_policy_compliance_from_git_source(
+            unit=unit, source="git+https://github.com/canonical/repo-policy-compliance"
+        )
+        await start_repo_policy(unit=unit)
+        token = secrets.token_hex(16)
+
+        # Get default ip using following commands
+        ret_code, stdout, stderr = await run_in_unit(
+            unit=unit,
+            command=(
+                "/bin/bash"
+                "-c"
+                r"ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') |"
+                r" grep -oP 'src \K\S+'"
+            ),
+        )
+
+        assert ret_code == 0, f"Failed to get default ip: {stderr}"
+        assert stdout, "Failed to get default ip"
+        default_ip = stdout.strip()
+
+        await app.set_config({"repo-policy-compliance-url": f"http://{default_ip}:8080"})
+        await app.set_config({"repo-policy-compliance-token": token})
+
+        await instance_helper.ensure_charm_has_runner(app=app, model=model)
 
     # Clear metrics log to make reconciliation event more predictable
     unit = app.units[0]

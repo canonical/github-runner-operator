@@ -10,6 +10,7 @@ import time
 import typing
 from datetime import datetime, timezone
 from functools import partial
+from pathlib import Path
 from typing import Awaitable, Callable, ParamSpec, TypeVar, cast
 
 import github
@@ -130,6 +131,54 @@ async def install_repo_policy_compliance_from_git_source(unit: Unit, source: Non
         assert (
             return_code == 0
         ), f"Failed to install repo-policy-compliance from source, {stdout} {stderr}"
+
+
+async def start_repo_policy(unit: Unit):
+    """Start the repo policy compliance service.
+
+    Args:
+        unit: Unit instance to check for the LXD profile.
+    """
+    return_code, stdout, stderr = await run_in_unit(
+        unit=unit, command="python3 -m pip install gunicorn"
+    )
+    assert return_code == 0, f"Failed to install gunicorn: {stdout} {stderr}"
+
+    repo_check_web_service_script = Path("scripts/repo_policy_compliance_service.py")
+    await unit.scp_to(
+        str(repo_check_web_service_script), "/home/ubuntu/repo_policy_compliance_service.py"
+    )
+    return_code, stdout, stderr = await run_in_unit(
+        unit,
+        """cat <<EOT > /etc/systemd/system/test-http-server.service
+[Unit]
+Description=Simple HTTP server for testing
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu
+ExecStart=/usr/bin/gunicorn --bind 0.0.0.0:8080 --timeout 60 repo_policy_compliance:app
+EOT""",
+    )
+    assert return_code == 0, f"Failed to create service file: {stdout} {stderr}"
+    return_code, stdout, stderr = await run_in_unit(unit, "/usr/bin/systemctl daemon-reload")
+    assert return_code == 0, f"Failed to reload systemd: {stdout} {stderr}"
+
+    return_code, stdout, stderr = await run_in_unit(unit, "/usr/bin/systemctl start test-http-server")
+    assert return_code == 0, f"Failed to start service: {stdout} {stderr}"
+
+    async def server_is_ready() -> bool:
+        """Check if the server is ready.
+
+        Returns:
+            Whether the server is ready.
+        """
+        return_code, stdout, _ = await run_in_unit(unit, "curl http://localhost:8080")
+        return return_code == 0 and bool(stdout)
+
+    await wait_for(server_is_ready, timeout=30, check_interval=3)
 
 
 async def remove_runner_bin(unit: Unit) -> None:
