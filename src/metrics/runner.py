@@ -169,6 +169,25 @@ def issue_events(
     issued_events = {metric_events.RunnerStart}
 
     if runner_metrics.post_job:
+        # When a job gets cancelled directly after spawning,
+        # the post-job timestamp might be lower then the pre-job timestamp.
+        # This is due to the fact that we don't have a real post-job script but rather use
+        # the exit code of the runner application which might exit before the pre-job script
+        # job is done in edge cases. See also:
+        # https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/running-scripts-before-or-after-a-job#triggering-the-scripts
+        # We set the job_duration to 0 in this case.
+        if (
+            logger.isEnabledFor(logging.WARNING)
+            and runner_metrics.post_job.timestamp < runner_metrics.pre_job.timestamp
+        ):
+            logger.warning(
+                "Post-job timestamp %d is before pre-job timestamp %d for runner %s."
+                " Setting job_duration to zero",
+                runner_metrics.post_job.timestamp,
+                runner_metrics.pre_job.timestamp,
+                runner_metrics.runner_name,
+            )
+        job_duration = max(runner_metrics.post_job.timestamp - runner_metrics.pre_job.timestamp, 0)
         runner_stop_event = metric_events.RunnerStop(
             timestamp=runner_metrics.post_job.timestamp,
             flavor=flavor,
@@ -177,7 +196,7 @@ def issue_events(
             github_event=runner_metrics.pre_job.event,
             status=runner_metrics.post_job.status,
             status_info=runner_metrics.post_job.status_info,
-            job_duration=runner_metrics.post_job.timestamp - runner_metrics.pre_job.timestamp,
+            job_duration=job_duration,
             job_conclusion=job_metrics.conclusion if job_metrics else None,
         )
         try:

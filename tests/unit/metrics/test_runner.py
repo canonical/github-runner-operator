@@ -537,6 +537,44 @@ def test_issue_events(issue_event_mock: MagicMock):
     )
 
 
+def test_issue_events_post_job_before_pre_job(issue_event_mock: MagicMock):
+    """
+    arrange: A runner with post-job timestamp smaller than pre-job timestamps.
+    act: Call issue_events.
+    assert: job_duration is set to zero.
+    """
+    runner_name = secrets.token_hex(16)
+    runner_metrics_data = _create_metrics_data(runner_name)
+    runner_metrics_data.post_job = PostJobMetrics(
+        timestamp=0, status=runner_metrics.PostJobStatus.NORMAL
+    )
+    flavor = secrets.token_hex(16)
+    job_metrics = metrics_type.GithubJobMetrics(
+        queue_duration=3600, conclusion=JobConclusion.SUCCESS
+    )
+    issued_metrics = runner_metrics.issue_events(
+        runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
+    )
+
+    assert metric_events.RunnerStop in issued_metrics
+    issue_event_mock.assert_has_calls(
+        [
+            call(
+                RunnerStop(
+                    timestamp=runner_metrics_data.post_job.timestamp,
+                    flavor=flavor,
+                    workflow=runner_metrics_data.pre_job.workflow,
+                    repo=runner_metrics_data.pre_job.repository,
+                    github_event=runner_metrics_data.pre_job.event,
+                    status=runner_metrics_data.post_job.status,
+                    job_duration=0,
+                    job_conclusion=job_metrics.conclusion,
+                )
+            ),
+        ]
+    )
+
+
 def test_issue_events_no_post_job_metrics(issue_event_mock: MagicMock):
     """
     arrange: A runner without  post-job metrics.
