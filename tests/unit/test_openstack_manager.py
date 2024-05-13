@@ -734,6 +734,7 @@ def test_reconcile_pulls_metric_files(
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
         return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
     )
+    openstack_manager_for_reconcile._get_openstack_instances = MagicMock(return_value=[MagicMock()])
     test_file_content = secrets.token_hex(16)
     ssh_connection_mock.get.side_effect = lambda remote, local: Path(local).write_text(
         test_file_content
