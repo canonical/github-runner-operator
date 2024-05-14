@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  self-host-stg:
+  # self-host-stg:
     # name: self-hosted stg test
     # runs-on: [self-hosted, ARM64, test-arm]
     # strategy:
