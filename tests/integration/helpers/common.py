@@ -133,24 +133,37 @@ async def install_repo_policy_compliance_from_git_source(unit: Unit, source: Non
         ), f"Failed to install repo-policy-compliance from source, {stdout} {stderr}"
 
 
-async def start_repo_policy(unit: Unit):
+async def start_repo_policy(unit: Unit, github_token: str, charm_token: str, http_proxy:str):
     """Start the repo policy compliance service.
 
     Args:
         unit: Unit instance to check for the LXD profile.
     """
     return_code, stdout, stderr = await run_in_unit(
-        unit=unit, command="python3 -m pip install gunicorn"
+        unit, "apt install -y python3-pip")
+    assert return_code == 0, f"Failed to install python3-pip: {stderr}"
+    return_code, stdout, stderr = await run_in_unit(unit, "rm -rf /home/ubuntu/repo_policy_compliance")
+    assert return_code == 0, f"Failed to remove repo-policy-compliance: {stderr}"
+    return_code, stdout, stderr = await run_in_unit(unit,
+                                                    f"sudo -u ubuntu HTTPS_PROXY={http_proxy} git clone https://github.com/canonical/repo-policy-compliance.git /home/ubuntu/repo_policy_compliance")
+    assert (
+            return_code == 0
+    ), f"Failed to install repo-policy-compliance from source, {stderr}"
+
+    return_code, stdout, stderr = await run_in_unit(unit,
+                                                    f"sudo -u ubuntu HTTPS_PROXY={http_proxy} pip install --proxy http://squid.internal:3128 -r /home/ubuntu/repo_policy_compliance/requirements.txt")
+    assert (
+        return_code == 0
+    ), f"Failed to install repo-policy-compliance requirements from source,  {stderr}"
+
+    return_code, stdout, stderr = await run_in_unit(
+        unit=unit, command=f"python3 -m pip install --proxy {http_proxy} gunicorn"
     )
     assert return_code == 0, f"Failed to install gunicorn: {stdout} {stderr}"
 
-    repo_check_web_service_script = Path("scripts/repo_policy_compliance_service.py")
-    await unit.scp_to(
-        str(repo_check_web_service_script), "/home/ubuntu/repo_policy_compliance_service.py"
-    )
     return_code, stdout, stderr = await run_in_unit(
         unit,
-        """cat <<EOT > /etc/systemd/system/test-http-server.service
+        f"""cat <<EOT > /etc/systemd/system/test-http-server.service
 [Unit]
 Description=Simple HTTP server for testing
 After=network.target
@@ -158,8 +171,14 @@ After=network.target
 [Service]
 User=ubuntu
 Group=www-data
-WorkingDirectory=/home/ubuntu
-ExecStart=/usr/bin/gunicorn --bind 0.0.0.0:8080 --timeout 60 repo_policy_compliance:app
+Environment="GITHUB_TOKEN={github_token}"
+Environment="CHARM_TOKEN={charm_token}"
+Environment="HTTP_PROXY={http_proxy}"
+Environment="http_proxy={http_proxy}"
+Environment="HTTPS_PROXY={http_proxy}"
+Environment="https_proxy={http_proxy}"
+WorkingDirectory=/home/ubuntu/repo_policy_compliance
+ExecStart=/usr/local/bin/gunicorn --bind 0.0.0.0:8080 --timeout 60 app:app
 EOT""",
     )
     assert return_code == 0, f"Failed to create service file: {stdout} {stderr}"

@@ -149,6 +149,8 @@ async def test_repo_policy_enabled(
     openstack_connection: OpenstackConnection,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
+    token: str,
+    http_proxy: str,
 ) -> None:
     """
     arrange: A working application with one runner and repo policy enabled.
@@ -156,30 +158,19 @@ async def test_repo_policy_enabled(
     assert: Run has successfully passed.
     """
     unit = app_openstack_runner.units[0]
-    await install_repo_policy_compliance_from_git_source(
-        unit=unit, source="git+https://github.com/canonical/repo-policy-compliance"
-    )
-    await start_repo_policy(unit=unit)
+    charm_token = secrets.token_hex(16)
+    await start_repo_policy(unit=unit, github_token=token, charm_token=charm_token, http_proxy=http_proxy)
     instance_helper = OpenStackInstanceHelper(openstack_connection)
-    token = secrets.token_hex(16)
 
-    # Get default ip using following commands
-    ret_code, stdout, stderr = await run_in_unit(
+    unit_address = await unit.get_public_address()
+    await app_openstack_runner.expose()
+    unit_name_without_slash = unit.name.replace("/", "-")
+    return_code, _, stderr = await run_in_unit(
         unit=unit,
-        command=(
-            "/bin/bash"
-            "-c"
-            r"ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') |"
-            r" grep -oP 'src \K\S+'"
-        ),
+        command=f"/var/lib/juju/tools/unit-{unit_name_without_slash}/open-port 8080",
     )
-    assert ret_code == 0, f"Failed to get default ip: {stderr}"
-    assert stdout, "Failed to get default ip"
-    default_ip = stdout.strip()
-    await app_openstack_runner.set_config(
-        {"repo-policy-compliance-url": f"http://{default_ip}:8080"}
-    )
-    await app_openstack_runner.set_config({"repo-policy-compliance-token": token})
+    assert return_code == 0, f"Failed to open port 8080: {stderr}"
+    await app_openstack_runner.set_config({"repo-policy-compliance-token": charm_token, "repo-policy-compliance-url": f"http://{unit_address}:8080"})
 
     await instance_helper.ensure_charm_has_runner(app=app_openstack_runner, model=model)
 
