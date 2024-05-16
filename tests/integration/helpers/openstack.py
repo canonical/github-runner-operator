@@ -1,7 +1,7 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import logging
-from typing import cast
+from typing import cast, Optional
 
 import openstack.connection
 from juju.application import Application
@@ -10,7 +10,7 @@ from juju.unit import Unit
 from openstack.compute.v2.server import Server
 
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers.common import InstanceHelper, reconcile, run_in_unit
+from tests.integration.helpers.common import InstanceHelper, reconcile, run_in_unit, wait_for
 
 logger = logging.getLogger(__name__)
 
@@ -129,3 +129,51 @@ class OpenStackInstanceHelper(InstanceHelper):
                 break
 
         return runner
+
+
+async def start_repo_policy(unit: Unit, github_token: str, charm_token: str, https_proxy: Optional[str]):
+    """Start the repo policy compliance service.
+
+    Args:
+        unit: Unit instance to check for the LXD profile.
+    """
+    await run_in_unit(unit, "apt install -y python3-pip", assert_on_failure=True, assert_msg="Failed to install python3-pip")
+    await run_in_unit(unit, "rm -rf /home/ubuntu/repo_policy_compliance", assert_on_failure=True, assert_msg="Failed to remove repo-policy-compliance")
+    await run_in_unit(unit, f'sudo -u ubuntu HTTPS_PROXY={https_proxy if https_proxy else ""} git clone https://github.com/canonical/repo-policy-compliance.git /home/ubuntu/repo_policy_compliance',
+                      assert_on_failure=True, assert_msg="Failed to clone repo-policy-compliance")
+    await run_in_unit(unit, f'sudo -u ubuntu HTTPS_PROXY={https_proxy if https_proxy else ""} pip install --proxy http://squid.internal:3128 -r /home/ubuntu/repo_policy_compliance/requirements.txt',
+                      assert_on_failure=True, assert_msg="Failed to install repo-policy-compliance requirements")
+    await run_in_unit(
+        unit=unit, command=f"HTTPS_PROXY={https_proxy if https_proxy else ''} python3 -m pip install gunicorn", assert_on_failure=True, assert_msg="Failed to install gunicorn"
+    )
+    await run_in_unit(
+        unit,
+        f"""cat <<EOT > /etc/systemd/system/repo-policy-compliance.service
+[Unit]
+Description=Simple HTTP server for testing
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+Environment="GITHUB_TOKEN={github_token}"
+Environment="CHARM_TOKEN={charm_token}"
+Environment="HTTPS_PROXY={https_proxy if https_proxy else ""}"
+Environment="https_proxy={https_proxy if https_proxy else ""}"
+WorkingDirectory=/home/ubuntu/repo_policy_compliance
+ExecStart=/usr/local/bin/gunicorn --bind 0.0.0.0:8080 --timeout 60 app:app
+EOT""", assert_on_failure=True, assert_msg="Failed to create service file"
+    )
+    await run_in_unit(unit, "/usr/bin/systemctl daemon-reload", assert_on_failure=True, assert_msg="Failed to reload systemd")
+    await run_in_unit(unit, "/usr/bin/systemctl restart repo-policy-compliance", assert_on_failure=True, assert_msg="Failed to restart service")
+
+    async def server_is_ready() -> bool:
+        """Check if the server is ready.
+
+        Returns:
+            Whether the server is ready.
+        """
+        return_code, stdout, _ = await run_in_unit(unit, "curl http://localhost:8080")
+        return return_code == 0 and bool(stdout)
+
+    await wait_for(server_is_ready, timeout=30, check_interval=3)

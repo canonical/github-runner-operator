@@ -133,73 +133,6 @@ async def install_repo_policy_compliance_from_git_source(unit: Unit, source: Non
         ), f"Failed to install repo-policy-compliance from source, {stdout} {stderr}"
 
 
-async def start_repo_policy(unit: Unit, github_token: str, charm_token: str, http_proxy: typing.Optional[str]):
-    """Start the repo policy compliance service.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-    """
-    return_code, stdout, stderr = await run_in_unit(
-        unit, "apt install -y python3-pip")
-    assert return_code == 0, f"Failed to install python3-pip: {stderr}"
-    return_code, stdout, stderr = await run_in_unit(unit, "rm -rf /home/ubuntu/repo_policy_compliance")
-    assert return_code == 0, f"Failed to remove repo-policy-compliance: {stderr}"
-    return_code, stdout, stderr = await run_in_unit(unit,
-                                                    f"sudo -u ubuntu HTTPS_PROXY={http_proxy} git clone https://github.com/canonical/repo-policy-compliance.git /home/ubuntu/repo_policy_compliance")
-    assert (
-            return_code == 0
-    ), f"Failed to install repo-policy-compliance from source, {stderr}"
-
-    return_code, stdout, stderr = await run_in_unit(unit,
-                                                    f"sudo -u ubuntu HTTPS_PROXY={http_proxy} pip install --proxy http://squid.internal:3128 -r /home/ubuntu/repo_policy_compliance/requirements.txt")
-    assert (
-        return_code == 0
-    ), f"Failed to install repo-policy-compliance requirements from source,  {stderr}"
-
-    return_code, stdout, stderr = await run_in_unit(
-        unit=unit, command=f"python3 -m pip install --proxy {http_proxy} gunicorn"
-    )
-    assert return_code == 0, f"Failed to install gunicorn: {stdout} {stderr}"
-
-    return_code, stdout, stderr = await run_in_unit(
-        unit,
-        f"""cat <<EOT > /etc/systemd/system/test-http-server.service
-[Unit]
-Description=Simple HTTP server for testing
-After=network.target
-
-[Service]
-User=ubuntu
-Group=www-data
-Environment="GITHUB_TOKEN={github_token}"
-Environment="CHARM_TOKEN={charm_token}"
-Environment="HTTP_PROXY={http_proxy}"
-Environment="http_proxy={http_proxy}"
-Environment="HTTPS_PROXY={http_proxy}"
-Environment="https_proxy={http_proxy}"
-WorkingDirectory=/home/ubuntu/repo_policy_compliance
-ExecStart=/usr/local/bin/gunicorn --bind 0.0.0.0:8080 --timeout 60 app:app
-EOT""",
-    )
-    assert return_code == 0, f"Failed to create service file: {stdout} {stderr}"
-    return_code, stdout, stderr = await run_in_unit(unit, "/usr/bin/systemctl daemon-reload")
-    assert return_code == 0, f"Failed to reload systemd: {stdout} {stderr}"
-
-    return_code, stdout, stderr = await run_in_unit(unit, "/usr/bin/systemctl restart test-http-server")
-    assert return_code == 0, f"Failed to start service: {stdout} {stderr}"
-
-    async def server_is_ready() -> bool:
-        """Check if the server is ready.
-
-        Returns:
-            Whether the server is ready.
-        """
-        return_code, stdout, _ = await run_in_unit(unit, "curl http://localhost:8080")
-        return return_code == 0 and bool(stdout)
-
-    await wait_for(server_is_ready, timeout=30, check_interval=3)
-
-
 async def remove_runner_bin(unit: Unit) -> None:
     """Remove runner binary.
 
@@ -225,7 +158,7 @@ def on_juju_2() -> bool:
 
 
 async def run_in_unit(
-    unit: Unit, command: str, timeout=None
+    unit: Unit, command: str, timeout=None, assert_on_failure=False, assert_msg=""
 ) -> tuple[int, str | None, str | None]:
     """Run command in juju unit.
 
@@ -235,6 +168,8 @@ async def run_in_unit(
         unit: Juju unit to execute the command in.
         command: Command to execute.
         timeout: Amount of time to wait for the execution.
+        assert_on_failure: Whether to assert on command failure.
+        assert_msg: Message to include in the assertion.
 
     Returns:
         Tuple of return code, stdout and stderr.
@@ -243,18 +178,23 @@ async def run_in_unit(
 
     # For compatibility with juju 2.
     if on_juju_2():
-        return (
+        code, stdout, stderr = (
             int(action.results["Code"]),
             action.results.get("Stdout", None),
             action.results.get("Stderr", None),
         )
+    else:
+        await action.wait()
+        code, stdout, stderr = (
+            action.results["return-code"],
+            action.results.get("stdout", None),
+            action.results.get("stderr", None),
+        )
 
-    await action.wait()
-    return (
-        action.results["return-code"],
-        action.results.get("stdout", None),
-        action.results.get("stderr", None),
-    )
+    if assert_on_failure:
+        assert code == 0, f"{assert_msg}: {stderr}"
+
+    return code, stdout, stderr
 
 
 async def reconcile(app: Application, model: Model) -> None:

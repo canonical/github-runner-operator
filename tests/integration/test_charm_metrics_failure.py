@@ -29,17 +29,15 @@ from tests.integration.helpers.common import (
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     InstanceHelper,
     dispatch_workflow,
-    install_repo_policy_compliance_from_git_source,
     reconcile,
     run_in_unit,
-    start_repo_policy,
 )
 from tests.integration.helpers.lxd import (
     ensure_charm_has_runner,
     get_runner_name,
     run_in_lxd_instance,
 )
-from tests.integration.helpers.openstack import OpenStackInstanceHelper
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, start_repo_policy
 
 
 @pytest_asyncio.fixture(scope="function", name="app")

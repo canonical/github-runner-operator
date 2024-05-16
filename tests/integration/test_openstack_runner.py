@@ -17,12 +17,10 @@ from tests.integration.helpers.common import (
     ACTIVE,
     DISPATCH_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
-    install_repo_policy_compliance_from_git_source,
     reconcile,
     run_in_unit,
-    start_repo_policy,
 )
-from tests.integration.helpers.openstack import OpenStackInstanceHelper
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, start_repo_policy
 
 
 async def test_openstack_check_runner(
@@ -151,6 +149,7 @@ async def test_repo_policy_enabled(
     forked_github_branch: Branch,
     token: str,
     http_proxy: str,
+    https_proxy: str
 ) -> None:
     """
     arrange: A working application with one runner and repo policy enabled.
@@ -165,11 +164,12 @@ async def test_repo_policy_enabled(
     unit_address = await unit.get_public_address()
     await app_openstack_runner.expose()
     unit_name_without_slash = unit.name.replace("/", "-")
-    return_code, _, stderr = await run_in_unit(
+    await run_in_unit(
         unit=unit,
         command=f"/var/lib/juju/tools/unit-{unit_name_without_slash}/open-port 8080",
+        assert_on_failure=True,
+        assert_msg="Failed to open port 8080"
     )
-    assert return_code == 0, f"Failed to open port 8080: {stderr}"
     await app_openstack_runner.set_config({"repo-policy-compliance-token": charm_token, "repo-policy-compliance-url": f"http://{unit_address}:8080"})
 
     await instance_helper.ensure_charm_has_runner(app=app_openstack_runner, model=model)
