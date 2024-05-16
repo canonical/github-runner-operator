@@ -66,7 +66,6 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [Configurations](reference/configurations.md)
   1. [COS Integration](reference/cos.md)
   1. [External Access](reference/external-access.md)
-  1. [GitHub token permissions](reference/github-token-permissions.md)
   1. [Integrations](reference/integrations.md)
 1. [Tutorial](tutorial)
   1. [Managing resource usage](tutorial/managing-resource-usage.md)

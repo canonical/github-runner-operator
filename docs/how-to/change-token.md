@@ -2,6 +2,30 @@
 
 This charm supports changing the [GitHub personal access token (PAT)](https://github.com/settings/tokens) used.
 
+## Fine grained access token scopes
+
+### Organizational Runners
+
+The following are the permissions scopes required for the GitHub runners when registering as an
+organisational runner.
+
+Organisation:
+
+- Self-hosted runners: read & write
+
+Repository:
+
+- Administration: read
+- Contents: read
+- Pull requests: read
+
+### Repository Runners
+
+- Contents: read
+- Metadata: read
+- Pull requests: read
+
+
 ## Personal access token scope
 
 To use this charm for GitHub repositories, the following scopes should be selected:
@@ -12,9 +36,6 @@ To use this charm for GitHub organisations, the following scopes should be selec
 
 - `repo`
 - `admin:org`
-
-For information on fine-grained token scopes, see
-[GitHub token permissions](reference/github-token-permissions.md).
 
 ## Changing the token
 

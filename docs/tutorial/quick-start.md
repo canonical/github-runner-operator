@@ -36,7 +36,7 @@ The registration token can be requested by calling the [GitHub API](https://docs
 
 The charm requires a GitHub personal access token with `repo` access, which can be created following the instructions [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic).
 A user with `admin` access for the repository/org is required, otherwise, the repo-policy-compliance will fail the job.
-For information on token scopes, see [GitHub token permissions](reference/github-token-permissions.md).
+For information on token scopes, see [How to change GitHub personal access token](how-to/change-token.md).
 
 Once the personal access token is created, the charm can be deployed with:
 
