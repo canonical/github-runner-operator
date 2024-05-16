@@ -13,6 +13,9 @@ To use this charm for GitHub organisations, the following scopes should be selec
 - `repo`
 - `admin:org`
 
+For information on fine-grained token scopes, see
+[GitHub token permissions](reference/github-token-permissions.md).
+
 ## Changing the token
 
 By using [`juju config`](https://juju.is/docs/juju/juju-config) to change the [charm configuration token](https://charmhub.io/github-runner/configure#token) the charm unregisters and removes the old self-hosted runners and instantiates new ones.
