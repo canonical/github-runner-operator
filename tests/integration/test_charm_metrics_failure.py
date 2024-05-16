@@ -37,7 +37,8 @@ from tests.integration.helpers.lxd import (
     get_runner_name,
     run_in_lxd_instance,
 )
-from tests.integration.helpers.openstack import OpenStackInstanceHelper, start_repo_policy
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, _install_repo_policy, \
+    setup_repo_policy
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -73,22 +74,12 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
         The Reconciliation metric has the post job status set to failure.
     """
     if isinstance(instance_helper, OpenStackInstanceHelper):
-        unit = app.units[0]
-        charm_token = secrets.token_hex(16)
-        await start_repo_policy(unit=unit, github_token=token, charm_token=charm_token, http_proxy=https_proxy)
-
-        unit_address = await unit.get_public_address()
-        await app.expose()
-        unit_name_without_slash = unit.name.replace("/", "-")
-        return_code, _, stderr = await run_in_unit(
-            unit=unit,
-            command=f"/var/lib/juju/tools/unit-{unit_name_without_slash}/open-port 8080",
+        await setup_repo_policy(
+            app=app,
+            openstack_connection=instance_helper.openstack_connection,
+            token=token,
+            https_proxy=https_proxy
         )
-        assert return_code == 0, f"Failed to open port 8080: {stderr}"
-        await app.set_config({"repo-policy-compliance-token": charm_token,
-                                               "repo-policy-compliance-url": f"http://{unit_address}:8080"})
-
-        await instance_helper.ensure_charm_has_runner(app=app, model=model)
 
     # Clear metrics log to make reconciliation event more predictable
     unit = app.units[0]

@@ -1,6 +1,7 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import logging
+import secrets
 from typing import cast, Optional
 
 import openstack.connection
@@ -130,8 +131,27 @@ class OpenStackInstanceHelper(InstanceHelper):
 
         return runner
 
+async def setup_repo_policy(app: Application, openstack_connection: openstack.connection.Connection, token: str, https_proxy: str):
+    unit = app.units[0]
+    charm_token = secrets.token_hex(16)
+    await _install_repo_policy(unit=unit, github_token=token, charm_token=charm_token, https_proxy=https_proxy)
+    instance_helper = OpenStackInstanceHelper(openstack_connection)
 
-async def start_repo_policy(unit: Unit, github_token: str, charm_token: str, https_proxy: Optional[str]):
+    unit_address = await unit.get_public_address()
+    await app.expose()
+    unit_name_without_slash = unit.name.replace("/", "-")
+    await run_in_unit(
+        unit=unit,
+        command=f"/var/lib/juju/tools/unit-{unit_name_without_slash}/open-port 8080",
+        assert_on_failure=True,
+        assert_msg="Failed to open port 8080"
+    )
+    await app.set_config({"repo-policy-compliance-token": charm_token, "repo-policy-compliance-url": f"http://{unit_address}:8080"})
+
+    await instance_helper.ensure_charm_has_runner(app=app, model=app.model)
+
+
+async def _install_repo_policy(unit: Unit, github_token: str, charm_token: str, https_proxy: Optional[str]):
     """Start the repo policy compliance service.
 
     Args:

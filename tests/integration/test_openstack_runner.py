@@ -20,7 +20,8 @@ from tests.integration.helpers.common import (
     reconcile,
     run_in_unit,
 )
-from tests.integration.helpers.openstack import OpenStackInstanceHelper, start_repo_policy
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, _install_repo_policy, \
+    setup_repo_policy
 
 
 async def test_openstack_check_runner(
@@ -142,13 +143,11 @@ async def test_token_config_changed(
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_repo_policy_enabled(
-    model: Model,
     app_openstack_runner: Application,
     openstack_connection: OpenstackConnection,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
     token: str,
-    http_proxy: str,
     https_proxy: str
 ) -> None:
     """
@@ -156,23 +155,12 @@ async def test_repo_policy_enabled(
     act: Dispatch a workflow.
     assert: Run has successfully passed.
     """
-    unit = app_openstack_runner.units[0]
-    charm_token = secrets.token_hex(16)
-    await start_repo_policy(unit=unit, github_token=token, charm_token=charm_token, http_proxy=http_proxy)
-    instance_helper = OpenStackInstanceHelper(openstack_connection)
-
-    unit_address = await unit.get_public_address()
-    await app_openstack_runner.expose()
-    unit_name_without_slash = unit.name.replace("/", "-")
-    await run_in_unit(
-        unit=unit,
-        command=f"/var/lib/juju/tools/unit-{unit_name_without_slash}/open-port 8080",
-        assert_on_failure=True,
-        assert_msg="Failed to open port 8080"
+    await setup_repo_policy(
+        app=app_openstack_runner,
+        openstack_connection=openstack_connection,
+        token=token,
+        https_proxy=https_proxy
     )
-    await app_openstack_runner.set_config({"repo-policy-compliance-token": charm_token, "repo-policy-compliance-url": f"http://{unit_address}:8080"})
-
-    await instance_helper.ensure_charm_has_runner(app=app_openstack_runner, model=model)
 
     await dispatch_workflow(
         app=app_openstack_runner,
