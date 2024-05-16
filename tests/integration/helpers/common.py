@@ -133,7 +133,7 @@ async def install_repo_policy_compliance_from_git_source(unit: Unit, source: Non
         ), f"Failed to install repo-policy-compliance from source, {stdout} {stderr}"
 
 
-async def start_repo_policy(unit: Unit, github_token: str, charm_token: str, http_proxy:str):
+async def start_repo_policy(unit: Unit, github_token: str, charm_token: str, http_proxy: typing.Optional[str]):
     """Start the repo policy compliance service.
 
     Args:
@@ -185,7 +185,7 @@ EOT""",
     return_code, stdout, stderr = await run_in_unit(unit, "/usr/bin/systemctl daemon-reload")
     assert return_code == 0, f"Failed to reload systemd: {stdout} {stderr}"
 
-    return_code, stdout, stderr = await run_in_unit(unit, "/usr/bin/systemctl start test-http-server")
+    return_code, stdout, stderr = await run_in_unit(unit, "/usr/bin/systemctl restart test-http-server")
     assert return_code == 0, f"Failed to start service: {stdout} {stderr}"
 
     async def server_is_ready() -> bool:
