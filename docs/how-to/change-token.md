@@ -21,10 +21,12 @@ Repository:
 
 ### Repository Runners
 
+The following are the permissions scopes required for the GitHub runners when registering as an
+repository runner.
+
 - Contents: read
 - Metadata: read
 - Pull requests: read
-
 
 ## Personal access token scope
 
