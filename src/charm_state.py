@@ -477,7 +477,7 @@ class BaseImage(str, Enum):
         Returns:
             The base image configuration of the charm.
         """
-        image_name = charm.config.get(BASE_IMAGE_CONFIG_NAME, "jammy").lower().strip()
+        image_name = cast(str, charm.config.get(BASE_IMAGE_CONFIG_NAME, "jammy")).lower().strip()
         if image_name in LTS_IMAGE_VERSION_TAG_MAP:
             return cls(LTS_IMAGE_VERSION_TAG_MAP[image_name])
         return cls(image_name)
