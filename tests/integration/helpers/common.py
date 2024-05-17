@@ -10,7 +10,6 @@ import time
 import typing
 from datetime import datetime, timezone
 from functools import partial
-from pathlib import Path
 from typing import Awaitable, Callable, ParamSpec, TypeVar, cast
 
 import github

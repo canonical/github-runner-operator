@@ -40,7 +40,6 @@ class LXDInstanceHelper(InstanceHelper):
 
         Args:
             app: The GitHub Runner Charm app to create the runner for.
-            model: The machine charm model.
         """
         await ensure_charm_has_runner(app, app.model)
 

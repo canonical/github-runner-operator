@@ -2,7 +2,6 @@
 #  See LICENSE file for licensing details.
 
 """Integration tests for OpenStack integration."""
-import secrets
 
 import pytest
 from github.Branch import Branch
@@ -18,10 +17,8 @@ from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
     reconcile,
-    run_in_unit,
 )
-from tests.integration.helpers.openstack import OpenStackInstanceHelper, _install_repo_policy, \
-    setup_repo_policy
+from tests.integration.helpers.openstack import setup_repo_policy
 
 
 async def test_openstack_check_runner(
@@ -148,7 +145,7 @@ async def test_repo_policy_enabled(
     forked_github_repository: Repository,
     forked_github_branch: Branch,
     token: str,
-    https_proxy: str
+    https_proxy: str,
 ) -> None:
     """
     arrange: A working application with one runner and repo policy enabled.
@@ -159,7 +156,7 @@ async def test_repo_policy_enabled(
         app=app_openstack_runner,
         openstack_connection=openstack_connection,
         token=token,
-        https_proxy=https_proxy
+        https_proxy=https_proxy,
     )
 
     await dispatch_workflow(

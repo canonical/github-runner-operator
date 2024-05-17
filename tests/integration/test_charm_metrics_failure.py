@@ -2,7 +2,6 @@
 #  See LICENSE file for licensing details.
 
 """Integration tests for metrics/logs assuming Github workflow failures or a runner crash."""
-import secrets
 import time
 from typing import AsyncIterator
 
@@ -37,8 +36,7 @@ from tests.integration.helpers.lxd import (
     get_runner_name,
     run_in_lxd_instance,
 )
-from tests.integration.helpers.openstack import OpenStackInstanceHelper, _install_repo_policy, \
-    setup_repo_policy
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -78,7 +76,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
             app=app,
             openstack_connection=instance_helper.openstack_connection,
             token=token,
-            https_proxy=https_proxy
+            https_proxy=https_proxy,
         )
 
     # Clear metrics log to make reconciliation event more predictable

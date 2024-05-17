@@ -7,7 +7,6 @@ The forked repo is configured to fail the repo-policy-compliance check.
 """
 
 from datetime import datetime, timezone
-from time import sleep
 
 import pytest
 import requests
@@ -17,9 +16,13 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import PATH_CONFIG_NAME
-from tests.integration.helpers.common import DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME, reconcile, \
-    InstanceHelper, dispatch_workflow
-from tests.integration.helpers.lxd import get_runner_names, ensure_charm_has_runner
+from tests.integration.helpers.common import (
+    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
+    InstanceHelper,
+    dispatch_workflow,
+    reconcile,
+)
+from tests.integration.helpers.lxd import ensure_charm_has_runner, get_runner_names
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
 
@@ -49,7 +52,7 @@ async def test_dispatch_workflow_failure(
             app=app_with_forked_repo,
             openstack_connection=instance_helper.openstack_connection,
             token=token,
-            https_proxy=https_proxy
+            https_proxy=https_proxy,
         )
 
     await instance_helper.ensure_charm_has_runner(app_with_forked_repo)
@@ -58,7 +61,13 @@ async def test_dispatch_workflow_failure(
         id_or_file_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME
     )
 
-    await dispatch_workflow(app=app_with_forked_repo, workflow_id_or_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME, branch=forked_github_branch, github_repository=forked_github_repository, conclusion="failure")
+    await dispatch_workflow(
+        app=app_with_forked_repo,
+        workflow_id_or_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
+        branch=forked_github_branch,
+        github_repository=forked_github_repository,
+        conclusion="failure",
+    )
 
     # Unable to find the run id of the workflow that was dispatched.
     # Therefore, all runs after this test start should pass the conditions.

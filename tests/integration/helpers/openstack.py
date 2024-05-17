@@ -2,11 +2,10 @@
 #  See LICENSE file for licensing details.
 import logging
 import secrets
-from typing import cast, Optional
+from typing import Optional, cast
 
 import openstack.connection
 from juju.application import Application
-from juju.model import Model
 from juju.unit import Unit
 from openstack.compute.v2.server import Server
 
@@ -68,7 +67,6 @@ class OpenStackInstanceHelper(InstanceHelper):
 
         Args:
             app: The GitHub Runner Charm app to create the runner for.
-            model: The machine charm model.
         """
         await OpenStackInstanceHelper._set_app_runner_amount(app, 1)
 
@@ -78,7 +76,6 @@ class OpenStackInstanceHelper(InstanceHelper):
 
         Args:
             app: The GitHub Runner Charm app to create the runner for.
-            model: The machine charm model.
             num_runners: The number of runners.
         """
         await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
@@ -132,10 +129,25 @@ class OpenStackInstanceHelper(InstanceHelper):
         return runner
 
 
-async def setup_repo_policy(app: Application, openstack_connection: openstack.connection.Connection, token: str, https_proxy: str):
+async def setup_repo_policy(
+    app: Application,
+    openstack_connection: openstack.connection.Connection,
+    token: str,
+    https_proxy: Optional[str],
+):
+    """Setup the repo policy compliance service.
+
+    Args:
+        app: The GitHub Runner Charm app to create the runner for.
+        openstack_connection: OpenStack connection object.
+        token: GitHub token.
+        https_proxy: HTTPS proxy url to use.
+    """
     unit = app.units[0]
     charm_token = secrets.token_hex(16)
-    await _install_repo_policy(unit=unit, github_token=token, charm_token=charm_token, https_proxy=https_proxy)
+    await _install_repo_policy(
+        unit=unit, github_token=token, charm_token=charm_token, https_proxy=https_proxy
+    )
     instance_helper = OpenStackInstanceHelper(openstack_connection)
 
     unit_address = await unit.get_public_address()
@@ -145,27 +157,58 @@ async def setup_repo_policy(app: Application, openstack_connection: openstack.co
         unit=unit,
         command=f"/var/lib/juju/tools/unit-{unit_name_without_slash}/open-port 8080",
         assert_on_failure=True,
-        assert_msg="Failed to open port 8080"
+        assert_msg="Failed to open port 8080",
     )
-    await app.set_config({"repo-policy-compliance-token": charm_token, "repo-policy-compliance-url": f"http://{unit_address}:8080"})
+    await app.set_config(
+        {
+            "repo-policy-compliance-token": charm_token,
+            "repo-policy-compliance-url": f"http://{unit_address}:8080",
+        }
+    )
 
     await instance_helper.ensure_charm_has_runner(app=app)
 
 
-async def _install_repo_policy(unit: Unit, github_token: str, charm_token: str, https_proxy: Optional[str]):
+async def _install_repo_policy(
+    unit: Unit, github_token: str, charm_token: str, https_proxy: Optional[str]
+):
     """Start the repo policy compliance service.
 
     Args:
         unit: Unit instance to check for the LXD profile.
+        github_token: GitHub token to use in the repo-policy service.
+        charm_token: Charm token to use in the repo-policy service.
+        https_proxy: HTTPS proxy url to use.
     """
-    await run_in_unit(unit, "apt install -y python3-pip", assert_on_failure=True, assert_msg="Failed to install python3-pip")
-    await run_in_unit(unit, "rm -rf /home/ubuntu/repo_policy_compliance", assert_on_failure=True, assert_msg="Failed to remove repo-policy-compliance")
-    await run_in_unit(unit, f'sudo -u ubuntu HTTPS_PROXY={https_proxy if https_proxy else ""} git clone https://github.com/canonical/repo-policy-compliance.git /home/ubuntu/repo_policy_compliance',
-                      assert_on_failure=True, assert_msg="Failed to clone repo-policy-compliance")
-    await run_in_unit(unit, f'sudo -u ubuntu HTTPS_PROXY={https_proxy if https_proxy else ""} pip install --proxy http://squid.internal:3128 -r /home/ubuntu/repo_policy_compliance/requirements.txt',
-                      assert_on_failure=True, assert_msg="Failed to install repo-policy-compliance requirements")
     await run_in_unit(
-        unit=unit, command=f"HTTPS_PROXY={https_proxy if https_proxy else ''} python3 -m pip install gunicorn", assert_on_failure=True, assert_msg="Failed to install gunicorn"
+        unit,
+        "apt install -y python3-pip",
+        assert_on_failure=True,
+        assert_msg="Failed to install python3-pip",
+    )
+    await run_in_unit(
+        unit,
+        "rm -rf /home/ubuntu/repo_policy_compliance",
+        assert_on_failure=True,
+        assert_msg="Failed to remove repo-policy-compliance",
+    )
+    await run_in_unit(
+        unit,
+        f'sudo -u ubuntu HTTPS_PROXY={https_proxy if https_proxy else ""} git clone https://github.com/canonical/repo-policy-compliance.git /home/ubuntu/repo_policy_compliance',
+        assert_on_failure=True,
+        assert_msg="Failed to clone repo-policy-compliance",
+    )
+    await run_in_unit(
+        unit,
+        f'sudo -u ubuntu HTTPS_PROXY={https_proxy if https_proxy else ""} pip install --proxy http://squid.internal:3128 -r /home/ubuntu/repo_policy_compliance/requirements.txt',
+        assert_on_failure=True,
+        assert_msg="Failed to install repo-policy-compliance requirements",
+    )
+    await run_in_unit(
+        unit=unit,
+        command=f"HTTPS_PROXY={https_proxy if https_proxy else ''} python3 -m pip install gunicorn",
+        assert_on_failure=True,
+        assert_msg="Failed to install gunicorn",
     )
     await run_in_unit(
         unit,
@@ -183,10 +226,22 @@ Environment="HTTPS_PROXY={https_proxy if https_proxy else ""}"
 Environment="https_proxy={https_proxy if https_proxy else ""}"
 WorkingDirectory=/home/ubuntu/repo_policy_compliance
 ExecStart=/usr/local/bin/gunicorn --bind 0.0.0.0:8080 --timeout 60 app:app
-EOT""", assert_on_failure=True, assert_msg="Failed to create service file"
+EOT""",
+        assert_on_failure=True,
+        assert_msg="Failed to create service file",
     )
-    await run_in_unit(unit, "/usr/bin/systemctl daemon-reload", assert_on_failure=True, assert_msg="Failed to reload systemd")
-    await run_in_unit(unit, "/usr/bin/systemctl restart repo-policy-compliance", assert_on_failure=True, assert_msg="Failed to restart service")
+    await run_in_unit(
+        unit,
+        "/usr/bin/systemctl daemon-reload",
+        assert_on_failure=True,
+        assert_msg="Failed to reload systemd",
+    )
+    await run_in_unit(
+        unit,
+        "/usr/bin/systemctl restart repo-policy-compliance",
+        assert_on_failure=True,
+        assert_msg="Failed to restart service",
+    )
 
     async def server_is_ready() -> bool:
         """Check if the server is ready.
