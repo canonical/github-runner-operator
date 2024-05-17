@@ -36,6 +36,7 @@ from tests.integration.helpers.lxd import (
     get_runner_name,
     run_in_lxd_instance,
 )
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -52,6 +53,7 @@ async def app_fixture(
     yield app_with_grafana_agent
 
 
+@pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_metrics_for_failed_repo_policy(
@@ -59,6 +61,9 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     app: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
+    token: str,
+    https_proxy: str,
+    instance_helper: InstanceHelper,
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
@@ -66,8 +71,13 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
         The Reconciliation metric has the post job status set to failure.
     """
-    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-    await ensure_charm_has_runner(app=app, model=model)
+    if isinstance(instance_helper, OpenStackInstanceHelper):
+        await setup_repo_policy(
+            app=app,
+            openstack_connection=instance_helper.openstack_connection,
+            token=token,
+            https_proxy=https_proxy,
+        )
 
     # Clear metrics log to make reconciliation event more predictable
     unit = app.units[0]
@@ -108,7 +118,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
         The Reconciliation metric has the post job status set to Abnormal.
     """
     await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-    await instance_helper.ensure_charm_has_runner(app, model)
+    await instance_helper.ensure_charm_has_runner(app)
 
     unit = app.units[0]
 

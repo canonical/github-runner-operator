@@ -63,12 +63,11 @@ class InstanceHelper(typing.Protocol):
         """
         ...
 
-    async def ensure_charm_has_runner(self, app: Application, model: Model):
+    async def ensure_charm_has_runner(self, app: Application):
         """Ensure charm has a runner.
 
         Args:
             app: The GitHub Runner Charm app to create the runner for.
-            model: The machine charm model.
         """
         ...
 
@@ -157,7 +156,7 @@ def on_juju_2() -> bool:
 
 
 async def run_in_unit(
-    unit: Unit, command: str, timeout=None
+    unit: Unit, command: str, timeout=None, assert_on_failure=False, assert_msg=""
 ) -> tuple[int, str | None, str | None]:
     """Run command in juju unit.
 
@@ -167,6 +166,8 @@ async def run_in_unit(
         unit: Juju unit to execute the command in.
         command: Command to execute.
         timeout: Amount of time to wait for the execution.
+        assert_on_failure: Whether to assert on command failure.
+        assert_msg: Message to include in the assertion.
 
     Returns:
         Tuple of return code, stdout and stderr.
@@ -175,18 +176,23 @@ async def run_in_unit(
 
     # For compatibility with juju 2.
     if on_juju_2():
-        return (
+        code, stdout, stderr = (
             int(action.results["Code"]),
             action.results.get("Stdout", None),
             action.results.get("Stderr", None),
         )
+    else:
+        await action.wait()
+        code, stdout, stderr = (
+            action.results["return-code"],
+            action.results.get("stdout", None),
+            action.results.get("stderr", None),
+        )
 
-    await action.wait()
-    return (
-        action.results["return-code"],
-        action.results.get("stdout", None),
-        action.results.get("stderr", None),
-    )
+    if assert_on_failure:
+        assert code == 0, f"{assert_msg}: {stderr}"
+
+    return code, stdout, stderr
 
 
 async def reconcile(app: Application, model: Model) -> None:
