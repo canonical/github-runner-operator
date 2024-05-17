@@ -52,7 +52,7 @@ async def test_dispatch_workflow_failure(
             https_proxy=https_proxy
         )
 
-    await instance_helper.ensure_charm_has_runner(app_with_forked_repo, app_with_forked_repo.model)
+    await instance_helper.ensure_charm_has_runner(app_with_forked_repo)
 
     workflow = forked_github_repository.get_workflow(
         id_or_file_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME

@@ -64,7 +64,7 @@ class InstanceHelper(typing.Protocol):
         """
         ...
 
-    async def ensure_charm_has_runner(self, app: Application, model: Model):
+    async def ensure_charm_has_runner(self, app: Application):
         """Ensure charm has a runner.
 
         Args:

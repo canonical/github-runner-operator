@@ -63,17 +63,17 @@ class OpenStackInstanceHelper(InstanceHelper):
         logging.warning("ssh_cmd: %s", ssh_cmd_as_ubuntu_user)
         return await run_in_unit(unit, ssh_cmd, timeout)
 
-    async def ensure_charm_has_runner(self, app: Application, model: Model) -> None:
+    async def ensure_charm_has_runner(self, app: Application) -> None:
         """Reconcile the charm to contain one runner.
 
         Args:
             app: The GitHub Runner Charm app to create the runner for.
             model: The machine charm model.
         """
-        await OpenStackInstanceHelper._set_app_runner_amount(app, model, 1)
+        await OpenStackInstanceHelper._set_app_runner_amount(app, 1)
 
     @staticmethod
-    async def _set_app_runner_amount(app: Application, model: Model, num_runners: int) -> None:
+    async def _set_app_runner_amount(app: Application, num_runners: int) -> None:
         """Reconcile the application to a runner amount.
 
         Args:
@@ -82,7 +82,7 @@ class OpenStackInstanceHelper(InstanceHelper):
             num_runners: The number of runners.
         """
         await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
-        await reconcile(app=app, model=model)
+        await reconcile(app=app, model=app.model)
 
     async def get_runner_name(self, unit: Unit) -> str:
         """Get the name of the runner.
@@ -131,6 +131,7 @@ class OpenStackInstanceHelper(InstanceHelper):
 
         return runner
 
+
 async def setup_repo_policy(app: Application, openstack_connection: openstack.connection.Connection, token: str, https_proxy: str):
     unit = app.units[0]
     charm_token = secrets.token_hex(16)
@@ -148,7 +149,7 @@ async def setup_repo_policy(app: Application, openstack_connection: openstack.co
     )
     await app.set_config({"repo-policy-compliance-token": charm_token, "repo-policy-compliance-url": f"http://{unit_address}:8080"})
 
-    await instance_helper.ensure_charm_has_runner(app=app, model=app.model)
+    await instance_helper.ensure_charm_has_runner(app=app)
 
 
 async def _install_repo_policy(unit: Unit, github_token: str, charm_token: str, https_proxy: Optional[str]):

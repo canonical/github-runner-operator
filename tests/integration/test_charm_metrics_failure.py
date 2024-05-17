@@ -120,7 +120,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
         The Reconciliation metric has the post job status set to Abnormal.
     """
     await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-    await instance_helper.ensure_charm_has_runner(app, model)
+    await instance_helper.ensure_charm_has_runner(app)
 
     unit = app.units[0]
 
