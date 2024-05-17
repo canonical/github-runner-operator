@@ -11,6 +11,7 @@ import pytest
 from invoke import Result
 from openstack.compute.v2.keypair import Keypair
 
+import metrics.storage
 from charm_state import CharmState, ProxyConfig, RepoPolicyComplianceConfig
 from errors import OpenStackError
 from github_type import GitHubRunnerStatus, SelfHostedRunner
@@ -19,7 +20,7 @@ from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from metrics.storage import MetricsStorage
 from openstack_cloud import openstack_manager
 from openstack_cloud.openstack_manager import MAX_METRICS_FILE_SIZE
-from runner_type import RunnerByHealth
+from runner_type import RunnerByHealth, RunnerGithubInfo
 
 CLOUD_NAME = "microstack"
 
@@ -689,7 +690,7 @@ def test_reconcile_issue_reconciliation_metrics(
 ):
     """
     arrange: Mock the metrics storage and the ssh connection.
-    act: Reconcile to create a runner.
+    act: Reconcile.
     assert: The expected reconciliation metrics are issued.
     """
     runner_metrics_path = tmp_path / "runner_fs"
@@ -731,6 +732,50 @@ def test_reconcile_issue_reconciliation_metrics(
                 )
             )
         ]
+    )
+
+
+def test_reconcile_ignores_metrics_for_healthy_and_online_runners(
+    openstack_manager_for_reconcile, monkeypatch, tmp_path
+):
+    """
+    arrange: Combination of runner status and github online status.
+    act: Call reconcile.
+    assert: The healthy and online runners are ignored.
+    """
+    runner_metrics_path = tmp_path / "runner_fs"
+    runner_metrics_path.mkdir()
+    ms = MetricsStorage(path=runner_metrics_path, runner_name="test_runner")
+    monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
+    monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
+    openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
+        return_value=RunnerByHealth(
+            healthy=("healthy_online", "healthy_offline"),
+            unhealthy=("unhealthy_online", "unhealthy_offline"),
+        )
+    )
+    openstack_manager_for_reconcile.get_github_runner_info = MagicMock(
+        return_value=(
+            RunnerGithubInfo(runner_name="healthy_online", runner_id=0, online=True, busy=True),
+            RunnerGithubInfo(runner_name="unhealthy_online", runner_id=1, online=True, busy=False),
+            RunnerGithubInfo(runner_name="healthy_offline", runner_id=2, online=False, busy=False),
+            RunnerGithubInfo(
+                runner_name="unhealthy_offline", runner_id=3, online=False, busy=False
+            ),
+        )
+    )
+
+    openstack_manager.runner_metrics.extract.return_value = (MagicMock() for _ in range(2))
+    openstack_manager.runner_metrics.issue_events.side_effect = [
+        {metric_events.RunnerStart, metric_events.RunnerStop},
+        {metric_events.RunnerStart},
+    ]
+
+    openstack_manager_for_reconcile.reconcile(quantity=0)
+
+    openstack_manager.runner_metrics.extract.assert_called_once_with(
+        metrics_storage_manager=metrics.storage,
+        ignore_runners={"healthy_online", "healthy_offline", "unhealthy_online"},
     )
 
 

@@ -1509,8 +1509,15 @@ class OpenstackRunnerManager:
             The stats of issued metric events.
         """
         total_stats: IssuedMetricEventsStats = {}
+        online_runners = {
+            runner_info.runner_name
+            for runner_info in self.get_github_runner_info()
+            if runner_info.online
+        }
+
         for extracted_metrics in runner_metrics.extract(
-            metrics_storage_manager=metrics_storage, ignore_runners=set(runner_states.healthy)
+            metrics_storage_manager=metrics_storage,
+            ignore_runners=set(runner_states.healthy) | online_runners,
         ):
             try:
                 job_metrics = github_metrics.job(
