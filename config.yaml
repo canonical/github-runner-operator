@@ -93,6 +93,8 @@ options:
     description: >-
       The GitHub Personal Access Token for registering the self-hosted runners. The token requires
       'repo' scope for repository runners and 'repo' + 'admin:org' scope for organization runners.
+      For fine grained token scopes, see
+      https://charmhub.io/github-runner/docs/how-to-change-token.
   virtual-machines:
     type: int
     default: 1
