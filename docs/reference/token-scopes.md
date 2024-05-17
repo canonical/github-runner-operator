@@ -26,13 +26,17 @@ repository runner.
 - Metadata: read
 - Pull requests: read
 
-## Personal access token scope
+## Personal access token scopes
 
-To use this charm for GitHub repositories, the following scopes should be selected:
-
-- `repo`
+### Organizational Runners
 
 To use this charm for GitHub organisations, the following scopes should be selected:
 
 - `repo`
 - `admin:org`
+
+### Repository Runners
+
+To use this charm for GitHub repositories, the following scopes should be selected:
+
+- `repo`
