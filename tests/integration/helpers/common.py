@@ -68,7 +68,6 @@ class InstanceHelper(typing.Protocol):
 
         Args:
             app: The GitHub Runner Charm app to create the runner for.
-            model: The machine charm model.
         """
         ...
 

@@ -134,8 +134,8 @@ async def setup_repo_policy(
     openstack_connection: openstack.connection.Connection,
     token: str,
     https_proxy: Optional[str],
-):
-    """Setup the repo policy compliance service.
+) -> None:
+    """Setup the repo policy compliance service for one runner.
 
     Args:
         app: The GitHub Runner Charm app to create the runner for.

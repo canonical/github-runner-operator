@@ -1458,7 +1458,7 @@ class OpenstackRunnerManager:
             storage = metrics_storage.create(instance_config.name)
         except CreateMetricsStorageError:
             logger.exception(
-                "Failed to get shared filesystem for runner %s, "
+                "Failed to create metrics storage for runner %s, "
                 "will not be able to issue all metrics.",
                 instance_config.name,
             )
@@ -1469,7 +1469,7 @@ class OpenstackRunnerManager:
                 )
             except FileNotFoundError:
                 logger.exception(
-                    "Failed to write runner-installed.timestamp into shared filesystem "
+                    "Failed to write runner-installed.timestamp into metrics storage "
                     "for runner %s, will not be able to issue all metrics.",
                     instance_config.name,
                 )
