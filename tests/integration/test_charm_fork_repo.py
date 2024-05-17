@@ -17,47 +17,48 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import PATH_CONFIG_NAME
-from tests.integration.helpers.common import DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME, reconcile
-from tests.integration.helpers.lxd import get_runner_names
+from tests.integration.helpers.common import DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME, reconcile, \
+    InstanceHelper, dispatch_workflow
+from tests.integration.helpers.lxd import get_runner_names, ensure_charm_has_runner
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
 
+@pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_dispatch_workflow_failure(
     app_with_forked_repo: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
+    instance_helper: InstanceHelper,
+    token: str,
+    https_proxy: str,
 ) -> None:
     """
     arrange: \
         1. A forked repository. \
-        2. A working application with one runner on the forked repository.
+        2. A working application using repo-policy checks with one runner on the forked repository.
     act: Trigger a workflow dispatch that fails the repo policy check on a branch
      in the forked repository.
     assert: The workflow that was dispatched failed and the reason is logged.
     """
     start_time = datetime.now(timezone.utc)
 
-    unit = app_with_forked_repo.units[0]
-    runners = await get_runner_names(unit)
-    assert len(runners) == 1
-    runner_to_be_used = runners[0]
+    if isinstance(instance_helper, OpenStackInstanceHelper):
+        await setup_repo_policy(
+            app=app_with_forked_repo,
+            openstack_connection=instance_helper.openstack_connection,
+            token=token,
+            https_proxy=https_proxy
+        )
+
+    await instance_helper.ensure_charm_has_runner(app_with_forked_repo, app_with_forked_repo.model)
 
     workflow = forked_github_repository.get_workflow(
         id_or_file_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME
     )
 
-    # The `create_dispatch` returns True on success.
-    assert workflow.create_dispatch(forked_github_branch, {"runner": app_with_forked_repo.name})
-
-    # Wait until the runner is used up.
-    for _ in range(30):
-        runners = await get_runner_names(unit)
-        if runner_to_be_used not in runners:
-            break
-        sleep(30)
-    else:
-        assert False, "Timeout while waiting for workflow to complete"
+    await dispatch_workflow(app=app_with_forked_repo, workflow_id_or_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME, branch=forked_github_branch, github_repository=forked_github_repository, conclusion="failure")
 
     # Unable to find the run id of the workflow that was dispatched.
     # Therefore, all runs after this test start should pass the conditions.
@@ -92,6 +93,7 @@ async def test_path_config_change(
     assert: No runners connected to the forked repository and one runner in the main repository.
     """
     unit = app_with_forked_repo.units[0]
+    await ensure_charm_has_runner(app=app_with_forked_repo, model=model)
 
     await app_with_forked_repo.set_config({PATH_CONFIG_NAME: path})
 
