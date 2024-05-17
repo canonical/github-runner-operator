@@ -66,3 +66,49 @@ def pytest_addoption(parser: Parser):
         "It is expected that the existing app is already integrated with other apps "
         "like grafana-agent, etc. ",
     )
+    # Private endpoint options
+    parser.addoption(
+        "--openstack-network-name",
+        action="store",
+        help="The Openstack network to create testing instances under.",
+    )
+    parser.addoption(
+        "--openstack-flavor-name",
+        action="store",
+        help="The Openstack flavor to create testing instances with.",
+    )
+    parser.addoption(
+        "--openstack-auth-url",
+        action="store",
+        help="The URL to Openstack authentication service, i.e. keystone.",
+    )
+    parser.addoption(
+        "--openstack-password",
+        action="store",
+        help="The password to authenticate to Openstack service.",
+    )
+    parser.addoption(
+        "--openstack-project-domain-name",
+        action="store",
+        help="The Openstack project domain name to use.",
+    )
+    parser.addoption(
+        "--openstack-project-name",
+        action="store",
+        help="The Openstack project name to use.",
+    )
+    parser.addoption(
+        "--openstack-user-domain-name",
+        action="store",
+        help="The Openstack user domain name to use.",
+    )
+    parser.addoption(
+        "--openstack-username",
+        action="store",
+        help="The Openstack user to authenticate as.",
+    )
+    parser.addoption(
+        "--openstack-region-name",
+        action="store",
+        help="The Openstack region to authenticate to.",
+    )
