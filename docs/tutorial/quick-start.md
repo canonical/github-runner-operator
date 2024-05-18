@@ -45,9 +45,9 @@ juju deploy github-runner --constraints="cores=4 mem=16G root-disk=20G virt-type
 
 Replacing the `<TOKEN>` with the personal access token, and `<OWNER/REPO>` the GitHub account name and GitHub repository separated with `/`.
 
-The `--constraints` option for the `juju deploy` sets the resource requirements for the juju machine hosting the charm application. This is used to accommodate different sizes of self-hosted runners. For details, refer to [Managing resource usage](https://charmhub.io/github-runner/docs/managing-resource-usage).
+The `--constraints` option for the `juju deploy` sets the resource requirements for the juju machine hosting the charm application. This is used to accommodate different sizes of self-hosted runners. For details, refer to [Managing resource usage](https://charmhub.io/github-runner/docs/tutorial-managing-resource-usage).
 
-The `--storage` option mounts a juju storage to be used as the disk for LXD instances hosting the self-hosted runners. Refer [How to configure runner storage](https://charmhub.io/github-runner/docs/configure-runner-storage) for more information.
+The `--storage` option mounts a juju storage to be used as the disk for LXD instances hosting the self-hosted runners. Refer [How to configure runner storage](https://charmhub.io/github-runner/docs/how-to-configure-runner-storage) for more information.
 
 The charm performs various installation and configuration on startup. The charm might upgrade the kernel of the juju machine and reboot the juju machine. During reboot, the juju machine will go into the `down` state, this is a part of the normal reboot process and the juju machine should be restarted after a while.
 
@@ -84,7 +84,7 @@ If the workflow failed at the `Set up runner` step with the following message:
 
 > This job has failed to pass a repository policy compliance check as defined in the https://github.com/canonical/repo-policy-compliance repository. The specific failure is listed below. Please update the settings on this project to fix the relevant policy.
 
-The repository setting does not comply with the best practice enforce by the charm. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/repo-policy).
+The repository setting does not comply with the best practice enforce by the charm. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/how-to-repo-policy).
 
 #### Removing the charm
 
