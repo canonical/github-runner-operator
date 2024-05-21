@@ -35,14 +35,13 @@ class LXDInstanceHelper(InstanceHelper):
         name = await self.get_runner_name(unit)
         return await run_in_lxd_instance(unit, name, command, timeout=timeout)
 
-    async def ensure_charm_has_runner(self, app: Application, model: Model):
+    async def ensure_charm_has_runner(self, app: Application):
         """Reconcile the charm to contain one runner.
 
         Args:
             app: The GitHub Runner Charm app to create the runner for.
-            model: The machine charm model.
         """
-        await ensure_charm_has_runner(app, model)
+        await ensure_charm_has_runner(app, app.model)
 
     async def get_runner_name(self, unit: Unit) -> str:
         """Get the name of the runner.

@@ -510,19 +510,16 @@ def forked_github_branch(
 
 @pytest_asyncio.fixture(scope="module")
 async def app_with_forked_repo(
-    model: Model, app_no_runner: Application, forked_github_repository: Repository
-) -> AsyncIterator[Application]:
-    """Application with a single runner on a forked repo.
+    model: Model, basic_app: Application, forked_github_repository: Repository
+) -> Application:
+    """Application with no runner on a forked repo.
 
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
-    app = app_no_runner  # alias for readability as the app will have a runner during the test
+    await basic_app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
 
-    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-    await ensure_charm_has_runner(app=app, model=model)
-
-    return app
+    return basic_app
 
 
 @pytest_asyncio.fixture(scope="module")

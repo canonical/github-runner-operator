@@ -56,7 +56,7 @@ async def test_charm_issues_runner_installed_metric(
     act: Config the charm to contain one runner.
     assert: The RunnerInstalled metric is logged.
     """
-    await instance_helper.ensure_charm_has_runner(app, model)
+    await instance_helper.ensure_charm_has_runner(app)
 
     metrics_log = await get_metrics_log(app.units[0])
     log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
@@ -87,7 +87,7 @@ async def test_charm_issues_metrics_after_reconciliation(
         The Reconciliation metric has the post job status set to normal.
     """
     await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-    await instance_helper.ensure_charm_has_runner(app, model)
+    await instance_helper.ensure_charm_has_runner(app)
 
     # Clear metrics log to make reconciliation event more predictable
     unit = app.units[0]

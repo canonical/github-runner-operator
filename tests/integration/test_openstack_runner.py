@@ -4,13 +4,21 @@
 """Integration tests for OpenStack integration."""
 
 import pytest
+from github.Branch import Branch
+from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 from openstack.compute.v2.server import Server
 from openstack.connection import Connection as OpenstackConnection
 
 from charm_state import TOKEN_CONFIG_NAME
-from tests.integration.helpers.common import ACTIVE, reconcile
+from tests.integration.helpers.common import (
+    ACTIVE,
+    DISPATCH_TEST_WORKFLOW_FILENAME,
+    dispatch_workflow,
+    reconcile,
+)
+from tests.integration.helpers.openstack import setup_repo_policy
 
 
 async def test_openstack_check_runner(
@@ -127,3 +135,34 @@ async def test_token_config_changed(
     assert (
         server_id != servers[0].id
     ), f"Expected new runner spawned, same server id found {server_id}"
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_repo_policy_enabled(
+    app_openstack_runner: Application,
+    openstack_connection: OpenstackConnection,
+    forked_github_repository: Repository,
+    forked_github_branch: Branch,
+    token: str,
+    https_proxy: str,
+) -> None:
+    """
+    arrange: A working application with one runner and repo policy enabled.
+    act: Dispatch a workflow.
+    assert: Run has successfully passed.
+    """
+    await setup_repo_policy(
+        app=app_openstack_runner,
+        openstack_connection=openstack_connection,
+        token=token,
+        https_proxy=https_proxy,
+    )
+
+    await dispatch_workflow(
+        app=app_openstack_runner,
+        branch=forked_github_branch,
+        github_repository=forked_github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+    )
