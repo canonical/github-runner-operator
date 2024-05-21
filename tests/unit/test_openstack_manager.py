@@ -8,11 +8,13 @@ from unittest.mock import MagicMock, call
 import jinja2
 import openstack.exceptions
 import pytest
+from fabric.connection import Connection as SshConnection
 from invoke import Result
 from openstack.compute.v2.keypair import Keypair
+from openstack.compute.v2.server import Server
 
 from charm_state import CharmState, ProxyConfig, RepoPolicyComplianceConfig
-from errors import OpenStackError
+from errors import OpenStackError, RunnerStartError
 from github_type import GitHubRunnerStatus, SelfHostedRunner
 from metrics import events as metric_events
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
@@ -31,6 +33,54 @@ def mock_openstack_connect_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock
     monkeypatch.setattr("openstack_cloud.openstack_manager.openstack.connect", mock_connect)
 
     return mock_connect
+
+
+@pytest.fixture(name="mock_server")
+def mock_server_fixture() -> MagicMock:
+    """Mock OpenStack Server object."""
+    mock_server = MagicMock(spec=Server)
+    mock_server.key_name = "mock_key"
+    mock_server.addresses.values = MagicMock(return_value=[[{"addr": "10.0.0.1"}]])
+    return mock_server
+
+
+@pytest.fixture(name="patch_ssh_connection_health_check")
+def patch_ssh_connection_health_check_fixture(monkeypatch: pytest.MonkeyPatch):
+    """Patch SSH connection to a MagicMock instance for health check."""
+    mock_get_ssh_connections = MagicMock(
+        spec=openstack_manager.OpenstackRunnerManager._get_ssh_connections
+    )
+    mock_ssh_connection = MagicMock(spec=SshConnection)
+    mock_ssh_connection.host = "test host IP"
+    mock_result = MagicMock(spec=Result)
+    mock_result.ok = True
+    mock_result.stderr = ""
+    mock_result.stdout = "-- Test output: /bin/bash /home/ubuntu/actions-runner/run.sh --"
+    mock_ssh_connection.run.return_value = mock_result
+    mock_get_ssh_connections.return_value = [mock_ssh_connection]
+
+    monkeypatch.setattr(
+        openstack_manager.OpenstackRunnerManager,
+        "_get_ssh_connections",
+        mock_get_ssh_connections,
+    )
+
+
+@pytest.fixture(name="patch_ssh_connection_error")
+def patch_ssh_connection_error_fixture(monkeypatch: pytest.MonkeyPatch):
+    """Patch SSH connection to a MagicMock instance with error on run."""
+    mock_get_ssh_connections = MagicMock(
+        spec=openstack_manager.OpenstackRunnerManager._get_ssh_connections
+    )
+    mock_ssh_connection = MagicMock(spec=SshConnection)
+    mock_ssh_connection.run.side_effect = TimeoutError("Error for testing")
+    mock_get_ssh_connections.return_value = [mock_ssh_connection]
+
+    monkeypatch.setattr(
+        openstack_manager.OpenstackRunnerManager,
+        "_get_ssh_connections",
+        mock_get_ssh_connections,
+    )
 
 
 @pytest.fixture(name="mock_github_client")
@@ -734,7 +784,9 @@ def test_reconcile_pulls_metric_files(
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
         return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
     )
-    openstack_manager_for_reconcile._get_openstack_instances = MagicMock(return_value=[MagicMock()])
+    openstack_manager_for_reconcile._get_openstack_instances = MagicMock(
+        return_value=[MagicMock()]
+    )
     test_file_content = secrets.token_hex(16)
     ssh_connection_mock.get.side_effect = lambda remote, local: Path(local).write_text(
         test_file_content
@@ -884,3 +936,75 @@ def test__ensure_security_group_with_existing_rules(
 
     openstack_manager.OpenstackRunnerManager._ensure_security_group(openstack_connect_mock)
     openstack_connect_mock.create_security_group_rule.assert_not_called()
+
+
+def test__get_ssh_connections(
+    monkeypatch,
+    mock_server: MagicMock,
+):
+    """
+    arrange: A server with SSH setup correctly.
+    act: Get the SSH connections.
+    assert: The SSH connections contains at least one connection.
+    """
+    # Patching the `_get_key_path` to get around the keyfile checks.
+    mock__get_key_path = MagicMock(spec=openstack_manager.OpenstackRunnerManager._get_key_path)
+    mock_key_path = MagicMock(spec=Path)
+    mock_key_path.exists.return_value = True
+    mock__get_key_path.return_value = mock_key_path
+    monkeypatch.setattr(
+        openstack_manager.OpenstackRunnerManager, "_get_key_path", mock__get_key_path
+    )
+
+    conn = next(openstack_manager.OpenstackRunnerManager._get_ssh_connections(mock_server))
+    assert conn is not None
+
+
+def test__ssh_health_check_success(
+    mock_server: MagicMock,
+    patch_ssh_connection_health_check,
+):
+    """
+    arrange: A server with SSH correctly setup.
+    act: Run health check on the server.
+    assert: The health check passes.
+    """
+    assert openstack_manager.OpenstackRunnerManager._ssh_health_check(mock_server)
+
+
+def test__ssh_health_check_no_key(mock_server: MagicMock):
+    """
+    arrange: A server with no key available.
+    act: Run health check on the server.
+    assert: The health check fails.
+    """
+    # Remove the mock SSH key.
+    mock_server.key_name = None
+
+    assert not openstack_manager.OpenstackRunnerManager._ssh_health_check(mock_server)
+
+
+def test__ssh_health_check_error(mock_server: MagicMock, patch_ssh_connection_error):
+    """
+    arrange: A server with error on SSH run.
+    act: Run health check on the server.
+    assert: The health check fails.
+    """
+    assert not openstack_manager.OpenstackRunnerManager._ssh_health_check(mock_server)
+
+
+def test__wait_until_runner_process_running_no_server(
+    openstack_connect_mock: openstack.connection.Connection,
+):
+    """
+    arrange: No server existing on the OpenStack connection.
+    act: Check if runner process is running.
+    assert: RunnerStartError thrown.
+    """
+    openstack_connect_mock.get_server = MagicMock()
+    openstack_connect_mock.get_server.return_value = None
+
+    with pytest.raises(RunnerStartError):
+        openstack_manager.OpenstackRunnerManager._wait_until_runner_process_running(
+            openstack_connect_mock, "Non-existing-server"
+        )
