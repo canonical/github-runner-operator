@@ -25,7 +25,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 168,
+  "id": 224,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -96,7 +96,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", flavor=\"flavor\" | flavor=~\"$flavor\" | event=\"runner_start\"[$__range]))",
+          "expr": "sum(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | flavor=~\"$flavor\" | event=\"runner_start\"[$__range]))",
           "queryType": "instant",
           "refId": "A"
         }
@@ -158,7 +158,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "count(count by(repo)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", flavor=\"flavor\" | flavor=~\"$flavor\" | event=\"runner_start\" | json repo=\"repo\"[$__range])))",
+          "expr": "count(count by(repo)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | flavor=~\"$flavor\" | event=\"runner_start\" | json repo=\"repo\"[$__range])))",
           "queryType": "instant",
           "refId": "A"
         }
@@ -253,7 +253,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", flavor=\"flavor\" | flavor=~\"$flavor\" | event=\"runner_start\"[1d]))",
+          "expr": "sum by(filename)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | flavor=~\"$flavor\" | event=\"runner_start\"[1d]))",
           "key": "Q-f7c42eab-69be-43b5-a807-35c071f708a0-0",
           "legendFormat": "Started",
           "queryType": "range",
@@ -320,7 +320,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "((sum(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"queue_duration\", flavor=\"flavor\" | event=\"runner_start\" | flavor=~\"$flavor\" |  duration<60 | __error__=\"\"[$__range])) / sum(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"queue_duration\", flavor=\"flavor\"  | flavor=~\"$flavor\" | event=\"runner_start\" | duration>=0 | __error__=\"\"[$__range]))) * 100)",
+          "expr": "((sum(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"queue_duration\",flavor=\"flavor\" | event=\"runner_start\" | flavor=~\"$flavor\" | duration<60 | __error__=\"\"[$__range])) / sum(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"queue_duration\",flavor=\"flavor\" | flavor=~\"$flavor\" | event=\"runner_start\" | duration>=0 | __error__=\"\"[$__range]))) * 100)",
           "queryType": "instant",
           "refId": "A"
         }
@@ -529,15 +529,15 @@
         "type": "query",
         "useTags": false
       },
-            {
+      {
         "current": {
           "selected": false,
           "text": ".*",
           "value": ".*"
         },
-        "description": "Specify the flavor that can be applied to a panel. You can use a regular expression to match multiple flavors. Use .* to match all flavors.",
+        "description": "Specify the application that can be applied to a panel. You can use a regular expression to match multiple application. Use .* to match all applications.",
         "hide": 0,
-        "label": "Flavor",
+        "label": "Application",
         "name": "flavor",
         "options": [
           {
@@ -560,6 +560,6 @@
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics (Long-Term)",
   "uid": "5da1c1eea77432e7",
-  "version": 2,
+  "version": 3,
   "weekStart": ""
 }
