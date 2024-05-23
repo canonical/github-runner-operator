@@ -3,7 +3,8 @@ jinja2
 openstacksdk>=3,<4
 ops>=2.8
 pylxd @ git+https://github.com/canonical/pylxd
-requests
+# temporarily pin requests until https://github.com/canonical/pylxd/issues/579 is resolved
+requests < 2.32.0
 typing-extensions
 cryptography <=42.0.5
 pydantic ==1.10.15
