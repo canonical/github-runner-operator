@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 226,
+  "id": 227,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -165,7 +165,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "Visualises the available flavours.",
+      "description": "Visualises the available applications.",
       "gridPos": {
         "h": 6,
         "w": 5,
@@ -191,13 +191,13 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(flavor)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_start\" [$__range]))",
+          "expr": "sum by(flavor)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_start\"[$__range]))",
           "legendFormat": "",
           "queryType": "instant",
           "refId": "A"
         }
       ],
-      "title": "Applications",
+      "title": "Available Applications",
       "type": "logs"
     },
     {
