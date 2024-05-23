@@ -165,23 +165,47 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "Visualises the available applications.",
+      "description": "Visualises the number of jobs started per application.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
       "gridPos": {
-        "h": 6,
-        "w": 5,
-        "x": 13,
+        "h": 8,
+        "w": 12,
+        "x": 12,
         "y": 0
       },
       "id": 22,
       "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": false,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": false,
-        "showTime": false,
-        "sortOrder": "Descending",
-        "wrapLogMessage": false
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": true
+        },
+        "showUnfilled": true
       },
       "pluginVersion": "9.2.1",
       "targets": [
@@ -197,8 +221,8 @@
           "refId": "A"
         }
       ],
-      "title": "Available Applications",
-      "type": "logs"
+      "title": "Jobs per Application",
+      "type": "bargauge"
     },
     {
       "collapsed": false,
