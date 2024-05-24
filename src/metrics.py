@@ -4,7 +4,7 @@
 """Models and functions for the metric events."""
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel, NonNegativeFloat
 
@@ -39,6 +39,7 @@ class Event(BaseModel):
 
         Args:
             camel_case_string: The string to convert.
+
         Returns:
             The converted string.
         """
@@ -50,12 +51,12 @@ class Event(BaseModel):
                 snake_case_string += char
         return snake_case_string
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any):
         """Initialize the event.
 
         Args:
-            *args: The positional arguments to pass to the base class.
-            **kwargs: The keyword arguments to pass to the base class. These are used to set the
+            args: The positional arguments to pass to the base class.
+            kwargs: The keyword arguments to pass to the base class. These are used to set the
                 specific fields. E.g. timestamp=12345 will set the timestamp field to 12345.
         """
         if "event" not in kwargs:
@@ -124,6 +125,7 @@ class RunnerStop(Event):
         status: A string describing the reason for stopping the runner.
         status_info: More information about the status.
         job_duration: The duration of the job in seconds.
+        job_conclusion: The job conclusion, e.g. "success", "failure", ...
     """
 
     flavor: str
@@ -177,15 +179,21 @@ def _enable_logrotate() -> None:
     Raises:
         SubprocessError: If the logrotate.timer cannot be enabled and started.
     """
-    execute_command([SYSTEMCTL_PATH, "enable", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True)
-
-    _, retcode = execute_command(
-        [SYSTEMCTL_PATH, "is-active", "--quiet", LOG_ROTATE_TIMER_SYSTEMD_SERVICE]
-    )
-    if retcode != 0:
+    try:
         execute_command(
-            [SYSTEMCTL_PATH, "start", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True
+            [SYSTEMCTL_PATH, "enable", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True
         )
+
+        _, retcode = execute_command(
+            [SYSTEMCTL_PATH, "is-active", "--quiet", LOG_ROTATE_TIMER_SYSTEMD_SERVICE]
+        )
+        if retcode != 0:
+            execute_command(
+                [SYSTEMCTL_PATH, "start", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True
+            )
+    # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+    except SubprocessError:  # pylint: disable=try-except-raise
+        raise
 
 
 def _configure_logrotate() -> None:
@@ -204,7 +212,7 @@ def _configure_logrotate() -> None:
     )
 
 
-def setup_logrotate():
+def setup_logrotate() -> None:
     """Configure logrotate for the metrics log.
 
     Raises:

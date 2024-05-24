@@ -11,6 +11,8 @@ import yaml
 
 from utilities import execute_command
 
+NetworkT = typing.TypeVar("NetworkT", ipaddress.IPv4Network, ipaddress.IPv6Network)
+
 
 @dataclasses.dataclass
 class FirewallEntry:
@@ -66,11 +68,45 @@ class Firewall:  # pylint: disable=too-few-public-methods
         )
         return str(ipaddress.IPv4Interface(address.strip()).ip)
 
-    def refresh_firewall(self, denylist: typing.List[FirewallEntry]):
+    def _exclude_network(
+        self,
+        networks: list[NetworkT],
+        exclude: list[NetworkT],
+    ) -> list[NetworkT]:
+        """Excludes the network segment from a pool of networks.
+
+        Args:
+            networks: The network pool to apply.
+            exclude: The networks to exclude from the pool.
+
+        Returns:
+            The network pool without the network segments in excludes.
+        """
+        total_networks_without_excluded = networks
+
+        for exclude_net in exclude:
+            scoped_excluded_networks: list[NetworkT] = []
+            for net in total_networks_without_excluded:
+                if net == exclude_net or net.subnet_of(exclude_net):
+                    continue
+                if net.overlaps(exclude_net):
+                    scoped_excluded_networks.extend(net.address_exclude(exclude_net))
+                else:
+                    scoped_excluded_networks.append(net)
+            total_networks_without_excluded = scoped_excluded_networks
+
+        return total_networks_without_excluded
+
+    def refresh_firewall(
+        self,
+        denylist: typing.Iterable[FirewallEntry],
+        allowlist: typing.Iterable[FirewallEntry] | None = None,
+    ) -> None:
         """Refresh the firewall configuration.
 
         Args:
-            denylist: The list of FirewallEntry objects to allow.
+            denylist: The list of FirewallEntry rules to allow.
+            allowlist: The list of FirewallEntry rules to allow.
         """
         current_acls = [
             acl["name"]
@@ -128,23 +164,23 @@ class Firewall:  # pylint: disable=too-few-public-methods
                 "state": "enabled",
             },
         ]
-        host_network = ipaddress.IPv4Network(host_ip)
-        for entry in denylist:
-            entry_network = ipaddress.IPv4Network(entry.ip_range)
-            try:
-                excluded = list(entry_network.address_exclude(host_network))
-            except ValueError:
-                excluded = [entry_network]
-            egress_rules.extend(
-                [
-                    {
-                        "action": "reject",
-                        "destination": str(ip),
-                        "state": "enabled",
-                    }
-                    for ip in excluded
-                ]
-            )
+
+        allowed_ips = [
+            ipaddress.IPv4Network(host_ip),
+            *[ipaddress.IPv4Network(entry.ip_range) for entry in (allowlist or [])],
+        ]
+        ips_to_deny = [ipaddress.IPv4Network(entry.ip_range) for entry in denylist]
+        denied_ips = self._exclude_network(networks=ips_to_deny, exclude=allowed_ips)
+        egress_rules.extend(
+            [
+                {
+                    "action": "reject",
+                    "destination": str(ip),
+                    "state": "enabled",
+                }
+                for ip in denied_ips
+            ]
+        )
         acl_config["egress"] = egress_rules
         execute_command(
             ["lxc", "network", "acl", "edit", self._ACL_RULESET_NAME],

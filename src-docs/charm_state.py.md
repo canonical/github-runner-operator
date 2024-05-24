@@ -9,16 +9,168 @@ State of the Charm.
 ---------------
 - **ARCHITECTURES_ARM64**
 - **ARCHITECTURES_X86**
+- **BASE_IMAGE_CONFIG_NAME**
+- **DENYLIST_CONFIG_NAME**
+- **DOCKERHUB_MIRROR_CONFIG_NAME**
+- **GROUP_CONFIG_NAME**
+- **OPENSTACK_CLOUDS_YAML_CONFIG_NAME**
+- **PATH_CONFIG_NAME**
+- **RECONCILE_INTERVAL_CONFIG_NAME**
+- **RUNNER_STORAGE_CONFIG_NAME**
+- **TEST_MODE_CONFIG_NAME**
+- **TOKEN_CONFIG_NAME**
+- **USE_APROXY_CONFIG_NAME**
+- **VIRTUAL_MACHINES_CONFIG_NAME**
+- **VM_CPU_CONFIG_NAME**
+- **VM_MEMORY_CONFIG_NAME**
+- **VM_DISK_CONFIG_NAME**
+- **LABELS_CONFIG_NAME**
 - **COS_AGENT_INTEGRATION_NAME**
+- **DEBUG_SSH_INTEGRATION_NAME**
+- **LTS_IMAGE_VERSION_TAG_MAP**
+
+---
+
+<a href="../src/charm_state.py#L101"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>function</kbd> `parse_github_path`
+
+```python
+parse_github_path(path_str: str, runner_group: str) → GithubOrg | GithubRepo
+```
+
+Parse GitHub path. 
+
+
+
+**Args:**
+ 
+ - <b>`path_str`</b>:  GitHub path in string format. 
+ - <b>`runner_group`</b>:  Runner group name for GitHub organization. If the path is  a repository this argument is ignored. 
+
+
+
+**Raises:**
+ 
+ - <b>`CharmConfigInvalidError`</b>:  if an invalid path string was given. 
+
+
+
+**Returns:**
+ GithubPath object representing the GitHub repository, or the GitHub organization with runner group information. 
 
 
 ---
 
-## <kbd>class</kbd> `ARCH`
+## <kbd>class</kbd> `Arch`
 Supported system architectures. 
 
 
 
+**Attributes:**
+ 
+ - <b>`ARM64`</b>:  Represents an ARM64 system architecture. 
+ - <b>`X64`</b>:  Represents an X64/AMD64 system architecture. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `BaseImage`
+The ubuntu OS base image to build and deploy runners on. 
+
+
+
+**Attributes:**
+ 
+ - <b>`JAMMY`</b>:  The jammy ubuntu LTS image. 
+ - <b>`NOBLE`</b>:  The noble ubuntu LTS image. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `CharmConfig`
+General charm configuration. 
+
+Some charm configurations are grouped into other configuration models. 
+
+
+
+**Attributes:**
+ 
+ - <b>`denylist`</b>:  List of IPv4 to block the runners from accessing. 
+ - <b>`dockerhub_mirror`</b>:  Private docker registry as dockerhub mirror for the runners to use. 
+ - <b>`labels`</b>:  Additional runner labels to append to default (i.e. os, flavor, architecture). 
+ - <b>`openstack_clouds_yaml`</b>:  The openstack clouds.yaml configuration. 
+ - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name. 
+ - <b>`reconcile_interval`</b>:  Time between each reconciliation of runners in minutes. 
+ - <b>`token`</b>:  GitHub personal access token for GitHub API. 
+
+
+
+
+---
+
+<a href="../src/charm_state.py#L380"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `check_reconcile_interval`
+
+```python
+check_reconcile_interval(reconcile_interval: int) → int
+```
+
+Validate the general charm configuration. 
+
+
+
+**Args:**
+ 
+ - <b>`reconcile_interval`</b>:  The value of reconcile_interval passed to class instantiation. 
+
+
+
+**Raises:**
+ 
+ - <b>`ValueError`</b>:  if an invalid reconcile_interval value of less than 2 has been passed. 
+
+
+
+**Returns:**
+ The validated reconcile_interval value. 
+
+---
+
+<a href="../src/charm_state.py#L407"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `from_charm`
+
+```python
+from_charm(charm: CharmBase) → CharmConfig
+```
+
+Initialize the config from charm. 
+
+
+
+**Args:**
+ 
+ - <b>`charm`</b>:  The charm instance. 
+
+
+
+**Raises:**
+ 
+ - <b>`CharmConfigInvalidError`</b>:  If any invalid configuration has been set on the charm. 
+
+
+
+**Returns:**
+ Current config of the charm. 
 
 
 ---
@@ -32,7 +184,7 @@ Raised when charm config is invalid.
  
  - <b>`msg`</b>:  Explanation of the error. 
 
-<a href="../src/charm_state.py#L41"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L213"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -54,6 +206,191 @@ Initialize a new instance of the CharmConfigInvalidError exception.
 
 ---
 
+## <kbd>class</kbd> `CharmState`
+The charm state. 
+
+
+
+**Attributes:**
+ 
+ - <b>`arch`</b>:  The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64. 
+ - <b>`charm_config`</b>:  Configuration of the juju charm. 
+ - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
+ - <b>`proxy_config`</b>:  Proxy-related configuration. 
+ - <b>`runner_config`</b>:  The charm configuration related to runner VM configuration. 
+ - <b>`ssh_debug_connections`</b>:  SSH debug connections configuration information. 
+
+
+
+
+---
+
+<a href="../src/charm_state.py#L867"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `from_charm`
+
+```python
+from_charm(charm: CharmBase) → CharmState
+```
+
+Initialize the state from charm. 
+
+
+
+**Args:**
+ 
+ - <b>`charm`</b>:  The charm instance. 
+
+
+
+**Raises:**
+ 
+ - <b>`CharmConfigInvalidError`</b>:  If an invalid configuration was set. 
+
+
+
+**Returns:**
+ Current state of the charm. 
+
+
+---
+
+## <kbd>class</kbd> `GithubConfig`
+Charm configuration related to GitHub. 
+
+
+
+**Attributes:**
+ 
+ - <b>`token`</b>:  The Github API access token (PAT). 
+ - <b>`path`</b>:  The Github org/repo path. 
+
+
+
+
+---
+
+<a href="../src/charm_state.py#L137"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `from_charm`
+
+```python
+from_charm(charm: CharmBase) → GithubConfig
+```
+
+Get github related charm configuration values from charm. 
+
+
+
+**Args:**
+ 
+ - <b>`charm`</b>:  The charm instance. 
+
+
+
+**Raises:**
+ 
+ - <b>`CharmConfigInvalidError`</b>:  If an invalid configuration value was set. 
+
+
+
+**Returns:**
+ The parsed GitHub configuration values. 
+
+
+---
+
+## <kbd>class</kbd> `GithubOrg`
+Represent GitHub organization. 
+
+
+
+**Attributes:**
+ 
+ - <b>`org`</b>:  Name of the GitHub organization. 
+ - <b>`group`</b>:  Runner group to spawn the runners in. 
+
+
+
+
+---
+
+<a href="../src/charm_state.py#L89"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `path`
+
+```python
+path() → str
+```
+
+Return a string representing the path. 
+
+
+
+**Returns:**
+  Path to the GitHub entity. 
+
+
+---
+
+## <kbd>class</kbd> `GithubRepo`
+Represent GitHub repository. 
+
+
+
+**Attributes:**
+ 
+ - <b>`owner`</b>:  Owner of the GitHub repository. 
+ - <b>`repo`</b>:  Name of the GitHub repository. 
+
+
+
+
+---
+
+<a href="../src/charm_state.py#L68"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `path`
+
+```python
+path() → str
+```
+
+Return a string representing the path. 
+
+
+
+**Returns:**
+  Path to the GitHub entity. 
+
+
+---
+
+## <kbd>class</kbd> `ImmutableConfigChangedError`
+Represents an error when changing immutable charm state. 
+
+<a href="../src/charm_state.py#L799"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>function</kbd> `__init__`
+
+```python
+__init__(msg: str)
+```
+
+Initialize a new instance of the ImmutableConfigChangedError exception. 
+
+
+
+**Args:**
+ 
+ - <b>`msg`</b>:  Explanation of the error. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `ProxyConfig`
 Proxy configuration. 
 
@@ -61,10 +398,11 @@ Proxy configuration.
 
 **Attributes:**
  
- - <b>`http_proxy`</b>:  HTTP proxy address. 
- - <b>`https_proxy`</b>:  HTTPS proxy address. 
+ - <b>`aproxy_address`</b>:  The address of aproxy snap instance if use_aproxy is enabled. 
+ - <b>`http`</b>:  HTTP proxy address. 
+ - <b>`https`</b>:  HTTPS proxy address. 
  - <b>`no_proxy`</b>:  Comma-separated list of hosts that should not be proxied. 
- - <b>`use_aproxy`</b>:  Whether aproxy should be used. 
+ - <b>`use_aproxy`</b>:  Whether aproxy should be used for the runners. 
 
 
 ---
@@ -77,19 +415,37 @@ Return the aproxy address.
 
 ---
 
-<a href="../src/charm_state.py#L99"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L644"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>classmethod</kbd> `check_fields`
+### <kbd>classmethod</kbd> `check_use_aproxy`
 
 ```python
-check_fields(values: dict) → dict
+check_use_aproxy(use_aproxy: bool, values: dict) → bool
 ```
 
 Validate the proxy configuration. 
 
+
+
+**Args:**
+ 
+ - <b>`use_aproxy`</b>:  Value of use_aproxy variable. 
+ - <b>`values`</b>:  Values in the pydantic model. 
+
+
+
+**Raises:**
+ 
+ - <b>`ValueError`</b>:  if use_aproxy was set but no http/https was passed. 
+
+
+
+**Returns:**
+ Validated use_aproxy value. 
+
 ---
 
-<a href="../src/charm_state.py#L65"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L672"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -113,31 +469,155 @@ Initialize the proxy config from charm.
 
 ---
 
-## <kbd>class</kbd> `State`
-The charm state. 
+## <kbd>class</kbd> `RunnerCharmConfig`
+Runner configurations for the charm. 
 
 
 
 **Attributes:**
  
- - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
- - <b>`proxy_config`</b>:  Whether aproxy should be used. 
- - <b>`arch`</b>:  The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64. 
+ - <b>`base_image`</b>:  The ubuntu base image to run the runner virtual machines on. 
+ - <b>`virtual_machines`</b>:  Number of virtual machine-based runner to spawn. 
+ - <b>`virtual_machine_resources`</b>:  Hardware resource used by one virtual machine for a runner. 
+ - <b>`runner_storage`</b>:  Storage to be used as disk for the runner. 
 
 
 
 
 ---
 
-<a href="../src/charm_state.py#L160"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L527"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `check_virtual_machine_resources`
+
+```python
+check_virtual_machine_resources(
+    vm_resources: VirtualMachineResources
+) → VirtualMachineResources
+```
+
+Validate the virtual_machine_resources field values. 
+
+
+
+**Args:**
+ 
+ - <b>`vm_resources`</b>:  the virtual_machine_resources value to validate. 
+
+
+
+**Raises:**
+ 
+ - <b>`ValueError`</b>:  if an invalid number of cpu was given or invalid memory/disk size was  given. 
+
+
+
+**Returns:**
+ The validated virtual_machine_resources value. 
+
+---
+
+<a href="../src/charm_state.py#L505"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `check_virtual_machines`
+
+```python
+check_virtual_machines(virtual_machines: int) → int
+```
+
+Validate the virtual machines configuration value. 
+
+
+
+**Args:**
+ 
+ - <b>`virtual_machines`</b>:  The virtual machines value to validate. 
+
+
+
+**Raises:**
+ 
+ - <b>`ValueError`</b>:  if a negative integer was passed. 
+
+
+
+**Returns:**
+ Validated virtual_machines value. 
+
+---
+
+<a href="../src/charm_state.py#L559"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
 ```python
-from_charm(charm: CharmBase) → State
+from_charm(charm: CharmBase) → RunnerCharmConfig
 ```
 
-Initialize the state from charm. 
+Initialize the config from charm. 
+
+
+
+**Args:**
+ 
+ - <b>`charm`</b>:  The charm instance. 
+
+
+
+**Raises:**
+ 
+ - <b>`CharmConfigInvalidError`</b>:  if an invalid runner charm config has been set on the charm. 
+
+
+
+**Returns:**
+ Current config of the charm. 
+
+
+---
+
+## <kbd>class</kbd> `RunnerStorage`
+Supported storage as runner disk. 
+
+
+
+**Attributes:**
+ 
+ - <b>`JUJU_STORAGE`</b>:  Represents runner storage from Juju storage. 
+ - <b>`MEMORY`</b>:  Represents tempfs storage (ramdisk). 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `SSHDebugConnection`
+SSH connection information for debug workflow. 
+
+
+
+**Attributes:**
+ 
+ - <b>`host`</b>:  The SSH relay server host IP address inside the VPN. 
+ - <b>`port`</b>:  The SSH relay server port. 
+ - <b>`rsa_fingerprint`</b>:  The host SSH server public RSA key fingerprint. 
+ - <b>`ed25519_fingerprint`</b>:  The host SSH server public ed25519 key fingerprint. 
+
+
+
+
+---
+
+<a href="../src/charm_state.py#L758"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `from_charm`
+
+```python
+from_charm(charm: CharmBase) → list['SSHDebugConnection']
+```
+
+Initialize the SSHDebugInfo from charm relation data. 
 
 
 
@@ -148,7 +628,7 @@ Initialize the state from charm.
 
 
 **Returns:**
- Current state of the charm. 
+ List of connection information for ssh debug access. 
 
 
 ---
@@ -162,7 +642,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L118"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L715"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -177,6 +657,23 @@ Initialize a new instance of the CharmConfigInvalidError exception.
 **Args:**
  
  - <b>`arch`</b>:  The current machine architecture. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `VirtualMachineResources`
+Virtual machine resource configuration. 
+
+
+
+**Attributes:**
+ 
+ - <b>`cpu`</b>:  Number of vCPU for the virtual machine. 
+ - <b>`memory`</b>:  Amount of memory for the virtual machine. 
+ - <b>`disk`</b>:  Amount of disk for the virtual machine. 
 
 
 

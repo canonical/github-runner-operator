@@ -43,24 +43,6 @@ class MissingRunnerBinaryError(Exception):
     """Error for missing runner binary."""
 
 
-class MissingConfigurationError(Exception):
-    """Error for missing juju configuration.
-
-    Attributes:
-        configs: The missing configurations.
-    """
-
-    def __init__(self, configs: list[str]):
-        """Construct the MissingConfigurationError.
-
-        Args:
-            configs: The missing configurations.
-        """
-        super().__init__(f"Missing required charm configuration: {configs}")
-
-        self.configs = configs
-
-
 class ConfigurationError(Exception):
     """Error for juju configuration."""
 
@@ -122,12 +104,16 @@ class DeleteSharedFilesystemError(SharedFilesystemError):
     """Represents an error when the shared filesystem could not be deleted."""
 
 
+class GetSharedFilesystemError(SharedFilesystemError):
+    """Represents an error when the shared filesystem could not be retrieved."""
+
+
 class QuarantineSharedFilesystemError(SharedFilesystemError):
     """Represents an error when the shared filesystem could not be quarantined."""
 
 
-class SharedFilesystemNotFoundError(SharedFilesystemError):
-    """Represents an error when the shared filesystem is not found."""
+class SharedFilesystemMountError(SharedFilesystemError):
+    """Represents an error related to the mounting of the shared filesystem."""
 
 
 class RunnerMetricsError(Exception):
@@ -146,5 +132,37 @@ class GithubClientError(Exception):
     """Base class for all github client errors."""
 
 
+class GithubApiError(GithubClientError):
+    """Represents an error when the GitHub API returns an error."""
+
+
+class TokenError(GithubClientError):
+    """Represents an error when the token is invalid or has not enough permissions."""
+
+
 class JobNotFoundError(GithubClientError):
     """Represents an error when the job could not be found on GitHub."""
+
+
+class RunnerLogsError(Exception):
+    """Base class for all runner logs errors."""
+
+
+class OpenStackError(Exception):
+    """Base class for OpenStack errors."""
+
+
+class OpenStackInvalidConfigError(OpenStackError):
+    """Represents an invalid OpenStack configuration."""
+
+
+class OpenStackUnauthorizedError(OpenStackError):
+    """Represents an unauthorized connection to OpenStack."""
+
+
+class OpenstackImageBuildError(Exception):
+    """Exception representing an error during image build process."""
+
+
+class OpenstackInstanceLaunchError(Exception):
+    """Exception representing an error during instance launch process."""

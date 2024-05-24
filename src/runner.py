@@ -13,6 +13,7 @@ collection of `Runner` instances.
 import json
 import logging
 import pathlib
+import secrets
 import textwrap
 import time
 from dataclasses import dataclass
@@ -22,9 +23,10 @@ from typing import Iterable, NamedTuple, Optional, Sequence
 import yaml
 
 import shared_fs
-from charm_state import ARCH
+from charm_state import Arch, GithubOrg, SSHDebugConnection, VirtualMachineResources
 from errors import (
     CreateSharedFilesystemError,
+    GithubClientError,
     LxdError,
     RunnerAproxyError,
     RunnerCreateError,
@@ -36,7 +38,7 @@ from errors import (
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
 from runner_manager_type import RunnerManagerClients
-from runner_type import GithubOrg, RunnerConfig, RunnerStatus, VirtualMachineResources
+from runner_type import RunnerConfig, RunnerStatus
 from utilities import execute_command, retry
 
 logger = logging.getLogger(__name__)
@@ -45,9 +47,18 @@ if not LXD_PROFILE_YAML.exists():
     LXD_PROFILE_YAML = LXD_PROFILE_YAML.parent / "lxd-profile.yml"
 LXDBR_DNSMASQ_LEASES_FILE = Path("/var/snap/lxd/common/lxd/networks/lxdbr0/dnsmasq.leases")
 
+APROXY_ARM_REVISION = 9
+APROXY_AMD_REVISION = 8
+
 
 class Snap(NamedTuple):
-    """This class represents a snap installation."""
+    """This class represents a snap installation.
+
+    Attributes:
+        name: The snap application name.
+        channel: The channel to install the snap from.
+        revision: The revision number of the snap installation.
+    """
 
     name: str
     channel: str
@@ -58,7 +69,7 @@ class Snap(NamedTuple):
 class WgetExecutable:
     """The executable to be installed through wget.
 
-    Args:
+    Attributes:
         url: The URL of the executable binary.
         cmd: Executable command name. E.g. yq_linux_amd64 -> yq
     """
@@ -71,7 +82,7 @@ class WgetExecutable:
 class CreateRunnerConfig:
     """The configuration values for creating a single runner instance.
 
-    Args:
+    Attributes:
         image: Name of the image to launch the LXD instance with.
         resources: Resource setting for the LXD instance.
         binary_path: Path to the runner binary.
@@ -83,11 +94,20 @@ class CreateRunnerConfig:
     resources: VirtualMachineResources
     binary_path: Path
     registration_token: str
-    arch: ARCH = ARCH.X64
+    arch: Arch = Arch.X64
 
 
 class Runner:
-    """Single instance of GitHub self-hosted runner."""
+    """Single instance of GitHub self-hosted runner.
+
+    Attributes:
+        runner_application: The runner application directory path
+        env_file: The runner environment source .env file path.
+        config_script: The runner configuration script file path.
+        runner_script: The runner start script file path.
+        pre_job_script: The runner pre_job script file path. This is referenced in the env_file in
+            the ACTIONS_RUNNER_HOOK_JOB_STARTED environment variable.
+    """
 
     runner_application = Path("/home/ubuntu/github-runner")
     env_file = runner_application / ".env"
@@ -107,6 +127,7 @@ class Runner:
         Args:
             clients: Clients to access various services.
             runner_config: Configuration of the runner instance.
+            runner_status: Status info of the given runner.
             instance: LXD instance of the runner if already created.
         """
         # Dependency injection to share the instances across different `Runner` instance.
@@ -117,15 +138,7 @@ class Runner:
 
         self._shared_fs: Optional[shared_fs.SharedFilesystem] = None
 
-        # If the proxy setting are set, then add NO_PROXY local variables.
-        if self.config.proxies.get("http") or self.config.proxies.get("https"):
-            if self.config.proxies.get("no_proxy"):
-                self.config.proxies["no_proxy"] += ","
-            else:
-                self.config.proxies["no_proxy"] = ""
-            self.config.proxies["no_proxy"] += f"{self.config.name},.svc"
-
-    def create(self, config: CreateRunnerConfig):
+    def create(self, config: CreateRunnerConfig) -> None:
         """Create the runner instance on LXD and register it on GitHub.
 
         Args:
@@ -151,29 +164,32 @@ class Runner:
             # Wait some initial time for the instance to boot up
             time.sleep(60)
             self._wait_boot_up()
-            self._install_binaries(config.binary_path)
+            self._install_binaries(config.binary_path, config.arch)
             self._configure_runner()
 
             self._register_runner(
-                config.registration_token, labels=[self.config.app_name, config.image]
+                config.registration_token,
+                labels=[self.config.app_name, config.image, *self.config.labels],
             )
             self._start_runner()
         except (RunnerError, LxdError) as err:
             raise RunnerCreateError(f"Unable to create runner {self.config.name}") from err
 
-    def remove(self, remove_token: str) -> None:
-        """Remove this runner instance from LXD and GitHub.
+    def _remove_lxd_runner(self, remove_token: Optional[str]) -> None:
+        """Remove running LXD runner instance.
 
         Args:
-            remove_token: Token for removing the runner on GitHub.
+            remove_token: The Github remove token to execute removal with config.sh script.
 
         Raises:
-            RunnerRemoveError: Failure in removing runner.
+            LxdError:If there was an error removing LXD runner instance.
         """
-        logger.info("Removing runner: %s", self.config.name)
+        logger.info("Executing command to removal of runner and clean up...")
 
-        if self.instance:
-            logger.info("Executing command to removal of runner and clean up...")
+        if not self.instance:
+            return
+
+        if remove_token:
             self.instance.execute(
                 [
                     "/usr/bin/sudo",
@@ -187,31 +203,49 @@ class Runner:
                 hide_cmd=True,
             )
 
-            if self.instance.status == "Running":
-                logger.info("Removing LXD instance of runner: %s", self.config.name)
-                try:
-                    self.instance.stop(wait=True, timeout=60)
-                except LxdError:
-                    logger.exception(
-                        "Unable to gracefully stop runner %s within timeout.", self.config.name
-                    )
-                    logger.info("Force stopping of runner %s", self.config.name)
-                    try:
-                        self.instance.stop(force=True)
-                    except LxdError as err:
-                        raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
-            else:
-                # Delete ephemeral instances that have error or stopped status which LXD failed to
-                # clean up.
-                logger.warning(
-                    "Found runner %s with status %s, forcing deletion",
-                    self.config.name,
-                    self.instance.status,
+        if self.instance.status == "Running":
+            logger.info("Removing LXD instance of runner: %s", self.config.name)
+            try:
+                self.instance.stop(wait=True, timeout=60)
+            except LxdError:
+                logger.exception(
+                    "Unable to gracefully stop runner %s within timeout.", self.config.name
                 )
+                logger.info("Force stopping of runner %s", self.config.name)
                 try:
-                    self.instance.delete(wait=True)
-                except LxdError as err:
-                    raise RunnerRemoveError(f"Unable to remove {self.config.name}") from err
+                    self.instance.stop(force=True)
+                except LxdError as exc:
+                    logger.error("Error stopping instance, %s", exc)
+                    raise
+        else:
+            # Delete ephemeral instances that have error or stopped status which LXD failed to
+            # clean up.
+            logger.warning(
+                "Found runner %s with status %s, forcing deletion",
+                self.config.name,
+                self.instance.status,
+            )
+            try:
+                self.instance.delete(wait=True)
+            except LxdError as exc:
+                logger.error("Error deleting instance, %s", exc)
+                raise
+
+    def remove(self, remove_token: Optional[str]) -> None:
+        """Remove this runner instance from LXD and GitHub.
+
+        Args:
+            remove_token: Token for removing the runner on GitHub.
+
+        Raises:
+            RunnerRemoveError: Failure in removing runner.
+        """
+        logger.info("Removing runner: %s", self.config.name)
+
+        try:
+            self._remove_lxd_runner(remove_token=remove_token)
+        except LxdError as exc:
+            raise RunnerRemoveError(f"Unable to remove {self.config.name}") from exc
 
         if self.status.runner_id is None:
             return
@@ -225,7 +259,12 @@ class Runner:
             self.status.runner_id,
             self.config.path.path(),
         )
-        self._clients.github.delete_runner(self.config.path, self.status.runner_id)
+        try:
+            self._clients.github.delete_runner(self.config.path, self.status.runner_id)
+        except GithubClientError:
+            logger.exception("Unable the remove runner on GitHub: %s", self.config.name)
+            # This can occur when attempting to remove a busy runner.
+            # The caller should retry later, after GitHub mark the runner as offline.
 
     def _add_shared_filesystem(self, path: Path) -> None:
         """Add the shared filesystem to the runner instance.
@@ -256,7 +295,7 @@ class Runner:
                 self.config.name,
             )
 
-    @retry(tries=5, delay=1, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _create_instance(
         self, image: str, resources: VirtualMachineResources, ephemeral: bool = True
     ) -> LxdInstance:
@@ -266,6 +305,9 @@ class Runner:
             image: Image used to launch the instance hosting the runner.
             resources: Configuration of the virtual machine resources.
             ephemeral: Whether the instance is ephemeral.
+
+        Raises:
+            LxdError: if there was an error creating an LXD instance.
 
         Returns:
             LXD instance of the runner.
@@ -309,7 +351,7 @@ class Runner:
 
         return instance
 
-    @retry(tries=5, delay=1, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _ensure_runner_profile(self) -> None:
         """Ensure the runner profile is present on LXD.
 
@@ -336,9 +378,13 @@ class Runner:
         if not self._clients.lxd.profiles.exists("runner"):
             raise RunnerError("Failed to create runner LXD profile")
 
-    @retry(tries=5, delay=5, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _ensure_runner_storage_pool(self) -> None:
-        """Ensure the runner storage pool exists."""
+        """Ensure the runner storage pool exists.
+
+        Raises:
+            RunnerError: If there was an error creating LXD storage pool.
+        """
         if self._clients.lxd.storage_pools.exists("runner"):
             logger.info("Found existing runner LXD storage pool.")
             return
@@ -384,7 +430,7 @@ class Runner:
         """
         return f"cpu-{cpu}-mem-{memory}-disk-{disk}"
 
-    @retry(tries=5, delay=1, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _get_resource_profile(self, resources: VirtualMachineResources) -> str:
         """Get the LXD profile name of given resource limit.
 
@@ -438,12 +484,12 @@ class Runner:
 
         return profile_name
 
-    @retry(tries=5, delay=1, local_logger=logger)
+    @retry(tries=5, delay=10, local_logger=logger)
     def _start_instance(self) -> None:
         """Start an instance and wait for it to boot.
 
-        Args:
-            reconcile_interval: Time in seconds of period between each reconciliation.
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -455,6 +501,11 @@ class Runner:
 
     @retry(tries=20, delay=30, local_logger=logger)
     def _wait_boot_up(self) -> None:
+        """Wait for LXD instance to boot up.
+
+        Raises:
+            RunnerError: If there was an error while waiting for the runner to boot up.
+        """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
@@ -466,20 +517,30 @@ class Runner:
 
         logger.info("Finished booting up LXD instance for runner: %s", self.config.name)
 
-    @retry(tries=5, delay=1, local_logger=logger)
-    def _install_binaries(self, runner_binary: Path) -> None:
+    @retry(tries=10, delay=10, max_delay=120, backoff=2, local_logger=logger)
+    def _install_binaries(self, runner_binary: Path, arch: Arch) -> None:
         """Install runner binary and other binaries.
 
         Args:
             runner_binary: Path to the compressed runner binary.
+            arch: The runner system architecture.
 
         Raises:
             RunnerFileLoadError: Unable to load the runner binary into the runner instance.
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
-        self._snap_install([Snap(name="aproxy", channel="edge", revision=6)])
+        self._snap_install(
+            [
+                Snap(
+                    name="aproxy",
+                    channel="edge",
+                    revision=APROXY_ARM_REVISION if arch == Arch.ARM64 else APROXY_AMD_REVISION,
+                )
+            ]
+        )
 
         # The LXD instance is meant to run untrusted workload. Hardcoding the tmp directory should
         # be fine.
@@ -521,6 +582,9 @@ class Runner:
     def _get_default_ip(self) -> Optional[str]:
         """Get the default IP of the runner.
 
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
+
         Returns:
             The default IP of the runner or None if not found.
         """
@@ -547,6 +611,7 @@ class Runner:
 
         Raises:
             RunnerAproxyError: If unable to configure aproxy.
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -558,6 +623,13 @@ class Runner:
         self.instance.execute(
             ["snap", "set", "aproxy", f"proxy={proxy_address}", f"listen=:{aproxy_port}"]
         )
+        exit_code, stdout, _ = self.instance.execute(["snap", "logs", "aproxy.aproxy", "-n=all"])
+        stdout_message = stdout.read().decode("utf-8")
+        if exit_code != 0 or (
+            "Started Service for snap application aproxy.aproxy" not in stdout_message
+            and "Started snap.aproxy.aproxy.service" not in stdout_message
+        ):
+            raise RunnerAproxyError("Aproxy service did not configure correctly")
 
         default_ip = self._get_default_ip()
         if not default_ip:
@@ -582,8 +654,12 @@ class Runner:
         )
         self.instance.execute(["nft", "-f", "-"], input=nft_input.encode("utf-8"))
 
-    def _configure_docker_proxy(self):
-        """Configure docker proxy."""
+    def _configure_docker_proxy(self) -> None:
+        """Configure docker proxy.
+
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
+        """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
@@ -603,9 +679,13 @@ class Runner:
         docker_client_proxy = {
             "proxies": {
                 "default": {
-                    "httpProxy": self.config.proxies["http"],
-                    "httpsProxy": self.config.proxies["https"],
-                    "noProxy": self.config.proxies["no_proxy"],
+                    key: value
+                    for key, value in (
+                        ("httpProxy", self.config.proxies.http),
+                        ("httpsProxy", self.config.proxies.https),
+                        ("noProxy", self.config.proxies.no_proxy),
+                    )
+                    if value
                 }
             }
         }
@@ -621,6 +701,7 @@ class Runner:
 
         Raises:
             RunnerFileLoadError: Unable to load configuration file on the runner.
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -629,7 +710,11 @@ class Runner:
         startup_contents = self._clients.jinja.get_template("start.j2").render(
             issue_metrics=self._should_render_templates_with_metrics()
         )
-        self._put_file(str(self.runner_script), startup_contents, mode="0755")
+        try:
+            self._put_file(str(self.runner_script), startup_contents, mode="0755")
+        # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+        except RunnerFileLoadError:  # pylint: disable=try-except-raise
+            raise
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
         self.instance.execute(["/usr/bin/sudo", "chmod", "u+x", str(self.runner_script)])
 
@@ -653,9 +738,15 @@ class Runner:
         # As the user already has sudo access, this does not give the user any additional access.
         self.instance.execute(["/usr/bin/sudo", "chmod", "777", "/usr/local/bin"])
 
+        selected_ssh_connection: SSHDebugConnection | None = (
+            secrets.choice(self.config.ssh_debug_connections)
+            if self.config.ssh_debug_connections
+            else None
+        )
+        logger.info("SSH Debug info: %s", selected_ssh_connection)
         # Load `/etc/environment` file.
         environment_contents = self._clients.jinja.get_template("environment.j2").render(
-            proxies=self.config.proxies
+            proxies=self.config.proxies, ssh_debug_info=selected_ssh_connection
         )
         self._put_file("/etc/environment", environment_contents)
 
@@ -664,6 +755,7 @@ class Runner:
             proxies=self.config.proxies,
             pre_job_script=str(self.pre_job_script),
             dockerhub_mirror=self.config.dockerhub_mirror,
+            ssh_debug_info=selected_ssh_connection,
         )
         self._put_file(str(self.env_file), env_contents)
         self.instance.execute(["/usr/bin/chown", "ubuntu:ubuntu", str(self.env_file)])
@@ -674,8 +766,8 @@ class Runner:
             self.instance.execute(["systemctl", "restart", "docker"])
 
         if self.config.proxies:
-            if self.config.proxies.get("aproxy_address"):
-                self._configure_aproxy(self.config.proxies["aproxy_address"])
+            if aproxy_address := self.config.proxies.aproxy_address:
+                self._configure_aproxy(aproxy_address)
             else:
                 self._configure_docker_proxy()
 
@@ -691,11 +783,14 @@ class Runner:
         Args:
             registration_token: Registration token request from GitHub.
             labels: Labels to tag the runner with.
+
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
-        logger.info("Registering runner %s", self.config.name)
+        logger.info("Registering runner %s, labels: %s", self.config.name, labels)
 
         register_cmd = [
             "/usr/bin/sudo",
@@ -726,7 +821,11 @@ class Runner:
 
     @retry(tries=5, delay=30, local_logger=logger)
     def _start_runner(self) -> None:
-        """Start the GitHub runner."""
+        """Start the GitHub runner.
+
+        Raises:
+            RunnerError: If the runner has not instantiated before calling this operation.
+        """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
 
@@ -749,9 +848,11 @@ class Runner:
         Args:
             filepath: Path to load the file in the runner instance.
             content: Content of the file.
+            mode: File permission setting.
 
         Raises:
             RunnerFileLoadError: Failed to load the file into the runner instance.
+            RunnerError: If the runner has not instantiated before calling this operation.
         """
         if self.instance is None:
             raise RunnerError("Runner operation called prior to runner creation.")
@@ -781,6 +882,10 @@ class Runner:
         This is a temporary solution to provide tools not offered by the base ubuntu image. Custom
         images based on the GitHub action runner image will be used in the future.
 
+        Raises:
+            RunnerError: if the runner was not created before calling the method.
+            RunnerCreateError: If there was an error installing a snap.
+
         Args:
             snaps: snaps to be installed.
         """
@@ -792,4 +897,9 @@ class Runner:
             cmd = ["snap", "install", snap.name, f"--channel={snap.channel}"]
             if snap.revision is not None:
                 cmd.append(f"--revision={snap.revision}")
-            self.instance.execute(cmd)
+            exit_code, _, stderr = self.instance.execute(cmd)
+
+            if exit_code != 0:
+                err_msg = stderr.read().decode("utf-8")
+                logger.error("Unable to install %s due to %s", snap.name, err_msg)
+                raise RunnerCreateError(f"Unable to install {snap.name}")

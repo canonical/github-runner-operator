@@ -2,24 +2,46 @@
 # See LICENSE file for licensing details.
 
 """EventTimer for scheduling dispatch of juju event on regular intervals."""
-
+import logging
 import subprocess  # nosec B404
 from pathlib import Path
 from typing import Optional, TypedDict
 
-from jinja2 import Environment, FileSystemLoader
+import jinja2
+
+from utilities import execute_command
+
+BIN_SYSTEMCTL = "/usr/bin/systemctl"
+
+logger = logging.getLogger(__name__)
 
 
-class TimerEnableError(Exception):
+class TimerError(Exception):
+    """Generic timer error as base exception."""
+
+
+class TimerEnableError(TimerError):
     """Raised when unable to enable a event timer."""
 
 
-class TimerDisableError(Exception):
+class TimerDisableError(TimerError):
     """Raised when unable to disable a event timer."""
 
 
+class TimerStatusError(TimerError):
+    """Raised when unable to check status of a event timer."""
+
+
 class EventConfig(TypedDict):
-    """Configuration used by service and timer templates."""
+    """Configuration used by service and timer templates.
+
+    Attributes:
+        event: Name of the event.
+        interval: Minutes between the event trigger.
+        random_delay: Minutes of random delay added between event trigger.
+        timeout: Minutes before the event handle is timeout.
+        unit: Name of the juju unit.
+    """
 
     event: str
     interval: int
@@ -44,9 +66,13 @@ class EventTimer:
             unit_name: Name of the juju unit to emit events to.
         """
         self.unit_name = unit_name
-        self._jinja = Environment(loader=FileSystemLoader("templates"), autoescape=True)
+        self._jinja = jinja2.Environment(
+            loader=jinja2.FileSystemLoader("templates"), autoescape=True
+        )
 
-    def _render_event_template(self, template_type: str, event_name: str, context: EventConfig):
+    def _render_event_template(
+        self, template_type: str, event_name: str, context: EventConfig
+    ) -> None:
         """Write event configuration files to systemd path.
 
         Args:
@@ -58,7 +84,32 @@ class EventTimer:
         dest = self._systemd_path / f"ghro.{event_name}.{template_type}"
         dest.write_text(template.render(context))
 
-    def ensure_event_timer(self, event_name: str, interval: int, timeout: Optional[int] = None):
+    def is_active(self, event_name: str) -> bool:
+        """Check if the systemd timer is active for the given event.
+
+        Args:
+            event_name: Name of the juju event to check.
+
+        Returns:
+            True if the timer is enabled, False otherwise.
+
+        Raises:
+            TimerStatusError: Timer status cannot be determined.
+        """
+        try:
+            # We choose status over is-active here to provide debug logs that show the output of
+            # the timer.
+            _, ret_code = execute_command(
+                [BIN_SYSTEMCTL, "status", f"ghro.{event_name}.timer"], check_exit=False
+            )
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
+            raise TimerStatusError from ex
+
+        return ret_code == 0
+
+    def ensure_event_timer(
+        self, event_name: str, interval: int, timeout: Optional[int] = None
+    ) -> None:
         """Ensure that a systemd service and timer are registered to dispatch the given event.
 
         The interval is how frequently, in minutes, the event should be dispatched.
@@ -69,34 +120,35 @@ class EventTimer:
         Args:
             event_name: Name of the juju event to schedule.
             interval: Number of minutes between emitting each event.
+            timeout: Timeout for each event handle in minutes.
 
         Raises:
             TimerEnableError: Timer cannot be started. Events will be not emitted.
         """
+        if timeout is not None:
+            timeout_in_secs = timeout * 60
+        else:
+            timeout_in_secs = interval * 30
+
         context: EventConfig = {
             "event": event_name,
             "interval": interval,
             "random_delay": interval // 4,
-            "timeout": timeout or (interval * 30),
+            "timeout": timeout_in_secs,
             "unit": self.unit_name,
         }
         self._render_event_template("service", event_name, context)
         self._render_event_template("timer", event_name, context)
-        try:
-            # Binding for systemctl do no exist, so `subprocess.run` used.
-            subprocess.run(["/usr/bin/systemctl", "daemon-reload"], check=True)  # nosec B603
-            subprocess.run(  # nosec B603
-                ["/usr/bin/systemctl", "enable", f"ghro.{event_name}.timer"], check=True
-            )
-            subprocess.run(  # nosec B603
-                ["/usr/bin/systemctl", "start", f"ghro.{event_name}.timer"], check=True
-            )
-        except subprocess.CalledProcessError as ex:
-            raise TimerEnableError from ex
-        except subprocess.TimeoutExpired as ex:
-            raise TimerEnableError from ex
 
-    def disable_event_timer(self, event_name: str):
+        systemd_timer = f"ghro.{event_name}.timer"
+        try:
+            execute_command([BIN_SYSTEMCTL, "daemon-reload"])
+            execute_command([BIN_SYSTEMCTL, "enable", systemd_timer])
+            execute_command([BIN_SYSTEMCTL, "start", systemd_timer])
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
+            raise TimerEnableError(f"Unable to enable systemd timer {systemd_timer}") from ex
+
+    def disable_event_timer(self, event_name: str) -> None:
         """Disable the systemd timer for the given event.
 
         Args:
@@ -105,16 +157,10 @@ class EventTimer:
         Raises:
             TimerDisableError: Timer cannot be stopped. Events will be emitted continuously.
         """
+        systemd_timer = f"ghro.{event_name}.timer"
         try:
             # Don't check for errors in case the timer wasn't registered.
-            # Binding for systemctl does no exist, so `subprocess.run` used.
-            subprocess.run(  # nosec B603
-                ["/usr/bin/systemctl", "stop", f"ghro.{event_name}.timer"], check=False
-            )
-            subprocess.run(  # nosec B603
-                ["/usr/bin/systemctl", "disable", f"ghro.{event_name}.timer"], check=False
-            )
-        except subprocess.CalledProcessError as ex:
-            raise TimerEnableError from ex
-        except subprocess.TimeoutExpired as ex:
-            raise TimerEnableError from ex
+            execute_command([BIN_SYSTEMCTL, "stop", systemd_timer], check_exit=False)
+            execute_command([BIN_SYSTEMCTL, "disable", systemd_timer], check_exit=False)
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
+            raise TimerDisableError(f"Unable to disable systemd timer {systemd_timer}") from ex

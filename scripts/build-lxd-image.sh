@@ -50,21 +50,45 @@ cleanup() {
 
 HTTP_PROXY="$1"
 HTTPS_PROXY="$2"
-MODE="$3"
+NO_PROXY="$3"
+BASE_IMAGE="$4"
+MODE="$5"
+
+if [[ -n "$HTTP_PROXY" ]]; then
+    /snap/bin/lxc config set core.proxy_http "$HTTP_PROXY"
+fi
+if [[ -n "$HTTPS_PROXY" ]]; then
+    /snap/bin/lxc config set core.proxy_https "$HTTPS_PROXY"
+fi
 
 cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD VM of previous run' 10
 
 if [[ "$MODE" == "test" ]]; then
-    retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --device root,size=5GiB' 'Starting LXD container'
+    retry "/snap/bin/lxc launch ubuntu-daily:$BASE_IMAGE builder --device root,size=5GiB" 'Starting LXD container'
 else
-    retry '/snap/bin/lxc launch ubuntu-daily:jammy builder --vm --device root,size=8GiB' 'Starting LXD VM'
+    retry "/snap/bin/lxc launch ubuntu-daily:$BASE_IMAGE builder --vm --device root,size=8GiB" 'Starting LXD VM'
 fi
 retry '/snap/bin/lxc exec builder -- /usr/bin/who' 'Wait for lxd agent to be ready' 30
+if [[ -n "$HTTP_PROXY" ]]; then
+    /snap/bin/lxc exec builder -- echo "HTTP_PROXY=$HTTP_PROXY" >> /etc/environment
+    /snap/bin/lxc exec builder -- echo "http_proxy=$HTTP_PROXY" >> /etc/environment
+    /snap/bin/lxc exec builder -- echo "Acquire::http::Proxy \"$HTTP_PROXY\";" >> /etc/apt/apt.conf
+fi
+if [[ -n "$HTTPS_PROXY" ]]; then
+    /snap/bin/lxc exec builder -- echo "HTTPS_PROXY=$HTTPS_PROXY" >> /etc/environment
+    /snap/bin/lxc exec builder -- echo "https_proxy=$HTTPS_PROXY" >> /etc/environment
+    /snap/bin/lxc exec builder -- echo "Acquire::https::Proxy \"$HTTPS_PROXY\";" >> /etc/apt/apt.conf
+fi
+if [[ -n "$NO_PROXY" ]]; then
+    /snap/bin/lxc exec builder -- echo "NO_PROXY=$NO_PROXY" >> /etc/environment
+    /snap/bin/lxc exec builder -- echo "no_proxy=$NO_PROXY" >> /etc/environment
+fi
 retry '/snap/bin/lxc exec builder -- /usr/bin/nslookup github.com' 'Wait for network to be ready' 30
 
 /snap/bin/lxc exec builder -- /usr/bin/apt-get update
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get upgrade -yq
-/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get install linux-generic-hwe-22.04 -yq
+# This will remove older version of kernel as HWE is installed now.
+/snap/bin/lxc exec builder -- /usr/bin/apt-get autoremove --purge
 
 /snap/bin/lxc restart builder
 retry '/snap/bin/lxc exec builder -- /usr/bin/who' 'Wait for lxd agent to be ready' 30
@@ -72,7 +96,18 @@ retry '/snap/bin/lxc exec builder -- /usr/bin/nslookup github.com' 'Wait for net
 
 /snap/bin/lxc exec builder -- /usr/bin/apt-get update
 /snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get upgrade -yq
-/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget -yq
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget unzip gh -yq
+
+# Uninstall unattended-upgrades, to avoid lock errors when unattended-upgrades is active in the runner
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/systemctl stop apt-daily.timer
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/systemctl disable apt-daily.timer
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/systemctl mask apt-daily.service
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/systemctl stop apt-daily-upgrade.timer
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/systemctl disable apt-daily-upgrade.timer
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/systemctl mask apt-daily-upgrade.service
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/systemctl daemon-reload
+/snap/bin/lxc exec builder --env DEBIAN_FRONTEND=noninteractive -- /usr/bin/apt-get purge unattended-upgrades -yq
+
 if [[ -n "$HTTP_PROXY" ]]; then
     /snap/bin/lxc exec builder -- /usr/bin/npm config set proxy "$HTTP_PROXY"
 fi
@@ -84,6 +119,10 @@ fi
 /snap/bin/lxc exec builder -- /usr/sbin/usermod -aG microk8s ubuntu
 /snap/bin/lxc exec builder -- /usr/sbin/usermod -aG docker ubuntu
 /snap/bin/lxc exec builder -- /usr/sbin/iptables -I DOCKER-USER -j ACCEPT
+
+# Reduce image size
+/snap/bin/lxc exec builder -- /usr/bin/npm cache clean --force
+/snap/bin/lxc exec builder -- /usr/bin/apt-get clean
 
 # Download and verify checksum of yq
 if [[ $(uname -m) == 'aarch64' ]]; then
@@ -107,9 +146,9 @@ fi
 /snap/bin/lxc publish builder --alias builder --reuse -f
 
 # Swap in the built image
-/snap/bin/lxc image alias rename jammy old-jammy || true
-/snap/bin/lxc image alias rename builder jammy
-/snap/bin/lxc image delete old-jammy || true
+/snap/bin/lxc image alias rename "$BASE_IMAGE" "old-$BASE_IMAGE" || true
+/snap/bin/lxc image alias rename builder "$BASE_IMAGE"
+/snap/bin/lxc image delete "old-$BASE_IMAGE" || true
 
 # Clean up LXD instance
 cleanup '/snap/bin/lxc info builder &> /dev/null' '/snap/bin/lxc delete builder --force' 'Cleanup LXD instance' 10

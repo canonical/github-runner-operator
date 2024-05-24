@@ -45,6 +45,24 @@ Represents an error when the shared filesystem could not be deleted.
 
 ---
 
+## <kbd>class</kbd> `GetSharedFilesystemError`
+Represents an error when the shared filesystem could not be retrieved. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `GithubApiError`
+Represents an error when the GitHub API returns an error. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `GithubClientError`
 Base class for all github client errors. 
 
@@ -99,30 +117,8 @@ Error for executing LXD actions.
 
 ---
 
-## <kbd>class</kbd> `MissingConfigurationError`
-Error for missing juju configuration. 
-
-
-
-**Attributes:**
- 
- - <b>`configs`</b>:  The missing configurations. 
-
-<a href="../src/errors.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>function</kbd> `__init__`
-
-```python
-__init__(configs: 'list[str]')
-```
-
-Construct the MissingConfigurationError. 
-
-
-
-**Args:**
- 
- - <b>`configs`</b>:  The missing configurations. 
+## <kbd>class</kbd> `MissingRunnerBinaryError`
+Error for missing runner binary. 
 
 
 
@@ -130,8 +126,44 @@ Construct the MissingConfigurationError.
 
 ---
 
-## <kbd>class</kbd> `MissingRunnerBinaryError`
-Error for missing runner binary. 
+## <kbd>class</kbd> `OpenStackError`
+Base class for OpenStack errors. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `OpenStackInvalidConfigError`
+Represents an invalid OpenStack configuration. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `OpenStackUnauthorizedError`
+Represents an unauthorized connection to OpenStack. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `OpenstackImageBuildError`
+Exception representing an error during image build process. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `OpenstackInstanceLaunchError`
+Exception representing an error during instance launch process. 
 
 
 
@@ -202,6 +234,15 @@ Error for loading file on runner.
 
 ---
 
+## <kbd>class</kbd> `RunnerLogsError`
+Base class for all runner logs errors. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `RunnerMetricsError`
 Base class for all runner metrics errors. 
 
@@ -238,8 +279,8 @@ Base class for all shared filesystem errors.
 
 ---
 
-## <kbd>class</kbd> `SharedFilesystemNotFoundError`
-Represents an error when the shared filesystem is not found. 
+## <kbd>class</kbd> `SharedFilesystemMountError`
+Represents an error related to the mounting of the shared filesystem. 
 
 
 
@@ -259,7 +300,7 @@ Error for Subprocess calls.
  - <b>`stdout`</b>:  Content of stdout of the subprocess. 
  - <b>`stderr`</b>:  Content of stderr of the subprocess. 
 
-<a href="../src/errors.py#L82"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L64"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -282,6 +323,15 @@ Construct the subprocess error.
  - <b>`return_code`</b>:  Return code of the subprocess. 
  - <b>`stdout`</b>:  Content of stdout of the subprocess. 
  - <b>`stderr`</b>:  Content of stderr of the subprocess. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `TokenError`
+Represents an error when the token is invalid or has not enough permissions. 
 
 
 

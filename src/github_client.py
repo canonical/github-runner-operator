@@ -6,26 +6,72 @@
 Migrate to PyGithub in the future. PyGithub is still lacking some API such as
 remove token for runner.
 """
-
+import functools
 import logging
 from datetime import datetime
+from typing import Callable, ParamSpec, TypeVar
 from urllib.error import HTTPError
 
 from ghapi.all import GhApi, pages
 from ghapi.page import paged
 from typing_extensions import assert_never
 
-import errors
+from charm_state import Arch, GithubOrg, GithubPath, GithubRepo
+from errors import GithubApiError, JobNotFoundError, RunnerBinaryError, TokenError
 from github_type import (
     JobStats,
     RegistrationToken,
     RemoveToken,
+    RunnerApplication,
     RunnerApplicationList,
     SelfHostedRunner,
 )
-from runner_type import GithubOrg, GithubPath, GithubRepo
 
 logger = logging.getLogger(__name__)
+
+# Parameters of the function decorated with retry
+ParamT = ParamSpec("ParamT")
+# Return type of the function decorated with retry
+ReturnT = TypeVar("ReturnT")
+
+
+def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, ReturnT]:
+    """Catch HTTP errors and raise custom exceptions.
+
+    Args:
+        func: The target function to catch common errors for.
+
+    Returns:
+        The decorated function.
+    """
+
+    @functools.wraps(func)
+    def wrapper(*args: ParamT.args, **kwargs: ParamT.kwargs) -> ReturnT:
+        """Catch common errors when using the GitHub API.
+
+        Args:
+            args: Placeholder for positional arguments.
+            kwargs: Placeholder for keyword arguments.
+
+        Raises:
+            TokenError: If there was an error with the provided token.
+            GithubApiError: If there was an unexpected error using the GitHub API.
+
+        Returns:
+            The decorated function.
+        """
+        try:
+            return func(*args, **kwargs)
+        except HTTPError as exc:
+            if exc.code in (401, 403):
+                if exc.code == 401:
+                    msg = "Invalid token."
+                else:
+                    msg = "Provided token has not enough permissions or has reached rate-limit."
+                raise TokenError(msg) from exc
+            raise GithubApiError from exc
+
+    return wrapper
 
 
 class GithubClient:
@@ -36,30 +82,51 @@ class GithubClient:
 
         Args:
             token: GitHub personal token for API requests.
-            request_session: Requests session for HTTP requests.
         """
         self._token = token
         self._client = GhApi(token=self._token)
 
-    def get_runner_applications(self, path: GithubPath) -> RunnerApplicationList:
-        """Get list of runner applications available for download.
+    @catch_http_errors
+    def get_runner_application(
+        self, path: GithubPath, arch: Arch, os: str = "linux"
+    ) -> RunnerApplication:
+        """Get runner application available for download for given arch.
 
         Args:
             path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
                 name.
+            arch: The runner architecture.
+            os: The operating system that the runner binary should run on.
+
+        Raises:
+            RunnerBinaryError: If the runner application for given architecture and OS is not
+                found.
+
         Returns:
-            List of runner applications.
+            The runner application.
         """
-        runner_bins: RunnerApplicationList = []
+        runner_applications: RunnerApplicationList = []
         if isinstance(path, GithubRepo):
-            runner_bins = self._client.actions.list_runner_applications_for_repo(
+            runner_applications = self._client.actions.list_runner_applications_for_repo(
                 owner=path.owner, repo=path.repo
             )
         if isinstance(path, GithubOrg):
-            runner_bins = self._client.actions.list_runner_applications_for_org(org=path.org)
+            runner_applications = self._client.actions.list_runner_applications_for_org(
+                org=path.org
+            )
+        logger.debug("Response of runner applications list: %s", runner_applications)
+        try:
+            return next(
+                bin
+                for bin in runner_applications
+                if bin["os"] == os and bin["architecture"] == arch
+            )
+        except StopIteration as err:
+            raise RunnerBinaryError(
+                f"Unable query GitHub runner binary information for {os} {arch}"
+            ) from err
 
-        return runner_bins
-
+    @catch_http_errors
     def get_runner_github_info(self, path: GithubPath) -> list[SelfHostedRunner]:
         """Get runner information on GitHub under a repo or org.
 
@@ -107,8 +174,12 @@ class GithubClient:
             ]
         return remote_runners_list
 
+    @catch_http_errors
     def get_runner_remove_token(self, path: GithubPath) -> str:
         """Get token from GitHub used for removing runners.
+
+        Args:
+            path: The Github org/repo path.
 
         Returns:
             The removing token.
@@ -125,6 +196,7 @@ class GithubClient:
 
         return token["token"]
 
+    @catch_http_errors
     def get_runner_registration_token(self, path: GithubPath) -> str:
         """Get token from GitHub used for registering runners.
 
@@ -147,6 +219,7 @@ class GithubClient:
 
         return token["token"]
 
+    @catch_http_errors
     def delete_runner(self, path: GithubPath, runner_id: int) -> None:
         """Delete the self-hosted runner from GitHub.
 
@@ -174,6 +247,10 @@ class GithubClient:
             path: GitHub repository path in the format '<owner>/<repo>'.
             workflow_run_id: Id of the workflow run.
             runner_name: Name of the runner.
+
+        Raises:
+            TokenError: if there was an error with the Github token crdential provided.
+            JobNotFoundError: If no jobs were found.
 
         Returns:
             Job information.
@@ -208,9 +285,11 @@ class GithubClient:
                         )
 
         except HTTPError as exc:
-            raise errors.JobNotFoundError(
+            if exc.code in (401, 403):
+                raise TokenError from exc
+            raise JobNotFoundError(
                 f"Could not find job for runner {runner_name}. "
                 f"Could not list jobs for workflow run {workflow_run_id}"
             ) from exc
 
-        raise errors.JobNotFoundError(f"Could not find job for runner {runner_name}.")
+        raise JobNotFoundError(f"Could not find job for runner {runner_name}.")
