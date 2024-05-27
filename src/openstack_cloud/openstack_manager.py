@@ -813,6 +813,11 @@ class OpenstackRunnerManager:
                 raise RunnerCreateError(
                     f"Timeout creating OpenStack runner {instance_config.name}"
                 ) from err
+            except openstack.exceptions.SDKException as err:
+                logger.exception("Failed to create OpenStack runner %s", instance_config.name)
+                raise RunnerCreateError(
+                    f"Failed to create OpenStack runner {instance_config.name}"
+                ) from err
 
             logger.info("Waiting runner %s to come online", instance_config.name)
             OpenstackRunnerManager._wait_until_runner_process_running(conn, instance.name)
