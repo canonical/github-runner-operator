@@ -146,13 +146,29 @@ def issue_events(
     Returns:
         A set of issued events.
     """
+    # When a job gets picked up directly after spawning, the runner_metrics installed timestamp
+    # might be higher than the pre-job timestamp. This is due to the fact that we issue the runner
+    # installed timestamp for Openstack after waiting with delays for the runner to be ready.
+    # We set the idle_duration to 0 in this case.
+    if (
+        logger.isEnabledFor(logging.WARNING)
+        and runner_metrics.pre_job.timestamp < runner_metrics.installed_timestamp
+    ):
+        logger.warning(
+            "Pre-job timestamp %d is before installed timestamp %d for runner %s."
+            " Setting idle_duration to zero",
+            runner_metrics.pre_job.timestamp,
+            runner_metrics.installed_timestamp,
+            runner_metrics.runner_name,
+        )
+    idle_duration = max(runner_metrics.pre_job.timestamp - runner_metrics.installed_timestamp, 0)
     runner_start_event = metric_events.RunnerStart(
         timestamp=runner_metrics.pre_job.timestamp,
         flavor=flavor,
         workflow=runner_metrics.pre_job.workflow,
         repo=runner_metrics.pre_job.repository,
         github_event=runner_metrics.pre_job.event,
-        idle=runner_metrics.pre_job.timestamp - runner_metrics.installed_timestamp,
+        idle=idle_duration,
         queue_duration=job_metrics.queue_duration if job_metrics else None,
     )
     try:
