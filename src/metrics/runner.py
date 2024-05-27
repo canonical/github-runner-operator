@@ -154,7 +154,7 @@ def issue_events(
         logger.isEnabledFor(logging.WARNING)
         and runner_metrics.pre_job.timestamp < runner_metrics.installed_timestamp
     ):
-        logger.warning(
+        logger.info(
             "Pre-job timestamp %d is before installed timestamp %d for runner %s."
             " Setting idle_duration to zero",
             runner_metrics.pre_job.timestamp,
