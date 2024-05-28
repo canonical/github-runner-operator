@@ -395,8 +395,9 @@ class CharmConfig(BaseModel):
         if not dockerhub_mirror:
             return None
 
+        dockerhub_mirror = cast(str, dockerhub_mirror)
         dockerhub_mirror_url = urlsplit(dockerhub_mirror)
-        if dockerhub_mirror is not None and dockerhub_mirror_url.scheme != "https":
+        if dockerhub_mirror_url.scheme != "https":
             raise CharmConfigInvalidError(
                 (
                     f"Only secured registry supported for {DOCKERHUB_MIRROR_CONFIG_NAME} "
