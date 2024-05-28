@@ -152,13 +152,13 @@ class GithubConfig:
         path_str = cast(str, charm.config.get(PATH_CONFIG_NAME, ""))
         if not path_str:
             raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
-        path = parse_github_path(path_str, runner_group)
+        path = parse_github_path(cast(str, path_str), cast(str, runner_group))
 
         token = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
         if not token:
             raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
 
-        return cls(token=token, path=path)
+        return cls(token=cast(str, token), path=path)
 
 
 class VirtualMachineResources(NamedTuple):
@@ -326,8 +326,9 @@ class CharmConfig(BaseModel):
         if not dockerhub_mirror:
             return None
 
+        dockerhub_mirror = cast(str, dockerhub_mirror)
         dockerhub_mirror_url = urlsplit(dockerhub_mirror)
-        if dockerhub_mirror is not None and dockerhub_mirror_url.scheme != "https":
+        if dockerhub_mirror_url.scheme != "https":
             raise CharmConfigInvalidError(
                 (
                     f"Only secured registry supported for {DOCKERHUB_MIRROR_CONFIG_NAME} "
@@ -357,7 +358,7 @@ class CharmConfig(BaseModel):
             return None
 
         try:
-            openstack_clouds_yaml = yaml.safe_load(openstack_clouds_yaml_str)
+            openstack_clouds_yaml = yaml.safe_load(cast(str, openstack_clouds_yaml_str))
         except yaml.YAMLError as exc:
             logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
             raise CharmConfigInvalidError(
