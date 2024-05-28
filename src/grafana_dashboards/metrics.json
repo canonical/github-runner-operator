@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 263,
+  "id": 266,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -165,7 +165,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "Visualises the number of runners created per application.",
+      "description": "Shows the number of available runners per application. Note: Available equals idle after reconciliation and is not a real-time metric as it is only updated after each reconciliation interval for each unit.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -242,13 +242,13 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(flavor)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_installed\"[$__range]))",
+          "expr": "sum by(flavor)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle_runners=\"idle_runners\",flavor=\"flavor\" | event=\"reconciliation\" | unwrap idle_runners[$__range]))",
           "legendFormat": "",
           "queryType": "instant",
           "refId": "A"
         }
       ],
-      "title": "Runners created per Application",
+      "title": "Available Runners",
       "type": "barchart"
     },
     {
