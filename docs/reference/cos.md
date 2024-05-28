@@ -12,8 +12,8 @@ The "GitHub Self-Hosted Runner Metrics" metrics dashboard presents the following
 
 - General: Displays general metrics about the charm and runners, such as:
   - Lifecycle counters: Tracks the frequency of Runner initialisation, start, stop, and crash events.
-  - Jobs per Application: Shows the number of jobs per charm application.
-  - Idle runners after reconciliation: Reflects the count of Runners marked as idle during the last reconciliation event. Note: This data updates post-reconciliation events and isn't real-time.
+  - Available runners: A horizontal bar graph showing the number of runners available during the last reconciliation event. Note: This data is updated after each reconciliation event and is not real-time.
+  - Idle runners after reconciliation: A time series graph showing the number of runners marked as idle during the last reconciliation event over time. Note: This data is updated after each reconciliation event and is not real-time.
   - Duration observations: Each data point aggregates the last hour and shows the 50th, 90th, 95th percentile and maximum durations for:
       - Runner installation
       - Runner idle duration
@@ -29,7 +29,7 @@ The "GitHub Self-Hosted Runner Metrics (Long-Term)" metrics dashboard displays t
 
 - General: Contains the following panels:
   - Total Jobs
-  - Jobs per Application: Shows the number of jobs per charm application.
+  - Runners created per application: Shows the number of runners created per charm application.
   - Total unique repositories
   - Timeseries chart displaying the number of jobs per day
   - Percentage of jobs with low queue time (less than 60 seconds)
