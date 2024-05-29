@@ -38,6 +38,7 @@ jobs:
     secrets: inherit
     with:
       juju-channel: 3.2/stable
+      pre-run-script: scripts/setup-lxd.sh
       provider: microk8s
       channel: 1.26-strict/stable
       microk8s-addons: "dns ingress hostpath-storage"
