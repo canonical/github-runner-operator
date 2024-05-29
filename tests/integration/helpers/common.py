@@ -280,6 +280,7 @@ async def deploy_github_runner_charm(
     application = await model.deploy(
         charm_file,
         application_name=app_name,
+        base="ubuntu@22.04",
         series="jammy",
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
