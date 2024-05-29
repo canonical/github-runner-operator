@@ -49,6 +49,7 @@ from charm_state import (
 from errors import (
     CreateMetricsStorageError,
     GetMetricsStorageError,
+    GithubApiError,
     GithubClientError,
     GithubMetricsError,
     IssueMetricEventError,
@@ -812,6 +813,11 @@ class OpenstackRunnerManager:
                 raise RunnerCreateError(
                     f"Timeout creating OpenStack runner {instance_config.name}"
                 ) from err
+            except openstack.exceptions.SDKException as err:
+                logger.exception("Failed to create OpenStack runner %s", instance_config.name)
+                raise RunnerCreateError(
+                    f"Failed to create OpenStack runner {instance_config.name}"
+                ) from err
 
             logger.info("Waiting runner %s to come online", instance_config.name)
             OpenstackRunnerManager._wait_until_runner_process_running(conn, instance.name)
@@ -1509,8 +1515,21 @@ class OpenstackRunnerManager:
             The stats of issued metric events.
         """
         total_stats: IssuedMetricEventsStats = {}
+        try:
+            online_runners = {
+                runner_info.runner_name
+                for runner_info in self.get_github_runner_info()
+                if runner_info.online
+            }
+        except GithubApiError:
+            logger.exception(
+                "Failed to retrieve set of online runners. Will not issue runner metrics"
+            )
+            return total_stats
+
         for extracted_metrics in runner_metrics.extract(
-            metrics_storage_manager=metrics_storage, ignore_runners=set(runner_states.healthy)
+            metrics_storage_manager=metrics_storage,
+            ignore_runners=set(runner_states.healthy) | online_runners,
         ):
             try:
                 job_metrics = github_metrics.job(
@@ -1546,7 +1565,15 @@ class OpenstackRunnerManager:
             reconciliation_end_ts: The timestamp of when reconciliation ended.
             runner_states: The states of the runners.
         """
-        github_info = self.get_github_runner_info()
+        try:
+            github_info = self.get_github_runner_info()
+        except GithubApiError:
+            logger.exception(
+                "Failed to retrieve github info for reconciliation metric. "
+                "Will not issue reconciliation metric."
+            )
+            return
+
         online_runners = [runner for runner in github_info if runner.online]
         offline_runner_names = {runner.runner_name for runner in github_info if not runner.online}
         active_runner_names = {runner.runner_name for runner in online_runners if runner.busy}

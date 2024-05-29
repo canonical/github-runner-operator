@@ -124,3 +124,12 @@ def pytest_addoption(parser: Parser):
         help="The Openstack region to authenticate to.",
         default=None,
     )
+    parser.addoption(
+        "--use-existing-app",
+        action="store",
+        help="The existing app to use."
+        "This will skip deployment of the charm and use the existing app."
+        "This option is useful for local testing."
+        "It is expected that the existing app is already integrated with other apps "
+        "like grafana-agent, etc. ",
+    )

@@ -537,6 +537,41 @@ def test_issue_events(issue_event_mock: MagicMock):
     )
 
 
+def test_issue_events_pre_job_before_runner_installed(issue_event_mock: MagicMock):
+    """
+    arrange: A runner with pre-job timestamp smaller than installed timestamp.
+    act: Call issue_events.
+    assert: RunnerStart metric is issued with idle set to 0.
+    """
+    runner_name = secrets.token_hex(16)
+    runner_metrics_data = _create_metrics_data(runner_name)
+    runner_metrics_data.pre_job.timestamp = 0
+
+    flavor = secrets.token_hex(16)
+    job_metrics = metrics_type.GithubJobMetrics(
+        queue_duration=3600, conclusion=JobConclusion.SUCCESS
+    )
+    issued_metrics = runner_metrics.issue_events(
+        runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
+    )
+    assert metric_events.RunnerStart in issued_metrics
+    issue_event_mock.assert_has_calls(
+        [
+            call(
+                RunnerStart(
+                    timestamp=runner_metrics_data.pre_job.timestamp,
+                    flavor=flavor,
+                    workflow=runner_metrics_data.pre_job.workflow,
+                    repo=runner_metrics_data.pre_job.repository,
+                    github_event=runner_metrics_data.pre_job.event,
+                    idle=0,
+                    queue_duration=job_metrics.queue_duration,
+                )
+            )
+        ]
+    )
+
+
 def test_issue_events_post_job_before_pre_job(issue_event_mock: MagicMock):
     """
     arrange: A runner with post-job timestamp smaller than pre-job timestamps.
