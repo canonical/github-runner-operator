@@ -16,6 +16,7 @@
 """Module for handling interactions with OpenStack."""
 import logging
 import secrets
+import shutil
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -638,6 +639,8 @@ class OpenstackRunnerManager:
 
         keypair = conn.create_keypair(name=name)
         private_key_path.write_text(keypair.private_key)
+        shutil.chown(private_key_path, user="ubuntu", group="ubuntu")
+        private_key_path.chmod(0o400)
 
     @staticmethod
     def _ssh_health_check(server: Server) -> bool:
@@ -878,6 +881,8 @@ class OpenstackRunnerManager:
     def _get_ssh_connections(server: Server) -> Iterator[SshConnection]:
         """Get ssh connections within a network for a given openstack instance.
 
+        The SSH connection will attempt to establish connection until the timeout configured.
+
         Args:
             server: The Openstack server instance.
 
@@ -912,7 +917,7 @@ class OpenstackRunnerManager:
                     host=ip,
                     user="ubuntu",
                     connect_kwargs={"key_filename": str(key_path)},
-                    connect_timeout=10,
+                    connect_timeout=30,
                 )
 
     def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
@@ -926,11 +931,7 @@ class OpenstackRunnerManager:
         """
         healthy_runner = []
         unhealthy_runner = []
-        openstack_instances = [
-            instance
-            for instance in cast(list[Server], conn.list_servers())
-            if instance.name.startswith(f"{self.instance_name}-")
-        ]
+        openstack_instances = self._get_openstack_instances(conn)
 
         logger.debug("Found openstack instances: %s", openstack_instances)
 
@@ -938,7 +939,6 @@ class OpenstackRunnerManager:
             server: Server | None = conn.get_server(instance.name)
             if not server:
                 continue
-            # SHUTOFF runners are runners that have completed executing jobs.
             if (
                 server.status == _INSTANCE_STATUS_SHUTOFF
                 or not OpenstackRunnerManager._ssh_health_check(server=server)
@@ -948,6 +948,21 @@ class OpenstackRunnerManager:
                 healthy_runner.append(instance.name)
 
         return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
+
+    def _get_openstack_instances(self, conn: OpenstackConnection) -> list[Server]:
+        """Get the OpenStack servers managed by this unit.
+
+        Args:
+            conn: The connection object to access OpenStack cloud.
+
+        Returns:
+            List of OpenStack instances.
+        """
+        return [
+            instance
+            for instance in cast(list[Server], conn.list_servers())
+            if instance.name.startswith(f"{self.instance_name}-")
+        ]
 
     def _run_github_removal_script(self, server: Server, remove_token: str | None) -> None:
         """Run Github runner removal script.
@@ -1056,8 +1071,15 @@ class OpenstackRunnerManager:
         server: Server | None = conn.get_server(name_or_id=instance_name)
 
         if server is not None:
+            logger.info(
+                "Pulling metrics and deleting server for OpenStack runner %s", instance_name
+            )
             self._pull_metrics(server, instance_name)
             self._remove_openstack_runner(conn, server, remove_token)
+        else:
+            logger.info(
+                "Not found server for OpenStack runner %s marked for deletion", instance_name
+            )
 
         if github_id is not None:
             try:
@@ -1191,10 +1213,18 @@ class OpenstackRunnerManager:
         start_ts = time.time()
 
         github_info = self.get_github_runner_info()
-        online_runners = [runner for runner in github_info if runner.online]
-        offline_runners = [runner for runner in github_info if not runner.online]
-        logger.info("Found %s existing online openstack runners", len(online_runners))
-        logger.info("Found %s existing offline openstack runners", len(offline_runners))
+        online_runners = [runner.runner_name for runner in github_info if runner.online]
+        offline_runners = [runner.runner_name for runner in github_info if not runner.online]
+        busy_runners = [runner.runner_name for runner in github_info if runner.busy]
+        logger.info(
+            "Found %s online and %s offline openstack runners, %s of the runners are busy",
+            len(online_runners),
+            len(offline_runners),
+            len(busy_runners),
+        )
+        logger.debug("Online runner: %s", online_runners)
+        logger.debug("Offline runner: %s", offline_runners)
+        logger.debug("Busy runner: %s", busy_runners)
 
         with _create_connection(self._cloud_config) as conn:
             runner_by_health = self._get_openstack_runner_status(conn)
@@ -1206,13 +1236,24 @@ class OpenstackRunnerManager:
             logger.debug("Healthy runner: %s", runner_by_health.healthy)
             logger.debug("Unhealthy runner: %s", runner_by_health.unhealthy)
 
+            healthy_runners_set = set(runner_by_health.healthy)
+            busy_runners_set = set(busy_runners)
+            busy_unhealthy_runners = set(runner_by_health.unhealthy).intersection(busy_runners_set)
+            if busy_unhealthy_runners:
+                logger.warning("Found unhealthy busy runners %s", busy_unhealthy_runners)
+
             # Clean up offline (SHUTOFF) runners or unhealthy (no connection/cloud-init script)
             # runners.
             remove_token = self._github.get_runner_remove_token(path=self._config.path)
-            instance_to_remove = (
-                *runner_by_health.unhealthy,
-                *(runner.runner_name for runner in offline_runners),
+            # Possible for a healthy runner to be appear as offline for sometime as GitHub can be
+            # slow to update the status.
+            # For busy runners let GitHub decide whether the runner should be removed.
+            instance_to_remove = tuple(
+                runner
+                for runner in (*runner_by_health.unhealthy, *offline_runners)
+                if runner not in healthy_runners_set and runner not in busy_runners_set
             )
+            logger.debug("Removing following runners with issues %s", instance_to_remove)
             self._remove_runners(
                 conn=conn, instance_names=instance_to_remove, remove_token=remove_token
             )
@@ -1221,7 +1262,10 @@ class OpenstackRunnerManager:
             self._clean_up_keys_files(conn, runner_by_health.healthy)
             self._clean_up_openstack_keypairs(conn, runner_by_health.healthy)
 
-            delta = quantity - len(runner_by_health.healthy)
+            # Get the number of OpenStack servers.
+            # This is not calculated due to there might be removal failures.
+            servers = self._get_openstack_instances(conn)
+            delta = quantity - len(servers)
 
             # Spawn new runners
             if delta > 0:
@@ -1354,6 +1398,17 @@ class OpenstackRunnerManager:
         except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException) as exc:
             raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
         if not result.ok:
+            logger.warning(
+                (
+                    "Unable to get file size of %s on instance %s, "
+                    "exit code: %s, stdout: %s, stderr: %s"
+                ),
+                remote_path,
+                ssh_conn.host,
+                result.return_code,
+                result.stdout,
+                result.stderr,
+            )
             raise _PullFileError(reason=f"Unable to get file size of {remote_path}")
 
         stdout = result.stdout
@@ -1403,7 +1458,7 @@ class OpenstackRunnerManager:
             storage = metrics_storage.create(instance_config.name)
         except CreateMetricsStorageError:
             logger.exception(
-                "Failed to get shared filesystem for runner %s, "
+                "Failed to create metrics storage for runner %s, "
                 "will not be able to issue all metrics.",
                 instance_config.name,
             )
@@ -1414,7 +1469,7 @@ class OpenstackRunnerManager:
                 )
             except FileNotFoundError:
                 logger.exception(
-                    "Failed to write runner-installed.timestamp into shared filesystem "
+                    "Failed to write runner-installed.timestamp into metrics storage "
                     "for runner %s, will not be able to issue all metrics.",
                     instance_config.name,
                 )

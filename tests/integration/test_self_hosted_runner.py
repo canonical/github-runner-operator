@@ -19,13 +19,15 @@ from charm_state import (
     GithubRepo,
 )
 from github_client import GithubClient
-from tests.integration.helpers import (
+from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     get_job_logs,
-    get_runner_names,
     get_workflow_runs,
     reconcile,
+)
+from tests.integration.helpers.lxd import (
+    get_runner_names,
     run_in_lxd_instance,
     wait_till_num_of_runners,
 )
