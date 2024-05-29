@@ -346,9 +346,8 @@ async def app_openstack_runner(
             reconcile_interval=60,
             constraints={
                 "root-disk": 50 * 1024,
-                "cores": 4,
                 "mem": 16 * 1024,
-                "arch": "arm64",
+                # "arch": "arm64",
             },
             config={
                 OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml,
