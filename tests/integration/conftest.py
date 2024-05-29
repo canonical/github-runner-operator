@@ -324,7 +324,7 @@ async def app_openstack_runner(
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
-    openstack_clouds_yaml: str,
+    clouds_yaml_contents: str,
     network_name: str,
     flavor_name: str,
     existing_app: Optional[str],
@@ -350,7 +350,7 @@ async def app_openstack_runner(
                 # "arch": "arm64",
             },
             config={
-                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_clouds_yaml,
+                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: clouds_yaml_contents,
                 OPENSTACK_NETWORK_CONFIG_NAME: network_name,
                 OPENSTACK_FLAVOR_CONFIG_NAME: flavor_name,
                 USE_APROXY_CONFIG_NAME: "true",
