@@ -12,7 +12,8 @@ The "GitHub Self-Hosted Runner Metrics" metrics dashboard presents the following
 
 - General: Displays general metrics about the charm and runners, such as:
   - Lifecycle counters: Tracks the frequency of Runner initialisation, start, stop, and crash events.
-  - Idle runners after reconciliation: Reflects the count of Runners marked as idle during the last reconciliation event. Note: This data updates post-reconciliation events and isn't real-time.
+  - Available runners: A horizontal bar graph showing the number of runners available during the last reconciliation event. Note: This data is updated after each reconciliation event and is not real-time.
+  - Idle runners after reconciliation: A time series graph showing the number of runners marked as idle during the last reconciliation event over time. Note: This data is updated after each reconciliation event and is not real-time.
   - Duration observations: Each data point aggregates the last hour and shows the 50th, 90th, 95th percentile and maximum durations for:
       - Runner installation
       - Runner idle duration
@@ -20,7 +21,7 @@ The "GitHub Self-Hosted Runner Metrics" metrics dashboard presents the following
       - Job queue duration - how long a job waits in the queue before a runner picks it up
 - Jobs: Displays certain metrics about the jobs executed by the runners. These metrics can be displayed per repository by specifying a
  regular expression on the `Repository` variable. The following metrics are displayed:
-  - Proportion charts: Share of jobs by completion status, job conclusion, flavor, repo policy check failure http codes and github events over time.
+  - Proportion charts: Share of jobs by completion status, job conclusion, application, repo policy check failure http codes and github events over time.
   - Job duration observation
   - Number of jobs per repository
 
@@ -28,11 +29,12 @@ The "GitHub Self-Hosted Runner Metrics (Long-Term)" metrics dashboard displays t
 
 - General: Contains the following panels:
   - Total Jobs
+  - Runners created per application: Shows the number of runners created per charm application.
   - Total unique repositories
   - Timeseries chart displaying the number of jobs per day
   - Percentage of jobs with low queue time (less than 60 seconds)
 
-Both dashboards allow for filtering by runner flavor by specifying a regular expression on the `Flavor` variable.
+Both dashboards allow for filtering by charm application by specifying a regular expression on the `Application` variable.
 
 
 While the dashboard visualises a subset of potential metrics, these metrics are logged in a file named `/var/log/github-runner-metrics.log`. Use following Loki query to retrieve lines from this file:
@@ -41,7 +43,7 @@ While the dashboard visualises a subset of potential metrics, these metrics are 
 {filename="/var/log/github-runner-metrics.log"}
 ```
 
-These log events contain valuable details such as flavor (pertinent for multiple runner applications), GitHub events triggering workflows along with their respective repositories, and more. Customising metric visualisation is possible to suit specific needs.
+These log events contain valuable details such as charm application, GitHub events triggering workflows along with their respective repositories, and more. Customising metric visualisation is possible to suit specific needs.
 
 ### Machine Host Metrics
 The `grafana-agent` autonomously transmits machine host metrics, which are visualised in the `System Resources` dashboard.
