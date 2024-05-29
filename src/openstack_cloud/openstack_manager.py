@@ -1497,7 +1497,7 @@ class OpenstackRunnerManager:
         """
         runner_states = self._get_openstack_runner_status(ssh_connection)
 
-        metric_stats = self._issue_runner_metrics(runner_states)
+        metric_stats = self._issue_runner_metrics(ssh_connection)
         self._issue_reconciliation_metric(
             metric_stats=metric_stats,
             reconciliation_start_ts=reconciliation_start_ts,
@@ -1505,7 +1505,7 @@ class OpenstackRunnerManager:
             runner_states=runner_states,
         )
 
-    def _issue_runner_metrics(self, runner_states: RunnerByHealth) -> IssuedMetricEventsStats:
+    def _issue_runner_metrics(self, ssh_conn: SshConnection) -> IssuedMetricEventsStats:
         """Issue runner metrics.
 
         Args:
@@ -1515,21 +1515,21 @@ class OpenstackRunnerManager:
             The stats of issued metric events.
         """
         total_stats: IssuedMetricEventsStats = {}
+
         try:
-            online_runners = {
-                runner_info.runner_name
-                for runner_info in self.get_github_runner_info()
-                if runner_info.online
-            }
-        except GithubApiError:
-            logger.exception(
-                "Failed to retrieve set of online runners. Will not issue runner metrics"
-            )
+            openstack_instances = self._get_openstack_instances(ssh_conn)
+        except openstack.exceptions.SDKException:
+            logger.exception("Failed to get openstack instances to ignore when extracting metrics."
+                             " Will not issue runner metrics")
             return total_stats
+
+        # Don't extract metrics for instances which are still there, as it might be
+        # the case that the metrics have not yet been pulled (they get pulled right before server termination).
+        os_online_runners = {instance.name for instance in openstack_instances if instance.status == _INSTANCE_STATUS_ACTIVE}
 
         for extracted_metrics in runner_metrics.extract(
             metrics_storage_manager=metrics_storage,
-            ignore_runners=set(runner_states.healthy) | online_runners,
+            ignore_runners=os_online_runners,
         ):
             try:
                 job_metrics = github_metrics.job(
