@@ -44,5 +44,6 @@ jobs:
       microk8s-addons: "dns ingress hostpath-storage"
       test-tox-env: integration-juju3.2
       modules: '["test_openstack_runner"]'
+      extra-arguments: "--http-proxy=http://squid.internal:3128 --https-proxy=http://squid.internal:3128"
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
