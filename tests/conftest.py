@@ -113,7 +113,7 @@ def pytest_addoption(parser: Parser):
         default=None,
     )
     parser.addoption(
-        "--openstack-user-name",
+        "--openstack-username",
         action="store",
         help="The Openstack user to authenticate as.",
         default=None,
