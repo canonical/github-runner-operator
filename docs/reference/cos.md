@@ -51,3 +51,14 @@ The `grafana-agent` autonomously transmits machine host metrics, which are visua
 ## Logs
 
 The `grafana-agent` effectively transmits all logs located at `/var/log/**/*log`, from the charm unit to Loki. Additionally, it collects logs concerning crashed runners with accessible but unshut LXD virtual machines.
+
+
+## Alerts
+
+The charm contains a number of alerts that are sent to COS using the `grafana-agent`. 
+Please refer to the COS documentation for more information on how to set up alerts.
+
+Alerts are divided into two categories: 
+
+- Capacity Alerts: Alerts you when there is a shortage of a particular type of runner.
+- Failure Alerts: Notification of runner crashes or repo policy related failures.
