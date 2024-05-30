@@ -19,7 +19,7 @@ from metrics import events as metric_events
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from metrics.storage import MetricsStorage
 from openstack_cloud import openstack_manager
-from openstack_cloud.openstack_manager import MAX_METRICS_FILE_SIZE
+from openstack_cloud.openstack_manager import MAX_METRICS_FILE_SIZE, METRICS_EXCHANGE_PATH
 from runner_type import RunnerByHealth, RunnerGithubInfo
 
 CLOUD_NAME = "microstack"
@@ -639,19 +639,19 @@ def test_reconcile_pulls_metric_files(
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
-        return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
+        return_value=RunnerByHealth(healthy=(), unhealthy=("test_runner",))
     )
-    test_file_content = secrets.token_hex(16)
-    ssh_connection_mock.get.side_effect = lambda remote, local: Path(local).write_text(
-        test_file_content
-    )
-
+    ssh_connection_mock.get.side_effect = MagicMock()
     openstack_manager_for_reconcile.reconcile(quantity=0)
 
-    assert (ms.path / "pre-job-metrics.json").exists()
-    assert (ms.path / "pre-job-metrics.json").read_text() == test_file_content
-    assert (ms.path / "post-job-metrics.json").exists()
-    assert (ms.path / "post-job-metrics.json").read_text() == test_file_content
+    ssh_connection_mock.get.assert_any_call(
+        remote=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"),
+        local=str(ms.path / "pre-job-metrics.json"),
+    )
+    ssh_connection_mock.get.assert_any_call(
+        remote=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"),
+        local=str(ms.path / "post-job-metrics.json"),
+    )
 
 
 def test_reconcile_does_not_pull_too_large_files(
@@ -735,47 +735,87 @@ def test_reconcile_issue_reconciliation_metrics(
     )
 
 
-def test_reconcile_ignores_metrics_for_healthy_and_online_runners(
-    openstack_manager_for_reconcile, monkeypatch, tmp_path
+def test_reconcile_ignores_metrics_for_openstack_online_runners(
+    openstack_manager_for_reconcile,
+    monkeypatch,
+    tmp_path,
+    patched_create_connection_context: MagicMock,
 ):
     """
-    arrange: Combination of runner status and github online status.
+    arrange: Combination of runner status/github status and openstack status.
     act: Call reconcile.
-    assert: The healthy and online runners are ignored.
+    assert: The runners returned with status ACTIVE are ignored for metrics extraction.
     """
     runner_metrics_path = tmp_path / "runner_fs"
     runner_metrics_path.mkdir()
     ms = MetricsStorage(path=runner_metrics_path, runner_name="test_runner")
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
+    instance_name = openstack_manager_for_reconcile.instance_name
+    runner_names = {
+        k: f"{instance_name}-{k}"
+        for k in [
+            "healthy_online",
+            "healthy_offline",
+            "unhealthy_online",
+            "unhealthy_offline",
+            "openstack_online_no_github_status",
+        ]
+    }
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
         return_value=RunnerByHealth(
-            healthy=("healthy_online", "healthy_offline"),
-            unhealthy=("unhealthy_online", "unhealthy_offline"),
+            healthy=(runner_names["healthy_online"], runner_names["healthy_offline"]),
+            unhealthy=(runner_names["unhealthy_online"], runner_names["unhealthy_offline"]),
         )
     )
     openstack_manager_for_reconcile.get_github_runner_info = MagicMock(
         return_value=(
-            RunnerGithubInfo(runner_name="healthy_online", runner_id=0, online=True, busy=True),
-            RunnerGithubInfo(runner_name="unhealthy_online", runner_id=1, online=True, busy=False),
-            RunnerGithubInfo(runner_name="healthy_offline", runner_id=2, online=False, busy=False),
             RunnerGithubInfo(
-                runner_name="unhealthy_offline", runner_id=3, online=False, busy=False
+                runner_name=runner_names["healthy_online"], runner_id=0, online=True, busy=True
+            ),
+            RunnerGithubInfo(
+                runner_name=runner_names["unhealthy_online"], runner_id=1, online=True, busy=False
+            ),
+            RunnerGithubInfo(
+                runner_name=runner_names["healthy_offline"], runner_id=2, online=False, busy=False
+            ),
+            RunnerGithubInfo(
+                runner_name=runner_names["unhealthy_offline"],
+                runner_id=3,
+                online=False,
+                busy=False,
             ),
         )
     )
 
-    openstack_manager.runner_metrics.extract.return_value = (MagicMock() for _ in range(2))
+    openstack_online_runner_names = [
+        runner_names["healthy_online"],
+        runner_names["healthy_offline"],
+        runner_names["unhealthy_online"],
+        runner_names["openstack_online_no_github_status"],
+    ]
+    openstack_online_runners = [
+        openstack_manager.openstack.compute.v2.server.Server(name=runner_name, status="ACTIVE")
+        for runner_name in openstack_online_runner_names
+    ]
+    openstack_offline_runners = [
+        openstack_manager.openstack.compute.v2.server.Server(name=runner_name, status="SHUTOFF")
+        for runner_name in [runner_names["unhealthy_offline"]]
+    ]
+    patched_create_connection_context.list_servers.return_value = (
+        openstack_online_runners + openstack_offline_runners
+    )
+
+    openstack_manager.runner_metrics.extract.return_value = (MagicMock() for _ in range(1))
     openstack_manager.runner_metrics.issue_events.side_effect = [
         {metric_events.RunnerStart, metric_events.RunnerStop},
-        {metric_events.RunnerStart},
     ]
 
     openstack_manager_for_reconcile.reconcile(quantity=0)
 
     openstack_manager.runner_metrics.extract.assert_called_once_with(
         metrics_storage_manager=metrics.storage,
-        ignore_runners={"healthy_online", "healthy_offline", "unhealthy_online"},
+        ignore_runners=set(openstack_online_runner_names),
     )
 
 

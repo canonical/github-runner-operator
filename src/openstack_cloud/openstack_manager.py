@@ -1509,7 +1509,7 @@ class OpenstackRunnerManager:
         """Issue runner metrics.
 
         Args:
-            runner_states: The states of the runners.
+            ssh_conn: SSH connection to the runner instance.
 
         Returns:
             The stats of issued metric events.
@@ -1519,13 +1519,20 @@ class OpenstackRunnerManager:
         try:
             openstack_instances = self._get_openstack_instances(ssh_conn)
         except openstack.exceptions.SDKException:
-            logger.exception("Failed to get openstack instances to ignore when extracting metrics."
-                             " Will not issue runner metrics")
+            logger.exception(
+                "Failed to get openstack instances to ignore when extracting metrics."
+                " Will not issue runner metrics"
+            )
             return total_stats
 
         # Don't extract metrics for instances which are still there, as it might be
-        # the case that the metrics have not yet been pulled (they get pulled right before server termination).
-        os_online_runners = {instance.name for instance in openstack_instances if instance.status == _INSTANCE_STATUS_ACTIVE}
+        # the case that the metrics have not yet been pulled
+        # (they get pulled right before server termination).
+        os_online_runners = {
+            instance.name
+            for instance in openstack_instances
+            if instance.status == _INSTANCE_STATUS_ACTIVE
+        }
 
         for extracted_metrics in runner_metrics.extract(
             metrics_storage_manager=metrics_storage,
