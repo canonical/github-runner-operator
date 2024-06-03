@@ -93,8 +93,13 @@ if [[ $REPO_CHECK -ne 0 ]]; then
     if [[ -s repo_check_error.txt ]]; then
         logger -p user.error -s -f repo_check_error.txt
     fi
-  logger -p user.error -s "Stopping execution of jobs due to repository setup is not compliant with policies."
-  logger -p user.error -s "This runner will be stopped or lost, please fix the setup of the repository, then rerun this job."
+    if [[ $REPO_CHECK_HTTP_CODE -ge 500 ]] && [[ $REPO_CHECK_HTTP_CODE -lt 600 ]]; then
+        logger -p user.error -s "The repository setup check failed with HTTP code ${REPO_CHECK_HTTP_CODE}."
+        logger -p user.error -s "This runner will be stopped or lost, please contact the repo-policy-compliance server operators or try again later."
+    else
+      logger -p user.error -s "Stopping execution of jobs due to repository setup is not compliant with policies."
+      logger -p user.error -s "This runner will be stopped or lost, please fix the setup of the repository, then rerun this job."
+    fi
 
   # Killing the runner.Listener process to stop the runner application. This will prevent jobs from being executed.
   pkill -2 Runner.Listener
