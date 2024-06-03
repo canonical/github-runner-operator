@@ -1318,7 +1318,7 @@ class OpenstackRunnerManager:
 
             end_ts = time.time()
             self._issue_reconciliation_metrics(
-                ssh_connection=conn, reconciliation_start_ts=start_ts, reconciliation_end_ts=end_ts
+                conn=conn, reconciliation_start_ts=start_ts, reconciliation_end_ts=end_ts
             )
 
             return delta
@@ -1482,7 +1482,7 @@ class OpenstackRunnerManager:
 
     def _issue_reconciliation_metrics(
         self,
-        ssh_connection: SshConnection,
+        conn: OpenstackConnection,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
     ) -> None:
@@ -1491,13 +1491,13 @@ class OpenstackRunnerManager:
         This includes the metrics for the runners and the reconciliation metric itself.
 
         Args:
-            ssh_connection: The SSH connection to the runner instance.
+            conn: The connection object to access OpenStack cloud.
             reconciliation_start_ts: The timestamp of when reconciliation started.
             reconciliation_end_ts: The timestamp of when reconciliation ended.
         """
-        runner_states = self._get_openstack_runner_status(ssh_connection)
+        runner_states = self._get_openstack_runner_status(conn)
 
-        metric_stats = self._issue_runner_metrics(runner_states)
+        metric_stats = self._issue_runner_metrics(conn)
         self._issue_reconciliation_metric(
             metric_stats=metric_stats,
             reconciliation_start_ts=reconciliation_start_ts,
@@ -1505,31 +1505,38 @@ class OpenstackRunnerManager:
             runner_states=runner_states,
         )
 
-    def _issue_runner_metrics(self, runner_states: RunnerByHealth) -> IssuedMetricEventsStats:
+    def _issue_runner_metrics(self, conn: OpenstackConnection) -> IssuedMetricEventsStats:
         """Issue runner metrics.
 
         Args:
-            runner_states: The states of the runners.
+            conn: The connection object to access OpenStack cloud.
 
         Returns:
             The stats of issued metric events.
         """
         total_stats: IssuedMetricEventsStats = {}
+
         try:
-            online_runners = {
-                runner_info.runner_name
-                for runner_info in self.get_github_runner_info()
-                if runner_info.online
-            }
-        except GithubApiError:
+            openstack_instances = self._get_openstack_instances(conn)
+        except openstack.exceptions.SDKException:
             logger.exception(
-                "Failed to retrieve set of online runners. Will not issue runner metrics"
+                "Failed to get openstack instances to ignore when extracting metrics."
+                " Will not issue runner metrics"
             )
             return total_stats
 
+        # Don't extract metrics for instances which are still there, as it might be
+        # the case that the metrics have not yet been pulled
+        # (they get pulled right before server termination).
+        os_online_runners = {
+            instance.name
+            for instance in openstack_instances
+            if instance.status == _INSTANCE_STATUS_ACTIVE
+        }
+
         for extracted_metrics in runner_metrics.extract(
             metrics_storage_manager=metrics_storage,
-            ignore_runners=set(runner_states.healthy) | online_runners,
+            ignore_runners=os_online_runners,
         ):
             try:
                 job_metrics = github_metrics.job(
