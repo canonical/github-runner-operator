@@ -98,12 +98,12 @@ async def test_openstack_flush_runners(
     await reconcile(app=app_openstack_runner, model=model)
 
     unit = app_openstack_runner.units[0]
-    action = await unit.run_action("check-runners")
+    action = await unit.run_action("flush-runners")
     await action.wait()
 
     assert action.status == "completed"
-    # TODO: Test only
-    print(action.results)
+    # TODO: testing
+    print("==================TEST==============: " + action.results)
     assert action.results["delta"]["virtual-machines"] == "1"
 
     assert len(openstack_connection.list_servers()) == 0, "Openstack runners not cleaned up"
