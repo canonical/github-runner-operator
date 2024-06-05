@@ -80,7 +80,7 @@ async def test_openstack_reconcile_one_runner(
     assert action.results["offline"] == "0"
     assert action.results["unknown"] == "0"
 
-    assert len(await openstack_connection.list_servers()) == 0, "Openstack runners not cleaned up"
+    assert len(openstack_connection.list_servers()) == 0, "Openstack runners not cleaned up"
 
 
 async def test_openstack_flush_runners(
@@ -104,7 +104,7 @@ async def test_openstack_flush_runners(
     assert action.status == "completed"
     assert action.results["delta"]["virtual-machines"] == "1"
 
-    assert len(await openstack_connection.list_servers()) == 0, "Openstack runners not cleaned up"
+    assert len(openstack_connection.list_servers()) == 0, "Openstack runners not cleaned up"
 
 
 @pytest.mark.asyncio
