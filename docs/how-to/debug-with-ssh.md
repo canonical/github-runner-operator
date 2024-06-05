@@ -7,7 +7,7 @@ for automatic configuration.
 
 ## Prerequisites
 
-To enhance the security of self-hosted runners and its infrastracture, only authorized connections
+To enhance the security of self-hosted runners and its infrastructure, only authorized connections
 can be established. Hence, action-tmate users must have
 [ssh-key registered](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
 on the GitHub account.

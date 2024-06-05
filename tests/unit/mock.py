@@ -407,7 +407,7 @@ class MockGhapiActions:
     """Mock for actions in Ghapi client."""
 
     def __init__(self):
-        """A placeholder method for test stub/fakes initializtion."""
+        """A placeholder method for test stub/fakes initialization."""
         hash = hashlib.sha256()
         hash.update(TEST_BINARY)
         self.test_hash = hash.hexdigest()
