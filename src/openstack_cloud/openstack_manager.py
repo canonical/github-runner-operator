@@ -704,11 +704,7 @@ class OpenstackRunnerManager:
         logger.debug("Found openstack instances: %s", openstack_instances)
 
         for instance in openstack_instances:
-            server: Server | None = conn.get_server(instance.name)
-            if not server:
-                logger.warning("Openstack instance %s gone.", instance.name)
-                continue
-            if not OpenstackRunnerManager._health_check(server=server):
+            if not OpenstackRunnerManager._health_check(conn=conn, server_name=instance.name):
                 unhealthy_runner.append(instance.name)
             else:
                 healthy_runner.append(instance.name)
@@ -730,7 +726,9 @@ class OpenstackRunnerManager:
             if instance.name.startswith(f"{self.instance_name}-")
         ]
 
-    def _health_check(self, server: Server, startup: bool = False) -> bool:
+    def _health_check(
+        self, conn: OpenstackConnection, server_name: str, startup: bool = False
+    ) -> bool:
         """Health check a server instance.
 
         A healthy server is defined as:
@@ -745,12 +743,16 @@ class OpenstackRunnerManager:
                 subject to change to unhealthy once enough data has been gathered.
 
         Args:
-            server: The server to health check.
+            conn: The Openstack connection instance.
+            server_name: The name of the OpenStack server to health check.
             startup: Check only whether the startup is successful.
 
         Returns:
             Whether the instance is healthy.
         """
+        server: Server | None = conn.get_server(name_or_id=server_name)
+        if not server:
+            return False
         if server.status == _INSTANCE_STATUS_SHUTOFF:
             return False
         if server.status not in (_INSTANCE_STATUS_ACTIVE, _INSTANCE_STATUS_BUILDING):
@@ -796,6 +798,7 @@ class OpenstackRunnerManager:
         return True
 
     @staticmethod
+    @retry(tries=3, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _get_ssh_connection(server: Server, timeout: int = 30) -> SshConnection:
         """Get a valid ssh connection within a network for a given openstack instance.
 
@@ -1116,8 +1119,9 @@ class OpenstackRunnerManager:
             RunnerStartError: Unable perform health check of the runner application.
         """
         try:
-            server: Server | None = conn.get_server(instance_name)
-            if not server or not OpenstackRunnerManager._health_check(server=server, startup=True):
+            if not OpenstackRunnerManager._health_check(
+                conn=conn, server_name=instance_name, startup=True
+            ):
                 raise RunnerStartError(
                     (
                         "Unable to find running process of runner application on openstack runner "
