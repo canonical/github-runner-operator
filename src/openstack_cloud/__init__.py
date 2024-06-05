@@ -39,7 +39,7 @@ def _remove_old_openstacksdk_lib() -> None:
                 "No old openstacksdk library to remove. "
                 "Please reach out to the charm dev team for further advice."
             )
-    except FileNotFoundError:
+    except OSError:
         logger.exception(
             "Failed to remove old openstacksdk library. "
             "Please reach out to the charm dev team for further advice."
