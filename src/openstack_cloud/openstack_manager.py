@@ -833,7 +833,7 @@ class OpenstackRunnerManager:
                     host=ip,
                     user="ubuntu",
                     connect_kwargs={"key_filename": str(key_path)},
-                    connect_timeout=30,
+                    connect_timeout=timeout,
                 )
                 result = connection.run("echo hello world", warn=True, timeout=timeout)
                 if not result.ok:
