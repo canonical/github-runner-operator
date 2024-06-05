@@ -8,7 +8,7 @@ Functions to calculate metrics from data retrieved from GitHub.
 
 ---
 
-<a href="../src/metrics/github.py#L13"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics/github.py#L16"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `job`
 
