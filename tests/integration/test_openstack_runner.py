@@ -103,7 +103,7 @@ async def test_openstack_flush_runners(
 
     assert action.status == "completed"
     # TODO: testing
-    print("==================TEST==============: " + action.results)
+    print("==================TEST==============: " + str(action.results))
     assert action.results["delta"]["virtual-machines"] == "1"
 
     assert len(openstack_connection.list_servers()) == 0, "Openstack runners not cleaned up"
