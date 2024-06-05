@@ -50,7 +50,8 @@ try:
     import openstack
 except AttributeError:
     logger.error(
-        "Failed to import openstack. Assuming juju bug https://bugs.launchpad.net/juju/+bug/2058335."
+        "Failed to import openstack. "
+        "Assuming juju bug https://bugs.launchpad.net/juju/+bug/2058335. "
         "Removing old openstacksdk library and retrying."
     )
     _remove_old_openstacksdk_lib()
