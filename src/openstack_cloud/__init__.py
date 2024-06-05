@@ -32,7 +32,7 @@ def _remove_old_openstacksdk_lib() -> None:
         if len(openstacksdk_dirs) > 1:
             openstacksdk_dirs.sort()
             for openstacksdk_dir in openstacksdk_dirs[:-1]:
-                logger.info("Removing old openstacksdk library: %s", openstacksdk_dir)
+                logger.error("Removing old openstacksdk library: %s", openstacksdk_dir)
                 shutil.rmtree(openstacksdk_dir)
         else:
             logger.error(
