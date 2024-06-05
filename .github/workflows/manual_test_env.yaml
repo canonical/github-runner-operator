@@ -1,22 +1,22 @@
 name: Manual test
 
 on:
-  # TODO: Re-enable
-  # pull_request:
-  workflow_dispatch:
+  # TODO: Test only
+  pull_request:
+  # workflow_dispatch:
 
 jobs:
-  integration-tests-microstack:
-    name: Integration test using microstack
+  integration-tests-private-endpoint:
+    name: Integration test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
       juju-channel: 3.2/stable
-      provider: microk8s
-      channel: 1.26-strict/stable
-      microk8s-addons: "dns ingress hostpath-storage"
+      pre-run-script: scripts/setup-lxd.sh
+      provider: lxd
       test-tox-env: integration-juju3.2
       modules: '["test_openstack_runner"]'
+      extra-arguments: "--http-proxy=http://squid.internal:3128 --https-proxy=http://squid.internal:3128 --no-proxy=keystone.ps6.canonical.com,glance.ps6.canonical.com,nova.ps6.canonical.com,neutron.ps6.canonical.com"
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
       tmate-debug: true
