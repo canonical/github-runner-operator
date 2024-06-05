@@ -770,47 +770,64 @@ class OpenstackRunnerManager:
         return False
 
     @staticmethod
-    def _get_ssh_connections(server: Server) -> Iterator[SshConnection]:
-        """Get ssh connections within a network for a given openstack instance.
+    def _get_ssh_connection(server: Server, timeout: int = 30) -> SshConnection:
+        """Get a valid ssh connection within a network for a given openstack instance.
 
         The SSH connection will attempt to establish connection until the timeout configured.
 
         Args:
             server: The Openstack server instance.
+            timeout: Timeout in seconds to attempt connection to each available server address.
 
-        Yields:
-            SSH connections to OpenStack server instance.
+        Raises:
+            _SSHError: If there was an error getting a valid SSH connection.
+
+        Returns:
+            An SSH connection to OpenStack server instance.
         """
         if not server.key_name:
-            logger.error(
-                "Unable to create SSH connection as no valid keypair found for %s", server.name
+            raise _SSHError(
+                f"Unable to create SSH connection, no valid keypair found for {server.name}"
             )
-            return
-
+        key_path = OpenstackRunnerManager._get_key_path(server.name)
+        if not key_path.exists():
+            raise _SSHError(f"Missing keyfile for server: {server.name}, key path: {key_path}")
         network_address_list = server.addresses.values()
         if not network_address_list:
-            logger.error("No addresses to connect to for OpenStack server %s", server.name)
-            return
+            raise _SSHError(f"No addresses found for OpenStack server {server.name}")
 
-        for network_addresses in network_address_list:
-            for address in network_addresses:
-                ip = address["addr"]
-
-                key_path = OpenstackRunnerManager._get_key_path(server.name)
-                if not key_path.exists():
-                    logger.error(
-                        "Skipping SSH to server %s with missing key file %s",
-                        server.name,
-                        str(key_path),
-                    )
-                    continue
-
-                yield SshConnection(
+        server_addresses: list[str] = [
+            address["addr"]
+            for network_addresses in network_address_list
+            for address in network_addresses
+        ]
+        for ip in server_addresses:
+            try:
+                connection = SshConnection(
                     host=ip,
                     user="ubuntu",
                     connect_kwargs={"key_filename": str(key_path)},
                     connect_timeout=30,
                 )
+                result = connection.run("echo hello world", warn=True, timeout=timeout)
+                if not result.ok:
+                    logger.warning(
+                        "SSH test connection failed, server: %s, address: %s", server.name, ip
+                    )
+                    continue
+                if "hello world" in result.stdout:
+                    return connection
+            except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException):
+                logger.warning(
+                    "Unable to SSH into %s with address %s",
+                    server.name,
+                    connection.host,
+                    exc_info=True,
+                )
+                continue
+        raise _SSHError(
+            f"No connectable SSH addresses found, server: {server.name}, addresses: {server_addresses}"
+        )
 
     @staticmethod
     def _get_key_path(name: str) -> Path:
@@ -1234,31 +1251,33 @@ class OpenstackRunnerManager:
             )
             return
 
-        for ssh_conn in self._get_ssh_connections(server=server):
-            try:
-                self._pull_file(
-                    ssh_conn=ssh_conn,
-                    remote_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"),
-                    local_path=str(storage.path / "pre-job-metrics.json"),
-                    max_size=MAX_METRICS_FILE_SIZE,
-                )
-                self._pull_file(
-                    ssh_conn=ssh_conn,
-                    remote_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"),
-                    local_path=str(storage.path / "post-job-metrics.json"),
-                    max_size=MAX_METRICS_FILE_SIZE,
-                )
-                return
-            except _PullFileError as exc:
-                logger.warning(
-                    "Failed to pull metrics for %s: %s . Will not be able to issue all metrics",
-                    instance_name,
-                    exc,
-                )
-                return
-            except _SSHError as exc:
-                logger.info("Failed to pull metrics for %s: %s", instance_name, exc)
-                continue
+        try:
+            ssh_conn = self._get_ssh_connection(server=server)
+        except _SSHError as exc:
+            logger.info("Failed to pull metrics for %s: %s", instance_name, exc)
+            return
+
+        try:
+            self._pull_file(
+                ssh_conn=ssh_conn,
+                remote_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"),
+                local_path=str(storage.path / "pre-job-metrics.json"),
+                max_size=MAX_METRICS_FILE_SIZE,
+            )
+            self._pull_file(
+                ssh_conn=ssh_conn,
+                remote_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"),
+                local_path=str(storage.path / "post-job-metrics.json"),
+                max_size=MAX_METRICS_FILE_SIZE,
+            )
+            return
+        except _PullFileError as exc:
+            logger.warning(
+                "Failed to pull metrics for %s: %s . Will not be able to issue all metrics",
+                instance_name,
+                exc,
+            )
+            return
 
     def _pull_file(
         self, ssh_conn: SshConnection, remote_path: str, local_path: str, max_size: int
@@ -1360,40 +1379,41 @@ class OpenstackRunnerManager:
         """
         if not remove_token:
             return
-        for ssh_conn in OpenstackRunnerManager._get_ssh_connections(server=server):
-            try:
-                result: Result = ssh_conn.run(
-                    f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}",
-                    warn=True,
-                )
-                if not result.ok:
-                    logger.warning(
-                        (
-                            "Unable to run removal script on instance %s, "
-                            "exit code: %s, stdout: %s, stderr: %s"
-                        ),
-                        server.name,
-                        result.return_code,
-                        result.stdout,
-                        result.stderr,
-                    )
-                    continue
-                return
-            except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException):
-                logger.info(
-                    "Unable to SSH into %s with address %s",
+        try:
+            ssh_conn = OpenstackRunnerManager._get_ssh_connection(server=server)
+        except _SSHError as exc:
+            logger.error(
+                "Unable to run GitHub removal script, server: %s, reason: %s",
+                server.name,
+                str(exc),
+            )
+            raise GithubRunnerRemoveError(
+                f"Failed to remove runner {server.name} from Github."
+            ) from exc
+
+        try:
+            result: Result = ssh_conn.run(
+                f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}",
+                warn=True,
+            )
+            if not result.ok:
+                logger.warning(
+                    (
+                        "Unable to run removal script on instance %s, "
+                        "exit code: %s, stdout: %s, stderr: %s"
+                    ),
                     server.name,
-                    ssh_conn.host,
-                    exc_info=True,
+                    result.return_code,
+                    result.stdout,
+                    result.stderr,
                 )
-                continue
-            # 2024/04/23: The broad except clause is for logging purposes.
-            # Will be removed in future versions.
-            except Exception:  # pylint: disable=broad-exception-caught
-                logger.critical(
-                    "Found unexpected exception, please contact the developers", exc_info=True
-                )
-                continue
+            return
+        # 2024/04/23: The broad except clause is for logging purposes.
+        # Will be removed in future versions.
+        except Exception:  # pylint: disable=broad-exception-caught
+            logger.critical(
+                "Found unexpected exception, please contact the developers", exc_info=True
+            )
 
         logger.warning("Failed to run GitHub runner removal script %s", server.name)
         raise GithubRunnerRemoveError(f"Failed to remove runner {server.name} from Github.")
