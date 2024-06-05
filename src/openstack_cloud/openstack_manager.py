@@ -90,6 +90,10 @@ METRICS_EXCHANGE_PATH = Path("/home/ubuntu/metrics-exchange")
 PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
 MAX_METRICS_FILE_SIZE = 1024
 
+RUNNER_STARTUP_PROCESS = "/home/ubuntu/actions-runner/run.sh"
+RUNNER_LISTENER_PROCESS = "Runner.Listener"
+RUNNER_WORKER_PROCESS = "Runner.Worker"
+
 
 class _PullFileError(Exception):
     """Represents an error while pulling a file from the runner instance."""
@@ -501,6 +505,7 @@ class GithubRunnerRemoveError(Exception):
 
 _INSTANCE_STATUS_SHUTOFF = "SHUTOFF"
 _INSTANCE_STATUS_ACTIVE = "ACTIVE"
+_INSTANCE_STATUS_BUILDING = "BUILDING"
 
 
 class OpenstackRunnerManager:
@@ -703,10 +708,7 @@ class OpenstackRunnerManager:
             if not server:
                 logger.warning("Openstack instance %s gone.", instance.name)
                 continue
-            if (
-                server.status == _INSTANCE_STATUS_SHUTOFF
-                or not OpenstackRunnerManager._ssh_health_check(server=server)
-            ):
+            if not OpenstackRunnerManager._health_check(server=server):
                 unhealthy_runner.append(instance.name)
             else:
                 healthy_runner.append(instance.name)
@@ -728,46 +730,70 @@ class OpenstackRunnerManager:
             if instance.name.startswith(f"{self.instance_name}-")
         ]
 
+    def _health_check(self, server: Server, startup: bool = False) -> bool:
+        """Health check a server instance.
+
+        A healthy server is defined as:
+            1. Openstack instance status is ACTIVE or BUILDING.
+            2. Runner.Worker exists (running a job).
+            3. Runner.Listener exists (waiting for job).
+            3. GitHub runner status is Idle or Active.
+
+        An undetermined server is marked as healthy when:
+            1. SSH fails - could be a transient network error.
+            2. The Runner.* processes do not exist. Mark healthy for now to gather data. This is
+                subject to change to unhealthy once enough data has been gathered.
+
+        Args:
+            server: The server to health check.
+            startup: Check only whether the startup is successful.
+
+        Returns:
+            Whether the instance is healthy.
+        """
+        if server.status == _INSTANCE_STATUS_SHUTOFF:
+            return False
+        if server.status not in (_INSTANCE_STATUS_ACTIVE, _INSTANCE_STATUS_BUILDING):
+            return False
+        return self._ssh_health_check(server=server, startup=startup)
+
     @staticmethod
-    def _ssh_health_check(server: Server) -> bool:
+    def _ssh_health_check(server: Server, startup: bool) -> bool:
         """Use SSH to check whether runner application is running.
 
         Args:
             server: The openstack server instance to check connections.
+            startup: Check only whether the startup is successful.
 
         Returns:
             Whether the runner application is running.
         """
-        addresses = []
-        for ssh_conn in OpenstackRunnerManager._get_ssh_connections(server=server):
-            addresses.append(ssh_conn.host)
-            try:
-                result = ssh_conn.run("ps aux", warn=True)
-                logger.debug("Output of `ps aux` on %s stderr: %s", server.name, result.stderr)
-                logger.debug("Output of `ps aux` on %s stdout: %s", server.name, result.stdout)
-                if not result.ok:
-                    logger.warning("List all process command failed on %s ", server.name)
-                    continue
+        try:
+            ssh_conn = OpenstackRunnerManager._get_ssh_connection(server=server)
+        except _SSHError as exc:
+            logger.warning("Unable to SSH into server: %s, reason: %s", server.name, str(exc))
+            return False
 
-                if "/bin/bash /home/ubuntu/actions-runner/run.sh" in result.stdout:
-                    logger.info("Runner process found to be healthy on %s", server.name)
-                    return True
+        result = ssh_conn.run("ps aux", warn=True)
+        logger.debug("Output of `ps aux` on %s stderr: %s", server.name, result.stderr)
+        logger.debug("Output of `ps aux` on %s stdout: %s", server.name, result.stdout)
+        if not result.ok:
+            logger.warning("List all process command failed on %s ", server.name)
+            return False
+        if RUNNER_STARTUP_PROCESS not in result.stdout:
+            return False
+        logger.info("Runner process found to be healthy on %s", server.name)
+        if startup:
+            return True
 
-            except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException):
-                logger.warning(
-                    "Unable to SSH into %s with address %s",
-                    server.name,
-                    ssh_conn.host,
-                    exc_info=True,
-                )
-                # Looping over all IP and trying SSH.
+        if RUNNER_WORKER_PROCESS in result.stdout:
+            return True
+        if RUNNER_LISTENER_PROCESS in result.stdout:
+            return True
 
-        logger.warning(
-            "Health check failed on %s with all of the following addresses: %s",
-            server.name,
-            addresses,
-        )
-        return False
+        # TODO: alert
+        logger.warning("Health check failed for server: %s", server.name)
+        return True
 
     @staticmethod
     def _get_ssh_connection(server: Server, timeout: int = 30) -> SshConnection:
@@ -1091,11 +1117,7 @@ class OpenstackRunnerManager:
         """
         try:
             server: Server | None = conn.get_server(instance_name)
-            if (
-                not server
-                or server.status != _INSTANCE_STATUS_ACTIVE
-                or not OpenstackRunnerManager._ssh_health_check(server=server)
-            ):
+            if not server or not OpenstackRunnerManager._health_check(server=server, startup=True):
                 raise RunnerStartError(
                     (
                         "Unable to find running process of runner application on openstack runner "
