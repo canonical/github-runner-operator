@@ -15,8 +15,8 @@ jobs:
       pre-run-script: scripts/setup-lxd.sh
       provider: lxd
       test-tox-env: integration-juju3.2
-      modules: '["test_charm_fork_repo", "test_openstack_runner", "test_charm_metric_failure", "test_charm_metric_success"]'
-      extra-arguments: "--http-proxy=http://squid.internal:3128 --https-proxy=http://squid.internal:3128 --no-proxy=keystone.ps6.canonical.com,glance.ps6.canonical.com,nova.ps6.canonical.com,neutron.ps6.canonical.com"
+      modules: '["test_charm_fork_repo"]'
+      extra-arguments: "-m openstack --http-proxy=http://squid.internal:3128 --https-proxy=http://squid.internal:3128 --no-proxy=keystone.ps6.canonical.com,glance.ps6.canonical.com,nova.ps6.canonical.com,neutron.ps6.canonical.com"
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
       tmate-debug: true
