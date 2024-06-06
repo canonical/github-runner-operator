@@ -944,7 +944,7 @@ def test_check_immutable_config_key_error(
     caplog: pytest.LogCaptureFixture,
 ):
     """
-    arrange: Mock CHARM_STATE_PATH and read_text method to return previous state with same config.
+    arrange: Mock CHARM_STATE_PATH and read_text method to return modified immutable config values.
     act: Call _check_immutable_config_change method.
     assert: None is returned.
     """
@@ -955,9 +955,8 @@ def test_check_immutable_config_key_error(
         "read_text",
         MagicMock(return_value=json.dumps(mock_charm_state_data)),
     )
-    state = CharmState(**mock_charm_state_data)
 
-    assert state._check_immutable_config_change(RunnerStorage.MEMORY, BaseImage.JAMMY) is None
+    assert CharmState._check_immutable_config_change(RunnerStorage.MEMORY, BaseImage.JAMMY) is None
     assert any(
         f"Key {immutable_config} not found, this will be updated to current config." in message
         for message in caplog.messages
