@@ -805,8 +805,17 @@ class OpenstackRunnerManager:
                         instance_config.name,
                     )
                     conn.delete_server(name_or_id=instance_config.name, wait=True)
+                    try:
+                        conn.delete_keypair(instance_config.name)
+                    except openstack.exceptions.SDKException:
+                        logger.exception(
+                            "Unable to delete OpenStack keypair %s", instance_config.name
+                        )
+                    OpenstackRunnerManager._get_key_path(instance_config.name).unlink(
+                        missing_ok=True
+                    )
                 except openstack.exceptions.SDKException:
-                    logger.critical(
+                    logger.exception(
                         "Cleanup of creation failure runner %s has failed", instance_config.name
                     )
                     # Reconcile will attempt to cleanup again prior to spawning new runners.
