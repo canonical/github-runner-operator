@@ -19,5 +19,5 @@ jobs:
       extra-arguments: "-m openstack --http-proxy=http://squid.internal:3128 --https-proxy=http://squid.internal:3128 --no-proxy=keystone.ps6.canonical.com,glance.ps6.canonical.com,nova.ps6.canonical.com,neutron.ps6.canonical.com"
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
-      tmate-debug: true
+      tmate-debug: false
       tmate-timeout: 2400
