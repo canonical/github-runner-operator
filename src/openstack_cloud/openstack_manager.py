@@ -1525,18 +1525,18 @@ class OpenstackRunnerManager:
             )
             return total_stats
 
+        logger.debug(
+            "Found following openstack instances before extracting metrics: %s",
+            openstack_instances,
+        )
         # Don't extract metrics for instances which are still there, as it might be
         # the case that the metrics have not yet been pulled
         # (they get pulled right before server termination).
-        os_online_runners = {
-            instance.name
-            for instance in openstack_instances
-            if instance.status == _INSTANCE_STATUS_ACTIVE
-        }
+        instance_names = {instance.name for instance in openstack_instances}
 
         for extracted_metrics in runner_metrics.extract(
             metrics_storage_manager=metrics_storage,
-            ignore_runners=os_online_runners,
+            ignore_runners=instance_names,
         ):
             try:
                 job_metrics = github_metrics.job(
