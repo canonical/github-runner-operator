@@ -90,6 +90,8 @@ METRICS_EXCHANGE_PATH = Path("/home/ubuntu/metrics-exchange")
 PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
 MAX_METRICS_FILE_SIZE = 1024
 
+CREATE_SERVER_TIMEOUT = 5 * 60
+
 
 class _PullFileError(Exception):
     """Represents an error while pulling a file from the runner instance."""
@@ -794,7 +796,7 @@ class OpenstackRunnerManager:
                     security_groups=[SECURITY_GROUP_NAME],
                     userdata=cloud_userdata_str,
                     auto_ip=False,
-                    timeout=120,
+                    timeout=CREATE_SERVER_TIMEOUT,
                     wait=True,
                 )
             except openstack.exceptions.ResourceTimeout as err:
