@@ -214,7 +214,7 @@ Construct OpenstackRunnerManager object.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L1335"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L1386"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `flush`
 
@@ -263,12 +263,6 @@ Reconcile the quantity of runners.
 **Args:**
  
  - <b>`quantity`</b>:  The number of intended runners. 
-
-
-
-**Raises:**
- 
- - <b>`OpenstackInstanceLaunchError`</b>:  Unable to launch OpenStack instance. 
 
 
 
