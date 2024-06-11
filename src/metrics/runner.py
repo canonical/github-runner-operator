@@ -163,6 +163,15 @@ def issue_events(
         )
     idle_duration = max(runner_metrics.pre_job.timestamp - runner_metrics.installed_timestamp, 0)
 
+    # GitHub API returns started_at < created_at in some rare cases.
+    if job_metrics and logger.isEnabledFor(logging.WARNING) and job_metrics.queue_duration < 0:
+        logger.warning(
+            "Queue duration for runner %s is negative: %f. Setting it to zero.",
+            runner_metrics.runner_name,
+            job_metrics.queue_duration,
+        )
+    queue_duration = max(job_metrics.queue_duration, 0) if job_metrics else None
+
     try:
         runner_start_event = metric_events.RunnerStart(
             timestamp=runner_metrics.pre_job.timestamp,
@@ -171,7 +180,7 @@ def issue_events(
             repo=runner_metrics.pre_job.repository,
             github_event=runner_metrics.pre_job.event,
             idle=idle_duration,
-            queue_duration=job_metrics.queue_duration if job_metrics else None,
+            queue_duration=queue_duration,
         )
         metric_events.issue_event(runner_start_event)
     except ValidationError:
