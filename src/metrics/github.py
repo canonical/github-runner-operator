@@ -2,12 +2,15 @@
 #  See LICENSE file for licensing details.
 
 """Functions to calculate metrics from data retrieved from GitHub."""
+import logging
 
 from charm_state import GithubRepo
 from errors import GithubMetricsError, JobNotFoundError
 from github_client import GithubClient
 from metrics.runner import PreJobMetrics
 from metrics.type import GithubJobMetrics
+
+logger = logging.getLogger(__name__)
 
 
 def job(
@@ -38,6 +41,13 @@ def job(
         )
     except JobNotFoundError as exc:
         raise GithubMetricsError from exc
+    logger.debug(
+        "Job info for runner %s with workflow run id %s: %s",
+        runner_name,
+        pre_job_metrics.workflow_run_id,
+        job_info,
+    )
+
     queue_duration = (job_info.started_at - job_info.created_at).total_seconds()
 
     return GithubJobMetrics(queue_duration=queue_duration, conclusion=job_info.conclusion)

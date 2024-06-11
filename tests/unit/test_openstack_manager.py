@@ -1,5 +1,6 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
+import random
 import secrets
 from pathlib import Path
 from typing import Optional
@@ -887,7 +888,7 @@ def test_reconcile_ignores_metrics_for_openstack_online_runners(
     """
     arrange: Combination of runner status/github status and openstack status.
     act: Call reconcile.
-    assert: The runners returned with status ACTIVE are ignored for metrics extraction.
+    assert: All runners which have an instance on Openstack are ignored for metrics extraction.
     """
     runner_metrics_path = tmp_path / "runner_fs"
     runner_metrics_path.mkdir()
@@ -903,12 +904,17 @@ def test_reconcile_ignores_metrics_for_openstack_online_runners(
             "unhealthy_online",
             "unhealthy_offline",
             "openstack_online_no_github_status",
+            "github_online_no_openstack_status",
         ]
     }
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
         return_value=RunnerByHealth(
             healthy=(runner_names["healthy_online"], runner_names["healthy_offline"]),
-            unhealthy=(runner_names["unhealthy_online"], runner_names["unhealthy_offline"]),
+            unhealthy=(
+                runner_names["unhealthy_online"],
+                runner_names["unhealthy_offline"],
+                runner_names["github_online_no_openstack_status"],
+            ),
         )
     )
     openstack_manager_for_reconcile.get_github_runner_info = MagicMock(
@@ -928,26 +934,27 @@ def test_reconcile_ignores_metrics_for_openstack_online_runners(
                 online=False,
                 busy=False,
             ),
+            RunnerGithubInfo(
+                runner_name=runner_names["github_online_no_openstack_status"],
+                runner_id=4,
+                online=True,
+                busy=False,
+            ),
         )
     )
 
     openstack_online_runner_names = [
-        runner_names["healthy_online"],
-        runner_names["healthy_offline"],
-        runner_names["unhealthy_online"],
-        runner_names["openstack_online_no_github_status"],
+        runner
+        for (name, runner) in runner_names.items()
+        if name != "github_online_no_openstack_status"
     ]
-    openstack_online_runners = [
-        openstack_manager.openstack.compute.v2.server.Server(name=runner_name, status="ACTIVE")
+    openstack_instances = [
+        openstack_manager.openstack.compute.v2.server.Server(
+            name=runner_name, status=random.choice(("ACTIVE", "BUILD", "STOPPED"))
+        )
         for runner_name in openstack_online_runner_names
     ]
-    openstack_offline_runners = [
-        openstack_manager.openstack.compute.v2.server.Server(name=runner_name, status="SHUTOFF")
-        for runner_name in [runner_names["unhealthy_offline"]]
-    ]
-    patched_create_connection_context.list_servers.return_value = (
-        openstack_online_runners + openstack_offline_runners
-    )
+    patched_create_connection_context.list_servers.return_value = openstack_instances
 
     openstack_manager.runner_metrics.extract.return_value = (MagicMock() for _ in range(1))
     openstack_manager.runner_metrics.issue_events.side_effect = [

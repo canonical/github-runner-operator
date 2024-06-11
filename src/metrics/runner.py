@@ -162,17 +162,27 @@ def issue_events(
             runner_metrics.runner_name,
         )
     idle_duration = max(runner_metrics.pre_job.timestamp - runner_metrics.installed_timestamp, 0)
-    runner_start_event = metric_events.RunnerStart(
-        timestamp=runner_metrics.pre_job.timestamp,
-        flavor=flavor,
-        workflow=runner_metrics.pre_job.workflow,
-        repo=runner_metrics.pre_job.repository,
-        github_event=runner_metrics.pre_job.event,
-        idle=idle_duration,
-        queue_duration=job_metrics.queue_duration if job_metrics else None,
-    )
+
     try:
+        runner_start_event = metric_events.RunnerStart(
+            timestamp=runner_metrics.pre_job.timestamp,
+            flavor=flavor,
+            workflow=runner_metrics.pre_job.workflow,
+            repo=runner_metrics.pre_job.repository,
+            github_event=runner_metrics.pre_job.event,
+            idle=idle_duration,
+            queue_duration=job_metrics.queue_duration if job_metrics else None,
+        )
         metric_events.issue_event(runner_start_event)
+    except ValidationError:
+        logger.exception(
+            "Not able to issue RunnerStart metric for "
+            "runner %s with pre-job metrics %s and job_metrics %s."
+            "Will not issue RunnerStop metric.",
+            runner_metrics.runner_name,
+            runner_metrics.pre_job,
+            job_metrics,
+        )
     except IssueMetricEventError:
         logger.exception(
             "Not able to issue RunnerStart metric for runner %s. "
@@ -204,19 +214,29 @@ def issue_events(
                 runner_metrics.runner_name,
             )
         job_duration = max(runner_metrics.post_job.timestamp - runner_metrics.pre_job.timestamp, 0)
-        runner_stop_event = metric_events.RunnerStop(
-            timestamp=runner_metrics.post_job.timestamp,
-            flavor=flavor,
-            workflow=runner_metrics.pre_job.workflow,
-            repo=runner_metrics.pre_job.repository,
-            github_event=runner_metrics.pre_job.event,
-            status=runner_metrics.post_job.status,
-            status_info=runner_metrics.post_job.status_info,
-            job_duration=job_duration,
-            job_conclusion=job_metrics.conclusion if job_metrics else None,
-        )
+
         try:
+            runner_stop_event = metric_events.RunnerStop(
+                timestamp=runner_metrics.post_job.timestamp,
+                flavor=flavor,
+                workflow=runner_metrics.pre_job.workflow,
+                repo=runner_metrics.pre_job.repository,
+                github_event=runner_metrics.pre_job.event,
+                status=runner_metrics.post_job.status,
+                status_info=runner_metrics.post_job.status_info,
+                job_duration=job_duration,
+                job_conclusion=job_metrics.conclusion if job_metrics else None,
+            )
             metric_events.issue_event(runner_stop_event)
+        except ValidationError:
+            logger.exception(
+                "Not able to issue RunnerStop metric for "
+                "runner %s with pre-job metrics %s, post-job metrics %s and job_metrics %s.",
+                runner_metrics.runner_name,
+                runner_metrics.pre_job,
+                runner_metrics.post_job,
+                job_metrics,
+            )
         except IssueMetricEventError:
             logger.exception(
                 "Not able to issue RunnerStop metric for runner %s.", runner_metrics.runner_name

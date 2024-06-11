@@ -90,6 +90,8 @@ METRICS_EXCHANGE_PATH = Path("/home/ubuntu/metrics-exchange")
 PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
 MAX_METRICS_FILE_SIZE = 1024
 
+CREATE_SERVER_TIMEOUT = 5 * 60
+
 
 class _PullFileError(Exception):
     """Represents an error while pulling a file from the runner instance."""
@@ -794,7 +796,7 @@ class OpenstackRunnerManager:
                     security_groups=[SECURITY_GROUP_NAME],
                     userdata=cloud_userdata_str,
                     auto_ip=False,
-                    timeout=120,
+                    timeout=CREATE_SERVER_TIMEOUT,
                     wait=True,
                 )
             except openstack.exceptions.ResourceTimeout as err:
@@ -805,8 +807,17 @@ class OpenstackRunnerManager:
                         instance_config.name,
                     )
                     conn.delete_server(name_or_id=instance_config.name, wait=True)
+                    try:
+                        conn.delete_keypair(instance_config.name)
+                    except openstack.exceptions.SDKException:
+                        logger.exception(
+                            "Unable to delete OpenStack keypair %s", instance_config.name
+                        )
+                    OpenstackRunnerManager._get_key_path(instance_config.name).unlink(
+                        missing_ok=True
+                    )
                 except openstack.exceptions.SDKException:
-                    logger.critical(
+                    logger.exception(
                         "Cleanup of creation failure runner %s has failed", instance_config.name
                     )
                     # Reconcile will attempt to cleanup again prior to spawning new runners.
@@ -1210,14 +1221,63 @@ class OpenstackRunnerManager:
         Args:
             quantity: The number of intended runners.
 
-        Raises:
-            OpenstackInstanceLaunchError: Unable to launch OpenStack instance.
-
         Returns:
             The change in number of runners.
         """
         start_ts = time.time()
+        try:
+            delta = self._reconcile_runners(quantity)
+        finally:
+            end_ts = time.time()
+            self._issue_reconciliation_metrics(
+                reconciliation_start_ts=start_ts, reconciliation_end_ts=end_ts
+            )
 
+        return delta
+
+    def _reconcile_runners(self, quantity: int) -> int:
+        """Reconcile the number of runners.
+
+        Args:
+            quantity: The number of intended runners.
+
+        Returns:
+            The change in number of runners.
+        """
+        with _create_connection(self._cloud_config) as conn:
+            runner_by_health = self._get_openstack_runner_status(conn)
+            logger.info(
+                "Found %s healthy runner and %s unhealthy runner",
+                len(runner_by_health.healthy),
+                len(runner_by_health.unhealthy),
+            )
+            logger.debug("Healthy runner: %s", runner_by_health.healthy)
+            logger.debug("Unhealthy runner: %s", runner_by_health.unhealthy)
+            remove_token = self._github.get_runner_remove_token(path=self._config.path)
+
+            self._clean_up_runners(
+                conn=conn, runner_by_health=runner_by_health, remove_token=remove_token
+            )
+
+            delta = self._scale(
+                quantity=quantity,
+                conn=conn,
+                runner_by_health=runner_by_health,
+                remove_token=remove_token,
+            )
+        return delta
+
+    def _clean_up_runners(
+        self, conn: OpenstackConnection, runner_by_health: RunnerByHealth, remove_token: str
+    ) -> None:
+        """Clean up offline or unhealthy runners.
+
+        Args:
+            conn: The openstack connection instance.
+            runner_by_health: The runner status grouped by health.
+            remove_token: The GitHub runner remove token.
+
+        """
         github_info = self.get_github_runner_info()
         online_runners = [runner.runner_name for runner in github_info if runner.online]
         offline_runners = [runner.runner_name for runner in github_info if not runner.online]
@@ -1232,96 +1292,98 @@ class OpenstackRunnerManager:
         logger.debug("Offline runner: %s", offline_runners)
         logger.debug("Busy runner: %s", busy_runners)
 
-        with _create_connection(self._cloud_config) as conn:
-            runner_by_health = self._get_openstack_runner_status(conn)
-            logger.info(
-                "Found %s healthy runner and %s unhealthy runner",
-                len(runner_by_health.healthy),
-                len(runner_by_health.unhealthy),
-            )
-            logger.debug("Healthy runner: %s", runner_by_health.healthy)
-            logger.debug("Unhealthy runner: %s", runner_by_health.unhealthy)
+        healthy_runners_set = set(runner_by_health.healthy)
+        busy_runners_set = set(busy_runners)
+        busy_unhealthy_runners = set(runner_by_health.unhealthy).intersection(busy_runners_set)
+        if busy_unhealthy_runners:
+            logger.warning("Found unhealthy busy runners %s", busy_unhealthy_runners)
 
-            healthy_runners_set = set(runner_by_health.healthy)
-            busy_runners_set = set(busy_runners)
-            busy_unhealthy_runners = set(runner_by_health.unhealthy).intersection(busy_runners_set)
-            if busy_unhealthy_runners:
-                logger.warning("Found unhealthy busy runners %s", busy_unhealthy_runners)
+        # Clean up offline (SHUTOFF) runners or unhealthy (no connection/cloud-init script)
+        # runners.
+        # Possible for a healthy runner to be appear as offline for sometime as GitHub can be
+        # slow to update the status.
+        # For busy runners let GitHub decide whether the runner should be removed.
+        instance_to_remove = tuple(
+            runner
+            for runner in (*runner_by_health.unhealthy, *offline_runners)
+            if runner not in healthy_runners_set and runner not in busy_runners_set
+        )
+        logger.debug("Removing following runners with issues %s", instance_to_remove)
+        self._remove_runners(
+            conn=conn, instance_names=instance_to_remove, remove_token=remove_token
+        )
+        # Clean up orphan keys, e.g., If openstack instance is removed externally the key
+        # would not be deleted.
+        self._clean_up_keys_files(conn, runner_by_health.healthy)
+        self._clean_up_openstack_keypairs(conn, runner_by_health.healthy)
 
-            # Clean up offline (SHUTOFF) runners or unhealthy (no connection/cloud-init script)
-            # runners.
-            remove_token = self._github.get_runner_remove_token(path=self._config.path)
-            # Possible for a healthy runner to be appear as offline for sometime as GitHub can be
-            # slow to update the status.
-            # For busy runners let GitHub decide whether the runner should be removed.
-            instance_to_remove = tuple(
-                runner
-                for runner in (*runner_by_health.unhealthy, *offline_runners)
-                if runner not in healthy_runners_set and runner not in busy_runners_set
-            )
-            logger.debug("Removing following runners with issues %s", instance_to_remove)
-            self._remove_runners(
-                conn=conn, instance_names=instance_to_remove, remove_token=remove_token
-            )
-            # Clean up orphan keys, e.g., If openstack instance is removed externally the key
-            # would not be deleted.
-            self._clean_up_keys_files(conn, runner_by_health.healthy)
-            self._clean_up_openstack_keypairs(conn, runner_by_health.healthy)
+    def _scale(
+        self,
+        quantity: int,
+        conn: OpenstackConnection,
+        runner_by_health: RunnerByHealth,
+        remove_token: str,
+    ) -> int:
+        """Scale the number of runners.
 
-            # Get the number of OpenStack servers.
-            # This is not calculated due to there might be removal failures.
-            servers = self._get_openstack_instances(conn)
-            delta = quantity - len(servers)
+        Args:
+            quantity: The number of intended runners.
+            conn: The openstack connection instance.
+            runner_by_health: The runner status grouped by health.
+            remove_token: The GitHub runner remove token.
 
-            # Spawn new runners
-            if delta > 0:
-                # Skip this reconcile if image not present.
-                try:
-                    if conn.get_image(name_or_id=IMAGE_NAME) is None:
-                        logger.warning(
-                            "No OpenStack runner was spawned due to image needed not found"
-                        )
-                        return 0
-                except openstack.exceptions.SDKException as exc:
-                    # Will be resolved by charm integration with image build charm.
-                    logger.exception("Multiple image named %s found", IMAGE_NAME)
-                    raise OpenstackInstanceLaunchError(
-                        "Multiple image found, unable to determine the image to use"
-                    ) from exc
+        Raises:
+            OpenstackInstanceLaunchError: Unable to launch OpenStack instance.
 
-                logger.info("Creating %s OpenStack runners", delta)
-                args = [
-                    OpenstackRunnerManager._CreateRunnerArgs(
-                        cloud_config=self._cloud_config,
-                        app_name=self.app_name,
-                        unit_num=self.unit_num,
-                        config=self._config,
-                    )
-                    for _ in range(delta)
-                ]
-                with Pool(processes=min(delta, 10)) as pool:
-                    pool.map(
-                        func=OpenstackRunnerManager._create_runner,
-                        iterable=args,
-                    )
+        Returns:
+            The change in number of runners.
+        """
+        # Get the number of OpenStack servers.
+        # This is not calculated due to there might be removal failures.
+        servers = self._get_openstack_instances(conn)
+        delta = quantity - len(servers)
 
-            elif delta < 0:
-                logger.info("Removing %s OpenStack runners", delta)
-                self._remove_runners(
-                    conn=conn,
-                    instance_names=runner_by_health.healthy,
-                    remove_token=remove_token,
-                    num_to_remove=abs(delta),
+        # Spawn new runners
+        if delta > 0:
+            # Skip this reconcile if image not present.
+            try:
+                if conn.get_image(name_or_id=IMAGE_NAME) is None:
+                    logger.warning("No OpenStack runner was spawned due to image needed not found")
+            except openstack.exceptions.SDKException as exc:
+                # Will be resolved by charm integration with image build charm.
+                logger.exception("Multiple image named %s found", IMAGE_NAME)
+                raise OpenstackInstanceLaunchError(
+                    "Multiple image found, unable to determine the image to use"
+                ) from exc
+
+            logger.info("Creating %s OpenStack runners", delta)
+            args = [
+                OpenstackRunnerManager._CreateRunnerArgs(
+                    cloud_config=self._cloud_config,
+                    app_name=self.app_name,
+                    unit_num=self.unit_num,
+                    config=self._config,
                 )
-            else:
-                logger.info("No changes to number of runners needed")
+                for _ in range(delta)
+            ]
+            with Pool(processes=min(delta, 10)) as pool:
+                pool.map(
+                    func=OpenstackRunnerManager._create_runner,
+                    iterable=args,
+                )
 
-            end_ts = time.time()
-            self._issue_reconciliation_metrics(
-                conn=conn, reconciliation_start_ts=start_ts, reconciliation_end_ts=end_ts
+        elif delta < 0:
+            logger.info("Removing %s OpenStack runners", delta)
+            self._remove_runners(
+                conn=conn,
+                instance_names=runner_by_health.healthy,
+                remove_token=remove_token,
+                num_to_remove=abs(delta),
             )
+        else:
+            logger.info("No changes to number of runners needed")
 
-            return delta
+        return delta
 
     def flush(self) -> int:
         """Flush Openstack servers.
@@ -1482,7 +1544,6 @@ class OpenstackRunnerManager:
 
     def _issue_reconciliation_metrics(
         self,
-        conn: OpenstackConnection,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
     ) -> None:
@@ -1491,19 +1552,19 @@ class OpenstackRunnerManager:
         This includes the metrics for the runners and the reconciliation metric itself.
 
         Args:
-            conn: The connection object to access OpenStack cloud.
             reconciliation_start_ts: The timestamp of when reconciliation started.
             reconciliation_end_ts: The timestamp of when reconciliation ended.
         """
-        runner_states = self._get_openstack_runner_status(conn)
+        with _create_connection(self._cloud_config) as conn:
+            runner_states = self._get_openstack_runner_status(conn)
 
-        metric_stats = self._issue_runner_metrics(conn)
-        self._issue_reconciliation_metric(
-            metric_stats=metric_stats,
-            reconciliation_start_ts=reconciliation_start_ts,
-            reconciliation_end_ts=reconciliation_end_ts,
-            runner_states=runner_states,
-        )
+            metric_stats = self._issue_runner_metrics(conn)
+            self._issue_reconciliation_metric(
+                metric_stats=metric_stats,
+                reconciliation_start_ts=reconciliation_start_ts,
+                reconciliation_end_ts=reconciliation_end_ts,
+                runner_states=runner_states,
+            )
 
     def _issue_runner_metrics(self, conn: OpenstackConnection) -> IssuedMetricEventsStats:
         """Issue runner metrics.
@@ -1525,18 +1586,18 @@ class OpenstackRunnerManager:
             )
             return total_stats
 
+        logger.debug(
+            "Found following openstack instances before extracting metrics: %s",
+            openstack_instances,
+        )
         # Don't extract metrics for instances which are still there, as it might be
         # the case that the metrics have not yet been pulled
         # (they get pulled right before server termination).
-        os_online_runners = {
-            instance.name
-            for instance in openstack_instances
-            if instance.status == _INSTANCE_STATUS_ACTIVE
-        }
+        instance_names = {instance.name for instance in openstack_instances}
 
         for extracted_metrics in runner_metrics.extract(
             metrics_storage_manager=metrics_storage,
-            ignore_runners=os_online_runners,
+            ignore_runners=instance_names,
         ):
             try:
                 job_metrics = github_metrics.job(
