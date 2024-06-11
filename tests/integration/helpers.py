@@ -374,6 +374,7 @@ async def deploy_github_runner_charm(
     reconcile_interval: int,
     constraints: dict | None = None,
     config: dict | None = None,
+    deploy_kwargs: dict | None = None,
     wait_idle: bool = True,
 ) -> Application:
     """Deploy github-runner charm.
@@ -392,6 +393,7 @@ async def deploy_github_runner_charm(
         constraints: The custom machine constraints to use. See DEFAULT_RUNNER_CONSTRAINTS
             otherwise.
         config: Additional custom config to use.
+        deploy_kwargs: Additional model deploy arguments.
         wait_idle: wait for model to become idle.
 
     Returns:
@@ -432,6 +434,7 @@ async def deploy_github_runner_charm(
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
         storage=storage,
+        **(deploy_kwargs or {}),
     )
 
     if wait_idle:

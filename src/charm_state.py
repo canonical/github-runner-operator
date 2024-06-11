@@ -860,7 +860,7 @@ class CharmState:
                     )
                 )
         except KeyError as exc:
-            logger.warning(
+            logger.info(
                 "Key %s not found, this will be updated to current config.", exc.args[0]
             )
 
@@ -875,7 +875,7 @@ class CharmState:
                     msg="base-image config cannot be changed after deployment, redeploy if needed"
                 )
         except KeyError as exc:
-            logger.warning(
+            logger.info(
                 "Key %s not found, this will be updated to current config.", exc.args[0]
             )
 
