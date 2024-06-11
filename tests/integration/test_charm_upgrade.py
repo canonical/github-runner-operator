@@ -7,6 +7,7 @@ import pytest
 from juju.client import client
 from juju.model import Model
 
+from charm_state import TEST_MODE_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers import deploy_github_runner_charm
 
 
@@ -45,6 +46,8 @@ async def test_charm_upgrade(
             "mem": 16 * 1024,
             "virt-type": "virtual-machine",
         },
+        # override default test-mode as this is not a local charm with overriden lxd-profile.
+        config={TEST_MODE_CONFIG_NAME: "", VIRTUAL_MACHINES_CONFIG_NAME: 1},
         deploy_kwargs={
             "channel": "latest/stable",
             "revision": 161,
