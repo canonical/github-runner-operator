@@ -45,10 +45,10 @@ async def test_charm_upgrade(
     retcode, stdout, stderr = await ops_test.juju(
         "download",
         "github-runner",
-        # do not specify channel -
+        # do not specify revision
         # --revision cannot be specified together with --arch, --base, --channel
-        "--revision",
-        str(latest_stable_revision),
+        "--channel",
+        "latest/stable",
         "--filepath",
         str(latest_stable_path),
         "--no-progress",
