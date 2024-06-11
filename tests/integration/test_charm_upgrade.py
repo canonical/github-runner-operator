@@ -3,6 +3,7 @@
 
 """Integration tests for charm upgrades."""
 
+import functools
 import pathlib
 
 import pytest
@@ -11,7 +12,12 @@ from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers import deploy_github_runner_charm, inject_lxd_profile
+from tests.integration.helpers import (
+    deploy_github_runner_charm,
+    inject_lxd_profile,
+    is_upgrade_charm_event_emitted,
+    wait_for,
+)
 
 
 @pytest.mark.asyncio
@@ -29,18 +35,18 @@ async def test_charm_upgrade(
     tmp_path: pathlib.Path,
 ):
     """
-    arrange: given latest stable version of the charm.
+    arrange: given latest stable version of the charm (current 161).
     act: charm upgrade is called.
     assert: the charm is upgraded successfully.
     """
     latest_stable_path = tmp_path / "github-runner.charm"
-    latest_stable_revision = 161
+    latest_stable_revision = 161  # update this value every release to stable.
     # download the charm and inject lxd profile for testing
     retcode, stdout, stderr = await ops_test.juju(
         "download",
         "github-runner",
-        "--channel",
-        "latest/stable",
+        # do not specify channel -
+        # --revision cannot be specified together with --arch, --base, --channel
         "--revision",
         str(latest_stable_revision),
         "--filepath",
@@ -85,6 +91,10 @@ async def test_charm_upgrade(
 
     # upgrade the charm with current local charm
     await application.local_refresh(path=charm_file, charm_origin=origin)
+    unit = application.units[0]
+    await wait_for(
+        functools.partial(is_upgrade_charm_event_emitted, unit), timeout=360, check_interval=60
+    )
     await model.wait_for_idle(
         apps=[application.name],
         raise_on_error=False,

@@ -648,3 +648,21 @@ devices:
             "lxd-profile.yaml",
             lxd_profile_str,
         )
+
+
+async def is_upgrade_charm_event_emitted(unit: Unit) -> bool:
+    """Check if the upgrade_charm event is emitted.
+
+    This is to ensure false positives from only waiting for ACTIVE status.
+
+    Args:
+        unit: The unit to check for upgrade charm event.
+
+    Returns:
+        bool: True if the event is emitted, False otherwise.
+    """
+    unit_name_without_slash = unit.name.replace("/", "-")
+    juju_unit_log_file = f"/var/log/juju/unit-{unit_name_without_slash}.log"
+    ret_code, stdout, stderr = await run_in_unit(unit=unit, command=f"cat {juju_unit_log_file}")
+    assert ret_code == 0, f"Failed to read the log file: {stderr}"
+    return stdout is not None and "Emitting Juju event upgrade_charm." in stdout
