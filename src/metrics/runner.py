@@ -146,42 +146,10 @@ def issue_events(
     Returns:
         A set of issued events.
     """
-    # When a job gets picked up directly after spawning, the runner_metrics installed timestamp
-    # might be higher than the pre-job timestamp. This is due to the fact that we issue the runner
-    # installed timestamp for Openstack after waiting with delays for the runner to be ready.
-    # We set the idle_duration to 0 in this case.
-    if (
-        logger.isEnabledFor(logging.WARNING)
-        and runner_metrics.pre_job.timestamp < runner_metrics.installed_timestamp
-    ):
-        logger.info(
-            "Pre-job timestamp %d is before installed timestamp %d for runner %s."
-            " Setting idle_duration to zero",
-            runner_metrics.pre_job.timestamp,
-            runner_metrics.installed_timestamp,
-            runner_metrics.runner_name,
-        )
-    idle_duration = max(runner_metrics.pre_job.timestamp - runner_metrics.installed_timestamp, 0)
+    runner_start_event = _create_runner_start(runner_metrics, flavor, job_metrics)
 
-    # GitHub API returns started_at < created_at in some rare cases.
-    if job_metrics and logger.isEnabledFor(logging.WARNING) and job_metrics.queue_duration < 0:
-        logger.warning(
-            "Queue duration for runner %s is negative: %f. Setting it to zero.",
-            runner_metrics.runner_name,
-            job_metrics.queue_duration,
-        )
-    queue_duration = max(job_metrics.queue_duration, 0) if job_metrics else None
-
+    issued_events = set()
     try:
-        runner_start_event = metric_events.RunnerStart(
-            timestamp=runner_metrics.pre_job.timestamp,
-            flavor=flavor,
-            workflow=runner_metrics.pre_job.workflow,
-            repo=runner_metrics.pre_job.repository,
-            github_event=runner_metrics.pre_job.event,
-            idle=idle_duration,
-            queue_duration=queue_duration,
-        )
         metric_events.issue_event(runner_start_event)
     except ValidationError:
         logger.exception(
@@ -198,44 +166,17 @@ def issue_events(
             "Will not issue RunnerStop metric.",
             runner_metrics.runner_name,
         )
-        # Return to not issuing RunnerStop metrics if RunnerStart metric could not be issued.
-        return set()
+    else:
+        issued_events = {metric_events.RunnerStart}
 
-    issued_events = {metric_events.RunnerStart}
+    # Return to not issuing RunnerStop metrics if RunnerStart metric could not be issued.
+    if not issued_events:
+        return issued_events
 
     if runner_metrics.post_job:
-        # When a job gets cancelled directly after spawning,
-        # the post-job timestamp might be lower then the pre-job timestamp.
-        # This is due to the fact that we don't have a real post-job script but rather use
-        # the exit code of the runner application which might exit before the pre-job script
-        # job is done in edge cases. See also:
-        # https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/running-scripts-before-or-after-a-job#triggering-the-scripts
-        # We set the job_duration to 0 in this case.
-        if (
-            logger.isEnabledFor(logging.WARNING)
-            and runner_metrics.post_job.timestamp < runner_metrics.pre_job.timestamp
-        ):
-            logger.warning(
-                "Post-job timestamp %d is before pre-job timestamp %d for runner %s."
-                " Setting job_duration to zero",
-                runner_metrics.post_job.timestamp,
-                runner_metrics.pre_job.timestamp,
-                runner_metrics.runner_name,
-            )
-        job_duration = max(runner_metrics.post_job.timestamp - runner_metrics.pre_job.timestamp, 0)
+        runner_stop_event = _create_runner_stop(runner_metrics, flavor, job_metrics)
 
         try:
-            runner_stop_event = metric_events.RunnerStop(
-                timestamp=runner_metrics.post_job.timestamp,
-                flavor=flavor,
-                workflow=runner_metrics.pre_job.workflow,
-                repo=runner_metrics.pre_job.repository,
-                github_event=runner_metrics.pre_job.event,
-                status=runner_metrics.post_job.status,
-                status_info=runner_metrics.post_job.status_info,
-                job_duration=job_duration,
-                job_conclusion=job_metrics.conclusion if job_metrics else None,
-            )
             metric_events.issue_event(runner_stop_event)
         except ValidationError:
             logger.exception(
@@ -255,6 +196,99 @@ def issue_events(
         issued_events.add(metric_events.RunnerStop)
 
     return issued_events
+
+
+def _create_runner_start(
+    runner_metrics: RunnerMetrics, flavor: str, job_metrics: Optional[GithubJobMetrics]
+) -> metric_events.RunnerStart:
+    """Create the RunnerStart event.
+
+    Args:
+        runner_metrics: The metrics for the runner.
+        flavor: The flavor of the runner.
+        job_metrics: The metrics about the job run by the runner.
+
+    Returns:
+        The RunnerStart event.
+    """
+    # When a job gets picked up directly after spawning, the runner_metrics installed timestamp
+    # might be higher than the pre-job timestamp. This is due to the fact that we issue the runner
+    # installed timestamp for Openstack after waiting with delays for the runner to be ready.
+    # We set the idle_duration to 0 in this case.
+    if runner_metrics.pre_job.timestamp < runner_metrics.installed_timestamp:
+        logger.warning(
+            "Pre-job timestamp %d is before installed timestamp %d for runner %s."
+            " Setting idle_duration to zero",
+            runner_metrics.pre_job.timestamp,
+            runner_metrics.installed_timestamp,
+            runner_metrics.runner_name,
+        )
+    idle_duration = max(runner_metrics.pre_job.timestamp - runner_metrics.installed_timestamp, 0)
+
+    # GitHub API returns started_at < created_at in some rare cases.
+    if job_metrics and job_metrics.queue_duration < 0:
+        logger.warning(
+            "Queue duration for runner %s is negative: %f. Setting it to zero.",
+            runner_metrics.runner_name,
+            job_metrics.queue_duration,
+        )
+    queue_duration = max(job_metrics.queue_duration, 0) if job_metrics else None
+
+    return metric_events.RunnerStart(
+        timestamp=runner_metrics.pre_job.timestamp,
+        flavor=flavor,
+        workflow=runner_metrics.pre_job.workflow,
+        repo=runner_metrics.pre_job.repository,
+        github_event=runner_metrics.pre_job.event,
+        idle=idle_duration,
+        queue_duration=queue_duration,
+    )
+
+
+def _create_runner_stop(
+    runner_metrics: RunnerMetrics, flavor: str, job_metrics: GithubJobMetrics
+) -> metric_events.RunnerStop:
+    """Create the RunnerStop event.
+
+    Expects that the runner_metrics.post_job is not None.
+
+    Args:
+        runner_metrics: The metrics for the runner.
+        flavor: The flavor of the runner.
+        job_metrics: The metrics about the job run by the runner.
+
+    Returns:
+        The RunnerStop event.
+    """
+    assert runner_metrics.post_job
+    # When a job gets cancelled directly after spawning,
+    # the post-job timestamp might be lower then the pre-job timestamp.
+    # This is due to the fact that we don't have a real post-job script but rather use
+    # the exit code of the runner application which might exit before the pre-job script
+    # job is done in edge cases. See also:
+    # https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/running-scripts-before-or-after-a-job#triggering-the-scripts
+    # We set the job_duration to 0 in this case.
+    if runner_metrics.post_job.timestamp < runner_metrics.pre_job.timestamp:
+        logger.warning(
+            "Post-job timestamp %d is before pre-job timestamp %d for runner %s."
+            " Setting job_duration to zero",
+            runner_metrics.post_job.timestamp,
+            runner_metrics.pre_job.timestamp,
+            runner_metrics.runner_name,
+        )
+    job_duration = max(runner_metrics.post_job.timestamp - runner_metrics.pre_job.timestamp, 0)
+
+    return metric_events.RunnerStop(
+        timestamp=runner_metrics.post_job.timestamp,
+        flavor=flavor,
+        workflow=runner_metrics.pre_job.workflow,
+        repo=runner_metrics.pre_job.repository,
+        github_event=runner_metrics.pre_job.event,
+        status=runner_metrics.post_job.status,
+        status_info=runner_metrics.post_job.status_info,
+        job_duration=job_duration,
+        job_conclusion=job_metrics.conclusion if job_metrics else None,
+    )
 
 
 def _extract_storage(
