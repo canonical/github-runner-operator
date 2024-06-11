@@ -49,6 +49,8 @@ async def test_charm_upgrade(
         # --revision cannot be specified together with --arch, --base, --channel
         "--channel",
         "latest/stable",
+        "--series",
+        "jammy",
         "--filepath",
         str(latest_stable_path),
         "--no-progress",
