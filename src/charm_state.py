@@ -860,9 +860,7 @@ class CharmState:
                     )
                 )
         except KeyError as exc:
-            logger.info(
-                "Key %s not found, this will be updated to current config.", exc.args[0]
-            )
+            logger.info("Key %s not found, this will be updated to current config.", exc.args[0])
 
         try:
             if prev_state["runner_config"]["base_image"] != base_image.value:
@@ -875,9 +873,7 @@ class CharmState:
                     msg="base-image config cannot be changed after deployment, redeploy if needed"
                 )
         except KeyError as exc:
-            logger.info(
-                "Key %s not found, this will be updated to current config.", exc.args[0]
-            )
+            logger.info("Key %s not found, this will be updated to current config.", exc.args[0])
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "CharmState":
