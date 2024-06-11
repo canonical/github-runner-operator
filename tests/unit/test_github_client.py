@@ -17,7 +17,7 @@ from github_type import JobConclusion, JobStats
 
 JobStatsRawData = namedtuple(
     "JobStatsRawData",
-    ["created_at", "started_at", "runner_name", "conclusion"],
+    ["created_at", "started_at", "runner_name", "conclusion", "id"],
 )
 
 
@@ -30,6 +30,7 @@ def job_stats_fixture() -> JobStatsRawData:
         started_at="2021-10-01T01:00:00Z",
         conclusion="success",
         runner_name=runner_name,
+        id=random.randint(1, 1000),
     )
 
 
@@ -45,6 +46,7 @@ def github_client_fixture(job_stats_raw: JobStatsRawData) -> GithubClient:
                 "started_at": job_stats_raw.started_at,
                 "runner_name": job_stats_raw.runner_name,
                 "conclusion": job_stats_raw.conclusion,
+                "id": job_stats_raw.id,
             }
         ]
     }
@@ -77,6 +79,7 @@ def _mock_multiple_pages_for_job_response(
                     "started_at": job_stats_raw.started_at,
                     "runner_name": runner_names[i * no_of_jobs_per_page + j],
                     "conclusion": job_stats_raw.conclusion,
+                    "id": job_stats_raw.id,
                 }
                 for j in range(no_of_jobs_per_page)
             ]
@@ -103,6 +106,7 @@ def test_get_job_info(github_client: GithubClient, job_stats_raw: JobStatsRawDat
         started_at=datetime(2021, 10, 1, 1, 0, 0, tzinfo=timezone.utc),
         runner_name=job_stats_raw.runner_name,
         conclusion=JobConclusion.SUCCESS,
+        job_id=job_stats_raw.id,
     )
 
 
@@ -120,6 +124,7 @@ def test_get_job_info_no_conclusion(github_client: GithubClient, job_stats_raw: 
                 "started_at": job_stats_raw.started_at,
                 "runner_name": job_stats_raw.runner_name,
                 "conclusion": None,
+                "id": job_stats_raw.id,
             }
         ]
     }
@@ -134,6 +139,7 @@ def test_get_job_info_no_conclusion(github_client: GithubClient, job_stats_raw: 
         started_at=datetime(2021, 10, 1, 1, 0, 0, tzinfo=timezone.utc),
         runner_name=job_stats_raw.runner_name,
         conclusion=None,
+        job_id=job_stats_raw.id,
     )
 
 
@@ -161,6 +167,7 @@ def test_github_api_pagination_multiple_pages(
         started_at=datetime(2021, 10, 1, 1, 0, 0, tzinfo=timezone.utc),
         runner_name=job_stats_raw.runner_name,
         conclusion=JobConclusion.SUCCESS,
+        job_id=job_stats_raw.id,
     )
 
 
