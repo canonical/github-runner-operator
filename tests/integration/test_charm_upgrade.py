@@ -4,6 +4,7 @@
 """Integration tests for charm upgrades."""
 
 import pytest
+from juju.client import client
 from juju.model import Model
 
 from tests.integration.helpers import deploy_github_runner_charm
@@ -25,6 +26,7 @@ async def test_charm_upgrade(
     act: charm upgrade is called.
     assert: the charm is upgraded successfully.
     """
+    latest_stable_revision = 161
     # deploy latest stable version of the charm
     application = await deploy_github_runner_charm(
         model=model,
@@ -55,9 +57,19 @@ async def test_charm_upgrade(
         timeout=180 * 60,
         check_freq=30,
     )
+    origin = client.CharmOrigin(
+        source="charm-hub",
+        track="22.04",
+        risk="latest/stable",
+        branch="deadbeef",
+        hash_="hash",
+        id_="id",
+        revision=latest_stable_revision,
+        base=client.Base("22.04", "ubuntu"),
+    )
 
     # upgrade the charm with current local charm
-    await application.local_refresh(path=charm_file)
+    await application.local_refresh(path=charm_file, charm_origin=origin)
     await model.wait_for_idle(
         apps=[application.name],
         raise_on_error=False,
