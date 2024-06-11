@@ -200,7 +200,9 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_charm_upgrade(model: Model, app_no_runner: Application, charm_file: str) -> None:
+async def test_charm_no_runner_upgrade(
+    model: Model, app_no_runner: Application, charm_file: str
+) -> None:
     """
     arrange: A working application with no runners.
     act: Upgrade the charm.
