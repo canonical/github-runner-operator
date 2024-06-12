@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm with no runner."""
+import functools
 import json
 from datetime import datetime, timezone
 
@@ -14,6 +15,7 @@ from tests.integration.helpers.common import (
     check_runner_binary_exists,
     get_repo_policy_compliance_pip_info,
     install_repo_policy_compliance_from_git_source,
+    is_upgrade_charm_event_emitted,
     reconcile,
     remove_runner_bin,
     run_in_unit,
@@ -200,7 +202,9 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_charm_upgrade(model: Model, app_no_runner: Application, charm_file: str) -> None:
+async def test_charm_no_runner_upgrade(
+    model: Model, app_no_runner: Application, charm_file: str
+) -> None:
     """
     arrange: A working application with no runners.
     act: Upgrade the charm.
@@ -211,22 +215,9 @@ async def test_charm_upgrade(model: Model, app_no_runner: Application, charm_fil
     await app_no_runner.refresh(path=charm_file)
 
     unit = app_no_runner.units[0]
-    unit_name_without_slash = unit.name.replace("/", "-")
-    juju_unit_log_file = f"/var/log/juju/unit-{unit_name_without_slash}.log"
-
-    async def is_upgrade_charm_event_emitted() -> bool:
-        """Check if the upgrade_charm event is emitted.
-
-        Returns:
-            bool: True if the event is emitted, False otherwise.
-        """
-        ret_code, stdout, stderr = await run_in_unit(
-            unit=unit, command=f"cat {juju_unit_log_file}"
-        )
-        assert ret_code == 0, f"Failed to read the log file: {stderr}"
-        return stdout is not None and "Emitting Juju event upgrade_charm." in stdout
-
-    await wait_for(is_upgrade_charm_event_emitted, timeout=360, check_interval=60)
+    await wait_for(
+        functools.partial(is_upgrade_charm_event_emitted, unit), timeout=360, check_interval=60
+    )
     await model.wait_for_idle(status=ACTIVE)
 
     ret_code, stdout, stderr = await run_in_unit(

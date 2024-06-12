@@ -5,7 +5,6 @@
 import logging
 import random
 import secrets
-import zipfile
 from pathlib import Path
 from time import sleep
 from typing import Any, AsyncIterator, Generator, Iterator, Optional
@@ -39,6 +38,8 @@ from github_client import GithubClient
 from tests.integration.helpers.common import (
     InstanceHelper,
     deploy_github_runner_charm,
+    ensure_charm_has_runner,
+    inject_lxd_profile,
     reconcile,
     wait_for,
 )
@@ -79,39 +80,13 @@ def charm_file(
     """Path to the built charm."""
     charm = pytestconfig.getoption("--charm-file")
     assert charm, "Please specify the --charm-file command line option"
+    charm_path_str = f"./{charm}"
 
     if openstack_clouds_yaml:
-        return f"./{charm}"
+        return charm_path_str
 
-    lxd_profile_str = """config:
-    security.nesting: true
-    security.privileged: true
-    raw.lxc: |
-        lxc.apparmor.profile=unconfined
-        lxc.mount.auto=proc:rw sys:rw cgroup:rw
-        lxc.cgroup.devices.allow=a
-        lxc.cap.drop=
-devices:
-    kmsg:
-        path: /dev/kmsg
-        source: /dev/kmsg
-        type: unix-char
-"""
-    if loop_device:
-        lxd_profile_str += f"""    loop-control:
-        path: /dev/loop-control
-        type: unix-char
-    loop14:
-        path: {loop_device}
-        type: unix-block
-"""
-
-    with zipfile.ZipFile(charm, mode="a") as charm_file:
-        charm_file.writestr(
-            "lxd-profile.yaml",
-            lxd_profile_str,
-        )
-    return f"./{charm}"
+    inject_lxd_profile(charm_file=Path(charm_path_str), loop_device=loop_device)
+    return charm_path_str
 
 
 @pytest.fixture(scope="module")

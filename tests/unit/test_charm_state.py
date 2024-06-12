@@ -932,6 +932,40 @@ def mock_charm_state_data():
     }
 
 
+@pytest.mark.parametrize(
+    "immutable_config",
+    [
+        pytest.param("runner_storage", id="Runner storage"),
+        pytest.param("base_image", id="Base image"),
+    ],
+)
+def test_check_immutable_config_key_error(
+    mock_charm_state_path: Path,
+    mock_charm_state_data: dict[str, typing.Any],
+    immutable_config: str,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+):
+    """
+    arrange: Mock CHARM_STATE_PATH and read_text method to return modified immutable config values.
+    act: Call _check_immutable_config_change method.
+    assert: None is returned.
+    """
+    mock_charm_state_data["runner_config"].pop(immutable_config)
+    monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", mock_charm_state_path)
+    monkeypatch.setattr(
+        charm_state.CHARM_STATE_PATH,
+        "read_text",
+        MagicMock(return_value=json.dumps(mock_charm_state_data)),
+    )
+
+    assert CharmState._check_immutable_config_change(RunnerStorage.MEMORY, BaseImage.JAMMY) is None
+    assert any(
+        f"Key {immutable_config} not found, this will be updated to current config." in message
+        for message in caplog.messages
+    )
+
+
 def test_check_immutable_config_change_no_previous_state(
     mock_charm_state_path: Path, mock_charm_state_data: dict, monkeypatch: pytest.MonkeyPatch
 ):
