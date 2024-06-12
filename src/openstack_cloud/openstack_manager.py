@@ -505,6 +505,7 @@ class GithubRunnerRemoveError(Exception):
 
 
 _INSTANCE_STATUS_SHUTOFF = "SHUTOFF"
+_INSTANCE_STATUS_ERROR = "ERROR"
 _INSTANCE_STATUS_ACTIVE = "ACTIVE"
 _INSTANCE_STATUS_BUILDING = "BUILDING"
 
@@ -686,7 +687,7 @@ class OpenstackRunnerManager:
         server: Server | None = conn.get_server(name_or_id=server_name)
         if not server:
             return False
-        if server.status == _INSTANCE_STATUS_SHUTOFF:
+        if server.status == (_INSTANCE_STATUS_SHUTOFF, _INSTANCE_STATUS_ERROR):
             return False
         if server.status not in (_INSTANCE_STATUS_ACTIVE, _INSTANCE_STATUS_BUILDING):
             return False
@@ -695,6 +696,11 @@ class OpenstackRunnerManager:
     @staticmethod
     def _ssh_health_check(server: Server, startup: bool) -> bool:
         """Use SSH to check whether runner application is running.
+
+        A healthy runner is defined as:
+            1. SSH connection can be established.
+            2. Runner.Worker exists (running a job).
+            3. Runner.Listener exists (waiting for job).
 
         Args:
             server: The openstack server instance to check connections.
@@ -706,10 +712,10 @@ class OpenstackRunnerManager:
         try:
             ssh_conn = OpenstackRunnerManager._get_ssh_connection(server=server)
         except _SSHError as exc:
-            logger.warning("Unable to SSH into server: %s, reason: %s", server.name, str(exc))
-            return False
+            logger.error("[ALERT]: Unable to SSH to server: %s, reason: %s", server.name, str(exc))
+            return True
 
-        result = ssh_conn.run("ps aux", warn=True)
+        result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
         logger.debug("Output of `ps aux` on %s stderr: %s", server.name, result.stderr)
         logger.debug("Output of `ps aux` on %s stdout: %s", server.name, result.stdout)
         if not result.ok or RUNNER_STARTUP_PROCESS not in result.stdout:
@@ -722,7 +728,7 @@ class OpenstackRunnerManager:
         if RUNNER_WORKER_PROCESS in result.stdout or RUNNER_LISTENER_PROCESS in result.stdout:
             return True
 
-        logger.warning("Health check failed for server: %s", server.name)
+        logger.error("[ALERT] Health check failed for server: %s", server.name)
         return True
 
     @staticmethod

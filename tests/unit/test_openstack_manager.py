@@ -22,6 +22,7 @@ from metrics.storage import MetricsStorage
 from openstack_cloud import openstack_manager
 from openstack_cloud.openstack_manager import MAX_METRICS_FILE_SIZE, METRICS_EXCHANGE_PATH
 from runner_type import RunnerByHealth, RunnerGithubInfo
+from tests.unit import factories
 
 CLOUD_NAME = "microstack"
 
@@ -857,3 +858,128 @@ def test_repo_policy_config(
     repo_policy_compliance_client_mock.get_one_time_token.assert_called_once()
     assert one_time_token in cloud_init_data_str
     assert test_url in cloud_init_data_str
+
+
+@pytest.mark.parametrize(
+    "server",
+    [
+        pytest.param(None, id="no server"),
+        pytest.param(factories.MockOpenstackServer(status="SHUTOFF"), id="shutoff"),
+        pytest.param(factories.MockOpenstackServer(status="REBUILD"), id="not active/buliding"),
+    ],
+)
+def test__health_check(server: factories.MockOpenstackServer | None):
+    """
+    arrange: given a mock openstack.get_server response.
+    act: when _health_check is called.
+    assert: False is returned, meaning unhealthy runner.
+    """
+    mock_get_server = MagicMock(return_value=server)
+    mock_connection = MagicMock()
+    mock_connection.get_server = mock_get_server
+
+    assert not openstack_manager.OpenstackRunnerManager._health_check(
+        conn=mock_connection, server_name="test"
+    )
+
+
+# The SSH health check will temporarily return True on failure for debugging purposes.
+@pytest.mark.xfail
+def test__ssh_health_check_connection_error(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: given a monkeypatched _get_ssh_connection function that raises _SSHError.
+    act: when _ssh_health_check is called.
+    assert: False is returned, meaning unhealthy runner.
+    """
+    monkeypatch.setattr(
+        openstack_manager.OpenstackRunnerManager,
+        "_get_ssh_connection",
+        MagicMock(side_effect=openstack_manager._SSHError),
+    )
+
+    assert not openstack_manager.OpenstackRunnerManager._ssh_health_check(
+        server=MagicMock(), startup=False
+    )
+
+
+@pytest.mark.parametrize(
+    "result",
+    [
+        pytest.param(factories.MockSSHRunResult(exited=1), id="ssh result not ok"),
+        pytest.param(
+            factories.MockSSHRunResult(exited=0, stdout=""),
+            id="runner process not found in stdout",
+        ),
+        # This health check should fail but temporarily marking as passing for passive runner
+        # deletion until we have more data.
+        pytest.param(
+            factories.MockSSHRunResult(exited=0, stdout="/home/ubuntu/actions-runner/run.sh"),
+            id="startup process exists but no listener or worker process",
+        ),
+    ],
+)
+@pytest.mark.xfail
+def test__ssh_health_check_unhealthy(
+    monkeypatch: pytest.MonkeyPatch, result: factories.MockSSHRunResult
+):
+    """
+    arrange: given unhealthy ssh responses.
+    act: when _ssh_health_check is called.
+    assert: False is returned, meaning unhealthy runner.
+    """
+    mock_ssh_connection = MagicMock()
+    mock_ssh_connection.run = MagicMock(return_value=result)
+    monkeypatch.setattr(
+        openstack_manager.OpenstackRunnerManager,
+        "_get_ssh_connection",
+        MagicMock(return_value=mock_ssh_connection),
+    )
+
+    assert not openstack_manager.OpenstackRunnerManager._ssh_health_check(
+        server=MagicMock(), startup=False
+    )
+
+
+@pytest.mark.parametrize(
+    "result, startup",
+    [
+        pytest.param(
+            factories.MockSSHRunResult(
+                exited=0, stdout="/home/ubuntu/actions-runner/run.sh\nRunner.Worker"
+            ),
+            False,
+            id="runner process & workper process found",
+        ),
+        pytest.param(
+            factories.MockSSHRunResult(
+                exited=0, stdout="/home/ubuntu/actions-runner/run.sh\nRunner.Listener"
+            ),
+            False,
+            id="runner process & listener process found",
+        ),
+        pytest.param(
+            factories.MockSSHRunResult(exited=0, stdout="/home/ubuntu/actions-runner/run.sh"),
+            True,
+            id="runner process found for startup",
+        ),
+    ],
+)
+def test__ssh_health_check_healthy(
+    monkeypatch: pytest.MonkeyPatch, result: factories.MockSSHRunResult, startup: bool
+):
+    """
+    arrange: given healthy ssh response.
+    act: when _ssh_health_check is called.
+    assert: True is returned, meaning healthy runner.
+    """
+    mock_ssh_connection = MagicMock()
+    mock_ssh_connection.run = MagicMock(return_value=result)
+    monkeypatch.setattr(
+        openstack_manager.OpenstackRunnerManager,
+        "_get_ssh_connection",
+        MagicMock(return_value=mock_ssh_connection),
+    )
+
+    assert openstack_manager.OpenstackRunnerManager._ssh_health_check(
+        server=MagicMock(), startup=startup
+    )
