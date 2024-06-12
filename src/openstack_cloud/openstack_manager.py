@@ -691,10 +691,12 @@ class OpenstackRunnerManager:
             return False
         if server.status not in (_INSTANCE_STATUS_ACTIVE, _INSTANCE_STATUS_BUILDING):
             return False
-        return OpenstackRunnerManager._ssh_health_check(server=server, startup=startup)
+        return OpenstackRunnerManager._ssh_health_check(
+            conn=conn, server_name=server_name, startup=startup
+        )
 
     @staticmethod
-    def _ssh_health_check(server: Server, startup: bool) -> bool:
+    def _ssh_health_check(conn: OpenstackConnection, server_name: str, startup: bool) -> bool:
         """Use SSH to check whether runner application is running.
 
         A healthy runner is defined as:
@@ -703,43 +705,49 @@ class OpenstackRunnerManager:
             3. Runner.Listener exists (waiting for job).
 
         Args:
-            server: The openstack server instance to check connections.
+            conn: The Openstack connection instance.
+            server_name: The openstack server instance to check connections.
             startup: Check only whether the startup is successful.
 
         Returns:
             Whether the runner application is running.
         """
         try:
-            ssh_conn = OpenstackRunnerManager._get_ssh_connection(server=server)
+            ssh_conn = OpenstackRunnerManager._get_ssh_connection(
+                conn=conn, server_name=server_name
+            )
         except _SSHError as exc:
-            logger.error("[ALERT]: Unable to SSH to server: %s, reason: %s", server.name, str(exc))
+            logger.error("[ALERT]: Unable to SSH to server: %s, reason: %s", server_name, str(exc))
             return True
 
         result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
-        logger.debug("Output of `ps aux` on %s stderr: %s", server.name, result.stderr)
-        logger.debug("Output of `ps aux` on %s stdout: %s", server.name, result.stdout)
+        logger.debug("Output of `ps aux` on %s stderr: %s", server_name, result.stderr)
+        logger.debug("Output of `ps aux` on %s stdout: %s", server_name, result.stdout)
         if not result.ok or RUNNER_STARTUP_PROCESS not in result.stdout:
-            logger.warning("List all process command failed on %s ", server.name)
+            logger.warning("List all process command failed on %s ", server_name)
             return False
-        logger.info("Runner process found to be healthy on %s", server.name)
+        logger.info("Runner process found to be healthy on %s", server_name)
         if startup:
             return True
 
         if RUNNER_WORKER_PROCESS in result.stdout or RUNNER_LISTENER_PROCESS in result.stdout:
             return True
 
-        logger.error("[ALERT] Health check failed for server: %s", server.name)
+        logger.error("[ALERT] Health check failed for server: %s", server_name)
         return True
 
     @staticmethod
     @retry(tries=3, delay=5, max_delay=60, backoff=2, local_logger=logger)
-    def _get_ssh_connection(server: Server, timeout: int = 30) -> SshConnection:
+    def _get_ssh_connection(
+        conn: OpenstackConnection, server_name: str, timeout: int = 30
+    ) -> SshConnection:
         """Get a valid ssh connection within a network for a given openstack instance.
 
         The SSH connection will attempt to establish connection until the timeout configured.
 
         Args:
-            server: The Openstack server instance.
+            conn: The Openstack connection instance.
+            server_name: The Openstack server instance name.
             timeout: Timeout in seconds to attempt connection to each available server address.
 
         Raises:
@@ -748,6 +756,9 @@ class OpenstackRunnerManager:
         Returns:
             An SSH connection to OpenStack server instance.
         """
+        server: Server | None = conn.get_server(name_or_id=server_name)
+        if not server:
+            raise _SSHError(f"Server gone while trying to get SSH connection: {server_name}.")
         if not server.key_name:
             raise _SSHError(
                 f"Unable to create SSH connection, no valid keypair found for {server.name}"
@@ -756,6 +767,7 @@ class OpenstackRunnerManager:
         if not key_path.exists():
             raise _SSHError(f"Missing keyfile for server: {server.name}, key path: {key_path}")
         network_address_list = server.addresses.values()
+        print(network_address_list)
         if not network_address_list:
             raise _SSHError(f"No addresses found for OpenStack server {server.name}")
 
@@ -1185,7 +1197,7 @@ class OpenstackRunnerManager:
             logger.info(
                 "Pulling metrics and deleting server for OpenStack runner %s", instance_name
             )
-            self._pull_metrics(server, instance_name)
+            self._pull_metrics(conn=conn, instance_name=instance_name)
             self._remove_openstack_runner(conn, server, remove_token)
         else:
             logger.info(
@@ -1204,11 +1216,11 @@ class OpenstackRunnerManager:
                     "Found unexpected exception, please contact the developers", exc_info=True
                 )
 
-    def _pull_metrics(self, server: Server, instance_name: str) -> None:
+    def _pull_metrics(self, conn: OpenstackConnection, instance_name: str) -> None:
         """Pull metrics from the runner into the respective storage for the runner.
 
         Args:
-            server: The Openstack server instance.
+            conn: The Openstack connection instance.
             instance_name: The Openstack server name.
         """
         try:
@@ -1222,7 +1234,7 @@ class OpenstackRunnerManager:
             return
 
         try:
-            ssh_conn = self._get_ssh_connection(server=server)
+            ssh_conn = self._get_ssh_connection(conn=conn, server_name=instance_name)
         except _SSHError as exc:
             logger.info("Failed to pull metrics for %s: %s", instance_name, exc)
             return
@@ -1314,7 +1326,7 @@ class OpenstackRunnerManager:
             remove_token: The GitHub runner remove token.
         """
         try:
-            self._run_github_removal_script(server=server, remove_token=remove_token)
+            self._run_github_removal_script(conn=conn, server=server, remove_token=remove_token)
         except (TimeoutError, invoke.exceptions.UnexpectedExit, GithubRunnerRemoveError):
             logger.warning(
                 "Failed to run runner removal script for %s", server.name, exc_info=True
@@ -1337,10 +1349,13 @@ class OpenstackRunnerManager:
                 "Found unexpected exception, please contact the developers", exc_info=True
             )
 
-    def _run_github_removal_script(self, server: Server, remove_token: str | None) -> None:
+    def _run_github_removal_script(
+        self, conn: OpenstackConnection, server: Server, remove_token: str | None
+    ) -> None:
         """Run Github runner removal script.
 
         Args:
+            conn: The Openstack connection instance.
             server: The Openstack server instance.
             remove_token: The GitHub instance removal token.
 
@@ -1350,7 +1365,9 @@ class OpenstackRunnerManager:
         if not remove_token:
             return
         try:
-            ssh_conn = OpenstackRunnerManager._get_ssh_connection(server=server)
+            ssh_conn = OpenstackRunnerManager._get_ssh_connection(
+                conn=conn, server_name=server.name
+            )
         except _SSHError as exc:
             logger.error(
                 "Unable to run GitHub removal script, server: %s, reason: %s",

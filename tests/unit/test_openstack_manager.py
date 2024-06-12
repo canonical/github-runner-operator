@@ -865,7 +865,7 @@ def test_repo_policy_config(
     [
         pytest.param(None, id="no server"),
         pytest.param(factories.MockOpenstackServer(status="SHUTOFF"), id="shutoff"),
-        pytest.param(factories.MockOpenstackServer(status="REBUILD"), id="not active/buliding"),
+        pytest.param(factories.MockOpenstackServer(status="REBUILD"), id="not active/building"),
     ],
 )
 def test__health_check(server: factories.MockOpenstackServer | None):
@@ -981,5 +981,167 @@ def test__ssh_health_check_healthy(
     )
 
     assert openstack_manager.OpenstackRunnerManager._ssh_health_check(
-        server=MagicMock(), startup=startup
+        conn=MagicMock(), server_name=MagicMock(), startup=startup
+    )
+
+
+@pytest.mark.usefixtures("skip_retry")
+def test__get_ssh_connection_server_gone():
+    """
+    arrange: given a mock Openstack get_server function that returns None.
+    act: when _get_ssh_connection is called.
+    assert: _SSHError is raised.
+    """
+    mock_connection = MagicMock()
+    mock_connection.get_server.return_value = None
+
+    with pytest.raises(openstack_manager._SSHError) as exc:
+        openstack_manager.OpenstackRunnerManager._get_ssh_connection(
+            conn=mock_connection, server_name="test"
+        )
+
+    assert "Server gone while trying to get SSH connection" in str(exc.getrepr())
+
+
+@pytest.mark.usefixtures("skip_retry")
+def test__get_ssh_connection_no_server_key():
+    """
+    arrange: given a mock server instance with no key attached.
+    act: when _get_ssh_connection is called.
+    assert: _SSHError is raised.
+    """
+    mock_server = MagicMock()
+    mock_server.key_name = None
+    mock_connection = MagicMock()
+    mock_connection.get_server.return_value = mock_server
+
+    with pytest.raises(openstack_manager._SSHError) as exc:
+        openstack_manager.OpenstackRunnerManager._get_ssh_connection(
+            conn=mock_connection, server_name="test"
+        )
+
+    assert "Unable to create SSH connection, no valid keypair found" in str(exc.getrepr())
+
+
+@pytest.mark.usefixtures("skip_retry")
+def test__get_ssh_connection_key_not_exists(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: given a monkeypatched _get_key_path function that returns a non-existent path.
+    act: when _get_ssh_connection is called.
+    assert: _SSHError is raised.
+    """
+    monkeypatch.setattr(
+        openstack_manager.OpenstackRunnerManager,
+        "_get_key_path",
+        MagicMock(return_value=Path("does-not-exist")),
+    )
+    mock_connection = MagicMock()
+
+    with pytest.raises(openstack_manager._SSHError) as exc:
+        openstack_manager.OpenstackRunnerManager._get_ssh_connection(
+            conn=mock_connection, server_name="test"
+        )
+
+    assert "Missing keyfile for server" in str(exc.getrepr())
+
+
+@pytest.mark.usefixtures("skip_retry")
+def test__get_ssh_connection_server_no_addresses(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: given a mock server instance with no server addresses.
+    act: when _get_ssh_connection is called.
+    assert: _SSHError is raised.
+    """
+    monkeypatch.setattr(
+        openstack_manager.OpenstackRunnerManager,
+        "_get_key_path",
+        MagicMock(return_value=Path(".")),
+    )
+    mock_server = MagicMock()
+    mock_server.addresses = {}
+    mock_connection = MagicMock()
+    mock_connection.get_server.return_value = mock_server
+
+    with pytest.raises(openstack_manager._SSHError) as exc:
+        openstack_manager.OpenstackRunnerManager._get_ssh_connection(
+            conn=mock_connection, server_name="test"
+        )
+
+    assert "Missing keyfile for server" in str(exc.getrepr())
+
+
+@pytest.mark.usefixtures("skip_retry")
+@pytest.mark.parametrize(
+    "run",
+    [
+        pytest.param(MagicMock(side_effect=TimeoutError), id="timeout error"),
+        pytest.param(
+            MagicMock(return_value=factories.MockSSHRunResult(exited=1)), id="result not ok"
+        ),
+        pytest.param(
+            MagicMock(return_value=factories.MockSSHRunResult(exited=0, stdout="")),
+            id="empty response",
+        ),
+    ],
+)
+def test__get_ssh_connection_server_no_valid_connections(
+    monkeypatch: pytest.MonkeyPatch, run: MagicMock
+):
+    """
+    arrange: given a monkeypatched Connection instance that returns invalid connections.
+    act: when _get_ssh_connection is called.
+    assert: _SSHError is raised.
+    """
+    monkeypatch.setattr(
+        openstack_manager.OpenstackRunnerManager,
+        "_get_key_path",
+        MagicMock(return_value=Path(".")),
+    )
+    mock_server = MagicMock()
+    mock_server.addresses = {"test": [{"addr": "test-address"}]}
+    mock_connection = MagicMock()
+    mock_connection.get_server.return_value = mock_server
+    mock_ssh_connection = MagicMock()
+    mock_ssh_connection.run = run
+    monkeypatch.setattr(
+        openstack_manager, "SshConnection", MagicMock(return_value=mock_ssh_connection)
+    )
+
+    with pytest.raises(openstack_manager._SSHError) as exc:
+        openstack_manager.OpenstackRunnerManager._get_ssh_connection(
+            conn=mock_connection, server_name="test"
+        )
+
+    assert "Missing keyfile for server" in str(exc.getrepr())
+
+
+@pytest.mark.usefixtures("skip_retry")
+def test__get_ssh_connection_server(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: given monkeypatched SSH connection instance.
+    act: when _get_ssh_connection is called.
+    assert: the SSH connection instance is returned.
+    """
+    monkeypatch.setattr(
+        openstack_manager.OpenstackRunnerManager,
+        "_get_key_path",
+        MagicMock(return_value=Path(".")),
+    )
+    mock_server = MagicMock()
+    mock_server.addresses = {"test": [{"addr": "test-address"}]}
+    mock_connection = MagicMock()
+    mock_connection.get_server.return_value = mock_server
+    mock_ssh_connection = MagicMock()
+    mock_ssh_connection.run = MagicMock(
+        return_value=factories.MockSSHRunResult(exited=0, stdout="hello world")
+    )
+    monkeypatch.setattr(
+        openstack_manager, "SshConnection", MagicMock(return_value=mock_ssh_connection)
+    )
+
+    assert (
+        openstack_manager.OpenstackRunnerManager._get_ssh_connection(
+            conn=mock_connection, server_name="test"
+        )
+        == mock_ssh_connection
     )
