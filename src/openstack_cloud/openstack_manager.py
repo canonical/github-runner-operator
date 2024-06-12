@@ -767,7 +767,6 @@ class OpenstackRunnerManager:
         if not key_path.exists():
             raise _SSHError(f"Missing keyfile for server: {server.name}, key path: {key_path}")
         network_address_list = server.addresses.values()
-        print(network_address_list)
         if not network_address_list:
             raise _SSHError(f"No addresses found for OpenStack server {server.name}")
 
