@@ -15,7 +15,7 @@ jobs:
       pre-run-script: scripts/pre-integration-test.sh
       provider: lxd
       test-tox-env: integration-juju2.9
-      modules: '["test_charm_base_image", "test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh"]'
+      modules: '["test_charm_base_image", "test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh", "test_charm_upgrade"]'
   integration-tests:
     name: Integration test with juju 3.1
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
@@ -25,7 +25,7 @@ jobs:
       pre-run-script: scripts/pre-integration-test.sh
       provider: lxd
       test-tox-env: integration-juju3.1
-      modules: '["test_charm_base_image", "test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh"]'
+      modules: '["test_charm_base_image", "test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh", "test_charm_upgrade"]'
   # openstack tests use microstack, whose setup is kind of special
   # - due to the huge resource requirements, we use self-hosted runners for these tests
   # - microstack requires juju 3.2 and microk8s 1.26

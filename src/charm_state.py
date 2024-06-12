@@ -846,24 +846,34 @@ class CharmState:
         prev_state = json.loads(json_data)
         logger.info("Previous charm state: %s", prev_state)
 
-        if prev_state["runner_config"]["runner_storage"] != runner_storage:
-            logger.error(
-                "Storage option changed from %s to %s, blocking the charm",
-                prev_state["runner_config"]["runner_storage"],
-                runner_storage,
-            )
-            raise ImmutableConfigChangedError(
-                msg="runner-storage config cannot be changed after deployment, redeploy if needed"
-            )
-        if prev_state["runner_config"]["base_image"] != base_image.value:
-            logger.error(
-                "Base image option changed from %s to %s, blocking the charm",
-                prev_state["runner_config"]["base_image"],
-                runner_storage,
-            )
-            raise ImmutableConfigChangedError(
-                msg="base-image config cannot be changed after deployment, redeploy if needed"
-            )
+        try:
+            if prev_state["runner_config"]["runner_storage"] != runner_storage:
+                logger.error(
+                    "Storage option changed from %s to %s, blocking the charm",
+                    prev_state["runner_config"]["runner_storage"],
+                    runner_storage,
+                )
+                raise ImmutableConfigChangedError(
+                    msg=(
+                        "runner-storage config cannot be changed after deployment, "
+                        "redeploy if needed"
+                    )
+                )
+        except KeyError as exc:
+            logger.info("Key %s not found, this will be updated to current config.", exc.args[0])
+
+        try:
+            if prev_state["runner_config"]["base_image"] != base_image.value:
+                logger.error(
+                    "Base image option changed from %s to %s, blocking the charm",
+                    prev_state["runner_config"]["base_image"],
+                    runner_storage,
+                )
+                raise ImmutableConfigChangedError(
+                    msg="base-image config cannot be changed after deployment, redeploy if needed"
+                )
+        except KeyError as exc:
+            logger.info("Key %s not found, this will be updated to current config.", exc.args[0])
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "CharmState":
