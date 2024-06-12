@@ -90,7 +90,7 @@ METRICS_EXCHANGE_PATH = Path("/home/ubuntu/metrics-exchange")
 PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
 MAX_METRICS_FILE_SIZE = 1024
 
-CREATE_SERVER_TIMEOUT = 5 * 60
+CREATE_SERVER_TIMEOUT = 10 * 60
 
 
 class _PullFileError(Exception):
