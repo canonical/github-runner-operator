@@ -660,9 +660,8 @@ class OpenstackRunnerManager:
             if instance.name.startswith(f"{self.instance_name}-")
         ]
 
-    def _health_check(
-        self, conn: OpenstackConnection, server_name: str, startup: bool = False
-    ) -> bool:
+    @staticmethod
+    def _health_check(conn: OpenstackConnection, server_name: str, startup: bool = False) -> bool:
         """Health check a server instance.
 
         A healthy server is defined as:
@@ -691,7 +690,7 @@ class OpenstackRunnerManager:
             return False
         if server.status not in (_INSTANCE_STATUS_ACTIVE, _INSTANCE_STATUS_BUILDING):
             return False
-        return self._ssh_health_check(server=server, startup=startup)
+        return OpenstackRunnerManager._ssh_health_check(server=server, startup=startup)
 
     @staticmethod
     def _ssh_health_check(server: Server, startup: bool) -> bool:
@@ -713,21 +712,16 @@ class OpenstackRunnerManager:
         result = ssh_conn.run("ps aux", warn=True)
         logger.debug("Output of `ps aux` on %s stderr: %s", server.name, result.stderr)
         logger.debug("Output of `ps aux` on %s stdout: %s", server.name, result.stdout)
-        if not result.ok:
+        if not result.ok or RUNNER_STARTUP_PROCESS not in result.stdout:
             logger.warning("List all process command failed on %s ", server.name)
-            return False
-        if RUNNER_STARTUP_PROCESS not in result.stdout:
             return False
         logger.info("Runner process found to be healthy on %s", server.name)
         if startup:
             return True
 
-        if RUNNER_WORKER_PROCESS in result.stdout:
-            return True
-        if RUNNER_LISTENER_PROCESS in result.stdout:
+        if RUNNER_WORKER_PROCESS in result.stdout or RUNNER_LISTENER_PROCESS in result.stdout:
             return True
 
-        # TODO: alert
         logger.warning("Health check failed for server: %s", server.name)
         return True
 
@@ -789,7 +783,8 @@ class OpenstackRunnerManager:
                 )
                 continue
         raise _SSHError(
-            f"No connectable SSH addresses found, server: {server.name}, addresses: {server_addresses}"
+            f"No connectable SSH addresses found, server: {server.name}, "
+            "addresses: {server_addresses}"
         )
 
     @staticmethod

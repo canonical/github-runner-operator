@@ -150,9 +150,7 @@ def openstack_manager_for_reconcile_fixture(
         cloud_config={},
     )
     os_runner_manager._ssh_health_check = MagicMock(return_value=True)
-    os_runner_manager._get_ssh_connection = MagicMock(
-        return_value=(ssh_connection_mock for _ in range(10))
-    )
+    os_runner_manager._get_ssh_connection = MagicMock(return_value=ssh_connection_mock)
     monkeypatch.setattr(
         openstack_manager.OpenstackRunnerManager, "_wait_until_runner_process_running", MagicMock()
     )
