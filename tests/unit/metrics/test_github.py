@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 import secrets
 from datetime import datetime, timedelta, timezone
+from random import randint
 from unittest.mock import MagicMock
 
 import pytest
@@ -42,6 +43,7 @@ def test_job(pre_job_metrics: PreJobMetrics):
         started_at=started_at,
         runner_name=runner_name,
         conclusion=JobConclusion.SUCCESS,
+        job_id=randint(1, 1000),
     )
 
     job_metrics = github_metrics.job(
