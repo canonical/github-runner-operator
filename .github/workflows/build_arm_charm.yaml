@@ -1,0 +1,26 @@
+name: build arm charm
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: [self-hosted, linux, arm64]
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: 'canonical/github-runner-operator'
+        ref: 'feat/openstack-integration'
+    - name: Install dependencies
+      run: |
+          sudo snap install charmcraft --classic
+          sudo lxd init --auto
+          sudo usermod -a -G lxd $USER
+    - name: Pack the charm
+      run: |
+          export http_proxy="" https_proxy="" HTTP_PROXY="" HTTPS_PROXY=""
+          sg lxd -c "charmcraft pack"
+    - name: upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+          name: charm
+          path: ./*.charm
