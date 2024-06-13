@@ -636,12 +636,13 @@ class GithubRunnerCharm(CharmBase):
 
         state = self._setup_state()
 
-        if state.charm_config.token != self._stored.token and state.instance_type == InstanceType.OPENSTACK:
-            openstack_runner_manager = self._get_openstack_runner_manager(state)
-            openstack_runner_manager.flush()
-            openstack_runner_manager.reconcile(state.runner_config.virtual_machines)
-            # 2024/04/12: Flush on token changes.
-            self.unit.status = ActiveStatus()
+        if state.instance_type == InstanceType.OPENSTACK:
+            if state.charm_config.token != self._stored.token:
+                openstack_runner_manager = self._get_openstack_runner_manager(state)
+                openstack_runner_manager.flush()
+                openstack_runner_manager.reconcile(state.runner_config.virtual_machines)
+                # 2024/04/12: Flush on token changes.
+                self.unit.status = ActiveStatus()
             return
 
         self._refresh_firewall(state)
