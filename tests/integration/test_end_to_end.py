@@ -21,7 +21,7 @@ from tests.integration.helpers.openstack import setup_repo_policy
 
 async def test_end_to_end(
     model: Model,
-    app_openstack_runner: Application,
+    basic_app: Application,
     github_repository: Repository,
     test_github_branch: Branch,
 ):
@@ -36,11 +36,11 @@ async def test_end_to_end(
     """
     # 1.
     # Waits until one runner is spawned.
-    await app_openstack_runner.set_config({"virtual-machines": "1"})
-    await reconcile(app=app_openstack_runner, model=model)
+    await basic_app.set_config({"virtual-machines": "1"})
+    await reconcile(app=basic_app, model=model)
 
     await dispatch_workflow(
-        app=app_openstack_runner,
+        app=basic_app,
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="success",
