@@ -33,16 +33,16 @@ from tests.integration.helpers.lxd import ensure_charm_has_runner, get_runner_na
 
 @pytest_asyncio.fixture(scope="function", name="app")
 async def app_fixture(
-    model: Model, app_with_grafana_agent: Application, loop_device: str
+    model: Model, basic_app: Application, loop_device: str
 ) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
     Clear the metrics log before each test.
     """
-    unit = app_with_grafana_agent.units[0]
+    unit = basic_app.units[0]
     await clear_metrics_log(unit)
     await print_loop_device_info(unit, loop_device)
-    yield app_with_grafana_agent
+    yield basic_app
 
 
 @pytest.mark.openstack
