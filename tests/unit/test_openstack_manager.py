@@ -1067,7 +1067,7 @@ def test__get_ssh_connection_server_no_addresses(monkeypatch: pytest.MonkeyPatch
             conn=mock_connection, server_name="test"
         )
 
-    assert "Missing keyfile for server" in str(exc.getrepr())
+    assert "No addresses found for OpenStack server" in str(exc.getrepr())
 
 
 @pytest.mark.usefixtures("skip_retry")
@@ -1112,7 +1112,7 @@ def test__get_ssh_connection_server_no_valid_connections(
             conn=mock_connection, server_name="test"
         )
 
-    assert "Missing keyfile for server" in str(exc.getrepr())
+    assert "No connectable SSH addresses found" in str(exc.getrepr())
 
 
 @pytest.mark.usefixtures("skip_retry")
