@@ -35,7 +35,7 @@ async def app_fixture(
     if instance_type == InstanceType.LOCAL_LXD:
         await lxd.ensure_charm_has_runner(basic_app, model)
     if instance_type == InstanceType.OPENSTACK:
-        await openstack.ensure_charm_has_runner(basic_app, model)
+        await openstack.OpenStackInstanceHelper.ensure_charm_has_runner(basic_app, model)
     yield basic_app
 
 
@@ -148,7 +148,10 @@ async def test_token_config_changed_insufficient_perms(
     await app.set_config({TOKEN_CONFIG_NAME: "invalid-token", VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await model.wait_for_idle()
 
-    if instance_type == InstanceType.LOCAL_LXD:
-        await lxd.wait_till_num_of_runners(unit, 1)
-    if instance_type == InstanceType.OPENSTACK:
-        await openstack.wait_till_num_of_runners(unit, 1)
+    action = await app.units[0].run_action("check-runners")
+    await action.wait()
+
+    assert action.status == "completed"
+    assert action.results["online"] == "0"
+    assert action.results["offline"] == "0"
+    assert action.results["unknown"] == "0"

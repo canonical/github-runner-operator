@@ -1,16 +1,14 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 from typing import AsyncIterator
-
-import pytest
-import pytest_asyncio
 from github.Branch import Branch
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
+import pytest
+import pytest_asyncio
 
 from charm_state import InstanceType
-from tests.integration.helpers import lxd, openstack
 from tests.integration.helpers.common import (
     ACTIVE,
     DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
@@ -18,7 +16,7 @@ from tests.integration.helpers.common import (
     dispatch_workflow,
     reconcile,
 )
-
+from tests.integration.helpers import openstack, lxd
 
 @pytest_asyncio.fixture(scope="function", name="app")
 async def app_fixture(
@@ -33,9 +31,8 @@ async def app_fixture(
     if instance_type == InstanceType.LOCAL_LXD:
         await lxd.ensure_charm_has_runner(basic_app, model)
     if instance_type == InstanceType.OPENSTACK:
-        await openstack.ensure_charm_has_runner(basic_app, model)
+        await openstack.OpenStackInstanceHelper.ensure_charm_has_runner(basic_app, model)
     yield basic_app
-
 
 @pytest.mark.openstack
 @pytest.mark.asyncio
