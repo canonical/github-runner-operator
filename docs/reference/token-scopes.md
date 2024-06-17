@@ -22,6 +22,7 @@ Repository:
 The following are the permissions scopes required for the GitHub runners when registering as an
 repository runner.
 
+- Administration: read & write
 - Contents: read
 - Metadata: read
 - Pull requests: read
