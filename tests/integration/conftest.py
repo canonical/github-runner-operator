@@ -34,6 +34,7 @@ from charm_state import (
     PATH_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
+    InstanceType,
 )
 from github_client import GithubClient
 from tests.integration.helpers.common import (
@@ -50,6 +51,18 @@ from tests.status_name import ACTIVE
 # with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
 nest_asyncio.apply()
 
+@pytest_asyncio.fixture(scope="module", name="instance_type")
+async def instance_type_fixture(
+    request: pytest.FixtureRequest, pytestconfig: pytest.Config
+) -> InstanceType:
+    # Due to scope being module we cannot use request.node.get_closes_marker as openstack
+    # mark is not available in this scope.
+    openstack_marker = pytestconfig.getoption("-m") == "openstack"
+
+    if openstack_marker:
+        return InstanceType.OPENSTACK
+    else:
+        return InstanceType.LOCAL_LXD
 
 @pytest.fixture(scope="module")
 def metadata() -> dict[str, Any]:
@@ -669,14 +682,10 @@ async def app_with_grafana_agent_integrated_fixture(
 
 @pytest_asyncio.fixture(scope="module", name="basic_app")
 async def basic_app_fixture(
-    request: pytest.FixtureRequest, pytestconfig: pytest.Config
+    request: pytest.FixtureRequest, instance_type: InstanceType
 ) -> Application:
     """Setup the charm with the basic configuration."""
-    # Due to scope being module we cannot use request.node.get_closes_marker as openstack
-    # mark is not available in this scope.
-    openstack_marker = pytestconfig.getoption("-m") == "openstack"
-
-    if openstack_marker:
+    if instance_type == InstanceType.OPENSTACK:
         app = request.getfixturevalue("app_openstack_runner")
     else:
         app = request.getfixturevalue("app_no_runner")
