@@ -29,7 +29,7 @@ async def app_fixture(
 
     Ensure the charm has one runner before starting a test.
     """
-    instance_helper.ensure_charm_has_runner(basic_app)
+    await instance_helper.ensure_charm_has_runner(basic_app)
     yield basic_app
 
 @pytest.mark.openstack
