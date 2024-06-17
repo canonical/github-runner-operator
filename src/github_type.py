@@ -152,11 +152,13 @@ class JobStats(BaseModel):
     """Stats for a job on GitHub.
 
     Attributes:
+        job_id: The ID of the job.
         created_at: The time the job was created.
         started_at: The time the job was started.
         conclusion: The end result of a job.
     """
 
+    job_id: int
     created_at: datetime
     started_at: datetime
     conclusion: Optional[JobConclusion]
