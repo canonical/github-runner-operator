@@ -52,4 +52,5 @@ async def test_e2e_workflow(
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
+        dispatch_input={"runner-tag": app.name}
     )

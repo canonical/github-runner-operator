@@ -395,6 +395,15 @@ async def dispatch_workflow(
 
     workflow = github_repository.get_workflow(id_or_file_name=workflow_id_or_name)
 
+    # TODO: REMOVE DEBUG prints.
+    print("==============================")
+    print(github_repository)
+    print("==============================")
+    print(branch)
+    print("==============================")
+    print(workflow)
+    print("==============================")
+
     # The `create_dispatch` returns True on success.
     assert workflow.create_dispatch(
         branch, dispatch_input or {"runner": app.name}

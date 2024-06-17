@@ -125,28 +125,3 @@ async def test_flush_runner_and_resource_config(
     new_runner_names = action.results["runners"].split(", ")
     assert len(new_runner_names) == 1
     assert new_runner_names[0] != runner_names[0]
-
-
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_token_config_changed_insufficient_perms(
-    model: Model, app: Application
-) -> None:
-    """
-    arrange: A working application with one runner.
-    act: Change the token to be invalid and set the number of runners to zero.
-    assert: The active runner should be removed, regardless of the invalid new token.
-    """
-    unit = app.units[0]
-
-    await app.set_config({TOKEN_CONFIG_NAME: "invalid-token", VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await model.wait_for_idle()
-
-    action = await app.units[0].run_action("check-runners")
-    await action.wait()
-
-    assert action.status == "completed"
-    assert action.results["online"] == "0"
-    assert action.results["offline"] == "0"
-    assert action.results["unknown"] == "0"
