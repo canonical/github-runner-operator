@@ -695,7 +695,9 @@ async def basic_app_fixture(
 
 
 @pytest_asyncio.fixture(scope="function", name="instance_helper")
-async def instance_helper_fixture(request: pytest.FixtureRequest, instance_type: InstanceType) -> InstanceHelper:
+async def instance_helper_fixture(
+    request: pytest.FixtureRequest, instance_type: InstanceType
+) -> InstanceHelper:
     """Instance helper fixture."""
     helper: InstanceHelper
     if instance_type == InstanceType.OPENSTACK:
