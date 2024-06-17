@@ -18,8 +18,9 @@ from charm_state import (
     VM_MEMORY_CONFIG_NAME,
     InstanceType,
 )
-from tests.integration.helpers import openstack, lxd
+from tests.integration.helpers import lxd, openstack
 from tests.status_name import ACTIVE, BLOCKED
+
 
 @pytest_asyncio.fixture(scope="function", name="app")
 async def app_fixture(
@@ -37,6 +38,8 @@ async def app_fixture(
         await openstack.ensure_charm_has_runner(basic_app, model)
     yield basic_app
 
+
+@pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_check_runner(app: Application) -> None:
@@ -54,9 +57,12 @@ async def test_check_runner(app: Application) -> None:
     assert action.results["unknown"] == "0"
 
 
+@pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_flush_runner_and_resource_config(app: Application, instance_type: InstanceType) -> None:
+async def test_flush_runner_and_resource_config(
+    app: Application, instance_type: InstanceType
+) -> None:
     """
     arrange: A working application with one runner.
     act:
@@ -126,7 +132,7 @@ async def test_flush_runner_and_resource_config(app: Application, instance_type:
     assert new_runner_names[0] != runner_names[0]
 
 
-
+@pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_token_config_changed_insufficient_perms(

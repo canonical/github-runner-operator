@@ -73,6 +73,7 @@ async def test_network_access(app: Application) -> None:
     assert return_code == 7
     assert stdout is None
 
+
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_token_config_changed(model: Model, app: Application, token_alt: str) -> None:

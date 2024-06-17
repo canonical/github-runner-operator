@@ -51,6 +51,7 @@ from tests.status_name import ACTIVE
 # with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
 nest_asyncio.apply()
 
+
 @pytest_asyncio.fixture(scope="module", name="instance_type")
 async def instance_type_fixture(
     request: pytest.FixtureRequest, pytestconfig: pytest.Config
@@ -63,6 +64,7 @@ async def instance_type_fixture(
         return InstanceType.OPENSTACK
     else:
         return InstanceType.LOCAL_LXD
+
 
 @pytest.fixture(scope="module")
 def metadata() -> dict[str, Any]:
