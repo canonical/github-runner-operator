@@ -3,11 +3,13 @@
 
 import copy
 import secrets
+import typing
 import unittest.mock
 from pathlib import Path
 
 import pytest
 
+import utilities
 from openstack_cloud import openstack_manager
 from tests.unit.mock import MockGhapiClient, MockLxdClient, MockRepoPolicyComplianceClient
 
@@ -148,3 +150,34 @@ def multi_clouds_yaml_fixture(clouds_yaml: dict) -> dict:
         }
     }
     return multi_clouds_yaml
+
+
+@pytest.fixture(name="skip_retry")
+def skip_retry_fixture(monkeypatch: pytest.MonkeyPatch):
+    """Fixture for skipping retry for functions with retry decorator."""
+
+    def patched_retry(*args, **kwargs):
+        """A fallthrough decorator.
+
+        Args:
+            args: Positional arguments placeholder.
+            kwargs: Keyword arguments placeholder.
+
+        Returns:
+            The fallthrough decorator.
+        """
+
+        def patched_retry_decorator(func: typing.Callable):
+            """The fallthrough decorator.
+
+            Args:
+                func: The function to decorate.
+
+            Returns:
+                the function without any additional features.
+            """
+            return func
+
+        return patched_retry_decorator
+
+    monkeypatch.setattr(utilities, "retry", patched_retry)

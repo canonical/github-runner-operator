@@ -90,6 +90,9 @@ METRICS_EXCHANGE_PATH = Path("/home/ubuntu/metrics-exchange")
 PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
 MAX_METRICS_FILE_SIZE = 1024
 
+RUNNER_STARTUP_PROCESS = "/home/ubuntu/actions-runner/run.sh"
+RUNNER_LISTENER_PROCESS = "Runner.Listener"
+RUNNER_WORKER_PROCESS = "Runner.Worker"
 CREATE_SERVER_TIMEOUT = 5 * 60
 
 
@@ -502,7 +505,9 @@ class GithubRunnerRemoveError(Exception):
 
 
 _INSTANCE_STATUS_SHUTOFF = "SHUTOFF"
+_INSTANCE_STATUS_ERROR = "ERROR"
 _INSTANCE_STATUS_ACTIVE = "ACTIVE"
+_INSTANCE_STATUS_BUILDING = "BUILDING"
 
 
 class OpenstackRunnerManager:
@@ -545,6 +550,260 @@ class OpenstackRunnerManager:
         self._cloud_config = cloud_config
         self._github = GithubClient(token=self._config.token)
 
+    def reconcile(self, quantity: int) -> int:
+        """Reconcile the quantity of runners.
+
+        Args:
+            quantity: The number of intended runners.
+
+        Returns:
+            The change in number of runners.
+        """
+        start_ts = time.time()
+        try:
+            delta = self._reconcile_runners(quantity)
+        finally:
+            end_ts = time.time()
+            self._issue_reconciliation_metrics(
+                reconciliation_start_ts=start_ts, reconciliation_end_ts=end_ts
+            )
+
+        return delta
+
+    def _reconcile_runners(self, quantity: int) -> int:
+        """Reconcile the number of runners.
+
+        Args:
+            quantity: The number of intended runners.
+
+        Returns:
+            The change in number of runners.
+        """
+        with _create_connection(self._cloud_config) as conn:
+            runner_by_health = self._get_openstack_runner_status(conn)
+            logger.info(
+                "Found %s healthy runner and %s unhealthy runner",
+                len(runner_by_health.healthy),
+                len(runner_by_health.unhealthy),
+            )
+            logger.debug("Healthy runner: %s", runner_by_health.healthy)
+            logger.debug("Unhealthy runner: %s", runner_by_health.unhealthy)
+            remove_token = self._github.get_runner_remove_token(path=self._config.path)
+
+            self._clean_up_runners(
+                conn=conn, runner_by_health=runner_by_health, remove_token=remove_token
+            )
+
+            delta = self._scale(
+                quantity=quantity,
+                conn=conn,
+                runner_by_health=runner_by_health,
+                remove_token=remove_token,
+            )
+        return delta
+
+    def get_github_runner_info(self) -> tuple[RunnerGithubInfo, ...]:
+        """Get information on GitHub for the runners.
+
+        Returns:
+            Collection of runner GitHub information.
+        """
+        remote_runners_list: list[SelfHostedRunner] = self._github.get_runner_github_info(
+            self._config.path
+        )
+        logger.debug("List of runners found on GitHub:%s", remote_runners_list)
+        return tuple(
+            RunnerGithubInfo(
+                runner["name"],
+                runner["id"],
+                runner["status"] == GitHubRunnerStatus.ONLINE,
+                runner["busy"],
+            )
+            for runner in remote_runners_list
+            if runner["name"].startswith(f"{self.instance_name}-")
+        )
+
+    def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
+        """Get status on OpenStack of each runner.
+
+        Args:
+            conn: The connection object to access OpenStack cloud.
+
+        Returns:
+            Runner status grouped by health.
+        """
+        healthy_runner = []
+        unhealthy_runner = []
+        openstack_instances = self._get_openstack_instances(conn)
+
+        logger.debug("Found openstack instances: %s", openstack_instances)
+
+        for instance in openstack_instances:
+            if not OpenstackRunnerManager._health_check(conn=conn, server_name=instance.name):
+                unhealthy_runner.append(instance.name)
+            else:
+                healthy_runner.append(instance.name)
+
+        return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
+
+    def _get_openstack_instances(self, conn: OpenstackConnection) -> list[Server]:
+        """Get the OpenStack servers managed by this unit.
+
+        Args:
+            conn: The connection object to access OpenStack cloud.
+
+        Returns:
+            List of OpenStack instances.
+        """
+        return [
+            instance
+            for instance in cast(list[Server], conn.list_servers())
+            if instance.name.startswith(f"{self.instance_name}-")
+        ]
+
+    @staticmethod
+    def _health_check(conn: OpenstackConnection, server_name: str, startup: bool = False) -> bool:
+        """Health check a server instance.
+
+        A healthy server is defined as:
+            1. Openstack instance status is ACTIVE or BUILDING.
+            2. Runner.Worker exists (running a job).
+            3. Runner.Listener exists (waiting for job).
+            3. GitHub runner status is Idle or Active.
+
+        An undetermined server is marked as healthy when:
+            1. SSH fails - could be a transient network error.
+            2. The Runner.* processes do not exist. Mark healthy for now to gather data. This is
+                subject to change to unhealthy once enough data has been gathered.
+
+        Args:
+            conn: The Openstack connection instance.
+            server_name: The name of the OpenStack server to health check.
+            startup: Check only whether the startup is successful.
+
+        Returns:
+            Whether the instance is healthy.
+        """
+        server: Server | None = conn.get_server(name_or_id=server_name)
+        if not server:
+            return False
+        if server.status == (_INSTANCE_STATUS_SHUTOFF, _INSTANCE_STATUS_ERROR):
+            return False
+        if server.status not in (_INSTANCE_STATUS_ACTIVE, _INSTANCE_STATUS_BUILDING):
+            return False
+        return OpenstackRunnerManager._ssh_health_check(
+            conn=conn, server_name=server_name, startup=startup
+        )
+
+    @staticmethod
+    def _ssh_health_check(conn: OpenstackConnection, server_name: str, startup: bool) -> bool:
+        """Use SSH to check whether runner application is running.
+
+        A healthy runner is defined as:
+            1. SSH connection can be established.
+            2. Runner.Worker exists (running a job).
+            3. Runner.Listener exists (waiting for job).
+
+        Args:
+            conn: The Openstack connection instance.
+            server_name: The openstack server instance to check connections.
+            startup: Check only whether the startup is successful.
+
+        Returns:
+            Whether the runner application is running.
+        """
+        try:
+            ssh_conn = OpenstackRunnerManager._get_ssh_connection(
+                conn=conn, server_name=server_name
+            )
+        except _SSHError as exc:
+            logger.error("[ALERT]: Unable to SSH to server: %s, reason: %s", server_name, str(exc))
+            return True
+
+        result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
+        logger.debug("Output of `ps aux` on %s stderr: %s", server_name, result.stderr)
+        logger.debug("Output of `ps aux` on %s stdout: %s", server_name, result.stdout)
+        if not result.ok or RUNNER_STARTUP_PROCESS not in result.stdout:
+            logger.warning("List all process command failed on %s ", server_name)
+            return False
+        logger.info("Runner process found to be healthy on %s", server_name)
+        if startup:
+            return True
+
+        if RUNNER_WORKER_PROCESS in result.stdout or RUNNER_LISTENER_PROCESS in result.stdout:
+            return True
+
+        logger.error("[ALERT] Health check failed for server: %s", server_name)
+        return True
+
+    @staticmethod
+    @retry(tries=3, delay=5, max_delay=60, backoff=2, local_logger=logger)
+    def _get_ssh_connection(
+        conn: OpenstackConnection, server_name: str, timeout: int = 30
+    ) -> SshConnection:
+        """Get a valid ssh connection within a network for a given openstack instance.
+
+        The SSH connection will attempt to establish connection until the timeout configured.
+
+        Args:
+            conn: The Openstack connection instance.
+            server_name: The Openstack server instance name.
+            timeout: Timeout in seconds to attempt connection to each available server address.
+
+        Raises:
+            _SSHError: If there was an error getting a valid SSH connection.
+
+        Returns:
+            An SSH connection to OpenStack server instance.
+        """
+        server: Server | None = conn.get_server(name_or_id=server_name)
+        if not server:
+            raise _SSHError(f"Server gone while trying to get SSH connection: {server_name}.")
+        if not server.key_name:
+            raise _SSHError(
+                f"Unable to create SSH connection, no valid keypair found for {server.name}"
+            )
+        key_path = OpenstackRunnerManager._get_key_path(server.name)
+        if not key_path.exists():
+            raise _SSHError(f"Missing keyfile for server: {server.name}, key path: {key_path}")
+        network_address_list = server.addresses.values()
+        if not network_address_list:
+            raise _SSHError(f"No addresses found for OpenStack server {server.name}")
+
+        server_addresses: list[str] = [
+            address["addr"]
+            for network_addresses in network_address_list
+            for address in network_addresses
+        ]
+        for ip in server_addresses:
+            try:
+                connection = SshConnection(
+                    host=ip,
+                    user="ubuntu",
+                    connect_kwargs={"key_filename": str(key_path)},
+                    connect_timeout=timeout,
+                )
+                result = connection.run("echo hello world", warn=True, timeout=timeout)
+                if not result.ok:
+                    logger.warning(
+                        "SSH test connection failed, server: %s, address: %s", server.name, ip
+                    )
+                    continue
+                if "hello world" in result.stdout:
+                    return connection
+            except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException):
+                logger.warning(
+                    "Unable to SSH into %s with address %s",
+                    server.name,
+                    connection.host,
+                    exc_info=True,
+                )
+                continue
+        raise _SSHError(
+            f"No connectable SSH addresses found, server: {server.name}, "
+            "addresses: {server_addresses}"
+        )
+
     @staticmethod
     def _get_key_path(name: str) -> Path:
         """Get the filepath for storing private SSH of a runner.
@@ -556,167 +815,6 @@ class OpenstackRunnerManager:
             Path to reserved for the key file of the runner.
         """
         return _SSH_KEY_PATH / f"runner-{name}.key"
-
-    @staticmethod
-    def _ensure_security_group(conn: OpenstackConnection) -> None:
-        """Ensure runner security group exists.
-
-        Args:
-            conn: The connection object to access OpenStack cloud.
-        """
-        rule_exists_icmp = False
-        rule_exists_ssh = False
-        rule_exists_tmate_ssh = False
-
-        existing_security_group = conn.get_security_group(name_or_id=SECURITY_GROUP_NAME)
-        if existing_security_group is None:
-            logger.info("Security group %s not found, creating it", SECURITY_GROUP_NAME)
-            conn.create_security_group(
-                name=SECURITY_GROUP_NAME,
-                description="For servers managed by the github-runner charm.",
-            )
-        else:
-            existing_rules = existing_security_group["security_group_rules"]
-            for rule in existing_rules:
-                if rule["protocol"] == "icmp":
-                    logger.debug(
-                        "Found ICMP rule in existing security group %s", SECURITY_GROUP_NAME
-                    )
-                    rule_exists_icmp = True
-                if (
-                    rule["protocol"] == "tcp"
-                    and rule["port_range_min"] == rule["port_range_max"] == 22
-                ):
-                    logger.debug(
-                        "Found SSH rule in existing security group %s", SECURITY_GROUP_NAME
-                    )
-                    rule_exists_ssh = True
-                if (
-                    rule["protocol"] == "tcp"
-                    and rule["port_range_min"] == rule["port_range_max"] == 10022
-                ):
-                    logger.debug(
-                        "Found tmate SSH rule in existing security group %s", SECURITY_GROUP_NAME
-                    )
-                    rule_exists_tmate_ssh = True
-
-        if not rule_exists_icmp:
-            conn.create_security_group_rule(
-                secgroup_name_or_id=SECURITY_GROUP_NAME,
-                protocol="icmp",
-                direction="ingress",
-                ethertype="IPv4",
-            )
-        if not rule_exists_ssh:
-            conn.create_security_group_rule(
-                secgroup_name_or_id=SECURITY_GROUP_NAME,
-                port_range_min="22",
-                port_range_max="22",
-                protocol="tcp",
-                direction="ingress",
-                ethertype="IPv4",
-            )
-        if not rule_exists_tmate_ssh:
-            conn.create_security_group_rule(
-                secgroup_name_or_id=SECURITY_GROUP_NAME,
-                port_range_min="10022",
-                port_range_max="10022",
-                protocol="tcp",
-                direction="egress",
-                ethertype="IPv4",
-            )
-
-    @staticmethod
-    def _setup_runner_keypair(conn: OpenstackConnection, name: str) -> None:
-        """Set up the SSH keypair for a runner.
-
-        Args:
-            conn: The connection object to access OpenStack cloud.
-            name: The name of the runner.
-        """
-        private_key_path = OpenstackRunnerManager._get_key_path(name)
-
-        if private_key_path.exists():
-            logger.warning("Existing private key file for %s found, removing it.", name)
-            private_key_path.unlink()
-
-        keypair = conn.create_keypair(name=name)
-        private_key_path.write_text(keypair.private_key)
-        shutil.chown(private_key_path, user="ubuntu", group="ubuntu")
-        private_key_path.chmod(0o400)
-
-    @staticmethod
-    def _ssh_health_check(server: Server) -> bool:
-        """Use SSH to check whether runner application is running.
-
-        Args:
-            server: The openstack server instance to check connections.
-
-        Returns:
-            Whether the runner application is running.
-        """
-        addresses = []
-        for ssh_conn in OpenstackRunnerManager._get_ssh_connections(server=server):
-            addresses.append(ssh_conn.host)
-            try:
-                result = ssh_conn.run("ps aux", warn=True)
-                logger.debug("Output of `ps aux` on %s stderr: %s", server.name, result.stderr)
-                logger.debug("Output of `ps aux` on %s stdout: %s", server.name, result.stdout)
-                if not result.ok:
-                    logger.warning("List all process command failed on %s ", server.name)
-                    continue
-
-                if "/bin/bash /home/ubuntu/actions-runner/run.sh" in result.stdout:
-                    logger.info("Runner process found to be healthy on %s", server.name)
-                    return True
-
-            except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException):
-                logger.warning(
-                    "Unable to SSH into %s with address %s",
-                    server.name,
-                    ssh_conn.host,
-                    exc_info=True,
-                )
-                # Looping over all IP and trying SSH.
-
-        logger.warning(
-            "Health check failed on %s with all of the following addresses: %s",
-            server.name,
-            addresses,
-        )
-        return False
-
-    @retry(tries=10, delay=60, local_logger=logger)
-    @staticmethod
-    def _wait_until_runner_process_running(conn: OpenstackConnection, instance_name: str) -> None:
-        """Wait until the runner process is running.
-
-        The waiting to done by the retry declarator.
-
-        Args:
-            conn: The openstack connection instance.
-            instance_name: The name of the instance to wait on.
-
-        Raises:
-            RunnerStartError: Unable perform health check of the runner application.
-        """
-        try:
-            server: Server | None = conn.get_server(instance_name)
-            if (
-                not server
-                or server.status != _INSTANCE_STATUS_ACTIVE
-                or not OpenstackRunnerManager._ssh_health_check(server=server)
-            ):
-                raise RunnerStartError(
-                    (
-                        "Unable to find running process of runner application on openstack runner "
-                        f"{instance_name}"
-                    )
-                )
-        except TimeoutError as err:
-            raise RunnerStartError(
-                f"Unable to connect to openstack runner {instance_name}"
-            ) from err
 
     @dataclass
     class _CreateRunnerArgs:
@@ -873,241 +971,166 @@ class OpenstackRunnerManager:
         pre_job_contents = templates_env.get_template("pre-job.j2").render(pre_job_contents_dict)
         return pre_job_contents
 
-    def get_github_runner_info(self) -> tuple[RunnerGithubInfo, ...]:
-        """Get information on GitHub for the runners.
+    @staticmethod
+    def _ensure_security_group(conn: OpenstackConnection) -> None:
+        """Ensure runner security group exists.
 
-        Returns:
-            Collection of runner GitHub information.
+        Args:
+            conn: The connection object to access OpenStack cloud.
         """
-        remote_runners_list: list[SelfHostedRunner] = self._github.get_runner_github_info(
-            self._config.path
-        )
-        logger.debug("List of runners found on GitHub:%s", remote_runners_list)
-        return tuple(
-            RunnerGithubInfo(
-                runner["name"],
-                runner["id"],
-                runner["status"] == GitHubRunnerStatus.ONLINE,
-                runner["busy"],
+        rule_exists_icmp = False
+        rule_exists_ssh = False
+        rule_exists_tmate_ssh = False
+
+        existing_security_group = conn.get_security_group(name_or_id=SECURITY_GROUP_NAME)
+        if existing_security_group is None:
+            logger.info("Security group %s not found, creating it", SECURITY_GROUP_NAME)
+            conn.create_security_group(
+                name=SECURITY_GROUP_NAME,
+                description="For servers managed by the github-runner charm.",
             )
-            for runner in remote_runners_list
-            if runner["name"].startswith(f"{self.instance_name}-")
-        )
+        else:
+            existing_rules = existing_security_group["security_group_rules"]
+            for rule in existing_rules:
+                if rule["protocol"] == "icmp":
+                    logger.debug(
+                        "Found ICMP rule in existing security group %s", SECURITY_GROUP_NAME
+                    )
+                    rule_exists_icmp = True
+                if (
+                    rule["protocol"] == "tcp"
+                    and rule["port_range_min"] == rule["port_range_max"] == 22
+                ):
+                    logger.debug(
+                        "Found SSH rule in existing security group %s", SECURITY_GROUP_NAME
+                    )
+                    rule_exists_ssh = True
+                if (
+                    rule["protocol"] == "tcp"
+                    and rule["port_range_min"] == rule["port_range_max"] == 10022
+                ):
+                    logger.debug(
+                        "Found tmate SSH rule in existing security group %s", SECURITY_GROUP_NAME
+                    )
+                    rule_exists_tmate_ssh = True
+
+        if not rule_exists_icmp:
+            conn.create_security_group_rule(
+                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                protocol="icmp",
+                direction="ingress",
+                ethertype="IPv4",
+            )
+        if not rule_exists_ssh:
+            conn.create_security_group_rule(
+                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                port_range_min="22",
+                port_range_max="22",
+                protocol="tcp",
+                direction="ingress",
+                ethertype="IPv4",
+            )
+        if not rule_exists_tmate_ssh:
+            conn.create_security_group_rule(
+                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                port_range_min="10022",
+                port_range_max="10022",
+                protocol="tcp",
+                direction="egress",
+                ethertype="IPv4",
+            )
 
     @staticmethod
-    def _get_ssh_connections(server: Server) -> Iterator[SshConnection]:
-        """Get ssh connections within a network for a given openstack instance.
-
-        The SSH connection will attempt to establish connection until the timeout configured.
-
-        Args:
-            server: The Openstack server instance.
-
-        Yields:
-            SSH connections to OpenStack server instance.
-        """
-        if not server.key_name:
-            logger.error(
-                "Unable to create SSH connection as no valid keypair found for %s", server.name
-            )
-            return
-
-        network_address_list = server.addresses.values()
-        if not network_address_list:
-            logger.error("No addresses to connect to for OpenStack server %s", server.name)
-            return
-
-        for network_addresses in network_address_list:
-            for address in network_addresses:
-                ip = address["addr"]
-
-                key_path = OpenstackRunnerManager._get_key_path(server.name)
-                if not key_path.exists():
-                    logger.error(
-                        "Skipping SSH to server %s with missing key file %s",
-                        server.name,
-                        str(key_path),
-                    )
-                    continue
-
-                yield SshConnection(
-                    host=ip,
-                    user="ubuntu",
-                    connect_kwargs={"key_filename": str(key_path)},
-                    connect_timeout=30,
-                )
-
-    def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
-        """Get status on OpenStack of each runner.
+    def _setup_runner_keypair(conn: OpenstackConnection, name: str) -> None:
+        """Set up the SSH keypair for a runner.
 
         Args:
             conn: The connection object to access OpenStack cloud.
-
-        Returns:
-            Runner status grouped by health.
+            name: The name of the runner.
         """
-        healthy_runner = []
-        unhealthy_runner = []
-        openstack_instances = self._get_openstack_instances(conn)
+        private_key_path = OpenstackRunnerManager._get_key_path(name)
 
-        logger.debug("Found openstack instances: %s", openstack_instances)
+        if private_key_path.exists():
+            logger.warning("Existing private key file for %s found, removing it.", name)
+            private_key_path.unlink()
 
-        for instance in openstack_instances:
-            server: Server | None = conn.get_server(instance.name)
-            if not server:
-                continue
-            if (
-                server.status == _INSTANCE_STATUS_SHUTOFF
-                or not OpenstackRunnerManager._ssh_health_check(server=server)
-            ):
-                unhealthy_runner.append(instance.name)
-            else:
-                healthy_runner.append(instance.name)
+        keypair = conn.create_keypair(name=name)
+        private_key_path.write_text(keypair.private_key)
+        shutil.chown(private_key_path, user="ubuntu", group="ubuntu")
+        private_key_path.chmod(0o400)
 
-        return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
+    @retry(tries=10, delay=60, local_logger=logger)
+    @staticmethod
+    def _wait_until_runner_process_running(conn: OpenstackConnection, instance_name: str) -> None:
+        """Wait until the runner process is running.
 
-    def _get_openstack_instances(self, conn: OpenstackConnection) -> list[Server]:
-        """Get the OpenStack servers managed by this unit.
+        The waiting to done by the retry declarator.
 
         Args:
-            conn: The connection object to access OpenStack cloud.
-
-        Returns:
-            List of OpenStack instances.
-        """
-        return [
-            instance
-            for instance in cast(list[Server], conn.list_servers())
-            if instance.name.startswith(f"{self.instance_name}-")
-        ]
-
-    def _run_github_removal_script(self, server: Server, remove_token: str | None) -> None:
-        """Run Github runner removal script.
-
-        Args:
-            server: The Openstack server instance.
-            remove_token: The GitHub instance removal token.
+            conn: The openstack connection instance.
+            instance_name: The name of the instance to wait on.
 
         Raises:
-            GithubRunnerRemoveError: Unable to remove runner from GitHub.
+            RunnerStartError: Unable perform health check of the runner application.
         """
-        if not remove_token:
-            return
-        for ssh_conn in OpenstackRunnerManager._get_ssh_connections(server=server):
-            try:
-                result: Result = ssh_conn.run(
-                    f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}",
-                    warn=True,
-                )
-                if not result.ok:
-                    logger.warning(
-                        (
-                            "Unable to run removal script on instance %s, "
-                            "exit code: %s, stdout: %s, stderr: %s"
-                        ),
-                        server.name,
-                        result.return_code,
-                        result.stdout,
-                        result.stderr,
+        try:
+            if not OpenstackRunnerManager._health_check(
+                conn=conn, server_name=instance_name, startup=True
+            ):
+                raise RunnerStartError(
+                    (
+                        "Unable to find running process of runner application on openstack runner "
+                        f"{instance_name}"
                     )
-                    continue
-                return
-            except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException):
-                logger.info(
-                    "Unable to SSH into %s with address %s",
-                    server.name,
-                    ssh_conn.host,
-                    exc_info=True,
                 )
-                continue
-            # 2024/04/23: The broad except clause is for logging purposes.
-            # Will be removed in future versions.
-            except Exception:  # pylint: disable=broad-exception-caught
-                logger.critical(
-                    "Found unexpected exception, please contact the developers", exc_info=True
-                )
-                continue
+        except TimeoutError as err:
+            raise RunnerStartError(
+                f"Unable to connect to openstack runner {instance_name}"
+            ) from err
 
-        logger.warning("Failed to run GitHub runner removal script %s", server.name)
-        raise GithubRunnerRemoveError(f"Failed to remove runner {server.name} from Github.")
-
-    def _remove_openstack_runner(
-        self,
-        conn: OpenstackConnection,
-        server: Server,
-        remove_token: str | None = None,
+    @staticmethod
+    def _issue_runner_installed_metric(
+        app_name: str,
+        instance_config: InstanceConfig,
+        install_start_ts: float,
+        install_end_ts: float,
     ) -> None:
-        """Remove a OpenStack server hosting the GitHub runner application.
+        """Issue RunnerInstalled metric.
 
         Args:
-            conn: The Openstack connection instance.
-            server: The Openstack server.
-            remove_token: The GitHub runner remove token.
+            app_name: The juju application name.
+            instance_config: The configuration values for Openstack instance.
+            install_start_ts: The timestamp when the installation started.
+            install_end_ts: The timestamp when the installation ended.
         """
         try:
-            self._run_github_removal_script(server=server, remove_token=remove_token)
-        except (TimeoutError, invoke.exceptions.UnexpectedExit, GithubRunnerRemoveError):
-            logger.warning(
-                "Failed to run runner removal script for %s", server.name, exc_info=True
+            metric_events.issue_event(
+                event=metric_events.RunnerInstalled(
+                    timestamp=install_start_ts,
+                    flavor=app_name,
+                    duration=install_end_ts - install_start_ts,
+                ),
             )
-        # 2024/04/23: The broad except clause is for logging purposes.
-        # Will be removed in future versions.
-        except Exception:  # pylint: disable=broad-exception-caught
-            logger.critical(
-                "Found unexpected exception, please contact the developers", exc_info=True
-            )
+        except IssueMetricEventError:
+            logger.exception("Failed to issue RunnerInstalled metric")
         try:
-            if not conn.delete_server(name_or_id=server.name, wait=True, delete_ips=True):
-                logger.warning("Server does not exist %s", server.name)
-        except SDKException as exc:
-            logger.error("Something wrong deleting the server %s, %s", server.name, exc)
-        # 2024/04/23: The broad except clause is for logging purposes.
-        # Will be removed in future versions.
-        except Exception:  # pylint: disable=broad-exception-caught
-            logger.critical(
-                "Found unexpected exception, please contact the developers", exc_info=True
+            storage = metrics_storage.create(instance_config.name)
+        except CreateMetricsStorageError:
+            logger.exception(
+                "Failed to create metrics storage for runner %s, "
+                "will not be able to issue all metrics.",
+                instance_config.name,
             )
-
-    def _remove_one_runner(
-        self,
-        conn: OpenstackConnection,
-        instance_name: str,
-        github_id: int | None = None,
-        remove_token: str | None = None,
-    ) -> None:
-        """Remove one OpenStack runner.
-
-        Args:
-            conn: The Openstack connection instance.
-            instance_name: The Openstack server name to delete.
-            github_id: The runner id on GitHub.
-            remove_token: The GitHub runner remove token.
-        """
-        logger.info("Attempting to remove OpenStack runner %s", instance_name)
-
-        server: Server | None = conn.get_server(name_or_id=instance_name)
-
-        if server is not None:
-            logger.info(
-                "Pulling metrics and deleting server for OpenStack runner %s", instance_name
-            )
-            self._pull_metrics(server, instance_name)
-            self._remove_openstack_runner(conn, server, remove_token)
         else:
-            logger.info(
-                "Not found server for OpenStack runner %s marked for deletion", instance_name
-            )
-
-        if github_id is not None:
             try:
-                self._github.delete_runner(self._config.path, github_id)
-            except GithubClientError as exc:
-                logger.warning("Failed to remove runner from Github %s, %s", instance_name, exc)
-            # 2024/04/23: The broad except clause is for logging purposes.
-            # Will be removed in future versions.
-            except Exception:  # pylint: disable=broad-exception-caught
-                logger.critical(
-                    "Found unexpected exception, please contact the developers", exc_info=True
+                (storage.path / RUNNER_INSTALLED_TS_FILE_NAME).write_text(
+                    str(install_end_ts), encoding="utf-8"
+                )
+            except FileNotFoundError:
+                logger.exception(
+                    "Failed to write runner-installed.timestamp into metrics storage "
+                    "for runner %s, will not be able to issue all metrics.",
+                    instance_config.name,
                 )
 
     def _remove_runners(
@@ -1149,6 +1172,237 @@ class OpenstackRunnerManager:
                 logger.exception("Unable to delete OpenStack keypair %s", instance_name)
             OpenstackRunnerManager._get_key_path(instance_name).unlink(missing_ok=True)
             num_to_remove -= 1
+
+    def _remove_one_runner(
+        self,
+        conn: OpenstackConnection,
+        instance_name: str,
+        github_id: int | None = None,
+        remove_token: str | None = None,
+    ) -> None:
+        """Remove one OpenStack runner.
+
+        Args:
+            conn: The Openstack connection instance.
+            instance_name: The Openstack server name to delete.
+            github_id: The runner id on GitHub.
+            remove_token: The GitHub runner remove token.
+        """
+        logger.info("Attempting to remove OpenStack runner %s", instance_name)
+
+        server: Server | None = conn.get_server(name_or_id=instance_name)
+
+        if server is not None:
+            logger.info(
+                "Pulling metrics and deleting server for OpenStack runner %s", instance_name
+            )
+            self._pull_metrics(conn=conn, instance_name=instance_name)
+            self._remove_openstack_runner(conn, server, remove_token)
+        else:
+            logger.info(
+                "Not found server for OpenStack runner %s marked for deletion", instance_name
+            )
+
+        if github_id is not None:
+            try:
+                self._github.delete_runner(self._config.path, github_id)
+            except GithubClientError as exc:
+                logger.warning("Failed to remove runner from Github %s, %s", instance_name, exc)
+            # 2024/04/23: The broad except clause is for logging purposes.
+            # Will be removed in future versions.
+            except Exception:  # pylint: disable=broad-exception-caught
+                logger.critical(
+                    "Found unexpected exception, please contact the developers", exc_info=True
+                )
+
+    def _pull_metrics(self, conn: OpenstackConnection, instance_name: str) -> None:
+        """Pull metrics from the runner into the respective storage for the runner.
+
+        Args:
+            conn: The Openstack connection instance.
+            instance_name: The Openstack server name.
+        """
+        try:
+            storage = metrics_storage.get(instance_name)
+        except GetMetricsStorageError:
+            logger.exception(
+                "Failed to get shared metrics storage for runner %s, "
+                "will not be able to issue all metrics.",
+                instance_name,
+            )
+            return
+
+        try:
+            ssh_conn = self._get_ssh_connection(conn=conn, server_name=instance_name)
+        except _SSHError as exc:
+            logger.info("Failed to pull metrics for %s: %s", instance_name, exc)
+            return
+
+        try:
+            self._pull_file(
+                ssh_conn=ssh_conn,
+                remote_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"),
+                local_path=str(storage.path / "pre-job-metrics.json"),
+                max_size=MAX_METRICS_FILE_SIZE,
+            )
+            self._pull_file(
+                ssh_conn=ssh_conn,
+                remote_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"),
+                local_path=str(storage.path / "post-job-metrics.json"),
+                max_size=MAX_METRICS_FILE_SIZE,
+            )
+            return
+        except _PullFileError as exc:
+            logger.warning(
+                "Failed to pull metrics for %s: %s . Will not be able to issue all metrics",
+                instance_name,
+                exc,
+            )
+            return
+
+    def _pull_file(
+        self, ssh_conn: SshConnection, remote_path: str, local_path: str, max_size: int
+    ) -> None:
+        """Pull file from the runner instance.
+
+        Args:
+            ssh_conn: The SSH connection instance.
+            remote_path: The file path on the runner instance.
+            local_path: The local path to store the file.
+            max_size: If the file is larger than this, it will not be pulled.
+
+        Raises:
+            _PullFileError: Unable to pull the file from the runner instance.
+            _SSHError: Issue with SSH connection.
+        """
+        try:
+            result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True)
+        except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException) as exc:
+            raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
+        if not result.ok:
+            logger.warning(
+                (
+                    "Unable to get file size of %s on instance %s, "
+                    "exit code: %s, stdout: %s, stderr: %s"
+                ),
+                remote_path,
+                ssh_conn.host,
+                result.return_code,
+                result.stdout,
+                result.stderr,
+            )
+            raise _PullFileError(reason=f"Unable to get file size of {remote_path}")
+
+        stdout = result.stdout
+        try:
+            stdout.strip()
+            size = int(stdout)
+            if size > max_size:
+                raise _PullFileError(
+                    reason=f"File size of {remote_path} too large {size} > {max_size}"
+                )
+        except ValueError as exc:
+            raise _PullFileError(reason=f"Invalid file size for {remote_path}: {stdout}") from exc
+
+        try:
+            ssh_conn.get(remote=remote_path, local=local_path)
+        except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException) as exc:
+            raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
+        except OSError as exc:
+            raise _PullFileError(reason=f"Unable to retrieve file {remote_path}") from exc
+
+    def _remove_openstack_runner(
+        self,
+        conn: OpenstackConnection,
+        server: Server,
+        remove_token: str | None = None,
+    ) -> None:
+        """Remove a OpenStack server hosting the GitHub runner application.
+
+        Args:
+            conn: The Openstack connection instance.
+            server: The Openstack server.
+            remove_token: The GitHub runner remove token.
+        """
+        try:
+            self._run_github_removal_script(conn=conn, server=server, remove_token=remove_token)
+        except (TimeoutError, invoke.exceptions.UnexpectedExit, GithubRunnerRemoveError):
+            logger.warning(
+                "Failed to run runner removal script for %s", server.name, exc_info=True
+            )
+        # 2024/04/23: The broad except clause is for logging purposes.
+        # Will be removed in future versions.
+        except Exception:  # pylint: disable=broad-exception-caught
+            logger.critical(
+                "Found unexpected exception, please contact the developers", exc_info=True
+            )
+        try:
+            if not conn.delete_server(name_or_id=server.name, wait=True, delete_ips=True):
+                logger.warning("Server does not exist %s", server.name)
+        except SDKException as exc:
+            logger.error("Something wrong deleting the server %s, %s", server.name, exc)
+        # 2024/04/23: The broad except clause is for logging purposes.
+        # Will be removed in future versions.
+        except Exception:  # pylint: disable=broad-exception-caught
+            logger.critical(
+                "Found unexpected exception, please contact the developers", exc_info=True
+            )
+
+    def _run_github_removal_script(
+        self, conn: OpenstackConnection, server: Server, remove_token: str | None
+    ) -> None:
+        """Run Github runner removal script.
+
+        Args:
+            conn: The Openstack connection instance.
+            server: The Openstack server instance.
+            remove_token: The GitHub instance removal token.
+
+        Raises:
+            GithubRunnerRemoveError: Unable to remove runner from GitHub.
+        """
+        if not remove_token:
+            return
+        try:
+            ssh_conn = OpenstackRunnerManager._get_ssh_connection(
+                conn=conn, server_name=server.name
+            )
+        except _SSHError as exc:
+            logger.error(
+                "Unable to run GitHub removal script, server: %s, reason: %s",
+                server.name,
+                str(exc),
+            )
+            raise GithubRunnerRemoveError(
+                f"Failed to remove runner {server.name} from Github."
+            ) from exc
+
+        try:
+            result: Result = ssh_conn.run(
+                f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}",
+                warn=True,
+            )
+            if not result.ok:
+                logger.warning(
+                    (
+                        "Unable to run removal script on instance %s, "
+                        "exit code: %s, stdout: %s, stderr: %s"
+                    ),
+                    server.name,
+                    result.return_code,
+                    result.stdout,
+                    result.stderr,
+                )
+            return
+        # 2024/04/23: The broad except clause is for logging purposes.
+        # Will be removed in future versions.
+        except Exception:  # pylint: disable=broad-exception-caught
+            logger.critical(
+                "Found unexpected exception, please contact the developers", exc_info=True
+            )
+
+        logger.warning("Failed to run GitHub runner removal script %s", server.name)
+        raise GithubRunnerRemoveError(f"Failed to remove runner {server.name} from Github.")
 
     def _clean_up_keys_files(
         self, conn: OpenstackConnection, exclude_instances: Iterable[str]
@@ -1214,58 +1468,6 @@ class OpenstackRunnerManager:
                         "Unable to delete OpenStack keypair associated with deleted key file %s ",
                         key.name,
                     )
-
-    def reconcile(self, quantity: int) -> int:
-        """Reconcile the quantity of runners.
-
-        Args:
-            quantity: The number of intended runners.
-
-        Returns:
-            The change in number of runners.
-        """
-        start_ts = time.time()
-        try:
-            delta = self._reconcile_runners(quantity)
-        finally:
-            end_ts = time.time()
-            self._issue_reconciliation_metrics(
-                reconciliation_start_ts=start_ts, reconciliation_end_ts=end_ts
-            )
-
-        return delta
-
-    def _reconcile_runners(self, quantity: int) -> int:
-        """Reconcile the number of runners.
-
-        Args:
-            quantity: The number of intended runners.
-
-        Returns:
-            The change in number of runners.
-        """
-        with _create_connection(self._cloud_config) as conn:
-            runner_by_health = self._get_openstack_runner_status(conn)
-            logger.info(
-                "Found %s healthy runner and %s unhealthy runner",
-                len(runner_by_health.healthy),
-                len(runner_by_health.unhealthy),
-            )
-            logger.debug("Healthy runner: %s", runner_by_health.healthy)
-            logger.debug("Unhealthy runner: %s", runner_by_health.unhealthy)
-            remove_token = self._github.get_runner_remove_token(path=self._config.path)
-
-            self._clean_up_runners(
-                conn=conn, runner_by_health=runner_by_health, remove_token=remove_token
-            )
-
-            delta = self._scale(
-                quantity=quantity,
-                conn=conn,
-                runner_by_health=runner_by_health,
-                remove_token=remove_token,
-            )
-        return delta
 
     def _clean_up_runners(
         self, conn: OpenstackConnection, runner_by_health: RunnerByHealth, remove_token: str
@@ -1384,163 +1586,6 @@ class OpenstackRunnerManager:
             logger.info("No changes to number of runners needed")
 
         return delta
-
-    def flush(self) -> int:
-        """Flush Openstack servers.
-
-        Returns:
-            The number of runners flushed.
-        """
-        logger.info("Flushing OpenStack all runners")
-        with _create_connection(self._cloud_config) as conn:
-            runner_by_health = self._get_openstack_runner_status(conn)
-            remove_token = self._github.get_runner_remove_token(path=self._config.path)
-            runners_to_delete = (*runner_by_health.healthy, *runner_by_health.unhealthy)
-            self._remove_runners(
-                conn=conn,
-                instance_names=runners_to_delete,
-                remove_token=remove_token,
-            )
-            return len(runners_to_delete)
-
-    def _pull_metrics(self, server: Server, instance_name: str) -> None:
-        """Pull metrics from the runner into the respective storage for the runner.
-
-        Args:
-            server: The Openstack server instance.
-            instance_name: The Openstack server name.
-        """
-        try:
-            storage = metrics_storage.get(instance_name)
-        except GetMetricsStorageError:
-            logger.exception(
-                "Failed to get shared metrics storage for runner %s, "
-                "will not be able to issue all metrics.",
-                instance_name,
-            )
-            return
-
-        for ssh_conn in self._get_ssh_connections(server=server):
-            try:
-                self._pull_file(
-                    ssh_conn=ssh_conn,
-                    remote_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"),
-                    local_path=str(storage.path / "pre-job-metrics.json"),
-                    max_size=MAX_METRICS_FILE_SIZE,
-                )
-                self._pull_file(
-                    ssh_conn=ssh_conn,
-                    remote_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"),
-                    local_path=str(storage.path / "post-job-metrics.json"),
-                    max_size=MAX_METRICS_FILE_SIZE,
-                )
-                return
-            except _PullFileError as exc:
-                logger.warning(
-                    "Failed to pull metrics for %s: %s . Will not be able to issue all metrics",
-                    instance_name,
-                    exc,
-                )
-                return
-            except _SSHError as exc:
-                logger.info("Failed to pull metrics for %s: %s", instance_name, exc)
-                continue
-
-    def _pull_file(
-        self, ssh_conn: SshConnection, remote_path: str, local_path: str, max_size: int
-    ) -> None:
-        """Pull file from the runner instance.
-
-        Args:
-            ssh_conn: The SSH connection instance.
-            remote_path: The file path on the runner instance.
-            local_path: The local path to store the file.
-            max_size: If the file is larger than this, it will not be pulled.
-
-        Raises:
-            _PullFileError: Unable to pull the file from the runner instance.
-            _SSHError: Issue with SSH connection.
-        """
-        try:
-            result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True)
-        except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException) as exc:
-            raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
-        if not result.ok:
-            logger.warning(
-                (
-                    "Unable to get file size of %s on instance %s, "
-                    "exit code: %s, stdout: %s, stderr: %s"
-                ),
-                remote_path,
-                ssh_conn.host,
-                result.return_code,
-                result.stdout,
-                result.stderr,
-            )
-            raise _PullFileError(reason=f"Unable to get file size of {remote_path}")
-
-        stdout = result.stdout
-        try:
-            stdout.strip()
-            size = int(stdout)
-            if size > max_size:
-                raise _PullFileError(
-                    reason=f"File size of {remote_path} too large {size} > {max_size}"
-                )
-        except ValueError as exc:
-            raise _PullFileError(reason=f"Invalid file size for {remote_path}: {stdout}") from exc
-
-        try:
-            ssh_conn.get(remote=remote_path, local=local_path)
-        except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException) as exc:
-            raise _SSHError(reason=f"Unable to SSH into {ssh_conn.host}") from exc
-        except OSError as exc:
-            raise _PullFileError(reason=f"Unable to retrieve file {remote_path}") from exc
-
-    @staticmethod
-    def _issue_runner_installed_metric(
-        app_name: str,
-        instance_config: InstanceConfig,
-        install_start_ts: float,
-        install_end_ts: float,
-    ) -> None:
-        """Issue RunnerInstalled metric.
-
-        Args:
-            app_name: The juju application name.
-            instance_config: The configuration values for Openstack instance.
-            install_start_ts: The timestamp when the installation started.
-            install_end_ts: The timestamp when the installation ended.
-        """
-        try:
-            metric_events.issue_event(
-                event=metric_events.RunnerInstalled(
-                    timestamp=install_start_ts,
-                    flavor=app_name,
-                    duration=install_end_ts - install_start_ts,
-                ),
-            )
-        except IssueMetricEventError:
-            logger.exception("Failed to issue RunnerInstalled metric")
-        try:
-            storage = metrics_storage.create(instance_config.name)
-        except CreateMetricsStorageError:
-            logger.exception(
-                "Failed to create metrics storage for runner %s, "
-                "will not be able to issue all metrics.",
-                instance_config.name,
-            )
-        else:
-            try:
-                (storage.path / RUNNER_INSTALLED_TS_FILE_NAME).write_text(
-                    str(install_end_ts), encoding="utf-8"
-                )
-            except FileNotFoundError:
-                logger.exception(
-                    "Failed to write runner-installed.timestamp into metrics storage "
-                    "for runner %s, will not be able to issue all metrics.",
-                    instance_config.name,
-                )
 
     def _issue_reconciliation_metrics(
         self,
@@ -1664,3 +1709,21 @@ class OpenstackRunnerManager:
             )
         except IssueMetricEventError:
             logger.exception("Failed to issue Reconciliation metric")
+
+    def flush(self) -> int:
+        """Flush Openstack servers.
+
+        Returns:
+            The number of runners flushed.
+        """
+        logger.info("Flushing OpenStack all runners")
+        with _create_connection(self._cloud_config) as conn:
+            runner_by_health = self._get_openstack_runner_status(conn)
+            remove_token = self._github.get_runner_remove_token(path=self._config.path)
+            runners_to_delete = (*runner_by_health.healthy, *runner_by_health.unhealthy)
+            self._remove_runners(
+                conn=conn,
+                instance_names=runners_to_delete,
+                remove_token=remove_token,
+            )
+            return len(runners_to_delete)

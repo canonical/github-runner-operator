@@ -12,6 +12,8 @@ from unittest.mock import MagicMock
 
 import factory
 import factory.fuzzy
+import invoke.runners
+import openstack.compute.v2.server
 from pydantic.networks import IPvAnyAddress
 
 from charm_state import (
@@ -152,3 +154,27 @@ def get_mock_github_runner_charm() -> MagicMock:
     mock_charm.unit.name = "github-runner/0"
     mock_charm.app.name = "github-runner"
     return mock_charm
+
+
+class MockOpenstackServer(factory.Factory):
+    """Mock Openstack server instance."""  # noqa: DCO060
+
+    class Meta:
+        """Configuration for factory."""  # noqa: DCO060
+
+        model = openstack.compute.v2.server.Server
+
+    status = "ACTIVE"
+
+
+class MockSSHRunResult(factory.Factory):
+    """Mock SSH run result."""  # noqa: DCO060
+
+    class Meta:
+        """Configuration for factory."""  # noqa: DCO060
+
+        model = invoke.runners.Result
+
+    exited = 0
+    stdout = ""
+    stderr = ""
