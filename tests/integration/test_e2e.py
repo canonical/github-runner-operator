@@ -13,6 +13,7 @@ from tests.integration.helpers.common import (
     ACTIVE,
     DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
     DISPATCH_TEST_WORKFLOW_FILENAME,
+    InstanceHelper,
     dispatch_workflow,
     reconcile,
 )
@@ -22,16 +23,13 @@ from tests.integration.helpers import openstack, lxd
 async def app_fixture(
     model: Model,
     basic_app: Application,
-    instance_type: InstanceType,
+    instance_helper: InstanceHelper,
 ) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
     Ensure the charm has one runner before starting a test.
     """
-    if instance_type == InstanceType.LOCAL_LXD:
-        await lxd.ensure_charm_has_runner(basic_app, model)
-    if instance_type == InstanceType.OPENSTACK:
-        await openstack.OpenStackInstanceHelper.ensure_charm_has_runner(basic_app, model)
+    instance_helper.ensure_charm_has_runner(basic_app)
     yield basic_app
 
 @pytest.mark.openstack

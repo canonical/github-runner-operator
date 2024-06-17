@@ -19,6 +19,7 @@ from charm_state import (
     InstanceType,
 )
 from tests.integration.helpers import lxd, openstack
+from tests.integration.helpers.common import InstanceHelper
 from tests.status_name import ACTIVE, BLOCKED
 
 
@@ -26,16 +27,13 @@ from tests.status_name import ACTIVE, BLOCKED
 async def app_fixture(
     model: Model,
     basic_app: Application,
-    instance_type: InstanceType,
+    instance_helper: InstanceHelper,
 ) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
     Ensure the charm has one runner before starting a test.
     """
-    if instance_type == InstanceType.LOCAL_LXD:
-        await lxd.ensure_charm_has_runner(basic_app, model)
-    if instance_type == InstanceType.OPENSTACK:
-        await openstack.OpenStackInstanceHelper.ensure_charm_has_runner(basic_app, model)
+    instance_helper.ensure_charm_has_runner(basic_app)
     yield basic_app
 
 
@@ -115,9 +113,6 @@ async def test_flush_runner_and_resource_config(
     configs = await app.get_config()
     if instance_type == InstanceType.LOCAL_LXD:
         await lxd.assert_resource_lxd_profile(unit, configs)
-        await lxd.wait_till_num_of_runners(unit, 1)
-    if instance_type == InstanceType.OPENSTACK:
-        await openstack.wait_till_num_of_runners(unit, 1)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
@@ -136,7 +131,7 @@ async def test_flush_runner_and_resource_config(
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_token_config_changed_insufficient_perms(
-    model: Model, app: Application, token: str, instance_type: InstanceType
+    model: Model, app: Application
 ) -> None:
     """
     arrange: A working application with one runner.

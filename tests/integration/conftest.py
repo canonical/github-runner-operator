@@ -695,11 +695,10 @@ async def basic_app_fixture(
 
 
 @pytest_asyncio.fixture(scope="function", name="instance_helper")
-async def instance_helper_fixture(request: pytest.FixtureRequest) -> InstanceHelper:
+async def instance_helper_fixture(request: pytest.FixtureRequest, instance_type: InstanceType) -> InstanceHelper:
     """Instance helper fixture."""
-    openstack_marker = request.node.get_closest_marker("openstack")
     helper: InstanceHelper
-    if openstack_marker:
+    if instance_type == InstanceType.OPENSTACK:
         openstack_connection = request.getfixturevalue("openstack_connection")
         helper = OpenStackInstanceHelper(openstack_connection=openstack_connection)
     else:
