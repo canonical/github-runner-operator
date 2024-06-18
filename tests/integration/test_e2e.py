@@ -13,6 +13,7 @@ from charm_state import InstanceType
 from tests.integration.helpers import lxd, openstack
 from tests.integration.helpers.common import (
     ACTIVE,
+    DISPATCH_E2E_TEST_RUN_OPENSTACK_WORKFLOW_FILENAME,
     DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
     DISPATCH_TEST_WORKFLOW_FILENAME,
     InstanceHelper,
@@ -43,17 +44,28 @@ async def test_e2e_workflow(
     app: Application,
     github_repository: Repository,
     test_github_branch: Branch,
+    instance_type: InstanceType,
 ):
     """
     arrange: An app connected to an OpenStack cloud with no runners.
     act: Run e2e test workflow.
     assert:
     """
-    await dispatch_workflow(
-        app=app,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",
-        workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
-        dispatch_input={"runner-tag": app.name},
-    )
+    if instance_type == InstanceType.OPENSTACK:
+        await dispatch_workflow(
+            app=app,
+            branch=test_github_branch,
+            github_repository=github_repository,
+            conclusion="success",
+            workflow_id_or_name=DISPATCH_E2E_TEST_RUN_OPENSTACK_WORKFLOW_FILENAME,
+            dispatch_input={"runner-tag": app.name},
+        )
+    else:
+        await dispatch_workflow(
+            app=app,
+            branch=test_github_branch,
+            github_repository=github_repository,
+            conclusion="success",
+            workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
+            dispatch_input={"runner-tag": app.name},
+        )
