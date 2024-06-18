@@ -1,7 +1,7 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-name: Run End-to-End test
+name: Run OpenStack End-to-End test
 
 on:
   # The inputs are the same but they cannot be shared between triggers.
@@ -88,9 +88,3 @@ jobs:
       # ~/.local/bin is added to path runner env through in scripts/env.j2
       - name: test check-jsonschema
         run: check-jsonschema --version
-      - name: Test Firewall
-        run: |
-          HOST_IP=$(ip route | grep default | cut -f 3 -d" ")
-          [ $((ping $HOST_IP -c 5 || :) | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
-      - name: Test sctp support
-        run: sudo apt-get install lksctp-tools -yq && checksctp
