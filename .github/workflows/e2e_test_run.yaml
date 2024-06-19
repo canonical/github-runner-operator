@@ -21,7 +21,7 @@ on:
 jobs:
   e2e-test:
     name: End-to-End Test Run
-    runs-on: [self-hosted, linux, "${{ inputs.runner-tag }}"]
+    runs-on: [self-hosted, linux, x64, "${{ inputs.runner-tag }}"]
     steps:
       # Snapd can have some issues in privileged LXD containers without setting
       # security.nesting=True and this.
