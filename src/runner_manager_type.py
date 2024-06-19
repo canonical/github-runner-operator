@@ -100,6 +100,7 @@ class OpenstackRunnerManagerConfig:
         token: GitHub personal access token to register runner to the
             repository or organization.
         flavor: OpenStack flavor for defining the runner resources.
+        image: Openstack image id to boot the runner with.
         network: OpenStack network for runner network access.
         dockerhub_mirror: URL of dockerhub mirror to use.
     """
@@ -109,6 +110,7 @@ class OpenstackRunnerManagerConfig:
     labels: Iterable[str]
     token: str
     flavor: str
+    image: str
     network: str
     dockerhub_mirror: str | None
 
