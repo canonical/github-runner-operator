@@ -67,9 +67,7 @@ from errors import (
 )
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
-from github_client import GithubClient
 from github_type import GitHubRunnerStatus
-from openstack_cloud import openstack_manager
 from openstack_cloud.openstack_manager import OpenstackRunnerManager
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig

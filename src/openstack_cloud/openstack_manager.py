@@ -35,17 +35,10 @@ from fabric import Connection as SshConnection
 from invoke.runners import Result
 from openstack.compute.v2.server import Server
 from openstack.connection import Connection as OpenstackConnection
-from openstack.exceptions import OpenStackCloudException, SDKException
+from openstack.exceptions import SDKException
 from paramiko.ssh_exception import NoValidConnectionsError
 
-from charm_state import (
-    Arch,
-    CharmState,
-    GithubOrg,
-    ProxyConfig,
-    SSHDebugConnection,
-    UnsupportedArchitectureError,
-)
+from charm_state import CharmState, GithubOrg, ProxyConfig, SSHDebugConnection
 from errors import (
     CreateMetricsStorageError,
     GetMetricsStorageError,
@@ -54,15 +47,11 @@ from errors import (
     GithubMetricsError,
     IssueMetricEventError,
     OpenStackError,
-    OpenstackImageBuildError,
-    OpenstackInstanceLaunchError,
-    RunnerBinaryError,
     RunnerCreateError,
     RunnerStartError,
-    SubprocessError,
 )
 from github_client import GithubClient
-from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
+from github_type import GitHubRunnerStatus, SelfHostedRunner
 from metrics import events as metric_events
 from metrics import github as github_metrics
 from metrics import runner as runner_metrics
@@ -72,13 +61,10 @@ from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner_manager import IssuedMetricEventsStats
 from runner_manager_type import OpenstackRunnerManagerConfig
 from runner_type import GithubPath, RunnerByHealth, RunnerGithubInfo
-from utilities import execute_command, retry, set_env_var
+from utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
 
-IMAGE_PATH_TMPL = "jammy-server-cloudimg-{architecture}-compressed.img"
-# Update the version when the image is not backward compatible.
-IMAGE_NAME = "github-runner-jammy-v1"
 # Update the version when the security group rules are not backward compatible.
 SECURITY_GROUP_NAME = "github-runner-v1"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
@@ -125,18 +111,18 @@ class InstanceConfig:
     """The configuration values for creating a single runner instance.
 
     Attributes:
-        name: Name of the image to launch the GitHub runner instance with.
-        labels: The runner instance labels.
-        registration_token: Token for registering the runner on GitHub.
         github_path: The GitHub repo/org path to register the runner.
-        openstack_image: The Openstack image to use to boot the instance with.
+        image: The Openstack image to use to boot the instance with.
+        labels: The runner instance labels.
+        name: Name of the image to launch the GitHub runner instance with.
+        registration_token: Token for registering the runner on GitHub.
     """
 
-    name: str
-    labels: Iterable[str]
-    registration_token: str
     github_path: GithubPath
-    openstack_image: str
+    image: str
+    labels: Iterable[str]
+    name: str
+    registration_token: str
 
 
 SupportedCloudImageArch = Literal["amd64", "arm64"]
@@ -233,7 +219,7 @@ def _get_default_proxy_values(proxies: Optional[ProxyConfig] = None) -> ProxyStr
 def create_instance_config(  # pylint: disable=too-many-arguments
     app_name: str,
     unit_num: int,
-    openstack_image: str,
+    image: str,
     path: GithubPath,
     labels: Iterable[str],
     github_token: str,
@@ -243,7 +229,7 @@ def create_instance_config(  # pylint: disable=too-many-arguments
     Args:
         app_name: The juju application name.
         unit_num: The juju unit number.
-        openstack_image: The openstack image object to create the instance with.
+        image: The openstack image object to create the instance with.
         path: Github organisation or repository path.
         labels: Addition labels for the runner.
         github_token: The Github PAT for interaction with Github API.
@@ -259,7 +245,7 @@ def create_instance_config(  # pylint: disable=too-many-arguments
         labels=("jammy", *labels),
         registration_token=registration_token,
         github_path=path,
-        openstack_image=openstack_image,
+        image=image,
     )
 
 
@@ -645,17 +631,17 @@ class OpenstackRunnerManager:
         """Arguments for _create_runner method.
 
         Attributes:
+            app_name: The juju application name.
             cloud_config: The clouds.yaml containing the OpenStack credentials. The first cloud
                 in the file will be used.
-            app_name: The juju application name.
-            unit_num: The juju unit number.
             config: Configurations related to runner manager.
+            unit_num: The juju unit number.
         """
 
-        cloud_config: dict[str, dict]
         app_name: str
-        unit_num: int
+        cloud_config: dict[str, dict]
         config: OpenstackRunnerManagerConfig
+        unit_num: int
 
     @staticmethod
     def _create_runner(args: _CreateRunnerArgs) -> None:
@@ -683,10 +669,11 @@ class OpenstackRunnerManager:
         pre_job_contents = OpenstackRunnerManager._render_pre_job_contents(
             charm_state=args.config.charm_state, templates_env=environment
         )
+
         instance_config = create_instance_config(
             args.app_name,
             args.unit_num,
-            IMAGE_NAME,
+            args.config.image,
             args.config.path,
             args.config.labels,
             args.config.token,
@@ -711,7 +698,7 @@ class OpenstackRunnerManager:
             try:
                 instance = conn.create_server(
                     name=instance_config.name,
-                    image=IMAGE_NAME,
+                    image=instance_config.image,
                     key_name=instance_config.name,
                     flavor=args.config.flavor,
                     network=args.config.network,
@@ -1358,9 +1345,6 @@ class OpenstackRunnerManager:
             runner_by_health: The runner status grouped by health.
             remove_token: The GitHub runner remove token.
 
-        Raises:
-            OpenstackInstanceLaunchError: Unable to launch OpenStack instance.
-
         Returns:
             The change in number of runners.
         """
@@ -1371,24 +1355,14 @@ class OpenstackRunnerManager:
 
         # Spawn new runners
         if delta > 0:
-            # Skip this reconcile if image not present.
-            try:
-                if conn.get_image(name_or_id=IMAGE_NAME) is None:
-                    logger.warning("No OpenStack runner was spawned due to image needed not found")
-            except openstack.exceptions.SDKException as exc:
-                # Will be resolved by charm integration with image build charm.
-                logger.exception("Multiple image named %s found", IMAGE_NAME)
-                raise OpenstackInstanceLaunchError(
-                    "Multiple image found, unable to determine the image to use"
-                ) from exc
-
             logger.info("Creating %s OpenStack runners", delta)
             args = [
                 OpenstackRunnerManager._CreateRunnerArgs(
-                    cloud_config=self._cloud_config,
                     app_name=self.app_name,
-                    unit_num=self.unit_num,
                     config=self._config,
+                    cloud_config=self._cloud_config,
+                    image=self._config.image,
+                    unit_num=self.unit_num,
                 )
                 for _ in range(delta)
             ]

@@ -162,7 +162,3 @@ class OpenStackInvalidConfigError(OpenStackError):
 
 class OpenStackUnauthorizedError(OpenStackError):
     """Represents an unauthorized connection to OpenStack."""
-
-
-class OpenstackInstanceLaunchError(Exception):
-    """Exception representing an error during instance launch process."""
