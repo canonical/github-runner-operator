@@ -60,8 +60,8 @@ async def app_fixture(
 async def test_charm_issues_metrics_for_failed_repo_policy(
     model: Model,
     app: Application,
-    forked_github_repository: Repository,
-    forked_github_branch: Branch,
+    github_repository: Repository,
+    test_github_branch: Branch,
     token: str,
     https_proxy: str,
     instance_helper: InstanceHelper,
@@ -85,8 +85,8 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     await clear_metrics_log(unit)
     await dispatch_workflow(
         app=app,
-        branch=forked_github_branch,
-        github_repository=forked_github_repository,
+        branch=test_github_branch,
+        github_repository=github_repository,
         conclusion="failure",
         workflow_id_or_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     )
@@ -97,7 +97,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
 
     await assert_events_after_reconciliation(
         app=app,
-        github_repository=forked_github_repository,
+        github_repository=github_repository,
         post_job_status=PostJobStatus.REPO_POLICY_CHECK_FAILURE,
     )
 
@@ -150,7 +150,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     await cancel_workflow_run(
         unit, workflow, branch=test_github_branch, instance_helper=instance_helper
     )
-    await wait_for_runner_to_be_marked_offline(test_github_repository, runner_name)
+    await wait_for_runner_to_be_marked_offline(github_repository, runner_name)
 
     # Set the number of virtual machines to 0 to speedup reconciliation
     await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
@@ -158,7 +158,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
 
     await assert_events_after_reconciliation(
         app=app,
-        github_repository=test_github_repository,
+        github_repository=github_repository,
         post_job_status=PostJobStatus.ABNORMAL,
     )
 
