@@ -12,12 +12,25 @@ on:
         description: The e2e test runner tag to run the workflow on.
         type: string
         required: true
+      runner-virt-type:
+        description: The e2e test runner virtualization type. E.g. lxd, or openstack.
+        # workflow_call does not support choice type.
+        type: string
+        required: true
   workflow_dispatch:
     inputs:
       runner-tag:
         description: The e2e test runner tag to run the workflow on.
         type: string
         required: true
+      runner-virt-type:
+        description: The e2e test runner virtualization type.
+        type: choice
+        required: true
+        options:
+          - lxd
+          - openstack
+
 jobs:
   e2e-test:
     name: End-to-End Test Run
@@ -89,8 +102,10 @@ jobs:
       - name: test check-jsonschema
         run: check-jsonschema --version
       - name: Test Firewall
+        if: "${{ github.event.inputs.runner-virt-type == 'lxd' }}"
         run: |
           HOST_IP=$(ip route | grep default | cut -f 3 -d" ")
           [ $((ping $HOST_IP -c 5 || :) | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
       - name: Test sctp support
+        if: "${{ github.event.inputs.runner-virt-type == 'lxd' }}"
         run: sudo apt-get install lksctp-tools -yq && checksctp

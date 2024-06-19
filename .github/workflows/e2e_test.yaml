@@ -454,6 +454,7 @@ jobs:
     uses: ./.github/workflows/e2e_test_run.yaml
     with:
       runner-tag: "pr-${{ needs.run-id.outputs.run-id }}${{ github.run_attempt}}"
+      runner-virt-type: "lxd"
 
   required_status_checks:
     name: Required E2E Test Status Checks
