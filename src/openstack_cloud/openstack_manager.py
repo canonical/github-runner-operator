@@ -116,6 +116,7 @@ class InstanceConfig:
         labels: The runner instance labels.
         name: Name of the image to launch the GitHub runner instance with.
         registration_token: Token for registering the runner on GitHub.
+        runner_download_url: The URL to download GitHub runner tar.gz.
     """
 
     github_path: GithubPath
@@ -123,6 +124,7 @@ class InstanceConfig:
     labels: Iterable[str]
     name: str
     registration_token: str
+    runner_download_url: str
 
 
 SupportedCloudImageArch = Literal["amd64", "arm64"]
@@ -143,8 +145,8 @@ class _CloudInitUserData:
     instance_config: InstanceConfig
     runner_env: str
     pre_job_contents: str
-    proxies: Optional[ProxyConfig] = None
     dockerhub_mirror: Optional[str] = None
+    proxies: Optional[ProxyConfig] = None
 
 
 @contextmanager
@@ -181,40 +183,6 @@ def _create_connection(cloud_config: dict[str, dict]) -> Iterator[openstack.conn
         raise OpenStackError("Failed OpenStack API call") from exc
 
 
-class ProxyStringValues(NamedTuple):
-    """Wrapper class to proxy values to string.
-
-    Attributes:
-        http: HTTP proxy address.
-        https: HTTPS proxy address.
-        no_proxy: Comma-separated list of hosts that should not be proxied.
-    """
-
-    http: str
-    https: str
-    no_proxy: str
-
-
-def _get_default_proxy_values(proxies: Optional[ProxyConfig] = None) -> ProxyStringValues:
-    """Get default proxy string values, empty string if None.
-
-    Used to parse proxy values for file configurations, empty strings if None.
-
-    Args:
-        proxies: The proxy configuration information.
-
-    Returns:
-        Proxy strings if set, empty string otherwise.
-    """
-    if not proxies:
-        return ProxyStringValues(http="", https="", no_proxy="")
-    return ProxyStringValues(
-        http=str(proxies.http or ""),
-        https=str(proxies.https or ""),
-        no_proxy=proxies.no_proxy or "",
-    )
-
-
 # Disable too many arguments, as they are needed to create the dataclass.
 def create_instance_config(  # pylint: disable=too-many-arguments
     app_name: str,
@@ -222,7 +190,8 @@ def create_instance_config(  # pylint: disable=too-many-arguments
     image: str,
     path: GithubPath,
     labels: Iterable[str],
-    github_token: str,
+    registration_token: str,
+    runner_download_url: str,
 ) -> InstanceConfig:
     """Create an instance config from charm data.
 
@@ -232,20 +201,21 @@ def create_instance_config(  # pylint: disable=too-many-arguments
         image: The openstack image object to create the instance with.
         path: Github organisation or repository path.
         labels: Addition labels for the runner.
-        github_token: The Github PAT for interaction with Github API.
-
+        registration_token: The Github runner registration token. See \
+            https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#create-a-registration-token-for-a-repository
+        runner_download_url: The URL to download GitHub runner tar.gz.
     Returns:
         Instance configuration created.
     """
-    github_client = GithubClient(token=github_token)
     suffix = secrets.token_hex(12)
-    registration_token = github_client.get_runner_registration_token(path=path)
     return InstanceConfig(
-        name=f"{app_name}-{unit_num}-{suffix}",
-        labels=("jammy", *labels),
-        registration_token=registration_token,
         github_path=path,
         image=image,
+        labels=("jammy", *labels),
+        name=f"{app_name}-{unit_num}-{suffix}",
+        registration_token=registration_token,
+        registration_token=registration_token,
+        runner_download_url=runner_download_url,
     )
 
 
@@ -298,6 +268,7 @@ def _generate_cloud_init_userdata(
     aproxy_address = proxies.aproxy_address if proxies is not None else None
     return templates_env.get_template("openstack-userdata.sh.j2").render(
         github_url=f"https://github.com/{instance_config.github_path.path()}",
+        runner_download_url=instance_config.runner_download_url,
         runner_group=runner_group,
         token=instance_config.registration_token,
         instance_labels=",".join(instance_config.labels),
@@ -635,12 +606,16 @@ class OpenstackRunnerManager:
             cloud_config: The clouds.yaml containing the OpenStack credentials. The first cloud
                 in the file will be used.
             config: Configurations related to runner manager.
+            registration_token: Token for registering the runner on GitHub.
+            runner_download_url: The URL to download GitHub runner tar.gz.
             unit_num: The juju unit number.
         """
 
         app_name: str
         cloud_config: dict[str, dict]
         config: OpenstackRunnerManagerConfig
+        registration_token: str
+        runner_download_url: str
         unit_num: int
 
     @staticmethod
@@ -677,6 +652,8 @@ class OpenstackRunnerManager:
             args.config.path,
             args.config.labels,
             args.config.token,
+            args.registration_token,
+            args.runner_download_url,
         )
         cloud_user_data = _CloudInitUserData(
             instance_config=instance_config,
@@ -1352,6 +1329,11 @@ class OpenstackRunnerManager:
         # This is not calculated due to there might be removal failures.
         servers = self._get_openstack_instances(conn)
         delta = quantity - len(servers)
+        runner_app = self._github.get_runner_application(
+            path=self._config.path, arch=self._config.charm_state.arch
+        )
+        registration_token = self._github.get_runner_registration_token(path=self._config.path)
+        runner_download_url = runner_app["download_url"]
 
         # Spawn new runners
         if delta > 0:
@@ -1361,7 +1343,8 @@ class OpenstackRunnerManager:
                     app_name=self.app_name,
                     config=self._config,
                     cloud_config=self._cloud_config,
-                    image=self._config.image,
+                    registration_token=registration_token,
+                    runner_download_url=runner_download_url,
                     unit_num=self.unit_num,
                 )
                 for _ in range(delta)

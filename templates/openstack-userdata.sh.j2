@@ -41,6 +41,9 @@ sudo systemctl restart docker
 # Prepare metrics
 su - ubuntu -c 'mkdir "{{ metrics_exchange_path }}"'
 
+# Download and unpack runner tar.gz
+su - ubuntu -c "mkdir ~/actions-runner && cd ~/actions-runner && wget {{ runner_download_url }}"
+
 # Insert pre-job script
 cat << 'EOF' | su - ubuntu -c 'tee /home/ubuntu/actions-runner/pre-job.sh'
 {{ pre_job_contents | safe }}
