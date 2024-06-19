@@ -116,6 +116,7 @@ class InstanceConfig:
         labels: The runner instance labels.
         name: Name of the image to launch the GitHub runner instance with.
         registration_token: Token for registering the runner on GitHub.
+        runner_download_url: The URL to download GitHub runner tar.gz.
     """
 
     github_path: GithubPath
@@ -123,6 +124,7 @@ class InstanceConfig:
     labels: Iterable[str]
     name: str
     registration_token: str
+    runner_download_url: str
 
 
 SupportedCloudImageArch = Literal["amd64", "arm64"]
@@ -143,8 +145,8 @@ class _CloudInitUserData:
     instance_config: InstanceConfig
     runner_env: str
     pre_job_contents: str
-    proxies: Optional[ProxyConfig] = None
     dockerhub_mirror: Optional[str] = None
+    proxies: Optional[ProxyConfig] = None
 
 
 @contextmanager
@@ -181,220 +183,6 @@ def _create_connection(cloud_config: dict[str, dict]) -> Iterator[openstack.conn
         raise OpenStackError("Failed OpenStack API call") from exc
 
 
-class ProxyStringValues(NamedTuple):
-    """Wrapper class to proxy values to string.
-
-    Attributes:
-        http: HTTP proxy address.
-        https: HTTPS proxy address.
-        no_proxy: Comma-separated list of hosts that should not be proxied.
-    """
-
-    http: str
-    https: str
-    no_proxy: str
-
-
-def _get_default_proxy_values(proxies: Optional[ProxyConfig] = None) -> ProxyStringValues:
-    """Get default proxy string values, empty string if None.
-
-    Used to parse proxy values for file configurations, empty strings if None.
-
-    Args:
-        proxies: The proxy configuration information.
-
-    Returns:
-        Proxy strings if set, empty string otherwise.
-    """
-    if not proxies:
-        return ProxyStringValues(http="", https="", no_proxy="")
-    return ProxyStringValues(
-        http=str(proxies.http or ""),
-        https=str(proxies.https or ""),
-        no_proxy=proxies.no_proxy or "",
-    )
-
-
-def _build_image_command(
-    runner_info: RunnerApplication,
-    proxies: Optional[ProxyConfig] = None,
-) -> list[str]:
-    """Get command for building runner image.
-
-    Args:
-        runner_info: The runner application to fetch runner tar download url.
-        proxies: HTTP proxy settings.
-
-    Returns:
-        Command to execute to build runner image.
-    """
-    proxy_values = _get_default_proxy_values(proxies=proxies)
-    cmd = [
-        "/usr/bin/bash",
-        BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME,
-        runner_info["download_url"],
-        proxy_values.http,
-        proxy_values.https,
-        proxy_values.no_proxy,
-    ]
-    return cmd
-
-
-def _get_supported_runner_arch(arch: str) -> SupportedCloudImageArch:
-    """Validate and return supported runner architecture.
-
-    The supported runner architecture takes in arch value from Github supported architecture and
-    outputs architectures supported by ubuntu cloud images.
-    See: https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners\
-/about-self-hosted-runners#architectures
-    and https://cloud-images.ubuntu.com/jammy/current/
-
-    Args:
-        arch: The compute architecture to check support for.
-
-    Raises:
-        UnsupportedArchitectureError: If an unsupported architecture was passed.
-
-    Returns:
-        The supported architecture.
-    """
-    match arch:
-        case Arch.X64:
-            return "amd64"
-        case Arch.ARM64:
-            return "arm64"
-        case _:
-            raise UnsupportedArchitectureError(arch)
-
-
-def _get_openstack_architecture(arch: Arch) -> str:
-    """Get openstack architecture.
-
-    See https://docs.openstack.org/glance/latest/admin/useful-image-properties.html
-
-    Args:
-        arch: The architecture the runner is running on.
-
-    Raises:
-        UnsupportedArchitectureError: If an unsupported architecture was passed.
-
-    Returns:
-        The architecture formatted for openstack image property.
-    """
-    match arch:
-        case arch.X64:
-            return "x86_64"
-        case arch.ARM64:
-            return "aarch64"
-        case _:
-            raise UnsupportedArchitectureError(arch)
-
-
-class OpenstackUpdateImageError(Exception):
-    """Represents an error while updating image on Openstack."""
-
-
-@retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
-def _update_image(
-    cloud_config: dict[str, dict], ubuntu_image_arch: str, openstack_image_arch: str
-) -> int:
-    """Update the openstack image if it exists, create new otherwise.
-
-    Args:
-        cloud_config: The cloud configuration to connect OpenStack with.
-        ubuntu_image_arch: The cloud-image architecture.
-        openstack_image_arch: The Openstack image architecture.
-
-    Raises:
-        OpenstackUpdateImageError: If there was an error interacting with images on Openstack.
-
-    Returns:
-        The created image ID.
-    """
-    try:
-        with _create_connection(cloud_config) as conn:
-            existing_image: openstack.image.v2.image.Image
-            for existing_image in conn.search_images(name_or_id=IMAGE_NAME):
-                # images with same name (different ID) can be created and will error during server
-                # instantiation.
-                if not conn.delete_image(name_or_id=existing_image.id, wait=True):
-                    raise OpenstackUpdateImageError(
-                        "Failed to delete duplicate image on Openstack."
-                    )
-            image: openstack.image.v2.image.Image = conn.create_image(
-                name=IMAGE_NAME,
-                filename=IMAGE_PATH_TMPL.format(architecture=ubuntu_image_arch),
-                wait=True,
-                properties={"architecture": openstack_image_arch},
-            )
-            return image.id
-    except OpenStackCloudException as exc:
-        raise OpenstackUpdateImageError("Failed to upload image.") from exc
-
-
-# Ignore the flake8 function too complex (C901). The function does not have much logic, the lint
-# is likely triggered with the multiple try-excepts, which are needed.
-def build_image(  # noqa: C901
-    arch: Arch,
-    cloud_config: dict[str, dict],
-    github_client: GithubClient,
-    path: GithubPath,
-    proxies: Optional[ProxyConfig] = None,
-) -> str:
-    """Build and upload an image to OpenStack.
-
-    Args:
-        arch: The architecture of the image.
-        cloud_config: The cloud configuration to connect OpenStack with.
-        github_client: The Github client to interact with Github API.
-        path: Github organisation or repository path.
-        proxies: HTTP proxy settings.
-
-    Raises:
-        OpenstackImageBuildError: If there were errors building/creating the image.
-
-    Returns:
-        The created OpenStack image id.
-    """
-    # Setting the env var to this process and any child process spawned.
-    # Needed for GitHub API with GhApi used by GithubClient class.
-    if proxies is not None:
-        if no_proxy := proxies.no_proxy:
-            set_env_var("NO_PROXY", no_proxy)
-        if http_proxy := proxies.http:
-            set_env_var("HTTP_PROXY", http_proxy)
-        if https_proxy := proxies.https:
-            set_env_var("HTTPS_PROXY", https_proxy)
-
-    try:
-        runner_application = github_client.get_runner_application(path=path, arch=arch)
-    except RunnerBinaryError as exc:
-        raise OpenstackImageBuildError("Failed to fetch runner application.") from exc
-
-    try:
-        execute_command(
-            _build_image_command(runner_application, proxies),
-            check_exit=True,
-        )
-    except SubprocessError as exc:
-        raise OpenstackImageBuildError("Failed to build image.") from exc
-
-    runner_arch = runner_application["architecture"]
-    try:
-        image_arch = _get_supported_runner_arch(arch=arch)
-    except UnsupportedArchitectureError as exc:
-        raise OpenstackImageBuildError(f"Unsupported architecture {runner_arch}") from exc
-
-    try:
-        return _update_image(
-            cloud_config=cloud_config,
-            ubuntu_image_arch=image_arch,
-            openstack_image_arch=_get_openstack_architecture(arch),
-        )
-    except OpenstackUpdateImageError as exc:
-        raise OpenstackImageBuildError(f"Failed to update image, {exc}") from exc
-
-
 # Disable too many arguments, as they are needed to create the dataclass.
 def create_instance_config(  # pylint: disable=too-many-arguments
     app_name: str,
@@ -402,7 +190,8 @@ def create_instance_config(  # pylint: disable=too-many-arguments
     image: str,
     path: GithubPath,
     labels: Iterable[str],
-    github_token: str,
+    registration_token: str,
+    runner_download_url: str,
 ) -> InstanceConfig:
     """Create an instance config from charm data.
 
@@ -412,20 +201,21 @@ def create_instance_config(  # pylint: disable=too-many-arguments
         image: The openstack image object to create the instance with.
         path: Github organisation or repository path.
         labels: Addition labels for the runner.
-        github_token: The Github PAT for interaction with Github API.
-
+        registration_token: The Github runner registration token. See \
+            https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#create-a-registration-token-for-a-repository
+        runner_download_url: The URL to download GitHub runner tar.gz.
     Returns:
         Instance configuration created.
     """
-    github_client = GithubClient(token=github_token)
     suffix = secrets.token_hex(12)
-    registration_token = github_client.get_runner_registration_token(path=path)
     return InstanceConfig(
-        name=f"{app_name}-{unit_num}-{suffix}",
-        labels=("jammy", *labels),
-        registration_token=registration_token,
         github_path=path,
         image=image,
+        labels=("jammy", *labels),
+        name=f"{app_name}-{unit_num}-{suffix}",
+        registration_token=registration_token,
+        registration_token=registration_token,
+        runner_download_url=runner_download_url,
     )
 
 
@@ -478,6 +268,7 @@ def _generate_cloud_init_userdata(
     aproxy_address = proxies.aproxy_address if proxies is not None else None
     return templates_env.get_template("openstack-userdata.sh.j2").render(
         github_url=f"https://github.com/{instance_config.github_path.path()}",
+        runner_download_url=instance_config.runner_download_url,
         runner_group=runner_group,
         token=instance_config.registration_token,
         instance_labels=",".join(instance_config.labels),
@@ -815,12 +606,16 @@ class OpenstackRunnerManager:
             cloud_config: The clouds.yaml containing the OpenStack credentials. The first cloud
                 in the file will be used.
             config: Configurations related to runner manager.
+            registration_token: Token for registering the runner on GitHub.
+            runner_download_url: The URL to download GitHub runner tar.gz.
             unit_num: The juju unit number.
         """
 
         app_name: str
         cloud_config: dict[str, dict]
         config: OpenstackRunnerManagerConfig
+        registration_token: str
+        runner_download_url: str
         unit_num: int
 
     @staticmethod
@@ -857,6 +652,8 @@ class OpenstackRunnerManager:
             args.config.path,
             args.config.labels,
             args.config.token,
+            args.registration_token,
+            args.runner_download_url,
         )
         cloud_user_data = _CloudInitUserData(
             instance_config=instance_config,
@@ -1532,6 +1329,11 @@ class OpenstackRunnerManager:
         # This is not calculated due to there might be removal failures.
         servers = self._get_openstack_instances(conn)
         delta = quantity - len(servers)
+        runner_app = self._github.get_runner_application(
+            path=self._config.path, arch=self._config.charm_state.arch
+        )
+        registration_token = self._github.get_runner_registration_token(path=self._config.path)
+        runner_download_url = runner_app["download_url"]
 
         # Spawn new runners
         if delta > 0:
@@ -1541,7 +1343,8 @@ class OpenstackRunnerManager:
                     app_name=self.app_name,
                     config=self._config,
                     cloud_config=self._cloud_config,
-                    image=self._config.image,
+                    registration_token=registration_token,
+                    runner_download_url=runner_download_url,
                     unit_num=self.unit_num,
                 )
                 for _ in range(delta)
