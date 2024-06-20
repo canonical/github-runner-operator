@@ -213,8 +213,11 @@ async def assert_events_after_reconciliation(
             elif post_job_status == PostJobStatus.REPO_POLICY_CHECK_FAILURE:
                 # TODO: DEBUG
                 print("#####################################")
-                metric_log.get("status_info")
-                metric_log.get("job_conclusion")
+                print(metric_log)
+                print("#####################################")
+                print(metric_log.get("status_info"))
+                print("#####################################")
+                print(metric_log.get("job_conclusion"))
                 print("#####################################")
                 assert metric_log.get("status_info", {}).get("code", 0) == 403
                 assert metric_log.get("job_conclusion") == JobConclusion.FAILURE
