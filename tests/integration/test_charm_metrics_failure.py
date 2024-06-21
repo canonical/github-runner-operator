@@ -54,8 +54,7 @@ async def app_fixture(
     yield basic_app
 
 
-# TODO: debug
-# @pytest.mark.openstack
+@pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_metrics_for_failed_repo_policy(
@@ -144,14 +143,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     runner_name = await instance_helper.get_runner_name(unit)
     kill_run_sh_cmd = "pkill -9 run.sh"
     ret_code, stdout, stderr = await instance_helper.run_in_instance(unit, kill_run_sh_cmd)
-    print("###################################")
-    print(ret_code)
-    print("###################################")
-    print(stdout)
-    print("###################################")
-    print(stderr)
-    print("###################################")
-    assert ret_code == 0, f"Failed to kill run.sh: {stderr}"
+    assert ret_code == 0, f"Failed to kill run.sh with code {ret_code}: {stderr}"
 
     # Cancel workflow and wait that the runner is marked offline
     # to avoid errors during reconciliation.
