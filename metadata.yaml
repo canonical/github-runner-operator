@@ -28,6 +28,8 @@ provides:
 requires:
   debug-ssh:
     interface: debug-ssh
+  image:
+    interface: github_runner_image_v0
 
 storage:
   runner:

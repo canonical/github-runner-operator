@@ -494,6 +494,41 @@ class CharmConfig(BaseModel):
         return reconcile_interval
 
 
+class OpenstackImage(BaseModel):
+    """OpenstackImage from image builder relation data.
+
+    Attributes:
+        id: The OpenStack image ID.
+        tags: Image tags, e.g. jammy
+    """
+
+    id: str | None
+    tags: list[str] | None
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "OpenstackImage | None":
+        """Initialize the OpenstackImage info from relation data.
+
+        None represents relation not established.
+        None values for id/tags represent image not yet ready but the relation exists.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            OpenstackImage metadata from charm relation data.
+        """
+        relations = charm.model.relations[IMAGE_INTEGRATION_NAME]
+        if not relations or not (relation := relations[0]).units:
+            return None
+        for unit in relation.units:
+            relation_data = relation.data[unit]
+            if not relation_data:
+                continue
+            return OpenstackImage(**relation_data)
+        return OpenstackImage()
+
+
 class OpenstackRunnerConfig(BaseModel):
     """Runner configuration for OpenStack Instances.
 
@@ -501,11 +536,13 @@ class OpenstackRunnerConfig(BaseModel):
         virtual_machines: Number of virtual machine-based runner to spawn.
         openstack_flavor: flavor on openstack to use for virtual machines.
         openstack_network: Network on openstack to use for virtual machines.
+        openstack_image: Openstack image to use for virtual machines.
     """
 
     virtual_machines: int
     openstack_flavor: str
     openstack_network: str
+    openstack_image: OpenstackImage | None
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "OpenstackRunnerConfig":
@@ -530,11 +567,13 @@ class OpenstackRunnerConfig(BaseModel):
 
         openstack_flavor = charm.config[OPENSTACK_FLAVOR_CONFIG_NAME]
         openstack_network = charm.config[OPENSTACK_NETWORK_CONFIG_NAME]
+        openstack_image = OpenstackImage.from_charm(charm)
 
         return cls(
             virtual_machines=virtual_machines,
             openstack_flavor=cast(str, openstack_flavor),
             openstack_network=cast(str, openstack_network),
+            openstack_image=openstack_image,
         )
 
 
@@ -969,38 +1008,3 @@ class CharmState:
         cls._store_state(state)
 
         return state
-
-
-class OpenstackImage(BaseModel):
-    """OpenstackImage from image builder relation data.
-
-    Attributes:
-        id: The OpenStack image ID.
-        tags: Image tags, e.g. jammy
-    """
-
-    id: str | None
-    tags: list[str] | None
-
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "OpenstackImage | None":
-        """Initialize the OpenstackImage info from relation data.
-
-        None represents relation not established.
-        None values for id/tags represent image not yet ready but the relation exists.
-
-        Args:
-            charm: The charm instance.
-
-        Returns:
-            OpenstackImage metadata from charm relation data.
-        """
-        relations = charm.model.relations[IMAGE_INTEGRATION_NAME]
-        if not relations or not (relation := relations[0]).units:
-            return None
-        for unit in relation.units:
-            relation_data = relation.data[unit]
-            if not relation_data:
-                continue
-            return OpenstackImage(**relation_data)
-        return OpenstackImage()

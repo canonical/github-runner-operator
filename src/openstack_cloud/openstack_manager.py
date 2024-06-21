@@ -22,7 +22,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from multiprocessing import Pool
 from pathlib import Path
-from typing import Iterable, Iterator, Literal, NamedTuple, Optional, cast
+from typing import Iterable, Iterator, Literal, Optional, cast
 
 import invoke
 import jinja2
@@ -116,7 +116,6 @@ class InstanceConfig:
         labels: The runner instance labels.
         name: Name of the image to launch the GitHub runner instance with.
         registration_token: Token for registering the runner on GitHub.
-        runner_download_url: The URL to download GitHub runner tar.gz.
     """
 
     github_path: GithubPath
@@ -124,7 +123,6 @@ class InstanceConfig:
     labels: Iterable[str]
     name: str
     registration_token: str
-    runner_download_url: str
 
 
 SupportedCloudImageArch = Literal["amd64", "arm64"]
@@ -191,7 +189,6 @@ def create_instance_config(  # pylint: disable=too-many-arguments
     path: GithubPath,
     labels: Iterable[str],
     registration_token: str,
-    runner_download_url: str,
 ) -> InstanceConfig:
     """Create an instance config from charm data.
 
@@ -203,7 +200,7 @@ def create_instance_config(  # pylint: disable=too-many-arguments
         labels: Addition labels for the runner.
         registration_token: The Github runner registration token. See \
             https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#create-a-registration-token-for-a-repository
-        runner_download_url: The URL to download GitHub runner tar.gz.
+
     Returns:
         Instance configuration created.
     """
@@ -214,8 +211,6 @@ def create_instance_config(  # pylint: disable=too-many-arguments
         labels=("jammy", *labels),
         name=f"{app_name}-{unit_num}-{suffix}",
         registration_token=registration_token,
-        registration_token=registration_token,
-        runner_download_url=runner_download_url,
     )
 
 
@@ -268,7 +263,6 @@ def _generate_cloud_init_userdata(
     aproxy_address = proxies.aproxy_address if proxies is not None else None
     return templates_env.get_template("openstack-userdata.sh.j2").render(
         github_url=f"https://github.com/{instance_config.github_path.path()}",
-        runner_download_url=instance_config.runner_download_url,
         runner_group=runner_group,
         token=instance_config.registration_token,
         instance_labels=",".join(instance_config.labels),
@@ -607,7 +601,6 @@ class OpenstackRunnerManager:
                 in the file will be used.
             config: Configurations related to runner manager.
             registration_token: Token for registering the runner on GitHub.
-            runner_download_url: The URL to download GitHub runner tar.gz.
             unit_num: The juju unit number.
         """
 
@@ -615,7 +608,6 @@ class OpenstackRunnerManager:
         cloud_config: dict[str, dict]
         config: OpenstackRunnerManagerConfig
         registration_token: str
-        runner_download_url: str
         unit_num: int
 
     @staticmethod
@@ -651,9 +643,7 @@ class OpenstackRunnerManager:
             args.config.image,
             args.config.path,
             args.config.labels,
-            args.config.token,
             args.registration_token,
-            args.runner_download_url,
         )
         cloud_user_data = _CloudInitUserData(
             instance_config=instance_config,
@@ -1329,11 +1319,7 @@ class OpenstackRunnerManager:
         # This is not calculated due to there might be removal failures.
         servers = self._get_openstack_instances(conn)
         delta = quantity - len(servers)
-        runner_app = self._github.get_runner_application(
-            path=self._config.path, arch=self._config.charm_state.arch
-        )
         registration_token = self._github.get_runner_registration_token(path=self._config.path)
-        runner_download_url = runner_app["download_url"]
 
         # Spawn new runners
         if delta > 0:
@@ -1344,7 +1330,6 @@ class OpenstackRunnerManager:
                     config=self._config,
                     cloud_config=self._cloud_config,
                     registration_token=registration_token,
-                    runner_download_url=runner_download_url,
                     unit_num=self.unit_num,
                 )
                 for _ in range(delta)
