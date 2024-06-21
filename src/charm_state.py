@@ -810,7 +810,7 @@ class ImmutableConfigChangedError(Exception):
         self.msg = msg
 
 
-class ReactiveMQConnection(BaseModel):
+class ReactiveMQConnectionInfo(BaseModel):
     """Represents the connection to the reactive MQ.
 
     Attributes:
@@ -819,7 +819,7 @@ class ReactiveMQConnection(BaseModel):
     uri: AnyUrl
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "ReactiveMQConnection":
+    def from_charm(cls, charm: CharmBase) -> "ReactiveMQConnectionInfo":
         """Initialize the SSHDebugInfo from charm relation data.
 
         Args:

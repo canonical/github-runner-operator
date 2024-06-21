@@ -36,7 +36,6 @@ class Message:
             InactiveMQError: If the connection to the MQ is inactive
                 (e.g. has already been closed or processed).
         """
-        pass
 
     def reject(self) -> None:
         """Do not acknowledge and requeue the message.
@@ -45,7 +44,6 @@ class Message:
             InactiveMQError: If the connection to the MQ is inactive
                 (e.g. has already been closed or processed).
         """
-        pass
 
     def ack(self) -> None:
         """Acknowledge the message.
@@ -54,7 +52,6 @@ class Message:
             InactiveMQError: If the connection to the MQ is inactive
                 (e.g. has already been closed or processed).
         """
-        pass
 
     def close(self) -> None:
         """Close the connection and the queue resources.
@@ -75,4 +72,3 @@ def consume(mq_uri: str, queue_name: str) -> Message:
     Returns:
         The consumed message.
     """
-    pass
