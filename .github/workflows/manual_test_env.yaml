@@ -14,7 +14,7 @@ jobs:
       pre-run-script: scripts/setup-lxd.sh
       provider: lxd
       test-tox-env: integration-juju3.2
-      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_runner", "test_e2e"]'
+      modules: '["test_charm_metrics_failure"]'
       extra-arguments: "-m openstack --openstack-flavor-name=builder-cpu4-ram8-disk50 --http-proxy=http://squid.internal:3128 --https-proxy=http://squid.internal:3128 --no-proxy=keystone.ps6.canonical.com,glance.ps6.canonical.com,nova.ps6.canonical.com,neutron.ps6.canonical.com"
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
