@@ -472,7 +472,7 @@ Initialize the proxy config from charm.
 
 ---
 
-## <kbd>class</kbd> `ReactiveMQConnection`
+## <kbd>class</kbd> `ReactiveMQConnectionInfo`
 Represents the connection to the reactive MQ. 
 
 
@@ -491,7 +491,7 @@ Represents the connection to the reactive MQ.
 ### <kbd>classmethod</kbd> `from_charm`
 
 ```python
-from_charm(charm: CharmBase) → ReactiveMQConnection
+from_charm(charm: CharmBase) → ReactiveMQConnectionInfo
 ```
 
 Initialize the SSHDebugInfo from charm relation data. 
