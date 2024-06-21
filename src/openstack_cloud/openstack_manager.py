@@ -208,7 +208,7 @@ def create_instance_config(  # pylint: disable=too-many-arguments
     return InstanceConfig(
         github_path=path,
         image=image,
-        labels=("jammy", *labels),
+        labels=labels,
         name=f"{app_name}-{unit_num}-{suffix}",
         registration_token=registration_token,
     )

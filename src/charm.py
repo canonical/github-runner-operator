@@ -502,6 +502,21 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = ActiveStatus()
 
+    def _get_set_image_ready_status(self) -> bool:
+        """Check if image is ready for Openstack and charm status accordingly.
+
+        Returns:
+            Whether the Openstack image is ready via image integration.
+        """
+        openstack_image = OpenstackImage.from_charm(self)
+        if openstack_image is None:
+            self.unit.status = BlockedStatus("Please provide image integration.")
+            return False
+        if not openstack_image.id:
+            self.unit.status = WaitingStatus("Waiting for image over integration.")
+            return False
+        return True
+
     def _update_kernel(self, now: bool = False) -> None:
         """Update the Linux kernel if new version is available.
 

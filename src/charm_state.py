@@ -604,7 +604,10 @@ class OpenstackImage(BaseModel):
             relation_data = relation.data[unit]
             if not relation_data:
                 continue
-            return OpenstackImage(**relation_data)
+            return OpenstackImage(
+                id=relation_data.get("id", None),
+                tags=[tag.strip() for tag in relation_data.get("tags", "").split(",") if tag],
+            )
         return OpenstackImage()
 
 
