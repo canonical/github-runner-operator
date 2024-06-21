@@ -370,13 +370,14 @@ class GithubRunnerCharm(CharmBase):
         # in hook where a runner may be created. TODO: This logic is subject to refactoring.
         image = state.runner_config.openstack_image
         image_id = image.id if image and image.id else ""
+        image_labels = image.tags if image and image.tags else []
 
         app_name, unit = self.unit.name.rsplit("/", 1)
         openstack_runner_manager_config = OpenstackRunnerManagerConfig(
             charm_state=state,
             path=path,
             token=token,
-            labels=state.charm_config.labels,
+            labels=(*state.charm_config.labels, *image_labels),
             flavor=state.runner_config.openstack_flavor,
             image=image_id,
             network=state.runner_config.openstack_network,
@@ -546,7 +547,7 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = ActiveStatus()
 
     def _get_set_image_ready_status(self) -> bool:
-        """A method to check if image is ready for Openstack and charm status accordingly.
+        """Check if image is ready for Openstack and charm status accordingly.
 
         Returns:
             Whether the Openstack image is ready via image integration.
