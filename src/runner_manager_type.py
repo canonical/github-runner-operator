@@ -71,6 +71,7 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
         token: GitHub personal access token to register runner to the
             repository or organization.
         dockerhub_mirror: URL of dockerhub mirror to use.
+        reactive_mq_conn: The connection info for the reactive MQ.
     """
 
     charm_state: CharmState
@@ -80,6 +81,7 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     service_token: str
     token: str
     dockerhub_mirror: str | None = None
+    reactive_mq_conn: str | None = None
 
     @property
     def are_metrics_enabled(self) -> bool:

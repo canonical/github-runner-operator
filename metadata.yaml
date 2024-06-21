@@ -28,6 +28,9 @@ provides:
 requires:
   debug-ssh:
     interface: debug-ssh
+  mongodb:
+    interface: mongodb_client
+    limit: 1
 
 storage:
   runner:

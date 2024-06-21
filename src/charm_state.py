@@ -15,8 +15,7 @@ from urllib.parse import urlsplit
 
 import yaml
 from ops import CharmBase
-from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, validator
-from pydantic.networks import IPvAnyAddress
+from pydantic import AnyHttpUrl, IPvAnyAddress, AnyUrl, BaseModel, Field, ValidationError, validator
 
 import openstack_cloud
 from errors import OpenStackInvalidConfigError
@@ -37,6 +36,7 @@ GROUP_CONFIG_NAME = "group"
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "experimental-openstack-clouds-yaml"
 PATH_CONFIG_NAME = "path"
 RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
+REACTIVE_MQ_URI_CONFIG_NAME = "experimental-reactive-mq-uri"
 RUNNER_STORAGE_CONFIG_NAME = "runner-storage"
 TEST_MODE_CONFIG_NAME = "test-mode"
 # bandit thinks this is a hardcoded password.
@@ -189,6 +189,7 @@ class Arch(str, Enum):
 
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
 DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
+MONGO_DB_INTEGRATION_NAME = "mongodb_client"
 
 
 class RunnerStorage(str, Enum):
@@ -278,6 +279,8 @@ class CharmConfig(BaseModel):
         openstack_clouds_yaml: The openstack clouds.yaml configuration.
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
             name.
+        reactive_mq_db_name: The db name of the message queue to use for reactive
+            spawning of runners.
         reconcile_interval: Time between each reconciliation of runners in minutes.
         token: GitHub personal access token for GitHub API.
     """
@@ -287,6 +290,7 @@ class CharmConfig(BaseModel):
     labels: tuple[str, ...]
     openstack_clouds_yaml: dict[str, dict] | None
     path: GithubPath
+    reactive_mq_db_name: str | None
     reconcile_interval: int
     token: str
 
@@ -804,6 +808,26 @@ class ImmutableConfigChangedError(Exception):
             msg: Explanation of the error.
         """
         self.msg = msg
+
+
+class ReactiveMQConnection(BaseModel):
+    """Represents the connection to the reactive MQ.
+
+    Attributes:
+        uri: The URI of the reactive MQ.
+    """
+    uri: AnyUrl
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "ReactiveMQConnection":
+        """Initialize the SSHDebugInfo from charm relation data.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            The connection information for the reactive MQ.
+        """
 
 
 @dataclasses.dataclass(frozen=True)
