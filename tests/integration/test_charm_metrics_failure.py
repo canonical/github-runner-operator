@@ -83,6 +83,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
             openstack_connection=instance_helper.openstack_connection,
             token=token,
             https_proxy=https_proxy,
+            authorized=False,
         )
 
     # Clear metrics log to make reconciliation event more predictable
