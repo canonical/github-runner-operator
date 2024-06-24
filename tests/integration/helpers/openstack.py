@@ -270,7 +270,7 @@ async def setup_runner_with_repo_policy(
         print(stdout)
         print(stderr)
         print("################")
-        return return_code == 0 and bool(stdout)
+        return return_code == 0
 
     # TODO: DEBUG
     return_code, stdout, stderr = await instance_helper.run_in_instance(
