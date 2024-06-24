@@ -958,7 +958,7 @@ class CharmState:
         """
         try:
             proxy_config = ProxyConfig.from_charm(charm)
-        except (ValidationError, ValueError) as exc:
+        except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc
 
         try:
@@ -968,7 +968,7 @@ class CharmState:
                 runner_storage=runner_config.runner_storage,
                 base_image=runner_config.base_image,
             )
-        except (ValidationError, ValueError) as exc:
+        except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
         except ImmutableConfigChangedError as exc:
             raise CharmConfigInvalidError(exc.msg) from exc
