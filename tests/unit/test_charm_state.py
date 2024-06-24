@@ -906,10 +906,10 @@ def test_ssh_debug_connection_from_charm():
     assert connections[0].ed25519_fingerprint == "SHA256:ghijkl"
 
 
-def test_reactive_mq_connection_info_from_charm():
+def test_reactive_config_from_charm():
     """
     arrange: Mock CharmBase instance with relation data and config option set.
-    act: Call ReactiveMQConnectionInfo.from_charm method.
+    act: Call ReactiveConfig.from_charm method.
     assert: Verify that the method returns the expected object.
     """
     mongodb_uri = "mongodb://user:password@localhost:27017"
@@ -926,31 +926,31 @@ def test_reactive_mq_connection_info_from_charm():
     db_name = secrets.token_hex(8)
     mock_charm.config[charm_state.REACTIVE_MQ_URI_CONFIG_NAME] = db_name
 
-    connection_info = charm_state.ReactiveMQConnectionInfo.from_charm(mock_charm)
+    connection_info = charm_state.ReactiveConfig.from_charm(mock_charm)
 
-    assert isinstance(connection_info, charm_state.ReactiveMQConnectionInfo)
-    assert connection_info.uri == mongodb_uri
+    assert isinstance(connection_info, charm_state.ReactiveConfig)
+    assert connection_info.mq_uri == mongodb_uri
 
 
-def test_reactive_mq_connection_info_from_charm_returns_none():
+def test_reactive_config_from_charm_returns_none():
     """
     arrange: Mock CharmBase instance without relation data and no config option set.
-    act: Call ReactiveMQConnectionInfo.from_charm method.
+    act: Call ReactiveConfig.from_charm method.
     assert: None is returned.
     """
     mock_charm = MockGithubRunnerCharmFactory()
 
     del mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME]
 
-    connection_info = charm_state.ReactiveMQConnectionInfo.from_charm(mock_charm)
+    connection_info = charm_state.ReactiveConfig.from_charm(mock_charm)
 
     assert connection_info is None
 
 
-def test_reactive_mq_connection_info_from_charm_integration_missing():
+def test_reactive_config_from_charm_integration_missing():
     """
     arrange: Mock CharmBase instance without relations but with config option set.
-    act: Call ReactiveMQConnectionInfo.from_charm method.
+    act: Call ReactiveConfig.from_charm method.
     assert: IntegrationMissingError is raised
     """
     mock_charm = MockGithubRunnerCharmFactory()
@@ -958,15 +958,15 @@ def test_reactive_mq_connection_info_from_charm_integration_missing():
     mock_charm.config[charm_state.REACTIVE_MQ_URI_CONFIG_NAME] = db_name
 
     with pytest.raises(IntegrationMissingError) as exc:
-        charm_state.ReactiveMQConnectionInfo.from_charm(mock_charm)
+        charm_state.ReactiveConfig.from_charm(mock_charm)
 
     assert f"Missing {charm_state.MONGO_DB_INTEGRATION_NAME} integration" in str(exc.value)
 
 
-def test_reactive_mq_connection_info_from_charm_integration_data_missing():
+def test_reactive_config_from_charm_integration_data_missing():
     """
     arrange: Mock CharmBase instance with relation but without data and with config option set.
-    act: Call ReactiveMQConnectionInfo.from_charm method.
+    act: Call ReactiveConfig.from_charm method.
     assert: IntegrationDataMissingError is raised
     """
     mock_charm = MockGithubRunnerCharmFactory()
@@ -979,7 +979,7 @@ def test_reactive_mq_connection_info_from_charm_integration_data_missing():
     mock_charm.config[charm_state.REACTIVE_MQ_URI_CONFIG_NAME] = db_name
 
     with pytest.raises(IntegrationDataMissingError) as exc:
-        charm_state.ReactiveMQConnectionInfo.from_charm(mock_charm)
+        charm_state.ReactiveConfig.from_charm(mock_charm)
 
     assert f"Missing uris for {charm_state.MONGO_DB_INTEGRATION_NAME} integration" in str(
         exc.value
@@ -1000,6 +1000,7 @@ def mock_charm_state_data():
         "is_metrics_logging_available": True,
         "proxy_config": {"http": "http://example.com", "https": "https://example.com"},
         "charm_config": {"denylist": ["192.168.1.1"], "token": "abc123"},
+        "reactive_config": {"uri": "mongodb://user:password@localhost:27017"},
         "runner_config": {
             "base_image": "jammy",
             "virtual_machines": 2,
@@ -1173,6 +1174,7 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(RunnerCharmConfig, "from_charm", MagicMock())
     monkeypatch.setattr(CharmState, "_check_immutable_config_change", MagicMock())
     monkeypatch.setattr(charm_state, "_get_supported_arch", MagicMock())
+    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
     monkeypatch.setattr(SSHDebugConnection, "from_charm", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
     monkeypatch.setattr(json, "dumps", MagicMock())

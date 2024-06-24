@@ -9,7 +9,7 @@ from pathlib import Path
 
 import jinja2
 
-from charm_state import CharmState, GithubPath, ReactiveMQConnectionInfo
+from charm_state import CharmState, GithubPath, ReactiveConfig
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
 from lxd import LxdClient
@@ -71,7 +71,7 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
         token: GitHub personal access token to register runner to the
             repository or organization.
         dockerhub_mirror: URL of dockerhub mirror to use.
-        reactive_mq_conn_info: The connection info for the reactive MQ.
+        reactive_config: The configuration to spawn runners reactively.
     """
 
     charm_state: CharmState
@@ -81,7 +81,7 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     service_token: str
     token: str
     dockerhub_mirror: str | None = None
-    reactive_mq_conn_info: ReactiveMQConnectionInfo | None = None
+    reactive_config: ReactiveConfig | None = None
 
     @property
     def are_metrics_enabled(self) -> bool:

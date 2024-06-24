@@ -811,18 +811,18 @@ class SSHDebugConnection(BaseModel):
         return ssh_debug_connections
 
 
-class ReactiveMQConnectionInfo(BaseModel):
-    """Represents the connection to the reactive MQ.
+class ReactiveConfig(BaseModel):
+    """Represents the configuration for reactive scheduling.
 
     Attributes:
-        uri: The URI of the reactive MQ.
+        mq_uri: The URI of the MQ to use to spawn runners reactively.
     """
 
-    uri: AnyUrl
+    mq_uri: AnyUrl
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "ReactiveMQConnectionInfo | None":
-        """Initialize the ReactiveMQConnectionInfo from charm config and integration data.
+    def from_charm(cls, charm: CharmBase) -> "ReactiveConfig | None":
+        """Initialize the ReactiveConfig from charm config and integration data.
 
         Args:
             charm: The charm instance.
@@ -855,7 +855,7 @@ class ReactiveMQConnectionInfo(BaseModel):
         data = relation_data[0]
 
         if uri_field in data:
-            return ReactiveMQConnectionInfo(uri=data[uri_field])
+            return ReactiveConfig(mq_uri=data[uri_field])
 
         raise IntegrationDataMissingError(
             f"Missing {uri_field} for {MONGO_DB_INTEGRATION_NAME} integration"
@@ -883,6 +883,7 @@ class CharmState:
         charm_config: Configuration of the juju charm.
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
+        reactive_config: The charm configuration related to reactive spawning mode.
         runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.
     """
@@ -892,6 +893,7 @@ class CharmState:
     proxy_config: ProxyConfig
     charm_config: CharmConfig
     runner_config: RunnerCharmConfig
+    reactive_config: ReactiveConfig | None
     ssh_debug_connections: list[SSHDebugConnection]
 
     @classmethod
@@ -984,12 +986,15 @@ class CharmState:
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
+        reactive_config = ReactiveConfig.from_charm(charm)
+
         state = cls(
             arch=arch,
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
             charm_config=charm_config,
             runner_config=runner_config,
+            reactive_config=reactive_config,
             ssh_debug_connections=ssh_debug_connections,
         )
 
@@ -997,6 +1002,11 @@ class CharmState:
         # Convert pydantic object to python object serializable by json module.
         state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
         state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
+        state_dict["reactive_config"] = (
+            json.loads(state_dict["reactive_config"].json())
+            if state_dict["reactive_config"]
+            else None
+        )
         state_dict["runner_config"] = json.loads(state_dict["runner_config"].json())
         state_dict["ssh_debug_connections"] = [
             debug_info.json() for debug_info in state_dict["ssh_debug_connections"]

@@ -220,6 +220,7 @@ The charm state.
  - <b>`charm_config`</b>:  Configuration of the juju charm. 
  - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
  - <b>`proxy_config`</b>:  Proxy-related configuration. 
+ - <b>`reactive_config`</b>:  The charm configuration related to reactive spawning mode. 
  - <b>`runner_config`</b>:  The charm configuration related to runner VM configuration. 
  - <b>`ssh_debug_connections`</b>:  SSH debug connections configuration information. 
 
@@ -228,7 +229,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L946"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L948"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -472,14 +473,14 @@ Initialize the proxy config from charm.
 
 ---
 
-## <kbd>class</kbd> `ReactiveMQConnectionInfo`
-Represents the connection to the reactive MQ. 
+## <kbd>class</kbd> `ReactiveConfig`
+Represents the configuration for reactive scheduling. 
 
 
 
 **Attributes:**
  
- - <b>`uri`</b>:  The URI of the reactive MQ. 
+ - <b>`mq_uri`</b>:  The URI of the MQ to use to spawn runners reactively. 
 
 
 
@@ -491,10 +492,10 @@ Represents the connection to the reactive MQ.
 ### <kbd>classmethod</kbd> `from_charm`
 
 ```python
-from_charm(charm: CharmBase) → ReactiveMQConnectionInfo | None
+from_charm(charm: CharmBase) → ReactiveConfig | None
 ```
 
-Initialize the ReactiveMQConnectionInfo from charm config and integration data. 
+Initialize the ReactiveConfig from charm config and integration data. 
 
 
 

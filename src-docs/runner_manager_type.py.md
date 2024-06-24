@@ -80,7 +80,7 @@ Configuration of runner manager.
  - <b>`service_token`</b>:  Token for accessing local service. 
  - <b>`token`</b>:  GitHub personal access token to register runner to the  repository or organization. 
  - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
- - <b>`reactive_mq_conn_info`</b>:  The connection info for the reactive MQ. 
+ - <b>`reactive_config`</b>:  The configuration to spawn runners reactively. 
 
 
 ---
