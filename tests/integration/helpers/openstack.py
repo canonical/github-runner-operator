@@ -61,7 +61,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         )
         await self.run_in_instance(
             unit=unit,
-            command=f"HTTPS_PROXY={https_proxy if https_proxy else ''} python3 -m pip install gunicorn",
+            command=f"HTTPS_PROXY={https_proxy if https_proxy else ''} sudo python3 -m pip install gunicorn",
             assert_on_failure=True,
             assert_msg="Failed to install gunicorn",
         )
