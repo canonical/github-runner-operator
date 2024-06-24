@@ -28,8 +28,8 @@ from pydantic import (
 
 import openstack_cloud
 from errors import (
-    IntegrationDataMissingError,
-    IntegrationMissingError,
+    MissingIntegrationDataError,
+    MissingIntegrationError,
     OpenStackInvalidConfigError,
 )
 from firewall import FirewallEntry
@@ -841,7 +841,7 @@ class ReactiveConfig(BaseModel):
             return None
 
         if not integration_existing:
-            raise IntegrationMissingError(f"Missing {MONGO_DB_INTEGRATION_NAME} integration")
+            raise MissingIntegrationError(f"Missing {MONGO_DB_INTEGRATION_NAME} integration")
 
         database_requires = DatabaseRequires(
             charm, relation_name=MONGO_DB_INTEGRATION_NAME, database_name=db_name
@@ -857,7 +857,7 @@ class ReactiveConfig(BaseModel):
         if uri_field in data:
             return ReactiveConfig(mq_uri=data[uri_field])
 
-        raise IntegrationDataMissingError(
+        raise MissingIntegrationDataError(
             f"Missing {uri_field} for {MONGO_DB_INTEGRATION_NAME} integration"
         )
 

@@ -47,7 +47,7 @@ from charm_state import (
     UnsupportedArchitectureError,
     VirtualMachineResources,
 )
-from errors import IntegrationDataMissingError, IntegrationMissingError
+from errors import MissingIntegrationDataError, MissingIntegrationError
 from tests.unit.factories import MockGithubRunnerCharmFactory
 
 
@@ -957,7 +957,7 @@ def test_reactive_config_from_charm_integration_missing():
     db_name = secrets.token_hex(8)
     mock_charm.config[charm_state.REACTIVE_MQ_URI_CONFIG_NAME] = db_name
 
-    with pytest.raises(IntegrationMissingError) as exc:
+    with pytest.raises(MissingIntegrationError) as exc:
         charm_state.ReactiveConfig.from_charm(mock_charm)
 
     assert f"Missing {charm_state.MONGO_DB_INTEGRATION_NAME} integration" in str(exc.value)
@@ -978,7 +978,7 @@ def test_reactive_config_from_charm_integration_data_missing():
     db_name = secrets.token_hex(8)
     mock_charm.config[charm_state.REACTIVE_MQ_URI_CONFIG_NAME] = db_name
 
-    with pytest.raises(IntegrationDataMissingError) as exc:
+    with pytest.raises(MissingIntegrationDataError) as exc:
         charm_state.ReactiveConfig.from_charm(mock_charm)
 
     assert f"Missing uris for {charm_state.MONGO_DB_INTEGRATION_NAME} integration" in str(

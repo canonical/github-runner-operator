@@ -81,24 +81,6 @@ Base class for all github metrics errors.
 
 ---
 
-## <kbd>class</kbd> `IntegrationDataMissingError`
-Error for missing integration data. 
-
-
-
-
-
----
-
-## <kbd>class</kbd> `IntegrationMissingError`
-Error for missing integration. 
-
-
-
-
-
----
-
 ## <kbd>class</kbd> `IssueMetricEventError`
 Represents an error when issuing a metric event. 
 
@@ -128,6 +110,24 @@ Represents an error raised when logrotate cannot be setup.
 
 ## <kbd>class</kbd> `LxdError`
 Error for executing LXD actions. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `MissingIntegrationDataError`
+Error for missing integration data. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `MissingIntegrationError`
+Error for missing integration. 
 
 
 

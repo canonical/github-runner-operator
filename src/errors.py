@@ -47,11 +47,11 @@ class ConfigurationError(Exception):
     """Error for juju configuration."""
 
 
-class IntegrationDataMissingError(Exception):
+class MissingIntegrationDataError(Exception):
     """Error for missing integration data."""
 
 
-class IntegrationMissingError(Exception):
+class MissingIntegrationError(Exception):
     """Error for missing integration."""
 
 

@@ -32,9 +32,9 @@ from charm_state import (
     VirtualMachineResources,
 )
 from errors import (
-    IntegrationDataMissingError,
-    IntegrationMissingError,
     LogrotateSetupError,
+    MissingIntegrationDataError,
+    MissingIntegrationError,
     RunnerError,
     SubprocessError,
 )
@@ -389,11 +389,11 @@ def test_charm_goes_into_blocked_state_on_missing_integration(
     monkeypatch: pytest.MonkeyPatch, harness: Harness
 ):
     """
-    arrange: Mock charm._setup_state to raise an IntegrationMissingError.
+    arrange: Mock charm._setup_state to raise an MissingIntegrationError.
     act: Fire config changed event.
     assert: Charm is in blocked state.
     """
-    setup_state_mock = MagicMock(side_effect=IntegrationMissingError("mock error"))
+    setup_state_mock = MagicMock(side_effect=MissingIntegrationError("mock error"))
     monkeypatch.setattr(GithubRunnerCharm, "_setup_state", setup_state_mock)
     harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
     harness.charm.on.config_changed.emit()
@@ -405,11 +405,11 @@ def test_charm_goes_into_waiting_state_on_missing_integration_data(
     monkeypatch: pytest.MonkeyPatch, harness: Harness
 ):
     """
-    arrange: Mock charm._setup_state to raise an IntegrationDataMissingError.
+    arrange: Mock charm._setup_state to raise an MissingIntegrationDataError.
     act: Fire config changed event.
     assert: Charm is in blocked state.
     """
-    setup_state_mock = MagicMock(side_effect=IntegrationDataMissingError("mock error"))
+    setup_state_mock = MagicMock(side_effect=MissingIntegrationDataError("mock error"))
     monkeypatch.setattr(GithubRunnerCharm, "_setup_state", setup_state_mock)
     harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
     harness.charm.on.config_changed.emit()
