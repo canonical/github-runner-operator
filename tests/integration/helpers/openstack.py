@@ -242,7 +242,7 @@ async def setup_runner_with_repo_policy(
         {
             "repo-policy-compliance-token": charm_token,
             # Will remote port forward the service to the runner.
-            "repo-policy-compliance-url": f"http://localhost:8080",
+            "repo-policy-compliance-url": f"http://0.0.0.0:8080",
         }
     )
 
@@ -253,7 +253,16 @@ async def setup_runner_with_repo_policy(
             Whether the server is ready.
         """
         return_code, stdout, stderr = await instance_helper.run_in_instance(
-            unit, "curl http://localhost:8080"
+            unit, "sudo systemd status repo-policy-compliance"
+        )
+        # TODO: DEBUG
+        print("################")
+        print(return_code)
+        print(stdout)
+        print(stderr)
+        print("################")
+        return_code, stdout, stderr = await instance_helper.run_in_instance(
+            unit, "curl http://0.0.0.0:8080"
         )
         # TODO: DEBUG
         print("################")
@@ -262,5 +271,15 @@ async def setup_runner_with_repo_policy(
         print(stderr)
         print("################")
         return return_code == 0 and bool(stdout)
+
+    # TODO: DEBUG
+    return_code, stdout, stderr = await instance_helper.run_in_instance(
+        unit, "sudo cat /etc/systemd/system/repo-policy-compliance.service"
+    )
+    print("################")
+    print(return_code)
+    print(stdout)
+    print(stderr)
+    print("################")
 
     await wait_for(server_is_ready, timeout=30, check_interval=3)
