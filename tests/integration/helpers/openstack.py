@@ -67,7 +67,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         )
         await self.run_in_instance(
             unit,
-            f"""sudo bash -c 'cat >> /etc/systemd/system/repo-policy-compliance.service' << EOT
+            f"""sudo tree -a /etc/systemd/system/repo-policy-compliance.service > /dev/null << EOT
     [Unit]
     Description=Simple HTTP server for testing
     After=network.target
