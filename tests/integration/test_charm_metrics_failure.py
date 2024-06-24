@@ -75,6 +75,8 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
         The Reconciliation metric has the post job status set to failure.
     """
+    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
+
     if isinstance(instance_helper, OpenStackInstanceHelper):
         await setup_runner_with_repo_policy(
             app=app,
