@@ -253,7 +253,7 @@ async def setup_runner_with_repo_policy(
             Whether the server is ready.
         """
         return_code, stdout, stderr = await instance_helper.run_in_instance(
-            unit, "sudo systemd status repo-policy-compliance"
+            unit, "sudo systemctl status repo-policy-compliance"
         )
         # TODO: DEBUG
         print("################")
