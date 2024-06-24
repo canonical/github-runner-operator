@@ -137,13 +137,6 @@ EOT""",
         ssh_cmd_as_ubuntu_user = f"su - ubuntu -c '{ssh_cmd}'"
         logging.warning("ssh_cmd: %s", ssh_cmd_as_ubuntu_user)
         exit_code, stdout, stderr = await run_in_unit(unit, ssh_cmd, timeout)
-        # TODO: debug
-        print("###################################")
-        print(command)
-        print(exit_code)
-        print(stdout)
-        print(stderr)
-        print("###################################")
         logger.debug(
             "Run command '%s' in runner with result %s: '%s' '%s'",
             command,
@@ -259,9 +252,15 @@ async def setup_runner_with_repo_policy(
         Returns:
             Whether the server is ready.
         """
-        return_code, stdout, _ = await instance_helper.run_in_instance(
+        return_code, stdout, stderr = await instance_helper.run_in_instance(
             unit, "curl http://localhost:8080"
         )
+        # TODO: DEBUG
+        print("################")
+        print(return_code)
+        print(stdout)
+        print(stderr)
+        print("################")
         return return_code == 0 and bool(stdout)
 
     await wait_for(server_is_ready, timeout=30, check_interval=3)
