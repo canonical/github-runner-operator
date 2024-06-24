@@ -63,8 +63,8 @@ async def app_fixture(
 async def test_charm_issues_metrics_for_failed_repo_policy(
     model: Model,
     app: Application,
-    github_repository: Repository,
-    test_github_branch: Branch,
+    forked_github_repository: Repository,
+    forked_github_branch: Branch,
     token: str,
     https_proxy: str,
     instance_helper: InstanceHelper,
@@ -88,8 +88,8 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     await clear_metrics_log(unit)
     await dispatch_workflow(
         app=app,
-        branch=test_github_branch,
-        github_repository=github_repository,
+        branch=forked_github_branch,
+        github_repository=forked_github_repository,
         conclusion="failure",
         workflow_id_or_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     )
@@ -100,7 +100,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
 
     await assert_events_after_reconciliation(
         app=app,
-        github_repository=github_repository,
+        github_repository=forked_github_repository,
         post_job_status=PostJobStatus.REPO_POLICY_CHECK_FAILURE,
     )
 

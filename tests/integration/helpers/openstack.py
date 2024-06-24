@@ -253,33 +253,8 @@ async def setup_runner_with_repo_policy(
             Whether the server is ready.
         """
         return_code, stdout, stderr = await instance_helper.run_in_instance(
-            unit, "sudo systemctl status repo-policy-compliance"
-        )
-        # TODO: DEBUG
-        print("################")
-        print(return_code)
-        print(stdout)
-        print(stderr)
-        print("################")
-        return_code, stdout, stderr = await instance_helper.run_in_instance(
             unit, "curl http://0.0.0.0:8080"
         )
-        # TODO: DEBUG
-        print("################")
-        print(return_code)
-        print(stdout)
-        print(stderr)
-        print("################")
         return return_code == 0
-
-    # TODO: DEBUG
-    return_code, stdout, stderr = await instance_helper.run_in_instance(
-        unit, "sudo cat /etc/systemd/system/repo-policy-compliance.service"
-    )
-    print("################")
-    print(return_code)
-    print(stdout)
-    print(stderr)
-    print("################")
 
     await wait_for(server_is_ready, timeout=30, check_interval=3)
