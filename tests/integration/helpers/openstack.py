@@ -67,21 +67,21 @@ class OpenStackInstanceHelper(InstanceHelper):
         )
         await self.run_in_instance(
             unit,
-            f"""sudo tree -a /etc/systemd/system/repo-policy-compliance.service > /dev/null << EOT
-    [Unit]
-    Description=Simple HTTP server for testing
-    After=network.target
+            f"""sudo tee -a /etc/systemd/system/repo-policy-compliance.service > /dev/null << EOT
+[Unit]
+Description=Simple HTTP server for testing
+After=network.target
 
-    [Service]
-    User=ubuntu
-    Group=www-data
-    Environment="GITHUB_TOKEN={github_token}"
-    Environment="CHARM_TOKEN={charm_token}"
-    Environment="HTTPS_PROXY={https_proxy if https_proxy else ""}"
-    Environment="https_proxy={https_proxy if https_proxy else ""}"
-    WorkingDirectory=/home/ubuntu/repo_policy_compliance
-    ExecStart=/usr/local/bin/gunicorn --bind 0.0.0.0:8080 --timeout 60 app:app
-    EOT""",
+[Service]
+User=ubuntu
+Group=www-data
+Environment="GITHUB_TOKEN={github_token}"
+Environment="CHARM_TOKEN={charm_token}"
+Environment="HTTPS_PROXY={https_proxy if https_proxy else ""}"
+Environment="https_proxy={https_proxy if https_proxy else ""}"
+WorkingDirectory=/home/ubuntu/repo_policy_compliance
+ExecStart=/usr/local/bin/gunicorn --bind 0.0.0.0:8080 --timeout 60 app:app
+EOT""",
             assert_on_failure=True,
             assert_msg="Failed to create service file",
         )
