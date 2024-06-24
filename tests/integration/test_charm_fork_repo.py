@@ -23,7 +23,10 @@ from tests.integration.helpers.common import (
     reconcile,
 )
 from tests.integration.helpers.lxd import ensure_charm_has_runner, get_runner_names
-from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
+from tests.integration.helpers.openstack import (
+    OpenStackInstanceHelper,
+    setup_runner_with_repo_policy,
+)
 
 
 @pytest.mark.openstack
@@ -48,7 +51,7 @@ async def test_dispatch_workflow_failure(
     start_time = datetime.now(timezone.utc)
 
     if isinstance(instance_helper, OpenStackInstanceHelper):
-        await setup_repo_policy(
+        await setup_runner_with_repo_policy(
             app=app_with_forked_repo,
             openstack_connection=instance_helper.openstack_connection,
             token=token,
