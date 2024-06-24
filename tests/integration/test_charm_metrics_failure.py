@@ -37,7 +37,10 @@ from tests.integration.helpers.lxd import (
     get_runner_name,
     run_in_lxd_instance,
 )
-from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
+from tests.integration.helpers.openstack import (
+    OpenStackInstanceHelper,
+    setup_runner_with_repo_policy,
+)
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -73,7 +76,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
         The Reconciliation metric has the post job status set to failure.
     """
     if isinstance(instance_helper, OpenStackInstanceHelper):
-        await setup_repo_policy(
+        await setup_runner_with_repo_policy(
             app=app,
             openstack_connection=instance_helper.openstack_connection,
             token=token,

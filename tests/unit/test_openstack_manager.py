@@ -1080,7 +1080,9 @@ def test__ssh_health_check_success(
     act: Run health check on the server.
     assert: The health check passes.
     """
-    assert openstack_manager.OpenstackRunnerManager._ssh_health_check(ssh_connection_health_check, mock_server.name, False)
+    assert openstack_manager.OpenstackRunnerManager._ssh_health_check(
+        ssh_connection_health_check, mock_server.name, False
+    )
 
 
 def test__ssh_health_check_no_key(mock_server: MagicMock):
@@ -1092,7 +1094,9 @@ def test__ssh_health_check_no_key(mock_server: MagicMock):
     # Remove the mock SSH key.
     mock_server.key_name = None
 
-    assert openstack_manager.OpenstackRunnerManager._ssh_health_check(mock_server, mock_server.name, False)
+    assert openstack_manager.OpenstackRunnerManager._ssh_health_check(
+        mock_server, mock_server.name, False
+    )
 
 
 def test__ssh_health_check_error(mock_server: MagicMock, patch_ssh_connection_error):
@@ -1101,7 +1105,9 @@ def test__ssh_health_check_error(mock_server: MagicMock, patch_ssh_connection_er
     act: Run health check on the server.
     assert: The health check fails.
     """
-    assert openstack_manager.OpenstackRunnerManager._ssh_health_check(mock_server, mock_server.name, False)
+    assert openstack_manager.OpenstackRunnerManager._ssh_health_check(
+        mock_server, mock_server.name, False
+    )
 
 
 def test__wait_until_runner_process_running_no_server(
