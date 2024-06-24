@@ -11,7 +11,7 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 import yaml
-from ops.model import BlockedStatus, MaintenanceStatus
+from ops.model import BlockedStatus, MaintenanceStatus, WaitingStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
@@ -31,7 +31,13 @@ from charm_state import (
     ProxyConfig,
     VirtualMachineResources,
 )
-from errors import LogrotateSetupError, RunnerError, SubprocessError
+from errors import (
+    IntegrationDataMissingError,
+    IntegrationMissingError,
+    LogrotateSetupError,
+    RunnerError,
+    SubprocessError,
+)
 from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
@@ -377,6 +383,38 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
     assert all(
         FirewallEntry(ip) in allowlist for ip in test_unit_ip_addresses
     ), "Expected IP firewall entry not found in allowlist arg."
+
+
+def test_charm_goes_into_blocked_state_on_missing_integration(
+    monkeypatch: pytest.MonkeyPatch, harness: Harness
+):
+    """
+    arrange: Mock charm._setup_state to raise an IntegrationMissingError.
+    act: Fire config changed event.
+    assert: Charm is in blocked state.
+    """
+    setup_state_mock = MagicMock(side_effect=IntegrationMissingError("mock error"))
+    monkeypatch.setattr(GithubRunnerCharm, "_setup_state", setup_state_mock)
+    harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
+    harness.charm.on.config_changed.emit()
+    assert isinstance(harness.charm.unit.status, BlockedStatus)
+    assert "mock error" in harness.charm.unit.status.message
+
+
+def test_charm_goes_into_waiting_state_on_missing_integration_data(
+    monkeypatch: pytest.MonkeyPatch, harness: Harness
+):
+    """
+    arrange: Mock charm._setup_state to raise an IntegrationDataMissingError.
+    act: Fire config changed event.
+    assert: Charm is in blocked state.
+    """
+    setup_state_mock = MagicMock(side_effect=IntegrationDataMissingError("mock error"))
+    monkeypatch.setattr(GithubRunnerCharm, "_setup_state", setup_state_mock)
+    harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
+    harness.charm.on.config_changed.emit()
+    assert isinstance(harness.charm.unit.status, WaitingStatus)
+    assert "mock error" in harness.charm.unit.status.message
 
 
 # New tests should not be added here. This should be refactored to pytest over time.

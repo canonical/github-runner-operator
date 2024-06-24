@@ -33,7 +33,7 @@ from ops.charm import (
 )
 from ops.framework import StoredState
 from ops.main import main
-from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
+from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, WaitingStatus
 
 import metrics
 from charm_state import (
@@ -54,6 +54,8 @@ from charm_state import (
 )
 from errors import (
     ConfigurationError,
+    IntegrationDataMissingError,
+    IntegrationMissingError,
     LogrotateSetupError,
     MissingRunnerBinaryError,
     OpenStackUnauthorizedError,
@@ -123,6 +125,12 @@ def catch_charm_errors(
             self.unit.status = BlockedStatus(
                 "Unauthorized OpenStack connection. Check credentials."
             )
+        except IntegrationDataMissingError as err:
+            logger.exception("Missing integration data")
+            self.unit.status = WaitingStatus(str(err))
+        except IntegrationMissingError as err:
+            logger.exception("Missing integration")
+            self.unit.status = BlockedStatus(str(err))
 
     return func_with_catch_errors
 
