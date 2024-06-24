@@ -151,7 +151,8 @@ class OpenStackInstanceHelper(InstanceHelper):
             stdout,
             stderr,
         )
-        assert assert_on_failure and exit_code != 0, assert_msg
+        if assert_on_failure:
+            assert exit_code == 0, assert_msg
         return exit_code, stdout, stderr
 
     async def ensure_charm_has_runner(self, app: Application) -> None:
