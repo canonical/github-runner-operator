@@ -14,11 +14,24 @@ from typing import NamedTuple, Optional, cast
 from urllib.parse import urlsplit
 
 import yaml
+from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from ops import CharmBase
-from pydantic import AnyHttpUrl, IPvAnyAddress, AnyUrl, BaseModel, Field, ValidationError, validator
+from pydantic import (
+    AnyHttpUrl,
+    AnyUrl,
+    BaseModel,
+    Field,
+    IPvAnyAddress,
+    ValidationError,
+    validator,
+)
 
 import openstack_cloud
-from errors import OpenStackInvalidConfigError
+from errors import (
+    IntegrationDataMissingError,
+    IntegrationMissingError,
+    OpenStackInvalidConfigError,
+)
 from firewall import FirewallEntry
 from utilities import get_env_var
 
@@ -798,6 +811,57 @@ class SSHDebugConnection(BaseModel):
         return ssh_debug_connections
 
 
+class ReactiveMQConnectionInfo(BaseModel):
+    """Represents the connection to the reactive MQ.
+
+    Attributes:
+        uri: The URI of the reactive MQ.
+    """
+
+    uri: AnyUrl
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "ReactiveMQConnectionInfo | None":
+        """Initialize the ReactiveMQConnectionInfo from charm config and integration data.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            The connection information for the reactive MQ or None if not available.
+
+        Raises:
+            IntegrationMissingError: If the reactive MQ integration is missing.
+            IntegrationDataMissingError: If the respective reactive MQ integration data is missing.
+        """
+        db_name = cast(str, charm.config.get(REACTIVE_MQ_URI_CONFIG_NAME, ""))
+        integration_existing = MONGO_DB_INTEGRATION_NAME in charm.model.relations
+
+        if not (db_name or integration_existing):
+            return None
+
+        if not integration_existing:
+            raise IntegrationMissingError(f"Missing {MONGO_DB_INTEGRATION_NAME} integration")
+
+        database_requires = DatabaseRequires(
+            charm, relation_name=MONGO_DB_INTEGRATION_NAME, database_name=db_name
+        )
+
+        uri_field = "uris"  # the field is called uris though it's a single uri
+        relation_data = list(database_requires.fetch_relation_data(fields=[uri_field]).values())
+
+        # There can be only one database integrated at a time
+        # with the same interface name. See: metadata.yaml
+        data = relation_data[0]
+
+        if uri_field in data:
+            return ReactiveMQConnectionInfo(uri=data[uri_field])
+
+        raise IntegrationDataMissingError(
+            f"Missing {uri_field} for {MONGO_DB_INTEGRATION_NAME} integration"
+        )
+
+
 class ImmutableConfigChangedError(Exception):
     """Represents an error when changing immutable charm state."""
 
@@ -808,26 +872,6 @@ class ImmutableConfigChangedError(Exception):
             msg: Explanation of the error.
         """
         self.msg = msg
-
-
-class ReactiveMQConnectionInfo(BaseModel):
-    """Represents the connection to the reactive MQ.
-
-    Attributes:
-        uri: The URI of the reactive MQ.
-    """
-    uri: AnyUrl
-
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "ReactiveMQConnectionInfo":
-        """Initialize the SSHDebugInfo from charm relation data.
-
-        Args:
-            charm: The charm instance.
-
-        Returns:
-            The connection information for the reactive MQ.
-        """
 
 
 @dataclasses.dataclass(frozen=True)

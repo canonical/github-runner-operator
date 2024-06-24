@@ -9,7 +9,6 @@ from reactive import Job
 
 class InactiveMQError(Exception):
     """Raised when the connection to the MQ is inactive."""
-    pass
 
 
 class Message:

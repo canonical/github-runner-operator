@@ -508,6 +508,15 @@ def test_reconcile_places_no_timestamp_in_newly_created_runner_if_metrics_disabl
     assert not (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).exists()
 
 
+def test_reconcile_consume_messages_for_reactive(runner_manager: RunnerManager):
+    """
+    arrange: Mock the _get_runners method to return an empty list.
+    act: Consume messages for reactive spawning.
+    assert: No error is raised.
+    """
+    runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
+
+
 def test_schedule_build_runner_image(
     runner_manager: RunnerManager,
     tmp_path: Path,

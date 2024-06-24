@@ -23,6 +23,7 @@ from charm_state import (
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     PATH_CONFIG_NAME,
+    REACTIVE_MQ_URI_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     RUNNER_STORAGE_CONFIG_NAME,
     TEST_MODE_CONFIG_NAME,
@@ -32,7 +33,7 @@ from charm_state import (
     VM_CPU_CONFIG_NAME,
     VM_DISK_CONFIG_NAME,
     VM_MEMORY_CONFIG_NAME,
-    SSHDebugConnection,
+    SSHDebugConnection, MONGO_DB_INTEGRATION_NAME,
 )
 
 T = TypeVar("T")
@@ -100,7 +101,7 @@ class MockGithubRunnerCharmModelFactory(factory.Factory):
 
         model = MagicMock
 
-    relations: dict[str, list] = {COS_AGENT_INTEGRATION_NAME: [], DEBUG_SSH_INTEGRATION_NAME: []}
+    relations: dict[str, list] = {COS_AGENT_INTEGRATION_NAME: [], DEBUG_SSH_INTEGRATION_NAME: [], MONGO_DB_INTEGRATION_NAME: []}
 
 
 class MockGithubRunnerCharmFactory(factory.Factory):
@@ -123,6 +124,7 @@ class MockGithubRunnerCharmFactory(factory.Factory):
             OPENSTACK_CLOUDS_YAML_CONFIG_NAME: "",
             PATH_CONFIG_NAME: factory.Sequence(lambda n: f"mock_path_{n}"),
             RECONCILE_INTERVAL_CONFIG_NAME: 10,
+            REACTIVE_MQ_URI_CONFIG_NAME: "",
             RUNNER_STORAGE_CONFIG_NAME: "juju-storage",
             TEST_MODE_CONFIG_NAME: "",
             TOKEN_CONFIG_NAME: factory.Sequence(lambda n: f"mock_token_{n}"),
