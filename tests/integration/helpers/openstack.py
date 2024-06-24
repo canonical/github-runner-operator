@@ -1,5 +1,6 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
+import asyncio
 import logging
 import secrets
 from typing import Optional, cast
@@ -25,6 +26,34 @@ class OpenStackInstanceHelper(InstanceHelper):
             openstack_connection: OpenStack connection object.
         """
         self.openstack_connection = openstack_connection
+
+    async def setup_ssh_tunnel_with_runner(self, unit: Unit, port: int) -> None:
+        """Remote forward the port on juju unit to a runner.
+
+        Args:
+            unit: Juju unit to execute the command in.
+            port: The port on both the unit and the runner. Not supporting specifying different
+                ports on each end.
+        """
+        runner = self._get_runner(unit=unit)
+        assert runner, f"Runner not found for unit {unit.name}"
+        network_address_list = runner.addresses.values()
+        logger.warning(network_address_list)
+        assert (
+            network_address_list
+        ), f"No addresses to connect to for OpenStack server {runner.name}"
+
+        ip = None
+        for network_addresses in network_address_list:
+            for address in network_addresses:
+                ip = address["addr"]
+                break
+        assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
+
+        ssh_cmd = f'ssh -i /home/ubuntu/.ssh/runner-{runner.name}.key -o "StrictHostKeyChecking no" -R {port}:localhost:{port} ubuntu@{ip}'
+        # Spawn this as a background task.
+        # Using None as timeout to run indefinitely.
+        asyncio.create_task(run_in_unit(unit, ssh_cmd, None))
 
     async def run_in_instance(
         self,
@@ -135,7 +164,9 @@ async def setup_repo_policy(
     token: str,
     https_proxy: Optional[str],
 ) -> None:
-    """Setup the repo policy compliance service for one runner.
+    """Setup the repo policy compliance service.
+
+    Will flush out old runners, and setup a new runner.
 
     Args:
         app: The GitHub Runner Charm app to create the runner for.
@@ -162,11 +193,18 @@ async def setup_repo_policy(
     await app.set_config(
         {
             "repo-policy-compliance-token": charm_token,
-            "repo-policy-compliance-url": f"http://{unit_address}:8080",
+            # Will remote port forward the service to the runner.
+            "repo-policy-compliance-url": f"http://localhost:8080",
         }
     )
 
+    # Flush out old runners and ensure one new runner.
+    action = await unit.run_action("flush-runners")
+    await action.wait()
+
+    assert action.status == "completed"
     await instance_helper.ensure_charm_has_runner(app=app)
+    await instance_helper.setup_ssh_tunnel_with_runner(unit=unit, port=8080)
 
 
 async def _install_repo_policy(
