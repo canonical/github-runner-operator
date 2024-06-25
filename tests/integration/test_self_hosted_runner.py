@@ -111,7 +111,7 @@ async def test_dispatch_workflow_with_dockerhub_mirror(
 async def test_flush_busy_runner(
     model: Model,
     app_runner: Application,
-    forked_github_repository: Repository,
+    github_repository: Repository,
     runner_manager_github_client: GithubClient,
 ) -> None:
     """
@@ -129,7 +129,7 @@ async def test_flush_busy_runner(
     config = await app_runner.get_config()
 
     await app_runner.set_config(
-        {PATH_CONFIG_NAME: forked_github_repository.full_name, VIRTUAL_MACHINES_CONFIG_NAME: "1"}
+        {PATH_CONFIG_NAME: github_repository.full_name, VIRTUAL_MACHINES_CONFIG_NAME: "1"}
     )
     await reconcile(app=app_runner, model=model)
     await wait_till_num_of_runners(unit, 1)
@@ -140,8 +140,8 @@ async def test_flush_busy_runner(
     runner_to_be_used = names[0]
 
     # 1.
-    main_branch = forked_github_repository.get_branch(forked_github_repository.default_branch)
-    workflow = forked_github_repository.get_workflow(
+    main_branch = github_repository.get_branch(github_repository.default_branch)
+    workflow = github_repository.get_workflow(
         id_or_file_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME
     )
 
@@ -151,7 +151,7 @@ async def test_flush_busy_runner(
     for _ in range(30):
         all_runners = runner_manager_github_client.get_runner_github_info(
             GithubRepo(
-                owner=forked_github_repository.owner.login, repo=forked_github_repository.name
+                owner=github_repository.owner.login, repo=github_repository.name
             )
         )
         runners = [runner for runner in all_runners if runner.name == runner_to_be_used]

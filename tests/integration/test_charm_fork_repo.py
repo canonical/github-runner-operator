@@ -34,8 +34,8 @@ from tests.integration.helpers.openstack import (
 @pytest.mark.abort_on_fail
 async def test_dispatch_workflow_failure(
     app_with_forked_repo: Application,
-    forked_github_repository: Repository,
-    forked_github_branch: Branch,
+    github_repository: Repository,
+    test_github_branch: Branch,
     instance_helper: InstanceHelper,
     token: str,
     https_proxy: str,
@@ -58,15 +58,15 @@ async def test_dispatch_workflow_failure(
             https_proxy=https_proxy,
         )
 
-    workflow = forked_github_repository.get_workflow(
+    workflow = github_repository.get_workflow(
         id_or_file_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME
     )
 
     await dispatch_workflow(
         app=app_with_forked_repo,
         workflow_id_or_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
-        branch=forked_github_branch,
-        github_repository=forked_github_repository,
+        branch=test_github_branch,
+        github_repository=github_repository,
         conclusion="failure",
     )
 

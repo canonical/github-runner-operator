@@ -113,15 +113,15 @@ async def test_charm_issues_metrics_after_reconciliation(
 async def test_charm_remounts_shared_fs(
     model: Model,
     app: Application,
-    forked_github_repository: Repository,
-    forked_github_branch: Branch,
+    github_repository: Repository,
+    test_github_branch: Branch,
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
     act: Dispatch a test workflow and afterwards unmount the shared fs. After that, reconcile.
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
     """
-    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
+    await app.set_config({PATH_CONFIG_NAME: github_repository.full_name})
     await ensure_charm_has_runner(app=app, model=model)
 
     # Clear metrics log to make reconciliation event more predictable
@@ -130,8 +130,8 @@ async def test_charm_remounts_shared_fs(
     await clear_metrics_log(unit)
     await dispatch_workflow(
         app=app,
-        branch=forked_github_branch,
-        github_repository=forked_github_repository,
+        branch=test_github_branch,
+        github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
     )
@@ -144,5 +144,5 @@ async def test_charm_remounts_shared_fs(
     await reconcile(app=app, model=model)
 
     await assert_events_after_reconciliation(
-        app=app, github_repository=forked_github_repository, post_job_status=PostJobStatus.NORMAL
+        app=app, github_repository=github_repository, post_job_status=PostJobStatus.NORMAL
     )

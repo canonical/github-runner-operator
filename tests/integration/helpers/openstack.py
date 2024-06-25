@@ -256,7 +256,7 @@ async def setup_runner_with_repo_policy(
         Returns:
             Whether the server is ready.
         """
-        return_code, stdout, stderr = await instance_helper.run_in_instance(
+        return_code, _, _ = await instance_helper.run_in_instance(
             unit, "curl http://0.0.0.0:8080"
         )
         return return_code == 0
