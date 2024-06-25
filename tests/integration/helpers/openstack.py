@@ -122,13 +122,7 @@ EOT""",
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
         ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i /home/ubuntu/.ssh/runner-{runner.name}.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
-        exit_code, stdout, stderr = await run_in_unit(unit, ssh_cmd)
-        logger.debug(
-            "Expose juju unit port to runner with result %s: '%s' '%s'",
-            exit_code,
-            stdout,
-            stderr,
-        )
+        asyncio.create_task(run_in_unit(unit, ssh_cmd))
 
     async def run_in_instance(
         self,
