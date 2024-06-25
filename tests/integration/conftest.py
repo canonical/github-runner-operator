@@ -533,7 +533,7 @@ def github_repository(github_client: Github, path: str) -> Repository:
 
 
 @pytest.fixture(scope="module")
-def github_repository(
+def forked_github_repository(
     github_repository: Repository,
 ) -> Iterator[Repository]:
     """Create a fork for a GitHub repository."""
@@ -556,20 +556,20 @@ def github_repository(
 
 
 @pytest.fixture(scope="module")
-def test_github_branch(
-    github_repository: Repository, github_repository: Repository
+def forked_github_branch(
+    github_repository: Repository, forked_github_repository: Repository
 ) -> Iterator[Branch]:
     """Create a new forked branch for testing."""
     branch_name = f"test/{secrets.token_hex(4)}"
 
-    main_branch = github_repository.get_branch(github_repository.default_branch)
-    branch_ref = github_repository.create_git_ref(
+    main_branch = forked_github_repository.get_branch(github_repository.default_branch)
+    branch_ref = forked_github_repository.create_git_ref(
         ref=f"refs/heads/{branch_name}", sha=main_branch.commit.sha
     )
 
     for _ in range(10):
         try:
-            branch = github_repository.get_branch(branch_name)
+            branch = forked_github_repository.get_branch(branch_name)
             break
         except GithubException as err:
             if err.status == 404:
