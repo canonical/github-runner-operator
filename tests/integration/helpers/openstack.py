@@ -220,7 +220,6 @@ async def setup_runner_with_repo_policy(
     openstack_connection: openstack.connection.Connection,
     token: str,
     https_proxy: Optional[str],
-    authorized: bool = True,
 ) -> None:
     """Setup a runner with a local repo policy service.
 
@@ -229,25 +228,22 @@ async def setup_runner_with_repo_policy(
         openstack_connection: OpenStack connection object.
         token: GitHub token.
         https_proxy: HTTPS proxy url to use.
-        authorized: Whether the runner is authorized to access the repo policy.
-            Setting this to False with result in repo policy failure for
-            workflow runs on the runner.
     """
     unit = app.units[0]
     charm_token = secrets.token_hex(16)
     instance_helper = OpenStackInstanceHelper(openstack_connection)
+    await app.set_config(
+        {
+            "repo-policy-compliance-token": charm_token,
+            # Will remote port forward the service to the runner.
+            "repo-policy-compliance-url": f"http://0.0.0.0:8080",
+        }
+    )
+
     await instance_helper.ensure_charm_has_runner(app=app)
 
     await instance_helper.install_repo_policy_in_instance(
         unit=unit, github_token=token, charm_token=charm_token, https_proxy=https_proxy
-    )
-
-    await app.set_config(
-        {
-            "repo-policy-compliance-token": charm_token if authorized else "FAKE_TOKEN",
-            # Will remote port forward the service to the runner.
-            "repo-policy-compliance-url": f"http://0.0.0.0:8080",
-        }
     )
 
     async def server_is_ready() -> bool:
