@@ -122,7 +122,8 @@ EOT""",
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
         ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i /home/ubuntu/.ssh/runner-{runner.name}.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
-        asyncio.create_task(run_in_unit(unit, ssh_cmd))
+        exit_code, _ , stderr = await run_in_unit(unit, ssh_cmd)
+        assert exit_code == 0, f"Error in SSH remote forwarding of port {port}: {stderr}"
 
     async def run_in_instance(
         self,
@@ -274,7 +275,7 @@ async def setup_repo_policy(
     await app.set_config(
         {
             "repo-policy-compliance-token": charm_token,
-            "repo-policy-compliance-url": f"http://{unit_address}:8080",
+            "repo-policy-compliance-url": f"http://localhost:8080",
         }
     )
 
