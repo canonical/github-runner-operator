@@ -98,6 +98,38 @@ EOT""",
             assert_msg="Failed to restart service",
         )
 
+    async def expose_to_instance(
+        self,
+        unit: Unit,
+        port: int,
+    ) -> None:
+        """
+        TODO
+        """
+        runner = self._get_runner(unit=unit)
+        assert runner, f"Runner not found for unit {unit.name}"
+        network_address_list = runner.addresses.values()
+        logger.warning(network_address_list)
+        assert (
+            network_address_list
+        ), f"No addresses to connect to for OpenStack server {runner.name}"
+
+        ip = None
+        for network_addresses in network_address_list:
+            for address in network_addresses:
+                ip = address["addr"]
+                break
+        assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
+
+        ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i /home/ubuntu/.ssh/runner-{runner.name}.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
+        exit_code, stdout, stderr = await run_in_unit(unit, ssh_cmd)
+        logger.debug(
+            "Expose juju unit port to runner with result %s: '%s' '%s'",
+            exit_code,
+            stdout,
+            stderr,
+        )
+
     async def run_in_instance(
         self,
         unit: Unit,
@@ -213,6 +245,132 @@ EOT""",
                 break
 
         return runner
+
+
+async def setup_repo_policy(
+    app: Application,
+    openstack_connection: openstack.connection.Connection,
+    token: str,
+    https_proxy: Optional[str],
+) -> None:
+    """Setup the repo policy compliance service for one runner.
+
+    Args:
+        app: The GitHub Runner Charm app to create the runner for.
+        openstack_connection: OpenStack connection object.
+        token: GitHub token.
+        https_proxy: HTTPS proxy url to use.
+    """
+    unit = app.units[0]
+    charm_token = secrets.token_hex(16)
+    await _install_repo_policy(
+        unit=unit, github_token=token, charm_token=charm_token, https_proxy=https_proxy
+    )
+    instance_helper = OpenStackInstanceHelper(openstack_connection)
+
+    unit_address = await unit.get_public_address()
+    await app.expose()
+    unit_name_without_slash = unit.name.replace("/", "-")
+    await run_in_unit(
+        unit=unit,
+        command=f"/var/lib/juju/tools/unit-{unit_name_without_slash}/open-port 8080",
+        assert_on_failure=True,
+        assert_msg="Failed to open port 8080",
+    )
+    await app.set_config(
+        {
+            "repo-policy-compliance-token": charm_token,
+            "repo-policy-compliance-url": f"http://{unit_address}:8080",
+        }
+    )
+
+    await instance_helper.ensure_charm_has_runner(app=app)
+    await instance_helper.expose_to_instance(unit, 8080)
+
+async def _install_repo_policy(
+    unit: Unit, github_token: str, charm_token: str, https_proxy: Optional[str]
+):
+    """Start the repo policy compliance service.
+
+    Args:
+        unit: Unit instance to check for the LXD profile.
+        github_token: GitHub token to use in the repo-policy service.
+        charm_token: Charm token to use in the repo-policy service.
+        https_proxy: HTTPS proxy url to use.
+    """
+    await run_in_unit(
+        unit,
+        "apt install -y python3-pip",
+        assert_on_failure=True,
+        assert_msg="Failed to install python3-pip",
+    )
+    await run_in_unit(
+        unit,
+        "rm -rf /home/ubuntu/repo_policy_compliance",
+        assert_on_failure=True,
+        assert_msg="Failed to remove repo-policy-compliance",
+    )
+    await run_in_unit(
+        unit,
+        f'sudo -u ubuntu HTTPS_PROXY={https_proxy if https_proxy else ""} git clone https://github.com/canonical/repo-policy-compliance.git /home/ubuntu/repo_policy_compliance',
+        assert_on_failure=True,
+        assert_msg="Failed to clone repo-policy-compliance",
+    )
+    await run_in_unit(
+        unit,
+        f'sudo -u ubuntu HTTPS_PROXY={https_proxy if https_proxy else ""} pip install --proxy http://squid.internal:3128 -r /home/ubuntu/repo_policy_compliance/requirements.txt',
+        assert_on_failure=True,
+        assert_msg="Failed to install repo-policy-compliance requirements",
+    )
+    await run_in_unit(
+        unit=unit,
+        command=f"HTTPS_PROXY={https_proxy if https_proxy else ''} python3 -m pip install gunicorn",
+        assert_on_failure=True,
+        assert_msg="Failed to install gunicorn",
+    )
+    await run_in_unit(
+        unit,
+        f"""cat <<EOT > /etc/systemd/system/repo-policy-compliance.service
+[Unit]
+Description=Simple HTTP server for testing
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+Environment="GITHUB_TOKEN={github_token}"
+Environment="CHARM_TOKEN={charm_token}"
+Environment="HTTPS_PROXY={https_proxy if https_proxy else ""}"
+Environment="https_proxy={https_proxy if https_proxy else ""}"
+WorkingDirectory=/home/ubuntu/repo_policy_compliance
+ExecStart=/usr/local/bin/gunicorn --bind 0.0.0.0:8080 --timeout 60 app:app
+EOT""",
+        assert_on_failure=True,
+        assert_msg="Failed to create service file",
+    )
+    await run_in_unit(
+        unit,
+        "/usr/bin/systemctl daemon-reload",
+        assert_on_failure=True,
+        assert_msg="Failed to reload systemd",
+    )
+    await run_in_unit(
+        unit,
+        "/usr/bin/systemctl restart repo-policy-compliance",
+        assert_on_failure=True,
+        assert_msg="Failed to restart service",
+    )
+
+    async def server_is_ready() -> bool:
+        """Check if the server is ready.
+
+        Returns:
+            Whether the server is ready.
+        """
+        return_code, stdout, _ = await run_in_unit(unit, "curl http://localhost:8080")
+        return return_code == 0 and bool(stdout)
+
+    await wait_for(server_is_ready, timeout=30, check_interval=3)
 
 
 async def setup_runner_with_repo_policy(

@@ -39,6 +39,7 @@ from tests.integration.helpers.lxd import (
 )
 from tests.integration.helpers.openstack import (
     OpenStackInstanceHelper,
+    setup_repo_policy,
     setup_runner_with_repo_policy,
 )
 
@@ -78,7 +79,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
 
     if isinstance(instance_helper, OpenStackInstanceHelper):
-        await setup_runner_with_repo_policy(
+        await setup_repo_policy(
             app=app,
             openstack_connection=instance_helper.openstack_connection,
             token=token,
