@@ -141,7 +141,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     )
 
     # Wait a bit to ensure pre-job script has been executed.
-    await sleep(5)
+    await sleep(30)
 
     # Make the runner terminate abnormally by killing run.sh
     runner_name = await instance_helper.get_runner_name(unit)
