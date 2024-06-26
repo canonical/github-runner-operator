@@ -1,6 +1,10 @@
 # Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
+# 2024/06/26 The charm contains a lot of states and configuration. The upcoming refactor will
+# split each/related class to a file.
+# pylint: disable=too-many-lines
+
 """State of the Charm."""
 
 import dataclasses

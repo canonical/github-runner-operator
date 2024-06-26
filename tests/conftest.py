@@ -71,44 +71,53 @@ def pytest_addoption(parser: Parser):
         "--openstack-network-name",
         action="store",
         help="The Openstack network to create testing instances under.",
+        default=None,
     )
     parser.addoption(
         "--openstack-flavor-name",
         action="store",
         help="The Openstack flavor to create testing instances with.",
+        default=None,
     )
     parser.addoption(
         "--openstack-auth-url",
         action="store",
         help="The URL to Openstack authentication service, i.e. keystone.",
+        default=None,
     )
     parser.addoption(
         "--openstack-password",
         action="store",
         help="The password to authenticate to Openstack service.",
+        default=None,
     )
     parser.addoption(
         "--openstack-project-domain-name",
         action="store",
         help="The Openstack project domain name to use.",
+        default=None,
     )
     parser.addoption(
         "--openstack-project-name",
         action="store",
         help="The Openstack project name to use.",
+        default=None,
     )
     parser.addoption(
         "--openstack-user-domain-name",
         action="store",
         help="The Openstack user domain name to use.",
+        default=None,
     )
     parser.addoption(
         "--openstack-username",
         action="store",
         help="The Openstack user to authenticate as.",
+        default=None,
     )
     parser.addoption(
         "--openstack-region-name",
         action="store",
         help="The Openstack region to authenticate to.",
+        default=None,
     )

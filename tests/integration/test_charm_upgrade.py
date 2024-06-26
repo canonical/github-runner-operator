@@ -12,7 +12,7 @@ from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers import (
+from tests.integration.helpers.common import (
     deploy_github_runner_charm,
     inject_lxd_profile,
     is_upgrade_charm_event_emitted,

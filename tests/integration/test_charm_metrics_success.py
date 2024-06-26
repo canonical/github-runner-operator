@@ -33,16 +33,16 @@ from tests.integration.helpers.lxd import ensure_charm_has_runner, get_runner_na
 
 @pytest_asyncio.fixture(scope="function", name="app")
 async def app_fixture(
-    model: Model, app_with_grafana_agent: Application, loop_device: str
+    model: Model, basic_app: Application, loop_device: str
 ) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
     Clear the metrics log before each test.
     """
-    unit = app_with_grafana_agent.units[0]
+    unit = basic_app.units[0]
     await clear_metrics_log(unit)
     await print_loop_device_info(unit, loop_device)
-    yield app_with_grafana_agent
+    yield basic_app
 
 
 @pytest.mark.openstack
@@ -76,8 +76,8 @@ async def test_charm_issues_runner_installed_metric(
 async def test_charm_issues_metrics_after_reconciliation(
     model: Model,
     app: Application,
-    forked_github_repository: Repository,
-    forked_github_branch: Branch,
+    github_repository: Repository,
+    test_github_branch: Branch,
     instance_helper: InstanceHelper,
 ):
     """
@@ -86,7 +86,6 @@ async def test_charm_issues_metrics_after_reconciliation(
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
         The Reconciliation metric has the post job status set to normal.
     """
-    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
     await instance_helper.ensure_charm_has_runner(app)
 
     # Clear metrics log to make reconciliation event more predictable
@@ -94,8 +93,8 @@ async def test_charm_issues_metrics_after_reconciliation(
     await clear_metrics_log(unit)
     await dispatch_workflow(
         app=app,
-        branch=forked_github_branch,
-        github_repository=forked_github_repository,
+        branch=test_github_branch,
+        github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
     )
@@ -105,7 +104,7 @@ async def test_charm_issues_metrics_after_reconciliation(
     await reconcile(app=app, model=model)
 
     await assert_events_after_reconciliation(
-        app=app, github_repository=forked_github_repository, post_job_status=PostJobStatus.NORMAL
+        app=app, github_repository=github_repository, post_job_status=PostJobStatus.NORMAL
     )
 
 

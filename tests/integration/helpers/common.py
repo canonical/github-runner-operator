@@ -44,6 +44,7 @@ DISPATCH_CRASH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_crash_test.yaml"
 DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME = "workflow_dispatch_failure_test.yaml"
 DISPATCH_WAIT_TEST_WORKFLOW_FILENAME = "workflow_dispatch_wait_test.yaml"
 DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME = "e2e_test_run.yaml"
+DISPATCH_E2E_TEST_RUN_OPENSTACK_WORKFLOW_FILENAME = "e2e_test_run_openstack.yaml"
 
 DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15}
 
@@ -284,7 +285,7 @@ async def deploy_github_runner_charm(
     application = await model.deploy(
         charm_file,
         application_name=app_name,
-        series="jammy",
+        base="ubuntu@22.04",
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
         storage=storage,

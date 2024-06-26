@@ -11,7 +11,7 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 import yaml
-from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
+from ops.model import BlockedStatus, MaintenanceStatus
 from ops.testing import Harness
 
 from charm import GithubRunnerCharm
@@ -615,7 +615,7 @@ class TestCharm(unittest.TestCase):
         """
         arrange: Setup mocked charm.
         act: Fire config changed event to use openstack-clouds-yaml.
-        assert: Charm is in blocked state.
+        assert: Charm is in maintenance state.
         """
         harness = Harness(GithubRunnerCharm)
         cloud_yaml = {

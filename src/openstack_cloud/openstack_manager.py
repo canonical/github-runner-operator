@@ -761,7 +761,7 @@ class OpenstackRunnerManager:
             An SSH connection to OpenStack server instance.
         """
         server: Server | None = conn.get_server(name_or_id=server_name)
-        if not server:
+        if server is None:
             raise _SSHError(f"Server gone while trying to get SSH connection: {server_name}.")
         if not server.key_name:
             raise _SSHError(

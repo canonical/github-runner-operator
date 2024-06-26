@@ -26,11 +26,46 @@ class OpenStackInstanceHelper(InstanceHelper):
         """
         self.openstack_connection = openstack_connection
 
+    async def expose_to_instance(
+        self,
+        unit: Unit,
+        port: int,
+    ) -> None:
+        """Expose a port on the juju machine to the OpenStack instance.
+
+        Uses SSH remote port forwarding from the juju machine to the OpenStack instance containing
+        the runner.
+
+        Args:
+            unit: The juju unit of the github-runner charm.
+            port: The port on the juju machine to expose to the runner.
+        """
+        runner = self._get_runner(unit=unit)
+        assert runner, f"Runner not found for unit {unit.name}"
+        network_address_list = runner.addresses.values()
+        logger.warning(network_address_list)
+        assert (
+            network_address_list
+        ), f"No addresses to connect to for OpenStack server {runner.name}"
+
+        ip = None
+        for network_addresses in network_address_list:
+            for address in network_addresses:
+                ip = address["addr"]
+                break
+        assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
+
+        ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i /home/ubuntu/.ssh/runner-{runner.name}.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
+        exit_code, _, stderr = await run_in_unit(unit, ssh_cmd)
+        assert exit_code == 0, f"Error in SSH remote forwarding of port {port}: {stderr}"
+
     async def run_in_instance(
         self,
         unit: Unit,
         command: str,
         timeout: int | None = None,
+        assert_on_failure: bool = False,
+        assert_msg: str | None = None,
     ) -> tuple[int, str | None, str | None]:
         """Run command in OpenStack instance.
 
@@ -38,6 +73,8 @@ class OpenStackInstanceHelper(InstanceHelper):
             unit: Juju unit to execute the command in.
             command: Command to execute.
             timeout: Amount of time to wait for the execution.
+            assert_on_failure: Perform assertion on non-zero exit code.
+            assert_msg: Message for the failure assertion.
 
         Returns:
             Tuple of return code, stdout and stderr.
@@ -60,7 +97,17 @@ class OpenStackInstanceHelper(InstanceHelper):
         ssh_cmd = f'ssh -i /home/ubuntu/.ssh/runner-{runner.name}.key -o "StrictHostKeyChecking no" ubuntu@{ip} {command}'
         ssh_cmd_as_ubuntu_user = f"su - ubuntu -c '{ssh_cmd}'"
         logging.warning("ssh_cmd: %s", ssh_cmd_as_ubuntu_user)
-        return await run_in_unit(unit, ssh_cmd, timeout)
+        exit_code, stdout, stderr = await run_in_unit(unit, ssh_cmd, timeout)
+        logger.debug(
+            "Run command '%s' in runner with result %s: '%s' '%s'",
+            command,
+            exit_code,
+            stdout,
+            stderr,
+        )
+        if assert_on_failure:
+            assert exit_code == 0, assert_msg
+        return exit_code, stdout, stderr
 
     async def ensure_charm_has_runner(self, app: Application) -> None:
         """Reconcile the charm to contain one runner.
@@ -150,7 +197,6 @@ async def setup_repo_policy(
     )
     instance_helper = OpenStackInstanceHelper(openstack_connection)
 
-    unit_address = await unit.get_public_address()
     await app.expose()
     unit_name_without_slash = unit.name.replace("/", "-")
     await run_in_unit(
@@ -162,11 +208,12 @@ async def setup_repo_policy(
     await app.set_config(
         {
             "repo-policy-compliance-token": charm_token,
-            "repo-policy-compliance-url": f"http://{unit_address}:8080",
+            "repo-policy-compliance-url": "http://localhost:8080",
         }
     )
 
     await instance_helper.ensure_charm_has_runner(app=app)
+    await instance_helper.expose_to_instance(unit, 8080)
 
 
 async def _install_repo_policy(

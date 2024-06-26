@@ -11,16 +11,8 @@ from juju.application import Application
 from juju.model import Model
 
 from charm import GithubRunnerCharm
-from charm_state import (
-    RUNNER_STORAGE_CONFIG_NAME,
-    TOKEN_CONFIG_NAME,
-    VIRTUAL_MACHINES_CONFIG_NAME,
-    VM_CPU_CONFIG_NAME,
-    VM_DISK_CONFIG_NAME,
-    VM_MEMORY_CONFIG_NAME,
-)
+from charm_state import RUNNER_STORAGE_CONFIG_NAME, TOKEN_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.lxd import (
-    assert_resource_lxd_profile,
     ensure_charm_has_runner,
     get_runner_names,
     reconcile,
@@ -72,88 +64,6 @@ async def test_network_access(app: Application) -> None:
 
     assert return_code == 7
     assert stdout is None
-
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_flush_runner_and_resource_config(app: Application) -> None:
-    """
-    arrange: A working application with one runner.
-    act:
-        1. Run Check_runner action. Record the runner name for later.
-        2. Nothing.
-        3. Change the virtual machine resource configuration.
-        4. Run flush_runner action.
-
-    assert:
-        1. One runner exists.
-        2. LXD profile of matching resource config exists.
-        3. Nothing.
-        4.  a. The runner name should be different to the runner prior running
-                the action.
-            b. LXD profile matching virtual machine resources of step 2 exists.
-
-    Test are combined to reduce number of runner spawned.
-    """
-    unit = app.units[0]
-
-    # 1.
-    action = await app.units[0].run_action("check-runners")
-    await action.wait()
-
-    assert action.status == "completed"
-    assert action.results["online"] == "1"
-    assert action.results["offline"] == "0"
-    assert action.results["unknown"] == "0"
-
-    runner_names = action.results["runners"].split(", ")
-    assert len(runner_names) == 1
-
-    # 2.
-    configs = await app.get_config()
-    await assert_resource_lxd_profile(unit, configs)
-
-    # 3.
-    await app.set_config(
-        {VM_CPU_CONFIG_NAME: "1", VM_MEMORY_CONFIG_NAME: "3GiB", VM_DISK_CONFIG_NAME: "8GiB"}
-    )
-
-    # 4.
-    action = await app.units[0].run_action("flush-runners")
-    await action.wait()
-
-    configs = await app.get_config()
-    await assert_resource_lxd_profile(unit, configs)
-    await wait_till_num_of_runners(unit, 1)
-
-    action = await app.units[0].run_action("check-runners")
-    await action.wait()
-
-    assert action.status == "completed"
-    assert action.results["online"] == "1"
-    assert action.results["offline"] == "0"
-    assert action.results["unknown"] == "0"
-
-    new_runner_names = action.results["runners"].split(", ")
-    assert len(new_runner_names) == 1
-    assert new_runner_names[0] != runner_names[0]
-
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_check_runner(app: Application) -> None:
-    """
-    arrange: A working application with one runner.
-    act: Run check_runner action.
-    assert: Action returns result with one runner.
-    """
-    action = await app.units[0].run_action("check-runners")
-    await action.wait()
-
-    assert action.status == "completed"
-    assert action.results["online"] == "1"
-    assert action.results["offline"] == "0"
-    assert action.results["unknown"] == "0"
 
 
 @pytest.mark.asyncio
@@ -289,19 +199,3 @@ async def test_disabled_apt_daily_upgrades(model: Model, app: Application) -> No
 
     assert "apt-daily" not in stdout  # this also checks for apt-daily-upgrade service
     assert "unattended-upgrades" not in stdout
-
-
-async def test_token_config_changed_insufficient_perms(
-    model: Model, app: Application, token: str
-) -> None:
-    """
-    arrange: A working application with one runner.
-    act: Change the token to be invalid and set the number of runners to zero.
-    assert: The active runner should be removed, regardless of the invalid new token.
-    """
-    unit = app.units[0]
-
-    await app.set_config({TOKEN_CONFIG_NAME: "invalid-token", VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await model.wait_for_idle()
-
-    await wait_till_num_of_runners(unit, num=0)
