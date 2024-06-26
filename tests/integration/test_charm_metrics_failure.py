@@ -110,8 +110,8 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
 async def test_charm_issues_metrics_for_abnormal_termination(
     model: Model,
     app: Application,
-    forked_github_repository: Repository,
-    forked_github_branch: Branch,
+    github_repository: Repository,
+    test_github_branch: Branch,
     instance_helper: InstanceHelper,
 ):
     """
@@ -120,20 +120,22 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
         The Reconciliation metric has the post job status set to Abnormal.
     """
+    await app.set_config({PATH_CONFIG_NAME: github_repository.full_name})
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await instance_helper.ensure_charm_has_runner(app)
 
     unit = app.units[0]
 
-    workflow = forked_github_repository.get_workflow(
+    workflow = github_repository.get_workflow(
         id_or_file_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME
     )
     dispatch_time = time.time()
-    assert workflow.create_dispatch(forked_github_branch, {"runner": app.name})
+    assert workflow.create_dispatch(test_github_branch, {"runner": app.name})
 
     await wait_for_workflow_to_start(
         unit,
         workflow,
-        branch=forked_github_branch,
+        branch=test_github_branch,
         started_time=dispatch_time,
         instance_helper=instance_helper,
     )
@@ -150,9 +152,9 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     # Cancel workflow and wait that the runner is marked offline
     # to avoid errors during reconciliation.
     await cancel_workflow_run(
-        unit, workflow, branch=forked_github_branch, instance_helper=instance_helper
+        unit, workflow, branch=test_github_branch, instance_helper=instance_helper
     )
-    await wait_for_runner_to_be_marked_offline(forked_github_repository, runner_name)
+    await wait_for_runner_to_be_marked_offline(github_repository, runner_name)
 
     # Set the number of virtual machines to 0 to speedup reconciliation
     await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
@@ -160,7 +162,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
 
     await assert_events_after_reconciliation(
         app=app,
-        github_repository=forked_github_repository,
+        github_repository=github_repository,
         post_job_status=PostJobStatus.ABNORMAL,
     )
 
