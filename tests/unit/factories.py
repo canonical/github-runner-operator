@@ -102,11 +102,11 @@ class MockGithubRunnerCharmModelFactory(factory.Factory):
 
         model = MagicMock
 
-    relations: dict[str, list] = {
+    relations: dict[str, list] = factory.Dict({
         COS_AGENT_INTEGRATION_NAME: [],
         DEBUG_SSH_INTEGRATION_NAME: [],
         MONGO_DB_INTEGRATION_NAME: [],
-    }
+    })
 
 
 class MockGithubRunnerCharmFactory(factory.Factory):

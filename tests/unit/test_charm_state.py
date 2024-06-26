@@ -957,6 +957,8 @@ def test_reactive_config_from_charm_integration_missing():
     db_name = secrets.token_hex(8)
     mock_charm.config[charm_state.REACTIVE_MQ_URI_CONFIG_NAME] = db_name
 
+    del mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME]
+
     with pytest.raises(MissingIntegrationError) as exc:
         charm_state.ReactiveConfig.from_charm(mock_charm)
 
