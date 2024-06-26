@@ -23,11 +23,7 @@ from tests.integration.helpers.common import (
     reconcile,
 )
 from tests.integration.helpers.lxd import ensure_charm_has_runner, get_runner_names
-from tests.integration.helpers.openstack import (
-    OpenStackInstanceHelper,
-    setup_repo_policy,
-    setup_runner_with_repo_policy,
-)
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
 
 @pytest.mark.openstack

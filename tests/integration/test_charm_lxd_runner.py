@@ -11,16 +11,8 @@ from juju.application import Application
 from juju.model import Model
 
 from charm import GithubRunnerCharm
-from charm_state import (
-    RUNNER_STORAGE_CONFIG_NAME,
-    TOKEN_CONFIG_NAME,
-    VIRTUAL_MACHINES_CONFIG_NAME,
-    VM_CPU_CONFIG_NAME,
-    VM_DISK_CONFIG_NAME,
-    VM_MEMORY_CONFIG_NAME,
-)
+from charm_state import RUNNER_STORAGE_CONFIG_NAME, TOKEN_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.lxd import (
-    assert_resource_lxd_profile,
     ensure_charm_has_runner,
     get_runner_names,
     reconcile,

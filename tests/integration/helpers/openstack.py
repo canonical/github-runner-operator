@@ -1,6 +1,5 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
-import asyncio
 import logging
 import secrets
 from typing import Optional, cast
@@ -27,84 +26,19 @@ class OpenStackInstanceHelper(InstanceHelper):
         """
         self.openstack_connection = openstack_connection
 
-    async def install_repo_policy_in_instance(
-        self,
-        unit: Unit,
-        github_token: str,
-        charm_token: str,
-        https_proxy: str,
-        timeout: int | None = None,
-    ) -> None:
-        await self.run_in_instance(
-            unit,
-            "sudo apt install -y python3-pip",
-            assert_on_failure=True,
-            assert_msg="Failed to install python3-pip",
-        )
-        await self.run_in_instance(
-            unit,
-            "sudo rm -rf /home/ubuntu/repo_policy_compliance",
-            assert_on_failure=True,
-            assert_msg="Failed to remove repo-policy-compliance",
-        )
-        await self.run_in_instance(
-            unit,
-            f'sudo -u ubuntu HTTPS_PROXY={https_proxy if https_proxy else ""} git clone https://github.com/canonical/repo-policy-compliance.git /home/ubuntu/repo_policy_compliance',
-            assert_on_failure=True,
-            assert_msg="Failed to clone repo-policy-compliance",
-        )
-        await self.run_in_instance(
-            unit,
-            f'sudo -u ubuntu HTTPS_PROXY={https_proxy if https_proxy else ""} pip install --proxy http://squid.internal:3128 -r /home/ubuntu/repo_policy_compliance/requirements.txt',
-            assert_on_failure=True,
-            assert_msg="Failed to install repo-policy-compliance requirements",
-        )
-        await self.run_in_instance(
-            unit=unit,
-            command=f"HTTPS_PROXY={https_proxy if https_proxy else ''} sudo python3 -m pip install gunicorn",
-            assert_on_failure=True,
-            assert_msg="Failed to install gunicorn",
-        )
-        await self.run_in_instance(
-            unit,
-            f"""sudo tee -a /etc/systemd/system/repo-policy-compliance.service > /dev/null << EOT
-[Unit]
-Description=Simple HTTP server for testing
-After=network.target
-
-[Service]
-User=ubuntu
-Group=www-data
-Environment="GITHUB_TOKEN={github_token}"
-Environment="CHARM_TOKEN={charm_token}"
-Environment="HTTPS_PROXY={https_proxy if https_proxy else ""}"
-Environment="https_proxy={https_proxy if https_proxy else ""}"
-WorkingDirectory=/home/ubuntu/repo_policy_compliance
-ExecStart=/usr/local/bin/gunicorn --bind 0.0.0.0:8080 --timeout 60 app:app
-EOT""",
-            assert_on_failure=True,
-            assert_msg="Failed to create service file",
-        )
-        await self.run_in_instance(
-            unit,
-            "sudo /usr/bin/systemctl daemon-reload",
-            assert_on_failure=True,
-            assert_msg="Failed to reload systemd",
-        )
-        await self.run_in_instance(
-            unit,
-            "sudo /usr/bin/systemctl restart repo-policy-compliance",
-            assert_on_failure=True,
-            assert_msg="Failed to restart service",
-        )
-
     async def expose_to_instance(
         self,
         unit: Unit,
         port: int,
     ) -> None:
-        """
-        TODO
+        """Expose a port on the juju machine to the OpenStack instance.
+
+        Uses SSH remote port forwarding from the juju machine to the OpenStack instance containing
+        the runner.
+
+        Args:
+            unit: The juju unit of the github-runner charm.
+            port: The port on the juju machine to expose to the runner.
         """
         runner = self._get_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
@@ -122,7 +56,7 @@ EOT""",
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
         ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i /home/ubuntu/.ssh/runner-{runner.name}.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
-        exit_code, _ , stderr = await run_in_unit(unit, ssh_cmd)
+        exit_code, _, stderr = await run_in_unit(unit, ssh_cmd)
         assert exit_code == 0, f"Error in SSH remote forwarding of port {port}: {stderr}"
 
     async def run_in_instance(
@@ -263,7 +197,6 @@ async def setup_repo_policy(
     )
     instance_helper = OpenStackInstanceHelper(openstack_connection)
 
-    unit_address = await unit.get_public_address()
     await app.expose()
     unit_name_without_slash = unit.name.replace("/", "-")
     await run_in_unit(
@@ -275,12 +208,13 @@ async def setup_repo_policy(
     await app.set_config(
         {
             "repo-policy-compliance-token": charm_token,
-            "repo-policy-compliance-url": f"http://localhost:8080",
+            "repo-policy-compliance-url": "http://localhost:8080",
         }
     )
 
     await instance_helper.ensure_charm_has_runner(app=app)
     await instance_helper.expose_to_instance(unit, 8080)
+
 
 async def _install_repo_policy(
     unit: Unit, github_token: str, charm_token: str, https_proxy: Optional[str]
@@ -364,50 +298,5 @@ EOT""",
         """
         return_code, stdout, _ = await run_in_unit(unit, "curl http://localhost:8080")
         return return_code == 0 and bool(stdout)
-
-    await wait_for(server_is_ready, timeout=30, check_interval=3)
-
-
-async def setup_runner_with_repo_policy(
-    app: Application,
-    openstack_connection: openstack.connection.Connection,
-    token: str,
-    https_proxy: Optional[str],
-) -> None:
-    """Setup a runner with a local repo policy service.
-
-    Args:
-        app: The GitHub Runner Charm app to create the runner for.
-        openstack_connection: OpenStack connection object.
-        token: GitHub token.
-        https_proxy: HTTPS proxy url to use.
-    """
-    unit = app.units[0]
-    charm_token = secrets.token_hex(16)
-    instance_helper = OpenStackInstanceHelper(openstack_connection)
-    await app.set_config(
-        {
-            "repo-policy-compliance-token": charm_token,
-            # Will remote port forward the service to the runner.
-            "repo-policy-compliance-url": f"http://0.0.0.0:8080",
-        }
-    )
-
-    await instance_helper.ensure_charm_has_runner(app=app)
-
-    await instance_helper.install_repo_policy_in_instance(
-        unit=unit, github_token=token, charm_token=charm_token, https_proxy=https_proxy
-    )
-
-    async def server_is_ready() -> bool:
-        """Check if the server is ready.
-
-        Returns:
-            Whether the server is ready.
-        """
-        return_code, stdout, stderr = await instance_helper.run_in_instance(
-            unit, "curl http://0.0.0.0:8080"
-        )
-        return return_code == 0
 
     await wait_for(server_is_ready, timeout=30, check_interval=3)

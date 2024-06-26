@@ -10,17 +10,13 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import (
-    RUNNER_STORAGE_CONFIG_NAME,
-    TOKEN_CONFIG_NAME,
-    VIRTUAL_MACHINES_CONFIG_NAME,
     VM_CPU_CONFIG_NAME,
     VM_DISK_CONFIG_NAME,
     VM_MEMORY_CONFIG_NAME,
     InstanceType,
 )
-from tests.integration.helpers import lxd, openstack
+from tests.integration.helpers import lxd
 from tests.integration.helpers.common import InstanceHelper
-from tests.status_name import ACTIVE, BLOCKED
 
 
 @pytest_asyncio.fixture(scope="function", name="app")

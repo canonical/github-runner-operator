@@ -37,11 +37,7 @@ from tests.integration.helpers.lxd import (
     get_runner_name,
     run_in_lxd_instance,
 )
-from tests.integration.helpers.openstack import (
-    OpenStackInstanceHelper,
-    setup_repo_policy,
-    setup_runner_with_repo_policy,
-)
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
 
 @pytest_asyncio.fixture(scope="function", name="app")

@@ -9,13 +9,15 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import BASE_IMAGE_CONFIG_NAME
-from tests.integration.helpers import (
+from tests.integration.helpers.common import (
     DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
     dispatch_workflow,
+    wait_for,
+)
+from tests.integration.helpers.lxd import (
     ensure_charm_has_runner,
     get_runner_name,
     run_in_lxd_instance,
-    wait_for,
 )
 
 

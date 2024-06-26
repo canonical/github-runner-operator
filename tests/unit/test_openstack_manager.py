@@ -7,6 +7,7 @@ from typing import Optional
 from unittest.mock import MagicMock, call
 
 import jinja2
+import openstack.connection
 import openstack.exceptions
 import pytest
 from fabric.connection import Connection as SshConnection
@@ -81,7 +82,7 @@ def ssh_connection_health_check_fixture(monkeypatch: pytest.MonkeyPatch):
     mock_result.stderr = ""
     mock_result.stdout = "-- Test output: /bin/bash /home/ubuntu/actions-runner/run.sh --"
     mock_ssh_connection.run.return_value = mock_result
-    mock_get_ssh_connection.return_value = [mock_ssh_connection]
+    mock_get_ssh_connection.return_value = mock_ssh_connection
 
     return mock_get_ssh_connection
 
@@ -93,8 +94,12 @@ def patch_ssh_connection_error_fixture(monkeypatch: pytest.MonkeyPatch):
         spec=openstack_manager.OpenstackRunnerManager._get_ssh_connection
     )
     mock_ssh_connection = MagicMock(spec=SshConnection)
-    mock_ssh_connection.run.side_effect = TimeoutError("Error for testing")
-    mock_get_ssh_connection.return_value = [mock_ssh_connection]
+    mock_result = MagicMock(spec=Result)
+    mock_result.ok = False
+    mock_result.stdout = "Mock stdout"
+    mock_result.stderr = "Mock stderr"
+    mock_ssh_connection.run.return_value = mock_result
+    mock_get_ssh_connection.return_value = mock_ssh_connection
 
     monkeypatch.setattr(
         openstack_manager.OpenstackRunnerManager,
@@ -661,7 +666,7 @@ def test_build_image_on_unsupported_arch(
         MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
     )
 
-    with pytest.raises(openstack_manager.UnsupportedArchitectureError) as exc:
+    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
         openstack_manager.build_image(
             # Use mock to represent unknown architecture.
             arch=MagicMock(),
@@ -669,6 +674,7 @@ def test_build_image_on_unsupported_arch(
             github_client=mock_github_client,
             path=MagicMock(),
         )
+    assert str(exc.value) == "Unsupported architecture x64"
 
 
 @pytest.mark.usefixtures("patch_execute_command")
@@ -1071,17 +1077,17 @@ def test__get_ssh_connection(
 
 
 def test__ssh_health_check_success(
-    monkeypatch,
     mock_server: MagicMock,
-    ssh_connection_health_check: MagicMock,
 ):
     """
     arrange: A server with SSH correctly setup.
     act: Run health check on the server.
     assert: The health check passes.
     """
+    mock_connection = MagicMock(spec=openstack.connection.Connection)
+    mock_connection.get_server.return_value = mock_server
     assert openstack_manager.OpenstackRunnerManager._ssh_health_check(
-        ssh_connection_health_check, mock_server.name, False
+        mock_connection, mock_server.name, False
     )
 
 
@@ -1094,8 +1100,11 @@ def test__ssh_health_check_no_key(mock_server: MagicMock):
     # Remove the mock SSH key.
     mock_server.key_name = None
 
+    mock_connection = MagicMock(spec=openstack.connection.Connection)
+    mock_connection.get_server.return_value = mock_server
+
     assert openstack_manager.OpenstackRunnerManager._ssh_health_check(
-        mock_server, mock_server.name, False
+        mock_connection, mock_server.name, False
     )
 
 
@@ -1105,8 +1114,10 @@ def test__ssh_health_check_error(mock_server: MagicMock, patch_ssh_connection_er
     act: Run health check on the server.
     assert: The health check fails.
     """
-    assert openstack_manager.OpenstackRunnerManager._ssh_health_check(
-        mock_server, mock_server.name, False
+    mock_connection = MagicMock(spec=openstack.connection.Connection)
+    mock_connection.get_server.return_value = mock_server
+    openstack_manager.OpenstackRunnerManager._ssh_health_check(
+        mock_connection, mock_server.name, False
     )
 
 
