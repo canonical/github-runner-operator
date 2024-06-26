@@ -8,42 +8,23 @@ on:
 jobs:
   # test option values defined at test/conftest.py are passed on via repository secret
   # INTEGRATION_TEST_ARGS to operator-workflows automatically.
-  # integration-tests-juju2:
-  #   name: Integration test with juju 2.9
-  #   uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-  #   secrets: inherit
-  #   with:
-  #     juju-channel: 2.9/stable
-  #     pre-run-script: scripts/pre-integration-test.sh
-  #     provider: lxd
-  #     test-tox-env: integration-juju2.9
-  #     modules: '["test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh"]'
-  # integration-tests:
-  #   name: Integration test with juju 3.1
-  #   uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-  #   secrets: inherit
-  #   with:
-  #     juju-channel: 3.1/stable
-  #     pre-run-script: scripts/pre-integration-test.sh
-  #     provider: lxd
-  #     test-tox-env: integration-juju3.1
-  #     modules: '["test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh"]'
-  # openstack tests use private-endpoints, whose setup is kind of special
-  # - due to the huge resource requirements, we use self-hosted runners for these tests
-  # - microk8s needs to be preconfigured with the actions operator to work properly with the dockerhub cache
-  # - we need to disable the rbac addon for microk8s, otherwise the setup will fail
-  integration-tests-private-endpoint:
-    name: Integration test using private-endpoint
+  integration-tests-juju2:
+    name: Integration test with juju 2.9
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
-      juju-channel: 3.2/stable
-      pre-run-script: scripts/setup-lxd.sh
-      provider: microk8s
-      channel: 1.26-strict/stable
-      microk8s-addons: "dns ingress hostpath-storage"
-      test-tox-env: integration-juju3.2
-      modules: '["test_openstack_runner"]'
-      extra-arguments: "--http-proxy=http://squid.internal:3128 --https-proxy=http://squid.internal:3128 --no-proxy=keystone.ps6.canonical.com,glance.ps6.canonical.com,nova.ps6.canonical.com,neutron.ps6.canonical.com"
-      self-hosted-runner: true
-      self-hosted-runner-label: stg-private-endpoint
+      juju-channel: 2.9/stable
+      pre-run-script: scripts/pre-integration-test.sh
+      provider: lxd
+      test-tox-env: integration-juju2.9
+      modules: '["test_charm_base_image", "test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh", "test_charm_upgrade"]'
+  integration-tests:
+    name: Integration test with juju 3.1
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    secrets: inherit
+    with:
+      juju-channel: 3.1/stable
+      pre-run-script: scripts/pre-integration-test.sh
+      provider: lxd
+      test-tox-env: integration-juju3.1
+      modules: '["test_charm_base_image", "test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_one_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh", "test_charm_upgrade"]'

@@ -2,6 +2,13 @@
 # See LICENSE file for licensing details.
 
 options:
+  base-image:
+    type: string
+    default: "jammy"
+    description: >-
+      The base ubuntu OS image to use for the runners. Codename (e.g. "jammy") or version tag
+      (e.g. 22.04) is supported as input. Currently only supports LTS versions of jammy and higher, 
+      i.e. jammy, noble.
   denylist:
     type: string
     default: ""
@@ -118,6 +125,8 @@ options:
     description: >-
       The GitHub Personal Access Token for registering the self-hosted runners. The token requires
       'repo' scope for repository runners and 'repo' + 'admin:org' scope for organization runners.
+      For fine grained token scopes, see
+      https://charmhub.io/github-runner/docs/how-to-change-token.
   virtual-machines:
     type: int
     default: 1

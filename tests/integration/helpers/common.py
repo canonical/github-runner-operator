@@ -5,9 +5,11 @@
 
 import inspect
 import logging
+import pathlib
 import subprocess
 import time
 import typing
+import zipfile
 from datetime import datetime, timezone
 from functools import partial
 from typing import Awaitable, Callable, ParamSpec, TypeVar, cast
@@ -223,6 +225,7 @@ async def deploy_github_runner_charm(
     reconcile_interval: int,
     constraints: dict | None = None,
     config: dict | None = None,
+    deploy_kwargs: dict | None = None,
     wait_idle: bool = True,
     use_local_lxd: bool = True,
 ) -> Application:
@@ -242,6 +245,7 @@ async def deploy_github_runner_charm(
         constraints: The custom machine constraints to use. See DEFAULT_RUNNER_CONSTRAINTS
             otherwise.
         config: Additional custom config to use.
+        deploy_kwargs: Additional model deploy arguments.
         wait_idle: wait for model to become idle.
         use_local_lxd: Whether to use local LXD or not.
 
@@ -285,6 +289,7 @@ async def deploy_github_runner_charm(
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
         storage=storage,
+        **(deploy_kwargs or {}),
     )
 
     if wait_idle:
@@ -403,7 +408,8 @@ async def dispatch_workflow(
 
     # There is a very small chance of selecting a run not created by the dispatch above.
     run: WorkflowRun | None = await wait_for(
-        partial(_get_latest_run, workflow=workflow, start_time=start_time, branch=branch)
+        partial(_get_latest_run, workflow=workflow, start_time=start_time, branch=branch),
+        timeout=10 * 60,
     )
     assert run, f"Run not found for workflow: {workflow.name} ({workflow.id})"
     await wait_for(partial(_is_workflow_run_complete, run=run), timeout=60 * 30, check_interval=60)
@@ -458,3 +464,58 @@ async def wait_for(
         if result := func():
             return cast(R, result)
     raise TimeoutError()
+
+
+def inject_lxd_profile(charm_file: pathlib.Path, loop_device: str | None) -> None:
+    """Injects LXD profile to charm file.
+
+    Args:
+        charm_file: Path to charm file to deploy.
+        loop_device: Loop device used to mount runner image.
+    """
+    lxd_profile_str = """config:
+    security.nesting: true
+    security.privileged: true
+    raw.lxc: |
+        lxc.apparmor.profile=unconfined
+        lxc.mount.auto=proc:rw sys:rw cgroup:rw
+        lxc.cgroup.devices.allow=a
+        lxc.cap.drop=
+devices:
+    kmsg:
+        path: /dev/kmsg
+        source: /dev/kmsg
+        type: unix-char
+"""
+    if loop_device:
+        lxd_profile_str += f"""    loop-control:
+        path: /dev/loop-control
+        type: unix-char
+    loop14:
+        path: {loop_device}
+        type: unix-block
+"""
+
+    with zipfile.ZipFile(charm_file, mode="a") as file:
+        file.writestr(
+            "lxd-profile.yaml",
+            lxd_profile_str,
+        )
+
+
+async def is_upgrade_charm_event_emitted(unit: Unit) -> bool:
+    """Check if the upgrade_charm event is emitted.
+
+    This is to ensure false positives from only waiting for ACTIVE status.
+
+    Args:
+        unit: The unit to check for upgrade charm event.
+
+    Returns:
+        bool: True if the event is emitted, False otherwise.
+    """
+    unit_name_without_slash = unit.name.replace("/", "-")
+    juju_unit_log_file = f"/var/log/juju/unit-{unit_name_without_slash}.log"
+    ret_code, stdout, stderr = await run_in_unit(unit=unit, command=f"cat {juju_unit_log_file}")
+    assert ret_code == 0, f"Failed to read the log file: {stderr}"
+    return stdout is not None and "Emitting Juju event upgrade_charm." in stdout

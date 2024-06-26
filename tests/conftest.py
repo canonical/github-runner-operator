@@ -61,7 +61,7 @@ def pytest_addoption(parser: Parser):
         "It is expected that the existing app is already integrated with other apps "
         "like grafana-agent, etc. ",
     )
-    # Openstack testing opts
+    # Private endpoint options
     parser.addoption(
         "--openstack-network-name",
         action="store",
@@ -74,14 +74,6 @@ def pytest_addoption(parser: Parser):
         help="The Openstack flavor to create testing instances with.",
         default=None,
     )
-    # microstack local testing option
-    parser.addoption(
-        "--openstack-clouds-yaml",
-        action="store",
-        help="The OpenStack clouds yaml file for the charm to use.",
-        default=None,
-    )
-    # Private endpoint options
     parser.addoption(
         "--openstack-auth-url",
         action="store",

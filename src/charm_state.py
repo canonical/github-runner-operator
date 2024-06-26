@@ -11,6 +11,7 @@ import re
 from enum import Enum
 from pathlib import Path
 from typing import NamedTuple, Optional, cast
+from urllib.parse import urlsplit
 
 import yaml
 from ops import CharmBase
@@ -29,6 +30,7 @@ ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
 
+BASE_IMAGE_CONFIG_NAME = "base-image"
 DENYLIST_CONFIG_NAME = "denylist"
 DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
 GROUP_CONFIG_NAME = "group"
@@ -128,7 +130,7 @@ def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
         organization with runner group information.
     """
     if "/" in path_str:
-        paths = path_str.split("/")
+        paths = tuple(segment for segment in path_str.split("/") if segment)
         if len(paths) != 2:
             raise CharmConfigInvalidError(f"Invalid path configuration {path_str}")
         owner, repo = paths
@@ -161,14 +163,14 @@ class GithubConfig:
         Returns:
             The parsed GitHub configuration values.
         """
-        runner_group = charm.config.get(GROUP_CONFIG_NAME, "default")
+        runner_group = cast(str, charm.config.get(GROUP_CONFIG_NAME, "default"))
 
-        path_str = charm.config.get(PATH_CONFIG_NAME, "")
+        path_str = cast(str, charm.config.get(PATH_CONFIG_NAME, ""))
         if not path_str:
             raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
         path = parse_github_path(cast(str, path_str), cast(str, runner_group))
 
-        token = charm.config.get(TOKEN_CONFIG_NAME)
+        token = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
         if not token:
             raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
 
@@ -278,9 +280,10 @@ def _parse_labels(labels: str) -> tuple[str, ...]:
     invalid_labels = []
     valid_labels = []
     for label in labels.split(","):
-        if not label:
+        stripped_label = label.strip()
+        if not stripped_label:
             continue
-        if not WORD_ONLY_REGEX.match(stripped_label := label.strip()):
+        if not WORD_ONLY_REGEX.match(stripped_label):
             invalid_labels.append(stripped_label)
         else:
             valid_labels.append(stripped_label)
@@ -373,6 +376,38 @@ class CharmConfig(BaseModel):
         return denylist
 
     @classmethod
+    def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
+        """Parse and validate dockerhub mirror URL.
+
+        Args:
+            charm: The charm instance.
+
+        Raises:
+            CharmConfigInvalidError: if insecure scheme is passed for dockerhub mirror.
+
+        Returns:
+            The URL of dockerhub mirror.
+        """
+        dockerhub_mirror: str | None = (
+            cast(str, charm.config.get(DOCKERHUB_MIRROR_CONFIG_NAME)) or None
+        )
+
+        if not dockerhub_mirror:
+            return None
+
+        dockerhub_mirror = cast(str, dockerhub_mirror)
+        dockerhub_mirror_url = urlsplit(dockerhub_mirror)
+        if dockerhub_mirror_url.scheme != "https":
+            raise CharmConfigInvalidError(
+                (
+                    f"Only secured registry supported for {DOCKERHUB_MIRROR_CONFIG_NAME} "
+                    "configuration, the scheme should be https"
+                )
+            )
+
+        return dockerhub_mirror
+
+    @classmethod
     def _parse_openstack_clouds_config(cls, charm: CharmBase) -> dict | None:
         """Parse and validate openstack clouds yaml config value.
 
@@ -385,7 +420,9 @@ class CharmConfig(BaseModel):
         Returns:
             The openstack clouds yaml.
         """
-        openstack_clouds_yaml_str = charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
+        openstack_clouds_yaml_str: str | None = cast(
+            str, charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
+        )
         if not openstack_clouds_yaml_str:
             return None
 
@@ -409,6 +446,33 @@ class CharmConfig(BaseModel):
             ) from exc
 
         return cast(dict, openstack_clouds_yaml)
+
+    @validator("reconcile_interval")
+    @classmethod
+    def check_reconcile_interval(cls, reconcile_interval: int) -> int:
+        """Validate the general charm configuration.
+
+        Args:
+            reconcile_interval: The value of reconcile_interval passed to class instantiation.
+
+        Raises:
+            ValueError: if an invalid reconcile_interval value of less than 2 has been passed.
+
+        Returns:
+            The validated reconcile_interval value.
+        """
+        # The EventTimer class sets a timeout of `reconcile_interval` - 1.
+        # Therefore the `reconcile_interval` must be at least 2.
+        if reconcile_interval < 2:
+            logger.error(
+                "The %s configuration must be greater than 1", RECONCILE_INTERVAL_CONFIG_NAME
+            )
+            raise ValueError(
+                f"The {RECONCILE_INTERVAL_CONFIG_NAME} configuration needs to be greater or equal"
+                " to 2"
+            )
+
+        return reconcile_interval
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "CharmConfig":
@@ -466,32 +530,43 @@ class CharmConfig(BaseModel):
             token=github_config.token,
         )
 
-    @validator("reconcile_interval")
-    @classmethod
-    def check_reconcile_interval(cls, reconcile_interval: int) -> int:
-        """Validate the general charm configuration.
 
-        Args:
-            reconcile_interval: The value of reconcile_interval passed to class instantiation.
+LTS_IMAGE_VERSION_TAG_MAP = {"22.04": "jammy", "24.04": "noble"}
 
-        Raises:
-            ValueError: if an invalid reconcile_interval value of less than 2 has been passed.
+
+class BaseImage(str, Enum):
+    """The ubuntu OS base image to build and deploy runners on.
+
+    Attributes:
+        JAMMY: The jammy ubuntu LTS image.
+        NOBLE: The noble ubuntu LTS image.
+    """
+
+    JAMMY = "jammy"
+    NOBLE = "noble"
+
+    def __str__(self) -> str:
+        """Interpolate to string value.
 
         Returns:
-            The validated reconcile_interval value.
+            The enum string value.
         """
-        # The EventTimer class sets a timeout of `reconcile_interval` - 1.
-        # Therefore the `reconcile_interval` must be at least 2.
-        if reconcile_interval < 2:
-            logger.exception(
-                "The %s configuration must be greater than 1", RECONCILE_INTERVAL_CONFIG_NAME
-            )
-            raise ValueError(
-                f"The {RECONCILE_INTERVAL_CONFIG_NAME} configuration needs to be \
-                    greater or equal to 2"
-            )
+        return self.value
 
-        return reconcile_interval
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "BaseImage":
+        """Retrieve the base image tag from charm.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            The base image configuration of the charm.
+        """
+        image_name = cast(str, charm.config.get(BASE_IMAGE_CONFIG_NAME, "jammy")).lower().strip()
+        if image_name in LTS_IMAGE_VERSION_TAG_MAP:
+            return cls(LTS_IMAGE_VERSION_TAG_MAP[image_name])
+        return cls(image_name)
 
 
 class OpenstackRunnerConfig(BaseModel):
@@ -549,44 +624,16 @@ class LocalLxdRunnerConfig(BaseModel):
     """Runner configurations for local LXD instances.
 
     Attributes:
+        base_image: The ubuntu base image to run the runner virtual machines on.
         virtual_machines: Number of virtual machine-based runner to spawn.
         virtual_machine_resources: Hardware resource used by one virtual machine for a runner.
         runner_storage: Storage to be used as disk for the runner.
     """
 
+    base_image: BaseImage
     virtual_machines: int
     virtual_machine_resources: VirtualMachineResources
     runner_storage: RunnerStorage
-
-    @classmethod
-    def _check_storage_change(cls, runner_storage: str) -> None:
-        """Check whether the storage configuration has changed.
-
-        Args:
-            runner_storage: The current runner_storage config value.
-
-        Raises:
-            CharmConfigInvalidError: If the runner-storage config value has changed after initial
-                deployment.
-        """
-        prev_state = None
-        if CHARM_STATE_PATH.exists():
-            json_data = CHARM_STATE_PATH.read_text(encoding="utf-8")
-            prev_state = json.loads(json_data)
-            logger.info("Previous charm state: %s", prev_state)
-
-        if (
-            prev_state is not None
-            and prev_state["runner_config"]["runner_storage"] != runner_storage
-        ):
-            logger.warning(
-                "Storage option changed from %s to %s, blocking the charm",
-                prev_state["runner_config"]["runner_storage"],
-                runner_storage,
-            )
-            raise CharmConfigInvalidError(
-                "runner-storage config cannot be changed after deployment, redeploy if needed"
-            )
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "LocalLxdRunnerConfig":
@@ -602,8 +649,12 @@ class LocalLxdRunnerConfig(BaseModel):
             Local LXD runner config of the charm.
         """
         try:
+            base_image = BaseImage.from_charm(charm)
+        except ValueError as err:
+            raise CharmConfigInvalidError("Invalid base image") from err
+
+        try:
             runner_storage = RunnerStorage(charm.config[RUNNER_STORAGE_CONFIG_NAME])
-            cls._check_storage_change(runner_storage=runner_storage)
         except ValueError as err:
             raise CharmConfigInvalidError(
                 f"Invalid {RUNNER_STORAGE_CONFIG_NAME} configuration"
@@ -630,6 +681,7 @@ class LocalLxdRunnerConfig(BaseModel):
         )
 
         return cls(
+            base_image=base_image,
             virtual_machines=virtual_machines,
             virtual_machine_resources=virtual_machine_resources,
             runner_storage=runner_storage,
@@ -709,40 +761,20 @@ class ProxyConfig(BaseModel):
     no_proxy: Optional[str]
     use_aproxy: bool = False
 
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "ProxyConfig":
-        """Initialize the proxy config from charm.
-
-        Args:
-            charm: The charm instance.
-
-        Returns:
-            Current proxy config of the charm.
-        """
-        use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
-        http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY") or None
-        https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
-        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None
-
-        # there's no need for no_proxy if there's no http_proxy or https_proxy
-        if not (https_proxy or http_proxy) and no_proxy:
-            no_proxy = None
-
-        return cls(
-            http=http_proxy,
-            https=https_proxy,
-            no_proxy=no_proxy,
-            use_aproxy=use_aproxy,
-        )
-
     @property
     def aproxy_address(self) -> Optional[str]:
         """Return the aproxy address."""
         if self.use_aproxy:
             proxy_address = self.http or self.https
             # assert is only used to make mypy happy
-            assert proxy_address is not None  # nosec for [B101:assert_used]
-            aproxy_address = f"{proxy_address.host}:{proxy_address.port}"
+            assert (
+                proxy_address is not None and proxy_address.host is not None
+            )  # nosec for [B101:assert_used]
+            aproxy_address = (
+                proxy_address.host
+                if not proxy_address.port
+                else f"{proxy_address.host}:{proxy_address.port}"
+            )
         else:
             aproxy_address = None
         return aproxy_address
@@ -774,6 +806,32 @@ class ProxyConfig(BaseModel):
             Whether the proxy config is set.
         """
         return bool(self.http or self.https)
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "ProxyConfig":
+        """Initialize the proxy config from charm.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            Current proxy config of the charm.
+        """
+        use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
+        http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY") or None
+        https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
+        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None
+
+        # there's no need for no_proxy if there's no http_proxy or https_proxy
+        if not (https_proxy or http_proxy) and no_proxy:
+            no_proxy = None
+
+        return cls(
+            http=http_proxy,
+            https=https_proxy,
+            no_proxy=no_proxy,
+            use_aproxy=use_aproxy,
+        )
 
     class Config:  # pylint: disable=too-few-public-methods
         """Pydantic model configuration.
@@ -874,6 +932,18 @@ class SSHDebugConnection(BaseModel):
         return ssh_debug_connections
 
 
+class ImmutableConfigChangedError(Exception):
+    """Represents an error when changing immutable charm state."""
+
+    def __init__(self, msg: str):
+        """Initialize a new instance of the ImmutableConfigChangedError exception.
+
+        Args:
+            msg: Explanation of the error.
+        """
+        self.msg = msg
+
+
 @dataclasses.dataclass(frozen=True)
 class CharmState:
     """The charm state.
@@ -914,6 +984,55 @@ class CharmState:
         json_data = json.dumps(state_dict, ensure_ascii=False)
         CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
 
+    @classmethod
+    def _check_immutable_config_change(
+        cls, runner_storage: RunnerStorage, base_image: BaseImage
+    ) -> None:
+        """Ensure immutable config has not changed.
+
+        Args:
+            runner_storage: The current runner_storage configuration.
+            base_image: The current base_image configuration.
+
+        Raises:
+            ImmutableConfigChangedError: If an immutable configuration has changed.
+        """
+        if not CHARM_STATE_PATH.exists():
+            return
+
+        json_data = CHARM_STATE_PATH.read_text(encoding="utf-8")
+        prev_state = json.loads(json_data)
+        logger.info("Previous charm state: %s", prev_state)
+
+        try:
+            if prev_state["runner_config"]["runner_storage"] != runner_storage:
+                logger.error(
+                    "Storage option changed from %s to %s, blocking the charm",
+                    prev_state["runner_config"]["runner_storage"],
+                    runner_storage,
+                )
+                raise ImmutableConfigChangedError(
+                    msg=(
+                        "runner-storage config cannot be changed after deployment, "
+                        "redeploy if needed"
+                    )
+                )
+        except KeyError as exc:
+            logger.info("Key %s not found, this will be updated to current config.", exc.args[0])
+
+        try:
+            if prev_state["runner_config"]["base_image"] != base_image.value:
+                logger.error(
+                    "Base image option changed from %s to %s, blocking the charm",
+                    prev_state["runner_config"]["base_image"],
+                    runner_storage,
+                )
+                raise ImmutableConfigChangedError(
+                    msg="base-image config cannot be changed after deployment, redeploy if needed"
+                )
+        except KeyError as exc:
+            logger.info("Key %s not found, this will be updated to current config.", exc.args[0])
+
     # Ignore the flake8 function too complex (C901). The function does not have much logic, the
     # lint is likely triggered with the multiple try-excepts, which are needed.
     @classmethod
@@ -948,8 +1067,14 @@ class CharmState:
             else:
                 instance_type = InstanceType.LOCAL_LXD
                 runner_config = LocalLxdRunnerConfig.from_charm(charm)
-        except ValueError as exc:
+                cls._check_immutable_config_change(
+                    runner_storage=runner_config.runner_storage,
+                    base_image=runner_config.base_image,
+                )
+        except (ValidationError, ValueError) as exc:
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
+        except ImmutableConfigChangedError as exc:
+            raise CharmConfigInvalidError(exc.msg) from exc
 
         try:
             arch = _get_supported_arch()
