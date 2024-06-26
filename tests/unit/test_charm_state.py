@@ -39,16 +39,15 @@ from charm_state import (
     GithubOrg,
     GithubRepo,
     ImmutableConfigChangedError,
-    InstanceType,
-    ProxyConfig,
-    OpenstackRunnerConfig,
     LocalLxdRunnerConfig,
+    OpenstackRunnerConfig,
+    ProxyConfig,
     RunnerStorage,
     SSHDebugConnection,
     UnsupportedArchitectureError,
     VirtualMachineResources,
 )
-from tests.unit.factories import MockGithubRunnerCharmFactory, get_mock_github_runner_charm
+from tests.unit.factories import MockGithubRunnerCharmFactory
 
 
 def test_github_repo_path():
@@ -694,7 +693,8 @@ def test_runner_charm_config_from_charm_valid():
     """
     arrange: Create a mock CharmBase instance with valid configuration.
     act: Call from_charm method with the mock CharmBase instance.
-    assert: Verify that the method returns a LocalLxdRunnerConfig instance with the expected values.
+    assert: Verify that the method returns a LocalLxdRunnerConfig instance with the expected
+        values.
     """
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config = {
@@ -1055,7 +1055,11 @@ class MockModel(BaseModel):
             ValidationError([], MockModel),
         ),
         (ProxyConfig, "from_charm", ValueError),
-        (CharmState, "_check_immutable_config_change", ImmutableConfigChangedError("Immutable config changed")),
+        (
+            CharmState,
+            "_check_immutable_config_change",
+            ImmutableConfigChangedError("Immutable config changed"),
+        ),
         (CharmConfig, "from_charm", ValidationError([], MockModel)),
         (CharmConfig, "from_charm", ValueError),
         (charm_state, "_get_supported_arch", UnsupportedArchitectureError(arch="testarch")),

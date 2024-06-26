@@ -38,7 +38,6 @@ from github_client import GithubClient
 from tests.integration.helpers.common import (
     InstanceHelper,
     deploy_github_runner_charm,
-    ensure_charm_has_runner,
     inject_lxd_profile,
     reconcile,
     wait_for,

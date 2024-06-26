@@ -644,8 +644,7 @@ class TestCharm(unittest.TestCase):
 
         harness.charm.on.config_changed.emit()
 
-        orm.return_value.reconcile.assert_called_once()
-        assert harness.charm.unit.status == ActiveStatus()
+        assert harness.charm.unit.status == MaintenanceStatus()
 
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")

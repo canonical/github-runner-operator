@@ -741,56 +741,6 @@ class LocalLxdRunnerConfig(BaseModel):
 
         return vm_resources
 
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "LocalLxdRunnerConfig":
-        """Initialize the config from charm.
-
-        Args:
-            charm: The charm instance.
-
-        Raises:
-            CharmConfigInvalidError: if an invalid runner charm config has been set on the charm.
-
-        Returns:
-            Current config of the charm.
-        """
-        try:
-            base_image = BaseImage.from_charm(charm)
-        except ValueError as err:
-            raise CharmConfigInvalidError("Invalid base image") from err
-
-        try:
-            runner_storage = RunnerStorage(charm.config[RUNNER_STORAGE_CONFIG_NAME])
-        except ValueError as err:
-            raise CharmConfigInvalidError(
-                f"Invalid {RUNNER_STORAGE_CONFIG_NAME} configuration"
-            ) from err
-
-        try:
-            virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
-        except ValueError as err:
-            raise CharmConfigInvalidError(
-                f"The {VIRTUAL_MACHINES_CONFIG_NAME} configuration must be int"
-            ) from err
-
-        try:
-            cpu = int(charm.config[VM_CPU_CONFIG_NAME])
-        except ValueError as err:
-            raise CharmConfigInvalidError(f"Invalid {VM_CPU_CONFIG_NAME} configuration") from err
-
-        virtual_machine_resources = VirtualMachineResources(
-            cpu,
-            cast(str, charm.config[VM_MEMORY_CONFIG_NAME]),
-            cast(str, charm.config[VM_DISK_CONFIG_NAME]),
-        )
-
-        return cls(
-            base_image=base_image,
-            virtual_machines=virtual_machines,
-            virtual_machine_resources=virtual_machine_resources,
-            runner_storage=runner_storage,
-        )
-
 
 RunnerConfig = OpenstackRunnerConfig | LocalLxdRunnerConfig
 
@@ -1086,7 +1036,7 @@ class CharmState:
     # Ignore the flake8 function too complex (C901). The function does not have much logic, the
     # lint is likely triggered with the multiple try-excepts, which are needed.
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "CharmState":
+    def from_charm(cls, charm: CharmBase) -> "CharmState":  # noqa: C901
         """Initialize the state from charm.
 
         Args:

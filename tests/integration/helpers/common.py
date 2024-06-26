@@ -10,7 +10,6 @@ import subprocess
 import time
 import typing
 import zipfile
-from asyncio import sleep
 from datetime import datetime, timezone
 from functools import partial
 from typing import Awaitable, Callable, ParamSpec, TypeVar, cast

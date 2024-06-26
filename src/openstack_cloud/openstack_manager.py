@@ -40,7 +40,6 @@ from paramiko.ssh_exception import NoValidConnectionsError
 
 from charm_state import (
     Arch,
-    BaseImage,
     CharmState,
     GithubOrg,
     ProxyConfig,
@@ -359,6 +358,7 @@ def build_image(  # noqa: C901
     """Build and upload an image to OpenStack.
 
     Args:
+        arch: The architecture of the image.
         cloud_config: The cloud configuration to connect OpenStack with.
         github_client: The Github client to interact with Github API.
         path: Github organisation or repository path.
