@@ -692,9 +692,9 @@ def test_build_image_with_proxy_config(
     )
 
     test_proxy_config = openstack_manager.ProxyConfig(
-        http=(test_http_proxy := None),
-        https=(test_https_proxy := None),
-        no_proxy=(test_no_proxy := None),
+        http=None,
+        https=None,
+        no_proxy=None,
         use_aproxy=False,
     )
 
@@ -707,9 +707,9 @@ def test_build_image_with_proxy_config(
     )
 
     test_proxy_config = openstack_manager.ProxyConfig(
-        http=(test_http_proxy := "http://proxy.test"),
-        https=(test_https_proxy := "https://proxy.test"),
-        no_proxy=(test_no_proxy := "http://no.proxy"),
+        http="http://proxy.test",
+        https="https://proxy.test",
+        no_proxy="http://no.proxy",
         use_aproxy=False,
     )
 
@@ -1027,17 +1027,14 @@ def test_repo_policy_config(
     assert test_url in cloud_init_data_str
 
 
-def test__ensure_security_group_with_existing_rules(
-    openstack_connect_mock: openstack.connection.Connection,
-):
+def test__ensure_security_group_with_existing_rules():
     """
     arrange: Mock OpenStack connection with the security rules created.
     act: Run `_ensure_security_group`.
     assert: The security rules are not created again.
     """
-    openstack_connect_mock.create_security_group_rule = MagicMock()
-    openstack_connect_mock.get_security_group = MagicMock()
-    openstack_connect_mock.get_security_group.return_value = {
+    connection_mock = MagicMock(spec=openstack.connection.Connection)
+    connection_mock.get_security_group.return_value = {
         "security_group_rules": [
             {"protocol": "icmp"},
             {"protocol": "tcp", "port_range_min": 22, "port_range_max": 22},
@@ -1045,8 +1042,8 @@ def test__ensure_security_group_with_existing_rules(
         ]
     }
 
-    openstack_manager.OpenstackRunnerManager._ensure_security_group(openstack_connect_mock)
-    openstack_connect_mock.create_security_group_rule.assert_not_called()
+    openstack_manager.OpenstackRunnerManager._ensure_security_group(connection_mock)
+    connection_mock.create_security_group_rule.assert_not_called()
 
 
 def test__get_ssh_connection(
@@ -1121,20 +1118,18 @@ def test__ssh_health_check_error(mock_server: MagicMock, patch_ssh_connection_er
     )
 
 
-def test__wait_until_runner_process_running_no_server(
-    openstack_connect_mock: openstack.connection.Connection,
-):
+def test__wait_until_runner_process_running_no_server():
     """
     arrange: No server existing on the OpenStack connection.
     act: Check if runner process is running.
     assert: RunnerStartError thrown.
     """
-    openstack_connect_mock.get_server = MagicMock()
-    openstack_connect_mock.get_server.return_value = None
+    mock_connection = MagicMock(spec=openstack.connection.Connection)
+    mock_connection.get_server.return_value = None
 
     with pytest.raises(RunnerStartError):
         openstack_manager.OpenstackRunnerManager._wait_until_runner_process_running(
-            openstack_connect_mock, "Non-existing-server"
+            mock_connection, "Non-existing-server"
         )
 
 
