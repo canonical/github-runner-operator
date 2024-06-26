@@ -18,11 +18,13 @@ from charm_state import (
     GithubOrg,
     GithubRepo,
     ProxyConfig,
+    ReactiveConfig,
     VirtualMachineResources,
 )
 from errors import IssueMetricEventError, RunnerBinaryError
 from github_type import RunnerApplication
 from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
+from reactive.job import Job
 from runner import Runner, RunnerStatus
 from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
@@ -122,6 +124,31 @@ def runner_metrics_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     runner_metrics_mock = MagicMock()
     monkeypatch.setattr("runner_manager.runner_metrics", runner_metrics_mock)
     return runner_metrics_mock
+
+
+@pytest.fixture(name="job_mock")
+def job_mock_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> MagicMock:
+    """Mock the job class.
+
+    We are writing the state of jobs into a file to verify that the job is picked up. We cannot
+    use the job_mock.picked_up.assert_called_once() because the job is picked up in a separate
+    process.
+    """
+    job_mock = MagicMock(spec=Job)
+    job_mock.labels = [
+        "test",
+    ]
+    job_mock.run_url = "http://example.com"
+    job_mock.from_message_queue.return_value = job_mock
+
+    def write_into_file():
+        unique_file = tmp_path / f"job-{secrets.token_hex(16)}"
+        unique_file.write_text("picked up")
+
+    job_mock.picked_up.side_effect = write_into_file
+
+    monkeypatch.setattr("runner_manager.Job", job_mock)
+    return job_mock
 
 
 @pytest.mark.parametrize(
@@ -508,13 +535,24 @@ def test_reconcile_places_no_timestamp_in_newly_created_runner_if_metrics_disabl
     assert not (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).exists()
 
 
-def test_reconcile_consume_messages_for_reactive(runner_manager: RunnerManager):
+def test_reconcile_reactive_mode(
+    runner_manager: RunnerManager, job_mock: MagicMock, tmp_path: Path
+):
     """
-    arrange: Mock the _get_runners method to return an empty list.
-    act: Consume messages for reactive spawning.
-    assert: No error is raised.
+    arrange: Enable reactive mode and mock the job class to return a job.
+    act: Call reconcile.
+    assert: A job is returned and acknowledged.
     """
-    runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
+    count = random.randint(1, 5)
+    runner_manager.config.reactive_config = ReactiveConfig(mq_uri="http://example.com")
+    runner_manager.reconcile(count, VirtualMachineResources(2, "7GiB", "10Gib"))
+
+    jobs_found = 0
+    for job_file in tmp_path.iterdir():
+        if job_file.name.startswith("job-"):
+            jobs_found += 1
+            assert job_file.read_text() == "picked up", "Job not picked up"
+    assert jobs_found == count, "Expected number of jobs not found"
 
 
 def test_schedule_build_runner_image(
