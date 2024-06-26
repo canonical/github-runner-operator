@@ -94,7 +94,13 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     )
 
     # Set the number of virtual machines to 0 to speedup reconciliation
-    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await app.set_config(
+        {
+            VIRTUAL_MACHINES_CONFIG_NAME: "0",
+            "repo-policy-compliance-token": "",
+            "repo-policy-compliance-url": "",
+        }
+    )
     await reconcile(app=app, model=model)
 
     await assert_events_after_reconciliation(
@@ -141,7 +147,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     )
 
     # Wait a bit to ensure pre-job script has been executed.
-    await sleep(30)
+    await sleep(10)
 
     # Make the runner terminate abnormally by killing run.sh
     runner_name = await instance_helper.get_runner_name(unit)
