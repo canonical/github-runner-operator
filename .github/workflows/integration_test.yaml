@@ -28,8 +28,7 @@ jobs:
       provider: lxd
       test-tox-env: integration-juju3.1
       # modules: '["test_charm_base_image", "test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_lxd_runner", "test_charm_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh", "test_charm_upgrade"]'
-      # modules: '["test_charm_fork_repo", "test_charm_lxd_runner", "test_charm_metrics_success", "test_charm_metrics_failure"]'
-      modules: '["test_charm_lxd_runner"]'
+      modules: '["test_charm_fork_repo", "test_charm_metrics_success", "test_charm_metrics_failure"]'
       tmate-debug: True
       tmate-timeout: 360
   # openstack-integration-tests-private-endpoint:
