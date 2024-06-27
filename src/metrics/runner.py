@@ -12,7 +12,12 @@ from typing import Iterator, Optional, Type
 
 from pydantic import BaseModel, Field, NonNegativeFloat, ValidationError
 
-from errors import CorruptMetricDataError, DeleteMetricsStorageError, IssueMetricEventError
+from errors import (
+    CorruptMetricDataError,
+    DeleteMetricsStorageError,
+    IssueMetricEventError,
+    RunnerMetricsError,
+)
 from metrics import events as metric_events
 from metrics.storage import MetricsStorage
 from metrics.storage import StorageManager as MetricsStorageManager
@@ -257,9 +262,17 @@ def _create_runner_stop(
         flavor: The flavor of the runner.
         job_metrics: The metrics about the job run by the runner.
 
+    Raises:
+        RunnerMetricsError: Post job runner metric not found. Should not happen.
+
     Returns:
         The RunnerStop event.
     """
+    if runner_metrics.post_job is None:
+        raise RunnerMetricsError(
+            "Post job runner metric not found during RunnerStop event, contact developers"
+        )
+
     # When a job gets cancelled directly after spawning,
     # the post-job timestamp might be lower then the pre-job timestamp.
     # This is due to the fact that we don't have a real post-job script but rather use

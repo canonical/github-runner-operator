@@ -16,7 +16,7 @@ Classes and function to extract the metrics from storage and issue runner metric
 
 ---
 
-<a href="../src/metrics/runner.py#L102"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics/runner.py#L107"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `extract`
 
@@ -50,7 +50,7 @@ In order to avoid DoS attacks, the file size is also checked.
 
 ---
 
-<a href="../src/metrics/runner.py#L134"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics/runner.py#L139"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_events`
 
@@ -281,7 +281,7 @@ __init__(url: str, cmd: str) → None
 
 ---
 
-<a href="../src/metrics/runner.py#L30"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics/runner.py#L35"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `PreJobMetrics`
 Metrics for the pre-job phase of a runner. 
@@ -302,7 +302,7 @@ Metrics for the pre-job phase of a runner.
 
 ---
 
-<a href="../src/metrics/runner.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics/runner.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `PostJobStatus`
 The status of the post-job phase of a runner. 
@@ -321,7 +321,7 @@ The status of the post-job phase of a runner.
 
 ---
 
-<a href="../src/metrics/runner.py#L62"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics/runner.py#L67"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `CodeInformation`
 Information about a status code. 
@@ -338,7 +338,7 @@ Information about a status code.
 
 ---
 
-<a href="../src/metrics/runner.py#L72"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics/runner.py#L77"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `PostJobMetrics`
 Metrics for the post-job phase of a runner. 
@@ -357,7 +357,7 @@ Metrics for the post-job phase of a runner.
 
 ---
 
-<a href="../src/metrics/runner.py#L86"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics/runner.py#L91"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerMetrics`
 Metrics for a runner. 
