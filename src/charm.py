@@ -1162,6 +1162,5 @@ class GithubRunnerCharm(CharmBase):
         )
 
 
-
 if __name__ == "__main__":
     main(GithubRunnerCharm)
