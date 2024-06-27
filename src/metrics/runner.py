@@ -260,7 +260,6 @@ def _create_runner_stop(
     Returns:
         The RunnerStop event.
     """
-    assert runner_metrics.post_job
     # When a job gets cancelled directly after spawning,
     # the post-job timestamp might be lower then the pre-job timestamp.
     # This is due to the fact that we don't have a real post-job script but rather use

@@ -54,6 +54,6 @@ async def test_runner_base_image(
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
-        dispatch_input={"runner-tag": app_no_wait.name},
+        dispatch_input={"runner-tag": app_no_wait.name, "runner-virt-type": "lxd"},
     )
     await wait_for(lambda: workflow.get_runs()[0].status == "completed")
