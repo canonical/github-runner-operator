@@ -339,45 +339,6 @@ class GithubRunnerCharm(CharmBase):
             logger.info("Restart repo-policy-compliance service")
             raise
 
-    def _get_openstack_runner_manager(
-        self, state: CharmState, token: str | None = None, path: GithubPath | None = None
-    ) -> OpenstackRunnerManager:
-        """Get OpenstackRunnerManager instance.
-
-        TODO: Combine this with `_get_runner_manager` during the runner manager interface refactor.
-
-        Args:
-            state: Charm state.
-            token: GitHub personal access token to manage the runners with. If None the token in
-                charm state is used.
-            path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
-                name. If None the path in charm state is used.
-
-        Returns:
-            An instance of OpenstackRunnerManager.
-        """
-        if token is None:
-            token = state.charm_config.token
-        if path is None:
-            path = state.charm_config.path
-
-        app_name, unit = self.unit.name.rsplit("/", 1)
-        openstack_runner_manager_config = OpenstackRunnerManagerConfig(
-            charm_state=state,
-            path=path,
-            token=token,
-            labels=state.charm_config.labels,
-            flavor=state.runner_config.openstack_flavor,
-            network=state.runner_config.openstack_network,
-            dockerhub_mirror=state.charm_config.dockerhub_mirror,
-        )
-        return OpenstackRunnerManager(
-            app_name,
-            unit,
-            openstack_runner_manager_config,
-            state.charm_config.openstack_clouds_yaml,
-        )
-
     def _get_runner_manager(
         self, state: CharmState, token: str | None = None, path: GithubPath | None = None
     ) -> RunnerManager:
@@ -875,6 +836,7 @@ class GithubRunnerCharm(CharmBase):
         if state.instance_type == InstanceType.OPENSTACK:
             # No dependencies managed by the charm for OpenStack-based runners.
             event.set_results({"flush": False})
+            return
 
         runner_manager = self._get_runner_manager(state)
         flushed = self._check_and_update_local_lxd_dependencies(
@@ -1159,6 +1121,46 @@ class GithubRunnerCharm(CharmBase):
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
         )
+
+    def _get_openstack_runner_manager(
+        self, state: CharmState, token: str | None = None, path: GithubPath | None = None
+    ) -> OpenstackRunnerManager:
+        """Get OpenstackRunnerManager instance.
+
+        TODO: Combine this with `_get_runner_manager` during the runner manager interface refactor.
+
+        Args:
+            state: Charm state.
+            token: GitHub personal access token to manage the runners with. If None the token in
+                charm state is used.
+            path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
+                name. If None the path in charm state is used.
+
+        Returns:
+            An instance of OpenstackRunnerManager.
+        """
+        if token is None:
+            token = state.charm_config.token
+        if path is None:
+            path = state.charm_config.path
+
+        app_name, unit = self.unit.name.rsplit("/", 1)
+        openstack_runner_manager_config = OpenstackRunnerManagerConfig(
+            charm_state=state,
+            path=path,
+            token=token,
+            labels=state.charm_config.labels,
+            flavor=state.runner_config.openstack_flavor,
+            network=state.runner_config.openstack_network,
+            dockerhub_mirror=state.charm_config.dockerhub_mirror,
+        )
+        return OpenstackRunnerManager(
+            app_name,
+            unit,
+            openstack_runner_manager_config,
+            state.charm_config.openstack_clouds_yaml,
+        )
+
 
 
 if __name__ == "__main__":
