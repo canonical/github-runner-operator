@@ -81,6 +81,8 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
             token=token,
             https_proxy=https_proxy,
         )
+    else:
+        instance_helper.ensure_charm_has_runner(app)
 
     # Clear metrics log to make reconciliation event more predictable
     unit = app.units[0]
