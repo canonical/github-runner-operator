@@ -24,12 +24,14 @@ from tests.integration.helpers.common import (
 )
 from tests.integration.helpers.lxd import ensure_charm_has_runner, get_runner_names
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
+from tests.status_name import ACTIVE
 
 
 @pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_dispatch_workflow_failure(
+    model: Model,
     app_with_forked_repo: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
@@ -55,6 +57,14 @@ async def test_dispatch_workflow_failure(
             https_proxy=https_proxy,
         )
     else:
+        grafana_agent = await model.deploy(
+            "grafana-agent",
+            application_name=f"grafana-agent-{app_with_forked_repo.name}",
+            channel="latest/edge",
+        )
+        await model.relate(f"{app_with_forked_repo.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
+        await model.wait_for_idle(apps=[app_with_forked_repo.name], status=ACTIVE)
+        await model.wait_for_idle(apps=[grafana_agent.name])
         await instance_helper.ensure_charm_has_runner(app_with_forked_repo)
 
     workflow = forked_github_repository.get_workflow(
