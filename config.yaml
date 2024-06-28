@@ -7,7 +7,7 @@ options:
     default: "jammy"
     description: >-
       The base ubuntu OS image to use for the runners. Codename (e.g. "jammy") or version tag
-      (e.g. 22.04) is supported as input. Currently only supports LTS versions of jammy and higher, 
+      (e.g. 22.04) is supported as input. Currently only supports LTS versions of jammy and higher,
       i.e. jammy, noble.
   denylist:
     type: string
@@ -20,31 +20,33 @@ options:
     type: string
     default: ""
     description: >-
-      The URL to the private docker registry configured as the dockerhub mirror to be used by the 
-      runners. If set a message will be displayed prior to job execution on self-hosted runner 
+      The URL to the private docker registry configured as the dockerhub mirror to be used by the
+      runners. If set a message will be displayed prior to job execution on self-hosted runner
       informing users to use the provided registry. You must use https:// as the protocol.
-  experimental-openstack-clouds-yaml:
+  openstack-clouds-yaml:
     type: string
     default: ""
     description: >-
-      (Experimental, under development) The openstack clouds.yaml
+      Providing a valid clouds.yaml will enable OpenStack integration. Setting the
+      openstack-clouds-yaml would enable spawning runners on OpenStack, and disable usage of
+      local LXD for runners. The format for the clouds.yaml is described in the docs:
       (https://docs.openstack.org/python-openstackclient/pike/configuration/index.html#clouds-yaml).
-      Setting the openstack-clouds-yaml would enable spawning runners on OpenStack, instead of LXD
-      vms. Providing a valid clouds.yaml will enable OpenStack integration. This feature is not yet
-      ready and is under development.
-  experimental-openstack-flavor:
+  openstack-flavor:
     type: string
     default: ""
     description: |
-      (Experimental, under development) The openstack flavor to use to spawn virtual machines.
-      This feature is not yet ready and is under development.
-  experimental-openstack-network:
+      The openstack flavor to use to spawn virtual machines. This controls the hardware resource
+      of the virtual machines. See docs for details:
+      (https://docs.openstack.org/nova/rocky/user/flavors.html).
+  openstack-network:
     type: string
     default: ""
     description: |
-      (Experimental, under development) The openstack network for virtual machines. This feature
-      is not yet ready and is under development.
-  experiential-openstack-image-build-unit:
+      The openstack network for virtual machines hosting the runners. The network must allow this
+      application to be able to access the virtual machine though the IP assigned by the openstack
+      network. See docs for details:
+      (https://docs.openstack.org/neutron/latest/admin/intro-os-networking.html).
+  experimental-openstack-image-build-unit:
     type: int
     default: -1
     description: >-
@@ -96,13 +98,13 @@ options:
   repo-policy-compliance-token:
     type: string
     description: >-
-      The token to authenticate with the repository-policy-compliance service in order to 
+      The token to authenticate with the repository-policy-compliance service in order to
       generate one-time-tokens. This option requires the repo-policy-compliance-url to be set.
       If not set, the repository-policy-compliance service will not be used.
   repo-policy-compliance-url:
     type: string
     description: >-
-      The URL to the repository-policy-compliance service. This option requires the 
+      The URL to the repository-policy-compliance service. This option requires the
       repo-policy-compliance-token to be set. If not set, the repository-policy-compliance service
       will not be used. This option is only supported when using OpenStack Cloud.
   runner-storage:

@@ -6,11 +6,11 @@ enabled the charm cannot be changed to use other virtualization methods.
 
 ## Configuration
 
-There are three configuration that the charm needs to be deployed with to enable OpenStack integration: `experimental-openstack-clouds-yaml`, `experimental-openstack-flavor`, and `experimental-openstack-network`.
+There are three configuration that the charm needs to be deployed with to enable OpenStack integration: `openstack-clouds-yaml`, `openstack-flavor`, and `openstack-network`.
 
 ### OpenStack clouds.yaml
 
-The `experimental-openstack-clouds-yaml` configuration contains the authorization information needed for the charm to log in to the openstack cloud.
+The `openstack-clouds-yaml` configuration contains the authorization information needed for the charm to log in to the openstack cloud.
 The first cloud in the `clouds.yaml` is used by the charm.
 
 Here is a sample of the `clouds.yaml`:
@@ -32,13 +32,13 @@ The `clouds.yaml` documentation is [here](https://docs.openstack.org/python-open
 
 ### OpenStack Flavor
 
-The `experimental-openstack-flavor` configuration sets the flavor used to create the OpenStack virtual machine when spawning new runners.
+The `openstack-flavor` configuration sets the flavor used to create the OpenStack virtual machine when spawning new runners.
 The flavor is tied with the vCPU, memory, and storage.
 The flavors documentation is [here](https://docs.openstack.org/nova/rocky/user/flavors.html).
 
 ### OpenStack Network
 
-The  `experimental-openstack-network` configuration sets the network used to create the OpenStack virtual machine when spawning new runners.
+The  `openstack-network` configuration sets the network used to create the OpenStack virtual machine when spawning new runners.
 
 Note that the network should be configured to allow traffic from the charm deployment (juju machine) to the OpenStack virtual machine, and traffic from the OpenStack virtual machine to GitHub.
 
