@@ -6,6 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
+  self-hosted-noble:
+    name: self-hosted noble test
+    runs-on: [self-hosted, X64, noble, noble-test]
+    steps:
+      - run: lsb_release -a
+      - run: groups
   # self-host-stg:
     # name: self-hosted stg test
     # runs-on: [self-hosted, ARM64, test-arm]
