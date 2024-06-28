@@ -28,34 +28,22 @@ from tests.integration.helpers.common import (
     reconcile,
     run_in_unit,
 )
-from tests.integration.helpers.lxd import LXDInstanceHelper, ensure_charm_has_runner, get_runner_name
-from tests.status_name import ACTIVE
+from tests.integration.helpers.lxd import ensure_charm_has_runner, get_runner_name
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
 async def app_fixture(
-    model: Model, basic_app: Application, loop_device: str, instance_helper: InstanceHelper,
+    model: Model, app_for_metric: Application, loop_device: str
 ) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
     Clear the metrics log before each test.
     """
-    unit = basic_app.units[0]
+    unit = app_for_metric.units[0]
     await clear_metrics_log(unit)
     await print_loop_device_info(unit, loop_device)
 
-    # OpenStack integration does not need the grafana agent to collect metric.
-    if isinstance(instance_helper, LXDInstanceHelper):
-        grafana_agent = await model.deploy(
-            "grafana-agent",
-            application_name=f"grafana-agent-{basic_app.name}",
-            channel="latest/edge",
-        )
-        await model.relate(f"{basic_app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
-        await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE)
-        await model.wait_for_idle(apps=[grafana_agent.name])
-
-    yield basic_app
+    yield app_for_metric
 
 
 @pytest.mark.openstack

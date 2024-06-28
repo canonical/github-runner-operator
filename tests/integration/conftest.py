@@ -635,19 +635,19 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
     branch_ref.delete()
 
 
-@pytest_asyncio.fixture(scope="module", name="app_with_grafana_agent")
-async def app_with_grafana_agent_integrated_fixture(
+@pytest_asyncio.fixture(scope="module", name="app_for_metric")
+async def app_for_metric_fixture(
     model: Model,
     basic_app: Application,
+    instance_helper: InstanceHelper,
     existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
-    """Setup the charm to be integrated with grafana-agent using the cos-agent integration."""
-    if not existing_app:
+    # OpenStack integration does not need the grafana agent to collect metric.
+    if isinstance(instance_helper, LXDInstanceHelper) and not existing_app:
         grafana_agent = await model.deploy(
             "grafana-agent",
             application_name=f"grafana-agent-{basic_app.name}",
             channel="latest/edge",
-            revision=108,
         )
         await model.relate(f"{basic_app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
         await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE)

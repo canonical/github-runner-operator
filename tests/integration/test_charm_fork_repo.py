@@ -62,7 +62,9 @@ async def test_dispatch_workflow_failure(
             application_name=f"grafana-agent-{app_with_forked_repo.name}",
             channel="latest/edge",
         )
-        await model.relate(f"{app_with_forked_repo.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
+        await model.relate(
+            f"{app_with_forked_repo.name}:cos-agent", f"{grafana_agent.name}:cos-agent"
+        )
         await model.wait_for_idle(apps=[app_with_forked_repo.name], status=ACTIVE)
         await model.wait_for_idle(apps=[grafana_agent.name])
         await instance_helper.ensure_charm_has_runner(app_with_forked_repo)
