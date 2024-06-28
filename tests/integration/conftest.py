@@ -639,11 +639,11 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
 async def app_for_metric_fixture(
     model: Model,
     basic_app: Application,
-    instance_helper: InstanceHelper,
+    instance_type: InstanceType,
     existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
     # OpenStack integration does not need the grafana agent to collect metric.
-    if isinstance(instance_helper, LXDInstanceHelper) and not existing_app:
+    if instance_type == InstanceType.LOCAL_LXD and not existing_app:
         grafana_agent = await model.deploy(
             "grafana-agent",
             application_name=f"grafana-agent-{basic_app.name}",
