@@ -41,7 +41,7 @@ jobs:
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
   openstack-integration-tests-private-endpoint-arm64:
-    name: Integration test using private-endpoint
+    name: Integration test using private-endpoint in arm64
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
