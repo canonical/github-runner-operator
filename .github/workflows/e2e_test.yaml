@@ -1,7 +1,11 @@
 name: End-to-End Test
 
+# Development shifts toward OpenStack support.
+# These test is for local LXD and is ran weekly.
+
 on:
-  pull_request:
+  schedule:
+    cron: "15 4 * * 2"
 
 jobs:
   build-charm:
