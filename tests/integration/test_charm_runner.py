@@ -12,22 +12,17 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import (
-    VIRTUAL_MACHINES_CONFIG_NAME,
     VM_CPU_CONFIG_NAME,
     VM_DISK_CONFIG_NAME,
     VM_MEMORY_CONFIG_NAME,
     InstanceType,
 )
 from tests.integration.helpers import lxd
-<<<<<<< Updated upstream
-from tests.integration.helpers.common import DISPATCH_TEST_WORKFLOW_FILENAME, InstanceHelper, dispatch_workflow
-=======
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     InstanceHelper,
     dispatch_workflow,
 )
->>>>>>> Stashed changes
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
 
@@ -134,10 +129,7 @@ async def test_flush_runner_and_resource_config(
     assert len(new_runner_names) == 1
     assert new_runner_names[0] != runner_names[0]
 
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 @pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
