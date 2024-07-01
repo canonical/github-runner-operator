@@ -4,13 +4,14 @@ on:
   pull_request:
 
 # TODO: debug
+# The branch for operator-workflow should be main once the issue is resolved.
 
 jobs:
   # test option values defined at test/conftest.py are passed on via repository secret
   # INTEGRATION_TEST_ARGS to operator-workflows automatically.
   integration-tests-juju2:
     name: Integration test with juju 2.9
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@temporary_update_dump_logs_action
     secrets: inherit
     with:
       juju-channel: 2.9/stable
@@ -18,10 +19,10 @@ jobs:
       provider: lxd
       test-tox-env: integration-juju2.9
       # modules: '["test_charm_base_image", "test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_lxd_runner", "test_charm_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh", "test_charm_upgrade"]'
-      modules: '["test_charm_runner"]'
+      modules: '["test_charm_runner", "test_charm_metrics_failure"]'
   integration-tests:
     name: Integration test with juju 3.1
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@temporary_update_dump_logs_action
     secrets: inherit
     with:
       juju-channel: 3.1/stable
@@ -29,10 +30,10 @@ jobs:
       provider: lxd
       test-tox-env: integration-juju3.1
       # modules: '["test_charm_base_image", "test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_lxd_runner", "test_charm_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh", "test_charm_upgrade"]'
-      modules: '["test_charm_runner"]'
+      modules: '["test_charm_runner", "test_charm_metrics_failure"]'
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@temporary_update_dump_logs_action
     secrets: inherit
     with:
       juju-channel: 3.2/stable
@@ -40,7 +41,7 @@ jobs:
       provider: lxd
       test-tox-env: integration-juju3.2
       # modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_runner", "test_e2e"]'
-      modules: '["test_charm_runner"]'
+      modules: '["test_charm_runner", "test_charm_metrics_failure"]'
       extra-arguments: "-m openstack --openstack-flavor-name=builder-cpu4-ram8-disk50 --http-proxy=http://squid.internal:3128 --https-proxy=http://squid.internal:3128 --no-proxy=keystone.ps6.canonical.com,glance.ps6.canonical.com,nova.ps6.canonical.com,neutron.ps6.canonical.com"
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint

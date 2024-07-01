@@ -51,6 +51,14 @@ async def app_fixture(
     unit = app_for_metric.units[0]
     await clear_metrics_log(unit)
     await print_loop_device_info(unit, loop_device)
+    await app_for_metric.set_config(
+        {
+            VIRTUAL_MACHINES_CONFIG_NAME: "0",
+            "repo-policy-compliance-token": "",
+            "repo-policy-compliance-url": "",
+        }
+    )
+    await reconcile(app=app_for_metric, model=model)
 
     yield app_for_metric
 
@@ -100,8 +108,6 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     await app.set_config(
         {
             VIRTUAL_MACHINES_CONFIG_NAME: "0",
-            "repo-policy-compliance-token": "",
-            "repo-policy-compliance-url": "",
         }
     )
     await reconcile(app=app, model=model)
