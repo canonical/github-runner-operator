@@ -2,6 +2,9 @@
 
 ## Fine grained access token scopes
 
+**Note**: The user who owns the token must have admin access to the organisation or repository
+(so having a token with the necessary permissions is not enough).
+
 ### Organizational Runners
 
 The following are the permissions scopes required for the GitHub runners when registering as an
