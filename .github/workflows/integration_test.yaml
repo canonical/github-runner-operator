@@ -4,14 +4,13 @@ on:
   pull_request:
 
 # TODO: debug
-# The branch for operator-workflow should be main once the issue is resolved.
 
 jobs:
   # test option values defined at test/conftest.py are passed on via repository secret
   # INTEGRATION_TEST_ARGS to operator-workflows automatically.
   integration-tests-juju2:
     name: Integration test with juju 2.9
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@temporary_update_dump_logs_action
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
       juju-channel: 2.9/stable
@@ -22,7 +21,7 @@ jobs:
       modules: '["test_charm_runner", "test_charm_metrics_failure"]'
   integration-tests:
     name: Integration test with juju 3.1
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@temporary_update_dump_logs_action
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
       juju-channel: 3.1/stable
@@ -33,7 +32,7 @@ jobs:
       modules: '["test_charm_runner", "test_charm_metrics_failure"]'
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@temporary_update_dump_logs_action
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
       juju-channel: 3.2/stable

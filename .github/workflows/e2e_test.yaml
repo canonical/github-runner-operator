@@ -1,7 +1,9 @@
 name: End-to-End Test
 
 on:
-  pull_request:
+  # TODO: debug
+  # pull_request:
+  workflow_call:
 
 jobs:
   build-charm:
