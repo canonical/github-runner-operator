@@ -10,7 +10,7 @@ from unittest.mock import MagicMock
 import pytest
 from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
-from pydantic.networks import AnyUrl, IPv4Address
+from pydantic.networks import IPv4Address
 
 import charm_state
 import openstack_cloud

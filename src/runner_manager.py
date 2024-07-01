@@ -618,7 +618,7 @@ class RunnerManager:
         reactive_config: ReactiveConfig
 
     @staticmethod
-    def _spawn_runner_reactively(args: _CreateReactiveRunnerArgs):
+    def _spawn_runner_reactively(args: _CreateReactiveRunnerArgs) -> None:
         """Spawn a runner reactively.
 
         Args:
@@ -630,7 +630,10 @@ class RunnerManager:
             uri=args.reactive_config.mq_uri, queue_name=args.app_name
         )
         job = Job.from_message_queue(mq_conn_info)
-        logger.info("Received job with labels %s and run_url %s", job.labels, job.run_url)
+        job_details = job.get_details()
+        logger.info(
+            "Received job with labels %s and run_url %s", job_details.labels, job_details.run_url
+        )
         job.picked_up()
 
     def _runners_in_pre_job(self) -> bool:

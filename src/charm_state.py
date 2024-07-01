@@ -292,8 +292,6 @@ class CharmConfig(BaseModel):
         openstack_clouds_yaml: The openstack clouds.yaml configuration.
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
             name.
-        reactive_mq_db_name: The db name of the message queue to use for reactive
-            spawning of runners.
         reconcile_interval: Time between each reconciliation of runners in minutes.
         token: GitHub personal access token for GitHub API.
     """
@@ -303,7 +301,6 @@ class CharmConfig(BaseModel):
     labels: tuple[str, ...]
     openstack_clouds_yaml: dict[str, dict] | None
     path: GithubPath
-    reactive_mq_db_name: str | None
     reconcile_interval: int
     token: str
 
@@ -831,8 +828,8 @@ class ReactiveConfig(BaseModel):
             The connection information for the reactive MQ or None if not available.
 
         Raises:
-            IntegrationMissingError: If the reactive MQ integration is missing.
-            IntegrationDataMissingError: If the respective reactive MQ integration data is missing.
+            MissingIntegrationError: If the reactive MQ integration is missing.
+            MissingIntegrationDataError: If the respective reactive MQ integration data is missing.
         """
         db_name = cast(str, charm.config.get(REACTIVE_MQ_URI_CONFIG_NAME, ""))
         integration_existing = MONGO_DB_INTEGRATION_NAME in charm.model.relations

@@ -135,13 +135,17 @@ def job_mock_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> MagicMock:
     process.
     """
 
-    def from_message_queue(mq_conn_info: MessageQueueConnectionInfo):
+    def from_message_queue(mq_conn_info: MessageQueueConnectionInfo) -> MagicMock:
         """Mock the from_message_queue method of the Job class.
 
         Args:
             mq_conn_info: The connection information for the message queue.
                 We read out the queue name out of it.
+
+        Returns:
+            A mocked job instance.
         """
+
         def write_into_file():
             """Write the job into a file to verify that it was picked up."""
             unique_file = tmp_path / f"job-{secrets.token_hex(16)}"

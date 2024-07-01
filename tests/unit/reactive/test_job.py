@@ -2,25 +2,22 @@
 #  See LICENSE file for licensing details.
 import secrets
 from contextlib import closing
-from queue import Empty
 from unittest.mock import MagicMock
 
 import pytest
 from kombu import Connection
 
-from reactive.job import Job, JobDetails, MessageQueueConnectionInfo, JobSource, JobSourceError, \
-    JobError
+from reactive.job import Job, JobDetails, JobError, JobSource, MessageQueueConnectionInfo
 
 IN_MEMORY_URI = "memory://"
 FAKE_RUN_URL = "https://api.github.com/repos/fakeusergh-runner-test/actions/runs/8200803099"
 
 
-
 def test_job_from_message_queue():
     """
-    arrange: a job placed in the message queue
-    act: call Job.from_message_queue
-    assert: the job is returned and contains the expected details
+    arrange: A job placed in the message queue.
+    act: Call Job.from_message_queue.
+    assert: The job is returned and contains the expected details.
     """
     queue_name = secrets.token_hex(16)
     job_details = JobDetails(
@@ -39,9 +36,9 @@ def test_job_from_message_queue():
 
 def test_reject():
     """
-    arrange: a job retrieved from the message queue
-    act: reject the job
-    assert: the job is still in the queue
+    arrange: A job retrieved from the message queue.
+    act: Reject the job.
+    assert: The job is still in the queue.
     """
     queue_name = secrets.token_hex(16)
     job_details = JobDetails(
@@ -66,9 +63,9 @@ def test_reject():
 
 def test_reject_multiple_times_raises_error():
     """
-    arrange: a job retrieved from the message queue
-    act: reject the job twice
-    assert: the second rejection raises an error
+    arrange: A job retrieved from the message queue.
+    act: Reject the job twice.
+    assert: The second rejection raises an error.
     """
     queue_name = secrets.token_hex(16)
     job_details = JobDetails(
@@ -91,9 +88,9 @@ def test_reject_multiple_times_raises_error():
 
 def test_picked_up_acknowledges_job():
     """
-    arrange: a job retrieved from the message queue
-    act: acknowledge the job
-    assert: the job is no longer in the queue
+    arrange: A fake job source.
+    act: Acknowledge the job.
+    assert: The ack method of the job source is called.
     """
     fake_job_source = MagicMock(spec=JobSource)
 
@@ -105,9 +102,9 @@ def test_picked_up_acknowledges_job():
 
 def test_picked_up_multiple_times_raises_error():
     """
-    arrange: a job retrieved from the message queue
-    act: acknowledge the job twice
-    assert: the second acknowledgement raises an error
+    arrange: A job retrieved from the message queue.
+    act: Acknowledge the job twice.
+    assert: The second acknowledgement raises an error.
     """
     queue_name = secrets.token_hex(16)
     job_details = JobDetails(
@@ -129,22 +126,23 @@ def test_picked_up_multiple_times_raises_error():
 
 
 @pytest.mark.parametrize(
-    "job_str", [
-    pytest.param(
-        '{"labels": ["label1", "label2"], "status": "completed"}',
-        id="run_url missing"
-    ),
-    pytest.param(
-        '{"status": "completed", "run_url": "https://example.com"}',
-        id="labels missing"
-    ),
-    pytest.param(
-        "no json at all",
-        id="invalid json"
-    )
-    ]
+    "job_str",
+    [
+        pytest.param(
+            '{"labels": ["label1", "label2"], "status": "completed"}', id="run_url missing"
+        ),
+        pytest.param(
+            '{"status": "completed", "run_url": "https://example.com"}', id="labels missing"
+        ),
+        pytest.param("no json at all", id="invalid json"),
+    ],
 )
 def test_job_details_validation_error(job_str: str):
+    """
+    arrange: A job placed in the message queue with invalid details.
+    act: Call Job.from_message_queue.
+    assert: A JobError is raised.
+    """
     queue_name = secrets.token_hex(16)
     with Connection(IN_MEMORY_URI) as conn:
         with closing(conn.SimpleQueue(queue_name)) as simple_queue:

@@ -24,7 +24,12 @@ class JobDetails(BaseModel):
 
 
 class MessageQueueConnectionInfo(BaseModel):
-    """The connection information for the MQ."""
+    """The connection information for the MQ.
+
+    Attributes:
+        uri: The URI of the MQ.
+        queue_name: The name of the queue.
+    """
 
     uri: AnyUrl
     queue_name: str
@@ -38,35 +43,39 @@ class JobSource(Protocol):
     """A protocol for a job source."""
 
     def ack(self) -> None:
-        """Acknowledge the message.
-
-        Raises:
-            JobSourceError: If the job could not be acknowledged.
-        """
+        """Acknowledge the message."""
 
     def reject(self) -> None:
-        """Reject the message.
-
-        Raises:
-            JobSourceError: If the job could not be rejected.
-        """
+        """Reject the message."""
 
     def get_job(self) -> JobDetails:
-        """Get the job details from the source.
-
-        Returns:
-            The job details.
-        """
+        """Get the job details from the source."""
 
 
 class _MQJobSource(JobSource):
+    """A class to represent a job source from a message queue."""
 
     def __init__(self, conn: Connection, queue: SimpleQueue, msg: Message):
+        """Initialize the message.
+
+        Args:
+            conn: The connection to the message queue.
+            queue: The queue to get the message from.
+            msg: The message to get the job details from.
+        """
         self._conn = conn
         self._queue = queue
         self._msg = msg
 
     def ack(self) -> None:
+        """Acknowledge the message.
+
+        This will ensure that the message is removed from the queue.
+        The connection will also be closed, this method is expected to only be called once.
+
+        Raises:
+            JobSourceError: If the message could not be acknowledged.
+        """
         try:
             self._msg.ack()
         except MessageStateError as e:
@@ -74,6 +83,14 @@ class _MQJobSource(JobSource):
         self._close()
 
     def reject(self) -> None:
+        """Reject the message.
+
+        This will ensure that the message is requeued.
+        The connection will also be closed, this method is expected to only be called once.
+
+        Raises:
+            JobSourceError: If the message could not be rejected.
+        """
         try:
             self._msg.reject(requeue=True)
         except MessageStateError as e:
@@ -81,12 +98,21 @@ class _MQJobSource(JobSource):
         self._close()
 
     def get_job(self) -> JobDetails:
+        """Get the job details from the message.
+
+        Raises:
+            JobSourceError: If the job details could not be retrieved.
+
+        Returns:
+            The job details.
+        """
         try:
             return cast(JobDetails, JobDetails.parse_raw(self._msg.payload))
         except ValueError as e:
             raise JobSourceError("Could not parse job details") from e
 
-    def _close(self):
+    def _close(self) -> None:
+        """Close the connection and the queue."""
         self._queue.close()
         self._conn.close()
 
@@ -111,6 +137,7 @@ class Job:
 
         Raises:
             JobError: If the job details could not be retrieved.
+
         Returns:
             The job details.
         """
