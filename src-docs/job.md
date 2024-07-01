@@ -11,6 +11,24 @@ Module responsible for job retrieval and handling.
 
 <a href="../src/reactive/job.py#L11"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
+## <kbd>class</kbd> `JobDetails`
+A class to translate the payload. 
+
+
+
+**Attributes:**
+ 
+ - <b>`labels`</b>:  The labels of the job. 
+ - <b>`run_url`</b>:  The URL of the job. 
+
+
+
+
+
+---
+
+<a href="../src/reactive/job.py#L23"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
 ## <kbd>class</kbd> `MessageQueueConnectionInfo`
 The connection information for the MQ. 
 
@@ -20,7 +38,7 @@ The connection information for the MQ.
 
 ---
 
-<a href="../src/reactive/job.py#L18"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/job.py#L30"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `JobSourceError`
 Raised when a job source error occurs. 
@@ -31,7 +49,7 @@ Raised when a job source error occurs.
 
 ---
 
-<a href="../src/reactive/job.py#L22"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/job.py#L34"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `JobSource`
 A protocol for a job source. 
@@ -41,7 +59,7 @@ A protocol for a job source.
 
 ---
 
-<a href="../src/reactive/job.py#L25"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/job.py#L37"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `ack`
 
@@ -59,7 +77,7 @@ Acknowledge the message.
 
 ---
 
-<a href="../src/reactive/job.py#L32"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/job.py#L44"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `reject`
 
@@ -78,7 +96,7 @@ Reject the message.
 
 ---
 
-<a href="../src/reactive/job.py#L40"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/job.py#L52"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `JobError`
 Raised when a job error occurs. 
@@ -89,12 +107,12 @@ Raised when a job error occurs.
 
 ---
 
-<a href="../src/reactive/job.py#L44"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/job.py#L56"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `Job`
 A class to represent a job to be picked up by a runner. 
 
-<a href="../src/reactive/job.py#L47"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/job.py#L59"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -137,7 +155,7 @@ The GitHub run URL of the job.
 
 ---
 
-<a href="../src/reactive/job.py#L84"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/job.py#L96"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `from_message_queue`
 
@@ -162,7 +180,7 @@ This method will block until a job is available.
 
 ---
 
-<a href="../src/reactive/job.py#L77"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/job.py#L89"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `picked_up`
 
@@ -180,7 +198,7 @@ Indicate that the job has been picked up by a runner.
 
 ---
 
-<a href="../src/reactive/job.py#L70"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/job.py#L82"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `reject`
 

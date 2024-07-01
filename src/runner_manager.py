@@ -538,7 +538,7 @@ class RunnerManager:
         """
         if self.config.reactive_config:
             logger.info("Reactive configuration detected, going into experimental reactive mode.")
-            self._reconcile_reactive(quantity, resources)
+            self._reconcile_reactive(quantity)
             return 0
         start_ts = time.time()
 

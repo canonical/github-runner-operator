@@ -24,7 +24,7 @@ from charm_state import (
 from errors import IssueMetricEventError, RunnerBinaryError
 from github_type import RunnerApplication
 from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
-from reactive.job import Job
+from reactive.job import Job, MessageQueueConnectionInfo
 from runner import Runner, RunnerStatus
 from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerManagerConfig
 from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
@@ -134,21 +134,32 @@ def job_mock_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> MagicMock:
     use the job_mock.picked_up.assert_called_once() because the job is picked up in a separate
     process.
     """
-    job_mock = MagicMock(spec=Job)
-    job_mock.labels = [
-        "test",
-    ]
-    job_mock.run_url = "http://example.com"
-    job_mock.from_message_queue.return_value = job_mock
 
-    def write_into_file():
-        unique_file = tmp_path / f"job-{secrets.token_hex(16)}"
-        unique_file.write_text("picked up")
+    def from_message_queue(mq_conn_info: MessageQueueConnectionInfo):
+        """Mock the from_message_queue method of the Job class.
 
-    job_mock.picked_up.side_effect = write_into_file
+        Args:
+            mq_conn_info: The connection information for the message queue.
+                We read out the queue name out of it.
+        """
+        def write_into_file():
+            """Write the job into a file to verify that it was picked up."""
+            unique_file = tmp_path / f"job-{secrets.token_hex(16)}"
+            unique_file.write_text(f"picked up job for queue {mq_conn_info.queue_name}")
 
-    monkeypatch.setattr("runner_manager.Job", job_mock)
-    return job_mock
+        job_mock = MagicMock(spec=Job)
+        job_mock.labels = [
+            "test",
+        ]
+        job_mock.run_url = "http://example.com"
+        job_mock.picked_up.side_effect = write_into_file
+
+        return job_mock
+
+    job_class_mock = MagicMock()
+    job_class_mock.from_message_queue.side_effect = from_message_queue
+    monkeypatch.setattr("runner_manager.Job", job_class_mock)
+    return job_class_mock
 
 
 @pytest.mark.parametrize(
@@ -535,9 +546,8 @@ def test_reconcile_places_no_timestamp_in_newly_created_runner_if_metrics_disabl
     assert not (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).exists()
 
 
-def test_reconcile_reactive_mode(
-    runner_manager: RunnerManager, job_mock: MagicMock, tmp_path: Path
-):
+@pytest.mark.usefixtures("job_mock")
+def test_reconcile_reactive_mode(runner_manager: RunnerManager, tmp_path: Path):
     """
     arrange: Enable reactive mode and mock the job class to return a job.
     act: Call reconcile.
@@ -551,7 +561,9 @@ def test_reconcile_reactive_mode(
     for job_file in tmp_path.iterdir():
         if job_file.name.startswith("job-"):
             jobs_found += 1
-            assert job_file.read_text() == "picked up", "Job not picked up"
+            assert (
+                job_file.read_text() == f"picked up job for queue {runner_manager.app_name}"
+            ), "Job not picked up"
     assert jobs_found == count, "Expected number of jobs not found"
 
 
