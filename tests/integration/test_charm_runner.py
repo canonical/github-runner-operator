@@ -6,17 +6,21 @@ from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio
+from github.Branch import Branch
+from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
 from charm_state import (
+    VIRTUAL_MACHINES_CONFIG_NAME,
     VM_CPU_CONFIG_NAME,
     VM_DISK_CONFIG_NAME,
     VM_MEMORY_CONFIG_NAME,
     InstanceType,
 )
 from tests.integration.helpers import lxd
-from tests.integration.helpers.common import InstanceHelper
+from tests.integration.helpers.common import DISPATCH_TEST_WORKFLOW_FILENAME, InstanceHelper, dispatch_workflow
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -121,3 +125,35 @@ async def test_flush_runner_and_resource_config(
     new_runner_names = action.results["runners"].split(", ")
     assert len(new_runner_names) == 1
     assert new_runner_names[0] != runner_names[0]
+
+@pytest.mark.openstack
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_repo_policy_enabled(
+    app: Application,
+    github_repository: Repository,
+    test_github_branch: Branch,
+    token: str,
+    https_proxy: str,
+    instance_helper: InstanceHelper,
+) -> None:
+    """
+    arrange: A working application with one runner with repo policy enabled.
+    act: Dispatch a workflow.
+    assert: Workflow run successfully passed.
+    """
+    if isinstance(instance_helper, OpenStackInstanceHelper):
+        await setup_repo_policy(
+            app=app,
+            openstack_connection=instance_helper.openstack_connection,
+            token=token,
+            https_proxy=https_proxy,
+        )
+
+    await dispatch_workflow(
+        app=app,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+    )
