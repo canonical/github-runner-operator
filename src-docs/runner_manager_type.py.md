@@ -28,6 +28,27 @@ Strategy for flushing runners.
 
 ---
 
+## <kbd>class</kbd> `OpenstackRunnerManagerConfig`
+Configuration of runner manager. 
+
+
+
+**Attributes:**
+ 
+ - <b>`charm_state`</b>:  The state of the charm. 
+ - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the  GitHub organization name. 
+ - <b>`labels`</b>:  Additional labels for the runners. 
+ - <b>`token`</b>:  GitHub personal access token to register runner to the  repository or organization. 
+ - <b>`flavor`</b>:  OpenStack flavor for defining the runner resources. 
+ - <b>`network`</b>:  OpenStack network for runner network access. 
+ - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `RunnerInfo`
 Information from GitHub of a runner. 
 

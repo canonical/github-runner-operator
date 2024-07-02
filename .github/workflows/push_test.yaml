@@ -7,7 +7,7 @@ on:
 
 jobs:
   push-event-tests:
-    runs-on: [self-hosted, linux, x64, "${{ github.ref_name }}"]
+    runs-on: [self-hosted, linux, "${{ github.ref_name }}"]
     steps:
       - name: Echo runner name
         run: |

@@ -21,7 +21,7 @@ CLOUDS_YAML_PATH = Path(Path.home() / ".config/openstack/clouds.yaml")
 
 # Make sure we can import openstack, if not remove the old openstacksdk library and retry.
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
-def _remove_old_openstacksdk_lib() -> None:
+def _remove_old_openstacksdk_lib() -> None:  # pragma: no cover
     """Remove the old openstacksdk library if it exists."""
     try:
         unit_name = os.environ["JUJU_UNIT_NAME"].replace("/", "-")

@@ -28,7 +28,7 @@ Represent HTTP-related proxy settings.
 ---
 
 ## <kbd>class</kbd> `RunnerByHealth`
-Set of runners LXD instance by health state. 
+Set of runners instance by health state. 
 
 
 
@@ -59,6 +59,24 @@ Configuration for runner.
  - <b>`proxies`</b>:  HTTP(S) proxy settings. 
  - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
  - <b>`ssh_debug_connections`</b>:  The SSH debug server connections metadata. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `RunnerGithubInfo`
+GitHub info of a runner. 
+
+
+
+**Attributes:**
+ 
+ - <b>`runner_name`</b>:  Name of the runner. 
+ - <b>`runner_id`</b>:  ID of the runner assigned by GitHub. 
+ - <b>`online`</b>:  Whether GitHub marks this runner as online. 
+ - <b>`busy`</b>:  Whether GitHub marks this runner as busy. 
 
 
 

@@ -13,7 +13,7 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import DENYLIST_CONFIG_NAME
-from tests.integration.helpers import dispatch_workflow, get_job_logs, get_workflow_runs
+from tests.integration.helpers.common import dispatch_workflow, get_job_logs, get_workflow_runs
 from tests.status_name import ACTIVE
 
 logger = logging.getLogger(__name__)
