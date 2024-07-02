@@ -1013,8 +1013,10 @@ class ImmutableConfigChangedError(Exception):
         self.msg = msg
 
 
+# Charm State is a list of all the configurations and states of the charm and
+# has therefore a lot of attributes.
 @dataclasses.dataclass(frozen=True)
-class CharmState:
+class CharmState:  # pylint: disable=too-many-instance-attributes
     """The charm state.
 
     Attributes:
