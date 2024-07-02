@@ -2,8 +2,8 @@
 
 ## Fine grained access token scopes
 
-**Note**: The user who owns the token must have admin access to the organisation or repository
-(so having a token with the necessary permissions is not enough).
+**Note**: In addition to having a token with the necessary permissions, the user who owns the
+token also must have admin access to the organisation or repository.
 
 ### Organizational Runners
 
