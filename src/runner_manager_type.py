@@ -10,7 +10,7 @@ from typing import Iterable
 
 import jinja2
 
-from charm_state import CharmState, GithubPath
+from charm_state import CharmState, GithubPath, ReactiveConfig
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
 from lxd import LxdClient
@@ -72,6 +72,7 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
         token: GitHub personal access token to register runner to the
             repository or organization.
         dockerhub_mirror: URL of dockerhub mirror to use.
+        reactive_config: The configuration to spawn runners reactively.
     """
 
     charm_state: CharmState
@@ -81,6 +82,7 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     service_token: str
     token: str
     dockerhub_mirror: str | None = None
+    reactive_config: ReactiveConfig | None = None
 
     @property
     def are_metrics_enabled(self) -> bool:
@@ -89,7 +91,8 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
 
 
 @dataclass
-class OpenstackRunnerManagerConfig:
+# The instance attributes are all required.
+class OpenstackRunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     """Configuration of runner manager.
 
     Attributes:
@@ -102,6 +105,7 @@ class OpenstackRunnerManagerConfig:
         flavor: OpenStack flavor for defining the runner resources.
         network: OpenStack network for runner network access.
         dockerhub_mirror: URL of dockerhub mirror to use.
+        reactive_config: The configuration to spawn runners reactively.
     """
 
     charm_state: CharmState
@@ -111,6 +115,7 @@ class OpenstackRunnerManagerConfig:
     flavor: str
     network: str
     dockerhub_mirror: str | None
+    reactive_config: ReactiveConfig | None = None
 
 
 @dataclass

@@ -47,6 +47,14 @@ class ConfigurationError(Exception):
     """Error for juju configuration."""
 
 
+class MissingIntegrationDataError(Exception):
+    """Error for missing integration data."""
+
+
+class MissingIntegrationError(Exception):
+    """Error for missing integration."""
+
+
 class LxdError(Exception):
     """Error for executing LXD actions."""
 

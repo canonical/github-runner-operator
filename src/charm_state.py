@@ -18,12 +18,24 @@ from typing import NamedTuple, Optional, cast
 from urllib.parse import urlsplit
 
 import yaml
+from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from ops import CharmBase
-from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, validator
-from pydantic.networks import IPvAnyAddress
+from pydantic import (
+    AnyHttpUrl,
+    AnyUrl,
+    BaseModel,
+    Field,
+    IPvAnyAddress,
+    ValidationError,
+    validator,
+)
 
 import openstack_cloud
-from errors import OpenStackInvalidConfigError
+from errors import (
+    MissingIntegrationDataError,
+    MissingIntegrationError,
+    OpenStackInvalidConfigError,
+)
 from firewall import FirewallEntry
 from utilities import get_env_var
 
@@ -45,6 +57,7 @@ OPENSTACK_FLAVOR_CONFIG_NAME = "openstack-flavor"
 OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME = "experimental-openstack-image-build-unit"
 PATH_CONFIG_NAME = "path"
 RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
+REACTIVE_MQ_URI_CONFIG_NAME = "experimental-reactive-mq-uri"
 # bandit thinks this is a hardcoded password
 REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"  # nosec
 REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME = "repo-policy-compliance-url"
@@ -209,6 +222,7 @@ class Arch(str, Enum):
 
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
 DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
+MONGO_DB_INTEGRATION_NAME = "mongodb_client"
 
 
 class RunnerStorage(str, Enum):
@@ -936,6 +950,57 @@ class SSHDebugConnection(BaseModel):
         return ssh_debug_connections
 
 
+class ReactiveConfig(BaseModel):
+    """Represents the configuration for reactive scheduling.
+
+    Attributes:
+        mq_uri: The URI of the MQ to use to spawn runners reactively.
+    """
+
+    mq_uri: AnyUrl
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "ReactiveConfig | None":
+        """Initialize the ReactiveConfig from charm config and integration data.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            The connection information for the reactive MQ or None if not available.
+
+        Raises:
+            MissingIntegrationError: If the reactive MQ integration is missing.
+            MissingIntegrationDataError: If the respective reactive MQ integration data is missing.
+        """
+        db_name = cast(str, charm.config.get(REACTIVE_MQ_URI_CONFIG_NAME, ""))
+        integration_existing = MONGO_DB_INTEGRATION_NAME in charm.model.relations
+
+        if not (db_name or integration_existing):
+            return None
+
+        if not integration_existing:
+            raise MissingIntegrationError(f"Missing {MONGO_DB_INTEGRATION_NAME} integration")
+
+        database_requires = DatabaseRequires(
+            charm, relation_name=MONGO_DB_INTEGRATION_NAME, database_name=db_name
+        )
+
+        uri_field = "uris"  # the field is called uris though it's a single uri
+        relation_data = list(database_requires.fetch_relation_data(fields=[uri_field]).values())
+
+        # There can be only one database integrated at a time
+        # with the same interface name. See: metadata.yaml
+        data = relation_data[0]
+
+        if uri_field in data:
+            return ReactiveConfig(mq_uri=data[uri_field])
+
+        raise MissingIntegrationDataError(
+            f"Missing {uri_field} for {MONGO_DB_INTEGRATION_NAME} integration"
+        )
+
+
 class ImmutableConfigChangedError(Exception):
     """Represents an error when changing immutable charm state."""
 
@@ -948,8 +1013,10 @@ class ImmutableConfigChangedError(Exception):
         self.msg = msg
 
 
+# Charm State is a list of all the configurations and states of the charm and
+# has therefore a lot of attributes.
 @dataclasses.dataclass(frozen=True)
-class CharmState:
+class CharmState:  # pylint: disable=too-many-instance-attributes
     """The charm state.
 
     Attributes:
@@ -958,6 +1025,7 @@ class CharmState:
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
         instance_type: The type of instances, e.g., local lxd, openstack.
+        reactive_config: The charm configuration related to reactive spawning mode.
         runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.
     """
@@ -968,6 +1036,7 @@ class CharmState:
     instance_type: InstanceType
     charm_config: CharmConfig
     runner_config: RunnerConfig
+    reactive_config: ReactiveConfig | None
     ssh_debug_connections: list[SSHDebugConnection]
 
     @classmethod
@@ -1075,7 +1144,7 @@ class CharmState:
                     runner_storage=runner_config.runner_storage,
                     base_image=runner_config.base_image,
                 )
-        except (ValidationError, ValueError) as exc:
+        except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
         except ImmutableConfigChangedError as exc:
             raise CharmConfigInvalidError(exc.msg) from exc
@@ -1092,12 +1161,15 @@ class CharmState:
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
+        reactive_config = ReactiveConfig.from_charm(charm)
+
         state = cls(
             arch=arch,
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
             charm_config=charm_config,
             runner_config=runner_config,
+            reactive_config=reactive_config,
             ssh_debug_connections=ssh_debug_connections,
             instance_type=instance_type,
         )
