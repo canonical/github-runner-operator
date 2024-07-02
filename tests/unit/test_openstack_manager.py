@@ -14,9 +14,10 @@ from fabric.connection import Connection as SshConnection
 from invoke import Result
 from openstack.compute.v2.keypair import Keypair
 from openstack.compute.v2.server import Server
+from pytest import LogCaptureFixture, MonkeyPatch
 
 import metrics.storage
-from charm_state import CharmState, ProxyConfig, RepoPolicyComplianceConfig
+from charm_state import CharmState, ProxyConfig, ReactiveConfig, RepoPolicyComplianceConfig
 from errors import OpenStackError, RunnerStartError
 from github_type import GitHubRunnerStatus, SelfHostedRunner
 from metrics import events as metric_events
@@ -24,6 +25,7 @@ from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from metrics.storage import MetricsStorage
 from openstack_cloud import openstack_manager
 from openstack_cloud.openstack_manager import MAX_METRICS_FILE_SIZE, METRICS_EXCHANGE_PATH
+from reactive.job import Job, JobDetails, MessageQueueConnectionInfo
 from runner_type import RunnerByHealth, RunnerGithubInfo
 from tests.unit import factories
 
@@ -189,9 +191,21 @@ def openstack_manager_for_reconcile_fixture(
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
 
+    def pool_map(func, iterable):
+        """Mock the map function of the Pool class.
+
+        Simply apply the function to each item in the iterable.
+
+        Args:
+            func: The function to apply to each item in the iterable.
+            iterable: The iterable to apply the function to.
+        """
+        for item in iterable:
+            func(item)
+
     pool_mock = MagicMock()
     pool_mock.__enter__.return_value = pool_mock
-    pool_mock.map.side_effect = lambda func, iterable: func(*iterable)
+    pool_mock.map.side_effect = pool_map
     pool_cls_mock = MagicMock()
     pool_cls_mock.return_value = pool_mock
     monkeypatch.setattr(openstack_manager, "Pool", pool_cls_mock)
@@ -232,6 +246,18 @@ def openstack_manager_for_reconcile_fixture(
     monkeypatch.setattr(openstack_manager.shutil, "chown", MagicMock())
 
     return os_runner_manager
+
+
+@pytest.fixture(name="job_mock")
+def job_mock_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> MagicMock:
+    """Mock the job class."""
+    job_mock = MagicMock(spec=Job)
+    job_mock.get_details = MagicMock()
+    job_mock.get_details.return_value = JobDetails(labels=["test"], run_url="http://example.com")
+    job_mock.from_message_queue = MagicMock(return_value=job_mock)
+    monkeypatch.setattr("openstack_cloud.openstack_manager.Job", job_mock)
+
+    return job_mock
 
 
 def test__create_connection_error(clouds_yaml: dict, openstack_connect_mock: MagicMock):
@@ -990,6 +1016,35 @@ def test_reconcile_ignores_metrics_for_openstack_online_runners(
         metrics_storage_manager=metrics.storage,
         ignore_runners=set(openstack_online_runner_names),
     )
+
+
+@pytest.mark.usefixtures("job_mock")
+def test_reconcile_reactive_mode(
+    openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager,
+    job_mock: MagicMock,
+    caplog: LogCaptureFixture,
+):
+    """
+    arrange: Enable reactive mode and mock the job class to return a job.
+    act: Call reconcile with a random quantity n.
+    assert: The mocked job is picked up n times and the expected log message is present.
+    """
+    count = random.randint(1, 5)
+    openstack_manager_for_reconcile._config.reactive_config = ReactiveConfig(
+        mq_uri="http://example.com"
+    )
+    openstack_manager_for_reconcile.reconcile(quantity=count)
+
+    job_details = job_mock.get_details()
+    job_mock.from_message_queue.assert_called_with(
+        MessageQueueConnectionInfo(
+            uri="http://example.com", queue_name=openstack_manager_for_reconcile.app_name
+        )
+    )
+    assert job_mock.from_message_queue.call_count == count
+    assert job_mock.picked_up.call_count == count
+    assert str(job_details.labels) in caplog.text
+    assert job_details.run_url in caplog.text
 
 
 def test_repo_policy_config(

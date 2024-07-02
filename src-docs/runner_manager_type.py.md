@@ -42,6 +42,7 @@ Configuration of runner manager.
  - <b>`flavor`</b>:  OpenStack flavor for defining the runner resources. 
  - <b>`network`</b>:  OpenStack network for runner network access. 
  - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
+ - <b>`reactive_config`</b>:  The configuration to spawn runners reactively. 
 
 
 

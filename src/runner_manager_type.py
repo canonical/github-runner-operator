@@ -91,7 +91,8 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
 
 
 @dataclass
-class OpenstackRunnerManagerConfig:
+# The instance attributes are all required.
+class OpenstackRunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     """Configuration of runner manager.
 
     Attributes:
@@ -104,6 +105,7 @@ class OpenstackRunnerManagerConfig:
         flavor: OpenStack flavor for defining the runner resources.
         network: OpenStack network for runner network access.
         dockerhub_mirror: URL of dockerhub mirror to use.
+        reactive_config: The configuration to spawn runners reactively.
     """
 
     charm_state: CharmState
@@ -113,6 +115,7 @@ class OpenstackRunnerManagerConfig:
     flavor: str
     network: str
     dockerhub_mirror: str | None
+    reactive_config: ReactiveConfig | None = None
 
 
 @dataclass
