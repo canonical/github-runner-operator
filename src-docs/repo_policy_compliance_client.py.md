@@ -19,12 +19,12 @@ Client for repo policy compliance service.
  - <b>`base_url`</b>:  Base url to the repo policy compliance service. 
  - <b>`token`</b>:  Charm token configured for the repo policy compliance service. 
 
-<a href="../src/repo_policy_compliance_client.py#L23"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/repo_policy_compliance_client.py#L24"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
 ```python
-__init__(session: Session, url: str, charm_token: str) → None
+__init__(url: str, charm_token: str) → None
 ```
 
 Construct the RepoPolicyComplianceClient. 
@@ -33,7 +33,6 @@ Construct the RepoPolicyComplianceClient.
 
 **Args:**
  
- - <b>`session`</b>:  The request Session object for making HTTP requests. 
  - <b>`url`</b>:  Base URL to the repo policy compliance service. 
  - <b>`charm_token`</b>:  Charm token configured for the repo policy compliance service. 
 

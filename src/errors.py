@@ -100,24 +100,28 @@ class LogrotateSetupError(Exception):
     """Represents an error raised when logrotate cannot be setup."""
 
 
-class SharedFilesystemError(Exception):
+class MetricsStorageError(Exception):
+    """Base class for all metrics storage errors."""
+
+
+class SharedFilesystemError(MetricsStorageError):
     """Base class for all shared filesystem errors."""
 
 
-class CreateSharedFilesystemError(SharedFilesystemError):
-    """Represents an error when the shared filesystem could not be created."""
+class CreateMetricsStorageError(MetricsStorageError):
+    """Represents an error when the metrics storage could not be created."""
 
 
-class DeleteSharedFilesystemError(SharedFilesystemError):
-    """Represents an error when the shared filesystem could not be deleted."""
+class DeleteMetricsStorageError(MetricsStorageError):
+    """Represents an error when the metrics storage could not be deleted."""
 
 
-class GetSharedFilesystemError(SharedFilesystemError):
-    """Represents an error when the shared filesystem could not be retrieved."""
+class GetMetricsStorageError(MetricsStorageError):
+    """Represents an error when the metrics storage could not be retrieved."""
 
 
-class QuarantineSharedFilesystemError(SharedFilesystemError):
-    """Represents an error when the shared filesystem could not be quarantined."""
+class QuarantineMetricsStorageError(MetricsStorageError):
+    """Represents an error when the metrics storage could not be quarantined."""
 
 
 class SharedFilesystemMountError(SharedFilesystemError):

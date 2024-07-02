@@ -27,8 +27,8 @@ Represents an error with the data being corrupt.
 
 ---
 
-## <kbd>class</kbd> `CreateSharedFilesystemError`
-Represents an error when the shared filesystem could not be created. 
+## <kbd>class</kbd> `CreateMetricsStorageError`
+Represents an error when the metrics storage could not be created. 
 
 
 
@@ -36,8 +36,8 @@ Represents an error when the shared filesystem could not be created.
 
 ---
 
-## <kbd>class</kbd> `DeleteSharedFilesystemError`
-Represents an error when the shared filesystem could not be deleted. 
+## <kbd>class</kbd> `DeleteMetricsStorageError`
+Represents an error when the metrics storage could not be deleted. 
 
 
 
@@ -45,8 +45,8 @@ Represents an error when the shared filesystem could not be deleted.
 
 ---
 
-## <kbd>class</kbd> `GetSharedFilesystemError`
-Represents an error when the shared filesystem could not be retrieved. 
+## <kbd>class</kbd> `GetMetricsStorageError`
+Represents an error when the metrics storage could not be retrieved. 
 
 
 
@@ -110,6 +110,15 @@ Represents an error raised when logrotate cannot be setup.
 
 ## <kbd>class</kbd> `LxdError`
 Error for executing LXD actions. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `MetricsStorageError`
+Base class for all metrics storage errors. 
 
 
 
@@ -189,8 +198,8 @@ Exception representing an error during instance launch process.
 
 ---
 
-## <kbd>class</kbd> `QuarantineSharedFilesystemError`
-Represents an error when the shared filesystem could not be quarantined. 
+## <kbd>class</kbd> `QuarantineMetricsStorageError`
+Represents an error when the metrics storage could not be quarantined. 
 
 
 

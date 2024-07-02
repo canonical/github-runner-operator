@@ -13,10 +13,16 @@ State of the Charm.
 - **DENYLIST_CONFIG_NAME**
 - **DOCKERHUB_MIRROR_CONFIG_NAME**
 - **GROUP_CONFIG_NAME**
+- **LABELS_CONFIG_NAME**
 - **OPENSTACK_CLOUDS_YAML_CONFIG_NAME**
+- **OPENSTACK_NETWORK_CONFIG_NAME**
+- **OPENSTACK_FLAVOR_CONFIG_NAME**
+- **OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME**
 - **PATH_CONFIG_NAME**
 - **RECONCILE_INTERVAL_CONFIG_NAME**
 - **REACTIVE_MQ_URI_CONFIG_NAME**
+- **REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME**
+- **REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME**
 - **RUNNER_STORAGE_CONFIG_NAME**
 - **TEST_MODE_CONFIG_NAME**
 - **TOKEN_CONFIG_NAME**
@@ -25,7 +31,6 @@ State of the Charm.
 - **VM_CPU_CONFIG_NAME**
 - **VM_MEMORY_CONFIG_NAME**
 - **VM_DISK_CONFIG_NAME**
-- **LABELS_CONFIG_NAME**
 - **COS_AGENT_INTEGRATION_NAME**
 - **DEBUG_SSH_INTEGRATION_NAME**
 - **MONGO_DB_INTEGRATION_NAME**
@@ -33,7 +38,7 @@ State of the Charm.
 
 ---
 
-<a href="../src/charm_state.py#L114"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L134"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `parse_github_path`
 
@@ -60,6 +65,21 @@ Parse GitHub path.
 
 **Returns:**
  GithubPath object representing the GitHub repository, or the GitHub organization with runner group information. 
+
+
+---
+
+## <kbd>class</kbd> `AnyHttpsUrl`
+Represents an HTTPS URL. 
+
+
+
+**Attributes:**
+ 
+ - <b>`allowed_schemes`</b>:  Allowed schemes for the URL. 
+
+
+
 
 
 ---
@@ -111,6 +131,7 @@ Some charm configurations are grouped into other configuration models.
  - <b>`openstack_clouds_yaml`</b>:  The openstack clouds.yaml configuration. 
  - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name. 
  - <b>`reconcile_interval`</b>:  Time between each reconciliation of runners in minutes. 
+ - <b>`repo_policy_compliance`</b>:  Configuration for the repo policy compliance service. 
  - <b>`token`</b>:  GitHub personal access token for GitHub API. 
 
 
@@ -118,7 +139,7 @@ Some charm configurations are grouped into other configuration models.
 
 ---
 
-<a href="../src/charm_state.py#L395"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L468"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_reconcile_interval`
 
@@ -147,7 +168,7 @@ Validate the general charm configuration.
 
 ---
 
-<a href="../src/charm_state.py#L422"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L495"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -186,7 +207,7 @@ Raised when charm config is invalid.
  
  - <b>`msg`</b>:  Explanation of the error. 
 
-<a href="../src/charm_state.py#L227"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L259"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -219,6 +240,7 @@ The charm state.
  - <b>`charm_config`</b>:  Configuration of the juju charm. 
  - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
  - <b>`proxy_config`</b>:  Proxy-related configuration. 
+ - <b>`instance_type`</b>:  The type of instances, e.g., local lxd, openstack. 
  - <b>`reactive_config`</b>:  The charm configuration related to reactive spawning mode. 
  - <b>`runner_config`</b>:  The charm configuration related to runner VM configuration. 
  - <b>`ssh_debug_connections`</b>:  SSH debug connections configuration information. 
@@ -228,7 +250,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L945"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L1109"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -273,7 +295,7 @@ Charm configuration related to GitHub.
 
 ---
 
-<a href="../src/charm_state.py#L150"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L170"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -318,7 +340,7 @@ Represent GitHub organization.
 
 ---
 
-<a href="../src/charm_state.py#L102"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L122"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `path`
 
@@ -351,7 +373,7 @@ Represent GitHub repository.
 
 ---
 
-<a href="../src/charm_state.py#L81"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L101"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `path`
 
@@ -372,7 +394,7 @@ Return a string representing the path.
 ## <kbd>class</kbd> `ImmutableConfigChangedError`
 Represents an error when changing immutable charm state. 
 
-<a href="../src/charm_state.py#L865"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L1007"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -390,6 +412,176 @@ Initialize a new instance of the ImmutableConfigChangedError exception.
 
 
 
+
+
+---
+
+## <kbd>class</kbd> `InstanceType`
+Type of instance for runner. 
+
+
+
+**Attributes:**
+ 
+ - <b>`LOCAL_LXD`</b>:  LXD instance on the local juju machine. 
+ - <b>`OPENSTACK`</b>:  OpenStack instance on a cloud. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `LocalLxdRunnerConfig`
+Runner configurations for local LXD instances. 
+
+
+
+**Attributes:**
+ 
+ - <b>`base_image`</b>:  The ubuntu base image to run the runner virtual machines on. 
+ - <b>`virtual_machines`</b>:  Number of virtual machine-based runner to spawn. 
+ - <b>`virtual_machine_resources`</b>:  Hardware resource used by one virtual machine for a runner. 
+ - <b>`runner_storage`</b>:  Storage to be used as disk for the runner. 
+
+
+
+
+---
+
+<a href="../src/charm_state.py#L730"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `check_virtual_machine_resources`
+
+```python
+check_virtual_machine_resources(
+    vm_resources: VirtualMachineResources
+) → VirtualMachineResources
+```
+
+Validate the virtual_machine_resources field values. 
+
+
+
+**Args:**
+ 
+ - <b>`vm_resources`</b>:  the virtual_machine_resources value to validate. 
+
+
+
+**Raises:**
+ 
+ - <b>`ValueError`</b>:  if an invalid number of cpu was given or invalid memory/disk size was  given. 
+
+
+
+**Returns:**
+ The validated virtual_machine_resources value. 
+
+---
+
+<a href="../src/charm_state.py#L708"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `check_virtual_machines`
+
+```python
+check_virtual_machines(virtual_machines: int) → int
+```
+
+Validate the virtual machines configuration value. 
+
+
+
+**Args:**
+ 
+ - <b>`virtual_machines`</b>:  The virtual machines value to validate. 
+
+
+
+**Raises:**
+ 
+ - <b>`ValueError`</b>:  if a negative integer was passed. 
+
+
+
+**Returns:**
+ Validated virtual_machines value. 
+
+---
+
+<a href="../src/charm_state.py#L656"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `from_charm`
+
+```python
+from_charm(charm: CharmBase) → LocalLxdRunnerConfig
+```
+
+Initialize the config from charm. 
+
+
+
+**Args:**
+ 
+ - <b>`charm`</b>:  The charm instance. 
+
+
+
+**Raises:**
+ 
+ - <b>`CharmConfigInvalidError`</b>:  if an invalid runner charm config has been set on the charm. 
+
+
+
+**Returns:**
+ Local LXD runner config of the charm. 
+
+
+---
+
+## <kbd>class</kbd> `OpenstackRunnerConfig`
+Runner configuration for OpenStack Instances. 
+
+
+
+**Attributes:**
+ 
+ - <b>`virtual_machines`</b>:  Number of virtual machine-based runner to spawn. 
+ - <b>`openstack_flavor`</b>:  flavor on openstack to use for virtual machines. 
+ - <b>`openstack_network`</b>:  Network on openstack to use for virtual machines. 
+ - <b>`build_image`</b>:  Whether to build the image on this juju unit. 
+
+
+
+
+---
+
+<a href="../src/charm_state.py#L605"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `from_charm`
+
+```python
+from_charm(charm: CharmBase) → OpenstackRunnerConfig
+```
+
+Initialize the config from charm. 
+
+
+
+**Args:**
+ 
+ - <b>`charm`</b>:  The charm instance. 
+
+
+
+**Raises:**
+ 
+ - <b>`CharmConfigInvalidError`</b>:  Error with charm configuration virtual-machines not of int  type. 
+
+
+
+**Returns:**
+ Openstack runner config of the charm. 
 
 
 ---
@@ -418,7 +610,7 @@ Return the aproxy address.
 
 ---
 
-<a href="../src/charm_state.py#L659"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L800"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_use_aproxy`
 
@@ -448,7 +640,7 @@ Validate the proxy configuration.
 
 ---
 
-<a href="../src/charm_state.py#L687"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L828"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -486,7 +678,7 @@ Represents the configuration for reactive scheduling.
 
 ---
 
-<a href="../src/charm_state.py#L820"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L962"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -517,89 +709,27 @@ Initialize the ReactiveConfig from charm config and integration data.
 
 ---
 
-## <kbd>class</kbd> `RunnerCharmConfig`
-Runner configurations for the charm. 
+## <kbd>class</kbd> `RepoPolicyComplianceConfig`
+Configuration for the repo policy compliance service. 
 
 
 
 **Attributes:**
  
- - <b>`base_image`</b>:  The ubuntu base image to run the runner virtual machines on. 
- - <b>`virtual_machines`</b>:  Number of virtual machine-based runner to spawn. 
- - <b>`virtual_machine_resources`</b>:  Hardware resource used by one virtual machine for a runner. 
- - <b>`runner_storage`</b>:  Storage to be used as disk for the runner. 
+ - <b>`token`</b>:  Token for the repo policy compliance service. 
+ - <b>`url`</b>:  URL of the repo policy compliance service. 
 
 
 
 
 ---
 
-<a href="../src/charm_state.py#L542"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>classmethod</kbd> `check_virtual_machine_resources`
-
-```python
-check_virtual_machine_resources(
-    vm_resources: VirtualMachineResources
-) → VirtualMachineResources
-```
-
-Validate the virtual_machine_resources field values. 
-
-
-
-**Args:**
- 
- - <b>`vm_resources`</b>:  the virtual_machine_resources value to validate. 
-
-
-
-**Raises:**
- 
- - <b>`ValueError`</b>:  if an invalid number of cpu was given or invalid memory/disk size was  given. 
-
-
-
-**Returns:**
- The validated virtual_machine_resources value. 
-
----
-
-<a href="../src/charm_state.py#L520"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>classmethod</kbd> `check_virtual_machines`
-
-```python
-check_virtual_machines(virtual_machines: int) → int
-```
-
-Validate the virtual machines configuration value. 
-
-
-
-**Args:**
- 
- - <b>`virtual_machines`</b>:  The virtual machines value to validate. 
-
-
-
-**Raises:**
- 
- - <b>`ValueError`</b>:  if a negative integer was passed. 
-
-
-
-**Returns:**
- Validated virtual_machines value. 
-
----
-
-<a href="../src/charm_state.py#L574"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L326"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
 ```python
-from_charm(charm: CharmBase) → RunnerCharmConfig
+from_charm(charm: CharmBase) → RepoPolicyComplianceConfig
 ```
 
 Initialize the config from charm. 
@@ -614,12 +744,12 @@ Initialize the config from charm.
 
 **Raises:**
  
- - <b>`CharmConfigInvalidError`</b>:  if an invalid runner charm config has been set on the charm. 
+ - <b>`CharmConfigInvalidError`</b>:  If an invalid configuration was set. 
 
 
 
 **Returns:**
- Current config of the charm. 
+ Current repo-policy-compliance config. 
 
 
 ---
@@ -657,7 +787,7 @@ SSH connection information for debug workflow.
 
 ---
 
-<a href="../src/charm_state.py#L773"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L914"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -690,7 +820,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L730"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L871"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

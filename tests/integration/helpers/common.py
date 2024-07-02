@@ -4,22 +4,19 @@
 """Utilities for integration test."""
 
 import inspect
-import json
 import logging
 import pathlib
 import subprocess
 import time
 import typing
 import zipfile
-from asyncio import sleep
 from datetime import datetime, timezone
 from functools import partial
-from typing import Any, Awaitable, Callable, ParamSpec, TypeVar, cast
+from typing import Awaitable, Callable, ParamSpec, TypeVar, cast
 
 import github
 import juju.version
 import requests
-import yaml
 from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
@@ -39,7 +36,6 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
 )
-from runner import Runner
 from runner_manager import RunnerManager
 from tests.status_name import ACTIVE
 
@@ -48,10 +44,43 @@ DISPATCH_CRASH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_crash_test.yaml"
 DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME = "workflow_dispatch_failure_test.yaml"
 DISPATCH_WAIT_TEST_WORKFLOW_FILENAME = "workflow_dispatch_wait_test.yaml"
 DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME = "e2e_test_run.yaml"
+DISPATCH_E2E_TEST_RUN_OPENSTACK_WORKFLOW_FILENAME = "e2e_test_run_openstack.yaml"
 
 DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15}
 
 logger = logging.getLogger(__name__)
+
+
+class InstanceHelper(typing.Protocol):
+    """Helper for running commands in instances."""
+
+    async def run_in_instance(
+        self, unit: Unit, command: str, timeout: int | None = None
+    ) -> tuple[int, str | None, str | None]:
+        """Run command in instance.
+
+        Args:
+            unit: Juju unit to execute the command in.
+            command: Command to execute.
+            timeout: Amount of time to wait for the execution.
+        """
+        ...
+
+    async def ensure_charm_has_runner(self, app: Application):
+        """Ensure charm has a runner.
+
+        Args:
+            app: The GitHub Runner Charm app to create the runner for.
+        """
+        ...
+
+    async def get_runner_name(self, unit: Unit) -> str:
+        """Get the name of the runner.
+
+        Args:
+            unit: The GitHub Runner Charm unit to get the runner name for.
+        """
+        ...
 
 
 async def check_runner_binary_exists(unit: Unit) -> bool:
@@ -118,100 +147,6 @@ async def remove_runner_bin(unit: Unit) -> None:
     assert return_code != 0
 
 
-async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> None:
-    """Check for LXD profile of the matching resource config.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-        configs: Configs of the application.
-    """
-    cpu = configs["vm-cpu"]["value"]
-    mem = configs["vm-memory"]["value"]
-    disk = configs["vm-disk"]["value"]
-    resource_profile_name = Runner._get_resource_profile_name(cpu, mem, disk)
-
-    # Verify the profile exists.
-    return_code, stdout, _ = await run_in_unit(unit, "lxc profile list --format json")
-    assert return_code == 0
-    assert stdout is not None
-    profiles = json.loads(stdout)
-    profile_names = [profile["name"] for profile in profiles]
-    assert resource_profile_name in profile_names
-
-    # Verify the profile contains the correct resource settings.
-    return_code, stdout, _ = await run_in_unit(unit, f"lxc profile show {resource_profile_name}")
-    assert return_code == 0
-    assert stdout is not None
-    profile_content = yaml.safe_load(stdout)
-    assert f"{cpu}" == profile_content["config"]["limits.cpu"]
-    assert mem == profile_content["config"]["limits.memory"]
-    assert disk == profile_content["devices"]["root"]["size"]
-
-
-async def get_runner_names(unit: Unit) -> tuple[str, ...]:
-    """Get names of the runners in LXD.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-
-    Returns:
-        Tuple of runner names.
-    """
-    return_code, stdout, _ = await run_in_unit(unit, "lxc list --format json")
-
-    assert return_code == 0
-    assert stdout is not None
-
-    lxc_instance: list[dict[str, str]] = json.loads(stdout)
-    return tuple(runner["name"] for runner in lxc_instance if runner["name"] != "builder")
-
-
-async def wait_till_num_of_runners(unit: Unit, num: int, timeout: int = 10 * 60) -> None:
-    """Wait and check the number of runners.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-        num: Number of runner instances to check for.
-        timeout: Number of seconds to wait for the runners.
-    """
-
-    async def get_lxc_instances() -> None | list[dict]:
-        """Get lxc instances list info.
-
-        Returns:
-            List of lxc instance dictionaries, None if failed to get list.
-        """
-        return_code, stdout, _ = await run_in_unit(unit, "lxc list --format json")
-        if return_code != 0 or not stdout:
-            logger.error("Failed to run lxc list, %s", return_code)
-            return None
-        return json.loads(stdout)
-
-    async def is_desired_num_runners():
-        """Return whether there are desired number of lxc instances running.
-
-        Returns:
-            Whether the desired number of lxc runners have been reached.
-        """
-        lxc_instances = await get_lxc_instances()
-        if lxc_instances is None:
-            return False
-        return len(lxc_instances) == num
-
-    await wait_for(is_desired_num_runners, timeout=timeout, check_interval=30)
-
-    instances = await get_lxc_instances()
-    if not instances:
-        return
-
-    for instance in instances:
-        return_code, stdout, _ = await run_in_unit(unit, f"lxc exec {instance['name']} -- ps aux")
-        assert return_code == 0
-
-        assert stdout is not None
-        assert f"/bin/bash {Runner.runner_script}" in stdout
-
-
 def on_juju_2() -> bool:
     """Check if juju 2 is used.
 
@@ -224,7 +159,7 @@ def on_juju_2() -> bool:
 
 
 async def run_in_unit(
-    unit: Unit, command: str, timeout=None
+    unit: Unit, command: str, timeout=None, assert_on_failure=False, assert_msg=""
 ) -> tuple[int, str | None, str | None]:
     """Run command in juju unit.
 
@@ -234,6 +169,8 @@ async def run_in_unit(
         unit: Juju unit to execute the command in.
         command: Command to execute.
         timeout: Amount of time to wait for the execution.
+        assert_on_failure: Whether to assert on command failure.
+        assert_msg: Message to include in the assertion.
 
     Returns:
         Tuple of return code, stdout and stderr.
@@ -242,111 +179,23 @@ async def run_in_unit(
 
     # For compatibility with juju 2.
     if on_juju_2():
-        return (
+        code, stdout, stderr = (
             int(action.results["Code"]),
             action.results.get("Stdout", None),
             action.results.get("Stderr", None),
         )
-
-    await action.wait()
-    return (
-        action.results["return-code"],
-        action.results.get("stdout", None),
-        action.results.get("stderr", None),
-    )
-
-
-async def run_in_lxd_instance(
-    unit: Unit,
-    name: str,
-    command: str,
-    env: dict[str, str] | None = None,
-    cwd: str | None = None,
-    timeout: int | None = None,
-) -> tuple[int, str | None, str | None]:
-    """Run command in LXD instance of a juju unit.
-
-    Args:
-        unit: Juju unit to execute the command in.
-        name: Name of LXD instance.
-        command: Command to execute.
-        env: Mapping of environment variable name to value.
-        cwd: Work directory of the command.
-        timeout: Amount of time to wait for the execution.
-
-    Returns:
-        Tuple of return code and stdout.
-    """
-    lxc_cmd = f"/snap/bin/lxc exec {name}"
-    if env:
-        for key, value in env.items():
-            lxc_cmd += f"--env {key}={value}"
-    if cwd:
-        lxc_cmd += f" --cwd {cwd}"
-    lxc_cmd += f" -- {command}"
-    return await run_in_unit(unit, lxc_cmd, timeout)
-
-
-async def start_test_http_server(unit: Unit, port: int):
-    """Start test http server.
-
-    Args:
-        unit: The unit to start the test server in.
-        port: Http server port.
-    """
-    await run_in_unit(
-        unit,
-        f"""cat <<EOT >> /etc/systemd/system/test-http-server.service
-[Unit]
-Description=Simple HTTP server for testing
-After=network.target
-
-[Service]
-User=ubuntu
-Group=www-data
-WorkingDirectory=/home/ubuntu
-ExecStart=python3 -m http.server {port}
-EOT""",
-    )
-    await run_in_unit(unit, "/usr/bin/systemctl daemon-reload")
-    await run_in_unit(unit, "/usr/bin/systemctl start test-http-server")
-
-    # Test the HTTP server
-    for _ in range(10):
-        return_code, stdout, _ = await run_in_unit(unit, f"curl http://localhost:{port}")
-        if return_code == 0 and stdout:
-            break
-        await sleep(3)
     else:
-        assert False, "Timeout waiting for HTTP server to start up"
+        await action.wait()
+        code, stdout, stderr = (
+            action.results["return-code"],
+            action.results.get("stdout", None),
+            action.results.get("stderr", None),
+        )
 
+    if assert_on_failure:
+        assert code == 0, f"{assert_msg}: {stderr}"
 
-async def ensure_charm_has_runner(app: Application, model: Model) -> None:
-    """Reconcile the charm to contain one runner.
-
-    Args:
-        app: The GitHub Runner Charm app to create the runner for.
-        model: The machine charm model.
-    """
-    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
-    await reconcile(app=app, model=model)
-    await wait_till_num_of_runners(unit=app.units[0], num=1)
-
-
-async def get_runner_name(unit: Unit) -> str:
-    """Get the name of the runner.
-
-    Expects only one runner to be present.
-
-    Args:
-        unit: The GitHub Runner Charm unit to get the runner name for.
-
-    Returns:
-        The Github runner name deployed in the given unit.
-    """
-    runners = await get_runner_names(unit)
-    assert len(runners) == 1
-    return runners[0]
+    return code, stdout, stderr
 
 
 async def reconcile(app: Application, model: Model) -> None:
@@ -378,6 +227,7 @@ async def deploy_github_runner_charm(
     config: dict | None = None,
     deploy_kwargs: dict | None = None,
     wait_idle: bool = True,
+    use_local_lxd: bool = True,
 ) -> Application:
     """Deploy github-runner charm.
 
@@ -397,11 +247,13 @@ async def deploy_github_runner_charm(
         config: Additional custom config to use.
         deploy_kwargs: Additional model deploy arguments.
         wait_idle: wait for model to become idle.
+        use_local_lxd: Whether to use local LXD or not.
 
     Returns:
         The charm application that was deployed.
     """
-    subprocess.run(["sudo", "modprobe", "br_netfilter"])
+    if use_local_lxd:
+        subprocess.run(["sudo", "modprobe", "br_netfilter"])
 
     await model.set_config(
         {
@@ -420,11 +272,12 @@ async def deploy_github_runner_charm(
         PATH_CONFIG_NAME: path,
         TOKEN_CONFIG_NAME: token,
         VIRTUAL_MACHINES_CONFIG_NAME: 0,
-        DENYLIST_CONFIG_NAME: "10.10.0.0/16",
         TEST_MODE_CONFIG_NAME: "insecure",
         RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
         RUNNER_STORAGE_CONFIG_NAME: runner_storage,
     }
+    if use_local_lxd:
+        default_config[DENYLIST_CONFIG_NAME] = "10.10.0.0/16"
 
     if config:
         default_config.update(config)
@@ -432,7 +285,7 @@ async def deploy_github_runner_charm(
     application = await model.deploy(
         charm_file,
         application_name=app_name,
-        series="jammy",
+        base="ubuntu@22.04",
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
         storage=storage,

@@ -14,46 +14,50 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import PATH_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
-from runner_metrics import PostJobStatus
-from tests.integration.charm_metrics_helpers import (
+from metrics.runner import PostJobStatus
+from tests.integration.helpers.charm_metrics import (
     assert_events_after_reconciliation,
     clear_metrics_log,
     get_metrics_log,
     print_loop_device_info,
 )
-from tests.integration.helpers import (
+from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
+    InstanceHelper,
     dispatch_workflow,
-    ensure_charm_has_runner,
-    get_runner_name,
     reconcile,
     run_in_unit,
 )
+from tests.integration.helpers.lxd import ensure_charm_has_runner, get_runner_name
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
 async def app_fixture(
-    model: Model, app_with_grafana_agent: Application, loop_device: str
+    model: Model, app_for_metric: Application, loop_device: str
 ) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
     Clear the metrics log before each test.
     """
-    unit = app_with_grafana_agent.units[0]
+    unit = app_for_metric.units[0]
     await clear_metrics_log(unit)
     await print_loop_device_info(unit, loop_device)
-    yield app_with_grafana_agent
+
+    yield app_for_metric
 
 
+@pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_charm_issues_runner_installed_metric(app: Application, model: Model):
+async def test_charm_issues_runner_installed_metric(
+    app: Application, model: Model, instance_helper: InstanceHelper
+):
     """
-    arrange: A charm without runners integrated with grafana-agent using the cos-agent integration.
+    arrange: A charm integrated with grafana-agent using the cos-agent integration.
     act: Config the charm to contain one runner.
     assert: The RunnerInstalled metric is logged.
     """
-    await ensure_charm_has_runner(app=app, model=model)
+    await instance_helper.ensure_charm_has_runner(app)
 
     metrics_log = await get_metrics_log(app.units[0])
     log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
@@ -67,13 +71,15 @@ async def test_charm_issues_runner_installed_metric(app: Application, model: Mod
             assert metric_log.get("duration") >= 0
 
 
+@pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_metrics_after_reconciliation(
     model: Model,
     app: Application,
-    forked_github_repository: Repository,
-    forked_github_branch: Branch,
+    github_repository: Repository,
+    test_github_branch: Branch,
+    instance_helper: InstanceHelper,
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
@@ -81,16 +87,15 @@ async def test_charm_issues_metrics_after_reconciliation(
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
         The Reconciliation metric has the post job status set to normal.
     """
-    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-    await ensure_charm_has_runner(app=app, model=model)
+    await instance_helper.ensure_charm_has_runner(app)
 
     # Clear metrics log to make reconciliation event more predictable
     unit = app.units[0]
     await clear_metrics_log(unit)
     await dispatch_workflow(
         app=app,
-        branch=forked_github_branch,
-        github_repository=forked_github_repository,
+        branch=test_github_branch,
+        github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
     )
@@ -100,7 +105,7 @@ async def test_charm_issues_metrics_after_reconciliation(
     await reconcile(app=app, model=model)
 
     await assert_events_after_reconciliation(
-        app=app, github_repository=forked_github_repository, post_job_status=PostJobStatus.NORMAL
+        app=app, github_repository=github_repository, post_job_status=PostJobStatus.NORMAL
     )
 
 

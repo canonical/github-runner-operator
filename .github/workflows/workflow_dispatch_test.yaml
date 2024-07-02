@@ -10,7 +10,7 @@ on:
 
 jobs:
   workflow-dispatch-tests:
-    runs-on: [self-hosted, linux, x64, "${{ inputs.runner }}"]
+    runs-on: [self-hosted, linux, "${{ inputs.runner }}"]
     steps:
       - name: Echo input variable and message
         run: |

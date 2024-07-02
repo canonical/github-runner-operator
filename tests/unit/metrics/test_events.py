@@ -1,4 +1,4 @@
-# Copyright 2024 Canonical Ltd.
+#  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import json
 from pathlib import Path
@@ -6,23 +6,23 @@ from unittest.mock import MagicMock, call
 
 import pytest
 
-import metrics
 from errors import LogrotateSetupError, SubprocessError
+from metrics import events
 
 TEST_LOKI_PUSH_API_URL = "http://loki:3100/api/prom/push"
 
 
-def test_issue_metrics_logs_events(tmp_path: Path):
+def test_issue_events_logs_events(tmp_path: Path):
     """
-    arrange: Change path of the metrics log.
+    arrange: Change path of the events log.
     act: Issue a metric event.
     assert: The expected metric log is created.
     """
-    event = metrics.RunnerInstalled(timestamp=123, flavor="small", duration=456)
+    event = events.RunnerInstalled(timestamp=123, flavor="small", duration=456)
 
-    metrics.issue_event(event)
+    events.issue_event(event)
 
-    assert json.loads(metrics.METRICS_LOG_PATH.read_text()) == {
+    assert json.loads(events.METRICS_LOG_PATH.read_text()) == {
         "event": "runner_installed",
         "timestamp": 123,
         "flavor": "small",
@@ -30,13 +30,13 @@ def test_issue_metrics_logs_events(tmp_path: Path):
     }
 
 
-def test_issue_metrics_exclude_none_values(tmp_path: Path):
+def test_issue_events_exclude_none_values(tmp_path: Path):
     """
-    arrange: Change path of the metrics log.
+    arrange: Change path of the events log.
     act: Issue a metric event with a None value.
     assert: The expected metric log without the None value is created.
     """
-    event = metrics.RunnerStop(
+    event = events.RunnerStop(
         timestamp=123,
         flavor="small",
         workflow="workflow",
@@ -47,9 +47,9 @@ def test_issue_metrics_exclude_none_values(tmp_path: Path):
         job_duration=456,
     )
 
-    metrics.issue_event(event)
+    events.issue_event(event)
 
-    assert json.loads(metrics.METRICS_LOG_PATH.read_text()) == {
+    assert json.loads(events.METRICS_LOG_PATH.read_text()) == {
         "event": "runner_stop",
         "timestamp": 123,
         "flavor": "small",
@@ -67,16 +67,16 @@ def test_setup_logrotate(tmp_path: Path):
     act: Setup logrotate.
     assert: The expected logrotate config is created.
     """
-    metrics.setup_logrotate()
+    events.setup_logrotate()
 
-    expected_logrotate_config = f"""{metrics.METRICS_LOG_PATH} {{
+    expected_logrotate_config = f"""{events.METRICS_LOG_PATH} {{
     rotate 0
     missingok
     notifempty
     create
 }}
 """
-    assert metrics.LOGROTATE_CONFIG.read_text() == expected_logrotate_config
+    assert events.LOGROTATE_CONFIG.read_text() == expected_logrotate_config
 
 
 def test_setup_logrotate_enables_logrotate_timer(lxd_exec_command: MagicMock):
@@ -103,7 +103,7 @@ def test_setup_logrotate_enables_logrotate_timer(lxd_exec_command: MagicMock):
 
     lxd_exec_command.side_effect = side_effect
 
-    metrics.setup_logrotate()
+    events.setup_logrotate()
 
     assert (
         call(["/usr/bin/systemctl", "enable", "logrotate.timer"], check_exit=True)
@@ -126,4 +126,4 @@ def test_setup_logrotate_raises_error(lxd_exec_command: MagicMock):
     )
 
     with pytest.raises(LogrotateSetupError):
-        metrics.setup_logrotate()
+        events.setup_logrotate()
