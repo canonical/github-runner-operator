@@ -8,7 +8,8 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers import reconcile, wait_till_num_of_runners
+from tests.integration.helpers.common import reconcile
+from tests.integration.helpers.lxd import wait_till_num_of_runners
 
 
 @pytest.mark.asyncio

@@ -13,15 +13,15 @@ from charm_state import GithubPath, SSHDebugConnection
 
 @dataclass
 class RunnerByHealth:
-    """Set of runners LXD instance by health state.
+    """Set of runners instance by health state.
 
     Attributes:
         healthy: Runners that are correctly running runner script.
         unhealthy: Runners that are not running runner script.
     """
 
-    healthy: tuple[str]
-    unhealthy: tuple[str]
+    healthy: tuple[str, ...]
+    unhealthy: tuple[str, ...]
 
 
 @dataclass
@@ -85,3 +85,20 @@ class RunnerStatus:
     exist: bool = False
     online: bool = False
     busy: bool = False
+
+
+@dataclass
+class RunnerGithubInfo:
+    """GitHub info of a runner.
+
+    Attributes:
+        runner_name: Name of the runner.
+        runner_id: ID of the runner assigned by GitHub.
+        online: Whether GitHub marks this runner as online.
+        busy: Whether GitHub marks this runner as busy.
+    """
+
+    runner_name: str
+    runner_id: int
+    online: bool
+    busy: bool

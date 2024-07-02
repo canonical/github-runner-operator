@@ -190,7 +190,7 @@ def test_common_install_code(
     act: Fire install/upgrade event.
     assert: Common install commands are run on the mock.
     """
-    monkeypatch.setattr("charm.metrics.setup_logrotate", setup_logrotate := MagicMock())
+    monkeypatch.setattr("charm.metric_events.setup_logrotate", setup_logrotate := MagicMock())
     monkeypatch.setattr(
         "runner_manager.RunnerManager.schedule_build_runner_image",
         schedule_build_runner_image := MagicMock(),
@@ -309,7 +309,7 @@ def test_on_install_failure(hook: str, harness: Harness, monkeypatch: pytest.Mon
     assert: Charm goes into error state in both cases.
     """
     monkeypatch.setattr(
-        "charm.metrics.setup_logrotate", setup_logrotate := unittest.mock.MagicMock()
+        "charm.metric_events.setup_logrotate", setup_logrotate := unittest.mock.MagicMock()
     )
 
     setup_logrotate.side_effect = LogrotateSetupError("Failed to setup logrotate")
@@ -607,14 +607,15 @@ class TestCharm(unittest.TestCase):
         )
 
     @patch("charm.RunnerManager")
+    @patch("charm.OpenstackRunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
-    def test_on_config_changed_openstack_clouds_yaml(self, run, wt, mkdir, rm):
+    def test_on_config_changed_openstack_clouds_yaml(self, run, wt, mkdir, orm, rm):
         """
         arrange: Setup mocked charm.
         act: Fire config changed event to use openstack-clouds-yaml.
-        assert: Charm is in blocked state.
+        assert: Charm is in maintenance state.
         """
         harness = Harness(GithubRunnerCharm)
         cloud_yaml = {
@@ -643,10 +644,7 @@ class TestCharm(unittest.TestCase):
 
         harness.charm.on.config_changed.emit()
 
-        assert harness.charm.unit.status == BlockedStatus(
-            "OpenStack integration is not supported yet. "
-            "Please remove the openstack-clouds-yaml config."
-        )
+        assert harness.charm.unit.status == MaintenanceStatus()
 
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")

@@ -39,8 +39,9 @@ from charm_state import (
     GithubOrg,
     GithubRepo,
     ImmutableConfigChangedError,
+    LocalLxdRunnerConfig,
+    OpenstackRunnerConfig,
     ProxyConfig,
-    RunnerCharmConfig,
     RunnerStorage,
     SSHDebugConnection,
     UnsupportedArchitectureError,
@@ -548,7 +549,7 @@ def test_check_virtual_machines_invalid(virtual_machines):
     assert: Verify that the method raises ValueError with the correct message.
     """
     with pytest.raises(ValueError) as exc_info:
-        RunnerCharmConfig.check_virtual_machines(virtual_machines)
+        LocalLxdRunnerConfig.check_virtual_machines(virtual_machines)
     assert (
         str(exc_info.value)
         == "The virtual-machines configuration needs to be greater or equal to 0"
@@ -564,7 +565,7 @@ def test_check_virtual_machines_valid(virtual_machines):
     act: Call check_virtual_machines method with the provided value.
     assert: Verify that the method returns the same value.
     """
-    result = RunnerCharmConfig.check_virtual_machines(virtual_machines)
+    result = LocalLxdRunnerConfig.check_virtual_machines(virtual_machines)
 
     assert result == virtual_machines
 
@@ -584,7 +585,7 @@ def test_check_virtual_machine_resources_invalid(vm_resources):
     assert: Verify that the method raises ValueError.
     """
     with pytest.raises(ValueError):
-        RunnerCharmConfig.check_virtual_machine_resources(vm_resources)
+        LocalLxdRunnerConfig.check_virtual_machine_resources(vm_resources)
 
 
 @pytest.mark.parametrize(
@@ -606,7 +607,7 @@ def test_check_virtual_machine_resources_valid(vm_resources, expected_result):
     act: Call check_virtual_machine_resources method with the provided value.
     assert: Verify that the method returns the same value.
     """
-    result = RunnerCharmConfig.check_virtual_machine_resources(vm_resources)
+    result = LocalLxdRunnerConfig.check_virtual_machine_resources(vm_resources)
 
     assert result == expected_result
 
@@ -621,7 +622,7 @@ def test_runner_charm_config_from_charm_invalid_base_image():
     mock_charm.config[BASE_IMAGE_CONFIG_NAME] = "invalid"
 
     with pytest.raises(CharmConfigInvalidError) as exc_info:
-        RunnerCharmConfig.from_charm(mock_charm)
+        LocalLxdRunnerConfig.from_charm(mock_charm)
     assert str(exc_info.value) == "Invalid base image"
 
 
@@ -642,7 +643,7 @@ def test_runner_charm_config_from_charm_invalid_storage_config():
     }
 
     with pytest.raises(CharmConfigInvalidError) as exc_info:
-        RunnerCharmConfig.from_charm(mock_charm)
+        LocalLxdRunnerConfig.from_charm(mock_charm)
     assert "Invalid runner-storage config" in str(exc_info.value)
 
 
@@ -663,7 +664,7 @@ def test_runner_charm_config_from_charm_invalid_cpu_config():
     }
 
     with pytest.raises(CharmConfigInvalidError) as exc_info:
-        RunnerCharmConfig.from_charm(mock_charm)
+        LocalLxdRunnerConfig.from_charm(mock_charm)
     assert str(exc_info.value) == "Invalid vm-cpu configuration"
 
 
@@ -684,7 +685,7 @@ def test_runner_charm_config_from_charm_invalid_virtual_machines_config():
     }
 
     with pytest.raises(CharmConfigInvalidError) as exc_info:
-        RunnerCharmConfig.from_charm(mock_charm)
+        LocalLxdRunnerConfig.from_charm(mock_charm)
     assert str(exc_info.value) == "The virtual-machines configuration must be int"
 
 
@@ -692,7 +693,8 @@ def test_runner_charm_config_from_charm_valid():
     """
     arrange: Create a mock CharmBase instance with valid configuration.
     act: Call from_charm method with the mock CharmBase instance.
-    assert: Verify that the method returns a RunnerCharmConfig instance with the expected values.
+    assert: Verify that the method returns a LocalLxdRunnerConfig instance with the expected
+        values.
     """
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config = {
@@ -704,7 +706,7 @@ def test_runner_charm_config_from_charm_valid():
         VM_DISK_CONFIG_NAME: "20GiB",
     }
 
-    result = RunnerCharmConfig.from_charm(mock_charm)
+    result = LocalLxdRunnerConfig.from_charm(mock_charm)
 
     assert result.base_image == BaseImage.JAMMY
     assert result.runner_storage == RunnerStorage("memory")
@@ -923,6 +925,7 @@ def mock_charm_state_data():
             "virtual_machines": 2,
             "runner_storage": "memory",
         },
+        "instance_type": "local-lxd",
         "ssh_debug_connections": [
             {"host": "10.1.2.4", "port": 22},
         ],
@@ -1052,7 +1055,11 @@ class MockModel(BaseModel):
             ValidationError([], MockModel),
         ),
         (ProxyConfig, "from_charm", ValueError),
-        (CharmConfig, "from_charm", ImmutableConfigChangedError("Immutable config changed")),
+        (
+            CharmState,
+            "_check_immutable_config_change",
+            ImmutableConfigChangedError("Immutable config changed"),
+        ),
         (CharmConfig, "from_charm", ValidationError([], MockModel)),
         (CharmConfig, "from_charm", ValueError),
         (charm_state, "_get_supported_arch", UnsupportedArchitectureError(arch="testarch")),
@@ -1069,8 +1076,13 @@ def test_charm_state_from_charm_invalid_cases(
     """
     mock_charm = MockGithubRunnerCharmFactory()
     monkeypatch.setattr(ProxyConfig, "from_charm", MagicMock())
-    monkeypatch.setattr(CharmConfig, "from_charm", MagicMock())
-    monkeypatch.setattr(RunnerCharmConfig, "from_charm", MagicMock())
+    mock_charm_config = MagicMock()
+    mock_charm_config.openstack_clouds_yaml = None
+    mock_charm_config_from_charm = MagicMock()
+    mock_charm_config_from_charm.return_value = mock_charm_config
+    monkeypatch.setattr(CharmConfig, "from_charm", mock_charm_config_from_charm)
+    monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
+    monkeypatch.setattr(LocalLxdRunnerConfig, "from_charm", MagicMock())
     monkeypatch.setattr(charm_state, "_get_supported_arch", MagicMock())
     monkeypatch.setattr(SSHDebugConnection, "from_charm", MagicMock())
     monkeypatch.setattr(module, target, MagicMock(side_effect=exc))
@@ -1088,7 +1100,8 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     mock_charm = MockGithubRunnerCharmFactory()
     monkeypatch.setattr(ProxyConfig, "from_charm", MagicMock())
     monkeypatch.setattr(CharmConfig, "from_charm", MagicMock())
-    monkeypatch.setattr(RunnerCharmConfig, "from_charm", MagicMock())
+    monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
+    monkeypatch.setattr(LocalLxdRunnerConfig, "from_charm", MagicMock())
     monkeypatch.setattr(CharmState, "_check_immutable_config_change", MagicMock())
     monkeypatch.setattr(charm_state, "_get_supported_arch", MagicMock())
     monkeypatch.setattr(SSHDebugConnection, "from_charm", MagicMock())

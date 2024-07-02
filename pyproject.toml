@@ -12,9 +12,13 @@ branch = true
 omit = [
     # Contains interface for calling LXD. Tested in integration tests and end to end tests.
     "src/lxd.py",
-    # Contains interface for calling repo policy compliance service. Tested in integration test 
+    # Contains interface for calling repo policy compliance service. Tested in integration test
     # and end to end tests.
     "src/repo_policy_compliance_client.py",
+    # 2024/04/17: These files are pending a major refactor. The refactor includes a RunnerManager
+    # interface class which will include a complete re-organization of the code in these files.
+    "src/runner.py",
+    "src/runner_manager.py",
 ]
 
 [tool.coverage.report]
@@ -24,6 +28,9 @@ show_missing = true
 [tool.pytest.ini_options]
 minversion = "6.0"
 log_cli_level = "INFO"
+markers = [
+    "openstack: mark a test as applicable for openstack cloud",
+]
 
 [tool.pylint.'MESSAGES CONTROL']
 extension-pkg-whitelist = "pydantic"

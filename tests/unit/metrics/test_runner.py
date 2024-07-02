@@ -7,35 +7,27 @@ from unittest.mock import MagicMock, call
 
 import pytest
 
-import metrics
-import metrics_type
-import runner_metrics
-import shared_fs
-from errors import DeleteSharedFilesystemError, IssueMetricEventError
+from errors import DeleteMetricsStorageError, IssueMetricEventError
 from github_type import JobConclusion
-from metrics import RunnerStart, RunnerStop
-from runner_metrics import (
+from metrics import events as metric_events
+from metrics import runner as runner_metrics
+from metrics import type as metrics_type
+from metrics.events import RunnerStart, RunnerStop
+from metrics.runner import (
     RUNNER_INSTALLED_TS_FILE_NAME,
     PostJobMetrics,
     PreJobMetrics,
     RunnerMetrics,
 )
+from metrics.storage import MetricsStorage
 
 
 @pytest.fixture(autouse=True, name="issue_event_mock")
 def issue_event_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     """Mock the issue_event function."""
     issue_event_mock = MagicMock()
-    monkeypatch.setattr("metrics.issue_event", issue_event_mock)
+    monkeypatch.setattr("metrics.events.issue_event", issue_event_mock)
     return issue_event_mock
-
-
-@pytest.fixture(autouse=True, name="shared_fs_mock")
-def shared_fs_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
-    """Mock the issue_event function."""
-    shared_fs_mock = MagicMock(spec=shared_fs)
-    monkeypatch.setattr("runner_metrics.shared_fs", shared_fs_mock)
-    return shared_fs_mock
 
 
 @pytest.fixture(name="runner_fs_base")
@@ -89,7 +81,7 @@ def _create_runner_files(
     pre_job_data: str | bytes | None,
     post_job_data: str | bytes | None,
     installed_timestamp: str | bytes | None,
-) -> shared_fs.SharedFilesystem:
+) -> MetricsStorage:
     """Create runner files inside shared fs.
 
     If the data is bytes, the file is written as binary, otherwise as text.
@@ -132,10 +124,10 @@ def _create_runner_files(
             runner_fs.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).write_text(
                 installed_timestamp, encoding="utf-8"
             )
-    return shared_fs.SharedFilesystem(path=runner_fs, runner_name=runner_name)
+    return MetricsStorage(path=runner_fs, runner_name=runner_name)
 
 
-def test_extract(shared_fs_mock: MagicMock, runner_fs_base: Path):
+def test_extract(runner_fs_base: Path):
     """
     arrange: \
         1. A runner with all metrics inside shared fs. \
@@ -174,15 +166,20 @@ def test_extract(shared_fs_mock: MagicMock, runner_fs_base: Path):
     # 3. Runner has no metrics except installed_timestamp inside shared fs
     runner3_fs = _create_runner_files(runner_fs_base, secrets.token_hex(16), None, None, "5")
 
-    shared_fs_mock.list_all.return_value = [runner1_fs, runner2_fs, runner3_fs]
+    metrics_storage_manager = MagicMock()
+    metrics_storage_manager.list_all.return_value = [runner1_fs, runner2_fs, runner3_fs]
 
-    extracted_metrics = list(runner_metrics.extract(ignore_runners=set()))
+    extracted_metrics = list(
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
 
     assert extracted_metrics == [
         runner_all_metrics,
         runner_without_post_job_metrics,
     ]
-    shared_fs_mock.delete.assert_has_calls(
+    metrics_storage_manager.delete.assert_has_calls(
         [
             ((runner1_fs.runner_name,),),
             ((runner2_fs.runner_name,),),
@@ -191,7 +188,7 @@ def test_extract(shared_fs_mock: MagicMock, runner_fs_base: Path):
     )
 
 
-def test_extract_ignores_runners(shared_fs_mock: MagicMock, runner_fs_base: Path):
+def test_extract_ignores_runners(runner_fs_base: Path):
     """
     arrange: Runners with metrics.
     act: Call extract with some runners on ignore list.
@@ -214,16 +211,21 @@ def test_extract_ignores_runners(shared_fs_mock: MagicMock, runner_fs_base: Path
         )
         runner_filesystems.append(runner_fs)
 
-    shared_fs_mock.list_all.return_value = runner_filesystems
+    metrics_storage_manager = MagicMock()
+    metrics_storage_manager.list_all.return_value = runner_filesystems
 
     ignore_runners = {runner_filesystems[0].runner_name, runner_filesystems[2].runner_name}
 
-    extracted_metrics = list(runner_metrics.extract(ignore_runners))
+    extracted_metrics = list(
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=ignore_runners
+        )
+    )
 
     assert extracted_metrics == runner_metrics_data[1:2] + runner_metrics_data[3:]
 
 
-def test_extract_corrupt_data(runner_fs_base: Path, shared_fs_mock: MagicMock):
+def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: \
         1. A runner with non-compliant pre-job metrics inside shared fs. \
@@ -245,11 +247,19 @@ def test_extract_corrupt_data(runner_fs_base: Path, shared_fs_mock: MagicMock):
         runner_metrics_data.post_job.json(),
         str(runner_metrics_data.installed_timestamp),
     )
-    shared_fs_mock.list_all.return_value = [runner_fs]
+    metrics_storage_manager = MagicMock()
+    metrics_storage_manager.list_all.return_value = [runner_fs]
+    move_to_quarantine_mock = MagicMock()
+    monkeypatch.setattr(runner_metrics, "move_to_quarantine", move_to_quarantine_mock)
 
-    extracted_metrics = list(runner_metrics.extract(ignore_runners=set()))
+    extracted_metrics = list(
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
+
     assert not extracted_metrics
-    shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
 
     # 2. Runner has non-json post-job metrics inside shared fs
     runner_name = secrets.token_hex(16)
@@ -262,11 +272,15 @@ def test_extract_corrupt_data(runner_fs_base: Path, shared_fs_mock: MagicMock):
         b"\x00",
         str(runner_metrics_data.installed_timestamp),
     )
-    shared_fs_mock.list_all.return_value = [runner_fs]
+    metrics_storage_manager.list_all.return_value = [runner_fs]
 
-    extracted_metrics = list(runner_metrics.extract(ignore_runners=set()))
+    extracted_metrics = list(
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
     assert not extracted_metrics
-    shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
 
     # 3. Runner has json post-job metrics but a json array (not object) inside shared fs.
     runner_name = secrets.token_hex(16)
@@ -279,11 +293,15 @@ def test_extract_corrupt_data(runner_fs_base: Path, shared_fs_mock: MagicMock):
         json.dumps([runner_metrics_data.post_job.dict()]),
         str(runner_metrics_data.installed_timestamp),
     )
-    shared_fs_mock.list_all.return_value = [runner_fs]
+    metrics_storage_manager.list_all.return_value = [runner_fs]
 
-    extracted_metrics = list(runner_metrics.extract(ignore_runners=set()))
+    extracted_metrics = list(
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
     assert not extracted_metrics
-    shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
 
     # 4. Runner has not a timestamp in installed_timestamp file inside shared fs
     runner_name = secrets.token_hex(16)
@@ -296,16 +314,20 @@ def test_extract_corrupt_data(runner_fs_base: Path, shared_fs_mock: MagicMock):
         runner_metrics_data.post_job.json(),
         b"\x00",
     )
-    shared_fs_mock.list_all.return_value = [runner_fs]
+    metrics_storage_manager.list_all.return_value = [runner_fs]
 
-    extracted_metrics = list(runner_metrics.extract(ignore_runners=set()))
+    extracted_metrics = list(
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
     assert not extracted_metrics
 
-    shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
 
 
 def test_extract_raises_error_for_too_large_files(
-    runner_fs_base: Path, shared_fs_mock: MagicMock, issue_event_mock: MagicMock
+    runner_fs_base: Path, issue_event_mock: MagicMock, monkeypatch: pytest.MonkeyPatch
 ):
     """
     arrange: Runners with too large metric and timestamp files.
@@ -327,12 +349,21 @@ def test_extract_raises_error_for_too_large_files(
         runner_metrics_data.post_job.json(),
         str(runner_metrics_data.installed_timestamp),
     )
-    shared_fs_mock.list_all.return_value = [runner_fs]
+    metrics_storage_manager = MagicMock()
 
-    extracted_metrics = list(runner_metrics.extract(ignore_runners=set()))
+    metrics_storage_manager.list_all.return_value = [runner_fs]
+
+    move_to_quarantine_mock = MagicMock()
+    monkeypatch.setattr(runner_metrics, "move_to_quarantine", move_to_quarantine_mock)
+
+    extracted_metrics = list(
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
     assert not extracted_metrics
 
-    shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
 
     # 2. Runner has a post-job metrics file that is too large
     runner_name = secrets.token_hex(16)
@@ -347,12 +378,17 @@ def test_extract_raises_error_for_too_large_files(
         invalid_post_job_data.json(),
         str(runner_metrics_data.installed_timestamp),
     )
-    shared_fs_mock.list_all.return_value = [runner_fs]
+    metrics_storage_manager.list_all.return_value = [runner_fs]
 
-    extracted_metrics = list(runner_metrics.extract(ignore_runners=set()))
+    extracted_metrics = list(
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
+
     assert not extracted_metrics
 
-    shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
 
     # 3. Runner has an installed_timestamp file that is too large
     runner_name = secrets.token_hex(16)
@@ -367,14 +403,19 @@ def test_extract_raises_error_for_too_large_files(
         runner_metrics_data.post_job.json(),
         invalid_ts,
     )
-    shared_fs_mock.list_all.return_value = [runner_fs]
+    metrics_storage_manager.list_all.return_value = [runner_fs]
 
-    extracted_metrics = list(runner_metrics.extract(ignore_runners=set()))
+    extracted_metrics = list(
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
+
     assert not extracted_metrics
-    shared_fs_mock.move_to_quarantine.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
 
 
-def test_extract_ignores_filesystems_without_ts(runner_fs_base: Path, shared_fs_mock: MagicMock):
+def test_extract_ignores_filesystems_without_ts(runner_fs_base: Path):
     """
     arrange: A runner without installed_timestamp file inside shared fs.
     act: Call extract.
@@ -401,16 +442,20 @@ def test_extract_ignores_filesystems_without_ts(runner_fs_base: Path, shared_fs_
         runner_metrics_data.post_job.json(),
         None,
     )
-    shared_fs_mock.list_all.return_value = [runner_fs]
+    metrics_storage_manager = MagicMock()
+    metrics_storage_manager.list_all.return_value = [runner_fs]
 
-    extracted_metrics = list(runner_metrics.extract(ignore_runners=set()))
+    extracted_metrics = list(
+        runner_metrics.extract(
+            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        )
+    )
     assert not extracted_metrics
-    shared_fs_mock.delete.assert_called_once_with(runner_fs.runner_name)
+    metrics_storage_manager.delete.assert_called_once_with(runner_fs.runner_name)
 
 
 def test_extract_ignores_failure_on_shared_fs_cleanup(
     runner_fs_base: Path,
-    shared_fs_mock: MagicMock,
     caplog: pytest.LogCaptureFixture,
 ):
     """
@@ -427,13 +472,17 @@ def test_extract_ignores_failure_on_shared_fs_cleanup(
         runner_metrics_data.post_job.json(),
         str(runner_metrics_data.installed_timestamp),
     )
-    shared_fs_mock.list_all.return_value = [runner_fs]
+    metrics_storage_manager = MagicMock()
 
-    shared_fs_mock.delete.side_effect = DeleteSharedFilesystemError(
+    metrics_storage_manager.list_all.return_value = [runner_fs]
+
+    metrics_storage_manager.delete.side_effect = DeleteMetricsStorageError(
         "Failed to delete shared filesystem"
     )
 
-    extracted_metrics = runner_metrics.extract(ignore_runners=set())
+    extracted_metrics = runner_metrics.extract(
+        metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+    )
     assert list(extracted_metrics) == [runner_metrics_data]
 
     assert "Failed to delete shared filesystem" in caplog.text
@@ -455,7 +504,7 @@ def test_issue_events(issue_event_mock: MagicMock):
     issued_metrics = runner_metrics.issue_events(
         runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
     )
-    assert issued_metrics == {metrics.RunnerStart, metrics.RunnerStop}
+    assert issued_metrics == {metric_events.RunnerStart, metric_events.RunnerStop}
     issue_event_mock.assert_has_calls(
         [
             # 1. Runner
@@ -488,6 +537,79 @@ def test_issue_events(issue_event_mock: MagicMock):
     )
 
 
+def test_issue_events_pre_job_before_runner_installed(issue_event_mock: MagicMock):
+    """
+    arrange: A runner with pre-job timestamp smaller than installed timestamp.
+    act: Call issue_events.
+    assert: RunnerStart metric is issued with idle set to 0.
+    """
+    runner_name = secrets.token_hex(16)
+    runner_metrics_data = _create_metrics_data(runner_name)
+    runner_metrics_data.pre_job.timestamp = 0
+
+    flavor = secrets.token_hex(16)
+    job_metrics = metrics_type.GithubJobMetrics(
+        queue_duration=3600, conclusion=JobConclusion.SUCCESS
+    )
+    issued_metrics = runner_metrics.issue_events(
+        runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
+    )
+    assert metric_events.RunnerStart in issued_metrics
+    issue_event_mock.assert_has_calls(
+        [
+            call(
+                RunnerStart(
+                    timestamp=runner_metrics_data.pre_job.timestamp,
+                    flavor=flavor,
+                    workflow=runner_metrics_data.pre_job.workflow,
+                    repo=runner_metrics_data.pre_job.repository,
+                    github_event=runner_metrics_data.pre_job.event,
+                    idle=0,
+                    queue_duration=job_metrics.queue_duration,
+                )
+            )
+        ]
+    )
+
+
+def test_issue_events_post_job_before_pre_job(issue_event_mock: MagicMock):
+    """
+    arrange: A runner with post-job timestamp smaller than pre-job timestamps.
+    act: Call issue_events.
+    assert: job_duration is set to zero.
+    """
+    runner_name = secrets.token_hex(16)
+    runner_metrics_data = _create_metrics_data(runner_name)
+    runner_metrics_data.post_job = PostJobMetrics(
+        timestamp=0, status=runner_metrics.PostJobStatus.NORMAL
+    )
+    flavor = secrets.token_hex(16)
+    job_metrics = metrics_type.GithubJobMetrics(
+        queue_duration=3600, conclusion=JobConclusion.SUCCESS
+    )
+    issued_metrics = runner_metrics.issue_events(
+        runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
+    )
+
+    assert metric_events.RunnerStop in issued_metrics
+    issue_event_mock.assert_has_calls(
+        [
+            call(
+                RunnerStop(
+                    timestamp=runner_metrics_data.post_job.timestamp,
+                    flavor=flavor,
+                    workflow=runner_metrics_data.pre_job.workflow,
+                    repo=runner_metrics_data.pre_job.repository,
+                    github_event=runner_metrics_data.pre_job.event,
+                    status=runner_metrics_data.post_job.status,
+                    job_duration=0,
+                    job_conclusion=job_metrics.conclusion,
+                )
+            ),
+        ]
+    )
+
+
 def test_issue_events_no_post_job_metrics(issue_event_mock: MagicMock):
     """
     arrange: A runner without  post-job metrics.
@@ -504,7 +626,7 @@ def test_issue_events_no_post_job_metrics(issue_event_mock: MagicMock):
     issued_metrics = runner_metrics.issue_events(
         runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
     )
-    assert issued_metrics == {metrics.RunnerStart}
+    assert issued_metrics == {metric_events.RunnerStart}
 
     issue_event_mock.assert_called_once_with(
         RunnerStart(

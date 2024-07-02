@@ -5,11 +5,99 @@ set -e
 # Write .env contents
 su - ubuntu -c 'cd ~/actions-runner && echo "{{ env_contents }}" > .env'
 
+{% if aproxy_address %}
+snap install aproxy --edge
+snap set aproxy proxy={{ aproxy_address }} listen=:54969
+cat << EOF > /etc/nftables.conf
+define default-ip = $(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
+define private-ips = { 10.0.0.0/8, 127.0.0.1/8, 172.16.0.0/12, 192.168.0.0/16 }
+table ip aproxy
+flush table ip aproxy
+table ip aproxy {
+      chain prerouting {
+              type nat hook prerouting priority dstnat; policy accept;
+              ip daddr != \$private-ips tcp dport { 80, 443 } counter dnat to \$default-ip:54969
+      }
+
+      chain output {
+              type nat hook output priority -100; policy accept;
+              ip daddr != \$private-ips tcp dport { 80, 443 } counter dnat to \$default-ip:54969
+      }
+}
+EOF
+systemctl enable nftables.service
+nft -f /etc/nftables.conf
+{% endif %}
+
+adduser ubuntu lxd
+adduser ubuntu adm
+
+{% if dockerhub_mirror %}
+echo "{\"registry-mirrors\": [\"{{ dockerhub_mirror }}\"]}" > /etc/docker/daemon.json
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+{% endif %}
+
+# Prepare metrics
+su - ubuntu -c 'mkdir "{{ metrics_exchange_path }}"'
+
+# Insert pre-job script
+cat << 'EOF' | su - ubuntu -c 'tee /home/ubuntu/actions-runner/pre-job.sh'
+{{ pre_job_contents | safe }}
+EOF
+
 # Create the runner and start the configuration experience
+{% if runner_group %}
+su - ubuntu -c "cd ~/actions-runner && ./config.sh \
+    --url {{ github_url }} \
+    --runnergroup '{{ runner_group }}' \
+    --token {{ token }} --ephemeral --unattended \
+    --labels {{ instance_labels }} --name {{ instance_name }}"
+{% else %}
 su - ubuntu -c "cd ~/actions-runner && ./config.sh \
     --url {{ github_url }} \
     --token {{ token }} --ephemeral --unattended \
     --labels {{ instance_labels }} --name {{ instance_name }}"
+{% endif %}
+
+
+write_post_metrics(){
+    # Expects the exit code of the run.sh script as the first argument.
+
+    # Only write the post-job metrics if the file does not already exist - which may indicate
+    # that the job has failed inside pre-job.
+
+    if [ -f {{ metrics_exchange_path}}/post-job-metrics.json ]; then
+        return
+    fi
+
+    timestamp=$(date +%s)
+
+    # Write the post-job metrics using status abnormal and exit code if exit code is non-zero
+    if [ "$1" != "0" ]; then
+        sudo -g ubuntu -u ubuntu jq -n \
+          --argjson timestamp "$timestamp" \
+          --arg status "abnormal" \
+          --argjson exit_code "$1" \
+          '{
+            "timestamp": $timestamp,
+            "status": $status,
+            "status_info": {code: $exit_code}
+          }' > "{{ metrics_exchange_path}}/post-job-metrics.json"
+        return
+    else
+        # If exit code is zero, write the post-job metrics using status normal
+        sudo -g ubuntu -u ubuntu jq -n \
+          --argjson timestamp "$timestamp" \
+          '{
+            "timestamp": $timestamp,
+            "status": "normal"
+          }' > "{{ metrics_exchange_path }}/post-job-metrics.json"
+    fi
+}
 
 # Run runner
-su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh"
+# We want to capture the exit code of the run.sh script and write the post-job metrics.
+(set +e; su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh"; write_post_metrics $?)
+
+su - ubuntu -c "touch /home/ubuntu/run-completed"

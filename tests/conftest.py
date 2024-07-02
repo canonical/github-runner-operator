@@ -57,49 +57,67 @@ def pytest_addoption(parser: Parser):
         action="store",
         help="The OpenStack clouds yaml file for the charm to use.",
     )
+    parser.addoption(
+        "--use-existing-app",
+        action="store",
+        help="The existing app to use."
+        "This will skip deployment of the charm and use the existing app."
+        "This option is useful for local testing."
+        "It is expected that the existing app is already integrated with other apps "
+        "like grafana-agent, etc. ",
+    )
     # Private endpoint options
     parser.addoption(
         "--openstack-network-name",
         action="store",
         help="The Openstack network to create testing instances under.",
+        default=None,
     )
     parser.addoption(
         "--openstack-flavor-name",
         action="store",
         help="The Openstack flavor to create testing instances with.",
+        default=None,
     )
     parser.addoption(
         "--openstack-auth-url",
         action="store",
         help="The URL to Openstack authentication service, i.e. keystone.",
+        default=None,
     )
     parser.addoption(
         "--openstack-password",
         action="store",
         help="The password to authenticate to Openstack service.",
+        default=None,
     )
     parser.addoption(
         "--openstack-project-domain-name",
         action="store",
         help="The Openstack project domain name to use.",
+        default=None,
     )
     parser.addoption(
         "--openstack-project-name",
         action="store",
         help="The Openstack project name to use.",
+        default=None,
     )
     parser.addoption(
         "--openstack-user-domain-name",
         action="store",
         help="The Openstack user domain name to use.",
+        default=None,
     )
     parser.addoption(
         "--openstack-username",
         action="store",
         help="The Openstack user to authenticate as.",
+        default=None,
     )
     parser.addoption(
         "--openstack-region-name",
         action="store",
         help="The Openstack region to authenticate to.",
+        default=None,
     )
