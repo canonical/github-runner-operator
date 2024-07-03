@@ -4,6 +4,7 @@
 """Test cases for GithubRunnerCharm."""
 import os
 import secrets
+import typing
 import unittest
 import urllib.error
 from pathlib import Path
@@ -11,10 +12,10 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 import yaml
-from ops.model import BlockedStatus, MaintenanceStatus
+from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
 
-from charm import GithubRunnerCharm
+from charm import GithubRunnerCharm, catch_action_errors, catch_charm_errors
 from charm_state import (
     GROUP_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
@@ -28,10 +29,20 @@ from charm_state import (
     Arch,
     GithubOrg,
     GithubRepo,
+    InstanceType,
+    OpenstackImage,
     ProxyConfig,
     VirtualMachineResources,
 )
-from errors import LogrotateSetupError, RunnerError, SubprocessError
+from errors import (
+    ConfigurationError,
+    LogrotateSetupError,
+    MissingRunnerBinaryError,
+    OpenStackUnauthorizedError,
+    RunnerError,
+    SubprocessError,
+    TokenError,
+)
 from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
@@ -697,3 +708,187 @@ class TestCharm(unittest.TestCase):
         harness.charm._on_flush_runners_action(mock_event)
         mock_event.set_results.assert_called()
         mock_event.reset_mock()
+
+
+@pytest.mark.parametrize(
+    "exception, expected_status",
+    [
+        pytest.param(ConfigurationError, BlockedStatus, id="charm config error"),
+        pytest.param(TokenError, BlockedStatus, id="github token error"),
+        pytest.param(MissingRunnerBinaryError, MaintenanceStatus, id="runner binary error"),
+        pytest.param(OpenStackUnauthorizedError, BlockedStatus, id="openstack auth error"),
+    ],
+)
+def test_catch_charm_errors(
+    exception: typing.Type[Exception], expected_status: typing.Type[StatusBase]
+):
+    """
+    arrange: given mock charm event handler decorated with catch_charm_errors that raises error.
+    act: when charm event is fired.
+    assert: the charm is put into expected status.
+    """
+
+    class TestCharm:
+        """Test charm."""
+
+        def __init__(self):
+            """Initialize the test charm."""
+            self.unit = MagicMock()
+
+        @catch_charm_errors
+        def test_event_handler(self, _: typing.Any):
+            """Test event handler.
+
+            Args:
+                event: The mock event.
+
+            Raises:
+                exception: The testing exception.
+            """
+            raise exception
+
+    test_charm = TestCharm()
+
+    test_charm.test_event_handler(MagicMock())
+
+    assert isinstance(test_charm.unit.status, expected_status)
+
+
+@pytest.mark.parametrize(
+    "exception, expected_status",
+    [
+        pytest.param(ConfigurationError, BlockedStatus, id="charm config error"),
+        pytest.param(MissingRunnerBinaryError, MaintenanceStatus, id="runner binary error"),
+    ],
+)
+def test_catch_action_errors(
+    exception: typing.Type[Exception], expected_status: typing.Type[StatusBase]
+):
+    """
+    arrange: given mock charm event handler decorated with catch_charm_errors that raises error.
+    act: when charm event is fired.
+    assert: the charm is put into expected status.
+    """
+
+    class TestCharm:
+        """Test charm."""
+
+        def __init__(self):
+            """Initialize the test charm."""
+            self.unit = MagicMock()
+
+        @catch_action_errors
+        def test_event_handler(self, _: typing.Any):
+            """Test event handler.
+
+            Args:
+                event: The mock event.
+
+            Raises:
+                exception: The testing exception.
+            """
+            raise exception
+
+    test_charm = TestCharm()
+
+    test_charm.test_event_handler(event_mock := MagicMock())
+
+    assert isinstance(test_charm.unit.status, expected_status)
+    event_mock.fail.assert_called_once()
+
+
+@pytest.mark.parametrize(
+    "openstack_image, expected_status, expected_value",
+    [
+        pytest.param(None, BlockedStatus, False, id="Image integration missing."),
+        pytest.param(
+            OpenstackImage(id=None, tags=None), WaitingStatus, False, id="Image not ready."
+        ),
+        pytest.param(
+            OpenstackImage(id="test", tags=["test"]),
+            MaintenanceStatus,
+            True,
+            id="Valid image integration.",
+        ),
+    ],
+)
+def test_openstack_image_ready_status(
+    monkeypatch: pytest.MonkeyPatch,
+    openstack_image: OpenstackImage | None,
+    expected_status: typing.Type[StatusBase],
+    expected_value: bool,
+):
+    """
+    arrange: given a monkeypatched OpenstackImage.from_charm that returns different values.
+    act: when _get_set_image_ready_status is called.
+    assert: expected unit status is set and expected value is returned.
+    """
+    monkeypatch.setattr(OpenstackImage, "from_charm", MagicMock(return_value=openstack_image))
+    harness = Harness(GithubRunnerCharm)
+    harness.begin()
+
+    is_ready = harness.charm._get_set_image_ready_status()
+
+    assert isinstance(harness.charm.unit.status, expected_status)
+    assert is_ready == expected_value
+
+
+def test__on_image_relation_changed_lxd():
+    """
+    arrange: given a charm with LXD instance type.
+    act: when _on_image_relation_changed is called.
+    assert: nothing happens.
+    """
+    harness = Harness(GithubRunnerCharm)
+    harness.begin()
+    state_mock = MagicMock()
+    state_mock.instance_type = InstanceType.LOCAL_LXD
+    harness.charm._setup_state = MagicMock(return_value=state_mock)
+
+    harness.charm._on_image_relation_changed(MagicMock())
+
+    # the unit is in maintenance status since nothing has happened.
+    assert harness.charm.unit.status.name == MaintenanceStatus.name
+
+
+def test__on_image_relation_image_not_ready():
+    """
+    arrange: given a charm with OpenStack instance type and a monkeypatched \
+        _get_set_image_ready_status that returns False denoting image not ready.
+    act: when _on_image_relation_changed is called.
+    assert: nothing happens since _get_set_image_ready_status should take care of status set.
+    """
+    harness = Harness(GithubRunnerCharm)
+    harness.begin()
+    state_mock = MagicMock()
+    state_mock.instance_type = InstanceType.OPENSTACK
+    harness.charm._setup_state = MagicMock(return_value=state_mock)
+    harness.charm._get_set_image_ready_status = MagicMock(return_value=False)
+
+    harness.charm._on_image_relation_changed(MagicMock())
+
+    # the unit is in maintenance status since nothing has happened.
+    assert harness.charm.unit.status.name == MaintenanceStatus.name
+
+
+def test__on_image_relation_image_ready():
+    """
+    arrange: given a charm with OpenStack instance type and a monkeypatched \
+        _get_set_image_ready_status that returns True denoting image ready.
+    act: when _on_image_relation_changed is called.
+    assert: runner flush and reconcile is called.
+    """
+    harness = Harness(GithubRunnerCharm)
+    harness.begin()
+    state_mock = MagicMock()
+    state_mock.instance_type = InstanceType.OPENSTACK
+    harness.charm._setup_state = MagicMock(return_value=state_mock)
+    harness.charm._get_set_image_ready_status = MagicMock(return_value=True)
+    runner_manager_mock = MagicMock()
+    harness.charm._get_openstack_runner_manager = MagicMock(return_value=runner_manager_mock)
+
+    harness.charm._on_image_relation_changed(MagicMock())
+
+    assert harness.charm.unit.status.name == ActiveStatus.name
+    runner_manager_mock.flush.assert_called_once()
+    runner_manager_mock.reconcile.assert_called_once()
