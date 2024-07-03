@@ -88,8 +88,9 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
         return self.charm_state.is_metrics_logging_available
 
 
+# This class is subject to refactor.
 @dataclass
-class OpenstackRunnerManagerConfig:
+class OpenstackRunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     """Configuration of runner manager.
 
     Attributes:

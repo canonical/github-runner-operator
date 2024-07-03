@@ -608,7 +608,7 @@ class OpenstackImage(BaseModel):
                 id=relation_data.get("id", None),
                 tags=[tag.strip() for tag in relation_data.get("tags", "").split(",") if tag],
             )
-        return OpenstackImage()
+        return OpenstackImage(id=None, tags=None)
 
 
 class OpenstackRunnerConfig(BaseModel):

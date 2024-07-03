@@ -1150,13 +1150,21 @@ class GithubRunnerCharm(CharmBase):
         if path is None:
             path = state.charm_config.path
 
+        # Empty image can be passed down due to a delete only case where deletion of runners do not
+        # depend on the image ID being available. Make sure that the charm goes to blocked status
+        # in hook where a runner may be created. TODO: This logic is subject to refactoring.
+        image = state.runner_config.openstack_image
+        image_id = image.id if image and image.id else ""
+        image_labels = image.tags if image and image.tags else []
+
         app_name, unit = self.unit.name.rsplit("/", 1)
         openstack_runner_manager_config = OpenstackRunnerManagerConfig(
             charm_state=state,
             path=path,
             token=token,
-            labels=state.charm_config.labels,
+            labels=(*state.charm_config.labels, *image_labels),
             flavor=state.runner_config.openstack_flavor,
+            image=image_id,
             network=state.runner_config.openstack_network,
             dockerhub_mirror=state.charm_config.dockerhub_mirror,
         )
