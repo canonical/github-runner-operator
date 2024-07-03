@@ -44,7 +44,7 @@ from tests.integration.helpers.common import (
     wait_for,
 )
 from tests.integration.helpers.lxd import LXDInstanceHelper, ensure_charm_has_runner
-from tests.integration.helpers.openstack import OpenStackInstanceHelper
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
 
 # The following line is required because we are using request.getfixturevalue in conjunction
@@ -169,9 +169,9 @@ def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
     return pytestconfig.getoption("--loop-device")
 
 
-@pytest.fixture(scope="module", name="private_endpoint_clouds_yaml")
-def private_endpoint_clouds_yaml_fixture(pytestconfig: pytest.Config) -> Optional[str]:
-    """The openstack private endpoint clouds yaml."""
+@pytest.fixture(scope="module", name="private_endpoint_config")
+def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpointConfigs | None:
+    """The private endpoint configuration values."""
     auth_url = pytestconfig.getoption("--openstack-auth-url")
     password = pytestconfig.getoption("--openstack-password")
     project_domain_name = pytestconfig.getoption("--openstack-project-domain-name")
@@ -192,17 +192,35 @@ def private_endpoint_clouds_yaml_fixture(pytestconfig: pytest.Config) -> Optiona
         )
     ):
         return None
+    return {
+        "auth_url": auth_url,
+        "password": password,
+        "project_domain_name": project_domain_name,
+        "project_name": project_name,
+        "user_domain_name": user_domain_name,
+        "username": user_name,
+        "region_name": region_name,
+    }
+
+
+@pytest.fixture(scope="module", name="private_endpoint_clouds_yaml")
+def private_endpoint_clouds_yaml_fixture(
+    private_endpoint_config: PrivateEndpointConfigs | None,
+) -> Optional[str]:
+    """The openstack private endpoint clouds yaml."""
+    if not private_endpoint_config:
+        return None
     return string.Template(
         Path("tests/integration/data/clouds.yaml.tmpl").read_text(encoding="utf-8")
     ).substitute(
         {
-            "auth_url": auth_url,
-            "password": password,
-            "project_domain_name": project_domain_name,
-            "project_name": project_name,
-            "user_domain_name": user_domain_name,
-            "username": user_name,
-            "region_name": region_name,
+            "auth_url": private_endpoint_config["auth_url"],
+            "password": private_endpoint_config["password"],
+            "project_domain_name": private_endpoint_config["project_domain_name"],
+            "project_name": private_endpoint_config["project_name"],
+            "user_domain_name": private_endpoint_config["user_domain_name"],
+            "username": private_endpoint_config["user_name"],
+            "region_name": private_endpoint_config["region_name"],
         }
     )
 
@@ -304,12 +322,25 @@ async def app_no_runner(
 
 
 @pytest_asyncio.fixture(scope="module", name="image_builder")
-async def image_builder_fixture(model: Model):
+async def image_builder_fixture(
+    model: Model, private_endpoint_config: PrivateEndpointConfigs | None
+):
     """The image builder application for OpenStack runners."""
+    if not private_endpoint_config:
+        raise ValueError("Private endpoints are required for testing OpenStack runners.")
     app = await model.deploy(
         "github-runner-image-builder",
         channel="latest/edge",
         constraints="cores=2 mem=16G root-disk=20G virt-type=virtual-machine",
+        config={
+            "openstack-auth-url": private_endpoint_config["auth_url"],
+            # Bandit thinks this is a hardcoded password
+            "openstack-password": private_endpoint_config["password"],  # nosec: B105
+            "openstack-project-domain-name": private_endpoint_config["project_domain_name"],
+            "openstack-project-name": private_endpoint_config["project_name"],
+            "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
+            "openstack-user-name": private_endpoint_config["username"],
+        },
     )
     await model.wait_for_idle(apps=[app.name], wait_for_active=True, timeout=15 * 60)
     return app
