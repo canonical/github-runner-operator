@@ -246,6 +246,11 @@ class GithubRunnerCharm(CharmBase):
             self.on.update_dependencies_action, self._on_update_dependencies_action
         )
         self.framework.observe(self.on.update_status, self._on_update_status)
+        self.framework.observe(self.on.mongodb_relation_joined, self._on_mongodb_relation_joined)
+        self.framework.observe(
+            self.on.mongodb_relation_departed, self._on_mongodb_relation_departed
+        )
+        self.framework.observe(self.on.mongodb_relation_changed, self._on_mongodb_relation_changed)
 
     def _setup_state(self) -> CharmState:
         """Set up the charm state.
@@ -686,7 +691,26 @@ class GithubRunnerCharm(CharmBase):
 
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
-        """Handle the reconciliation of runners."""
+        """Event handler for reconciling runners."""
+        self._trigger_reconciliation()
+
+    @catch_charm_errors
+    def _on_mongodb_relation_joined(self, _: ops.RelationEvent) -> None:
+        """Handle the MongoDB relation joined event."""
+        self._trigger_reconciliation()
+
+    @catch_charm_errors
+    def _on_mongodb_relation_changed(self, _: ops.RelationEvent) -> None:
+        """Handle the MongoDB relation changed event."""
+        self._trigger_reconciliation()
+
+    @catch_charm_errors
+    def _on_mongodb_relation_departed(self, _: ops.RelationEvent) -> None:
+        """Handle the departure of the MongoDB relation."""
+        self._trigger_reconciliation()
+
+    def _trigger_reconciliation(self) -> None:
+        """Trigger the reconciliation of runners."""
         self.unit.status = MaintenanceStatus("Reconciling runners")
         state = self._setup_state()
 

@@ -417,6 +417,31 @@ def test_charm_goes_into_waiting_state_on_missing_integration_data(
     assert "mock error" in harness.charm.unit.status.message
 
 
+@pytest.mark.parametrize(
+    "hook",
+    [
+        pytest.param("mongodb_relation_joined", id="Relation Joined"),
+        pytest.param("mongodb_relation_changed", id="Relation Changed"),
+        pytest.param("mongodb_relation_departed", id="Relation Departed"),
+    ],
+)
+def test_mongodb_integration_events_trigger_reconciliation(
+    hook: str, monkeypatch: pytest.MonkeyPatch, harness: Harness
+):
+    """
+    arrange: Mock charm._trigger_reconciliation.
+    act: Fire mongodb relation events.
+    assert: _trigger_reconciliation has been called.
+    """
+    reconcliation_mock = MagicMock()
+    relation_mock = MagicMock()
+    relation_mock.name = "mongodb"
+    relation_mock.id = 0
+    monkeypatch.setattr("charm.GithubRunnerCharm._trigger_reconciliation", reconcliation_mock)
+    getattr(harness.charm.on, hook).emit(relation=relation_mock)
+    reconcliation_mock.assert_called_once()
+
+
 # New tests should not be added here. This should be refactored to pytest over time.
 # New test should be written with pytest, similar to the above tests.
 # Consider to rewrite test with pytest if the tests below needs to be changed.
