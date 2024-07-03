@@ -219,7 +219,7 @@ def private_endpoint_clouds_yaml_fixture(
             "project_domain_name": private_endpoint_config["project_domain_name"],
             "project_name": private_endpoint_config["project_name"],
             "user_domain_name": private_endpoint_config["user_domain_name"],
-            "username": private_endpoint_config["user_name"],
+            "username": private_endpoint_config["username"],
             "region_name": private_endpoint_config["region_name"],
         }
     )
