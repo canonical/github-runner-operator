@@ -615,7 +615,7 @@ class TestCharm(unittest.TestCase):
         """
         arrange: Setup mocked charm.
         act: Fire config changed event to use openstack-clouds-yaml.
-        assert: Charm is in maintenance state.
+        assert: Charm is in blocked state.
         """
         harness = Harness(GithubRunnerCharm)
         cloud_yaml = {
@@ -644,7 +644,7 @@ class TestCharm(unittest.TestCase):
 
         harness.charm.on.config_changed.emit()
 
-        assert harness.charm.unit.status == MaintenanceStatus()
+        assert harness.charm.unit.status == BlockedStatus("Please provide image integration.")
 
     @patch("charm.RunnerManager")
     @patch("pathlib.Path.mkdir")

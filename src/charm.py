@@ -39,6 +39,7 @@ import metrics.events as metric_events
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     GROUP_CONFIG_NAME,
+    IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
@@ -228,6 +229,10 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(
             self.on[DEBUG_SSH_INTEGRATION_NAME].relation_changed,
             self._on_debug_ssh_relation_changed,
+        )
+        self.framework.observe(
+            self.on[IMAGE_INTEGRATION_NAME].relation_changed,
+            self._on_image_relation_changed,
         )
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
@@ -567,8 +572,9 @@ class GithubRunnerCharm(CharmBase):
             state.runner_config.virtual_machine_resources,
         )
 
+    # Temporarily ignore too-complex since this is subject to refactor.
     @catch_charm_errors
-    def _on_config_changed(self, _: ConfigChangedEvent) -> None:
+    def _on_config_changed(self, _: ConfigChangedEvent) -> None:  # noqa: C901
         """Handle the configuration change."""
         state = self._setup_state()
         self._set_reconcile_timer()
@@ -600,6 +606,8 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
+            if not self._get_set_image_ready_status():
+                return
             if state.charm_config.token != self._stored.token:
                 openstack_runner_manager = self._get_openstack_runner_manager(state)
                 openstack_runner_manager.flush()
@@ -686,6 +694,8 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
+            if not self._get_set_image_ready_status():
+                return
             runner_manager = self._get_openstack_runner_manager(state)
             runner_manager.reconcile(state.runner_config.virtual_machines)
             self.unit.status = ActiveStatus()
@@ -1113,6 +1123,8 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
+            if not self._get_set_image_ready_status():
+                return
             runner_manager = self._get_openstack_runner_manager(state)
             # 2024/04/12: Should be flush idle.
             runner_manager.flush()
@@ -1127,6 +1139,23 @@ class GithubRunnerCharm(CharmBase):
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
         )
+
+    @catch_charm_errors
+    def _on_image_relation_changed(self, _: ops.RelationChangedEvent) -> None:
+        """Handle debug ssh relation changed event."""
+        state = self._setup_state()
+
+        if state.instance_type != InstanceType.OPENSTACK:
+            return
+        if not self._get_set_image_ready_status():
+            return
+
+        runner_manager = self._get_openstack_runner_manager(state)
+        # 2024/04/12: Should be flush idle.
+        runner_manager.flush()
+        runner_manager.reconcile(state.runner_config.virtual_machines)
+        self.unit.status = ActiveStatus()
+        return
 
     def _get_openstack_runner_manager(
         self, state: CharmState, token: str | None = None, path: GithubPath | None = None

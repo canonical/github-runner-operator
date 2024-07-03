@@ -42,7 +42,6 @@ LABELS_CONFIG_NAME = "labels"
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "openstack-clouds-yaml"
 OPENSTACK_NETWORK_CONFIG_NAME = "openstack-network"
 OPENSTACK_FLAVOR_CONFIG_NAME = "openstack-flavor"
-OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME = "experimental-openstack-image-build-unit"
 PATH_CONFIG_NAME = "path"
 RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
 # bandit thinks this is a hardcoded password

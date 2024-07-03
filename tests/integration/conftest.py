@@ -303,6 +303,18 @@ async def app_no_runner(
     return application
 
 
+@pytest_asyncio.fixture(scope="module", name="image_builder")
+async def image_builder_fixture(model: Model):
+    """The image builder application for OpenStack runners."""
+    app = await model.deploy(
+        "github-runner-image-builder",
+        channel="latest/edge",
+        constraints="cores=2 mem=16G root-disk=20G virt-type=virtual-machine",
+    )
+    await model.wait_for_idle(apps=[app.name], wait_for_active=True, timeout=15 * 60)
+    return app
+
+
 @pytest_asyncio.fixture(scope="module", name="app_openstack_runner")
 async def app_openstack_runner_fixture(
     model: Model,
@@ -317,6 +329,7 @@ async def app_openstack_runner_fixture(
     network_name: str,
     flavor_name: str,
     existing_app: Optional[str],
+    image_builder: Application,
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
     if existing_app:
@@ -348,6 +361,7 @@ async def app_openstack_runner_fixture(
             wait_idle=False,
             use_local_lxd=False,
         )
+    await model.integrate(image_builder, application)
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
 
     return application
