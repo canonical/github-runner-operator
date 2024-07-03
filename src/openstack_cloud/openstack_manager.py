@@ -112,14 +112,14 @@ class InstanceConfig:
 
     Attributes:
         github_path: The GitHub repo/org path to register the runner.
-        image: The Openstack image to use to boot the instance with.
+        image: The Openstack image id to use to boot the instance with.
         labels: The runner instance labels.
         name: Name of the image to launch the GitHub runner instance with.
         registration_token: Token for registering the runner on GitHub.
     """
 
     github_path: GithubPath
-    image: str
+    image_id: str
     labels: Iterable[str]
     name: str
     registration_token: str
@@ -185,7 +185,7 @@ def _create_connection(cloud_config: dict[str, dict]) -> Iterator[openstack.conn
 def create_instance_config(  # pylint: disable=too-many-arguments
     app_name: str,
     unit_num: int,
-    image: str,
+    image_id: str,
     path: GithubPath,
     labels: Iterable[str],
     registration_token: str,
@@ -195,7 +195,7 @@ def create_instance_config(  # pylint: disable=too-many-arguments
     Args:
         app_name: The juju application name.
         unit_num: The juju unit number.
-        image: The openstack image object to create the instance with.
+        image: The openstack image id to create the instance with.
         path: Github organisation or repository path.
         labels: Addition labels for the runner.
         registration_token: The Github runner registration token. See \
@@ -207,7 +207,7 @@ def create_instance_config(  # pylint: disable=too-many-arguments
     suffix = secrets.token_hex(12)
     return InstanceConfig(
         github_path=path,
-        image=image,
+        image_id=image_id,
         labels=labels,
         name=f"{app_name}-{unit_num}-{suffix}",
         registration_token=registration_token,
@@ -665,7 +665,7 @@ class OpenstackRunnerManager:
             try:
                 instance = conn.create_server(
                     name=instance_config.name,
-                    image=instance_config.image,
+                    image=instance_config.image_id,
                     key_name=instance_config.name,
                     flavor=args.config.flavor,
                     network=args.config.network,
