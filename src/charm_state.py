@@ -222,7 +222,7 @@ class Arch(str, Enum):
 
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
 DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
-MONGO_DB_INTEGRATION_NAME = "mongodb_client"
+MONGO_DB_INTEGRATION_NAME = "mongodb"
 
 
 class RunnerStorage(str, Enum):
