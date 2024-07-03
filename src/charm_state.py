@@ -970,11 +970,12 @@ class ReactiveConfig(BaseModel):
             The connection information for the reactive MQ or None if not available.
 
         Raises:
+            CharmConfigInvalidError: If the reactive MQ URI configuration is missing.
             MissingIntegrationError: If the reactive MQ integration is missing.
             MissingIntegrationDataError: If the respective reactive MQ integration data is missing.
         """
         db_name = cast(str, charm.config.get(REACTIVE_MQ_URI_CONFIG_NAME, ""))
-        integration_existing = MONGO_DB_INTEGRATION_NAME in charm.model.relations
+        integration_existing = bool(charm.model.relations.get(MONGO_DB_INTEGRATION_NAME))
 
         if not (db_name or integration_existing):
             return None

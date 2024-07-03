@@ -951,7 +951,7 @@ def test_reactive_config_from_charm_returns_none():
 
 def test_reactive_config_from_charm_integration_missing():
     """
-    arrange: Mock CharmBase instance without relations but with config option set.
+    arrange: Mock CharmBase instance without relation but with config option set.
     act: Call ReactiveConfig.from_charm method.
     assert: IntegrationMissingError is raised
     """
@@ -998,6 +998,7 @@ def test_reactive_config_from_charm_integration_data_missing():
     relation_mock.app = app_mock
     relation_mock.data = {}
     mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
+
     db_name = secrets.token_hex(8)
     mock_charm.config[charm_state.REACTIVE_MQ_URI_CONFIG_NAME] = db_name
 
