@@ -967,11 +967,30 @@ def test_reactive_config_from_charm_integration_missing():
     assert f"Missing {charm_state.MONGO_DB_INTEGRATION_NAME} integration" in str(exc.value)
 
 
+def test_reactive_config_from_charm_reactive_config_missing():
+    """
+    arrange: Mock CharmBase instance with relation but without config option set.
+    act: Call ReactiveConfig.from_charm method.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    relation_mock = MagicMock()
+    app_mock = MagicMock()
+    relation_mock.app = app_mock
+    relation_mock.data = {}
+    mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
+
+    with pytest.raises(CharmConfigInvalidError) as exc:
+        charm_state.ReactiveConfig.from_charm(mock_charm)
+
+    assert f"Missing {charm_state.REACTIVE_MQ_URI_CONFIG_NAME} configuration" in str(exc.value)
+
+
 def test_reactive_config_from_charm_integration_data_missing():
     """
     arrange: Mock CharmBase instance with relation but without data and with config option set.
     act: Call ReactiveConfig.from_charm method.
-    assert: IntegrationDataMissingError is raised
+    assert: IntegrationDataMissingError is raised.
     """
     mock_charm = MockGithubRunnerCharmFactory()
     relation_mock = MagicMock()

@@ -982,6 +982,9 @@ class ReactiveConfig(BaseModel):
         if not integration_existing:
             raise MissingIntegrationError(f"Missing {MONGO_DB_INTEGRATION_NAME} integration")
 
+        if not db_name:
+            raise CharmConfigInvalidError(f"Missing {REACTIVE_MQ_URI_CONFIG_NAME} configuration")
+
         database_requires = DatabaseRequires(
             charm, relation_name=MONGO_DB_INTEGRATION_NAME, database_name=db_name
         )
