@@ -8,6 +8,19 @@ enabled the charm cannot be changed to use other virtualization methods.
 
 There are three configuration that the charm needs to be deployed with to enable OpenStack integration: `openstack-clouds-yaml`, `openstack-flavor`, and `openstack-network`.
 
+## Integration
+
+The OpenStack runners require image to be available via the `image` integration. Deploy the
+`github-runner-image-builder` charm and wait for the image to be successfully provided via the
+relation data.
+
+```bash
+juju deploy github-runner-image-builder
+juju integrate github-runner-image-builder github-runner
+```
+
+The image takes around 10-15 minutes to be built and ready via the relation.
+
 ### OpenStack clouds.yaml
 
 The `openstack-clouds-yaml` configuration contains the authorization information needed for the charm to log in to the openstack cloud.
