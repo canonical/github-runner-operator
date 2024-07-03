@@ -112,7 +112,7 @@ class InstanceConfig:
 
     Attributes:
         github_path: The GitHub repo/org path to register the runner.
-        image: The Openstack image id to use to boot the instance with.
+        image_id: The Openstack image id to use to boot the instance with.
         labels: The runner instance labels.
         name: Name of the image to launch the GitHub runner instance with.
         registration_token: Token for registering the runner on GitHub.
@@ -195,7 +195,7 @@ def create_instance_config(  # pylint: disable=too-many-arguments
     Args:
         app_name: The juju application name.
         unit_num: The juju unit number.
-        image: The openstack image id to create the instance with.
+        image_id: The openstack image id to create the instance with.
         path: Github organisation or repository path.
         labels: Addition labels for the runner.
         registration_token: The Github runner registration token. See \
