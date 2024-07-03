@@ -33,7 +33,7 @@ from ops.charm import (
 )
 from ops.framework import StoredState
 from ops.main import main
-from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
+from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, WaitingStatus
 
 import metrics.events as metric_events
 from charm_state import (
@@ -48,6 +48,7 @@ from charm_state import (
     CharmState,
     GithubPath,
     InstanceType,
+    OpenstackImage,
     ProxyConfig,
     RunnerStorage,
     VirtualMachineResources,
@@ -407,17 +408,6 @@ class GithubRunnerCharm(CharmBase):
             raise
 
         if state.instance_type == InstanceType.OPENSTACK:
-            if state.runner_config.build_image:
-                self.unit.status = MaintenanceStatus("Building Openstack image")
-                github = GithubClient(token=state.charm_config.token)
-                openstack_manager.build_image(
-                    arch=state.arch,
-                    cloud_config=state.charm_config.openstack_clouds_yaml,
-                    github_client=github,
-                    path=state.charm_config.path,
-                    proxies=state.proxy_config,
-                )
-                self.unit.status = ActiveStatus()
             return True
 
         self.unit.status = MaintenanceStatus("Installing packages")

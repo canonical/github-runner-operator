@@ -58,6 +58,10 @@ VM_CPU_CONFIG_NAME = "vm-cpu"
 VM_MEMORY_CONFIG_NAME = "vm-memory"
 VM_DISK_CONFIG_NAME = "vm-disk"
 
+# Integration names
+COS_AGENT_INTEGRATION_NAME = "cos-agent"
+DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
+IMAGE_INTEGRATION_NAME = "image"
 
 StorageSize = str
 """Representation of storage size with KiB, MiB, GiB, TiB, PiB, EiB as unit."""
@@ -205,10 +209,6 @@ class Arch(str, Enum):
 
     ARM64 = "arm64"
     X64 = "x64"
-
-
-COS_AGENT_INTEGRATION_NAME = "cos-agent"
-DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 
 
 class RunnerStorage(str, Enum):
