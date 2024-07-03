@@ -926,7 +926,7 @@ def test_reactive_config_from_charm():
     }
     mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
     db_name = secrets.token_hex(8)
-    mock_charm.config[charm_state.REACTIVE_MQ_URI_CONFIG_NAME] = db_name
+    mock_charm.config[charm_state.REACTIVE_MQ_DB_NAME_CONFIG_NAME] = db_name
 
     connection_info = charm_state.ReactiveConfig.from_charm(mock_charm)
 
@@ -957,7 +957,7 @@ def test_reactive_config_from_charm_integration_missing():
     """
     mock_charm = MockGithubRunnerCharmFactory()
     db_name = secrets.token_hex(8)
-    mock_charm.config[charm_state.REACTIVE_MQ_URI_CONFIG_NAME] = db_name
+    mock_charm.config[charm_state.REACTIVE_MQ_DB_NAME_CONFIG_NAME] = db_name
 
     del mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME]
 
@@ -983,7 +983,7 @@ def test_reactive_config_from_charm_reactive_config_missing():
     with pytest.raises(CharmConfigInvalidError) as exc:
         charm_state.ReactiveConfig.from_charm(mock_charm)
 
-    assert f"Missing {charm_state.REACTIVE_MQ_URI_CONFIG_NAME} configuration" in str(exc.value)
+    assert f"Missing {charm_state.REACTIVE_MQ_DB_NAME_CONFIG_NAME} configuration" in str(exc.value)
 
 
 def test_reactive_config_from_charm_integration_data_missing():
@@ -1000,7 +1000,7 @@ def test_reactive_config_from_charm_integration_data_missing():
     mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
 
     db_name = secrets.token_hex(8)
-    mock_charm.config[charm_state.REACTIVE_MQ_URI_CONFIG_NAME] = db_name
+    mock_charm.config[charm_state.REACTIVE_MQ_DB_NAME_CONFIG_NAME] = db_name
 
     with pytest.raises(MissingIntegrationDataError) as exc:
         charm_state.ReactiveConfig.from_charm(mock_charm)

@@ -57,7 +57,7 @@ OPENSTACK_FLAVOR_CONFIG_NAME = "openstack-flavor"
 OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME = "experimental-openstack-image-build-unit"
 PATH_CONFIG_NAME = "path"
 RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
-REACTIVE_MQ_URI_CONFIG_NAME = "experimental-reactive-mq-uri"
+REACTIVE_MQ_DB_NAME_CONFIG_NAME = "experimental-reactive-mq-database-name"
 # bandit thinks this is a hardcoded password
 REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"  # nosec
 REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME = "repo-policy-compliance-url"
@@ -974,7 +974,7 @@ class ReactiveConfig(BaseModel):
             MissingIntegrationError: If the reactive MQ integration is missing.
             MissingIntegrationDataError: If the respective reactive MQ integration data is missing.
         """
-        db_name = cast(str, charm.config.get(REACTIVE_MQ_URI_CONFIG_NAME, ""))
+        db_name = cast(str, charm.config.get(REACTIVE_MQ_DB_NAME_CONFIG_NAME, ""))
         integration_existing = bool(charm.model.relations.get(MONGO_DB_INTEGRATION_NAME))
 
         if not (db_name or integration_existing):
@@ -984,7 +984,7 @@ class ReactiveConfig(BaseModel):
             raise MissingIntegrationError(f"Missing {MONGO_DB_INTEGRATION_NAME} integration")
 
         if not db_name:
-            raise CharmConfigInvalidError(f"Missing {REACTIVE_MQ_URI_CONFIG_NAME} configuration")
+            raise CharmConfigInvalidError(f"Missing {REACTIVE_MQ_DB_NAME_CONFIG_NAME} configuration")
 
         database_requires = DatabaseRequires(
             charm, relation_name=MONGO_DB_INTEGRATION_NAME, database_name=db_name
