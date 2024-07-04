@@ -86,12 +86,6 @@ options:
       The organization or the repository to register the self-hosted runners. For organization the
       path would be the name of the organization. For repository the path should be in the
       "{owner}/{repo}" format.
-  experimental-reactive-mq-database-name:
-    type: string
-    description: >-
-      (Experimental - may be removed) The database name of the reactive message queue. If set,
-      the charm will go in reactive-mode and consume messages from a message queue corresponding
-      to its flavour. MongoDB integration is required for this feature.
   reconcile-interval:
     type: int
     default: 10

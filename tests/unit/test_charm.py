@@ -31,13 +31,7 @@ from charm_state import (
     ProxyConfig,
     VirtualMachineResources,
 )
-from errors import (
-    LogrotateSetupError,
-    MissingIntegrationDataError,
-    MissingIntegrationError,
-    RunnerError,
-    SubprocessError,
-)
+from errors import LogrotateSetupError, MissingIntegrationDataError, RunnerError, SubprocessError
 from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
@@ -385,22 +379,6 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
     ), "Expected IP firewall entry not found in allowlist arg."
 
 
-def test_charm_goes_into_blocked_state_on_missing_integration(
-    monkeypatch: pytest.MonkeyPatch, harness: Harness
-):
-    """
-    arrange: Mock charm._setup_state to raise an MissingIntegrationError.
-    act: Fire config changed event.
-    assert: Charm is in blocked state.
-    """
-    setup_state_mock = MagicMock(side_effect=MissingIntegrationError("mock error"))
-    monkeypatch.setattr(GithubRunnerCharm, "_setup_state", setup_state_mock)
-    harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
-    harness.charm.on.config_changed.emit()
-    assert isinstance(harness.charm.unit.status, BlockedStatus)
-    assert "mock error" in harness.charm.unit.status.message
-
-
 def test_charm_goes_into_waiting_state_on_missing_integration_data(
     monkeypatch: pytest.MonkeyPatch, harness: Harness
 ):
@@ -420,12 +398,11 @@ def test_charm_goes_into_waiting_state_on_missing_integration_data(
 @pytest.mark.parametrize(
     "hook",
     [
-        pytest.param("mongodb_relation_joined", id="Relation Joined"),
-        pytest.param("mongodb_relation_changed", id="Relation Changed"),
-        pytest.param("mongodb_relation_departed", id="Relation Departed"),
+        pytest.param("database_created", id="Database Created"),
+        pytest.param("endpoints_changed", id="Endpoints Changed"),
     ],
 )
-def test_mongodb_integration_events_trigger_reconciliation(
+def test_database_integration_events_trigger_reconciliation(
     hook: str, monkeypatch: pytest.MonkeyPatch, harness: Harness
 ):
     """
@@ -438,7 +415,7 @@ def test_mongodb_integration_events_trigger_reconciliation(
     relation_mock.name = "mongodb"
     relation_mock.id = 0
     monkeypatch.setattr("charm.GithubRunnerCharm._trigger_reconciliation", reconcliation_mock)
-    getattr(harness.charm.on, hook).emit(relation=relation_mock)
+    getattr(harness.charm.database.on, hook).emit(relation=relation_mock)
     reconcliation_mock.assert_called_once()
 
 

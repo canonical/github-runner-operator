@@ -19,6 +19,7 @@ from typing import Any, Callable, Dict, Sequence, TypeVar
 
 import jinja2
 import ops
+from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from ops.charm import (
     ActionEvent,
@@ -57,7 +58,6 @@ from errors import (
     ConfigurationError,
     LogrotateSetupError,
     MissingIntegrationDataError,
-    MissingIntegrationError,
     MissingRunnerBinaryError,
     OpenStackUnauthorizedError,
     RunnerBinaryError,
@@ -77,6 +77,10 @@ from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
 from utilities import bytes_with_unit_to_kib, execute_command, retry
 
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
+
+# This is currently hardcoded and may be moved to a config option in the future.
+REACTIVE_MQ_DB_NAME = "github-runner-webhook-router"
+
 
 logger = logging.getLogger(__name__)
 
@@ -130,9 +134,6 @@ def catch_charm_errors(
         except MissingIntegrationDataError as err:
             logger.exception("Missing integration data")
             self.unit.status = WaitingStatus(str(err))
-        except MissingIntegrationError as err:
-            logger.exception("Missing integration")
-            self.unit.status = BlockedStatus(str(err))
 
     return func_with_catch_errors
 
@@ -246,11 +247,11 @@ class GithubRunnerCharm(CharmBase):
             self.on.update_dependencies_action, self._on_update_dependencies_action
         )
         self.framework.observe(self.on.update_status, self._on_update_status)
-        self.framework.observe(self.on.mongodb_relation_joined, self._on_mongodb_relation_joined)
-        self.framework.observe(
-            self.on.mongodb_relation_departed, self._on_mongodb_relation_departed
+        self.database = DatabaseRequires(
+            self, relation_name="mongodb", database_name=REACTIVE_MQ_DB_NAME
         )
-        self.framework.observe(self.on.mongodb_relation_changed, self._on_mongodb_relation_changed)
+        self.framework.observe(self.database.on.database_created, self._on_database_created)
+        self.framework.observe(self.database.on.endpoints_changed, self._on_database_created)
 
     def _setup_state(self) -> CharmState:
         """Set up the charm state.
@@ -262,7 +263,7 @@ class GithubRunnerCharm(CharmBase):
             The charm state.
         """
         try:
-            return CharmState.from_charm(self)
+            return CharmState.from_charm(charm=self, database=self.database)
         except CharmConfigInvalidError as exc:
             raise ConfigurationError(exc.msg) from exc
 
@@ -696,18 +697,13 @@ class GithubRunnerCharm(CharmBase):
         self._trigger_reconciliation()
 
     @catch_charm_errors
-    def _on_mongodb_relation_joined(self, _: ops.RelationEvent) -> None:
+    def _on_database_created(self, _: ops.RelationEvent) -> None:
         """Handle the MongoDB relation joined event."""
         self._trigger_reconciliation()
 
     @catch_charm_errors
-    def _on_mongodb_relation_changed(self, _: ops.RelationEvent) -> None:
+    def _on_endpoints_changed(self, _: ops.RelationEvent) -> None:
         """Handle the MongoDB relation changed event."""
-        self._trigger_reconciliation()
-
-    @catch_charm_errors
-    def _on_mongodb_relation_departed(self, _: ops.RelationEvent) -> None:
-        """Handle the departure of the MongoDB relation."""
         self._trigger_reconciliation()
 
     def _trigger_reconciliation(self) -> None:

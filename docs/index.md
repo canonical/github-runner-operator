@@ -71,3 +71,4 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
 1. [Tutorial](tutorial)
   1. [Managing resource usage](tutorial/managing-resource-usage.md)
   1. [Quick start](tutorial/quick-start.md)
+  1. [Reactive scheduling](tutorial/reactive-scheduling.md)

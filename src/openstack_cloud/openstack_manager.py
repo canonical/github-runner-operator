@@ -589,18 +589,21 @@ class OpenstackRunnerManager:
         """
         logger.info("Reactive mode is experimental and not yet fully implemented.")
         logger.debug("Trying to spawn up to %i runners reactively.", quantity)
-        args = [
-            OpenstackRunnerManager._CreateReactiveRunnerArgs(
-                app_name=self.app_name,
-                reactive_config=self._config.reactive_config,
-            )
-            for _ in range(quantity)
-        ]
-        with Pool(processes=quantity) as pool:
-            pool.map(
-                func=OpenstackRunnerManager._spawn_runner_reactively,
-                iterable=args,
-            )
+        if quantity > 0:
+            args = [
+                OpenstackRunnerManager._CreateReactiveRunnerArgs(
+                    app_name=self.app_name,
+                    reactive_config=self._config.reactive_config,
+                )
+                for _ in range(quantity)
+            ]
+            with Pool(processes=quantity) as pool:
+                pool.map(
+                    func=OpenstackRunnerManager._spawn_runner_reactively,
+                    iterable=args,
+                )
+        else:
+            logger.info("No runner needs to be spawned.")
 
     @dataclass
     class _CreateReactiveRunnerArgs:

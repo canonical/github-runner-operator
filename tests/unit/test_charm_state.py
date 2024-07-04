@@ -2,12 +2,12 @@
 # See LICENSE file for licensing details.
 import json
 import platform
-import secrets
 import typing
 from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
+from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
 from pydantic.networks import IPv4Address
@@ -48,7 +48,7 @@ from charm_state import (
     UnsupportedArchitectureError,
     VirtualMachineResources,
 )
-from errors import MissingIntegrationDataError, MissingIntegrationError
+from errors import MissingIntegrationDataError
 from tests.unit.factories import MockGithubRunnerCharmFactory
 
 
@@ -925,68 +925,39 @@ def test_reactive_config_from_charm():
         }
     }
     mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
-    db_name = secrets.token_hex(8)
-    mock_charm.config[charm_state.REACTIVE_MQ_DB_NAME_CONFIG_NAME] = db_name
+    database = DatabaseRequires(
+        mock_charm, relation_name=charm_state.MONGO_DB_INTEGRATION_NAME, database_name="test"
+    )
 
-    connection_info = charm_state.ReactiveConfig.from_charm(mock_charm)
+    connection_info = charm_state.ReactiveConfig.from_database(database)
 
     assert isinstance(connection_info, charm_state.ReactiveConfig)
     assert connection_info.mq_uri == mongodb_uri
 
 
-def test_reactive_config_from_charm_returns_none():
+def test_reactive_config_from_database_returns_none():
     """
-    arrange: Mock CharmBase instance without relation data and no config option set.
-    act: Call ReactiveConfig.from_charm method.
+    arrange: Mock CharmBase instance without relation data.
+    act: Call ReactiveConfig.from_database method.
     assert: None is returned.
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-
-    del mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME]
-
-    connection_info = charm_state.ReactiveConfig.from_charm(mock_charm)
-
-    assert connection_info is None
-
-
-def test_reactive_config_from_charm_integration_missing():
-    """
-    arrange: Mock CharmBase instance without relation but with config option set.
-    act: Call ReactiveConfig.from_charm method.
-    assert: IntegrationMissingError is raised
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    db_name = secrets.token_hex(8)
-    mock_charm.config[charm_state.REACTIVE_MQ_DB_NAME_CONFIG_NAME] = db_name
-
-    del mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME]
-
-    with pytest.raises(MissingIntegrationError) as exc:
-        charm_state.ReactiveConfig.from_charm(mock_charm)
-
-    assert f"Missing {charm_state.MONGO_DB_INTEGRATION_NAME} integration" in str(exc.value)
-
-
-def test_reactive_config_from_charm_reactive_config_missing():
-    """
-    arrange: Mock CharmBase instance with relation but without config option set.
-    act: Call ReactiveConfig.from_charm method.
-    assert: CharmConfigInvalidError is raised.
     """
     mock_charm = MockGithubRunnerCharmFactory()
     relation_mock = MagicMock()
     app_mock = MagicMock()
     relation_mock.app = app_mock
     relation_mock.data = {}
-    mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
+    mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = []
 
-    with pytest.raises(CharmConfigInvalidError) as exc:
-        charm_state.ReactiveConfig.from_charm(mock_charm)
+    database = DatabaseRequires(
+        mock_charm, relation_name=charm_state.MONGO_DB_INTEGRATION_NAME, database_name="test"
+    )
 
-    assert f"Missing {charm_state.REACTIVE_MQ_DB_NAME_CONFIG_NAME} configuration" in str(exc.value)
+    connection_info = charm_state.ReactiveConfig.from_database(database)
+
+    assert connection_info is None
 
 
-def test_reactive_config_from_charm_integration_data_missing():
+def test_reactive_config_from_database_integration_data_missing():
     """
     arrange: Mock CharmBase instance with relation but without data and with config option set.
     act: Call ReactiveConfig.from_charm method.
@@ -999,11 +970,12 @@ def test_reactive_config_from_charm_integration_data_missing():
     relation_mock.data = {}
     mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
 
-    db_name = secrets.token_hex(8)
-    mock_charm.config[charm_state.REACTIVE_MQ_DB_NAME_CONFIG_NAME] = db_name
+    database = DatabaseRequires(
+        mock_charm, relation_name=charm_state.MONGO_DB_INTEGRATION_NAME, database_name="test"
+    )
 
     with pytest.raises(MissingIntegrationDataError) as exc:
-        charm_state.ReactiveConfig.from_charm(mock_charm)
+        charm_state.ReactiveConfig.from_database(database)
 
     assert f"Missing uris for {charm_state.MONGO_DB_INTEGRATION_NAME} integration" in str(
         exc.value
@@ -1180,6 +1152,7 @@ def test_charm_state_from_charm_invalid_cases(
     assert: Ensure CharmConfigInvalidError is raised with the appropriate message.
     """
     mock_charm = MockGithubRunnerCharmFactory()
+    mock_database = MagicMock(spec=DatabaseRequires)
     monkeypatch.setattr(ProxyConfig, "from_charm", MagicMock())
     mock_charm_config = MagicMock()
     mock_charm_config.openstack_clouds_yaml = None
@@ -1193,7 +1166,7 @@ def test_charm_state_from_charm_invalid_cases(
     monkeypatch.setattr(module, target, MagicMock(side_effect=exc))
 
     with pytest.raises(CharmConfigInvalidError):
-        CharmState.from_charm(mock_charm)
+        CharmState.from_charm(mock_charm, mock_database)
 
 
 def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
@@ -1203,6 +1176,7 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     assert: Ensure no errors are raised.
     """
     mock_charm = MockGithubRunnerCharmFactory()
+    mock_database = MagicMock(spec=DatabaseRequires)
     monkeypatch.setattr(ProxyConfig, "from_charm", MagicMock())
     monkeypatch.setattr(CharmConfig, "from_charm", MagicMock())
     monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
@@ -1215,4 +1189,4 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(json, "dumps", MagicMock())
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
 
-    assert CharmState.from_charm(mock_charm)
+    assert CharmState.from_charm(mock_charm, mock_database)
