@@ -19,7 +19,7 @@ juju deploy github-runner-image-builder
 juju integrate github-runner-image-builder github-runner
 ```
 
-The image takes around 10-15 minutes to be built and ready via the relation.
+The image will take about 10-15 minutes to build and be ready via the relation.
 
 ### OpenStack clouds.yaml
 
