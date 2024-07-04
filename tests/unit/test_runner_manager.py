@@ -569,6 +569,28 @@ def test_reconcile_reactive_mode(
     assert job_details.run_url in caplog.text
 
 
+@pytest.mark.usefixtures("job_mock")
+def test_reconcile_reactive_mode_zero_quantity(
+    runner_manager: RunnerManager,
+    job_mock: MagicMock,
+    caplog: LogCaptureFixture,
+):
+    """
+    arrange: Enable reactive mode and mock the job class to return a job.
+    act: Call reconcile with a quantity of 0.
+    assert: The mocked job is not picked up and no log message is present.
+    """
+    runner_manager.config.reactive_config = ReactiveConfig(mq_uri="http://example.com")
+    runner_manager.reconcile(0, VirtualMachineResources(2, "7GiB", "10Gib"))
+
+    job_mock.from_message_queue.assert_not_called()
+    assert job_mock.picked_up.call_count == 0
+
+    job_details = job_mock.get_details()
+    assert str(job_details.labels) not in caplog.text
+    assert job_details.run_url not in caplog.text
+
+
 def test_schedule_build_runner_image(
     runner_manager: RunnerManager,
     tmp_path: Path,

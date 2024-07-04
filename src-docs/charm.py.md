@@ -14,13 +14,12 @@ Charm for creating and managing GitHub self-hosted runner instances.
 - **RECONCILE_INTERVAL_CONFIG_NAME**
 - **TEST_MODE_CONFIG_NAME**
 - **TOKEN_CONFIG_NAME**
-- **MONGO_DB_INTEGRATION_NAME**
-- **REACTIVE_MQ_DB_NAME_CONFIG_NAME**
 - **RECONCILE_RUNNERS_EVENT**
+- **REACTIVE_MQ_DB_NAME**
 
 ---
 
-<a href="../src/charm.py#L93"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L96"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_charm_errors`
 

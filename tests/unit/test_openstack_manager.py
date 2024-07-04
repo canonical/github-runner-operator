@@ -1035,7 +1035,6 @@ def test_reconcile_reactive_mode(
     )
     openstack_manager_for_reconcile.reconcile(quantity=count)
 
-    job_details = job_mock.get_details()
     job_mock.from_message_queue.assert_called_with(
         MessageQueueConnectionInfo(
             uri="http://example.com", queue_name=openstack_manager_for_reconcile.app_name
@@ -1043,8 +1042,34 @@ def test_reconcile_reactive_mode(
     )
     assert job_mock.from_message_queue.call_count == count
     assert job_mock.picked_up.call_count == count
+
+    job_details = job_mock.get_details()
     assert str(job_details.labels) in caplog.text
     assert job_details.run_url in caplog.text
+
+
+@pytest.mark.usefixtures("job_mock")
+def test_reconcile_reactive_mode_zero_quantity(
+    openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager,
+    job_mock: MagicMock,
+    caplog: LogCaptureFixture,
+):
+    """
+    arrange: Enable reactive mode and mock the job class to return a job.
+    act: Call reconcile with a quantity of 0.
+    assert: The mocked job is not picked up and no log message is present.
+    """
+    openstack_manager_for_reconcile._config.reactive_config = ReactiveConfig(
+        mq_uri="http://example.com"
+    )
+    openstack_manager_for_reconcile.reconcile(quantity=0)
+
+    job_mock.from_message_queue.assert_not_called()
+    assert job_mock.picked_up.call_count == 0
+
+    job_details = job_mock.get_details()
+    assert str(job_details.labels) not in caplog.text
+    assert job_details.run_url not in caplog.text
 
 
 def test_repo_policy_config(

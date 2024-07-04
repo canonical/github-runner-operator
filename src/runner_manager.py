@@ -584,19 +584,22 @@ class RunnerManager:
             quantity: Number of intended runners.
         """
         logger.info("Reactive mode is experimental and not yet fully implemented.")
-        logger.debug("Trying to spawn up to %i runners reactively.", quantity)
-        args = [
-            RunnerManager._CreateReactiveRunnerArgs(
-                app_name=self.app_name,
-                reactive_config=self.config.reactive_config,
-            )
-            for _ in range(quantity)
-        ]
-        with Pool(processes=quantity) as pool:
-            pool.map(
-                func=RunnerManager._spawn_runner_reactively,
-                iterable=args,
-            )
+        if quantity > 0:
+            logger.debug("Trying to spawn up to %i runners reactively.", quantity)
+            args = [
+                RunnerManager._CreateReactiveRunnerArgs(
+                    app_name=self.app_name,
+                    reactive_config=self.config.reactive_config,
+                )
+                for _ in range(quantity)
+            ]
+            with Pool(processes=quantity) as pool:
+                pool.map(
+                    func=RunnerManager._spawn_runner_reactively,
+                    iterable=args,
+                )
+        else:
+            logger.info("No runner needs to be spawned.")
 
     @dataclass
     class _CreateReactiveRunnerArgs:
