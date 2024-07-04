@@ -1142,7 +1142,7 @@ class GithubRunnerCharm(CharmBase):
 
     @catch_charm_errors
     def _on_image_relation_changed(self, _: ops.RelationChangedEvent) -> None:
-        """Handle debug ssh relation changed event."""
+        """Handle image relation changed event."""
         state = self._setup_state()
 
         if state.instance_type != InstanceType.OPENSTACK:
