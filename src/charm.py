@@ -396,6 +396,7 @@ class GithubRunnerCharm(CharmBase):
                 image=state.runner_config.base_image.value,
                 lxd_storage_path=lxd_storage_path,
                 path=path,
+                reactive_config=state.reactive_config,
                 service_token=self.service_token,
                 token=token,
             ),
@@ -1185,6 +1186,7 @@ class GithubRunnerCharm(CharmBase):
             flavor=state.runner_config.openstack_flavor,
             network=state.runner_config.openstack_network,
             dockerhub_mirror=state.charm_config.dockerhub_mirror,
+            reactive_config=state.reactive_config,
         )
         return OpenstackRunnerManager(
             app_name,

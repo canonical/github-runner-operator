@@ -184,6 +184,7 @@ class Job:
 
         simple_queue = conn.SimpleQueue(mq_connection_info.queue_name)
 
+        # TODO: add timeout
         msg = simple_queue.get(block=True)
         mq_job_source = _MQJobSource(conn, simple_queue, msg)
 
