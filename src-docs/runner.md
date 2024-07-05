@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/metrics/runner.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/runner.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `runner`
 Classes and function to extract the metrics from storage and issue runner metrics events. 
@@ -13,6 +13,24 @@ Classes and function to extract the metrics from storage and issue runner metric
 - **PRE_JOB_METRICS_FILE_NAME**
 - **POST_JOB_METRICS_FILE_NAME**
 - **RUNNER_INSTALLED_TS_FILE_NAME**
+
+---
+
+<a href="../src/reactive/runner.py#L11"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>function</kbd> `reactive_runner`
+
+```python
+reactive_runner(mq_uri: str, queue_name: str) → None
+```
+
+Spawn a runner reactively. 
+
+
+
+**Args:**
+ 
+
 
 ---
 
@@ -80,7 +98,24 @@ Issue the metrics events for a runner.
 
 ---
 
-<a href="../src/metrics/runner.py"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/runner.py"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `CodeInformation`
+Information about a status code. 
+
+
+
+**Attributes:**
+ 
+ - <b>`code`</b>:  The status code. 
+
+
+
+
+
+---
+
+<a href="../src/reactive/runner.py"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `CreateRunnerConfig`
 The configuration values for creating a single runner instance. 
@@ -119,7 +154,66 @@ __init__(
 
 ---
 
-<a href="../src/metrics/runner.py"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/runner.py"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `PostJobMetrics`
+Metrics for the post-job phase of a runner. 
+
+
+
+**Attributes:**
+ 
+ - <b>`timestamp`</b>:  The UNIX time stamp of the time at which the event was originally issued. 
+ - <b>`status`</b>:  The status of the job. 
+ - <b>`status_info`</b>:  More information about the status. 
+
+
+
+
+
+---
+
+<a href="../src/reactive/runner.py"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `PostJobStatus`
+The status of the post-job phase of a runner. 
+
+
+
+**Attributes:**
+ 
+ - <b>`NORMAL`</b>:  Represents a normal post-job. 
+ - <b>`ABNORMAL`</b>:  Represents an error with post-job. 
+ - <b>`REPO_POLICY_CHECK_FAILURE`</b>:  Represents an error with repo-policy-compliance check. 
+
+
+
+
+
+---
+
+<a href="../src/reactive/runner.py"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `PreJobMetrics`
+Metrics for the pre-job phase of a runner. 
+
+
+
+**Attributes:**
+ 
+ - <b>`timestamp`</b>:  The UNIX time stamp of the time at which the event was originally issued. 
+ - <b>`workflow`</b>:  The workflow name. 
+ - <b>`workflow_run_id`</b>:  The workflow run id. 
+ - <b>`repository`</b>:  The repository path in the format '<owner>/<repo>'. 
+ - <b>`event`</b>:  The github event. 
+
+
+
+
+
+---
+
+<a href="../src/reactive/runner.py"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `Runner`
 Single instance of GitHub self-hosted runner. 
@@ -232,7 +326,27 @@ Remove this runner instance from LXD and GitHub.
 
 ---
 
-<a href="../src/metrics/runner.py"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/runner.py"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `RunnerMetrics`
+Metrics for a runner. 
+
+
+
+**Attributes:**
+ 
+ - <b>`installed_timestamp`</b>:  The UNIX time stamp of the time at which the runner was installed. 
+ - <b>`pre_job`</b>:  The metrics for the pre-job phase. 
+ - <b>`post_job`</b>:  The metrics for the post-job phase. 
+ - <b>`runner_name`</b>:  The name of the runner. 
+
+
+
+
+
+---
+
+<a href="../src/reactive/runner.py"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `Snap`
 This class represents a snap installation. 
@@ -251,7 +365,7 @@ This class represents a snap installation.
 
 ---
 
-<a href="../src/metrics/runner.py"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/runner.py"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `WgetExecutable`
 The executable to be installed through wget. 
@@ -274,102 +388,6 @@ __init__(url: str, cmd: str) → None
 
 
 
-
-
-
-
-
----
-
-<a href="../src/metrics/runner.py#L35"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>class</kbd> `PreJobMetrics`
-Metrics for the pre-job phase of a runner. 
-
-
-
-**Attributes:**
- 
- - <b>`timestamp`</b>:  The UNIX time stamp of the time at which the event was originally issued. 
- - <b>`workflow`</b>:  The workflow name. 
- - <b>`workflow_run_id`</b>:  The workflow run id. 
- - <b>`repository`</b>:  The repository path in the format '<owner>/<repo>'. 
- - <b>`event`</b>:  The github event. 
-
-
-
-
-
----
-
-<a href="../src/metrics/runner.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>class</kbd> `PostJobStatus`
-The status of the post-job phase of a runner. 
-
-
-
-**Attributes:**
- 
- - <b>`NORMAL`</b>:  Represents a normal post-job. 
- - <b>`ABNORMAL`</b>:  Represents an error with post-job. 
- - <b>`REPO_POLICY_CHECK_FAILURE`</b>:  Represents an error with repo-policy-compliance check. 
-
-
-
-
-
----
-
-<a href="../src/metrics/runner.py#L67"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>class</kbd> `CodeInformation`
-Information about a status code. 
-
-
-
-**Attributes:**
- 
- - <b>`code`</b>:  The status code. 
-
-
-
-
-
----
-
-<a href="../src/metrics/runner.py#L77"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>class</kbd> `PostJobMetrics`
-Metrics for the post-job phase of a runner. 
-
-
-
-**Attributes:**
- 
- - <b>`timestamp`</b>:  The UNIX time stamp of the time at which the event was originally issued. 
- - <b>`status`</b>:  The status of the job. 
- - <b>`status_info`</b>:  More information about the status. 
-
-
-
-
-
----
-
-<a href="../src/metrics/runner.py#L91"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>class</kbd> `RunnerMetrics`
-Metrics for a runner. 
-
-
-
-**Attributes:**
- 
- - <b>`installed_timestamp`</b>:  The UNIX time stamp of the time at which the runner was installed. 
- - <b>`pre_job`</b>:  The metrics for the pre-job phase. 
- - <b>`post_job`</b>:  The metrics for the post-job phase. 
- - <b>`runner_name`</b>:  The name of the runner. 
 
 
 

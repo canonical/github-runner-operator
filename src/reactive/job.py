@@ -10,6 +10,8 @@ from kombu.exceptions import MessageStateError
 from kombu.simple import SimpleQueue
 from pydantic import AnyUrl, BaseModel, HttpUrl
 
+# TODO: add sigterm handler to requeue the message if the process is killed
+
 
 class JobDetails(BaseModel):
     """A class to translate the payload.
