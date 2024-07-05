@@ -16,7 +16,7 @@ from openstack.compute.v2.keypair import Keypair
 from openstack.compute.v2.server import Server
 
 import metrics.storage
-from charm_state import CharmState, ProxyConfig, RepoPolicyComplianceConfig
+from charm_state import BaseImage, CharmState, ProxyConfig, RepoPolicyComplianceConfig
 from errors import OpenStackError, RunnerStartError
 from github_type import GitHubRunnerStatus, SelfHostedRunner
 from metrics import events as metric_events
@@ -469,7 +469,7 @@ def test__build_image_command():
     )
 
     command = openstack_manager._build_image_command(
-        runner_info=test_runner_info, proxies=test_proxy_config
+        runner_info=test_runner_info, base_image=BaseImage.JAMMY, proxies=test_proxy_config
     )
     assert command == [
         "/usr/bin/bash",
@@ -478,6 +478,7 @@ def test__build_image_command():
         test_http_proxy,
         test_https_proxy,
         test_no_proxy,
+        "jammy",
     ], "Unexpected build image command."
 
 
@@ -496,6 +497,7 @@ def test_build_image_runner_binary_error():
             cloud_config=MagicMock(),
             github_client=mock_github_client,
             path=MagicMock(),
+            base_image=BaseImage.JAMMY,
         )
 
     assert "Failed to fetch runner application." in str(exc)
@@ -523,6 +525,7 @@ def test_build_image_script_error(monkeypatch: pytest.MonkeyPatch):
             cloud_config=MagicMock(),
             github_client=MagicMock(),
             path=MagicMock(),
+            base_image=BaseImage.JAMMY,
         )
 
     assert "Failed to build image." in str(exc)
@@ -551,6 +554,7 @@ def test_build_image_runner_arch_error(
             cloud_config=MagicMock(),
             github_client=mock_github_client,
             path=MagicMock(),
+            base_image=BaseImage.JAMMY,
         )
 
     assert "Unsupported architecture" in str(exc)
@@ -577,6 +581,7 @@ def test_build_image_delete_image_error(
             cloud_config=MagicMock(),
             github_client=mock_github_client,
             path=MagicMock(),
+            base_image=BaseImage.JAMMY,
         )
 
     assert "Failed to delete duplicate image on Openstack." in str(exc)
@@ -601,6 +606,7 @@ def test_build_image_create_image_error(
             cloud_config=MagicMock(),
             github_client=mock_github_client,
             path=MagicMock(),
+            base_image=BaseImage.JAMMY,
             proxies=None,
         )
 
@@ -627,6 +633,7 @@ def test_build_image(
         cloud_config=MagicMock(),
         github_client=mock_github_client,
         path=MagicMock(),
+        base_image=BaseImage.JAMMY,
     )
 
 
@@ -649,6 +656,7 @@ def test_build_image_on_arm64(
         cloud_config=MagicMock(),
         github_client=mock_github_client,
         path=MagicMock(),
+        base_image=BaseImage.JAMMY,
     )
 
 
@@ -673,6 +681,7 @@ def test_build_image_on_unsupported_arch(
             cloud_config=MagicMock(),
             github_client=mock_github_client,
             path=MagicMock(),
+            base_image=BaseImage.JAMMY,
         )
     assert str(exc.value) == "Unsupported architecture x64"
 
@@ -703,6 +712,7 @@ def test_build_image_with_proxy_config(
         cloud_config=MagicMock(),
         github_client=mock_github_client,
         path=MagicMock(),
+        base_image=BaseImage.JAMMY,
         proxies=test_proxy_config,
     )
 
@@ -718,6 +728,7 @@ def test_build_image_with_proxy_config(
         cloud_config=MagicMock(),
         github_client=mock_github_client,
         path=MagicMock(),
+        base_image=BaseImage.JAMMY,
         proxies=test_proxy_config,
     )
 

@@ -352,7 +352,7 @@ def _update_image(
 
 # Ignore the flake8 function too complex (C901). The function does not have much logic, the lint
 # is likely triggered with the multiple try-excepts, which are needed.
-def build_image(  # noqa: C901
+def build_image(  # noqa: C901 pylint: disable=too-many-arguments
     arch: Arch,
     cloud_config: dict[str, dict],
     github_client: GithubClient,
