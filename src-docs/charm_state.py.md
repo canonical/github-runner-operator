@@ -9,12 +9,19 @@ State of the Charm.
 ---------------
 - **ARCHITECTURES_ARM64**
 - **ARCHITECTURES_X86**
+- **BASE_IMAGE_CONFIG_NAME**
 - **DENYLIST_CONFIG_NAME**
 - **DOCKERHUB_MIRROR_CONFIG_NAME**
 - **GROUP_CONFIG_NAME**
+- **LABELS_CONFIG_NAME**
 - **OPENSTACK_CLOUDS_YAML_CONFIG_NAME**
+- **OPENSTACK_NETWORK_CONFIG_NAME**
+- **OPENSTACK_FLAVOR_CONFIG_NAME**
+- **OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME**
 - **PATH_CONFIG_NAME**
 - **RECONCILE_INTERVAL_CONFIG_NAME**
+- **REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME**
+- **REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME**
 - **RUNNER_STORAGE_CONFIG_NAME**
 - **TEST_MODE_CONFIG_NAME**
 - **TOKEN_CONFIG_NAME**
@@ -23,13 +30,13 @@ State of the Charm.
 - **VM_CPU_CONFIG_NAME**
 - **VM_MEMORY_CONFIG_NAME**
 - **VM_DISK_CONFIG_NAME**
-- **LABELS_CONFIG_NAME**
 - **COS_AGENT_INTEGRATION_NAME**
 - **DEBUG_SSH_INTEGRATION_NAME**
+- **LTS_IMAGE_VERSION_TAG_MAP**
 
 ---
 
-<a href="../src/charm_state.py#L100"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L121"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `parse_github_path`
 
@@ -60,6 +67,21 @@ Parse GitHub path.
 
 ---
 
+## <kbd>class</kbd> `AnyHttpsUrl`
+Represents an HTTPS URL. 
+
+
+
+**Attributes:**
+ 
+ - <b>`allowed_schemes`</b>:  Allowed schemes for the URL. 
+
+
+
+
+
+---
+
 ## <kbd>class</kbd> `Arch`
 Supported system architectures. 
 
@@ -69,6 +91,22 @@ Supported system architectures.
  
  - <b>`ARM64`</b>:  Represents an ARM64 system architecture. 
  - <b>`X64`</b>:  Represents an X64/AMD64 system architecture. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `BaseImage`
+The ubuntu OS base image to build and deploy runners on. 
+
+
+
+**Attributes:**
+ 
+ - <b>`JAMMY`</b>:  The jammy ubuntu LTS image. 
+ - <b>`NOBLE`</b>:  The noble ubuntu LTS image. 
 
 
 
@@ -91,6 +129,7 @@ Some charm configurations are grouped into other configuration models.
  - <b>`openstack_clouds_yaml`</b>:  The openstack clouds.yaml configuration. 
  - <b>`path`</b>:  GitHub repository path in the format '<owner>/<repo>', or the GitHub organization  name. 
  - <b>`reconcile_interval`</b>:  Time between each reconciliation of runners in minutes. 
+ - <b>`repo_policy_compliance`</b>:  Configuration for the repo policy compliance service. 
  - <b>`token`</b>:  GitHub personal access token for GitHub API. 
 
 
@@ -98,7 +137,7 @@ Some charm configurations are grouped into other configuration models.
 
 ---
 
-<a href="../src/charm_state.py#L418"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L454"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_reconcile_interval`
 
@@ -127,7 +166,7 @@ Validate the general charm configuration.
 
 ---
 
-<a href="../src/charm_state.py#L374"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L481"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -166,7 +205,7 @@ Raised when charm config is invalid.
  
  - <b>`msg`</b>:  Explanation of the error. 
 
-<a href="../src/charm_state.py#L212"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L245"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -199,6 +238,7 @@ The charm state.
  - <b>`charm_config`</b>:  Configuration of the juju charm. 
  - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
  - <b>`proxy_config`</b>:  Proxy-related configuration. 
+ - <b>`instance_type`</b>:  The type of instances, e.g., local lxd, openstack. 
  - <b>`runner_config`</b>:  The charm configuration related to runner VM configuration. 
  - <b>`ssh_debug_connections`</b>:  SSH debug connections configuration information. 
 
@@ -207,7 +247,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L788"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L1042"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -252,7 +292,7 @@ Charm configuration related to GitHub.
 
 ---
 
-<a href="../src/charm_state.py#L136"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L157"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -297,7 +337,7 @@ Represent GitHub organization.
 
 ---
 
-<a href="../src/charm_state.py#L88"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L109"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `path`
 
@@ -330,7 +370,7 @@ Represent GitHub repository.
 
 ---
 
-<a href="../src/charm_state.py#L67"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L88"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `path`
 
@@ -348,91 +388,55 @@ Return a string representing the path.
 
 ---
 
-## <kbd>class</kbd> `ProxyConfig`
-Proxy configuration. 
+## <kbd>class</kbd> `ImmutableConfigChangedError`
+Represents an error when changing immutable charm state. 
 
+<a href="../src/charm_state.py#L942"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-
-**Attributes:**
- 
- - <b>`aproxy_address`</b>:  The address of aproxy snap instance if use_aproxy is enabled. 
- - <b>`http`</b>:  HTTP proxy address. 
- - <b>`https`</b>:  HTTPS proxy address. 
- - <b>`no_proxy`</b>:  Comma-separated list of hosts that should not be proxied. 
- - <b>`use_aproxy`</b>:  Whether aproxy should be used for the runners. 
-
-
----
-
-#### <kbd>property</kbd> aproxy_address
-
-Return the aproxy address. 
-
-
-
----
-
-<a href="../src/charm_state.py#L643"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>classmethod</kbd> `check_use_aproxy`
+### <kbd>function</kbd> `__init__`
 
 ```python
-check_use_aproxy(use_aproxy: bool, values: dict) → bool
+__init__(msg: str)
 ```
 
-Validate the proxy configuration. 
+Initialize a new instance of the ImmutableConfigChangedError exception. 
 
 
 
 **Args:**
  
- - <b>`use_aproxy`</b>:  Value of use_aproxy variable. 
- - <b>`values`</b>:  Values in the pydantic model. 
+ - <b>`msg`</b>:  Explanation of the error. 
 
 
 
-**Raises:**
- 
- - <b>`ValueError`</b>:  if use_aproxy was set but no http/https was passed. 
-
-
-
-**Returns:**
- Validated use_aproxy value. 
-
----
-
-<a href="../src/charm_state.py#L605"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>classmethod</kbd> `from_charm`
-
-```python
-from_charm(charm: CharmBase) → ProxyConfig
-```
-
-Initialize the proxy config from charm. 
-
-
-
-**Args:**
- 
- - <b>`charm`</b>:  The charm instance. 
-
-
-
-**Returns:**
- Current proxy config of the charm. 
 
 
 ---
 
-## <kbd>class</kbd> `RunnerCharmConfig`
-Runner configurations for the charm. 
+## <kbd>class</kbd> `InstanceType`
+Type of instance for runner. 
 
 
 
 **Attributes:**
  
+ - <b>`LOCAL_LXD`</b>:  LXD instance on the local juju machine. 
+ - <b>`OPENSTACK`</b>:  OpenStack instance on a cloud. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `LocalLxdRunnerConfig`
+Runner configurations for local LXD instances. 
+
+
+
+**Attributes:**
+ 
+ - <b>`base_image`</b>:  The ubuntu base image to run the runner virtual machines on. 
  - <b>`virtual_machines`</b>:  Number of virtual machine-based runner to spawn. 
  - <b>`virtual_machine_resources`</b>:  Hardware resource used by one virtual machine for a runner. 
  - <b>`runner_storage`</b>:  Storage to be used as disk for the runner. 
@@ -442,7 +446,7 @@ Runner configurations for the charm.
 
 ---
 
-<a href="../src/charm_state.py#L556"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L716"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_virtual_machine_resources`
 
@@ -473,7 +477,7 @@ Validate the virtual_machine_resources field values.
 
 ---
 
-<a href="../src/charm_state.py#L534"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L694"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_virtual_machines`
 
@@ -502,12 +506,12 @@ Validate the virtual machines configuration value.
 
 ---
 
-<a href="../src/charm_state.py#L489"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L642"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
 ```python
-from_charm(charm: CharmBase) → RunnerCharmConfig
+from_charm(charm: CharmBase) → LocalLxdRunnerConfig
 ```
 
 Initialize the config from charm. 
@@ -527,7 +531,177 @@ Initialize the config from charm.
 
 
 **Returns:**
- Current config of the charm. 
+ Local LXD runner config of the charm. 
+
+
+---
+
+## <kbd>class</kbd> `OpenstackRunnerConfig`
+Runner configuration for OpenStack Instances. 
+
+
+
+**Attributes:**
+ 
+ - <b>`virtual_machines`</b>:  Number of virtual machine-based runner to spawn. 
+ - <b>`openstack_flavor`</b>:  flavor on openstack to use for virtual machines. 
+ - <b>`openstack_network`</b>:  Network on openstack to use for virtual machines. 
+ - <b>`build_image`</b>:  Whether to build the image on this juju unit. 
+
+
+
+
+---
+
+<a href="../src/charm_state.py#L591"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `from_charm`
+
+```python
+from_charm(charm: CharmBase) → OpenstackRunnerConfig
+```
+
+Initialize the config from charm. 
+
+
+
+**Args:**
+ 
+ - <b>`charm`</b>:  The charm instance. 
+
+
+
+**Raises:**
+ 
+ - <b>`CharmConfigInvalidError`</b>:  Error with charm configuration virtual-machines not of int  type. 
+
+
+
+**Returns:**
+ Openstack runner config of the charm. 
+
+
+---
+
+## <kbd>class</kbd> `ProxyConfig`
+Proxy configuration. 
+
+
+
+**Attributes:**
+ 
+ - <b>`aproxy_address`</b>:  The address of aproxy snap instance if use_aproxy is enabled. 
+ - <b>`http`</b>:  HTTP proxy address. 
+ - <b>`https`</b>:  HTTPS proxy address. 
+ - <b>`no_proxy`</b>:  Comma-separated list of hosts that should not be proxied. 
+ - <b>`use_aproxy`</b>:  Whether aproxy should be used for the runners. 
+
+
+---
+
+#### <kbd>property</kbd> aproxy_address
+
+Return the aproxy address. 
+
+
+
+---
+
+<a href="../src/charm_state.py#L786"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `check_use_aproxy`
+
+```python
+check_use_aproxy(use_aproxy: bool, values: dict) → bool
+```
+
+Validate the proxy configuration. 
+
+
+
+**Args:**
+ 
+ - <b>`use_aproxy`</b>:  Value of use_aproxy variable. 
+ - <b>`values`</b>:  Values in the pydantic model. 
+
+
+
+**Raises:**
+ 
+ - <b>`ValueError`</b>:  if use_aproxy was set but no http/https was passed. 
+
+
+
+**Returns:**
+ Validated use_aproxy value. 
+
+---
+
+<a href="../src/charm_state.py#L814"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `from_charm`
+
+```python
+from_charm(charm: CharmBase) → ProxyConfig
+```
+
+Initialize the proxy config from charm. 
+
+
+
+**Args:**
+ 
+ - <b>`charm`</b>:  The charm instance. 
+
+
+
+**Returns:**
+ Current proxy config of the charm. 
+
+
+---
+
+## <kbd>class</kbd> `RepoPolicyComplianceConfig`
+Configuration for the repo policy compliance service. 
+
+
+
+**Attributes:**
+ 
+ - <b>`token`</b>:  Token for the repo policy compliance service. 
+ - <b>`url`</b>:  URL of the repo policy compliance service. 
+
+
+
+
+---
+
+<a href="../src/charm_state.py#L312"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>classmethod</kbd> `from_charm`
+
+```python
+from_charm(charm: CharmBase) → RepoPolicyComplianceConfig
+```
+
+Initialize the config from charm. 
+
+
+
+**Args:**
+ 
+ - <b>`charm`</b>:  The charm instance. 
+
+
+
+**Raises:**
+ 
+ - <b>`CharmConfigInvalidError`</b>:  If an invalid configuration was set. 
+
+
+
+**Returns:**
+ Current repo-policy-compliance config. 
 
 
 ---
@@ -565,7 +739,7 @@ SSH connection information for debug workflow.
 
 ---
 
-<a href="../src/charm_state.py#L731"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L900"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -598,7 +772,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L688"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L857"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

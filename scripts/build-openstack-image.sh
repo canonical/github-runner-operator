@@ -12,8 +12,7 @@ RUNNER_TAR_URL="$1"
 HTTP_PROXY="$2"
 HTTPS_PROXY="$3"
 NO_PROXY="$4"
-DOCKER_PROXY_SERVICE_CONF="$5"
-DOCKER_PROXY_CONF="$6"
+BASE_IMAGE="$7"
 
 # retry function
 retry() {
@@ -54,10 +53,6 @@ if [[ -n "$HTTP_PROXY" ]]; then
         sed -i "/^http_proxy=/d" /etc/environment
         echo "http_proxy=$HTTP_PROXY" >> /etc/environment
     fi
-    if ! grep -q "Acquire::http::Proxy" /etc/apt/apt.conf || ! grep -q "Acquire::http::Proxy \"$HTTP_PROXY\";" /etc/apt/apt.conf; then
-        sed -i "/^Acquire::http::Proxy/d" /etc/apt/apt.conf
-        echo "Acquire::http::Proxy \"$HTTP_PROXY\";" >> /etc/apt/apt.conf
-    fi
 fi
 
 if [[ -n "$HTTPS_PROXY" ]]; then
@@ -68,10 +63,6 @@ if [[ -n "$HTTPS_PROXY" ]]; then
     if ! grep -q "https_proxy=" /etc/environment || ! grep -q "https_proxy=$HTTPS_PROXY" /etc/environment; then
         sed -i "/^https_proxy=/d" /etc/environment
         echo "https_proxy=$HTTPS_PROXY" >> /etc/environment
-    fi
-    if ! grep -q "Acquire::https::Proxy" /etc/apt/apt.conf || ! grep -q "Acquire::https::Proxy \"$HTTPS_PROXY\";" /etc/apt/apt.conf; then
-        sed -i "/^Acquire::https::Proxy/d" /etc/apt/apt.conf
-        echo "Acquire::https::Proxy \"$HTTPS_PROXY\";" >> /etc/apt/apt.conf
     fi
 fi
 
@@ -108,15 +99,15 @@ sudo modprobe nbd
 # cleanup any existing mounts
 cleanup
 
-retry "sudo wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-$BIN_ARCH.img \
-    -O jammy-server-cloudimg-$BIN_ARCH.img" "Downloading cloud image" 3
+retry "sudo wget https://cloud-images.ubuntu.com/$BASE_IMAGE/current/$BASE_IMAGE-server-cloudimg-$BIN_ARCH.img \
+    -O $BASE_IMAGE-server-cloudimg-$BIN_ARCH.img" "Downloading cloud image" 3
 
 # resize image - installing dependencies requires more disk space
-sudo qemu-img resize jammy-server-cloudimg-$BIN_ARCH.img +1.5G
+sudo qemu-img resize "$BASE_IMAGE-server-cloudimg-$BIN_ARCH.img" +1.5G
 
 # mount nbd
 echo "Connecting network block device to image"
-sudo qemu-nbd --connect=/dev/nbd0 jammy-server-cloudimg-$BIN_ARCH.img
+sudo qemu-nbd --connect=/dev/nbd0 "$BASE_IMAGE-server-cloudimg-$BIN_ARCH.img"
 sudo mkdir -p /mnt/ubuntu-image
 retry "sudo mount -o rw /dev/nbd0p1 /mnt/ubuntu-image" "Mounting nbd0p1 device" 3
 
@@ -142,8 +133,10 @@ set -e
 df -h # print disk free space
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get update -yq
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get upgrade -yq
-DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget unzip gh -yq
+DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install docker.io npm python3-pip shellcheck jq wget unzip gh snapd -yq
 ln -s /usr/bin/python3 /usr/bin/python
+
+# Snap installation cannot work in chroot env: https://forum.snapcraft.io/t/installing-a-snap-in-chrooted-enviornment/19048/2
 
 # Uninstall unattended-upgrades, to avoid lock errors when unattended-upgrades is active in the runner
 DEBIAN_FRONTEND=noninteractive /usr/bin/systemctl stop apt-daily.timer
@@ -156,29 +149,11 @@ DEBIAN_FRONTEND=noninteractive /usr/bin/systemctl daemon-reload
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get purge unattended-upgrades -yq
 
 /usr/sbin/useradd -m ubuntu
-/usr/bin/npm install --global yarn 
+/usr/bin/npm install --global yarn
 /usr/sbin/groupadd microk8s
 /usr/sbin/usermod -aG microk8s ubuntu
 /usr/sbin/usermod -aG docker ubuntu
 /usr/bin/chmod 777 /usr/local/bin
-
-# Proxy configs
-if [[ -n "$HTTP_PROXY" ]]; then
-    /usr/bin/npm config set proxy "$HTTP_PROXY"
-fi
-if [[ -n "$HTTPS_PROXY" ]]; then
-    /usr/bin/npm config set https-proxy "$HTTPS_PROXY"
-fi
-if [[ -n "$DOCKER_PROXY_SERVICE_CONF" ]]; then
-    mkdir -p /etc/systemd/system/docker.service.d
-    echo "$DOCKER_PROXY_SERVICE_CONF" > /etc/systemd/system/docker.service.d/http-proxy.conf
-fi
-if [[ -n "$DOCKER_PROXY_CONF" ]]; then
-    mkdir -p /root/.docker
-    echo "$DOCKER_PROXY_CONF" > /root/.docker/config.json
-    mkdir -p /home/ubuntu/.docker
-    echo "$DOCKER_PROXY_CONF" > /home/ubuntu/.docker/config.json
-fi
 
 # Reduce image size
 /usr/bin/npm cache clean --force
@@ -190,7 +165,7 @@ DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get clean
 /usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/checksums_hashes_order -O checksums_hashes_order
 /usr/bin/wget https://github.com/mikefarah/yq/releases/latest/download/extract-checksum.sh -O extract-checksum.sh
 /usr/bin/bash extract-checksum.sh SHA-256 "yq_linux_$BIN_ARCH" | /usr/bin/awk '{print \$2,\$1}' | /usr/bin/sha256sum -c | /usr/bin/grep OK
-rm checksums checksums_hashes_order extract-checksum.sh 
+rm checksums checksums_hashes_order extract-checksum.sh
 /usr/bin/chmod 755 yq_linux_$BIN_ARCH
 /usr/bin/mv yq_linux_$BIN_ARCH /usr/bin/yq
 
@@ -208,4 +183,4 @@ sudo sync
 cleanup
 
 # Reduce image size by removing sparse space & compressing
-sudo virt-sparsify --compress jammy-server-cloudimg-$BIN_ARCH.img jammy-server-cloudimg-$BIN_ARCH-compressed.img
+sudo virt-sparsify --compress "$BASE_IMAGE-server-cloudimg-$BIN_ARCH.img" "$BASE_IMAGE-server-cloudimg-$BIN_ARCH-compressed.img"

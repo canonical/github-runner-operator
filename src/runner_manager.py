@@ -18,14 +18,10 @@ import requests
 import requests.adapters
 import urllib3
 
-import github_metrics
-import metrics
-import runner_logs
-import runner_metrics
 import shared_fs
 from charm_state import VirtualMachineResources
 from errors import (
-    GetSharedFilesystemError,
+    GetMetricsStorageError,
     GithubClientError,
     GithubMetricsError,
     IssueMetricEventError,
@@ -37,10 +33,14 @@ from errors import (
 from github_client import GithubClient
 from github_type import RunnerApplication, SelfHostedRunner
 from lxd import LxdClient, LxdInstance
+from metrics import events as metric_events
+from metrics import github as github_metrics
+from metrics import runner as runner_metrics
+from metrics import runner_logs
+from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import FlushMode, RunnerInfo, RunnerManagerClients, RunnerManagerConfig
-from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import ProxySetting as RunnerProxySetting
 from runner_type import RunnerByHealth
 from utilities import execute_command, retry, set_env_var
@@ -52,7 +52,7 @@ logger = logging.getLogger(__name__)
 
 BUILD_IMAGE_SCRIPT_FILENAME = Path("scripts/build-lxd-image.sh")
 
-IssuedMetricEventsStats = dict[Type[metrics.Event], int]
+IssuedMetricEventsStats = dict[Type[metric_events.Event], int]
 
 
 class RunnerManager:
@@ -101,21 +101,11 @@ class RunnerManager:
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
 
-        # The repo policy compliance service is on localhost and should not have any proxies
-        # setting configured. The is a separated requests Session as the other one configured
-        # according proxies setting provided by user.
-        local_session = requests.Session()
-        local_session.mount("http://", adapter)
-        local_session.mount("https://", adapter)
-        local_session.trust_env = False
-
         self._clients = RunnerManagerClients(
             GithubClient(token=self.config.token),
             jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True),
             LxdClient(),
-            RepoPolicyComplianceClient(
-                local_session, "http://127.0.0.1:8080", self.config.service_token
-            ),
+            RepoPolicyComplianceClient("http://127.0.0.1:8080", self.config.service_token),
         )
 
     def check_runner_bin(self) -> bool:
@@ -281,8 +271,8 @@ class RunnerManager:
             )
             ts_after = time.time()
             try:
-                metrics.issue_event(
-                    event=metrics.RunnerInstalled(
+                metric_events.issue_event(
+                    event=metric_events.RunnerInstalled(
                         timestamp=ts_after,
                         flavor=self.app_name,
                         duration=ts_after - ts_now,
@@ -293,7 +283,7 @@ class RunnerManager:
 
             try:
                 fs = shared_fs.get(runner.config.name)
-            except GetSharedFilesystemError:
+            except GetMetricsStorageError:
                 logger.exception(
                     "Failed to get shared filesystem for runner %s, "
                     "will not be able to issue all metrics.",
@@ -331,7 +321,9 @@ class RunnerManager:
         runner_states = self._get_runner_health_states()
 
         total_stats: IssuedMetricEventsStats = {}
-        for extracted_metrics in runner_metrics.extract(ignore_runners=set(runner_states.healthy)):
+        for extracted_metrics in runner_metrics.extract(
+            metrics_storage_manager=shared_fs, ignore_runners=set(runner_states.healthy)
+        ):
             try:
                 job_metrics = github_metrics.job(
                     github_client=self._clients.github,
@@ -384,12 +376,12 @@ class RunnerManager:
         idle_offline_count = len((offline_runner_names & healthy_runners) - active_runner_names)
 
         try:
-            metrics.issue_event(
-                event=metrics.Reconciliation(
+            metric_events.issue_event(
+                event=metric_events.Reconciliation(
                     timestamp=time.time(),
                     flavor=self.app_name,
-                    crashed_runners=metric_stats.get(metrics.RunnerStart, 0)
-                    - metric_stats.get(metrics.RunnerStop, 0),
+                    crashed_runners=metric_stats.get(metric_events.RunnerStart, 0)
+                    - metric_stats.get(metric_events.RunnerStop, 0),
                     idle_runners=idle_online_count + idle_offline_count,
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )
@@ -517,7 +509,8 @@ class RunnerManager:
         for runner in unhealthy_runners:
             if self.config.are_metrics_enabled:
                 try:
-                    runner_logs.get_crashed(runner)
+                    logger.info("Pulling the logs of the crashed runner %s.", runner.config.name)
+                    runner.pull_logs()
                 except RunnerLogsError:
                     logger.exception("Failed to get logs of crashed runner %s", runner.config.name)
             runner.remove(remove_token)
@@ -553,7 +546,7 @@ class RunnerManager:
             len(runner_states.unhealthy),
         )
 
-        runner_logs.remove_outdated_crashed()
+        runner_logs.remove_outdated()
         if self.config.are_metrics_enabled:
             metric_stats = self._issue_runner_metrics()
 
@@ -780,6 +773,7 @@ class RunnerManager:
             http_proxy,
             https_proxy,
             no_proxy,
+            self.config.image,
         ]
         if LXD_PROFILE_YAML.exists():
             cmd += ["test"]
@@ -793,6 +787,7 @@ class RunnerManager:
         """
         return self._clients.lxd.images.exists(self.config.image)
 
+    @retry(tries=3, delay=30, local_logger=logger)
     def build_runner_image(self) -> None:
         """Build the LXD image for hosting runner.
 

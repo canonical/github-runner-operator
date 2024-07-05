@@ -19,7 +19,7 @@ jobs:
 
   issues-schedule-event-tests:
     needs: [ extract-runner-name ]
-    runs-on: [ self-hosted, linux, x64, "${{ needs.extract-runner-name.outputs.name }}" ]
+    runs-on: [ self-hosted, linux, "${{ needs.extract-runner-name.outputs.name }}" ]
     steps:
       - name: Echo runner name
         run: |

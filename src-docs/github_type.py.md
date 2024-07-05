@@ -55,6 +55,7 @@ Stats for a job on GitHub.
 
 **Attributes:**
  
+ - <b>`job_id`</b>:  The ID of the job. 
  - <b>`created_at`</b>:  The time the job was created. 
  - <b>`started_at`</b>:  The time the job was started. 
  - <b>`conclusion`</b>:  The end result of a job. 

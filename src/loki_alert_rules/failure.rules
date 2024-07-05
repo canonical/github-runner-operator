@@ -1,0 +1,29 @@
+groups:
+  - name: github-runner-failure
+    rules:
+      - alert: Crashed runner
+        expr: |
+          (sum_over_time({filename="/var/log/github-runner-metrics.log"} | json event="event", crashed_runners="crashed_runners" |  event = `reconciliation` | unwrap crashed_runners [1h])) > 0
+        labels:
+            severity: high
+        for: 0s
+        annotations:
+            summary: A runner in unit {{ $labels.juju_unit }} crashed.
+      - alert: Repo-policy check failures
+        expr: |
+          sum by (filename) (count_over_time({filename="/var/log/github-runner-metrics.log"} | json event="event" | event="runner_stop" | json status="status" | status="repo-policy-check-failure" | json http_code="status_info.code" | http_code=~"4.." [10m])) / sum by (filename) (count_over_time({filename="/var/log/github-runner-metrics.log"} | json event="event" | event="runner_stop" [10m])) > 0.5
+        labels:
+            severity: high
+        for: 3h
+        annotations:
+            description: More than 50 % of jobs have failed the repo-policy check (4xx status code)
+            summary: Too many repo-policy check failures
+      - alert: Repo-policy server error
+        expr: |
+            count_over_time({filename="/var/log/github-runner-metrics.log"} | json event="event" | event="runner_stop" | json status="status",repo="repo" | status="repo-policy-check-failure" | json http_code="status_info.code" | http_code=~"5.." [1h]) > 0
+        labels:
+            severity: high
+        for: 0s
+        annotations:
+            description: A repo-policy server error ({{ $labels.http_code }}) was encountered in a runner in unit {{ $labels.juju_unit }} and repository {{ $labels.repo }}.
+            summary: Repo-policy server error in unit {{ $labels.juju_unit }}.

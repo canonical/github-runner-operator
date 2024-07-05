@@ -22,12 +22,12 @@ from charm_state import (
 )
 from errors import IssueMetricEventError, RunnerBinaryError
 from github_type import RunnerApplication
-from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
+from metrics.events import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
+from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
+from metrics.storage import MetricsStorage
 from runner import Runner, RunnerStatus
 from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerManagerConfig
-from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import RunnerByHealth
-from shared_fs import SharedFilesystem
 from tests.unit.mock import TEST_BINARY, MockLxdImageManager
 
 IMAGE_NAME = "jammy"
@@ -103,7 +103,7 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token, charm_state):
 def issue_event_mock_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     """Mock the issue_event function."""
     issue_event_mock = MagicMock()
-    monkeypatch.setattr("metrics.issue_event", issue_event_mock)
+    monkeypatch.setattr("metrics.events.issue_event", issue_event_mock)
     return issue_event_mock
 
 
@@ -462,7 +462,7 @@ def test_reconcile_places_timestamp_in_newly_created_runner(
     monkeypatch.setattr(RUNNER_MANAGER_TIME_MODULE, t_mock)
     runner_shared_fs = tmp_path / "runner_fs"
     runner_shared_fs.mkdir()
-    fs = SharedFilesystem(path=runner_shared_fs, runner_name="test_runner")
+    fs = MetricsStorage(path=runner_shared_fs, runner_name="test_runner")
     shared_fs.get.return_value = fs
 
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
@@ -482,7 +482,7 @@ def test_reconcile_error_on_placing_timestamp_is_ignored(
     """
     charm_state.is_metrics_logging_available = True
     runner_shared_fs = tmp_path / "runner_fs"
-    fs = SharedFilesystem(path=runner_shared_fs, runner_name="test_runner")
+    fs = MetricsStorage(path=runner_shared_fs, runner_name="test_runner")
     shared_fs.get.return_value = fs
 
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
@@ -500,7 +500,7 @@ def test_reconcile_places_no_timestamp_in_newly_created_runner_if_metrics_disabl
     """
     charm_state.is_metrics_logging_available = False
 
-    fs = SharedFilesystem(path=tmp_path, runner_name="test_runner")
+    fs = MetricsStorage(path=tmp_path, runner_name="test_runner")
     shared_fs.get.return_value = fs
 
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
@@ -533,7 +533,7 @@ def test_schedule_build_runner_image(
     cmd = f"/usr/bin/bash {BUILD_IMAGE_SCRIPT_FILENAME.absolute()} {http} {https} {no_proxy}"
 
     assert cronfile.exists()
-    assert cronfile.read_text() == f"4 4,10,16,22 * * * ubuntu {cmd}\n"
+    assert cronfile.read_text() == f"4 4,10,16,22 * * * ubuntu {cmd} jammy\n"
 
 
 def test_has_runner_image(runner_manager: RunnerManager):
