@@ -577,12 +577,14 @@ class OpenstackRunnerConfig(BaseModel):
     """Runner configuration for OpenStack Instances.
 
     Attributes:
+        base_image: The ubuntu base image to run the runner virtual machines on.
         virtual_machines: Number of virtual machine-based runner to spawn.
         openstack_flavor: flavor on openstack to use for virtual machines.
         openstack_network: Network on openstack to use for virtual machines.
         build_image: Whether to build the image on this juju unit.
     """
 
+    base_image: BaseImage
     virtual_machines: int
     openstack_flavor: str
     openstack_network: str
@@ -603,6 +605,11 @@ class OpenstackRunnerConfig(BaseModel):
             Openstack runner config of the charm.
         """
         try:
+            base_image = BaseImage.from_charm(charm)
+        except ValueError as err:
+            raise CharmConfigInvalidError("Invalid base image") from err
+
+        try:
             virtual_machines = int(charm.config["virtual-machines"])
         except ValueError as err:
             raise CharmConfigInvalidError(
@@ -617,6 +624,7 @@ class OpenstackRunnerConfig(BaseModel):
         build_image = openstack_image_build_unit == unit_num
 
         return cls(
+            base_image=base_image,
             virtual_machines=virtual_machines,
             openstack_flavor=cast(str, openstack_flavor),
             openstack_network=cast(str, openstack_network),
