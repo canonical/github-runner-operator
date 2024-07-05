@@ -417,6 +417,7 @@ class GithubRunnerCharm(CharmBase):
                     cloud_config=state.charm_config.openstack_clouds_yaml,
                     github_client=github,
                     path=state.charm_config.path,
+                    base_image=state.runner_config.base_image,
                     proxies=state.proxy_config,
                 )
                 self.unit.status = ActiveStatus()

@@ -12,7 +12,7 @@ RUNNER_TAR_URL="$1"
 HTTP_PROXY="$2"
 HTTPS_PROXY="$3"
 NO_PROXY="$4"
-BASE_IMAGE="$7"
+BASE_IMAGE="$5"
 
 # retry function
 retry() {

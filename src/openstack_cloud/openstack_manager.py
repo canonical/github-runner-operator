@@ -40,6 +40,7 @@ from paramiko.ssh_exception import NoValidConnectionsError
 
 from charm_state import (
     Arch,
+    BaseImage,
     CharmState,
     GithubOrg,
     ProxyConfig,
@@ -231,12 +232,14 @@ def _get_default_proxy_values(proxies: Optional[ProxyConfig] = None) -> ProxyStr
 
 def _build_image_command(
     runner_info: RunnerApplication,
+    base_image: BaseImage,
     proxies: Optional[ProxyConfig] = None,
 ) -> list[str]:
     """Get command for building runner image.
 
     Args:
         runner_info: The runner application to fetch runner tar download url.
+        base_image: The base image for building the image.
         proxies: HTTP proxy settings.
 
     Returns:
@@ -250,6 +253,7 @@ def _build_image_command(
         proxy_values.http,
         proxy_values.https,
         proxy_values.no_proxy,
+        str(base_image),
     ]
     return cmd
 
@@ -353,6 +357,7 @@ def build_image(  # noqa: C901
     cloud_config: dict[str, dict],
     github_client: GithubClient,
     path: GithubPath,
+    base_image: BaseImage,
     proxies: Optional[ProxyConfig] = None,
 ) -> str:
     """Build and upload an image to OpenStack.
@@ -362,6 +367,7 @@ def build_image(  # noqa: C901
         cloud_config: The cloud configuration to connect OpenStack with.
         github_client: The Github client to interact with Github API.
         path: Github organisation or repository path.
+        base_image: The base image for building the image.
         proxies: HTTP proxy settings.
 
     Raises:
@@ -387,7 +393,7 @@ def build_image(  # noqa: C901
 
     try:
         execute_command(
-            _build_image_command(runner_application, proxies),
+            _build_image_command(runner_application, proxies, base_image),
             check_exit=True,
         )
     except SubprocessError as exc:
