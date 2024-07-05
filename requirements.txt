@@ -3,7 +3,7 @@ jinja2
 fabric >=3,<4
 openstacksdk>=3,<4
 ops>=2.8
-pylxd @ git+https://github.com/canonical/pylxd
+pylxd @ git+https://github.com/canonical/pylxd@46b58e61a465a970937cd97bbbf93622f98caa8c
 requests
 typing-extensions
 cryptography <=42.0.5
