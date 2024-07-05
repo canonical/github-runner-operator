@@ -10,13 +10,14 @@ There are three configuration that the charm needs to be deployed with to enable
 
 ## Integration
 
-The OpenStack runners require image to be available via the `image` integration. Deploy the
+The image will take about 10-15 minutes to build and be fully integrated. Deploy the
 `github-runner-image-builder` charm and wait for the image to be successfully provided via the
 relation data.
 
 ```bash
 juju deploy github-runner-image-builder
 juju integrate github-runner-image-builder github-runner
+juju status github-runner
 ```
 
 The image will take about 10-15 minutes to build and be ready via the relation.
@@ -51,7 +52,7 @@ The flavors documentation is [here](https://docs.openstack.org/nova/rocky/user/f
 
 ### OpenStack Network
 
-The  `openstack-network` configuration sets the network used to create the OpenStack virtual machine when spawning new runners.
+The `openstack-network` configuration sets the network used to create the OpenStack virtual machine when spawning new runners.
 
 Note that the network should be configured to allow traffic from the charm deployment (juju machine) to the OpenStack virtual machine, and traffic from the OpenStack virtual machine to GitHub.
 
