@@ -393,7 +393,7 @@ def build_image(  # noqa: C901
 
     try:
         execute_command(
-            _build_image_command(runner_application, proxies, base_image),
+            _build_image_command(runner_application, base_image, proxies),
             check_exit=True,
         )
     except SubprocessError as exc:
