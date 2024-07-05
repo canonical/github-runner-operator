@@ -12,7 +12,7 @@ jobs:
   # INTEGRATION_TEST_ARGS to operator-workflows automatically.
   integration-tests-juju2:
     name: Integration test with juju 2.9
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@3646a29c06e87d1ac89665c532dc21ac9fbf4692
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
       juju-channel: 2.9/stable
@@ -22,7 +22,7 @@ jobs:
       modules: '["test_charm_base_image", "test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_lxd_runner", "test_charm_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh", "test_charm_upgrade"]'
   integration-tests:
     name: Integration test with juju 3.1
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@3646a29c06e87d1ac89665c532dc21ac9fbf4692
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
       juju-channel: 3.1/stable
