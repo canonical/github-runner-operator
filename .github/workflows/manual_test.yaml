@@ -27,11 +27,11 @@ jobs:
     #   - run: sleep 3600
   self-host-x64:
     name: self-hosted x64 test
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    runs-on: [self-hosted, X64, large, jammy]
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    runs-on: [self-hosted, X64, edge, jammy]
     steps:
       - run: uname -a
     # - uses: actions/checkout@v4
@@ -63,23 +63,23 @@ jobs:
   #   - name: rand read
   #     run: sudo fio --name=write_iops --directory=/ --numjobs=4 --size=3G --time_based --runtime=60s --ramp_time=2s --ioengine=libaio --direct=1 --verify=0 --bs=4k --iodepth=256 --rw=randread --group_reporting=1 --iodepth_batch_submit=256 --iodepth_batch_complete_max=256
   #   - run: sudo rm -f /write* /read*
-  self-host-test-arm64:
-    name: self-hosted arm64 test
-    runs-on: [self-hosted, ARM64, medium]
-    strategy:
-      fail-fast: false
-      matrix:
-        # index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        index: [0]
-    steps:
+  # self-host-test-arm64:
+  #   name: self-hosted arm64 test
+  #   runs-on: [self-hosted, ARM64, medium]
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       # index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  #       index: [0]
+  #   steps:
       # - uses: actions/checkout@v4
       # - run: bash scripts/test_hardware.sh
     #   - name: tmate ssh
     #     uses: canonical/action-tmate@debug
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
+      # - run: lscpu
+      # - run: df -h
+      # - run: free -h
+      # - run: uname -a
       # - run: echo $HTTP_PROXY
       # - run: echo $HTTPS_PROXY
       # - run: echo $NO_PROXY
