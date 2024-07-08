@@ -85,8 +85,10 @@ class ReactiveRunnerManager:
                 self._reactive_config.mq_uri,
                 self._queue_name,
             ],
-            stdout=None,
-            stderr=None,
+            # TODO: we are using devnull because there are hanging issues if we reuse the same fd as the parent
+            # maybe add a check if the process is alive
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
             env=env,
             user=UBUNTU_USER,
         )
