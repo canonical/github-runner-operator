@@ -6,10 +6,10 @@ import secrets
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from pytest import MonkeyPatch, LogCaptureFixture
 import pytest
+from pytest import LogCaptureFixture, MonkeyPatch
 
-from reactive.job import Job, JobDetails, MessageQueueConnectionInfo, JobError
+from reactive.job import Job, JobDetails, JobError, MessageQueueConnectionInfo
 from reactive.runner import reactive_runner
 
 

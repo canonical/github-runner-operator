@@ -13,6 +13,7 @@ Runner Manager manages the runners on LXD and GitHub.
 - **REACTIVE_RUNNER_SCRIPT_FILE**
 - **REACTIVE_RUNNER_TIMEOUT_STR**
 - **PYTHON_BIN**
+- **PS_COMMAND_LINE_LIST**
 - **TIMEOUT_COMMAND**
 - **UBUNTU_USER**
 

@@ -3,7 +3,7 @@
 import argparse
 import logging
 
-from reactive.job import Job, MessageQueueConnectionInfo, JobError
+from reactive.job import Job, JobError, MessageQueueConnectionInfo
 
 logger = logging.getLogger(__name__)
 
