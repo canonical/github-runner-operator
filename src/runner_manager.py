@@ -9,9 +9,7 @@ import random
 import secrets
 import tarfile
 import time
-from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
-from multiprocessing import Pool
 from pathlib import Path
 from typing import Iterator, Optional, Type
 
@@ -20,8 +18,9 @@ import requests
 import requests.adapters
 import urllib3
 
+import reactive.runner_manager as reactive_runner_manager
 import shared_fs
-from charm_state import ReactiveConfig, VirtualMachineResources
+from charm_state import VirtualMachineResources
 from errors import (
     GetMetricsStorageError,
     GithubClientError,
@@ -40,7 +39,6 @@ from metrics import github as github_metrics
 from metrics import runner as runner_metrics
 from metrics import runner_logs
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
-from reactive.runner_manager import ReactiveRunnerManager
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import FlushMode, RunnerInfo, RunnerManagerClients, RunnerManagerConfig
@@ -583,10 +581,10 @@ class RunnerManager:
             quantity: Number of intended runners.
         """
         logger.info("Reactive mode is experimental and not yet fully implemented.")
-        reactive_runner_manager = ReactiveRunnerManager(
-            reactive_config=self.config.reactive_config, queue_name=self.app_name
+        config = reactive_runner_manager.ReactiveRunnerConfig(
+            mq_uri=self.config.reactive_config.mq_uri, queue_name=self.app_name
         )
-        return reactive_runner_manager.reconcile(quantity=quantity)
+        return reactive_runner_manager.reconcile(quantity=quantity, config=config)
 
     def _runners_in_pre_job(self) -> bool:
         """Check there exist runners in the pre-job script stage.

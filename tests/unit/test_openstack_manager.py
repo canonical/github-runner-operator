@@ -17,6 +17,7 @@ from openstack.compute.v2.server import Server
 from pytest import LogCaptureFixture, MonkeyPatch
 
 import metrics.storage
+import reactive.runner_manager
 from charm_state import CharmState, ProxyConfig, ReactiveConfig, RepoPolicyComplianceConfig
 from errors import OpenStackError, RunnerStartError
 from github_type import GitHubRunnerStatus, SelfHostedRunner
@@ -25,7 +26,6 @@ from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from metrics.storage import MetricsStorage
 from openstack_cloud import openstack_manager
 from openstack_cloud.openstack_manager import MAX_METRICS_FILE_SIZE, METRICS_EXCHANGE_PATH
-from reactive.runner_manager import ReactiveRunnerManager
 from runner_type import RunnerByHealth, RunnerGithubInfo
 from tests.unit import factories
 
@@ -248,14 +248,15 @@ def openstack_manager_for_reconcile_fixture(
     return os_runner_manager
 
 
-@pytest.fixture(name="reactive_runner_manager_mock")
-def reactive_runner_manager_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> MagicMock:
+@pytest.fixture(name="reactive_reconcile_mock")
+def reactive_reconcile_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> MagicMock:
     """Mock the job class."""
-    reactive_runner_manager = MagicMock(spec=ReactiveRunnerManager)
-    monkeypatch.setattr("openstack_cloud.openstack_manager.ReactiveRunnerManager", MagicMock(return_value=reactive_runner_manager))
-    reactive_runner_manager.reconcile.side_effect = lambda quantity: quantity
-    return reactive_runner_manager
-
+    reconcile_mock = MagicMock(spec=reactive.runner_manager.reconcile)
+    monkeypatch.setattr(
+        "openstack_cloud.openstack_manager.reactive_runner_manager.reconcile", reconcile_mock
+    )
+    reconcile_mock.side_effect = lambda quantity, **kwargs: quantity
+    return reconcile_mock
 
 
 def test__create_connection_error(clouds_yaml: dict, openstack_connect_mock: MagicMock):
@@ -1017,7 +1018,9 @@ def test_reconcile_ignores_metrics_for_openstack_online_runners(
 
 
 def test_reconcile_reactive_mode(
-    openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager, reactive_runner_manager_mock: MagicMock, caplog: LogCaptureFixture
+    openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager,
+    reactive_reconcile_mock: MagicMock,
+    caplog: LogCaptureFixture,
 ):
     """
     arrange: Enable reactive mode and mock the job class to return a job.
@@ -1031,7 +1034,12 @@ def test_reconcile_reactive_mode(
     actual_count = openstack_manager_for_reconcile.reconcile(quantity=count)
 
     assert actual_count == count
-    reactive_runner_manager_mock.reconcile.assert_called_with(quantity=count)
+    reactive_reconcile_mock.assert_called_with(
+        quantity=count,
+        config=reactive.runner_manager.ReactiveRunnerConfig(
+            mq_uri="http://example.com", queue_name=openstack_manager_for_reconcile.app_name
+        ),
+    )
 
 
 def test_repo_policy_config(

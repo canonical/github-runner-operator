@@ -38,6 +38,7 @@ from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import OpenStackCloudException, SDKException
 from paramiko.ssh_exception import NoValidConnectionsError
 
+import reactive.runner_manager as reactive_runner_manager
 from charm_state import (
     Arch,
     CharmState,
@@ -69,7 +70,6 @@ from metrics import github as github_metrics
 from metrics import runner as runner_metrics
 from metrics import storage as metrics_storage
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
-from reactive.runner_manager import ReactiveRunnerManager
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner_manager import IssuedMetricEventsStats
 from runner_manager_type import OpenstackRunnerManagerConfig
@@ -587,10 +587,10 @@ class OpenstackRunnerManager:
             quantity: Number of intended runners.
         """
         logger.info("Reactive mode is experimental and not yet fully implemented.")
-        reactive_runner_manager = ReactiveRunnerManager(
-            reactive_config=self._config.reactive_config, queue_name=self.app_name
+        config = reactive_runner_manager.ReactiveRunnerConfig(
+            mq_uri=self._config.reactive_config.mq_uri, queue_name=self.app_name
         )
-        return reactive_runner_manager.reconcile(quantity=quantity)
+        return reactive_runner_manager.reconcile(quantity=quantity, config=config)
 
     def _reconcile_runners(self, quantity: int) -> int:
         """Reconcile the number of runners.

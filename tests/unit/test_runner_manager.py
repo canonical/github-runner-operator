@@ -10,6 +10,7 @@ from unittest.mock import MagicMock, call
 import pytest
 from pytest import LogCaptureFixture, MonkeyPatch
 
+import reactive.runner_manager
 import shared_fs
 from charm_state import (
     Arch,
@@ -26,7 +27,6 @@ from github_type import RunnerApplication
 from metrics.events import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from metrics.storage import MetricsStorage
-from reactive.runner_manager import ReactiveRunnerManager
 from runner import Runner, RunnerStatus
 from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerManagerConfig
 from runner_type import RunnerByHealth
@@ -126,13 +126,13 @@ def runner_metrics_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     return runner_metrics_mock
 
 
-@pytest.fixture(name="reactive_runner_manager_mock")
-def reactive_runner_manager_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> MagicMock:
+@pytest.fixture(name="reactive_reconcile_mock")
+def reactive_reconcile_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> MagicMock:
     """Mock the job class."""
-    reactive_runner_manager = MagicMock(spec=ReactiveRunnerManager)
-    monkeypatch.setattr("runner_manager.ReactiveRunnerManager", MagicMock(return_value=reactive_runner_manager))
-    reactive_runner_manager.reconcile.side_effect = lambda quantity: quantity
-    return reactive_runner_manager
+    reconcile_mock = MagicMock(spec=reactive.runner_manager.reconcile)
+    monkeypatch.setattr("runner_manager.reactive_runner_manager.reconcile", reconcile_mock)
+    reconcile_mock.side_effect = lambda quantity, **kwargs: quantity
+    return reconcile_mock
 
 
 @pytest.mark.parametrize(
@@ -520,7 +520,9 @@ def test_reconcile_places_no_timestamp_in_newly_created_runner_if_metrics_disabl
 
 
 def test_reconcile_reactive_mode(
-    runner_manager: RunnerManager, reactive_runner_manager_mock: MagicMock, caplog: LogCaptureFixture
+    runner_manager: RunnerManager,
+    reactive_reconcile_mock: MagicMock,
+    caplog: LogCaptureFixture,
 ):
     """
     arrange: Enable reactive mode and mock the job class to return a job.
@@ -532,7 +534,12 @@ def test_reconcile_reactive_mode(
     actual_count = runner_manager.reconcile(count, VirtualMachineResources(2, "7GiB", "10Gib"))
 
     assert actual_count == count
-    reactive_runner_manager_mock.reconcile.assert_called_with(quantity=count)
+    reactive_reconcile_mock.assert_called_with(
+        quantity=count,
+        config=reactive.runner_manager.ReactiveRunnerConfig(
+            mq_uri="http://example.com", queue_name=runner_manager.app_name
+        ),
+    )
 
 
 def test_schedule_build_runner_image(

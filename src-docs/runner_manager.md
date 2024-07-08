@@ -3,7 +3,7 @@
 <a href="../src/reactive/runner_manager.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `runner_manager`
-Runner Manager manages the runners on LXD and GitHub. 
+Module for managing reactive runners. 
 
 **Global Variables**
 ---------------
@@ -16,6 +16,31 @@ Runner Manager manages the runners on LXD and GitHub.
 - **PS_COMMAND_LINE_LIST**
 - **TIMEOUT_COMMAND**
 - **UBUNTU_USER**
+
+---
+
+<a href="../src/reactive/runner_manager.py#L35"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>function</kbd> `reconcile`
+
+```python
+reconcile(quantity: int, config: ReactiveRunnerConfig) → int
+```
+
+Spawn a runner reactively. 
+
+
+
+**Args:**
+ 
+ - <b>`quantity`</b>:  The number of runners to spawn. 
+ - <b>`config`</b>:  The configuration for the reactive runner. 
+
+
+
+**Raises:**
+ 
+ - <b>`ReactiveRunnerError`</b>:  If the runner fails to spawn. 
 
 
 ---
@@ -32,7 +57,7 @@ Manage a group of runners according to configuration.
  - <b>`runner_bin_path`</b>:  The github runner app scripts path. 
  - <b>`cron_path`</b>:  The path to runner build image cron job. 
 
-<a href="../src/runner_manager.py#L72"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L70"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -59,7 +84,7 @@ Construct RunnerManager object for creating and managing runners.
 
 ---
 
-<a href="../src/utilities.py#L808"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L806"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `build_runner_image`
 
@@ -79,7 +104,7 @@ Build container image in test mode, else virtual machine image.
 
 ---
 
-<a href="../src/runner_manager.py#L114"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L112"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `check_runner_bin`
 
@@ -96,7 +121,7 @@ Check if runner binary exists.
 
 ---
 
-<a href="../src/runner_manager.py#L619"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L617"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `flush`
 
@@ -125,7 +150,7 @@ Remove existing runners.
 
 ---
 
-<a href="../src/runner_manager.py#L215"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L213"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_github_info`
 
@@ -142,7 +167,7 @@ Get information on the runners from GitHub.
 
 ---
 
-<a href="../src/utilities.py#L122"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L120"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_latest_runner_bin_url`
 
@@ -173,7 +198,7 @@ The runner binary URL changes when a new version is available.
 
 ---
 
-<a href="../src/runner_manager.py#L800"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L798"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `has_runner_image`
 
@@ -190,7 +215,7 @@ Check if the runner image exists.
 
 ---
 
-<a href="../src/runner_manager.py#L522"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L520"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `reconcile`
 
@@ -214,7 +239,7 @@ Bring runners in line with target.
 
 ---
 
-<a href="../src/runner_manager.py#L823"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L821"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `schedule_build_runner_image`
 
@@ -226,7 +251,7 @@ Install cron job for building runner image.
 
 ---
 
-<a href="../src/utilities.py#L145"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L143"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `update_runner_bin`
 
@@ -253,7 +278,7 @@ Remove the existing runner binary to prevent it from being used. This is done to
 
 ---
 
-<a href="../src/reactive/runner_manager.py#L22"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/runner_manager.py#L24"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `ReactiveRunnerError`
 Raised when a reactive runner error occurs. 
@@ -264,17 +289,17 @@ Raised when a reactive runner error occurs.
 
 ---
 
-<a href="../src/reactive/runner_manager.py#L26"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/runner_manager.py#L28"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>class</kbd> `ReactiveRunnerManager`
-A class to manage the reactive runners. 
+## <kbd>class</kbd> `ReactiveRunnerConfig`
+ReactiveRunnerConfig(mq_uri: str, queue_name: str) 
 
-<a href="../src/reactive/runner_manager.py#L29"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
 ```python
-__init__(reactive_config: ReactiveConfig, queue_name: str)
+__init__(mq_uri: str, queue_name: str) → None
 ```
 
 
@@ -283,29 +308,5 @@ __init__(reactive_config: ReactiveConfig, queue_name: str)
 
 
 
-
----
-
-<a href="../src/reactive/runner_manager.py#L33"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>method</kbd> `reconcile`
-
-```python
-reconcile(quantity: int) → int
-```
-
-Spawn a runner reactively. 
-
-
-
-**Args:**
- 
- - <b>`queue_name`</b>:  The name of the queue. 
-
-
-
-**Raises:**
- 
- - <b>`ReactiveRunnerError`</b>:  If the runner fails to spawn. 
 
 
