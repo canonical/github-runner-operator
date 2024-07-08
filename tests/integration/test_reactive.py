@@ -4,6 +4,7 @@ import json
 import random
 import secrets
 
+import pytest
 from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
@@ -17,6 +18,7 @@ from tests.integration.helpers.common import get_file_content, reconcile
 FAKE_URL = "http://example.com"
 
 
+@pytest.mark.openstack
 async def test_reactive_mode_consumes_jobs(ops_test: OpsTest, app_for_reactive: Application):
     unit = app_for_reactive.units[0]
     mongodb_uri = await _get_mongodb_uri_from_integration_data(ops_test, unit)
