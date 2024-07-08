@@ -9,7 +9,6 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from charm_state import ReactiveConfig
 from reactive.runner_manager import (
     PS_COMMAND_LINE_LIST,
     PYTHON_BIN,
