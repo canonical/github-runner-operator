@@ -531,8 +531,7 @@ class RunnerManager:
         """
         if self.config.reactive_config:
             logger.info("Reactive configuration detected, going into experimental reactive mode.")
-            self._reconcile_reactive(quantity)
-            return 0
+            return self._reconcile_reactive(quantity)
         start_ts = time.time()
 
         runners = self._get_runners()
@@ -577,16 +576,17 @@ class RunnerManager:
             )
         return delta
 
-    def _reconcile_reactive(self, quantity: int) -> None:
+    def _reconcile_reactive(self, quantity: int) -> int:
         """Reconcile runners reactively.
 
         Args:
             quantity: Number of intended runners.
         """
         logger.info("Reactive mode is experimental and not yet fully implemented.")
-        ReactiveRunnerManager(
+        reactive_runner_manager = ReactiveRunnerManager(
             reactive_config=self.config.reactive_config, queue_name=self.app_name
-        ).reconcile(quantity=quantity)
+        )
+        return reactive_runner_manager.reconcile(quantity=quantity)
 
     def _runners_in_pre_job(self) -> bool:
         """Check there exist runners in the pre-job script stage.

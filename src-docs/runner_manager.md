@@ -290,7 +290,7 @@ __init__(reactive_config: ReactiveConfig, queue_name: str)
 ### <kbd>method</kbd> `reconcile`
 
 ```python
-reconcile(quantity: int) → None
+reconcile(quantity: int) → int
 ```
 
 Spawn a runner reactively. 

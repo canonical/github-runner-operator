@@ -69,7 +69,7 @@ from metrics import github as github_metrics
 from metrics import runner as runner_metrics
 from metrics import storage as metrics_storage
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
-from reactive.job import Job, MessageQueueConnectionInfo
+from reactive.runner_manager import ReactiveRunnerManager
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner_manager import IssuedMetricEventsStats
 from runner_manager_type import OpenstackRunnerManagerConfig
@@ -567,8 +567,7 @@ class OpenstackRunnerManager:
         """
         if self._config.reactive_config:
             logger.info("Reactive configuration detected, going into experimental reactive mode.")
-            self._reconcile_reactive(quantity)
-            return 0
+            return self._reconcile_reactive(quantity)
 
         start_ts = time.time()
         try:
@@ -581,60 +580,17 @@ class OpenstackRunnerManager:
 
         return delta
 
-    def _reconcile_reactive(self, quantity: int) -> None:
+    def _reconcile_reactive(self, quantity: int) -> int:
         """Reconcile runners reactively.
 
         Args:
             quantity: Number of intended runners.
         """
         logger.info("Reactive mode is experimental and not yet fully implemented.")
-        logger.debug("Trying to spawn up to %i runners reactively.", quantity)
-        if quantity > 0:
-            args = [
-                OpenstackRunnerManager._CreateReactiveRunnerArgs(
-                    app_name=self.app_name,
-                    reactive_config=self._config.reactive_config,
-                )
-                for _ in range(quantity)
-            ]
-            with Pool(processes=quantity) as pool:
-                pool.map(
-                    func=OpenstackRunnerManager._spawn_runner_reactively,
-                    iterable=args,
-                )
-        else:
-            logger.info("No runner needs to be spawned.")
-
-    @dataclass
-    class _CreateReactiveRunnerArgs:
-        """Arguments for _create_runner method.
-
-        Attributes:
-            app_name: The juju application name.
-            reactive_config: Configurations related to runner manager.
-        """
-
-        app_name: str
-        reactive_config: ReactiveConfig
-
-    @staticmethod
-    def _spawn_runner_reactively(args: _CreateReactiveRunnerArgs) -> None:
-        """Spawn a runner reactively.
-
-        Args:
-            args: Arguments for spawning a runner.
-        """
-        # The runner manager is not yet fully implemented in reactive mode. We are just logging
-        # the received job for now.
-        mq_conn_info = MessageQueueConnectionInfo(
-            uri=args.reactive_config.mq_uri, queue_name=args.app_name
+        reactive_runner_manager = ReactiveRunnerManager(
+            reactive_config=self._config.reactive_config, queue_name=self.app_name
         )
-        job = Job.from_message_queue(mq_conn_info)
-        job_details = job.get_details()
-        logger.info(
-            "Received job with labels %s and run_url %s", job_details.labels, job_details.run_url
-        )
-        job.picked_up()
+        return reactive_runner_manager.reconcile(quantity=quantity)
 
     def _reconcile_runners(self, quantity: int) -> int:
         """Reconcile the number of runners.

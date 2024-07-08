@@ -30,7 +30,7 @@ class ReactiveRunnerManager:
         self._reactive_config = reactive_config
         self._queue_name = queue_name
 
-    def reconcile(self, quantity: int) -> None:
+    def reconcile(self, quantity: int) -> int:
         """Spawn a runner reactively.
 
         Args:
@@ -66,12 +66,16 @@ class ReactiveRunnerManager:
         else:
             logger.info("No changes to number of ReactiveRunners needed.")
 
+        return max(delta, 0)
+
+
     def _setup_log_file(self) -> None:
         """Set up the log file."""
         logfile = Path(REACTIVE_RUNNER_LOG_FILE)
         if not logfile.exists():
             logfile.touch()
             shutil.chown(logfile, user=UBUNTU_USER, group=UBUNTU_USER)
+
 
     def _spawn_runner(self) -> None:
         """Spawn a runner."""
@@ -92,5 +96,4 @@ class ReactiveRunnerManager:
             env=env,
             user=UBUNTU_USER,
         )
-        # TODO: change this to debug level
-        logger.info("Spawned a new ReactiveRunner process with pid %s", process.pid)
+        logger.debug("Spawned a new ReactiveRunner process with pid %s", process.pid)

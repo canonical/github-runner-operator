@@ -26,7 +26,7 @@ from github_type import RunnerApplication
 from metrics.events import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from metrics.storage import MetricsStorage
-from reactive.job import Job, JobDetails, MessageQueueConnectionInfo
+from reactive.runner_manager import ReactiveRunnerManager
 from runner import Runner, RunnerStatus
 from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerManagerConfig
 from runner_type import RunnerByHealth
@@ -126,40 +126,13 @@ def runner_metrics_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     return runner_metrics_mock
 
 
-@pytest.fixture(name="job_mock")
-def job_mock_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> MagicMock:
+@pytest.fixture(name="reactive_runner_manager_mock")
+def reactive_runner_manager_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> MagicMock:
     """Mock the job class."""
-    job_mock = MagicMock(spec=Job)
-    job_mock.get_details = MagicMock()
-    job_mock.get_details.return_value = JobDetails(labels=["test"], run_url="http://example.com")
-    job_mock.from_message_queue = MagicMock(return_value=job_mock)
-    monkeypatch.setattr("runner_manager.Job", job_mock)
-
-    return job_mock
-
-
-@pytest.fixture(name="pool_map_mock")
-def pool_map_mock_fixture(monkeypatch: MonkeyPatch):
-    """Mock the map function of the Pool class."""
-
-    def pool_map(func, iterable):
-        """Mock the map function of the Pool class.
-
-        Simply apply the function to each item in the iterable.
-
-        Args:
-            func: The function to apply to each item in the iterable.
-            iterable: The iterable to apply the function to.
-        """
-        for item in iterable:
-            func(item)
-
-    pool_mock = MagicMock()
-    pool_mock.__enter__.return_value = pool_mock
-    pool_mock.map.side_effect = pool_map
-    pool_cls_mock = MagicMock()
-    pool_cls_mock.return_value = pool_mock
-    monkeypatch.setattr("runner_manager.Pool", pool_cls_mock)
+    reactive_runner_manager = MagicMock(spec=ReactiveRunnerManager)
+    monkeypatch.setattr("runner_manager.ReactiveRunnerManager", MagicMock(return_value=reactive_runner_manager))
+    reactive_runner_manager.reconcile.side_effect = lambda quantity: quantity
+    return reactive_runner_manager
 
 
 @pytest.mark.parametrize(
@@ -546,49 +519,20 @@ def test_reconcile_places_no_timestamp_in_newly_created_runner_if_metrics_disabl
     assert not (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).exists()
 
 
-@pytest.mark.usefixtures("job_mock", "pool_map_mock")
 def test_reconcile_reactive_mode(
-    runner_manager: RunnerManager, job_mock: MagicMock, caplog: LogCaptureFixture
+    runner_manager: RunnerManager, reactive_runner_manager_mock: MagicMock, caplog: LogCaptureFixture
 ):
     """
     arrange: Enable reactive mode and mock the job class to return a job.
     act: Call reconcile with a random quantity n.
     assert: The mocked job is picked up n times and the expected log message is present.
     """
-    count = random.randint(1, 5)
+    count = random.randint(0, 5)
     runner_manager.config.reactive_config = ReactiveConfig(mq_uri="http://example.com")
-    runner_manager.reconcile(count, VirtualMachineResources(2, "7GiB", "10Gib"))
+    actual_count = runner_manager.reconcile(count, VirtualMachineResources(2, "7GiB", "10Gib"))
 
-    job_details = job_mock.get_details()
-    job_mock.from_message_queue.assert_called_with(
-        MessageQueueConnectionInfo(uri="http://example.com", queue_name=runner_manager.app_name)
-    )
-    assert job_mock.from_message_queue.call_count == count
-    assert job_mock.picked_up.call_count == count
-    assert str(job_details.labels) in caplog.text
-    assert job_details.run_url in caplog.text
-
-
-@pytest.mark.usefixtures("job_mock")
-def test_reconcile_reactive_mode_zero_quantity(
-    runner_manager: RunnerManager,
-    job_mock: MagicMock,
-    caplog: LogCaptureFixture,
-):
-    """
-    arrange: Enable reactive mode and mock the job class to return a job.
-    act: Call reconcile with a quantity of 0.
-    assert: The mocked job is not picked up and no log message is present.
-    """
-    runner_manager.config.reactive_config = ReactiveConfig(mq_uri="http://example.com")
-    runner_manager.reconcile(0, VirtualMachineResources(2, "7GiB", "10Gib"))
-
-    job_mock.from_message_queue.assert_not_called()
-    assert job_mock.picked_up.call_count == 0
-
-    job_details = job_mock.get_details()
-    assert str(job_details.labels) not in caplog.text
-    assert job_details.run_url not in caplog.text
+    assert actual_count == count
+    reactive_runner_manager_mock.reconcile.assert_called_with(quantity=count)
 
 
 def test_schedule_build_runner_image(
