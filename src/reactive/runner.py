@@ -1,6 +1,7 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
-import argparse
+
+"""Module which contains code to spawn a runner reactively."""
 import logging
 
 from reactive.job import Job, JobError, MessageQueueConnectionInfo

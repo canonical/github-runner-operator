@@ -3,7 +3,7 @@
 <a href="../src/reactive/runner.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `runner`
-Classes and function to extract the metrics from storage and issue runner metrics events. 
+Module which contains code to spawn a runner reactively. 
 
 **Global Variables**
 ---------------
@@ -16,7 +16,7 @@ Classes and function to extract the metrics from storage and issue runner metric
 
 ---
 
-<a href="../src/reactive/runner.py#L11"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/runner.py#L12"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `reactive_runner`
 

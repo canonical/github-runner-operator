@@ -44,7 +44,6 @@ from charm_state import (
     CharmState,
     GithubOrg,
     ProxyConfig,
-    ReactiveConfig,
     SSHDebugConnection,
     UnsupportedArchitectureError,
 )
@@ -585,6 +584,10 @@ class OpenstackRunnerManager:
 
         Args:
             quantity: Number of intended runners.
+
+        Returns:
+            The difference between intended runners and actual runners. In reactive mode
+            this number is never negative as additional processes should terminate after a timeout.
         """
         logger.info("Reactive mode is experimental and not yet fully implemented.")
         config = reactive_runner_manager.ReactiveRunnerConfig(

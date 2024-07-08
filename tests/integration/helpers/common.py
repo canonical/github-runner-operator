@@ -46,6 +46,7 @@ DISPATCH_WAIT_TEST_WORKFLOW_FILENAME = "workflow_dispatch_wait_test.yaml"
 DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME = "e2e_test_run.yaml"
 DISPATCH_E2E_TEST_RUN_OPENSTACK_WORKFLOW_FILENAME = "e2e_test_run_openstack.yaml"
 
+MONGODB_APP_NAME = "mongodb"
 DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15}
 
 logger = logging.getLogger(__name__)
@@ -519,3 +520,23 @@ async def is_upgrade_charm_event_emitted(unit: Unit) -> bool:
     ret_code, stdout, stderr = await run_in_unit(unit=unit, command=f"cat {juju_unit_log_file}")
     assert ret_code == 0, f"Failed to read the log file: {stderr}"
     return stdout is not None and "Emitting Juju event upgrade_charm." in stdout
+
+
+async def get_file_content(unit: Unit, filepath: pathlib.Path) -> str:
+    """Retrieve the file content in the unit.
+
+    Args:
+        unit: The unit to retrieve the file content from.
+        filepath: The path of the file to retrieve.
+
+    Returns:
+        The file content
+    """
+    retcode, stdout, stderr = await run_in_unit(
+        unit=unit,
+        command=f"if [ -f {filepath} ]; then cat {filepath}; else echo ''; fi",
+    )
+    assert retcode == 0, f"Failed to get content of {filepath}: {stdout} {stderr}"
+    assert stdout is not None, f"Failed to get content of {filepath}, no stdout message"
+    logging.info("File content of %s: %s", filepath, stdout)
+    return stdout.strip()

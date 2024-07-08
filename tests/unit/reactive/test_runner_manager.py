@@ -14,18 +14,20 @@ from reactive.runner_manager import (
     PS_COMMAND_LINE_LIST,
     PYTHON_BIN,
     REACTIVE_RUNNER_SCRIPT_FILE,
-    ReactiveRunnerError, ReactiveRunnerConfig,
-reconcile
+    ReactiveRunnerConfig,
+    ReactiveRunnerError,
+    reconcile,
 )
 from utilities import secure_run_subprocess
 
 EXAMPLE_MQ_URI = "http://example.com"
 
+
 @pytest.fixture(name="log_file_path", autouse=True)
 def log_file_path_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Return the path to the log file."""
     log_file_path = tmp_path / "log.txt"
-    monkeypatch.setattr("reactive.runner_manager.REACTIVE_RUNNER_LOG_FILE", log_file_path)
+    monkeypatch.setattr("reactive.runner_manager.REACTIVE_RUNNER_LOG_PATH", log_file_path)
     monkeypatch.setattr("shutil.chown", lambda *args, **kwargs: None)
     return log_file_path
 
@@ -138,7 +140,6 @@ def test_reconcile_raises_reactive_runner_error_on_ps_failure(
         stderr=b"error",
     )
 
-    reactive_config = ReactiveConfig(mq_uri=EXAMPLE_MQ_URI)
     with pytest.raises(ReactiveRunnerError) as err:
         reconcile(1, reactive_config)
 
