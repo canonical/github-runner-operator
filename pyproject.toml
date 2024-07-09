@@ -33,7 +33,10 @@ markers = [
 ]
 
 [tool.pylint.'MESSAGES CONTROL']
+# see https://github.com/pydantic/pydantic/issues/1961#issuecomment-759522422
 extension-pkg-whitelist = "pydantic"
+# Ignore W0511 TODO comments because the functions are subject to refactor.
+disable = "W0511"
 
 # Formatting tools configuration
 [tool.black]

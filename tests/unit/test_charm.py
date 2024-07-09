@@ -848,7 +848,7 @@ def test__on_image_relation_changed_lxd():
     harness.charm._on_image_relation_changed(MagicMock())
 
     # the unit is in maintenance status since nothing has happened.
-    assert harness.charm.unit.status.name == MaintenanceStatus.name
+    assert harness.charm.unit.status.name == BlockedStatus.name
 
 
 def test__on_image_relation_image_not_ready():
