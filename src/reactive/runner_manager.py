@@ -10,12 +10,11 @@ import subprocess  # nosec
 from dataclasses import dataclass
 from pathlib import Path
 
+from logrotate import LogrotateConfig
 from utilities import secure_run_subprocess
 
-# TODO: setup logrotate
-
-
 logger = logging.getLogger(__name__)
+
 
 REACTIVE_RUNNER_LOG_DIR = Path("/var/log/reactive_runner")
 REACTIVE_RUNNER_LOG_PATH = REACTIVE_RUNNER_LOG_DIR / "reactive_runner.log"
@@ -26,6 +25,19 @@ PYTHON_BIN = "/usr/bin/python3"
 PS_COMMAND_LINE_LIST = ["ps", "axo", "cmd"]
 TIMEOUT_COMMAND = "/usr/bin/timeout"
 UBUNTU_USER = "ubuntu"
+
+REACTIVE_LOG_ROTATE_CONFIG = LogrotateConfig(
+    name="reactive-runner",
+    log_path_glob_pattern=str(REACTIVE_RUNNER_LOG_PATH),
+    rotate=0,
+    create=True,
+)
+REACTIVE_ERROR_LOG_ROTATE_CONFIG = LogrotateConfig(
+    name="reactive-runner-error",
+    log_path_glob_pattern=f"{REACTIVE_STDOUT_STD_ERR_SUFFIX_PATH}.*",
+    rotate=0,
+    create=False,
+)
 
 
 class ReactiveRunnerError(Exception):

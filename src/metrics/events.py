@@ -8,16 +8,22 @@ from typing import Any, Optional
 
 from pydantic import BaseModel, NonNegativeFloat
 
-from errors import IssueMetricEventError, LogrotateSetupError, SubprocessError
-from utilities import execute_command
+from errors import IssueMetricEventError
+from logrotate import LogrotateConfig
 
 LOG_ROTATE_TIMER_SYSTEMD_SERVICE = "logrotate.timer"
 
 SYSTEMCTL_PATH = "/usr/bin/systemctl"
 
-LOGROTATE_CONFIG = Path("/etc/logrotate.d/github-runner-metrics")
 METRICS_LOG_PATH = Path("/var/log/github-runner-metrics.log")
-
+# Set rotate param to 0 to not keep the old metrics log file to avoid sending the
+# metrics to Loki twice, which may happen if there is a corrupt log scrape configuration.
+METRICS_LOG_ROTATE_CONFIG = LogrotateConfig(
+    name="github-runner-metrics",
+    log_path_glob_pattern=str(METRICS_LOG_PATH),
+    rotate=0,
+    create=False,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -171,56 +177,3 @@ def issue_event(event: Event) -> None:
             metrics_file.write(f"{event.json(exclude_none=True)}\n")
     except OSError as exc:
         raise IssueMetricEventError(f"Cannot write to {METRICS_LOG_PATH}") from exc
-
-
-def _enable_logrotate() -> None:
-    """Enable and start the logrotate timer if it is not active.
-
-    Raises:
-        SubprocessError: If the logrotate.timer cannot be enabled and started.
-    """
-    try:
-        execute_command(
-            [SYSTEMCTL_PATH, "enable", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True
-        )
-
-        _, retcode = execute_command(
-            [SYSTEMCTL_PATH, "is-active", "--quiet", LOG_ROTATE_TIMER_SYSTEMD_SERVICE]
-        )
-        if retcode != 0:
-            execute_command(
-                [SYSTEMCTL_PATH, "start", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True
-            )
-    # 2024/04/02 - We should define a new error, wrap it and re-raise it.
-    except SubprocessError:  # pylint: disable=try-except-raise
-        raise
-
-
-def _configure_logrotate() -> None:
-    """Configure logrotate for the metrics log."""
-    # Set rotate to 0 to not keep the old metrics log file to avoid sending the
-    # metrics to Loki twice, which may happen if there is a corrupt log scrape configuration.
-    LOGROTATE_CONFIG.write_text(
-        f"""{str(METRICS_LOG_PATH)} {{
-    rotate 0
-    missingok
-    notifempty
-    create
-}}
-""",
-        encoding="utf-8",
-    )
-
-
-def setup_logrotate() -> None:
-    """Configure logrotate for the metrics log.
-
-    Raises:
-        LogrotateSetupError: If the logrotate.timer cannot be enabled.
-    """
-    _configure_logrotate()
-
-    try:
-        _enable_logrotate()
-    except SubprocessError as error:
-        raise LogrotateSetupError() from error

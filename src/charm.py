@@ -36,7 +36,7 @@ from ops.framework import StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, WaitingStatus
 
-import metrics.events as metric_events
+import logrotate
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     GROUP_CONFIG_NAME,
@@ -69,8 +69,10 @@ from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
+from metrics.events import METRICS_LOG_ROTATE_CONFIG
 from openstack_cloud import openstack_manager
 from openstack_cloud.openstack_manager import OpenstackRunnerManager
+from reactive.runner_manager import REACTIVE_ERROR_LOG_ROTATE_CONFIG, REACTIVE_LOG_ROTATE_CONFIG
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
@@ -447,10 +449,14 @@ class GithubRunnerCharm(CharmBase):
             raise
 
         try:
-            metric_events.setup_logrotate()
+            logrotate.setup()
         except LogrotateSetupError:
             logger.error("Failed to setup logrotate")
             raise
+
+        logrotate.configure(REACTIVE_LOG_ROTATE_CONFIG)
+        logrotate.configure(REACTIVE_ERROR_LOG_ROTATE_CONFIG)
+        logrotate.configure(METRICS_LOG_ROTATE_CONFIG)
 
         self._refresh_firewall(state)
 
