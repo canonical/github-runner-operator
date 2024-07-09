@@ -36,6 +36,7 @@ from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
 from metrics.events import METRICS_LOGROTATE_CONFIG
+from metrics.runner_logs import RUNNER_LOGROTATE_CONFIG
 from reactive.runner_manager import REACTIVE_ERROR_LOGROTATE_CONFIG, REACTIVE_LOGROTATE_CONFIG
 from runner_manager import RunnerInfo, RunnerManagerConfig
 
@@ -218,6 +219,7 @@ def test_common_install_code(
             call(REACTIVE_LOGROTATE_CONFIG),
             call(REACTIVE_ERROR_LOGROTATE_CONFIG),
             call(METRICS_LOGROTATE_CONFIG),
+            call(RUNNER_LOGROTATE_CONFIG),
         ]
     )
     schedule_build_runner_image.assert_called_once()

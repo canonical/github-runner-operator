@@ -455,12 +455,10 @@ class GithubRunnerCharm(CharmBase):
             logger.error("Failed to setup logrotate")
             raise
 
-        logrotate.configure(REACTIVE_LOG_ROTATE_CONFIG)
-        logrotate.configure(REACTIVE_ERROR_LOG_ROTATE_CONFIG)
-        logrotate.configure(METRICS_LOG_ROTATE_CONFIG)
         logrotate.configure(REACTIVE_LOGROTATE_CONFIG)
         logrotate.configure(REACTIVE_ERROR_LOGROTATE_CONFIG)
         logrotate.configure(METRICS_LOGROTATE_CONFIG)
+        logrotate.configure(RUNNER_LOGROTATE_CONFIG)
 
         self._refresh_firewall(state)
 
