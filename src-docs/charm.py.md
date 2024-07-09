@@ -19,7 +19,7 @@ Charm for creating and managing GitHub self-hosted runner instances.
 
 ---
 
-<a href="../src/charm.py#L97"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L98"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_charm_errors`
 
@@ -45,7 +45,7 @@ Catch common errors in charm.
 
 ---
 
-<a href="../src/charm.py#L143"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L144"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_action_errors`
 
@@ -86,7 +86,7 @@ Charm for managing GitHub self-hosted runners.
  - <b>`ram_pool_path`</b>:  The path to memdisk storage. 
  - <b>`kernel_module_path`</b>:  The path to kernel modules. 
 
-<a href="../src/charm.py#L204"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L205"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

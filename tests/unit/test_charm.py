@@ -35,8 +35,8 @@ from errors import LogrotateSetupError, MissingIntegrationDataError, RunnerError
 from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
-from metrics.events import METRICS_LOG_ROTATE_CONFIG
-from reactive.runner_manager import REACTIVE_ERROR_LOG_ROTATE_CONFIG, REACTIVE_LOG_ROTATE_CONFIG
+from metrics.events import METRICS_LOGROTATE_CONFIG
+from reactive.runner_manager import REACTIVE_ERROR_LOGROTATE_CONFIG, REACTIVE_LOGROTATE_CONFIG
 from runner_manager import RunnerInfo, RunnerManagerConfig
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
@@ -215,9 +215,9 @@ def test_common_install_code(
     setup_logrotate.assert_called_once()
     config_logrotate.assert_has_calls(
         [
-            call(REACTIVE_LOG_ROTATE_CONFIG),
-            call(REACTIVE_ERROR_LOG_ROTATE_CONFIG),
-            call(METRICS_LOG_ROTATE_CONFIG),
+            call(REACTIVE_LOGROTATE_CONFIG),
+            call(REACTIVE_ERROR_LOGROTATE_CONFIG),
+            call(METRICS_LOGROTATE_CONFIG),
         ]
     )
     schedule_build_runner_image.assert_called_once()

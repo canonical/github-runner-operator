@@ -230,7 +230,7 @@ Single instance of GitHub self-hosted runner.
  - <b>`runner_script`</b>:  The runner start script file path. 
  - <b>`pre_job_script`</b>:  The runner pre_job script file path. This is referenced in the env_file in  the ACTIONS_RUNNER_HOOK_JOB_STARTED environment variable. 
 
-<a href="../src/runner.py#L124"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L125"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -259,7 +259,7 @@ Construct the runner instance.
 
 ---
 
-<a href="../src/runner.py#L147"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L148"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `create`
 
@@ -283,7 +283,7 @@ Create the runner instance on LXD and register it on GitHub.
 
 ---
 
-<a href="../src/runner.py#L275"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L276"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `pull_logs`
 
@@ -303,7 +303,7 @@ Expects the runner to have an instance.
 
 ---
 
-<a href="../src/runner.py#L240"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner.py#L241"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `remove`
 

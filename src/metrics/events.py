@@ -18,7 +18,7 @@ SYSTEMCTL_PATH = "/usr/bin/systemctl"
 METRICS_LOG_PATH = Path("/var/log/github-runner-metrics.log")
 # Set rotate param to 0 to not keep the old metrics log file to avoid sending the
 # metrics to Loki twice, which may happen if there is a corrupt log scrape configuration.
-METRICS_LOG_ROTATE_CONFIG = LogrotateConfig(
+METRICS_LOGROTATE_CONFIG = LogrotateConfig(
     name="github-runner-metrics",
     log_path_glob_pattern=str(METRICS_LOG_PATH),
     rotate=0,

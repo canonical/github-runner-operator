@@ -69,8 +69,7 @@ def test_setup_raises_error(exec_command: MagicMock):
     assert "Not able to setup logrotate" in str(exc_info.value)
 
 
-@pytest.mark.parametrize("create", [True, False])
-def test_config_logrotate(create: bool, monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+def test_config_logrotate(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     """
     arrange: Change paths for the logrotate config and the log file.
     act: Setup logrotate.
@@ -83,17 +82,32 @@ def test_config_logrotate(create: bool, monkeypatch: pytest.MonkeyPatch, tmp_pat
     name = secrets.token_hex(16)
     log_path_glob_pattern = str(tmp_path / "metrics.log.*")
     rotate = randint(0, 11)
-    logrotate_config = logrotate.LogrotateConfig(
-        name=name, log_path_glob_pattern=log_path_glob_pattern, rotate=rotate, create=create
-    )
 
-    logrotate.configure(logrotate_config)
+    create_vals = [True, False]
+    notifempty_vals = [True, False]
 
-    expected_logrotate_config = f"""{log_path_glob_pattern} {{
+    for create in create_vals:
+        for notifempty in notifempty_vals:
+            for frequency in logrotate.LogrotateFrequency:
+                logrotate_config = logrotate.LogrotateConfig(
+                    name=name,
+                    log_path_glob_pattern=log_path_glob_pattern,
+                    rotate=rotate,
+                    create=create,
+                    notifempty=notifempty,
+                    frequency=frequency,
+                )
+
+                logrotate.configure(logrotate_config)
+
+                expected_logrotate_config = f"""{log_path_glob_pattern} {{
+{frequency}
 rotate {rotate}
 missingok
-notifempty
+{"notifempty" if notifempty else ""}
 {"create" if create else ""}
 }}
 """
-    assert (config_dir / name).read_text() == expected_logrotate_config
+                assert (
+                    config_dir / name
+                ).read_text() == expected_logrotate_config, "Logrotate config is not as expected."

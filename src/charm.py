@@ -69,10 +69,11 @@ from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
-from metrics.events import METRICS_LOG_ROTATE_CONFIG
+from metrics.events import METRICS_LOGROTATE_CONFIG
+from metrics.runner_logs import RUNNER_LOGROTATE_CONFIG
 from openstack_cloud import openstack_manager
 from openstack_cloud.openstack_manager import OpenstackRunnerManager
-from reactive.runner_manager import REACTIVE_ERROR_LOG_ROTATE_CONFIG, REACTIVE_LOG_ROTATE_CONFIG
+from reactive.runner_manager import REACTIVE_ERROR_LOGROTATE_CONFIG, REACTIVE_LOGROTATE_CONFIG
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
@@ -457,6 +458,9 @@ class GithubRunnerCharm(CharmBase):
         logrotate.configure(REACTIVE_LOG_ROTATE_CONFIG)
         logrotate.configure(REACTIVE_ERROR_LOG_ROTATE_CONFIG)
         logrotate.configure(METRICS_LOG_ROTATE_CONFIG)
+        logrotate.configure(REACTIVE_LOGROTATE_CONFIG)
+        logrotate.configure(REACTIVE_ERROR_LOGROTATE_CONFIG)
+        logrotate.configure(METRICS_LOGROTATE_CONFIG)
 
         self._refresh_firewall(state)
 

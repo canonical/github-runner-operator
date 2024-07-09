@@ -5,13 +5,10 @@
 # <kbd>module</kbd> `runner_logs`
 Functions to pull and remove the logs of the crashed runners. 
 
-**Global Variables**
----------------
-- **OUTDATED_LOGS_IN_SECONDS**
 
 ---
 
-<a href="../src/metrics/runner_logs.py#L21"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics/runner_logs.py#L23"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_logs_dir`
 
@@ -31,18 +28,5 @@ Create the directory to store the logs of the crashed runners.
 
 **Returns:**
  The path to the directory where the logs of the crashed runners will be stored. 
-
-
----
-
-<a href="../src/metrics/runner_logs.py#L36"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>function</kbd> `remove_outdated`
-
-```python
-remove_outdated() → None
-```
-
-Remove the logs that are too old. 
 
 

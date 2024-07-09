@@ -10,7 +10,7 @@ import subprocess  # nosec
 from dataclasses import dataclass
 from pathlib import Path
 
-from logrotate import LogrotateConfig
+from logrotate import LogrotateConfig, LogrotateFrequency
 from utilities import secure_run_subprocess
 
 logger = logging.getLogger(__name__)
@@ -26,17 +26,19 @@ PS_COMMAND_LINE_LIST = ["ps", "axo", "cmd"]
 TIMEOUT_COMMAND = "/usr/bin/timeout"
 UBUNTU_USER = "ubuntu"
 
-REACTIVE_LOG_ROTATE_CONFIG = LogrotateConfig(
+REACTIVE_LOGROTATE_CONFIG = LogrotateConfig(
     name="reactive-runner",
     log_path_glob_pattern=str(REACTIVE_RUNNER_LOG_PATH),
     rotate=0,
     create=True,
 )
-REACTIVE_ERROR_LOG_ROTATE_CONFIG = LogrotateConfig(
+REACTIVE_ERROR_LOGROTATE_CONFIG = LogrotateConfig(
     name="reactive-runner-error",
     log_path_glob_pattern=f"{REACTIVE_STDOUT_STD_ERR_SUFFIX_PATH}.*",
     rotate=0,
     create=False,
+    notifempty=False,
+    frequency=LogrotateFrequency.DAILY,
 )
 
 
@@ -149,7 +151,11 @@ def _spawn_runner(reactive_runner_config: ReactiveRunnerConfig) -> None:
             "2>&1",
         ]
     )
-    logger.debug("Spawning a new reactive runner process with command: %s", command)
+    # replace the mq_uri with **** to avoid leaking sensitive information (mongodb password)
+    logger.debug(
+        "Spawning a new reactive runner process with command: %s",
+        command.replace(reactive_runner_config.mq_uri, "****"),
+    )
     process = subprocess.Popen(  # pylint: disable=consider-using-with  # nosec
         command,
         shell=True,
