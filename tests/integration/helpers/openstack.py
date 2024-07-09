@@ -2,7 +2,7 @@
 #  See LICENSE file for licensing details.
 import logging
 import secrets
-from typing import Optional, cast
+from typing import Optional, TypedDict, cast
 
 import openstack.connection
 from juju.application import Application
@@ -300,3 +300,25 @@ EOT""",
         return return_code == 0 and bool(stdout)
 
     await wait_for(server_is_ready, timeout=30, check_interval=3)
+
+
+class PrivateEndpointConfigs(TypedDict):
+    """The Private endpoint configuration values.
+
+    Attributes:
+        auth_url: OpenStack uthentication URL (Keystone).
+        password: OpenStack password.
+        project_domain_name: OpenStack project domain to use.
+        project_name: OpenStack project to use within the domain.
+        user_domain_name: OpenStack user domain to use.
+        username: OpenStack user to use within the domain.
+        region_name: OpenStack deployment region.
+    """
+
+    auth_url: str
+    password: str
+    project_domain_name: str
+    project_name: str
+    user_domain_name: str
+    username: str
+    region_name: str

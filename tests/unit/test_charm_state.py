@@ -18,6 +18,7 @@ from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     DENYLIST_CONFIG_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
+    IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     PATH_CONFIG_NAME,
@@ -40,6 +41,7 @@ from charm_state import (
     GithubRepo,
     ImmutableConfigChangedError,
     LocalLxdRunnerConfig,
+    OpenstackImage,
     OpenstackRunnerConfig,
     ProxyConfig,
     RunnerStorage,
@@ -539,6 +541,67 @@ def test_base_image_from_charm(image_name: str, expected_result: BaseImage):
     result = BaseImage.from_charm(mock_charm)
 
     assert result == expected_result
+
+
+def test_openstack_image_from_charm_no_connections():
+    """
+    arrange: Mock CharmBase instance without relation.
+    act: Call OpenstackImage.from_charm method.
+    assert: Verify that the method returns the expected None value.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    relation_mock = MagicMock()
+    relation_mock.units = []
+    mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
+
+    image = OpenstackImage.from_charm(mock_charm)
+
+    assert image is None
+
+
+def test_openstack_image_from_charm_data_not_ready():
+    """
+    arrange: Mock CharmBase instance with no relation data.
+    act: Call OpenstackImage.from_charm method.
+    assert: Verify that the method returns the expected None value for id and tags.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    relation_mock = MagicMock()
+    unit_mock = MagicMock()
+    relation_mock.units = [unit_mock]
+    relation_mock.data = {unit_mock: {}}
+    mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = [relation_mock]
+
+    image = OpenstackImage.from_charm(mock_charm)
+
+    assert isinstance(image, OpenstackImage)
+    assert image.id is None
+    assert image.tags is None
+
+
+def test_openstack_image_from_charm():
+    """
+    arrange: Mock CharmBase instance with relation data.
+    act: Call OpenstackImage.from_charm method.
+    assert: Verify that the method returns the expected image id and tags.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    relation_mock = MagicMock()
+    unit_mock = MagicMock()
+    relation_mock.units = [unit_mock]
+    relation_mock.data = {
+        unit_mock: {
+            "id": (test_id := "test-id"),
+            "tags": ",".join(test_tags := ["tag1", "tag2"]),
+        }
+    }
+    mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = [relation_mock]
+
+    image = OpenstackImage.from_charm(mock_charm)
+
+    assert isinstance(image, OpenstackImage)
+    assert image.id == test_id
+    assert image.tags == test_tags
 
 
 @pytest.mark.parametrize("virtual_machines", [(-1), (-5)])  # Invalid value  # Invalid value
