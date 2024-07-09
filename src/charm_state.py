@@ -42,7 +42,6 @@ LABELS_CONFIG_NAME = "labels"
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "openstack-clouds-yaml"
 OPENSTACK_NETWORK_CONFIG_NAME = "openstack-network"
 OPENSTACK_FLAVOR_CONFIG_NAME = "openstack-flavor"
-OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME = "experimental-openstack-image-build-unit"
 PATH_CONFIG_NAME = "path"
 RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
 # bandit thinks this is a hardcoded password
@@ -58,6 +57,10 @@ VM_CPU_CONFIG_NAME = "vm-cpu"
 VM_MEMORY_CONFIG_NAME = "vm-memory"
 VM_DISK_CONFIG_NAME = "vm-disk"
 
+# Integration names
+COS_AGENT_INTEGRATION_NAME = "cos-agent"
+DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
+IMAGE_INTEGRATION_NAME = "image"
 
 StorageSize = str
 """Representation of storage size with KiB, MiB, GiB, TiB, PiB, EiB as unit."""
@@ -205,10 +208,6 @@ class Arch(str, Enum):
 
     ARM64 = "arm64"
     X64 = "x64"
-
-
-COS_AGENT_INTEGRATION_NAME = "cos-agent"
-DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 
 
 class RunnerStorage(str, Enum):
@@ -573,6 +572,44 @@ class BaseImage(str, Enum):
         return cls(image_name)
 
 
+class OpenstackImage(BaseModel):
+    """OpenstackImage from image builder relation data.
+
+    Attributes:
+        id: The OpenStack image ID.
+        tags: Image tags, e.g. jammy
+    """
+
+    id: str | None
+    tags: list[str] | None
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "OpenstackImage | None":
+        """Initialize the OpenstackImage info from relation data.
+
+        None represents relation not established.
+        None values for id/tags represent image not yet ready but the relation exists.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            OpenstackImage metadata from charm relation data.
+        """
+        relations = charm.model.relations[IMAGE_INTEGRATION_NAME]
+        if not relations or not (relation := relations[0]).units:
+            return None
+        for unit in relation.units:
+            relation_data = relation.data[unit]
+            if not relation_data:
+                continue
+            return OpenstackImage(
+                id=relation_data.get("id", None),
+                tags=[tag.strip() for tag in relation_data.get("tags", "").split(",") if tag],
+            )
+        return OpenstackImage(id=None, tags=None)
+
+
 class OpenstackRunnerConfig(BaseModel):
     """Runner configuration for OpenStack Instances.
 
@@ -580,13 +617,13 @@ class OpenstackRunnerConfig(BaseModel):
         virtual_machines: Number of virtual machine-based runner to spawn.
         openstack_flavor: flavor on openstack to use for virtual machines.
         openstack_network: Network on openstack to use for virtual machines.
-        build_image: Whether to build the image on this juju unit.
+        openstack_image: Openstack image to use for virtual machines.
     """
 
     virtual_machines: int
     openstack_flavor: str
     openstack_network: str
-    build_image: bool
+    openstack_image: OpenstackImage | None
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "OpenstackRunnerConfig":
@@ -611,16 +648,13 @@ class OpenstackRunnerConfig(BaseModel):
 
         openstack_flavor = charm.config[OPENSTACK_FLAVOR_CONFIG_NAME]
         openstack_network = charm.config[OPENSTACK_NETWORK_CONFIG_NAME]
-
-        openstack_image_build_unit = str(charm.config[OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME])
-        _, unit_num = charm.unit.name.rsplit("/", 1)
-        build_image = openstack_image_build_unit == unit_num
+        openstack_image = OpenstackImage.from_charm(charm)
 
         return cls(
             virtual_machines=virtual_machines,
             openstack_flavor=cast(str, openstack_flavor),
             openstack_network=cast(str, openstack_network),
-            build_image=build_image,
+            openstack_image=openstack_image,
         )
 
 
