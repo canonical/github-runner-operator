@@ -471,6 +471,8 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
+            if not self._get_set_image_ready_status():
+                return
             openstack_runner_manager = self._get_openstack_runner_manager(state)
             openstack_runner_manager.reconcile(state.runner_config.virtual_machines)
             self.unit.status = ActiveStatus()
