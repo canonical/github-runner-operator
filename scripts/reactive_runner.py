@@ -23,7 +23,7 @@ def setup_root_logging() -> None:
     """Set up logging for the reactive runner."""
     # setup root logger to log in a file called /var/log/reactive_runner.log
     logging.basicConfig(
-        filename=REACTIVE_RUNNER_LOG_PATH,
+        filename=str(REACTIVE_RUNNER_LOG_PATH),
         level=logging.DEBUG,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )

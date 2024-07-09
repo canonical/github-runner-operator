@@ -12,9 +12,14 @@ from pathlib import Path
 
 from utilities import secure_run_subprocess
 
+# TODO: setup logrotate
+
+
 logger = logging.getLogger(__name__)
 
-REACTIVE_RUNNER_LOG_PATH = "/var/log/reactive_runner.log"
+REACTIVE_RUNNER_LOG_DIR = Path("/var/log/reactive_runner")
+REACTIVE_RUNNER_LOG_PATH = REACTIVE_RUNNER_LOG_DIR / "reactive_runner.log"
+REACTIVE_STDOUT_STD_ERR_SUFFIX_PATH = REACTIVE_RUNNER_LOG_DIR / "error.log"
 REACTIVE_RUNNER_SCRIPT_FILE = "scripts/reactive_runner.py"
 REACTIVE_RUNNER_TIMEOUT_STR = "1h"
 PYTHON_BIN = "/usr/bin/python3"
@@ -58,7 +63,7 @@ def reconcile(quantity: int, config: ReactiveRunnerConfig) -> int:
     actual_delta = delta
     if delta > 0:
         logger.info("Will spawn %d new reactive runner processes", delta)
-        _setup_log_file()
+        _setup_logging()
         for _ in range(delta):
             try:
                 _spawn_runner(config)
@@ -99,12 +104,11 @@ def _determine_current_quantity() -> int:
     return actual_quantity
 
 
-def _setup_log_file() -> None:
-    """Set up the log file."""
-    logfile = Path(REACTIVE_RUNNER_LOG_PATH)
-    if not logfile.exists():
-        logfile.touch()
-        shutil.chown(logfile, user=UBUNTU_USER, group=UBUNTU_USER)
+def _setup_logging() -> None:
+    """Set up the log dir."""
+    if not REACTIVE_RUNNER_LOG_DIR.exists():
+        REACTIVE_RUNNER_LOG_DIR.mkdir()
+        shutil.chown(REACTIVE_RUNNER_LOG_DIR, user=UBUNTU_USER, group=UBUNTU_USER)
 
 
 def _spawn_runner(reactive_runner_config: ReactiveRunnerConfig) -> None:
@@ -119,22 +123,38 @@ def _spawn_runner(reactive_runner_config: ReactiveRunnerConfig) -> None:
     env = {"PYTHONPATH": "src:lib:venv"}
     # We do not want to wait for the process to finish, so we do not use with statement.
     # We trust the command.
-    process = subprocess.Popen(  # pylint: disable=consider-using-with  # nosec
+    command = " ".join(
         [
             TIMEOUT_COMMAND,
             REACTIVE_RUNNER_TIMEOUT_STR,
             PYTHON_BIN,
             REACTIVE_RUNNER_SCRIPT_FILE,
-            reactive_runner_config.mq_uri,
-            reactive_runner_config.queue_name,
-        ],
+            f'"{reactive_runner_config.mq_uri}"',
+            f'"{reactive_runner_config.queue_name}"',
+            ">>",
+            # $$ will be replaced by the PID of the process, so we can track the error log easily.
+            f"{REACTIVE_STDOUT_STD_ERR_SUFFIX_PATH}.$$",
+            "2>&1",
+        ]
+    )
+    logger.debug("Spawning a new reactive runner process with command: %s", command)
+    process = subprocess.Popen(  # pylint: disable=consider-using-with  # nosec
+        command,
+        shell=True,
+        env=env,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        env=env,
         user=UBUNTU_USER,
     )
+
+    try:
+        process.wait(0.001)
+    except subprocess.TimeoutExpired:
+        pass
+    else:
+        if process.returncode not in (0, None):
+            raise ReactiveRunnerError(
+                f"Failed to spawn a new reactive runner process with pid {process.pid}."
+                f" Return code: {process.returncode}"
+            )
     logger.debug("Spawned a new reactive runner process with pid %s", process.pid)
-    if process.returncode not in (0, None):
-        raise ReactiveRunnerError(
-            f"Failed to spawn a new reactive runner process. Return code: {process.returncode}"
-        )
