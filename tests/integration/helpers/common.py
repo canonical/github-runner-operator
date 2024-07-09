@@ -454,6 +454,7 @@ async def wait_for(
         else:
             if result := func():
                 return cast(R, result)
+        logger.info("Wait for condition not met, sleeping %s", check_interval)
         time.sleep(check_interval)
 
     # final check before raising TimeoutError.

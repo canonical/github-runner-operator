@@ -1,10 +1,10 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-# 2024/04/11 The module contains too many lines which are scheduled for refactoring.
+# TODO: 2024-04-11 The module contains too many lines which are scheduled for refactoring.
 # pylint: disable=too-many-lines
 
-# 2024/04/22 The module contains duplicate code which is scheduled for refactoring.
+# TODO: 2024-04-22 The module contains duplicate code which is scheduled for refactoring.
 # Lines related to issuing metrics are duplicated:
 #  ==openstack_cloud.openstack_manager:[1320:1337]
 #  ==runner_manager:[383:413]
@@ -986,7 +986,7 @@ class OpenstackRunnerManager:
                 self._github.delete_runner(self._config.path, github_id)
             except GithubClientError as exc:
                 logger.warning("Failed to remove runner from Github %s, %s", instance_name, exc)
-            # 2024/04/23: The broad except clause is for logging purposes.
+            # TODO: 2024-04-23: The broad except clause is for logging purposes.
             # Will be removed in future versions.
             except Exception:  # pylint: disable=broad-exception-caught
                 logger.critical(
@@ -1108,7 +1108,7 @@ class OpenstackRunnerManager:
             logger.warning(
                 "Failed to run runner removal script for %s", server.name, exc_info=True
             )
-        # 2024/04/23: The broad except clause is for logging purposes.
+        # TODO: 2024-04-23: The broad except clause is for logging purposes.
         # Will be removed in future versions.
         except Exception:  # pylint: disable=broad-exception-caught
             logger.critical(
@@ -1119,7 +1119,7 @@ class OpenstackRunnerManager:
                 logger.warning("Server does not exist %s", server.name)
         except SDKException as exc:
             logger.error("Something wrong deleting the server %s, %s", server.name, exc)
-        # 2024/04/23: The broad except clause is for logging purposes.
+        # TODO: 2024-04-23: The broad except clause is for logging purposes.
         # Will be removed in future versions.
         except Exception:  # pylint: disable=broad-exception-caught
             logger.critical(
@@ -1172,7 +1172,7 @@ class OpenstackRunnerManager:
                     result.stderr,
                 )
             return
-        # 2024/04/23: The broad except clause is for logging purposes.
+        # TODO: 2024-04-23: The broad except clause is for logging purposes.
         # Will be removed in future versions.
         except Exception:  # pylint: disable=broad-exception-caught
             logger.critical(
