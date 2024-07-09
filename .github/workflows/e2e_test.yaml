@@ -16,7 +16,7 @@ jobs:
       provider: lxd
       test-tox-env: integration-juju3.2
       modules: '["test_e2e"]'
-      extra-arguments: "-m openstack --openstack-flavor-name=builder-cpu4-ram8-disk50 --http-proxy=http://squid.internal:3128 --https-proxy=http://squid.internal:3128 --no-proxy=keystone.ps6.canonical.com,glance.ps6.canonical.com,nova.ps6.canonical.com,neutron.ps6.canonical.com"
+      extra-arguments: "-m openstack"
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
 

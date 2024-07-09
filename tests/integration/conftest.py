@@ -162,6 +162,23 @@ def no_proxy(pytestconfig: pytest.Config) -> str:
     no_proxy = pytestconfig.getoption("--no-proxy")
     return "" if no_proxy is None else no_proxy
 
+@pytest.fixture(scope="module", name="openstack_http_proxy")
+def openstack_http_proxy_fixture(pytestconfig: pytest.Config) -> str:
+    """Configured http_proxy setting for openstack runners."""
+    http_proxy = pytestconfig.getoption("--openstack-http-proxy")
+    return "" if http_proxy is None else http_proxy
+
+@pytest.fixture(scope="module", name="openstack_https_proxy")
+def openstack_https_proxy_fixture(pytestconfig: pytest.Config) -> str:
+    """Configured https_proxy setting for openstack runners."""
+    https_proxy = pytestconfig.getoption("--openstack-https-proxy")
+    return "" if https_proxy is None else https_proxy
+
+@pytest.fixture(scope="module", name="openstack_no_proxy")
+def openstack_no_proxy_fixture(pytestconfig: pytest.Config) -> str:
+    """Configured no_proxy setting for openstack runners."""
+    no_proxy = pytestconfig.getoption("--openstack-no-proxy")
+    return "" if no_proxy is None else no_proxy
 
 @pytest.fixture(scope="module")
 def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
@@ -310,9 +327,9 @@ async def app_openstack_runner_fixture(
     app_name: str,
     path: str,
     token: str,
-    http_proxy: str,
-    https_proxy: str,
-    no_proxy: str,
+    openstack_http_proxy: str,
+    openstack_https_proxy: str,
+    openstack_no_proxy: str,
     clouds_yaml_contents: str,
     network_name: str,
     flavor_name: str,
@@ -329,14 +346,13 @@ async def app_openstack_runner_fixture(
             path=path,
             token=token,
             runner_storage="juju-storage",
-            http_proxy=http_proxy,
-            https_proxy=https_proxy,
-            no_proxy=no_proxy,
+            http_proxy=openstack_http_proxy,
+            https_proxy=openstack_https_proxy,
+            no_proxy=openstack_no_proxy,
             reconcile_interval=60,
             constraints={
                 "root-disk": 50 * 1024,
                 "mem": 16 * 1024,
-                # "arch": "arm64",
             },
             config={
                 OPENSTACK_CLOUDS_YAML_CONFIG_NAME: clouds_yaml_contents,
