@@ -576,7 +576,7 @@ class OpenstackRunnerManager:
                 continue
         raise _SSHError(
             f"No connectable SSH addresses found, server: {server.name}, "
-            "addresses: {server_addresses}"
+            f"addresses: {server_addresses}"
         )
 
     @staticmethod
