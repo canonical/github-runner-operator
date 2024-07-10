@@ -649,8 +649,8 @@ class OpenstackRunnerManager:
             instance_config=instance_config,
             runner_env=env_contents,
             pre_job_contents=pre_job_contents,
-            proxies=args.config.charm_state.proxy_config,
             dockerhub_mirror=args.config.dockerhub_mirror,
+            proxies=args.config.charm_state.proxy_config,
         )
         cloud_userdata_str = _generate_cloud_init_userdata(
             templates_env=environment,
