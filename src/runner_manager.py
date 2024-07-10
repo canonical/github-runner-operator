@@ -238,7 +238,9 @@ class RunnerManager:
         unhealthy = []
 
         for runner in local_runners:
-            _, stdout, _ = runner.execute(["ps", "aux"])
+            # we need to hide the command to prevent sensitive information on the workload
+            # from being exposed.
+            _, stdout, _ = runner.execute(["ps", "aux"], hide_cmd=True)
             if f"/bin/bash {Runner.runner_script}" in stdout.read().decode("utf-8"):
                 healthy.append(runner.name)
             else:
