@@ -107,7 +107,7 @@ class LxdInstanceFileManager:
 
             try:
                 self.push_file(file.name, filepath, mode)
-            # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+            # TODO: 2024-04-02 - We should define a new error, wrap it and re-raise it.
             except LxdError:  # pylint: disable=try-except-raise
                 raise
 
@@ -154,7 +154,7 @@ class LxdInstanceFileManager:
         with tempfile.NamedTemporaryFile() as file:
             try:
                 self.pull_file(filepath, file.name)
-            # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+            # TODO: 2024-04-02 - We should define a new error, wrap it and re-raise it.
             except LxdError:  # pylint: disable=try-except-raise
                 raise
 
