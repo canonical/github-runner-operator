@@ -191,21 +191,9 @@ def openstack_manager_for_reconcile_fixture(
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
 
-    def pool_map(func, iterable):
-        """Mock the map function of the Pool class.
-
-        Simply apply the function to each item in the iterable.
-
-        Args:
-            func: The function to apply to each item in the iterable.
-            iterable: The iterable to apply the function to.
-        """
-        for item in iterable:
-            func(item)
-
     pool_mock = MagicMock()
     pool_mock.__enter__.return_value = pool_mock
-    pool_mock.map.side_effect = pool_map
+    pool_mock.map.side_effect = lambda func, iterable: func(*iterable)
     pool_cls_mock = MagicMock()
     pool_cls_mock.return_value = pool_mock
     monkeypatch.setattr(openstack_manager, "Pool", pool_cls_mock)

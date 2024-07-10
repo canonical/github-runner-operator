@@ -702,12 +702,12 @@ class GithubRunnerCharm(CharmBase):
 
     @catch_charm_errors
     def _on_database_created(self, _: ops.RelationEvent) -> None:
-        """Handle the MongoDB relation joined event."""
+        """Handle the MongoDB database created event."""
         self._trigger_reconciliation()
 
     @catch_charm_errors
     def _on_endpoints_changed(self, _: ops.RelationEvent) -> None:
-        """Handle the MongoDB relation changed event."""
+        """Handle the MongoDB endpoints changed event."""
         self._trigger_reconciliation()
 
     def _trigger_reconciliation(self) -> None:
