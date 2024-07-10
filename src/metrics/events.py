@@ -191,7 +191,7 @@ def _enable_logrotate() -> None:
             execute_command(
                 [SYSTEMCTL_PATH, "start", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True
             )
-    # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+    # TODO: 2024-04-02 - We should define a new error, wrap it and re-raise it.
     except SubprocessError:  # pylint: disable=try-except-raise
         raise
 
