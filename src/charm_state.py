@@ -48,6 +48,7 @@ RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
 REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"  # nosec
 REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME = "repo-policy-compliance-url"
 RUNNER_STORAGE_CONFIG_NAME = "runner-storage"
+SENSITIVE_PLACEHOLDER = "*****"
 TEST_MODE_CONFIG_NAME = "test-mode"
 # bandit thinks this is a hardcoded password.
 TOKEN_CONFIG_NAME = "token"  # nosec
@@ -1086,7 +1087,7 @@ class CharmState:
             charm_config = prev_state_for_logging.get("charm_config")
             if charm_config and "token" in charm_config:
                 charm_config = charm_config.copy()
-                charm_config["token"] = "*****"  # nosec
+                charm_config["token"] = SENSITIVE_PLACEHOLDER  # nosec
             prev_state_for_logging["charm_config"] = charm_config
 
             logger.debug("Previous charm state: %s", prev_state_for_logging)
