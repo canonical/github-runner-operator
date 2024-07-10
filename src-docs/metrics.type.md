@@ -2,7 +2,7 @@
 
 <a href="../src/metrics/type.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `type`
+# <kbd>module</kbd> `metrics.type`
 Data types used by modules handling metrics. 
 
 

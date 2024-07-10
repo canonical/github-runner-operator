@@ -2,7 +2,7 @@
 
 <a href="../src/charm.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `charm.py`
+# <kbd>module</kbd> `charm`
 Charm for creating and managing GitHub self-hosted runner instances. 
 
 **Global Variables**
@@ -72,6 +72,19 @@ Catch common errors in actions.
 
 ---
 
+<a href="../src/charm.py#L91"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `ReconcileRunnersEvent`
+Event representing a periodic check to ensure runners are ok. 
+
+
+
+
+
+---
+
+<a href="../src/charm.py#L182"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
 ## <kbd>class</kbd> `GithubRunnerCharm`
 Charm for managing GitHub self-hosted runners. 
 
@@ -89,7 +102,7 @@ Charm for managing GitHub self-hosted runners.
 
 <a href="../src/charm.py#L205"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>function</kbd> `__init__`
+### <kbd>method</kbd> `__init__`
 
 ```python
 __init__(*args: Any, **kwargs: Any) → None
@@ -146,15 +159,6 @@ Shortcut for more simple access the model.
 #### <kbd>property</kbd> unit
 
 Unit that this execution is responsible for. 
-
-
-
-
----
-
-## <kbd>class</kbd> `ReconcileRunnersEvent`
-Event representing a periodic check to ensure runners are ok. 
-
 
 
 

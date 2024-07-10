@@ -2,7 +2,7 @@
 
 <a href="../src/event_timer.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `event_timer.py`
+# <kbd>module</kbd> `event_timer`
 EventTimer for scheduling dispatch of juju event on regular intervals. 
 
 **Global Variables**
@@ -11,6 +11,52 @@ EventTimer for scheduling dispatch of juju event on regular intervals.
 
 
 ---
+
+<a href="../src/event_timer.py#L19"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `TimerError`
+Generic timer error as base exception. 
+
+
+
+
+
+---
+
+<a href="../src/event_timer.py#L23"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `TimerEnableError`
+Raised when unable to enable a event timer. 
+
+
+
+
+
+---
+
+<a href="../src/event_timer.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `TimerDisableError`
+Raised when unable to disable a event timer. 
+
+
+
+
+
+---
+
+<a href="../src/event_timer.py#L31"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `TimerStatusError`
+Raised when unable to check status of a event timer. 
+
+
+
+
+
+---
+
+<a href="../src/event_timer.py#L35"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `EventConfig`
 Configuration used by service and timer templates. 
@@ -31,6 +77,8 @@ Configuration used by service and timer templates.
 
 ---
 
+<a href="../src/event_timer.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
 ## <kbd>class</kbd> `EventTimer`
 Manages the timer to emit juju events at regular intervals. 
 
@@ -42,7 +90,7 @@ Manages the timer to emit juju events at regular intervals.
 
 <a href="../src/event_timer.py#L62"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>function</kbd> `__init__`
+### <kbd>method</kbd> `__init__`
 
 ```python
 __init__(unit_name: str)
@@ -63,7 +111,7 @@ Construct the timer manager.
 
 <a href="../src/event_timer.py#L151"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>function</kbd> `disable_event_timer`
+### <kbd>method</kbd> `disable_event_timer`
 
 ```python
 disable_event_timer(event_name: str) → None
@@ -87,7 +135,7 @@ Disable the systemd timer for the given event.
 
 <a href="../src/event_timer.py#L110"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>function</kbd> `ensure_event_timer`
+### <kbd>method</kbd> `ensure_event_timer`
 
 ```python
 ensure_event_timer(
@@ -121,7 +169,7 @@ The timeout is the number of seconds before an event is timed out. If not set or
 
 <a href="../src/event_timer.py#L87"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>function</kbd> `is_active`
+### <kbd>method</kbd> `is_active`
 
 ```python
 is_active(event_name: str) → bool
@@ -145,41 +193,5 @@ Check if the systemd timer is active for the given event.
 **Raises:**
  
  - <b>`TimerStatusError`</b>:  Timer status cannot be determined. 
-
-
----
-
-## <kbd>class</kbd> `TimerDisableError`
-Raised when unable to disable a event timer. 
-
-
-
-
-
----
-
-## <kbd>class</kbd> `TimerEnableError`
-Raised when unable to enable a event timer. 
-
-
-
-
-
----
-
-## <kbd>class</kbd> `TimerError`
-Generic timer error as base exception. 
-
-
-
-
-
----
-
-## <kbd>class</kbd> `TimerStatusError`
-Raised when unable to check status of a event timer. 
-
-
-
 
 

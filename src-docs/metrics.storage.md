@@ -2,7 +2,7 @@
 
 <a href="../src/metrics/storage.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `storage`
+# <kbd>module</kbd> `metrics.storage`
 Classes and functions defining the metrics storage. 
 
 It contains a protocol and reference implementation. 

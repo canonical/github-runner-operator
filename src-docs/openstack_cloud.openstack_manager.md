@@ -2,7 +2,7 @@
 
 <a href="../src/openstack_cloud/openstack_manager.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `openstack_manager`
+# <kbd>module</kbd> `openstack_cloud.openstack_manager`
 Module for handling interactions with OpenStack. 
 
 **Global Variables**

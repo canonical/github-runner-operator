@@ -2,7 +2,7 @@
 
 <a href="../src/metrics/events.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `events`
+# <kbd>module</kbd> `metrics.events`
 Models and functions for the metric events. 
 
 **Global Variables**

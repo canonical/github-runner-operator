@@ -2,7 +2,7 @@
 
 <a href="../src/shared_fs.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `shared_fs.py`
+# <kbd>module</kbd> `shared_fs`
 Classes and functions to operate on the shared filesystem between the charm and the runners. 
 
 **Global Variables**

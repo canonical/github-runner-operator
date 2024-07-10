@@ -2,7 +2,7 @@
 
 <a href="../src/logrotate.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `logrotate.py`
+# <kbd>module</kbd> `logrotate`
 Logrotate setup and configuration. 
 
 **Global Variables**
@@ -50,6 +50,28 @@ Write a particular logrotate config to disk.
 
 ---
 
+<a href="../src/logrotate.py#L20"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `LogrotateFrequency`
+The frequency of log rotation. 
+
+
+
+**Attributes:**
+ 
+ - <b>`DAILY`</b>:  Rotate the log daily. 
+ - <b>`WEEKLY`</b>:  Rotate the log weekly. 
+ - <b>`MONTHLY`</b>:  Rotate the log monthly. 
+ - <b>`YEARLY`</b>:  Rotate the log yearly. 
+
+
+
+
+
+---
+
+<a href="../src/logrotate.py#L36"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
 ## <kbd>class</kbd> `LogrotateConfig`
 Configuration for logrotate. 
 
@@ -63,24 +85,6 @@ Configuration for logrotate.
  - <b>`create`</b>:  Whether to create the log file if it does not exist. 
  - <b>`notifempty`</b>:  Whether to not rotate the log file if it is empty. 
  - <b>`frequency`</b>:  The frequency of log rotation. 
-
-
-
-
-
----
-
-## <kbd>class</kbd> `LogrotateFrequency`
-The frequency of log rotation. 
-
-
-
-**Attributes:**
- 
- - <b>`DAILY`</b>:  Rotate the log daily. 
- - <b>`WEEKLY`</b>:  Rotate the log weekly. 
- - <b>`MONTHLY`</b>:  Rotate the log monthly. 
- - <b>`YEARLY`</b>:  Rotate the log yearly. 
 
 
 

@@ -2,7 +2,7 @@
 
 <a href="../src/utilities.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `utilities.py`
+# <kbd>module</kbd> `utilities`
 Utilities used by the charm. 
 
 
@@ -19,7 +19,7 @@ retry(
     delay: float = 0,
     max_delay: Optional[float] = None,
     backoff: float = 1,
-    local_logger: Logger = <Logger utilities.py (WARNING)>
+    local_logger: Logger = <Logger utilities (WARNING)>
 ) → Callable[[Callable[~ParamT, ~ReturnT]], Callable[~ParamT, ~ReturnT]]
 ```
 

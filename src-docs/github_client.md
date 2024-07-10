@@ -2,7 +2,7 @@
 
 <a href="../src/github_client.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `github_client.py`
+# <kbd>module</kbd> `github_client`
 GitHub API client. 
 
 Migrate to PyGithub in the future. PyGithub is still lacking some API such as remove token for runner. 
@@ -36,12 +36,14 @@ Catch HTTP errors and raise custom exceptions.
 
 ---
 
+<a href="../src/github_client.py#L77"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
 ## <kbd>class</kbd> `GithubClient`
 GitHub API client. 
 
 <a href="../src/github_client.py#L80"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>function</kbd> `__init__`
+### <kbd>method</kbd> `__init__`
 
 ```python
 __init__(token: str)
@@ -62,7 +64,7 @@ Instantiate the GiHub API client.
 
 <a href="../src/github_client.py#L222"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>function</kbd> `delete_runner`
+### <kbd>method</kbd> `delete_runner`
 
 ```python
 delete_runner(path: GithubOrg | GithubRepo, runner_id: int) → None
@@ -81,7 +83,7 @@ Delete the self-hosted runner from GitHub.
 
 <a href="../src/github_client.py#L243"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>function</kbd> `get_job_info`
+### <kbd>method</kbd> `get_job_info`
 
 ```python
 get_job_info(
@@ -117,7 +119,7 @@ Get information about a job for a specific workflow run.
 
 <a href="../src/github_client.py#L89"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>function</kbd> `get_runner_application`
+### <kbd>method</kbd> `get_runner_application`
 
 ```python
 get_runner_application(
@@ -152,7 +154,7 @@ Get runner application available for download for given arch.
 
 <a href="../src/github_client.py#L129"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>function</kbd> `get_runner_github_info`
+### <kbd>method</kbd> `get_runner_github_info`
 
 ```python
 get_runner_github_info(path: GithubOrg | GithubRepo) → list[SelfHostedRunner]
@@ -175,7 +177,7 @@ Get runner information on GitHub under a repo or org.
 
 <a href="../src/github_client.py#L199"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>function</kbd> `get_runner_registration_token`
+### <kbd>method</kbd> `get_runner_registration_token`
 
 ```python
 get_runner_registration_token(path: GithubOrg | GithubRepo) → str
@@ -198,7 +200,7 @@ Get token from GitHub used for registering runners.
 
 <a href="../src/github_client.py#L177"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>function</kbd> `get_runner_remove_token`
+### <kbd>method</kbd> `get_runner_remove_token`
 
 ```python
 get_runner_remove_token(path: GithubOrg | GithubRepo) → str

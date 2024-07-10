@@ -2,7 +2,7 @@
 
 <a href="../src/metrics/runner_logs.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `runner_logs`
+# <kbd>module</kbd> `metrics.runner_logs`
 Functions to pull and remove the logs of the crashed runners. 
 
 

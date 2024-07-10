@@ -2,7 +2,7 @@
 
 <a href="../src/metrics/github.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `github`
+# <kbd>module</kbd> `metrics.github`
 Functions to calculate metrics from data retrieved from GitHub. 
 
 
