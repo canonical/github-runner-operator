@@ -162,11 +162,13 @@ def no_proxy(pytestconfig: pytest.Config) -> str:
     no_proxy = pytestconfig.getoption("--no-proxy")
     return "" if no_proxy is None else no_proxy
 
+
 @pytest.fixture(scope="module", name="openstack_http_proxy")
 def openstack_http_proxy_fixture(pytestconfig: pytest.Config) -> str:
     """Configured http_proxy setting for openstack runners."""
     http_proxy = pytestconfig.getoption("--openstack-http-proxy")
     return "" if http_proxy is None else http_proxy
+
 
 @pytest.fixture(scope="module", name="openstack_https_proxy")
 def openstack_https_proxy_fixture(pytestconfig: pytest.Config) -> str:
@@ -174,11 +176,13 @@ def openstack_https_proxy_fixture(pytestconfig: pytest.Config) -> str:
     https_proxy = pytestconfig.getoption("--openstack-https-proxy")
     return "" if https_proxy is None else https_proxy
 
+
 @pytest.fixture(scope="module", name="openstack_no_proxy")
 def openstack_no_proxy_fixture(pytestconfig: pytest.Config) -> str:
     """Configured no_proxy setting for openstack runners."""
     no_proxy = pytestconfig.getoption("--openstack-no-proxy")
     return "" if no_proxy is None else no_proxy
+
 
 @pytest.fixture(scope="module")
 def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
