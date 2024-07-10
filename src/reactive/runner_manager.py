@@ -109,7 +109,7 @@ def _determine_current_quantity() -> int:
     result = secure_run_subprocess(cmd=PS_COMMAND_LINE_LIST)
     if result.returncode != 0:
         raise ReactiveRunnerError("Failed to get list of processes")
-    commands = result.stdout.decode().rstrip().split("\n")[1:]
+    commands = result.stdout.decode().rstrip().split("\n")[1:] if result.stdout else []
     logger.debug(commands)
     actual_quantity = 0
     for command in commands:
