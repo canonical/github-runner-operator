@@ -740,7 +740,7 @@ class Runner:
         )
         try:
             self._put_file(str(self.runner_script), startup_contents, mode="0755")
-        # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+        # TODO: 2024-04-02 - We should define a new error, wrap it and re-raise it.
         except RunnerFileLoadError:  # pylint: disable=try-except-raise
             raise
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])

@@ -3,7 +3,7 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-# 2024/03/12 The module contains too many lines which are scheduled for refactoring.
+# TODO: 2024-03-12 The module contains too many lines which are scheduled for refactoring.
 # pylint: disable=too-many-lines
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
@@ -494,6 +494,8 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
+            if not self._get_set_image_ready_status():
+                return
             openstack_runner_manager = self._get_openstack_runner_manager(state)
             openstack_runner_manager.reconcile(state.runner_config.virtual_machines)
             self.unit.status = ActiveStatus()
@@ -620,7 +622,7 @@ class GithubRunnerCharm(CharmBase):
                 openstack_runner_manager = self._get_openstack_runner_manager(state)
                 openstack_runner_manager.flush()
                 openstack_runner_manager.reconcile(state.runner_config.virtual_machines)
-                # 2024/04/12: Flush on token changes.
+                # TODO: 2024-04-12: Flush on token changes.
                 self.unit.status = ActiveStatus()
             return
 
@@ -1148,7 +1150,7 @@ class GithubRunnerCharm(CharmBase):
             if not self._get_set_image_ready_status():
                 return
             runner_manager = self._get_openstack_runner_manager(state)
-            # 2024/04/12: Should be flush idle.
+            # TODO: 2024-04-12: Should be flush idle.
             runner_manager.flush()
             runner_manager.reconcile(state.runner_config.virtual_machines)
             return
@@ -1168,12 +1170,15 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type != InstanceType.OPENSTACK:
+            self.unit.status = BlockedStatus(
+                "Openstack mode not enabled. Please remove the image integration."
+            )
             return
         if not self._get_set_image_ready_status():
             return
 
         runner_manager = self._get_openstack_runner_manager(state)
-        # 2024/04/12: Should be flush idle.
+        # TODO: 2024-04-12: Should be flush idle.
         runner_manager.flush()
         runner_manager.reconcile(state.runner_config.virtual_machines)
         self.unit.status = ActiveStatus()
@@ -1199,7 +1204,8 @@ class GithubRunnerCharm(CharmBase):
     ) -> OpenstackRunnerManager:
         """Get OpenstackRunnerManager instance.
 
-        TODO: Combine this with `_get_runner_manager` during the runner manager interface refactor.
+        TODO: 2024-07-09 Combine this with `_get_runner_manager` during the runner manager \
+        interface refactor.
 
         Args:
             state: Charm state.
@@ -1218,7 +1224,8 @@ class GithubRunnerCharm(CharmBase):
 
         # Empty image can be passed down due to a delete only case where deletion of runners do not
         # depend on the image ID being available. Make sure that the charm goes to blocked status
-        # in hook where a runner may be created. TODO: This logic is subject to refactoring.
+        # in hook where a runner may be created. TODO: 2024-07-09 This logic is subject to
+        # refactoring.
         image = state.runner_config.openstack_image
         image_id = image.id if image and image.id else ""
         image_labels = image.tags if image and image.tags else []
