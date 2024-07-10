@@ -1133,7 +1133,9 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type != InstanceType.OPENSTACK:
-            self.unit.status = BlockedStatus("LXD mode enabled. Please remove image relation.")
+            self.unit.status = BlockedStatus(
+                "Openstack mode not enabled. Please remove the image integration."
+            )
             return
         if not self._get_set_image_ready_status():
             return
