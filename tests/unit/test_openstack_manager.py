@@ -20,7 +20,7 @@ import metrics.storage
 import reactive.runner_manager
 from charm_state import CharmState, ProxyConfig, ReactiveConfig, RepoPolicyComplianceConfig
 from errors import OpenStackError, RunnerStartError
-from github_type import GitHubRunnerStatus, SelfHostedRunner
+from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
 from metrics import events as metric_events
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from metrics.storage import MetricsStorage
@@ -114,7 +114,7 @@ def patch_ssh_connection_error_fixture(monkeypatch: pytest.MonkeyPatch):
 def mock_github_client_fixture() -> MagicMock:
     """Mocked github client that returns runner application."""
     mock_github_client = MagicMock(spec=openstack_manager.GithubClient)
-    mock_github_client.get_runner_application.return_value = openstack_manager.RunnerApplication(
+    mock_github_client.get_runner_application.return_value = RunnerApplication(
         os="linux",
         architecture="x64",
         download_url="http://test_url",
@@ -222,6 +222,7 @@ def openstack_manager_for_reconcile_fixture(
         labels=[],
         token=secrets.token_hex(16),
         flavor=app_name,
+        image="test-image-id",
         network=secrets.token_hex(16),
         dockerhub_mirror=None,
     )
@@ -293,44 +294,6 @@ def test__create_connection(
     # 2. single cloud
     with openstack_manager._create_connection(cloud_config=clouds_yaml):
         openstack_connect_mock.assert_called_with(cloud=cloud_name)
-
-
-@pytest.mark.parametrize(
-    "arch",
-    [
-        pytest.param("s390x", id="s390x"),
-        pytest.param("riscv64", id="riscv64"),
-        pytest.param("ppc64el", id="ppc64el"),
-        pytest.param("armhf", id="armhf"),
-        pytest.param("test", id="test"),
-    ],
-)
-def test__get_supported_runner_arch_invalid_arch(arch: str):
-    """
-    arrange: given supported architectures.
-    act: when _get_supported_runner_arch is called.
-    assert: supported cloud image architecture type is returned.
-    """
-    with pytest.raises(openstack_manager.UnsupportedArchitectureError) as exc:
-        openstack_manager._get_supported_runner_arch(arch=arch)
-
-    assert arch in str(exc)
-
-
-@pytest.mark.parametrize(
-    "arch, image_arch",
-    [
-        pytest.param("x64", "amd64", id="x64"),
-        pytest.param("arm64", "arm64", id="arm64"),
-    ],
-)
-def test__get_supported_runner_arch(arch: str, image_arch: str):
-    """
-    arrange: given supported architectures.
-    act: when _get_supported_runner_arch is called.
-    assert: supported cloud image architecture type is returned.
-    """
-    assert openstack_manager._get_supported_runner_arch(arch=arch) == image_arch
 
 
 @pytest.mark.parametrize(
@@ -470,280 +433,6 @@ def test__generate_runner_env(
             ssh_debug_connections=ssh_debug_connections,
         )
         == expected_env_contents
-    )
-
-
-def test__build_image_command():
-    """
-    arrange: given a mock Github runner application and proxy config.
-    act: when _build_image_command is called.
-    assert: command for build image bash script with args are returned.
-    """
-    test_runner_info = openstack_manager.RunnerApplication(
-        os="linux",
-        architecture="x64",
-        download_url=(test_download_url := "https://testdownloadurl.com"),
-        filename="test_filename",
-        temp_download_token=secrets.token_hex(16),
-    )
-    test_proxy_config = openstack_manager.ProxyConfig(
-        http=(test_http_proxy := "http://proxy.test"),
-        https=(test_https_proxy := "https://proxy.test"),
-        no_proxy=(test_no_proxy := "http://no.proxy"),
-        use_aproxy=False,
-    )
-
-    command = openstack_manager._build_image_command(
-        runner_info=test_runner_info, proxies=test_proxy_config
-    )
-    assert command == [
-        "/usr/bin/bash",
-        openstack_manager.BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME,
-        test_download_url,
-        test_http_proxy,
-        test_https_proxy,
-        test_no_proxy,
-    ], "Unexpected build image command."
-
-
-def test_build_image_runner_binary_error():
-    """
-    arrange: given a mocked github client get_runner_application function that raises an error.
-    act: when build_image is called.
-    assert: ImageBuildError is raised.
-    """
-    mock_github_client = MagicMock(spec=openstack_manager.GithubClient)
-    mock_github_client.get_runner_application.side_effect = openstack_manager.RunnerBinaryError
-
-    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
-        openstack_manager.build_image(
-            arch=openstack_manager.Arch.X64,
-            cloud_config=MagicMock(),
-            github_client=mock_github_client,
-            path=MagicMock(),
-        )
-
-    assert "Failed to fetch runner application." in str(exc)
-
-
-def test_build_image_script_error(monkeypatch: pytest.MonkeyPatch):
-    """
-    arrange: given a monkeypatched execute_command function that raises an error.
-    act: when build_image is called.
-    assert: ImageBuildError is raised.
-    """
-    monkeypatch.setattr(
-        openstack_manager,
-        "execute_command",
-        MagicMock(
-            side_effect=openstack_manager.SubprocessError(
-                cmd=[], return_code=1, stdout="", stderr=""
-            )
-        ),
-    )
-
-    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
-        openstack_manager.build_image(
-            arch=openstack_manager.Arch.X64,
-            cloud_config=MagicMock(),
-            github_client=MagicMock(),
-            path=MagicMock(),
-        )
-
-    assert "Failed to build image." in str(exc)
-
-
-@pytest.mark.usefixtures("patch_execute_command")
-def test_build_image_runner_arch_error(
-    monkeypatch: pytest.MonkeyPatch, mock_github_client: MagicMock
-):
-    """
-    arrange: given _get_supported_runner_arch that raises unsupported architecture error.
-    act: when build_image is called.
-    assert: ImageBuildError error is raised with unsupported arch message.
-    """
-    mock_get_supported_runner_arch = MagicMock(
-        spec=openstack_manager._get_supported_runner_arch,
-        side_effect=openstack_manager.UnsupportedArchitectureError(arch="x64"),
-    )
-    monkeypatch.setattr(
-        openstack_manager, "_get_supported_runner_arch", mock_get_supported_runner_arch
-    )
-
-    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
-        openstack_manager.build_image(
-            arch=openstack_manager.Arch.X64,
-            cloud_config=MagicMock(),
-            github_client=mock_github_client,
-            path=MagicMock(),
-        )
-
-    assert "Unsupported architecture" in str(exc)
-
-
-@pytest.mark.usefixtures("patch_execute_command")
-def test_build_image_delete_image_error(
-    mock_github_client: MagicMock, patched_create_connection_context: MagicMock
-):
-    """
-    arrange: given a mocked openstack connection that returns existing images and delete_image \
-        that returns False (failed to delete image).
-    act: when build_image is called.
-    assert: ImageBuildError is raised.
-    """
-    patched_create_connection_context.search_images.return_value = (
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-    )
-    patched_create_connection_context.delete_image.return_value = False
-
-    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
-        openstack_manager.build_image(
-            arch=openstack_manager.Arch.X64,
-            cloud_config=MagicMock(),
-            github_client=mock_github_client,
-            path=MagicMock(),
-        )
-
-    assert "Failed to delete duplicate image on Openstack." in str(exc)
-
-
-@pytest.mark.usefixtures("patch_execute_command")
-def test_build_image_create_image_error(
-    patched_create_connection_context: MagicMock, mock_github_client: MagicMock
-):
-    """
-    arrange: given a mocked connection that raises OpenStackCloudException on create_image.
-    act: when build_image is called.
-    assert: ImageBuildError is raised.
-    """
-    patched_create_connection_context.create_image.side_effect = (
-        openstack_manager.OpenStackCloudException
-    )
-
-    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
-        openstack_manager.build_image(
-            arch=openstack_manager.Arch.X64,
-            cloud_config=MagicMock(),
-            github_client=mock_github_client,
-            path=MagicMock(),
-            proxies=None,
-        )
-
-    assert "Failed to update image" in str(exc)
-
-
-@pytest.mark.usefixtures("patch_execute_command")
-def test_build_image(
-    patched_create_connection_context: MagicMock,
-    mock_github_client: MagicMock,
-):
-    """
-    arrange: given monkeypatched execute_command and mocked openstack connection.
-    act: when build_image is called.
-    assert: Openstack image is successfully created.
-    """
-    patched_create_connection_context.search_images.return_value = (
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-    )
-
-    openstack_manager.build_image(
-        arch=openstack_manager.Arch.X64,
-        cloud_config=MagicMock(),
-        github_client=mock_github_client,
-        path=MagicMock(),
-    )
-
-
-@pytest.mark.usefixtures("patch_execute_command")
-def test_build_image_on_arm64(
-    patched_create_connection_context: MagicMock, mock_github_client: MagicMock
-):
-    """
-    arrange: given monkeypatched execute_command and mocked openstack connection.
-    act: when build_image is called on arm64.
-    assert: Openstack image is successfully created.
-    """
-    patched_create_connection_context.search_images.return_value = (
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-    )
-
-    openstack_manager.build_image(
-        arch=openstack_manager.Arch.ARM64,
-        cloud_config=MagicMock(),
-        github_client=mock_github_client,
-        path=MagicMock(),
-    )
-
-
-@pytest.mark.usefixtures("patch_execute_command")
-def test_build_image_on_unsupported_arch(
-    patched_create_connection_context: MagicMock, mock_github_client: MagicMock
-):
-    """
-    arrange: given monkeypatched execute_command and mocked openstack connection.
-    act: when build_image is called on unknown architecture.
-    assert: UnsupportedArchitectureError is raised.
-    """
-    patched_create_connection_context.search_images.return_value = (
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-    )
-
-    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
-        openstack_manager.build_image(
-            # Use mock to represent unknown architecture.
-            arch=MagicMock(),
-            cloud_config=MagicMock(),
-            github_client=mock_github_client,
-            path=MagicMock(),
-        )
-    assert str(exc.value) == "Unsupported architecture x64"
-
-
-@pytest.mark.usefixtures("patch_execute_command")
-def test_build_image_with_proxy_config(
-    patched_create_connection_context: MagicMock, mock_github_client: MagicMock
-):
-    """
-    arrange: given monkeypatched execute_command and mocked openstack connection.
-    act: when build_image is called with various valid ProxyConfig objects.
-    assert: Openstack image is successfully created.
-    """
-    patched_create_connection_context.search_images.return_value = (
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-    )
-
-    test_proxy_config = openstack_manager.ProxyConfig(
-        http=None,
-        https=None,
-        no_proxy=None,
-        use_aproxy=False,
-    )
-
-    openstack_manager.build_image(
-        arch=openstack_manager.Arch.ARM64,
-        cloud_config=MagicMock(),
-        github_client=mock_github_client,
-        path=MagicMock(),
-        proxies=test_proxy_config,
-    )
-
-    test_proxy_config = openstack_manager.ProxyConfig(
-        http="http://proxy.test",
-        https="https://proxy.test",
-        no_proxy="http://no.proxy",
-        use_aproxy=False,
-    )
-
-    openstack_manager.build_image(
-        arch=openstack_manager.Arch.ARM64,
-        cloud_config=MagicMock(),
-        github_client=mock_github_client,
-        path=MagicMock(),
-        proxies=test_proxy_config,
     )
 
 

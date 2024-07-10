@@ -40,6 +40,7 @@ Configuration of runner manager.
  - <b>`labels`</b>:  Additional labels for the runners. 
  - <b>`token`</b>:  GitHub personal access token to register runner to the  repository or organization. 
  - <b>`flavor`</b>:  OpenStack flavor for defining the runner resources. 
+ - <b>`image`</b>:  Openstack image id to boot the runner with. 
  - <b>`network`</b>:  OpenStack network for runner network access. 
  - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
  - <b>`reactive_config`</b>:  The configuration to spawn runners reactively. 

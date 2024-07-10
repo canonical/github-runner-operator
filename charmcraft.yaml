@@ -14,7 +14,6 @@ parts:
       - pkg-config # for cryptography
     prime:
       - scripts/build-lxd-image.sh
-      - scripts/build-openstack-image.sh
       - scripts/reactive_runner.py
       - scripts/repo_policy_compliance_service.py
 bases:

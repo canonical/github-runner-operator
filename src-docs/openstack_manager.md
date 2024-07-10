@@ -8,8 +8,6 @@ Module for handling interactions with OpenStack.
 **Global Variables**
 ---------------
 - **RUNNER_INSTALLED_TS_FILE_NAME**
-- **IMAGE_PATH_TMPL**
-- **IMAGE_NAME**
 - **SECURITY_GROUP_NAME**
 - **BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME**
 - **MAX_METRICS_FILE_SIZE**
@@ -20,47 +18,7 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L352"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>function</kbd> `build_image`
-
-```python
-build_image(
-    arch: Arch,
-    cloud_config: dict[str, dict],
-    github_client: GithubClient,
-    path: GithubOrg | GithubRepo,
-    proxies: Optional[ProxyConfig] = None
-) → str
-```
-
-Build and upload an image to OpenStack. 
-
-
-
-**Args:**
- 
- - <b>`arch`</b>:  The architecture of the image. 
- - <b>`cloud_config`</b>:  The cloud configuration to connect OpenStack with. 
- - <b>`github_client`</b>:  The Github client to interact with Github API. 
- - <b>`path`</b>:  Github organisation or repository path. 
- - <b>`proxies`</b>:  HTTP proxy settings. 
-
-
-
-**Raises:**
- 
- - <b>`OpenstackImageBuildError`</b>:  If there were errors building/creating the image. 
-
-
-
-**Returns:**
- The created OpenStack image id. 
-
-
----
-
-<a href="../src/openstack_cloud/openstack_manager.py#L414"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L186"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
@@ -68,10 +26,10 @@ Build and upload an image to OpenStack.
 create_instance_config(
     app_name: str,
     unit_num: int,
-    openstack_image: str,
+    image_id: str,
     path: GithubOrg | GithubRepo,
     labels: Iterable[str],
-    github_token: str
+    registration_token: str
 ) → InstanceConfig
 ```
 
@@ -83,10 +41,10 @@ Create an instance config from charm data.
  
  - <b>`app_name`</b>:  The juju application name. 
  - <b>`unit_num`</b>:  The juju unit number. 
- - <b>`openstack_image`</b>:  The openstack image object to create the instance with. 
+ - <b>`image_id`</b>:  The openstack image id to create the instance with. 
  - <b>`path`</b>:  Github organisation or repository path. 
  - <b>`labels`</b>:  Addition labels for the runner. 
- - <b>`github_token`</b>:  The Github PAT for interaction with Github API. 
+ - <b>`registration_token`</b>:  The Github runner registration token. See             https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#create-a-registration-token-for-a-repository 
 
 
 
@@ -96,7 +54,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L124"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L110"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `InstanceConfig`
 The configuration values for creating a single runner instance. 
@@ -105,11 +63,11 @@ The configuration values for creating a single runner instance.
 
 **Attributes:**
  
- - <b>`name`</b>:  Name of the image to launch the GitHub runner instance with. 
- - <b>`labels`</b>:  The runner instance labels. 
- - <b>`registration_token`</b>:  Token for registering the runner on GitHub. 
  - <b>`github_path`</b>:  The GitHub repo/org path to register the runner. 
- - <b>`openstack_image`</b>:  The Openstack image to use to boot the instance with. 
+ - <b>`image_id`</b>:  The Openstack image id to use to boot the instance with. 
+ - <b>`labels`</b>:  The runner instance labels. 
+ - <b>`name`</b>:  Name of the image to launch the GitHub runner instance with. 
+ - <b>`registration_token`</b>:  Token for registering the runner on GitHub. 
 
 <a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
@@ -117,11 +75,11 @@ The configuration values for creating a single runner instance.
 
 ```python
 __init__(
-    name: str,
-    labels: Iterable[str],
-    registration_token: str,
     github_path: GithubOrg | GithubRepo,
-    openstack_image: str
+    image_id: str,
+    labels: Iterable[str],
+    name: str,
+    registration_token: str
 ) → None
 ```
 
@@ -135,37 +93,7 @@ __init__(
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L199"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>class</kbd> `ProxyStringValues`
-Wrapper class to proxy values to string. 
-
-
-
-**Attributes:**
- 
- - <b>`http`</b>:  HTTP proxy address. 
- - <b>`https`</b>:  HTTPS proxy address. 
- - <b>`no_proxy`</b>:  Comma-separated list of hosts that should not be proxied. 
-
-
-
-
-
----
-
-<a href="../src/openstack_cloud/openstack_manager.py#L308"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>class</kbd> `OpenstackUpdateImageError`
-Represents an error while updating image on Openstack. 
-
-
-
-
-
----
-
-<a href="../src/openstack_cloud/openstack_manager.py#L508"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L279"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `GithubRunnerRemoveError`
 Represents an error removing registered runner from Github. 
@@ -176,7 +104,7 @@ Represents an error removing registered runner from Github.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L518"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L289"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackRunnerManager`
 Runner manager for OpenStack-based instances. 
@@ -189,7 +117,7 @@ Runner manager for OpenStack-based instances.
  - <b>`unit_num`</b>:  The juju unit number. 
  - <b>`instance_name`</b>:  Prefix of the name for the set of runners. 
 
-<a href="../src/openstack_cloud/openstack_manager.py#L527"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L298"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -218,7 +146,7 @@ Construct OpenstackRunnerManager object.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L1738"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L1500"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `flush`
 
@@ -235,7 +163,7 @@ Flush Openstack servers.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L630"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L401"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_github_runner_info`
 
@@ -252,7 +180,7 @@ Get information on GitHub for the runners.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L558"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L329"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `reconcile`
 

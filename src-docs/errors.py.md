@@ -171,24 +171,6 @@ Represents an unauthorized connection to OpenStack.
 
 ---
 
-## <kbd>class</kbd> `OpenstackImageBuildError`
-Exception representing an error during image build process. 
-
-
-
-
-
----
-
-## <kbd>class</kbd> `OpenstackInstanceLaunchError`
-Exception representing an error during instance launch process. 
-
-
-
-
-
----
-
 ## <kbd>class</kbd> `QuarantineMetricsStorageError`
 Represents an error when the metrics storage could not be quarantined. 
 

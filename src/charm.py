@@ -40,6 +40,7 @@ import logrotate
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     GROUP_CONFIG_NAME,
+    IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
@@ -49,6 +50,7 @@ from charm_state import (
     CharmState,
     GithubPath,
     InstanceType,
+    OpenstackImage,
     ProxyConfig,
     RunnerStorage,
     VirtualMachineResources,
@@ -67,11 +69,9 @@ from errors import (
 )
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
-from github_client import GithubClient
 from github_type import GitHubRunnerStatus
 from metrics.events import METRICS_LOGROTATE_CONFIG
 from metrics.runner_logs import RUNNER_LOGROTATE_CONFIG
-from openstack_cloud import openstack_manager
 from openstack_cloud.openstack_manager import OpenstackRunnerManager
 from reactive.runner_manager import REACTIVE_ERROR_LOGROTATE_CONFIG, REACTIVE_LOGROTATE_CONFIG
 from runner import LXD_PROFILE_YAML
@@ -241,6 +241,10 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(
             self.on[DEBUG_SSH_INTEGRATION_NAME].relation_changed,
             self._on_debug_ssh_relation_changed,
+        )
+        self.framework.observe(
+            self.on[IMAGE_INTEGRATION_NAME].relation_changed,
+            self._on_image_relation_changed,
         )
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
@@ -427,17 +431,6 @@ class GithubRunnerCharm(CharmBase):
             raise
 
         if state.instance_type == InstanceType.OPENSTACK:
-            if state.runner_config.build_image:
-                self.unit.status = MaintenanceStatus("Building Openstack image")
-                github = GithubClient(token=state.charm_config.token)
-                openstack_manager.build_image(
-                    arch=state.arch,
-                    cloud_config=state.charm_config.openstack_clouds_yaml,
-                    github_client=github,
-                    path=state.charm_config.path,
-                    proxies=state.proxy_config,
-                )
-                self.unit.status = ActiveStatus()
             return True
 
         self.unit.status = MaintenanceStatus("Installing packages")
@@ -587,8 +580,9 @@ class GithubRunnerCharm(CharmBase):
             state.runner_config.virtual_machine_resources,
         )
 
+    # Temporarily ignore too-complex since this is subject to refactor.
     @catch_charm_errors
-    def _on_config_changed(self, _: ConfigChangedEvent) -> None:
+    def _on_config_changed(self, _: ConfigChangedEvent) -> None:  # noqa: C901
         """Handle the configuration change."""
         state = self._setup_state()
         self._set_reconcile_timer()
@@ -620,6 +614,8 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
+            if not self._get_set_image_ready_status():
+                return
             if state.charm_config.token != self._stored.token:
                 openstack_runner_manager = self._get_openstack_runner_manager(state)
                 openstack_runner_manager.flush()
@@ -720,6 +716,8 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
+            if not self._get_set_image_ready_status():
+                return
             runner_manager = self._get_openstack_runner_manager(state)
             runner_manager.reconcile(state.runner_config.virtual_machines)
             self.unit.status = ActiveStatus()
@@ -812,6 +810,9 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
+            if not self._get_set_image_ready_status():
+                event.fail("Openstack image not yet provided/ready.")
+                return
             runner_manager = self._get_openstack_runner_manager(state)
 
             delta = runner_manager.reconcile(state.runner_config.virtual_machines)
@@ -1144,6 +1145,8 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
+            if not self._get_set_image_ready_status():
+                return
             runner_manager = self._get_openstack_runner_manager(state)
             # 2024/04/12: Should be flush idle.
             runner_manager.flush()
@@ -1158,6 +1161,38 @@ class GithubRunnerCharm(CharmBase):
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
         )
+
+    @catch_charm_errors
+    def _on_image_relation_changed(self, _: ops.RelationChangedEvent) -> None:
+        """Handle image relation changed event."""
+        state = self._setup_state()
+
+        if state.instance_type != InstanceType.OPENSTACK:
+            return
+        if not self._get_set_image_ready_status():
+            return
+
+        runner_manager = self._get_openstack_runner_manager(state)
+        # 2024/04/12: Should be flush idle.
+        runner_manager.flush()
+        runner_manager.reconcile(state.runner_config.virtual_machines)
+        self.unit.status = ActiveStatus()
+        return
+
+    def _get_set_image_ready_status(self) -> bool:
+        """Check if image is ready for Openstack and charm status accordingly.
+
+        Returns:
+            Whether the Openstack image is ready via image integration.
+        """
+        openstack_image = OpenstackImage.from_charm(self)
+        if openstack_image is None:
+            self.unit.status = BlockedStatus("Please provide image integration.")
+            return False
+        if not openstack_image.id:
+            self.unit.status = WaitingStatus("Waiting for image over integration.")
+            return False
+        return True
 
     def _get_openstack_runner_manager(
         self, state: CharmState, token: str | None = None, path: GithubPath | None = None
@@ -1181,13 +1216,21 @@ class GithubRunnerCharm(CharmBase):
         if path is None:
             path = state.charm_config.path
 
+        # Empty image can be passed down due to a delete only case where deletion of runners do not
+        # depend on the image ID being available. Make sure that the charm goes to blocked status
+        # in hook where a runner may be created. TODO: This logic is subject to refactoring.
+        image = state.runner_config.openstack_image
+        image_id = image.id if image and image.id else ""
+        image_labels = image.tags if image and image.tags else []
+
         app_name, unit = self.unit.name.rsplit("/", 1)
         openstack_runner_manager_config = OpenstackRunnerManagerConfig(
             charm_state=state,
             path=path,
             token=token,
-            labels=state.charm_config.labels,
+            labels=(*state.charm_config.labels, *image_labels),
             flavor=state.runner_config.openstack_flavor,
+            image=image_id,
             network=state.runner_config.openstack_network,
             dockerhub_mirror=state.charm_config.dockerhub_mirror,
             reactive_config=state.reactive_config,

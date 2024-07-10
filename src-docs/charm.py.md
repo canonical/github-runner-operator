@@ -9,6 +9,7 @@ Charm for creating and managing GitHub self-hosted runner instances.
 ---------------
 - **DEBUG_SSH_INTEGRATION_NAME**
 - **GROUP_CONFIG_NAME**
+- **IMAGE_INTEGRATION_NAME**
 - **LABELS_CONFIG_NAME**
 - **PATH_CONFIG_NAME**
 - **RECONCILE_INTERVAL_CONFIG_NAME**

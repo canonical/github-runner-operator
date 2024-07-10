@@ -165,7 +165,7 @@ class RunnerManager:
 
         try:
             # Download the new file
-            response = self.session.get(binary["download_url"], stream=True)
+            response = self.session.get(binary["download_url"], stream=True, timeout=10 * 60)
 
             logger.info(
                 "Download of runner binary from %s return status code: %i",

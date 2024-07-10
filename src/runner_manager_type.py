@@ -90,8 +90,8 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
         return self.charm_state.is_metrics_logging_available
 
 
+# This class is subject to refactor.
 @dataclass
-# The instance attributes are all required.
 class OpenstackRunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     """Configuration of runner manager.
 
@@ -103,6 +103,7 @@ class OpenstackRunnerManagerConfig:  # pylint: disable=too-many-instance-attribu
         token: GitHub personal access token to register runner to the
             repository or organization.
         flavor: OpenStack flavor for defining the runner resources.
+        image: Openstack image id to boot the runner with.
         network: OpenStack network for runner network access.
         dockerhub_mirror: URL of dockerhub mirror to use.
         reactive_config: The configuration to spawn runners reactively.
@@ -113,6 +114,7 @@ class OpenstackRunnerManagerConfig:  # pylint: disable=too-many-instance-attribu
     labels: Iterable[str]
     token: str
     flavor: str
+    image: str
     network: str
     dockerhub_mirror: str | None
     reactive_config: ReactiveConfig | None = None
