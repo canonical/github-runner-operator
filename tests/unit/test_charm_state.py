@@ -1177,7 +1177,7 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     assert CharmState.from_charm(mock_charm)
 
 
-def test_charm_state___log_prev_state_redacts_sensitive_information(
+def test_charm_state__log_prev_state_redacts_sensitive_information(
     mock_charm_state_data: dict, caplog: pytest.LogCaptureFixture
 ):
     """
