@@ -16,6 +16,7 @@ Organisation:
 
 Repository:
 
+- Actions: read (required when COS integration is enabled)
 - Administration: read
 - Contents: read
 - Pull requests: read
@@ -25,6 +26,7 @@ Repository:
 The following are the permissions scopes required for the GitHub runners when registering as an
 repository runner.
 
+- Actions: read (required when COS integration is enabled)
 - Administration: read & write
 - Contents: read
 - Metadata: read
