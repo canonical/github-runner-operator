@@ -435,13 +435,13 @@ def test_database_integration_events_trigger_reconciliation(
     act: Fire mongodb relation events.
     assert: _trigger_reconciliation has been called.
     """
-    reconcliation_mock = MagicMock()
+    reconciliation_mock = MagicMock()
     relation_mock = MagicMock()
     relation_mock.name = "mongodb"
     relation_mock.id = 0
-    monkeypatch.setattr("charm.GithubRunnerCharm._trigger_reconciliation", reconcliation_mock)
+    monkeypatch.setattr("charm.GithubRunnerCharm._trigger_reconciliation", reconciliation_mock)
     getattr(harness.charm.database.on, hook).emit(relation=relation_mock)
-    reconcliation_mock.assert_called_once()
+    reconciliation_mock.assert_called_once()
 
 
 # New tests should not be added here. This should be refactored to pytest over time.

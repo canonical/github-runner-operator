@@ -148,7 +148,7 @@ def test_reconcile_spawn_runner_failed(
     reactive_config = ReactiveRunnerConfig(mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
     subprocess_popen_mock.side_effect = [
         MagicMock(returncode=0),
-        MagicMock(return_code=1),
+        MagicMock(returncode=1),
         MagicMock(returncode=0),
     ]
     _arrange_reactive_processes(secure_run_subprocess_mock, count=0)
