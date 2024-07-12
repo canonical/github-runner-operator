@@ -73,17 +73,17 @@ def reconcile(quantity: int, config: ReactiveRunnerConfig) -> int:
     """
     actual_quantity = _determine_current_quantity()
     logger.info("Actual quantity of reactive runner processes: %s", actual_quantity)
-    delta = quantity - actual_quantity
-    actual_delta = delta
+    actual_delta = delta = quantity - actual_quantity
     if delta > 0:
         logger.info("Will spawn %d new reactive runner processes", delta)
         _setup_logging()
         for _ in range(delta):
             try:
                 _spawn_runner(config)
-            except ReactiveRunnerError:
+            except _SpawnError:
                 logger.exception("Failed to spawn a new reactive runner process")
-                actual_delta -= 1
+        actual_quantity_after_spawning = _determine_current_quantity()
+        actual_delta = actual_quantity_after_spawning - actual_quantity
     elif delta < 0:
         logger.info(
             "%d reactive runner processes are running. "
@@ -125,6 +125,10 @@ def _setup_logging() -> None:
         shutil.chown(REACTIVE_RUNNER_LOG_DIR, user=UBUNTU_USER, group=UBUNTU_USER)
 
 
+class _SpawnError(Exception):
+    """Raised when spawning a runner fails."""
+
+
 def _spawn_runner(reactive_runner_config: ReactiveRunnerConfig) -> None:
     """Spawn a runner.
 
@@ -132,7 +136,7 @@ def _spawn_runner(reactive_runner_config: ReactiveRunnerConfig) -> None:
         reactive_runner_config: The configuration for the reactive runner.
 
     Raises:
-        ReactiveRunnerError: If the runner fails to spawn.
+        _SpawnError: If the runner fails to spawn.
     """
     env = {
         "PYTHONPATH": "src:lib:venv",
@@ -164,14 +168,9 @@ def _spawn_runner(reactive_runner_config: ReactiveRunnerConfig) -> None:
         user=UBUNTU_USER,
     )
 
-    try:
-        process.wait(0.001)
-    except subprocess.TimeoutExpired:
-        pass
-    else:
-        if process.returncode not in (0, None):
-            raise ReactiveRunnerError(
-                f"Failed to spawn a new reactive runner process with pid {process.pid}."
-                f" Return code: {process.returncode}"
-            )
+    if process.returncode not in (0, None):
+        raise _SpawnError(
+            f"Failed to spawn a new reactive runner process with pid {process.pid}."
+            f" Return code: {process.returncode}"
+        )
     logger.debug("Spawned a new reactive runner process with pid %s", process.pid)

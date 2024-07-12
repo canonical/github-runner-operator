@@ -49,12 +49,11 @@ def secure_run_subprocess_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> Magic
 @pytest.fixture(name="subprocess_popen_mock")
 def subprocess_popen_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     """Mock the subprocess.Popen function."""
-    popen_result = MagicMock(spec=subprocess.Popen, pid=1234)
+    popen_result = MagicMock(spec=subprocess.Popen, pid=1234, returncode=0)
     subprocess_popen_mock = MagicMock(
         spec=subprocess.Popen,
         return_value=popen_result,
     )
-    popen_result.wait.side_effect = subprocess.TimeoutExpired("cmd", 1)
     monkeypatch.setattr("subprocess.Popen", subprocess_popen_mock)
     return subprocess_popen_mock
 
@@ -69,7 +68,9 @@ def test_reconcile_spawns_runners(
     """
     queue_name = secrets.token_hex(16)
     reactive_config = ReactiveRunnerConfig(mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
-    _arrange_reactive_processes(secure_run_subprocess_mock, count=2)
+    _arrange_reactive_processes(
+        secure_run_subprocess_mock, count_before_spawn=2, count_after_spawn=5
+    )
 
     delta = reconcile(5, reactive_config)
 
@@ -88,7 +89,9 @@ def test_reconcile_does_not_spawn_runners(
     """
     queue_name = secrets.token_hex(16)
     reactive_config = ReactiveRunnerConfig(mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
-    _arrange_reactive_processes(secure_run_subprocess_mock, count=2)
+    _arrange_reactive_processes(
+        secure_run_subprocess_mock, count_before_spawn=2, count_after_spawn=2
+    )
 
     delta = reconcile(2, reactive_config)
 
@@ -106,7 +109,9 @@ def test_reconcile_does_not_spawn_runners_for_too_many_processes(
     """
     queue_name = secrets.token_hex(16)
     reactive_config = ReactiveRunnerConfig(mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
-    _arrange_reactive_processes(secure_run_subprocess_mock, count=2)
+    _arrange_reactive_processes(
+        secure_run_subprocess_mock, count_before_spawn=2, count_after_spawn=2
+    )
     delta = reconcile(1, reactive_config)
 
     assert delta == 0
@@ -151,24 +156,42 @@ def test_reconcile_spawn_runner_failed(
         MagicMock(returncode=1),
         MagicMock(returncode=0),
     ]
-    _arrange_reactive_processes(secure_run_subprocess_mock, count=0)
+    _arrange_reactive_processes(
+        secure_run_subprocess_mock, count_before_spawn=0, count_after_spawn=2
+    )
 
     delta = reconcile(3, reactive_config)
 
     assert delta == 2
 
 
-def _arrange_reactive_processes(secure_run_subprocess_mock: MagicMock, count: int):
+def _arrange_reactive_processes(
+    secure_run_subprocess_mock: MagicMock, count_before_spawn: int, count_after_spawn: int
+):
     """Mock reactive runner processes are active.
 
     Args:
         secure_run_subprocess_mock: The mock to use for the ps command.
-        count: The number of processes
+        count_before_spawn: The number of processes before spawning new ones.
+        count_after_spawn: The number of processes after spawning new ones.
     """
-    process_cmds = "\n".join([f"{PYTHON_BIN} {REACTIVE_RUNNER_SCRIPT_FILE}" for _ in range(count)])
-    secure_run_subprocess_mock.return_value = CompletedProcess(
-        args=PS_COMMAND_LINE_LIST,
-        returncode=0,
-        stdout=f"CMD\n{process_cmds}".encode("utf-8"),
-        stderr=b"",
+    process_cmds_before = "\n".join(
+        [f"{PYTHON_BIN} {REACTIVE_RUNNER_SCRIPT_FILE}" for _ in range(count_before_spawn)]
     )
+    process_cmds_after = "\n".join(
+        [f"{PYTHON_BIN} {REACTIVE_RUNNER_SCRIPT_FILE}" for _ in range(count_after_spawn)]
+    )
+    secure_run_subprocess_mock.side_effect = [
+        CompletedProcess(
+            args=PS_COMMAND_LINE_LIST,
+            returncode=0,
+            stdout=f"CMD\n{process_cmds_before}".encode("utf-8"),
+            stderr=b"",
+        ),
+        CompletedProcess(
+            args=PS_COMMAND_LINE_LIST,
+            returncode=0,
+            stdout=f"CMD\n{process_cmds_after}".encode("utf-8"),
+            stderr=b"",
+        ),
+    ]
