@@ -83,9 +83,10 @@ def test_reject_multiple_times_raises_error():
     job = Job.from_message_queue(mq_conn_info)
 
     job.reject()
-    with pytest.raises(JobError) as exc_info:
-        job.reject()
-    assert "Could not reject job" in str(exc_info.value)
+    for _ in range(2):
+        with pytest.raises(JobError) as exc_info:
+            job.reject()
+        assert "Could not reject job" in str(exc_info.value)
 
 
 def test_picked_up_acknowledges_job():
@@ -122,9 +123,10 @@ def test_picked_up_multiple_times_raises_error():
     job = Job.from_message_queue(mq_conn_info)
 
     job.picked_up()
-    with pytest.raises(JobError) as exc_info:
-        job.picked_up()
-    assert "Could not acknowledge job" in str(exc_info.value)
+    for _ in range(2):
+        with pytest.raises(JobError) as exc_info:
+            job.picked_up()
+        assert "Could not acknowledge job" in str(exc_info.value)
 
 
 @pytest.mark.parametrize(

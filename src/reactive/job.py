@@ -80,7 +80,8 @@ class _MQJobSource(JobSource):
             self._msg.ack()
         except MessageStateError as e:
             raise JobSourceError("Could not acknowledge message") from e
-        self._close()
+        finally:
+            self._close()
 
     def reject(self) -> None:
         """Reject the message.
@@ -95,7 +96,8 @@ class _MQJobSource(JobSource):
             self._msg.reject(requeue=True)
         except MessageStateError as e:
             raise JobSourceError("Could not reject message") from e
-        self._close()
+        finally:
+            self._close()
 
     def get_job(self) -> JobDetails:
         """Get the job details from the message.
