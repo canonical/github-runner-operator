@@ -7,6 +7,7 @@ Module for managing reactive runners.
 
 **Global Variables**
 ---------------
+- **MQ_URI_ENV_VAR**
 - **REACTIVE_RUNNER_SCRIPT_FILE**
 - **REACTIVE_RUNNER_TIMEOUT_STR**
 - **PYTHON_BIN**

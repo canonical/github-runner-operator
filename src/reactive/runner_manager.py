@@ -15,7 +15,7 @@ from utilities import secure_run_subprocess
 
 logger = logging.getLogger(__name__)
 
-
+MQ_URI_ENV_VAR = "MQ_URI"
 REACTIVE_RUNNER_LOG_DIR = Path("/var/log/reactive_runner")
 REACTIVE_RUNNER_LOG_PATH = REACTIVE_RUNNER_LOG_DIR / "reactive_runner.log"
 REACTIVE_STDOUT_STD_ERR_SUFFIX_PATH = REACTIVE_RUNNER_LOG_DIR / "error.log"
@@ -134,7 +134,10 @@ def _spawn_runner(reactive_runner_config: ReactiveRunnerConfig) -> None:
     Raises:
         ReactiveRunnerError: If the runner fails to spawn.
     """
-    env = {"PYTHONPATH": "src:lib:venv"}
+    env = {
+        "PYTHONPATH": "src:lib:venv",
+        MQ_URI_ENV_VAR: reactive_runner_config.mq_uri,
+    }
     # We do not want to wait for the process to finish, so we do not use with statement.
     # We trust the command.
     command = " ".join(
@@ -143,7 +146,6 @@ def _spawn_runner(reactive_runner_config: ReactiveRunnerConfig) -> None:
             REACTIVE_RUNNER_TIMEOUT_STR,
             PYTHON_BIN,
             REACTIVE_RUNNER_SCRIPT_FILE,
-            f'"{reactive_runner_config.mq_uri}"',
             f'"{reactive_runner_config.queue_name}"',
             ">>",
             # $$ will be replaced by the PID of the process, so we can track the error log easily.
@@ -152,10 +154,7 @@ def _spawn_runner(reactive_runner_config: ReactiveRunnerConfig) -> None:
         ]
     )
     # replace the mq_uri with **** to avoid leaking sensitive information (mongodb password)
-    logger.debug(
-        "Spawning a new reactive runner process with command: %s",
-        command.replace(reactive_runner_config.mq_uri, "****"),
-    )
+    logger.debug("Spawning a new reactive runner process with command: %s", command)
     process = subprocess.Popen(  # pylint: disable=consider-using-with  # nosec
         command,
         shell=True,
