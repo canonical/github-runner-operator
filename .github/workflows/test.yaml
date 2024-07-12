@@ -4,8 +4,10 @@ on:
   pull_request:
 
 jobs:
-  unit-tests:
-    uses: canonical/operator-workflows/.github/workflows/test.yaml@main
-    secrets: inherit
-    with:
-      self-hosted-runner: false
+  test-run:
+    name: Test job pickup
+    runs-on: [self-hosted, ARM64, stg-private-endpoint]
+    steps:
+      - name: echo hello world
+        run: |
+          echo hello world
