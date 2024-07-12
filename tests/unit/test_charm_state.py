@@ -1,7 +1,9 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 import json
+import logging
 import platform
+import secrets
 import typing
 from pathlib import Path
 from unittest.mock import MagicMock
@@ -982,7 +984,7 @@ def mock_charm_state_data():
         "arch": "x86_64",
         "is_metrics_logging_available": True,
         "proxy_config": {"http": "http://example.com", "https": "https://example.com"},
-        "charm_config": {"denylist": ["192.168.1.1"], "token": "abc123"},
+        "charm_config": {"denylist": ["192.168.1.1"], "token": secrets.token_hex(16)},
         "runner_config": {
             "base_image": "jammy",
             "virtual_machines": 2,
@@ -1173,3 +1175,18 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
 
     assert CharmState.from_charm(mock_charm)
+
+
+def test_charm_state__log_prev_state_redacts_sensitive_information(
+    mock_charm_state_data: dict, caplog: pytest.LogCaptureFixture
+):
+    """
+    arrange: Arrange charm state data with a token and set log level to DEBUG.
+    act: Call the __log_prev_state method on the class.
+    assert: Verify that the method redacts the sensitive information in the log message.
+    """
+    caplog.set_level(logging.DEBUG)
+    CharmState._log_prev_state(mock_charm_state_data)
+
+    assert mock_charm_state_data["charm_config"]["token"] not in caplog.text
+    assert charm_state.SENSITIVE_PLACEHOLDER in caplog.text
