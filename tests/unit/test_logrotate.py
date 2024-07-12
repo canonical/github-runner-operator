@@ -69,9 +69,19 @@ def test_setup_raises_error(exec_command: MagicMock):
     assert "Not able to setup logrotate" in str(exc_info.value)
 
 
-def test_config_logrotate(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+@pytest.mark.parametrize("create", [True, False])
+@pytest.mark.parametrize("notifempty", [True, False])
+@pytest.mark.parametrize("frequency", [freq for freq in logrotate.LogrotateFrequency])
+def test_config_logrotate(
+    create: bool,
+    notifempty: bool,
+    frequency: logrotate.LogrotateFrequency,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+):
     """
     arrange: Change paths for the logrotate config and the log file.
+        Arrange multiple LogrotateConfig instances using all parameter combinations.
     act: Setup logrotate.
     assert: The expected logrotate config is created.
     """
@@ -83,24 +93,18 @@ def test_config_logrotate(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     log_path_glob_pattern = str(tmp_path / "metrics.log.*")
     rotate = randint(0, 11)
 
-    create_vals = [True, False]
-    notifempty_vals = [True, False]
+    logrotate_config = logrotate.LogrotateConfig(
+        name=name,
+        log_path_glob_pattern=log_path_glob_pattern,
+        rotate=rotate,
+        create=create,
+        notifempty=notifempty,
+        frequency=frequency,
+    )
 
-    for create in create_vals:
-        for notifempty in notifempty_vals:
-            for frequency in logrotate.LogrotateFrequency:
-                logrotate_config = logrotate.LogrotateConfig(
-                    name=name,
-                    log_path_glob_pattern=log_path_glob_pattern,
-                    rotate=rotate,
-                    create=create,
-                    notifempty=notifempty,
-                    frequency=frequency,
-                )
+    logrotate.configure(logrotate_config)
 
-                logrotate.configure(logrotate_config)
-
-                expected_logrotate_config = f"""{log_path_glob_pattern} {{
+    expected_logrotate_config = f"""{log_path_glob_pattern} {{
 {frequency}
 rotate {rotate}
 missingok
@@ -108,6 +112,6 @@ missingok
 {"create" if create else ""}
 }}
 """
-                assert (
-                    config_dir / name
-                ).read_text() == expected_logrotate_config, "Logrotate config is not as expected."
+    assert (
+        config_dir / name
+    ).read_text() == expected_logrotate_config, "Logrotate config is not as expected."
