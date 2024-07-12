@@ -9,16 +9,6 @@ from reactive.runner import reactive_runner
 from reactive.runner_manager import REACTIVE_RUNNER_LOG_PATH
 
 
-def spawn_runner(mq_uri: str, queue_name: str) -> None:
-    """Spawn a reactive runner.
-
-    Args:
-        mq_uri: The URI of the message queue.
-        queue_name: The name of the
-    """
-    reactive_runner(mq_uri=mq_uri, queue_name=queue_name)
-
-
 def setup_root_logging() -> None:
     """Set up logging for the reactive runner."""
     # setup root logger to log in a file which will be picked up by grafana agent and sent to Loki
