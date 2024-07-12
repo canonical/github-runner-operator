@@ -1129,8 +1129,8 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         except KeyError as exc:
             logger.info("Key %s not found, this will be updated to current config.", exc.args[0])
 
-    @classmethod
-    def _log_prev_state(cls, prev_state_dict: dict) -> None:
+    @staticmethod
+    def _log_prev_state(prev_state_dict: dict) -> None:
         """Log the previous state of the charm.
 
         Replace sensitive information before logging.
