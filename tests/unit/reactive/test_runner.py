@@ -10,7 +10,7 @@ import pytest
 from pytest import LogCaptureFixture, MonkeyPatch
 
 from reactive.job import Job, JobDetails, JobError, MessageQueueConnectionInfo
-from reactive.runner import reactive_runner
+from reactive.runner import spawn_reactive_runner
 
 
 @pytest.fixture(name="job_mock")
@@ -32,7 +32,7 @@ def test_reactive_runner(job_mock: MagicMock, caplog: LogCaptureFixture):
     assert: The job is received and logged.
     """
     queue_name = secrets.token_hex(16)
-    reactive_runner("http://example.com", queue_name)
+    spawn_reactive_runner("http://example.com", queue_name)
 
     job_mock.from_message_queue.assert_called_with(
         MessageQueueConnectionInfo(uri="http://example.com", queue_name=queue_name)
@@ -51,7 +51,7 @@ def test_reactive_runner_job_is_rejected_on_error(job_mock: MagicMock, caplog: L
     """
     job_mock.get_details.side_effect = JobError("test error")
 
-    reactive_runner("http://example.com", "test-queue")
+    spawn_reactive_runner("http://example.com", "test-queue")
 
     job_mock.reject.assert_called_once()
     assert "Received job with labels ['test'] and run_url http://example.com" not in caplog.text
