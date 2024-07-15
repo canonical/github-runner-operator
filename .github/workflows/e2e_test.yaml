@@ -1,7 +1,8 @@
 name: End-to-End Test
 
 on:
-  pull_request:
+  # pull_request:
+  workflow_dispatch:
 
 jobs:
   build-charm:
@@ -322,7 +323,7 @@ jobs:
           fi
 
       - name: Trigger workflow and watch github-runner (Issues, Schedule)
-        if:  matrix.event.name == 'issues' || matrix.event.name == 'schedule'
+        if: matrix.event.name == 'issues' || matrix.event.name == 'schedule'
         env:
           GH_TOKEN: ${{ secrets.E2E_TESTING_TOKEN }}
         run: |
