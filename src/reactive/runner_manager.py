@@ -17,8 +17,6 @@ logger = logging.getLogger(__name__)
 
 MQ_URI_ENV_VAR = "MQ_URI"
 REACTIVE_RUNNER_LOG_DIR = Path("/var/log/reactive_runner")
-REACTIVE_RUNNER_LOG_PATH = REACTIVE_RUNNER_LOG_DIR / "reactive_runner.log"
-REACTIVE_STDOUT_STD_ERR_SUFFIX_PATH = REACTIVE_RUNNER_LOG_DIR / "error.log"
 REACTIVE_RUNNER_SCRIPT_FILE = "scripts/reactive_runner.py"
 REACTIVE_RUNNER_TIMEOUT_STR = "1h"
 PYTHON_BIN = "/usr/bin/python3"
@@ -28,13 +26,7 @@ UBUNTU_USER = "ubuntu"
 
 REACTIVE_LOGROTATE_CONFIG = LogrotateConfig(
     name="reactive-runner",
-    log_path_glob_pattern=str(REACTIVE_RUNNER_LOG_PATH),
-    rotate=0,
-    create=True,
-)
-REACTIVE_ERROR_LOGROTATE_CONFIG = LogrotateConfig(
-    name="reactive-runner-error",
-    log_path_glob_pattern=f"{REACTIVE_STDOUT_STD_ERR_SUFFIX_PATH}.*",
+    log_path_glob_pattern=f"{REACTIVE_RUNNER_LOG_DIR}/.*",
     rotate=0,
     create=False,
     notifempty=False,
@@ -110,7 +102,6 @@ def _determine_current_quantity() -> int:
     if result.returncode != 0:
         raise ReactiveRunnerError("Failed to get list of processes")
     commands = result.stdout.decode().rstrip().split("\n")[1:] if result.stdout else []
-    logger.debug(commands)
     actual_quantity = 0
     for command in commands:
         if command.startswith(f"{PYTHON_BIN} {REACTIVE_RUNNER_SCRIPT_FILE}"):
@@ -153,7 +144,7 @@ def _spawn_runner(reactive_runner_config: ReactiveRunnerConfig) -> None:
             f'"{reactive_runner_config.queue_name}"',
             ">>",
             # $$ will be replaced by the PID of the process, so we can track the error log easily.
-            f"{REACTIVE_STDOUT_STD_ERR_SUFFIX_PATH}.$$",
+            f"{REACTIVE_RUNNER_LOG_DIR}/$$.log",
             "2>&1",
         ]
     )

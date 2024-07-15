@@ -49,7 +49,7 @@ from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
 from metrics.events import METRICS_LOGROTATE_CONFIG
 from metrics.runner_logs import RUNNER_LOGROTATE_CONFIG
-from reactive.runner_manager import REACTIVE_ERROR_LOGROTATE_CONFIG, REACTIVE_LOGROTATE_CONFIG
+from reactive.runner_manager import REACTIVE_LOGROTATE_CONFIG
 from runner_manager import RunnerInfo, RunnerManagerConfig
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
@@ -229,7 +229,7 @@ def test_common_install_code(
     config_logrotate.assert_has_calls(
         [
             call(REACTIVE_LOGROTATE_CONFIG),
-            call(REACTIVE_ERROR_LOGROTATE_CONFIG),
+            call(REACTIVE_LOGROTATE_CONFIG),
             call(METRICS_LOGROTATE_CONFIG),
             call(RUNNER_LOGROTATE_CONFIG),
         ]

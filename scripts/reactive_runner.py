@@ -6,16 +6,17 @@
 import argparse
 import logging
 import os
+import sys
 
 from reactive.runner import reactive_runner
-from reactive.runner_manager import MQ_URI_ENV_VAR, REACTIVE_RUNNER_LOG_PATH
+from reactive.runner_manager import MQ_URI_ENV_VAR
 
 
 def setup_root_logging() -> None:
     """Set up logging for the reactive runner."""
     # setup root logger to log in a file which will be picked up by grafana agent and sent to Loki
     logging.basicConfig(
-        filename=str(REACTIVE_RUNNER_LOG_PATH),
+        stream=sys.stdout,
         level=logging.DEBUG,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )

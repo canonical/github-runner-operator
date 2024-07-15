@@ -26,12 +26,6 @@ def log_dir_path_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Pat
     """Return the path to the log file."""
     log_file_path = tmp_path / "logs"
     monkeypatch.setattr("reactive.runner_manager.REACTIVE_RUNNER_LOG_DIR", log_file_path)
-    monkeypatch.setattr(
-        "reactive.runner_manager.REACTIVE_RUNNER_LOG_PATH", log_file_path / "reactive_runner.log"
-    )
-    monkeypatch.setattr(
-        "reactive.runner_manager.REACTIVE_STDOUT_STD_ERR_SUFFIX_PATH", log_file_path / "error.log"
-    )
     monkeypatch.setattr("shutil.chown", lambda *args, **kwargs: None)
     return log_file_path
 
