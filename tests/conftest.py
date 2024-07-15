@@ -68,6 +68,24 @@ def pytest_addoption(parser: Parser):
     )
     # Private endpoint options
     parser.addoption(
+        "--openstack-http-proxy",
+        action="store",
+        help="The http proxy used to openstack integration.",
+        default=None,
+    )
+    parser.addoption(
+        "--openstack-https-proxy",
+        action="store",
+        help="The https proxy used to openstack integration.",
+        default=None,
+    )
+    parser.addoption(
+        "--openstack-no-proxy",
+        action="store",
+        help="The no proxy used to openstack integration.",
+        default=None,
+    )
+    parser.addoption(
         "--openstack-network-name",
         action="store",
         help="The Openstack network to create testing instances under.",

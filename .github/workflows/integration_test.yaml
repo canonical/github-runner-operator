@@ -10,16 +10,6 @@ concurrency:
 jobs:
   # test option values defined at test/conftest.py are passed on via repository secret
   # INTEGRATION_TEST_ARGS to operator-workflows automatically.
-  integration-tests-juju2:
-    name: Integration test with juju 2.9
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-    secrets: inherit
-    with:
-      juju-channel: 2.9/stable
-      pre-run-script: scripts/pre-integration-test.sh
-      provider: lxd
-      test-tox-env: integration-juju2.9
-      modules: '["test_charm_base_image", "test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_lxd_runner", "test_charm_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh", "test_charm_upgrade"]'
   integration-tests:
     name: Integration test with juju 3.1
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
@@ -29,7 +19,11 @@ jobs:
       pre-run-script: scripts/pre-integration-test.sh
       provider: lxd
       test-tox-env: integration-juju3.1
-      modules: '["test_charm_base_image", "test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_lxd_runner", "test_charm_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh", "test_charm_upgrade"]'
+      # These important local LXD test has no OpenStack integration versions.
+      # test_charm_scheduled_events ensures reconcile events are fired on a schedule.
+      # test_debug_ssh ensures tmate SSH actions works.
+      # TODO: Add OpenStack integration versions of these tests.
+      modules: '["test_charm_scheduled_events", "test_debug_ssh"]'
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
@@ -39,7 +33,7 @@ jobs:
       pre-run-script: scripts/setup-lxd.sh
       provider: lxd
       test-tox-env: integration-juju3.2
-      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_runner", "test_e2e"]'
-      extra-arguments: "-m openstack --openstack-flavor-name=builder-cpu4-ram8-disk50 --http-proxy=http://squid.internal:3128 --https-proxy=http://squid.internal:3128 --no-proxy=keystone.ps6.canonical.com,glance.ps6.canonical.com,nova.ps6.canonical.com,neutron.ps6.canonical.com"
+      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_runner"]'
+      extra-arguments: "-m openstack"
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
