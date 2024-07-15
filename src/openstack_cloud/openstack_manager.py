@@ -518,7 +518,6 @@ class OpenstackRunnerManager:
 
         result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
         logger.debug("Output of `ps aux` on %s stderr: %s", server_name, result.stderr)
-        logger.debug("Output of `ps aux` on %s stdout: %s", server_name, result.stdout)
         if not result.ok or RUNNER_STARTUP_PROCESS not in result.stdout:
             logger.warning("List all process command failed on %s ", server_name)
             return False
