@@ -357,7 +357,7 @@ async def image_builder_fixture(
         config={
             "app-channel": "edge",
             "build-interval": "12",
-            "revision-history-limit": "2",
+            "revision-history-limit": "5",
             "openstack-auth-url": private_endpoint_config["auth_url"],
             # Bandit thinks this is a hardcoded password
             "openstack-password": private_endpoint_config["password"],  # nosec: B105
@@ -416,7 +416,7 @@ async def app_openstack_runner_fixture(
             wait_idle=False,
             use_local_lxd=False,
         )
-    await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
+        await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
 
     return application
