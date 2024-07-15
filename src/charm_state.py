@@ -48,6 +48,7 @@ RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
 REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"  # nosec
 REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME = "repo-policy-compliance-url"
 RUNNER_STORAGE_CONFIG_NAME = "runner-storage"
+SENSITIVE_PLACEHOLDER = "*****"
 TEST_MODE_CONFIG_NAME = "test-mode"
 # bandit thinks this is a hardcoded password.
 TOKEN_CONFIG_NAME = "token"  # nosec
@@ -1040,7 +1041,8 @@ class CharmState:
 
         json_data = CHARM_STATE_PATH.read_text(encoding="utf-8")
         prev_state = json.loads(json_data)
-        logger.info("Previous charm state: %s", prev_state)
+
+        cls._log_prev_state(prev_state)
 
         try:
             if prev_state["runner_config"]["runner_storage"] != runner_storage:
@@ -1070,6 +1072,25 @@ class CharmState:
                 )
         except KeyError as exc:
             logger.info("Key %s not found, this will be updated to current config.", exc.args[0])
+
+    @classmethod
+    def _log_prev_state(cls, prev_state_dict: dict) -> None:
+        """Log the previous state of the charm.
+
+        Replace sensitive information before logging.
+
+        Args:
+            prev_state_dict: The previous state of the charm as a dict.
+        """
+        if logger.isEnabledFor(logging.DEBUG):
+            prev_state_for_logging = prev_state_dict.copy()
+            charm_config = prev_state_for_logging.get("charm_config")
+            if charm_config and "token" in charm_config:
+                charm_config = charm_config.copy()
+                charm_config["token"] = SENSITIVE_PLACEHOLDER  # nosec
+            prev_state_for_logging["charm_config"] = charm_config
+
+            logger.debug("Previous charm state: %s", prev_state_for_logging)
 
     # Ignore the flake8 function too complex (C901). The function does not have much logic, the
     # lint is likely triggered with the multiple try-excepts, which are needed.
