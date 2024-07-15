@@ -9,7 +9,7 @@ from reactive.job import Job, JobError, MessageQueueConnectionInfo
 logger = logging.getLogger(__name__)
 
 
-def reactive_runner(mq_uri: str, queue_name: str) -> None:
+def spawn_reactive_runner(mq_uri: str, queue_name: str) -> None:
     """Spawn a runner reactively.
 
     Args:

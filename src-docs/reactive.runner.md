@@ -10,10 +10,10 @@ Module which contains code to spawn a runner reactively.
 
 <a href="../src/reactive/runner.py#L12"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>function</kbd> `reactive_runner`
+## <kbd>function</kbd> `spawn_reactive_runner`
 
 ```python
-reactive_runner(mq_uri: str, queue_name: str) → None
+spawn_reactive_runner(mq_uri: str, queue_name: str) → None
 ```
 
 Spawn a runner reactively. 

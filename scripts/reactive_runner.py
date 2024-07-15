@@ -8,7 +8,7 @@ import logging
 import os
 import sys
 
-from reactive.runner import reactive_runner
+from reactive.runner import spawn_reactive_runner
 from reactive.runner_manager import MQ_URI_ENV_VAR
 
 
@@ -43,4 +43,4 @@ if __name__ == "__main__":
     arguments = parser.parse_args()
 
     setup_root_logging()
-    reactive_runner(arguments.mq_uri, arguments.queue_name)
+    spawn_reactive_runner(arguments.mq_uri, arguments.queue_name)
