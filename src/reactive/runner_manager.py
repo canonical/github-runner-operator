@@ -148,7 +148,6 @@ def _spawn_runner(reactive_runner_config: ReactiveRunnerConfig) -> None:
             "2>&1",
         ]
     )
-    # replace the mq_uri with **** to avoid leaking sensitive information (mongodb password)
     logger.debug("Spawning a new reactive runner process with command: %s", command)
     process = subprocess.Popen(  # pylint: disable=consider-using-with  # nosec
         command,
