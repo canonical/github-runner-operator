@@ -22,7 +22,7 @@ METRICS_LOGROTATE_CONFIG = LogrotateConfig(
     name="github-runner-metrics",
     log_path_glob_pattern=str(METRICS_LOG_PATH),
     rotate=0,
-    create=False,
+    create=True,
 )
 
 logger = logging.getLogger(__name__)
