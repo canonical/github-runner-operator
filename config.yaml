@@ -8,7 +8,7 @@ options:
     description: >-
       The base ubuntu OS image to use for the runners. Codename (e.g. "jammy") or version tag
       (e.g. 22.04) is supported as input. Currently only supports LTS versions of jammy and higher,
-      i.e. jammy, noble.
+      i.e. jammy, noble. Only applicable for LXD mode.
   denylist:
     type: string
     default: ""
@@ -46,13 +46,6 @@ options:
       application to be able to access the virtual machine though the IP assigned by the openstack
       network. See docs for details:
       (https://docs.openstack.org/neutron/latest/admin/intro-os-networking.html).
-  experimental-openstack-image-build-unit:
-    type: int
-    default: -1
-    description: >-
-      (Experimental, tmp workaround, will be removed in the future) The unit that performs the
-      OpenStack image build. All other units will have the image build disabled. Cannot be changed
-      after deployment. Will only take effect with OpenStack integration enabled.
   experimental-use-aproxy:
     type: boolean
     default: false
