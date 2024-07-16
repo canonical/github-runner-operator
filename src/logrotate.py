@@ -5,14 +5,13 @@
 from enum import Enum
 from pathlib import Path
 
+from charms.operator_libs_linux.v1 import systemd
 from pydantic import BaseModel
 
-from errors import LogrotateSetupError, SubprocessError
-from utilities import execute_command
+from errors import LogrotateSetupError
 
 LOG_ROTATE_TIMER_SYSTEMD_SERVICE = "logrotate.timer"
 
-SYSTEMCTL_PATH = "/usr/bin/systemctl"
 
 LOGROTATE_CONFIG_DIR = Path("/etc/logrotate.d")
 
@@ -70,24 +69,16 @@ class _EnableLogRotateError(Exception):
 
 
 def _enable_logrotate() -> None:
-    """Enable and start the logrotate timer if it is not active.
+    """Enable and start the logrotate timer if it is not running.
 
     Raises:
         _EnableLogRotateError: If the logrotate.timer cannot be enabled and started.
     """
     try:
-        execute_command(
-            [SYSTEMCTL_PATH, "enable", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True
-        )
-
-        _, retcode = execute_command(
-            [SYSTEMCTL_PATH, "is-active", "--quiet", LOG_ROTATE_TIMER_SYSTEMD_SERVICE]
-        )
-        if retcode != 0:
-            execute_command(
-                [SYSTEMCTL_PATH, "start", LOG_ROTATE_TIMER_SYSTEMD_SERVICE], check_exit=True
-            )
-    except SubprocessError as exc:
+        systemd.service_enable(LOG_ROTATE_TIMER_SYSTEMD_SERVICE)
+        if not systemd.service_running(LOG_ROTATE_TIMER_SYSTEMD_SERVICE):
+            systemd.service_start(LOG_ROTATE_TIMER_SYSTEMD_SERVICE)
+    except systemd.SystemdError as exc:
         raise _EnableLogRotateError from exc
 
 

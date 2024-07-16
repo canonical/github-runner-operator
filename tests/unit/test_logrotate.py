@@ -3,65 +3,47 @@
 import secrets
 from pathlib import Path
 from random import randint
-from unittest.mock import MagicMock, call
+from unittest.mock import MagicMock
 
+import charms.operator_libs_linux.v1.systemd
 import pytest
 
 import logrotate
-from errors import LogrotateSetupError, SubprocessError
+from errors import LogrotateSetupError
 
 
-@pytest.fixture(name="exec_command")
-def exec_command_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
-    mock = MagicMock(return_value=("", 0))
-    monkeypatch.setattr("logrotate.execute_command", mock)
+@pytest.fixture(name="systemd_mock")
+def systemd_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
+    """Mock the systemd module."""
+    mock = MagicMock(spec=charms.operator_libs_linux.v1.systemd)
+    mock.service_running.return_value = True
+    mock.SystemdError = charms.operator_libs_linux.v1.systemd.SystemdError
+    monkeypatch.setattr(logrotate, "systemd", mock)
     return mock
 
 
-def test_setup_enables_logrotate_timer(exec_command: MagicMock):
+def test_setup_enables_logrotate_timer(systemd_mock: MagicMock):
     """
-    arrange: Mock execute command to return error for the is-active call and \
-        non-error for the remaining calls.
+    arrange: Mock service_running command to return False.
     act: Setup logrotate.
     assert: The commands to enable and start the logrotate timer are called.
     """
-
-    def side_effect(*args, **kwargs):
-        """Mock side effect function that returns non-zero exit code.
-
-        Args:
-            args: Placeholder for positional arguments for lxd exec command.
-            kwargs: Placeholder for keyword arguments for lxd exec command.
-
-        Returns:
-            A tuple of return value and exit code.
-        """
-        if "is-active" in args[0]:
-            return "", 1
-        return "", 0
-
-    exec_command.side_effect = side_effect
+    systemd_mock.service_running.return_value = False
 
     logrotate.setup()
 
-    assert (
-        call(["/usr/bin/systemctl", "enable", "logrotate.timer"], check_exit=True)
-        in exec_command.mock_calls
-    )
-    assert (
-        call(["/usr/bin/systemctl", "start", "logrotate.timer"], check_exit=True)
-        in exec_command.mock_calls
-    )
+    systemd_mock.service_enable.assert_called_once_with(logrotate.LOG_ROTATE_TIMER_SYSTEMD_SERVICE)
+    systemd_mock.service_start.assert_called_once_with(logrotate.LOG_ROTATE_TIMER_SYSTEMD_SERVICE)
 
 
-def test_setup_raises_error(exec_command: MagicMock):
+def test_setup_raises_error(systemd_mock: MagicMock):
     """
-    arrange: Mock execute command to raise a SubprocessError.
+    arrange: Mock service_enable command to raise a SystemdError.
     act: Setup logrotate.
     assert: The expected error is raised.
     """
-    exec_command.side_effect = SubprocessError(
-        cmd=["mock"], return_code=1, stdout="mock stdout", stderr="mock stderr"
+    systemd_mock.service_enable.side_effect = charms.operator_libs_linux.v1.systemd.SystemdError(
+        "error"
     )
 
     with pytest.raises(LogrotateSetupError) as exc_info:

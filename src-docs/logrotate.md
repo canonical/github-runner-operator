@@ -8,11 +8,10 @@ Logrotate setup and configuration.
 **Global Variables**
 ---------------
 - **LOG_ROTATE_TIMER_SYSTEMD_SERVICE**
-- **SYSTEMCTL_PATH**
 
 ---
 
-<a href="../src/logrotate.py#L56"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/logrotate.py#L55"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `setup`
 
@@ -31,7 +30,7 @@ Set up logrotate.
 
 ---
 
-<a href="../src/logrotate.py#L94"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/logrotate.py#L85"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `configure`
 
@@ -50,7 +49,7 @@ Write a particular logrotate config to disk.
 
 ---
 
-<a href="../src/logrotate.py#L20"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/logrotate.py#L19"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `LogrotateFrequency`
 The frequency of log rotation. 
@@ -70,7 +69,7 @@ The frequency of log rotation.
 
 ---
 
-<a href="../src/logrotate.py#L36"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/logrotate.py#L35"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `LogrotateConfig`
 Configuration for logrotate. 
