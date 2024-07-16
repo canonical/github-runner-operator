@@ -12,8 +12,8 @@ from kombu import Connection
 from pytest_operator.plugin import OpsTest
 
 from reactive.job import JobDetails
-from reactive.runner_manager import REACTIVE_RUNNER_LOG_PATH
-from tests.integration.helpers.common import get_file_content, reconcile
+from reactive.runner_manager import REACTIVE_RUNNER_LOG_DIR
+from tests.integration.helpers.common import get_file_content, reconcile, run_in_unit
 
 FAKE_URL = "http://example.com"
 
@@ -125,7 +125,18 @@ async def _assert_job_details_in_reactive_log(unit: Unit, jobs: list[JobDetails]
         unit: The juju unit.
         jobs: The list of job details to check.
     """
-    reactive_logs = await get_file_content(unit, REACTIVE_RUNNER_LOG_PATH)
+    retcode, stdout, stderr = await run_in_unit(
+        unit=unit,
+        command=f"ls {REACTIVE_RUNNER_LOG_DIR}",
+    )
+    assert retcode == 0, f"Failed to list the reactive log dir: {stderr}"
+    assert stdout, "No log files found in the reactive log dir."
+    log_files = [log_file for log_file in stdout.split()]
+
+    reactive_logs = ""
+    for log_file in log_files:
+        reactive_logs += await get_file_content(unit, REACTIVE_RUNNER_LOG_DIR / log_file)
+
     for job in jobs:
         assert job.run_url in reactive_logs
         assert str(job.labels) in reactive_logs
