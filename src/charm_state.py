@@ -22,10 +22,10 @@ from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from ops import CharmBase
 from pydantic import (
     AnyHttpUrl,
-    AnyUrl,
     BaseModel,
     Field,
     IPvAnyAddress,
+    MongoDsn,
     ValidationError,
     validator,
 )
@@ -987,7 +987,7 @@ class ReactiveConfig(BaseModel):
         mq_uri: The URI of the MQ to use to spawn runners reactively.
     """
 
-    mq_uri: AnyUrl
+    mq_uri: MongoDsn
 
     @classmethod
     def from_database(cls, database: DatabaseRequires) -> "ReactiveConfig | None":
@@ -1000,7 +1000,8 @@ class ReactiveConfig(BaseModel):
             The connection information for the reactive MQ or None if not available.
 
         Raises:
-            MissingIntegrationDataError: If the respective reactive MQ integration data is missing.
+            MissingMongoDBError: If the information on howto access MongoDB
+                is missing in the integration data.
         """
         integration_existing = bool(database.relations)
 

@@ -29,6 +29,7 @@ from openstack_cloud.openstack_manager import MAX_METRICS_FILE_SIZE, METRICS_EXC
 from runner_type import RunnerByHealth, RunnerGithubInfo
 from tests.unit import factories
 
+FAKE_MONGODB_URI = "mongodb://example.com/db"
 CLOUD_NAME = "microstack"
 
 
@@ -706,7 +707,7 @@ def test_reconcile_reactive_mode(
     """
     count = random.randint(0, 5)
     openstack_manager_for_reconcile._config.reactive_config = ReactiveConfig(
-        mq_uri="http://example.com"
+        mq_uri=FAKE_MONGODB_URI
     )
     actual_count = openstack_manager_for_reconcile.reconcile(quantity=count)
 
@@ -714,7 +715,7 @@ def test_reconcile_reactive_mode(
     reactive_reconcile_mock.assert_called_with(
         quantity=count,
         config=reactive.runner_manager.ReactiveRunnerConfig(
-            mq_uri="http://example.com", queue_name=openstack_manager_for_reconcile.app_name
+            mq_uri=FAKE_MONGODB_URI, queue_name=openstack_manager_for_reconcile.app_name
         ),
     )
 

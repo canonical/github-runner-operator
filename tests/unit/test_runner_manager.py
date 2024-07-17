@@ -32,6 +32,8 @@ from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerMan
 from runner_type import RunnerByHealth
 from tests.unit.mock import TEST_BINARY, MockLxdImageManager
 
+FAKE_MONGODB_URI = "mongodb://example.com/db"
+
 IMAGE_NAME = "jammy"
 
 RUNNER_MANAGER_TIME_MODULE = "runner_manager.time.time"
@@ -530,14 +532,14 @@ def test_reconcile_reactive_mode(
     assert: The mocked job is picked up n times and the expected log message is present.
     """
     count = random.randint(0, 5)
-    runner_manager.config.reactive_config = ReactiveConfig(mq_uri="http://example.com")
+    runner_manager.config.reactive_config = ReactiveConfig(mq_uri=FAKE_MONGODB_URI)
     actual_count = runner_manager.reconcile(count, VirtualMachineResources(2, "7GiB", "10Gib"))
 
     assert actual_count == count
     reactive_reconcile_mock.assert_called_with(
         quantity=count,
         config=reactive.runner_manager.ReactiveRunnerConfig(
-            mq_uri="http://example.com", queue_name=runner_manager.app_name
+            mq_uri=FAKE_MONGODB_URI, queue_name=runner_manager.app_name
         ),
     )
 
