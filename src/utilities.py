@@ -6,6 +6,7 @@
 import functools
 import logging
 import os
+import pathlib
 import subprocess  # nosec B404
 import time
 from typing import Any, Callable, Optional, Sequence, Type, TypeVar
@@ -245,3 +246,16 @@ def bytes_with_unit_to_kib(num_bytes: str) -> int:
         )
 
     return num_of_kib[unit] * int(num)
+
+
+# This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
+def remove_residual_venv_dirs() -> None:  # pragma: no cover
+    """Remove the residual empty directories from last revision if it exists."""
+    unit_name = os.environ["JUJU_UNIT_NAME"].replace("/", "-")
+    venv_dir = pathlib.Path(f"/var/lib/juju/agents/unit-{unit_name}/charm/venv/")
+    if not venv_dir.exists():
+        return
+    for path in venv_dir.iterdir():
+        if path.is_dir() and not os.listdir(path):
+            logger.warning("Removing residual empty dir: %s", path)
+            path.rmdir()

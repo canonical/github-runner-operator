@@ -4,7 +4,6 @@
 """Module for managing Openstack cloud."""
 
 import logging
-import os
 from pathlib import Path
 from typing import TypedDict, cast
 
@@ -16,36 +15,6 @@ logger = logging.getLogger(__name__)
 
 
 CLOUDS_YAML_PATH = Path(Path.home() / ".config/openstack/clouds.yaml")
-
-
-# This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
-def _remove_residual_venv_dirs() -> None:  # pragma: no cover
-    """Remove the residual empty directories from last revision if it exists."""
-    unit_name = os.environ["JUJU_UNIT_NAME"].replace("/", "-")
-    venv_dir = Path(f"/var/lib/juju/agents/unit-{unit_name}/charm/venv/")
-    for path in venv_dir.iterdir():
-        if path.is_dir() and not os.listdir(path):
-            logger.warning("Removing residual empty dir: %s", path)
-            path.rmdir()
-
-
-try:
-    import openstack
-except AttributeError:
-    logger.error(
-        "Failed to import openstack. "
-        "Assuming juju bug https://bugs.launchpad.net/juju/+bug/2058335. "
-        "Removing old openstacksdk library and retrying."
-    )
-    _remove_residual_venv_dirs()
-    try:
-        # The import is there to make sure the charm fails if the openstack import is not working.
-        import openstack  # noqa: F401
-    except AttributeError:
-        logger.exception(
-            "Failed to import openstack. Please reach out to the charm team for further advice."
-        )
-        raise
 
 
 class CloudConfig(TypedDict):
