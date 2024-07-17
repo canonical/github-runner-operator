@@ -258,7 +258,7 @@ class GithubRunnerCharm(CharmBase):
             self, relation_name="mongodb", database_name=REACTIVE_MQ_DB_NAME
         )
         self.framework.observe(self.database.on.database_created, self._on_database_created)
-        self.framework.observe(self.database.on.endpoints_changed, self._on_database_created)
+        self.framework.observe(self.database.on.endpoints_changed, self._on_endpoints_changed)
 
     def _setup_state(self) -> CharmState:
         """Set up the charm state.
