@@ -22,6 +22,16 @@ def systemd_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     return mock
 
 
+@pytest.fixture(name="logrotate_dir")
+def logrotate_dir_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Create a temporary directory for logrotate config files."""
+    logrotate_dir = tmp_path / "logrotate.d"
+    logrotate_dir.mkdir()
+    monkeypatch.setattr(logrotate, "LOGROTATE_CONFIG_DIR", logrotate_dir)
+    return logrotate_dir
+
+
+@pytest.mark.usefixtures("logrotate_dir")
 def test_setup_enables_logrotate_timer(systemd_mock: MagicMock):
     """
     arrange: Mock service_running command to return False.
@@ -36,6 +46,7 @@ def test_setup_enables_logrotate_timer(systemd_mock: MagicMock):
     systemd_mock.service_start.assert_called_once_with(logrotate.LOG_ROTATE_TIMER_SYSTEMD_SERVICE)
 
 
+@pytest.mark.usefixtures("logrotate_dir")
 def test_setup_raises_error(systemd_mock: MagicMock):
     """
     arrange: Mock service_enable command to raise a SystemdError.
@@ -51,14 +62,29 @@ def test_setup_raises_error(systemd_mock: MagicMock):
     assert "Not able to setup logrotate" in str(exc_info.value)
 
 
+@pytest.mark.usefixtures("systemd_mock")
+def test_setup_writes_logrotate_config(logrotate_dir: Path):
+    """
+    arrange: Change paths for the logrotate config directory.
+    act: Setup logrotate.
+    assert: The expected logrotate configs are written.
+    """
+    logrotate.setup()
+    assert logrotate.LOGROTATE_CONFIG_DIR.is_dir()
+    assert (logrotate_dir / logrotate.METRICS_LOGROTATE_CONFIG.name).exists()
+    assert (logrotate_dir / logrotate.RUNNER_LOGROTATE_CONFIG.name).exists()
+    assert (logrotate_dir / logrotate.REACTIVE_LOGROTATE_CONFIG.name).exists()
+
+
 @pytest.mark.parametrize("create", [True, False])
 @pytest.mark.parametrize("notifempty", [True, False])
 @pytest.mark.parametrize("frequency", [freq for freq in logrotate.LogrotateFrequency])
-def test_config_logrotate(
+@pytest.mark.usefixtures("logrotate_dir")
+def test__write_config(
     create: bool,
     notifempty: bool,
     frequency: logrotate.LogrotateFrequency,
-    monkeypatch: pytest.MonkeyPatch,
+    logrotate_dir: Path,
     tmp_path: Path,
 ):
     """
@@ -67,10 +93,6 @@ def test_config_logrotate(
     act: Setup logrotate.
     assert: The expected logrotate config is created.
     """
-    config_dir = tmp_path / "logrotate.d"
-    config_dir.mkdir()
-    monkeypatch.setattr("logrotate.LOGROTATE_CONFIG_DIR", config_dir)
-
     name = secrets.token_hex(16)
     log_path_glob_pattern = str(tmp_path / "metrics.log.*")
     rotate = randint(0, 11)
@@ -84,7 +106,7 @@ def test_config_logrotate(
         frequency=frequency,
     )
 
-    logrotate.configure(logrotate_config)
+    logrotate._write_config(logrotate_config)
 
     expected_logrotate_config = f"""{log_path_glob_pattern} {{
 {frequency}
@@ -95,5 +117,5 @@ missingok
 }}
 """
     assert (
-        config_dir / name
+        logrotate_dir / name
     ).read_text() == expected_logrotate_config, "Logrotate config is not as expected."

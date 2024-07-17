@@ -70,10 +70,7 @@ from errors import (
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
-from metrics.events import METRICS_LOGROTATE_CONFIG
-from metrics.runner_logs import RUNNER_LOGROTATE_CONFIG
 from openstack_cloud.openstack_manager import OpenstackRunnerManager
-from reactive.runner_manager import REACTIVE_LOGROTATE_CONFIG
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
@@ -447,11 +444,6 @@ class GithubRunnerCharm(CharmBase):
         except LogrotateSetupError:
             logger.error("Failed to setup logrotate")
             raise
-
-        logrotate.configure(REACTIVE_LOGROTATE_CONFIG)
-        logrotate.configure(REACTIVE_LOGROTATE_CONFIG)
-        logrotate.configure(METRICS_LOGROTATE_CONFIG)
-        logrotate.configure(RUNNER_LOGROTATE_CONFIG)
 
         self._refresh_firewall(state)
 

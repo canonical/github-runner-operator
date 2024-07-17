@@ -47,9 +47,6 @@ from errors import (
 from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
-from metrics.events import METRICS_LOGROTATE_CONFIG
-from metrics.runner_logs import RUNNER_LOGROTATE_CONFIG
-from reactive.runner_manager import REACTIVE_LOGROTATE_CONFIG
 from runner_manager import RunnerInfo, RunnerManagerConfig
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
@@ -163,7 +160,6 @@ def setup_charm_harness(monkeypatch: pytest.MonkeyPatch, runner_bin_path: Path) 
     monkeypatch.setattr("runner_manager.RunnerManager._runners_in_pre_job", lambda self: False)
     monkeypatch.setattr("charm.EventTimer.ensure_event_timer", MagicMock())
     monkeypatch.setattr("charm.logrotate.setup", MagicMock())
-    monkeypatch.setattr("charm.logrotate.configure", MagicMock())
     return harness
 
 
@@ -208,7 +204,6 @@ def test_common_install_code(
     assert: Common install commands are run on the mock.
     """
     monkeypatch.setattr("charm.logrotate.setup", setup_logrotate := MagicMock())
-    monkeypatch.setattr("charm.logrotate.configure", config_logrotate := MagicMock())
 
     monkeypatch.setattr(
         "runner_manager.RunnerManager.schedule_build_runner_image",
@@ -226,14 +221,6 @@ def test_common_install_code(
 
     exec_command.assert_has_calls(calls, any_order=True)
     setup_logrotate.assert_called_once()
-    config_logrotate.assert_has_calls(
-        [
-            call(REACTIVE_LOGROTATE_CONFIG),
-            call(REACTIVE_LOGROTATE_CONFIG),
-            call(METRICS_LOGROTATE_CONFIG),
-            call(RUNNER_LOGROTATE_CONFIG),
-        ]
-    )
     schedule_build_runner_image.assert_called_once()
     event_timer_mock.ensure_event_timer.assert_called_once()
 

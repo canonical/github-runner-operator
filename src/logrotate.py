@@ -9,6 +9,9 @@ from charms.operator_libs_linux.v1 import systemd
 from pydantic import BaseModel
 
 from errors import LogrotateSetupError
+from metrics.events import METRICS_LOG_PATH
+from metrics.runner_logs import RUNNER_LOGS_DIR_PATH
+from reactive.runner_manager import REACTIVE_RUNNER_LOG_DIR
 
 LOG_ROTATE_TIMER_SYSTEMD_SERVICE = "logrotate.timer"
 
@@ -52,23 +55,51 @@ class LogrotateConfig(BaseModel):
     frequency: LogrotateFrequency = LogrotateFrequency.WEEKLY
 
 
+# Set rotate param to 0 to not keep the old metrics log file to avoid sending the
+# metrics to Loki twice, which may happen if there is a corrupt log scrape configuration.
+METRICS_LOGROTATE_CONFIG = LogrotateConfig(
+    name="github-runner-metrics",
+    log_path_glob_pattern=str(METRICS_LOG_PATH),
+    rotate=0,
+    create=True,
+)
+
+RUNNER_LOGROTATE_CONFIG = LogrotateConfig(
+    name="github-runner-logs",
+    log_path_glob_pattern=f"{RUNNER_LOGS_DIR_PATH}/.*",
+    rotate=0,
+    create=False,
+)
+
+REACTIVE_LOGROTATE_CONFIG = LogrotateConfig(
+    name="reactive-runner",
+    log_path_glob_pattern=f"{REACTIVE_RUNNER_LOG_DIR}/.*",
+    rotate=0,
+    create=False,
+    notifempty=False,
+    frequency=LogrotateFrequency.DAILY,
+)
+
+
 def setup() -> None:
-    """Set up logrotate.
+    """Enable and configure logrotate.
 
     Raises:
         LogrotateSetupError: If the logrotate.timer cannot be enabled.
     """
     try:
-        _enable_logrotate()
+        _enable()
     except _EnableLogRotateError as error:
         raise LogrotateSetupError("Not able to setup logrotate") from error
+
+    _configure()
 
 
 class _EnableLogRotateError(Exception):
     """Raised when the logrotate.timer cannot be enabled and started."""
 
 
-def _enable_logrotate() -> None:
+def _enable() -> None:
     """Enable and start the logrotate timer if it is not running.
 
     Raises:
@@ -82,7 +113,14 @@ def _enable_logrotate() -> None:
         raise _EnableLogRotateError from exc
 
 
-def configure(logrotate_config: LogrotateConfig) -> None:
+def _configure() -> None:
+    """Configure logrotate."""
+    _write_config(REACTIVE_LOGROTATE_CONFIG)
+    _write_config(METRICS_LOGROTATE_CONFIG)
+    _write_config(RUNNER_LOGROTATE_CONFIG)
+
+
+def _write_config(logrotate_config: LogrotateConfig) -> None:
     """Write a particular logrotate config to disk.
 
     Args:

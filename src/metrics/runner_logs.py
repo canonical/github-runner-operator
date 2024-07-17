@@ -6,16 +6,7 @@
 import logging
 from pathlib import Path
 
-from logrotate import LogrotateConfig
-
 RUNNER_LOGS_DIR_PATH = Path("/var/log/github-runner-logs")
-
-RUNNER_LOGROTATE_CONFIG = LogrotateConfig(
-    name="github-runner-logs",
-    log_path_glob_pattern=f"{RUNNER_LOGS_DIR_PATH}.*",
-    rotate=0,
-    create=False,
-)
 
 logger = logging.getLogger(__name__)
 
