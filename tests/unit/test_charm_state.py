@@ -52,7 +52,7 @@ from charm_state import (
     UnsupportedArchitectureError,
     VirtualMachineResources,
 )
-from errors import MissingIntegrationDataError
+from errors import MissingMongoDBError
 from tests.unit.factories import MockGithubRunnerCharmFactory
 
 
@@ -1039,7 +1039,7 @@ def test_reactive_config_from_database_integration_data_missing():
         mock_charm, relation_name=charm_state.MONGO_DB_INTEGRATION_NAME, database_name="test"
     )
 
-    with pytest.raises(MissingIntegrationDataError) as exc:
+    with pytest.raises(MissingMongoDBError) as exc:
         charm_state.ReactiveConfig.from_database(database)
 
     assert f"Missing uris for {charm_state.MONGO_DB_INTEGRATION_NAME} integration" in str(

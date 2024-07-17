@@ -31,7 +31,7 @@ from pydantic import (
 )
 
 import openstack_cloud
-from errors import MissingIntegrationDataError, OpenStackInvalidConfigError
+from errors import MissingMongoDBError, OpenStackInvalidConfigError
 from firewall import FirewallEntry
 from utilities import get_env_var
 
@@ -1017,7 +1017,7 @@ class ReactiveConfig(BaseModel):
         if uri_field in data:
             return ReactiveConfig(mq_uri=data[uri_field])
 
-        raise MissingIntegrationDataError(
+        raise MissingMongoDBError(
             f"Missing {uri_field} for {MONGO_DB_INTEGRATION_NAME} integration"
         )
 

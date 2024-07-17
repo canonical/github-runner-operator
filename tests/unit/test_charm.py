@@ -37,7 +37,7 @@ from charm_state import (
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
-    MissingIntegrationDataError,
+    MissingMongoDBError,
     MissingRunnerBinaryError,
     OpenStackUnauthorizedError,
     RunnerError,
@@ -412,7 +412,7 @@ def test_charm_goes_into_waiting_state_on_missing_integration_data(
     act: Fire config changed event.
     assert: Charm is in blocked state.
     """
-    setup_state_mock = MagicMock(side_effect=MissingIntegrationDataError("mock error"))
+    setup_state_mock = MagicMock(side_effect=MissingMongoDBError("mock error"))
     monkeypatch.setattr(GithubRunnerCharm, "_setup_state", setup_state_mock)
     harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
     harness.charm.on.config_changed.emit()

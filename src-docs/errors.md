@@ -121,7 +121,7 @@ Error for juju configuration.
 
 <a href="../src/errors.py#L50"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>class</kbd> `MissingIntegrationDataError`
+## <kbd>class</kbd> `MissingMongoDBError`
 Error for missing integration data. 
 
 

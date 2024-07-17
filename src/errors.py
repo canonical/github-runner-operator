@@ -47,7 +47,7 @@ class ConfigurationError(Exception):
     """Error for juju configuration."""
 
 
-class MissingIntegrationDataError(Exception):
+class MissingMongoDBError(Exception):
     """Error for missing integration data."""
 
 
