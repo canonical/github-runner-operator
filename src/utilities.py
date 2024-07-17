@@ -251,7 +251,9 @@ def bytes_with_unit_to_kib(num_bytes: str) -> int:
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
 def remove_residual_venv_dirs() -> None:  # pragma: no cover
     """Remove the residual empty directories from last revision if it exists."""
-    unit_name = os.environ["JUJU_UNIT_NAME"].replace("/", "-")
+    unit_name = os.environ.get("JUJU_UNIT_NAME", "").replace("/", "-")
+    if not unit_name:
+        return 
     venv_dir = pathlib.Path(f"/var/lib/juju/agents/unit-{unit_name}/charm/venv/")
     if not venv_dir.exists():
         return
