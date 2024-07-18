@@ -7,7 +7,6 @@ import shutil
 
 # All commands run by subprocess are secure.
 import subprocess  # nosec
-from dataclasses import dataclass
 from pathlib import Path
 
 from utilities import secure_run_subprocess
@@ -28,25 +27,13 @@ class ReactiveRunnerError(Exception):
     """Raised when a reactive runner error occurs."""
 
 
-@dataclass
-class ReactiveRunnerConfig:
-    """Configuration for spawning a reactive runner.
-
-    Attributes:
-        mq_uri: The message queue URI.
-        queue_name: The name of the queue.
-    """
-
-    mq_uri: str
-    queue_name: str
-
-
-def reconcile(quantity: int, config: ReactiveRunnerConfig) -> int:
+def reconcile(quantity: int, mq_uri: str, queue_name: str) -> int:
     """Spawn a runner reactively.
 
     Args:
         quantity: The number of runners to spawn.
-        config: The configuration for the reactive runner.
+        mq_uri: The message queue URI.
+        queue_name: The name of the queue.
 
     Raises a ReactiveRunnerError if the runner fails to spawn.
 
@@ -62,7 +49,7 @@ def reconcile(quantity: int, config: ReactiveRunnerConfig) -> int:
         _setup_logging_for_processes()
         for _ in range(delta):
             try:
-                _spawn_runner(config)
+                _spawn_runner(mq_uri=mq_uri, queue_name=queue_name)
             except _SpawnError:
                 logger.exception("Failed to spawn a new reactive runner process")
             else:
@@ -111,18 +98,19 @@ class _SpawnError(Exception):
     """Raised when spawning a runner fails."""
 
 
-def _spawn_runner(reactive_runner_config: ReactiveRunnerConfig) -> None:
+def _spawn_runner(mq_uri: str, queue_name: str) -> None:
     """Spawn a runner.
 
     Args:
-        reactive_runner_config: The configuration for the reactive runner.
+        mq_uri: The message queue URI.
+        queue_name: The name of the queue.
 
     Raises:
         _SpawnError: If the runner fails to spawn.
     """
     env = {
         "PYTHONPATH": "src:lib:venv",
-        MQ_URI_ENV_VAR: reactive_runner_config.mq_uri,
+        MQ_URI_ENV_VAR: mq_uri,
     }
     # We do not want to wait for the process to finish, so we do not use with statement.
     # We trust the command.
@@ -132,7 +120,7 @@ def _spawn_runner(reactive_runner_config: ReactiveRunnerConfig) -> None:
             REACTIVE_RUNNER_TIMEOUT_STR,
             PYTHON_BIN,
             REACTIVE_RUNNER_SCRIPT_FILE,
-            f'"{reactive_runner_config.queue_name}"',
+            f'"{queue_name}"',
             ">>",
             # $$ will be replaced by the PID of the process, so we can track the error log easily.
             f"{REACTIVE_RUNNER_LOG_DIR}/$$.log",

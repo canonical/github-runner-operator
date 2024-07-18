@@ -12,7 +12,6 @@ from reactive.runner_manager import (
     ACTIVE_SCRIPTS_COMMAND_LINE,
     PYTHON_BIN,
     REACTIVE_RUNNER_SCRIPT_FILE,
-    ReactiveRunnerConfig,
     ReactiveRunnerError,
     reconcile,
 )
@@ -61,12 +60,11 @@ def test_reconcile_spawns_runners(
     assert: Three runners are spawned. Log file is setup.
     """
     queue_name = secrets.token_hex(16)
-    reactive_config = ReactiveRunnerConfig(mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
     _arrange_reactive_processes(
         secure_run_subprocess_mock, count_before_spawn=2, count_after_spawn=5
     )
 
-    delta = reconcile(5, reactive_config)
+    delta = reconcile(5, mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
 
     assert delta == 3
     assert subprocess_popen_mock.call_count == 3
@@ -82,12 +80,11 @@ def test_reconcile_does_not_spawn_runners(
     assert: No runners are spawned.
     """
     queue_name = secrets.token_hex(16)
-    reactive_config = ReactiveRunnerConfig(mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
     _arrange_reactive_processes(
         secure_run_subprocess_mock, count_before_spawn=2, count_after_spawn=2
     )
 
-    delta = reconcile(2, reactive_config)
+    delta = reconcile(2, mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
 
     assert delta == 0
     assert subprocess_popen_mock.call_count == 0
@@ -102,11 +99,10 @@ def test_reconcile_does_not_spawn_runners_for_too_many_processes(
     assert: No runners are spawned and delta is 0.
     """
     queue_name = secrets.token_hex(16)
-    reactive_config = ReactiveRunnerConfig(mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
     _arrange_reactive_processes(
         secure_run_subprocess_mock, count_before_spawn=2, count_after_spawn=2
     )
-    delta = reconcile(1, reactive_config)
+    delta = reconcile(1, mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
 
     assert delta == 0
     assert subprocess_popen_mock.call_count == 0
@@ -121,7 +117,6 @@ def test_reconcile_raises_reactive_runner_error_on_ps_failure(
     assert: A ReactiveRunnerError is raised.
     """
     queue_name = secrets.token_hex(16)
-    reactive_config = ReactiveRunnerConfig(mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
     secure_run_subprocess_mock.return_value = CompletedProcess(
         args=ACTIVE_SCRIPTS_COMMAND_LINE,
         returncode=1,
@@ -130,7 +125,7 @@ def test_reconcile_raises_reactive_runner_error_on_ps_failure(
     )
 
     with pytest.raises(ReactiveRunnerError) as err:
-        reconcile(1, reactive_config)
+        reconcile(1, mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
 
     assert "Failed to get list of processes" in str(err.value)
 
@@ -144,7 +139,6 @@ def test_reconcile_spawn_runner_failed(
     assert: The delta is 2.
     """
     queue_name = secrets.token_hex(16)
-    reactive_config = ReactiveRunnerConfig(mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
     subprocess_popen_mock.side_effect = [
         MagicMock(returncode=0),
         MagicMock(returncode=1),
@@ -154,7 +148,7 @@ def test_reconcile_spawn_runner_failed(
         secure_run_subprocess_mock, count_before_spawn=0, count_after_spawn=2
     )
 
-    delta = reconcile(3, reactive_config)
+    delta = reconcile(3, mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
 
     assert delta == 2
 

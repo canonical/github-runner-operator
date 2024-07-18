@@ -585,10 +585,9 @@ class RunnerManager:
             this number is never negative as additional processes should terminate after a timeout.
         """
         logger.info("Reactive mode is experimental and not yet fully implemented.")
-        config = reactive_runner_manager.ReactiveRunnerConfig(
-            mq_uri=self.config.reactive_config.mq_uri, queue_name=self.app_name
+        return reactive_runner_manager.reconcile(
+            quantity=quantity, mq_uri=self.config.reactive_config.mq_uri, queue_name=self.app_name
         )
-        return reactive_runner_manager.reconcile(quantity=quantity, config=config)
 
     def _runners_in_pre_job(self) -> bool:
         """Check there exist runners in the pre-job script stage.

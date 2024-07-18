@@ -17,12 +17,12 @@ Module for managing reactive runners.
 
 ---
 
-<a href="../src/reactive/runner_manager.py#L44"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/runner_manager.py#L30"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `reconcile`
 
 ```python
-reconcile(quantity: int, config: ReactiveRunnerConfig) → int
+reconcile(quantity: int, mq_uri: str, queue_name: str) → int
 ```
 
 Spawn a runner reactively. 
@@ -32,7 +32,8 @@ Spawn a runner reactively.
 **Args:**
  
  - <b>`quantity`</b>:  The number of runners to spawn. 
- - <b>`config`</b>:  The configuration for the reactive runner. 
+ - <b>`mq_uri`</b>:  The message queue URI. 
+ - <b>`queue_name`</b>:  The name of the queue. 
 
 Raises a ReactiveRunnerError if the runner fails to spawn. 
 
@@ -44,40 +45,10 @@ Raises a ReactiveRunnerError if the runner fails to spawn.
 
 ---
 
-<a href="../src/reactive/runner_manager.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/runner_manager.py#L26"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `ReactiveRunnerError`
 Raised when a reactive runner error occurs. 
-
-
-
-
-
----
-
-<a href="../src/reactive/runner_manager.py#L31"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>class</kbd> `ReactiveRunnerConfig`
-Configuration for spawning a reactive runner. 
-
-
-
-**Attributes:**
- 
- - <b>`mq_uri`</b>:  The message queue URI. 
- - <b>`queue_name`</b>:  The name of the queue. 
-
-<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>method</kbd> `__init__`
-
-```python
-__init__(mq_uri: str, queue_name: str) → None
-```
-
-
-
-
 
 
 

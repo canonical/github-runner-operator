@@ -714,9 +714,8 @@ def test_reconcile_reactive_mode(
     assert actual_count == count
     reactive_reconcile_mock.assert_called_with(
         quantity=count,
-        config=reactive.runner_manager.ReactiveRunnerConfig(
-            mq_uri=FAKE_MONGODB_URI, queue_name=openstack_manager_for_reconcile.app_name
-        ),
+        mq_uri=FAKE_MONGODB_URI,
+        queue_name=openstack_manager_for_reconcile.app_name,
     )
 
 
