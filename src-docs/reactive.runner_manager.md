@@ -39,7 +39,7 @@ Raises a ReactiveRunnerError if the runner fails to spawn.
 
 
 **Returns:**
- The number of runners spawned. 
+ The number of reactive runner processes spawned. 
 
 
 ---

@@ -51,35 +51,36 @@ def reconcile(quantity: int, config: ReactiveRunnerConfig) -> int:
     Raises a ReactiveRunnerError if the runner fails to spawn.
 
     Returns:
-        The number of runners spawned.
+        The number of reactive runner processes spawned.
     """
-    actual_quantity = _determine_current_quantity()
-    logger.info("Actual quantity of reactive runner processes: %s", actual_quantity)
-    actual_delta = delta = quantity - actual_quantity
+    current_quantity = _get_current_quantity()
+    logger.info("Current quantity of reactive runner processes: %s", current_quantity)
+    delta = quantity - current_quantity
+    runners_spawned = 0
     if delta > 0:
         logger.info("Will spawn %d new reactive runner processes", delta)
-        _setup_logging()
+        _setup_logging_for_processes()
         for _ in range(delta):
             try:
                 _spawn_runner(config)
             except _SpawnError:
                 logger.exception("Failed to spawn a new reactive runner process")
-        actual_quantity_after_spawning = _determine_current_quantity()
-        actual_delta = actual_quantity_after_spawning - actual_quantity
+            else:
+                runners_spawned += 1
     elif delta < 0:
         logger.info(
             "%d reactive runner processes are running. "
             "Will skip spawning. Additional processes should terminate after %s.",
-            actual_quantity,
+            current_quantity,
             REACTIVE_RUNNER_TIMEOUT_STR,
         )
     else:
         logger.info("No changes to number of reactive runner processes needed.")
 
-    return max(actual_delta, 0)
+    return runners_spawned
 
 
-def _determine_current_quantity() -> int:
+def _get_current_quantity() -> int:
     """Determine the current quantity of reactive runners.
 
     Returns:
@@ -99,7 +100,7 @@ def _determine_current_quantity() -> int:
     return actual_quantity
 
 
-def _setup_logging() -> None:
+def _setup_logging_for_processes() -> None:
     """Set up the log dir."""
     if not REACTIVE_RUNNER_LOG_DIR.exists():
         REACTIVE_RUNNER_LOG_DIR.mkdir()
