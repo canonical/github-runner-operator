@@ -19,8 +19,8 @@ REACTIVE_RUNNER_LOG_DIR = Path("/var/log/reactive_runner")
 REACTIVE_RUNNER_SCRIPT_FILE = "scripts/reactive_runner.py"
 REACTIVE_RUNNER_TIMEOUT_STR = "1h"
 PYTHON_BIN = "/usr/bin/python3"
-PS_COMMAND_LINE_LIST = ["ps", "axo", "cmd"]
-TIMEOUT_COMMAND = "/usr/bin/timeout"
+ACTIVE_SCRIPTS_COMMAND_LINE = ["ps", "axo", "cmd", "--no-headers"]
+TIMEOUT_BIN = "/usr/bin/timeout"
 UBUNTU_USER = "ubuntu"
 
 
@@ -89,15 +89,15 @@ def _get_current_quantity() -> int:
     Raises:
         ReactiveRunnerError: If the number of reactive runners cannot be determined
     """
-    result = secure_run_subprocess(cmd=PS_COMMAND_LINE_LIST)
+    result = secure_run_subprocess(cmd=ACTIVE_SCRIPTS_COMMAND_LINE)
     if result.returncode != 0:
         raise ReactiveRunnerError("Failed to get list of processes")
-    commands = result.stdout.decode().rstrip().split("\n")[1:] if result.stdout else []
-    actual_quantity = 0
-    for command in commands:
-        if command.startswith(f"{PYTHON_BIN} {REACTIVE_RUNNER_SCRIPT_FILE}"):
-            actual_quantity += 1
-    return actual_quantity
+    commands = result.stdout.decode().split("\n") if result.stdout else []
+    return sum(
+        1
+        for command in commands
+        if command.startswith(f"{PYTHON_BIN} {REACTIVE_RUNNER_SCRIPT_FILE}")
+    )
 
 
 def _setup_logging_for_processes() -> None:
@@ -128,7 +128,7 @@ def _spawn_runner(reactive_runner_config: ReactiveRunnerConfig) -> None:
     # We trust the command.
     command = " ".join(
         [
-            TIMEOUT_COMMAND,
+            TIMEOUT_BIN,
             REACTIVE_RUNNER_TIMEOUT_STR,
             PYTHON_BIN,
             REACTIVE_RUNNER_SCRIPT_FILE,

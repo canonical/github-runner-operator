@@ -9,7 +9,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from reactive.runner_manager import (
-    PS_COMMAND_LINE_LIST,
+    ACTIVE_SCRIPTS_COMMAND_LINE,
     PYTHON_BIN,
     REACTIVE_RUNNER_SCRIPT_FILE,
     ReactiveRunnerConfig,
@@ -123,7 +123,7 @@ def test_reconcile_raises_reactive_runner_error_on_ps_failure(
     queue_name = secrets.token_hex(16)
     reactive_config = ReactiveRunnerConfig(mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
     secure_run_subprocess_mock.return_value = CompletedProcess(
-        args=PS_COMMAND_LINE_LIST,
+        args=ACTIVE_SCRIPTS_COMMAND_LINE,
         returncode=1,
         stdout=b"",
         stderr=b"error",
@@ -177,13 +177,13 @@ def _arrange_reactive_processes(
     )
     secure_run_subprocess_mock.side_effect = [
         CompletedProcess(
-            args=PS_COMMAND_LINE_LIST,
+            args=ACTIVE_SCRIPTS_COMMAND_LINE,
             returncode=0,
             stdout=f"CMD\n{process_cmds_before}".encode("utf-8"),
             stderr=b"",
         ),
         CompletedProcess(
-            args=PS_COMMAND_LINE_LIST,
+            args=ACTIVE_SCRIPTS_COMMAND_LINE,
             returncode=0,
             stdout=f"CMD\n{process_cmds_after}".encode("utf-8"),
             stderr=b"",
