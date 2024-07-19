@@ -9,7 +9,7 @@ Module for managing reactive runners.
 ---------------
 - **MQ_URI_ENV_VAR**
 - **REACTIVE_RUNNER_SCRIPT_FILE**
-- **REACTIVE_RUNNER_TIMEOUT_STR**
+- **REACTIVE_RUNNER_TIMEOUT_INTERVAL**
 - **PYTHON_BIN**
 - **ACTIVE_SCRIPTS_COMMAND_LINE**
 - **TIMEOUT_BIN**

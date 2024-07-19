@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 MQ_URI_ENV_VAR = "MQ_URI"
 REACTIVE_RUNNER_LOG_DIR = Path("/var/log/reactive_runner")
 REACTIVE_RUNNER_SCRIPT_FILE = "scripts/reactive_runner.py"
-REACTIVE_RUNNER_TIMEOUT_STR = "1h"
+REACTIVE_RUNNER_TIMEOUT_INTERVAL = "1h"
 PYTHON_BIN = "/usr/bin/python3"
 ACTIVE_SCRIPTS_COMMAND_LINE = ["ps", "axo", "cmd", "--no-headers"]
 TIMEOUT_BIN = "/usr/bin/timeout"
@@ -59,7 +59,7 @@ def reconcile(quantity: int, mq_uri: str, queue_name: str) -> int:
             "%d reactive runner processes are running. "
             "Will skip spawning. Additional processes should terminate after %s.",
             current_quantity,
-            REACTIVE_RUNNER_TIMEOUT_STR,
+            REACTIVE_RUNNER_TIMEOUT_INTERVAL,
         )
     else:
         logger.info("No changes to number of reactive runner processes needed.")
@@ -117,7 +117,7 @@ def _spawn_runner(mq_uri: str, queue_name: str) -> None:
     command = " ".join(
         [
             TIMEOUT_BIN,
-            REACTIVE_RUNNER_TIMEOUT_STR,
+            REACTIVE_RUNNER_TIMEOUT_INTERVAL,
             PYTHON_BIN,
             REACTIVE_RUNNER_SCRIPT_FILE,
             f'"{queue_name}"',
