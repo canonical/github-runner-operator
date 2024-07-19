@@ -43,17 +43,11 @@ def reconcile(quantity: int, mq_uri: str, queue_name: str) -> int:
     current_quantity = _get_current_quantity()
     logger.info("Current quantity of reactive runner processes: %s", current_quantity)
     delta = quantity - current_quantity
-    runners_spawned = 0
     if delta > 0:
         logger.info("Will spawn %d new reactive runner processes", delta)
         _setup_logging_for_processes()
         for _ in range(delta):
-            try:
-                _spawn_runner(mq_uri=mq_uri, queue_name=queue_name)
-            except _SpawnError:
-                logger.exception("Failed to spawn a new reactive runner process")
-            else:
-                runners_spawned += 1
+            _spawn_runner(mq_uri=mq_uri, queue_name=queue_name)
     elif delta < 0:
         logger.info(
             "%d reactive runner processes are running. "
@@ -64,7 +58,7 @@ def reconcile(quantity: int, mq_uri: str, queue_name: str) -> int:
     else:
         logger.info("No changes to number of reactive runner processes needed.")
 
-    return runners_spawned
+    return max(delta, 0)
 
 
 def _get_current_quantity() -> int:
@@ -94,19 +88,12 @@ def _setup_logging_for_processes() -> None:
         shutil.chown(REACTIVE_RUNNER_LOG_DIR, user=UBUNTU_USER, group=UBUNTU_USER)
 
 
-class _SpawnError(Exception):
-    """Raised when spawning a runner fails."""
-
-
 def _spawn_runner(mq_uri: str, queue_name: str) -> None:
     """Spawn a runner.
 
     Args:
         mq_uri: The message queue URI.
         queue_name: The name of the queue.
-
-    Raises:
-        _SpawnError: If the runner fails to spawn.
     """
     env = {
         "PYTHONPATH": "src:lib:venv",
@@ -137,9 +124,4 @@ def _spawn_runner(mq_uri: str, queue_name: str) -> None:
         user=UBUNTU_USER,
     )
 
-    if process.returncode not in (0, None):
-        raise _SpawnError(
-            f"Failed to spawn a new reactive runner process with pid {process.pid}."
-            f" Return code: {process.returncode}"
-        )
     logger.debug("Spawned a new reactive runner process with pid %s", process.pid)

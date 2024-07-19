@@ -130,29 +130,6 @@ def test_reconcile_raises_reactive_runner_error_on_ps_failure(
     assert "Failed to get list of processes" in str(err.value)
 
 
-def test_reconcile_spawn_runner_failed(
-    secure_run_subprocess_mock: MagicMock, subprocess_popen_mock: MagicMock
-):
-    """
-    arrange: Mock that one reactive runner spawn fails.
-    act: Call reconcile with a quantity of 3.
-    assert: The delta is 2.
-    """
-    queue_name = secrets.token_hex(16)
-    subprocess_popen_mock.side_effect = [
-        MagicMock(returncode=0),
-        MagicMock(returncode=1),
-        MagicMock(returncode=0),
-    ]
-    _arrange_reactive_processes(
-        secure_run_subprocess_mock, count_before_spawn=0, count_after_spawn=2
-    )
-
-    delta = reconcile(3, mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
-
-    assert delta == 2
-
-
 def _arrange_reactive_processes(
     secure_run_subprocess_mock: MagicMock, count_before_spawn: int, count_after_spawn: int
 ):
