@@ -13,7 +13,7 @@ Module for managing Openstack cloud.
 
 ---
 
-<a href="../src/openstack_cloud/__init__.py#L110"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/__init__.py#L62"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `initialize`
 
@@ -40,7 +40,7 @@ Validates config and writes it to disk.
 
 ---
 
-<a href="../src/openstack_cloud/__init__.py#L68"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/__init__.py#L20"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `CloudConfig`
 The parsed clouds.yaml configuration dictionary. 

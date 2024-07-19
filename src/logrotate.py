@@ -66,14 +66,15 @@ METRICS_LOGROTATE_CONFIG = LogrotateConfig(
 
 RUNNER_LOGROTATE_CONFIG = LogrotateConfig(
     name="github-runner-logs",
-    log_path_glob_pattern=f"{RUNNER_LOGS_DIR_PATH}/.*",
+    log_path_glob_pattern=f"{RUNNER_LOGS_DIR_PATH}/*",
     rotate=0,
     create=False,
+    notifempty=False,
 )
 
 REACTIVE_LOGROTATE_CONFIG = LogrotateConfig(
     name="reactive-runner",
-    log_path_glob_pattern=f"{REACTIVE_RUNNER_LOG_DIR}/.*",
+    log_path_glob_pattern=f"{REACTIVE_RUNNER_LOG_DIR}/*.log",
     rotate=0,
     create=False,
     notifempty=False,

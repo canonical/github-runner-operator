@@ -14,7 +14,7 @@ Logrotate setup and configuration.
 
 ---
 
-<a href="../src/logrotate.py#L84"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/logrotate.py#L85"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `setup`
 

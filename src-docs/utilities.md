@@ -8,7 +8,7 @@ Utilities used by the charm.
 
 ---
 
-<a href="../src/utilities.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L28"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `retry`
 
@@ -44,7 +44,7 @@ Parameterize the decorator for adding retry to functions.
 
 ---
 
-<a href="../src/utilities.py#L109"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L110"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `secure_run_subprocess`
 
@@ -78,7 +78,7 @@ The command is executed with `subprocess.run`, additional arguments can be passe
 
 ---
 
-<a href="../src/utilities.py#L150"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L151"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `execute_command`
 
@@ -118,7 +118,7 @@ The output is logged if the log level of the logger is set to debug.
 
 ---
 
-<a href="../src/utilities.py#L191"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L192"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `get_env_var`
 
@@ -144,7 +144,7 @@ Looks for all upper-case and all low-case of the `env_var`.
 
 ---
 
-<a href="../src/utilities.py#L205"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L206"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `set_env_var`
 
@@ -166,7 +166,7 @@ Set the all upper case and all low case of the `env_var`.
 
 ---
 
-<a href="../src/utilities.py#L218"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L219"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `bytes_with_unit_to_kib`
 
@@ -192,5 +192,18 @@ Convert a positive integer followed by a unit to number of kibibytes.
 
 **Returns:**
  Number of kilobytes. 
+
+
+---
+
+<a href="../src/utilities.py#L252"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>function</kbd> `remove_residual_venv_dirs`
+
+```python
+remove_residual_venv_dirs() → None
+```
+
+Remove the residual empty directories from last revision if it exists. 
 
 
