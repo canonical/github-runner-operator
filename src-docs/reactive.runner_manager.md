@@ -8,6 +8,7 @@ Module for managing reactive runners.
 **Global Variables**
 ---------------
 - **MQ_URI_ENV_VAR**
+- **QUEUE_NAME_ENV_VAR**
 - **REACTIVE_RUNNER_SCRIPT_FILE**
 - **REACTIVE_RUNNER_TIMEOUT_INTERVAL**
 - **PYTHON_BIN**
@@ -17,7 +18,7 @@ Module for managing reactive runners.
 
 ---
 
-<a href="../src/reactive/runner_manager.py#L30"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/runner_manager.py#L31"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `reconcile`
 
@@ -45,7 +46,7 @@ Raises a ReactiveRunnerError if the runner fails to spawn.
 
 ---
 
-<a href="../src/reactive/runner_manager.py#L26"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/runner_manager.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `ReactiveRunnerError`
 Raised when a reactive runner error occurs. 

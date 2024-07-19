@@ -3,13 +3,12 @@
 #  See LICENSE file for licensing details.
 
 """Script to spawn a reactive runner."""
-import argparse
 import logging
 import os
 import sys
 
 from reactive.runner import spawn_reactive_runner
-from reactive.runner_manager import MQ_URI_ENV_VAR
+from reactive.runner_manager import MQ_URI_ENV_VAR, QUEUE_NAME_ENV_VAR
 
 
 def setup_root_logging() -> None:
@@ -22,25 +21,30 @@ def setup_root_logging() -> None:
     )
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+def main() -> None:
+    """Spawn the reactive runner.
 
-    parser.add_argument(
-        "queue_name", help="Name of the message queue to consume from. E.g. : large"
-    )
-
+    Raises:
+        ValueError: If the required environment variables are not set
+    """
     mq_uri = os.environ.get(MQ_URI_ENV_VAR)
-    argument_opts: dict = {"default": mq_uri} if mq_uri else {"required": True}
-    parser.add_argument(
-        "--mq-uri",
-        help="URI of the message queue database. This should include authentication information."
-        f"The argument is required but can also be set via the {MQ_URI_ENV_VAR} "
-        "environment variable."
-        " Example URI : mongodb://user:pw@10.36.24.114/github-runner-webhook-router"
-        "?replicaSet=mongodb&authSource=admin",
-        **argument_opts,
-    )
-    arguments = parser.parse_args()
+    queue_name = os.environ.get(QUEUE_NAME_ENV_VAR)
+
+    if not mq_uri:
+        raise ValueError(
+            f"Missing {MQ_URI_ENV_VAR} environment variable. "
+            "Please set it to the message queue URI."
+        )
+
+    if not queue_name:
+        raise ValueError(
+            f"Missing {QUEUE_NAME_ENV_VAR} environment variable. "
+            "Please set it to the name of the queue."
+        )
 
     setup_root_logging()
-    spawn_reactive_runner(arguments.mq_uri, arguments.queue_name)
+    spawn_reactive_runner(mq_uri, queue_name)
+
+
+if __name__ == "__main__":
+    main()

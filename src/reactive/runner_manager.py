@@ -14,6 +14,7 @@ from utilities import secure_run_subprocess
 logger = logging.getLogger(__name__)
 
 MQ_URI_ENV_VAR = "MQ_URI"
+QUEUE_NAME_ENV_VAR = "QUEUE_NAME"
 REACTIVE_RUNNER_LOG_DIR = Path("/var/log/reactive_runner")
 REACTIVE_RUNNER_SCRIPT_FILE = "scripts/reactive_runner.py"
 REACTIVE_RUNNER_TIMEOUT_INTERVAL = "1h"
@@ -98,6 +99,7 @@ def _spawn_runner(mq_uri: str, queue_name: str) -> None:
     env = {
         "PYTHONPATH": "src:lib:venv",
         MQ_URI_ENV_VAR: mq_uri,
+        QUEUE_NAME_ENV_VAR: queue_name,
     }
     # We do not want to wait for the process to finish, so we do not use with statement.
     # We trust the command.
@@ -107,7 +109,6 @@ def _spawn_runner(mq_uri: str, queue_name: str) -> None:
             REACTIVE_RUNNER_TIMEOUT_INTERVAL,
             PYTHON_BIN,
             REACTIVE_RUNNER_SCRIPT_FILE,
-            f'"{queue_name}"',
             ">>",
             # $$ will be replaced by the PID of the process, so we can track the error log easily.
             f"{REACTIVE_RUNNER_LOG_DIR}/$$.log",
@@ -124,4 +125,4 @@ def _spawn_runner(mq_uri: str, queue_name: str) -> None:
         user=UBUNTU_USER,
     )
 
-    logger.debug("Spawned a new reactive runner process with pid %s", process.pid)
+    logger.info("Spawned a new reactive runner process with pid %s", process.pid)
