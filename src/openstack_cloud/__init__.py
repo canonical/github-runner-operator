@@ -4,8 +4,6 @@
 """Module for managing Openstack cloud."""
 
 import logging
-import os
-import shutil
 from pathlib import Path
 from typing import TypedDict, cast
 
@@ -17,52 +15,6 @@ logger = logging.getLogger(__name__)
 
 
 CLOUDS_YAML_PATH = Path(Path.home() / ".config/openstack/clouds.yaml")
-
-
-# Make sure we can import openstack, if not remove the old openstacksdk library and retry.
-# This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
-def _remove_old_openstacksdk_lib() -> None:  # pragma: no cover
-    """Remove the old openstacksdk library if it exists."""
-    try:
-        unit_name = os.environ["JUJU_UNIT_NAME"].replace("/", "-")
-        venv_dir = Path(f"/var/lib/juju/agents/unit-{unit_name}/charm/venv/")
-        openstacksdk_dirs = list(venv_dir.glob("openstacksdk-*.dist-info"))
-        # use error log level as logging may not be fully initialized yet
-        logger.error("Found following openstack dirs: %s", openstacksdk_dirs)
-        if len(openstacksdk_dirs) > 1:
-            openstacksdk_dirs.sort()
-            for openstacksdk_dir in openstacksdk_dirs[:-1]:
-                logger.error("Removing old openstacksdk library: %s", openstacksdk_dir)
-                shutil.rmtree(openstacksdk_dir)
-        else:
-            logger.error(
-                "No old openstacksdk library to remove. "
-                "Please reach out to the charm dev team for further advice."
-            )
-    except OSError:
-        logger.exception(
-            "Failed to remove old openstacksdk library. "
-            "Please reach out to the charm dev team for further advice."
-        )
-
-
-try:
-    import openstack
-except AttributeError:
-    logger.error(
-        "Failed to import openstack. "
-        "Assuming juju bug https://bugs.launchpad.net/juju/+bug/2058335. "
-        "Removing old openstacksdk library and retrying."
-    )
-    _remove_old_openstacksdk_lib()
-    try:
-        # The import is there to make sure the charm fails if the openstack import is not working.
-        import openstack  # noqa: F401
-    except AttributeError:
-        logger.exception(
-            "Failed to import openstack. Please reach out to the charm team for further advice."
-        )
-        raise
 
 
 class CloudConfig(TypedDict):
