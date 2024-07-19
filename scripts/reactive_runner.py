@@ -2,17 +2,17 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
-"""Script to spawn a reactive runner."""
+"""Script to spawn a reactive runner process."""
 import logging
 import os
 import sys
 
-from reactive.runner import spawn_reactive_runner
+from reactive.consumer import consume
 from reactive.runner_manager import MQ_URI_ENV_VAR, QUEUE_NAME_ENV_VAR
 
 
 def setup_root_logging() -> None:
-    """Set up logging for the reactive runner."""
+    """Set up logging for the reactive runner process."""
     # setup root logger to log in a file which will be picked up by grafana agent and sent to Loki
     logging.basicConfig(
         stream=sys.stdout,
@@ -22,7 +22,7 @@ def setup_root_logging() -> None:
 
 
 def main() -> None:
-    """Spawn the reactive runner.
+    """Spawn a process that consumes a message from the queue to create a runner.
 
     Raises:
         ValueError: If the required environment variables are not set
@@ -43,7 +43,7 @@ def main() -> None:
         )
 
     setup_root_logging()
-    spawn_reactive_runner(mq_uri, queue_name)
+    consume(mq_uri, queue_name)
 
 
 if __name__ == "__main__":
