@@ -8,6 +8,14 @@
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
+from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
+
+# This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
+# pylint: disable=wrong-import-position,wrong-import-order
+# TODO: 2024-07-17 remove this once the issue has been fixed
+remove_residual_venv_dirs()
+
+
 import functools
 import logging
 import os
@@ -74,7 +82,6 @@ from openstack_cloud.openstack_manager import OpenstackRunnerManager
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
-from utilities import bytes_with_unit_to_kib, execute_command, retry
 
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
 
