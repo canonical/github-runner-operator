@@ -13,7 +13,7 @@ from pydantic import BaseModel, HttpUrl, ValidationError
 logger = logging.getLogger(__name__)
 
 
-class _JobDetails(BaseModel):
+class JobDetails(BaseModel):
     """A class to translate the payload.
 
     Attributes:
@@ -46,7 +46,7 @@ def consume(mongodb_uri: str, queue_name: str) -> None:
         with closing(SimpleQueue(conn, queue_name)) as simple_queue:
             msg = simple_queue.get(block=True)
             try:
-                job_details = cast(_JobDetails, _JobDetails.parse_raw(msg.payload))
+                job_details = cast(JobDetails, JobDetails.parse_raw(msg.payload))
             except ValidationError as exc:
                 msg.reject(requeue=True)
                 raise JobError(f"Invalid job details: {msg.payload}") from exc

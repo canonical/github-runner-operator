@@ -22,7 +22,7 @@ def test_consume(caplog: pytest.LogCaptureFixture):
     assert: The job is logged.
     """
     queue_name = secrets.token_hex(16)
-    job_details = consumer._JobDetails(
+    job_details = consumer.JobDetails(
         labels=[secrets.token_hex(16), secrets.token_hex(16)],
         run_url=FAKE_RUN_URL,
     )

@@ -36,6 +36,24 @@ Log the job details and acknowledge the message. If the job details are invalid,
 
 ---
 
+<a href="../src/reactive/consumer.py#L16"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `JobDetails`
+A class to translate the payload. 
+
+
+
+**Attributes:**
+ 
+ - <b>`labels`</b>:  The labels of the job. 
+ - <b>`run_url`</b>:  The URL of the job. 
+
+
+
+
+
+---
+
 <a href="../src/reactive/consumer.py#L28"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `JobError`
