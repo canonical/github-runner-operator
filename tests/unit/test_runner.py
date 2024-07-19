@@ -23,14 +23,7 @@ from errors import (
 )
 from lxd import LxdInstance, LxdInstanceFileManager
 from metrics.storage import MetricsStorage
-from runner import (
-    DIAG_DIR_PATH,
-    SYSLOG_PATH,
-    CreateRunnerConfig,
-    Runner,
-    RunnerConfig,
-    RunnerStatus,
-)
+from runner import DIAG_DIR_PATH, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerManagerClients
 from runner_type import ProxySetting
 from tests.unit.factories import SSHDebugInfoFactory
@@ -529,7 +522,7 @@ def test_pull_logs(runner: Runner, log_dir_base_path: Path):
     runner.instance.files.pull_file.assert_has_calls(
         [
             call(str(DIAG_DIR_PATH), str(log_dir_path), is_dir=True),
-            call(str(SYSLOG_PATH), str(log_dir_path)),
+            call(str(metrics.runner_logs.SYSLOG_PATH), str(log_dir_path)),
         ]
     )
 
