@@ -21,6 +21,11 @@ FAKE_URL = "http://example.com"
 
 @pytest.mark.openstack
 async def test_reactive_mode_consumes_jobs(ops_test: OpsTest, app_for_reactive: Application):
+    """
+    arrange: A charm integrated with mongodb and a message is added to the queue.
+    act: Call reconcile.
+    assert: The message is consumed and the job details are logged.
+    """
     unit = app_for_reactive.units[0]
     mongodb_uri = await _get_mongodb_uri_from_integration_data(ops_test, unit)
     if not mongodb_uri:
