@@ -18,6 +18,7 @@ import requests
 import requests.adapters
 import urllib3
 
+import reactive.runner_manager as reactive_runner_manager
 import shared_fs
 from charm_state import VirtualMachineResources
 from errors import (
@@ -528,6 +529,9 @@ class RunnerManager:
         Returns:
             Difference between intended runners and actual runners.
         """
+        if self.config.reactive_config:
+            logger.info("Reactive configuration detected, going into experimental reactive mode.")
+            return self._reconcile_reactive(quantity)
         start_ts = time.time()
 
         runners = self._get_runners()
@@ -571,6 +575,21 @@ class RunnerManager:
                 reconciliation_end_ts=end_ts,
             )
         return delta
+
+    def _reconcile_reactive(self, quantity: int) -> int:
+        """Reconcile runners reactively.
+
+        Args:
+            quantity: Number of intended runners.
+
+        Returns:
+            The difference between intended runners and actual runners. In reactive mode
+            this number is never negative as additional processes should terminate after a timeout.
+        """
+        logger.info("Reactive mode is experimental and not yet fully implemented.")
+        return reactive_runner_manager.reconcile(
+            quantity=quantity, mq_uri=self.config.reactive_config.mq_uri, queue_name=self.app_name
+        )
 
     def _runners_in_pre_job(self) -> bool:
         """Check there exist runners in the pre-job script stage.

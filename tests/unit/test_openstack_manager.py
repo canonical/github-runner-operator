@@ -14,9 +14,11 @@ from fabric.connection import Connection as SshConnection
 from invoke import Result
 from openstack.compute.v2.keypair import Keypair
 from openstack.compute.v2.server import Server
+from pytest import LogCaptureFixture, MonkeyPatch
 
 import metrics.storage
-from charm_state import CharmState, ProxyConfig, RepoPolicyComplianceConfig
+import reactive.runner_manager
+from charm_state import CharmState, ProxyConfig, ReactiveConfig, RepoPolicyComplianceConfig
 from errors import OpenStackError, RunnerStartError
 from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
 from metrics import events as metric_events
@@ -27,6 +29,7 @@ from openstack_cloud.openstack_manager import MAX_METRICS_FILE_SIZE, METRICS_EXC
 from runner_type import RunnerByHealth, RunnerGithubInfo
 from tests.unit import factories
 
+FAKE_MONGODB_URI = "mongodb://example.com/db"
 CLOUD_NAME = "microstack"
 
 
@@ -233,6 +236,17 @@ def openstack_manager_for_reconcile_fixture(
     monkeypatch.setattr(openstack_manager.shutil, "chown", MagicMock())
 
     return os_runner_manager
+
+
+@pytest.fixture(name="reactive_reconcile_mock")
+def reactive_reconcile_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> MagicMock:
+    """Mock the job class."""
+    reconcile_mock = MagicMock(spec=reactive.runner_manager.reconcile)
+    monkeypatch.setattr(
+        "openstack_cloud.openstack_manager.reactive_runner_manager.reconcile", reconcile_mock
+    )
+    reconcile_mock.side_effect = lambda quantity, **kwargs: quantity
+    return reconcile_mock
 
 
 def test__create_connection_error(clouds_yaml: dict, openstack_connect_mock: MagicMock):
@@ -678,6 +692,30 @@ def test_reconcile_ignores_metrics_for_openstack_online_runners(
     openstack_manager.runner_metrics.extract.assert_called_once_with(
         metrics_storage_manager=metrics.storage,
         ignore_runners=set(openstack_online_runner_names),
+    )
+
+
+def test_reconcile_reactive_mode(
+    openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager,
+    reactive_reconcile_mock: MagicMock,
+    caplog: LogCaptureFixture,
+):
+    """
+    arrange: Enable reactive mode and mock the job class to return a job.
+    act: Call reconcile with a random quantity n.
+    assert: The mocked job is picked up n times and the expected log message is present.
+    """
+    count = random.randint(0, 5)
+    openstack_manager_for_reconcile._config.reactive_config = ReactiveConfig(
+        mq_uri=FAKE_MONGODB_URI
+    )
+    actual_count = openstack_manager_for_reconcile.reconcile(quantity=count)
+
+    assert actual_count == count
+    reactive_reconcile_mock.assert_called_with(
+        quantity=count,
+        mq_uri=FAKE_MONGODB_URI,
+        queue_name=openstack_manager_for_reconcile.app_name,
     )
 
 

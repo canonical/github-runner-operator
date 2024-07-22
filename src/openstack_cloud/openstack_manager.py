@@ -38,6 +38,7 @@ from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import SDKException
 from paramiko.ssh_exception import NoValidConnectionsError
 
+import reactive.runner_manager as reactive_runner_manager
 from charm_state import CharmState, GithubOrg, ProxyConfig, SSHDebugConnection
 from errors import (
     CreateMetricsStorageError,
@@ -334,6 +335,10 @@ class OpenstackRunnerManager:
         Returns:
             The change in number of runners.
         """
+        if self._config.reactive_config:
+            logger.info("Reactive configuration detected, going into experimental reactive mode.")
+            return self._reconcile_reactive(quantity)
+
         start_ts = time.time()
         try:
             delta = self._reconcile_runners(quantity)
@@ -344,6 +349,21 @@ class OpenstackRunnerManager:
             )
 
         return delta
+
+    def _reconcile_reactive(self, quantity: int) -> int:
+        """Reconcile runners reactively.
+
+        Args:
+            quantity: Number of intended runners.
+
+        Returns:
+            The difference between intended runners and actual runners. In reactive mode
+            this number is never negative as additional processes should terminate after a timeout.
+        """
+        logger.info("Reactive mode is experimental and not yet fully implemented.")
+        return reactive_runner_manager.reconcile(
+            quantity=quantity, mq_uri=self._config.reactive_config.mq_uri, queue_name=self.app_name
+        )
 
     def _reconcile_runners(self, quantity: int) -> int:
         """Reconcile the number of runners.
