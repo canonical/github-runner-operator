@@ -61,6 +61,7 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [How to debug with ssh](how-to/debug-with-ssh.md)
   1. [How to deploy on ARM64](how-to/deploy-on-arm64.md)
   1. [How to integrate with COS](how-to/integrate-with-cos.md)
+  1. [How to spawn OpenStack runner](how-to/openstack-runner.md)
   1. [How to comply with repository policies](how-to/repo-policy.md)
   1. [How to run on LXD cloud](how-to/run-on-lxd.md)
   1. [How to set base image](how-to/set-base-image.md)
