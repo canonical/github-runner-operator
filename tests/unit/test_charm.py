@@ -30,12 +30,12 @@ from charm_state import (
     GithubOrg,
     GithubRepo,
     InstanceType,
-    OpenstackImage,
     ProxyConfig,
     VirtualMachineResources,
 )
 from errors import (
     ConfigurationError,
+    IntegrationDataNotReadyError,
     LogrotateSetupError,
     MissingMongoDBError,
     MissingRunnerBinaryError,
@@ -838,42 +838,6 @@ def test_catch_action_errors(
     event_mock.fail.assert_called_once()
 
 
-@pytest.mark.parametrize(
-    "openstack_image, expected_status, expected_value",
-    [
-        pytest.param(None, BlockedStatus, False, id="Image integration missing."),
-        pytest.param(
-            OpenstackImage(id=None, tags=None), WaitingStatus, False, id="Image not ready."
-        ),
-        pytest.param(
-            OpenstackImage(id="test", tags=["test"]),
-            MaintenanceStatus,
-            True,
-            id="Valid image integration.",
-        ),
-    ],
-)
-def test_openstack_image_ready_status(
-    monkeypatch: pytest.MonkeyPatch,
-    openstack_image: OpenstackImage | None,
-    expected_status: typing.Type[StatusBase],
-    expected_value: bool,
-):
-    """
-    arrange: given a monkeypatched OpenstackImage.from_charm that returns different values.
-    act: when _get_set_image_ready_status is called.
-    assert: expected unit status is set and expected value is returned.
-    """
-    monkeypatch.setattr(OpenstackImage, "from_charm", MagicMock(return_value=openstack_image))
-    harness = Harness(GithubRunnerCharm)
-    harness.begin()
-
-    is_ready = harness.charm._get_set_image_ready_status()
-
-    assert isinstance(harness.charm.unit.status, expected_status)
-    assert is_ready == expected_value
-
-
 def test__on_image_relation_changed_lxd():
     """
     arrange: given a charm with LXD instance type.
@@ -894,28 +858,24 @@ def test__on_image_relation_changed_lxd():
 
 def test__on_image_relation_image_not_ready():
     """
-    arrange: given a charm with OpenStack instance type and a monkeypatched \
-        _get_set_image_ready_status that returns False denoting image not ready.
+    arrange: given a charm with OpenStack instance type and a monkeypatched setup_state that \
+        raises IntegrationDataNotReadyError.
     act: when _on_image_relation_changed is called.
-    assert: nothing happens since _get_set_image_ready_status should take care of status set.
+    assert: charm goes into a waiting state.
     """
     harness = Harness(GithubRunnerCharm)
     harness.begin()
-    state_mock = MagicMock()
-    state_mock.instance_type = InstanceType.OPENSTACK
-    harness.charm._setup_state = MagicMock(return_value=state_mock)
-    harness.charm._get_set_image_ready_status = MagicMock(return_value=False)
+    harness.charm._setup_state = MagicMock(side_effect=IntegrationDataNotReadyError())
 
     harness.charm._on_image_relation_changed(MagicMock())
 
     # the unit is in maintenance status since nothing has happened.
-    assert harness.charm.unit.status.name == MaintenanceStatus.name
+    assert harness.charm.unit.status.name == WaitingStatus.name
 
 
 def test__on_image_relation_image_ready():
     """
-    arrange: given a charm with OpenStack instance type and a monkeypatched \
-        _get_set_image_ready_status that returns True denoting image ready.
+    arrange: given a charm with OpenStack instance type.
     act: when _on_image_relation_changed is called.
     assert: runner flush and reconcile is called.
     """
@@ -924,7 +884,6 @@ def test__on_image_relation_image_ready():
     state_mock = MagicMock()
     state_mock.instance_type = InstanceType.OPENSTACK
     harness.charm._setup_state = MagicMock(return_value=state_mock)
-    harness.charm._get_set_image_ready_status = MagicMock(return_value=True)
     runner_manager_mock = MagicMock()
     harness.charm._get_openstack_runner_manager = MagicMock(return_value=runner_manager_mock)
 
