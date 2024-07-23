@@ -639,7 +639,7 @@ class OpenstackRunnerConfig(BaseModel):
     virtual_machines: int
     openstack_flavor: str
     openstack_network: str
-    openstack_image: OpenstackImage | None
+    openstack_image: OpenstackImage
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "OpenstackRunnerConfig":
