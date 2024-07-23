@@ -90,11 +90,11 @@ def _get_pids() -> list[int]:
     if result.returncode != 0:
         raise ReactiveRunnerError("Failed to get list of processes")
 
-    pids = []
-    for line in result.stdout.decode().split("\n"):
-        if line.startswith(REACTIVE_RUNNER_CMD_LINE_PREFIX):
-            pids.append(int(line.rstrip().rsplit(maxsplit=1)[-1]))
-    return pids
+    return [
+        int(line.rstrip().rsplit(maxsplit=1)[-1])
+        for line in result.stdout.decode().split("\n")
+        if line.startswith(REACTIVE_RUNNER_CMD_LINE_PREFIX)
+    ]
 
 
 def _setup_logging_for_processes() -> None:
