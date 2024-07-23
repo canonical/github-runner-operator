@@ -10,6 +10,9 @@ Package for common metrics-related code.
 - **events**: # Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
+- **runner_logs**: #  Copyright 2024 Canonical Ltd.
+#  See LICENSE file for licensing details.
+
 - **storage**: #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
@@ -20,9 +23,6 @@ Package for common metrics-related code.
 #  See LICENSE file for licensing details.
 
 - **github**: #  Copyright 2024 Canonical Ltd.
-#  See LICENSE file for licensing details.
-
-- **runner_logs**: #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 

@@ -779,7 +779,15 @@ class OpenstackRunnerManager:
         rule_exists_ssh = False
         rule_exists_tmate_ssh = False
 
-        existing_security_group = conn.get_security_group(name_or_id=SECURITY_GROUP_NAME)
+        security_groups = conn.list_security_groups(filters={"name": SECURITY_GROUP_NAME})
+        existing_security_group = None
+        if len(security_groups) == 1:
+            existing_security_group = security_groups[0]
+        elif len(security_groups) > 1:
+            # If found multiple security groups, there is likely an issue, delete them all.
+            for group in security_groups:
+                group.delete()
+
         if existing_security_group is None:
             logger.info("Security group %s not found, creating it", SECURITY_GROUP_NAME)
             conn.create_security_group(
