@@ -166,3 +166,15 @@ class OpenStackInvalidConfigError(OpenStackError):
 
 class OpenStackUnauthorizedError(OpenStackError):
     """Represents an unauthorized connection to OpenStack."""
+
+
+class IntegrationBaseError(Exception):
+    """Base class for charm integration related errors."""
+
+
+class IntegrationNotFoundError(IntegrationBaseError):
+    """Represents an error with a necessary integration is not found."""
+
+
+class IntegrationDataNotReadyError(IntegrationBaseError):
+    """Represents an error with a necessary integration data not yet ready/populated."""
