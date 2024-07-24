@@ -9,11 +9,12 @@ Logrotate setup and configuration.
 ---------------
 - **LOG_ROTATE_TIMER_SYSTEMD_SERVICE**
 - **METRICS_LOGROTATE_CONFIG**
+- **RUNNER_LOGROTATE_CONFIG**
 - **REACTIVE_LOGROTATE_CONFIG**
 
 ---
 
-<a href="../src/logrotate.py#L76"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/logrotate.py#L85"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `setup`
 
@@ -32,7 +33,7 @@ Enable and configure logrotate.
 
 ---
 
-<a href="../src/logrotate.py#L21"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/logrotate.py#L22"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `LogrotateFrequency`
 The frequency of log rotation. 
@@ -52,7 +53,7 @@ The frequency of log rotation.
 
 ---
 
-<a href="../src/logrotate.py#L37"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/logrotate.py#L38"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `LogrotateConfig`
 Configuration for logrotate. 
