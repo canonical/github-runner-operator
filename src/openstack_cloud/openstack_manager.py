@@ -794,7 +794,7 @@ class OpenstackRunnerManager:
             for rule in existing_rules:
                 if rule["protocol"] == "icmp":
                     logger.debug(
-                        "Found ICMP rule in existing security group %s", SECURITY_GROUP_NAME
+                        "Found ICMP rule in existing security group %s of ID %s", SECURITY_GROUP_NAME, existing_security_group.id
                     )
                     rule_exists_icmp = True
                 if (
@@ -802,7 +802,7 @@ class OpenstackRunnerManager:
                     and rule["port_range_min"] == rule["port_range_max"] == 22
                 ):
                     logger.debug(
-                        "Found SSH rule in existing security group %s", SECURITY_GROUP_NAME
+                        "Found SSH rule in existing security group %s of ID %s", SECURITY_GROUP_NAME, existing_security_group.id
                     )
                     rule_exists_ssh = True
                 if (
@@ -810,20 +810,20 @@ class OpenstackRunnerManager:
                     and rule["port_range_min"] == rule["port_range_max"] == 10022
                 ):
                     logger.debug(
-                        "Found tmate SSH rule in existing security group %s", SECURITY_GROUP_NAME
+                        "Found tmate SSH rule in existing security group %s of ID %s", SECURITY_GROUP_NAME, existing_security_group.id
                     )
                     rule_exists_tmate_ssh = True
 
         if not rule_exists_icmp:
             conn.create_security_group_rule(
-                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                secgroup_name_or_id=existing_security_group.id,
                 protocol="icmp",
                 direction="ingress",
                 ethertype="IPv4",
             )
         if not rule_exists_ssh:
             conn.create_security_group_rule(
-                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                secgroup_name_or_id=existing_security_group.id,
                 port_range_min="22",
                 port_range_max="22",
                 protocol="tcp",
@@ -832,7 +832,7 @@ class OpenstackRunnerManager:
             )
         if not rule_exists_tmate_ssh:
             conn.create_security_group_rule(
-                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                secgroup_name_or_id=existing_security_group.id,
                 port_range_min="10022",
                 port_range_max="10022",
                 protocol="tcp",
