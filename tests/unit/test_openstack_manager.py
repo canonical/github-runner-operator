@@ -761,13 +761,15 @@ def test__ensure_security_group_with_existing_rules():
     assert: The security rules are not created again.
     """
     connection_mock = MagicMock(spec=openstack.connection.Connection)
-    connection_mock.list_security_groups.return_value = [{
-        "security_group_rules": [
-            {"protocol": "icmp"},
-            {"protocol": "tcp", "port_range_min": 22, "port_range_max": 22},
-            {"protocol": "tcp", "port_range_min": 10022, "port_range_max": 10022},
-        ]
-    }]
+    connection_mock.list_security_groups.return_value = [
+        {
+            "security_group_rules": [
+                {"protocol": "icmp"},
+                {"protocol": "tcp", "port_range_min": 22, "port_range_max": 22},
+                {"protocol": "tcp", "port_range_min": 10022, "port_range_max": 10022},
+            ]
+        }
+    ]
 
     openstack_manager.OpenstackRunnerManager._ensure_security_group(connection_mock)
     connection_mock.create_security_group_rule.assert_not_called()
