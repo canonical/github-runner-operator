@@ -47,7 +47,7 @@ def consume(mongodb_uri: str, queue_name: str) -> None:
     """
     with Connection(mongodb_uri) as conn:
         with closing(SimpleQueue(conn, queue_name)) as simple_queue:
-            _add_sigterm_handler(simple_queue, signal.SIGTERM)
+            _add_sigterm_handler(signal.SIGTERM)
             msg = simple_queue.get(block=True)
             try:
                 job_details = cast(JobDetails, JobDetails.parse_raw(msg.payload))
@@ -62,24 +62,25 @@ def consume(mongodb_uri: str, queue_name: str) -> None:
             msg.ack()
 
 
-def _add_sigterm_handler(queue: SimpleQueue, signal_code: signal.Signals) -> None:
-    """Add a signal handler to clean up and exit.
+def _add_sigterm_handler(signal_code: signal.Signals) -> None:
+    """Add a signal handler for clean up and exit.
 
     Args:
-        queue: The queue to clean up.
         signal_code: The signal code to handle.
     """
 
     def sigterm_handler(signal_code: int, _: FrameType | None) -> None:
         """Handle a signal.
 
-        Requeue the message and exit.
+        Call sys.exit with the signal code. Kombu should automatically
+        requeue unacknowledged messages.
 
         Args:
             signal_code: The signal code to handle.
         """
-        logger.error("Signal '%s' received. Requeueing message.", signal.strsignal(signal_code))
-        queue.channel.basic_recover(requeue=True)
+        print(
+            f"Signal '{signal.strsignal(signal_code)}' received. Will terminate.", file=sys.stderr
+        )
         sys.exit(signal_code)
 
     signal.signal(signal_code, sigterm_handler)
