@@ -47,6 +47,10 @@ class ConfigurationError(Exception):
     """Error for juju configuration."""
 
 
+class MissingMongoDBError(Exception):
+    """Error for missing integration data."""
+
+
 class LxdError(Exception):
     """Error for executing LXD actions."""
 

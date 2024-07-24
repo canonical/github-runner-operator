@@ -37,6 +37,7 @@ from charm_state import (
 )
 from github_client import GithubClient
 from tests.integration.helpers.common import (
+    MONGODB_APP_NAME,
     InstanceHelper,
     deploy_github_runner_charm,
     inject_lxd_profile,
@@ -160,6 +161,27 @@ def https_proxy(pytestconfig: pytest.Config) -> str:
 def no_proxy(pytestconfig: pytest.Config) -> str:
     """Configured no_proxy setting."""
     no_proxy = pytestconfig.getoption("--no-proxy")
+    return "" if no_proxy is None else no_proxy
+
+
+@pytest.fixture(scope="module", name="openstack_http_proxy")
+def openstack_http_proxy_fixture(pytestconfig: pytest.Config) -> str:
+    """Configured http_proxy setting for openstack runners."""
+    http_proxy = pytestconfig.getoption("--openstack-http-proxy")
+    return "" if http_proxy is None else http_proxy
+
+
+@pytest.fixture(scope="module", name="openstack_https_proxy")
+def openstack_https_proxy_fixture(pytestconfig: pytest.Config) -> str:
+    """Configured https_proxy setting for openstack runners."""
+    https_proxy = pytestconfig.getoption("--openstack-https-proxy")
+    return "" if https_proxy is None else https_proxy
+
+
+@pytest.fixture(scope="module", name="openstack_no_proxy")
+def openstack_no_proxy_fixture(pytestconfig: pytest.Config) -> str:
+    """Configured no_proxy setting for openstack runners."""
+    no_proxy = pytestconfig.getoption("--openstack-no-proxy")
     return "" if no_proxy is None else no_proxy
 
 
@@ -303,21 +325,26 @@ async def app_no_runner(
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
+    existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
-    # Set the scheduled event to 1 hour to avoid interfering with the tests.
-    application = await deploy_github_runner_charm(
-        model=model,
-        charm_file=charm_file,
-        app_name=app_name,
-        path=path,
-        token=token,
-        runner_storage="memory",
-        http_proxy=http_proxy,
-        https_proxy=https_proxy,
-        no_proxy=no_proxy,
-        reconcile_interval=60,
-    )
+    if existing_app:
+        application = model.applications[existing_app]
+    else:
+        # Set the scheduled event to 1 hour to avoid interfering with the tests.
+        application = await deploy_github_runner_charm(
+            model=model,
+            charm_file=charm_file,
+            app_name=app_name,
+            path=path,
+            token=token,
+            runner_storage="memory",
+            http_proxy=http_proxy,
+            https_proxy=https_proxy,
+            no_proxy=no_proxy,
+            reconcile_interval=60,
+        )
+    await model.wait_for_idle(apps=[application.name], status=ACTIVE)
     return application
 
 
@@ -336,7 +363,7 @@ async def image_builder_fixture(
         config={
             "app-channel": "edge",
             "build-interval": "12",
-            "revision-history-limit": "2",
+            "revision-history-limit": "5",
             "openstack-auth-url": private_endpoint_config["auth_url"],
             # Bandit thinks this is a hardcoded password
             "openstack-password": private_endpoint_config["password"],  # nosec: B105
@@ -357,9 +384,9 @@ async def app_openstack_runner_fixture(
     app_name: str,
     path: str,
     token: str,
-    http_proxy: str,
-    https_proxy: str,
-    no_proxy: str,
+    openstack_http_proxy: str,
+    openstack_https_proxy: str,
+    openstack_no_proxy: str,
     clouds_yaml_contents: str,
     network_name: str,
     flavor_name: str,
@@ -377,14 +404,13 @@ async def app_openstack_runner_fixture(
             path=path,
             token=token,
             runner_storage="juju-storage",
-            http_proxy=http_proxy,
-            https_proxy=https_proxy,
-            no_proxy=no_proxy,
+            http_proxy=openstack_http_proxy,
+            https_proxy=openstack_https_proxy,
+            no_proxy=openstack_no_proxy,
             reconcile_interval=60,
             constraints={
                 "root-disk": 50 * 1024,
                 "mem": 16 * 1024,
-                # "arch": "arm64",
             },
             config={
                 OPENSTACK_CLOUDS_YAML_CONFIG_NAME: clouds_yaml_contents,
@@ -396,7 +422,7 @@ async def app_openstack_runner_fixture(
             wait_idle=False,
             use_local_lxd=False,
         )
-    await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
+        await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
 
     return application
@@ -703,6 +729,34 @@ async def app_for_metric_fixture(
         await model.wait_for_idle(apps=[grafana_agent.name])
 
     yield basic_app
+
+
+@pytest_asyncio.fixture(scope="module", name="mongodb")
+async def mongodb_fixture(model: Model, existing_app: str | None) -> Application:
+    """Deploy MongoDB."""
+    if not existing_app:
+        mongodb = await model.deploy(MONGODB_APP_NAME, channel="6/edge")
+        await model.wait_for_idle(apps=[MONGODB_APP_NAME], status=ACTIVE)
+    else:
+        mongodb = model.applications["mongodb"]
+    return mongodb
+
+
+@pytest_asyncio.fixture(scope="module", name="app_for_reactive")
+async def app_for_reactive_fixture(
+    model: Model,
+    basic_app: Application,
+    mongodb: Application,
+    existing_app: Optional[str],
+) -> Application:
+    """Application for testing reactive."""
+    if not existing_app:
+        await model.relate(f"{basic_app.name}:mongodb", f"{mongodb.name}:database")
+
+    await basic_app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    await model.wait_for_idle(apps=[basic_app.name, mongodb.name], status=ACTIVE)
+
+    return basic_app
 
 
 @pytest_asyncio.fixture(scope="module", name="basic_app")

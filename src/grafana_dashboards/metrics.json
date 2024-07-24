@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 266,
+  "id": 293,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -113,35 +113,11 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event = \"runner_start\" | flavor=~\"$flavor\" | timestamp >= ${__from} [$__range]))",
+          "expr": "sum by(filename, event) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\", flavor=\"flavor\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event =~ \"runner_start|runner_stop|runner_installed\" | flavor=~\"$flavor\" | timestamp >= ${__from} [$__range]))",
           "key": "Q-f7c42eab-69be-43b5-a807-35c071f708a0-0",
-          "legendFormat": "Started",
+          "legendFormat": "{{event}}",
           "queryType": "range",
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "builder",
-          "expr": "sum by(filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\", flavor=\"flavor\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event = \"runner_installed\" | flavor=~\"$flavor\" | timestamp >= ${__from} [$__range]))",
-          "hide": false,
-          "legendFormat": "Initialized",
-          "queryType": "range",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "builder",
-          "expr": "sum by(filename) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\", flavor=\"flavor\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event = \"runner_stop\" | flavor=~\"$flavor\" | timestamp >= ${__from} [$__range]))",
-          "hide": false,
-          "legendFormat": "Stopped",
-          "queryType": "range",
-          "refId": "C"
         },
         {
           "datasource": {
@@ -157,7 +133,29 @@
         }
       ],
       "title": "Lifecycle Status",
-      "transformations": [],
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "runner_installed",
+            "renamePattern": "Initialized"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "runner_start",
+            "renamePattern": "Started"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "runner_stop",
+            "renamePattern": "Stopped"
+          }
+        }
+      ],
       "type": "timeseries"
     },
     {
@@ -186,6 +184,9 @@
             "lineWidth": 1,
             "scaleDistribution": {
               "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
             }
           },
           "decimals": 0,
@@ -217,6 +218,7 @@
       "options": {
         "barRadius": 0,
         "barWidth": 0.97,
+        "fullHighlight": false,
         "groupWidth": 0.7,
         "legend": {
           "calcs": [],
@@ -1575,8 +1577,8 @@
       "type": "row"
     }
   ],
-  "refresh": false,
-  "schemaVersion": 37,
+  "refresh": "",
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -1826,6 +1828,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics",
-  "version": 12,
+  "version": 13,
   "weekStart": ""
 }

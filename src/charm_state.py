@@ -18,12 +18,20 @@ from typing import NamedTuple, Optional, cast
 from urllib.parse import urlsplit
 
 import yaml
+from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from ops import CharmBase
-from pydantic import AnyHttpUrl, BaseModel, Field, ValidationError, validator
-from pydantic.networks import IPvAnyAddress
+from pydantic import (
+    AnyHttpUrl,
+    BaseModel,
+    Field,
+    IPvAnyAddress,
+    MongoDsn,
+    ValidationError,
+    validator,
+)
 
 import openstack_cloud
-from errors import OpenStackInvalidConfigError
+from errors import MissingMongoDBError, OpenStackInvalidConfigError
 from firewall import FirewallEntry
 from utilities import get_env_var
 
@@ -48,6 +56,7 @@ RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
 REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"  # nosec
 REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME = "repo-policy-compliance-url"
 RUNNER_STORAGE_CONFIG_NAME = "runner-storage"
+SENSITIVE_PLACEHOLDER = "*****"
 TEST_MODE_CONFIG_NAME = "test-mode"
 # bandit thinks this is a hardcoded password.
 TOKEN_CONFIG_NAME = "token"  # nosec
@@ -61,6 +70,7 @@ VM_DISK_CONFIG_NAME = "vm-disk"
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
 DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 IMAGE_INTEGRATION_NAME = "image"
+MONGO_DB_INTEGRATION_NAME = "mongodb"
 
 StorageSize = str
 """Representation of storage size with KiB, MiB, GiB, TiB, PiB, EiB as unit."""
@@ -970,6 +980,49 @@ class SSHDebugConnection(BaseModel):
         return ssh_debug_connections
 
 
+class ReactiveConfig(BaseModel):
+    """Represents the configuration for reactive scheduling.
+
+    Attributes:
+        mq_uri: The URI of the MQ to use to spawn runners reactively.
+    """
+
+    mq_uri: MongoDsn
+
+    @classmethod
+    def from_database(cls, database: DatabaseRequires) -> "ReactiveConfig | None":
+        """Initialize the ReactiveConfig from charm config and integration data.
+
+        Args:
+            database: The database to fetch integration data from.
+
+        Returns:
+            The connection information for the reactive MQ or None if not available.
+
+        Raises:
+            MissingMongoDBError: If the information on howto access MongoDB
+                is missing in the integration data.
+        """
+        integration_existing = bool(database.relations)
+
+        if not integration_existing:
+            return None
+
+        uri_field = "uris"  # the field is called uris though it's a single uri
+        relation_data = list(database.fetch_relation_data(fields=[uri_field]).values())
+
+        # There can be only one database integrated at a time
+        # with the same interface name. See: metadata.yaml
+        data = relation_data[0]
+
+        if uri_field in data:
+            return ReactiveConfig(mq_uri=data[uri_field])
+
+        raise MissingMongoDBError(
+            f"Missing {uri_field} for {MONGO_DB_INTEGRATION_NAME} integration"
+        )
+
+
 class ImmutableConfigChangedError(Exception):
     """Represents an error when changing immutable charm state."""
 
@@ -982,8 +1035,10 @@ class ImmutableConfigChangedError(Exception):
         self.msg = msg
 
 
+# Charm State is a list of all the configurations and states of the charm and
+# has therefore a lot of attributes.
 @dataclasses.dataclass(frozen=True)
-class CharmState:
+class CharmState:  # pylint: disable=too-many-instance-attributes
     """The charm state.
 
     Attributes:
@@ -992,6 +1047,7 @@ class CharmState:
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
         instance_type: The type of instances, e.g., local lxd, openstack.
+        reactive_config: The charm configuration related to reactive spawning mode.
         runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.
     """
@@ -1002,6 +1058,7 @@ class CharmState:
     instance_type: InstanceType
     charm_config: CharmConfig
     runner_config: RunnerConfig
+    reactive_config: ReactiveConfig | None
     ssh_debug_connections: list[SSHDebugConnection]
 
     @classmethod
@@ -1015,6 +1072,8 @@ class CharmState:
         # Convert pydantic object to python object serializable by json module.
         state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
         state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
+        if state.reactive_config:
+            state_dict["reactive_config"] = json.loads(state_dict["reactive_config"].json())
         state_dict["runner_config"] = json.loads(state_dict["runner_config"].json())
         state_dict["ssh_debug_connections"] = [
             debug_info.json() for debug_info in state_dict["ssh_debug_connections"]
@@ -1040,7 +1099,8 @@ class CharmState:
 
         json_data = CHARM_STATE_PATH.read_text(encoding="utf-8")
         prev_state = json.loads(json_data)
-        logger.info("Previous charm state: %s", prev_state)
+
+        cls._log_prev_state(prev_state)
 
         try:
             if prev_state["runner_config"]["runner_storage"] != runner_storage:
@@ -1071,14 +1131,42 @@ class CharmState:
         except KeyError as exc:
             logger.info("Key %s not found, this will be updated to current config.", exc.args[0])
 
+    @classmethod
+    def _log_prev_state(cls, prev_state_dict: dict) -> None:
+        """Log the previous state of the charm.
+
+        Replace sensitive information before logging.
+
+        Args:
+            prev_state_dict: The previous state of the charm as a dict.
+        """
+        if logger.isEnabledFor(logging.DEBUG):
+            prev_state_for_logging = prev_state_dict.copy()
+            charm_config = prev_state_for_logging.get("charm_config")
+            if charm_config and "token" in charm_config:
+                charm_config = charm_config.copy()
+                charm_config["token"] = SENSITIVE_PLACEHOLDER  # nosec
+            prev_state_for_logging["charm_config"] = charm_config
+
+            reactive_config = prev_state_for_logging.get("reactive_config")
+            if reactive_config and "mq_uri" in reactive_config:
+                reactive_config = reactive_config.copy()
+                reactive_config["mq_uri"] = "*****"
+            prev_state_for_logging["reactive_config"] = reactive_config
+
+            logger.debug("Previous charm state: %s", prev_state_for_logging)
+
     # Ignore the flake8 function too complex (C901). The function does not have much logic, the
     # lint is likely triggered with the multiple try-excepts, which are needed.
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "CharmState":  # noqa: C901
+    def from_charm(  # noqa: C901
+        cls, charm: CharmBase, database: DatabaseRequires
+    ) -> "CharmState":
         """Initialize the state from charm.
 
         Args:
             charm: The charm instance.
+            database: The database instance.
 
         Raises:
             CharmConfigInvalidError: If an invalid configuration was set.
@@ -1109,7 +1197,7 @@ class CharmState:
                     runner_storage=runner_config.runner_storage,
                     base_image=runner_config.base_image,
                 )
-        except (ValidationError, ValueError) as exc:
+        except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
         except ImmutableConfigChangedError as exc:
             raise CharmConfigInvalidError(exc.msg) from exc
@@ -1126,12 +1214,15 @@ class CharmState:
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
+        reactive_config = ReactiveConfig.from_database(database)
+
         state = cls(
             arch=arch,
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
             charm_config=charm_config,
             runner_config=runner_config,
+            reactive_config=reactive_config,
             ssh_debug_connections=ssh_debug_connections,
             instance_type=instance_type,
         )
