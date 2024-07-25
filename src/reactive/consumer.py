@@ -2,12 +2,13 @@
 #  See LICENSE file for licensing details.
 
 """Module responsible for consuming jobs from the message queue."""
+import contextlib
 import logging
 import signal
 import sys
 from contextlib import closing
 from types import FrameType
-from typing import cast
+from typing import Generator, cast
 
 from kombu import Connection
 from kombu.simple import SimpleQueue
@@ -47,23 +48,39 @@ def consume(mongodb_uri: str, queue_name: str) -> None:
     """
     with Connection(mongodb_uri) as conn:
         with closing(SimpleQueue(conn, queue_name)) as simple_queue:
-            _add_sigterm_handler(signal.SIGTERM)
-            msg = simple_queue.get(block=True)
-            try:
-                job_details = cast(JobDetails, JobDetails.parse_raw(msg.payload))
-            except ValidationError as exc:
-                msg.reject(requeue=True)
-                raise JobError(f"Invalid job details: {msg.payload}") from exc
-            logger.info(
-                "Received job with labels %s and run_url %s",
-                job_details.labels,
-                job_details.run_url,
-            )
-            msg.ack()
+            with signal_handler(signal.SIGTERM):
+                msg = simple_queue.get(block=True)
+                try:
+                    job_details = cast(JobDetails, JobDetails.parse_raw(msg.payload))
+                except ValidationError as exc:
+                    msg.reject(requeue=True)
+                    raise JobError(f"Invalid job details: {msg.payload}") from exc
+                logger.info(
+                    "Received job with labels %s and run_url %s",
+                    job_details.labels,
+                    job_details.run_url,
+                )
+                msg.ack()
 
 
-def _add_sigterm_handler(signal_code: signal.Signals) -> None:
-    """Add a signal handler for clean up and exit.
+@contextlib.contextmanager
+def signal_handler(signal_code: signal.Signals) -> Generator[None, None, None]:
+    """Set a signal handler and after the context, restore the default handler.
+
+    The signal handler exits the process.
+
+    Args:
+        signal_code: The signal code to handle.
+    """
+    _set_signal_handler(signal_code)
+    try:
+        yield
+    finally:
+        _restore_signal_handler(signal_code)
+
+
+def _set_signal_handler(signal_code: signal.Signals) -> None:
+    """Set a signal handler which exits the process.
 
     Args:
         signal_code: The signal code to handle.
@@ -84,3 +101,12 @@ def _add_sigterm_handler(signal_code: signal.Signals) -> None:
         sys.exit(signal_code)
 
     signal.signal(signal_code, sigterm_handler)
+
+
+def _restore_signal_handler(signal_code: signal.Signals) -> None:
+    """Restore the default signal handler.
+
+    Args:
+        signal_code: The signal code to restore.
+    """
+    signal.signal(signal_code, signal.SIG_DFL)
