@@ -3,7 +3,9 @@
 
 """Module for managing reactive runners."""
 import logging
+import os
 import shutil
+import signal
 
 # All commands run by subprocess are secure.
 import subprocess  # nosec
@@ -17,10 +19,16 @@ MQ_URI_ENV_VAR = "MQ_URI"
 QUEUE_NAME_ENV_VAR = "QUEUE_NAME"
 REACTIVE_RUNNER_LOG_DIR = Path("/var/log/reactive_runner")
 REACTIVE_RUNNER_SCRIPT_FILE = "scripts/reactive_runner.py"
-REACTIVE_RUNNER_TIMEOUT_INTERVAL = "1h"
 PYTHON_BIN = "/usr/bin/python3"
-ACTIVE_SCRIPTS_COMMAND_LINE = ["ps", "axo", "cmd", "--no-headers"]
-TIMEOUT_BIN = "/usr/bin/timeout"
+REACTIVE_RUNNER_CMD_LINE_PREFIX = f"{PYTHON_BIN} {REACTIVE_RUNNER_SCRIPT_FILE}"
+PID_CMD_COLUMN_WIDTH = len(REACTIVE_RUNNER_CMD_LINE_PREFIX)
+PIDS_COMMAND_LINE = [
+    "ps",
+    "axo",
+    f"cmd:{PID_CMD_COLUMN_WIDTH},pid",
+    "--no-headers",
+    "--sort=-start_time",
+]
 UBUNTU_USER = "ubuntu"
 
 
@@ -41,45 +49,52 @@ def reconcile(quantity: int, mq_uri: str, queue_name: str) -> int:
     Returns:
         The number of reactive runner processes spawned.
     """
-    current_quantity = _get_current_quantity()
+    pids = _get_pids()
+    current_quantity = len(pids)
     logger.info("Current quantity of reactive runner processes: %s", current_quantity)
     delta = quantity - current_quantity
     if delta > 0:
-        logger.info("Will spawn %d new reactive runner processes", delta)
+        logger.info("Will spawn %d new reactive runner process(es)", delta)
         _setup_logging_for_processes()
         for _ in range(delta):
             _spawn_runner(mq_uri=mq_uri, queue_name=queue_name)
     elif delta < 0:
-        logger.info(
-            "%d reactive runner processes are running. "
-            "Will skip spawning. Additional processes should terminate after %s.",
-            current_quantity,
-            REACTIVE_RUNNER_TIMEOUT_INTERVAL,
-        )
+        logger.info("Will kill %d process(es).", -delta)
+        for pid in pids[:-delta]:
+            logger.info("Killing reactive runner process with pid %s", pid)
+            try:
+                os.kill(pid, signal.SIGTERM)
+            except ProcessLookupError:
+                # There can be a race condition that the process has already terminated.
+                # We just ignore and log the fact.
+                logger.info(
+                    "Failed to kill process with pid %s. Process might have terminated it self.",
+                    pid,
+                )
     else:
         logger.info("No changes to number of reactive runner processes needed.")
 
-    return max(delta, 0)
+    return delta
 
 
-def _get_current_quantity() -> int:
-    """Determine the current quantity of reactive runners.
+def _get_pids() -> list[int]:
+    """Get the PIDs of the reactive runners processes.
 
     Returns:
-        The number of reactive runners.
+        The PIDs of the reactive runner processes sorted by start time in descending order.
 
     Raises:
-        ReactiveRunnerError: If the number of reactive runners cannot be determined
+        ReactiveRunnerError: If the command to get the PIDs fails
     """
-    result = secure_run_subprocess(cmd=ACTIVE_SCRIPTS_COMMAND_LINE)
+    result = secure_run_subprocess(cmd=PIDS_COMMAND_LINE)
     if result.returncode != 0:
         raise ReactiveRunnerError("Failed to get list of processes")
-    commands = result.stdout.decode().split("\n") if result.stdout else []
-    return sum(
-        1
-        for command in commands
-        if command.startswith(f"{PYTHON_BIN} {REACTIVE_RUNNER_SCRIPT_FILE}")
-    )
+
+    return [
+        int(line.rstrip().rsplit(maxsplit=1)[-1])
+        for line in result.stdout.decode().split("\n")
+        if line.startswith(REACTIVE_RUNNER_CMD_LINE_PREFIX)
+    ]
 
 
 def _setup_logging_for_processes() -> None:
@@ -105,8 +120,6 @@ def _spawn_runner(mq_uri: str, queue_name: str) -> None:
     # We trust the command.
     command = " ".join(
         [
-            TIMEOUT_BIN,
-            REACTIVE_RUNNER_TIMEOUT_INTERVAL,
             PYTHON_BIN,
             REACTIVE_RUNNER_SCRIPT_FILE,
             ">>",
