@@ -280,8 +280,13 @@ class GithubClient:
                         # though we would assume that it should always be present,
                         # as the job should be finished
                         conclusion = job.get("conclusion", None)
+
+                        job_id = job["id"]
                         return JobStats(
-                            created_at=created_at, started_at=started_at, conclusion=conclusion
+                            job_id=job_id,
+                            created_at=created_at,
+                            started_at=started_at,
+                            conclusion=conclusion,
                         )
 
         except HTTPError as exc:

@@ -1,12 +1,15 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 import json
+import logging
 import platform
+import secrets
 import typing
 from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
+from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
 from pydantic.networks import IPv4Address
@@ -18,6 +21,7 @@ from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     DENYLIST_CONFIG_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
+    IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     PATH_CONFIG_NAME,
@@ -39,13 +43,16 @@ from charm_state import (
     GithubOrg,
     GithubRepo,
     ImmutableConfigChangedError,
+    LocalLxdRunnerConfig,
+    OpenstackImage,
+    OpenstackRunnerConfig,
     ProxyConfig,
-    RunnerCharmConfig,
     RunnerStorage,
     SSHDebugConnection,
     UnsupportedArchitectureError,
     VirtualMachineResources,
 )
+from errors import MissingMongoDBError
 from tests.unit.factories import MockGithubRunnerCharmFactory
 
 
@@ -540,6 +547,67 @@ def test_base_image_from_charm(image_name: str, expected_result: BaseImage):
     assert result == expected_result
 
 
+def test_openstack_image_from_charm_no_connections():
+    """
+    arrange: Mock CharmBase instance without relation.
+    act: Call OpenstackImage.from_charm method.
+    assert: Verify that the method returns the expected None value.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    relation_mock = MagicMock()
+    relation_mock.units = []
+    mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
+
+    image = OpenstackImage.from_charm(mock_charm)
+
+    assert image is None
+
+
+def test_openstack_image_from_charm_data_not_ready():
+    """
+    arrange: Mock CharmBase instance with no relation data.
+    act: Call OpenstackImage.from_charm method.
+    assert: Verify that the method returns the expected None value for id and tags.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    relation_mock = MagicMock()
+    unit_mock = MagicMock()
+    relation_mock.units = [unit_mock]
+    relation_mock.data = {unit_mock: {}}
+    mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = [relation_mock]
+
+    image = OpenstackImage.from_charm(mock_charm)
+
+    assert isinstance(image, OpenstackImage)
+    assert image.id is None
+    assert image.tags is None
+
+
+def test_openstack_image_from_charm():
+    """
+    arrange: Mock CharmBase instance with relation data.
+    act: Call OpenstackImage.from_charm method.
+    assert: Verify that the method returns the expected image id and tags.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    relation_mock = MagicMock()
+    unit_mock = MagicMock()
+    relation_mock.units = [unit_mock]
+    relation_mock.data = {
+        unit_mock: {
+            "id": (test_id := "test-id"),
+            "tags": ",".join(test_tags := ["tag1", "tag2"]),
+        }
+    }
+    mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = [relation_mock]
+
+    image = OpenstackImage.from_charm(mock_charm)
+
+    assert isinstance(image, OpenstackImage)
+    assert image.id == test_id
+    assert image.tags == test_tags
+
+
 @pytest.mark.parametrize("virtual_machines", [(-1), (-5)])  # Invalid value  # Invalid value
 def test_check_virtual_machines_invalid(virtual_machines):
     """
@@ -548,7 +616,7 @@ def test_check_virtual_machines_invalid(virtual_machines):
     assert: Verify that the method raises ValueError with the correct message.
     """
     with pytest.raises(ValueError) as exc_info:
-        RunnerCharmConfig.check_virtual_machines(virtual_machines)
+        LocalLxdRunnerConfig.check_virtual_machines(virtual_machines)
     assert (
         str(exc_info.value)
         == "The virtual-machines configuration needs to be greater or equal to 0"
@@ -564,7 +632,7 @@ def test_check_virtual_machines_valid(virtual_machines):
     act: Call check_virtual_machines method with the provided value.
     assert: Verify that the method returns the same value.
     """
-    result = RunnerCharmConfig.check_virtual_machines(virtual_machines)
+    result = LocalLxdRunnerConfig.check_virtual_machines(virtual_machines)
 
     assert result == virtual_machines
 
@@ -584,7 +652,7 @@ def test_check_virtual_machine_resources_invalid(vm_resources):
     assert: Verify that the method raises ValueError.
     """
     with pytest.raises(ValueError):
-        RunnerCharmConfig.check_virtual_machine_resources(vm_resources)
+        LocalLxdRunnerConfig.check_virtual_machine_resources(vm_resources)
 
 
 @pytest.mark.parametrize(
@@ -606,7 +674,7 @@ def test_check_virtual_machine_resources_valid(vm_resources, expected_result):
     act: Call check_virtual_machine_resources method with the provided value.
     assert: Verify that the method returns the same value.
     """
-    result = RunnerCharmConfig.check_virtual_machine_resources(vm_resources)
+    result = LocalLxdRunnerConfig.check_virtual_machine_resources(vm_resources)
 
     assert result == expected_result
 
@@ -621,7 +689,7 @@ def test_runner_charm_config_from_charm_invalid_base_image():
     mock_charm.config[BASE_IMAGE_CONFIG_NAME] = "invalid"
 
     with pytest.raises(CharmConfigInvalidError) as exc_info:
-        RunnerCharmConfig.from_charm(mock_charm)
+        LocalLxdRunnerConfig.from_charm(mock_charm)
     assert str(exc_info.value) == "Invalid base image"
 
 
@@ -642,7 +710,7 @@ def test_runner_charm_config_from_charm_invalid_storage_config():
     }
 
     with pytest.raises(CharmConfigInvalidError) as exc_info:
-        RunnerCharmConfig.from_charm(mock_charm)
+        LocalLxdRunnerConfig.from_charm(mock_charm)
     assert "Invalid runner-storage config" in str(exc_info.value)
 
 
@@ -663,7 +731,7 @@ def test_runner_charm_config_from_charm_invalid_cpu_config():
     }
 
     with pytest.raises(CharmConfigInvalidError) as exc_info:
-        RunnerCharmConfig.from_charm(mock_charm)
+        LocalLxdRunnerConfig.from_charm(mock_charm)
     assert str(exc_info.value) == "Invalid vm-cpu configuration"
 
 
@@ -684,7 +752,7 @@ def test_runner_charm_config_from_charm_invalid_virtual_machines_config():
     }
 
     with pytest.raises(CharmConfigInvalidError) as exc_info:
-        RunnerCharmConfig.from_charm(mock_charm)
+        LocalLxdRunnerConfig.from_charm(mock_charm)
     assert str(exc_info.value) == "The virtual-machines configuration must be int"
 
 
@@ -692,7 +760,8 @@ def test_runner_charm_config_from_charm_valid():
     """
     arrange: Create a mock CharmBase instance with valid configuration.
     act: Call from_charm method with the mock CharmBase instance.
-    assert: Verify that the method returns a RunnerCharmConfig instance with the expected values.
+    assert: Verify that the method returns a LocalLxdRunnerConfig instance with the expected
+        values.
     """
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config = {
@@ -704,7 +773,7 @@ def test_runner_charm_config_from_charm_valid():
         VM_DISK_CONFIG_NAME: "20GiB",
     }
 
-    result = RunnerCharmConfig.from_charm(mock_charm)
+    result = LocalLxdRunnerConfig.from_charm(mock_charm)
 
     assert result.base_image == BaseImage.JAMMY
     assert result.runner_storage == RunnerStorage("memory")
@@ -904,6 +973,80 @@ def test_ssh_debug_connection_from_charm():
     assert connections[0].ed25519_fingerprint == "SHA256:ghijkl"
 
 
+def test_reactive_config_from_charm():
+    """
+    arrange: Mock CharmBase instance with relation data and config option set.
+    act: Call ReactiveConfig.from_charm method.
+    assert: Verify that the method returns the expected object.
+    """
+    mongodb_uri = "mongodb://user:password@localhost:27017"
+    mock_charm = MockGithubRunnerCharmFactory()
+    relation_mock = MagicMock()
+    app_mock = MagicMock()
+    relation_mock.app = app_mock
+    relation_mock.data = {
+        app_mock: {
+            "uris": mongodb_uri,
+        }
+    }
+    mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
+    database = DatabaseRequires(
+        mock_charm, relation_name=charm_state.MONGO_DB_INTEGRATION_NAME, database_name="test"
+    )
+
+    connection_info = charm_state.ReactiveConfig.from_database(database)
+
+    assert isinstance(connection_info, charm_state.ReactiveConfig)
+    assert connection_info.mq_uri == mongodb_uri
+
+
+def test_reactive_config_from_database_returns_none():
+    """
+    arrange: Mock CharmBase instance without relation data.
+    act: Call ReactiveConfig.from_database method.
+    assert: None is returned.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    relation_mock = MagicMock()
+    app_mock = MagicMock()
+    relation_mock.app = app_mock
+    relation_mock.data = {}
+    mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = []
+
+    database = DatabaseRequires(
+        mock_charm, relation_name=charm_state.MONGO_DB_INTEGRATION_NAME, database_name="test"
+    )
+
+    connection_info = charm_state.ReactiveConfig.from_database(database)
+
+    assert connection_info is None
+
+
+def test_reactive_config_from_database_integration_data_missing():
+    """
+    arrange: Mock CharmBase instance with relation but without data and with config option set.
+    act: Call ReactiveConfig.from_charm method.
+    assert: IntegrationDataMissingError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    relation_mock = MagicMock()
+    app_mock = MagicMock()
+    relation_mock.app = app_mock
+    relation_mock.data = {}
+    mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
+
+    database = DatabaseRequires(
+        mock_charm, relation_name=charm_state.MONGO_DB_INTEGRATION_NAME, database_name="test"
+    )
+
+    with pytest.raises(MissingMongoDBError) as exc:
+        charm_state.ReactiveConfig.from_database(database)
+
+    assert f"Missing uris for {charm_state.MONGO_DB_INTEGRATION_NAME} integration" in str(
+        exc.value
+    )
+
+
 @pytest.fixture
 def mock_charm_state_path():
     """Fixture to mock CHARM_STATE_PATH."""
@@ -917,16 +1060,52 @@ def mock_charm_state_data():
         "arch": "x86_64",
         "is_metrics_logging_available": True,
         "proxy_config": {"http": "http://example.com", "https": "https://example.com"},
-        "charm_config": {"denylist": ["192.168.1.1"], "token": "abc123"},
+        "charm_config": {"denylist": ["192.168.1.1"], "token": secrets.token_hex(16)},
+        "reactive_config": {"uri": "mongodb://user:password@localhost:27017"},
         "runner_config": {
             "base_image": "jammy",
             "virtual_machines": 2,
             "runner_storage": "memory",
         },
+        "instance_type": "local-lxd",
         "ssh_debug_connections": [
             {"host": "10.1.2.4", "port": 22},
         ],
     }
+
+
+@pytest.mark.parametrize(
+    "immutable_config",
+    [
+        pytest.param("runner_storage", id="Runner storage"),
+        pytest.param("base_image", id="Base image"),
+    ],
+)
+def test_check_immutable_config_key_error(
+    mock_charm_state_path: Path,
+    mock_charm_state_data: dict[str, typing.Any],
+    immutable_config: str,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+):
+    """
+    arrange: Mock CHARM_STATE_PATH and read_text method to return modified immutable config values.
+    act: Call _check_immutable_config_change method.
+    assert: None is returned.
+    """
+    mock_charm_state_data["runner_config"].pop(immutable_config)
+    monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", mock_charm_state_path)
+    monkeypatch.setattr(
+        charm_state.CHARM_STATE_PATH,
+        "read_text",
+        MagicMock(return_value=json.dumps(mock_charm_state_data)),
+    )
+
+    assert CharmState._check_immutable_config_change(RunnerStorage.MEMORY, BaseImage.JAMMY) is None
+    assert any(
+        f"Key {immutable_config} not found, this will be updated to current config." in message
+        for message in caplog.messages
+    )
 
 
 def test_check_immutable_config_change_no_previous_state(
@@ -1018,7 +1197,11 @@ class MockModel(BaseModel):
             ValidationError([], MockModel),
         ),
         (ProxyConfig, "from_charm", ValueError),
-        (CharmConfig, "from_charm", ImmutableConfigChangedError("Immutable config changed")),
+        (
+            CharmState,
+            "_check_immutable_config_change",
+            ImmutableConfigChangedError("Immutable config changed"),
+        ),
         (CharmConfig, "from_charm", ValidationError([], MockModel)),
         (CharmConfig, "from_charm", ValueError),
         (charm_state, "_get_supported_arch", UnsupportedArchitectureError(arch="testarch")),
@@ -1034,15 +1217,21 @@ def test_charm_state_from_charm_invalid_cases(
     assert: Ensure CharmConfigInvalidError is raised with the appropriate message.
     """
     mock_charm = MockGithubRunnerCharmFactory()
+    mock_database = MagicMock(spec=DatabaseRequires)
     monkeypatch.setattr(ProxyConfig, "from_charm", MagicMock())
-    monkeypatch.setattr(CharmConfig, "from_charm", MagicMock())
-    monkeypatch.setattr(RunnerCharmConfig, "from_charm", MagicMock())
+    mock_charm_config = MagicMock()
+    mock_charm_config.openstack_clouds_yaml = None
+    mock_charm_config_from_charm = MagicMock()
+    mock_charm_config_from_charm.return_value = mock_charm_config
+    monkeypatch.setattr(CharmConfig, "from_charm", mock_charm_config_from_charm)
+    monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
+    monkeypatch.setattr(LocalLxdRunnerConfig, "from_charm", MagicMock())
     monkeypatch.setattr(charm_state, "_get_supported_arch", MagicMock())
     monkeypatch.setattr(SSHDebugConnection, "from_charm", MagicMock())
     monkeypatch.setattr(module, target, MagicMock(side_effect=exc))
 
     with pytest.raises(CharmConfigInvalidError):
-        CharmState.from_charm(mock_charm)
+        CharmState.from_charm(mock_charm, mock_database)
 
 
 def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
@@ -1052,14 +1241,32 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     assert: Ensure no errors are raised.
     """
     mock_charm = MockGithubRunnerCharmFactory()
+    mock_database = MagicMock(spec=DatabaseRequires)
     monkeypatch.setattr(ProxyConfig, "from_charm", MagicMock())
     monkeypatch.setattr(CharmConfig, "from_charm", MagicMock())
-    monkeypatch.setattr(RunnerCharmConfig, "from_charm", MagicMock())
+    monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
+    monkeypatch.setattr(LocalLxdRunnerConfig, "from_charm", MagicMock())
     monkeypatch.setattr(CharmState, "_check_immutable_config_change", MagicMock())
     monkeypatch.setattr(charm_state, "_get_supported_arch", MagicMock())
+    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
     monkeypatch.setattr(SSHDebugConnection, "from_charm", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
     monkeypatch.setattr(json, "dumps", MagicMock())
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
 
-    assert CharmState.from_charm(mock_charm)
+    assert CharmState.from_charm(mock_charm, mock_database)
+
+
+def test_charm_state__log_prev_state_redacts_sensitive_information(
+    mock_charm_state_data: dict, caplog: pytest.LogCaptureFixture
+):
+    """
+    arrange: Arrange charm state data with a token and set log level to DEBUG.
+    act: Call the __log_prev_state method on the class.
+    assert: Verify that the method redacts the sensitive information in the log message.
+    """
+    caplog.set_level(logging.DEBUG)
+    CharmState._log_prev_state(mock_charm_state_data)
+
+    assert mock_charm_state_data["charm_config"]["token"] not in caplog.text
+    assert charm_state.SENSITIVE_PLACEHOLDER in caplog.text

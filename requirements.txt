@@ -1,13 +1,16 @@
 ghapi
 jinja2
+fabric >=3,<4
 openstacksdk>=3,<4
 ops>=2.8
 pylxd @ git+https://github.com/canonical/pylxd
 requests
 typing-extensions
-cryptography <=42.0.5
-pydantic ==1.10.15
-cosl ==0.0.11
+cryptography <=43.0.0
+pydantic ==1.10.17
+cosl ==0.0.15
 # juju 3.1.2.0 depends on pyyaml<=6.0 and >=5.1.2
 PyYAML ==6.0.*
-pyOpenSSL==24.1.0
+pyOpenSSL==24.2.1
+kombu==5.3.7
+pymongo==4.8.0

@@ -2,7 +2,9 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm with no runner."""
+import functools
 import json
+import logging
 from datetime import datetime, timezone
 
 import pytest
@@ -10,17 +12,20 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers import (
+from tests.integration.helpers.common import (
     check_runner_binary_exists,
     get_repo_policy_compliance_pip_info,
     install_repo_policy_compliance_from_git_source,
+    is_upgrade_charm_event_emitted,
     reconcile,
     remove_runner_bin,
     run_in_unit,
     wait_for,
-    wait_till_num_of_runners,
 )
+from tests.integration.helpers.lxd import wait_till_num_of_runners
 from tests.status_name import ACTIVE
+
+logger = logging.getLogger(__name__)
 
 REPO_POLICY_COMPLIANCE_VER_0_2_GIT_SOURCE = (
     "git+https://github.com/canonical/"
@@ -200,35 +205,29 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_charm_upgrade(model: Model, app_no_runner: Application, charm_file: str) -> None:
+async def test_charm_no_runner_upgrade(
+    model: Model, app_no_runner: Application, charm_file: str
+) -> None:
     """
     arrange: A working application with no runners.
     act: Upgrade the charm.
     assert: The upgrade_charm hook ran successfully and the image has not been rebuilt.
     """
+    logger.info("Wait for idlle before test start")
+    await model.wait_for_idle(apps=[app_no_runner.name])
     start_time = datetime.now(tz=timezone.utc)
 
+    logger.info("Refreshing runner")
     await app_no_runner.refresh(path=charm_file)
 
     unit = app_no_runner.units[0]
-    unit_name_without_slash = unit.name.replace("/", "-")
-    juju_unit_log_file = f"/var/log/juju/unit-{unit_name_without_slash}.log"
-
-    async def is_upgrade_charm_event_emitted() -> bool:
-        """Check if the upgrade_charm event is emitted.
-
-        Returns:
-            bool: True if the event is emitted, False otherwise.
-        """
-        ret_code, stdout, stderr = await run_in_unit(
-            unit=unit, command=f"cat {juju_unit_log_file}"
-        )
-        assert ret_code == 0, f"Failed to read the log file: {stderr}"
-        return stdout is not None and "Emitting Juju event upgrade_charm." in stdout
-
-    await wait_for(is_upgrade_charm_event_emitted, timeout=360, check_interval=60)
+    logger.info("Waiting for upgrade event")
+    await wait_for(
+        functools.partial(is_upgrade_charm_event_emitted, unit), timeout=360, check_interval=60
+    )
     await model.wait_for_idle(status=ACTIVE)
 
+    logger.info("Running 'lxd image list' in unit")
     ret_code, stdout, stderr = await run_in_unit(
         unit=unit, command="/snap/bin/lxc image list --format json"
     )

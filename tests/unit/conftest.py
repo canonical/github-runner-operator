@@ -3,11 +3,13 @@
 
 import copy
 import secrets
+import typing
 import unittest.mock
 from pathlib import Path
 
 import pytest
 
+import utilities
 from openstack_cloud import openstack_manager
 from tests.unit.mock import MockGhapiClient, MockLxdClient, MockRepoPolicyComplianceClient
 
@@ -59,7 +61,7 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     monkeypatch.setattr(
         "charm.GithubRunnerCharm.repo_check_systemd_service", tmp_path / "systemd_service"
     )
-    monkeypatch.setattr("charm.openstack_manager", openstack_manager_mock)
+    monkeypatch.setattr("charm.OpenstackRunnerManager", openstack_manager_mock)
     monkeypatch.setattr("charm.GithubRunnerCharm.kernel_module_path", tmp_path / "modules")
     monkeypatch.setattr("charm.GithubRunnerCharm._update_kernel", lambda self, now: None)
     monkeypatch.setattr("charm.execute_command", exec_command)
@@ -74,9 +76,7 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     monkeypatch.setattr("firewall.Firewall.refresh_firewall", unittest.mock.MagicMock())
     monkeypatch.setattr("runner.execute_command", lxd_exec_command)
     monkeypatch.setattr("runner.shared_fs", unittest.mock.MagicMock())
-    monkeypatch.setattr("metrics.execute_command", lxd_exec_command)
-    monkeypatch.setattr("metrics.METRICS_LOG_PATH", Path(tmp_path / "metrics.log"))
-    monkeypatch.setattr("metrics.LOGROTATE_CONFIG", Path(tmp_path / "github-runner-metrics"))
+    monkeypatch.setattr("metrics.events.METRICS_LOG_PATH", Path(tmp_path / "metrics.log"))
     monkeypatch.setattr("runner.time", unittest.mock.MagicMock())
     monkeypatch.setattr("github_client.GhApi", MockGhapiClient)
     monkeypatch.setattr("runner_manager_type.jinja2", unittest.mock.MagicMock())
@@ -146,3 +146,34 @@ def multi_clouds_yaml_fixture(clouds_yaml: dict) -> dict:
         }
     }
     return multi_clouds_yaml
+
+
+@pytest.fixture(name="skip_retry")
+def skip_retry_fixture(monkeypatch: pytest.MonkeyPatch):
+    """Fixture for skipping retry for functions with retry decorator."""
+
+    def patched_retry(*args, **kwargs):
+        """A fallthrough decorator.
+
+        Args:
+            args: Positional arguments placeholder.
+            kwargs: Keyword arguments placeholder.
+
+        Returns:
+            The fallthrough decorator.
+        """
+
+        def patched_retry_decorator(func: typing.Callable):
+            """The fallthrough decorator.
+
+            Args:
+                func: The function to decorate.
+
+            Returns:
+                the function without any additional features.
+            """
+            return func
+
+        return patched_retry_decorator
+
+    monkeypatch.setattr(utilities, "retry", patched_retry)

@@ -47,6 +47,10 @@ class ConfigurationError(Exception):
     """Error for juju configuration."""
 
 
+class MissingMongoDBError(Exception):
+    """Error for missing integration data."""
+
+
 class LxdError(Exception):
     """Error for executing LXD actions."""
 
@@ -92,24 +96,28 @@ class LogrotateSetupError(Exception):
     """Represents an error raised when logrotate cannot be setup."""
 
 
-class SharedFilesystemError(Exception):
+class MetricsStorageError(Exception):
+    """Base class for all metrics storage errors."""
+
+
+class SharedFilesystemError(MetricsStorageError):
     """Base class for all shared filesystem errors."""
 
 
-class CreateSharedFilesystemError(SharedFilesystemError):
-    """Represents an error when the shared filesystem could not be created."""
+class CreateMetricsStorageError(MetricsStorageError):
+    """Represents an error when the metrics storage could not be created."""
 
 
-class DeleteSharedFilesystemError(SharedFilesystemError):
-    """Represents an error when the shared filesystem could not be deleted."""
+class DeleteMetricsStorageError(MetricsStorageError):
+    """Represents an error when the metrics storage could not be deleted."""
 
 
-class GetSharedFilesystemError(SharedFilesystemError):
-    """Represents an error when the shared filesystem could not be retrieved."""
+class GetMetricsStorageError(MetricsStorageError):
+    """Represents an error when the metrics storage could not be retrieved."""
 
 
-class QuarantineSharedFilesystemError(SharedFilesystemError):
-    """Represents an error when the shared filesystem could not be quarantined."""
+class QuarantineMetricsStorageError(MetricsStorageError):
+    """Represents an error when the metrics storage could not be quarantined."""
 
 
 class SharedFilesystemMountError(SharedFilesystemError):
@@ -158,11 +166,3 @@ class OpenStackInvalidConfigError(OpenStackError):
 
 class OpenStackUnauthorizedError(OpenStackError):
     """Represents an unauthorized connection to OpenStack."""
-
-
-class OpenstackImageBuildError(Exception):
-    """Exception representing an error during image build process."""
-
-
-class OpenstackInstanceLaunchError(Exception):
-    """Exception representing an error during instance launch process."""

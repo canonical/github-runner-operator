@@ -12,6 +12,8 @@ from unittest.mock import MagicMock
 
 import factory
 import factory.fuzzy
+import invoke.runners
+import openstack.compute.v2.server
 from pydantic.networks import IPvAnyAddress
 
 from charm_state import (
@@ -21,7 +23,10 @@ from charm_state import (
     DOCKERHUB_MIRROR_CONFIG_NAME,
     GROUP_CONFIG_NAME,
     LABELS_CONFIG_NAME,
+    MONGO_DB_INTEGRATION_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    OPENSTACK_FLAVOR_CONFIG_NAME,
+    OPENSTACK_NETWORK_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     RUNNER_STORAGE_CONFIG_NAME,
@@ -77,7 +82,7 @@ class MockGithubRunnerCharmUnitFactory(factory.Factory):
 
         model = MagicMock
 
-    name = "github-runner/0"
+    # The name attribute is special for MagicMock. Must be set after object creation.
 
 
 class MockGithubRunnerCharmAppFactory(factory.Factory):
@@ -88,8 +93,8 @@ class MockGithubRunnerCharmAppFactory(factory.Factory):
 
         model = MagicMock
 
-    planned_units = 1
-    name = "github-runner"
+    planned_units: int = 1
+    # The name attribute is special for MagicMock. Must be set after object creation.
 
 
 class MockGithubRunnerCharmModelFactory(factory.Factory):
@@ -100,7 +105,13 @@ class MockGithubRunnerCharmModelFactory(factory.Factory):
 
         model = MagicMock
 
-    relations: dict[str, list] = {COS_AGENT_INTEGRATION_NAME: [], DEBUG_SSH_INTEGRATION_NAME: []}
+    relations: dict[str, list] = factory.Dict(
+        {
+            COS_AGENT_INTEGRATION_NAME: [],
+            DEBUG_SSH_INTEGRATION_NAME: [],
+            MONGO_DB_INTEGRATION_NAME: [],
+        }
+    )
 
 
 class MockGithubRunnerCharmFactory(factory.Factory):
@@ -121,6 +132,8 @@ class MockGithubRunnerCharmFactory(factory.Factory):
             GROUP_CONFIG_NAME: "default",
             LABELS_CONFIG_NAME: "",
             OPENSTACK_CLOUDS_YAML_CONFIG_NAME: "",
+            OPENSTACK_NETWORK_CONFIG_NAME: "external",
+            OPENSTACK_FLAVOR_CONFIG_NAME: "m1.small",
             PATH_CONFIG_NAME: factory.Sequence(lambda n: f"mock_path_{n}"),
             RECONCILE_INTERVAL_CONFIG_NAME: 10,
             RUNNER_STORAGE_CONFIG_NAME: "juju-storage",
@@ -133,3 +146,40 @@ class MockGithubRunnerCharmFactory(factory.Factory):
             VM_DISK_CONFIG_NAME: "10GiB",
         }
     )
+
+
+def get_mock_github_runner_charm() -> MagicMock:
+    """Create a MagicMock of github-runner charm.
+
+    Returns:
+        The MagicMock object with github-runner charm attributes.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    # The name attribute is special for MagicMock. Must be set after object creation.
+    mock_charm.unit.name = "github-runner/0"
+    mock_charm.app.name = "github-runner"
+    return mock_charm
+
+
+class MockOpenstackServer(factory.Factory):
+    """Mock Openstack server instance."""  # noqa: DCO060
+
+    class Meta:
+        """Configuration for factory."""  # noqa: DCO060
+
+        model = openstack.compute.v2.server.Server
+
+    status = "ACTIVE"
+
+
+class MockSSHRunResult(factory.Factory):
+    """Mock SSH run result."""  # noqa: DCO060
+
+    class Meta:
+        """Configuration for factory."""  # noqa: DCO060
+
+        model = invoke.runners.Result
+
+    exited = 0
+    stdout = ""
+    stderr = ""

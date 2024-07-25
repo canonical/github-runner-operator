@@ -24,7 +24,7 @@ from charm_state import (
     USE_APROXY_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
 )
-from tests.integration.helpers import (
+from tests.integration.helpers.lxd import (
     ensure_charm_has_runner,
     get_runner_names,
     reconcile,

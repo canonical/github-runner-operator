@@ -8,8 +8,9 @@ from pathlib import Path
 from unittest.mock import MagicMock, call
 
 import pytest
-from _pytest.monkeypatch import MonkeyPatch
+from pytest import LogCaptureFixture, MonkeyPatch
 
+import reactive.runner_manager
 import shared_fs
 from charm_state import (
     Arch,
@@ -18,17 +19,20 @@ from charm_state import (
     GithubOrg,
     GithubRepo,
     ProxyConfig,
+    ReactiveConfig,
     VirtualMachineResources,
 )
 from errors import IssueMetricEventError, RunnerBinaryError
 from github_type import RunnerApplication
-from metrics import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
+from metrics.events import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
+from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
+from metrics.storage import MetricsStorage
 from runner import Runner, RunnerStatus
 from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerManagerConfig
-from runner_metrics import RUNNER_INSTALLED_TS_FILE_NAME
 from runner_type import RunnerByHealth
-from shared_fs import SharedFilesystem
 from tests.unit.mock import TEST_BINARY, MockLxdImageManager
+
+FAKE_MONGODB_URI = "mongodb://example.com/db"
 
 IMAGE_NAME = "jammy"
 
@@ -103,7 +107,7 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token, charm_state):
 def issue_event_mock_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     """Mock the issue_event function."""
     issue_event_mock = MagicMock()
-    monkeypatch.setattr("metrics.issue_event", issue_event_mock)
+    monkeypatch.setattr("metrics.events.issue_event", issue_event_mock)
     return issue_event_mock
 
 
@@ -122,6 +126,15 @@ def runner_metrics_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     runner_metrics_mock = MagicMock()
     monkeypatch.setattr("runner_manager.runner_metrics", runner_metrics_mock)
     return runner_metrics_mock
+
+
+@pytest.fixture(name="reactive_reconcile_mock")
+def reactive_reconcile_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> MagicMock:
+    """Mock the job class."""
+    reconcile_mock = MagicMock(spec=reactive.runner_manager.reconcile)
+    monkeypatch.setattr("runner_manager.reactive_runner_manager.reconcile", reconcile_mock)
+    reconcile_mock.side_effect = lambda quantity, **kwargs: quantity
+    return reconcile_mock
 
 
 @pytest.mark.parametrize(
@@ -462,7 +475,7 @@ def test_reconcile_places_timestamp_in_newly_created_runner(
     monkeypatch.setattr(RUNNER_MANAGER_TIME_MODULE, t_mock)
     runner_shared_fs = tmp_path / "runner_fs"
     runner_shared_fs.mkdir()
-    fs = SharedFilesystem(path=runner_shared_fs, runner_name="test_runner")
+    fs = MetricsStorage(path=runner_shared_fs, runner_name="test_runner")
     shared_fs.get.return_value = fs
 
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
@@ -482,7 +495,7 @@ def test_reconcile_error_on_placing_timestamp_is_ignored(
     """
     charm_state.is_metrics_logging_available = True
     runner_shared_fs = tmp_path / "runner_fs"
-    fs = SharedFilesystem(path=runner_shared_fs, runner_name="test_runner")
+    fs = MetricsStorage(path=runner_shared_fs, runner_name="test_runner")
     shared_fs.get.return_value = fs
 
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
@@ -500,12 +513,32 @@ def test_reconcile_places_no_timestamp_in_newly_created_runner_if_metrics_disabl
     """
     charm_state.is_metrics_logging_available = False
 
-    fs = SharedFilesystem(path=tmp_path, runner_name="test_runner")
+    fs = MetricsStorage(path=tmp_path, runner_name="test_runner")
     shared_fs.get.return_value = fs
 
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 
     assert not (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).exists()
+
+
+def test_reconcile_reactive_mode(
+    runner_manager: RunnerManager,
+    reactive_reconcile_mock: MagicMock,
+    caplog: LogCaptureFixture,
+):
+    """
+    arrange: Enable reactive mode and mock the job class to return a job.
+    act: Call reconcile with a random quantity n.
+    assert: The mocked job is picked up n times and the expected log message is present.
+    """
+    count = random.randint(0, 5)
+    runner_manager.config.reactive_config = ReactiveConfig(mq_uri=FAKE_MONGODB_URI)
+    actual_count = runner_manager.reconcile(count, VirtualMachineResources(2, "7GiB", "10Gib"))
+
+    assert actual_count == count
+    reactive_reconcile_mock.assert_called_with(
+        quantity=count, mq_uri=FAKE_MONGODB_URI, queue_name=runner_manager.app_name
+    )
 
 
 def test_schedule_build_runner_image(

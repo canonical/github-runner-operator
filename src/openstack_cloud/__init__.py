@@ -72,7 +72,7 @@ def initialize(cloud_config: dict) -> None:
     """
     try:
         valid_config = _validate_cloud_config(cloud_config)
-    # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+    # TODO: 2024-04-02 - We should define a new error, wrap it and re-raise it.
     except OpenStackInvalidConfigError:  # pylint: disable=try-except-raise
         raise
     _write_config_to_disk(valid_config)

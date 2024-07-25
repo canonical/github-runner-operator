@@ -25,18 +25,21 @@ import yaml
 import shared_fs
 from charm_state import Arch, GithubOrg, SSHDebugConnection, VirtualMachineResources
 from errors import (
-    CreateSharedFilesystemError,
+    CreateMetricsStorageError,
     GithubClientError,
     LxdError,
     RunnerAproxyError,
     RunnerCreateError,
     RunnerError,
     RunnerFileLoadError,
+    RunnerLogsError,
     RunnerRemoveError,
     SubprocessError,
 )
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
+from metrics.runner_logs import SYSLOG_PATH, create_logs_dir
+from metrics.storage import MetricsStorage
 from runner_manager_type import RunnerManagerClients
 from runner_type import RunnerConfig, RunnerStatus
 from utilities import execute_command, retry
@@ -49,6 +52,9 @@ LXDBR_DNSMASQ_LEASES_FILE = Path("/var/snap/lxd/common/lxd/networks/lxdbr0/dnsma
 
 APROXY_ARM_REVISION = 9
 APROXY_AMD_REVISION = 8
+
+METRICS_EXCHANGE_PATH = Path("/metrics-exchange")
+DIAG_DIR_PATH = Path("/home/ubuntu/github-runner/_diag")
 
 
 class Snap(NamedTuple):
@@ -136,7 +142,7 @@ class Runner:
         self.status = runner_status
         self.instance = instance
 
-        self._shared_fs: Optional[shared_fs.SharedFilesystem] = None
+        self._shared_fs: Optional[MetricsStorage] = None
 
     def create(self, config: CreateRunnerConfig) -> None:
         """Create the runner instance on LXD and register it on GitHub.
@@ -152,7 +158,7 @@ class Runner:
         if self.config.issue_metrics:
             try:
                 self._shared_fs = shared_fs.create(self.config.name)
-            except CreateSharedFilesystemError:
+            except CreateMetricsStorageError:
                 logger.exception(
                     "Unable to create shared filesystem for runner %s. "
                     "Will not create metrics for this runner.",
@@ -266,6 +272,27 @@ class Runner:
             # This can occur when attempting to remove a busy runner.
             # The caller should retry later, after GitHub mark the runner as offline.
 
+    def pull_logs(self) -> None:
+        """Pull the logs of the runner into a directory.
+
+        Expects the runner to have an instance.
+
+        Raises:
+            RunnerLogsError: If the runner logs could not be pulled.
+        """
+        if self.instance is None:
+            raise RunnerLogsError(
+                f"Cannot pull the logs for {self.config.name} as runner has no running instance."
+            )
+
+        target_log_path = create_logs_dir(self.config.name)
+
+        try:
+            self.instance.files.pull_file(str(DIAG_DIR_PATH), str(target_log_path), is_dir=True)
+            self.instance.files.pull_file(str(SYSLOG_PATH), str(target_log_path))
+        except LxdError as exc:
+            raise RunnerLogsError(f"Cannot pull the logs for {self.config.name}.") from exc
+
     def _add_shared_filesystem(self, path: Path) -> None:
         """Add the shared filesystem to the runner instance.
 
@@ -284,7 +311,7 @@ class Runner:
                     "metrics",
                     "disk",
                     f"source={path}",
-                    "path=/metrics-exchange",
+                    f"path={METRICS_EXCHANGE_PATH}",
                 ],
                 check_exit=True,
             )
@@ -712,7 +739,7 @@ class Runner:
         )
         try:
             self._put_file(str(self.runner_script), startup_contents, mode="0755")
-        # 2024/04/02 - We should define a new error, wrap it and re-raise it.
+        # TODO: 2024-04-02 - We should define a new error, wrap it and re-raise it.
         except RunnerFileLoadError:  # pylint: disable=try-except-raise
             raise
         self.instance.execute(["/usr/bin/sudo", "chown", "ubuntu:ubuntu", str(self.runner_script)])
@@ -723,9 +750,11 @@ class Runner:
         host_ip, _ = bridge_address_range.split("/")
         one_time_token = self._clients.repo.get_one_time_token()
         pre_job_contents = self._clients.jinja.get_template("pre-job.j2").render(
-            host_ip=host_ip,
-            one_time_token=one_time_token,
+            repo_policy_base_url=f"http://{host_ip}:8080",
+            repo_policy_one_time_token=one_time_token,
             issue_metrics=self._should_render_templates_with_metrics(),
+            metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
+            do_repo_policy_check=True,
         )
         self._put_file(str(self.pre_job_script), pre_job_contents)
         self.instance.execute(
