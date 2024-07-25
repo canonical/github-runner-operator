@@ -785,7 +785,7 @@ class OpenstackRunnerManager:
 
         if existing_security_group is None:
             logger.info("Security group %s not found, creating it", SECURITY_GROUP_NAME)
-            conn.create_security_group(
+            existing_security_group = conn.create_security_group(
                 name=SECURITY_GROUP_NAME,
                 description="For servers managed by the github-runner charm.",
             )
@@ -820,14 +820,14 @@ class OpenstackRunnerManager:
                     )
                     rule_exists_tmate_ssh = True
 
-        if not rule_exists_icmp and existing_security_group is not None:
+        if not rule_exists_icmp:
             conn.create_security_group_rule(
                 secgroup_name_or_id=existing_security_group["id"],
                 protocol="icmp",
                 direction="ingress",
                 ethertype="IPv4",
             )
-        if not rule_exists_ssh and existing_security_group is not None:
+        if not rule_exists_ssh:
             conn.create_security_group_rule(
                 secgroup_name_or_id=existing_security_group["id"],
                 port_range_min="22",
@@ -836,7 +836,7 @@ class OpenstackRunnerManager:
                 direction="ingress",
                 ethertype="IPv4",
             )
-        if not rule_exists_tmate_ssh and existing_security_group is not None:
+        if not rule_exists_tmate_ssh:
             conn.create_security_group_rule(
                 secgroup_name_or_id=existing_security_group["id"],
                 port_range_min="10022",
