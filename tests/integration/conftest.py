@@ -241,16 +241,15 @@ def private_endpoint_configs_fixture(
         )
     ):
         return None
-    return {
-        "arch": arch,
-        "auth_url": auth_url,
-        "password": password,
-        "project_domain_name": project_domain_name,
-        "project_name": project_name,
-        "user_domain_name": user_domain_name,
-        "username": user_name,
-        "region_name": region_name,
-    }
+    return PrivateEndpointConfigs(
+        auth_url=auth_url,
+        password=password,
+        project_domain_name=project_domain_name,
+        project_name=project_name,
+        user_domain_name=user_domain_name,
+        username=user_name,
+        region_name=region_name,
+    )
 
 
 @pytest.fixture(scope="module", name="private_endpoint_clouds_yaml")
