@@ -678,7 +678,7 @@ class OpenstackRunnerManager:
         )
 
         with _create_connection(cloud_config=args.cloud_config) as conn:
-            security_group = OpenstackRunnerManager._ensure_security_group(conn)
+            runner_security_group = OpenstackRunnerManager._ensure_security_group(conn)
             OpenstackRunnerManager._setup_runner_keypair(conn, instance_config.name)
 
             logger.info("Creating runner %s", instance_config.name)
@@ -689,7 +689,7 @@ class OpenstackRunnerManager:
                     key_name=instance_config.name,
                     flavor=args.config.flavor,
                     network=args.config.network,
-                    security_groups=[security_group.id],
+                    security_groups=[runner_security_group],
                     userdata=cloud_userdata_str,
                     auto_ip=False,
                     timeout=CREATE_SERVER_TIMEOUT,
