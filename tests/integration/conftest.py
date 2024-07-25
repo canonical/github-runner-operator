@@ -49,7 +49,7 @@ from tests.integration.helpers.common import (
 )
 from tests.integration.helpers.lxd import LXDInstanceHelper, ensure_charm_has_runner
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
-from tests.integration.helpers.types import CommonAppConfig, ProxyConfig
+from tests.integration.helpers.types import CommonAppConfig, OpenstackConfig, ProxyConfig
 from tests.status_name import ACTIVE
 
 # The following line is required because we are using request.getfixturevalue in conjunction
@@ -296,6 +296,16 @@ def clouds_yaml_contents_fixture(
     return clouds_yaml_contents
 
 
+@pytest.fixture(scope="module", name="openstack_config")
+def openstack_config_fixture(
+    clouds_yaml_contents: str, network_name: str, flavor_name: str
+) -> OpenstackConfig:
+    """The Openstack configuration values wrapper."""
+    return OpenstackConfig(
+        clouds_yaml=clouds_yaml_contents, network=network_name, flavor=flavor_name
+    )
+
+
 @pytest.fixture(scope="module", name="openstack_connection")
 def openstack_connection_fixture(
     clouds_yaml_contents: str, app_name: str
@@ -398,9 +408,7 @@ async def app_openstack_runner_fixture(
     model: Model,
     common_app_config: CommonAppConfig,
     openstack_proxy: ProxyConfig,
-    clouds_yaml_contents: str,
-    network_name: str,
-    flavor_name: str,
+    openstack_config: OpenstackConfig,
     existing_app: Optional[str],
     image_builder: Application,
 ) -> AsyncIterator[Application]:
@@ -424,9 +432,9 @@ async def app_openstack_runner_fixture(
                 "mem": 16 * 1024,
             },
             config={
-                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: clouds_yaml_contents,
-                OPENSTACK_NETWORK_CONFIG_NAME: network_name,
-                OPENSTACK_FLAVOR_CONFIG_NAME: flavor_name,
+                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_config.clouds_yaml,
+                OPENSTACK_NETWORK_CONFIG_NAME: openstack_config.network,
+                OPENSTACK_FLAVOR_CONFIG_NAME: openstack_config.flavor,
                 USE_APROXY_CONFIG_NAME: "true",
                 LABELS_CONFIG_NAME: common_app_config.app_name,
             },

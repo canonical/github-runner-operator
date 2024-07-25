@@ -22,7 +22,7 @@ class ProxyConfig(typing.NamedTuple):
 
 
 class CommonAppConfig(typing.NamedTuple):
-    """Common application deploy config values.
+    """Common application deploy configuration values.
 
     Attributes:
         app_name: The existing app name or "integration-id" prefixed random test id.
@@ -35,3 +35,17 @@ class CommonAppConfig(typing.NamedTuple):
     charm_file: str | pathlib.Path
     path: str
     token: str
+
+
+class OpenstackConfig(typing.NamedTuple):
+    """Openstack related testing configuration values.
+
+    Attributes:
+        clouds_yaml: The clouds.yaml contents.
+        network: The Openstack network name.
+        flavor: The Openstack flavor name.
+    """
+
+    clouds_yaml: str
+    network: str
+    flavor: str
