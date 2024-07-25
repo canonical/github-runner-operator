@@ -37,6 +37,7 @@ from charm_state import (
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
+    MissingMongoDBError,
     MissingRunnerBinaryError,
     OpenStackUnauthorizedError,
     RunnerError,
@@ -158,6 +159,7 @@ def setup_charm_harness(monkeypatch: pytest.MonkeyPatch, runner_bin_path: Path) 
     monkeypatch.setattr("runner_manager.RunnerManager.update_runner_bin", stub_update_runner_bin)
     monkeypatch.setattr("runner_manager.RunnerManager._runners_in_pre_job", lambda self: False)
     monkeypatch.setattr("charm.EventTimer.ensure_event_timer", MagicMock())
+    monkeypatch.setattr("charm.logrotate.setup", MagicMock())
     return harness
 
 
@@ -201,7 +203,8 @@ def test_common_install_code(
     act: Fire install/upgrade event.
     assert: Common install commands are run on the mock.
     """
-    monkeypatch.setattr("charm.metric_events.setup_logrotate", setup_logrotate := MagicMock())
+    monkeypatch.setattr("charm.logrotate.setup", setup_logrotate := MagicMock())
+
     monkeypatch.setattr(
         "runner_manager.RunnerManager.schedule_build_runner_image",
         schedule_build_runner_image := MagicMock(),
@@ -319,9 +322,7 @@ def test_on_install_failure(hook: str, harness: Harness, monkeypatch: pytest.Mon
         2. Mock _install_deps raises error.
     assert: Charm goes into error state in both cases.
     """
-    monkeypatch.setattr(
-        "charm.metric_events.setup_logrotate", setup_logrotate := unittest.mock.MagicMock()
-    )
+    monkeypatch.setattr("charm.logrotate.setup", setup_logrotate := unittest.mock.MagicMock())
 
     setup_logrotate.side_effect = LogrotateSetupError("Failed to setup logrotate")
     with pytest.raises(LogrotateSetupError) as exc:
@@ -388,6 +389,46 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
     assert all(
         FirewallEntry(ip) in allowlist for ip in test_unit_ip_addresses
     ), "Expected IP firewall entry not found in allowlist arg."
+
+
+def test_charm_goes_into_waiting_state_on_missing_integration_data(
+    monkeypatch: pytest.MonkeyPatch, harness: Harness
+):
+    """
+    arrange: Mock charm._setup_state to raise an MissingIntegrationDataError.
+    act: Fire config changed event.
+    assert: Charm is in blocked state.
+    """
+    setup_state_mock = MagicMock(side_effect=MissingMongoDBError("mock error"))
+    monkeypatch.setattr(GithubRunnerCharm, "_setup_state", setup_state_mock)
+    harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
+    harness.charm.on.config_changed.emit()
+    assert isinstance(harness.charm.unit.status, WaitingStatus)
+    assert "mock error" in harness.charm.unit.status.message
+
+
+@pytest.mark.parametrize(
+    "hook",
+    [
+        pytest.param("database_created", id="Database Created"),
+        pytest.param("endpoints_changed", id="Endpoints Changed"),
+    ],
+)
+def test_database_integration_events_trigger_reconciliation(
+    hook: str, monkeypatch: pytest.MonkeyPatch, harness: Harness
+):
+    """
+    arrange: Mock charm._trigger_reconciliation.
+    act: Fire mongodb relation events.
+    assert: _trigger_reconciliation has been called.
+    """
+    reconciliation_mock = MagicMock()
+    relation_mock = MagicMock()
+    relation_mock.name = "mongodb"
+    relation_mock.id = 0
+    monkeypatch.setattr("charm.GithubRunnerCharm._trigger_reconciliation", reconciliation_mock)
+    getattr(harness.charm.database.on, hook).emit(relation=relation_mock)
+    reconciliation_mock.assert_called_once()
 
 
 # New tests should not be added here. This should be refactored to pytest over time.

@@ -23,6 +23,7 @@ from charm_state import (
     DOCKERHUB_MIRROR_CONFIG_NAME,
     GROUP_CONFIG_NAME,
     LABELS_CONFIG_NAME,
+    MONGO_DB_INTEGRATION_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
@@ -104,7 +105,13 @@ class MockGithubRunnerCharmModelFactory(factory.Factory):
 
         model = MagicMock
 
-    relations: dict[str, list] = {COS_AGENT_INTEGRATION_NAME: [], DEBUG_SSH_INTEGRATION_NAME: []}
+    relations: dict[str, list] = factory.Dict(
+        {
+            COS_AGENT_INTEGRATION_NAME: [],
+            DEBUG_SSH_INTEGRATION_NAME: [],
+            MONGO_DB_INTEGRATION_NAME: [],
+        }
+    )
 
 
 class MockGithubRunnerCharmFactory(factory.Factory):

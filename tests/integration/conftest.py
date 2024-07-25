@@ -40,6 +40,7 @@ from charm_state import (
 )
 from github_client import GithubClient
 from tests.integration.helpers.common import (
+    MONGODB_APP_NAME,
     InstanceHelper,
     deploy_github_runner_charm,
     inject_lxd_profile,
@@ -369,22 +370,26 @@ def runner_manager_github_client(token: str) -> GithubClient:
 
 @pytest_asyncio.fixture(scope="module")
 async def app_no_runner(
-    model: Model, common_app_config: CommonAppConfig, proxy: ProxyConfig
+    model: Model, common_app_config: CommonAppConfig, proxy: ProxyConfig, existing_app: Application
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
-    # Set the scheduled event to 1 hour to avoid interfering with the tests.
-    application = await deploy_github_runner_charm(
-        model=model,
-        charm_file=common_app_config.charm_file,
-        app_name=common_app_config.app_name,
-        path=common_app_config.path,
-        token=common_app_config.token,
-        runner_storage="memory",
-        http_proxy=proxy.http,
-        https_proxy=proxy.https,
-        no_proxy=proxy.no_proxy,
-        reconcile_interval=60,
-    )
+    if existing_app:
+        application = model.applications[existing_app]
+    else:
+        # Set the scheduled event to 1 hour to avoid interfering with the tests.
+        application = await deploy_github_runner_charm(
+            model=model,
+            charm_file=common_app_config.charm_file,
+            app_name=common_app_config.app_name,
+            path=common_app_config.path,
+            token=common_app_config.token,
+            runner_storage="memory",
+            http_proxy=proxy.http,
+            https_proxy=proxy.https,
+            no_proxy=proxy.no_proxy,
+            reconcile_interval=60,
+        )
+    await model.wait_for_idle(apps=[application.name], status=ACTIVE)
     return application
 
 
@@ -557,39 +562,6 @@ async def app_juju_storage(
     return application
 
 
-@pytest_asyncio.fixture(scope="module", name="app_for_metric")
-async def app_for_metric_fixture(
-    model: Model,
-    basic_app: Application,
-    instance_type: InstanceType,
-    existing_app: Optional[str],
-) -> AsyncIterator[Application]:
-    # OpenStack integration does not need the grafana agent to collect metric.
-    if instance_type == InstanceType.LOCAL_LXD and not existing_app:
-        grafana_agent = await model.deploy(
-            "grafana-agent",
-            application_name=f"grafana-agent-{basic_app.name}",
-            channel="latest/edge",
-        )
-        await model.relate(f"{basic_app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
-        await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE)
-        await model.wait_for_idle(apps=[grafana_agent.name])
-
-    yield basic_app
-
-
-@pytest_asyncio.fixture(scope="module", name="basic_app")
-async def basic_app_fixture(
-    request: pytest.FixtureRequest, instance_type: InstanceType
-) -> Application:
-    """Setup the charm with the basic configuration."""
-    if instance_type == InstanceType.OPENSTACK:
-        app = request.getfixturevalue("app_openstack_runner")
-    else:
-        app = request.getfixturevalue("app_no_runner")
-    return app
-
-
 @pytest_asyncio.fixture(scope="module", name="image_builder")
 async def image_builder_fixture(
     model: Model, private_endpoint_config: PrivateEndpointConfigs | None
@@ -748,6 +720,67 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
     yield get_branch()
 
     branch_ref.delete()
+
+
+@pytest_asyncio.fixture(scope="module", name="app_for_metric")
+async def app_for_metric_fixture(
+    model: Model,
+    basic_app: Application,
+    instance_type: InstanceType,
+    existing_app: Optional[str],
+) -> AsyncIterator[Application]:
+    # OpenStack integration does not need the grafana agent to collect metric.
+    if instance_type == InstanceType.LOCAL_LXD and not existing_app:
+        grafana_agent = await model.deploy(
+            "grafana-agent",
+            application_name=f"grafana-agent-{basic_app.name}",
+            channel="latest/edge",
+        )
+        await model.relate(f"{basic_app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
+        await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE)
+        await model.wait_for_idle(apps=[grafana_agent.name])
+
+    yield basic_app
+
+
+@pytest_asyncio.fixture(scope="module", name="mongodb")
+async def mongodb_fixture(model: Model, existing_app: str | None) -> Application:
+    """Deploy MongoDB."""
+    if not existing_app:
+        mongodb = await model.deploy(MONGODB_APP_NAME, channel="6/edge")
+        await model.wait_for_idle(apps=[MONGODB_APP_NAME], status=ACTIVE)
+    else:
+        mongodb = model.applications["mongodb"]
+    return mongodb
+
+
+@pytest_asyncio.fixture(scope="module", name="app_for_reactive")
+async def app_for_reactive_fixture(
+    model: Model,
+    basic_app: Application,
+    mongodb: Application,
+    existing_app: Optional[str],
+) -> Application:
+    """Application for testing reactive."""
+    if not existing_app:
+        await model.relate(f"{basic_app.name}:mongodb", f"{mongodb.name}:database")
+
+    await basic_app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    await model.wait_for_idle(apps=[basic_app.name, mongodb.name], status=ACTIVE)
+
+    return basic_app
+
+
+@pytest_asyncio.fixture(scope="module", name="basic_app")
+async def basic_app_fixture(
+    request: pytest.FixtureRequest, instance_type: InstanceType
+) -> Application:
+    """Setup the charm with the basic configuration."""
+    if instance_type == InstanceType.OPENSTACK:
+        app = request.getfixturevalue("app_openstack_runner")
+    else:
+        app = request.getfixturevalue("app_no_runner")
+    return app
 
 
 @pytest_asyncio.fixture(scope="function", name="instance_helper")

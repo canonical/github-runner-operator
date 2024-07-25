@@ -8,6 +8,14 @@
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
+from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
+
+# This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
+# pylint: disable=wrong-import-position,wrong-import-order
+# TODO: 2024-07-17 remove this once the issue has been fixed
+remove_residual_venv_dirs()
+
+
 import functools
 import logging
 import os
@@ -19,6 +27,7 @@ from typing import Any, Callable, Dict, Sequence, TypeVar
 
 import jinja2
 import ops
+from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from ops.charm import (
     ActionEvent,
@@ -35,7 +44,7 @@ from ops.framework import StoredState
 from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, WaitingStatus
 
-import metrics.events as metric_events
+import logrotate
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     GROUP_CONFIG_NAME,
@@ -58,6 +67,7 @@ from charm_state import (
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
+    MissingMongoDBError,
     MissingRunnerBinaryError,
     OpenStackUnauthorizedError,
     RunnerBinaryError,
@@ -72,9 +82,12 @@ from openstack_cloud.openstack_manager import OpenstackRunnerManager
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
-from utilities import bytes_with_unit_to_kib, execute_command, retry
 
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
+
+# This is currently hardcoded and may be moved to a config option in the future.
+REACTIVE_MQ_DB_NAME = "github-runner-webhook-router"
+
 
 logger = logging.getLogger(__name__)
 
@@ -125,6 +138,9 @@ def catch_charm_errors(
             self.unit.status = BlockedStatus(
                 "Unauthorized OpenStack connection. Check credentials."
             )
+        except MissingMongoDBError as err:
+            logger.exception("Missing integration data")
+            self.unit.status = WaitingStatus(str(err))
 
     return func_with_catch_errors
 
@@ -242,6 +258,11 @@ class GithubRunnerCharm(CharmBase):
             self.on.update_dependencies_action, self._on_update_dependencies_action
         )
         self.framework.observe(self.on.update_status, self._on_update_status)
+        self.database = DatabaseRequires(
+            self, relation_name="mongodb", database_name=REACTIVE_MQ_DB_NAME
+        )
+        self.framework.observe(self.database.on.database_created, self._on_database_created)
+        self.framework.observe(self.database.on.endpoints_changed, self._on_endpoints_changed)
 
     def _setup_state(self) -> CharmState:
         """Set up the charm state.
@@ -253,7 +274,7 @@ class GithubRunnerCharm(CharmBase):
             The charm state.
         """
         try:
-            return CharmState.from_charm(self)
+            return CharmState.from_charm(charm=self, database=self.database)
         except CharmConfigInvalidError as exc:
             raise ConfigurationError(exc.msg) from exc
 
@@ -387,6 +408,7 @@ class GithubRunnerCharm(CharmBase):
                 image=state.runner_config.base_image.value,
                 lxd_storage_path=lxd_storage_path,
                 path=path,
+                reactive_config=state.reactive_config,
                 service_token=self.service_token,
                 token=token,
             ),
@@ -425,7 +447,7 @@ class GithubRunnerCharm(CharmBase):
             raise
 
         try:
-            metric_events.setup_logrotate()
+            logrotate.setup()
         except LogrotateSetupError:
             logger.error("Failed to setup logrotate")
             raise
@@ -676,7 +698,21 @@ class GithubRunnerCharm(CharmBase):
 
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
-        """Handle the reconciliation of runners."""
+        """Event handler for reconciling runners."""
+        self._trigger_reconciliation()
+
+    @catch_charm_errors
+    def _on_database_created(self, _: ops.RelationEvent) -> None:
+        """Handle the MongoDB database created event."""
+        self._trigger_reconciliation()
+
+    @catch_charm_errors
+    def _on_endpoints_changed(self, _: ops.RelationEvent) -> None:
+        """Handle the MongoDB endpoints changed event."""
+        self._trigger_reconciliation()
+
+    def _trigger_reconciliation(self) -> None:
+        """Trigger the reconciliation of runners."""
         self.unit.status = MaintenanceStatus("Reconciling runners")
         state = self._setup_state()
 
@@ -1203,6 +1239,7 @@ class GithubRunnerCharm(CharmBase):
             image=image_id,
             network=state.runner_config.openstack_network,
             dockerhub_mirror=state.charm_config.dockerhub_mirror,
+            reactive_config=state.reactive_config,
         )
         return OpenstackRunnerManager(
             app_name,
