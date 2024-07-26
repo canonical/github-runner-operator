@@ -689,7 +689,7 @@ class OpenstackRunnerManager:
                     key_name=instance_config.name,
                     flavor=args.config.flavor,
                     network=args.config.network,
-                    security_groups=[runner_security_group],
+                    security_groups=[runner_security_group["id"]],
                     userdata=cloud_userdata_str,
                     auto_ip=False,
                     timeout=CREATE_SERVER_TIMEOUT,
