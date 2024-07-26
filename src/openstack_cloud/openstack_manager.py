@@ -534,7 +534,7 @@ class OpenstackRunnerManager:
     @staticmethod
     @retry(tries=3, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _get_ssh_connection(
-        conn: OpenstackConnection, server_name: str, timeout: int = 30
+        conn: OpenstackConnection, server_name: str, timeout: int = 60
     ) -> SshConnection:
         """Get a valid ssh connection within a network for a given openstack instance.
 
