@@ -1,25 +1,26 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+import datetime
+import logging
+import shutil
 from contextlib import contextmanager
 from dataclasses import dataclass
-import datetime
 from functools import reduce
-import logging
 from pathlib import Path
-import shutil
 from typing import Iterable, Iterator, cast
+
 import openstack
-from openstack.compute.v2.server import Server as OpenstackServer
-from openstack.compute.v2.keypair import Keypair as OpenstackKeypair
-from openstack.network.v2.security_group import SecurityGroup as OpenstackSecurityGroup 
-from openstack.connection import Connection as OpenstackConnection
 import openstack.exceptions
-from fabric import Connection as SshConnection
 import paramiko
+from fabric import Connection as SshConnection
+from openstack.compute.v2.keypair import Keypair as OpenstackKeypair
+from openstack.compute.v2.server import Server as OpenstackServer
+from openstack.connection import Connection as OpenstackConnection
+from openstack.network.v2.security_group import SecurityGroup as OpenstackSecurityGroup
 from paramiko.ssh_exception import NoValidConnectionsError
 
-from errors import OpenStackError 
+from errors import OpenStackError
 
 logger = logging.getLogger(__name__)
 
@@ -27,19 +28,21 @@ logger = logging.getLogger(__name__)
 _SECURITY_GROUP_NAME = "github-runner-v1"
 
 _CREATE_SERVER_TIMEOUT = 5 * 60
-_SSH_TIMEOUT= 30
+_SSH_TIMEOUT = 30
 _SSH_KEY_PATH = "/home/ubuntu/.ssh"
 _TEST_STRING = "test_string"
 
+
 class _SshError(Exception):
     """Represents an error while interacting with SSH."""
+
 
 @dataclass
 class OpenstackInstance:
     id: str
     name: str
     addresses: list[str]
-    
+
     def __init__(self, server: OpenstackServer):
         self.id = server.id
         self.name = server.name
@@ -83,33 +86,36 @@ def _create_connection(cloud_config: dict[str, dict]) -> Iterator[OpenstackConne
         logger.exception("OpenStack API call failure")
         raise OpenStackError("Failed OpenStack API call") from exc
 
+
 class OpenstackCloud:
-    
+
     def __init__(self, cloud_config: dict[str, dict], prefix: str):
         """Create a OpenstackCloud instance.
-        
+
         Args:
-            cloud_config: The openstack clouds.yaml in dict format. The first cloud in the yaml is 
+            cloud_config: The openstack clouds.yaml in dict format. The first cloud in the yaml is
                 used.
             prefix:
         """
         self.cloud_config = cloud_config
         self.prefix = prefix
-        
-    def launch_instance(self, name: str, image: str, flavor: str, network: str, userdata: str) -> OpenstackInstance:
+
+    def launch_instance(
+        self, name: str, image: str, flavor: str, network: str, userdata: str
+    ) -> OpenstackInstance:
         full_name = self._get_instance_name(name)
         logger.info("Creating openstack server with %s", full_name)
 
         with _create_connection(cloud_config=self.cloud_config) as conn:
             security_group = OpenstackCloud._ensure_security_group(conn)
             keypair = OpenstackCloud._setup_key_pair(conn, full_name)
-            
+
             server = conn.create_server(
-                name = full_name,
-                image = image,
+                name=full_name,
+                image=image,
                 key_name=keypair.name,
-                flavor= flavor,
-                network= network,
+                flavor=flavor,
+                network=network,
                 security_groups=[security_group.id],
                 userdata=userdata,
                 auto_ip=False,
@@ -126,7 +132,7 @@ class OpenstackCloud:
             server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
             server.delete()
             OpenstackCloud._delete_key_pair(conn, full_name)
-    
+
     def get_ssh_connection(self, instance: OpenstackInstance) -> SshConnection:
         key_path = OpenstackCloud._get_key_path(instance.name)
 
@@ -166,7 +172,7 @@ class OpenstackCloud:
 
     def get_instances(self, name: str) -> list[OpenstackInstance]:
         logger.info("Getting all openstack servers managed by the charm")
-        
+
         with _create_connection(cloud_config=self.cloud_config) as conn:
             servers = self._get_openstack_instances(conn)
             server_names = set(server.name for server in servers)
@@ -257,21 +263,28 @@ class OpenstackCloud:
             for server in cast(list[OpenstackServer], conn.list_servers())
             if server.name.startswith(f"{self.prefix}-")
         ]
-    
+
     @staticmethod
-    def _get_and_ensure_unique_server(conn: OpenstackConnection, name: str) -> OpenstackServer | None:
+    def _get_and_ensure_unique_server(
+        conn: OpenstackConnection, name: str
+    ) -> OpenstackServer | None:
         """Get the latest server of the name and ensure it is unique.
 
-        If multiple servers with the same name is found, the latest server in creation time is 
+        If multiple servers with the same name is found, the latest server in creation time is
         returned. Other servers is deleted.
         """
         servers: list[OpenstackServer] = conn.search_servers(name)
 
-        latest_server = reduce(lambda a, b: a if datetime.strptime(a.created_at) < datetime.strptime(b.create_at) else b, servers)
+        latest_server = reduce(
+            lambda a, b: (
+                a if datetime.strptime(a.created_at) < datetime.strptime(b.create_at) else b
+            ),
+            servers,
+        )
         outdated_servers = filter(lambda x: x != latest_server, servers)
         for server in outdated_servers:
             server.delete()
-        
+
         return latest_server
 
     @staticmethod
@@ -289,17 +302,17 @@ class OpenstackCloud:
     @staticmethod
     def _setup_key_pair(conn: OpenstackConnection, name: str) -> OpenstackKeypair:
         key_path = OpenstackCloud._get_key_path(name)
-        
+
         if key_path.exists:
             logger.warning("Existing private key file for %s found, removing it.", name)
             key_path.unlink(missing_ok=True)
-        
+
         keypair = conn.create_keypair(name=name)
         key_path.write_text(keypair.private_key)
         shutil.chown(key_path, user="ubuntu", group="ubuntu")
         key_path.chmod(0o400)
         return keypair
-    
+
     @staticmethod
     def _delete_key_pair(conn: OpenstackConnection, name: str) -> None:
         try:
@@ -307,8 +320,8 @@ class OpenstackCloud:
             if not conn.delete_keypair(name):
                 logger.warning("Unable to delete keypair for %s", name)
         except openstack.exceptions.SDKException:
-                logger.warning("Unable to delete keypair for %s", name, stack_info=True)
-        
+            logger.warning("Unable to delete keypair for %s", name, stack_info=True)
+
         key_path = OpenstackCloud._get_key_path(name)
         key_path.unlink(missing_ok=True)
 
@@ -318,14 +331,14 @@ class OpenstackCloud:
 
         Args:
             conn: The connection object to access OpenStack cloud.
-        
+
         Returns:
             The security group with the rules for runners.
         """
         rule_exists_icmp = False
         rule_exists_ssh = False
         rule_exists_tmate_ssh = False
-        
+
         security_group_list = conn.list_security_groups(filters={"name": _SECURITY_GROUP_NAME})
         # Pick the first security_group returned.
         security_group = next(iter(security_group_list), None)
@@ -340,7 +353,9 @@ class OpenstackCloud:
             for rule in existing_rules:
                 if rule.protocol == "icmp":
                     logger.debug(
-                        "Found ICMP rule in existing security group %s of ID %s", _SECURITY_GROUP_NAME, security_group.id
+                        "Found ICMP rule in existing security group %s of ID %s",
+                        _SECURITY_GROUP_NAME,
+                        security_group.id,
                     )
                     rule_exists_icmp = True
                 if (
@@ -348,7 +363,9 @@ class OpenstackCloud:
                     and rule["port_range_min"] == rule["port_range_max"] == 22
                 ):
                     logger.debug(
-                        "Found SSH rule in existing security group %s of ID %s", _SECURITY_GROUP_NAME, security_group.id
+                        "Found SSH rule in existing security group %s of ID %s",
+                        _SECURITY_GROUP_NAME,
+                        security_group.id,
                     )
                     rule_exists_ssh = True
                 if (
@@ -356,7 +373,9 @@ class OpenstackCloud:
                     and rule["port_range_min"] == rule["port_range_max"] == 10022
                 ):
                     logger.debug(
-                        "Found tmate SSH rule in existing security group %s of ID %s", _SECURITY_GROUP_NAME, security_group.id
+                        "Found tmate SSH rule in existing security group %s of ID %s",
+                        _SECURITY_GROUP_NAME,
+                        security_group.id,
                     )
                     rule_exists_tmate_ssh = True
 
