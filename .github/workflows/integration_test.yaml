@@ -33,7 +33,7 @@ jobs:
       pre-run-script: scripts/setup-lxd.sh
       provider: lxd
       test-tox-env: integration-juju3.2
-      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_runner", "test_reactive"]'
+      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_runner", "test_reactive", "test_openstack_cloud"]'
       extra-arguments: "-m openstack"
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
