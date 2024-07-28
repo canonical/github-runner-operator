@@ -17,7 +17,7 @@ from openstack_cloud.openstack_cloud import OpenstackCloud
 @pytest_asyncio.fixture(scope="function", name="base_openstack_cloud")
 async def base_openstack_cloud_fixture(private_endpoint_clouds_yaml: str) -> OpenstackCloud:
     """Setup a OpenstackCloud object with connection to openstack."""
-    clouds_yaml = yaml.load(private_endpoint_clouds_yaml)
+    clouds_yaml = yaml.safe_load(private_endpoint_clouds_yaml)
     return OpenstackCloud(clouds_yaml, f"test-{token_hex(4)}")
 
 
