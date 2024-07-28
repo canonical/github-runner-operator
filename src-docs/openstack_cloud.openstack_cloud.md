@@ -81,7 +81,7 @@ delete_instance(name: str)
 ### <kbd>method</kbd> `get_instances`
 
 ```python
-get_instances(name: str) → list[OpenstackInstance]
+get_instances() → list[OpenstackInstance]
 ```
 
 

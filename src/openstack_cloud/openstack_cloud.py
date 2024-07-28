@@ -170,7 +170,7 @@ class OpenstackCloud:
             f"addresses: {instance.addresses}"
         )
 
-    def get_instances(self, name: str) -> list[OpenstackInstance]:
+    def get_instances(self) -> list[OpenstackInstance]:
         logger.info("Getting all openstack servers managed by the charm")
 
         with _create_connection(cloud_config=self.cloud_config) as conn:
