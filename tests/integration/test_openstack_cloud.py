@@ -9,14 +9,16 @@ from typing import AsyncIterator
 import pytest
 import pytest_asyncio
 from openstack.connection import Connection as OpenstackConnection
+import yaml
 
 from openstack_cloud.openstack_cloud import OpenstackCloud
 
 
 @pytest_asyncio.fixture(scope="function", name="base_openstack_cloud")
-async def base_openstack_cloud_fixture(private_endpoint_config: dict[str, dict]) -> OpenstackCloud:
+async def base_openstack_cloud_fixture(private_endpoint_clouds_yaml: str) -> OpenstackCloud:
     """Setup a OpenstackCloud object with connection to openstack."""
-    return OpenstackCloud(private_endpoint_config, f"test-{token_hex(4)}")
+    clouds_yaml = yaml.load(private_endpoint_clouds_yaml)
+    return OpenstackCloud(clouds_yaml, f"test-{token_hex(4)}")
 
 
 @pytest_asyncio.fixture(scope="function", name="openstack_cloud")
