@@ -11,12 +11,12 @@
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L40"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L43"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackInstance`
 OpenstackInstance(server: openstack.compute.v2.server.Server) 
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L46"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L49"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -34,19 +34,19 @@ __init__(server: Server)
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L90"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L91"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackCloud`
 
 
 
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L92"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L93"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
 ```python
-__init__(cloud_config: dict[str, dict], prefix: str)
+__init__(clouds_config: dict[str, dict], cloud: str, prefix: str)
 ```
 
 Create a OpenstackCloud instance. 
@@ -55,14 +55,16 @@ Create a OpenstackCloud instance.
 
 **Args:**
  
- - <b>`cloud_config`</b>:  The openstack clouds.yaml in dict format. The first cloud in the yaml is  used. prefix: 
+ - <b>`clouds_config`</b>:  The openstack clouds.yaml in dict format. 
+ - <b>`cloud`</b>:  The name of cloud to use in the clouds.yaml. 
+ - <b>`prefix`</b>:  Prefix attached to names of resource managed by this instance. Used for   identifying which resource belongs to this instance. 
 
 
 
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L127"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L130"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `delete_instance`
 
@@ -76,7 +78,7 @@ delete_instance(name: str)
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L173"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L176"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_instances`
 
@@ -90,7 +92,7 @@ get_instances() → list[OpenstackInstance]
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L136"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L139"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_ssh_connection`
 
@@ -104,7 +106,7 @@ get_ssh_connection(instance: OpenstackInstance) → Connection
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L103"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L106"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `launch_instance`
 

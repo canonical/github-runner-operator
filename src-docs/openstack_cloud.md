@@ -7,9 +7,6 @@ Module for managing Openstack cloud.
 
 **Global Variables**
 ---------------
-- **openstack_cloud**: # Copyright 2024 Canonical Ltd.
-# See LICENSE file for licensing details.
-
 - **openstack_manager**: # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 

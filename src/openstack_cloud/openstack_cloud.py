@@ -19,10 +19,13 @@ from openstack.compute.v2.server import Server as OpenstackServer
 from openstack.connection import Connection as OpenstackConnection
 from openstack.network.v2.security_group import SecurityGroup as OpenstackSecurityGroup
 from paramiko.ssh_exception import NoValidConnectionsError
+import yaml
 
 from errors import OpenStackError
 
 logger = logging.getLogger(__name__)
+
+_CLOUDS_YAML_PATH = Path(Path.home() / ".config/openstack/clouds.yaml")
 
 # Update the version when the security group rules are not backward compatible.
 _SECURITY_GROUP_NAME = "github-runner-v1"
@@ -54,15 +57,14 @@ class OpenstackInstance:
 
 
 @contextmanager
-def _create_connection(cloud_config: dict[str, dict]) -> Iterator[OpenstackConnection]:
+def _get_openstack_connection(clouds_config: dict[str, dict], cloud: str) -> Iterator[OpenstackConnection]:
     """Create a connection context managed object, to be used within with statements.
-
-    This method should be called with a valid cloud_config. See _validate_cloud_config.
-    Also, this method assumes that the clouds.yaml exists on ~/.config/openstack/clouds.yaml.
-    See charm_state.py _write_openstack_config_to_disk.
+    
+    The file of _CLOUDS_YAML_PATH should only be modified by this function.
 
     Args:
         cloud_config: The configuration in clouds.yaml format to apply.
+        cloud: The name of cloud to use in the clouds.yaml.
 
     Raises:
         OpenStackError: if the credentials provided is not authorized.
@@ -70,15 +72,14 @@ def _create_connection(cloud_config: dict[str, dict]) -> Iterator[OpenstackConne
     Yields:
         An openstack.connection.Connection object.
     """
-    clouds = list(cloud_config["clouds"].keys())
-    if len(clouds) > 1:
-        logger.warning("Multiple clouds defined in clouds.yaml. Using the first one to connect.")
-    cloud_name = clouds[0]
+    if not _CLOUDS_YAML_PATH.exists():
+        _CLOUDS_YAML_PATH.parent.mkdir(parents=True, exist_ok=True)
+        _CLOUDS_YAML_PATH.write_text(data=yaml.dump(clouds_config), encoding="utf-8")
 
     # api documents that keystoneauth1.exceptions.MissingRequiredOptions can be raised but
     # I could not reproduce it. Therefore, no catch here for such exception.
     try:
-        with openstack.connect(cloud=cloud_name) as conn:
+        with openstack.connect(cloud=cloud) as conn:
             conn.authorize()
             yield conn
     # pylint thinks this isn't an exception, but does inherit from Exception class.
@@ -89,15 +90,17 @@ def _create_connection(cloud_config: dict[str, dict]) -> Iterator[OpenstackConne
 
 class OpenstackCloud:
 
-    def __init__(self, cloud_config: dict[str, dict], prefix: str):
+    def __init__(self, clouds_config: dict[str, dict], cloud: str, prefix: str):
         """Create a OpenstackCloud instance.
 
         Args:
-            cloud_config: The openstack clouds.yaml in dict format. The first cloud in the yaml is
-                used.
-            prefix:
+            clouds_config: The openstack clouds.yaml in dict format.
+            cloud: The name of cloud to use in the clouds.yaml.
+            prefix: Prefix attached to names of resource managed by this instance. Used for 
+                identifying which resource belongs to this instance.
         """
-        self.cloud_config = cloud_config
+        self.clouds_config = clouds_config
+        self.cloud = cloud
         self.prefix = prefix
 
     def launch_instance(
@@ -106,7 +109,7 @@ class OpenstackCloud:
         full_name = self._get_instance_name(name)
         logger.info("Creating openstack server with %s", full_name)
 
-        with _create_connection(cloud_config=self.cloud_config) as conn:
+        with _get_openstack_connection(cloud_config=self.clouds_config, cloud=self.cloud) as conn:
             security_group = OpenstackCloud._ensure_security_group(conn)
             keypair = OpenstackCloud._setup_key_pair(conn, full_name)
 
@@ -128,7 +131,7 @@ class OpenstackCloud:
         full_name = self._get_instance_name(full_name)
         logger.info("Deleting openstack server with %s", full_name)
 
-        with _create_connection(cloud_config=self.cloud_config) as conn:
+        with _get_openstack_connection(cloud_config=self.clouds_config) as conn:
             server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
             server.delete()
             OpenstackCloud._delete_key_pair(conn, full_name)
@@ -173,7 +176,7 @@ class OpenstackCloud:
     def get_instances(self) -> list[OpenstackInstance]:
         logger.info("Getting all openstack servers managed by the charm")
 
-        with _create_connection(cloud_config=self.cloud_config) as conn:
+        with _get_openstack_connection(cloud_config=self.clouds_config) as conn:
             servers = self._get_openstack_instances(conn)
             server_names = set(server.name for server in servers)
             return [

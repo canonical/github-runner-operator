@@ -8,8 +8,8 @@ from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio
-from openstack.connection import Connection as OpenstackConnection
 import yaml
+from openstack.connection import Connection as OpenstackConnection
 
 from openstack_cloud.openstack_cloud import OpenstackCloud
 
@@ -18,7 +18,7 @@ from openstack_cloud.openstack_cloud import OpenstackCloud
 async def base_openstack_cloud_fixture(private_endpoint_clouds_yaml: str) -> OpenstackCloud:
     """Setup a OpenstackCloud object with connection to openstack."""
     clouds_yaml = yaml.safe_load(private_endpoint_clouds_yaml)
-    return OpenstackCloud(clouds_yaml, f"test-{token_hex(4)}")
+    return OpenstackCloud(clouds_yaml, "testcloud", f"test-{token_hex(4)}")
 
 
 @pytest_asyncio.fixture(scope="function", name="openstack_cloud")

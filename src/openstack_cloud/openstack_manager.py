@@ -59,7 +59,6 @@ from metrics import github as github_metrics
 from metrics import runner as runner_metrics
 from metrics import storage as metrics_storage
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
-from openstack_cloud.openstack_cloud import _create_connection
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner_manager import IssuedMetricEventsStats
 from runner_manager_type import OpenstackRunnerManagerConfig
@@ -1493,3 +1492,37 @@ class OpenstackRunnerManager:
                 remove_token=remove_token,
             )
             return len(runners_to_delete)
+
+
+@contextmanager
+def _create_connection(cloud_config: dict[str, dict]) -> Iterator[OpenstackConnection]:
+    """Create a connection context managed object, to be used within with statements.
+
+    This method should be called with a valid cloud_config. See _validate_cloud_config.
+    Also, this method assumes that the clouds.yaml exists on ~/.config/openstack/clouds.yaml.
+    See charm_state.py _write_openstack_config_to_disk.
+
+    Args:
+        cloud_config: The configuration in clouds.yaml format to apply.
+
+    Raises:
+        OpenStackError: if the credentials provided is not authorized.
+
+    Yields:
+        An openstack.connection.Connection object.
+    """
+    clouds = list(cloud_config["clouds"].keys())
+    if len(clouds) > 1:
+        logger.warning("Multiple clouds defined in clouds.yaml. Using the first one to connect.")
+    cloud_name = clouds[0]
+
+    # api documents that keystoneauth1.exceptions.MissingRequiredOptions can be raised but
+    # I could not reproduce it. Therefore, no catch here for such exception.
+    try:
+        with openstack.connect(cloud=cloud_name) as conn:
+            conn.authorize()
+            yield conn
+    # pylint thinks this isn't an exception, but does inherit from Exception class.
+    except openstack.exceptions.HttpException as exc:  # pylint: disable=bad-exception-cause
+        logger.exception("OpenStack API call failure")
+        raise OpenStackError("Failed OpenStack API call") from exc
