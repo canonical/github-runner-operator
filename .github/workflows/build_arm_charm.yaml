@@ -9,7 +9,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         repository: 'canonical/github-runner-operator'
-        ref: 'feat/openstack-integration'
+        ref: 'main'
     - name: Install dependencies
       run: |
           sudo snap install charmcraft --classic
