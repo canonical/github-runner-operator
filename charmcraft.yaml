@@ -4,7 +4,7 @@
 type: charm
 parts:
   charm:
-    charm-python-packages:
+    charm-binary-python-packages:
       - setuptools  # for jinja2
     build-packages:
       - git  # for installing git source of pylxd 
