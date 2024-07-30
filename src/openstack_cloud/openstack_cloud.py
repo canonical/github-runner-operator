@@ -99,8 +99,8 @@ class OpenstackCloud:
             prefix: Prefix attached to names of resource managed by this instance. Used for 
                 identifying which resource belongs to this instance.
         """
-        self.clouds_config = clouds_config
-        self.cloud = cloud
+        self._clouds_config = clouds_config
+        self._cloud = cloud
         self.prefix = prefix
 
     def launch_instance(
@@ -109,7 +109,7 @@ class OpenstackCloud:
         full_name = self._get_instance_name(name)
         logger.info("Creating openstack server with %s", full_name)
 
-        with _get_openstack_connection(cloud_config=self.clouds_config, cloud=self.cloud) as conn:
+        with _get_openstack_connection(clouds_config=self._clouds_config, cloud=self._cloud) as conn:
             security_group = OpenstackCloud._ensure_security_group(conn)
             keypair = OpenstackCloud._setup_key_pair(conn, full_name)
 
@@ -131,7 +131,7 @@ class OpenstackCloud:
         full_name = self._get_instance_name(full_name)
         logger.info("Deleting openstack server with %s", full_name)
 
-        with _get_openstack_connection(cloud_config=self.clouds_config) as conn:
+        with _get_openstack_connection(clouds_config=self._clouds_config, cloud=self._cloud) as conn:
             server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
             server.delete()
             OpenstackCloud._delete_key_pair(conn, full_name)
@@ -176,7 +176,7 @@ class OpenstackCloud:
     def get_instances(self) -> list[OpenstackInstance]:
         logger.info("Getting all openstack servers managed by the charm")
 
-        with _get_openstack_connection(cloud_config=self.clouds_config) as conn:
+        with _get_openstack_connection(clouds_config=self._clouds_config, cloud=self._cloud) as conn:
             servers = self._get_openstack_instances(conn)
             server_names = set(server.name for server in servers)
             return [
