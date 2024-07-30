@@ -278,6 +278,22 @@ def flavor_name_fixture(pytestconfig: pytest.Config) -> str:
     return flavor_name
 
 
+@pytest.fixture(scope="module", name="openstack_test_image")
+def openstack_test_image_fixture(pytestconfig: pytest.Config) -> str:
+    """Image for testing openstack interfaces."""
+    test_image = pytestconfig.getoption("--openstack-test-image")
+    assert test_image, "Please specify the --openstack-test-image command line option"
+    return test_image
+
+
+@pytest.fixture(scope="module", name="openstack_test_flavor")
+def openstack_test_flavor_fixture(pytestconfig: pytest.Config) -> str:
+    """Flavor for testing openstack interfaces."""
+    test_flavor = pytestconfig.getoption("--openstack-test-flavor")
+    assert test_flavor, "Please specify the --openstack-test-flavor command line option"
+    return test_flavor
+
+
 @pytest.fixture(scope="module", name="openstack_connection")
 def openstack_connection_fixture(
     clouds_yaml_contents: str, app_name: str
