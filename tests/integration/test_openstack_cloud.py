@@ -27,6 +27,7 @@ async def openstack_cloud_fixture(base_openstack_cloud: OpenstackCloud) -> Opens
     instances = base_openstack_cloud.get_instances()
     for instance in instances:
         base_openstack_cloud.delete_instance(name=instance.name)
+    return base_openstack_cloud
 
 
 @pytest.mark.openstack
@@ -52,6 +53,7 @@ async def test_launch_instance_and_delete(
     openstack_connection: OpenstackConnection,
     openstack_test_image: str,
     openstack_test_flavor: str,
+    network_name: str,
 ) -> None:
     """
     arrange: No instance on OpenStack.
@@ -71,7 +73,7 @@ async def test_launch_instance_and_delete(
 
     # 1.
     instance = base_openstack_cloud.launch_instance(
-        name=instance_name, image=openstack_test_image, flavor=openstack_test_flavor, userdata=""
+        name=instance_name, image=openstack_test_image, flavor=openstack_test_flavor, network=network_name,userdata=""
     )
 
     assert instance is not None
@@ -96,7 +98,6 @@ async def test_launch_instance_and_delete(
 @pytest.mark.abort_on_fail
 async def test_instance_ssh_connection(
     openstack_cloud: OpenstackCloud,
-    openstack_connection: OpenstackConnection,
     openstack_test_image: str,
     openstack_test_flavor: str,
 ) -> None:
