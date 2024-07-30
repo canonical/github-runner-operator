@@ -73,7 +73,11 @@ async def test_launch_instance_and_delete(
 
     # 1.
     instance = base_openstack_cloud.launch_instance(
-        name=instance_name, image=openstack_test_image, flavor=openstack_test_flavor, network=network_name,userdata=""
+        name=instance_name,
+        image=openstack_test_image,
+        flavor=openstack_test_flavor,
+        network=network_name,
+        userdata="",
     )
 
     assert instance is not None
@@ -100,6 +104,7 @@ async def test_instance_ssh_connection(
     openstack_cloud: OpenstackCloud,
     openstack_test_image: str,
     openstack_test_flavor: str,
+    network_name: str,
 ) -> None:
     """
     arrange: One instance on OpenStack.
@@ -111,7 +116,11 @@ async def test_instance_ssh_connection(
     rand_chars = f"{token_hex(10)}"
     instance_name = f"{token_hex(2)}"
     instance = openstack_cloud.launch_instance(
-        name=instance_name, image=openstack_test_image, flavor=openstack_test_flavor, userdata=""
+        name=instance_name,
+        image=openstack_test_image,
+        flavor=openstack_test_flavor,
+        network=network_name,
+        userdata="",
     )
 
     ssh_conn = openstack_cloud.get_ssh_connection(instance)

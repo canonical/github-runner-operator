@@ -13,13 +13,13 @@ from typing import Iterable, Iterator, cast
 import openstack
 import openstack.exceptions
 import paramiko
+import yaml
 from fabric import Connection as SshConnection
 from openstack.compute.v2.keypair import Keypair as OpenstackKeypair
 from openstack.compute.v2.server import Server as OpenstackServer
 from openstack.connection import Connection as OpenstackConnection
 from openstack.network.v2.security_group import SecurityGroup as OpenstackSecurityGroup
 from paramiko.ssh_exception import NoValidConnectionsError
-import yaml
 
 from errors import OpenStackError
 
@@ -57,9 +57,11 @@ class OpenstackInstance:
 
 
 @contextmanager
-def _get_openstack_connection(clouds_config: dict[str, dict], cloud: str) -> Iterator[OpenstackConnection]:
+def _get_openstack_connection(
+    clouds_config: dict[str, dict], cloud: str
+) -> Iterator[OpenstackConnection]:
     """Create a connection context managed object, to be used within with statements.
-    
+
     The file of _CLOUDS_YAML_PATH should only be modified by this function.
 
     Args:
@@ -96,7 +98,7 @@ class OpenstackCloud:
         Args:
             clouds_config: The openstack clouds.yaml in dict format.
             cloud: The name of cloud to use in the clouds.yaml.
-            prefix: Prefix attached to names of resource managed by this instance. Used for 
+            prefix: Prefix attached to names of resource managed by this instance. Used for
                 identifying which resource belongs to this instance.
         """
         self._clouds_config = clouds_config
@@ -109,7 +111,9 @@ class OpenstackCloud:
         full_name = self._get_instance_name(name)
         logger.info("Creating openstack server with %s", full_name)
 
-        with _get_openstack_connection(clouds_config=self._clouds_config, cloud=self._cloud) as conn:
+        with _get_openstack_connection(
+            clouds_config=self._clouds_config, cloud=self._cloud
+        ) as conn:
             security_group = OpenstackCloud._ensure_security_group(conn)
             keypair = OpenstackCloud._setup_key_pair(conn, full_name)
 
@@ -131,7 +135,9 @@ class OpenstackCloud:
         full_name = self._get_instance_name(full_name)
         logger.info("Deleting openstack server with %s", full_name)
 
-        with _get_openstack_connection(clouds_config=self._clouds_config, cloud=self._cloud) as conn:
+        with _get_openstack_connection(
+            clouds_config=self._clouds_config, cloud=self._cloud
+        ) as conn:
             server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
             server.delete()
             OpenstackCloud._delete_key_pair(conn, full_name)
@@ -176,7 +182,9 @@ class OpenstackCloud:
     def get_instances(self) -> list[OpenstackInstance]:
         logger.info("Getting all openstack servers managed by the charm")
 
-        with _get_openstack_connection(clouds_config=self._clouds_config, cloud=self._cloud) as conn:
+        with _get_openstack_connection(
+            clouds_config=self._clouds_config, cloud=self._cloud
+        ) as conn:
             servers = self._get_openstack_instances(conn)
             server_names = set(server.name for server in servers)
             return [
@@ -354,7 +362,7 @@ class OpenstackCloud:
         else:
             existing_rules = security_group.security_group_rules
             for rule in existing_rules:
-                if rule.protocol == "icmp":
+                if rule["protocol"] == "icmp":
                     logger.debug(
                         "Found ICMP rule in existing security group %s of ID %s",
                         _SECURITY_GROUP_NAME,
@@ -362,7 +370,7 @@ class OpenstackCloud:
                     )
                     rule_exists_icmp = True
                 if (
-                    rule.protocol == "tcp"
+                    rule["protocol"] == "tcp"
                     and rule["port_range_min"] == rule["port_range_max"] == 22
                 ):
                     logger.debug(
@@ -372,7 +380,7 @@ class OpenstackCloud:
                     )
                     rule_exists_ssh = True
                 if (
-                    rule.protocol == "tcp"
+                    rule["protocol"] == "tcp"
                     and rule["port_range_min"] == rule["port_range_max"] == 10022
                 ):
                     logger.debug(
