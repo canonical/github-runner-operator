@@ -32,7 +32,7 @@ _SECURITY_GROUP_NAME = "github-runner-v1"
 
 _CREATE_SERVER_TIMEOUT = 5 * 60
 _SSH_TIMEOUT = 30
-_SSH_KEY_PATH = "/home/ubuntu/.ssh"
+_SSH_KEY_PATH = Path("/home/ubuntu/.ssh")
 _TEST_STRING = "test_string"
 
 
