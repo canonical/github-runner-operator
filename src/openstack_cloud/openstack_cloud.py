@@ -117,18 +117,33 @@ class OpenstackCloud:
             security_group = OpenstackCloud._ensure_security_group(conn)
             keypair = OpenstackCloud._setup_key_pair(conn, full_name)
 
-            server = conn.create_server(
-                name=full_name,
-                image=image,
-                key_name=keypair.name,
-                flavor=flavor,
-                network=network,
-                security_groups=[security_group.id],
-                userdata=userdata,
-                auto_ip=False,
-                timeout=_CREATE_SERVER_TIMEOUT,
-                wait=True,
-            )
+            try:
+                server = conn.create_server(
+                    name=full_name,
+                    image=image,
+                    key_name=keypair.name,
+                    flavor=flavor,
+                    network=network,
+                    security_groups=[security_group.id],
+                    userdata=userdata,
+                    auto_ip=False,
+                    timeout=_CREATE_SERVER_TIMEOUT,
+                    wait=True,
+                )
+            except openstack.exceptions.ResourceTimeout as err:
+                logger.exception("Timeout creating openstack server %s", full_name)
+                logger.info("Attempting clean up of openstack server %s that timeout during creation", full_name)
+                try:
+                    conn.delete_server(name_or_id=full_name, wait=True)
+                except (openstack.exceptions.SDKException, openstack.exceptions.ResourceTimeout) as err:
+                    logger.exception("Failed to cleanup openstack server %s that timeout during creation", full_name)
+                self._delete_key_pair(conn, name)
+                raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
+            except openstack.exceptions.SDKException as err:
+                logger.exception("Failed to create openstack server %s", full_name)
+                self._delete_key_pair(conn, name)
+                raise OpenStackError(f"Failed to create openstack server {full_name}") from err
+
             return OpenstackInstance(server)
 
     def delete_instance(self, name: str):
@@ -330,7 +345,7 @@ class OpenstackCloud:
             # Keypair have unique names, access by ID is not needed.
             if not conn.delete_keypair(name):
                 logger.warning("Unable to delete keypair for %s", name)
-        except openstack.exceptions.SDKException:
+        except (openstack.exceptions.SDKException, openstack.exceptions.ResourceTimeout) as err:
             logger.warning("Unable to delete keypair for %s", name, stack_info=True)
 
         key_path = OpenstackCloud._get_key_path(name)
