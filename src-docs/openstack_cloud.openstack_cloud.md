@@ -78,6 +78,20 @@ delete_instance(name: str)
 
 ---
 
+<a href="../src/openstack_cloud/openstack_cloud.py#L260"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>method</kbd> `get_instance_name`
+
+```python
+get_instance_name(name: str) → str
+```
+
+
+
+
+
+---
+
 <a href="../src/openstack_cloud/openstack_cloud.py#L182"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_instances`

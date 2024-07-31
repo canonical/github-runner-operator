@@ -108,7 +108,7 @@ class OpenstackCloud:
     def launch_instance(
         self, name: str, image: str, flavor: str, network: str, userdata: str
     ) -> OpenstackInstance:
-        full_name = self._get_instance_name(name)
+        full_name = self.get_instance_name(name)
         logger.info("Creating openstack server with %s", full_name)
 
         with _get_openstack_connection(
@@ -132,7 +132,7 @@ class OpenstackCloud:
             return OpenstackInstance(server)
 
     def delete_instance(self, name: str):
-        full_name = self._get_instance_name(full_name)
+        full_name = self.get_instance_name(name)
         logger.info("Deleting openstack server with %s", full_name)
 
         with _get_openstack_connection(
@@ -257,7 +257,7 @@ class OpenstackCloud:
                         key.name,
                     )
 
-    def _get_instance_name(self, name: str) -> str:
+    def get_instance_name(self, name: str) -> str:
         return f"{self.prefix}-{name}"
 
     def _get_openstack_instances(self, conn: OpenstackConnection) -> list[OpenstackServer]:
