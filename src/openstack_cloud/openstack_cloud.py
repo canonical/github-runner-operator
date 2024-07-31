@@ -139,7 +139,7 @@ class OpenstackCloud:
             clouds_config=self._clouds_config, cloud=self._cloud
         ) as conn:
             server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
-            server.delete()
+            conn.delete_server(name_or_id=server.id)
             OpenstackCloud._delete_key_pair(conn, full_name)
 
     def get_ssh_connection(self, instance: OpenstackInstance) -> SshConnection:
