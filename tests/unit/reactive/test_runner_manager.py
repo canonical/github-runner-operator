@@ -1,5 +1,6 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
+import os
 import secrets
 import subprocess
 from pathlib import Path
@@ -9,7 +10,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from reactive.runner_manager import (
-    ACTIVE_SCRIPTS_COMMAND_LINE,
+    PIDS_COMMAND_LINE,
     PYTHON_BIN,
     REACTIVE_RUNNER_SCRIPT_FILE,
     ReactiveRunnerError,
@@ -39,6 +40,14 @@ def secure_run_subprocess_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> Magic
     return secure_run_subprocess_mock
 
 
+@pytest.fixture(name="os_kill_mock", autouse=True)
+def os_kill_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
+    """Mock the os.kill function."""
+    os_kill_mock = MagicMock(spec=os.kill)
+    monkeypatch.setattr("os.kill", os_kill_mock)
+    return os_kill_mock
+
+
 @pytest.fixture(name="subprocess_popen_mock")
 def subprocess_popen_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     """Mock the subprocess.Popen function."""
@@ -60,9 +69,7 @@ def test_reconcile_spawns_runners(
     assert: Three runners are spawned. Log file is setup.
     """
     queue_name = secrets.token_hex(16)
-    _arrange_reactive_processes(
-        secure_run_subprocess_mock, count_before_spawn=2, count_after_spawn=5
-    )
+    _arrange_reactive_processes(secure_run_subprocess_mock, count=2)
 
     delta = reconcile(5, mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
 
@@ -80,9 +87,7 @@ def test_reconcile_does_not_spawn_runners(
     assert: No runners are spawned.
     """
     queue_name = secrets.token_hex(16)
-    _arrange_reactive_processes(
-        secure_run_subprocess_mock, count_before_spawn=2, count_after_spawn=2
-    )
+    _arrange_reactive_processes(secure_run_subprocess_mock, count=2)
 
     delta = reconcile(2, mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
 
@@ -90,22 +95,43 @@ def test_reconcile_does_not_spawn_runners(
     assert subprocess_popen_mock.call_count == 0
 
 
-def test_reconcile_does_not_spawn_runners_for_too_many_processes(
-    secure_run_subprocess_mock: MagicMock, subprocess_popen_mock: MagicMock
+def test_reconcile_kills_processes_for_too_many_processes(
+    secure_run_subprocess_mock: MagicMock,
+    subprocess_popen_mock: MagicMock,
+    os_kill_mock: MagicMock,
 ):
     """
-    arrange: Mock that two reactive runner processes are active.
+    arrange: Mock that 3 reactive runner processes are active.
     act: Call reconcile with a quantity of 1.
-    assert: No runners are spawned and delta is 0.
+    assert: 2 processes are killed.
     """
     queue_name = secrets.token_hex(16)
-    _arrange_reactive_processes(
-        secure_run_subprocess_mock, count_before_spawn=2, count_after_spawn=2
-    )
+    _arrange_reactive_processes(secure_run_subprocess_mock, count=3)
     delta = reconcile(1, mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
 
-    assert delta == 0
+    assert delta == -2
     assert subprocess_popen_mock.call_count == 0
+    assert os_kill_mock.call_count == 2
+
+
+def test_reconcile_ignore_process_not_found_on_kill(
+    secure_run_subprocess_mock: MagicMock,
+    subprocess_popen_mock: MagicMock,
+    os_kill_mock: MagicMock,
+):
+    """
+    arrange: Mock 3 reactive processes and os.kill to fail once with a ProcessLookupError.
+    act: Call reconcile with a quantity of 1.
+    assert: The returned delta is still -2.
+    """
+    queue_name = secrets.token_hex(16)
+    _arrange_reactive_processes(secure_run_subprocess_mock, count=3)
+    os_kill_mock.side_effect = [None, ProcessLookupError]
+    delta = reconcile(1, mq_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
+
+    assert delta == -2
+    assert subprocess_popen_mock.call_count == 0
+    assert os_kill_mock.call_count == 2
 
 
 def test_reconcile_raises_reactive_runner_error_on_ps_failure(
@@ -118,7 +144,7 @@ def test_reconcile_raises_reactive_runner_error_on_ps_failure(
     """
     queue_name = secrets.token_hex(16)
     secure_run_subprocess_mock.return_value = CompletedProcess(
-        args=ACTIVE_SCRIPTS_COMMAND_LINE,
+        args=PIDS_COMMAND_LINE,
         returncode=1,
         stdout=b"",
         stderr=b"error",
@@ -130,33 +156,20 @@ def test_reconcile_raises_reactive_runner_error_on_ps_failure(
     assert "Failed to get list of processes" in str(err.value)
 
 
-def _arrange_reactive_processes(
-    secure_run_subprocess_mock: MagicMock, count_before_spawn: int, count_after_spawn: int
-):
+def _arrange_reactive_processes(secure_run_subprocess_mock: MagicMock, count: int):
     """Mock reactive runner processes are active.
 
     Args:
         secure_run_subprocess_mock: The mock to use for the ps command.
-        count_before_spawn: The number of processes before spawning new ones.
-        count_after_spawn: The number of processes after spawning new ones.
+        count: The number of processes.
     """
     process_cmds_before = "\n".join(
-        [f"{PYTHON_BIN} {REACTIVE_RUNNER_SCRIPT_FILE}" for _ in range(count_before_spawn)]
+        [f"{PYTHON_BIN} {REACTIVE_RUNNER_SCRIPT_FILE}\t{i}" for i in range(count)]
     )
-    process_cmds_after = "\n".join(
-        [f"{PYTHON_BIN} {REACTIVE_RUNNER_SCRIPT_FILE}" for _ in range(count_after_spawn)]
+
+    secure_run_subprocess_mock.return_value = CompletedProcess(
+        args=PIDS_COMMAND_LINE,
+        returncode=0,
+        stdout=f"CMD\n{process_cmds_before}".encode("utf-8"),
+        stderr=b"",
     )
-    secure_run_subprocess_mock.side_effect = [
-        CompletedProcess(
-            args=ACTIVE_SCRIPTS_COMMAND_LINE,
-            returncode=0,
-            stdout=f"CMD\n{process_cmds_before}".encode("utf-8"),
-            stderr=b"",
-        ),
-        CompletedProcess(
-            args=ACTIVE_SCRIPTS_COMMAND_LINE,
-            returncode=0,
-            stdout=f"CMD\n{process_cmds_after}".encode("utf-8"),
-            stderr=b"",
-        ),
-    ]
