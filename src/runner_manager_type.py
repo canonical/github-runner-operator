@@ -20,6 +20,9 @@ from repo_policy_compliance_client import RepoPolicyComplianceClient
 class FlushMode(Enum):
     """Strategy for flushing runners.
 
+    During pre-job (repo-check), the runners are marked as idle and if the pre-job fails, the
+    runner falls back to being idle again. Hence wait_repo_check is required.
+
     Attributes:
         FLUSH_IDLE: Flush only idle runners.
         FLUSH_IDLE_WAIT_REPO_CHECK: Flush only idle runners, then wait until repo-policy-check is
