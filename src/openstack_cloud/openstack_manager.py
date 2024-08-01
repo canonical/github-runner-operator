@@ -1574,6 +1574,6 @@ class OpenstackRunnerManager:
                 warn=True,
             )
             if not result.ok:
-                logger.warning("Failed to kill idle runner process. Instance: %s", server.name)
+                logger.warning("Failed to kill runner process. Instance: %s", server.name)
                 continue
-            logger.info("Successfully killed idle runner process. Instance: %s", server.name)
+            logger.info("Successfully killed runner process. Instance: %s", server.name)
