@@ -10,7 +10,6 @@ from pydantic import BaseModel
 
 from errors import LogrotateSetupError
 from metrics.events import METRICS_LOG_PATH
-from metrics.runner_logs import RUNNER_LOGS_DIR_PATH
 from reactive.runner_manager import REACTIVE_RUNNER_LOG_DIR
 
 LOG_ROTATE_TIMER_SYSTEMD_SERVICE = "logrotate.timer"
@@ -64,13 +63,6 @@ METRICS_LOGROTATE_CONFIG = LogrotateConfig(
     create=True,
 )
 
-RUNNER_LOGROTATE_CONFIG = LogrotateConfig(
-    name="github-runner-logs",
-    log_path_glob_pattern=f"{RUNNER_LOGS_DIR_PATH}/*",
-    rotate=0,
-    create=False,
-    notifempty=False,
-)
 
 REACTIVE_LOGROTATE_CONFIG = LogrotateConfig(
     name="reactive-runner",
@@ -118,7 +110,6 @@ def _configure() -> None:
     """Configure logrotate."""
     _write_config(REACTIVE_LOGROTATE_CONFIG)
     _write_config(METRICS_LOGROTATE_CONFIG)
-    _write_config(RUNNER_LOGROTATE_CONFIG)
 
 
 def _write_config(logrotate_config: LogrotateConfig) -> None:

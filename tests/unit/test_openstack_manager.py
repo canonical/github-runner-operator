@@ -768,7 +768,8 @@ def test__ensure_security_group_with_existing_rules():
                 {"protocol": "icmp"},
                 {"protocol": "tcp", "port_range_min": 22, "port_range_max": 22},
                 {"protocol": "tcp", "port_range_min": 10022, "port_range_max": 10022},
-            ]
+            ],
+            "id": "TEST_ID",
         }
     ]
 

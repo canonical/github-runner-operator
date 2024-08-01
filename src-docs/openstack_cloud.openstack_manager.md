@@ -18,7 +18,7 @@ Module for handling interactions with OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L186"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L187"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_instance_config`
 
@@ -54,7 +54,7 @@ Create an instance config from charm data.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L110"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L111"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `InstanceConfig`
 The configuration values for creating a single runner instance. 
@@ -93,7 +93,7 @@ __init__(
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L279"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L280"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `GithubRunnerRemoveError`
 Represents an error removing registered runner from Github. 
@@ -104,7 +104,7 @@ Represents an error removing registered runner from Github.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L289"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L290"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackRunnerManager`
 Runner manager for OpenStack-based instances. 
@@ -117,7 +117,7 @@ Runner manager for OpenStack-based instances.
  - <b>`unit_num`</b>:  The juju unit number. 
  - <b>`instance_name`</b>:  Prefix of the name for the set of runners. 
 
-<a href="../src/openstack_cloud/openstack_manager.py#L298"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L299"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -146,7 +146,7 @@ Construct OpenstackRunnerManager object.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L1501"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L1512"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `flush`
 
@@ -163,7 +163,7 @@ Flush Openstack servers.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L400"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L401"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_github_runner_info`
 
@@ -180,7 +180,7 @@ Get information on GitHub for the runners.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L329"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L330"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `reconcile`
 

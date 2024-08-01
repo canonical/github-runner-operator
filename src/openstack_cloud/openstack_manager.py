@@ -36,6 +36,7 @@ from fabric import Connection as SshConnection
 from openstack.compute.v2.server import Server
 from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import SDKException
+from openstack.network.v2.security_group import SecurityGroup
 from paramiko.ssh_exception import NoValidConnectionsError
 
 import reactive.runner_manager as reactive_runner_manager
@@ -688,7 +689,7 @@ class OpenstackRunnerManager:
         )
 
         with _create_connection(cloud_config=args.cloud_config) as conn:
-            OpenstackRunnerManager._ensure_security_group(conn)
+            runner_security_group = OpenstackRunnerManager._ensure_security_group(conn)
             OpenstackRunnerManager._setup_runner_keypair(conn, instance_config.name)
 
             logger.info("Creating runner %s", instance_config.name)
@@ -699,7 +700,7 @@ class OpenstackRunnerManager:
                     key_name=instance_config.name,
                     flavor=args.config.flavor,
                     network=args.config.network,
-                    security_groups=[SECURITY_GROUP_NAME],
+                    security_groups=[runner_security_group["id"]],
                     userdata=cloud_userdata_str,
                     auto_ip=False,
                     timeout=CREATE_SERVER_TIMEOUT,
@@ -780,32 +781,37 @@ class OpenstackRunnerManager:
         return pre_job_contents
 
     @staticmethod
-    def _ensure_security_group(conn: OpenstackConnection) -> None:
+    def _ensure_security_group(conn: OpenstackConnection) -> SecurityGroup:
         """Ensure runner security group exists.
 
         Args:
             conn: The connection object to access OpenStack cloud.
+
+        Returns:
+            The security group with the rules for runners.
         """
         rule_exists_icmp = False
         rule_exists_ssh = False
         rule_exists_tmate_ssh = False
 
-        security_groups = conn.list_security_groups(filters={"name": SECURITY_GROUP_NAME})
+        security_group_list = conn.list_security_groups(filters={"name": SECURITY_GROUP_NAME})
         # Pick the first security_group returned.
-        existing_security_group = next(iter(security_groups), None)
+        security_group = next(iter(security_group_list), None)
 
-        if existing_security_group is None:
+        if security_group is None:
             logger.info("Security group %s not found, creating it", SECURITY_GROUP_NAME)
-            conn.create_security_group(
+            security_group = conn.create_security_group(
                 name=SECURITY_GROUP_NAME,
                 description="For servers managed by the github-runner charm.",
             )
         else:
-            existing_rules = existing_security_group["security_group_rules"]
+            existing_rules = security_group["security_group_rules"]
             for rule in existing_rules:
                 if rule["protocol"] == "icmp":
                     logger.debug(
-                        "Found ICMP rule in existing security group %s", SECURITY_GROUP_NAME
+                        "Found ICMP rule in existing security group %s of ID %s",
+                        SECURITY_GROUP_NAME,
+                        security_group["id"],
                     )
                     rule_exists_icmp = True
                 if (
@@ -813,7 +819,9 @@ class OpenstackRunnerManager:
                     and rule["port_range_min"] == rule["port_range_max"] == 22
                 ):
                     logger.debug(
-                        "Found SSH rule in existing security group %s", SECURITY_GROUP_NAME
+                        "Found SSH rule in existing security group %s of ID %s",
+                        SECURITY_GROUP_NAME,
+                        security_group["id"],
                     )
                     rule_exists_ssh = True
                 if (
@@ -821,20 +829,22 @@ class OpenstackRunnerManager:
                     and rule["port_range_min"] == rule["port_range_max"] == 10022
                 ):
                     logger.debug(
-                        "Found tmate SSH rule in existing security group %s", SECURITY_GROUP_NAME
+                        "Found tmate SSH rule in existing security group %s of ID %s",
+                        SECURITY_GROUP_NAME,
+                        security_group["id"],
                     )
                     rule_exists_tmate_ssh = True
 
         if not rule_exists_icmp:
             conn.create_security_group_rule(
-                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                secgroup_name_or_id=security_group["id"],
                 protocol="icmp",
                 direction="ingress",
                 ethertype="IPv4",
             )
         if not rule_exists_ssh:
             conn.create_security_group_rule(
-                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                secgroup_name_or_id=security_group["id"],
                 port_range_min="22",
                 port_range_max="22",
                 protocol="tcp",
@@ -843,13 +853,14 @@ class OpenstackRunnerManager:
             )
         if not rule_exists_tmate_ssh:
             conn.create_security_group_rule(
-                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                secgroup_name_or_id=security_group["id"],
                 port_range_min="10022",
                 port_range_max="10022",
                 protocol="tcp",
                 direction="egress",
                 ethertype="IPv4",
             )
+        return security_group
 
     @staticmethod
     def _setup_runner_keypair(conn: OpenstackConnection, name: str) -> None:
