@@ -20,6 +20,7 @@ import shutil
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass
+from datetime import datetime
 from multiprocessing import Pool
 from pathlib import Path
 from typing import Iterable, Iterator, Literal, Optional, cast
@@ -32,7 +33,6 @@ import openstack.exceptions
 import openstack.image.v2.image
 import paramiko
 from fabric import Connection as SshConnection
-from invoke.runners import Result
 from openstack.compute.v2.server import Server
 from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import SDKException
@@ -61,7 +61,7 @@ from metrics import storage as metrics_storage
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner_manager import IssuedMetricEventsStats
-from runner_manager_type import OpenstackRunnerManagerConfig
+from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
 from runner_type import GithubPath, RunnerByHealth, RunnerGithubInfo
 from utilities import retry, set_env_var
 
@@ -458,7 +458,12 @@ class OpenstackRunnerManager:
         ]
 
     @staticmethod
-    def _health_check(conn: OpenstackConnection, server_name: str, startup: bool = False) -> bool:
+    def _health_check(
+        conn: OpenstackConnection,
+        server_name: str,
+        startup: bool = False,
+        building_timeout_mins: int = 10,
+    ) -> bool:
         """Health check a server instance.
 
         A healthy server is defined as:
@@ -476,6 +481,8 @@ class OpenstackRunnerManager:
             conn: The Openstack connection instance.
             server_name: The name of the OpenStack server to health check.
             startup: Check only whether the startup is successful.
+            building_timeout_mins: How long to wait for BUILDING status until it is deemed
+                unhealthy.
 
         Returns:
             Whether the instance is healthy.
@@ -487,6 +494,11 @@ class OpenstackRunnerManager:
             return False
         if server.status not in (_INSTANCE_STATUS_ACTIVE, _INSTANCE_STATUS_BUILDING):
             return False
+        created_at = datetime.strptime(server.created_at, "%Y-%m-%dT%H:%M:%SZ")
+        current_time = datetime.now(created_at.tzinfo)
+        elapsed_min = (created_at - current_time).total_seconds() / 60
+        if server.status == _INSTANCE_STATUS_BUILDING:
+            return elapsed_min < building_timeout_mins
         return OpenstackRunnerManager._ssh_health_check(
             conn=conn, server_name=server_name, startup=startup
         )
@@ -528,8 +540,7 @@ class OpenstackRunnerManager:
         if RUNNER_WORKER_PROCESS in result.stdout or RUNNER_LISTENER_PROCESS in result.stdout:
             return True
 
-        logger.error("[ALERT] Health check failed for server: %s", server_name)
-        return True
+        return False
 
     @staticmethod
     @retry(tries=3, delay=5, max_delay=60, backoff=2, local_logger=logger)
@@ -1189,7 +1200,7 @@ class OpenstackRunnerManager:
             ) from exc
 
         try:
-            result: Result = ssh_conn.run(
+            result: invoke.runners.Result = ssh_conn.run(
                 f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}",
                 warn=True,
             )
@@ -1509,20 +1520,71 @@ class OpenstackRunnerManager:
         except IssueMetricEventError:
             logger.exception("Failed to issue Reconciliation metric")
 
-    def flush(self) -> int:
+    def flush(self, mode: FlushMode = FlushMode.FLUSH_IDLE) -> int:
         """Flush Openstack servers.
+
+        1. Kill the processes depending on flush mode.
+        2. Get unhealthy runners after process purging.
+        3. Delete unhealthy runners.
+
+        Args:
+            mode: The mode to determine which runner to flush.
 
         Returns:
             The number of runners flushed.
         """
         logger.info("Flushing OpenStack all runners")
         with _create_connection(self._cloud_config) as conn:
+            self._kill_runner_processes(conn=conn, mode=mode)
             runner_by_health = self._get_openstack_runner_status(conn)
             remove_token = self._github.get_runner_remove_token(path=self._config.path)
-            runners_to_delete = (*runner_by_health.healthy, *runner_by_health.unhealthy)
             self._remove_runners(
                 conn=conn,
-                instance_names=runners_to_delete,
+                instance_names=runner_by_health.unhealthy,
                 remove_token=remove_token,
             )
-            return len(runners_to_delete)
+        return len(runner_by_health.unhealthy)
+
+    def _kill_runner_processes(self, conn: OpenstackConnection, mode: FlushMode) -> None:
+        """Kill runner application that are not running any jobs.
+
+        Runners that have not picked up a job has
+        1. no Runner.Worker process
+        2. no pre-run.sh job process
+
+        Args:
+            conn: The connection object to access OpenStack cloud.
+            mode: The flush mode to determine which runner processes to kill.
+
+        Raises:
+            NotImplementedError: If unsupported flush mode has been passed.
+        """
+        killer_command: str
+        match mode:
+            case FlushMode.FLUSH_IDLE:
+                # only kill Runner.Listener if Runner.Worker does not exist.
+                killer_command = (
+                    "! pgrep -x Runner.Worker && pgrep -x Runner.Listener && "
+                    "kill $(pgrep -x Runner.Listener)"
+                )
+            case FlushMode.FLUSH_BUSY:
+                # kill both Runner.Listener and Runner.Worker processes.
+                # This kills pre-job.sh, a child process of Runner.Worker.
+                killer_command = (
+                    "pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);"
+                    "pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);"
+                )
+            case _:
+                raise NotImplementedError(f"Unsupported flush mode {mode}")
+
+        servers = self._get_openstack_instances(conn=conn)
+        for server in servers:
+            ssh_conn: SshConnection = self._get_ssh_connection(conn=conn, server_name=server.name)
+            result: invoke.runners.Result = ssh_conn.run(
+                killer_command,
+                warn=True,
+            )
+            if not result.ok:
+                logger.warning("Failed to kill runner process. Instance: %s", server.name)
+                continue
+            logger.info("Successfully killed runner process. Instance: %s", server.name)
