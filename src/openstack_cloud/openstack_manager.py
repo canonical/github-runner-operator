@@ -480,7 +480,7 @@ class OpenstackRunnerManager:
             conn: The Openstack connection instance.
             server_name: The name of the OpenStack server to health check.
             startup: Check only whether the startup is successful.
-            building_timeout_mins: How long to wait for BULIDING status until it is deemed
+            building_timeout_mins: How long to wait for BUILDING status until it is deemed
                 unhealthy.
 
         Returns:
@@ -1516,12 +1516,15 @@ class OpenstackRunnerManager:
         2. Get unhealthy runners after process purging.
         3. Delete unhealthy runners.
 
+        Args:
+            mode: The mode to determine which runner to flush.
+
         Returns:
             The number of runners flushed.
         """
         logger.info("Flushing OpenStack all runners")
         with _create_connection(self._cloud_config) as conn:
-            self._kill_runner_processes(conn=conn, mmode=mode)
+            self._kill_runner_processes(conn=conn, mode=mode)
             runner_by_health = self._get_openstack_runner_status(conn)
             remove_token = self._github.get_runner_remove_token(path=self._config.path)
             self._remove_runners(
@@ -1531,7 +1534,7 @@ class OpenstackRunnerManager:
             )
         return len(runner_by_health.unhealthy)
 
-    def _kill_runner_processes(self, conn: OpenstackConnection, mode: FlushMode):
+    def _kill_runner_processes(self, conn: OpenstackConnection, mode: FlushMode) -> None:
         """Kill runner application that are not running any jobs.
 
         Runners that have not picked up a job has
@@ -1548,12 +1551,14 @@ class OpenstackRunnerManager:
         killer_command: str
         match mode:
             case FlushMode.FLUSH_IDLE:
+                # only kill Runner.Listener if Runner.Worker does not exist.
                 killer_command = (
                     "! pgrep -x Runner.Worker && pgrep -x Runner.Listener && "
                     "kill $(pgrep -x Runner.Listener)"
                 )
             case FlushMode.FLUSH_BUSY:
-                # This kills pre-job as well.
+                # kill both Runner.Listener and Runner.Worker processes.
+                # This kills pre-job.sh, a child process of Runner.Worker.
                 killer_command = (
                     "pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);"
                     "pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);"
@@ -1563,7 +1568,7 @@ class OpenstackRunnerManager:
 
         servers = self._get_openstack_instances(conn=conn)
         for server in servers:
-            ssh_conn: SshConnection = self._get_ssh_connection(conn=conn, server=server.name)
+            ssh_conn: SshConnection = self._get_ssh_connection(conn=conn, server_name=server.name)
             result: invoke.runners.Result = ssh_conn.run(
                 killer_command,
                 warn=True,

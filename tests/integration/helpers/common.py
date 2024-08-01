@@ -381,7 +381,8 @@ async def dispatch_workflow(
     conclusion: str,
     workflow_id_or_name: str,
     dispatch_input: dict | None = None,
-):
+    wait: bool = True,
+) -> WorkflowRun:
     """Dispatch a workflow on a branch for the runner to run.
 
     The function assumes that there is only one runner running in the unit.
@@ -394,9 +395,10 @@ async def dispatch_workflow(
         workflow_id_or_name: The workflow filename in .github/workflows in main branch to run or
             its id.
         dispatch_input: Workflow input values.
+        wait: Whether to wait for runner to run workflow until completion.
 
     Returns:
-        A completed workflow.
+        The workflow run.
     """
     start_time = datetime.now(timezone.utc)
 
@@ -413,14 +415,16 @@ async def dispatch_workflow(
         timeout=10 * 60,
     )
     assert run, f"Run not found for workflow: {workflow.name} ({workflow.id})"
-    await wait_for(partial(_is_workflow_run_complete, run=run), timeout=60 * 30, check_interval=60)
 
+    if not wait:
+        return run
+    await wait_for(partial(_is_workflow_run_complete, run=run), timeout=60 * 30, check_interval=60)
     # The run object is updated by _is_workflow_run_complete function above.
     assert (
         run.conclusion == conclusion
     ), f"Unexpected run conclusion, expected: {conclusion}, got: {run.conclusion}"
 
-    return workflow
+    return run
 
 
 P = ParamSpec("P")
