@@ -42,20 +42,28 @@ class _SshError(Exception):
 
 @dataclass
 class OpenstackInstance:
-    id: str
+    server_id: str
+    server_name: str
     name: str
     addresses: list[str]
+    status: str
 
-    def __init__(self, server: OpenstackServer):
-        self.id = server.id
-        self.name = server.name
+    def __init__(self, server: OpenstackServer, prefix: str):
+        self.server_id = server.id
+        self.server_name = server.name
+        self.status = server.status
         self.addresses = [
             address["addr"]
             for network_addresses in server.addresses.values()
             for address in network_addresses
         ]
 
+        if not self.name.startswith(prefix):
+            # Should never happen.
+            raise ValueError(f"Found openstack server {server.name} managed under prefix {prefix}, contact devs")
+        self.name = self.server_name[len(prefix):]
 
+    
 @contextmanager
 def _get_openstack_connection(
     clouds_config: dict[str, dict], cloud: str
@@ -145,17 +153,29 @@ class OpenstackCloud:
                 raise OpenStackError(f"Failed to create openstack server {full_name}") from err
 
             return OpenstackInstance(server)
+    
+    def get_instance(self, name: str) -> OpenstackInstance:
+        full_name = self.get_instance_name(name)
+        logger.info("Getting openstack server with %s", full_name)
 
-    def delete_instance(self, name: str):
+        with _get_openstack_connection(
+            clouds_config=self._clouds_config, cloud=self._cloud
+        ) as conn:
+            return OpenstackInstance(OpenstackCloud._get_and_ensure_unique_server(conn, full_name))
+
+    def delete_instance(self, name: str) -> None:
         full_name = self.get_instance_name(name)
         logger.info("Deleting openstack server with %s", full_name)
 
         with _get_openstack_connection(
             clouds_config=self._clouds_config, cloud=self._cloud
         ) as conn:
-            server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
-            conn.delete_server(name_or_id=server.id)
-            OpenstackCloud._delete_key_pair(conn, full_name)
+            try:
+                server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
+                conn.delete_server(name_or_id=server.id)
+                OpenstackCloud._delete_key_pair(conn, full_name)
+            except (openstack.exceptions.SDKException, openstack.exceptions.ResourceTimeout) as err:
+                raise OpenStackError(f"Failed to remove openstack runner {full_name}") from err
 
     def get_ssh_connection(self, instance: OpenstackInstance) -> SshConnection:
         key_path = OpenstackCloud._get_key_path(instance.name)
