@@ -10,15 +10,15 @@ Module for managing reactive runners.
 - **MQ_URI_ENV_VAR**
 - **QUEUE_NAME_ENV_VAR**
 - **REACTIVE_RUNNER_SCRIPT_FILE**
-- **REACTIVE_RUNNER_TIMEOUT_INTERVAL**
 - **PYTHON_BIN**
-- **ACTIVE_SCRIPTS_COMMAND_LINE**
-- **TIMEOUT_BIN**
+- **REACTIVE_RUNNER_CMD_LINE_PREFIX**
+- **PID_CMD_COLUMN_WIDTH**
+- **PIDS_COMMAND_LINE**
 - **UBUNTU_USER**
 
 ---
 
-<a href="../src/reactive/runner_manager.py#L31"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/runner_manager.py#L39"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `reconcile`
 
@@ -46,7 +46,7 @@ Raises a ReactiveRunnerError if the runner fails to spawn.
 
 ---
 
-<a href="../src/reactive/runner_manager.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/reactive/runner_manager.py#L35"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `ReactiveRunnerError`
 Raised when a reactive runner error occurs. 
