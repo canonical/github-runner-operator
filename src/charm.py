@@ -58,7 +58,6 @@ from charm_state import (
     CharmState,
     GithubPath,
     InstanceType,
-    OpenstackImage,
     ProxyConfig,
     RunnerStorage,
     VirtualMachineResources,
@@ -66,6 +65,8 @@ from charm_state import (
 )
 from errors import (
     ConfigurationError,
+    IntegrationDataNotReadyError,
+    IntegrationNotFoundError,
     LogrotateSetupError,
     MissingMongoDBError,
     MissingRunnerBinaryError,
@@ -141,6 +142,12 @@ def catch_charm_errors(
         except MissingMongoDBError as err:
             logger.exception("Missing integration data")
             self.unit.status = WaitingStatus(str(err))
+        except IntegrationNotFoundError as err:
+            logger.exception("Missing integration")
+            self.unit.status = BlockedStatus(str(err))
+        except IntegrationDataNotReadyError as err:
+            logger.exception("Missing integration data")
+            self.unit.status = WaitingStatus(str(err))
 
     return func_with_catch_errors
 
@@ -179,6 +186,12 @@ def catch_action_errors(
             )
             self.unit.status = MaintenanceStatus(err_msg)
             event.fail(err_msg)
+        except IntegrationNotFoundError as err:
+            event.fail(str(err))
+            self.unit.status = BlockedStatus(str(err))
+        except IntegrationDataNotReadyError as err:
+            event.fail(str(err))
+            self.unit.status = WaitingStatus(str(err))
 
     return func_with_catch_errors
 
@@ -493,8 +506,6 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
-            if not self._get_set_image_ready_status():
-                return
             openstack_runner_manager = self._get_openstack_runner_manager(state)
             openstack_runner_manager.reconcile(state.runner_config.virtual_machines)
             self.unit.status = ActiveStatus()
@@ -615,8 +626,6 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
-            if not self._get_set_image_ready_status():
-                return
             if state.charm_config.token != self._stored.token:
                 openstack_runner_manager = self._get_openstack_runner_manager(state)
                 openstack_runner_manager.flush()
@@ -717,8 +726,6 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
-            if not self._get_set_image_ready_status():
-                return
             runner_manager = self._get_openstack_runner_manager(state)
             runner_manager.reconcile(state.runner_config.virtual_machines)
             self.unit.status = ActiveStatus()
@@ -811,9 +818,6 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
-            if not self._get_set_image_ready_status():
-                event.fail("Openstack image not yet provided/ready.")
-                return
             runner_manager = self._get_openstack_runner_manager(state)
 
             delta = runner_manager.reconcile(state.runner_config.virtual_machines)
@@ -1146,8 +1150,6 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
-            if not self._get_set_image_ready_status():
-                return
             runner_manager = self._get_openstack_runner_manager(state)
             # TODO: 2024-04-12: Should be flush idle.
             runner_manager.flush()
@@ -1173,8 +1175,6 @@ class GithubRunnerCharm(CharmBase):
                 "Openstack mode not enabled. Please remove the image integration."
             )
             return
-        if not self._get_set_image_ready_status():
-            return
 
         runner_manager = self._get_openstack_runner_manager(state)
         # TODO: 2024-04-12: Should be flush idle.
@@ -1182,21 +1182,6 @@ class GithubRunnerCharm(CharmBase):
         runner_manager.reconcile(state.runner_config.virtual_machines)
         self.unit.status = ActiveStatus()
         return
-
-    def _get_set_image_ready_status(self) -> bool:
-        """Check if image is ready for Openstack and charm status accordingly.
-
-        Returns:
-            Whether the Openstack image is ready via image integration.
-        """
-        openstack_image = OpenstackImage.from_charm(self)
-        if openstack_image is None:
-            self.unit.status = BlockedStatus("Please provide image integration.")
-            return False
-        if not openstack_image.id:
-            self.unit.status = WaitingStatus("Waiting for image over integration.")
-            return False
-        return True
 
     def _get_openstack_runner_manager(
         self, state: CharmState, token: str | None = None, path: GithubPath | None = None
@@ -1221,22 +1206,15 @@ class GithubRunnerCharm(CharmBase):
         if path is None:
             path = state.charm_config.path
 
-        # Empty image can be passed down due to a delete only case where deletion of runners do not
-        # depend on the image ID being available. Make sure that the charm goes to blocked status
-        # in hook where a runner may be created. TODO: 2024-07-09 This logic is subject to
-        # refactoring.
         image = state.runner_config.openstack_image
-        image_id = image.id if image and image.id else ""
-        image_labels = image.tags if image and image.tags else []
-
         app_name, unit = self.unit.name.rsplit("/", 1)
         openstack_runner_manager_config = OpenstackRunnerManagerConfig(
             charm_state=state,
             path=path,
             token=token,
-            labels=(*state.charm_config.labels, *image_labels),
+            labels=(*state.charm_config.labels, *image.tags),
             flavor=state.runner_config.openstack_flavor,
-            image=image_id,
+            image=image.id,
             network=state.runner_config.openstack_network,
             dockerhub_mirror=state.charm_config.dockerhub_mirror,
             reactive_config=state.reactive_config,
