@@ -20,6 +20,7 @@ from charm_state import (
 from tests.integration.helpers import lxd
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
+    DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     InstanceHelper,
     dispatch_workflow,
     wait_for,
@@ -141,7 +142,8 @@ async def test_flush_runner_and_resource_config(
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="success",
-        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+        dispatch_input={"runner": app.name, "minutes": "5"},
         wait=False,
     )
     await wait_for(lambda: workflow.update() and workflow.status == "in_progress")
