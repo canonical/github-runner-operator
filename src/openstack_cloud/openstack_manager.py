@@ -467,9 +467,10 @@ class OpenstackRunnerManager:
 
         A healthy server is defined as:
             1. Openstack instance status is ACTIVE or BUILDING.
-            2. Runner.Worker exists (running a job).
-            3. Runner.Listener exists (waiting for job).
-            3. GitHub runner status is Idle or Active.
+            2. Openstack instance status is in BUILDING less than CREATE_SERVER_TIMEOUT seconds.
+            3. Runner.Worker exists (running a job).
+            4. Runner.Listener exists (waiting for job).
+            5. GitHub runner status is Idle or Active.
 
         An undetermined server is marked as healthy when:
             1. SSH fails - could be a transient network error.
