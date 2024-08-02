@@ -4,7 +4,7 @@
 from abc import ABC
 from dataclasses import dataclass
 from enum import Enum
-from typing import Tuple
+from typing import Sequence, Tuple
 
 RunnerId = str
 
@@ -13,63 +13,65 @@ _OPENSTACK_STATUS_ERROR = "ERROR"
 _OPENSTACK_STATUS_ACTIVE = "ACTIVE"
 _OPENSTACK_STATUS_BUILDING = "BUILDING"
 
-class CloudRunnerStatus(str, Enum):
-    created = "created"
-    active = "active"
-    deleted = "deleted"
-    error = "error"
-    stopped = "stopped"
-    unknown = "unknown"
-    unexpected = "unexpected"
 
-    
-    def from_openstack_status(status: str) -> "CloudRunnerStatus":
+class CloudRunnerState(str, Enum):
+    CREATED = "created"
+    ACTIVE = "active"
+    DELETED = "deleted"
+    ERROR = "error"
+    STOPPED = "stopped"
+    UNKNOWN = "unknown"
+    UNEXPECTED = "unexpected"
+
+    def __init__(openstack_server_status: str) -> None:
         """Create from openstack server status.
-        
+
         The openstack server status are documented here:
         https://docs.openstack.org/api-guide/compute/server_concepts.html
-        
+
         Args:
             status: Openstack server status.
-        
-        Returns:
-            The CloudRunnerStatus.
         """
-        match status:
+        match openstack_server_status:
             case "BUILD":
-                return CloudRunnerStatus.created
+                return CloudRunnerState.CREATED
             case "REBUILD":
-                return CloudRunnerStatus.created
+                return CloudRunnerState.CREATED
             case "ACTIVE":
-                return CloudRunnerStatus.active
+                return CloudRunnerState.ACTIVE
             case "ERROR":
-                return CloudRunnerStatus.error
+                return CloudRunnerState.ERROR
             case "STOPPED":
-                return CloudRunnerStatus.stopped
+                return CloudRunnerState.STOPPED
             case "DELETED":
-                return CloudRunnerStatus.deleted
+                return CloudRunnerState.DELETED
             case "UNKNOWN":
-                return CloudRunnerStatus.unknown
+                return CloudRunnerState.UNKNOWN
             case _:
-                return CloudRunnerStatus.unexpected
+                return CloudRunnerState.UNEXPECTED
+
 
 @dataclass
-class RunnerInstance:
+class CloudRunnerInstance:
     name: str
     id: str
-    status: CloudRunnerStatus
+    status: CloudRunnerState
+
 
 @dataclass
 class RunnerMetrics:
     pass
 
+
 class CloudRunnerManager(ABC):
     def create_runner(self, registration_token: str) -> RunnerId: ...
 
-    def get_runner(self, id: RunnerId) -> RunnerInstance: ...
+    def get_runner(self, id: RunnerId) -> CloudRunnerInstance: ...
 
     def get_runners(
-        self, cloud_runner_status: list[CloudRunnerStatus]
-    ) -> Tuple[RunnerInstance]: ...
+        self, cloud_runner_status: Sequence[CloudRunnerState]
+    ) -> Tuple[CloudRunnerInstance]: ...
 
-    def delete_runners(self, id: RunnerId, remove_token: str) -> None: ...
+    def delete_runner(self, id: RunnerId, remove_token: str) -> None: ...
+
+    def cleanup_runner(self, remove_token: str) -> None: ...

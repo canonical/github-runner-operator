@@ -11,12 +11,12 @@
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L43"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L39"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackInstance`
 OpenstackInstance(server: openstack.compute.v2.server.Server, prefix: str) 
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L51"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L47"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -34,14 +34,14 @@ __init__(server: Server, prefix: str)
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L101"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L99"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackCloud`
 
 
 
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L103"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L101"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -64,7 +64,21 @@ Create a OpenstackCloud instance.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L166"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L240"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>method</kbd> `cleanup`
+
+```python
+cleanup() → None
+```
+
+
+
+
+
+---
+
+<a href="../src/openstack_cloud/openstack_cloud.py#L173"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `delete_instance`
 
@@ -78,7 +92,7 @@ delete_instance(name: str) → None
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L157"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L164"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_instance`
 
@@ -92,7 +106,7 @@ get_instance(name: str) → OpenstackInstance
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L295"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L314"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_instance_name`
 
@@ -106,12 +120,12 @@ get_instance_name(name: str) → str
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L217"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L227"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_instances`
 
 ```python
-get_instances() → list[OpenstackInstance]
+get_instances() → tuple[OpenstackInstance]
 ```
 
 
@@ -120,7 +134,7 @@ get_instances() → list[OpenstackInstance]
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L180"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L190"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_ssh_connection`
 
@@ -134,7 +148,7 @@ get_ssh_connection(instance: OpenstackInstance) → Connection
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L116"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L114"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `launch_instance`
 
