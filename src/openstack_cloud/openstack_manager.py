@@ -462,7 +462,6 @@ class OpenstackRunnerManager:
         conn: OpenstackConnection,
         server_name: str,
         startup: bool = False,
-        building_timeout_mins: int = 10,
     ) -> bool:
         """Health check a server instance.
 
@@ -481,8 +480,6 @@ class OpenstackRunnerManager:
             conn: The Openstack connection instance.
             server_name: The name of the OpenStack server to health check.
             startup: Check only whether the startup is successful.
-            building_timeout_mins: How long to wait for BUILDING status until it is deemed
-                unhealthy.
 
         Returns:
             Whether the instance is healthy.
@@ -496,9 +493,9 @@ class OpenstackRunnerManager:
             return False
         created_at = datetime.strptime(server.created_at, "%Y-%m-%dT%H:%M:%SZ")
         current_time = datetime.now(created_at.tzinfo)
-        elapsed_min = (created_at - current_time).total_seconds() / 60
+        elapsed_min = (created_at - current_time).total_seconds()
         if server.status == _INSTANCE_STATUS_BUILDING:
-            return elapsed_min < building_timeout_mins
+            return elapsed_min < CREATE_SERVER_TIMEOUT
         return OpenstackRunnerManager._ssh_health_check(
             conn=conn, server_name=server_name, startup=startup
         )
