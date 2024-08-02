@@ -694,6 +694,7 @@ class OpenstackRunnerManager:
                     auto_ip=False,
                     timeout=CREATE_SERVER_TIMEOUT,
                     wait=True,
+                    meta={"runner_protocol": 0},
                 )
             except openstack.exceptions.ResourceTimeout as err:
                 logger.exception("Timeout creating OpenStack runner %s", instance_config.name)

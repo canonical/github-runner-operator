@@ -132,16 +132,16 @@ options:
     type: int
     default: 2
     description: >-
-      The number of CPUs used per virtual machine runner.
+      The number of CPUs used per virtual machine runner. Only used in LXD mode.
   vm-memory:
     type: string
     default: 7GiB
     description: >-
       Amount of memory to allocate per virtual machine runner. Positive integers with KiB, MiB, GiB,
-      TiB, PiB, EiB suffix.
+      TiB, PiB, EiB suffix. Only used in LXD mode.
   vm-disk:
     type: string
     default: 10GiB
     description: >-
       Amount of disk space to allocate to root disk for virtual machine runner. Positive integers
-      with KiB, MiB, GiB, TiB, PiB, EiB suffix.
+      with KiB, MiB, GiB, TiB, PiB, EiB suffix. Only used in LXD mode.
