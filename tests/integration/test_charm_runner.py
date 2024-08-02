@@ -146,7 +146,7 @@ async def test_flush_runner_and_resource_config(
         dispatch_input={"runner": app.name, "minutes": "5"},
         wait=False,
     )
-    await wait_for(lambda: workflow.update() and workflow.status == "in_progress")
+    await wait_for(lambda: workflow.update() or workflow.status == "in_progress")
     action = await app.units[0].run_action("flush-runners")
     await action.wait()
 
