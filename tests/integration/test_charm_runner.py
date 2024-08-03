@@ -8,6 +8,7 @@ import pytest
 import pytest_asyncio
 from github.Branch import Branch
 from github.Repository import Repository
+from juju.action import Action
 from juju.application import Application
 from juju.model import Model
 
@@ -147,14 +148,18 @@ async def test_flush_runner_and_resource_config(
         wait=False,
     )
     await wait_for(lambda: workflow.update() or workflow.status == "in_progress")
-    action = await app.units[0].run_action("flush-runners")
+    action: Action = await app.units[0].run_action("flush-runners")
     await action.wait()
 
     assert action.status == "completed"
     assert action.results["delta"]["virtual-machines"] == "0"
 
-    action = await app.units[0].run_action("reconcile-runners")
+    await wait_for(lambda: workflow.update() or workflow.status == "completed")
+    action: Action = await app.units[0].run_action("flush-runners")
     await action.wait()
+
+    assert action.status == "completed"
+    assert action.results["delta"]["virtual-machines"] == "1"
 
 
 @pytest.mark.openstack
