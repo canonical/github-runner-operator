@@ -93,7 +93,7 @@ async def test_flush_runner_and_resource_config(
     unit = app.units[0]
 
     # 1.
-    action = await app.units[0].run_action("check-runners")
+    action: Action = await app.units[0].run_action("check-runners")
     await action.wait()
 
     assert action.status == "completed"
@@ -148,14 +148,14 @@ async def test_flush_runner_and_resource_config(
         wait=False,
     )
     await wait_for(lambda: workflow.update() or workflow.status == "in_progress")
-    action: Action = await app.units[0].run_action("flush-runners")
+    action = await app.units[0].run_action("flush-runners")
     await action.wait()
 
     assert action.status == "completed"
     assert action.results["delta"]["virtual-machines"] == "0"
 
     await wait_for(lambda: workflow.update() or workflow.status == "completed")
-    action: Action = await app.units[0].run_action("flush-runners")
+    action = await app.units[0].run_action("flush-runners")
     await action.wait()
 
     assert action.status == "completed"
