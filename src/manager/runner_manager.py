@@ -41,12 +41,11 @@ class RunnerInstance:
         self.name = github_info.name
         self.id = cloud_instance.id
         self.github_state = GithubRunnerState(SelfHostedRunner)
-        self.cloud_state = cloud_instance.status
+        self.cloud_state = cloud_instance.state
 
 
 @dataclass
 class RunnerManagerConfig:
-    prefix: str
     token: str
     path: GithubPath
 
@@ -57,7 +56,7 @@ class RunnerManager:
         self._config = config
         self._cloud = cloud_runner_manager
         self._github = GithubRunnerManager(
-            self._config.prefix, self._config.path, self._config.path
+            prefix=self._cloud.get_name_prefix(), token=self._config.token, path=self._config.path
         )
 
     def create_runners(self, num: int) -> list[RunnerId]:

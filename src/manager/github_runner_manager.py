@@ -15,7 +15,8 @@ class GithubRunnerState(str, Enum):
     OFFLINE = "offline"
     UNKNOWN = "unknown"
 
-    def __init__(self, runner: SelfHostedRunner) -> "GithubRunnerState":
+    @staticmethod
+    def from_runner(runner: SelfHostedRunner) -> "GithubRunnerState":
         state = GithubRunnerState.OFFLINE
         if runner.status == GitHubRunnerStatus.ONLINE:
             if runner.busy:
@@ -33,11 +34,12 @@ class GithubRunnerManager:
         self._github = GithubClient(token)
 
     def get_runners(self, states: Sequence[GithubRunnerState]) -> tuple[SelfHostedRunner]:
-        runner_list = self._github.get_runner_github_info()
+        runner_list = self._github.get_runner_github_info(self._path)
         return tuple(
             runner
             for runner in runner_list
-            if GithubRunnerManager._filter_runner_state(runner, states)
+            if runner.name.startswith(self._prefix)
+            and GithubRunnerManager._filter_runner_state(runner, states)
         )
 
     def delete_runners(self, states: Sequence[GithubRunnerState]) -> None:
@@ -55,4 +57,4 @@ class GithubRunnerManager:
     def _filter_runner_state(
         runner: SelfHostedRunner, states: Sequence[GithubRunnerState]
     ) -> bool:
-        return GithubRunnerState(runner) in states
+        return GithubRunnerState.from_runner(runner) in states

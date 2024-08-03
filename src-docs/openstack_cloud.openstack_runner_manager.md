@@ -19,10 +19,10 @@
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L55"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L65"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackRunnerManagerConfig`
-OpenstackRunnerManagerConfig(image: str, flavor: str, network: str, github_path: charm_state.GithubOrg | charm_state.GithubRepo, labels: list[str], proxy_config: charm_state.ProxyConfig | None, dockerhub_mirror: str | None, ssh_debug_connections: list[charm_state.SSHDebugConnection], repo_policy_url: str, repo_policy_token: str, clouds_config: dict[str, dict], cloud: str) 
+OpenstackRunnerManagerConfig(clouds_config: dict[str, dict], cloud: str, image: str, flavor: str, network: str, github_path: charm_state.GithubOrg | charm_state.GithubRepo, labels: list[str], proxy_config: charm_state.ProxyConfig | None, dockerhub_mirror: str | None, ssh_debug_connections: list[charm_state.SSHDebugConnection] | None, repo_policy_url: str | None, repo_policy_token: str | None) 
 
 <a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
@@ -30,6 +30,8 @@ OpenstackRunnerManagerConfig(image: str, flavor: str, network: str, github_path:
 
 ```python
 __init__(
+    clouds_config: dict[str, dict],
+    cloud: str,
     image: str,
     flavor: str,
     network: str,
@@ -37,11 +39,9 @@ __init__(
     labels: list[str],
     proxy_config: ProxyConfig | None,
     dockerhub_mirror: str | None,
-    ssh_debug_connections: list[SSHDebugConnection],
-    repo_policy_url: str,
-    repo_policy_token: str,
-    clouds_config: dict[str, dict],
-    cloud: str
+    ssh_debug_connections: list[SSHDebugConnection] | None,
+    repo_policy_url: str | None,
+    repo_policy_token: str | None
 ) → None
 ```
 
@@ -55,19 +55,19 @@ __init__(
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L71"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L81"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackRunnerManager`
 
 
 
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L73"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L83"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
 ```python
-__init__(runner_flavor: str, config: OpenstackRunnerManagerConfig) → None
+__init__(prefix: str, config: OpenstackRunnerManagerConfig) → None
 ```
 
 
@@ -79,7 +79,21 @@ __init__(runner_flavor: str, config: OpenstackRunnerManagerConfig) → None
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L80"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L178"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>method</kbd> `cleanup`
+
+```python
+cleanup(remove_token: str) → None
+```
+
+
+
+
+
+---
+
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L95"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `create_runner`
 
@@ -93,12 +107,12 @@ create_runner(registration_token: str) → str
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L118"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L157"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>method</kbd> `delete_runners`
+### <kbd>method</kbd> `delete_runner`
 
 ```python
-delete_runners(id: str, remove_token: str) → None
+delete_runner(id: str, remove_token: str) → None
 ```
 
 
@@ -107,12 +121,26 @@ delete_runners(id: str, remove_token: str) → None
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L92"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>method</kbd> `get_name_prefix`
+
+```python
+get_name_prefix() → str
+```
+
+
+
+
+
+---
+
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L131"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_runner`
 
 ```python
-get_runner(id: str) → RunnerInstance | None
+get_runner(id: str) → CloudRunnerInstance | None
 ```
 
 
@@ -121,14 +149,14 @@ get_runner(id: str) → RunnerInstance | None
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L112"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L143"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_runners`
 
 ```python
 get_runners(
-    cloud_runner_status: list[CloudRunnerStatus]
-) → Tuple[RunnerInstance]
+    cloud_runner_status: Sequence[CloudRunnerState]
+) → Tuple[CloudRunnerInstance]
 ```
 
 

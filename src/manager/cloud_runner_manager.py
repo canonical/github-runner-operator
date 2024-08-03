@@ -23,7 +23,8 @@ class CloudRunnerState(str, Enum):
     UNKNOWN = "unknown"
     UNEXPECTED = "unexpected"
 
-    def __init__(openstack_server_status: str) -> None:
+    @staticmethod
+    def from_openstack_server_status(openstack_server_status: str) -> None:
         """Create from openstack server status.
 
         The openstack server status are documented here:
@@ -55,7 +56,7 @@ class CloudRunnerState(str, Enum):
 class CloudRunnerInstance:
     name: str
     id: str
-    status: CloudRunnerState
+    state: CloudRunnerState
 
 
 @dataclass
@@ -64,6 +65,8 @@ class RunnerMetrics:
 
 
 class CloudRunnerManager(ABC):
+    def get_name_prefix(self) -> str: ...
+
     def create_runner(self, registration_token: str) -> RunnerId: ...
 
     def get_runner(self, id: RunnerId) -> CloudRunnerInstance: ...

@@ -64,6 +64,8 @@ class _PullFileError(Exception):
 
 @dataclass
 class OpenstackRunnerManagerConfig:
+    clouds_config: dict[str, dict]
+    cloud: str
     image: str
     flavor: str
     network: str
@@ -71,23 +73,24 @@ class OpenstackRunnerManagerConfig:
     labels: list[str]
     proxy_config: ProxyConfig | None
     dockerhub_mirror: str | None
-    ssh_debug_connections: list[SSHDebugConnection]
-    repo_policy_url: str
-    repo_policy_token: str
-    clouds_config: dict[str, dict]
-    cloud: str
+    ssh_debug_connections: list[SSHDebugConnection] | None
+    repo_policy_url: str | None
+    repo_policy_token: str | None
 
 
 class OpenstackRunnerManager(CloudRunnerManager):
 
-    def __init__(self, runner_flavor: str, config: OpenstackRunnerManagerConfig) -> None:
-        self.runner_flavor = runner_flavor
+    def __init__(self, prefix: str, config: OpenstackRunnerManagerConfig) -> None:
+        self.prefix = prefix
         self.config = config
         self._openstack_cloud = OpenstackCloud(
             clouds_config=self.config.clouds_config,
             cloud=self.config.cloud,
-            prefix=self.runner_flavor,
+            prefix=self.prefix,
         )
+
+    def get_name_prefix(self) -> str:
+        return self.prefix
 
     def create_runner(self, registration_token: str) -> RunnerId:
         start_timestamp = time.time()
@@ -119,7 +122,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         end_timestamp = time.time()
         OpenstackRunnerManager._issue_runner_installed_metric(
             name=instance_name,
-            flavor=self.runner_flavor,
+            flavor=self.prefix,
             install_start_timestamp=start_timestamp,
             install_end_timestamp=end_timestamp,
         )
@@ -133,7 +136,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 return CloudRunnerInstance(
                     name=name,
                     id=id,
-                    status=CloudRunnerState(instance.status),
+                    state=CloudRunnerState.from_openstack_server_status(instance.status),
                 )
         return None
 
@@ -145,11 +148,11 @@ class OpenstackRunnerManager(CloudRunnerManager):
             CloudRunnerInstance(
                 name=instance.name,
                 id=self._openstack_cloud.convert_name(instance.name),
-                status=CloudRunnerState(instance.status),
+                state=CloudRunnerState.from_openstack_server_status(instance.status),
             )
             for instance in instances_list
         ]
-        return [instance for instance in instances_list if instance.status in cloud_runner_status]
+        return [instance for instance in instances_list if instance.state in cloud_runner_status]
 
     def delete_runner(self, id: RunnerId, remove_token: str) -> None:
         instance = self._openstack_cloud.get_instance(id)
@@ -176,7 +179,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         runner_list = self._openstack_cloud.get_instances()
 
         for runner in runner_list:
-            state = CloudRunnerState(runner.status)
+            state = (CloudRunnerState(runner.status),)
             if state in (
                 CloudRunnerState.DELETED,
                 CloudRunnerState.ERROR,
