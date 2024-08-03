@@ -153,6 +153,9 @@ async def test_flush_runner_and_resource_config(
     assert action.status == "completed"
     assert action.results["delta"]["virtual-machines"] == "0"
 
+    action = await app.units[0].run_action("reconcile-runners")
+    await action.wait()
+
 
 @pytest.mark.openstack
 @pytest.mark.asyncio
