@@ -54,7 +54,7 @@ class OpenstackInstance:
             for address in network_addresses
         ]
 
-        if not self.name.startswith(prefix):
+        if not self.server_name.startswith(prefix):
             # Should never happen.
             raise ValueError(
                 f"Found openstack server {server.name} managed under prefix {prefix}, contact devs"
@@ -159,7 +159,7 @@ class OpenstackCloud:
                 self._delete_key_pair(conn, name)
                 raise OpenStackError(f"Failed to create openstack server {full_name}") from err
 
-            return OpenstackInstance(server)
+            return OpenstackInstance(server, self.prefix)
 
     def get_instance(self, name: str) -> OpenstackInstance:
         full_name = self.get_instance_name(name)
@@ -368,13 +368,13 @@ class OpenstackCloud:
     def _setup_key_pair(conn: OpenstackConnection, name: str) -> OpenstackKeypair:
         key_path = OpenstackCloud._get_key_path(name)
 
-        if key_path.exists:
+        if key_path.exists():
             logger.warning("Existing private key file for %s found, removing it.", name)
             key_path.unlink(missing_ok=True)
 
         keypair = conn.create_keypair(name=name)
+        key_path.parent.mkdir(parents=True, exist_ok=True)
         key_path.write_text(keypair.private_key)
-        shutil.chown(key_path, user="ubuntu", group="ubuntu")
         key_path.chmod(0o400)
         return keypair
 

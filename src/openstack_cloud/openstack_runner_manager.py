@@ -229,7 +229,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             if self.config.proxy_config is not None
             else None
         )
-        return jinja.get_template("openstack_userdata.sh.j2").render(
+        return jinja.get_template("openstack-userdata.sh.j2").render(
             github_url=f"https://github.com/{self.config.github_path.path()}",
             runner_group=runner_group,
             token=registration_token,

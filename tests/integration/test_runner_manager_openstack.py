@@ -10,6 +10,8 @@ import yaml
 from openstack.connection import Connection as OpenstackConnection
 
 from charm_state import GithubPath, ProxyConfig, parse_github_path
+from manager.cloud_runner_manager import CloudRunnerState
+from manager.github_runner_manager import GithubRunnerState
 from manager.runner_manager import RunnerManager, RunnerManagerConfig
 from openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from openstack_cloud.openstack_runner_manager import (
@@ -56,9 +58,7 @@ async def openstack_runner_manager_fixture(
 
     The prefix args of OpenstackRunnerManager set to app_name to let openstack_connection_fixture preform the cleanup of openstack resources.
     """
-    # TODO: Think about how to deal with this when testing locally.
-    # This will modify a file under home directory.
-    _CLOUDS_YAML_PATH.unlink()
+    _CLOUDS_YAML_PATH.unlink(missing_ok=True)
     clouds_config = yaml.safe_load(private_endpoint_clouds_yaml)
 
     config = OpenstackRunnerManagerConfig(
@@ -91,10 +91,34 @@ async def runner_manager_fixture(
 @pytest.mark.abort_on_fail
 async def test_get_no_runner(runner_manager: RunnerManager) -> None:
     """
-    Arrange: No runners on the
-    Act:
-    Assert:
+    Arrange: RunnerManager instance with no runners.
+    Act: Get runners.
+    Assert: Empty tuple returned.
     """
     runner_list = runner_manager.get_runners()
     assert isinstance(runner_list, tuple)
     assert not runner_list
+
+
+@pytest.mark.openstack
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_create_runner(runner_manager: RunnerManager) -> None:
+    """
+    Arrange: RunnerManager instance with no runners.
+    Act: Create one runner.
+    Assert: An active idle runner.
+    """
+    runner_id_list = runner_manager.create_runners(1)
+    assert isinstance(runner_id_list, tuple)
+    assert len(runner_id_list) == 1
+    runner_id = runner_id[0]
+    
+    runner_list = runner_manager.get_runners()
+    assert isinstance(runner_list, tuple)
+    assert len(runner_list) == 1
+    runner = runner_list[0]
+    assert runner.id == runner_id
+    assert runner.cloud_state == CloudRunnerState.ACTIVE
+    assert runner.github_state == GithubRunnerState.IDLE
+
