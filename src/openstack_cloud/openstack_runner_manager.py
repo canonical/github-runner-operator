@@ -101,7 +101,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         )
         try:
             instance = self._openstack_cloud.launch_instance(
-                name=id,
+                instance_id=id,
                 image=self.config.image,
                 flavor=self.config.flavor,
                 network=self.config.network,
@@ -109,10 +109,6 @@ class OpenstackRunnerManager(CloudRunnerManager):
             )
         except OpenStackError as err:
             raise RunnerCreateError("Failed to create {instance_name} openstack runner") from err
-        
-        # TODO: Test only
-        import pytest
-        pytest.set_trace()
 
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
@@ -136,7 +132,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         name = self._openstack_cloud.get_instance_name(id)
         instances_list = self._openstack_cloud.get_instances()
         for instance in instances_list:
-            if instance.name == name:
+            if instance.server_name == name:
                 return CloudRunnerInstance(
                     name=name,
                     id=id,
@@ -150,8 +146,8 @@ class OpenstackRunnerManager(CloudRunnerManager):
         instances_list = self._openstack_cloud.get_instances()
         instances_list = [
             CloudRunnerInstance(
-                name=instance.name,
-                id=self._openstack_cloud.convert_name(instance.name),
+                name=instance.server_name,
+                id=instance.instance_id,
                 state=CloudRunnerState.from_openstack_server_status(instance.status),
             )
             for instance in instances_list
@@ -164,20 +160,20 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
     def _delete_runner(self, instance: OpenstackInstance, remove_token) -> None:
         ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-        self._pull_runner_metrics(instance.name, ssh_conn)
+        self._pull_runner_metrics(instance.server_name, ssh_conn)
         try:
             OpenstackRunnerManager._run_github_runner_removal_script(
-                instance.name, ssh_conn, remove_token
+                instance.server_name, ssh_conn, remove_token
             )
         except GithubRunnerRemoveError:
             logger.warning(
-                "Unable to run github runner removal script for %s", instance.name, stack_info=True
+                "Unable to run github runner removal script for %s", instance.server_name, stack_info=True
             )
 
         try:
             self._openstack_cloud.delete_instance(id)
         except OpenStackError:
-            logger.exception("Unable to delete openstack instance for runner %s", instance.name)
+            logger.exception("Unable to delete openstack instance for runner %s", instance.server_name)
 
     def cleanup(self, remove_token: str) -> None:
         runner_list = self._openstack_cloud.get_instances()
@@ -257,14 +253,14 @@ class OpenstackRunnerManager(CloudRunnerManager):
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
         except SshError:
-            logger.exception("SSH connection failure with %s", instance.name)
+            logger.exception("SSH connection failure with %s", instance.server_name)
             return False
         try:
-            OpenstackRunnerManager._run_health_check(ssh_conn, instance.name)
+            OpenstackRunnerManager._run_health_check(ssh_conn, instance.server_name)
         except RunnerError:
-            logger.exception("Health check failure for %s", instance.name)
+            logger.exception("Health check failure for %s", instance.server_name)
             return False
-        logger.info("Health check success for %s", instance.name)
+        logger.info("Health check success for %s", instance.server_name)
         return True
 
     @retry(tries=3, delay=60, local_logger=logger)

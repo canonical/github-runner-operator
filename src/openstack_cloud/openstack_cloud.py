@@ -40,7 +40,7 @@ _TEST_STRING = "test_string"
 class OpenstackInstance:
     server_id: str
     server_name: str
-    name: str
+    instance_id: str
     addresses: list[str]
     status: str
 
@@ -59,7 +59,7 @@ class OpenstackInstance:
             raise ValueError(
                 f"Found openstack server {server.name} managed under prefix {prefix}, contact devs"
             )
-        self.name = self.server_name[len(prefix) :]
+        self.instance_id = self.server_name[len(prefix) :]
 
 
 @contextmanager
@@ -112,9 +112,9 @@ class OpenstackCloud:
         self.prefix = prefix
 
     def launch_instance(
-        self, name: str, image: str, flavor: str, network: str, userdata: str
+        self, instance_id: str, image: str, flavor: str, network: str, userdata: str
     ) -> OpenstackInstance:
-        full_name = self.get_instance_name(name)
+        full_name = self.get_instance_name(instance_id)
         logger.info("Creating openstack server with %s", full_name)
 
         with _get_openstack_connection(
@@ -152,17 +152,17 @@ class OpenstackCloud:
                         "Failed to cleanup openstack server %s that timeout during creation",
                         full_name,
                     )
-                self._delete_key_pair(conn, name)
+                self._delete_key_pair(conn, instance_id)
                 raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
             except openstack.exceptions.SDKException as err:
                 logger.exception("Failed to create openstack server %s", full_name)
-                self._delete_key_pair(conn, name)
+                self._delete_key_pair(conn, instance_id)
                 raise OpenStackError(f"Failed to create openstack server {full_name}") from err
 
             return OpenstackInstance(server, self.prefix)
 
-    def get_instance(self, name: str) -> OpenstackInstance:
-        full_name = self.get_instance_name(name)
+    def get_instance(self, instance_id: str) -> OpenstackInstance:
+        full_name = self.get_instance_name(instance_id)
         logger.info("Getting openstack server with %s", full_name)
 
         with _get_openstack_connection(
@@ -170,8 +170,8 @@ class OpenstackCloud:
         ) as conn:
             return OpenstackInstance(OpenstackCloud._get_and_ensure_unique_server(conn, full_name))
 
-    def delete_instance(self, name: str) -> None:
-        full_name = self.get_instance_name(name)
+    def delete_instance(self, instance_id: str) -> None:
+        full_name = self.get_instance_name(instance_id)
         logger.info("Deleting openstack server with %s", full_name)
 
         with _get_openstack_connection(
@@ -188,12 +188,12 @@ class OpenstackCloud:
                 raise OpenStackError(f"Failed to remove openstack runner {full_name}") from err
 
     def get_ssh_connection(self, instance: OpenstackInstance) -> SshConnection:
-        key_path = OpenstackCloud._get_key_path(instance.name)
+        key_path = OpenstackCloud._get_key_path(instance.server_name)
 
         if not key_path.exists():
-            raise SshError(f"Missing keyfile for server: {instance.name}, key path: {key_path}")
+            raise SshError(f"Missing keyfile for server: {instance.server_name}, key path: {key_path}")
         if not instance.addresses:
-            raise SshError(f"No addresses found for OpenStack server {instance.name}")
+            raise SshError(f"No addresses found for OpenStack server {instance.server_name}")
 
         for ip in instance.addresses:
             try:
@@ -206,7 +206,7 @@ class OpenstackCloud:
                 result = connection.run("echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT)
                 if not result.ok:
                     logger.warning(
-                        "SSH test connection failed, server: %s, address: %s", instance.name, ip
+                        "SSH test connection failed, server: %s, address: %s", instance.server_name, ip
                     )
                     continue
                 if _TEST_STRING in result.stdout:
@@ -214,13 +214,13 @@ class OpenstackCloud:
             except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException):
                 logger.warning(
                     "Unable to SSH into %s with address %s",
-                    instance.name,
+                    instance.server_name,
                     connection.host,
                     exc_info=True,
                 )
                 continue
         raise SshError(
-            f"No connectable SSH addresses found, server: {instance.name}, "
+            f"No connectable SSH addresses found, server: {instance.server_name}, "
             f"addresses: {instance.addresses}"
         )
 

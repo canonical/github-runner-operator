@@ -26,7 +26,7 @@ async def openstack_cloud_fixture(base_openstack_cloud: OpenstackCloud) -> Opens
     """Ensures the OpenstackCloud object has no openstack servers."""
     instances = base_openstack_cloud.get_instances()
     for instance in instances:
-        base_openstack_cloud.delete_instance(name=instance.name)
+        base_openstack_cloud.delete_instance(instance_id=instance.instance_id)
     return base_openstack_cloud
 
 
@@ -73,7 +73,7 @@ async def test_launch_instance_and_delete(
 
     # 1.
     instance = base_openstack_cloud.launch_instance(
-        name=instance_name,
+        instance_id=instance_name,
         image=openstack_test_image,
         flavor=openstack_test_flavor,
         network=network_name,
@@ -81,7 +81,8 @@ async def test_launch_instance_and_delete(
     )
 
     assert instance is not None
-    assert instance.name is not None
+    assert instance.instance_id is not None
+    assert instance.server_name is not None
     assert instance.id is not None
 
     servers = openstack_connection.list_servers()
@@ -92,7 +93,7 @@ async def test_launch_instance_and_delete(
         assert False, f"OpenStack server with {instance_name} in the name not found"
 
     # 2.
-    base_openstack_cloud.delete_instance(name=instance_name)
+    base_openstack_cloud.delete_instance(instance_id=instance_name)
     instances = base_openstack_cloud.get_instances()
     assert not instances, "Test failure: openstack instance should be deleted."
 
@@ -116,7 +117,7 @@ async def test_instance_ssh_connection(
     rand_chars = f"{token_hex(10)}"
     instance_name = f"{token_hex(2)}"
     instance = openstack_cloud.launch_instance(
-        name=instance_name,
+        instance_id=instance_name,
         image=openstack_test_image,
         flavor=openstack_test_flavor,
         network=network_name,

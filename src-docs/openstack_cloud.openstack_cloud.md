@@ -83,7 +83,7 @@ cleanup() → None
 ### <kbd>method</kbd> `delete_instance`
 
 ```python
-delete_instance(name: str) → None
+delete_instance(instance_id: str) → None
 ```
 
 
@@ -97,7 +97,7 @@ delete_instance(name: str) → None
 ### <kbd>method</kbd> `get_instance`
 
 ```python
-get_instance(name: str) → OpenstackInstance
+get_instance(instance_id: str) → OpenstackInstance
 ```
 
 
@@ -154,7 +154,7 @@ get_ssh_connection(instance: OpenstackInstance) → Connection
 
 ```python
 launch_instance(
-    name: str,
+    instance_id: str,
     image: str,
     flavor: str,
     network: str,
