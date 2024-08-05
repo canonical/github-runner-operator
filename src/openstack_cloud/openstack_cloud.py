@@ -195,9 +195,6 @@ class OpenstackCloud:
         if not instance.addresses:
             raise SshError(f"No addresses found for OpenStack server {instance.server_name}")
         
-        import pytest
-        pytest.set_trace()
-
         for ip in instance.addresses:
             try:
                 connection = SshConnection(
@@ -206,7 +203,7 @@ class OpenstackCloud:
                     connect_kwargs={"key_filename": str(key_path)},
                     connect_timeout=_SSH_TIMEOUT,
                 )
-                result = connection.run("echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT)
+                result = connection.run(f"echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT)
                 if not result.ok:
                     logger.warning(
                         "SSH test connection failed, server: %s, address: %s", instance.server_name, ip

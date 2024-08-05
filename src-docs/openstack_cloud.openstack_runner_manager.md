@@ -79,7 +79,7 @@ __init__(prefix: str, config: OpenstackRunnerManagerConfig) → None
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L178"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L182"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `cleanup`
 
