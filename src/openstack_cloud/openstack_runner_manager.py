@@ -110,14 +110,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         except OpenStackError as err:
             raise RunnerCreateError("Failed to create {instance_name} openstack runner") from err
 
-        try:
-            ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-        except SshError as err:
-            raise RunnerCreateError(
-                f"Failed to SSH connect to {instance_name} openstack runner"
-            ) from err
-
-        OpenstackRunnerManager._wait_runner_startup(ssh_conn, instance_name)
+        self._wait_runner_startup(instance)
 
         end_timestamp = time.time()
         OpenstackRunnerManager._issue_runner_installed_metric(
@@ -282,16 +275,22 @@ class OpenstackRunnerManager(CloudRunnerManager):
             raise RunnerError(f"Runner process not found on {name}")
 
     @retry(tries=10, delay=60, local_logger=logger)
-    @staticmethod
-    def _wait_runner_startup(ssh_conn: SshConnection, name: str) -> None:
+    def _wait_runner_startup(self, instance: OpenstackInstance) -> None:
+        try:
+            ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+        except SshError as err:
+            raise RunnerCreateError(
+                f"Failed to SSH connect to {instance.server_name} openstack runner"
+            ) from err
+
         result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
         if not result.ok:
-            logger.warning("SSH run of `ps aux` failed on %s", name)
-            raise RunnerStartError(f"Unable to SSH run `ps aux` on {name}")
+            logger.warning("SSH run of `ps aux` failed on %s", instance.server_name)
+            raise RunnerStartError(f"Unable to SSH run `ps aux` on {instance.server_name}")
         if RUNNER_STARTUP_PROCESS not in result.stdout:
-            logger.warning("Runner startup process not found on %s", name)
-            return RunnerStartError(f"Runner startup process not found on {name}")
-        logger.info("Runner startup process found to be healthy on %s", name)
+            logger.warning("Runner startup process not found on %s", instance.server_name)
+            return RunnerStartError(f"Runner startup process not found on {instance.server_name}")
+        logger.info("Runner startup process found to be healthy on %s", instance.server_name)
 
     @staticmethod
     def _generate_runner_id() -> RunnerId:
