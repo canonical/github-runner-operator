@@ -109,6 +109,10 @@ class OpenstackRunnerManager(CloudRunnerManager):
             )
         except OpenStackError as err:
             raise RunnerCreateError("Failed to create {instance_name} openstack runner") from err
+        
+        # TODO: Test only
+        import pytest
+        pytest.set_trace()
 
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
