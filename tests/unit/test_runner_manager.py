@@ -8,6 +8,14 @@ from pathlib import Path
 from unittest.mock import MagicMock, call
 
 import pytest
+from github_runner_manager.metrics import (
+    MetricsStorage,
+    Reconciliation,
+    RunnerInstalled,
+    RunnerStart,
+    RunnerStop,
+)
+from github_runner_manager.metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from pytest import LogCaptureFixture, MonkeyPatch
 
 import reactive.runner_manager
@@ -24,9 +32,6 @@ from charm_state import (
 )
 from errors import IssueMetricEventError, RunnerBinaryError
 from github_type import RunnerApplication
-from metrics.events import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
-from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
-from metrics.storage import MetricsStorage
 from runner import Runner, RunnerStatus
 from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerManagerConfig
 from runner_type import RunnerByHealth

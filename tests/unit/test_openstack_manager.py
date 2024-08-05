@@ -6,26 +6,29 @@ from pathlib import Path
 from typing import Optional
 from unittest.mock import MagicMock, call
 
+import github_runner_manager.metrics.storage
 import jinja2
 import openstack.connection
 import openstack.exceptions
 import pytest
 from fabric.connection import Connection as SshConnection
+from github_runner_manager.metrics import MetricsStorage
+from github_runner_manager.metrics import events as metric_events
+from github_runner_manager.metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from invoke import Result
 from openstack.compute.v2.keypair import Keypair
 from openstack.compute.v2.server import Server
 from pytest import LogCaptureFixture, MonkeyPatch
 
-import metrics.storage
 import reactive.runner_manager
 from charm_state import CharmState, ProxyConfig, ReactiveConfig, RepoPolicyComplianceConfig
 from errors import OpenStackError, RunnerStartError
 from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
-from metrics import events as metric_events
-from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
-from metrics.storage import MetricsStorage
-from openstack_cloud import openstack_manager
-from openstack_cloud.openstack_manager import MAX_METRICS_FILE_SIZE, METRICS_EXCHANGE_PATH
+from runner_manager.github_runner_manager.openstack_cloud import openstack_manager
+from runner_manager.github_runner_manager.openstack_cloud.openstack_manager import (
+    MAX_METRICS_FILE_SIZE,
+    METRICS_EXCHANGE_PATH,
+)
 from runner_manager_type import FlushMode
 from runner_type import RunnerByHealth, RunnerGithubInfo
 from tests.unit import factories
@@ -691,7 +694,7 @@ def test_reconcile_ignores_metrics_for_openstack_online_runners(
     openstack_manager_for_reconcile.reconcile(quantity=0)
 
     openstack_manager.runner_metrics.extract.assert_called_once_with(
-        metrics_storage_manager=metrics.storage,
+        metrics_storage_manager=github_runner_manager.metrics.storage,
         ignore_runners=set(openstack_online_runner_names),
     )
 

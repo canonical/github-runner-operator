@@ -29,6 +29,7 @@ import jinja2
 import ops
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
+from github_runner_manager.openstack_cloud.openstack_manager import OpenstackRunnerManager
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -78,7 +79,6 @@ from errors import (
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
-from openstack_cloud.openstack_manager import OpenstackRunnerManager
 from runner import LXD_PROFILE_YAML
 from runner_manager import RunnerManager, RunnerManagerConfig
 from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
@@ -995,7 +995,7 @@ class GithubRunnerCharm(CharmBase):
             modules_file.write("br_netfilter\n")
 
     def _install_deps(self) -> None:
-        """Install dependences for the charm."""
+        """Install dependencies for the charm."""
         logger.info("Installing charm dependencies.")
         self._apt_install(["run-one"])
 

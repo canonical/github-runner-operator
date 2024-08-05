@@ -13,12 +13,11 @@ from charm_state import GithubPath, ProxyConfig, parse_github_path
 from manager.cloud_runner_manager import CloudRunnerState
 from manager.github_runner_manager import GithubRunnerState
 from manager.runner_manager import RunnerManager, RunnerManagerConfig
-from openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
-from openstack_cloud.openstack_runner_manager import (
+from runner_manager.github_runner_manager.openstack_cloud import (
     OpenstackRunnerManager,
     OpenstackRunnerManagerConfig,
 )
-from tests.integration.helpers.openstack import PrivateEndpointConfigs
+from runner_manager.github_runner_manager.openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 
 
 @pytest.fixture(scope="module", name="github_path")
@@ -113,7 +112,7 @@ async def test_create_runner(runner_manager: RunnerManager) -> None:
     assert isinstance(runner_id_list, tuple)
     assert len(runner_id_list) == 1
     runner_id = runner_id[0]
-    
+
     runner_list = runner_manager.get_runners()
     assert isinstance(runner_list, tuple)
     assert len(runner_list) == 1
@@ -121,4 +120,3 @@ async def test_create_runner(runner_manager: RunnerManager) -> None:
     assert runner.id == runner_id
     assert runner.cloud_state == CloudRunnerState.ACTIVE
     assert runner.github_state == GithubRunnerState.IDLE
-

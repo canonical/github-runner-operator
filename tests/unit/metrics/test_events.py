@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-from metrics import events
+from github_runner_manager.metrics import events
 
 TEST_LOKI_PUSH_API_URL = "http://loki:3100/api/prom/push"
 

@@ -5,6 +5,7 @@ import tarfile
 from pathlib import Path
 
 import pytest
+from github_runner_manager.metrics import MetricsStorage, storage
 
 from errors import (
     CreateMetricsStorageError,
@@ -12,8 +13,6 @@ from errors import (
     GetMetricsStorageError,
     QuarantineMetricsStorageError,
 )
-from metrics import storage
-from metrics.storage import MetricsStorage
 
 
 @pytest.fixture(autouse=True, name="filesystem_paths")

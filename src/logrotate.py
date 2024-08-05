@@ -6,10 +6,10 @@ from enum import Enum
 from pathlib import Path
 
 from charms.operator_libs_linux.v1 import systemd
+from github_runner_manager.metrics.events import METRICS_LOG_PATH
 from pydantic import BaseModel
 
 from errors import LogrotateSetupError
-from metrics.events import METRICS_LOG_PATH
 from reactive.runner_manager import REACTIVE_RUNNER_LOG_DIR
 
 LOG_ROTATE_TIMER_SYSTEMD_SERVICE = "logrotate.timer"

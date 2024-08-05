@@ -4,14 +4,13 @@
 """Test for OpenstackCloud class integration with OpenStack."""
 
 from secrets import token_hex
-from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio
 import yaml
 from openstack.connection import Connection as OpenstackConnection
 
-from openstack_cloud.openstack_cloud import OpenstackCloud
+from runner_manager.github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud
 
 
 @pytest_asyncio.fixture(scope="function", name="base_openstack_cloud")

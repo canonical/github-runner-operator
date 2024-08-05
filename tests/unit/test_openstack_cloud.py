@@ -5,8 +5,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-import openstack_cloud
 from errors import OpenStackInvalidConfigError
+from runner_manager.github_runner_manager import openstack_cloud
 
 
 def test_initialize(clouds_yaml_path: Path, clouds_yaml: dict):

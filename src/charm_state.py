@@ -19,6 +19,7 @@ from urllib.parse import urlsplit
 
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
+from github_runner_manager import openstack_cloud
 from ops import CharmBase
 from pydantic import (
     AnyHttpUrl,
@@ -30,7 +31,6 @@ from pydantic import (
     validator,
 )
 
-import openstack_cloud
 from errors import MissingMongoDBError, OpenStackInvalidConfigError
 from firewall import FirewallEntry
 from utilities import get_env_var

@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 
 import utilities
-from openstack_cloud import openstack_manager
+from runner_manager.github_runner_manager.openstack_cloud import openstack_manager
 from tests.unit.mock import MockGhapiClient, MockLxdClient, MockRepoPolicyComplianceClient
 
 

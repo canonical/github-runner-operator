@@ -21,6 +21,8 @@ from pathlib import Path
 from typing import Iterable, NamedTuple, Optional, Sequence
 
 import yaml
+from github_runner_manager.metrics.runner_logs import SYSLOG_PATH, create_logs_dir
+from github_runner_manager.metrics.storage import MetricsStorage
 
 import shared_fs
 from charm_state import Arch, GithubOrg, SSHDebugConnection, VirtualMachineResources
@@ -38,8 +40,6 @@ from errors import (
 )
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
-from metrics.runner_logs import SYSLOG_PATH, create_logs_dir
-from metrics.storage import MetricsStorage
 from runner_manager_type import RunnerManagerClients
 from runner_type import RunnerConfig, RunnerStatus
 from utilities import execute_command, retry

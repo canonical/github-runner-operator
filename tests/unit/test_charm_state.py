@@ -15,7 +15,6 @@ from pydantic.error_wrappers import ValidationError
 from pydantic.networks import IPv4Address
 
 import charm_state
-import openstack_cloud
 from charm_state import (
     BASE_IMAGE_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
@@ -53,6 +52,7 @@ from charm_state import (
     VirtualMachineResources,
 )
 from errors import MissingMongoDBError
+from runner_manager.github_runner_manager import openstack_cloud
 from tests.unit.factories import MockGithubRunnerCharmFactory
 
 

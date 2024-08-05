@@ -3,8 +3,7 @@
 from pathlib import Path
 
 import pytest
-
-from metrics import runner_logs
+from github_runner_manager.metrics import runner_logs
 
 
 @pytest.fixture(name="log_dir_base_path")
