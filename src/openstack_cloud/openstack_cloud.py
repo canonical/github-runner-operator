@@ -194,6 +194,9 @@ class OpenstackCloud:
             raise SshError(f"Missing keyfile for server: {instance.server_name}, key path: {key_path}")
         if not instance.addresses:
             raise SshError(f"No addresses found for OpenStack server {instance.server_name}")
+        
+        import pytest
+        pytest.set_trace()
 
         for ip in instance.addresses:
             try:
