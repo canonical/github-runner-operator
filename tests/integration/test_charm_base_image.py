@@ -48,7 +48,7 @@ async def test_runner_base_image(
     assert "noble" in str(stdout)
 
     # Workflow completes successfully
-    workflow = await dispatch_workflow(
+    workflow_run = await dispatch_workflow(
         app=app_no_wait,
         branch=test_github_branch,
         github_repository=github_repository,
@@ -56,4 +56,4 @@ async def test_runner_base_image(
         workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
         dispatch_input={"runner-tag": app_no_wait.name, "runner-virt-type": "lxd"},
     )
-    await wait_for(lambda: workflow.get_runs()[0].status == "completed")
+    await wait_for(lambda: workflow_run.update() and workflow_run.status == "completed")

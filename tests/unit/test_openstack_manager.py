@@ -26,6 +26,7 @@ from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from metrics.storage import MetricsStorage
 from openstack_cloud import openstack_manager
 from openstack_cloud.openstack_manager import MAX_METRICS_FILE_SIZE, METRICS_EXCHANGE_PATH
+from runner_manager_type import FlushMode
 from runner_type import RunnerByHealth, RunnerGithubInfo
 from tests.unit import factories
 
@@ -149,7 +150,7 @@ def patched_create_connection_context_fixture(monkeypatch: pytest.MonkeyPatch):
 
 
 @pytest.fixture(name="ssh_connection_mock")
-def ssh_connection_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
+def ssh_connection_mock_fixture() -> MagicMock:
     """Return a mocked ssh connection."""
     test_file_content = secrets.token_hex(16)
     ssh_conn_mock = MagicMock(spec=openstack_manager.SshConnection)
@@ -835,7 +836,7 @@ def test__ssh_health_check_no_key(mock_server: MagicMock):
     )
 
 
-def test__ssh_health_check_error(mock_server: MagicMock, patch_ssh_connection_error):
+def test__ssh_health_check_error(mock_server: MagicMock):
     """
     arrange: A server with error on SSH run.
     act: Run health check on the server.
@@ -1148,3 +1149,72 @@ def test__get_ssh_connection_server(monkeypatch: pytest.MonkeyPatch):
         )
         == mock_ssh_connection
     )
+
+
+def test_flush(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: given monkeypatched sub functions of flush.
+    act: when flush is called.
+    assert: sub functions are called.
+    """
+    monkeypatch.setattr(openstack_manager, "_create_connection", MagicMock())
+    monkeypatch.setattr(openstack_manager, "set_env_var", MagicMock())
+    runner_manager = openstack_manager.OpenstackRunnerManager(
+        app_name=MagicMock(),
+        unit_num=MagicMock(),
+        openstack_runner_manager_config=MagicMock(),
+        cloud_config=MagicMock(),
+    )
+    runner_manager._kill_runner_processes = MagicMock()
+    runner_manager._get_openstack_runner_status = MagicMock()
+    runner_manager._github = MagicMock()
+    runner_manager._remove_runners = MagicMock()
+
+    runner_manager.flush(mode=MagicMock())
+
+    runner_manager._kill_runner_processes.assert_called()
+    runner_manager._get_openstack_runner_status.assert_called()
+    runner_manager._github.get_runner_remove_token.assert_called()
+    runner_manager._remove_runners.assert_called()
+
+
+@pytest.mark.parametrize(
+    "flush_mode, expected_command",
+    [
+        pytest.param(
+            FlushMode.FLUSH_BUSY,
+            "pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);"
+            "pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);",
+            id="Flush Busy",
+        ),
+        pytest.param(
+            FlushMode.FLUSH_IDLE,
+            "! pgrep -x Runner.Worker && pgrep -x Runner.Listener && "
+            "kill $(pgrep -x Runner.Listener)",
+            id="Flush Idle",
+        ),
+    ],
+)
+def test__kill_runner_processes(
+    monkeypatch: pytest.MonkeyPatch, flush_mode: FlushMode, expected_command: str
+):
+    """
+    arrange: given supported flush modes.
+    act: when _kill_runner_processes is called.
+    assert: expected kill commands are issued.
+    """
+    monkeypatch.setattr(openstack_manager, "_create_connection", MagicMock())
+    monkeypatch.setattr(openstack_manager, "set_env_var", MagicMock())
+    runner_manager = openstack_manager.OpenstackRunnerManager(
+        app_name=MagicMock(),
+        unit_num=MagicMock(),
+        openstack_runner_manager_config=MagicMock(),
+        cloud_config=MagicMock(),
+    )
+    runner_manager._get_openstack_instances = MagicMock(return_value=[MagicMock(), MagicMock()])
+    mock_connection = MagicMock()
+    runner_manager._get_ssh_connection = MagicMock(return_value=mock_connection)
+
+    runner_manager._kill_runner_processes(conn=MagicMock(), mode=flush_mode)
+
+    mock_connection.run.assert_called_with(expected_command, warn=True)
