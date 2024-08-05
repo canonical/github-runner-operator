@@ -8,6 +8,7 @@ import pytest
 import pytest_asyncio
 from github.Branch import Branch
 from github.Repository import Repository
+from juju.action import Action
 from juju.application import Application
 from juju.model import Model
 
@@ -20,8 +21,10 @@ from charm_state import (
 from tests.integration.helpers import lxd
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
+    DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     InstanceHelper,
     dispatch_workflow,
+    wait_for,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
@@ -62,7 +65,10 @@ async def test_check_runner(app: Application) -> None:
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_flush_runner_and_resource_config(
-    app: Application, instance_type: InstanceType
+    app: Application,
+    instance_type: InstanceType,
+    github_repository: Repository,
+    test_github_branch: Branch,
 ) -> None:
     """
     arrange: A working application with one runner.
@@ -71,6 +77,7 @@ async def test_flush_runner_and_resource_config(
         2. Nothing.
         3. Change the virtual machine resource configuration.
         4. Run flush_runner action.
+        5. Dispatch a workflow to make runner busy and call flush_runner action.
 
     assert:
         1. One runner exists.
@@ -79,13 +86,14 @@ async def test_flush_runner_and_resource_config(
         4.  a. The runner name should be different to the runner prior running
                 the action.
             b. LXD profile matching virtual machine resources of step 2 exists.
+        5. The runner is not flushed since by default it flushes idle.
 
     Test are combined to reduce number of runner spawned.
     """
     unit = app.units[0]
 
     # 1.
-    action = await app.units[0].run_action("check-runners")
+    action: Action = await app.units[0].run_action("check-runners")
     await action.wait()
 
     assert action.status == "completed"
@@ -128,6 +136,30 @@ async def test_flush_runner_and_resource_config(
     new_runner_names = action.results["runners"].split(", ")
     assert len(new_runner_names) == 1
     assert new_runner_names[0] != runner_names[0]
+
+    # 5.
+    workflow = await dispatch_workflow(
+        app=app,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+        dispatch_input={"runner": app.name, "minutes": "5"},
+        wait=False,
+    )
+    await wait_for(lambda: workflow.update() or workflow.status == "in_progress")
+    action = await app.units[0].run_action("flush-runners")
+    await action.wait()
+
+    assert action.status == "completed"
+    assert action.results["delta"]["virtual-machines"] == "0"
+
+    await wait_for(lambda: workflow.update() or workflow.status == "completed")
+    action = await app.units[0].run_action("flush-runners")
+    await action.wait()
+
+    assert action.status == "completed"
+    assert action.results["delta"]["virtual-machines"] == "1"
 
 
 @pytest.mark.openstack
