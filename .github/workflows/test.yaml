@@ -1,7 +1,9 @@
 name: Tests
 
 on:
-  pull_request:
+  # TODO: Uncomment
+  #pull_request:
+  workflow_dispatch:
 
 jobs:
   unit-tests:

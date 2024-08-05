@@ -8,12 +8,6 @@ from typing import Sequence, Tuple
 
 RunnerId = str
 
-_OPENSTACK_STATUS_SHUTOFF = "SHUTOFF"
-_OPENSTACK_STATUS_ERROR = "ERROR"
-_OPENSTACK_STATUS_ACTIVE = "ACTIVE"
-_OPENSTACK_STATUS_BUILDING = "BUILDING"
-
-
 class CloudRunnerState(str, Enum):
     CREATED = "created"
     ACTIVE = "active"
