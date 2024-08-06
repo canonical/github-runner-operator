@@ -66,12 +66,12 @@ class OpenstackInstance:
             for address in network_addresses
         ]
 
-        if not self.server_name.startswith(prefix):
+        if not self.server_name.startswith(f"{prefix}-"):
             # Should never happen.
             raise ValueError(
                 f"Found openstack server {server.name} managed under prefix {prefix}, contact devs"
             )
-        self.instance_id = self.server_name[len(prefix) :]
+        self.instance_id = self.server_name[len(prefix) + 1 :]
 
 
 @contextmanager

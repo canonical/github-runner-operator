@@ -33,13 +33,14 @@ class FlushMode(Enum):
 @dataclass
 class RunnerInstance:
     """Represents an instance of runner.
-    
+
     Attributes:
         name: Full name of the runner. Managed by the cloud runner manager.
         id: ID of the runner. Managed by the runner manager.
         github_state: State on github.
-        cloud_state: State on cloud.        
+        cloud_state: State on cloud.
     """
+
     name: str
     id: RunnerId
     github_state: GithubRunnerState
@@ -49,7 +50,7 @@ class RunnerInstance:
         self, cloud_instance: CloudRunnerInstance, github_info: SelfHostedRunner
     ) -> "RunnerInstance":
         """Construct an instance.
-        
+
         Args:
             cloud_instance: Information on the cloud instance.
             github_info: Information on the GitHub of the runner.
@@ -65,11 +66,12 @@ class RunnerInstance:
 @dataclass
 class RunnerManagerConfig:
     """Configuration for the runner manager.
-    
+
     Attributes:
         token: GitHub personal access token to query GitHub API.
         path: Path to GitHub repository or organization to registry the runners.
     """
+
     token: str
     path: GithubPath
 
@@ -79,7 +81,7 @@ class RunnerManager:
 
     def __init__(self, cloud_runner_manager: CloudRunnerManager, config: RunnerManagerConfig):
         """Construct the object.
-        
+
         Args:
             cloud_runner_manager: For managing the cloud instance of the runner.
             config: Configuration of this class.
