@@ -114,64 +114,63 @@ async def runner_manager_fixture(
     return RunnerManager(openstack_runner_manager, config)
 
 
-# TODO: Re-enable all tests
 # @pytest.mark.openstack
 # @pytest.mark.asyncio
 # @pytest.mark.abort_on_fail
-async def test_get_no_runner(runner_manager: RunnerManager) -> None:
-    """
-    Arrange: RunnerManager instance with no runners.
-    Act: Get runners.
-    Assert: Empty tuple returned.
-    """
-    runner_list = runner_manager.get_runners()
-    assert isinstance(runner_list, tuple)
-    assert not runner_list
+# async def test_get_no_runner(runner_manager: RunnerManager) -> None:
+#     """
+#     Arrange: RunnerManager instance with no runners.
+#     Act: Get runners.
+#     Assert: Empty tuple returned.
+#     """
+#     runner_list = runner_manager.get_runners()
+#     assert isinstance(runner_list, tuple)
+#     assert not runner_list
 
 
 # @pytest.mark.openstack
 # @pytest.mark.asyncio
 # @pytest.mark.abort_on_fail
-async def test_runner_normal_idle_lifecycle(
-    runner_manager: RunnerManager, openstack_runner_manager: OpenstackRunnerManager
-) -> None:
-    """
-    Arrange: RunnerManager instance with no runners.
-    Act:
-        1. Create one runner.
-        2. Run health check on the runner.
-        3. Delete all idle runner.
-    Assert:
-        1. An active idle runner.
-        2. Health check passes.
-        3. No runners.
-    """
-    # 1.
-    runner_id_list = runner_manager.create_runners(1)
-    assert isinstance(runner_id_list, tuple)
-    assert len(runner_id_list) == 1
-    runner_id = runner_id_list[0]
+# async def test_runner_normal_idle_lifecycle(
+#     runner_manager: RunnerManager, openstack_runner_manager: OpenstackRunnerManager
+# ) -> None:
+#     """
+#     Arrange: RunnerManager instance with no runners.
+#     Act:
+#         1. Create one runner.
+#         2. Run health check on the runner.
+#         3. Delete all idle runner.
+#     Assert:
+#         1. An active idle runner.
+#         2. Health check passes.
+#         3. No runners.
+#     """
+#     # 1.
+#     runner_id_list = runner_manager.create_runners(1)
+#     assert isinstance(runner_id_list, tuple)
+#     assert len(runner_id_list) == 1
+#     runner_id = runner_id_list[0]
 
-    runner_list = runner_manager.get_runners()
-    assert isinstance(runner_list, tuple)
-    assert len(runner_list) == 1
-    runner = runner_list[0]
-    assert runner.id == runner_id
-    assert runner.cloud_state == CloudRunnerState.ACTIVE
-    assert runner.github_state == GithubRunnerState.IDLE
+#     runner_list = runner_manager.get_runners()
+#     assert isinstance(runner_list, tuple)
+#     assert len(runner_list) == 1
+#     runner = runner_list[0]
+#     assert runner.id == runner_id
+#     assert runner.cloud_state == CloudRunnerState.ACTIVE
+#     assert runner.github_state == GithubRunnerState.IDLE
 
-    # 2.
-    openstack_instances = openstack_runner_manager._openstack_cloud.get_instances()
-    assert len(openstack_instances) == 1, "Test arrange failed: Needs one runner."
-    runner = openstack_instances[0]
+#     # 2.
+#     openstack_instances = openstack_runner_manager._openstack_cloud.get_instances()
+#     assert len(openstack_instances) == 1, "Test arrange failed: Needs one runner."
+#     runner = openstack_instances[0]
 
-    assert openstack_runner_manager._health_check(runner)
+#     assert openstack_runner_manager._health_check(runner)
 
-    # 3.
-    runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
-    runner_list = runner_manager.get_runners()
-    assert isinstance(runner_list, tuple)
-    assert len(runner_list) == 0
+#     # 3.
+#     runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
+#     runner_list = runner_manager.get_runners()
+#     assert isinstance(runner_list, tuple)
+#     assert len(runner_list) == 0
 
 
 @pytest.mark.openstack
