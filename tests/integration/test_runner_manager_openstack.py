@@ -138,7 +138,7 @@ async def test_create_runner(runner_manager: RunnerManager, openstack_runner_man
     runner_id_list = runner_manager.create_runners(1)
     assert isinstance(runner_id_list, tuple)
     assert len(runner_id_list) == 1
-    runner_id = runner_id[0]
+    runner_id = runner_id_list[0]
 
     runner_list = runner_manager.get_runners()
     assert isinstance(runner_list, tuple)
