@@ -194,13 +194,13 @@ def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
 @pytest.fixture(scope="module", name="private_endpoint_config")
 def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpointConfigs | None:
     """The private endpoint configuration values."""
-    auth_url = pytestconfig.getoption("--openstack-auth-url")
-    password = pytestconfig.getoption("--openstack-password")
-    project_domain_name = pytestconfig.getoption("--openstack-project-domain-name")
-    project_name = pytestconfig.getoption("--openstack-project-name")
-    user_domain_name = pytestconfig.getoption("--openstack-user-domain-name")
-    user_name = pytestconfig.getoption("--openstack-username")
-    region_name = pytestconfig.getoption("--openstack-region-name")
+    auth_url = pytestconfig.getoption("--openstack-auth-url-amd64")
+    password = pytestconfig.getoption("--openstack-password-amd64")
+    project_domain_name = pytestconfig.getoption("--openstack-project-domain-name-amd64")
+    project_name = pytestconfig.getoption("--openstack-project-name-amd64")
+    user_domain_name = pytestconfig.getoption("--openstack-user-domain-name-amd64")
+    user_name = pytestconfig.getoption("--openstack-username-amd64")
+    region_name = pytestconfig.getoption("--openstack-region-name-amd64")
     if any(
         not val
         for val in (
@@ -265,15 +265,15 @@ def clouds_yaml_contents_fixture(
 @pytest.fixture(scope="module", name="network_name")
 def network_name_fixture(pytestconfig: pytest.Config) -> str:
     """Network to use to spawn test instances under."""
-    network_name = pytestconfig.getoption("--openstack-network-name")
-    assert network_name, "Please specify the --openstack-network-name command line option"
+    network_name = pytestconfig.getoption("--openstack-network-name-amd64")
+    assert network_name, "Please specify the --openstack-network-name-amd64 command line option"
     return network_name
 
 
 @pytest.fixture(scope="module", name="flavor_name")
 def flavor_name_fixture(pytestconfig: pytest.Config) -> str:
     """Flavor to create testing instances with."""
-    flavor_name = pytestconfig.getoption("--openstack-flavor-name")
+    flavor_name = pytestconfig.getoption("--openstack-flavor-name-amd64")
     assert flavor_name, "Please specify the --openstack-flavor-name command line option"
     return flavor_name
 
