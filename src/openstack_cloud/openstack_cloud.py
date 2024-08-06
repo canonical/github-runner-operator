@@ -191,10 +191,12 @@ class OpenstackCloud:
         key_path = OpenstackCloud._get_key_path(instance.server_name)
 
         if not key_path.exists():
-            raise SshError(f"Missing keyfile for server: {instance.server_name}, key path: {key_path}")
+            raise SshError(
+                f"Missing keyfile for server: {instance.server_name}, key path: {key_path}"
+            )
         if not instance.addresses:
             raise SshError(f"No addresses found for OpenStack server {instance.server_name}")
-        
+
         for ip in instance.addresses:
             try:
                 connection = SshConnection(
@@ -206,7 +208,9 @@ class OpenstackCloud:
                 result = connection.run(f"echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT)
                 if not result.ok:
                     logger.warning(
-                        "SSH test connection failed, server: %s, address: %s", instance.server_name, ip
+                        "SSH test connection failed, server: %s, address: %s",
+                        instance.server_name,
+                        ip,
                     )
                     continue
                 if _TEST_STRING in result.stdout:

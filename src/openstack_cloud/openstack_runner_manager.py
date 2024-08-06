@@ -156,7 +156,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
         except SshError:
             logger.exception("Failed SSH connection while removing %s", instance.server_name)
-            raise RunnerRemoveError(F"Failed SSH connection for {instance.server_name}")
+            raise RunnerRemoveError(f"Failed SSH connection for {instance.server_name}")
         self._pull_runner_metrics(instance.server_name, ssh_conn)
         try:
             OpenstackRunnerManager._run_github_runner_removal_script(
@@ -164,13 +164,17 @@ class OpenstackRunnerManager(CloudRunnerManager):
             )
         except GithubRunnerRemoveError:
             logger.warning(
-                "Unable to run github runner removal script for %s", instance.server_name, stack_info=True
+                "Unable to run github runner removal script for %s",
+                instance.server_name,
+                stack_info=True,
             )
 
         try:
             self._openstack_cloud.delete_instance(id)
         except OpenStackError:
-            logger.exception("Unable to delete openstack instance for runner %s", instance.server_name)
+            logger.exception(
+                "Unable to delete openstack instance for runner %s", instance.server_name
+            )
 
     def cleanup(self, remove_token: str) -> None:
         runner_list = self._openstack_cloud.get_instances()

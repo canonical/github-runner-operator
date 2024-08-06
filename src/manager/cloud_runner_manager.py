@@ -8,6 +8,7 @@ from typing import Sequence, Tuple
 
 RunnerId = str
 
+
 class CloudRunnerState(str, Enum):
     CREATED = "created"
     ACTIVE = "active"

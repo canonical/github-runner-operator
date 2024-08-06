@@ -5,6 +5,7 @@
 
 
 from pathlib import Path
+
 import pytest
 import pytest_asyncio
 import yaml
@@ -22,12 +23,15 @@ from openstack_cloud.openstack_runner_manager import (
 )
 from tests.integration.helpers.openstack import PrivateEndpointConfigs
 
+
 @pytest.fixture(scope="module", name="log_dir_base_path")
-def log_dir_base_path_fixture(tmp_path_factory: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+def log_dir_base_path_fixture(tmp_path_factory: Path) -> Path:
     """Mock the log directory path and return it."""
-    log_dir_base_path = tmp_path_factory.mktemp("log") / "log_dir"
-    monkeypatch.setattr(runner_logs, "RUNNER_LOGS_DIR_PATH", log_dir_base_path)
-    return log_dir_base_path
+    with pytest.MonkeyPatch.context() as monkeypatch:
+        log_dir_base_path = tmp_path_factory.mktemp("log") / "log_dir"
+        monkeypatch.setattr(runner_logs, "RUNNER_LOGS_DIR_PATH", log_dir_base_path)
+        yield log_dir_base_path
+
 
 @pytest.fixture(scope="module", name="github_path")
 def github_path_fixture(path: str) -> GithubPath:
@@ -88,10 +92,13 @@ async def openstack_runner_manager_fixture(
 
 @pytest_asyncio.fixture(scope="module", name="runner_manager")
 async def runner_manager_fixture(
-    openstack_runner_manager: OpenstackRunnerManager, token: str, github_path: GithubPath, log_dir_base_path: Path
+    openstack_runner_manager: OpenstackRunnerManager,
+    token: str,
+    github_path: GithubPath,
+    log_dir_base_path: Path,
 ) -> RunnerManager:
     """Get RunnerManager instance.
-    
+
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
     config = RunnerManagerConfig(token, github_path)
@@ -125,7 +132,7 @@ async def test_create_runner(runner_manager: RunnerManager) -> None:
     assert isinstance(runner_id_list, tuple)
     assert len(runner_id_list) == 1
     runner_id = runner_id[0]
-    
+
     runner_list = runner_manager.get_runners()
     assert isinstance(runner_list, tuple)
     assert len(runner_list) == 1
@@ -133,4 +140,3 @@ async def test_create_runner(runner_manager: RunnerManager) -> None:
     assert runner.id == runner_id
     assert runner.cloud_state == CloudRunnerState.ACTIVE
     assert runner.github_state == GithubRunnerState.IDLE
-
