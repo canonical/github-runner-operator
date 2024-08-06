@@ -178,7 +178,7 @@ def pytest_addoption(parser: Parser):
         action="store",
         help="The Openstack region to authenticate to.",
     )
-    # OpenStack integration tests
+    # Interface testing args
     parser.addoption(
         "--openstack-test-image",
         action="store",
