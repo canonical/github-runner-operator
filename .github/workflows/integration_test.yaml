@@ -51,3 +51,5 @@ jobs:
       builder-runner-label: ARM64
       self-hosted-runner: true
       self-hosted-runner-label: ARM64, stg-private-endpoint
+      tmate-debug: true
+      tmate-timeout: 30
