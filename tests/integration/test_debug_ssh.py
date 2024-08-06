@@ -3,17 +3,14 @@
 
 """Integration tests for github-runner charm with ssh-debug integration."""
 import logging
-from datetime import datetime, timedelta
 
-from dateutil.tz import tzutc
 from github.Branch import Branch
 from github.Repository import Repository
-from github.WorkflowRun import WorkflowRun
 from juju.application import Application
 from juju.model import Model
 
 from charm_state import DENYLIST_CONFIG_NAME
-from tests.integration.helpers.common import dispatch_workflow, get_job_logs, get_workflow_runs
+from tests.integration.helpers.common import dispatch_workflow, get_job_logs
 from tests.status_name import ACTIVE
 
 logger = logging.getLogger(__name__)
@@ -48,10 +45,9 @@ async def test_ssh_debug(
 
     # trigger tmate action
     logger.info("Dispatching workflow_dispatch_ssh_debug.yaml workflow.")
-    start_time = datetime.now(tzutc())
 
     # expect failure since the ssh workflow will timeout
-    workflow = await dispatch_workflow(
+    workflow_run = await dispatch_workflow(
         app=app_no_wait,
         branch=test_github_branch,
         github_repository=github_repository,
@@ -59,18 +55,7 @@ async def test_ssh_debug(
         workflow_id_or_name=SSH_DEBUG_WORKFLOW_FILE_NAME,
     )
 
-    # query a second before actual to ensure we query a bigger range. A branch is created per test
-    # module so this should only return a single result.
-    latest_run: WorkflowRun = next(
-        get_workflow_runs(
-            start_time=start_time - timedelta(seconds=1),
-            workflow=workflow,
-            runner_name=app_no_wait.name,
-            branch=test_github_branch,
-        )
-    )
-
-    logs = get_job_logs(latest_run.jobs("latest")[0])
+    logs = get_job_logs(workflow_run.jobs("latest")[0])
 
     # ensure ssh connection info printed in logs.
     logger.info("Logs: %s", logs)

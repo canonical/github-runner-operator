@@ -178,3 +178,16 @@ def pytest_addoption(parser: Parser):
         action="store",
         help="The Openstack region to authenticate to.",
     )
+    # OpenStack integration tests
+    parser.addoption(
+        "--openstack-test-image",
+        action="store",
+        help="The image for testing openstack interfaces. Any ubuntu image should work.",
+        default=None,
+    )
+    parser.addoption(
+        "--openstack-test-flavor",
+        action="store",
+        help="The flavor for testing openstack interfaces. The resource should be enough to boot the test image.",
+        default=None,
+    )
