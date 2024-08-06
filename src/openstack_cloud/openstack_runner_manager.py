@@ -308,7 +308,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 event=metric_events.RunnerInstalled(
                     timestamp=install_start_timestamp,
                     flavor=flavor,
-                    duration=install_start_timestamp - install_end_timestamp,
+                    duration=install_end_timestamp - install_start_timestamp,
                 )
             )
         except IssueMetricEventError:
