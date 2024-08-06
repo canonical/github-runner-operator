@@ -171,7 +171,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             )
 
         try:
-            self._openstack_cloud.delete_instance(id)
+            self._openstack_cloud.delete_instance(instance.instance_id)
         except OpenStackError:
             logger.exception(
                 "Unable to delete openstack instance for runner %s", instance.server_name
