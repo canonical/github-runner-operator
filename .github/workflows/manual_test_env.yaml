@@ -1,17 +1,19 @@
 name: Manual test env
 
 on:
-  pull_request:
+  # TODO: Uncomment
+  #pull_request:
+  workflow_dispatch:
 
 jobs:
   manual-test-env:
     name: manual-test-env
     runs-on: ["self-hosted", "stg-private-endpoint", "X64"]
     steps:
-      # - run: sudo apt update -yq
-      # - run: sudo apt install pipx -yq
-      # - run: pipx ensurepath
-      # - run: pipx install tox
+      - run: sudo apt update -yq
+      - run: sudo apt install pipx -yq
+      - run: pipx ensurepath
+      - run: pipx install tox
       - uses: actions/checkout@v4
       - name: Tmate debugging session (self-hosted)
         uses: canonical/action-tmate@main

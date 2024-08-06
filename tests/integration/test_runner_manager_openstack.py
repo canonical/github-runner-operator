@@ -4,6 +4,7 @@
 """Testing the RunnerManager class with OpenStackRunnerManager as CloudManager."""
 
 
+from pathlib import Path
 import pytest
 import pytest_asyncio
 import yaml
@@ -13,13 +14,13 @@ from charm_state import GithubPath, ProxyConfig, parse_github_path
 from manager.cloud_runner_manager import CloudRunnerState
 from manager.github_runner_manager import GithubRunnerState
 from manager.runner_manager import RunnerManager, RunnerManagerConfig
+from metrics import runner_logs
 from openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from openstack_cloud.openstack_runner_manager import (
     OpenstackRunnerManager,
     OpenstackRunnerManagerConfig,
 )
 from tests.integration.helpers.openstack import PrivateEndpointConfigs
-
 
 @pytest.fixture(scope="module", name="github_path")
 def github_path_fixture(path: str) -> GithubPath:
@@ -80,8 +81,12 @@ async def openstack_runner_manager_fixture(
 
 @pytest_asyncio.fixture(scope="module", name="runner_manager")
 async def runner_manager_fixture(
-    openstack_runner_manager: OpenstackRunnerManager, token: str, github_path: GithubPath
+    openstack_runner_manager: OpenstackRunnerManager, token: str, github_path: GithubPath, log_dir_base_path: Path
 ) -> RunnerManager:
+    """
+    
+    Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
+    """
     config = RunnerManagerConfig(token, github_path)
     return RunnerManager(openstack_runner_manager, config)
 
