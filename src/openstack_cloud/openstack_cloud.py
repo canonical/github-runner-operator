@@ -373,7 +373,7 @@ class OpenstackCloud:
         returned. Other servers is deleted.
         """
         servers: list[OpenstackServer] = conn.search_servers(name)
-        
+
         if not servers:
             return None
 

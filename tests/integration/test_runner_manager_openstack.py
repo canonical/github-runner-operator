@@ -9,6 +9,8 @@ from pathlib import Path
 import pytest
 import pytest_asyncio
 import yaml
+from github.Branch import Branch
+from github.Repository import Repository
 from openstack.connection import Connection as OpenstackConnection
 
 from charm_state import GithubPath, ProxyConfig, parse_github_path
@@ -20,6 +22,11 @@ from openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from openstack_cloud.openstack_runner_manager import (
     OpenstackRunnerManager,
     OpenstackRunnerManagerConfig,
+)
+from tests.integration.helpers.common import (
+    DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+    dispatch_workflow,
+    wait_for,
 )
 from tests.integration.helpers.openstack import PrivateEndpointConfigs
 
@@ -132,13 +139,11 @@ async def test_runner_normal_idle_lifecycle(
     Act:
         1. Create one runner.
         2. Run health check on the runner.
-        4. Delete all busy runner.
-        4. Delete all idle runner.
+        3. Delete all idle runner.
     Assert:
         1. An active idle runner.
         2. Health check passes.
-        3. An active idle runner.
-        4. No runners.
+        3. No runners.
     """
     # 1.
     runner_id_list = runner_manager.create_runners(1)
@@ -161,20 +166,7 @@ async def test_runner_normal_idle_lifecycle(
 
     assert openstack_runner_manager._health_check(runner)
 
-    # TODO: debug
-    pytest.set_trace()
-
     # 3.
-    runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
-    runner_list = runner_manager.get_runners()
-    assert isinstance(runner_list, tuple)
-    assert len(runner_list) == 1
-    runner = runner_list[0]
-    assert runner.id == runner_id
-    assert runner.cloud_state == CloudRunnerState.ACTIVE
-    assert runner.github_state == GithubRunnerState.IDLE
-
-    # 4.
     runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
     runner_list = runner_manager.get_runners()
     assert isinstance(runner_list, tuple)
@@ -184,7 +176,60 @@ async def test_runner_normal_idle_lifecycle(
 @pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_runner_normal_busy_lifecycle(
-    runner_manager: RunnerManager, openstack_runner_manager: OpenstackRunnerManager
+async def test_runner_flush_busy_lifecycle(
+    runner_manager: RunnerManager,
+    openstack_runner_manager: OpenstackRunnerManager,
+    test_github_branch: Branch,
+    github_repository: Repository,
 ):
-    pass
+    """
+    Arrange: RunnerManager with one idle runner.
+    Act:
+        1. Run a long workflow.
+        2. Run flush idle runner.
+        3. Run flush busy runner.
+    Assert:
+        1. Runner takes the job and become busy.
+        2. Busy runner still exists.
+        3. No runners exists.
+    """
+    runner_manager.create_runners(1)
+    runner_list = runner_manager.get_runners()
+    assert len(runner_list) == 1, "Test arrange failed: Expect one runner"
+    runner = runner_list[0]
+    assert (
+        runner.cloud_state == CloudRunnerState.ACTIVE
+    ), "Test arrange failed: Expect runner in active state"
+    assert (
+        runner.github_state == GithubRunnerState.IDLE
+    ), "Test arrange failed: Expect runner in idle state"
+
+    # 1.
+    workflow = await dispatch_workflow(
+        app=None,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+        dispatch_input={"runner": runner.name, "minutes": "10"},
+        wait=False,
+    )
+    await wait_for(lambda: workflow.update() or workflow.status == "in_progress")
+
+    runner_list = runner_manager.get_runners()
+    assert len(runner_list) == 1
+    busy_runner = runner_list[0]
+    assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
+    assert busy_runner.github_state == GithubRunnerState.BUSY
+
+    # 2.
+    runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
+    runner_list = runner_manager.get_runners()
+    assert len(runner_list) == 1
+    busy_runner = runner_list[0]
+    assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
+    assert busy_runner.github_state == GithubRunnerState.BUSY
+
+    # 3.
+    runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
+    assert len(runner_list) == 0

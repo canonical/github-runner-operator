@@ -43,7 +43,7 @@ class GithubRunnerManager:
 
     def __init__(self, prefix: str, token: str, path: GithubPath):
         """Construct the object.
-        
+
         Args:
             prefix: The prefix in the name to identify the runners managed by this instance.
             token: The GitHub personal access token to access the GitHub API.
