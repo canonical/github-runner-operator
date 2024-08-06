@@ -31,7 +31,6 @@ from manager.cloud_runner_manager import (
     CloudRunnerManager,
     CloudRunnerState,
     RunnerId,
-    RunnerMetrics,
 )
 from metrics import events as metric_events
 from metrics import github as github_metrics

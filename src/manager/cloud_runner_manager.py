@@ -11,6 +11,7 @@ RunnerId = str
 
 class CloudRunnerState(str, Enum):
     """Represent state of the instance hosting the runner."""
+
     CREATED = "created"
     ACTIVE = "active"
     DELETED = "deleted"
@@ -51,12 +52,13 @@ class CloudRunnerState(str, Enum):
 @dataclass
 class CloudRunnerInstance:
     """Information on the runner on the cloud.
-    
+
     Attributes:
         name: Name of the instance hosting the runner.
-        id: ID of the instance. 
+        id: ID of the instance.
         state: State of the instance hosting the runner.
     """
+
     name: str
     id: str
     state: CloudRunnerState
