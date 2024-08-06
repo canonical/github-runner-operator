@@ -198,9 +198,6 @@ class OpenstackCloud:
             clouds_config=self._clouds_config, cloud=self._cloud
         ) as conn:
             try:
-                # TODO: debug
-                import pytest
-                pytest.set_trace()
                 server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
                 conn.delete_server(name_or_id=server.id)
                 OpenstackCloud._delete_key_pair(conn, full_name)
