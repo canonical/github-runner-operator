@@ -158,6 +158,8 @@ async def test_create_runner(runner_manager: RunnerManager, openstack_runner_man
     Act: Run openstack health check.
     Assert: health check passes.
     """
+    pytest.set_trace()
+
     openstack_instances = openstack_runner_manager._openstack_cloud.get_instances()
     assert len(openstack_instances) == 1, "Test arrange failed: Needs one runner."
     runner = openstack_instances[0]
