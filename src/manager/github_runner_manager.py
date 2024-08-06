@@ -33,7 +33,7 @@ class GithubRunnerManager:
         self._path = path
         self._github = GithubClient(token)
 
-    def get_runners(self, states: Sequence[GithubRunnerState]) -> tuple[SelfHostedRunner]:
+    def get_runners(self, states: Sequence[GithubRunnerState] | None = None) -> tuple[SelfHostedRunner]:
         runner_list = self._github.get_runner_github_info(self._path)
         return tuple(
             runner
@@ -42,7 +42,7 @@ class GithubRunnerManager:
             and GithubRunnerManager._filter_runner_state(runner, states)
         )
 
-    def delete_runners(self, states: Sequence[GithubRunnerState]) -> None:
+    def delete_runners(self, states: Sequence[GithubRunnerState] | None = None) -> None:
         runner_list = self.get_runners(states)
         for runner in runner_list:
             self._github.delete_runner(self._path, runner.id)
@@ -55,6 +55,8 @@ class GithubRunnerManager:
 
     @staticmethod
     def _filter_runner_state(
-        runner: SelfHostedRunner, states: Sequence[GithubRunnerState]
+        runner: SelfHostedRunner, states: Sequence[GithubRunnerState] | None 
     ) -> bool:
+        if states is None:
+            return True
         return GithubRunnerState.from_runner(runner) in states

@@ -70,8 +70,8 @@ class RunnerManager:
 
     def get_runners(
         self,
-        github_runner_state: Sequence[GithubRunnerState] = None,
-        cloud_runner_state: Sequence[CloudRunnerState] = None,
+        github_runner_state: Sequence[GithubRunnerState] | None = None,
+        cloud_runner_state: Sequence[CloudRunnerState] | None = None,
     ) -> tuple[RunnerInstance]:
         """Get information on runner filter by state.
 
@@ -84,10 +84,10 @@ class RunnerManager:
         Returns:
             Information on the runners.
         """
+        github_infos = self._github.get_runners(github_runner_state=github_runner_state)
         cloud_infos = self._cloud.get_runners(cloud_runner_status=cloud_runner_state)
-        github_infos = self._github.get_runners(github_runner_state)
-        cloud_infos_map = {info.name: info for info in cloud_infos}
         github_infos_map = {info.name: info for info in github_infos}
+        cloud_infos_map = {info.name: info for info in cloud_infos}
         return tuple(
             RunnerInstance(cloud_infos_map[name], github_infos_map[name])
             for name in cloud_infos_map.keys() & github_infos_map.keys()

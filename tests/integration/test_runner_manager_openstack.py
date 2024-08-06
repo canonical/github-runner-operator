@@ -1,7 +1,12 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Testing the RunnerManager class with OpenStackRunnerManager as CloudManager."""
+"""Testing the RunnerManager class with OpenStackRunnerManager as CloudManager.
+
+To prevent consistent deletion and recreate of openstack machines, the unit are arranged in a order 
+to take advantage of the state from the previous tests.
+Take note of the arrange condition of each test.
+"""
 
 
 from pathlib import Path
@@ -143,3 +148,19 @@ async def test_create_runner(runner_manager: RunnerManager) -> None:
     assert runner.id == runner_id
     assert runner.cloud_state == CloudRunnerState.ACTIVE
     assert runner.github_state == GithubRunnerState.IDLE
+
+@pytest.mark.openstack
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_create_runner(runner_manager: RunnerManager, openstack_runner_manager: OpenstackRunnerManager) -> None:
+    """
+    Arrange: RunnerManager instance with one runner.
+    Act: Run openstack health check.
+    Assert: health check passes.
+    """
+    openstack_instances = openstack_runner_manager._openstack_cloud.get_instances()
+    assert len(openstack_instances) == 1, "Test arrange failed: Needs one runner."
+    runner = openstack_instances[0]
+    
+    assert openstack_runner_manager._health_check(runner)
+    

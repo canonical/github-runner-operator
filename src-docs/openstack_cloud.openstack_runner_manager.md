@@ -79,7 +79,7 @@ __init__(prefix: str, config: OpenstackRunnerManagerConfig) → None
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L179"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L181"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `cleanup`
 
@@ -107,7 +107,7 @@ create_runner(registration_token: str) → str
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L150"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L152"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `delete_runner`
 
@@ -155,7 +155,7 @@ get_runner(id: str) → CloudRunnerInstance | None
 
 ```python
 get_runners(
-    cloud_runner_status: Sequence[CloudRunnerState]
+    cloud_runner_state: Optional[Sequence[CloudRunnerState]] = None
 ) → Tuple[CloudRunnerInstance]
 ```
 
