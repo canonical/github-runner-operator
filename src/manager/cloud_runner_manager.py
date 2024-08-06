@@ -54,11 +54,6 @@ class CloudRunnerInstance:
     state: CloudRunnerState
 
 
-@dataclass
-class RunnerMetrics:
-    pass
-
-
 class CloudRunnerManager(ABC):
     def get_name_prefix(self) -> str: ...
 
