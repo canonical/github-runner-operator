@@ -145,10 +145,10 @@ async def test_create_runner(runner_manager: RunnerManager) -> None:
     assert isinstance(runner_list, tuple)
     assert len(runner_list) == 1
     runner = runner_list[0]
+    pytest.set_trace()
     assert runner.id == runner_id
     assert runner.cloud_state == CloudRunnerState.ACTIVE
     assert runner.github_state == GithubRunnerState.IDLE
-    pytest.set_trace()
 
 @pytest.mark.openstack
 @pytest.mark.asyncio
