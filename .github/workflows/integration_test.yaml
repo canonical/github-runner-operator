@@ -43,7 +43,7 @@ jobs:
     secrets: inherit
     with:
       juju-channel: 3.2/stable
-      pre-run-script: scripts/setup-lxd.sh
+      pre-run-script: tests/integration/setup_private_endpoint_model.sh
       provider: lxd
       test-tox-env: integration-juju3.2
       modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_runner"]'
@@ -51,4 +51,3 @@ jobs:
       builder-runner-label: ARM64
       self-hosted-runner: true
       self-hosted-runner-label: ARM64, stg-private-endpoint
-      pre-run-script: tests/integration/setup_private_endpoint_model.sh
