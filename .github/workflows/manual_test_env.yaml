@@ -2,8 +2,8 @@ name: Manual test env
 
 on:
   # TODO: Uncomment
-  #pull_request:
-  workflow_dispatch:
+  pull_request:
+  # workflow_dispatch:
 
 jobs:
   manual-test-env:
