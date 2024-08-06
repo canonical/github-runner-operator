@@ -33,7 +33,9 @@ class GithubRunnerManager:
         self._path = path
         self._github = GithubClient(token)
 
-    def get_runners(self, states: Sequence[GithubRunnerState] | None = None) -> tuple[SelfHostedRunner]:
+    def get_runners(
+        self, states: Sequence[GithubRunnerState] | None = None
+    ) -> tuple[SelfHostedRunner]:
         runner_list = self._github.get_runner_github_info(self._path)
         return tuple(
             runner
@@ -55,7 +57,7 @@ class GithubRunnerManager:
 
     @staticmethod
     def _filter_runner_state(
-        runner: SelfHostedRunner, states: Sequence[GithubRunnerState] | None 
+        runner: SelfHostedRunner, states: Sequence[GithubRunnerState] | None
     ) -> bool:
         if states is None:
             return True

@@ -1,9 +1,10 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+"""Class for accessing OpenStack API for managing servers."""
+
 import datetime
 import logging
-import shutil
 from contextlib import contextmanager
 from dataclasses import dataclass
 from functools import reduce
@@ -38,6 +39,17 @@ _TEST_STRING = "test_string"
 
 @dataclass
 class OpenstackInstance:
+    """Represents an OpenStack instance.
+
+    Attributes:
+        server_id: ID of server assigned by OpenStack.
+        server_name: Name of the server on OpenStack.
+        instance_id: ID used by OpenstackCloud class to manage the instances. See docs on the
+            OpenstackCloud.
+        addresses: IP addresses assigned to the server.
+        status: Status of the server.
+    """
+
     server_id: str
     server_name: str
     instance_id: str
@@ -97,6 +109,12 @@ def _get_openstack_connection(
 
 
 class OpenstackCloud:
+    """Client to interact with OpenStack cloud.
+
+    The OpenStack server name is managed by this cloud. Caller refers to the instances via
+    instance_id. If the caller needs the server name, e.g., for logging, it can be queried with
+    get_server_name.
+    """
 
     def __init__(self, clouds_config: dict[str, dict], cloud: str, prefix: str):
         """Create a OpenstackCloud instance.
@@ -114,7 +132,7 @@ class OpenstackCloud:
     def launch_instance(
         self, instance_id: str, image: str, flavor: str, network: str, userdata: str
     ) -> OpenstackInstance:
-        full_name = self.get_instance_name(instance_id)
+        full_name = self.get_server_name(instance_id)
         logger.info("Creating openstack server with %s", full_name)
 
         with _get_openstack_connection(
@@ -162,16 +180,18 @@ class OpenstackCloud:
             return OpenstackInstance(server, self.prefix)
 
     def get_instance(self, instance_id: str) -> OpenstackInstance:
-        full_name = self.get_instance_name(instance_id)
+        full_name = self.get_server_name(instance_id)
         logger.info("Getting openstack server with %s", full_name)
 
         with _get_openstack_connection(
             clouds_config=self._clouds_config, cloud=self._cloud
         ) as conn:
-            return OpenstackInstance(OpenstackCloud._get_and_ensure_unique_server(conn, full_name), self.prefix)
+            return OpenstackInstance(
+                OpenstackCloud._get_and_ensure_unique_server(conn, full_name), self.prefix
+            )
 
     def delete_instance(self, instance_id: str) -> None:
-        full_name = self.get_instance_name(instance_id)
+        full_name = self.get_server_name(instance_id)
         logger.info("Deleting openstack server with %s", full_name)
 
         with _get_openstack_connection(
@@ -237,7 +257,9 @@ class OpenstackCloud:
             servers = self._get_openstack_instances(conn)
             server_names = set(server.name for server in servers)
             return [
-                OpenstackInstance(OpenstackCloud._get_and_ensure_unique_server(conn, name), self.prefix)
+                OpenstackInstance(
+                    OpenstackCloud._get_and_ensure_unique_server(conn, name), self.prefix
+                )
                 for name in server_names
             ]
 
@@ -249,6 +271,17 @@ class OpenstackCloud:
             exclude_list = [server.name for server in server_list]
             self._cleanup_key_files(conn, exclude_list)
             self._clean_up_openstack_keypairs(conn, exclude_list)
+
+    def get_server_name(self, instance_id: str) -> str:
+        """Get server name on OpenStack.
+
+        Args:
+            instance_id: ID used to identify a instance.
+
+        Returns:
+            The OpenStack server name.
+        """
+        return f"{self.prefix}-{instance_id}"
 
     def _cleanup_key_files(
         self, conn: OpenstackConnection, exclude_instances: Iterable[str]
@@ -315,9 +348,6 @@ class OpenstackCloud:
                         key.name,
                     )
 
-    def get_instance_name(self, name: str) -> str:
-        return f"{self.prefix}-{name}"
-
     def _get_openstack_instances(self, conn: OpenstackConnection) -> tuple[OpenstackServer]:
         """Get the OpenStack servers managed by this unit.
 
@@ -355,7 +385,12 @@ class OpenstackCloud:
             try:
                 conn.delete_server(name_or_id=server.id)
             except (openstack.exceptions.SDKException, openstack.exceptions.ResourceTimeout):
-                logger.warning("Unable to delete server with duplicate name %s with ID %s", name, server.id, stack_info=True)
+                logger.warning(
+                    "Unable to delete server with duplicate name %s with ID %s",
+                    name,
+                    server.id,
+                    stack_info=True,
+                )
 
         return latest_server
 

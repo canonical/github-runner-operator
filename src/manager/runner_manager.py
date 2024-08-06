@@ -1,6 +1,8 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+"""Class for managing the runners."""
+
 from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Sequence

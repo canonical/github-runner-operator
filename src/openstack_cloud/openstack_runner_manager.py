@@ -95,7 +95,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
     def create_runner(self, registration_token: str) -> RunnerId:
         start_timestamp = time.time()
         id = OpenstackRunnerManager._generate_runner_id()
-        instance_name = self._openstack_cloud.get_instance_name(name=id)
+        instance_name = self._openstack_cloud.get_server_name(instance_id=id)
         userdata = self._generate_userdata(
             instance_name=instance_name, registration_token=registration_token
         )
@@ -122,7 +122,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         return id
 
     def get_runner(self, id: RunnerId) -> CloudRunnerInstance | None:
-        name = self._openstack_cloud.get_instance_name(id)
+        name = self._openstack_cloud.get_server_name(id)
         instances_list = self._openstack_cloud.get_instances()
         for instance in instances_list:
             if instance.server_name == name:
@@ -146,7 +146,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             for instance in instances_list
         ]
         if states is None:
-            return instances_list 
+            return instances_list
         return [instance for instance in instances_list if instance.state in states]
 
     def delete_runner(self, id: RunnerId, remove_token: str) -> None:

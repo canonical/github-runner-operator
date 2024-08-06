@@ -15,8 +15,7 @@ from charm_state import GithubPath, ProxyConfig, parse_github_path
 from manager.cloud_runner_manager import CloudRunnerState
 from manager.github_runner_manager import GithubRunnerState
 from manager.runner_manager import RunnerManager, RunnerManagerConfig
-from metrics import runner_logs
-from metrics import events
+from metrics import events, runner_logs
 from openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from openstack_cloud.openstack_runner_manager import (
     OpenstackRunnerManager,
@@ -125,13 +124,15 @@ async def test_get_no_runner(runner_manager: RunnerManager) -> None:
 @pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_create_runner(runner_manager: RunnerManager, openstack_runner_manager: OpenstackRunnerManager) -> None:
+async def test_create_runner(
+    runner_manager: RunnerManager, openstack_runner_manager: OpenstackRunnerManager
+) -> None:
     """
     Arrange: RunnerManager instance with no runners.
-    Act: 
+    Act:
         1. Create one runner.
-        2. 
-    Assert: 
+        2.
+    Assert:
         1. An active idle runner.
     """
     # 1.
@@ -152,7 +153,7 @@ async def test_create_runner(runner_manager: RunnerManager, openstack_runner_man
     openstack_instances = openstack_runner_manager._openstack_cloud.get_instances()
     assert len(openstack_instances) == 1, "Test arrange failed: Needs one runner."
     runner = openstack_instances[0]
-    
+
     pytest.set_trace()
 
     assert openstack_runner_manager._health_check(runner)
