@@ -227,7 +227,7 @@ async def test_runner_flush_busy_lifecycle(
         dispatch_input={"runner": runner_label, "minutes": "10"},
         wait=False,
     )
-    await wait_for(workflow_in_progress)
+    await wait_for(lambda: workflow_in_progress(workflow))
 
     runner_list = runner_manager.get_runners()
     assert len(runner_list) == 1
