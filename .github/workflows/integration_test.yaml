@@ -50,6 +50,7 @@ jobs:
       extra-arguments: "-m openstack"
       builder-runner-label: ARM64
       self-hosted-runner: true
-      self-hosted-runner-label: ARM64, stg-private-endpoint
+      self-hosted-runner-arch: ARM64
+      self-hosted-runner-label: stg-private-endpoint
       tmate-debug: true
       tmate-timeout: 30
