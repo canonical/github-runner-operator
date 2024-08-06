@@ -48,7 +48,7 @@ from tests.integration.helpers.common import (
     wait_for,
 )
 from tests.integration.helpers.lxd import LXDInstanceHelper, ensure_charm_has_runner
-from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfig
 from tests.integration.helpers.types import CommonAppConfig, OpenstackConfig, ProxyConfig
 from tests.status_name import ACTIVE
 
@@ -207,10 +207,10 @@ def flavor_name_fixture(pytestconfig: pytest.Config, arch: Literal["amd64", "arm
     return flavor_name
 
 
-@pytest.fixture(scope="module", name="private_endpoint_configs")
-def private_endpoint_configs_fixture(
+@pytest.fixture(scope="module", name="private_endpoint_config")
+def private_endpoint_config_fixture(
     pytestconfig: pytest.Config, arch: Literal["amd64", "arm64"]
-) -> PrivateEndpointConfigs | None:
+) -> PrivateEndpointConfig | None:
     """The OpenStack private endpoint configurations."""
     if arch == "arm64":
         auth_url = pytestconfig.getoption("--openstack-auth-url-arm64")
@@ -241,7 +241,7 @@ def private_endpoint_configs_fixture(
         )
     ):
         return None
-    return PrivateEndpointConfigs(
+    return PrivateEndpointConfig(
         auth_url=auth_url,
         password=password,
         project_domain_name=project_domain_name,
@@ -254,7 +254,7 @@ def private_endpoint_configs_fixture(
 
 @pytest.fixture(scope="module", name="private_endpoint_clouds_yaml")
 def private_endpoint_clouds_yaml_fixture(
-    private_endpoint_config: PrivateEndpointConfigs | None,
+    private_endpoint_config: PrivateEndpointConfig | None,
 ) -> Optional[str]:
     """The openstack private endpoint clouds yaml."""
     if not private_endpoint_config:
@@ -404,7 +404,7 @@ async def app_no_runner(
 
 @pytest_asyncio.fixture(scope="module", name="image_builder")
 async def image_builder_fixture(
-    model: Model, private_endpoint_config: PrivateEndpointConfigs | None
+    model: Model, private_endpoint_config: PrivateEndpointConfig | None
 ):
     """The image builder application for OpenStack runners."""
     if not private_endpoint_config:
