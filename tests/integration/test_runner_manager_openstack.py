@@ -14,7 +14,7 @@ from openstack.connection import Connection as OpenstackConnection
 from charm_state import GithubPath, ProxyConfig, parse_github_path
 from manager.cloud_runner_manager import CloudRunnerState
 from manager.github_runner_manager import GithubRunnerState
-from manager.runner_manager import RunnerManager, RunnerManagerConfig
+from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
 from metrics import events, runner_logs
 from openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from openstack_cloud.openstack_runner_manager import (
@@ -124,7 +124,7 @@ async def test_get_no_runner(runner_manager: RunnerManager) -> None:
 @pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_runner_normal_lifecycle(
+async def test_runner_normal_idle_lifecycle(
     runner_manager: RunnerManager, openstack_runner_manager: OpenstackRunnerManager
 ) -> None:
     """
@@ -132,11 +132,13 @@ async def test_runner_normal_lifecycle(
     Act:
         1. Create one runner.
         2. Run health check on the runner.
-        3. Delete all idle runner.
+        4. Delete all busy runner.
+        4. Delete all idle runner.
     Assert:
         1. An active idle runner.
         2. Health check passes.
-        3. No runners.
+        3. An active idle runner.
+        4. No runners.
     """
     # 1.
     runner_id_list = runner_manager.create_runners(1)
@@ -158,10 +160,28 @@ async def test_runner_normal_lifecycle(
     runner = openstack_instances[0]
 
     assert openstack_runner_manager._health_check(runner)
-    
-    # 3.
-    runner_manager.delete_runners()
 
+    # 3.
+    runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
+    runner_list = runner_manager.get_runners()
+    assert isinstance(runner_list, tuple)
+    assert len(runner_list) == 1
+    runner = runner_list[0]
+    assert runner.id == runner_id
+    assert runner.cloud_state == CloudRunnerState.ACTIVE
+    assert runner.github_state == GithubRunnerState.IDLE
+
+    # 4.
+    runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
     runner_list = runner_manager.get_runners()
     assert isinstance(runner_list, tuple)
     assert len(runner_list) == 0
+
+
+@pytest.mark.openstack
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_runner_normal_busy_lifecycle(
+    runner_manager: RunnerManager, openstack_runner_manager: OpenstackRunnerManager
+):
+    pass
