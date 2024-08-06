@@ -352,7 +352,10 @@ class OpenstackCloud:
         )
         outdated_servers = filter(lambda x: x != latest_server, servers)
         for server in outdated_servers:
-            server.delete()
+            try:
+                server.delete()
+            except (openstack.exceptions.SDKException, openstack.exceptions.ResourceTimeout):
+                logger.warning("Unable to delete server with duplicate name %s with ID %s", name, server.id, stack_info=True)
 
         return latest_server
 
@@ -388,7 +391,7 @@ class OpenstackCloud:
             # Keypair have unique names, access by ID is not needed.
             if not conn.delete_keypair(name):
                 logger.warning("Unable to delete keypair for %s", name)
-        except (openstack.exceptions.SDKException, openstack.exceptions.ResourceTimeout) as err:
+        except (openstack.exceptions.SDKException, openstack.exceptions.ResourceTimeout):
             logger.warning("Unable to delete keypair for %s", name, stack_info=True)
 
         key_path = OpenstackCloud._get_key_path(name)
