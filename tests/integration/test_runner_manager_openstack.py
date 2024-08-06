@@ -5,12 +5,14 @@
 
 
 from pathlib import Path
+from secrets import token_hex
 
 import pytest
 import pytest_asyncio
 import yaml
 from github.Branch import Branch
 from github.Repository import Repository
+from github.Workflow import Workflow
 from openstack.connection import Connection as OpenstackConnection
 
 from charm_state import GithubPath, ProxyConfig, parse_github_path
@@ -30,6 +32,11 @@ from tests.integration.helpers.common import (
 )
 from tests.integration.helpers.openstack import PrivateEndpointConfigs
 
+
+
+@pytest.fixture(scope="module", name="runner_label")
+def runner_label():
+    return f"test-{token_hex(6)}"
 
 @pytest.fixture(scope="module", name="log_dir_base_path")
 def log_dir_base_path_fixture(tmp_path_factory: Path):
@@ -73,6 +80,7 @@ async def openstack_runner_manager_fixture(
     network_name: str,
     github_path: GithubPath,
     proxy_config: ProxyConfig,
+    runner_label: str,
     openstack_connection: OpenstackConnection,
 ) -> OpenstackRunnerManager:
     """Create OpenstackRunnerManager instance.
@@ -89,7 +97,7 @@ async def openstack_runner_manager_fixture(
         flavor=flavor_name,
         network=network_name,
         github_path=github_path,
-        labels=["openstack_test"],
+        labels=["openstack_test", runner_label],
         proxy_config=proxy_config,
         dockerhub_mirror=None,
         ssh_debug_connections=None,
@@ -112,6 +120,10 @@ async def runner_manager_fixture(
     """
     config = RunnerManagerConfig(token, github_path)
     return RunnerManager(openstack_runner_manager, config)
+
+def workflow_in_progress(workflow: Workflow) -> bool:
+    workflow.update() 
+    return workflow.status == "in_progress"
 
 
 # @pytest.mark.openstack
@@ -181,6 +193,7 @@ async def test_runner_flush_busy_lifecycle(
     openstack_runner_manager: OpenstackRunnerManager,
     test_github_branch: Branch,
     github_repository: Repository,
+    runner_label: str
 ):
     """
     Arrange: RunnerManager with one idle runner.
@@ -211,11 +224,10 @@ async def test_runner_flush_busy_lifecycle(
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": runner.name, "minutes": "10"},
+        dispatch_input={"runner": runner_label, "minutes": "10"},
         wait=False,
     )
-    await wait_for(lambda: workflow.update() or workflow.status == "in_progress")
-    pytest.set_trace()
+    await wait_for(workflow_in_progress)
 
     runner_list = runner_manager.get_runners()
     assert len(runner_list) == 1
