@@ -1,7 +1,7 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Class for managing the runners."""
+"""Class for managing the GitHub self-hosted runners hosted on cloud instances."""
 
 from dataclasses import dataclass
 from enum import Enum, auto
@@ -151,7 +151,7 @@ class RunnerManager:
             self._cloud.delete_runner(id=runner.id, remove_token=remove_token)
 
     def cleanup(self) -> None:
-        """Runs cleanup of the runners and other resources."""
+        """Run cleanup of the runners and other resources."""
         self._github.delete_runners([GithubRunnerState.OFFLINE, GithubRunnerState.UNKNOWN])
         remove_token = self._github.get_removal_token()
         self._cloud.cleanup_runner(remove_token)

@@ -1,6 +1,8 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+"""Client for managing self-hosted runner on GitHub side."""
+
 from enum import Enum, auto
 from typing import Sequence
 
@@ -37,8 +39,16 @@ class GithubRunnerState(str, Enum):
 
 
 class GithubRunnerManager:
+    """Manage self-hosted runner on GitHub side."""
 
     def __init__(self, prefix: str, token: str, path: GithubPath):
+        """Construct the object.
+        
+        Args:
+            prefix: The prefix in the name to identify the runners managed by this instance.
+            token: The GitHub personal access token to access the GitHub API.
+            path: The GitHub repository or organization to register the runners under.
+        """
         self._prefix = prefix
         self._path = path
         self._github = GithubClient(token)
