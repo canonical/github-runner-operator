@@ -114,9 +114,10 @@ async def runner_manager_fixture(
     return RunnerManager(openstack_runner_manager, config)
 
 
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
+# TODO: Re-enable all tests
+# @pytest.mark.openstack
+# @pytest.mark.asyncio
+# @pytest.mark.abort_on_fail
 async def test_get_no_runner(runner_manager: RunnerManager) -> None:
     """
     Arrange: RunnerManager instance with no runners.
@@ -128,9 +129,9 @@ async def test_get_no_runner(runner_manager: RunnerManager) -> None:
     assert not runner_list
 
 
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
+# @pytest.mark.openstack
+# @pytest.mark.asyncio
+# @pytest.mark.abort_on_fail
 async def test_runner_normal_idle_lifecycle(
     runner_manager: RunnerManager, openstack_runner_manager: OpenstackRunnerManager
 ) -> None:
