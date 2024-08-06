@@ -59,14 +59,14 @@ class RunnerManager:
             prefix=self._cloud.get_name_prefix(), token=self._config.token, path=self._config.path
         )
 
-    def create_runners(self, num: int) -> list[RunnerId]:
+    def create_runners(self, num: int) -> tuple[RunnerId]:
         registration_token = self._github.get_registration_token()
 
         runner_ids = []
         for _ in range(num):
             runner_ids.append(self._cloud.create_runner(registration_token=registration_token))
 
-        return runner_ids
+        return tuple(runner_ids)
 
     def get_runners(
         self,
