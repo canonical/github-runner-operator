@@ -42,7 +42,7 @@ class RunnerInstance:
     ) -> "RunnerInstance":
         self.name = github_info.name
         self.id = cloud_instance.id
-        self.github_state = GithubRunnerState(SelfHostedRunner)
+        self.github_state = GithubRunnerState(github_info)
         self.cloud_state = cloud_instance.state
 
 
