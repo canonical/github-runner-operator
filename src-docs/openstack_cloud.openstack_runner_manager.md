@@ -155,7 +155,7 @@ get_runner(id: str) → CloudRunnerInstance | None
 
 ```python
 get_runners(
-    cloud_runner_state: Optional[Sequence[CloudRunnerState]] = None
+    states: Optional[Sequence[CloudRunnerState]] = None
 ) → Tuple[CloudRunnerInstance]
 ```
 

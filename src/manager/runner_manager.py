@@ -84,8 +84,8 @@ class RunnerManager:
         Returns:
             Information on the runners.
         """
-        github_infos = self._github.get_runners(github_runner_state=github_runner_state)
-        cloud_infos = self._cloud.get_runners(cloud_runner_status=cloud_runner_state)
+        github_infos = self._github.get_runners(github_runner_state)
+        cloud_infos = self._cloud.get_runners(cloud_runner_state)
         github_infos_map = {info.name: info for info in github_infos}
         cloud_infos_map = {info.name: info for info in cloud_infos}
         return tuple(

@@ -134,7 +134,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         return None
 
     def get_runners(
-        self, cloud_runner_state: Sequence[CloudRunnerState] | None = None
+        self, states: Sequence[CloudRunnerState] | None = None
     ) -> Tuple[CloudRunnerInstance]:
         instances_list = self._openstack_cloud.get_instances()
         instances_list = [
@@ -145,9 +145,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
             )
             for instance in instances_list
         ]
-        if cloud_runner_state is None:
+        if states is None:
             return instances_list 
-        return [instance for instance in instances_list if instance.state in cloud_runner_state]
+        return [instance for instance in instances_list if instance.state in states]
 
     def delete_runner(self, id: RunnerId, remove_token: str) -> None:
         instance = self._openstack_cloud.get_instance(id)
