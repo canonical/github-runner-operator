@@ -16,6 +16,7 @@ from manager.cloud_runner_manager import CloudRunnerState
 from manager.github_runner_manager import GithubRunnerState
 from manager.runner_manager import RunnerManager, RunnerManagerConfig
 from metrics import runner_logs
+from metrics import events
 from openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from openstack_cloud.openstack_runner_manager import (
     OpenstackRunnerManager,
@@ -25,12 +26,14 @@ from tests.integration.helpers.openstack import PrivateEndpointConfigs
 
 
 @pytest.fixture(scope="module", name="log_dir_base_path")
-def log_dir_base_path_fixture(tmp_path_factory: Path) -> Path:
+def log_dir_base_path_fixture(tmp_path_factory: Path):
     """Mock the log directory path and return it."""
     with pytest.MonkeyPatch.context() as monkeypatch:
-        log_dir_base_path = tmp_path_factory.mktemp("log") / "log_dir"
-        monkeypatch.setattr(runner_logs, "RUNNER_LOGS_DIR_PATH", log_dir_base_path)
-        yield log_dir_base_path
+        runner_log_dir_path = tmp_path_factory.mktemp("log") / "runner_log"
+        metric_log_path = tmp_path_factory.mktemp("log") / "runner_log"
+        monkeypatch.setattr(runner_logs, "RUNNER_LOGS_DIR_PATH", runner_log_dir_path)
+        monkeypatch.setattr(events, "METRICS_LOG_PATH", metric_log_path)
+        yield
 
 
 @pytest.fixture(scope="module", name="github_path")
