@@ -353,7 +353,7 @@ class OpenstackCloud:
         outdated_servers = filter(lambda x: x != latest_server, servers)
         for server in outdated_servers:
             try:
-                server.delete()
+                conn.delete_server(name_or_id=server.id)
             except (openstack.exceptions.SDKException, openstack.exceptions.ResourceTimeout):
                 logger.warning("Unable to delete server with duplicate name %s with ID %s", name, server.id, stack_info=True)
 
