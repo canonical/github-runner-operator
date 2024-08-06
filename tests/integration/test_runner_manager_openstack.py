@@ -22,7 +22,7 @@ from openstack_cloud.openstack_runner_manager import (
 )
 from tests.integration.helpers.openstack import PrivateEndpointConfigs
 
-@pytest.fixture(name="log_dir_base_path")
+@pytest.fixture(scope="module", name="log_dir_base_path")
 def log_dir_base_path_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Mock the log directory path and return it."""
     log_dir_base_path = tmp_path / "log_dir"
