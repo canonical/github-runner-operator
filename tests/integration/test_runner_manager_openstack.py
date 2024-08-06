@@ -161,10 +161,11 @@ async def test_runner_normal_idle_lifecycle(
 
     assert openstack_runner_manager._health_check(runner)
 
-    # 3.
-    runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
     # TODO: debug
     pytest.set_trace()
+
+    # 3.
+    runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
     runner_list = runner_manager.get_runners()
     assert isinstance(runner_list, tuple)
     assert len(runner_list) == 1
