@@ -168,7 +168,7 @@ class OpenstackCloud:
         with _get_openstack_connection(
             clouds_config=self._clouds_config, cloud=self._cloud
         ) as conn:
-            return OpenstackInstance(OpenstackCloud._get_and_ensure_unique_server(conn, full_name))
+            return OpenstackInstance(OpenstackCloud._get_and_ensure_unique_server(conn, full_name), self.prefix)
 
     def delete_instance(self, instance_id: str) -> None:
         full_name = self.get_instance_name(instance_id)
@@ -237,7 +237,7 @@ class OpenstackCloud:
             servers = self._get_openstack_instances(conn)
             server_names = set(server.name for server in servers)
             return [
-                OpenstackInstance(OpenstackCloud._get_and_ensure_unique_server(conn, name))
+                OpenstackInstance(OpenstackCloud._get_and_ensure_unique_server(conn, name), self.prefix)
                 for name in server_names
             ]
 
