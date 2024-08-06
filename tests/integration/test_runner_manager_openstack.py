@@ -215,6 +215,7 @@ async def test_runner_flush_busy_lifecycle(
         wait=False,
     )
     await wait_for(lambda: workflow.update() or workflow.status == "in_progress")
+    pytest.set_trace()
 
     runner_list = runner_manager.get_runners()
     assert len(runner_list) == 1
