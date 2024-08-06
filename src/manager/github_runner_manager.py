@@ -10,6 +10,7 @@ from github_type import GitHubRunnerStatus, SelfHostedRunner
 
 
 class GithubRunnerState(str, Enum):
+    """State of the runner on GitHub."""
     BUSY = "busy"
     IDLE = "idle"
     OFFLINE = "offline"
@@ -17,6 +18,14 @@ class GithubRunnerState(str, Enum):
 
     @staticmethod
     def from_runner(runner: SelfHostedRunner) -> "GithubRunnerState":
+        """Construct the object from GtiHub runner information.
+        
+        Args:
+            runner: Information on the GitHub self-hosted runner.
+        
+        Returns:
+            The state of runner.
+        """
         state = GithubRunnerState.OFFLINE
         if runner.status == GitHubRunnerStatus.ONLINE:
             if runner.busy:
