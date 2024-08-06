@@ -8,7 +8,9 @@ jobs:
     name: manual-test-env
     runs-on: ["self-hosted", "stg-private-endpoint", "X64"]
     steps:
-      - run: python -m pip install pipx-in-pipx --user
+      - run: sudo apt update -yq
+      - run: sudo apt install pipx
+      - run: pipx ensurepath
       - run: pipx install tox
       - uses: actions/checkout@v4
       - name: Tmate debugging session (self-hosted)
