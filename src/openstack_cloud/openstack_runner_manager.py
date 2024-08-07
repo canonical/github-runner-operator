@@ -107,7 +107,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 userdata=userdata,
             )
         except OpenStackError as err:
-            raise RunnerCreateError("Failed to create {instance_name} openstack runner") from err
+            raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
 
         self._wait_runner_startup(instance)
 
