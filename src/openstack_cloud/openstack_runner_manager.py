@@ -78,8 +78,15 @@ class OpenstackRunnerManagerConfig:
 
 
 class OpenstackRunnerManager(CloudRunnerManager):
+    """Manage self-hosted runner on OpenStack cloud."""
 
     def __init__(self, prefix: str, config: OpenstackRunnerManagerConfig) -> None:
+        """Construct the object.
+        
+        Args:
+            prefix: The prefix to runner name.
+            config: Configuration of the object.
+        """
         self.prefix = prefix
         self.config = config
         self._openstack_cloud = OpenstackCloud(
@@ -89,9 +96,22 @@ class OpenstackRunnerManager(CloudRunnerManager):
         )
 
     def get_name_prefix(self) -> str:
+        """Get the name prefix of the self-hosted runners.
+
+        Returns:
+            The name prefix.
+        """
         return self.prefix
 
     def create_runner(self, registration_token: str) -> InstanceId:
+        """Create a self-hosted runner.
+
+        Args:
+            registration_token: The GitHub registration token for registering runners.
+
+        Returns:
+            Instance ID of the runner.
+        """
         start_timestamp = time.time()
         id = OpenstackRunnerManager._generate_runner_id()
         instance_name = self._openstack_cloud.get_server_name(instance_id=id)
@@ -121,6 +141,14 @@ class OpenstackRunnerManager(CloudRunnerManager):
         return id
 
     def get_runner(self, id: InstanceId) -> CloudRunnerInstance | None:
+        """Get a self-hosted runner by instance id.
+
+        Args:
+            id: The instance id.
+
+        Returns:
+            Information on the runner instance.
+        """
         name = self._openstack_cloud.get_server_name(id)
         instances_list = self._openstack_cloud.get_instances()
         for instance in instances_list:
@@ -135,6 +163,15 @@ class OpenstackRunnerManager(CloudRunnerManager):
     def get_runners(
         self, states: Sequence[CloudRunnerState] | None = None
     ) -> Tuple[CloudRunnerInstance]:
+        """Get self-hosted runners by state.
+
+        Args:
+            states: Filter for the runners with these github states. If None all states will be
+                included.
+
+        Returns:
+            Information on the runner instances.
+        """
         instances_list = self._openstack_cloud.get_instances()
         instances_list = [
             CloudRunnerInstance(
@@ -149,10 +186,22 @@ class OpenstackRunnerManager(CloudRunnerManager):
         return [instance for instance in instances_list if instance.state in states]
 
     def delete_runner(self, id: InstanceId, remove_token: str) -> None:
+        """Delete self-hosted runners.
+
+        Args:
+            id: The instance id of the runner to delete.
+            remove_token: The GitHub remove token.
+        """
         instance = self._openstack_cloud.get_instance(id)
         self._delete_runner(instance, remove_token)
 
     def _delete_runner(self, instance: OpenstackInstance, remove_token) -> None:
+        """Delete self-hosted runners by openstack instance.
+
+        Args:
+            instance: The OpenStack instance.
+            remove_token: The GitHub remove token.
+        """
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
         except SshError:
@@ -178,6 +227,11 @@ class OpenstackRunnerManager(CloudRunnerManager):
             )
 
     def cleanup(self, remove_token: str) -> None:
+        """Cleanup runner and resource on the cloud.
+
+        Args:
+            remove_token: The GitHub remove token.
+        """
         runner_list = self._openstack_cloud.get_instances()
 
         for runner in runner_list:

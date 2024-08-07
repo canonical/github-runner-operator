@@ -69,61 +69,61 @@ class CloudRunnerInstance:
 class CloudRunnerManager(ABC):
     """Manage runner instance on cloud."""
 
-    def get_name_prefix(self) -> str: ...
+    def get_name_prefix(self) -> str:
+        """Get the name prefix of the self-hosted runners.
 
-    """Get the name prefix of the self-hosted runners.
-    
-    Returns:
-        The name prefix.
-    """
+        Returns:
+            The name prefix.
+        """
+        ...
 
-    def create_runner(self, registration_token: str) -> InstanceId: ...
+    def create_runner(self, registration_token: str) -> InstanceId:
+        """Create a self-hosted runner.
 
-    """Create a self-hosted runner.
-    
-    Args:
-        registration_token: The GitHub registration token for registering runners.
+        Args:
+            registration_token: The GitHub registration token for registering runners.
 
-    Returns:
-        Instance ID of the runner.
-    """
+        Returns:
+            Instance ID of the runner.
+        """
+        ...
 
-    def get_runner(self, id: InstanceId) -> CloudRunnerInstance: ...
+    def get_runner(self, id: InstanceId) -> CloudRunnerInstance:
+        """Get a self-hosted runner by instance id.
 
-    """Get a self-hosted runner by instance id.
+        Args:
+            id: The instance id.
 
-    Args:
-        id: The instance id.    
-        
-    Returns:
-        Information on the runner instance.
-    """
+        Returns:
+            Information on the runner instance.
+        """
+        ...
 
-    def get_runners(self, states: Sequence[CloudRunnerState]) -> Tuple[CloudRunnerInstance]: ...
+    def get_runners(self, states: Sequence[CloudRunnerState]) -> Tuple[CloudRunnerInstance]:
+        """Get self-hosted runners by state.
 
-    """Get self-hosted runners by state.
-    
-    Args:
-        states: Filter for the runners with these github states. If None all states will be 
-            included.
+        Args:
+            states: Filter for the runners with these github states. If None all states will be
+                included.
 
-    Returns:
-        Information on the runner instances.
-    """
+        Returns:
+            Information on the runner instances.
+        """
+        ...
 
-    def delete_runner(self, id: InstanceId, remove_token: str) -> None: ...
+    def delete_runner(self, id: InstanceId, remove_token: str) -> None:
+        """Delete self-hosted runners.
 
-    """Delete self-hosted runners.
-    
-    Args:
-        id: The instance id of the runner to delete.
-        remove_token: The GitHub remove token.
-    """
+        Args:
+            id: The instance id of the runner to delete.
+            remove_token: The GitHub remove token.
+        """
+        ...
 
-    def cleanup_runner(self, remove_token: str) -> None: ...
+    def cleanup_runner(self, remove_token: str) -> None:
+        """Cleanup runner and resource on the cloud.
 
-    """Cleanup runner and resource on the cloud.
-    
-    Args:
-        remove_token: The GitHub remove token.
-    """
+        Args:
+            remove_token: The GitHub remove token.
+        """
+        ...

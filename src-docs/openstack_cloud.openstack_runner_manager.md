@@ -58,11 +58,9 @@ __init__(
 <a href="../src/openstack_cloud/openstack_runner_manager.py#L80"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackRunnerManager`
+Manage self-hosted runner on OpenStack cloud. 
 
-
-
-
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L82"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L83"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -70,16 +68,21 @@ __init__(
 __init__(prefix: str, config: OpenstackRunnerManagerConfig) → None
 ```
 
+Construct the object. 
 
 
 
+**Args:**
+ 
+ - <b>`prefix`</b>:  The prefix to runner name. 
+ - <b>`config`</b>:  Configuration of the object. 
 
 
 
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L180"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L229"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `cleanup`
 
@@ -87,13 +90,17 @@ __init__(prefix: str, config: OpenstackRunnerManagerConfig) → None
 cleanup(remove_token: str) → None
 ```
 
+Cleanup runner and resource on the cloud. 
 
 
 
+**Args:**
+ 
+ - <b>`remove_token`</b>:  The GitHub remove token. 
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L94"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L106"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `create_runner`
 
@@ -101,13 +108,22 @@ cleanup(remove_token: str) → None
 create_runner(registration_token: str) → str
 ```
 
+Create a self-hosted runner. 
 
 
 
+**Args:**
+ 
+ - <b>`registration_token`</b>:  The GitHub registration token for registering runners. 
+
+
+
+**Returns:**
+ Instance ID of the runner. 
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L151"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L188"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `delete_runner`
 
@@ -115,13 +131,18 @@ create_runner(registration_token: str) → str
 delete_runner(id: str, remove_token: str) → None
 ```
 
+Delete self-hosted runners. 
 
 
 
+**Args:**
+ 
+ - <b>`id`</b>:  The instance id of the runner to delete. 
+ - <b>`remove_token`</b>:  The GitHub remove token. 
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L91"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L98"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_name_prefix`
 
@@ -129,13 +150,16 @@ delete_runner(id: str, remove_token: str) → None
 get_name_prefix() → str
 ```
 
+Get the name prefix of the self-hosted runners. 
 
 
 
+**Returns:**
+  The name prefix. 
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L123"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L143"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_runner`
 
@@ -143,13 +167,22 @@ get_name_prefix() → str
 get_runner(id: str) → CloudRunnerInstance | None
 ```
 
+Get a self-hosted runner by instance id. 
 
 
 
+**Args:**
+ 
+ - <b>`id`</b>:  The instance id. 
+
+
+
+**Returns:**
+ Information on the runner instance. 
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L135"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L163"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_runners`
 
@@ -159,8 +192,17 @@ get_runners(
 ) → Tuple[CloudRunnerInstance]
 ```
 
+Get self-hosted runners by state. 
 
 
 
+**Args:**
+ 
+ - <b>`states`</b>:  Filter for the runners with these github states. If None all states will be  included. 
+
+
+
+**Returns:**
+ Information on the runner instances. 
 
 
