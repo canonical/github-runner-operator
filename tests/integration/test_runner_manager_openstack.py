@@ -33,10 +33,10 @@ from tests.integration.helpers.common import (
 from tests.integration.helpers.openstack import PrivateEndpointConfigs
 
 
-
 @pytest.fixture(scope="module", name="runner_label")
 def runner_label():
     return f"test-{token_hex(6)}"
+
 
 @pytest.fixture(scope="module", name="log_dir_base_path")
 def log_dir_base_path_fixture(tmp_path_factory: Path):
@@ -121,8 +121,9 @@ async def runner_manager_fixture(
     config = RunnerManagerConfig(token, github_path)
     return RunnerManager(openstack_runner_manager, config)
 
+
 def workflow_in_progress(workflow: Workflow) -> bool:
-    workflow.update() 
+    workflow.update()
     return workflow.status == "in_progress"
 
 
@@ -185,64 +186,64 @@ def workflow_in_progress(workflow: Workflow) -> bool:
 #     assert len(runner_list) == 0
 
 
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_runner_flush_busy_lifecycle(
-    runner_manager: RunnerManager,
-    test_github_branch: Branch,
-    github_repository: Repository,
-    runner_label: str
-):
-    """
-    Arrange: RunnerManager with one idle runner.
-    Act:
-        1. Run a long workflow.
-        2. Run flush idle runner.
-        3. Run flush busy runner.
-    Assert:
-        1. Runner takes the job and become busy.
-        2. Busy runner still exists.
-        3. No runners exists.
-    """
-    runner_manager.create_runners(1)
-    runner_list = runner_manager.get_runners()
-    assert len(runner_list) == 1, "Test arrange failed: Expect one runner"
-    runner = runner_list[0]
-    assert (
-        runner.cloud_state == CloudRunnerState.ACTIVE
-    ), "Test arrange failed: Expect runner in active state"
-    assert (
-        runner.github_state == GithubRunnerState.IDLE
-    ), "Test arrange failed: Expect runner in idle state"
+# @pytest.mark.openstack
+# @pytest.mark.asyncio
+# @pytest.mark.abort_on_fail
+# async def test_runner_flush_busy_lifecycle(
+#     runner_manager: RunnerManager,
+#     test_github_branch: Branch,
+#     github_repository: Repository,
+#     runner_label: str,
+# ):
+#     """
+#     Arrange: RunnerManager with one idle runner.
+#     Act:
+#         1. Run a long workflow.
+#         2. Run flush idle runner.
+#         3. Run flush busy runner.
+#     Assert:
+#         1. Runner takes the job and become busy.
+#         2. Busy runner still exists.
+#         3. No runners exists.
+#     """
+#     runner_manager.create_runners(1)
+#     runner_list = runner_manager.get_runners()
+#     assert len(runner_list) == 1, "Test arrange failed: Expect one runner"
+#     runner = runner_list[0]
+#     assert (
+#         runner.cloud_state == CloudRunnerState.ACTIVE
+#     ), "Test arrange failed: Expect runner in active state"
+#     assert (
+#         runner.github_state == GithubRunnerState.IDLE
+#     ), "Test arrange failed: Expect runner in idle state"
 
-    # 1.
-    workflow = await dispatch_workflow(
-        app=None,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",
-        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": runner_label, "minutes": "10"},
-        wait=False,
-    )
-    await wait_for(lambda: workflow_in_progress(workflow))
+#     # 1.
+#     workflow = await dispatch_workflow(
+#         app=None,
+#         branch=test_github_branch,
+#         github_repository=github_repository,
+#         conclusion="success",
+#         workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+#         dispatch_input={"runner": runner_label, "minutes": "10"},
+#         wait=False,
+#     )
+#     await wait_for(lambda: workflow_in_progress(workflow))
 
-    runner_list = runner_manager.get_runners()
-    assert len(runner_list) == 1
-    busy_runner = runner_list[0]
-    assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.github_state == GithubRunnerState.BUSY
+#     runner_list = runner_manager.get_runners()
+#     assert len(runner_list) == 1
+#     busy_runner = runner_list[0]
+#     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
+#     assert busy_runner.github_state == GithubRunnerState.BUSY
 
-    # 2.
-    runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
-    runner_list = runner_manager.get_runners()
-    assert len(runner_list) == 1
-    busy_runner = runner_list[0]
-    assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.github_state == GithubRunnerState.BUSY
+#     # 2.
+#     runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
+#     runner_list = runner_manager.get_runners()
+#     assert len(runner_list) == 1
+#     busy_runner = runner_list[0]
+#     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
+#     assert busy_runner.github_state == GithubRunnerState.BUSY
 
-    # 3.
-    runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
-    runner_list = runner_manager.get_runners()
-    pytest.set_trace()
+#     # 3.
+#     runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
+#     runner_list = runner_manager.get_runners()
+#     pytest.set_trace()

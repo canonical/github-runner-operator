@@ -3,6 +3,7 @@
 
 """Class for managing the GitHub self-hosted runners hosted on cloud instances."""
 
+import logging
 from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Sequence
@@ -16,6 +17,8 @@ from manager.cloud_runner_manager import (
     RunnerId,
 )
 from manager.github_runner_manager import GithubRunnerManager, GithubRunnerState
+
+logger = logging.getLogger(__name__)
 
 
 class FlushMode(Enum):
@@ -101,6 +104,7 @@ class RunnerManager:
         Returns:
             List of instance ID of the runners.
         """
+        logger.info("Creating %s runners", num)
         registration_token = self._github.get_registration_token()
 
         runner_ids = []
@@ -125,13 +129,28 @@ class RunnerManager:
         Returns:
             Information on the runners.
         """
+        logger.info("Getting runners...")
         github_infos = self._github.get_runners(github_runner_state)
         cloud_infos = self._cloud.get_runners(cloud_runner_state)
         github_infos_map = {info.name: info for info in github_infos}
         cloud_infos_map = {info.name: info for info in cloud_infos}
+        runner_names = cloud_infos_map.keys() & github_infos_map.keys()
+        logger.info("Found following runners: %s", runner_names)
+
+        cloud_only = cloud_infos_map.keys() - runner_names
+        github_only = github_infos_map.keys() - runner_names
+        if cloud_only:
+            logger.warning(
+                "Found runner instance on cloud but not registered on GitHub: %s", cloud_only
+            )
+        if github_only:
+            logger.warning(
+                "Found self-hosted runner on GitHub but no matching runner instance on cloud: %s",
+                github_only,
+            )
+
         return tuple(
-            RunnerInstance(cloud_infos_map[name], github_infos_map[name])
-            for name in cloud_infos_map.keys() & github_infos_map.keys()
+            RunnerInstance(cloud_infos_map[name], github_infos_map[name]) for name in runner_names
         )
 
     def delete_runners(self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE) -> None:
@@ -140,11 +159,21 @@ class RunnerManager:
         Args:
             flush_mode: The type of runners affect by the deletion.
         """
+        match flush_mode:
+                case FlushMode.FLUSH_IDLE:
+                    logger.info("Deleting idle runners...")
+                case FlushMode.FLUSH_BUSY:
+                    logger.info("Deleting idle and busy runners...")
+                case _:
+                    logger.critical("Unknown flush mode %s encountered, contact developers", flush_mode)
+                
         states = [GithubRunnerState.IDLE]
         if flush_mode == FlushMode.FLUSH_BUSY:
             states.append(GithubRunnerState.BUSY)
 
         runners_list = self.get_runners(github_runner_state=states)
+        runner_names = [runner.name for runner in runners_list]
+        logger.info("Deleting runners: %s", runner_names)
         remove_token = self._github.get_removal_token()
 
         for runner in runners_list:
