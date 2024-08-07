@@ -1,6 +1,8 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+"""Manager for self-hosted runner on OpenStack."""
+
 import logging
 import secrets
 import time
@@ -63,6 +65,8 @@ class _PullFileError(Exception):
 
 @dataclass
 class OpenstackRunnerManagerConfig:
+    """Configuration for OpenstackRunnerManager."""
+
     clouds_config: dict[str, dict]
     cloud: str
     image: str
@@ -82,7 +86,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
     def __init__(self, prefix: str, config: OpenstackRunnerManagerConfig) -> None:
         """Construct the object.
-        
+
         Args:
             prefix: The prefix to runner name.
             config: Configuration of the object.

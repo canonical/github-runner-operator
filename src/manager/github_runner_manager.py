@@ -3,7 +3,7 @@
 
 """Client for managing self-hosted runner on GitHub side."""
 
-from enum import Enum, auto
+from enum import Enum
 from typing import Sequence
 
 from charm_state import GithubPath

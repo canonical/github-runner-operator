@@ -51,14 +51,12 @@ class RunnerInstance:
 
     def __init__(
         self, cloud_instance: CloudRunnerInstance, github_info: SelfHostedRunner
-    ) -> "RunnerInstance":
+    ):
         """Construct an instance.
 
         Args:
             cloud_instance: Information on the cloud instance.
             github_info: Information on the GitHub of the runner.
-        Returns:
-            A RunnerInstance object.
         """
         self.name = github_info.name
         self.id = cloud_instance.id

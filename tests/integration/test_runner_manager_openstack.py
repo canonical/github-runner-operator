@@ -86,7 +86,7 @@ async def openstack_runner_manager_fixture(
 ) -> OpenstackRunnerManager:
     """Create OpenstackRunnerManager instance.
 
-    The prefix args of OpenstackRunnerManager set to app_name to let openstack_connection_fixture preform the cleanup of openstack resources.
+    The prefix args of OpenstackRunnerManager set to app_name to let openstack_connection_fixture perform the cleanup of openstack resources.
     """
     _CLOUDS_YAML_PATH.unlink(missing_ok=True)
     clouds_config = yaml.safe_load(private_endpoint_clouds_yaml)

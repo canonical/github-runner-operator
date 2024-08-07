@@ -57,6 +57,12 @@ class OpenstackInstance:
     status: str
 
     def __init__(self, server: OpenstackServer, prefix: str):
+        """Construct the object.
+
+        Args:
+            server: The OpenStack server.
+            prefix: The name prefix for the servers.
+        """
         self.server_id = server.id
         self.server_name = server.name
         self.status = server.status
@@ -117,7 +123,7 @@ class OpenstackCloud:
     """
 
     def __init__(self, clouds_config: dict[str, dict], cloud: str, prefix: str):
-        """Create a OpenstackCloud instance.
+        """Create the object.
 
         Args:
             clouds_config: The openstack clouds.yaml in dict format.
@@ -132,6 +138,18 @@ class OpenstackCloud:
     def launch_instance(
         self, instance_id: str, image: str, flavor: str, network: str, userdata: str
     ) -> OpenstackInstance:
+        """Create an OpenStack instance.
+
+        Args:
+            instance_id: The instance ID to form the instance name.
+            image: The image used to create the instance.
+            flavor: The flavor used to create the instance.
+            network: The network used to create the instance.
+            userdata: The cloud init userdata to startup the instance.
+
+        Returns:
+            The OpenStack instance created.
+        """
         full_name = self.get_server_name(instance_id)
         logger.info("Creating openstack server with %s", full_name)
 
@@ -139,7 +157,7 @@ class OpenstackCloud:
             clouds_config=self._clouds_config, cloud=self._cloud
         ) as conn:
             security_group = OpenstackCloud._ensure_security_group(conn)
-            keypair = OpenstackCloud._setup_key_pair(conn, full_name)
+            keypair = OpenstackCloud._setup_keypair(conn, full_name)
 
             try:
                 server = conn.create_server(
@@ -170,16 +188,24 @@ class OpenstackCloud:
                         "Failed to cleanup openstack server %s that timeout during creation",
                         full_name,
                     )
-                self._delete_key_pair(conn, instance_id)
+                self._delete_keypair(conn, instance_id)
                 raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
             except openstack.exceptions.SDKException as err:
                 logger.exception("Failed to create openstack server %s", full_name)
-                self._delete_key_pair(conn, instance_id)
+                self._delete_keypair(conn, instance_id)
                 raise OpenStackError(f"Failed to create openstack server {full_name}") from err
 
             return OpenstackInstance(server, self.prefix)
 
     def get_instance(self, instance_id: str) -> OpenstackInstance:
+        """Get OpenStack instance by instance ID.
+
+        Args:
+            instance_id: The instance ID.
+
+        Returns:
+            The OpenStack instance.
+        """
         full_name = self.get_server_name(instance_id)
         logger.info("Getting openstack server with %s", full_name)
 
@@ -191,6 +217,11 @@ class OpenstackCloud:
             )
 
     def delete_instance(self, instance_id: str) -> None:
+        """Delete a openstack instance.
+
+        Args:
+            instance_id: The instance ID of the instance to delete.
+        """
         full_name = self.get_server_name(instance_id)
         logger.info("Deleting openstack server with %s", full_name)
 
@@ -200,7 +231,7 @@ class OpenstackCloud:
             try:
                 server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
                 conn.delete_server(name_or_id=server.id)
-                OpenstackCloud._delete_key_pair(conn, full_name)
+                OpenstackCloud._delete_keypair(conn, full_name)
             except (
                 openstack.exceptions.SDKException,
                 openstack.exceptions.ResourceTimeout,
@@ -208,6 +239,14 @@ class OpenstackCloud:
                 raise OpenStackError(f"Failed to remove openstack runner {full_name}") from err
 
     def get_ssh_connection(self, instance: OpenstackInstance) -> SshConnection:
+        """Get SSH connection to an OpenStack instance.
+
+        Args:
+            instance: The OpenStack instance to connect to.
+
+        Returns:
+            SSH connection object.
+        """
         key_path = OpenstackCloud._get_key_path(instance.server_name)
 
         if not key_path.exists():
@@ -249,6 +288,11 @@ class OpenstackCloud:
         )
 
     def get_instances(self) -> tuple[OpenstackInstance]:
+        """Get all OpenStack instances.
+
+        Returns:
+            The OpenStack instances.
+        """
         logger.info("Getting all openstack servers managed by the charm")
 
         with _get_openstack_connection(
@@ -267,6 +311,7 @@ class OpenstackCloud:
             return instances
 
     def cleanup(self) -> None:
+        """Cleanup unused openstack resources."""
         with _get_openstack_connection(
             clouds_config=self._clouds_config, cloud=self._cloud
         ) as conn:
@@ -413,7 +458,16 @@ class OpenstackCloud:
         return _SSH_KEY_PATH / f"{name}.key"
 
     @staticmethod
-    def _setup_key_pair(conn: OpenstackConnection, name: str) -> OpenstackKeypair:
+    def _setup_keypair(conn: OpenstackConnection, name: str) -> OpenstackKeypair:
+        """Create OpenStack keypair.
+
+        Args:
+            conn: The connection object to access OpenStack cloud.
+            name: The name of the keypair.
+
+        Returns:
+            The OpenStack keypair.
+        """
         key_path = OpenstackCloud._get_key_path(name)
 
         if key_path.exists():
@@ -427,7 +481,13 @@ class OpenstackCloud:
         return keypair
 
     @staticmethod
-    def _delete_key_pair(conn: OpenstackConnection, name: str) -> None:
+    def _delete_keypair(conn: OpenstackConnection, name: str) -> None:
+        """Delete OpenStack keypair.
+
+        Args:
+            conn: The connection object to access OpenStack cloud.
+            name: The name of the keypair.
+        """
         try:
             # Keypair have unique names, access by ID is not needed.
             if not conn.delete_keypair(name):
