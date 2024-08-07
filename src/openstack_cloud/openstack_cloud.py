@@ -256,6 +256,11 @@ class OpenstackCloud:
         ) as conn:
             servers = self._get_openstack_instances(conn)
             server_names = set(server.name for server in servers)
+            
+            # TODO: debug
+            import pytest
+            pytest.set_trace()
+
             return [
                 OpenstackInstance(
                     OpenstackCloud._get_and_ensure_unique_server(conn, name), self.prefix

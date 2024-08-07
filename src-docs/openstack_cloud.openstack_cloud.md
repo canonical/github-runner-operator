@@ -72,7 +72,7 @@ Create a OpenstackCloud instance.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L266"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L271"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `cleanup`
 
@@ -128,7 +128,7 @@ get_instances() → tuple[OpenstackInstance]
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L275"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L280"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_server_name`
 
