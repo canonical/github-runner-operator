@@ -414,6 +414,9 @@ async def image_builder_fixture(
     constraints = "cores=2 mem=16G root-disk=20G"
     if not use_private_endpoint_model:
         constraints += " virt-type=virtual-machine"
+    else:
+        # use arm64 arch for ARM64 private-endpoint model testing
+        constraints += " arch=arm64"
     app = await model.deploy(
         "github-runner-image-builder",
         channel="latest/edge",
