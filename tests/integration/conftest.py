@@ -83,11 +83,17 @@ def existing_app_fixture(pytestconfig: pytest.Config) -> Optional[str]:
     return pytestconfig.getoption("--use-existing-app")
 
 
+@pytest.fixture(scope="module", name="test_id")
+def test_id_fixture() -> str:
+    """Randomized test ID."""
+    return secrets.token_hex(2)
+
+
 @pytest.fixture(scope="module", name="app_name")
-def app_name_fixture(existing_app: Optional[str]) -> str:
+def app_name_fixture(existing_app: Optional[str], test_id: str) -> str:
     """Randomized application name."""
     # Randomized app name to avoid collision when runner is connecting to GitHub.
-    return existing_app or f"integration-id{secrets.token_hex(2)}"
+    return existing_app or f"integration-id{test_id}"
 
 
 @pytest.fixture(scope="module", name="charm_file")
@@ -407,6 +413,7 @@ async def image_builder_fixture(
     model: Model,
     private_endpoint_config: PrivateEndpointConfig | None,
     use_private_endpoint_model: bool,
+    test_id: str,
 ):
     """The image builder application for OpenStack runners."""
     if not private_endpoint_config:
@@ -419,6 +426,7 @@ async def image_builder_fixture(
         constraints += " arch=arm64"
     app = await model.deploy(
         "github-runner-image-builder",
+        application_name=f"image-builder-{test_id}",
         channel="latest/edge",
         revision=2,
         constraints=constraints,
