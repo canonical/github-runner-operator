@@ -123,7 +123,7 @@ async def runner_manager_fixture(
     return RunnerManager(openstack_runner_manager, config)
 
 
-@pytest_asyncio.fixture(scope="module", name="runner_manager_with_one_runner")
+@pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")
 async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) -> RunnerManager:
     runner_manager.create_runners(1)
     runner_list = runner_manager.get_runners()
