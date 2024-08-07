@@ -263,7 +263,7 @@ class OpenstackCloud:
                 # line. This is an issues during tests. Hence the need for None check.
                 server = OpenstackCloud._get_and_ensure_unique_server(conn, name)
                 if server is not None:
-                    instances.append(OpenstackInstance(server))
+                    instances.append(OpenstackInstance(server, self.prefix))
             return instances
 
     def cleanup(self) -> None:
