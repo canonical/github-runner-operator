@@ -19,3 +19,4 @@ recommendation on `cores` and `mem` constraint.
 
 The name of the application must not be longer than 29 characters. This is due to the nature of LXD
 pathing that must not exceed 108 bytes. 79 characters are reserved for path naming convention.
+
