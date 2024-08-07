@@ -257,16 +257,14 @@ class OpenstackCloud:
             servers = self._get_openstack_instances(conn)
             server_names = set(server.name for server in servers)
             
-            # TODO: debug
-            import pytest
-            pytest.set_trace()
-
-            return [
-                OpenstackInstance(
-                    OpenstackCloud._get_and_ensure_unique_server(conn, name), self.prefix
-                )
-                for name in server_names
-            ]
+            instances = []            
+            for name in server_names:
+                # The server can be deleted between the `_get_openstack_instances` call and this 
+                # line. This is an issues during tests. Hence the need for None check.
+                server = OpenstackCloud._get_and_ensure_unique_server(conn, name)
+                if server is not None:
+                    instances.append(OpenstackInstance(server))
+            return instances
 
     def cleanup(self) -> None:
         with _get_openstack_connection(
