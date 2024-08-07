@@ -60,7 +60,7 @@ class GithubRunnerManager:
 
         Args:
             states: Filter the runners for these states. If None, all runners are returned.
-        
+
         Returns:
             Information on the runners.
         """
@@ -74,10 +74,10 @@ class GithubRunnerManager:
 
     def delete_runners(self, states: Sequence[GithubRunnerState] | None = None) -> None:
         """Delete the self-hosted runners of certain states.
-        
+
         Args:
             states: Filter the runners for these states. If None, all runners are deleted.
-            
+
         Returns:
             Information on the runners.
         """
@@ -115,7 +115,7 @@ class GithubRunnerManager:
             states: Filter the runners for these states. If None, return true.
 
         Returns:
-            True if the runner is in one of the state, else false.            
+            True if the runner is in one of the state, else false.
         """
         if states is None:
             return True

@@ -30,7 +30,7 @@ from manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
-    RunnerId,
+    InstanceId,
 )
 from metrics import events as metric_events
 from metrics import github as github_metrics
@@ -91,7 +91,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
     def get_name_prefix(self) -> str:
         return self.prefix
 
-    def create_runner(self, registration_token: str) -> RunnerId:
+    def create_runner(self, registration_token: str) -> InstanceId:
         start_timestamp = time.time()
         id = OpenstackRunnerManager._generate_runner_id()
         instance_name = self._openstack_cloud.get_server_name(instance_id=id)
@@ -120,7 +120,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         )
         return id
 
-    def get_runner(self, id: RunnerId) -> CloudRunnerInstance | None:
+    def get_runner(self, id: InstanceId) -> CloudRunnerInstance | None:
         name = self._openstack_cloud.get_server_name(id)
         instances_list = self._openstack_cloud.get_instances()
         for instance in instances_list:
@@ -148,7 +148,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             return instances_list
         return [instance for instance in instances_list if instance.state in states]
 
-    def delete_runner(self, id: RunnerId, remove_token: str) -> None:
+    def delete_runner(self, id: InstanceId, remove_token: str) -> None:
         instance = self._openstack_cloud.get_instance(id)
         self._delete_runner(instance, remove_token)
 
@@ -298,7 +298,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         logger.info("Runner startup process found to be healthy on %s", instance.server_name)
 
     @staticmethod
-    def _generate_runner_id() -> RunnerId:
+    def _generate_runner_id() -> InstanceId:
         return secrets.token_hex(12)
 
     @staticmethod

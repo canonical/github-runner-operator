@@ -14,7 +14,7 @@ from manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
-    RunnerId,
+    InstanceId,
 )
 from manager.github_runner_manager import GithubRunnerManager, GithubRunnerState
 
@@ -45,7 +45,7 @@ class RunnerInstance:
     """
 
     name: str
-    id: RunnerId
+    id: InstanceId
     github_state: GithubRunnerState
     cloud_state: CloudRunnerState
 
@@ -95,7 +95,7 @@ class RunnerManager:
             prefix=self._cloud.get_name_prefix(), token=self._config.token, path=self._config.path
         )
 
-    def create_runners(self, num: int) -> tuple[RunnerId]:
+    def create_runners(self, num: int) -> tuple[InstanceId]:
         """Create runners.
 
         Args:
