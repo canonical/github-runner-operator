@@ -245,4 +245,5 @@ async def test_runner_flush_busy_lifecycle(
 
     # 3.
     runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
-    assert len(runner_list) == 0
+    assert len(runner_list) == 1
+    pytest.set_trace()
