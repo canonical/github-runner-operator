@@ -6,6 +6,7 @@
 
 from pathlib import Path
 from secrets import token_hex
+from typing import Iterator
 
 import pytest
 import pytest_asyncio
@@ -39,14 +40,14 @@ def runner_label():
 
 
 @pytest.fixture(scope="module", name="log_dir_base_path")
-def log_dir_base_path_fixture(tmp_path_factory: Path):
+def log_dir_base_path_fixture(tmp_path_factory: Path) -> Iterator[dict[str, Path]]:
     """Mock the log directory path and return it."""
     with pytest.MonkeyPatch.context() as monkeypatch:
         runner_log_dir_path = tmp_path_factory.mktemp("log") / "runner_log"
         metric_log_path = tmp_path_factory.mktemp("log") / "runner_log"
         monkeypatch.setattr(runner_logs, "RUNNER_LOGS_DIR_PATH", runner_log_dir_path)
         monkeypatch.setattr(events, "METRICS_LOG_PATH", metric_log_path)
-        yield
+        yield {"runner_logs_dir": runner_log_dir_path, "metric_log": metric_log_path}
 
 
 @pytest.fixture(scope="module", name="github_path")
@@ -112,7 +113,7 @@ async def runner_manager_fixture(
     openstack_runner_manager: OpenstackRunnerManager,
     token: str,
     github_path: GithubPath,
-    log_dir_base_path: Path,
+    log_dir_base_path: dict[str, Path],
 ) -> RunnerManager:
     """Get RunnerManager instance.
 
@@ -122,9 +123,24 @@ async def runner_manager_fixture(
     return RunnerManager(openstack_runner_manager, config)
 
 
-def workflow_in_progress(workflow: Workflow) -> bool:
+@pytest_asyncio.fixture(scope="module", name="runner_manager_with_one_runner")
+async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) -> RunnerManager:
+    runner_manager.create_runners(1)
+    runner_list = runner_manager.get_runners()
+    assert len(runner_list) == 1, "Test arrange failed: Expect one runner"
+    runner = runner_list[0]
+    assert (
+        runner.cloud_state == CloudRunnerState.ACTIVE
+    ), "Test arrange failed: Expect runner in active state"
+    assert (
+        runner.github_state == GithubRunnerState.IDLE
+    ), "Test arrange failed: Expect runner in idle state"
+    return runner_manager
+
+
+def workflow_is_status(workflow: Workflow, status: str) -> bool:
     workflow.update()
-    return workflow.status == "in_progress"
+    return workflow.status == status
 
 
 # @pytest.mark.openstack
@@ -186,64 +202,84 @@ def workflow_in_progress(workflow: Workflow) -> bool:
 #     assert len(runner_list) == 0
 
 
-# @pytest.mark.openstack
-# @pytest.mark.asyncio
-# @pytest.mark.abort_on_fail
-# async def test_runner_flush_busy_lifecycle(
-#     runner_manager: RunnerManager,
-#     test_github_branch: Branch,
-#     github_repository: Repository,
-#     runner_label: str,
-# ):
-#     """
-#     Arrange: RunnerManager with one idle runner.
-#     Act:
-#         1. Run a long workflow.
-#         2. Run flush idle runner.
-#         3. Run flush busy runner.
-#     Assert:
-#         1. Runner takes the job and become busy.
-#         2. Busy runner still exists.
-#         3. No runners exists.
-#     """
-#     runner_manager.create_runners(1)
-#     runner_list = runner_manager.get_runners()
-#     assert len(runner_list) == 1, "Test arrange failed: Expect one runner"
-#     runner = runner_list[0]
-#     assert (
-#         runner.cloud_state == CloudRunnerState.ACTIVE
-#     ), "Test arrange failed: Expect runner in active state"
-#     assert (
-#         runner.github_state == GithubRunnerState.IDLE
-#     ), "Test arrange failed: Expect runner in idle state"
+@pytest.mark.openstack
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_runner_flush_busy_lifecycle(
+    runner_manager_with_one_runner: RunnerManager,
+    test_github_branch: Branch,
+    github_repository: Repository,
+    runner_label: str,
+):
+    """
+    Arrange: RunnerManager with one idle runner.
+    Act:
+        1. Run a long workflow.
+        2. Run flush idle runner.
+        3. Run flush busy runner.
+    Assert:
+        1. Runner takes the job and become busy.
+        2. Busy runner still exists.
+        3. No runners exists.
+    """
+    # 1.
+    workflow = await dispatch_workflow(
+        app=None,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+        dispatch_input={"runner": runner_label, "minutes": "10"},
+        wait=False,
+    )
+    await wait_for(lambda: workflow_is_status(workflow, "in_progress"))
 
-#     # 1.
-#     workflow = await dispatch_workflow(
-#         app=None,
-#         branch=test_github_branch,
-#         github_repository=github_repository,
-#         conclusion="success",
-#         workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-#         dispatch_input={"runner": runner_label, "minutes": "10"},
-#         wait=False,
-#     )
-#     await wait_for(lambda: workflow_in_progress(workflow))
+    runner_list = runner_manager_with_one_runner.get_runners()
+    assert len(runner_list) == 1
+    busy_runner = runner_list[0]
+    assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
+    assert busy_runner.github_state == GithubRunnerState.BUSY
 
-#     runner_list = runner_manager.get_runners()
-#     assert len(runner_list) == 1
-#     busy_runner = runner_list[0]
-#     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-#     assert busy_runner.github_state == GithubRunnerState.BUSY
+    # 2.
+    runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
+    runner_list = runner_manager_with_one_runner.get_runners()
+    assert len(runner_list) == 1
+    busy_runner = runner_list[0]
+    assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
+    assert busy_runner.github_state == GithubRunnerState.BUSY
 
-#     # 2.
-#     runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
-#     runner_list = runner_manager.get_runners()
-#     assert len(runner_list) == 1
-#     busy_runner = runner_list[0]
-#     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-#     assert busy_runner.github_state == GithubRunnerState.BUSY
+    # 3.
+    runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
+    runner_list = runner_manager_with_one_runner.get_runners()
 
-#     # 3.
-#     runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
-#     runner_list = runner_manager.get_runners()
-#     pytest.set_trace()
+
+@pytest.mark.openstack
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_runner_normal_lifecycle(
+    runner_manager_with_one_runner: RunnerManager,
+    test_github_branch: Branch,
+    github_repository: Repository,
+    runner_label: str,
+    log_dir_base_path: dict[str, Path],
+):
+    """
+    Arrange: RunnerManager with one runner.
+    Act:
+        1. Start a test workflow for the runner.
+        2. Run cleanup.
+    Assert:
+        1. The workflow complete successfully.
+        2. The runner should be deleted. The metrics should be recorded.
+    """
+    workflow = await dispatch_workflow(
+        app=None,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+        dispatch_input={"runner": runner_label, "minutes": "0"},
+        wait=False,
+    )
+    await wait_for(lambda: workflow_is_status(workflow, "completed"))
+    metric_log_path = log_dir_base_path["metric_log"]

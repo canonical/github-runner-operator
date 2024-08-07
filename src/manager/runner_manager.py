@@ -160,13 +160,15 @@ class RunnerManager:
             flush_mode: The type of runners affect by the deletion.
         """
         match flush_mode:
-                case FlushMode.FLUSH_IDLE:
-                    logger.info("Deleting idle runners...")
-                case FlushMode.FLUSH_BUSY:
-                    logger.info("Deleting idle and busy runners...")
-                case _:
-                    logger.critical("Unknown flush mode %s encountered, contact developers", flush_mode)
-                
+            case FlushMode.FLUSH_IDLE:
+                logger.info("Deleting idle runners...")
+            case FlushMode.FLUSH_BUSY:
+                logger.info("Deleting idle and busy runners...")
+            case _:
+                logger.critical(
+                    "Unknown flush mode %s encountered, contact developers", flush_mode
+                )
+
         states = [GithubRunnerState.IDLE]
         if flush_mode == FlushMode.FLUSH_BUSY:
             states.append(GithubRunnerState.BUSY)
