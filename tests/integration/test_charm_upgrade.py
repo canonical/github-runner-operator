@@ -18,19 +18,16 @@ from tests.integration.helpers.common import (
     is_upgrade_charm_event_emitted,
     wait_for,
 )
+from tests.integration.helpers.types import CommonAppConfig, ProxyConfig
 
 
 @pytest.mark.asyncio
 async def test_charm_upgrade(
     model: Model,
     ops_test: OpsTest,
-    charm_file: str,
+    common_app_config: CommonAppConfig,
     loop_device: str | None,
-    app_name: str,
-    path: str,
-    token: str,
-    http_proxy: str,
-    https_proxy: str,
+    proxy: ProxyConfig,
     no_proxy: str,
     tmp_path: pathlib.Path,
 ):
@@ -62,12 +59,12 @@ async def test_charm_upgrade(
     application = await deploy_github_runner_charm(
         model=model,
         charm_file=str(latest_stable_path),
-        app_name=app_name,
-        path=path,
-        token=token,
+        app_name=common_app_config.app_name,
+        path=common_app_config.path,
+        token=common_app_config.token,
         runner_storage="juju-storage",
-        http_proxy=http_proxy,
-        https_proxy=https_proxy,
+        http_proxy=proxy.http,
+        https_proxy=proxy.https,
         no_proxy=no_proxy,
         reconcile_interval=5,
         # override default virtual_machines=0 config.
@@ -92,7 +89,7 @@ async def test_charm_upgrade(
     )
 
     # upgrade the charm with current local charm
-    await application.local_refresh(path=charm_file, charm_origin=origin)
+    await application.local_refresh(path=common_app_config.charm_file, charm_origin=origin)
     unit = application.units[0]
     await wait_for(
         functools.partial(is_upgrade_charm_event_emitted, unit), timeout=360, check_interval=60

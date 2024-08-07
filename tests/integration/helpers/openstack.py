@@ -302,7 +302,7 @@ EOT""",
     await wait_for(server_is_ready, timeout=30, check_interval=3)
 
 
-class PrivateEndpointConfigs(TypedDict):
+class PrivateEndpointConfig(TypedDict):
     """The Private endpoint configuration values.
 
     Attributes:

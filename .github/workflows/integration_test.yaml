@@ -24,8 +24,8 @@ jobs:
       # test_debug_ssh ensures tmate SSH actions works.
       # TODO: Add OpenStack integration versions of these tests.
       modules: '["test_charm_scheduled_events", "test_debug_ssh"]'
-  openstack-integration-tests-private-endpoint:
-    name: Integration test using private-endpoint
+  openstack-integration-tests-private-endpoint-amd64:
+    name: Integration test using private-endpoint(AMD64)
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
@@ -37,3 +37,20 @@ jobs:
       extra-arguments: "-m openstack"
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
+  openstack-integration-tests-private-endpoint-arm64:
+    name: Integration test using private-endpoint(ARM64)
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    secrets: inherit
+    with:
+      juju-channel: 3.2/stable
+      pre-run-script: tests/integration/setup_private_endpoint_model.sh
+      provider: lxd
+      test-tox-env: integration-juju3.2
+      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_runner"]'
+      extra-arguments: "-m openstack"
+      builder-runner-label: ARM64
+      self-hosted-runner: true
+      self-hosted-runner-arch: ARM64
+      self-hosted-runner-label: stg-private-endpoint
+      tmate-debug: true
+      tmate-timeout: 30
