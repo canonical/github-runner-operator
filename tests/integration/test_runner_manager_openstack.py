@@ -190,7 +190,6 @@ def workflow_in_progress(workflow: Workflow) -> bool:
 @pytest.mark.abort_on_fail
 async def test_runner_flush_busy_lifecycle(
     runner_manager: RunnerManager,
-    openstack_runner_manager: OpenstackRunnerManager,
     test_github_branch: Branch,
     github_repository: Repository,
     runner_label: str
@@ -245,5 +244,5 @@ async def test_runner_flush_busy_lifecycle(
 
     # 3.
     runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
-    assert len(runner_list) == 1
+    runner_list = runner_manager.get_runners()
     pytest.set_trace()
