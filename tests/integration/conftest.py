@@ -404,16 +404,21 @@ async def app_no_runner(
 
 @pytest_asyncio.fixture(scope="module", name="image_builder")
 async def image_builder_fixture(
-    model: Model, private_endpoint_config: PrivateEndpointConfig | None
+    model: Model,
+    private_endpoint_config: PrivateEndpointConfig | None,
+    use_private_endpoint_model: bool,
 ):
     """The image builder application for OpenStack runners."""
     if not private_endpoint_config:
         raise ValueError("Private endpoints are required for testing OpenStack runners.")
+    constraints = "cores=2 mem=16G root-disk=20G"
+    if not use_private_endpoint_model:
+        constraints += " virt-type=virtual-machine"
     app = await model.deploy(
         "github-runner-image-builder",
         channel="latest/edge",
         revision=2,
-        constraints="cores=2 mem=16G root-disk=20G virt-type=virtual-machine",
+        constraints=constraints,
         config={
             "app-channel": "edge",
             "build-interval": "12",
