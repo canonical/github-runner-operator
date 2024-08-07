@@ -31,7 +31,12 @@ from pydantic import (
 )
 
 import openstack_cloud
-from errors import MissingMongoDBError, OpenStackInvalidConfigError
+from errors import (
+    IntegrationDataNotReadyError,
+    IntegrationNotFoundError,
+    MissingMongoDBError,
+    OpenStackInvalidConfigError,
+)
 from firewall import FirewallEntry
 from utilities import get_env_var
 
@@ -590,34 +595,43 @@ class OpenstackImage(BaseModel):
         tags: Image tags, e.g. jammy
     """
 
-    id: str | None
-    tags: list[str] | None
+    id: str
+    tags: list[str]
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "OpenstackImage | None":
-        """Initialize the OpenstackImage info from relation data.
-
-        None represents relation not established.
-        None values for id/tags represent image not yet ready but the relation exists.
+    def from_charm(cls, charm: CharmBase) -> "OpenstackImage":
+        """Initialize the OpenstackImage info from integration data.
 
         Args:
             charm: The charm instance.
 
         Returns:
-            OpenstackImage metadata from charm relation data.
+            OpenstackImage metadata from charm integration data.
+
+        Raises:
+            IntegrationNotFoundError: if the charm has not yet been integrated.
+            IntegrationDataNotReadyError: if the integration data is not yet available.
         """
         relations = charm.model.relations[IMAGE_INTEGRATION_NAME]
         if not relations or not (relation := relations[0]).units:
-            return None
+            raise IntegrationNotFoundError(f"Please provide {IMAGE_INTEGRATION_NAME} integration.")
         for unit in relation.units:
             relation_data = relation.data[unit]
             if not relation_data:
                 continue
+            image_id = relation_data.get("id", None)
+            image_tags = [tag.strip() for tag in relation_data.get("tags", "").split(",") if tag]
+            if not image_id:
+                raise IntegrationDataNotReadyError(
+                    f"Waiting for {IMAGE_INTEGRATION_NAME} integration data."
+                )
             return OpenstackImage(
-                id=relation_data.get("id", None),
-                tags=[tag.strip() for tag in relation_data.get("tags", "").split(",") if tag],
+                id=image_id,
+                tags=image_tags,
             )
-        return OpenstackImage(id=None, tags=None)
+        raise IntegrationDataNotReadyError(
+            f"Waiting for {IMAGE_INTEGRATION_NAME} integration data."
+        )
 
 
 class OpenstackRunnerConfig(BaseModel):
@@ -633,7 +647,7 @@ class OpenstackRunnerConfig(BaseModel):
     virtual_machines: int
     openstack_flavor: str
     openstack_network: str
-    openstack_image: OpenstackImage | None
+    openstack_image: OpenstackImage
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "OpenstackRunnerConfig":
