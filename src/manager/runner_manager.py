@@ -6,9 +6,10 @@
 import logging
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Sequence
+from typing import Iterator, Sequence, Type
 
 from charm_state import GithubPath
+from errors import GithubMetricsError
 from github_type import SelfHostedRunner
 from manager.cloud_runner_manager import (
     CloudRunnerInstance,
@@ -17,8 +18,14 @@ from manager.cloud_runner_manager import (
     InstanceId,
 )
 from manager.github_runner_manager import GithubRunnerManager, GithubRunnerState
+from metrics import events as metric_events
+from metrics import github as github_metrics
+from metrics import runner as runner_metrics
+from metrics.runner import RunnerMetrics
 
 logger = logging.getLogger(__name__)
+
+IssuedMetricEventsStats = dict[Type[metric_events.Event], int]
 
 
 class FlushMode(Enum):
@@ -49,9 +56,7 @@ class RunnerInstance:
     github_state: GithubRunnerState
     cloud_state: CloudRunnerState
 
-    def __init__(
-        self, cloud_instance: CloudRunnerInstance, github_info: SelfHostedRunner
-    ):
+    def __init__(self, cloud_instance: CloudRunnerInstance, github_info: SelfHostedRunner):
         """Construct an instance.
 
         Args:
@@ -151,7 +156,9 @@ class RunnerManager:
             RunnerInstance(cloud_infos_map[name], github_infos_map[name]) for name in runner_names
         )
 
-    def delete_runners(self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE) -> None:
+    def delete_runners(
+        self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE
+    ) -> IssuedMetricEventsStats:
         """Delete the runners.
 
         Args:
@@ -176,11 +183,42 @@ class RunnerManager:
         logger.info("Deleting runners: %s", runner_names)
         remove_token = self._github.get_removal_token()
 
+        metrics = []
         for runner in runners_list:
-            self._cloud.delete_runner(id=runner.id, remove_token=remove_token)
+            metrics.append(self._cloud.delete_runner(id=runner.id, remove_token=remove_token))
 
-    def cleanup(self) -> None:
+        return self._issue_runner_metrics(metrics=iter(metric_events))
+
+    def cleanup(self) -> IssuedMetricEventsStats:
         """Run cleanup of the runners and other resources."""
         self._github.delete_runners([GithubRunnerState.OFFLINE, GithubRunnerState.UNKNOWN])
         remove_token = self._github.get_removal_token()
-        self._cloud.cleanup_runner(remove_token)
+        metrics = self._cloud.cleanup_runner(remove_token)
+        return self._issue_runner_metrics(metrics=metrics)
+
+    def _issue_runner_metrics(self, metrics: Iterator[RunnerMetrics]) -> IssuedMetricEventsStats:
+        total_stats: IssuedMetricEventsStats = {}
+
+        for extracted_metrics in metrics:
+            try:
+                job_metrics = github_metrics.job(
+                    github_client=self._github.github,
+                    pre_job_metrics=extracted_metrics.pre_job,
+                    runner_name=extracted_metrics.runner_name,
+                )
+            except GithubMetricsError:
+                logger.exception(
+                    "Failed to calculate job metrics for %s", extracted_metrics.runner_name
+                )
+                job_metrics = None
+
+            issued_events = runner_metrics.issue_events(
+                runner_metrics=extracted_metrics,
+                job_metrics=job_metrics,
+                flavor=self._cloud.get_name_prefix(),
+            )
+
+            for event_type in issued_events:
+                total_stats[event_type] = total_stats.get(event_type, 0) + 1
+
+        return total_stats

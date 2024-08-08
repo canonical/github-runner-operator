@@ -325,7 +325,7 @@ class RunnerManager:
 
         total_stats: IssuedMetricEventsStats = {}
         for extracted_metrics in runner_metrics.extract(
-            metrics_storage_manager=shared_fs, ignore_runners=set(runner_states.healthy)
+            metrics_storage_manager=shared_fs, runners=set(runner_states.healthy)
         ):
             try:
                 job_metrics = github_metrics.job(

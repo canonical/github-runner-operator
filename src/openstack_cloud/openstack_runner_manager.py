@@ -16,6 +16,7 @@ import paramiko
 import paramiko.ssh_exception
 from fabric import Connection as SshConnection
 
+import shared_fs
 from charm_state import GithubOrg, GithubPath, ProxyConfig, SSHDebugConnection
 from errors import (
     CreateMetricsStorageError,
@@ -35,7 +36,6 @@ from manager.cloud_runner_manager import (
     InstanceId,
 )
 from metrics import events as metric_events
-from metrics import github as github_metrics
 from metrics import runner as runner_metrics
 from metrics import storage as metrics_storage
 from openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
@@ -79,6 +79,12 @@ class OpenstackRunnerManagerConfig:
     ssh_debug_connections: list[SSHDebugConnection] | None
     repo_policy_url: str | None
     repo_policy_token: str | None
+
+
+@dataclass
+class RunnerHealth:
+    healthy: tuple[OpenstackInstance]
+    unhealthy: tuple[OpenstackInstance]
 
 
 class OpenstackRunnerManager(CloudRunnerManager):
@@ -189,7 +195,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             return instances_list
         return [instance for instance in instances_list if instance.state in states]
 
-    def delete_runner(self, id: InstanceId, remove_token: str) -> None:
+    def delete_runner(self, id: InstanceId, remove_token: str) -> runner_metrics.RunnerMetrics:
         """Delete self-hosted runners.
 
         Args:
@@ -197,7 +203,31 @@ class OpenstackRunnerManager(CloudRunnerManager):
             remove_token: The GitHub remove token.
         """
         instance = self._openstack_cloud.get_instance(id)
+        metric = runner_metrics.extract(
+            metrics_storage_manager=shared_fs, runners=instance.server_name
+        )
         self._delete_runner(instance, remove_token)
+        return metric
+
+    def cleanup(self, remove_token: str) -> runner_metrics.RunnerMetrics:
+        """Cleanup runner and resource on the cloud.
+
+        Args:
+            remove_token: The GitHub remove token.
+
+        Returns:
+            Any metrics retrieved from cleanup runners.
+        """
+        runners = self._get_runner_health()
+        healthy_runner_names = [runner.server_name for runner in runners.healthy]
+        metrics = runner_metrics.extract(
+            metrics_storage_manager=shared_fs, runners=set(healthy_runner_names)
+        )
+        for runner in runners.unhealthy:
+            self._delete_runner(runner, remove_token)
+
+        self._openstack_cloud.cleanup()
+        return metrics
 
     def _delete_runner(self, instance: OpenstackInstance, remove_token) -> None:
         """Delete self-hosted runners by openstack instance.
@@ -230,24 +260,26 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 "Unable to delete openstack instance for runner %s", instance.server_name
             )
 
-    def cleanup(self, remove_token: str) -> None:
-        """Cleanup runner and resource on the cloud.
+    def _get_runner_health(self) -> RunnerHealth:
+        """Get runners by health state.
 
-        Args:
-            remove_token: The GitHub remove token.
+        Returns:
+            Runners by health state.
         """
         runner_list = self._openstack_cloud.get_instances()
 
+        healthy, unhealthy = [], []
         for runner in runner_list:
-            state = (CloudRunnerState(runner.status),)
-            if state in (
+            cloud_state = CloudRunnerState(runner.status)
+            if cloud_state in (
                 CloudRunnerState.DELETED,
                 CloudRunnerState.ERROR,
                 CloudRunnerState.STOPPED,
-            ) or self._health_check(runner):
-                self._delete_runner(runner, remove_token)
-
-        self._openstack_cloud.cleanup()
+            ) or not self._health_check(runner):
+                unhealthy.append(runner)
+            else:
+                healthy.append(runner)
+        return RunnerHealth(healthy=healthy, unhealthy=unhealthy)
 
     def _generate_userdata(self, instance_name: str, registration_token: str) -> str:
         jinja = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)

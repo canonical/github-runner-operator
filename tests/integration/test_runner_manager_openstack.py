@@ -21,6 +21,7 @@ from manager.cloud_runner_manager import CloudRunnerState
 from manager.github_runner_manager import GithubRunnerState
 from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
 from metrics import events, runner_logs
+from openstack_cloud import openstack_runner_manager
 from openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from openstack_cloud.openstack_runner_manager import (
     OpenstackRunnerManager,
@@ -31,7 +32,6 @@ from tests.integration.helpers.common import (
     dispatch_workflow,
     wait_for,
 )
-from tests.integration.helpers.openstack import PrivateEndpointConfigs
 
 
 @pytest.fixture(scope="module", name="runner_label")
@@ -43,11 +43,23 @@ def runner_label():
 def log_dir_base_path_fixture(tmp_path_factory: Path) -> Iterator[dict[str, Path]]:
     """Mock the log directory path and return it."""
     with pytest.MonkeyPatch.context() as monkeypatch:
-        runner_log_dir_path = tmp_path_factory.mktemp("log") / "runner_log"
-        metric_log_path = tmp_path_factory.mktemp("log") / "runner_log"
+        temp_log_dir = tmp_path_factory.mktemp("log")
+
+        runner_log_dir_path = temp_log_dir / "runner_log"
+        metric_log_path = temp_log_dir / "metric_log"
+        metric_exchange_path = temp_log_dir / "metric_exchange"
+
         monkeypatch.setattr(runner_logs, "RUNNER_LOGS_DIR_PATH", runner_log_dir_path)
         monkeypatch.setattr(events, "METRICS_LOG_PATH", metric_log_path)
-        yield {"runner_logs_dir": runner_log_dir_path, "metric_log": metric_log_path}
+        monkeypatch.setattr(
+            openstack_runner_manager, "METRICS_EXCHANGE_PATH", metric_exchange_path
+        )
+
+        yield {
+            "runner_logs_dir": runner_log_dir_path,
+            "metric_log": metric_log_path,
+            "metric_exchange": metric_exchange_path,
+        }
 
 
 @pytest.fixture(scope="module", name="github_path")

@@ -51,7 +51,7 @@ class GithubRunnerManager:
         """
         self._prefix = prefix
         self._path = path
-        self._github = GithubClient(token)
+        self.github = GithubClient(token)
 
     def get_runners(
         self, states: Sequence[GithubRunnerState] | None = None
@@ -64,7 +64,7 @@ class GithubRunnerManager:
         Returns:
             Information on the runners.
         """
-        runner_list = self._github.get_runner_github_info(self._path)
+        runner_list = self.github.get_runner_github_info(self._path)
         return tuple(
             runner
             for runner in runner_list
@@ -83,7 +83,7 @@ class GithubRunnerManager:
         """
         runner_list = self.get_runners(states)
         for runner in runner_list:
-            self._github.delete_runner(self._path, runner.id)
+            self.github.delete_runner(self._path, runner.id)
 
     def get_registration_token(self) -> str:
         """Get registration token from GitHub.
@@ -93,7 +93,7 @@ class GithubRunnerManager:
         Returns:
             The registration token.
         """
-        return self._github.get_runner_registration_token(self._path)
+        return self.github.get_runner_registration_token(self._path)
 
     def get_removal_token(self) -> str:
         """Get removal token from GitHub.
@@ -103,7 +103,7 @@ class GithubRunnerManager:
         Returns:
             The removal token.
         """
-        return self._github.get_runner_remove_token(self._path)
+        return self.github.get_runner_remove_token(self._path)
 
     @staticmethod
     def _filter_runner_state(

@@ -1450,7 +1450,7 @@ class OpenstackRunnerManager:
 
         for extracted_metrics in runner_metrics.extract(
             metrics_storage_manager=metrics_storage,
-            ignore_runners=instance_names,
+            runners=instance_names,
         ):
             try:
                 job_metrics = github_metrics.job(

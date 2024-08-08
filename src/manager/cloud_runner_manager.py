@@ -6,7 +6,10 @@
 from abc import ABC
 from dataclasses import dataclass
 from enum import Enum
-from typing import Sequence, Tuple
+from typing import Iterator, Sequence, Tuple, Type
+
+from metrics import events as metric_events
+from metrics.runner import RunnerMetrics
 
 InstanceId = str
 
@@ -111,19 +114,25 @@ class CloudRunnerManager(ABC):
         """
         ...
 
-    def delete_runner(self, id: InstanceId, remove_token: str) -> None:
+    def delete_runner(self, id: InstanceId, remove_token: str) -> RunnerMetrics:
         """Delete self-hosted runners.
 
         Args:
             id: The instance id of the runner to delete.
             remove_token: The GitHub remove token.
+
+        Returns:
+            Metrics of the runner deleted.
         """
         ...
 
-    def cleanup_runner(self, remove_token: str) -> None:
+    def cleanup_runner(self, remove_token: str) -> Iterator[RunnerMetrics]:
         """Cleanup runner and resource on the cloud.
 
         Args:
             remove_token: The GitHub remove token.
+
+        Returns:
+            Metrics of the runners that was cleanup.
         """
         ...
