@@ -155,7 +155,7 @@ class RunnerManager:
             )
 
         return tuple(
-            RunnerInstance(cloud_infos_map[name], github_infos_map[name]) for name in cloud_infos_map.keys() 
+            RunnerInstance(cloud_infos_map[name], github_infos_map[name] if name in github_infos_map else None) for name in cloud_infos_map.keys() 
         )
 
     def delete_runners(
