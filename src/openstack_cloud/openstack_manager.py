@@ -516,6 +516,9 @@ class OpenstackRunnerManager:
             server_name: The openstack server instance to check connections.
             startup: Check only whether the startup is successful.
 
+        Raises:
+            _SSHError: if there was an error SSH-ing into the machine or with the SSH command.
+
         Returns:
             Whether the runner application is running.
         """
@@ -532,7 +535,7 @@ class OpenstackRunnerManager:
         if not result.ok:
             logger.warning("List all process command failed on %s.", server_name)
             raise _SSHError(f"List process command failed on {server_name}.")
-        if not RUNNER_STARTUP_PROCESS not in result.stdout:
+        if RUNNER_STARTUP_PROCESS not in result.stdout:
             raise _SSHError(f"Runner not yet started on {server_name}.")
 
         logger.info("Runner process found to be healthy on %s", server_name)
