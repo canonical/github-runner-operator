@@ -53,19 +53,19 @@ class RunnerInstance:
 
     name: str
     id: InstanceId
-    github_state: GithubRunnerState
+    github_state: GithubRunnerState | None
     cloud_state: CloudRunnerState
 
-    def __init__(self, cloud_instance: CloudRunnerInstance, github_info: SelfHostedRunner):
+    def __init__(self, cloud_instance: CloudRunnerInstance, github_info: SelfHostedRunner | None):
         """Construct an instance.
 
         Args:
             cloud_instance: Information on the cloud instance.
             github_info: Information on the GitHub of the runner.
         """
-        self.name = github_info.name
+        self.name =cloud_instance.name 
         self.id = cloud_instance.id
-        self.github_state = GithubRunnerState.from_runner(github_info)
+        self.github_state = GithubRunnerState.from_runner(github_info) if github_info is not None else None
         self.cloud_state = cloud_instance.state
 
 
@@ -122,6 +122,8 @@ class RunnerManager:
         cloud_runner_state: Sequence[CloudRunnerState] | None = None,
     ) -> tuple[RunnerInstance]:
         """Get information on runner filter by state.
+        
+        Only runners that has cloud instance are returned.
 
         Args:
             github_runner_state: Filter for the runners with these github states. If None all
@@ -137,9 +139,9 @@ class RunnerManager:
         cloud_infos = self._cloud.get_runners(cloud_runner_state)
         github_infos_map = {info.name: info for info in github_infos}
         cloud_infos_map = {info.name: info for info in cloud_infos}
-        runner_names = cloud_infos_map.keys() & github_infos_map.keys()
-        logger.info("Found following runners: %s", runner_names)
+        logger.info("Found following runners: %s", cloud_infos_map.keys() | github_infos_map.keys())
 
+        runner_names = cloud_infos_map.keys() & github_infos_map.keys()
         cloud_only = cloud_infos_map.keys() - runner_names
         github_only = github_infos_map.keys() - runner_names
         if cloud_only:
@@ -153,7 +155,7 @@ class RunnerManager:
             )
 
         return tuple(
-            RunnerInstance(cloud_infos_map[name], github_infos_map[name]) for name in runner_names
+            RunnerInstance(cloud_infos_map[name], github_infos_map[name]) for name in cloud_infos_map.keys() 
         )
 
     def delete_runners(
