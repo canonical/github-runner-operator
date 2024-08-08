@@ -525,13 +525,16 @@ class OpenstackRunnerManager:
             )
         except _SSHError as exc:
             logger.error("[ALERT]: Unable to SSH to server: %s, reason: %s", server_name, str(exc))
-            return False
+            raise
 
         result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
         logger.debug("Output of `ps aux` on %s stderr: %s", server_name, result.stderr)
-        if not result.ok or RUNNER_STARTUP_PROCESS not in result.stdout:
+        if not result.ok:
             logger.warning("List all process command failed on %s ", server_name)
-            return False
+            raise _SSHError("List process command failed on %s ", server_name)
+        if not RUNNER_STARTUP_PROCESS not in result.stdout:
+            raise _SSHError("Runner not yet started.")
+
         logger.info("Runner process found to be healthy on %s", server_name)
         if startup:
             return True
