@@ -86,7 +86,7 @@ def existing_app_fixture(pytestconfig: pytest.Config) -> Optional[str]:
 @pytest.fixture(scope="module", name="test_id")
 def test_id_fixture() -> str:
     """Randomized test ID."""
-    return secrets.token_hex(2)
+    return "".join(secrets.choice(list(string.ascii_lowercase)) for _ in range(4))
 
 
 @pytest.fixture(scope="module", name="app_name")
