@@ -2,13 +2,13 @@ name: Manual test env
 
 on:
   # TODO: Uncomment
-  # pull_request:
+  pull_request:
   workflow_dispatch:
 
 jobs:
   manual-test-env:
     name: manual-test-env
-    runs-on: ["self-hosted", "stg-private-endpoint", "X64"]
+    runs-on: ["self-hosted", "stg-private-endpoint"]
     steps:
       - run: sudo apt update -yq
       - run: sudo apt install pipx -yq
