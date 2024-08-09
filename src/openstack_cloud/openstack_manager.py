@@ -506,8 +506,7 @@ class OpenstackRunnerManager:
             return False
 
     @staticmethod
-    # retry for 6m 20s
-    @retry(tries=5, delay=20, max_delay=120, backoff=2, local_logger=logger)
+    @retry(tries=3, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _ssh_health_check(conn: OpenstackConnection, server_name: str, startup: bool) -> bool:
         """Use SSH to check whether runner application is running.
 
@@ -554,8 +553,7 @@ class OpenstackRunnerManager:
         return False
 
     @staticmethod
-    # retry for 6m 20s
-    @retry(tries=5, delay=20, max_delay=120, backoff=2, local_logger=logger)
+    @retry(tries=3, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _get_ssh_connection(
         conn: OpenstackConnection, server_name: str, timeout: int = 30
     ) -> SshConnection:
