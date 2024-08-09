@@ -205,23 +205,23 @@ class OpenstackRunnerManager(CloudRunnerManager):
         Returns:
             Information on the runner instances.
         """
-        instances_list = self._openstack_cloud.get_instances()
+        instance_list = self._openstack_cloud.get_instances()
         
         # TODO: debug
         import pytest
         pytest.set_trace()
 
-        instances_list = [
+        instance_list = [
             CloudRunnerInstance(
                 name=instance.server_name,
                 id=instance.instance_id,
                 state=CloudRunnerState.from_openstack_server_status(instance.status),
             )
-            for instance in instances_list
+            for instance in instance_list
         ]
         if states is None:
-            return instances_list
-        return [instance for instance in instances_list if instance.state in states]
+            return instance_list
+        return [instance for instance in instance_list if instance.state in states]
 
     def delete_runner(
         self, id: InstanceId, remove_token: str
@@ -392,42 +392,36 @@ class OpenstackRunnerManager(CloudRunnerManager):
             )
         return None
 
+    @retry(tries=3, delay=5, backoff=2, local_logger=logger)
     def _health_check(self, instance: OpenstackInstance) -> bool:
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
         except SshError:
-            logger.exception("SSH connection failure with %s", instance.server_name)
-            return False
-        try:
-            OpenstackRunnerManager._run_health_check(ssh_conn, instance.server_name)
-        except RunnerError:
-            logger.exception("Health check failure for %s", instance.server_name)
-            return False
-        logger.info("Health check success for %s", instance.server_name)
-        return True
+            logger.exception("SSH connection failure with %s during health check", instance.server_name)
+            raise
+        return OpenstackRunnerManager._run_health_check(ssh_conn, instance.server_name)
 
-    @retry(tries=3, delay=60, local_logger=logger)
     @staticmethod
-    def _run_health_check(ssh_conn: SshConnection, name: str) -> None:
+    def _run_health_check(ssh_conn: SshConnection, name: str) -> bool:
         """Run a health check for runner process.
 
         Args:
             ssh_conn: The SSH connection to the runner.
             name: The name of the runner.
             
-        Raises:
-            RunnerError: Unable to SSH and find the runner process on the runner.
+        Returns:
+            Whether the health succeed.
         """
         result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
         if not result.ok:
             logger.warning("SSH run of `ps aux` failed on %s", name)
-            raise RunnerError(f"Unable to SSH run `ps aux` on {name}")
+            return False
         if (
             RUNNER_WORKER_PROCESS not in result.stdout
             and RUNNER_LISTENER_PROCESS not in result.stdout
         ):
             logger.warning("Runner process not found on %s", name)
-            raise RunnerError(f"Runner process not found on {name}")
+            return False
 
     @retry(tries=10, delay=60, local_logger=logger)
     def _wait_runner_startup(self, instance: OpenstackInstance) -> None:
