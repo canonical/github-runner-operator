@@ -305,6 +305,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         healthy, unhealthy = [], []
         for runner in runner_list:
+            # TODO: debug
+            import pytest
+            pytest.set_trace()
             cloud_state = CloudRunnerState(runner.status)
             if cloud_state in (
                 CloudRunnerState.DELETED,
