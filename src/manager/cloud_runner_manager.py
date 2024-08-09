@@ -6,16 +6,25 @@
 from abc import ABC
 from dataclasses import dataclass
 from enum import Enum
-from typing import Iterator, Sequence, Tuple, Type
+from typing import Iterator, Sequence, Tuple
 
-from metrics import events as metric_events
 from metrics.runner import RunnerMetrics
 
 InstanceId = str
 
 
 class CloudRunnerState(str, Enum):
-    """Represent state of the instance hosting the runner."""
+    """Represent state of the instance hosting the runner.
+
+    Attributes:
+        CREATED: The instance is created.
+        ACTIVE: The instance is active and running.
+        DELETED: The instance is deleted.
+        ERROR: The instance has encountered error and not running.
+        STOPPED: The instance has stopped.
+        UNKNOWN: The state of the instance is not known.
+        UNEXPECTED: An unknown state not accounted by the developer is encountered.
+    """
 
     CREATED = "created"
     ACTIVE = "active"
@@ -26,7 +35,7 @@ class CloudRunnerState(str, Enum):
     UNEXPECTED = "unexpected"
 
     @staticmethod
-    def from_openstack_server_status(openstack_server_status: str) -> None:
+    def from_openstack_server_status(openstack_server_status: str) -> "CloudRunnerState":
         """Create from openstack server status.
 
         The openstack server status are documented here:
@@ -34,6 +43,9 @@ class CloudRunnerState(str, Enum):
 
         Args:
             openstack_server_status: Openstack server status.
+
+        Returns:
+            The state of the runner.
         """
         match openstack_server_status:
             case "BUILD":
@@ -73,11 +85,7 @@ class CloudRunnerManager(ABC):
     """Manage runner instance on cloud."""
 
     def get_name_prefix(self) -> str:
-        """Get the name prefix of the self-hosted runners.
-
-        Returns:
-            The name prefix.
-        """
+        """Get the name prefix of the self-hosted runners."""
         ...
 
     def create_runner(self, registration_token: str) -> InstanceId:
@@ -85,9 +93,6 @@ class CloudRunnerManager(ABC):
 
         Args:
             registration_token: The GitHub registration token for registering runners.
-
-        Returns:
-            Instance ID of the runner.
         """
         ...
 
@@ -96,9 +101,6 @@ class CloudRunnerManager(ABC):
 
         Args:
             id: The instance id.
-
-        Returns:
-            Information on the runner instance.
         """
         ...
 
@@ -108,9 +110,6 @@ class CloudRunnerManager(ABC):
         Args:
             states: Filter for the runners with these github states. If None all states will be
                 included.
-
-        Returns:
-            Information on the runner instances.
         """
         ...
 
@@ -120,9 +119,6 @@ class CloudRunnerManager(ABC):
         Args:
             id: The instance id of the runner to delete.
             remove_token: The GitHub remove token.
-
-        Returns:
-            Metrics of the runner deleted if any.
         """
         ...
 
@@ -131,8 +127,5 @@ class CloudRunnerManager(ABC):
 
         Args:
             remove_token: The GitHub remove token.
-
-        Returns:
-            Metrics of the runners that was cleanup.
         """
         ...

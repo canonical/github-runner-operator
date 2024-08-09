@@ -165,9 +165,15 @@ class RunnerManager:
             for name in cloud_infos_map.keys()
         )
         if cloud_runner_state is not None:
-            runner_instances = [runner for runner in runner_instances if runner.cloud_state in cloud_runner_state]
+            runner_instances = [
+                runner for runner in runner_instances if runner.cloud_state in cloud_runner_state
+            ]
         if github_runner_state is not None:
-            runner_instances = [runner for runner in runner_instances if runner.github_state is not None and runner.github_state in github_runner_state]
+            runner_instances = [
+                runner
+                for runner in runner_instances
+                if runner.github_state is not None and runner.github_state in github_runner_state
+            ]
         return runner_instances
 
     def delete_runners(
@@ -177,6 +183,9 @@ class RunnerManager:
 
         Args:
             flush_mode: The type of runners affect by the deletion.
+
+        Returns:
+            Stats on metrics events issued during the deletion of runners.
         """
         match flush_mode:
             case FlushMode.FLUSH_IDLE:
@@ -205,13 +214,25 @@ class RunnerManager:
         return self._issue_runner_metrics(metrics=iter(runner_metrics_list))
 
     def cleanup(self) -> IssuedMetricEventsStats:
-        """Run cleanup of the runners and other resources."""
-        self._github.delete_runners([GithubRunnerState.OFFLINE, GithubRunnerState.UNKNOWN])
+        """Run cleanup of the runners and other resources.
+
+        Returns:
+            Stats on metrics events issued during the cleanup of runners.
+        """
+        self._github.delete_runners([GithubRunnerState.OFFLINE])
         remove_token = self._github.get_removal_token()
         runner_metrics = self._cloud.cleanup_runner(remove_token)
         return self._issue_runner_metrics(metrics=runner_metrics)
 
     def _issue_runner_metrics(self, metrics: Iterator[RunnerMetrics]) -> IssuedMetricEventsStats:
+        """Issue runner metrics.
+
+        Args:
+            metrics: Runner metrics to issue.
+
+        Returns:
+            Stats on runner metrics issued.
+        """
         total_stats: IssuedMetricEventsStats = {}
 
         for extracted_metrics in metrics:

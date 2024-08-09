@@ -202,7 +202,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
             return instances_list
         return [instance for instance in instances_list if instance.state in states]
 
-    def delete_runner(self, id: InstanceId, remove_token: str) -> runner_metrics.RunnerMetrics | None:
+    def delete_runner(
+        self, id: InstanceId, remove_token: str
+    ) -> runner_metrics.RunnerMetrics | None:
         """Delete self-hosted runners.
 
         Args:

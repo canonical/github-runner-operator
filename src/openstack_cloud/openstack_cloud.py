@@ -62,6 +62,9 @@ class OpenstackInstance:
         Args:
             server: The OpenStack server.
             prefix: The name prefix for the servers.
+
+        Raises:
+            ValueError: Provided server should not be managed under this prefix.
         """
         self.server_id = server.id
         self.server_name = server.name

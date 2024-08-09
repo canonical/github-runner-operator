@@ -297,7 +297,7 @@ async def test_runner_normal_lifecycle(
         wait=False,
     )
     await wait_for(lambda: workflow_is_status(workflow, "completed"))
-    
+
     issue_metrics_events = runner_manager_with_one_runner.cleanup()
 
     pytest.set_trace()

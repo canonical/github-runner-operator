@@ -12,12 +12,17 @@ from github_type import GitHubRunnerStatus, SelfHostedRunner
 
 
 class GithubRunnerState(str, Enum):
-    """State of the runner on GitHub."""
+    """State of the self-hosted runner on GitHub.
+
+    Attributes:
+        BUSY: Runner is working on a job assigned by GitHub.
+        IDLE: Runner is waiting to take a job.
+        OFFLINE: Runner is not connected to GitHub.
+    """
 
     BUSY = "busy"
     IDLE = "idle"
     OFFLINE = "offline"
-    UNKNOWN = "unknown"
 
     @staticmethod
     def from_runner(runner: SelfHostedRunner) -> "GithubRunnerState":
@@ -77,11 +82,13 @@ class GithubRunnerManager:
 
         Args:
             states: Filter the runners for these states. If None, all runners are deleted.
-
-        Returns:
-            Information on the runners.
         """
         runner_list = self.get_runners(states)
+        
+        # TODO: debug
+        import pytest
+        pytest.set_trace()
+
         for runner in runner_list:
             self.github.delete_runner(self._path, runner.id)
 
@@ -112,6 +119,7 @@ class GithubRunnerManager:
         """Filter the runner by the state.
 
         Args:
+            runner: Runner to filter.
             states: Filter the runners for these states. If None, return true.
 
         Returns:
