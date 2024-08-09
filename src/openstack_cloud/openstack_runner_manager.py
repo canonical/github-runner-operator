@@ -214,6 +214,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
             metrics_storage_manager=metrics_storage, runners=instance.server_name
         )
         self._delete_runner(instance, remove_token)
+        # TODO: debug
+        import pytest
+        pytest.set_trace()
         return next(metric)
 
     def cleanup(self, remove_token: str) -> runner_metrics.RunnerMetrics:
