@@ -284,7 +284,8 @@ async def test_runner_normal_lifecycle(
         2. The runner should be deleted. The metrics should be recorded.
     """
     metric_log_path = log_dir_base_path["metric_log"]
-    metric_log_path.write_text("")
+    filesystem_base_path = log_dir_base_path["filesystem_base_path"]
+    filesystem_quarantine_path = log_dir_base_path["filesystem_quarantine_path"]
 
     workflow = await dispatch_workflow(
         app=None,
@@ -296,5 +297,7 @@ async def test_runner_normal_lifecycle(
         wait=False,
     )
     await wait_for(lambda: workflow_is_status(workflow, "completed"))
+    
+    issue_metrics_events = runner_manager_with_one_runner.cleanup()
 
     pytest.set_trace()
