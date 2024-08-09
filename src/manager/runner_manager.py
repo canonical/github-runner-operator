@@ -221,7 +221,7 @@ class RunnerManager:
         """
         self._github.delete_runners([GithubRunnerState.OFFLINE])
         remove_token = self._github.get_removal_token()
-        runner_metrics = self._cloud.cleanup_runner(remove_token)
+        runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=runner_metrics)
 
     def _issue_runner_metrics(self, metrics: Iterator[RunnerMetrics]) -> IssuedMetricEventsStats:

@@ -122,7 +122,7 @@ class CloudRunnerManager(ABC):
         """
         ...
 
-    def cleanup_runner(self, remove_token: str) -> Iterator[RunnerMetrics]:
+    def cleanup(self, remove_token: str) -> Iterator[RunnerMetrics]:
         """Cleanup runner and resource on the cloud.
 
         Args:
