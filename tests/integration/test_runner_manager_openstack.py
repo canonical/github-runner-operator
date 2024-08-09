@@ -46,14 +46,17 @@ def log_dir_base_path_fixture(tmp_path_factory: Path) -> Iterator[dict[str, Path
     with pytest.MonkeyPatch.context() as monkeypatch:
         temp_log_dir = tmp_path_factory.mktemp("log")
 
-        metric_exchange_path = temp_log_dir / "metric_exchange"
+        filesystem_base_path = temp_log_dir / "runner-fs"
+        filesystem_quarantine_path = temp_log_dir / "runner-fs-quarantine"
         metric_log_path = temp_log_dir / "metric_log"
 
-        monkeypatch.setattr(openstack_runner_manager, "METRICS_EXCHANGE_PATH", metric_exchange_path)
+        monkeypatch.setattr(storage, "FILESYSTEM_BASE_PATH", filesystem_base_path)
+        monkeypatch.setattr(storage, "FILESYSTEM_QUARANTINE_PATH", filesystem_quarantine_path)
         monkeypatch.setattr(events, "METRICS_LOG_PATH", metric_log_path)
 
         yield {
-            "metric_exchange": metric_exchange_path,
+            "filesystem_base_path": filesystem_base_path,
+            "filesystem_quarantine_path": filesystem_quarantine_path,
             "metric_log": metric_log_path,
         }
 
