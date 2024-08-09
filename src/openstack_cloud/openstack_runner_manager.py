@@ -8,7 +8,7 @@ import secrets
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Sequence, Tuple
+from typing import Iterator, Sequence, Tuple
 
 import invoke
 import jinja2
@@ -202,7 +202,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             return instances_list
         return [instance for instance in instances_list if instance.state in states]
 
-    def delete_runner(self, id: InstanceId, remove_token: str) -> runner_metrics.RunnerMetrics:
+    def delete_runner(self, id: InstanceId, remove_token: str) -> runner_metrics.RunnerMetrics | None:
         """Delete self-hosted runners.
 
         Args:
@@ -214,12 +214,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
             metrics_storage_manager=metrics_storage, runners=instance.server_name
         )
         self._delete_runner(instance, remove_token)
-        # TODO: debug
-        import pytest
-        pytest.set_trace()
-        return next(metric)
+        return next(metric, None)
 
-    def cleanup(self, remove_token: str) -> runner_metrics.RunnerMetrics:
+    def cleanup(self, remove_token: str) -> Iterator[runner_metrics.RunnerMetrics]:
         """Cleanup runner and resource on the cloud.
 
         Args:

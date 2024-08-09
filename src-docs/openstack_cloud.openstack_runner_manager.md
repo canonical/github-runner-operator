@@ -113,12 +113,12 @@ Construct the object.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L222"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L219"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `cleanup`
 
 ```python
-cleanup(remove_token: str) → RunnerMetrics
+cleanup(remove_token: str) → Iterator[RunnerMetrics]
 ```
 
 Cleanup runner and resource on the cloud. 
@@ -164,7 +164,7 @@ Create a self-hosted runner.
 ### <kbd>method</kbd> `delete_runner`
 
 ```python
-delete_runner(id: str, remove_token: str) → RunnerMetrics
+delete_runner(id: str, remove_token: str) → RunnerMetrics | None
 ```
 
 Delete self-hosted runners. 

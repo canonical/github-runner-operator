@@ -114,7 +114,7 @@ class CloudRunnerManager(ABC):
         """
         ...
 
-    def delete_runner(self, id: InstanceId, remove_token: str) -> RunnerMetrics:
+    def delete_runner(self, id: InstanceId, remove_token: str) -> RunnerMetrics | None:
         """Delete self-hosted runners.
 
         Args:
@@ -122,7 +122,7 @@ class CloudRunnerManager(ABC):
             remove_token: The GitHub remove token.
 
         Returns:
-            Metrics of the runner deleted.
+            Metrics of the runner deleted if any.
         """
         ...
 
