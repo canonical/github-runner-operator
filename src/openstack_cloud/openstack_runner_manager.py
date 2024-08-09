@@ -207,7 +207,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             metrics_storage_manager=shared_fs, runners=instance.server_name
         )
         self._delete_runner(instance, remove_token)
-        return metric
+        return next(metric)
 
     def cleanup(self, remove_token: str) -> runner_metrics.RunnerMetrics:
         """Cleanup runner and resource on the cloud.
