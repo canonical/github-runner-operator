@@ -47,18 +47,13 @@ def log_dir_base_path_fixture(tmp_path_factory: Path) -> Iterator[dict[str, Path
 
         runner_log_dir_path = temp_log_dir / "runner_log"
         metric_log_path = temp_log_dir / "metric_log"
-        metric_exchange_path = temp_log_dir / "metric_exchange"
 
         monkeypatch.setattr(runner_logs, "RUNNER_LOGS_DIR_PATH", runner_log_dir_path)
         monkeypatch.setattr(events, "METRICS_LOG_PATH", metric_log_path)
-        monkeypatch.setattr(
-            openstack_runner_manager, "METRICS_EXCHANGE_PATH", metric_exchange_path
-        )
 
         yield {
             "runner_logs_dir": runner_log_dir_path,
             "metric_log": metric_log_path,
-            "metric_exchange": metric_exchange_path,
         }
 
 

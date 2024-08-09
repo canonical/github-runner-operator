@@ -128,9 +128,6 @@ class OpenstackRunnerManager(CloudRunnerManager):
         userdata = self._generate_userdata(
             instance_name=instance_name, registration_token=registration_token
         )
-        # TODO: debug
-        import pytest
-        pytest.set_trace()
         try:
             instance = self._openstack_cloud.launch_instance(
                 instance_id=id,
@@ -387,7 +384,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             raise RunnerStartError(f"Unable to SSH run `ps aux` on {instance.server_name}")
         if RUNNER_STARTUP_PROCESS not in result.stdout:
             logger.warning("Runner startup process not found on %s", instance.server_name)
-            return RunnerStartError(f"Runner startup process not found on {instance.server_name}")
+            raise RunnerStartError(f"Runner startup process not found on {instance.server_name}")
         logger.info("Runner startup process found to be healthy on %s", instance.server_name)
 
     @staticmethod
