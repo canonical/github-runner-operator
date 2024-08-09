@@ -289,6 +289,6 @@ async def test_runner_normal_lifecycle(
         wait=False,
     )
     await wait_for(lambda: workflow_is_status(workflow, "completed"))
-    runner_log_dir_path = log_dir_base_path["runner_log_dir"]
+    runner_log_dir_path = log_dir_base_path["runner_logs_dir"]
     metric_log_path = log_dir_base_path["metric_log"]
     pytest.set_trace()
