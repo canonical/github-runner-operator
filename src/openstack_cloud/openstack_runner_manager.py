@@ -206,11 +206,6 @@ class OpenstackRunnerManager(CloudRunnerManager):
             Information on the runner instances.
         """
         instance_list = self._openstack_cloud.get_instances()
-        
-        # TODO: debug
-        import pytest
-        pytest.set_trace()
-
         instance_list = [
             CloudRunnerInstance(
                 name=instance.server_name,
