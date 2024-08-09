@@ -211,7 +211,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         """
         instance = self._openstack_cloud.get_instance(id)
         metric = runner_metrics.extract(
-            metrics_storage_manager=shared_fs, runners=instance.server_name
+            metrics_storage_manager=metrics_storage, runners=instance.server_name
         )
         self._delete_runner(instance, remove_token)
         return next(metric)
