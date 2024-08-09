@@ -189,7 +189,7 @@ class RunnerManager:
         for runner in runners_list:
             metrics.append(self._cloud.delete_runner(id=runner.id, remove_token=remove_token))
 
-        return self._issue_runner_metrics(metrics=iter(metrics))
+        return self._issue_runner_metrics(metrics=metrics)
 
     def cleanup(self) -> IssuedMetricEventsStats:
         """Run cleanup of the runners and other resources."""
