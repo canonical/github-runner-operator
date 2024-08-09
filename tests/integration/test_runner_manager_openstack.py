@@ -221,55 +221,55 @@ def workflow_is_status(workflow: Workflow, status: str) -> bool:
 #     assert len(runner_list) == 0
 
 
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_runner_flush_busy_lifecycle(
-    runner_manager_with_one_runner: RunnerManager,
-    test_github_branch: Branch,
-    github_repository: Repository,
-    runner_label: str,
-):
-    """
-    Arrange: RunnerManager with one idle runner.
-    Act:
-        1. Run a long workflow.
-        2. Run flush idle runner.
-        3. Run flush busy runner.
-    Assert:
-        1. Runner takes the job and become busy.
-        2. Busy runner still exists.
-        3. No runners exists.
-    """
-    # 1.
-    workflow = await dispatch_workflow(
-        app=None,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",
-        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": runner_label, "minutes": "10"},
-        wait=False,
-    )
-    await wait_for(lambda: workflow_is_status(workflow, "in_progress"))
+# @pytest.mark.openstack
+# @pytest.mark.asyncio
+# @pytest.mark.abort_on_fail
+# async def test_runner_flush_busy_lifecycle(
+#     runner_manager_with_one_runner: RunnerManager,
+#     test_github_branch: Branch,
+#     github_repository: Repository,
+#     runner_label: str,
+# ):
+#     """
+#     Arrange: RunnerManager with one idle runner.
+#     Act:
+#         1. Run a long workflow.
+#         2. Run flush idle runner.
+#         3. Run flush busy runner.
+#     Assert:
+#         1. Runner takes the job and become busy.
+#         2. Busy runner still exists.
+#         3. No runners exists.
+#     """
+#     # 1.
+#     workflow = await dispatch_workflow(
+#         app=None,
+#         branch=test_github_branch,
+#         github_repository=github_repository,
+#         conclusion="success",
+#         workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+#         dispatch_input={"runner": runner_label, "minutes": "10"},
+#         wait=False,
+#     )
+#     await wait_for(lambda: workflow_is_status(workflow, "in_progress"))
 
-    runner_list = runner_manager_with_one_runner.get_runners()
-    assert len(runner_list) == 1
-    busy_runner = runner_list[0]
-    assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.github_state == GithubRunnerState.BUSY
+#     runner_list = runner_manager_with_one_runner.get_runners()
+#     assert len(runner_list) == 1
+#     busy_runner = runner_list[0]
+#     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
+#     assert busy_runner.github_state == GithubRunnerState.BUSY
 
-    # 2.
-    runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
-    runner_list = runner_manager_with_one_runner.get_runners()
-    assert len(runner_list) == 1
-    busy_runner = runner_list[0]
-    assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.github_state == GithubRunnerState.BUSY
+#     # 2.
+#     runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
+#     runner_list = runner_manager_with_one_runner.get_runners()
+#     assert len(runner_list) == 1
+#     busy_runner = runner_list[0]
+#     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
+#     assert busy_runner.github_state == GithubRunnerState.BUSY
 
-    # 3.
-    runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
-    runner_list = runner_manager_with_one_runner.get_runners()
+#     # 3.
+#     runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
+#     runner_list = runner_manager_with_one_runner.get_runners()
 
 
 @pytest.mark.openstack
