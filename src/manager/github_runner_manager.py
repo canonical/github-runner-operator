@@ -35,9 +35,10 @@ class GithubRunnerState(str, Enum):
             The state of runner.
         """
         state = GithubRunnerState.OFFLINE
+        # A runner that is busy and offline is possible.
+        if runner.busy:
+            state = GithubRunnerState.BUSY
         if runner.status == GitHubRunnerStatus.ONLINE:
-            if runner.busy:
-                state = GithubRunnerState.BUSY
             if not runner.busy:
                 state = GithubRunnerState.IDLE
         return state
@@ -84,9 +85,10 @@ class GithubRunnerManager:
             states: Filter the runners for these states. If None, all runners are deleted.
         """
         runner_list = self.get_runners(states)
-        
+
         # TODO: debug
         import pytest
+
         pytest.set_trace()
 
         for runner in runner_list:

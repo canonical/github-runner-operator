@@ -293,6 +293,17 @@ class OpenstackRunnerManager(CloudRunnerManager):
         return RunnerHealth(healthy=healthy, unhealthy=unhealthy)
 
     def _generate_userdata(self, instance_name: str, registration_token: str) -> str:
+        """Generate cloud init userdata.
+        
+        This is the script the openstack server runs on startup.
+
+        Args:
+            instance_name: The name of the instance.
+            registration_token: The GitHub runner registration token.
+            
+        Returns:
+            The userdata for openstack instance.
+        """
         jinja = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
 
         env_contents = jinja.get_template("env.j2").render(
@@ -442,6 +453,12 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
     @staticmethod
     def _pull_runner_metrics(name: str, ssh_conn: SshConnection) -> None:
+        """Pull metrics from runner.
+
+        Args:
+            name: The name of the runner.
+            ssh_conn: The SSH connection to the runner.
+        """
         try:
             storage = metrics_storage.get(name)
         except GetMetricsStorageError:
@@ -486,7 +503,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         Raises:
             _PullFileError: Unable to pull the file from the runner instance.
-            _SSHError: Issue with SSH connection.
+            SSHError: Issue with SSH connection.
         """
         try:
             result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True)

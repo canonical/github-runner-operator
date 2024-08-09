@@ -16,13 +16,11 @@ from github.Repository import Repository
 from github.Workflow import Workflow
 from openstack.connection import Connection as OpenstackConnection
 
-import shared_fs
 from charm_state import GithubPath, ProxyConfig, parse_github_path
 from manager.cloud_runner_manager import CloudRunnerState
 from manager.github_runner_manager import GithubRunnerState
 from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
-from metrics import events, runner_logs, storage
-from openstack_cloud import openstack_runner_manager
+from metrics import events, storage
 from openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from openstack_cloud.openstack_runner_manager import (
     OpenstackRunnerManager,
@@ -97,7 +95,8 @@ async def openstack_runner_manager_fixture(
 ) -> OpenstackRunnerManager:
     """Create OpenstackRunnerManager instance.
 
-    The prefix args of OpenstackRunnerManager set to app_name to let openstack_connection_fixture perform the cleanup of openstack resources.
+    The prefix args of OpenstackRunnerManager set to app_name to let openstack_connection_fixture
+    perform the cleanup of openstack resources.
     """
     _CLOUDS_YAML_PATH.unlink(missing_ok=True)
     clouds_config = yaml.safe_load(private_endpoint_clouds_yaml)
