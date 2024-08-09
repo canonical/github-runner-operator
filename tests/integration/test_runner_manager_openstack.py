@@ -149,6 +149,15 @@ async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) 
 
 
 def workflow_is_status(workflow: Workflow, status: str) -> bool:
+    """Check if workflow in provided status.
+
+    Args:
+        workflow: The workflow to check.
+        status: The status to check for.
+
+    Returns:
+        Whether the workflow is in the status.
+    """
     workflow.update()
     return workflow.status == status
 

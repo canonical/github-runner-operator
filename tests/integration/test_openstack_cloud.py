@@ -4,7 +4,6 @@
 """Test for OpenstackCloud class integration with OpenStack."""
 
 from secrets import token_hex
-from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio

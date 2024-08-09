@@ -130,7 +130,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             Instance ID of the runner.
         """
         start_timestamp = time.time()
-        id = OpenstackRunnerManager._generate_runner_id()
+        id = OpenstackRunnerManager._generate_instance_id()
         instance_name = self._openstack_cloud.get_server_name(instance_id=id)
         userdata = self._generate_userdata(
             instance_name=instance_name, registration_token=registration_token
@@ -294,13 +294,13 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
     def _generate_userdata(self, instance_name: str, registration_token: str) -> str:
         """Generate cloud init userdata.
-        
+
         This is the script the openstack server runs on startup.
 
         Args:
             instance_name: The name of the instance.
             registration_token: The GitHub runner registration token.
-            
+
         Returns:
             The userdata for openstack instance.
         """
@@ -357,6 +357,11 @@ class OpenstackRunnerManager(CloudRunnerManager):
         )
 
     def _get_repo_policy_compliance_client(self) -> RepoPolicyComplianceClient | None:
+        """Get repo policy compliance client.
+
+        Returns:
+            The repo policy compliance client.
+        """
         if self.config.repo_policy_url and self.config.repo_policy_token:
             return RepoPolicyComplianceClient(
                 self.config.repo_policy_url, self.config.repo_policy_token
@@ -379,7 +384,13 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
     @retry(tries=3, delay=60, local_logger=logger)
     @staticmethod
-    def _run_health_check(ssh_conn: SshConnection, name: str):
+    def _run_health_check(ssh_conn: SshConnection, name: str) -> None:
+        """Run a health check for runner process.
+        
+        Args:
+            ssh_conn: The SSH connection to the runner.
+            name: The name of the runner.
+        """
         result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
         if not result.ok:
             logger.warning("SSH run of `ps aux` failed on %s", name)
@@ -393,6 +404,11 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
     @retry(tries=10, delay=60, local_logger=logger)
     def _wait_runner_startup(self, instance: OpenstackInstance) -> None:
+        """Wait until runner is startup.
+
+        Args:
+            instance: The runner instance.
+        """
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
         except SshError as err:
@@ -410,7 +426,12 @@ class OpenstackRunnerManager(CloudRunnerManager):
         logger.info("Runner startup process found to be healthy on %s", instance.server_name)
 
     @staticmethod
-    def _generate_runner_id() -> InstanceId:
+    def _generate_instance_id() -> InstanceId:
+        """Generate a instance id.
+        
+        Return: 
+            The id.
+        """
         return secrets.token_hex(12)
 
     @staticmethod
@@ -420,6 +441,14 @@ class OpenstackRunnerManager(CloudRunnerManager):
         install_start_timestamp: float,
         install_end_timestamp: float,
     ) -> None:
+        """Issue metric for runner installed event.
+
+        Args:
+            name: The name of the runner.
+            flavor: The flavor of the runner.
+            install_start_timestamp: The timestamp of installation start.
+            install_end_timestamp: The timestamp of installation end.
+        """
         try:
             metric_events.issue_event(
                 event=metric_events.RunnerInstalled(
@@ -503,7 +532,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         Raises:
             _PullFileError: Unable to pull the file from the runner instance.
-            SSHError: Issue with SSH connection.
+            SshError: Issue with SSH connection.
         """
         try:
             result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True)
@@ -554,6 +583,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         """Run Github runner removal script.
 
         Args:
+            instance_name: The name of the runner instance.
             ssh_conn: The SSH connection to the runner instance.
             remove_token: The GitHub instance removal token.
 
