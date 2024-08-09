@@ -149,6 +149,9 @@ class OpenstackCloud:
             flavor: The flavor used to create the instance.
             network: The network used to create the instance.
             userdata: The cloud init userdata to startup the instance.
+            
+        Raises:
+            OpenstackError: Unable to create OpenStack server for runner.
 
         Returns:
             The OpenStack instance created.
@@ -175,7 +178,7 @@ class OpenstackCloud:
                     timeout=_CREATE_SERVER_TIMEOUT,
                     wait=True,
                 )
-            except openstack.exceptions.ResourceTimeout as err:
+            except openstack.exceptions.ResourceTimeout:
                 logger.exception("Timeout creating openstack server %s", full_name)
                 logger.info(
                     "Attempting clean up of openstack server %s that timeout during creation",

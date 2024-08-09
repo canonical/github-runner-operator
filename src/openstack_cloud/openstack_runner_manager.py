@@ -16,7 +16,6 @@ import paramiko
 import paramiko.ssh_exception
 from fabric import Connection as SshConnection
 
-import shared_fs
 from charm_state import GithubOrg, GithubPath, ProxyConfig, SSHDebugConnection
 from errors import (
     CreateMetricsStorageError,
@@ -25,7 +24,6 @@ from errors import (
     OpenStackError,
     RunnerCreateError,
     RunnerError,
-    RunnerRemoveError,
     RunnerStartError,
     SshError,
 )
@@ -65,7 +63,22 @@ class _PullFileError(Exception):
 
 @dataclass
 class OpenstackRunnerManagerConfig:
-    """Configuration for OpenstackRunnerManager."""
+    """Configuration for OpenstackRunnerManager.
+    
+    Attributes:
+        clouds_config: The clouds.yaml.
+        cloud: The cloud name to connect to.
+        image: The image name for runners to use.
+        flavor: The flavor name for runners to use.
+        network: The network name for runners to use.
+        github_path: The GitHub organization or repository for runners to connect to.
+        labels: The labels to add to runners.
+        proxy_config: The proxy configuration.
+        dockerhub_mirror: The dockerhub mirror to use for runners.
+        ssh_debug_connections: The information on the ssh debug services.
+        repo_policy_url: The URL of the repo policy service.
+        repo_policy_token: The token to access the repo policy service.
+    """
 
     clouds_config: dict[str, dict]
     cloud: str
@@ -125,6 +138,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         Args:
             registration_token: The GitHub registration token for registering runners.
+        
+        Raises:
+            RunnerCreateError: Unable to create runner due to OpenStack issues.
 
         Returns:
             Instance ID of the runner.
@@ -260,8 +276,12 @@ class OpenstackRunnerManager(CloudRunnerManager):
                     stack_info=True,
                 )
         except SshError:
-            logger.exception("Failed to get SSH connection while removing %s", instance.server_name)
-            logger.warning("Skipping runner remove script for %s due to SSH issues", instance.server_name)
+            logger.exception(
+                "Failed to get SSH connection while removing %s", instance.server_name
+            )
+            logger.warning(
+                "Skipping runner remove script for %s due to SSH issues", instance.server_name
+            )
 
         try:
             self._openstack_cloud.delete_instance(instance.instance_id)
@@ -389,6 +409,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
         Args:
             ssh_conn: The SSH connection to the runner.
             name: The name of the runner.
+            
+        Raises:
+            RunnerError: Unable to SSH and find the runner process on the runner.
         """
         result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
         if not result.ok:
@@ -407,7 +430,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         Args:
             instance: The runner instance.
-        
+
         Raises:
             RunnerStartError: The runner process was not found on the runner.
         """
