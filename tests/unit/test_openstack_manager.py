@@ -804,21 +804,31 @@ def test__get_ssh_connection(
     assert conn is not None
 
 
-def test__ssh_health_check_success(
-    mock_server: MagicMock,
-):
+@pytest.mark.usefixtures("skip_retry")
+def test__ssh_health_check_success(monkeypatch: pytest.MonkeyPatch, mock_server: MagicMock):
     """
     arrange: A server with SSH correctly setup.
     act: Run health check on the server.
     assert: The health check passes.
     """
+    ssh_connection_mock = MagicMock()
+    result_mock = MagicMock()
+    result_mock.stdout = "/home/ubuntu/actions-runner/run.sh\nRunner.Worker"
+    ssh_connection_mock.run.return_value = result_mock
+    monkeypatch.setattr(
+        openstack_manager.OpenstackRunnerManager,
+        "_get_ssh_connection",
+        MagicMock(return_value=ssh_connection_mock),
+    )
     mock_connection = MagicMock(spec=openstack.connection.Connection)
     mock_connection.get_server.return_value = mock_server
+
     assert openstack_manager.OpenstackRunnerManager._ssh_health_check(
         mock_connection, mock_server.name, False
     )
 
 
+@pytest.mark.usefixtures("skip_retry")
 def test__ssh_health_check_no_key(mock_server: MagicMock):
     """
     arrange: A server with no key available.
@@ -831,22 +841,36 @@ def test__ssh_health_check_no_key(mock_server: MagicMock):
     mock_connection = MagicMock(spec=openstack.connection.Connection)
     mock_connection.get_server.return_value = mock_server
 
-    assert openstack_manager.OpenstackRunnerManager._ssh_health_check(
-        mock_connection, mock_server.name, False
-    )
+    with pytest.raises(openstack_manager._SSHError) as exc:
+        openstack_manager.OpenstackRunnerManager._ssh_health_check(
+            mock_connection, mock_server.name, False
+        )
+
+    assert "no valid keypair found" in str(exc)
 
 
-def test__ssh_health_check_error(mock_server: MagicMock):
+@pytest.mark.usefixtures("skip_retry")
+def test__ssh_health_check_error(monkeypatch: pytest.MonkeyPatch, mock_server: MagicMock):
     """
     arrange: A server with error on SSH run.
     act: Run health check on the server.
     assert: The health check fails.
     """
+    monkeypatch.setattr(openstack_manager.OpenstackRunnerManager, "_get_key_path", MagicMock())
     mock_connection = MagicMock(spec=openstack.connection.Connection)
     mock_connection.get_server.return_value = mock_server
-    openstack_manager.OpenstackRunnerManager._ssh_health_check(
-        mock_connection, mock_server.name, False
+    mock_ssh_connection = MagicMock()
+    mock_ssh_connection.run = MagicMock(side_effect=TimeoutError)
+    monkeypatch.setattr(
+        openstack_manager, "SshConnection", MagicMock(return_value=mock_ssh_connection)
     )
+
+    with pytest.raises(openstack_manager._SSHError) as exc:
+        openstack_manager.OpenstackRunnerManager._ssh_health_check(
+            mock_connection, mock_server.name, False
+        )
+
+    assert "No connectable SSH addresses found" in str(exc)
 
 
 def test__wait_until_runner_process_running_no_server():
