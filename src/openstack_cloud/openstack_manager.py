@@ -497,11 +497,16 @@ class OpenstackRunnerManager:
         elapsed_min = (created_at - current_time).total_seconds()
         if server.status == _INSTANCE_STATUS_BUILDING:
             return elapsed_min < CREATE_SERVER_TIMEOUT
-        return OpenstackRunnerManager._ssh_health_check(
-            conn=conn, server_name=server_name, startup=startup
-        )
+        try:
+            return OpenstackRunnerManager._ssh_health_check(
+                conn=conn, server_name=server_name, startup=startup
+            )
+        except _SSHError:
+            logger.warning("Health check failed, unable to SSH into server: %s", server_name)
+            return False
 
     @staticmethod
+    @retry(tries=3, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _ssh_health_check(conn: OpenstackConnection, server_name: str, startup: bool) -> bool:
         """Use SSH to check whether runner application is running.
 
@@ -515,6 +520,9 @@ class OpenstackRunnerManager:
             server_name: The openstack server instance to check connections.
             startup: Check only whether the startup is successful.
 
+        Raises:
+            _SSHError: if there was an error SSH-ing into the machine or with the SSH command.
+
         Returns:
             Whether the runner application is running.
         """
@@ -524,13 +532,17 @@ class OpenstackRunnerManager:
             )
         except _SSHError as exc:
             logger.error("[ALERT]: Unable to SSH to server: %s, reason: %s", server_name, str(exc))
-            return True
+            raise
 
         result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
         logger.debug("Output of `ps aux` on %s stderr: %s", server_name, result.stderr)
-        if not result.ok or RUNNER_STARTUP_PROCESS not in result.stdout:
-            logger.warning("List all process command failed on %s ", server_name)
-            return False
+        if not result.ok:
+            logger.warning("List all process command failed on %s.", server_name)
+            raise _SSHError(f"List process command failed on {server_name}.")
+        if RUNNER_STARTUP_PROCESS not in result.stdout:
+            logger.warning("No startup process found on server %s.", server_name)
+            raise _SSHError(f"Runner not yet started on {server_name}.")
+
         logger.info("Runner process found to be healthy on %s", server_name)
         if startup:
             return True
