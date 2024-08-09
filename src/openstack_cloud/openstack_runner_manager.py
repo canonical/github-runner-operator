@@ -247,22 +247,21 @@ class OpenstackRunnerManager(CloudRunnerManager):
         """
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+            self._pull_runner_metrics(instance.server_name, ssh_conn)
+
+            try:
+                OpenstackRunnerManager._run_github_runner_removal_script(
+                    instance.server_name, ssh_conn, remove_token
+                )
+            except GithubRunnerRemoveError:
+                logger.warning(
+                    "Unable to run github runner removal script for %s",
+                    instance.server_name,
+                    stack_info=True,
+                )
         except SshError:
-            logger.exception("Failed SSH connection while removing %s", instance.server_name)
-            raise RunnerRemoveError(f"Failed SSH connection for {instance.server_name}")
-
-        self._pull_runner_metrics(instance.server_name, ssh_conn)
-
-        try:
-            OpenstackRunnerManager._run_github_runner_removal_script(
-                instance.server_name, ssh_conn, remove_token
-            )
-        except GithubRunnerRemoveError:
-            logger.warning(
-                "Unable to run github runner removal script for %s",
-                instance.server_name,
-                stack_info=True,
-            )
+            logger.exception("Failed to get SSH connection while removing %s", instance.server_name)
+            logger.warning("Skipping runner remove script for %s due to SSH issues", instance.server_name)
 
         try:
             self._openstack_cloud.delete_instance(instance.instance_id)
@@ -386,7 +385,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
     @staticmethod
     def _run_health_check(ssh_conn: SshConnection, name: str) -> None:
         """Run a health check for runner process.
-        
+
         Args:
             ssh_conn: The SSH connection to the runner.
             name: The name of the runner.
@@ -408,11 +407,14 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         Args:
             instance: The runner instance.
+        
+        Raises:
+            RunnerStartError: The runner process was not found on the runner.
         """
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
         except SshError as err:
-            raise RunnerCreateError(
+            raise RunnerStartError(
                 f"Failed to SSH connect to {instance.server_name} openstack runner"
             ) from err
 
@@ -428,8 +430,8 @@ class OpenstackRunnerManager(CloudRunnerManager):
     @staticmethod
     def _generate_instance_id() -> InstanceId:
         """Generate a instance id.
-        
-        Return: 
+
+        Return:
             The id.
         """
         return secrets.token_hex(12)
