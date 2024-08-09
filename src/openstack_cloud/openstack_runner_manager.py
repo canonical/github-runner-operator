@@ -84,7 +84,7 @@ class OpenstackRunnerManagerConfig:
 @dataclass
 class RunnerHealth:
     """Runners with health state.
-    
+
     Attributes:
         healthy: The list of healthy runners.
         unhealthy:  The list of unhealthy runners.
@@ -228,7 +228,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         runners = self._get_runner_health()
         healthy_runner_names = [runner.server_name for runner in runners.healthy]
         metrics = runner_metrics.extract(
-            metrics_storage_manager=shared_fs, runners=set(healthy_runner_names)
+            metrics_storage_manager=metrics_storage, runners=set(healthy_runner_names)
         )
         for runner in runners.unhealthy:
             self._delete_runner(runner, remove_token)
