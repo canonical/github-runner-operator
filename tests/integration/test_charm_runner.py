@@ -27,6 +27,7 @@ from tests.integration.helpers.common import (
     wait_for,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
+from tests.integration.helpers.types import ProxyConfig
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -170,7 +171,7 @@ async def test_repo_policy_enabled(
     github_repository: Repository,
     test_github_branch: Branch,
     token: str,
-    https_proxy: str,
+    proxy: ProxyConfig,
     instance_helper: InstanceHelper,
 ) -> None:
     """
@@ -183,7 +184,7 @@ async def test_repo_policy_enabled(
             app=app,
             openstack_connection=instance_helper.openstack_connection,
             token=token,
-            https_proxy=https_proxy,
+            https_proxy=proxy.https,
         )
 
     await dispatch_workflow(

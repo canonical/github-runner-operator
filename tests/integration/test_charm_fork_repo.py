@@ -24,6 +24,7 @@ from tests.integration.helpers.common import (
 )
 from tests.integration.helpers.lxd import ensure_charm_has_runner, get_runner_names
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
+from tests.integration.helpers.types import ProxyConfig
 from tests.status_name import ACTIVE
 
 
@@ -37,7 +38,7 @@ async def test_dispatch_workflow_failure(
     forked_github_branch: Branch,
     instance_helper: InstanceHelper,
     token: str,
-    https_proxy: str,
+    proxy: ProxyConfig,
 ) -> None:
     """
     arrange: \
@@ -54,7 +55,7 @@ async def test_dispatch_workflow_failure(
             app=app_with_forked_repo,
             openstack_connection=instance_helper.openstack_connection,
             token=token,
-            https_proxy=https_proxy,
+            https_proxy=proxy.https,
         )
     else:
         grafana_agent = await model.deploy(

@@ -215,7 +215,7 @@ async def reconcile(app: Application, model: Model) -> None:
 
 async def deploy_github_runner_charm(
     model: Model,
-    charm_file: str,
+    charm_file: str | pathlib.Path,
     app_name: str,
     path: str,
     token: str,
