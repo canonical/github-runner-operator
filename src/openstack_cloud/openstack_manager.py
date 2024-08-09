@@ -497,9 +497,13 @@ class OpenstackRunnerManager:
         elapsed_min = (created_at - current_time).total_seconds()
         if server.status == _INSTANCE_STATUS_BUILDING:
             return elapsed_min < CREATE_SERVER_TIMEOUT
-        return OpenstackRunnerManager._ssh_health_check(
-            conn=conn, server_name=server_name, startup=startup
-        )
+        try:
+            return OpenstackRunnerManager._ssh_health_check(
+                conn=conn, server_name=server_name, startup=startup
+            )
+        except _SSHError:
+            logger.warning("Health chedk failed, unable to SSH into server: %s", server_name)
+            return False
 
     @staticmethod
     # retry for 6m 20s
@@ -537,6 +541,7 @@ class OpenstackRunnerManager:
             logger.warning("List all process command failed on %s.", server_name)
             raise _SSHError(f"List process command failed on {server_name}.")
         if RUNNER_STARTUP_PROCESS not in result.stdout:
+            logger.warning("No startup process found on server %s.", server_name)
             raise _SSHError(f"Runner not yet started on {server_name}.")
 
         logger.info("Runner process found to be healthy on %s", server_name)
