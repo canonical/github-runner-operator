@@ -188,6 +188,9 @@ class RunnerManager:
             states.append(GithubRunnerState.BUSY)
 
         runners_list = self.get_runners(github_runner_state=states)
+        # TODO: debug
+        import pytest
+        pytest.set_trace()
         runner_names = [runner.name for runner in runners_list]
         logger.info("Deleting runners: %s", runner_names)
         remove_token = self._github.get_removal_token()
