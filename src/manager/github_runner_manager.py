@@ -85,12 +85,6 @@ class GithubRunnerManager:
             states: Filter the runners for these states. If None, all runners are deleted.
         """
         runner_list = self.get_runners(states)
-
-        # TODO: debug
-        import pytest
-
-        pytest.set_trace()
-
         for runner in runner_list:
             self.github.delete_runner(self._path, runner.id)
 
