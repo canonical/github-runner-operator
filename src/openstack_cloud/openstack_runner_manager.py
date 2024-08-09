@@ -128,6 +128,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
         userdata = self._generate_userdata(
             instance_name=instance_name, registration_token=registration_token
         )
+        # TODO: debug
+        import pytest
+        pytest.set_trace()
         try:
             instance = self._openstack_cloud.launch_instance(
                 instance_id=id,
