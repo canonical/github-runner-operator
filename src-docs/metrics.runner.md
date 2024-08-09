@@ -21,7 +21,8 @@ Classes and function to extract the metrics from storage and issue runner metric
 ```python
 extract(
     metrics_storage_manager: StorageManager,
-    ignore_runners: set[str]
+    runners: set[str],
+    include: bool = False
 ) → Iterator[RunnerMetrics]
 ```
 
@@ -38,7 +39,8 @@ In order to avoid DoS attacks, the file size is also checked.
 **Args:**
  
  - <b>`metrics_storage_manager`</b>:  The metrics storage manager. 
- - <b>`ignore_runners`</b>:  The set of runners to ignore. 
+ - <b>`runners`</b>:  The runners to include or exclude. 
+ - <b>`include`</b>:  If true the provided runners are included for metric extraction, else the provided  runners are excluded. 
 
 
 
@@ -48,7 +50,7 @@ In order to avoid DoS attacks, the file size is also checked.
 
 ---
 
-<a href="../src/metrics/runner.py#L139"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/metrics/runner.py#L143"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_events`
 

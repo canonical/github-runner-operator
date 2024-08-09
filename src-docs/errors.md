@@ -403,3 +403,14 @@ Represents an unauthorized connection to OpenStack.
 
 
 
+---
+
+<a href="../src/errors.py#L171"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `SshError`
+Represents an error while interacting with SSH. 
+
+
+
+
+

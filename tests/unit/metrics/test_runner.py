@@ -170,9 +170,7 @@ def test_extract(runner_fs_base: Path):
     metrics_storage_manager.list_all.return_value = [runner1_fs, runner2_fs, runner3_fs]
 
     extracted_metrics = list(
-        runner_metrics.extract(
-            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
-        )
+        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, runners=set())
     )
 
     assert extracted_metrics == [
@@ -218,7 +216,7 @@ def test_extract_ignores_runners(runner_fs_base: Path):
 
     extracted_metrics = list(
         runner_metrics.extract(
-            metrics_storage_manager=metrics_storage_manager, ignore_runners=ignore_runners
+            metrics_storage_manager=metrics_storage_manager, runners=ignore_runners
         )
     )
 
@@ -253,9 +251,7 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
     monkeypatch.setattr(runner_metrics, "move_to_quarantine", move_to_quarantine_mock)
 
     extracted_metrics = list(
-        runner_metrics.extract(
-            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
-        )
+        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, runners=set())
     )
 
     assert not extracted_metrics
@@ -275,9 +271,7 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
     extracted_metrics = list(
-        runner_metrics.extract(
-            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
-        )
+        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, runners=set())
     )
     assert not extracted_metrics
     move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
@@ -296,9 +290,7 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
     extracted_metrics = list(
-        runner_metrics.extract(
-            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
-        )
+        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, runners=set())
     )
     assert not extracted_metrics
     move_to_quarantine_mock.assert_any_call(metrics_storage_manager, runner_fs.runner_name)
@@ -317,9 +309,7 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
     extracted_metrics = list(
-        runner_metrics.extract(
-            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
-        )
+        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, runners=set())
     )
     assert not extracted_metrics
 
@@ -357,9 +347,7 @@ def test_extract_raises_error_for_too_large_files(
     monkeypatch.setattr(runner_metrics, "move_to_quarantine", move_to_quarantine_mock)
 
     extracted_metrics = list(
-        runner_metrics.extract(
-            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
-        )
+        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, runners=set())
     )
     assert not extracted_metrics
 
@@ -381,9 +369,7 @@ def test_extract_raises_error_for_too_large_files(
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
     extracted_metrics = list(
-        runner_metrics.extract(
-            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
-        )
+        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, runners=set())
     )
 
     assert not extracted_metrics
@@ -406,9 +392,7 @@ def test_extract_raises_error_for_too_large_files(
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
     extracted_metrics = list(
-        runner_metrics.extract(
-            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
-        )
+        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, runners=set())
     )
 
     assert not extracted_metrics
@@ -446,9 +430,7 @@ def test_extract_ignores_filesystems_without_ts(runner_fs_base: Path):
     metrics_storage_manager.list_all.return_value = [runner_fs]
 
     extracted_metrics = list(
-        runner_metrics.extract(
-            metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
-        )
+        runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, runners=set())
     )
     assert not extracted_metrics
     metrics_storage_manager.delete.assert_called_once_with(runner_fs.runner_name)
@@ -481,7 +463,7 @@ def test_extract_ignores_failure_on_shared_fs_cleanup(
     )
 
     extracted_metrics = runner_metrics.extract(
-        metrics_storage_manager=metrics_storage_manager, ignore_runners=set()
+        metrics_storage_manager=metrics_storage_manager, runners=set()
     )
     assert list(extracted_metrics) == [runner_metrics_data]
 

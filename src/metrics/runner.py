@@ -105,7 +105,7 @@ class RunnerMetrics(BaseModel):
 
 
 def extract(
-    metrics_storage_manager: MetricsStorageManager, ignore_runners: set[str]
+    metrics_storage_manager: MetricsStorageManager, runners: set[str], include: bool = False
 ) -> Iterator[RunnerMetrics]:
     """Extract metrics from runners.
 
@@ -120,13 +120,17 @@ def extract(
 
     Args:
         metrics_storage_manager: The metrics storage manager.
-        ignore_runners: The set of runners to ignore.
+        runners: The runners to include or exclude.
+        include: If true the provided runners are included for metric extraction, else the provided
+            runners are excluded.
 
     Yields:
         Extracted runner metrics of a particular runner.
     """
     for ms in metrics_storage_manager.list_all():
-        if ms.runner_name not in ignore_runners:
+        if (include and ms.runner_name in runners) or (
+            not include and ms.runner_name not in runners
+        ):
             runner_metrics = _extract_storage(
                 metrics_storage_manager=metrics_storage_manager, metrics_storage=ms
             )

@@ -375,7 +375,7 @@ def _is_workflow_run_complete(run: WorkflowRun) -> bool:
 
 
 async def dispatch_workflow(
-    app: Application,
+    app: Application | None,
     branch: Branch,
     github_repository: Repository,
     conclusion: str,
@@ -400,14 +400,16 @@ async def dispatch_workflow(
     Returns:
         The workflow run.
     """
+    if dispatch_input is None:
+        assert app is not None, "If dispatch input not given the app cannot be None."
+        dispatch_input = {"runner": app.name}
+
     start_time = datetime.now(timezone.utc)
 
     workflow = github_repository.get_workflow(id_or_file_name=workflow_id_or_name)
 
     # The `create_dispatch` returns True on success.
-    assert workflow.create_dispatch(
-        branch, dispatch_input or {"runner": app.name}
-    ), "Failed to create workflow"
+    assert workflow.create_dispatch(branch, dispatch_input), "Failed to create workflow"
 
     # There is a very small chance of selecting a run not created by the dispatch above.
     run: WorkflowRun | None = await wait_for(

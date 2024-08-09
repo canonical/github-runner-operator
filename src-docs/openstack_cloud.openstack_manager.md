@@ -146,20 +146,28 @@ Construct OpenstackRunnerManager object.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_manager.py#L1512"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_manager.py#L1533"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `flush`
 
 ```python
-flush() → int
+flush(mode: FlushMode = <FlushMode.FLUSH_IDLE: 1>) → int
 ```
 
 Flush Openstack servers. 
 
+1. Kill the processes depending on flush mode. 2. Get unhealthy runners after process purging. 3. Delete unhealthy runners. 
+
+
+
+**Args:**
+ 
+ - <b>`mode`</b>:  The mode to determine which runner to flush. 
+
 
 
 **Returns:**
-  The number of runners flushed. 
+ The number of runners flushed. 
 
 ---
 
