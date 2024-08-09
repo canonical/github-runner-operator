@@ -158,12 +158,20 @@ class RunnerManager:
                 github_only,
             )
 
-        return tuple(
+        runner_instances = tuple(
             RunnerInstance(
                 cloud_infos_map[name], github_infos_map[name] if name in github_infos_map else None
             )
             for name in cloud_infos_map.keys()
         )
+        if cloud_runner_state is not None:
+            runner_instances = [runner for runner in runner_instances if runner.cloud_state in cloud_runner_state]
+        if github_runner_state is not None:
+            runner_instances = [runner for runner in runner_instances if runner.github_state is not None and runner.github_state in github_runner_state]
+        # TODO: debug
+        import pytest
+        pytest.set_trace()
+        return runner_instances
 
     def delete_runners(
         self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE
@@ -188,9 +196,6 @@ class RunnerManager:
             states.append(GithubRunnerState.BUSY)
 
         runners_list = self.get_runners(github_runner_state=states)
-        # TODO: debug
-        import pytest
-        pytest.set_trace()
         runner_names = [runner.name for runner in runners_list]
         logger.info("Deleting runners: %s", runner_names)
         remove_token = self._github.get_removal_token()
