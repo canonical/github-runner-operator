@@ -35,7 +35,7 @@ class CloudRunnerState(str, Enum):
     UNEXPECTED = "unexpected"
 
     @staticmethod
-    def from_openstack_server_status(openstack_server_status: str) -> "CloudRunnerState":
+    def from_openstack_server_status(openstack_server_status: str) -> str:
         """Create from openstack server status.
 
         The openstack server status are documented here:
