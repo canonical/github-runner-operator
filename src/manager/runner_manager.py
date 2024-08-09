@@ -188,6 +188,10 @@ class RunnerManager:
         metrics = []
         for runner in runners_list:
             metrics.append(self._cloud.delete_runner(id=runner.id, remove_token=remove_token))
+        
+        # TODO: DEBUG
+        import pytest
+        pytest.set_trace()
 
         return self._issue_runner_metrics(metrics=metrics)
 
@@ -202,6 +206,9 @@ class RunnerManager:
         total_stats: IssuedMetricEventsStats = {}
 
         for extracted_metrics in metrics:
+            # TODO: DEBUG
+            import pytest
+            pytest.set_trace()
             try:
                 job_metrics = github_metrics.job(
                     github_client=self._github.github,
