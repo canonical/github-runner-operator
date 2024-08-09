@@ -502,7 +502,7 @@ class OpenstackRunnerManager:
                 conn=conn, server_name=server_name, startup=startup
             )
         except _SSHError:
-            logger.warning("Health chedk failed, unable to SSH into server: %s", server_name)
+            logger.warning("Health check failed, unable to SSH into server: %s", server_name)
             return False
 
     @staticmethod
