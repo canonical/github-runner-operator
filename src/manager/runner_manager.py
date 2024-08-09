@@ -63,9 +63,11 @@ class RunnerInstance:
             cloud_instance: Information on the cloud instance.
             github_info: Information on the GitHub of the runner.
         """
-        self.name =cloud_instance.name 
+        self.name = cloud_instance.name
         self.id = cloud_instance.id
-        self.github_state = GithubRunnerState.from_runner(github_info) if github_info is not None else None
+        self.github_state = (
+            GithubRunnerState.from_runner(github_info) if github_info is not None else None
+        )
         self.cloud_state = cloud_instance.state
 
 
@@ -122,7 +124,7 @@ class RunnerManager:
         cloud_runner_state: Sequence[CloudRunnerState] | None = None,
     ) -> tuple[RunnerInstance]:
         """Get information on runner filter by state.
-        
+
         Only runners that has cloud instance are returned.
 
         Args:
@@ -139,7 +141,9 @@ class RunnerManager:
         cloud_infos = self._cloud.get_runners(cloud_runner_state)
         github_infos_map = {info.name: info for info in github_infos}
         cloud_infos_map = {info.name: info for info in cloud_infos}
-        logger.info("Found following runners: %s", cloud_infos_map.keys() | github_infos_map.keys())
+        logger.info(
+            "Found following runners: %s", cloud_infos_map.keys() | github_infos_map.keys()
+        )
 
         runner_names = cloud_infos_map.keys() & github_infos_map.keys()
         cloud_only = cloud_infos_map.keys() - runner_names
@@ -155,7 +159,10 @@ class RunnerManager:
             )
 
         return tuple(
-            RunnerInstance(cloud_infos_map[name], github_infos_map[name] if name in github_infos_map else None) for name in cloud_infos_map.keys() 
+            RunnerInstance(
+                cloud_infos_map[name], github_infos_map[name] if name in github_infos_map else None
+            )
+            for name in cloud_infos_map.keys()
         )
 
     def delete_runners(
@@ -187,10 +194,13 @@ class RunnerManager:
 
         runner_metrics = []
         for runner in runners_list:
-            runner_metrics.append(self._cloud.delete_runner(id=runner.id, remove_token=remove_token))
-        
+            runner_metrics.append(
+                self._cloud.delete_runner(id=runner.id, remove_token=remove_token)
+            )
+
         # TODO: DEBUG
         import pytest
+
         pytest.set_trace()
 
         return self._issue_runner_metrics(metrics=iter(runner_metrics))
@@ -208,6 +218,7 @@ class RunnerManager:
         for extracted_metrics in metrics:
             # TODO: DEBUG
             import pytest
+
             pytest.set_trace()
             try:
                 job_metrics = github_metrics.job(

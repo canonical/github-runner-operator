@@ -16,6 +16,7 @@ from github.Repository import Repository
 from github.Workflow import Workflow
 from openstack.connection import Connection as OpenstackConnection
 
+import shared_fs
 from charm_state import GithubPath, ProxyConfig, parse_github_path
 from manager.cloud_runner_manager import CloudRunnerState
 from manager.github_runner_manager import GithubRunnerState
@@ -27,7 +28,6 @@ from openstack_cloud.openstack_runner_manager import (
     OpenstackRunnerManager,
     OpenstackRunnerManagerConfig,
 )
-import shared_fs 
 from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
@@ -53,7 +53,7 @@ def log_dir_base_path_fixture(tmp_path_factory: Path) -> Iterator[dict[str, Path
 
         monkeypatch.setattr(storage, "FILESYSTEM_BASE_PATH", filesystem_base_path)
         monkeypatch.setattr(storage, "FILESYSTEM_QUARANTINE_PATH", filesystem_quarantine_path)
-        monkeypatch.setattr(shared_fs, "FILESYSTEM_IMAGES_PATH" , filesystem_images_path)
+        monkeypatch.setattr(shared_fs, "FILESYSTEM_IMAGES_PATH", filesystem_images_path)
         monkeypatch.setattr(events, "METRICS_LOG_PATH", metric_log_path)
 
         yield {

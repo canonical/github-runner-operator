@@ -83,6 +83,13 @@ class OpenstackRunnerManagerConfig:
 
 @dataclass
 class RunnerHealth:
+    """Runners with health state.
+    
+    Attributes:
+        healthy: The list of healthy runners.
+        unhealthy:  The list of unhealthy runners.
+    """
+
     healthy: tuple[OpenstackInstance]
     unhealthy: tuple[OpenstackInstance]
 
