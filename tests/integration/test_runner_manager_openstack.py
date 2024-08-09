@@ -46,20 +46,14 @@ def log_dir_base_path_fixture(tmp_path_factory: Path) -> Iterator[dict[str, Path
     with pytest.MonkeyPatch.context() as monkeypatch:
         temp_log_dir = tmp_path_factory.mktemp("log")
 
-        filesystem_base_path = temp_log_dir / "runner-fs"
-        filesystem_quarantine_path = temp_log_dir / "runner-fs-quarantine"
-        filesystem_images_path = temp_log_dir / "runner-fs-images"
+        metric_exchange_path = temp_log_dir / "metric_exchange"
         metric_log_path = temp_log_dir / "metric_log"
 
-        monkeypatch.setattr(storage, "FILESYSTEM_BASE_PATH", filesystem_base_path)
-        monkeypatch.setattr(storage, "FILESYSTEM_QUARANTINE_PATH", filesystem_quarantine_path)
-        monkeypatch.setattr(shared_fs, "FILESYSTEM_IMAGES_PATH", filesystem_images_path)
+        monkeypatch.setattr(openstack_runner_manager, "METRICS_EXCHANGE_PATH", metric_exchange_path)
         monkeypatch.setattr(events, "METRICS_LOG_PATH", metric_log_path)
 
         yield {
-            "filesystem_base_path": filesystem_base_path,
-            "filesystem_quarantine_path": filesystem_quarantine_path,
-            "filesystem_images_path": filesystem_images_path,
+            "metric_exchange": metric_exchange_path,
             "metric_log": metric_log_path,
         }
 
@@ -267,37 +261,37 @@ async def test_runner_flush_busy_lifecycle(
     runner_list = runner_manager_with_one_runner.get_runners()
 
 
-# @pytest.mark.openstack
-# @pytest.mark.asyncio
-# @pytest.mark.abort_on_fail
-# async def test_runner_normal_lifecycle(
-#     runner_manager_with_one_runner: RunnerManager,
-#     test_github_branch: Branch,
-#     github_repository: Repository,
-#     runner_label: str,
-#     log_dir_base_path: dict[str, Path],
-# ):
-#     """
-#     Arrange: RunnerManager with one runner. Clean metric logs.
-#     Act:
-#         1. Start a test workflow for the runner.
-#         2. Run cleanup.
-#     Assert:
-#         1. The workflow complete successfully.
-#         2. The runner should be deleted. The metrics should be recorded.
-#     """
-#     metric_log_path = log_dir_base_path["metric_log"]
-#     metric_log_path.write_text("")
+@pytest.mark.openstack
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_runner_normal_lifecycle(
+    runner_manager_with_one_runner: RunnerManager,
+    test_github_branch: Branch,
+    github_repository: Repository,
+    runner_label: str,
+    log_dir_base_path: dict[str, Path],
+):
+    """
+    Arrange: RunnerManager with one runner. Clean metric logs.
+    Act:
+        1. Start a test workflow for the runner.
+        2. Run cleanup.
+    Assert:
+        1. The workflow complete successfully.
+        2. The runner should be deleted. The metrics should be recorded.
+    """
+    metric_log_path = log_dir_base_path["metric_log"]
+    metric_log_path.write_text("")
 
-#     workflow = await dispatch_workflow(
-#         app=None,
-#         branch=test_github_branch,
-#         github_repository=github_repository,
-#         conclusion="success",
-#         workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-#         dispatch_input={"runner": runner_label, "minutes": "0"},
-#         wait=False,
-#     )
-#     await wait_for(lambda: workflow_is_status(workflow, "completed"))
+    workflow = await dispatch_workflow(
+        app=None,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+        dispatch_input={"runner": runner_label, "minutes": "0"},
+        wait=False,
+    )
+    await wait_for(lambda: workflow_is_status(workflow, "completed"))
 
-#     pytest.set_trace()
+    pytest.set_trace()

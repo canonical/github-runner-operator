@@ -168,9 +168,6 @@ class RunnerManager:
             runner_instances = [runner for runner in runner_instances if runner.cloud_state in cloud_runner_state]
         if github_runner_state is not None:
             runner_instances = [runner for runner in runner_instances if runner.github_state is not None and runner.github_state in github_runner_state]
-        # TODO: debug
-        import pytest
-        pytest.set_trace()
         return runner_instances
 
     def delete_runners(
