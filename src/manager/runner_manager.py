@@ -185,22 +185,22 @@ class RunnerManager:
         logger.info("Deleting runners: %s", runner_names)
         remove_token = self._github.get_removal_token()
 
-        metrics = []
+        runner_metrics = []
         for runner in runners_list:
-            metrics.append(self._cloud.delete_runner(id=runner.id, remove_token=remove_token))
+            runner_metrics.append(self._cloud.delete_runner(id=runner.id, remove_token=remove_token))
         
         # TODO: DEBUG
         import pytest
         pytest.set_trace()
 
-        return self._issue_runner_metrics(metrics=metrics)
+        return self._issue_runner_metrics(metrics=iter(runner_metrics))
 
     def cleanup(self) -> IssuedMetricEventsStats:
         """Run cleanup of the runners and other resources."""
         self._github.delete_runners([GithubRunnerState.OFFLINE, GithubRunnerState.UNKNOWN])
         remove_token = self._github.get_removal_token()
-        metrics = self._cloud.cleanup_runner(remove_token)
-        return self._issue_runner_metrics(metrics=metrics)
+        runner_metrics = self._cloud.cleanup_runner(remove_token)
+        return self._issue_runner_metrics(metrics=runner_metrics)
 
     def _issue_runner_metrics(self, metrics: Iterator[RunnerMetrics]) -> IssuedMetricEventsStats:
         total_stats: IssuedMetricEventsStats = {}
