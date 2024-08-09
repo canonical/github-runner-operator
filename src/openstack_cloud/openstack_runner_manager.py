@@ -241,7 +241,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
         except SshError:
             logger.exception("Failed SSH connection while removing %s", instance.server_name)
             raise RunnerRemoveError(f"Failed SSH connection for {instance.server_name}")
+
         self._pull_runner_metrics(instance.server_name, ssh_conn)
+
         try:
             OpenstackRunnerManager._run_github_runner_removal_script(
                 instance.server_name, ssh_conn, remove_token
