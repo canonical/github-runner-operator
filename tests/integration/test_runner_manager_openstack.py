@@ -183,7 +183,6 @@ async def test_runner_normal_idle_lifecycle(
     """
     # 1.
     runner_id_list = runner_manager.create_runners(1)
-    pytest.set_trace()
     assert isinstance(runner_id_list, tuple)
     assert len(runner_id_list) == 1
     runner_id = runner_id_list[0]
@@ -290,5 +289,6 @@ async def test_runner_normal_lifecycle(
         wait=False,
     )
     await wait_for(lambda: workflow_is_status(workflow, "completed"))
+    runner_log_dir_path = log_dir_base_path["runner_log_dir"]
     metric_log_path = log_dir_base_path["metric_log"]
     pytest.set_trace()
