@@ -417,6 +417,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         ):
             logger.warning("Runner process not found on %s", name)
             return False
+        return True
 
     @retry(tries=10, delay=60, local_logger=logger)
     def _wait_runner_startup(self, instance: OpenstackInstance) -> None:
