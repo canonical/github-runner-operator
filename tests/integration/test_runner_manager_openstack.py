@@ -4,6 +4,7 @@
 """Testing the RunnerManager class with OpenStackRunnerManager as CloudManager."""
 
 
+import json
 from pathlib import Path
 from secrets import token_hex
 from typing import Iterator
@@ -292,8 +293,7 @@ async def test_runner_normal_lifecycle(
         2. The runner should be deleted. The metrics should be recorded.
     """
     metric_log_path = log_dir_base_path["metric_log"]
-    filesystem_base_path = log_dir_base_path["filesystem_base_path"]
-    filesystem_quarantine_path = log_dir_base_path["filesystem_quarantine_path"]
+    metric_log_existing_content = metric_log_path.read_text(encoding='utf-8')
 
     workflow = await dispatch_workflow(
         app=None,
@@ -307,5 +307,12 @@ async def test_runner_normal_lifecycle(
     await wait_for(lambda: workflow_is_status(workflow, "completed"))
 
     issue_metrics_events = runner_manager_with_one_runner.cleanup()
+    assert issue_metrics_events[events.RunnerStart] == 1
+    assert issue_metrics_events[events.RunnerStop] == 1
+    
+    metric_log_full_content = metric_log_path.read_text(encoding='utf-8')
+    assert metric_log_full_content.startswith(metric_log_existing_content), "The metric log was modified in ways other than appending"
+    metric_log_new_content = metric_log_full_content[len(metric_log_existing_content):]
+    metric_logs = [json.loads(metric) for metric in metric_log_new_content.splitlines()]
 
     pytest.set_trace()
