@@ -293,7 +293,7 @@ async def test_runner_normal_lifecycle(
         2. The runner should be deleted. The metrics should be recorded.
     """
     metric_log_path = log_dir_base_path["metric_log"]
-    metric_log_existing_content = metric_log_path.read_text(encoding='utf-8')
+    metric_log_existing_content = metric_log_path.read_text(encoding="utf-8")
 
     workflow = await dispatch_workflow(
         app=None,
@@ -309,13 +309,20 @@ async def test_runner_normal_lifecycle(
     issue_metrics_events = runner_manager_with_one_runner.cleanup()
     assert issue_metrics_events[events.RunnerStart] == 1
     assert issue_metrics_events[events.RunnerStop] == 1
-    
-    metric_log_full_content = metric_log_path.read_text(encoding='utf-8')
-    assert metric_log_full_content.startswith(metric_log_existing_content), "The metric log was modified in ways other than appending"
-    metric_log_new_content = metric_log_full_content[len(metric_log_existing_content):]
+
+    metric_log_full_content = metric_log_path.read_text(encoding="utf-8")
+    assert metric_log_full_content.startswith(
+        metric_log_existing_content
+    ), "The metric log was modified in ways other than appending"
+    # Disable E203 (space before :) as it conflicts with the formatter (black).
+    metric_log_new_content = metric_log_full_content[
+        len(metric_log_existing_content) :  # noqa: E203
+    ]
     metric_logs = [json.loads(metric) for metric in metric_log_new_content.splitlines()]
-    assert len(metric_logs) == 2, "Assuming two events should be runner_start and runner_stop, modify this if new events are added"
-    assert metric_logs[0]['event'] == "runner_start"
-    assert metric_logs[0]['workflow'] == "Workflow Dispatch Wait Tests"
-    assert metric_logs[1]['event'] == "runner_stop"
-    assert metric_logs[1]['workflow'] == "Workflow Dispatch Wait Tests"
+    assert (
+        len(metric_logs) == 2
+    ), "Assuming two events should be runner_start and runner_stop, modify this if new events are added"
+    assert metric_logs[0]["event"] == "runner_start"
+    assert metric_logs[0]["workflow"] == "Workflow Dispatch Wait Tests"
+    assert metric_logs[1]["event"] == "runner_stop"
+    assert metric_logs[1]["workflow"] == "Workflow Dispatch Wait Tests"

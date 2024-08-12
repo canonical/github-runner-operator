@@ -80,7 +80,8 @@ class OpenstackInstance:
             raise ValueError(
                 f"Found openstack server {server.name} managed under prefix {prefix}, contact devs"
             )
-        self.instance_id = self.server_name[len(prefix) + 1 :]
+        # Disable E203 (space before :) as it conflicts with the formatter (black).
+        self.instance_id = self.server_name[len(prefix) + 1 :]  # noqa: E203
 
 
 @contextmanager
@@ -92,7 +93,7 @@ def _get_openstack_connection(
     The file of _CLOUDS_YAML_PATH should only be modified by this function.
 
     Args:
-        cloud_config: The configuration in clouds.yaml format to apply.
+        clouds_config: The configuration in clouds.yaml format to apply.
         cloud: The name of cloud to use in the clouds.yaml.
 
     Raises:
@@ -149,9 +150,9 @@ class OpenstackCloud:
             flavor: The flavor used to create the instance.
             network: The network used to create the instance.
             userdata: The cloud init userdata to startup the instance.
-            
+
         Raises:
-            OpenstackError: Unable to create OpenStack server for runner.
+            OpenStackError: Unable to create OpenStack server.
 
         Returns:
             The OpenStack instance created.
@@ -178,7 +179,7 @@ class OpenstackCloud:
                     timeout=_CREATE_SERVER_TIMEOUT,
                     wait=True,
                 )
-            except openstack.exceptions.ResourceTimeout:
+            except openstack.exceptions.ResourceTimeout as err:
                 logger.exception("Timeout creating openstack server %s", full_name)
                 logger.info(
                     "Attempting clean up of openstack server %s that timeout during creation",
@@ -189,7 +190,7 @@ class OpenstackCloud:
                 except (
                     openstack.exceptions.SDKException,
                     openstack.exceptions.ResourceTimeout,
-                ) as err:
+                ):
                     logger.exception(
                         "Failed to cleanup openstack server %s that timeout during creation",
                         full_name,
@@ -225,6 +226,9 @@ class OpenstackCloud:
     def delete_instance(self, instance_id: str) -> None:
         """Delete a openstack instance.
 
+        Raises:
+            OpenStackError: Unable to delete OpenStack server.
+
         Args:
             instance_id: The instance ID of the instance to delete.
         """
@@ -249,6 +253,9 @@ class OpenstackCloud:
 
         Args:
             instance: The OpenStack instance to connect to.
+
+        Raises:
+            SshError: Unable to get a working SSH connection to the instance.
 
         Returns:
             SSH connection object.
@@ -355,11 +362,7 @@ class OpenstackCloud:
         deleted = 0
         for path in _SSH_KEY_PATH.iterdir():
             # Find key file from this application.
-            if (
-                path.is_file()
-                and path.name.startswith(self.prefix)
-                and path.name.endswith(".key")
-            ):
+            if path.is_file() and path.name.startswith(self.prefix) and path.name.endswith(".key"):
                 total += 1
                 if path.name in exclude_filename:
                     continue
@@ -425,6 +428,13 @@ class OpenstackCloud:
 
         If multiple servers with the same name is found, the latest server in creation time is
         returned. Other servers is deleted.
+
+        Args:
+            conn: The connection to OpenStack.
+            name: The name of the OpenStack name.
+
+        Returns:
+            A server with the name.
         """
         servers: list[OpenstackServer] = conn.search_servers(name)
 

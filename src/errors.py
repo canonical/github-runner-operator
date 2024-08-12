@@ -156,15 +156,15 @@ class RunnerLogsError(Exception):
     """Base class for all runner logs errors."""
 
 
-class OpenStackError(Exception):
+class OpenstackError(Exception):
     """Base class for OpenStack errors."""
 
 
-class OpenStackInvalidConfigError(OpenStackError):
+class OpenStackInvalidConfigError(OpenstackError):
     """Represents an invalid OpenStack configuration."""
 
 
-class OpenStackUnauthorizedError(OpenStackError):
+class OpenStackUnauthorizedError(OpenstackError):
     """Represents an unauthorized connection to OpenStack."""
 
 

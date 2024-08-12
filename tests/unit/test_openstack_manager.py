@@ -19,7 +19,7 @@ from pytest import LogCaptureFixture, MonkeyPatch
 import metrics.storage
 import reactive.runner_manager
 from charm_state import CharmState, ProxyConfig, ReactiveConfig, RepoPolicyComplianceConfig
-from errors import OpenStackError, RunnerStartError
+from errors import OpenstackError, RunnerStartError
 from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
 from metrics import events as metric_events
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
@@ -262,7 +262,7 @@ def test__create_connection_error(clouds_yaml: dict, openstack_connect_mock: Mag
     connection_mock.__enter__.return_value = connection_context
     openstack_connect_mock.return_value = connection_mock
 
-    with pytest.raises(OpenStackError) as exc:
+    with pytest.raises(OpenstackError) as exc:
         with openstack_manager._create_connection(cloud_config=clouds_yaml):
             pass
 

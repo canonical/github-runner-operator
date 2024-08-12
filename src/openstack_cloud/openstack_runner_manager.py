@@ -21,9 +21,8 @@ from errors import (
     CreateMetricsStorageError,
     GetMetricsStorageError,
     IssueMetricEventError,
-    OpenStackError,
+    OpenstackError,
     RunnerCreateError,
-    RunnerError,
     RunnerStartError,
     SshError,
 )
@@ -64,7 +63,7 @@ class _PullFileError(Exception):
 @dataclass
 class OpenstackRunnerManagerConfig:
     """Configuration for OpenstackRunnerManager.
-    
+
     Attributes:
         clouds_config: The clouds.yaml.
         cloud: The cloud name to connect to.
@@ -138,7 +137,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         Args:
             registration_token: The GitHub registration token for registering runners.
-        
+
         Raises:
             RunnerCreateError: Unable to create runner due to OpenStack issues.
 
@@ -159,7 +158,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 network=self.config.network,
                 userdata=userdata,
             )
-        except OpenStackError as err:
+        except OpenstackError as err:
             raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
 
         self._wait_runner_startup(instance)
@@ -226,6 +225,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
         Args:
             id: The instance id of the runner to delete.
             remove_token: The GitHub remove token.
+
+        Returns:
+            Any metrics collected during the deletion of the runner.
         """
         instance = self._openstack_cloud.get_instance(id)
         metric = runner_metrics.extract(
@@ -285,7 +287,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         try:
             self._openstack_cloud.delete_instance(instance.instance_id)
-        except OpenStackError:
+        except OpenstackError:
             logger.exception(
                 "Unable to delete openstack instance for runner %s", instance.server_name
             )
@@ -389,10 +391,23 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
     @retry(tries=3, delay=5, backoff=2, local_logger=logger)
     def _health_check(self, instance: OpenstackInstance) -> bool:
+        """Check whether runner is healthy.
+
+        Args:
+            instance: The OpenStack instance to conduit the health check.
+
+        Raises:
+            SshError: Unable to get a SSH connection to the instance.
+
+        Returns:
+            Whether the runner is healthy.
+        """
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
         except SshError:
-            logger.exception("SSH connection failure with %s during health check", instance.server_name)
+            logger.exception(
+                "SSH connection failure with %s during health check", instance.server_name
+            )
             raise
         return OpenstackRunnerManager._run_health_check(ssh_conn, instance.server_name)
 
@@ -403,7 +418,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         Args:
             ssh_conn: The SSH connection to the runner.
             name: The name of the runner.
-            
+
         Returns:
             Whether the health succeed.
         """

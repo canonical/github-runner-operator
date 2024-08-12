@@ -374,7 +374,7 @@ Base class for all runner logs errors.
 
 <a href="../src/errors.py#L159"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>class</kbd> `OpenStackError`
+## <kbd>class</kbd> `OpenstackError`
 Base class for OpenStack errors. 
 
 
