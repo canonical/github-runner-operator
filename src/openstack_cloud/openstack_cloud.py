@@ -357,7 +357,7 @@ class OpenstackCloud:
             # Find key file from this application.
             if (
                 path.is_file()
-                and path.name.startswith(self.instance_name)
+                and path.name.startswith(self.prefix)
                 and path.name.endswith(".key")
             ):
                 total += 1
