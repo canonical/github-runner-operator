@@ -6,7 +6,7 @@
 import logging
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Iterator, Sequence, Type
+from typing import Iterator, Sequence, Type, cast
 
 from charm_state import GithubPath
 from errors import GithubMetricsError
@@ -158,12 +158,12 @@ class RunnerManager:
                 github_only,
             )
 
-        runner_instances = tuple(
+        runner_instances: list[RunnerInstance] = [
             RunnerInstance(
                 cloud_infos_map[name], github_infos_map[name] if name in github_infos_map else None
             )
             for name in cloud_infos_map.keys()
-        )
+        ]
         if cloud_runner_state is not None:
             runner_instances = [
                 runner for runner in runner_instances if runner.cloud_state in cloud_runner_state
@@ -174,7 +174,7 @@ class RunnerManager:
                 for runner in runner_instances
                 if runner.github_state is not None and runner.github_state in github_runner_state
             ]
-        return runner_instances
+        return cast(tuple[RunnerInstance], tuple(runner_instances))
 
     def delete_runners(
         self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE
@@ -208,9 +208,11 @@ class RunnerManager:
 
         runner_metrics_list = []
         for runner in runners_list:
-            runner_metrics = self._cloud.delete_runner(id=runner.id, remove_token=remove_token)
-            if runner_metrics is not None:
-                runner_metrics_list.append(runner_metrics)
+            deleted_runner_metrics = self._cloud.delete_runner(
+                instance_id=runner.id, remove_token=remove_token
+            )
+            if deleted_runner_metrics is not None:
+                runner_metrics_list.append(deleted_runner_metrics)
         return self._issue_runner_metrics(metrics=iter(runner_metrics_list))
 
     def cleanup(self) -> IssuedMetricEventsStats:
@@ -221,8 +223,8 @@ class RunnerManager:
         """
         self._github.delete_runners([GithubRunnerState.OFFLINE])
         remove_token = self._github.get_removal_token()
-        runner_metrics = self._cloud.cleanup(remove_token)
-        return self._issue_runner_metrics(metrics=runner_metrics)
+        deleted_runner_metrics = self._cloud.cleanup(remove_token)
+        return self._issue_runner_metrics(metrics=deleted_runner_metrics)
 
     def _issue_runner_metrics(self, metrics: Iterator[RunnerMetrics]) -> IssuedMetricEventsStats:
         """Issue runner metrics.

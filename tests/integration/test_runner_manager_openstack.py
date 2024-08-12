@@ -40,7 +40,9 @@ def runner_label():
 
 
 @pytest.fixture(scope="module", name="log_dir_base_path")
-def log_dir_base_path_fixture(tmp_path_factory: Path) -> Iterator[dict[str, Path]]:
+def log_dir_base_path_fixture(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> Iterator[dict[str, Path]]:
     """Mock the log directory path and return it."""
     with pytest.MonkeyPatch.context() as monkeypatch:
         temp_log_dir = tmp_path_factory.mktemp("log")
@@ -72,11 +74,11 @@ def openstack_proxy_config_fixture(
     use_aproxy = False
     if openstack_http_proxy or openstack_https_proxy:
         use_aproxy = True
-    openstack_http_proxy = openstack_http_proxy if openstack_http_proxy else None
-    openstack_https_proxy = openstack_https_proxy if openstack_https_proxy else None
+    http_proxy = openstack_http_proxy if openstack_http_proxy else None
+    https_proxy = openstack_https_proxy if openstack_https_proxy else None
     return ProxyConfig(
-        http=openstack_http_proxy,
-        https=openstack_https_proxy,
+        http=http_proxy,
+        https=https_proxy,
         no_proxy=openstack_no_proxy,
         use_aproxy=use_aproxy,
     )
@@ -274,6 +276,7 @@ async def test_runner_flush_busy_lifecycle(
 
     issue_metrics_events = runner_manager_with_one_runner.cleanup()
     assert issue_metrics_events[events.RunnerStart] == 1
+
 
 @pytest.mark.openstack
 @pytest.mark.asyncio

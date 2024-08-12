@@ -60,8 +60,9 @@ class _PullFileError(Exception):
     """Represents an error while pulling a file from the runner instance."""
 
 
+# Ignore "Too many instance attributes" as this dataclass is for passing arguments.
 @dataclass
-class OpenstackRunnerManagerConfig:
+class OpenstackRunnerManagerConfig:  # pylint: disable=R0902
     """Configuration for OpenstackRunnerManager.
 
     Attributes:
@@ -145,14 +146,14 @@ class OpenstackRunnerManager(CloudRunnerManager):
             Instance ID of the runner.
         """
         start_timestamp = time.time()
-        id = OpenstackRunnerManager._generate_instance_id()
-        instance_name = self._openstack_cloud.get_server_name(instance_id=id)
+        instance_id = OpenstackRunnerManager._generate_instance_id()
+        instance_name = self._openstack_cloud.get_server_name(instance_id=instance_id)
         userdata = self._generate_userdata(
             instance_name=instance_name, registration_token=registration_token
         )
         try:
             instance = self._openstack_cloud.launch_instance(
-                instance_id=id,
+                instance_id=instance_id,
                 image=self.config.image,
                 flavor=self.config.flavor,
                 network=self.config.network,
@@ -170,24 +171,24 @@ class OpenstackRunnerManager(CloudRunnerManager):
             install_start_timestamp=start_timestamp,
             install_end_timestamp=end_timestamp,
         )
-        return id
+        return instance_id
 
-    def get_runner(self, id: InstanceId) -> CloudRunnerInstance | None:
+    def get_runner(self, instance_id: InstanceId) -> CloudRunnerInstance | None:
         """Get a self-hosted runner by instance id.
 
         Args:
-            id: The instance id.
+            instance_id: The instance id.
 
         Returns:
             Information on the runner instance.
         """
-        name = self._openstack_cloud.get_server_name(id)
+        name = self._openstack_cloud.get_server_name(instance_id)
         instances_list = self._openstack_cloud.get_instances()
         for instance in instances_list:
             if instance.server_name == name:
                 return CloudRunnerInstance(
                     name=name,
-                    id=id,
+                    id=instance_id,
                     state=CloudRunnerState.from_openstack_server_status(instance.status),
                 )
         return None
@@ -215,21 +216,28 @@ class OpenstackRunnerManager(CloudRunnerManager):
         ]
         if states is None:
             return instance_list
-        return [instance for instance in instance_list if instance.state in states]
+        return tuple(instance for instance in instance_list if instance.state in states)
 
     def delete_runner(
-        self, id: InstanceId, remove_token: str
+        self, instance_id: InstanceId, remove_token: str
     ) -> runner_metrics.RunnerMetrics | None:
         """Delete self-hosted runners.
 
         Args:
-            id: The instance id of the runner to delete.
+            instance_id: The instance id of the runner to delete.
             remove_token: The GitHub remove token.
 
         Returns:
             Any metrics collected during the deletion of the runner.
         """
-        instance = self._openstack_cloud.get_instance(id)
+        instance = self._openstack_cloud.get_instance(instance_id)
+        if instance is None:
+            logger.warning(
+                "Unable to delete instance %s as it is not found",
+                self._openstack_cloud.get_server_name(instance_id),
+            )
+            return None
+
         metric = runner_metrics.extract(
             metrics_storage_manager=metrics_storage, runners=instance.server_name
         )
@@ -256,7 +264,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         self._openstack_cloud.cleanup()
         return metrics
 
-    def _delete_runner(self, instance: OpenstackInstance, remove_token) -> None:
+    def _delete_runner(self, instance: OpenstackInstance, remove_token: str) -> None:
         """Delete self-hosted runners by openstack instance.
 
         Args:
@@ -311,7 +319,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 unhealthy.append(runner)
             else:
                 healthy.append(runner)
-        return RunnerHealth(healthy=healthy, unhealthy=unhealthy)
+        return RunnerHealth(healthy=tuple(healthy), unhealthy=tuple(unhealthy))
 
     def _generate_userdata(self, instance_name: str, registration_token: str) -> str:
         """Generate cloud init userdata.

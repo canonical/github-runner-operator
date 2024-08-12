@@ -130,7 +130,7 @@ Construct the object.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L237"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L247"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `cleanup`
 
@@ -187,7 +187,7 @@ Create a self-hosted runner.
 ### <kbd>method</kbd> `delete_runner`
 
 ```python
-delete_runner(id: str, remove_token: str) → RunnerMetrics | None
+delete_runner(instance_id: str, remove_token: str) → RunnerMetrics | None
 ```
 
 Delete self-hosted runners. 
@@ -196,8 +196,13 @@ Delete self-hosted runners.
 
 **Args:**
  
- - <b>`id`</b>:  The instance id of the runner to delete. 
+ - <b>`instance_id`</b>:  The instance id of the runner to delete. 
  - <b>`remove_token`</b>:  The GitHub remove token. 
+
+
+
+**Returns:**
+ Any metrics collected during the deletion of the runner. 
 
 ---
 
@@ -223,7 +228,7 @@ Get the name prefix of the self-hosted runners.
 ### <kbd>method</kbd> `get_runner`
 
 ```python
-get_runner(id: str) → CloudRunnerInstance | None
+get_runner(instance_id: str) → CloudRunnerInstance | None
 ```
 
 Get a self-hosted runner by instance id. 
@@ -232,7 +237,7 @@ Get a self-hosted runner by instance id.
 
 **Args:**
  
- - <b>`id`</b>:  The instance id. 
+ - <b>`instance_id`</b>:  The instance id. 
 
 
 

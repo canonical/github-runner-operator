@@ -3,7 +3,7 @@
 
 """Interface of manager of runner instance on clouds."""
 
-from abc import ABC
+import abc
 from dataclasses import dataclass
 from enum import Enum
 from typing import Iterator, Sequence, Tuple
@@ -34,8 +34,12 @@ class CloudRunnerState(str, Enum):
     UNKNOWN = "unknown"
     UNEXPECTED = "unexpected"
 
+    # Disable "Too many return statements" as this method is using case statement for converting
+    # the states, which does not cause a complexity issue.
     @staticmethod
-    def from_openstack_server_status(openstack_server_status: str) -> "CloudRunnerState":
+    def from_openstack_server_status(  # pylint: disable=R0911
+        openstack_server_status: str,
+    ) -> "CloudRunnerState":
         """Create from openstack server status.
 
         The openstack server status are documented here:
@@ -81,29 +85,30 @@ class CloudRunnerInstance:
     state: CloudRunnerState
 
 
-class CloudRunnerManager(ABC):
+class CloudRunnerManager(abc.ABC):
     """Manage runner instance on cloud."""
 
+    @abc.abstractmethod
     def get_name_prefix(self) -> str:
         """Get the name prefix of the self-hosted runners."""
-        ...
 
+    @abc.abstractmethod
     def create_runner(self, registration_token: str) -> InstanceId:
         """Create a self-hosted runner.
 
         Args:
             registration_token: The GitHub registration token for registering runners.
         """
-        ...
 
-    def get_runner(self, id: InstanceId) -> CloudRunnerInstance:
+    @abc.abstractmethod
+    def get_runner(self, instance_id: InstanceId) -> CloudRunnerInstance:
         """Get a self-hosted runner by instance id.
 
         Args:
-            id: The instance id.
+            instance_id: The instance id.
         """
-        ...
 
+    @abc.abstractmethod
     def get_runners(self, states: Sequence[CloudRunnerState]) -> Tuple[CloudRunnerInstance]:
         """Get self-hosted runners by state.
 
@@ -111,21 +116,20 @@ class CloudRunnerManager(ABC):
             states: Filter for the runners with these github states. If None all states will be
                 included.
         """
-        ...
 
-    def delete_runner(self, id: InstanceId, remove_token: str) -> RunnerMetrics | None:
+    @abc.abstractmethod
+    def delete_runner(self, instance_id: InstanceId, remove_token: str) -> RunnerMetrics | None:
         """Delete self-hosted runners.
 
         Args:
-            id: The instance id of the runner to delete.
+            instance_id: The instance id of the runner to delete.
             remove_token: The GitHub remove token.
         """
-        ...
 
+    @abc.abstractmethod
     def cleanup(self, remove_token: str) -> Iterator[RunnerMetrics]:
         """Cleanup runner and resource on the cloud.
 
         Args:
             remove_token: The GitHub remove token.
         """
-        ...

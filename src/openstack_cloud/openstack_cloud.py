@@ -3,10 +3,10 @@
 
 """Class for accessing OpenStack API for managing servers."""
 
-import datetime
 import logging
 from contextlib import contextmanager
 from dataclasses import dataclass
+from datetime import datetime
 from functools import reduce
 from pathlib import Path
 from typing import Iterable, Iterator, cast
@@ -22,7 +22,7 @@ from openstack.connection import Connection as OpenstackConnection
 from openstack.network.v2.security_group import SecurityGroup as OpenstackSecurityGroup
 from paramiko.ssh_exception import NoValidConnectionsError
 
-from errors import OpenStackError, SshError
+from errors import OpenstackError, SshError
 
 logger = logging.getLogger(__name__)
 
@@ -97,7 +97,7 @@ def _get_openstack_connection(
         cloud: The name of cloud to use in the clouds.yaml.
 
     Raises:
-        OpenStackError: if the credentials provided is not authorized.
+        OpenstackError: if the credentials provided is not authorized.
 
     Yields:
         An openstack.connection.Connection object.
@@ -115,7 +115,7 @@ def _get_openstack_connection(
     # pylint thinks this isn't an exception, but does inherit from Exception class.
     except openstack.exceptions.HttpException as exc:  # pylint: disable=bad-exception-cause
         logger.exception("OpenStack API call failure")
-        raise OpenStackError("Failed OpenStack API call") from exc
+        raise OpenstackError("Failed OpenStack API call") from exc
 
 
 class OpenstackCloud:
@@ -139,7 +139,9 @@ class OpenstackCloud:
         self._cloud = cloud
         self.prefix = prefix
 
-    def launch_instance(
+    # Ignore "Too many arguments" as 6 args should be fine. Move to a dataclass is new args are
+    # added.
+    def launch_instance(  # pylint: disable=R0913
         self, instance_id: str, image: str, flavor: str, network: str, userdata: str
     ) -> OpenstackInstance:
         """Create an OpenStack instance.
@@ -152,7 +154,7 @@ class OpenstackCloud:
             userdata: The cloud init userdata to startup the instance.
 
         Raises:
-            OpenStackError: Unable to create OpenStack server.
+            OpenstackError: Unable to create OpenStack server.
 
         Returns:
             The OpenStack instance created.
@@ -196,22 +198,22 @@ class OpenstackCloud:
                         full_name,
                     )
                 self._delete_keypair(conn, instance_id)
-                raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
+                raise OpenstackError(f"Timeout creating openstack server {full_name}") from err
             except openstack.exceptions.SDKException as err:
                 logger.exception("Failed to create openstack server %s", full_name)
                 self._delete_keypair(conn, instance_id)
-                raise OpenStackError(f"Failed to create openstack server {full_name}") from err
+                raise OpenstackError(f"Failed to create openstack server {full_name}") from err
 
             return OpenstackInstance(server, self.prefix)
 
-    def get_instance(self, instance_id: str) -> OpenstackInstance:
+    def get_instance(self, instance_id: str) -> OpenstackInstance | None:
         """Get OpenStack instance by instance ID.
 
         Args:
             instance_id: The instance ID.
 
         Returns:
-            The OpenStack instance.
+            The OpenStack instance if found.
         """
         full_name = self.get_server_name(instance_id)
         logger.info("Getting openstack server with %s", full_name)
@@ -219,15 +221,16 @@ class OpenstackCloud:
         with _get_openstack_connection(
             clouds_config=self._clouds_config, cloud=self._cloud
         ) as conn:
-            return OpenstackInstance(
-                OpenstackCloud._get_and_ensure_unique_server(conn, full_name), self.prefix
-            )
+            server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
+            if server is not None:
+                return OpenstackInstance(server, self.prefix)
+        return None
 
     def delete_instance(self, instance_id: str) -> None:
         """Delete a openstack instance.
 
         Raises:
-            OpenStackError: Unable to delete OpenStack server.
+            OpenstackError: Unable to delete OpenStack server.
 
         Args:
             instance_id: The instance ID of the instance to delete.
@@ -240,13 +243,14 @@ class OpenstackCloud:
         ) as conn:
             try:
                 server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
-                conn.delete_server(name_or_id=server.id)
+                if server is not None:
+                    conn.delete_server(name_or_id=server.id)
                 OpenstackCloud._delete_keypair(conn, full_name)
             except (
                 openstack.exceptions.SDKException,
                 openstack.exceptions.ResourceTimeout,
             ) as err:
-                raise OpenStackError(f"Failed to remove openstack runner {full_name}") from err
+                raise OpenstackError(f"Failed to remove openstack runner {full_name}") from err
 
     def get_ssh_connection(self, instance: OpenstackInstance) -> SshConnection:
         """Get SSH connection to an OpenStack instance.
@@ -321,7 +325,7 @@ class OpenstackCloud:
                 server = OpenstackCloud._get_and_ensure_unique_server(conn, name)
                 if server is not None:
                     instances.append(OpenstackInstance(server, self.prefix))
-            return instances
+            return cast(tuple[OpenstackInstance], tuple(instances))
 
     def cleanup(self) -> None:
         """Cleanup unused openstack resources."""
@@ -414,11 +418,14 @@ class OpenstackCloud:
         Returns:
             List of OpenStack instances.
         """
-        return [
-            server
-            for server in cast(list[OpenstackServer], conn.list_servers())
-            if server.name.startswith(f"{self.prefix}-")
-        ]
+        return cast(
+            tuple[OpenstackServer],
+            tuple(
+                server
+                for server in cast(list[OpenstackServer], conn.list_servers())
+                if server.name.startswith(f"{self.prefix}-")
+            ),
+        )
 
     @staticmethod
     def _get_and_ensure_unique_server(
@@ -443,7 +450,10 @@ class OpenstackCloud:
 
         latest_server = reduce(
             lambda a, b: (
-                a if datetime.strptime(a.created_at) < datetime.strptime(b.create_at) else b
+                a
+                if datetime.strptime(a.created_at, "a %b %d %H:%M:%S %Y")
+                < datetime.strptime(b.create_at, "a %b %d %H:%M:%S %Y")
+                else b
             ),
             servers,
         )
