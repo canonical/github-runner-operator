@@ -324,7 +324,7 @@ class OpenstackCloud:
             server_list = self._get_openstack_instances(conn)
             exclude_list = [server.name for server in server_list]
             self._cleanup_key_files(conn, exclude_list)
-            self._clean_up_openstack_keypairs(conn, exclude_list)
+            self._cleanup_openstack_keypairs(conn, exclude_list)
 
     def get_server_name(self, instance_id: str) -> str:
         """Get server name on OpenStack.
@@ -377,7 +377,7 @@ class OpenstackCloud:
                 deleted += 1
         logger.info("Found %s key files, clean up %s key files", total, deleted)
 
-    def _clean_up_openstack_keypairs(
+    def _cleanup_openstack_keypairs(
         self, conn: OpenstackConnection, exclude_instances: Iterable[str]
     ) -> None:
         """Delete all OpenStack keypairs except the specified instances.
