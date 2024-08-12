@@ -692,7 +692,7 @@ def test_reconcile_ignores_metrics_for_openstack_online_runners(
 
     openstack_manager.runner_metrics.extract.assert_called_once_with(
         metrics_storage_manager=metrics.storage,
-        ignore_runners=set(openstack_online_runner_names),
+        runners=set(openstack_online_runner_names),
     )
 
 
