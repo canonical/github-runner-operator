@@ -390,7 +390,7 @@ class OpenstackCloud:
         keypairs = conn.list_keypairs()
         for key in keypairs:
             # The `name` attribute is of resource.Body type.
-            if key.name and str(key.name).startswith(self.instance_name):
+            if key.name and str(key.name).startswith(self.prefix):
                 if str(key.name) in exclude_instances:
                     continue
 
