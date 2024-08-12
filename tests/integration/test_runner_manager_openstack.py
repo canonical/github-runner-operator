@@ -272,6 +272,8 @@ async def test_runner_flush_busy_lifecycle(
     runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
     runner_list = runner_manager_with_one_runner.get_runners()
 
+    issue_metrics_events = runner_manager_with_one_runner.cleanup()
+    assert issue_metrics_events[events.RunnerStart] == 1
 
 @pytest.mark.openstack
 @pytest.mark.asyncio
