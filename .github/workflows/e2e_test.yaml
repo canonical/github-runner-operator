@@ -1,9 +1,7 @@
 name: End-to-End tests
 
 on:
-  # TODO: Debug
-  #pull_request:
-  workflow_dispatch:
+  pull_request:
 
 jobs:
   # test option values defined at test/conftest.py are passed on via repository secret
