@@ -65,7 +65,7 @@ class RunnerInstance:
             github_info: Information on the GitHub of the runner.
         """
         self.name = cloud_instance.name
-        self.id = cloud_instance.id
+        self.id = cloud_instance.instance_id
         self.github_state = (
             GithubRunnerState.from_runner(github_info) if github_info is not None else None
         )

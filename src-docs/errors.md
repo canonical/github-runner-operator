@@ -374,7 +374,7 @@ Base class for all runner logs errors.
 
 <a href="../src/errors.py#L159"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>class</kbd> `OpenstackError`
+## <kbd>class</kbd> `OpenStackError`
 Base class for OpenStack errors. 
 
 
@@ -407,7 +407,7 @@ Represents an unauthorized connection to OpenStack.
 
 <a href="../src/errors.py#L171"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>class</kbd> `SshError`
+## <kbd>class</kbd> `SSHError`
 Represents an error while interacting with SSH. 
 
 

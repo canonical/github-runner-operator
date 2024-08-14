@@ -22,10 +22,10 @@ from errors import (
     GetMetricsStorageError,
     IssueMetricEventError,
     KeyfileError,
-    OpenstackError,
+    OpenStackError,
     RunnerCreateError,
     RunnerStartError,
-    SshError,
+    SSHError,
 )
 from manager.cloud_runner_manager import (
     CloudRunnerInstance,
@@ -160,7 +160,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 network=self.config.network,
                 userdata=userdata,
             )
-        except OpenstackError as err:
+        except OpenStackError as err:
             raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
 
         self._wait_runner_startup(instance)
@@ -190,7 +190,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             if instance.server_name == name:
                 return CloudRunnerInstance(
                     name=name,
-                    id=instance_id,
+                    instance_id=instance_id,
                     state=CloudRunnerState.from_openstack_server_status(instance.status),
                 )
         return None
@@ -211,7 +211,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         instance_list = [
             CloudRunnerInstance(
                 name=instance.server_name,
-                id=instance.instance_id,
+                instance_id=instance.instance_id,
                 state=CloudRunnerState.from_openstack_server_status(instance.status),
             )
             for instance in instance_list
@@ -287,7 +287,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                     instance.server_name,
                     stack_info=True,
                 )
-        except SshError:
+        except SSHError:
             logger.exception(
                 "Failed to get SSH connection while removing %s", instance.server_name
             )
@@ -297,7 +297,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         try:
             self._openstack_cloud.delete_instance(instance.instance_id)
-        except OpenstackError:
+        except OpenStackError:
             logger.exception(
                 "Unable to delete openstack instance for runner %s", instance.server_name
             )
@@ -407,7 +407,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             instance: The OpenStack instance to conduit the health check.
 
         Raises:
-            SshError: Unable to get a SSH connection to the instance.
+            SSHError: Unable to get a SSH connection to the instance.
 
         Returns:
             Whether the runner is healthy.
@@ -419,7 +419,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 "Health check failed due to unable to find keyfile for %s", instance.server_name
             )
             return False
-        except SshError:
+        except SSHError:
             logger.exception(
                 "SSH connection failure with %s during health check", instance.server_name
             )
@@ -461,7 +461,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         """
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-        except SshError as err:
+        except SSHError as err:
             raise RunnerStartError(
                 f"Failed to SSH connect to {instance.server_name} openstack runner"
             ) from err
@@ -487,7 +487,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         """
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-        except SshError as err:
+        except SSHError as err:
             raise RunnerStartError(
                 f"Failed to SSH connect to {instance.server_name} openstack runner"
             ) from err
@@ -607,7 +607,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         Raises:
             _PullFileError: Unable to pull the file from the runner instance.
-            SshError: Issue with SSH connection.
+            SSHError: Issue with SSH connection.
         """
         try:
             result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True)
@@ -616,7 +616,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             paramiko.ssh_exception.NoValidConnectionsError,
             paramiko.ssh_exception.SSHException,
         ) as exc:
-            raise SshError(f"Unable to SSH into {ssh_conn.host}") from exc
+            raise SSHError(f"Unable to SSH into {ssh_conn.host}") from exc
         if not result.ok:
             logger.warning(
                 (
@@ -647,7 +647,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             paramiko.ssh_exception.NoValidConnectionsError,
             paramiko.ssh_exception.SSHException,
         ) as exc:
-            raise SshError(f"Unable to SSH into {ssh_conn.host}") from exc
+            raise SSHError(f"Unable to SSH into {ssh_conn.host}") from exc
         except OSError as exc:
             raise _PullFileError(f"Unable to retrieve file {remote_path}") from exc
 

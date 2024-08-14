@@ -22,7 +22,7 @@ from openstack.connection import Connection as OpenstackConnection
 from openstack.network.v2.security_group import SecurityGroup as OpenstackSecurityGroup
 from paramiko.ssh_exception import NoValidConnectionsError
 
-from errors import KeyfileError, OpenstackError, SshError
+from errors import KeyfileError, OpenStackError, SSHError
 
 logger = logging.getLogger(__name__)
 
@@ -97,7 +97,7 @@ def _get_openstack_connection(
         cloud: The name of cloud to use in the clouds.yaml.
 
     Raises:
-        OpenstackError: if the credentials provided is not authorized.
+        OpenStackError: if the credentials provided is not authorized.
 
     Yields:
         An openstack.connection.Connection object.
@@ -115,7 +115,7 @@ def _get_openstack_connection(
     # pylint thinks this isn't an exception, but does inherit from Exception class.
     except openstack.exceptions.HttpException as exc:  # pylint: disable=bad-exception-cause
         logger.exception("OpenStack API call failure")
-        raise OpenstackError("Failed OpenStack API call") from exc
+        raise OpenStackError("Failed OpenStack API call") from exc
 
 
 class OpenstackCloud:
@@ -154,7 +154,7 @@ class OpenstackCloud:
             userdata: The cloud init userdata to startup the instance.
 
         Raises:
-            OpenstackError: Unable to create OpenStack server.
+            OpenStackError: Unable to create OpenStack server.
 
         Returns:
             The OpenStack instance created.
@@ -198,11 +198,11 @@ class OpenstackCloud:
                         full_name,
                     )
                 self._delete_keypair(conn, instance_id)
-                raise OpenstackError(f"Timeout creating openstack server {full_name}") from err
+                raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
             except openstack.exceptions.SDKException as err:
                 logger.exception("Failed to create openstack server %s", full_name)
                 self._delete_keypair(conn, instance_id)
-                raise OpenstackError(f"Failed to create openstack server {full_name}") from err
+                raise OpenStackError(f"Failed to create openstack server {full_name}") from err
 
             return OpenstackInstance(server, self.prefix)
 
@@ -230,7 +230,7 @@ class OpenstackCloud:
         """Delete a openstack instance.
 
         Raises:
-            OpenstackError: Unable to delete OpenStack server.
+            OpenStackError: Unable to delete OpenStack server.
 
         Args:
             instance_id: The instance ID of the instance to delete.
@@ -250,7 +250,7 @@ class OpenstackCloud:
                 openstack.exceptions.SDKException,
                 openstack.exceptions.ResourceTimeout,
             ) as err:
-                raise OpenstackError(f"Failed to remove openstack runner {full_name}") from err
+                raise OpenStackError(f"Failed to remove openstack runner {full_name}") from err
 
     def get_ssh_connection(self, instance: OpenstackInstance) -> SshConnection:
         """Get SSH connection to an OpenStack instance.
@@ -259,7 +259,7 @@ class OpenstackCloud:
             instance: The OpenStack instance to connect to.
 
         Raises:
-            SshError: Unable to get a working SSH connection to the instance.
+            SSHError: Unable to get a working SSH connection to the instance.
             KeyfileError: Unable to find the keyfile to connect to the instance.
 
         Returns:
@@ -272,7 +272,7 @@ class OpenstackCloud:
                 f"Missing keyfile for server: {instance.server_name}, key path: {key_path}"
             )
         if not instance.addresses:
-            raise SshError(f"No addresses found for OpenStack server {instance.server_name}")
+            raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
 
         for ip in instance.addresses:
             try:
@@ -300,7 +300,7 @@ class OpenstackCloud:
                     exc_info=True,
                 )
                 continue
-        raise SshError(
+        raise SSHError(
             f"No connectable SSH addresses found, server: {instance.server_name}, "
             f"addresses: {instance.addresses}"
         )

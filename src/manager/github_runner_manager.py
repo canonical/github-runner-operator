@@ -16,7 +16,7 @@ class GithubRunnerState(str, Enum):
 
     Attributes:
         BUSY: Runner is working on a job assigned by GitHub.
-        IDLE: Runner is waiting to take a job.
+        IDLE: Runner is waiting to take a job or is running pre-job tasks (i.e. repo-policy-compliance check).
         OFFLINE: Runner is not connected to GitHub.
     """
 

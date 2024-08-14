@@ -109,7 +109,7 @@ Delete a openstack instance.
 
 **Raises:**
  
- - <b>`OpenstackError`</b>:  Unable to delete OpenStack server. 
+ - <b>`OpenStackError`</b>:  Unable to delete OpenStack server. 
 
 
 
@@ -202,7 +202,7 @@ Get SSH connection to an OpenStack instance.
 
 **Raises:**
  
- - <b>`SshError`</b>:  Unable to get a working SSH connection to the instance. 
+ - <b>`SSHError`</b>:  Unable to get a working SSH connection to the instance. 
  - <b>`KeyfileError`</b>:  Unable to find the keyfile to connect to the instance. 
 
 
@@ -242,7 +242,7 @@ Create an OpenStack instance.
 
 **Raises:**
  
- - <b>`OpenstackError`</b>:  Unable to create OpenStack server. 
+ - <b>`OpenStackError`</b>:  Unable to create OpenStack server. 
 
 
 

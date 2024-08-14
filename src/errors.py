@@ -156,21 +156,21 @@ class RunnerLogsError(Exception):
     """Base class for all runner logs errors."""
 
 
-class OpenstackError(Exception):
+class OpenStackError(Exception):
     """Base class for OpenStack errors."""
 
 
-class OpenStackInvalidConfigError(OpenstackError):
+class OpenStackInvalidConfigError(OpenStackError):
     """Represents an invalid OpenStack configuration."""
 
 
-class OpenStackUnauthorizedError(OpenstackError):
+class OpenStackUnauthorizedError(OpenStackError):
     """Represents an unauthorized connection to OpenStack."""
 
 
-class SshError(Exception):
+class SSHError(Exception):
     """Represents an error while interacting with SSH."""
 
 
-class KeyfileError(SshError):
+class KeyfileError(SSHError):
     """Represents missing keyfile for SSH."""

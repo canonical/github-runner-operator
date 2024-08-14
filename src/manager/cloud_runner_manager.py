@@ -6,11 +6,15 @@
 import abc
 from dataclasses import dataclass
 from enum import Enum
+import logging
 from typing import Iterator, Sequence, Tuple
 
 from metrics.runner import RunnerMetrics
 
+logger = logging.getLogger(__name__)
+
 InstanceId = str
+
 
 
 class CloudRunnerState(str, Enum):
@@ -76,12 +80,12 @@ class CloudRunnerInstance:
 
     Attributes:
         name: Name of the instance hosting the runner.
-        id: ID of the instance.
+        instance_id: ID of the instance.
         state: State of the instance hosting the runner.
     """
 
     name: str
-    id: str
+    instance_id: InstanceId
     state: CloudRunnerState
 
 

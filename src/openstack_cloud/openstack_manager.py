@@ -48,7 +48,7 @@ from errors import (
     GithubClientError,
     GithubMetricsError,
     IssueMetricEventError,
-    OpenstackError,
+    OpenStackError,
     RunnerCreateError,
     RunnerStartError,
 )
@@ -161,7 +161,7 @@ def _create_connection(cloud_config: dict[str, dict]) -> Iterator[openstack.conn
         cloud_config: The configuration in clouds.yaml format to apply.
 
     Raises:
-        OpenstackError: if the credentials provided is not authorized.
+        OpenStackError: if the credentials provided is not authorized.
 
     Yields:
         An openstack.connection.Connection object.
@@ -180,7 +180,7 @@ def _create_connection(cloud_config: dict[str, dict]) -> Iterator[openstack.conn
     # pylint thinks this isn't an exception, but does inherit from Exception class.
     except openstack.exceptions.HttpException as exc:  # pylint: disable=bad-exception-cause
         logger.exception("OpenStack API call failure")
-        raise OpenstackError("Failed OpenStack API call") from exc
+        raise OpenStackError("Failed OpenStack API call") from exc
 
 
 # Disable too many arguments, as they are needed to create the dataclass.
