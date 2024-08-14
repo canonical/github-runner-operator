@@ -139,7 +139,7 @@ class OpenstackCloud:
         self._cloud = cloud
         self.prefix = prefix
 
-    # Ignore "Too many arguments" as 6 args should be fine. Move to a dataclass is new args are
+    # Ignore "Too many arguments" as 6 args should be fine. Move to a dataclass if new args are
     # added.
     def launch_instance(  # pylint: disable=R0913
         self, instance_id: str, image: str, flavor: str, network: str, userdata: str
