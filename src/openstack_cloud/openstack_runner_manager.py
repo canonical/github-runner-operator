@@ -163,6 +163,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
 
         self._wait_runner_startup(instance)
+        self._wait_runner_running(instance)
 
         end_timestamp = time.time()
         OpenstackRunnerManager._issue_runner_installed_metric(
@@ -450,7 +451,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             instance: The runner instance.
 
         Raises:
-            RunnerStartError: The runner process was not found on the runner.
+            RunnerStartError: The runner startup process was not found on the runner.
         """
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
@@ -467,6 +468,31 @@ class OpenstackRunnerManager(CloudRunnerManager):
             logger.warning("Runner startup process not found on %s", instance.server_name)
             raise RunnerStartError(f"Runner startup process not found on {instance.server_name}")
         logger.info("Runner startup process found to be healthy on %s", instance.server_name)
+
+    @retry(tries=5, delay=60, local_logger=logger)
+    def _wait_runner_running(self, instance: OpenstackInstance) -> None:
+        """Wait until runner is running.
+        
+        Args:
+            instance: The runner instance.
+
+        Raises:
+            RunnerStartError: The runner process was not found on the runner.
+        """
+        try:
+            ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+        except SshError as err:
+            raise RunnerStartError(
+                f"Failed to SSH connect to {instance.server_name} openstack runner"
+            ) from err
+
+        if not self._run_health_check(ssh_conn=ssh_conn, name=instance.server_name):
+            logger.info("Runner process not found on %s", instance.server_name)
+            raise RunnerStartError(
+                f"Runner process on {instance.server_name} failed to initialize on after starting"
+            )
+
+        logger.info("Runner process found to be healthy on %s", instance.server_name)
 
     @staticmethod
     def _generate_instance_id() -> InstanceId:
