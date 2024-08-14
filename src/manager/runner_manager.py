@@ -266,9 +266,26 @@ class RunnerManager:
 
     @dataclass
     class _CreateRunnerArgs:
+        """Arguments for the _create_runner function.
+
+        Attrs:
+            cloud_runner_manager: For managing the cloud instance of the runner.
+            registration_token: The GitHub provided-token for registering runners.
+        """
+
         cloud_runner_manager: CloudRunnerManager
         registration_token: str
 
     @staticmethod
     def _create_runner(args: _CreateRunnerArgs) -> InstanceId:
+        """Create a single runner.
+
+        This is a staticmethod for usage with multiprocess.Pool.
+
+        Args:
+            args: The arguments.
+
+        Returns:
+            The instance ID of the runner created.
+        """
         return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
