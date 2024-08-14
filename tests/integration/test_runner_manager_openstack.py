@@ -387,7 +387,7 @@ async def test_runner_spawn_two(
         3. No runners.
     """
     # 1.
-    runner_id_list = runner_manager.create_runners(1)
+    runner_id_list = runner_manager.create_runners(2)
     assert isinstance(runner_id_list, tuple)
     assert len(runner_id_list) == 2
 
