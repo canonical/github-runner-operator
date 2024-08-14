@@ -113,12 +113,13 @@ class RunnerManager:
         logger.info("Creating %s runners", num)
         registration_token = self._github.get_registration_token()
 
-        create_runner_args = [RunnerManager._CreateRunnerArgs(self._cloud, registration_token) for _ in range(num)]
+        create_runner_args = [
+            RunnerManager._CreateRunnerArgs(self._cloud, registration_token) for _ in range(num)
+        ]
         with Pool(processes=min(num, 10)) as pool:
             instance_ids = pool.map(func=RunnerManager._create_runner, iterable=create_runner_args)
-            
-        return tuple(instance_ids)
 
+        return tuple(instance_ids)
 
     def get_runners(
         self,
@@ -262,7 +263,7 @@ class RunnerManager:
                 total_stats[event_type] = total_stats.get(event_type, 0) + 1
 
         return total_stats
-    
+
     @dataclass
     class _CreateRunnerArgs:
         cloud_runner_manager: CloudRunnerManager
@@ -271,5 +272,3 @@ class RunnerManager:
     @staticmethod
     def _create_runner(args: _CreateRunnerArgs) -> InstanceId:
         return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
-    
-
