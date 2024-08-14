@@ -129,6 +129,8 @@ class CloudRunnerManager(abc.ABC):
     @abc.abstractmethod
     def cleanup(self, remove_token: str) -> Iterator[RunnerMetrics]:
         """Cleanup runner and resource on the cloud.
+        
+        Perform health check on runner and delete the runner if it fails.
 
         Args:
             remove_token: The GitHub remove token.
