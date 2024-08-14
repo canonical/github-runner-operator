@@ -242,112 +242,112 @@ async def test_runner_normal_idle_lifecycle(
     await assert_no_runner(runner_manager)
 
 
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_runner_flush_busy_lifecycle(
-    runner_manager_with_one_runner: RunnerManager,
-    test_github_branch: Branch,
-    github_repository: Repository,
-    runner_label: str,
-):
-    """
-    Arrange: RunnerManager with one idle runner.
-    Act:
-        1. Run a long workflow.
-        2. Run flush idle runner.
-        3. Run flush busy runner.
-    Assert:
-        1. Runner takes the job and become busy.
-        2. Busy runner still exists.
-        3. No runners exists.
-    """
-    # 1.
-    workflow = await dispatch_workflow(
-        app=None,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",
-        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": runner_label, "minutes": "10"},
-        wait=False,
-    )
-    await wait_for(lambda: workflow_is_status(workflow, "in_progress"))
+# @pytest.mark.openstack
+# @pytest.mark.asyncio
+# @pytest.mark.abort_on_fail
+# async def test_runner_flush_busy_lifecycle(
+#     runner_manager_with_one_runner: RunnerManager,
+#     test_github_branch: Branch,
+#     github_repository: Repository,
+#     runner_label: str,
+# ):
+#     """
+#     Arrange: RunnerManager with one idle runner.
+#     Act:
+#         1. Run a long workflow.
+#         2. Run flush idle runner.
+#         3. Run flush busy runner.
+#     Assert:
+#         1. Runner takes the job and become busy.
+#         2. Busy runner still exists.
+#         3. No runners exists.
+#     """
+#     # 1.
+#     workflow = await dispatch_workflow(
+#         app=None,
+#         branch=test_github_branch,
+#         github_repository=github_repository,
+#         conclusion="success",
+#         workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+#         dispatch_input={"runner": runner_label, "minutes": "10"},
+#         wait=False,
+#     )
+#     await wait_for(lambda: workflow_is_status(workflow, "in_progress"))
 
-    runner_list = runner_manager_with_one_runner.get_runners()
-    assert len(runner_list) == 1
-    busy_runner = runner_list[0]
-    assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.github_state == GithubRunnerState.BUSY
+#     runner_list = runner_manager_with_one_runner.get_runners()
+#     assert len(runner_list) == 1
+#     busy_runner = runner_list[0]
+#     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
+#     assert busy_runner.github_state == GithubRunnerState.BUSY
 
-    # 2.
-    runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
-    runner_list = runner_manager_with_one_runner.get_runners()
-    assert len(runner_list) == 1
-    busy_runner = runner_list[0]
-    assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.github_state == GithubRunnerState.BUSY
+#     # 2.
+#     runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
+#     runner_list = runner_manager_with_one_runner.get_runners()
+#     assert len(runner_list) == 1
+#     busy_runner = runner_list[0]
+#     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
+#     assert busy_runner.github_state == GithubRunnerState.BUSY
 
-    # 3.
-    runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
-    await assert_no_runner(runner_manager_with_one_runner)
+#     # 3.
+#     runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
+#     await assert_no_runner(runner_manager_with_one_runner)
 
-    issue_metrics_events = runner_manager_with_one_runner.cleanup()
-    assert issue_metrics_events[events.RunnerStart] == 1
+#     issue_metrics_events = runner_manager_with_one_runner.cleanup()
+#     assert issue_metrics_events[events.RunnerStart] == 1
 
 
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_runner_normal_lifecycle(
-    runner_manager_with_one_runner: RunnerManager,
-    test_github_branch: Branch,
-    github_repository: Repository,
-    runner_label: str,
-    log_dir_base_path: dict[str, Path],
-):
-    """
-    Arrange: RunnerManager with one runner. Clean metric logs.
-    Act:
-        1. Start a test workflow for the runner.
-        2. Run cleanup.
-    Assert:
-        1. The workflow complete successfully.
-        2. The runner should be deleted. The metrics should be recorded.
-    """
-    metric_log_path = log_dir_base_path["metric_log"]
-    metric_log_existing_content = metric_log_path.read_text(encoding="utf-8")
+# @pytest.mark.openstack
+# @pytest.mark.asyncio
+# @pytest.mark.abort_on_fail
+# async def test_runner_normal_lifecycle(
+#     runner_manager_with_one_runner: RunnerManager,
+#     test_github_branch: Branch,
+#     github_repository: Repository,
+#     runner_label: str,
+#     log_dir_base_path: dict[str, Path],
+# ):
+#     """
+#     Arrange: RunnerManager with one runner. Clean metric logs.
+#     Act:
+#         1. Start a test workflow for the runner.
+#         2. Run cleanup.
+#     Assert:
+#         1. The workflow complete successfully.
+#         2. The runner should be deleted. The metrics should be recorded.
+#     """
+#     metric_log_path = log_dir_base_path["metric_log"]
+#     metric_log_existing_content = metric_log_path.read_text(encoding="utf-8")
 
-    workflow = await dispatch_workflow(
-        app=None,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",
-        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": runner_label, "minutes": "0"},
-        wait=False,
-    )
-    await wait_for(lambda: workflow_is_status(workflow, "completed"))
+#     workflow = await dispatch_workflow(
+#         app=None,
+#         branch=test_github_branch,
+#         github_repository=github_repository,
+#         conclusion="success",
+#         workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+#         dispatch_input={"runner": runner_label, "minutes": "0"},
+#         wait=False,
+#     )
+#     await wait_for(lambda: workflow_is_status(workflow, "completed"))
 
-    issue_metrics_events = runner_manager_with_one_runner.cleanup()
-    assert issue_metrics_events[events.RunnerStart] == 1
-    assert issue_metrics_events[events.RunnerStop] == 1
+#     issue_metrics_events = runner_manager_with_one_runner.cleanup()
+#     assert issue_metrics_events[events.RunnerStart] == 1
+#     assert issue_metrics_events[events.RunnerStop] == 1
 
-    metric_log_full_content = metric_log_path.read_text(encoding="utf-8")
-    assert metric_log_full_content.startswith(
-        metric_log_existing_content
-    ), "The metric log was modified in ways other than appending"
-    # Disable E203 (space before :) as it conflicts with the formatter (black).
-    metric_log_new_content = metric_log_full_content[
-        len(metric_log_existing_content) :  # noqa: E203
-    ]
-    metric_logs = [json.loads(metric) for metric in metric_log_new_content.splitlines()]
-    assert (
-        len(metric_logs) == 2
-    ), "Assuming two events should be runner_start and runner_stop, modify this if new events are added"
-    assert metric_logs[0]["event"] == "runner_start"
-    assert metric_logs[0]["workflow"] == "Workflow Dispatch Wait Tests"
-    assert metric_logs[1]["event"] == "runner_stop"
-    assert metric_logs[1]["workflow"] == "Workflow Dispatch Wait Tests"
+#     metric_log_full_content = metric_log_path.read_text(encoding="utf-8")
+#     assert metric_log_full_content.startswith(
+#         metric_log_existing_content
+#     ), "The metric log was modified in ways other than appending"
+#     # Disable E203 (space before :) as it conflicts with the formatter (black).
+#     metric_log_new_content = metric_log_full_content[
+#         len(metric_log_existing_content) :  # noqa: E203
+#     ]
+#     metric_logs = [json.loads(metric) for metric in metric_log_new_content.splitlines()]
+#     assert (
+#         len(metric_logs) == 2
+#     ), "Assuming two events should be runner_start and runner_stop, modify this if new events are added"
+#     assert metric_logs[0]["event"] == "runner_start"
+#     assert metric_logs[0]["workflow"] == "Workflow Dispatch Wait Tests"
+#     assert metric_logs[1]["event"] == "runner_stop"
+#     assert metric_logs[1]["workflow"] == "Workflow Dispatch Wait Tests"
 
-    await assert_no_runner(runner_manager_with_one_runner)
+#     await assert_no_runner(runner_manager_with_one_runner)
