@@ -144,7 +144,6 @@ async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) 
         await assert_runner_amount(runner_manager, 1)
     except TimeoutError as err:
         raise AssertionError("Test arrange failed: Expect one runner") from err
-    
 
     runner = runner_list[0]
     assert (
@@ -176,15 +175,13 @@ def workflow_is_status(workflow: Workflow, status: str) -> bool:
 
 
 async def assert_runner_amount(runner_manager: RunnerManager, num: int):
-    """Assert the runner manager has no runners.
-
-    Retry are performed if the number of runner is not 0. Due to it may take some time for
-    openstack to delete the servers.
+    """Assert the number of runner a runner manager has.
 
     A TimeoutError will be thrown if runners are still found after timeout.
 
     Args:
         runner_manager: The RunnerManager to check.
+        num: Number of runner to check for.
     """
     runner_list = runner_manager.get_runners()
     assert isinstance(runner_list, tuple)

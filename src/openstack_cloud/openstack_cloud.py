@@ -260,6 +260,7 @@ class OpenstackCloud:
 
         Raises:
             SshError: Unable to get a working SSH connection to the instance.
+            KeyfileError: Unable to find the keyfile to connect to the instance.
 
         Returns:
             SSH connection object.
