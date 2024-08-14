@@ -16,7 +16,8 @@ class GithubRunnerState(str, Enum):
 
     Attributes:
         BUSY: Runner is working on a job assigned by GitHub.
-        IDLE: Runner is waiting to take a job or is running pre-job tasks (i.e. repo-policy-compliance check).
+        IDLE: Runner is waiting to take a job or is running pre-job tasks (i.e.
+            repo-policy-compliance check).
         OFFLINE: Runner is not connected to GitHub.
     """
 
@@ -75,7 +76,7 @@ class GithubRunnerManager:
             runner
             for runner in runner_list
             if runner.name.startswith(self._prefix)
-            and GithubRunnerManager._filter_runner_state(runner, states)
+            and GithubRunnerManager._is_runner_in_state(runner, states)
         )
 
     def delete_runners(self, states: Sequence[GithubRunnerState] | None = None) -> None:
@@ -110,12 +111,14 @@ class GithubRunnerManager:
 
     @staticmethod
     def _is_runner_in_state(
-            runner: SelfHostedRunner, states: Sequence[GithubRunnerState] | None
+        runner: SelfHostedRunner, states: Sequence[GithubRunnerState] | None
     ) -> bool:
         """Check that the runner is in one of the states provided.
+
         Args:
             runner: Runner to filter.
             states: States in which to check the runner belongs to.
+
         Returns:
             True if the runner is in one of the state, else false.
         """

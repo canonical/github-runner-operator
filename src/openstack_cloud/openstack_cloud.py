@@ -187,7 +187,7 @@ class OpenstackCloud:
                     "Attempting clean up of openstack server %s that timeout during creation",
                     full_name,
                 )
-                self._delete_instance(conn,  full_name)
+                self._delete_instance(conn, full_name)
                 raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
             except openstack.exceptions.SDKException as err:
                 logger.exception("Failed to create openstack server %s", full_name)
@@ -219,9 +219,6 @@ class OpenstackCloud:
     def delete_instance(self, instance_id: str) -> None:
         """Delete a openstack instance.
 
-        Raises:
-            OpenStackError: Unable to delete OpenStack server.
-
         Args:
             instance_id: The instance ID of the instance to delete.
         """
@@ -232,7 +229,7 @@ class OpenstackCloud:
             clouds_config=self._clouds_config, cloud=self._cloud
         ) as conn:
             self._delete_instance(conn, full_name)
-        
+
     def _delete_instance(self, conn: OpenstackConnection, full_name: str) -> None:
         """Delete a openstack instance.
 

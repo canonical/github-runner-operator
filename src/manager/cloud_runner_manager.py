@@ -4,9 +4,9 @@
 """Interface of manager of runner instance on clouds."""
 
 import abc
+import logging
 from dataclasses import dataclass
 from enum import Enum
-import logging
 from typing import Iterator, Sequence, Tuple
 
 from metrics.runner import RunnerMetrics
@@ -14,7 +14,6 @@ from metrics.runner import RunnerMetrics
 logger = logging.getLogger(__name__)
 
 InstanceId = str
-
 
 
 class CloudRunnerState(str, Enum):

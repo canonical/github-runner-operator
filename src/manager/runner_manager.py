@@ -10,7 +10,7 @@ from multiprocessing import Pool
 from typing import Iterator, Sequence, Type, cast
 
 from charm_state import GithubPath
-from errors import GithubMetricsError
+from errors import GithubMetricsError, RunnerCreateError
 from github_type import SelfHostedRunner
 from manager.cloud_runner_manager import (
     CloudRunnerInstance,
@@ -116,10 +116,21 @@ class RunnerManager:
         create_runner_args = [
             RunnerManager._CreateRunnerArgs(self._cloud, registration_token) for _ in range(num)
         ]
+        instance_id_list = []
         with Pool(processes=min(num, 10)) as pool:
-            instance_ids = pool.map(func=RunnerManager._create_runner, iterable=create_runner_args)
-
-        return tuple(instance_ids)
+            jobs = pool.imap_unordered(
+                func=RunnerManager._create_runner, iterable=create_runner_args
+            )
+            for _ in range(num):
+                try:
+                    instance_id = next(jobs)
+                except RunnerCreateError:
+                    logger.exception("Failed to spawn a runner.")
+                except StopIteration:
+                    break
+                else:
+                    instance_id_list.append(instance_id)
+        return tuple(instance_id_list)
 
     def get_runners(
         self,
