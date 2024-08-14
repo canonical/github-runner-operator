@@ -170,3 +170,6 @@ class OpenStackUnauthorizedError(OpenstackError):
 
 class SshError(Exception):
     """Represents an error while interacting with SSH."""
+
+class KeyfileError(SshError):
+    """Represents missing keyfile for SSH."""

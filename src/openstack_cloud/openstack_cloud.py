@@ -22,7 +22,7 @@ from openstack.connection import Connection as OpenstackConnection
 from openstack.network.v2.security_group import SecurityGroup as OpenstackSecurityGroup
 from paramiko.ssh_exception import NoValidConnectionsError
 
-from errors import OpenstackError, SshError
+from errors import KeyfileError, OpenstackError, SshError
 
 logger = logging.getLogger(__name__)
 
@@ -267,7 +267,7 @@ class OpenstackCloud:
         key_path = OpenstackCloud._get_key_path(instance.server_name)
 
         if not key_path.exists():
-            raise SshError(
+            raise KeyfileError(
                 f"Missing keyfile for server: {instance.server_name}, key path: {key_path}"
             )
         if not instance.addresses:

@@ -21,6 +21,7 @@ from errors import (
     CreateMetricsStorageError,
     GetMetricsStorageError,
     IssueMetricEventError,
+    KeyfileError,
     OpenstackError,
     RunnerCreateError,
     RunnerStartError,
@@ -413,6 +414,11 @@ class OpenstackRunnerManager(CloudRunnerManager):
         """
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+        except KeyfileError:
+            logger.exception(
+                "Health check failed due to unable to find keyfile for %s", instance.server_name
+            )
+            return False
         except SshError:
             logger.exception(
                 "SSH connection failure with %s during health check", instance.server_name
