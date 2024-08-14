@@ -109,15 +109,13 @@ class GithubRunnerManager:
         return self.github.get_runner_remove_token(self._path)
 
     @staticmethod
-    def _filter_runner_state(
-        runner: SelfHostedRunner, states: Sequence[GithubRunnerState] | None
+    def _is_runner_in_state(
+            runner: SelfHostedRunner, states: Sequence[GithubRunnerState] | None
     ) -> bool:
-        """Filter the runner by the state.
-
+        """Check that the runner is in one of the states provided.
         Args:
             runner: Runner to filter.
-            states: Filter the runners for these states. If None, return true.
-
+            states: States in which to check the runner belongs to.
         Returns:
             True if the runner is in one of the state, else false.
         """
