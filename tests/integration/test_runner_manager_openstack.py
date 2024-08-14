@@ -228,7 +228,12 @@ async def test_runner_normal_idle_lifecycle(
     runner = runner_list[0]
     assert runner.id == runner_id
     assert runner.cloud_state == CloudRunnerState.ACTIVE
-    assert runner.github_state == GithubRunnerState.IDLE
+    # Update on GitHub-side can take a bit of time.
+    await wait_for(
+        lambda: runner_manager.get_runners()[0].github_state == GithubRunnerState.IDLE,
+        timeout=120,
+        check_interval=10,
+    )
 
     # 2.
     openstack_instances = openstack_runner_manager._openstack_cloud.get_instances()
@@ -293,12 +298,13 @@ async def test_runner_flush_busy_lifecycle(
 
     issue_metrics_events = runner_manager_with_one_runner.cleanup()
     assert issue_metrics_events[events.RunnerStart] == 1
-    
+
     # TODO: Debug
     runner_list = runner_manager_with_one_runner.get_runners()
-    pytest.set_trace()   
-    
+    pytest.set_trace()
+
     await assert_no_runner(runner_manager_with_one_runner)
+
 
 @pytest.mark.openstack
 @pytest.mark.asyncio
@@ -356,6 +362,6 @@ async def test_runner_normal_lifecycle(
 
     # TODO: Debug
     runner_list = runner_manager_with_one_runner.get_runners()
-    pytest.set_trace()   
+    pytest.set_trace()
 
     await assert_no_runner(runner_manager_with_one_runner)
