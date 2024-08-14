@@ -314,10 +314,6 @@ async def test_runner_flush_busy_lifecycle(
     issue_metrics_events = runner_manager_with_one_runner.cleanup()
     assert issue_metrics_events[events.RunnerStart] == 1
 
-    # TODO: Debug
-    runner_list = runner_manager_with_one_runner.get_runners()
-    pytest.set_trace()
-
     await assert_runner_amount(runner_manager_with_one_runner, 0)
 
 
@@ -374,9 +370,5 @@ async def test_runner_normal_lifecycle(
     assert metric_logs[0]["workflow"] == "Workflow Dispatch Wait Tests"
     assert metric_logs[1]["event"] == "runner_stop"
     assert metric_logs[1]["workflow"] == "Workflow Dispatch Wait Tests"
-
-    # TODO: Debug
-    runner_list = runner_manager_with_one_runner.get_runners()
-    pytest.set_trace()
 
     await assert_runner_amount(runner_manager_with_one_runner, 0)
