@@ -14,7 +14,7 @@ import invoke
 import jinja2
 import paramiko
 import paramiko.ssh_exception
-from fabric import Connection as SshConnection
+from fabric import Connection as SSHConnection
 
 from charm_state import GithubOrg, GithubPath, ProxyConfig, SSHDebugConnection
 from errors import (
@@ -428,7 +428,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         return OpenstackRunnerManager._run_health_check(ssh_conn, instance.server_name)
 
     @staticmethod
-    def _run_health_check(ssh_conn: SshConnection, name: str) -> bool:
+    def _run_health_check(ssh_conn: SSHConnection, name: str) -> bool:
         """Run a health check for runner process.
 
         Args:
@@ -557,7 +557,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 )
 
     @staticmethod
-    def _pull_runner_metrics(name: str, ssh_conn: SshConnection) -> None:
+    def _pull_runner_metrics(name: str, ssh_conn: SSHConnection) -> None:
         """Pull metrics from runner.
 
         Args:
@@ -596,7 +596,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
     @staticmethod
     def _ssh_pull_file(
-        ssh_conn: SshConnection, remote_path: str, local_path: str, max_size: int
+        ssh_conn: SSHConnection, remote_path: str, local_path: str, max_size: int
     ) -> None:
         """Pull file from the runner instance.
 
@@ -654,7 +654,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
     @staticmethod
     def _run_github_runner_removal_script(
-        instance_name: str, ssh_conn: SshConnection, remove_token: str
+        instance_name: str, ssh_conn: SSHConnection, remove_token: str
     ) -> None:
         """Run Github runner removal script.
 

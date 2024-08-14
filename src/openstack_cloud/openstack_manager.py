@@ -32,7 +32,7 @@ import openstack.connection
 import openstack.exceptions
 import openstack.image.v2.image
 import paramiko
-from fabric import Connection as SshConnection
+from fabric import Connection as SSHConnection
 from openstack.compute.v2.server import Server
 from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import SDKException
@@ -556,7 +556,7 @@ class OpenstackRunnerManager:
     @retry(tries=3, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _get_ssh_connection(
         conn: OpenstackConnection, server_name: str, timeout: int = 30
-    ) -> SshConnection:
+    ) -> SSHConnection:
         """Get a valid ssh connection within a network for a given openstack instance.
 
         The SSH connection will attempt to establish connection until the timeout configured.
@@ -593,7 +593,7 @@ class OpenstackRunnerManager:
         ]
         for ip in server_addresses:
             try:
-                connection = SshConnection(
+                connection = SSHConnection(
                     host=ip,
                     user="ubuntu",
                     connect_kwargs={"key_filename": str(key_path)},
@@ -1093,7 +1093,7 @@ class OpenstackRunnerManager:
             return
 
     def _pull_file(
-        self, ssh_conn: SshConnection, remote_path: str, local_path: str, max_size: int
+        self, ssh_conn: SSHConnection, remote_path: str, local_path: str, max_size: int
     ) -> None:
         """Pull file from the runner instance.
 
@@ -1589,7 +1589,7 @@ class OpenstackRunnerManager:
 
         servers = self._get_openstack_instances(conn=conn)
         for server in servers:
-            ssh_conn: SshConnection = self._get_ssh_connection(conn=conn, server_name=server.name)
+            ssh_conn: SSHConnection = self._get_ssh_connection(conn=conn, server_name=server.name)
             result: invoke.runners.Result = ssh_conn.run(
                 killer_command,
                 warn=True,

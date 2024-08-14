@@ -15,7 +15,7 @@ import openstack
 import openstack.exceptions
 import paramiko
 import yaml
-from fabric import Connection as SshConnection
+from fabric import Connection as SSHConnection
 from openstack.compute.v2.keypair import Keypair as OpenstackKeypair
 from openstack.compute.v2.server import Server as OpenstackServer
 from openstack.connection import Connection as OpenstackConnection
@@ -251,7 +251,7 @@ class OpenstackCloud:
         ) as err:
             raise OpenStackError(f"Failed to remove openstack runner {full_name}") from err
 
-    def get_ssh_connection(self, instance: OpenstackInstance) -> SshConnection:
+    def get_ssh_connection(self, instance: OpenstackInstance) -> SSHConnection:
         """Get SSH connection to an OpenStack instance.
 
         Args:
@@ -275,7 +275,7 @@ class OpenstackCloud:
 
         for ip in instance.addresses:
             try:
-                connection = SshConnection(
+                connection = SSHConnection(
                     host=ip,
                     user="ubuntu",
                     connect_kwargs={"key_filename": str(key_path)},
@@ -448,6 +448,8 @@ class OpenstackCloud:
         if not servers:
             return None
 
+        # 2024/08/14: The `format` arg for `strptime` is the default format.
+        # This is only provided to get around a bug of the function with type checking.
         latest_server = reduce(
             lambda a, b: (
                 a

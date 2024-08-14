@@ -10,7 +10,7 @@ import jinja2
 import openstack.connection
 import openstack.exceptions
 import pytest
-from fabric.connection import Connection as SshConnection
+from fabric.connection import Connection as SSHConnection
 from invoke import Result
 from openstack.compute.v2.keypair import Keypair
 from openstack.compute.v2.server import Server
@@ -57,7 +57,7 @@ def patch_get_ssh_connection_health_check_fixture(monkeypatch: pytest.MonkeyPatc
     mock_get_ssh_connection = MagicMock(
         spec=openstack_manager.OpenstackRunnerManager._get_ssh_connection
     )
-    mock_ssh_connection = MagicMock(spec=SshConnection)
+    mock_ssh_connection = MagicMock(spec=SSHConnection)
     mock_ssh_connection.host = "test host IP"
     mock_result = MagicMock(spec=Result)
     mock_result.ok = True
@@ -79,7 +79,7 @@ def ssh_connection_health_check_fixture(monkeypatch: pytest.MonkeyPatch):
     mock_get_ssh_connection = MagicMock(
         spec=openstack_manager.OpenstackRunnerManager._get_ssh_connection
     )
-    mock_ssh_connection = MagicMock(spec=SshConnection)
+    mock_ssh_connection = MagicMock(spec=SSHConnection)
     mock_ssh_connection.host = "test host IP"
     mock_result = MagicMock(spec=Result)
     mock_result.ok = True
@@ -97,7 +97,7 @@ def patch_ssh_connection_error_fixture(monkeypatch: pytest.MonkeyPatch):
     mock_get_ssh_connection = MagicMock(
         spec=openstack_manager.OpenstackRunnerManager._get_ssh_connection
     )
-    mock_ssh_connection = MagicMock(spec=SshConnection)
+    mock_ssh_connection = MagicMock(spec=SSHConnection)
     mock_result = MagicMock(spec=Result)
     mock_result.ok = False
     mock_result.stdout = "Mock stdout"
@@ -153,7 +153,7 @@ def patched_create_connection_context_fixture(monkeypatch: pytest.MonkeyPatch):
 def ssh_connection_mock_fixture() -> MagicMock:
     """Return a mocked ssh connection."""
     test_file_content = secrets.token_hex(16)
-    ssh_conn_mock = MagicMock(spec=openstack_manager.SshConnection)
+    ssh_conn_mock = MagicMock(spec=openstack_manager.SSHConnection)
     ssh_conn_mock.get.side_effect = lambda remote, local: Path(local).write_text(test_file_content)
     ssh_conn_mock.run.side_effect = lambda cmd, **kwargs: (
         Result(stdout="1") if cmd.startswith("stat") else Result()
@@ -862,7 +862,7 @@ def test__ssh_health_check_error(monkeypatch: pytest.MonkeyPatch, mock_server: M
     mock_ssh_connection = MagicMock()
     mock_ssh_connection.run = MagicMock(side_effect=TimeoutError)
     monkeypatch.setattr(
-        openstack_manager, "SshConnection", MagicMock(return_value=mock_ssh_connection)
+        openstack_manager, "SSHConnection", MagicMock(return_value=mock_ssh_connection)
     )
 
     with pytest.raises(openstack_manager._SSHError) as exc:
@@ -1132,7 +1132,7 @@ def test__get_ssh_connection_server_no_valid_connections(
     mock_ssh_connection = MagicMock()
     mock_ssh_connection.run = run
     monkeypatch.setattr(
-        openstack_manager, "SshConnection", MagicMock(return_value=mock_ssh_connection)
+        openstack_manager, "SSHConnection", MagicMock(return_value=mock_ssh_connection)
     )
 
     with pytest.raises(openstack_manager._SSHError) as exc:
@@ -1164,7 +1164,7 @@ def test__get_ssh_connection_server(monkeypatch: pytest.MonkeyPatch):
         return_value=factories.MockSSHRunResult(exited=0, stdout="hello world")
     )
     monkeypatch.setattr(
-        openstack_manager, "SshConnection", MagicMock(return_value=mock_ssh_connection)
+        openstack_manager, "SSHConnection", MagicMock(return_value=mock_ssh_connection)
     )
 
     assert (
