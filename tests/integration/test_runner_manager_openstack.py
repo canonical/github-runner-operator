@@ -164,6 +164,24 @@ def workflow_is_status(workflow: Workflow, status: str) -> bool:
     workflow.update()
     return workflow.status == status
 
+async def assert_no_runner(runner_manager: RunnerManager):
+    """Assert the runner manager has no runners.
+
+    Retry are performed if the number of runner is not 0. Due to it may take some time for 
+    openstack to delete the servers.
+    
+    A TimeoutError will be thrown if runners are still found after timeout.
+    
+    Args:
+        runner_manager: The RunnerManager to check.
+    """
+    runner_list = runner_manager.get_runners()
+    assert isinstance(runner_list, tuple)
+    if len(runner_list) == 0:
+        return
+    
+    # The openstack server can take sometime to fully clean up.
+    await wait_for(lambda: len(runner_manager.get_runners()) == 0, timeout=60)
 
 @pytest.mark.openstack
 @pytest.mark.asyncio
@@ -219,18 +237,7 @@ async def test_runner_normal_idle_lifecycle(
 
     # 3.
     runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
-    runner_list = runner_manager.get_runners()
-    assert isinstance(runner_list, tuple)
-    if len(runner_list) == 1:
-        runner = runner_list[0]
-        assert runner.github_state == None
-
-        # The openstack server can take sometime to fully clean up.
-        await wait_for(lambda: len(runner_manager.get_runners()) == 0, timeout=60)
-        return
-
-    assert len(runner_list) == 0
-
+    assert_no_runner(runner_manager)
 
 @pytest.mark.openstack
 @pytest.mark.asyncio
@@ -280,7 +287,7 @@ async def test_runner_flush_busy_lifecycle(
 
     # 3.
     runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
-    runner_list = runner_manager_with_one_runner.get_runners()
+    assert_no_runner(runner_manager_with_one_runner)
 
     issue_metrics_events = runner_manager_with_one_runner.cleanup()
     assert issue_metrics_events[events.RunnerStart] == 1
@@ -339,3 +346,5 @@ async def test_runner_normal_lifecycle(
     assert metric_logs[0]["workflow"] == "Workflow Dispatch Wait Tests"
     assert metric_logs[1]["event"] == "runner_stop"
     assert metric_logs[1]["workflow"] == "Workflow Dispatch Wait Tests"
+
+    assert_no_runner(runner_manager_with_one_runner)
