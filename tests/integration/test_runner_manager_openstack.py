@@ -140,14 +140,24 @@ async def runner_manager_fixture(
 async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) -> RunnerManager:
     runner_manager.create_runners(1)
     runner_list = runner_manager.get_runners()
-    assert len(runner_list) == 1, "Test arrange failed: Expect one runner"
+    try:
+        await assert_runner_amount(runner_manager, 1)
+    except TimeoutError as err:
+        raise AssertionError("Test arrange failed: Expect one runner") from err
+    
+
     runner = runner_list[0]
     assert (
         runner.cloud_state == CloudRunnerState.ACTIVE
     ), "Test arrange failed: Expect runner in active state"
-    assert (
-        runner.github_state == GithubRunnerState.IDLE
-    ), "Test arrange failed: Expect runner in idle state"
+    try:
+        await wait_for(
+            lambda: runner_manager.get_runners()[0].github_state == GithubRunnerState.IDLE,
+            timeout=120,
+            check_interval=10,
+        )
+    except TimeoutError as err:
+        raise AssertionError("Test arrange failed: Expect runner in idle state") from err
     return runner_manager
 
 
@@ -165,7 +175,7 @@ def workflow_is_status(workflow: Workflow, status: str) -> bool:
     return workflow.status == status
 
 
-async def assert_no_runner(runner_manager: RunnerManager):
+async def assert_runner_amount(runner_manager: RunnerManager, num: int):
     """Assert the runner manager has no runners.
 
     Retry are performed if the number of runner is not 0. Due to it may take some time for
@@ -178,11 +188,11 @@ async def assert_no_runner(runner_manager: RunnerManager):
     """
     runner_list = runner_manager.get_runners()
     assert isinstance(runner_list, tuple)
-    if len(runner_list) == 0:
+    if len(runner_list) == num:
         return
 
-    # The openstack server can take sometime to fully clean up.
-    await wait_for(lambda: len(runner_manager.get_runners()) == 0, timeout=60)
+    # The openstack server can take sometime to fully clean up or create.
+    await wait_for(lambda: len(runner_manager.get_runners()) == num)
 
 
 @pytest.mark.openstack
@@ -222,6 +232,11 @@ async def test_runner_normal_idle_lifecycle(
     assert len(runner_id_list) == 1
     runner_id = runner_id_list[0]
 
+    try:
+        await assert_runner_amount(runner_manager, 1)
+    except TimeoutError as err:
+        raise AssertionError("Test arrange failed: Expect one runner") from err
+
     runner_list = runner_manager.get_runners()
     assert isinstance(runner_list, tuple)
     assert len(runner_list) == 1
@@ -244,7 +259,7 @@ async def test_runner_normal_idle_lifecycle(
 
     # 3.
     runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
-    await assert_no_runner(runner_manager)
+    await assert_runner_amount(runner_manager, 0)
 
 
 @pytest.mark.openstack
@@ -303,7 +318,7 @@ async def test_runner_flush_busy_lifecycle(
     runner_list = runner_manager_with_one_runner.get_runners()
     pytest.set_trace()
 
-    await assert_no_runner(runner_manager_with_one_runner)
+    await assert_runner_amount(runner_manager_with_one_runner, 0)
 
 
 @pytest.mark.openstack
@@ -364,4 +379,4 @@ async def test_runner_normal_lifecycle(
     runner_list = runner_manager_with_one_runner.get_runners()
     pytest.set_trace()
 
-    await assert_no_runner(runner_manager_with_one_runner)
+    await assert_runner_amount(runner_manager_with_one_runner, 0)
