@@ -472,7 +472,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
     @retry(tries=5, delay=60, local_logger=logger)
     def _wait_runner_running(self, instance: OpenstackInstance) -> None:
         """Wait until runner is running.
-        
+
         Args:
             instance: The runner instance.
 
