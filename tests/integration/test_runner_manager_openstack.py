@@ -290,11 +290,15 @@ async def test_runner_flush_busy_lifecycle(
 
     # 3.
     runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
-    await assert_no_runner(runner_manager_with_one_runner)
 
     issue_metrics_events = runner_manager_with_one_runner.cleanup()
     assert issue_metrics_events[events.RunnerStart] == 1
-
+    
+    # TODO: Debug
+    runner_list = runner_manager_with_one_runner.get_runners()
+    pytest.set_trace()   
+    
+    await assert_no_runner(runner_manager_with_one_runner)
 
 @pytest.mark.openstack
 @pytest.mark.asyncio
@@ -349,5 +353,9 @@ async def test_runner_normal_lifecycle(
     assert metric_logs[0]["workflow"] == "Workflow Dispatch Wait Tests"
     assert metric_logs[1]["event"] == "runner_stop"
     assert metric_logs[1]["workflow"] == "Workflow Dispatch Wait Tests"
+
+    # TODO: Debug
+    runner_list = runner_manager_with_one_runner.get_runners()
+    pytest.set_trace()   
 
     await assert_no_runner(runner_manager_with_one_runner)
