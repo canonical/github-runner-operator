@@ -83,7 +83,7 @@ Create the object.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L331"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L333"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `cleanup`
 
@@ -95,7 +95,7 @@ Cleanup unused openstack resources.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L229"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L219"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `delete_instance`
 
@@ -119,7 +119,7 @@ Delete a openstack instance.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L209"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L199"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_instance`
 
@@ -142,7 +142,7 @@ Get OpenStack instance by instance ID.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L308"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L310"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_instances`
 
@@ -159,7 +159,7 @@ Get all OpenStack instances.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L341"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L343"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_server_name`
 
@@ -182,7 +182,7 @@ Get server name on OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_cloud.py#L255"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_cloud.py#L257"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_ssh_connection`
 

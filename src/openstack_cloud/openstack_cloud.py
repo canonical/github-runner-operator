@@ -187,17 +187,7 @@ class OpenstackCloud:
                     "Attempting clean up of openstack server %s that timeout during creation",
                     full_name,
                 )
-                try:
-                    conn.delete_server(name_or_id=full_name, wait=True)
-                except (
-                    openstack.exceptions.SDKException,
-                    openstack.exceptions.ResourceTimeout,
-                ):
-                    logger.exception(
-                        "Failed to cleanup openstack server %s that timeout during creation",
-                        full_name,
-                    )
-                self._delete_keypair(conn, instance_id)
+                self._delete_instance(conn,  full_name)
                 raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
             except openstack.exceptions.SDKException as err:
                 logger.exception("Failed to create openstack server %s", full_name)
@@ -241,16 +231,28 @@ class OpenstackCloud:
         with _get_openstack_connection(
             clouds_config=self._clouds_config, cloud=self._cloud
         ) as conn:
-            try:
-                server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
-                if server is not None:
-                    conn.delete_server(name_or_id=server.id)
-                OpenstackCloud._delete_keypair(conn, full_name)
-            except (
-                openstack.exceptions.SDKException,
-                openstack.exceptions.ResourceTimeout,
-            ) as err:
-                raise OpenStackError(f"Failed to remove openstack runner {full_name}") from err
+            self._delete_instance(conn, full_name)
+        
+    def _delete_instance(self, conn: OpenstackConnection, full_name: str) -> None:
+        """Delete a openstack instance.
+
+        Raises:
+            OpenStackError: Unable to delete OpenStack server.
+
+        Args:
+            conn: The openstack connection to use.
+            full_name: The full name of the server.
+        """
+        try:
+            server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
+            if server is not None:
+                conn.delete_server(name_or_id=server.id)
+            OpenstackCloud._delete_keypair(conn, full_name)
+        except (
+            openstack.exceptions.SDKException,
+            openstack.exceptions.ResourceTimeout,
+        ) as err:
+            raise OpenStackError(f"Failed to remove openstack runner {full_name}") from err
 
     def get_ssh_connection(self, instance: OpenstackInstance) -> SshConnection:
         """Get SSH connection to an OpenStack instance.

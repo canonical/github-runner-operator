@@ -317,6 +317,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 CloudRunnerState.DELETED,
                 CloudRunnerState.ERROR,
                 CloudRunnerState.STOPPED,
+                CloudRunnerState.UNKNOWN,
             ) or not self._health_check(runner):
                 unhealthy.append(runner)
             else:
