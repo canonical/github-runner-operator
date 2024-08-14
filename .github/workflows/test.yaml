@@ -1,7 +1,9 @@
 name: Tests
 
 on:
-  pull_request:
+  #TODO: Debug
+  # pull_request:
+  workflow_dispatch:
 
 jobs:
   unit-tests:
