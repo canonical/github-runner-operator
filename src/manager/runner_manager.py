@@ -23,6 +23,7 @@ from metrics import events as metric_events
 from metrics import github as github_metrics
 from metrics import runner as runner_metrics
 from metrics.runner import RunnerMetrics
+from runner_type import RunnerByHealth
 
 logger = logging.getLogger(__name__)
 
@@ -247,6 +248,14 @@ class RunnerManager:
         remove_token = self._github.get_removal_token()
         deleted_runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)
+
+    def get_runner_health(self) -> RunnerByHealth:
+        """Get the runner health state.
+
+        Returns:
+            The runners by the health state.
+        """
+        return self._cloud.get_runner_health()
 
     def _delete_runners(
         self, runners: Sequence[RunnerInstance], remove_token: str

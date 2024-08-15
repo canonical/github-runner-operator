@@ -39,6 +39,7 @@ from metrics import storage as metrics_storage
 from openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
 from openstack_cloud.openstack_manager import GithubRunnerRemoveError
 from repo_policy_compliance_client import RepoPolicyComplianceClient
+from runner_type import RunnerByHealth
 from utilities import retry
 
 logger = logging.getLogger(__name__)
@@ -265,6 +266,18 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         self._openstack_cloud.cleanup()
         return metrics
+
+    def get_runner_health(self) -> RunnerByHealth:
+        """Get the runner health state.
+
+        Returns:
+            The runners by the health state.
+        """
+        runners = self._get_runner_health()
+        return RunnerByHealth(
+            tuple(runner.server_name for runner in runners.healthy),
+            tuple(runner.server_name for runner in runners.unhealthy),
+        )
 
     def _delete_runner(self, instance: OpenstackInstance, remove_token: str) -> None:
         """Delete self-hosted runners by openstack instance.

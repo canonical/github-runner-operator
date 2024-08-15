@@ -10,6 +10,7 @@ from enum import Enum
 from typing import Iterator, Sequence, Tuple
 
 from metrics.runner import RunnerMetrics
+from runner_type import RunnerByHealth
 
 logger = logging.getLogger(__name__)
 
@@ -138,3 +139,7 @@ class CloudRunnerManager(abc.ABC):
         Args:
             remove_token: The GitHub remove token.
         """
+
+    @abc.abstractmethod
+    def get_runner_health(self) -> RunnerByHealth:
+        """Get the runners health state."""
