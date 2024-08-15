@@ -190,10 +190,26 @@ class RunnerManager:
             ]
         return cast(tuple[RunnerInstance], tuple(runner_instances))
 
-    def delete_runners(
+    def delete_runners(self, num: int) -> IssuedMetricEventsStats:
+        """Delete runners.
+
+        Args:
+            num: The number of runner to delete.
+
+        Returns:
+            Stats on metrics events issued during the deletion of runners.
+        """
+        logger.info("Deleting %s number of runners", num)
+        runners_list = self.get_runners()[:num]
+        runner_names = [runner.name for runner in runners_list]
+        logger.info("Deleting runners: %s", runner_names)
+        remove_token = self._github.get_removal_token()
+        return self._delete_runners(runners=runners_list, remove_token=remove_token)
+
+    def flush_runners(
         self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE
     ) -> IssuedMetricEventsStats:
-        """Delete the runners.
+        """Delete runners according to state.
 
         Args:
             flush_mode: The type of runners affect by the deletion.
@@ -203,9 +219,9 @@ class RunnerManager:
         """
         match flush_mode:
             case FlushMode.FLUSH_IDLE:
-                logger.info("Deleting idle runners...")
+                logger.info("Flushing idle runners...")
             case FlushMode.FLUSH_BUSY:
-                logger.info("Deleting idle and busy runners...")
+                logger.info("Flushing idle and busy runners...")
             case _:
                 logger.critical(
                     "Unknown flush mode %s encountered, contact developers", flush_mode
@@ -217,17 +233,9 @@ class RunnerManager:
 
         runners_list = self.get_runners(github_runner_state=states)
         runner_names = [runner.name for runner in runners_list]
-        logger.info("Deleting runners: %s", runner_names)
+        logger.info("Flushing runners: %s", runner_names)
         remove_token = self._github.get_removal_token()
-
-        runner_metrics_list = []
-        for runner in runners_list:
-            deleted_runner_metrics = self._cloud.delete_runner(
-                instance_id=runner.id, remove_token=remove_token
-            )
-            if deleted_runner_metrics is not None:
-                runner_metrics_list.append(deleted_runner_metrics)
-        return self._issue_runner_metrics(metrics=iter(runner_metrics_list))
+        return self._delete_runners(runners=runners_list, remove_token=remove_token)
 
     def cleanup(self) -> IssuedMetricEventsStats:
         """Run cleanup of the runners and other resources.
@@ -239,6 +247,27 @@ class RunnerManager:
         remove_token = self._github.get_removal_token()
         deleted_runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)
+
+    def _delete_runners(
+        self, runners: Sequence[RunnerInstance], remove_token: str
+    ) -> IssuedMetricEventsStats:
+        """Delete list of runners.
+
+        Args:
+            runners: The runners to delete.
+            remove_token: The token for removing self-hosted runners.
+
+        Returns:
+            Stats on metrics events issued during the deletion of runners.
+        """
+        runner_metrics_list = []
+        for runner in runners:
+            deleted_runner_metrics = self._cloud.delete_runner(
+                instance_id=runner.id, remove_token=remove_token
+            )
+            if deleted_runner_metrics is not None:
+                runner_metrics_list.append(deleted_runner_metrics)
+        return self._issue_runner_metrics(metrics=iter(runner_metrics_list))
 
     def _issue_runner_metrics(self, metrics: Iterator[RunnerMetrics]) -> IssuedMetricEventsStats:
         """Issue runner metrics.

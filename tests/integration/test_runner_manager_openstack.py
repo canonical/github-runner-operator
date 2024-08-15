@@ -255,7 +255,7 @@ async def test_runner_normal_idle_lifecycle(
     assert openstack_runner_manager._health_check(runner)
 
     # 3.
-    runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
+    runner_manager.flush_runners(flush_mode=FlushMode.FLUSH_IDLE)
     await assert_runner_amount(runner_manager, 0)
 
 
@@ -298,7 +298,7 @@ async def test_runner_flush_busy_lifecycle(
     assert busy_runner.github_state == GithubRunnerState.BUSY
 
     # 2.
-    runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
+    runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_IDLE)
     runner_list = runner_manager_with_one_runner.get_runners()
     assert len(runner_list) == 1
     busy_runner = runner_list[0]
@@ -306,7 +306,7 @@ async def test_runner_flush_busy_lifecycle(
     assert busy_runner.github_state == GithubRunnerState.BUSY
 
     # 3.
-    runner_manager_with_one_runner.delete_runners(flush_mode=FlushMode.FLUSH_BUSY)
+    runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
 
     issue_metrics_events = runner_manager_with_one_runner.cleanup()
     assert issue_metrics_events[events.RunnerStart] == 1
@@ -398,5 +398,5 @@ async def test_runner_spawn_two(
     assert len(runner_list) == 2
 
     # 3.
-    runner_manager.delete_runners(flush_mode=FlushMode.FLUSH_IDLE)
+    runner_manager.flush_runners(flush_mode=FlushMode.FLUSH_IDLE)
     await assert_runner_amount(runner_manager, 0)
