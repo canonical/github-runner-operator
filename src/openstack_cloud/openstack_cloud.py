@@ -23,6 +23,7 @@ from openstack.network.v2.security_group import SecurityGroup as OpenstackSecuri
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from errors import KeyfileError, OpenStackError, SSHError
+from utilities import retry
 
 logger = logging.getLogger(__name__)
 
@@ -82,8 +83,8 @@ class OpenstackInstance:
             )
         self.instance_id = self.server_name[len(prefix) + 1 :]
 
-
 @contextmanager
+@retry(tries=2, delay=5, local_logger=logger)
 def _get_openstack_connection(
     clouds_config: dict[str, dict], cloud: str
 ) -> Iterator[OpenstackConnection]:
@@ -103,7 +104,11 @@ def _get_openstack_connection(
     """
     if not _CLOUDS_YAML_PATH.exists():
         _CLOUDS_YAML_PATH.parent.mkdir(parents=True, exist_ok=True)
-        _CLOUDS_YAML_PATH.write_text(data=yaml.dump(clouds_config), encoding="utf-8")
+
+    # Concurrency: Very small chance for the file to be corrupted due to multiple process calling 
+    # this function and writing the file at the same time. This should cause the `conn.authorize`
+    # to fail, and retry of this function would resolve this.
+    _CLOUDS_YAML_PATH.write_text(data=yaml.dump(clouds_config), encoding="utf-8")
 
     # api documents that keystoneauth1.exceptions.MissingRequiredOptions can be raised but
     # I could not reproduce it. Therefore, no catch here for such exception.
