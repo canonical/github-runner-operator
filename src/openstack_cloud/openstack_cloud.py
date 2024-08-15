@@ -26,7 +26,7 @@ from errors import KeyfileError, OpenStackError, SSHError
 
 logger = logging.getLogger(__name__)
 
-_CLOUDS_YAML_PATH = Path(Path.home() / ".config/openstack/clouds.yaml")
+_CLOUDS_YAML_PATH = Path.home() / ".config/openstack/clouds.yaml"
 
 # Update the version when the security group rules are not backward compatible.
 _SECURITY_GROUP_NAME = "github-runner-v1"
@@ -80,8 +80,7 @@ class OpenstackInstance:
             raise ValueError(
                 f"Found openstack server {server.name} managed under prefix {prefix}, contact devs"
             )
-        # Disable E203 (space before :) as it conflicts with the formatter (black).
-        self.instance_id = self.server_name[len(prefix) + 1 :]  # noqa: E203
+        self.instance_id = self.server_name[len(prefix) + 1 :]
 
 
 @contextmanager
@@ -142,7 +141,7 @@ class OpenstackCloud:
     # Ignore "Too many arguments" as 6 args should be fine. Move to a dataclass if new args are
     # added.
     def launch_instance(  # pylint: disable=R0913
-        self, instance_id: str, image: str, flavor: str, network: str, userdata: str
+        self, instance_id: str, image: str, flavor: str, network: str, cloud_init: str
     ) -> OpenstackInstance:
         """Create an OpenStack instance.
 
@@ -151,7 +150,7 @@ class OpenstackCloud:
             image: The image used to create the instance.
             flavor: The flavor used to create the instance.
             network: The network used to create the instance.
-            userdata: The cloud init userdata to startup the instance.
+            cloud_init: The cloud init userdata to startup the instance.
 
         Raises:
             OpenStackError: Unable to create OpenStack server.
@@ -176,7 +175,7 @@ class OpenstackCloud:
                     flavor=flavor,
                     network=network,
                     security_groups=[security_group.id],
-                    userdata=userdata,
+                    userdata=cloud_init,
                     auto_ip=False,
                     timeout=_CREATE_SERVER_TIMEOUT,
                     wait=True,

@@ -158,7 +158,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 image=self.config.image,
                 flavor=self.config.flavor,
                 network=self.config.network,
-                userdata=userdata,
+                cloud_init=userdata,
             )
         except OpenStackError as err:
             raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err

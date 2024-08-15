@@ -355,10 +355,7 @@ async def test_runner_normal_lifecycle(
     assert metric_log_full_content.startswith(
         metric_log_existing_content
     ), "The metric log was modified in ways other than appending"
-    # Disable E203 (space before :) as it conflicts with the formatter (black).
-    metric_log_new_content = metric_log_full_content[
-        len(metric_log_existing_content) :  # noqa: E203
-    ]
+    metric_log_new_content = metric_log_full_content[len(metric_log_existing_content) :]
     metric_logs = [json.loads(metric) for metric in metric_log_new_content.splitlines()]
     assert (
         len(metric_logs) == 2
