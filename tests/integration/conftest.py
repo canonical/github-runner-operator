@@ -344,6 +344,12 @@ def use_private_endpoint_model_fixture(
     openstack_auth_url = pytestconfig.getoption("--openstack-auth-url-arm64")
     # ARM64 requires private endpoint testing because we cannot test in LXD models due to nested
     # virtualization limitations.
+    logging.info(
+        "ARCH: %s , AUTH_URL: %s, RESULT: %s",
+        arch,
+        openstack_auth_url,
+        bool(openstack_auth_url) and arch == "arm64",
+    )
     return bool(openstack_auth_url) and arch == "arm64"
 
 
