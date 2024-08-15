@@ -83,6 +83,7 @@ class OpenstackInstance:
             )
         self.instance_id = self.server_name[len(prefix) + 1 :]
 
+
 @contextmanager
 @retry(tries=2, delay=5, local_logger=logger)
 def _get_openstack_connection(
@@ -105,7 +106,7 @@ def _get_openstack_connection(
     if not _CLOUDS_YAML_PATH.exists():
         _CLOUDS_YAML_PATH.parent.mkdir(parents=True, exist_ok=True)
 
-    # Concurrency: Very small chance for the file to be corrupted due to multiple process calling 
+    # Concurrency: Very small chance for the file to be corrupted due to multiple process calling
     # this function and writing the file at the same time. This should cause the `conn.authorize`
     # to fail, and retry of this function would resolve this.
     _CLOUDS_YAML_PATH.write_text(data=yaml.dump(clouds_config), encoding="utf-8")
