@@ -19,7 +19,7 @@ from openstack.connection import Connection as OpenstackConnection
 
 from charm_state import GithubPath, ProxyConfig, parse_github_path
 from manager.cloud_runner_manager import CloudRunnerState, GitHubRunnerConfig, SupportServiceConfig
-from manager.github_runner_manager import GithubRunnerState
+from manager.github_runner_manager import GitHubRunnerState
 from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
 from metrics import events, storage
 from openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
@@ -160,7 +160,7 @@ async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) 
     ), "Test arrange failed: Expect runner in active state"
     try:
         await wait_for(
-            lambda: runner_manager.get_runners()[0].github_state == GithubRunnerState.IDLE,
+            lambda: runner_manager.get_runners()[0].github_state == GitHubRunnerState.IDLE,
             timeout=120,
             check_interval=10,
         )
@@ -251,7 +251,7 @@ async def test_runner_normal_idle_lifecycle(
     assert runner.cloud_state == CloudRunnerState.ACTIVE
     # Update on GitHub-side can take a bit of time.
     await wait_for(
-        lambda: runner_manager.get_runners()[0].github_state == GithubRunnerState.IDLE,
+        lambda: runner_manager.get_runners()[0].github_state == GitHubRunnerState.IDLE,
         timeout=120,
         check_interval=10,
     )
@@ -304,7 +304,7 @@ async def test_runner_flush_busy_lifecycle(
     assert len(runner_list) == 1
     busy_runner = runner_list[0]
     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.github_state == GithubRunnerState.BUSY
+    assert busy_runner.github_state == GitHubRunnerState.BUSY
 
     # 2.
     runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_IDLE)
@@ -312,7 +312,7 @@ async def test_runner_flush_busy_lifecycle(
     assert len(runner_list) == 1
     busy_runner = runner_list[0]
     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.github_state == GithubRunnerState.BUSY
+    assert busy_runner.github_state == GitHubRunnerState.BUSY
 
     # 3.
     runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)

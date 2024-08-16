@@ -11,7 +11,7 @@ from github_client import GithubClient
 from github_type import GitHubRunnerStatus, SelfHostedRunner
 
 
-class GithubRunnerState(str, Enum):
+class GitHubRunnerState(str, Enum):
     """State of the self-hosted runner on GitHub.
 
     Attributes:
@@ -26,7 +26,7 @@ class GithubRunnerState(str, Enum):
     OFFLINE = auto()
 
     @staticmethod
-    def from_runner(runner: SelfHostedRunner) -> "GithubRunnerState":
+    def from_runner(runner: SelfHostedRunner) -> "GitHubRunnerState":
         """Construct the object from GtiHub runner information.
 
         Args:
@@ -35,13 +35,13 @@ class GithubRunnerState(str, Enum):
         Returns:
             The state of runner.
         """
-        state = GithubRunnerState.OFFLINE
+        state = GitHubRunnerState.OFFLINE
         # A runner that is busy and offline is possible.
         if runner.busy:
-            state = GithubRunnerState.BUSY
+            state = GitHubRunnerState.BUSY
         if runner.status == GitHubRunnerStatus.ONLINE:
             if not runner.busy:
-                state = GithubRunnerState.IDLE
+                state = GitHubRunnerState.IDLE
         return state
 
 
@@ -61,7 +61,7 @@ class GithubRunnerManager:
         self.github = GithubClient(token)
 
     def get_runners(
-        self, states: Sequence[GithubRunnerState] | None = None
+        self, states: Sequence[GitHubRunnerState] | None = None
     ) -> tuple[SelfHostedRunner]:
         """Get info on self-hosted runners of certain states.
 
@@ -79,7 +79,7 @@ class GithubRunnerManager:
             and GithubRunnerManager._is_runner_in_state(runner, states)
         )
 
-    def delete_runners(self, states: Sequence[GithubRunnerState] | None = None) -> None:
+    def delete_runners(self, states: Sequence[GitHubRunnerState] | None = None) -> None:
         """Delete the self-hosted runners of certain states.
 
         Args:
@@ -111,7 +111,7 @@ class GithubRunnerManager:
 
     @staticmethod
     def _is_runner_in_state(
-        runner: SelfHostedRunner, states: Sequence[GithubRunnerState] | None
+        runner: SelfHostedRunner, states: Sequence[GitHubRunnerState] | None
     ) -> bool:
         """Check that the runner is in one of the states provided.
 
@@ -124,4 +124,4 @@ class GithubRunnerManager:
         """
         if states is None:
             return True
-        return GithubRunnerState.from_runner(runner) in states
+        return GitHubRunnerState.from_runner(runner) in states

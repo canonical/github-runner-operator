@@ -19,7 +19,7 @@ from manager.cloud_runner_manager import (
     HealthState,
     InstanceId,
 )
-from manager.github_runner_manager import GithubRunnerManager, GithubRunnerState
+from manager.github_runner_manager import GithubRunnerManager, GitHubRunnerState
 from metrics import events as metric_events
 from metrics import github as github_metrics
 from metrics import runner as runner_metrics
@@ -57,7 +57,7 @@ class RunnerInstance:
     name: str
     instance_id: InstanceId
     health: HealthState
-    github_state: GithubRunnerState | None
+    github_state: GitHubRunnerState | None
     cloud_state: CloudRunnerState
 
     def __init__(self, cloud_instance: CloudRunnerInstance, github_info: SelfHostedRunner | None):
@@ -71,7 +71,7 @@ class RunnerInstance:
         self.instance_id = cloud_instance.instance_id
         self.health = cloud_instance.health
         self.github_state = (
-            GithubRunnerState.from_runner(github_info) if github_info is not None else None
+            GitHubRunnerState.from_runner(github_info) if github_info is not None else None
         )
         self.cloud_state = cloud_instance.state
 
@@ -91,7 +91,7 @@ class RunnerManagerConfig:
 
 class RunnerManager:
     """Manage the runners.
-    
+
     Attributes:
         name_prefix: The name prefix of the runners.
     """
@@ -143,7 +143,7 @@ class RunnerManager:
 
     def get_runners(
         self,
-        github_states: Sequence[GithubRunnerState] | None = None,
+        github_states: Sequence[GitHubRunnerState] | None = None,
         cloud_states: Sequence[CloudRunnerState] | None = None,
     ) -> tuple[RunnerInstance]:
         """Get information on runner filter by state.
@@ -236,9 +236,9 @@ class RunnerManager:
                     "Unknown flush mode %s encountered, contact developers", flush_mode
                 )
 
-        states = [GithubRunnerState.IDLE]
+        states = [GitHubRunnerState.IDLE]
         if flush_mode == FlushMode.FLUSH_BUSY:
-            states.append(GithubRunnerState.BUSY)
+            states.append(GitHubRunnerState.BUSY)
 
         runners_list = self.get_runners(github_states=states)
         runner_names = [runner.name for runner in runners_list]
@@ -252,7 +252,7 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the cleanup of runners.
         """
-        self._github.delete_runners([GithubRunnerState.OFFLINE])
+        self._github.delete_runners([GitHubRunnerState.OFFLINE])
         remove_token = self._github.get_removal_token()
         deleted_runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)
