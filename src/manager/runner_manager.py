@@ -90,7 +90,11 @@ class RunnerManagerConfig:
 
 
 class RunnerManager:
-    """Manage the runners."""
+    """Manage the runners.
+    
+    Attributes:
+        name_prefix: The name prefix of the runners.
+    """
 
     def __init__(self, cloud_runner_manager: CloudRunnerManager, config: RunnerManagerConfig):
         """Construct the object.
