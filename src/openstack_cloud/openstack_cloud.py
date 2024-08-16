@@ -394,7 +394,7 @@ class OpenstackCloud:
                     continue
 
                 try:
-                    conn.delete_keypair(key.name)
+                    self._delete_keypair(conn, key.name)
                 except openstack.exceptions.SDKException:
                     logger.warning(
                         "Unable to delete OpenStack keypair associated with deleted key file %s ",
@@ -422,7 +422,7 @@ class OpenstackCloud:
     ) -> OpenstackServer | None:
         """Get the latest server of the name and ensure it is unique.
 
-        If multiple servers with the same name is found, the latest server in creation time is
+        If multiple servers with the same name are found, the latest server in creation time is
         returned. Other servers is deleted.
 
         Args:

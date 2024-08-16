@@ -52,10 +52,8 @@ class CloudRunnerState(str, Enum):
     UNKNOWN = auto()
     UNEXPECTED = auto()
 
-    # Disable "Too many return statements" as this method is using case statement for converting
-    # the states, which does not cause a complexity issue.
     @staticmethod
-    def from_openstack_server_status(  # pylint: disable=R0911
+    def from_openstack_server_status(
         openstack_server_status: str,
     ) -> "CloudRunnerState":
         """Create from openstack server status.
@@ -69,23 +67,25 @@ class CloudRunnerState(str, Enum):
         Returns:
             The state of the runner.
         """
+        state = CloudRunnerState.UNEXPECTED
         match openstack_server_status:
             case "BUILD":
-                return CloudRunnerState.CREATED
+                state = CloudRunnerState.CREATED
             case "REBUILD":
-                return CloudRunnerState.CREATED
+                state = CloudRunnerState.CREATED
             case "ACTIVE":
-                return CloudRunnerState.ACTIVE
+                state = CloudRunnerState.ACTIVE
             case "ERROR":
-                return CloudRunnerState.ERROR
+                state = CloudRunnerState.ERROR
             case "STOPPED":
-                return CloudRunnerState.STOPPED
+                state = CloudRunnerState.STOPPED
             case "DELETED":
-                return CloudRunnerState.DELETED
+                state = CloudRunnerState.DELETED
             case "UNKNOWN":
-                return CloudRunnerState.UNKNOWN
+                state = CloudRunnerState.UNKNOWN
             case _:
-                return CloudRunnerState.UNEXPECTED
+                state = CloudRunnerState.UNEXPECTED
+        return state
 
 
 @dataclass

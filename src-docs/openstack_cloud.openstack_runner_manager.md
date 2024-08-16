@@ -232,7 +232,7 @@ Get a self-hosted runner by instance id.
 ```python
 get_runners(
     states: Optional[Sequence[CloudRunnerState]] = None
-) → Tuple[CloudRunnerInstance]
+) → tuple[CloudRunnerInstance, ]
 ```
 
 Get self-hosted runners by state. 
