@@ -3,7 +3,7 @@
 
 """Client for managing self-hosted runner on GitHub side."""
 
-from enum import Enum
+from enum import Enum, auto
 from typing import Sequence
 
 from charm_state import GithubPath
@@ -21,9 +21,9 @@ class GithubRunnerState(str, Enum):
         OFFLINE: Runner is not connected to GitHub.
     """
 
-    BUSY = "busy"
-    IDLE = "idle"
-    OFFLINE = "offline"
+    BUSY = auto()
+    IDLE = auto()
+    OFFLINE = auto()
 
     @staticmethod
     def from_runner(runner: SelfHostedRunner) -> "GithubRunnerState":
