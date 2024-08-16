@@ -477,7 +477,8 @@ class OpenstackRunnerManager(CloudRunnerManager):
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
         except SSHError as err:
             raise RunnerStartError(
-                f"Failed to SSH connect to {instance.server_name} openstack runner"
+                f"Failed to SSH to {instance.server_name} during creation possible due to setup "
+                "not completed"
             ) from err
 
         result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)

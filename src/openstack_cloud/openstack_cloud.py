@@ -587,14 +587,14 @@ class OpenstackCloud:
 
         if not rule_exists_icmp:
             conn.create_security_group_rule(
-                secgroup_name_or_id=_SECURITY_GROUP_NAME,
+                secgroup_name_or_id=security_group.id,
                 protocol="icmp",
                 direction="ingress",
                 ethertype="IPv4",
             )
         if not rule_exists_ssh:
             conn.create_security_group_rule(
-                secgroup_name_or_id=_SECURITY_GROUP_NAME,
+                secgroup_name_or_id=security_group.id,
                 port_range_min="22",
                 port_range_max="22",
                 protocol="tcp",
@@ -603,7 +603,7 @@ class OpenstackCloud:
             )
         if not rule_exists_tmate_ssh:
             conn.create_security_group_rule(
-                secgroup_name_or_id=_SECURITY_GROUP_NAME,
+                secgroup_name_or_id=security_group.id,
                 port_range_min="10022",
                 port_range_max="10022",
                 protocol="tcp",
