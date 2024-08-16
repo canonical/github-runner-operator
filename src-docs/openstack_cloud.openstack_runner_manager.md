@@ -88,8 +88,8 @@ Runners with health state.
 
 ```python
 __init__(
-    healthy: tuple[OpenstackInstance],
-    unhealthy: tuple[OpenstackInstance]
+    healthy: tuple[OpenstackInstance, ],
+    unhealthy: tuple[OpenstackInstance, ]
 ) → None
 ```
 
@@ -251,7 +251,7 @@ Get a self-hosted runner by instance id.
 ### <kbd>method</kbd> `get_runner_health`
 
 ```python
-get_runner_health() → RunnerByHealth
+get_runner_health() → RunnerNameByHealth
 ```
 
 Get the runner health state. 
@@ -259,7 +259,7 @@ Get the runner health state.
 
 
 **Returns:**
-  The runners by the health state. 
+  The names of the runner by health state. 
 
 ---
 

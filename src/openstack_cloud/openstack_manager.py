@@ -62,7 +62,7 @@ from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner_manager import IssuedMetricEventsStats
 from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
-from runner_type import GithubPath, RunnerByHealth, RunnerGithubInfo
+from runner_type import GithubPath, RunnerGithubInfo, RunnerNameByHealth
 from utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
@@ -419,7 +419,7 @@ class OpenstackRunnerManager:
             if runner["name"].startswith(f"{self.instance_name}-")
         )
 
-    def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
+    def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerNameByHealth:
         """Get status on OpenStack of each runner.
 
         Args:
@@ -440,7 +440,7 @@ class OpenstackRunnerManager:
             else:
                 healthy_runner.append(instance.name)
 
-        return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
+        return RunnerNameByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
 
     def _get_openstack_instances(self, conn: OpenstackConnection) -> list[Server]:
         """Get the OpenStack servers managed by this unit.
@@ -1302,7 +1302,7 @@ class OpenstackRunnerManager:
                     )
 
     def _clean_up_runners(
-        self, conn: OpenstackConnection, runner_by_health: RunnerByHealth, remove_token: str
+        self, conn: OpenstackConnection, runner_by_health: RunnerNameByHealth, remove_token: str
     ) -> None:
         """Clean up offline or unhealthy runners.
 
@@ -1355,7 +1355,7 @@ class OpenstackRunnerManager:
         self,
         quantity: int,
         conn: OpenstackConnection,
-        runner_by_health: RunnerByHealth,
+        runner_by_health: RunnerNameByHealth,
         remove_token: str,
     ) -> int:
         """Scale the number of runners.
@@ -1488,7 +1488,7 @@ class OpenstackRunnerManager:
         metric_stats: IssuedMetricEventsStats,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
-        runner_states: RunnerByHealth,
+        runner_states: RunnerNameByHealth,
     ) -> None:
         """Issue reconciliation metric.
 

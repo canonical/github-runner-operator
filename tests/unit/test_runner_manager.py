@@ -29,7 +29,7 @@ from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from metrics.storage import MetricsStorage
 from runner import Runner, RunnerStatus
 from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerManagerConfig
-from runner_type import RunnerByHealth
+from runner_type import RunnerNameByHealth
 from tests.unit.mock import TEST_BINARY, MockLxdImageManager
 
 FAKE_MONGODB_URI = "mongodb://example.com/db"
@@ -268,7 +268,7 @@ def test_reconcile_remove_runner(runner_manager: RunnerManager):
 
     # Create online runners.
     runner_manager._get_runners = mock_get_runners
-    runner_manager._get_runner_health_states = lambda: RunnerByHealth(
+    runner_manager._get_runner_health_states = lambda: RunnerNameByHealth(
         (
             f"{runner_manager.instance_name}-0",
             f"{runner_manager.instance_name}-1",
@@ -433,7 +433,7 @@ def test_reconcile_issues_reconciliation_metric_event(
 
     # Create online runners.
     runner_manager._get_runners = mock_get_runners
-    runner_manager._get_runner_health_states = lambda: RunnerByHealth(
+    runner_manager._get_runner_health_states = lambda: RunnerNameByHealth(
         healthy=(
             online_idle_runner_name,
             offline_idle_runner_name,

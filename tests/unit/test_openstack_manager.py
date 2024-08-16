@@ -27,7 +27,7 @@ from metrics.storage import MetricsStorage
 from openstack_cloud import openstack_manager
 from openstack_cloud.openstack_manager import MAX_METRICS_FILE_SIZE, METRICS_EXCHANGE_PATH
 from runner_manager_type import FlushMode
-from runner_type import RunnerByHealth, RunnerGithubInfo
+from runner_type import RunnerGithubInfo, RunnerNameByHealth
 from tests.unit import factories
 
 FAKE_MONGODB_URI = "mongodb://example.com/db"
@@ -510,7 +510,7 @@ def test_reconcile_pulls_metric_files(
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
-        return_value=RunnerByHealth(healthy=(), unhealthy=("test_runner",))
+        return_value=RunnerNameByHealth(healthy=(), unhealthy=("test_runner",))
     )
     ssh_connection_mock.get.side_effect = MagicMock()
     openstack_manager_for_reconcile.reconcile(quantity=0)
@@ -545,7 +545,7 @@ def test_reconcile_does_not_pull_too_large_files(
         Result(stdout=f"{MAX_METRICS_FILE_SIZE + 1}") if cmd.startswith("stat") else Result()
     )
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
-        return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
+        return_value=RunnerNameByHealth(healthy=("test_runner",), unhealthy=())
     )
 
     openstack_manager_for_reconcile.reconcile(quantity=0)
@@ -570,7 +570,7 @@ def test_reconcile_issue_reconciliation_metrics(
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
-        return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
+        return_value=RunnerNameByHealth(healthy=("test_runner",), unhealthy=())
     )
 
     openstack_manager.runner_metrics.extract.return_value = (MagicMock() for _ in range(2))
@@ -635,7 +635,7 @@ def test_reconcile_ignores_metrics_for_openstack_online_runners(
         ]
     }
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
-        return_value=RunnerByHealth(
+        return_value=RunnerNameByHealth(
             healthy=(runner_names["healthy_online"], runner_names["healthy_offline"]),
             unhealthy=(
                 runner_names["unhealthy_online"],

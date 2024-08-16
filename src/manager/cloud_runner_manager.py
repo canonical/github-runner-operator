@@ -10,7 +10,7 @@ from enum import Enum
 from typing import Iterator, Sequence, Tuple
 
 from metrics.runner import RunnerMetrics
-from runner_type import RunnerByHealth
+from runner_type import RunnerNameByHealth
 
 logger = logging.getLogger(__name__)
 
@@ -141,5 +141,5 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_runner_health(self) -> RunnerByHealth:
+    def get_runner_health(self) -> RunnerNameByHealth:
         """Get the runners health state."""

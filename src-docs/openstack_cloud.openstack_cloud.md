@@ -91,7 +91,7 @@ Create the object.
 cleanup() → None
 ```
 
-Cleanup unused openstack resources. 
+Cleanup unused key files and openstack keypairs. 
 
 ---
 
@@ -141,7 +141,7 @@ Get OpenStack instance by instance ID.
 ### <kbd>method</kbd> `get_instances`
 
 ```python
-get_instances() → tuple[OpenstackInstance]
+get_instances() → tuple[OpenstackInstance, ]
 ```
 
 Get all OpenStack instances. 

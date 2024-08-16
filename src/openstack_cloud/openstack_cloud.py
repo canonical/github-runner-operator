@@ -309,7 +309,7 @@ class OpenstackCloud:
             f"addresses: {instance.addresses}"
         )
 
-    def get_instances(self) -> tuple[OpenstackInstance]:
+    def get_instances(self) -> tuple[OpenstackInstance, ...]:
         """Get all OpenStack instances.
 
         Returns:
@@ -320,26 +320,26 @@ class OpenstackCloud:
         with _get_openstack_connection(
             clouds_config=self._clouds_config, cloud=self._cloud
         ) as conn:
-            servers = self._get_openstack_instances(conn)
-            server_names = set(server.name for server in servers)
+            instance_list = self._get_openstack_instances(conn)
+            server_names = set(server.name for server in instance_list)
 
-            instances = []
-            for name in server_names:
-                # The server can be deleted between the `_get_openstack_instances` call and this
-                # line. This is an issues during tests. Hence the need for None check.
-                server = OpenstackCloud._get_and_ensure_unique_server(conn, name)
-                if server is not None:
-                    instances.append(OpenstackInstance(server, self.prefix))
-            return cast(tuple[OpenstackInstance], tuple(instances))
+            server_list = [
+                OpenstackCloud._get_and_ensure_unique_server(conn, name) for name in server_names
+            ]
+            return tuple(
+                OpenstackInstance(server, self.prefix)
+                for server in server_list
+                if server is not None
+            )
 
     def cleanup(self) -> None:
-        """Cleanup unused openstack resources."""
+        """Cleanup unused key files and openstack keypairs."""
         with _get_openstack_connection(
             clouds_config=self._clouds_config, cloud=self._cloud
         ) as conn:
-            server_list = self._get_openstack_instances(conn)
-            exclude_list = [server.name for server in server_list]
-            self._cleanup_key_files(conn, exclude_list)
+            instances = self._get_openstack_instances(conn)
+            exclude_list = [server.name for server in instances]
+            self._cleanup_key_files(exclude_list)
             self._cleanup_openstack_keypairs(conn, exclude_list)
 
     def get_server_name(self, instance_id: str) -> str:
@@ -353,13 +353,10 @@ class OpenstackCloud:
         """
         return f"{self.prefix}-{instance_id}"
 
-    def _cleanup_key_files(
-        self, conn: OpenstackConnection, exclude_instances: Iterable[str]
-    ) -> None:
+    def _cleanup_key_files(self, exclude_instances: Iterable[str]) -> None:
         """Delete all SSH key files except the specified instances.
 
         Args:
-            conn: The Openstack connection instance.
             exclude_instances: The keys of these instance will not be deleted.
         """
         logger.info("Cleaning up SSH key files")
@@ -375,16 +372,6 @@ class OpenstackCloud:
                 total += 1
                 if path.name in exclude_filename:
                     continue
-
-                keypair_name = path.name.split(".")[0]
-                try:
-                    conn.delete_keypair(keypair_name)
-                except openstack.exceptions.SDKException:
-                    logger.warning(
-                        "Unable to delete OpenStack keypair associated with deleted key file %s ",
-                        path.name,
-                    )
-
                 path.unlink()
                 deleted += 1
         logger.info("Found %s key files, clean up %s key files", total, deleted)
@@ -403,7 +390,7 @@ class OpenstackCloud:
         for key in keypairs:
             # The `name` attribute is of resource.Body type.
             if key.name and str(key.name).startswith(self.prefix):
-                if str(key.name) in exclude_instances:
+                if str(key.name) in set(exclude_instances):
                     continue
 
                 try:
@@ -414,7 +401,7 @@ class OpenstackCloud:
                         key.name,
                     )
 
-    def _get_openstack_instances(self, conn: OpenstackConnection) -> tuple[OpenstackServer]:
+    def _get_openstack_instances(self, conn: OpenstackConnection) -> tuple[OpenstackServer, ...]:
         """Get the OpenStack servers managed by this unit.
 
         Args:
@@ -423,13 +410,10 @@ class OpenstackCloud:
         Returns:
             List of OpenStack instances.
         """
-        return cast(
-            tuple[OpenstackServer],
-            tuple(
-                server
-                for server in cast(list[OpenstackServer], conn.list_servers())
-                if server.name.startswith(f"{self.prefix}-")
-            ),
+        return tuple(
+            server
+            for server in cast(list[OpenstackServer], conn.list_servers())
+            if server.name.startswith(f"{self.prefix}-")
         )
 
     @staticmethod

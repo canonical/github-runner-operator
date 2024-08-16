@@ -43,7 +43,7 @@ from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import FlushMode, RunnerInfo, RunnerManagerClients, RunnerManagerConfig
 from runner_type import ProxySetting as RunnerProxySetting
-from runner_type import RunnerByHealth
+from runner_type import RunnerNameByHealth
 from utilities import execute_command, retry, set_env_var
 
 REMOVED_RUNNER_LOG_STR = "Removed runner: %s"
@@ -222,7 +222,7 @@ class RunnerManager:
             for runner in remote_runners.values()
         )
 
-    def _get_runner_health_states(self) -> RunnerByHealth:
+    def _get_runner_health_states(self) -> RunnerNameByHealth:
         """Get all runners sorted into health groups.
 
         Returns:
@@ -247,7 +247,7 @@ class RunnerManager:
             else:
                 unhealthy.append(runner.name)
 
-        return RunnerByHealth(healthy, unhealthy)
+        return RunnerNameByHealth(healthy, unhealthy)
 
     def _create_runner(
         self, registration_token: str, resources: VirtualMachineResources, runner: Runner
@@ -491,7 +491,7 @@ class RunnerManager:
             logger.info("There are no idle runners to remove.")
 
     def _cleanup_offline_runners(
-        self, runner_states: RunnerByHealth, all_runners: list[Runner]
+        self, runner_states: RunnerNameByHealth, all_runners: list[Runner]
     ) -> None:
         """Cleanup runners that are not running the github run.sh script.
 

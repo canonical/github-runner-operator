@@ -23,7 +23,7 @@ from metrics import events as metric_events
 from metrics import github as github_metrics
 from metrics import runner as runner_metrics
 from metrics.runner import RunnerMetrics
-from runner_type import RunnerByHealth
+from runner_type import RunnerNameByHealth
 
 logger = logging.getLogger(__name__)
 
@@ -135,25 +135,25 @@ class RunnerManager:
 
     def get_runners(
         self,
-        github_runner_state: Sequence[GithubRunnerState] | None = None,
-        cloud_runner_state: Sequence[CloudRunnerState] | None = None,
+        github_states: Sequence[GithubRunnerState] | None = None,
+        cloud_states: Sequence[CloudRunnerState] | None = None,
     ) -> tuple[RunnerInstance]:
         """Get information on runner filter by state.
 
         Only runners that has cloud instance are returned.
 
         Args:
-            github_runner_state: Filter for the runners with these github states. If None all
+            github_states: Filter for the runners with these github states. If None all
                 states will be included.
-            cloud_runner_state: Filter for the runners with these cloud states. If None all states
+            cloud_states: Filter for the runners with these cloud states. If None all states
                 will be included.
 
         Returns:
             Information on the runners.
         """
         logger.info("Getting runners...")
-        github_infos = self._github.get_runners(github_runner_state)
-        cloud_infos = self._cloud.get_runners(cloud_runner_state)
+        github_infos = self._github.get_runners(github_states)
+        cloud_infos = self._cloud.get_runners(cloud_states)
         github_infos_map = {info.name: info for info in github_infos}
         cloud_infos_map = {info.name: info for info in cloud_infos}
         logger.info(
@@ -179,15 +179,15 @@ class RunnerManager:
             )
             for name in cloud_infos_map.keys()
         ]
-        if cloud_runner_state is not None:
+        if cloud_states is not None:
             runner_instances = [
-                runner for runner in runner_instances if runner.cloud_state in cloud_runner_state
+                runner for runner in runner_instances if runner.cloud_state in cloud_states
             ]
-        if github_runner_state is not None:
+        if github_states is not None:
             runner_instances = [
                 runner
                 for runner in runner_instances
-                if runner.github_state is not None and runner.github_state in github_runner_state
+                if runner.github_state is not None and runner.github_state in github_states
             ]
         return cast(tuple[RunnerInstance], tuple(runner_instances))
 
@@ -232,7 +232,7 @@ class RunnerManager:
         if flush_mode == FlushMode.FLUSH_BUSY:
             states.append(GithubRunnerState.BUSY)
 
-        runners_list = self.get_runners(github_runner_state=states)
+        runners_list = self.get_runners(github_states=states)
         runner_names = [runner.name for runner in runners_list]
         logger.info("Flushing runners: %s", runner_names)
         remove_token = self._github.get_removal_token()
@@ -249,7 +249,7 @@ class RunnerManager:
         deleted_runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)
 
-    def get_runner_health(self) -> RunnerByHealth:
+    def get_runner_health(self) -> RunnerNameByHealth:
         """Get the runner health state.
 
         Returns:

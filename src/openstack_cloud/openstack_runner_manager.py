@@ -39,7 +39,7 @@ from metrics import storage as metrics_storage
 from openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
 from openstack_cloud.openstack_manager import GithubRunnerRemoveError
 from repo_policy_compliance_client import RepoPolicyComplianceClient
-from runner_type import RunnerByHealth
+from runner_type import RunnerNameByHealth
 from utilities import retry
 
 logger = logging.getLogger(__name__)
@@ -105,8 +105,8 @@ class RunnerHealth:
         unhealthy:  The list of unhealthy runners.
     """
 
-    healthy: tuple[OpenstackInstance]
-    unhealthy: tuple[OpenstackInstance]
+    healthy: tuple[OpenstackInstance, ...]
+    unhealthy: tuple[OpenstackInstance, ...]
 
 
 class OpenstackRunnerManager(CloudRunnerManager):
@@ -150,7 +150,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         start_timestamp = time.time()
         instance_id = OpenstackRunnerManager._generate_instance_id()
         instance_name = self._openstack_cloud.get_server_name(instance_id=instance_id)
-        userdata = self._generate_userdata(
+        cloud_init = self._generate_cloud_init(
             instance_name=instance_name, registration_token=registration_token
         )
         try:
@@ -159,7 +159,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 image=self.config.image,
                 flavor=self.config.flavor,
                 network=self.config.network,
-                cloud_init=userdata,
+                cloud_init=cloud_init,
             )
         except OpenStackError as err:
             raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
@@ -185,16 +185,16 @@ class OpenstackRunnerManager(CloudRunnerManager):
         Returns:
             Information on the runner instance.
         """
-        name = self._openstack_cloud.get_server_name(instance_id)
-        instances_list = self._openstack_cloud.get_instances()
-        for instance in instances_list:
-            if instance.server_name == name:
-                return CloudRunnerInstance(
-                    name=name,
-                    instance_id=instance_id,
-                    state=CloudRunnerState.from_openstack_server_status(instance.status),
-                )
-        return None
+        instance = self._openstack_cloud.get_instance(instance_id)
+        return (
+            CloudRunnerInstance(
+                name=instance.server_name,
+                instance_id=instance_id,
+                state=CloudRunnerState.from_openstack_server_status(instance.status),
+            )
+            if instance is not None
+            else None
+        )
 
     def get_runners(
         self, states: Sequence[CloudRunnerState] | None = None
@@ -242,7 +242,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             return None
 
         metric = runner_metrics.extract(
-            metrics_storage_manager=metrics_storage, runners=instance.server_name
+            metrics_storage_manager=metrics_storage, runners=set(instance.server_name)
         )
         self._delete_runner(instance, remove_token)
         return next(metric, None)
@@ -267,14 +267,14 @@ class OpenstackRunnerManager(CloudRunnerManager):
         self._openstack_cloud.cleanup()
         return metrics
 
-    def get_runner_health(self) -> RunnerByHealth:
+    def get_runner_health(self) -> RunnerNameByHealth:
         """Get the runner health state.
 
         Returns:
-            The runners by the health state.
+            The names of the runner by health state.
         """
         runners = self._get_runner_health()
-        return RunnerByHealth(
+        return RunnerNameByHealth(
             tuple(runner.server_name for runner in runners.healthy),
             tuple(runner.server_name for runner in runners.unhealthy),
         )
@@ -291,7 +291,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             self._pull_runner_metrics(instance.server_name, ssh_conn)
 
             try:
-                OpenstackRunnerManager._run_github_runner_removal_script(
+                OpenstackRunnerManager._run_runner_removal_script(
                     instance.server_name, ssh_conn, remove_token
                 )
             except GithubRunnerRemoveError:
@@ -326,18 +326,19 @@ class OpenstackRunnerManager(CloudRunnerManager):
         healthy, unhealthy = [], []
         for runner in runner_list:
             cloud_state = CloudRunnerState.from_openstack_server_status(runner.status)
-            if cloud_state in (
-                CloudRunnerState.DELETED,
-                CloudRunnerState.ERROR,
-                CloudRunnerState.STOPPED,
-                CloudRunnerState.UNKNOWN,
+            if cloud_state in set(
+                (
+                    CloudRunnerState.DELETED,
+                    CloudRunnerState.ERROR,
+                    CloudRunnerState.STOPPED,
+                )
             ) or not self._health_check(runner):
                 unhealthy.append(runner)
             else:
                 healthy.append(runner)
         return RunnerHealth(healthy=tuple(healthy), unhealthy=tuple(unhealthy))
 
-    def _generate_userdata(self, instance_name: str, registration_token: str) -> str:
+    def _generate_cloud_init(self, instance_name: str, registration_token: str) -> str:
         """Generate cloud init userdata.
 
         This is the script the openstack server runs on startup.
@@ -347,7 +348,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             registration_token: The GitHub runner registration token.
 
         Returns:
-            The userdata for openstack instance.
+            The cloud init userdata for openstack instance.
         """
         jinja = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
 
@@ -667,7 +668,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             raise _PullFileError(f"Unable to retrieve file {remote_path}") from exc
 
     @staticmethod
-    def _run_github_runner_removal_script(
+    def _run_runner_removal_script(
         instance_name: str, ssh_conn: SSHConnection, remove_token: str
     ) -> None:
         """Run Github runner removal script.
