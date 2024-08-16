@@ -18,14 +18,15 @@ from github.Workflow import Workflow
 from openstack.connection import Connection as OpenstackConnection
 
 from charm_state import GithubPath, ProxyConfig, parse_github_path
-from manager.cloud_runner_manager import CloudRunnerState
+from manager.cloud_runner_manager import CloudRunnerState, GitHubRunnerConfig, SupportServiceConfig
 from manager.github_runner_manager import GithubRunnerState
 from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
 from metrics import events, storage
 from openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from openstack_cloud.openstack_runner_manager import (
+    OpenStackCloudConfig,
     OpenstackRunnerManager,
-    OpenstackRunnerManagerConfig,
+    OpenStackServerConfig,
 )
 from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
@@ -104,21 +105,29 @@ async def openstack_runner_manager_fixture(
     _CLOUDS_YAML_PATH.unlink(missing_ok=True)
     clouds_config = yaml.safe_load(private_endpoint_clouds_yaml)
 
-    config = OpenstackRunnerManagerConfig(
+    cloud_config = OpenStackCloudConfig(
         clouds_config=clouds_config,
         cloud="testcloud",
+    )
+    server_config = OpenStackServerConfig(
         image=openstack_test_image,
         flavor=flavor_name,
         network=network_name,
+    )
+    runner_config = GitHubRunnerConfig(
         github_path=github_path,
         labels=["openstack_test", runner_label],
+    )
+    service_config = SupportServiceConfig(
         proxy_config=proxy_config,
         dockerhub_mirror=None,
         ssh_debug_connections=None,
         repo_policy_url=None,
         repo_policy_token=None,
     )
-    return OpenstackRunnerManager(app_name, config)
+    return OpenstackRunnerManager(
+        app_name, cloud_config, server_config, runner_config, service_config
+    )
 
 
 @pytest_asyncio.fixture(scope="module", name="runner_manager")

@@ -16,6 +16,7 @@ from manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
+    HealthState,
     InstanceId,
 )
 from manager.github_runner_manager import GithubRunnerManager, GithubRunnerState
@@ -23,7 +24,6 @@ from metrics import events as metric_events
 from metrics import github as github_metrics
 from metrics import runner as runner_metrics
 from metrics.runner import RunnerMetrics
-from runner_type import RunnerNameByHealth
 
 logger = logging.getLogger(__name__)
 
@@ -40,19 +40,8 @@ class FlushMode(Enum):
 
     FLUSH_IDLE = auto()
     FLUSH_BUSY = auto()
-    
-class HealthState(Enum):
-    """Health state of the runners.
-    
-    Attributes:
-        HEALTHY: The runner is healthy.
-        UNHEALTHY: The runner is not healthy.
-        UNKNOWN: Unable to get the health state.
-    """
-    HEALTHY = auto()
-    UNHEALTHY= auto()
-    UNKNOWN=auto()
-    
+
+
 @dataclass
 class RunnerInstance:
     """Represents an instance of runner.
@@ -112,8 +101,9 @@ class RunnerManager:
         """
         self._config = config
         self._cloud = cloud_runner_manager
+        self.name_prefix = self._cloud.name_prefix
         self._github = GithubRunnerManager(
-            prefix=self._cloud.get_name_prefix(), token=self._config.token, path=self._config.path
+            prefix=self.name_prefix, token=self._config.token, path=self._config.path
         )
 
     def create_runners(self, num: int) -> tuple[InstanceId]:
@@ -311,7 +301,7 @@ class RunnerManager:
             issued_events = runner_metrics.issue_events(
                 runner_metrics=extracted_metrics,
                 job_metrics=job_metrics,
-                flavor=self._cloud.get_name_prefix(),
+                flavor=self.name_prefix,
             )
 
             for event_type in issued_events:

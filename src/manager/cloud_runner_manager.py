@@ -9,13 +9,26 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Iterator, Sequence, Tuple
 
-from manager.runner_manager import HealthState
+from charm_state import GithubPath, ProxyConfig, SSHDebugConnection
 from metrics.runner import RunnerMetrics
-from runner_type import RunnerNameByHealth
 
 logger = logging.getLogger(__name__)
 
 InstanceId = str
+
+
+class HealthState(Enum):
+    """Health state of the runners.
+
+    Attributes:
+        HEALTHY: The runner is healthy.
+        UNHEALTHY: The runner is not healthy.
+        UNKNOWN: Unable to get the health state.
+    """
+
+    HEALTHY = auto()
+    UNHEALTHY = auto()
+    UNKNOWN = auto()
 
 
 class CloudRunnerState(str, Enum):
@@ -76,6 +89,38 @@ class CloudRunnerState(str, Enum):
 
 
 @dataclass
+class GitHubRunnerConfig:
+    """Configuration for GitHub runner spawned.
+
+    Attributes:
+        github_path: The GitHub organization or repository for runners to connect to.
+        labels: The labels to add to runners.
+    """
+
+    github_path: GithubPath
+    labels: list[str]
+
+
+@dataclass
+class SupportServiceConfig:
+    """Configuration for supporting services for runners.
+
+    Attributes:
+        proxy_config: The proxy configuration.
+        dockerhub_mirror: The dockerhub mirror to use for runners.
+        ssh_debug_connections: The information on the ssh debug services.
+        repo_policy_url: The URL of the repo policy service.
+        repo_policy_token: The token to access the repo policy service.
+    """
+
+    proxy_config: ProxyConfig | None
+    dockerhub_mirror: str | None
+    ssh_debug_connections: list[SSHDebugConnection] | None
+    repo_policy_url: str | None
+    repo_policy_token: str | None
+
+
+@dataclass
 class CloudRunnerInstance:
     """Information on the runner on the cloud.
 
@@ -93,10 +138,15 @@ class CloudRunnerInstance:
 
 
 class CloudRunnerManager(abc.ABC):
-    """Manage runner instance on cloud."""
+    """Manage runner instance on cloud.
 
+    Attributes:
+        name_prefix: The name prefix of the self-hosted runners.
+    """
+
+    @property
     @abc.abstractmethod
-    def get_name_prefix(self) -> str:
+    def name_prefix(self) -> str:
         """Get the name prefix of the self-hosted runners."""
 
     @abc.abstractmethod

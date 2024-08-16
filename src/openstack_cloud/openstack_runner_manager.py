@@ -16,7 +16,7 @@ import paramiko
 import paramiko.ssh_exception
 from fabric import Connection as SSHConnection
 
-from charm_state import GithubOrg, GithubPath, ProxyConfig, SSHDebugConnection
+from charm_state import GithubOrg
 from errors import (
     CreateMetricsStorageError,
     GetMetricsStorageError,
@@ -31,7 +31,9 @@ from manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
+    GitHubRunnerConfig,
     InstanceId,
+    SupportServiceConfig,
 )
 from manager.runner_manager import HealthState
 from metrics import events as metric_events
@@ -40,7 +42,6 @@ from metrics import storage as metrics_storage
 from openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
 from openstack_cloud.openstack_manager import GithubRunnerRemoveError
 from repo_policy_compliance_client import RepoPolicyComplianceClient
-from runner_type import RunnerNameByHealth
 from utilities import retry
 
 logger = logging.getLogger(__name__)
@@ -63,42 +64,36 @@ class _PullFileError(Exception):
     """Represents an error while pulling a file from the runner instance."""
 
 
-# Ignore "Too many instance attributes" as this dataclass is for passing arguments.
 @dataclass
-class OpenstackRunnerManagerConfig:  # pylint: disable=R0902
-    """Configuration for OpenstackRunnerManager.
+class OpenStackCloudConfig:
+    """Configuration for OpenStack cloud authorisation information.
 
     Attributes:
         clouds_config: The clouds.yaml.
         cloud: The cloud name to connect to.
-        image: The image name for runners to use.
-        flavor: The flavor name for runners to use.
-        network: The network name for runners to use.
-        github_path: The GitHub organization or repository for runners to connect to.
-        labels: The labels to add to runners.
-        proxy_config: The proxy configuration.
-        dockerhub_mirror: The dockerhub mirror to use for runners.
-        ssh_debug_connections: The information on the ssh debug services.
-        repo_policy_url: The URL of the repo policy service.
-        repo_policy_token: The token to access the repo policy service.
     """
 
     clouds_config: dict[str, dict]
     cloud: str
-    image: str
-    flavor: str
-    network: str
-    github_path: GithubPath
-    labels: list[str]
-    proxy_config: ProxyConfig | None
-    dockerhub_mirror: str | None
-    ssh_debug_connections: list[SSHDebugConnection] | None
-    repo_policy_url: str | None
-    repo_policy_token: str | None
 
 
 @dataclass
-class RunnerHealth:
+class OpenStackServerConfig:
+    """Configuration for OpenStack server.
+
+    Attributes:
+        image: The image name for runners to use.
+        flavor: The flavor name for runners to use.
+        network: The network name for runners to use.
+    """
+
+    image: str
+    flavor: str
+    network: str
+
+
+@dataclass
+class _RunnerHealth:
     """Runners with health state.
 
     Attributes:
@@ -111,30 +106,40 @@ class RunnerHealth:
 
 
 class OpenstackRunnerManager(CloudRunnerManager):
-    """Manage self-hosted runner on OpenStack cloud."""
+    """Manage self-hosted runner on OpenStack cloud.
 
-    def __init__(self, prefix: str, config: OpenstackRunnerManagerConfig) -> None:
+    Attributes:
+        name_prefix: The name prefix of the runners created.
+    """
+
+    # Ignore "Too many arguments", as the class requires a lot of configurations.
+    def __init__(  # pylint: disable=R0913
+        self,
+        prefix: str,
+        cloud_config: OpenStackCloudConfig,
+        server_config: OpenStackServerConfig,
+        runner_config: GitHubRunnerConfig,
+        service_config: SupportServiceConfig,
+    ) -> None:
         """Construct the object.
 
         Args:
             prefix: The prefix to runner name.
-            config: Configuration of the object.
+            cloud_config: The configuration for OpenStack authorisation.
+            server_config: The configuration for creating OpenStack server.
+            runner_config: The configuration for the runner.
+            service_config: The configuration of supporting services of the runners.
         """
-        self.prefix = prefix
-        self.config = config
+        self.name_prefix = prefix
+        self._cloud_config = cloud_config
+        self._server_config = server_config
+        self._runner_config = runner_config
+        self._service_config = service_config
         self._openstack_cloud = OpenstackCloud(
-            clouds_config=self.config.clouds_config,
-            cloud=self.config.cloud,
-            prefix=self.prefix,
+            clouds_config=self._cloud_config.clouds_config,
+            cloud=self._cloud_config.cloud,
+            prefix=self.name_prefix,
         )
-
-    def get_name_prefix(self) -> str:
-        """Get the name prefix of the self-hosted runners.
-
-        Returns:
-            The name prefix.
-        """
-        return self.prefix
 
     def create_runner(self, registration_token: str) -> InstanceId:
         """Create a self-hosted runner.
@@ -157,9 +162,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
         try:
             instance = self._openstack_cloud.launch_instance(
                 instance_id=instance_id,
-                image=self.config.image,
-                flavor=self.config.flavor,
-                network=self.config.network,
+                image=self._server_config.image,
+                flavor=self._server_config.flavor,
+                network=self._server_config.network,
                 cloud_init=cloud_init,
             )
         except OpenStackError as err:
@@ -171,7 +176,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         end_timestamp = time.time()
         OpenstackRunnerManager._issue_runner_installed_metric(
             name=instance_name,
-            flavor=self.prefix,
+            flavor=self.name_prefix,
             install_start_timestamp=start_timestamp,
             install_end_timestamp=end_timestamp,
         )
@@ -216,7 +221,11 @@ class OpenstackRunnerManager(CloudRunnerManager):
             CloudRunnerInstance(
                 name=instance.server_name,
                 instance_id=instance.instance_id,
-                health=HealthState.HEALTHY if self._runner_health_check(instance) else HealthState.UNHEALTHY,
+                health=(
+                    HealthState.HEALTHY
+                    if self._runner_health_check(instance)
+                    else HealthState.UNHEALTHY
+                ),
                 state=CloudRunnerState.from_openstack_server_status(instance.status),
             )
             for instance in instance_list
@@ -306,8 +315,8 @@ class OpenstackRunnerManager(CloudRunnerManager):
             logger.exception(
                 "Unable to delete openstack instance for runner %s", instance.server_name
             )
-            
-    def _get_runners_health(self) -> RunnerHealth:
+
+    def _get_runners_health(self) -> _RunnerHealth:
         """Get runners by health state.
 
         Returns:
@@ -321,11 +330,11 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 healthy.append(runner)
             else:
                 unhealthy.append(runner)
-        return RunnerHealth(healthy=tuple(healthy), unhealthy=tuple(unhealthy))
+        return _RunnerHealth(healthy=tuple(healthy), unhealthy=tuple(unhealthy))
 
     def _runner_health_check(self, instance: OpenstackInstance) -> bool:
         """Run health check on a runner.
-        
+
         Args:
             instance: The instance hosting the runner to run health check on.
 
@@ -357,10 +366,10 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         env_contents = jinja.get_template("env.j2").render(
             pre_job_script=str(PRE_JOB_SCRIPT),
-            dockerhub_mirror=self.config.dockerhub_mirror or "",
+            dockerhub_mirror=self._service_config.dockerhub_mirror or "",
             ssh_debug_info=(
-                secrets.choice(self.config.ssh_debug_connections)
-                if self.config.ssh_debug_connections
+                secrets.choice(self._service_config.ssh_debug_connections)
+                if self._service_config.ssh_debug_connections
                 else None
             ),
             # Proxies are handled by aproxy.
@@ -385,24 +394,24 @@ class OpenstackRunnerManager(CloudRunnerManager):
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
         runner_group = None
-        if isinstance(self.config.github_path, GithubOrg):
-            runner_group = self.config.github_path.group
+        if isinstance(self._runner_config.github_path, GithubOrg):
+            runner_group = self._runner_config.github_path.group
         aproxy_address = (
-            self.config.proxy_config.aproxy_address
-            if self.config.proxy_config is not None
+            self._service_config.proxy_config.aproxy_address
+            if self._service_config.proxy_config is not None
             else None
         )
         return jinja.get_template("openstack-userdata.sh.j2").render(
-            github_url=f"https://github.com/{self.config.github_path.path()}",
+            github_url=f"https://github.com/{self._runner_config.github_path.path()}",
             runner_group=runner_group,
             token=registration_token,
-            instance_labels=",".join(self.config.labels),
+            instance_labels=",".join(self._runner_config.labels),
             instance_name=instance_name,
             env_contents=env_contents,
             pre_job_contents=pre_job_contents,
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
             aproxy_address=aproxy_address,
-            dockerhub_mirror=self.config.dockerhub_mirror,
+            dockerhub_mirror=self._service_config.dockerhub_mirror,
         )
 
     def _get_repo_policy_compliance_client(self) -> RepoPolicyComplianceClient | None:
@@ -411,9 +420,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
         Returns:
             The repo policy compliance client.
         """
-        if self.config.repo_policy_url and self.config.repo_policy_token:
+        if self._service_config.repo_policy_url and self._service_config.repo_policy_token:
             return RepoPolicyComplianceClient(
-                self.config.repo_policy_url, self.config.repo_policy_token
+                self._service_config.repo_policy_url, self._service_config.repo_policy_token
             )
         return None
 

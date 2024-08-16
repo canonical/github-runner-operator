@@ -17,10 +17,10 @@ Manager for self-hosted runner on OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L66"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L67"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>class</kbd> `OpenstackRunnerManagerConfig`
-Configuration for OpenstackRunnerManager. 
+## <kbd>class</kbd> `OpenStackCloudConfig`
+Configuration for OpenStack cloud authorisation information. 
 
 
 
@@ -28,36 +28,13 @@ Configuration for OpenstackRunnerManager.
  
  - <b>`clouds_config`</b>:  The clouds.yaml. 
  - <b>`cloud`</b>:  The cloud name to connect to. 
- - <b>`image`</b>:  The image name for runners to use. 
- - <b>`flavor`</b>:  The flavor name for runners to use. 
- - <b>`network`</b>:  The network name for runners to use. 
- - <b>`github_path`</b>:  The GitHub organization or repository for runners to connect to. 
- - <b>`labels`</b>:  The labels to add to runners. 
- - <b>`proxy_config`</b>:  The proxy configuration. 
- - <b>`dockerhub_mirror`</b>:  The dockerhub mirror to use for runners. 
- - <b>`ssh_debug_connections`</b>:  The information on the ssh debug services. 
- - <b>`repo_policy_url`</b>:  The URL of the repo policy service. 
- - <b>`repo_policy_token`</b>:  The token to access the repo policy service. 
 
 <a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
 ```python
-__init__(
-    clouds_config: dict[str, dict],
-    cloud: str,
-    image: str,
-    flavor: str,
-    network: str,
-    github_path: GithubOrg | GithubRepo,
-    labels: list[str],
-    proxy_config: ProxyConfig | None,
-    dockerhub_mirror: str | None,
-    ssh_debug_connections: list[SSHDebugConnection] | None,
-    repo_policy_url: str | None,
-    repo_policy_token: str | None
-) → None
+__init__(clouds_config: dict[str, dict], cloud: str) → None
 ```
 
 
@@ -70,27 +47,25 @@ __init__(
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L99"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L80"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>class</kbd> `RunnerHealth`
-Runners with health state. 
+## <kbd>class</kbd> `OpenStackServerConfig`
+Configuration for OpenStack server. 
 
 
 
 **Attributes:**
  
- - <b>`healthy`</b>:  The list of healthy runners. 
- - <b>`unhealthy`</b>:   The list of unhealthy runners. 
+ - <b>`image`</b>:  The image name for runners to use. 
+ - <b>`flavor`</b>:  The flavor name for runners to use. 
+ - <b>`network`</b>:  The network name for runners to use. 
 
 <a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
 ```python
-__init__(
-    healthy: tuple[OpenstackInstance, ],
-    unhealthy: tuple[OpenstackInstance, ]
-) → None
+__init__(image: str, flavor: str, network: str) → None
 ```
 
 
@@ -103,17 +78,29 @@ __init__(
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L112"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L108"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackRunnerManager`
 Manage self-hosted runner on OpenStack cloud. 
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L115"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+
+**Attributes:**
+ 
+ - <b>`name_prefix`</b>:  The name prefix of the runners created. 
+
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L116"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
 ```python
-__init__(prefix: str, config: OpenstackRunnerManagerConfig) → None
+__init__(
+    prefix: str,
+    cloud_config: OpenStackCloudConfig,
+    server_config: OpenStackServerConfig,
+    runner_config: GitHubRunnerConfig,
+    service_config: SupportServiceConfig
+) → None
 ```
 
 Construct the object. 
@@ -123,14 +110,23 @@ Construct the object.
 **Args:**
  
  - <b>`prefix`</b>:  The prefix to runner name. 
- - <b>`config`</b>:  Configuration of the object. 
+ - <b>`cloud_config`</b>:  The configuration for OpenStack authorisation. 
+ - <b>`server_config`</b>:  The configuration for creating OpenStack server. 
+ - <b>`runner_config`</b>:  The configuration for the runner. 
+ - <b>`service_config`</b>:  The configuration of supporting services of the runners. 
 
+
+---
+
+#### <kbd>property</kbd> name_prefix
+
+Get the name prefix of the self-hosted runners. 
 
 
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L250"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L263"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `cleanup`
 
@@ -153,7 +149,7 @@ Cleanup runner and resource on the cloud.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L138"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L144"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `create_runner`
 
@@ -182,7 +178,7 @@ Create a self-hosted runner.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L224"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L237"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `delete_runner`
 
@@ -206,24 +202,7 @@ Delete self-hosted runners.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L130"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>method</kbd> `get_name_prefix`
-
-```python
-get_name_prefix() → str
-```
-
-Get the name prefix of the self-hosted runners. 
-
-
-
-**Returns:**
-  The name prefix. 
-
----
-
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L179"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L185"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_runner`
 
@@ -246,24 +225,7 @@ Get a self-hosted runner by instance id.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L270"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>method</kbd> `get_runner_health`
-
-```python
-get_runner_health() → RunnerNameByHealth
-```
-
-Get the runner health state. 
-
-
-
-**Returns:**
-  The names of the runner by health state. 
-
----
-
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L199"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L207"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_runners`
 
