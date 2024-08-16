@@ -33,6 +33,7 @@ from manager.cloud_runner_manager import (
     CloudRunnerState,
     InstanceId,
 )
+from manager.runner_manager import HealthState
 from metrics import events as metric_events
 from metrics import runner as runner_metrics
 from metrics import storage as metrics_storage
@@ -186,10 +187,12 @@ class OpenstackRunnerManager(CloudRunnerManager):
             Information on the runner instance.
         """
         instance = self._openstack_cloud.get_instance(instance_id)
+        healthy = self._runner_health_check(instance=instance)
         return (
             CloudRunnerInstance(
                 name=instance.server_name,
                 instance_id=instance_id,
+                health=HealthState.HEALTHY if healthy else HealthState.UNHEALTHY,
                 state=CloudRunnerState.from_openstack_server_status(instance.status),
             )
             if instance is not None
@@ -213,6 +216,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             CloudRunnerInstance(
                 name=instance.server_name,
                 instance_id=instance.instance_id,
+                health=HealthState.HEALTHY if self._runner_health_check(instance) else HealthState.UNHEALTHY,
                 state=CloudRunnerState.from_openstack_server_status(instance.status),
             )
             for instance in instance_list
@@ -256,7 +260,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         Returns:
             Any metrics retrieved from cleanup runners.
         """
-        runners = self._get_runner_health()
+        runners = self._get_runners_health()
         healthy_runner_names = [runner.server_name for runner in runners.healthy]
         metrics = runner_metrics.extract(
             metrics_storage_manager=metrics_storage, runners=set(healthy_runner_names)
@@ -266,18 +270,6 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         self._openstack_cloud.cleanup()
         return metrics
-
-    def get_runner_health(self) -> RunnerNameByHealth:
-        """Get the runner health state.
-
-        Returns:
-            The names of the runner by health state.
-        """
-        runners = self._get_runner_health()
-        return RunnerNameByHealth(
-            tuple(runner.server_name for runner in runners.healthy),
-            tuple(runner.server_name for runner in runners.unhealthy),
-        )
 
     def _delete_runner(self, instance: OpenstackInstance, remove_token: str) -> None:
         """Delete self-hosted runners by openstack instance.
@@ -314,8 +306,8 @@ class OpenstackRunnerManager(CloudRunnerManager):
             logger.exception(
                 "Unable to delete openstack instance for runner %s", instance.server_name
             )
-
-    def _get_runner_health(self) -> RunnerHealth:
+            
+    def _get_runners_health(self) -> RunnerHealth:
         """Get runners by health state.
 
         Returns:
@@ -325,18 +317,29 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         healthy, unhealthy = [], []
         for runner in runner_list:
-            cloud_state = CloudRunnerState.from_openstack_server_status(runner.status)
-            if cloud_state in set(
-                (
-                    CloudRunnerState.DELETED,
-                    CloudRunnerState.ERROR,
-                    CloudRunnerState.STOPPED,
-                )
-            ) or not self._health_check(runner):
-                unhealthy.append(runner)
-            else:
+            if self._runner_health_check(runner):
                 healthy.append(runner)
+            else:
+                unhealthy.append(runner)
         return RunnerHealth(healthy=tuple(healthy), unhealthy=tuple(unhealthy))
+
+    def _runner_health_check(self, instance: OpenstackInstance) -> bool:
+        """Run health check on a runner.
+        
+        Args:
+            instance: The instance hosting the runner to run health check on.
+
+        Returns:
+            True if runner is healthy.
+        """
+        cloud_state = CloudRunnerState.from_openstack_server_status(instance.status)
+        return cloud_state not in set(
+            (
+                CloudRunnerState.DELETED,
+                CloudRunnerState.ERROR,
+                CloudRunnerState.STOPPED,
+            )
+        ) and self._health_check(instance)
 
     def _generate_cloud_init(self, instance_name: str, registration_token: str) -> str:
         """Generate cloud init userdata.

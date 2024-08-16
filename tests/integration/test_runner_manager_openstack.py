@@ -238,7 +238,7 @@ async def test_runner_normal_idle_lifecycle(
     assert isinstance(runner_list, tuple)
     assert len(runner_list) == 1
     runner = runner_list[0]
-    assert runner.id == runner_id
+    assert runner.instance_id == runner_id
     assert runner.cloud_state == CloudRunnerState.ACTIVE
     # Update on GitHub-side can take a bit of time.
     await wait_for(

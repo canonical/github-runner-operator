@@ -6,9 +6,10 @@
 import abc
 import logging
 from dataclasses import dataclass
-from enum import Enum
+from enum import Enum, auto
 from typing import Iterator, Sequence, Tuple
 
+from manager.runner_manager import HealthState
 from metrics.runner import RunnerMetrics
 from runner_type import RunnerNameByHealth
 
@@ -30,13 +31,13 @@ class CloudRunnerState(str, Enum):
         UNEXPECTED: An unknown state not accounted by the developer is encountered.
     """
 
-    CREATED = "created"
-    ACTIVE = "active"
-    DELETED = "deleted"
-    ERROR = "error"
-    STOPPED = "stopped"
-    UNKNOWN = "unknown"
-    UNEXPECTED = "unexpected"
+    CREATED = auto()
+    ACTIVE = auto()
+    DELETED = auto()
+    ERROR = auto()
+    STOPPED = auto()
+    UNKNOWN = auto()
+    UNEXPECTED = auto()
 
     # Disable "Too many return statements" as this method is using case statement for converting
     # the states, which does not cause a complexity issue.
@@ -81,11 +82,13 @@ class CloudRunnerInstance:
     Attributes:
         name: Name of the instance hosting the runner.
         instance_id: ID of the instance.
+        health: Health state of the runner.
         state: State of the instance hosting the runner.
     """
 
     name: str
     instance_id: InstanceId
+    health: HealthState
     state: CloudRunnerState
 
 
@@ -139,7 +142,3 @@ class CloudRunnerManager(abc.ABC):
         Args:
             remove_token: The GitHub remove token.
         """
-
-    @abc.abstractmethod
-    def get_runner_health(self) -> RunnerNameByHealth:
-        """Get the runners health state."""

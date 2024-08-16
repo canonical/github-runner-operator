@@ -40,21 +40,34 @@ class FlushMode(Enum):
 
     FLUSH_IDLE = auto()
     FLUSH_BUSY = auto()
-
-
+    
+class HealthState(Enum):
+    """Health state of the runners.
+    
+    Attributes:
+        HEALTHY: The runner is healthy.
+        UNHEALTHY: The runner is not healthy.
+        UNKNOWN: Unable to get the health state.
+    """
+    HEALTHY = auto()
+    UNHEALTHY= auto()
+    UNKNOWN=auto()
+    
 @dataclass
 class RunnerInstance:
     """Represents an instance of runner.
 
     Attributes:
         name: Full name of the runner. Managed by the cloud runner manager.
-        id: ID of the runner. Managed by the runner manager.
+        instance_id: ID of the runner. Managed by the runner manager.
+        health: The health state of the runner.
         github_state: State on github.
         cloud_state: State on cloud.
     """
 
     name: str
-    id: InstanceId
+    instance_id: InstanceId
+    health: HealthState
     github_state: GithubRunnerState | None
     cloud_state: CloudRunnerState
 
@@ -66,7 +79,8 @@ class RunnerInstance:
             github_info: Information on the GitHub of the runner.
         """
         self.name = cloud_instance.name
-        self.id = cloud_instance.instance_id
+        self.instance_id = cloud_instance.instance_id
+        self.health = cloud_instance.health
         self.github_state = (
             GithubRunnerState.from_runner(github_info) if github_info is not None else None
         )
@@ -249,14 +263,6 @@ class RunnerManager:
         deleted_runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)
 
-    def get_runner_health(self) -> RunnerNameByHealth:
-        """Get the runner health state.
-
-        Returns:
-            The runners by the health state.
-        """
-        return self._cloud.get_runner_health()
-
     def _delete_runners(
         self, runners: Sequence[RunnerInstance], remove_token: str
     ) -> IssuedMetricEventsStats:
@@ -272,7 +278,7 @@ class RunnerManager:
         runner_metrics_list = []
         for runner in runners:
             deleted_runner_metrics = self._cloud.delete_runner(
-                instance_id=runner.id, remove_token=remove_token
+                instance_id=runner.instance_id, remove_token=remove_token
             )
             if deleted_runner_metrics is not None:
                 runner_metrics_list.append(deleted_runner_metrics)
