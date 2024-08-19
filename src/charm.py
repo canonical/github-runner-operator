@@ -8,6 +8,10 @@
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
+from manager.cloud_runner_manager import GitHubRunnerConfig, SupportServiceConfig
+from manager.runner_manager import RunnerManager, RunnerManagerConfig
+from manager.runner_scaler import RunnerScaler
+from openstack_cloud.openstack_runner_manager import OpenStackCloudConfig, OpenStackServerConfig
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
@@ -78,9 +82,9 @@ from errors import (
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
-from openstack_cloud.openstack_manager import OpenstackRunnerManager
+from openstack_cloud.openstack_runner_manager import OpenStackRunnerManager
 from runner import LXD_PROFILE_YAML
-from runner_manager import RunnerManager, RunnerManagerConfig
+from runner_manager import LXDRunnerManager, LXDRunnerManagerConfig
 from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
 
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
@@ -366,7 +370,7 @@ class GithubRunnerCharm(CharmBase):
 
     def _get_runner_manager(
         self, state: CharmState, token: str | None = None, path: GithubPath | None = None
-    ) -> RunnerManager:
+    ) -> LXDRunnerManager:
         """Get a RunnerManager instance.
 
         Args:
@@ -399,10 +403,10 @@ class GithubRunnerCharm(CharmBase):
 
         app_name, unit = self.unit.name.rsplit("/", 1)
 
-        return RunnerManager(
+        return LXDRunnerManager(
             app_name,
             unit,
-            RunnerManagerConfig(
+            LXDRunnerManagerConfig(
                 charm_state=state,
                 dockerhub_mirror=state.charm_config.dockerhub_mirror,
                 image=state.runner_config.base_image.value,
@@ -495,8 +499,8 @@ class GithubRunnerCharm(CharmBase):
         if state.instance_type == InstanceType.OPENSTACK:
             if not self._get_set_image_ready_status():
                 return
-            openstack_runner_manager = self._get_openstack_runner_manager(state)
-            openstack_runner_manager.reconcile(state.runner_config.virtual_machines)
+            runner_scaler = self._get_runner_scaler(state)
+            runner_scaler.reconcile(state.runner_config.virtual_machines)
             self.unit.status = ActiveStatus()
             return
 
@@ -618,9 +622,9 @@ class GithubRunnerCharm(CharmBase):
             if not self._get_set_image_ready_status():
                 return
             if state.charm_config.token != self._stored.token:
-                openstack_runner_manager = self._get_openstack_runner_manager(state)
-                openstack_runner_manager.flush()
-                openstack_runner_manager.reconcile(state.runner_config.virtual_machines)
+                runner_scaler = self._get_runner_scaler(state)
+                runner_scaler.flush()
+                runner_scaler.reconcile(state.runner_config.virtual_machines)
                 # TODO: 2024-04-12: Flush on token changes.
                 self.unit.status = ActiveStatus()
             return
@@ -639,7 +643,7 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = ActiveStatus()
 
     def _check_and_update_local_lxd_dependencies(
-        self, runner_manager: RunnerManager, token: str, proxy_config: ProxyConfig
+        self, runner_manager: LXDRunnerManager, token: str, proxy_config: ProxyConfig
     ) -> bool:
         """Check and update runner binary and services for local LXD runners.
 
@@ -719,8 +723,8 @@ class GithubRunnerCharm(CharmBase):
         if state.instance_type == InstanceType.OPENSTACK:
             if not self._get_set_image_ready_status():
                 return
-            runner_manager = self._get_openstack_runner_manager(state)
-            runner_manager.reconcile(state.runner_config.virtual_machines)
+            runner_scaler = self._get_runner_scaler(state)
+            runner_scaler.reconcile(state.runner_config.virtual_machines)
             self.unit.status = ActiveStatus()
             return
 
@@ -757,23 +761,8 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
-            openstack_runner_manager = self._get_openstack_runner_manager(state)
-            runner_info = openstack_runner_manager.get_github_runner_info()
-
-            for info in runner_info:
-                if info.online:
-                    online += 1
-                    runner_names.append(info.runner_name)
-                else:
-                    offline += 1
-            event.set_results(
-                {
-                    "online": online,
-                    "offline": offline,
-                    "unknown": unknown,
-                    "runners": ", ".join(runner_names),
-                }
-            )
+            runner_scaler = self._get_runner_scaler(state)
+            event.set_results(runner_scaler.get_runner_info())
             return
 
         runner_manager = self._get_runner_manager(state)
@@ -814,9 +803,9 @@ class GithubRunnerCharm(CharmBase):
             if not self._get_set_image_ready_status():
                 event.fail("Openstack image not yet provided/ready.")
                 return
-            runner_manager = self._get_openstack_runner_manager(state)
+            runner_scaler = self._get_runner_scaler(state)
 
-            delta = runner_manager.reconcile(state.runner_config.virtual_machines)
+            delta = runner_scaler.reconcile(state.runner_config.virtual_machines)
             self.unit.status = ActiveStatus()
             event.set_results({"delta": {"virtual-machines": delta}})
             return
@@ -847,8 +836,8 @@ class GithubRunnerCharm(CharmBase):
 
         if state.instance_type == InstanceType.OPENSTACK:
             # Flushing mode not implemented for OpenStack yet.
-            runner_manager = self._get_openstack_runner_manager(state)
-            flushed = runner_manager.flush()
+            runner_scaler = self._get_runner_scaler(state)
+            flushed = runner_scaler.flush()
             event.set_results({"delta": {"virtual-machines": flushed}})
             return
 
@@ -895,15 +884,15 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
-            runner_manager = self._get_openstack_runner_manager(state)
-            runner_manager.flush()
+            runner_scaler = self._get_runner_scaler(state)
+            runner_scaler.flush()
             return
 
         runner_manager = self._get_runner_manager(state)
         runner_manager.flush(FlushMode.FLUSH_BUSY)
 
     def _reconcile_runners(
-        self, runner_manager: RunnerManager, num: int, resources: VirtualMachineResources
+        self, runner_manager: LXDRunnerManager, num: int, resources: VirtualMachineResources
     ) -> Dict[str, Any]:
         """Reconcile the current runners state and intended runner state.
 
@@ -918,7 +907,7 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             Changes in runner number due to reconciling runners.
         """
-        if not RunnerManager.runner_bin_path.is_file():
+        if not LXDRunnerManager.runner_bin_path.is_file():
             logger.warning("Unable to reconcile due to missing runner binary")
             raise MissingRunnerBinaryError("Runner binary not found.")
 
@@ -1148,10 +1137,10 @@ class GithubRunnerCharm(CharmBase):
         if state.instance_type == InstanceType.OPENSTACK:
             if not self._get_set_image_ready_status():
                 return
-            runner_manager = self._get_openstack_runner_manager(state)
+            runner_scaler = self._get_runner_scaler(state)
             # TODO: 2024-04-12: Should be flush idle.
-            runner_manager.flush()
-            runner_manager.reconcile(state.runner_config.virtual_machines)
+            runner_scaler.flush()
+            runner_scaler.reconcile(state.runner_config.virtual_machines)
             return
 
         self._refresh_firewall(state)
@@ -1176,10 +1165,10 @@ class GithubRunnerCharm(CharmBase):
         if not self._get_set_image_ready_status():
             return
 
-        runner_manager = self._get_openstack_runner_manager(state)
+        runner_scaler = self._get_runner_scaler(state)
         # TODO: 2024-04-12: Should be flush idle.
-        runner_manager.flush()
-        runner_manager.reconcile(state.runner_config.virtual_machines)
+        runner_scaler.flush()
+        runner_scaler.reconcile(state.runner_config.virtual_machines)
         self.unit.status = ActiveStatus()
         return
 
@@ -1198,10 +1187,10 @@ class GithubRunnerCharm(CharmBase):
             return False
         return True
 
-    def _get_openstack_runner_manager(
+    def _get_runner_scaler(
         self, state: CharmState, token: str | None = None, path: GithubPath | None = None
-    ) -> OpenstackRunnerManager:
-        """Get OpenstackRunnerManager instance.
+    ) -> RunnerScaler:
+        """Get runner scaler instance for scaling runners.
 
         TODO: 2024-07-09 Combine this with `_get_runner_manager` during the runner manager \
         interface refactor.
@@ -1214,39 +1203,61 @@ class GithubRunnerCharm(CharmBase):
                 name. If None the path in charm state is used.
 
         Returns:
-            An instance of OpenstackRunnerManager.
+            An instance of RunnerScaler.
         """
         if token is None:
             token = state.charm_config.token
         if path is None:
             path = state.charm_config.path
 
-        # Empty image can be passed down due to a delete only case where deletion of runners do not
-        # depend on the image ID being available. Make sure that the charm goes to blocked status
-        # in hook where a runner may be created. TODO: 2024-07-09 This logic is subject to
-        # refactoring.
-        image = state.runner_config.openstack_image
-        image_id = image.id if image and image.id else ""
-        image_labels = image.tags if image and image.tags else []
-
         app_name, unit = self.unit.name.rsplit("/", 1)
-        openstack_runner_manager_config = OpenstackRunnerManagerConfig(
-            charm_state=state,
-            path=path,
-            token=token,
-            labels=(*state.charm_config.labels, *image_labels),
-            flavor=state.runner_config.openstack_flavor,
-            image=image_id,
-            network=state.runner_config.openstack_network,
+
+        clouds = list(state.charm_config.openstack_clouds_yaml["clouds"].keys())
+        if len(clouds) > 1:
+            logger.warning(
+                "Multiple clouds defined in clouds.yaml. Using the first one to connect."
+            )
+        cloud_config = OpenStackCloudConfig(
+            clouds_config=state.charm_config.openstack_clouds_yaml,
+            cloud=clouds[0],
+        )
+        server_config = None
+        image_labels = []
+        image = state.runner_config.openstack_image
+        if image and image.id:
+            server_config = OpenStackServerConfig(
+                image=image.id,
+                flavor=state.runner_config.openstack_flavor,
+                network=state.runner_config.openstack_network,
+            )
+            if image.tags:
+                image_labels += image.tags
+
+        runner_config = GitHubRunnerConfig(
+            github_path=path, labels=(*state.charm_config.labels, *image_labels)
+        )
+        service_config = SupportServiceConfig(
+            proxy_config=state.proxy_config,
             dockerhub_mirror=state.charm_config.dockerhub_mirror,
-            reactive_config=state.reactive_config,
+            ssh_debug_connections=state.ssh_debug_connections,
+            repo_policy_url=state.charm_config.repo_policy_compliance.url,
+            repo_policy_token=state.charm_config.repo_policy_compliance.token,
         )
-        return OpenstackRunnerManager(
+        openstack_runner_manager = OpenStackRunnerManager(
             app_name,
-            unit,
-            openstack_runner_manager_config,
-            state.charm_config.openstack_clouds_yaml,
+            cloud_config=cloud_config,
+            server_config=server_config,
+            runner_config=runner_config,
+            service_config=service_config,
         )
+        runner_manager_config = RunnerManagerConfig(
+            token=token,
+            path=path,
+        )
+        runner_manager = RunnerManager(
+            cloud_runner_manager=openstack_runner_manager, config=runner_manager_config
+        )
+        return RunnerScaler(runner_manager=runner_manager)
 
 
 if __name__ == "__main__":

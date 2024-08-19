@@ -71,7 +71,7 @@ __init__(
 
 <a href="../src/runner_manager_type.py#L62"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>class</kbd> `RunnerManagerConfig`
+## <kbd>class</kbd> `LXDRunnerManagerConfig`
 Configuration of runner manager. 
 
 

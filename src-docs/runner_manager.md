@@ -15,7 +15,7 @@ Runner Manager manages the runners on LXD and GitHub.
 
 <a href="../src/runner_manager.py#L59"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>class</kbd> `RunnerManager`
+## <kbd>class</kbd> `LXDRunnerManager`
 Manage a group of runners according to configuration. 
 
 
@@ -33,7 +33,7 @@ Manage a group of runners according to configuration.
 __init__(
     app_name: str,
     unit: int,
-    runner_manager_config: RunnerManagerConfig
+    runner_manager_config: LXDRunnerManagerConfig
 ) → None
 ```
 

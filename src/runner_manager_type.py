@@ -61,7 +61,7 @@ class RunnerManagerClients:
 
 @dataclass
 # The instance attributes are all required.
-class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
+class LXDRunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     """Configuration of runner manager.
 
     Attributes:

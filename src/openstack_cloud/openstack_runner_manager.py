@@ -22,6 +22,7 @@ from errors import (
     GetMetricsStorageError,
     IssueMetricEventError,
     KeyfileError,
+    MissingServerConfigError,
     OpenStackError,
     RunnerCreateError,
     RunnerStartError,
@@ -105,7 +106,7 @@ class _RunnerHealth:
     unhealthy: tuple[OpenstackInstance, ...]
 
 
-class OpenstackRunnerManager(CloudRunnerManager):
+class OpenStackRunnerManager(CloudRunnerManager):
     """Manage self-hosted runner on OpenStack cloud.
 
     Attributes:
@@ -117,7 +118,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         self,
         prefix: str,
         cloud_config: OpenStackCloudConfig,
-        server_config: OpenStackServerConfig,
+        server_config: OpenStackServerConfig | None,
         runner_config: GitHubRunnerConfig,
         service_config: SupportServiceConfig,
     ) -> None:
@@ -126,7 +127,8 @@ class OpenstackRunnerManager(CloudRunnerManager):
         Args:
             prefix: The prefix to runner name.
             cloud_config: The configuration for OpenStack authorisation.
-            server_config: The configuration for creating OpenStack server.
+            server_config: The configuration for creating OpenStack server. Unable to create
+                runner if None.
             runner_config: The configuration for the runner.
             service_config: The configuration of supporting services of the runners.
         """
@@ -162,8 +164,11 @@ class OpenstackRunnerManager(CloudRunnerManager):
         Returns:
             Instance ID of the runner.
         """
+        if self._server_config is None:
+            raise MissingServerConfigError("Missing server configuration to create runners")
+
         start_timestamp = time.time()
-        instance_id = OpenstackRunnerManager._generate_instance_id()
+        instance_id = OpenStackRunnerManager._generate_instance_id()
         instance_name = self._openstack_cloud.get_server_name(instance_id=instance_id)
         cloud_init = self._generate_cloud_init(
             instance_name=instance_name, registration_token=registration_token
@@ -183,7 +188,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         self._wait_runner_running(instance)
 
         end_timestamp = time.time()
-        OpenstackRunnerManager._issue_runner_installed_metric(
+        OpenStackRunnerManager._issue_runner_installed_metric(
             name=instance_name,
             flavor=self.name_prefix,
             install_start_timestamp=start_timestamp,
@@ -301,7 +306,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             self._pull_runner_metrics(instance.server_name, ssh_conn)
 
             try:
-                OpenstackRunnerManager._run_runner_removal_script(
+                OpenStackRunnerManager._run_runner_removal_script(
                     instance.server_name, ssh_conn, remove_token
                 )
             except GithubRunnerRemoveError:
@@ -460,7 +465,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 "SSH connection failure with %s during health check", instance.server_name
             )
             raise
-        return OpenstackRunnerManager._run_health_check(ssh_conn, instance.server_name)
+        return OpenStackRunnerManager._run_health_check(ssh_conn, instance.server_name)
 
     @staticmethod
     def _run_health_check(ssh_conn: SSHConnection, name: str) -> bool:
@@ -611,13 +616,13 @@ class OpenstackRunnerManager(CloudRunnerManager):
             return
 
         try:
-            OpenstackRunnerManager._ssh_pull_file(
+            OpenStackRunnerManager._ssh_pull_file(
                 ssh_conn=ssh_conn,
                 remote_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"),
                 local_path=str(storage.path / "pre-job-metrics.json"),
                 max_size=MAX_METRICS_FILE_SIZE,
             )
-            OpenstackRunnerManager._ssh_pull_file(
+            OpenStackRunnerManager._ssh_pull_file(
                 ssh_conn=ssh_conn,
                 remote_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"),
                 local_path=str(storage.path / "post-job-metrics.json"),

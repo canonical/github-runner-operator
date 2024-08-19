@@ -47,7 +47,7 @@ from errors import (
 from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
-from runner_manager import RunnerInfo, RunnerManagerConfig
+from runner_manager import LXDRunnerManagerConfig, RunnerInfo
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
@@ -458,7 +458,7 @@ class TestCharm(unittest.TestCase):
         rm.assert_called_with(
             "github-runner",
             "0",
-            RunnerManagerConfig(
+            LXDRunnerManagerConfig(
                 path=GithubOrg(org="mockorg", group="mockgroup"),
                 token="mocktoken",
                 image="jammy",
@@ -488,7 +488,7 @@ class TestCharm(unittest.TestCase):
         rm.assert_called_with(
             "github-runner",
             "0",
-            RunnerManagerConfig(
+            LXDRunnerManagerConfig(
                 path=GithubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
                 image="jammy",
@@ -546,7 +546,7 @@ class TestCharm(unittest.TestCase):
         rm.assert_called_with(
             "github-runner",
             "0",
-            RunnerManagerConfig(
+            LXDRunnerManagerConfig(
                 path=GithubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
                 image="jammy",
@@ -568,7 +568,7 @@ class TestCharm(unittest.TestCase):
         rm.assert_called_with(
             "github-runner",
             "0",
-            RunnerManagerConfig(
+            LXDRunnerManagerConfig(
                 path=GithubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
                 image="jammy",
@@ -926,7 +926,7 @@ def test__on_image_relation_image_ready():
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._get_set_image_ready_status = MagicMock(return_value=True)
     runner_manager_mock = MagicMock()
-    harness.charm._get_openstack_runner_manager = MagicMock(return_value=runner_manager_mock)
+    harness.charm._get_runner_scaler = MagicMock(return_value=runner_manager_mock)
 
     harness.charm._on_image_relation_changed(MagicMock())
 
