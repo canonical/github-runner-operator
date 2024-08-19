@@ -130,7 +130,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             runner_config: The configuration for the runner.
             service_config: The configuration of supporting services of the runners.
         """
-        self.name_prefix = prefix
+        self._prefix = prefix
         self._cloud_config = cloud_config
         self._server_config = server_config
         self._runner_config = runner_config
@@ -140,6 +140,15 @@ class OpenstackRunnerManager(CloudRunnerManager):
             cloud=self._cloud_config.cloud,
             prefix=self.name_prefix,
         )
+
+    @property
+    def name_prefix(self) -> str:
+        """The prefix of runner names.
+
+        Returns:
+            The prefix of the runner names managed by this class.
+        """
+        return self._prefix
 
     def create_runner(self, registration_token: str) -> InstanceId:
         """Create a self-hosted runner.
