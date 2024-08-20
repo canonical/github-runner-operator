@@ -22,5 +22,8 @@ Package for common metrics-related code.
 - **github**: #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
+- **runner_logs**: #  Copyright 2024 Canonical Ltd.
+#  See LICENSE file for licensing details.
+
 
 

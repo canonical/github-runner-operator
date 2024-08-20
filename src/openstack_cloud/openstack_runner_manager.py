@@ -159,6 +159,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             registration_token: The GitHub registration token for registering runners.
 
         Raises:
+            MissingServerConfigError: Unable to create runner due to missing configuration.
             RunnerCreateError: Unable to create runner due to OpenStack issues.
 
         Returns:

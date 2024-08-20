@@ -11,7 +11,6 @@
 from manager.cloud_runner_manager import GitHubRunnerConfig, SupportServiceConfig
 from manager.runner_manager import RunnerManager, RunnerManagerConfig
 from manager.runner_scaler import RunnerScaler
-from openstack_cloud.openstack_runner_manager import OpenStackCloudConfig, OpenStackServerConfig
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
@@ -82,10 +81,14 @@ from errors import (
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
-from openstack_cloud.openstack_runner_manager import OpenStackRunnerManager
+from openstack_cloud.openstack_runner_manager import (
+    OpenStackCloudConfig,
+    OpenStackRunnerManager,
+    OpenStackServerConfig,
+)
 from runner import LXD_PROFILE_YAML
 from runner_manager import LXDRunnerManager, LXDRunnerManagerConfig
-from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
+from runner_manager_type import FlushMode
 
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
 
@@ -1210,7 +1213,7 @@ class GithubRunnerCharm(CharmBase):
         if path is None:
             path = state.charm_config.path
 
-        app_name, unit = self.unit.name.rsplit("/", 1)
+        app_name, _ = self.unit.name.rsplit("/", 1)
 
         clouds = list(state.charm_config.openstack_clouds_yaml["clouds"].keys())
         if len(clouds) > 1:

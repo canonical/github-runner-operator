@@ -1,6 +1,7 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+"""Module for scaling the runners amount."""
 
 import logging
 import time
@@ -15,8 +16,7 @@ from metrics import events as metric_events
 logger = logging.getLogger(__name__)
 
 
-@TypedDict
-class RunnerInfo:
+class RunnerInfo(TypedDict):
     """Information on the runners.
 
     Attributes:
@@ -39,11 +39,16 @@ class RunnerScaler:
         """Construct the object.
 
         Args:
-            runner_manager: The RunnerManager to preform runner reconcile.
+            runner_manager: The RunnerManager to perform runner reconcile.
         """
         self._manager = runner_manager
 
     def get_runner_info(self) -> RunnerInfo:
+        """Get information on the runners.
+
+        Returns:
+            The information on the runners.
+        """
         runner_list = self._manager.get_runners()
         online = 0
         offline = 0
@@ -61,16 +66,26 @@ class RunnerScaler:
                     offline += 1
                 case _:
                     unknown += 1
-        return RunnerInfo(online=online, offline=offline, unknown=unknown, runners=online_runners)
+        return RunnerInfo(
+            online=online, offline=offline, unknown=unknown, runners=tuple(online_runners)
+        )
 
-    def flush(self, flush_mode: FlushMode) -> None:
+    def flush(self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE) -> None:
         """Flush the runners.
 
         Args:
             flush_mode: Determines the types of runner to be flushed.
+
+        Returns:
+            Number of runners flushed.
         """
-        self._manager.cleanup()
-        self._manager.delete_runners(flush_mode=flush_mode)
+        metric_stats = self._manager.cleanup()
+        delete_metric_stats = self._manager.delete_runners(flush_mode=flush_mode)
+        metric_stats = {
+            delete_metric_stats.get(event_name, 0) + metric_stats.get(event_name, 0)
+            for event_name in set(delete_metric_stats) | set(metric_stats)
+        }
+        return metric_stats.get(metric_events.RunnerStop, 0)
 
     def reconcile(self, num_of_runner: int) -> int:
         """Reconcile the quantity of runners.
