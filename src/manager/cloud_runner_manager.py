@@ -176,11 +176,21 @@ class CloudRunnerManager(abc.ABC):
 
     @abc.abstractmethod
     def delete_runner(self, instance_id: InstanceId, remove_token: str) -> RunnerMetrics | None:
-        """Delete self-hosted runners.
+        """Delete self-hosted runner.
 
         Args:
             instance_id: The instance id of the runner to delete.
             remove_token: The GitHub remove token.
+        """
+
+    @abc.abstractmethod
+    def flush_runners(self, remove_token: str, busy: bool = False) -> Iterator[RunnerMetrics]:
+        """Stop all runners.
+
+        Args:
+            remove_token: The GitHub remove token for removing runners.
+            busy: If false, only idle runners are removed. If true, both idle and busy runners are
+                removed.
         """
 
     @abc.abstractmethod
@@ -190,5 +200,5 @@ class CloudRunnerManager(abc.ABC):
         Perform health check on runner and delete the runner if it fails.
 
         Args:
-            remove_token: The GitHub remove token.
+            remove_token: The GitHub remove token for removing runners.
         """

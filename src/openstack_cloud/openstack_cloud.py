@@ -386,11 +386,12 @@ class OpenstackCloud:
             exclude_instances: The keys of these instance will not be deleted.
         """
         logger.info("Cleaning up openstack keypairs")
+        exclude_instance_set = set(exclude_instances)
         keypairs = conn.list_keypairs()
         for key in keypairs:
             # The `name` attribute is of resource.Body type.
             if key.name and str(key.name).startswith(self.prefix):
-                if str(key.name) in set(exclude_instances):
+                if str(key.name) in exclude_instance_set:
                     continue
 
                 try:

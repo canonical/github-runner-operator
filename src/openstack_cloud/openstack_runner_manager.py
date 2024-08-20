@@ -269,6 +269,31 @@ class OpenstackRunnerManager(CloudRunnerManager):
         self._delete_runner(instance, remove_token)
         return next(extracted_metrics, None)
 
+    def flush_runners(
+        self, remove_token: str, busy: bool = False
+    ) -> Iterator[runner_metrics.RunnerMetrics]:
+        """Remove idle and/or busy runners.
+
+        Args:
+            remove_token:
+            busy: If false, only idle runners are removed. If true, both idle and busy runners are
+                removed.
+
+        Returns:
+            Any metrics retrieved from flushed runners.
+        """
+        instance_list = self._openstack_cloud.get_instances()
+        for instance in instance_list:
+            try:
+                self._check_state_and_flush(instance, busy)
+            except SSHError:
+                logger.warning(
+                    "Unable to determine state of  %s and kill runner process due to SSH issues",
+                    instance.server_name,
+                )
+                continue
+        return self.cleanup(remove_token)
+
     def cleanup(self, remove_token: str) -> Iterator[runner_metrics.RunnerMetrics]:
         """Cleanup runner and resource on the cloud.
 
@@ -381,8 +406,6 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 if self._service_config.ssh_debug_connections
                 else None
             ),
-            # Proxies are handled by aproxy.
-            proxies={},
         )
 
         pre_job_contents_dict = {
@@ -434,6 +457,56 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 self._service_config.repo_policy_url, self._service_config.repo_policy_token
             )
         return None
+
+    @retry(tries=3, delay=5, backoff=2, local_logger=logger)
+    def _check_state_and_flush(self, instance: OpenstackInstance, busy: bool) -> None:
+        """Kill runner process depending on idle or busy.
+
+        Due to update to runner state has some delay with GitHub API. The state of the runner is
+        determined by which runner processes are running. If the Runner.Worker process is running,
+        the runner is deemed to be busy.
+
+        Raises:
+            SSHError: Unable to check the state of the runner and kill the runner process due to
+                SSH failure.
+
+        Args:
+            instance: The openstack instance to kill the runner process.
+            busy: Kill the process if runner is busy, else only kill runner
+                process if runner is idle.
+        """
+        try:
+            ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+        except KeyfileError:
+            logger.exception(
+                "Health check failed due to unable to find keyfile for %s", instance.server_name
+            )
+            return
+        except SSHError:
+            logger.exception(
+                "SSH connection failure with %s during health check", instance.server_name
+            )
+            raise
+
+        if not busy:
+            # only kill Runner.Listener if Runner.Worker does not exist.
+            kill_command = (
+                "! pgrep -x Runner.Worker && pgrep -x Runner.Listener && "
+                "kill $(pgrep -x Runner.Listener)"
+            )
+        else:
+            # kill both Runner.Listener and Runner.Worker processes.
+            # This kills pre-job.sh, a child process of Runner.Worker.
+            kill_command = (
+                "pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);"
+                "pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);"
+            )
+
+        result: invoke.runners.Result = ssh_conn.run(kill_command, warn=True)
+        if not result.ok:
+            logger.warning("Unable to SSH to kill runner process on %s", instance.name)
+            return
+        logger.info("Killed runner process on %s", instance.name)
 
     @retry(tries=3, delay=5, backoff=2, local_logger=logger)
     def _health_check(self, instance: OpenstackInstance) -> bool:

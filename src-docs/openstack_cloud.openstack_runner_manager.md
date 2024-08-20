@@ -131,7 +131,7 @@ The prefix of runner names.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L272"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L297"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `cleanup`
 
@@ -204,6 +204,29 @@ Delete self-hosted runners.
 
 **Returns:**
  Any metrics collected during the deletion of the runner. 
+
+---
+
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L272"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>method</kbd> `flush_runners`
+
+```python
+flush_runners(remove_token: str, busy: bool = False) → Iterator[RunnerMetrics]
+```
+
+Remove idle and/or busy runners. 
+
+
+
+**Args:**
+  remove_token: 
+ - <b>`busy`</b>:  If false, only idle runners are removed. If true, both idle and busy runners are  removed. 
+
+
+
+**Returns:**
+ Any metrics retrieved from flushed runners. 
 
 ---
 
