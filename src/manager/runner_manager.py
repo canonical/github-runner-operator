@@ -236,15 +236,12 @@ class RunnerManager:
                     "Unknown flush mode %s encountered, contact developers", flush_mode
                 )
 
-        states = [GitHubRunnerState.IDLE]
-        if flush_mode == FlushMode.FLUSH_BUSY:
-            states.append(GitHubRunnerState.BUSY)
-
-        runners_list = self.get_runners(github_states=states)
-        runner_names = [runner.name for runner in runners_list]
-        logger.info("Flushing runners: %s", runner_names)
+        busy = False
+        if FlushMode.FLUSH_BUSY:
+            busy = True
         remove_token = self._github.get_removal_token()
-        return self._delete_runners(runners=runners_list, remove_token=remove_token)
+        stats = self._cloud.flush_runners(remove_token, busy)
+        return self._issue_runner_metrics(metrics=stats)
 
     def cleanup(self) -> IssuedMetricEventsStats:
         """Run cleanup of the runners and other resources.
