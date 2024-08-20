@@ -150,7 +150,7 @@ async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) 
     runner_manager.create_runners(1)
     runner_list = runner_manager.get_runners()
     try:
-        await assert_runner_amount(runner_manager, 1)
+        await wait_runner_amount(runner_manager, 1)
     except TimeoutError as err:
         raise AssertionError("Test arrange failed: Expect one runner") from err
 
@@ -183,10 +183,10 @@ def workflow_is_status(workflow: Workflow, status: str) -> bool:
     return workflow.status == status
 
 
-async def assert_runner_amount(runner_manager: RunnerManager, num: int):
-    """Assert the number of runner a runner manager has.
+async def wait_runner_amount(runner_manager: RunnerManager, num: int):
+    """Wait until the runner manager has the number of runners.
 
-    A TimeoutError will be thrown if runners are still found after timeout.
+    A TimeoutError will be thrown if runners amount is not correct after timeout.
 
     Args:
         runner_manager: The RunnerManager to check.
@@ -239,7 +239,7 @@ async def test_runner_normal_idle_lifecycle(
     runner_id = runner_id_list[0]
 
     try:
-        await assert_runner_amount(runner_manager, 1)
+        await wait_runner_amount(runner_manager, 1)
     except TimeoutError as err:
         raise AssertionError("Test arrange failed: Expect one runner") from err
 
@@ -265,7 +265,7 @@ async def test_runner_normal_idle_lifecycle(
 
     # 3.
     runner_manager.flush_runners(flush_mode=FlushMode.FLUSH_IDLE)
-    await assert_runner_amount(runner_manager, 0)
+    await wait_runner_amount(runner_manager, 0)
 
 
 @pytest.mark.openstack
@@ -320,7 +320,7 @@ async def test_runner_flush_busy_lifecycle(
     issue_metrics_events = runner_manager_with_one_runner.cleanup()
     assert issue_metrics_events[events.RunnerStart] == 1
 
-    await assert_runner_amount(runner_manager_with_one_runner, 0)
+    await wait_runner_amount(runner_manager_with_one_runner, 0)
 
 
 @pytest.mark.openstack
@@ -374,7 +374,7 @@ async def test_runner_normal_lifecycle(
     assert metric_logs[1]["event"] == "runner_stop"
     assert metric_logs[1]["workflow"] == "Workflow Dispatch Wait Tests"
 
-    await assert_runner_amount(runner_manager_with_one_runner, 0)
+    await wait_runner_amount(runner_manager_with_one_runner, 0)
 
 
 @pytest.mark.openstack
@@ -387,10 +387,10 @@ async def test_runner_spawn_two(
     Arrange: RunnerManager instance with no runners.
     Act:
         1. Create two runner.
-        3. Delete all idle runner.
+        2. Delete all idle runner.
     Assert:
         1. Two active idle runner.
-        3. No runners.
+        2. No runners.
     """
     # 1.
     runner_id_list = runner_manager.create_runners(2)
@@ -398,7 +398,7 @@ async def test_runner_spawn_two(
     assert len(runner_id_list) == 2
 
     try:
-        await assert_runner_amount(runner_manager, 2)
+        await wait_runner_amount(runner_manager, 2)
     except TimeoutError as err:
         raise AssertionError("Test arrange failed: Expect two runner") from err
 
@@ -408,4 +408,4 @@ async def test_runner_spawn_two(
 
     # 3.
     runner_manager.flush_runners(flush_mode=FlushMode.FLUSH_IDLE)
-    await assert_runner_amount(runner_manager, 0)
+    await wait_runner_amount(runner_manager, 0)
