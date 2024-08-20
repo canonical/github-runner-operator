@@ -1,7 +1,7 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Test cases of RunnerManager class."""
+"""Test cases of LXDRunnerManager class."""
 import random
 import secrets
 from pathlib import Path
@@ -82,7 +82,7 @@ def charm_state_fixture(charm_config: MagicMock):
 def runner_manager_fixture(request, tmp_path, monkeypatch, token, charm_state):
     charm_state.proxy_config = request.param[1]
     monkeypatch.setattr(
-        "runner_manager.RunnerManager.runner_bin_path", tmp_path / "mock_runner_binary"
+        "runner_manager.LXDRunnerManager.runner_bin_path", tmp_path / "mock_runner_binary"
     )
     pool_path = tmp_path / "test_storage"
     pool_path.mkdir(exist_ok=True)
