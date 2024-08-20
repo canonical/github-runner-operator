@@ -287,17 +287,12 @@ def test__create_connection(
 
 
 @pytest.mark.parametrize(
-    "proxy_config, dockerhub_mirror, ssh_debug_connections, expected_env_contents",
+    "dockerhub_mirror, ssh_debug_connections, expected_env_contents",
     [
         pytest.param(
             None,
             None,
-            None,
             """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
 
 LANG=C.UTF-8
 ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
@@ -305,33 +300,9 @@ ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
             id="all values empty",
         ),
         pytest.param(
-            openstack_manager.ProxyConfig(
-                http="http://test.internal",
-                https="https://test.internal",
-                no_proxy="http://no_proxy.internal",
-            ),
-            None,
-            None,
-            """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
-
-LANG=C.UTF-8
-ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
-""",
-            id="proxy value set",
-        ),
-        pytest.param(
-            None,
             "http://dockerhub_mirror.test",
             None,
             """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
 
 DOCKERHUB_MIRROR=http://dockerhub_mirror.test
 CONTAINER_REGISTRY_URL=http://dockerhub_mirror.test
@@ -343,7 +314,6 @@ ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
         ),
         pytest.param(
             None,
-            None,
             [
                 openstack_manager.SSHDebugConnection(
                     host="127.0.0.1",
@@ -353,10 +323,6 @@ ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
                 )
             ],
             """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
 
 LANG=C.UTF-8
 ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
@@ -369,11 +335,6 @@ TMATE_SERVER_ED25519_FINGERPRINT=SHA256:tested25519
             id="ssh debug connection set",
         ),
         pytest.param(
-            openstack_manager.ProxyConfig(
-                http="http://test.internal",
-                https="https://test.internal",
-                no_proxy="http://no_proxy.internal",
-            ),
             "http://dockerhub_mirror.test",
             [
                 openstack_manager.SSHDebugConnection(
@@ -384,10 +345,6 @@ TMATE_SERVER_ED25519_FINGERPRINT=SHA256:tested25519
                 )
             ],
             """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
 
 DOCKERHUB_MIRROR=http://dockerhub_mirror.test
 CONTAINER_REGISTRY_URL=http://dockerhub_mirror.test
@@ -405,7 +362,6 @@ TMATE_SERVER_ED25519_FINGERPRINT=SHA256:tested25519
     ],
 )
 def test__generate_runner_env(
-    proxy_config: Optional[openstack_manager.ProxyConfig],
     dockerhub_mirror: Optional[str],
     ssh_debug_connections: Optional[list[openstack_manager.SSHDebugConnection]],
     expected_env_contents: str,
