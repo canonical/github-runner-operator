@@ -488,10 +488,6 @@ class OpenstackRunnerManager(CloudRunnerManager):
             )
             raise
 
-        # TODO: debug
-        result: invoke.runners.Result = ssh_conn.run("! pgrep -x Runner.Worker && echo HELLO", warn=True)
-        import pytest
-        pytest.set_trace()
         if not busy:
             # only kill Runner.Listener if Runner.Worker does not exist.
             kill_command = (
