@@ -285,8 +285,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         instance_list = self._openstack_cloud.get_instances()
         for instance in instance_list:
             try:
-                pass
-                # self._check_state_and_flush(instance, busy)
+                self._check_state_and_flush(instance, busy)
             except SSHError:
                 logger.warning(
                     "Unable to determine state of  %s and kill runner process due to SSH issues",
@@ -510,6 +509,15 @@ class OpenstackRunnerManager(CloudRunnerManager):
             )
         # Checking the result of kill command is not useful, as the exit code does not reveal much.
         ssh_conn.run(kill_command, warn=True)
+        
+        # TODO: debug
+        result = ssh_conn.run("ps aux", warn=True)
+        import pytest
+        pytest.set_trace()
+
+        result = ssh_conn.run("ps aux", warn=True)
+        import pytest
+        pytest.set_trace()
 
     @retry(tries=3, delay=5, backoff=2, local_logger=logger)
     def _health_check(self, instance: OpenstackInstance) -> bool:
