@@ -489,7 +489,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             raise
         
         # TODO: Debug
-        ssh_conn.run("! pgrep -x Runner.Worker && echo HELLO", warn=True)
+        result = ssh_conn.run("! pgrep -x Runner.Worker && echo HELLO", warn=True)
         import pytest
         pytest.set_trace()
         
