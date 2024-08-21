@@ -285,7 +285,8 @@ class OpenstackRunnerManager(CloudRunnerManager):
         instance_list = self._openstack_cloud.get_instances()
         for instance in instance_list:
             try:
-                self._check_state_and_flush(instance, busy)
+                pass
+                # self._check_state_and_flush(instance, busy)
             except SSHError:
                 logger.warning(
                     "Unable to determine state of  %s and kill runner process due to SSH issues",
