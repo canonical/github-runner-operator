@@ -504,7 +504,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             )
             # Only kill Runner.Listener if Runner.Worker does not exist.
             kill_command = (
-                f"! pgrep -x {RUNNER_WORKER_PROCESS} && pgrep -x {RUNNER_LISTENER_PROCESS} && "
+                f"pgrep -x {RUNNER_WORKER_PROCESS} || pgrep -x {RUNNER_LISTENER_PROCESS} && "
                 f"kill $(pgrep -x {RUNNER_LISTENER_PROCESS})"
             )
         # Checking the result of kill command is not useful, as the exit code does not reveal much.
