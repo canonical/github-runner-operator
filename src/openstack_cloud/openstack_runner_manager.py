@@ -504,9 +504,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
 
         result: invoke.runners.Result = ssh_conn.run(kill_command, warn=True)
         if not result.ok:
-            logger.warning("Unable to SSH to kill runner process on %s", instance.name)
+            logger.warning("Unable to SSH to kill runner process on %s: %s", instance.server_name, result.stderr)
             return
-        logger.info("Killed runner process on %s", instance.name)
+        logger.info("Killed runner process on %s", instance.server_name)
 
     @retry(tries=3, delay=5, backoff=2, local_logger=logger)
     def _health_check(self, instance: OpenstackInstance) -> bool:
@@ -548,7 +548,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         """
         result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
         if not result.ok:
-            logger.warning("SSH run of `ps aux` failed on %s", name)
+            logger.warning("SSH run of `ps aux` failed on %s: %s", name, result.stderr)
             return False
         if (
             RUNNER_WORKER_PROCESS not in result.stdout
