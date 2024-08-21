@@ -506,11 +506,8 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 "pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);"
             )
 
-        result: invoke.runners.Result = ssh_conn.run(kill_command, warn=True)
-        if not result.ok:
-            logger.warning("Unable to SSH to kill runner process on %s: %s", instance.server_name, result.stderr)
-            return
-        logger.info("Killed runner process on %s", instance.server_name)
+        ssh_conn.run(kill_command, warn=True)
+        logger.info("Attempted to killed runner process on %s", instance.server_name)
 
     @retry(tries=3, delay=5, backoff=2, local_logger=logger)
     def _health_check(self, instance: OpenstackInstance) -> bool:
