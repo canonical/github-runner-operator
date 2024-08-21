@@ -1,9 +1,7 @@
 name: End-to-End tests
 
 on:
-  # TODO: DEBUG
-  workflow_dispatch:
-  # pull_request:
+  pull_request:
   
 
 jobs:
