@@ -488,6 +488,10 @@ class OpenstackRunnerManager(CloudRunnerManager):
             )
             raise
 
+        # TODO: Debug
+        import pytest
+        pytest.set_trace()
+
         # Using a single command to determine the state and kill the process if needed.
         # This makes it more robust when network is unstable.
         if busy:
@@ -535,9 +539,6 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 "SSH connection failure with %s during health check", instance.server_name
             )
             raise
-        # TODO: Debug
-        import pytest
-        pytest.set_trace()
         return OpenstackRunnerManager._run_health_check(ssh_conn, instance.server_name)
 
     @staticmethod
