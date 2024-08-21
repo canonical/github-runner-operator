@@ -492,11 +492,17 @@ class OpenstackRunnerManager(CloudRunnerManager):
         result = ssh_conn.run("! pgrep -x Runner.Worker && echo HELLO", warn=True)
         import pytest
         pytest.set_trace()
-        
+        result = ssh_conn.run("! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)", warn=True)
+        import pytest
+        pytest.set_trace()
+        result = ssh_conn.run("! pgrep -x Runner.Worker && echo HELLO", warn=True)
+        import pytest
+        pytest.set_trace()
 
         # Using a single command to determine the state and kill the process if needed.
         # This makes it more robust when network is unstable.
         if busy:
+            logger.info("Attempting to kill all runner process on %s", instance.server_name)
             # kill both Runner.Listener and Runner.Worker processes.
             # This kills pre-job.sh, a child process of Runner.Worker.
             kill_command = (
@@ -504,6 +510,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 f"pgrep -x {RUNNER_WORKER_PROCESS} && kill $(pgrep -x {RUNNER_WORKER_PROCESS});"
             )
         else:
+            logger.info("Attempting to kill runner process on %s if not busy", instance.server_name)
             # Only kill Runner.Listener if Runner.Worker does not exist.
             kill_command = (
                 f"! pgrep -x {RUNNER_WORKER_PROCESS} && pgrep -x {RUNNER_LISTENER_PROCESS} && "
@@ -511,7 +518,6 @@ class OpenstackRunnerManager(CloudRunnerManager):
             )
         # Checking the result of kill command is not useful, as the exit code does not reveal much.
         ssh_conn.run(kill_command, warn=True)
-        logger.info("Attempted to killed runner process on %s", instance.server_name)
 
     @retry(tries=3, delay=5, backoff=2, local_logger=logger)
     def _health_check(self, instance: OpenstackInstance) -> bool:

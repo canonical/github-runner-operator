@@ -201,71 +201,71 @@ async def wait_runner_amount(runner_manager: RunnerManager, num: int):
     await wait_for(lambda: len(runner_manager.get_runners()) == num)
 
 
-# @pytest.mark.openstack
-# @pytest.mark.asyncio
-# @pytest.mark.abort_on_fail
-# async def test_get_no_runner(runner_manager: RunnerManager) -> None:
-#     """
-#     Arrange: RunnerManager instance with no runners.
-#     Act: Get runners.
-#     Assert: Empty tuple returned.
-#     """
-#     runner_list = runner_manager.get_runners()
-#     assert isinstance(runner_list, tuple)
-#     assert not runner_list
+@pytest.mark.openstack
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_get_no_runner(runner_manager: RunnerManager) -> None:
+    """
+    Arrange: RunnerManager instance with no runners.
+    Act: Get runners.
+    Assert: Empty tuple returned.
+    """
+    runner_list = runner_manager.get_runners()
+    assert isinstance(runner_list, tuple)
+    assert not runner_list
 
 
-# @pytest.mark.openstack
-# @pytest.mark.asyncio
-# @pytest.mark.abort_on_fail
-# async def test_runner_normal_idle_lifecycle(
-#     runner_manager: RunnerManager, openstack_runner_manager: OpenstackRunnerManager
-# ) -> None:
-#     """
-#     Arrange: RunnerManager instance with no runners.
-#     Act:
-#         1. Create one runner.
-#         2. Run health check on the runner.
-#         3. Delete all idle runner.
-#     Assert:
-#         1. An active idle runner.
-#         2. Health check passes.
-#         3. No runners.
-#     """
-#     # 1.
-#     runner_id_list = runner_manager.create_runners(1)
-#     assert isinstance(runner_id_list, tuple)
-#     assert len(runner_id_list) == 1
-#     runner_id = runner_id_list[0]
+@pytest.mark.openstack
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_runner_normal_idle_lifecycle(
+    runner_manager: RunnerManager, openstack_runner_manager: OpenstackRunnerManager
+) -> None:
+    """
+    Arrange: RunnerManager instance with no runners.
+    Act:
+        1. Create one runner.
+        2. Run health check on the runner.
+        3. Delete all idle runner.
+    Assert:
+        1. An active idle runner.
+        2. Health check passes.
+        3. No runners.
+    """
+    # 1.
+    runner_id_list = runner_manager.create_runners(1)
+    assert isinstance(runner_id_list, tuple)
+    assert len(runner_id_list) == 1
+    runner_id = runner_id_list[0]
 
-#     try:
-#         await wait_runner_amount(runner_manager, 1)
-#     except TimeoutError as err:
-#         raise AssertionError("Test arrange failed: Expect one runner") from err
+    try:
+        await wait_runner_amount(runner_manager, 1)
+    except TimeoutError as err:
+        raise AssertionError("Test arrange failed: Expect one runner") from err
 
-#     runner_list = runner_manager.get_runners()
-#     assert isinstance(runner_list, tuple)
-#     assert len(runner_list) == 1
-#     runner = runner_list[0]
-#     assert runner.instance_id == runner_id
-#     assert runner.cloud_state == CloudRunnerState.ACTIVE
-#     # Update on GitHub-side can take a bit of time.
-#     await wait_for(
-#         lambda: runner_manager.get_runners()[0].github_state == GitHubRunnerState.IDLE,
-#         timeout=120,
-#         check_interval=10,
-#     )
+    runner_list = runner_manager.get_runners()
+    assert isinstance(runner_list, tuple)
+    assert len(runner_list) == 1
+    runner = runner_list[0]
+    assert runner.instance_id == runner_id
+    assert runner.cloud_state == CloudRunnerState.ACTIVE
+    # Update on GitHub-side can take a bit of time.
+    await wait_for(
+        lambda: runner_manager.get_runners()[0].github_state == GitHubRunnerState.IDLE,
+        timeout=120,
+        check_interval=10,
+    )
 
-#     # 2.
-#     openstack_instances = openstack_runner_manager._openstack_cloud.get_instances()
-#     assert len(openstack_instances) == 1, "Test arrange failed: Needs one runner."
-#     runner = openstack_instances[0]
+    # 2.
+    openstack_instances = openstack_runner_manager._openstack_cloud.get_instances()
+    assert len(openstack_instances) == 1, "Test arrange failed: Needs one runner."
+    runner = openstack_instances[0]
 
-#     assert openstack_runner_manager._health_check(runner)
+    assert openstack_runner_manager._health_check(runner)
 
-#     # 3.
-#     runner_manager.flush_runners(flush_mode=FlushMode.FLUSH_IDLE)
-#     await wait_runner_amount(runner_manager, 0)
+    # 3.
+    runner_manager.flush_runners(flush_mode=FlushMode.FLUSH_IDLE)
+    await wait_runner_amount(runner_manager, 0)
 
 
 @pytest.mark.openstack
