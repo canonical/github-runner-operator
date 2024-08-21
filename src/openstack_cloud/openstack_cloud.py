@@ -370,6 +370,9 @@ class OpenstackCloud:
             # Find key file from this application.
             if path.is_file() and path.name.startswith(self.prefix) and path.name.endswith(".key"):
                 total += 1
+                # TODO: DEBUG
+                import pytest
+                pytest.set_trace()
                 if path.name in exclude_filename:
                     continue
                 path.unlink()
