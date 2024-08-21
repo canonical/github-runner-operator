@@ -335,9 +335,7 @@ async def test_runner_flush_busy_lifecycle(
     assert busy_runner.github_state == GitHubRunnerState.BUSY
 
     # 4.
-    runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
-
-    issue_metrics_events = runner_manager_with_one_runner.cleanup()
+    issue_metrics_events = runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
     assert issue_metrics_events[events.RunnerStart] == 1
 
     await wait_runner_amount(runner_manager_with_one_runner, 0)
