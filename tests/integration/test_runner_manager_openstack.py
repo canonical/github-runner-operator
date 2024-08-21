@@ -311,21 +311,20 @@ async def test_runner_flush_busy_lifecycle(
     )
     await wait_for(lambda: workflow_is_status(workflow, "in_progress"))
 
-    # TODO: debug
-    # runner_list = runner_manager_with_one_runner.get_runners()
-    # assert len(runner_list) == 1
-    # busy_runner = runner_list[0]
-    # assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    # assert busy_runner.github_state == GitHubRunnerState.BUSY
+    runner_list = runner_manager_with_one_runner.get_runners()
+    assert len(runner_list) == 1
+    busy_runner = runner_list[0]
+    assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
+    assert busy_runner.github_state == GitHubRunnerState.BUSY
 
-    # # 2.
-    # runner_manager_with_one_runner.cleanup()
-    # runner_list = runner_manager_with_one_runner.get_runners()
-    # assert isinstance(runner_list, tuple)
-    # assert len(runner_list) == 1
-    # runner = runner_list[0]
-    # assert runner.cloud_state == CloudRunnerState.ACTIVE
-    # assert busy_runner.github_state == GitHubRunnerState.BUSY
+    # 2.
+    runner_manager_with_one_runner.cleanup()
+    runner_list = runner_manager_with_one_runner.get_runners()
+    assert isinstance(runner_list, tuple)
+    assert len(runner_list) == 1
+    runner = runner_list[0]
+    assert runner.cloud_state == CloudRunnerState.ACTIVE
+    assert busy_runner.github_state == GitHubRunnerState.BUSY
 
     # 3.
     runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_IDLE)

@@ -488,10 +488,6 @@ class OpenstackRunnerManager(CloudRunnerManager):
             )
             raise
 
-        # TODO: Debug
-        import pytest
-        pytest.set_trace()
-
         # Using a single command to determine the state and kill the process if needed.
         # This makes it more robust when network is unstable.
         if busy:
