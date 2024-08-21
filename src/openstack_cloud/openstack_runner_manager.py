@@ -489,10 +489,13 @@ class OpenstackRunnerManager(CloudRunnerManager):
             raise
         
         # TODO: Debug
+        result = ssh_conn.run("! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)", warn=True)
+        import pytest
+        pytest.set_trace()
         result = ssh_conn.run("! pgrep -x Runner.Worker && echo HELLO", warn=True)
         import pytest
         pytest.set_trace()
-        result = ssh_conn.run("! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)", warn=True)
+        result = ssh_conn.run("ps aux", warn=True)
         import pytest
         pytest.set_trace()
         result = ssh_conn.run("! pgrep -x Runner.Worker && echo HELLO", warn=True)
