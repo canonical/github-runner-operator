@@ -249,7 +249,8 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the cleanup of runners.
         """
-        self._github.delete_runners([GitHubRunnerState.OFFLINE])
+        # TODO: DEBUG
+        # self._github.delete_runners([GitHubRunnerState.OFFLINE])
         remove_token = self._github.get_removal_token()
         deleted_runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)

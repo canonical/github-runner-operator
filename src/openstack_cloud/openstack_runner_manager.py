@@ -484,7 +484,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             return
         except SSHError:
             logger.exception(
-                "SSH connection failure with %s during health check", instance.server_name
+                "SSH connection failure with %s during flushing", instance.server_name
             )
             raise
 
@@ -508,16 +508,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 f"kill $(pgrep -x {RUNNER_LISTENER_PROCESS})"
             )
         # Checking the result of kill command is not useful, as the exit code does not reveal much.
-        # ssh_conn.run(kill_command, warn=True)
-        
-        # TODO: debug
-        result = ssh_conn.run("ps aux", warn=True)
-        import pytest
-        pytest.set_trace()
-
-        result = ssh_conn.run("ps aux", warn=True)
-        import pytest
-        pytest.set_trace()
+        ssh_conn.run(kill_command, warn=True)
 
     @retry(tries=3, delay=5, backoff=2, local_logger=logger)
     def _health_check(self, instance: OpenstackInstance) -> bool:
