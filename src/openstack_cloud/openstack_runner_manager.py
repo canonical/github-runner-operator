@@ -535,6 +535,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 "SSH connection failure with %s during health check", instance.server_name
             )
             raise
+        # TODO: Debug
+        import pytest
+        pytest.set_trace()
         return OpenstackRunnerManager._run_health_check(ssh_conn, instance.server_name)
 
     @staticmethod
@@ -548,9 +551,6 @@ class OpenstackRunnerManager(CloudRunnerManager):
         Returns:
             Whether the health succeed.
         """
-        # TODO: Debug
-        import pytest
-        pytest.set_trace()
         result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
         if not result.ok:
             logger.warning("SSH run of `ps aux` failed on %s: %s", name, result.stderr)
