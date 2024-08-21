@@ -237,7 +237,7 @@ class RunnerManager:
                 )
 
         busy = False
-        if FlushMode.FLUSH_BUSY:
+        if flush_mode == FlushMode.FLUSH_BUSY:
             busy = True
         remove_token = self._github.get_removal_token()
         stats = self._cloud.flush_runners(remove_token, busy)
