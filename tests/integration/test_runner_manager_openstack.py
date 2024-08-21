@@ -295,7 +295,7 @@ async def test_runner_flush_busy_lifecycle(
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": runner_label, "minutes": "10"},
+        dispatch_input={"runner": runner_label, "minutes": "30"},
         wait=False,
     )
     await wait_for(lambda: workflow_is_status(workflow, "in_progress"))
