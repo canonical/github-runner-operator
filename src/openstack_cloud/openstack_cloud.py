@@ -370,10 +370,7 @@ class OpenstackCloud:
             # Find key file from this application.
             if path.is_file() and path.name.startswith(self.prefix) and path.name.endswith(".key"):
                 total += 1
-                # TODO: DEBUG
-                import pytest
-                pytest.set_trace()
-                if path.name in exclude_filename:
+                if path in exclude_filename:
                     continue
                 path.unlink()
                 deleted += 1
@@ -394,12 +391,8 @@ class OpenstackCloud:
         for key in keypairs:
             # The `name` attribute is of resource.Body type.
             if key.name and str(key.name).startswith(self.prefix):
-                # TODO: DEBUG
-                import pytest
-                pytest.set_trace()
                 if str(key.name) in exclude_instance_set:
                     continue
-
                 try:
                     self._delete_keypair(conn, key.name)
                 except openstack.exceptions.SDKException:

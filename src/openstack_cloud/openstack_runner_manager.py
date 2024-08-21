@@ -499,7 +499,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 f"pgrep -x {RUNNER_WORKER_PROCESS} && kill $(pgrep -x {RUNNER_WORKER_PROCESS});"
             )
         else:
-            logger.info("Attempting to kill runner process on %s if not busy", instance.server_name)
+            logger.info(
+                "Attempting to kill runner process on %s if not busy", instance.server_name
+            )
             # Only kill Runner.Listener if Runner.Worker does not exist.
             kill_command = (
                 f"! pgrep -x {RUNNER_WORKER_PROCESS} && pgrep -x {RUNNER_LISTENER_PROCESS} && "
