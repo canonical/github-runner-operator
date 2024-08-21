@@ -487,21 +487,27 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 "SSH connection failure with %s during health check", instance.server_name
             )
             raise
+        
+        # TODO: Debug
+        ssh_conn.run("! pgrep -x Runner.Worker && echo HELLO", warn=True)
+        import pytest
+        pytest.set_trace()
+        
 
         # Using a single command to determine the state and kill the process if needed.
         # This makes it more robust when network is unstable.
-        if not busy:
-            # only kill Runner.Listener if Runner.Worker does not exist.
-            kill_command = (
-                "! pgrep -x Runner.Worker && pgrep -x Runner.Listener && "
-                "kill $(pgrep -x Runner.Listener)"
-            )
-        else:
+        if busy:
             # kill both Runner.Listener and Runner.Worker processes.
             # This kills pre-job.sh, a child process of Runner.Worker.
             kill_command = (
-                "pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);"
-                "pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);"
+                f"pgrep -x {RUNNER_LISTENER_PROCESS} && kill $(pgrep -x {RUNNER_LISTENER_PROCESS});"
+                f"pgrep -x {RUNNER_WORKER_PROCESS} && kill $(pgrep -x {RUNNER_WORKER_PROCESS});"
+            )
+        else:
+            # Only kill Runner.Listener if Runner.Worker does not exist.
+            kill_command = (
+                f"! pgrep -x {RUNNER_WORKER_PROCESS} && pgrep -x {RUNNER_LISTENER_PROCESS} && "
+                f"kill $(pgrep -x {RUNNER_LISTENER_PROCESS})"
             )
         # Checking the result of kill command is not useful, as the exit code does not reveal much.
         ssh_conn.run(kill_command, warn=True)
