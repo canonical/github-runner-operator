@@ -488,6 +488,8 @@ class OpenstackRunnerManager(CloudRunnerManager):
             )
             raise
 
+        # Using a single command to determine the state and kill the process if needed.
+        # This makes it more robust when network is unstable.
         if not busy:
             # only kill Runner.Listener if Runner.Worker does not exist.
             kill_command = (
@@ -501,7 +503,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 "pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);"
                 "pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);"
             )
-
+        # Checking the result of kill command is not useful, as the exit code does not reveal much.
         ssh_conn.run(kill_command, warn=True)
         logger.info("Attempted to killed runner process on %s", instance.server_name)
 
