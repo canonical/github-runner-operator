@@ -391,6 +391,9 @@ class OpenstackCloud:
         for key in keypairs:
             # The `name` attribute is of resource.Body type.
             if key.name and str(key.name).startswith(self.prefix):
+                # TODO: DEBUG
+                import pytest
+                pytest.set_trace()
                 if str(key.name) in exclude_instance_set:
                     continue
 
