@@ -434,7 +434,6 @@ async def image_builder_fixture(
         "github-runner-image-builder",
         application_name=f"image-builder-{test_id}",
         channel="latest/edge",
-        revision=2,
         constraints=constraints,
         config={
             "app-channel": "edge",
