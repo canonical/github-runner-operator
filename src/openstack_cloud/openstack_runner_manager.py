@@ -508,7 +508,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 f"kill $(pgrep -x {RUNNER_LISTENER_PROCESS})"
             )
         # Checking the result of kill command is not useful, as the exit code does not reveal much.
-        ssh_conn.run(kill_command, warn=True)
+        # ssh_conn.run(kill_command, warn=True)
         
         # TODO: debug
         result = ssh_conn.run("ps aux", warn=True)
