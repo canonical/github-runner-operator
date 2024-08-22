@@ -70,7 +70,7 @@ class RunnerScaler:
             online=online, offline=offline, unknown=unknown, runners=tuple(online_runners)
         )
 
-    def flush(self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE) -> None:
+    def flush(self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE) -> int:
         """Flush the runners.
 
         Args:
@@ -80,10 +80,11 @@ class RunnerScaler:
             Number of runners flushed.
         """
         metric_stats = self._manager.cleanup()
-        delete_metric_stats = self._manager.delete_runners(flush_mode=flush_mode)
+        delete_metric_stats = self._manager.flush_runners(flush_mode=flush_mode)
+        events = set(delete_metric_stats.keys()) | set(metric_stats.keys())
         metric_stats = {
-            delete_metric_stats.get(event_name, 0) + metric_stats.get(event_name, 0)
-            for event_name in set(delete_metric_stats) | set(metric_stats)
+            event_name: delete_metric_stats.get(event_name, 0) + metric_stats.get(event_name, 0)
+            for event_name in events
         }
         return metric_stats.get(metric_events.RunnerStop, 0)
 
@@ -137,13 +138,15 @@ class RunnerScaler:
         ]
 
         try:
+            available_runners = set(runner.name for runner in idle_runners) | set(runner.name for runner in offline_healthy_runners)
+            logger.info("Current available runners (idle + healthy offline): %s", available_runners)
             metric_events.issue_event(
                 metric_events.Reconciliation(
                     timestamp=time.time(),
                     flavor=self._manager.name_prefix,
                     crashed_runners=metric_stats.get(metric_events.RunnerStart, 0)
                     - metric_stats.get(metric_events.RunnerStop, 0),
-                    idle_runners=len(set(idle_runners) | set(offline_healthy_runners)),
+                    idle_runners=len(available_runners),
                     duration=end_timestamp - start_timestamp,
                 )
             )

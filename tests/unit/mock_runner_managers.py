@@ -14,7 +14,7 @@ from manager.cloud_runner_manager import (
     CloudRunnerState,
     InstanceId,
 )
-from manager.github_runner_manager import GitHubRunnerManager, GitHubRunnerState
+from manager.github_runner_manager import GitHubRunnerState
 from metrics.runner import RunnerMetrics
 
 
@@ -31,7 +31,7 @@ class MockRunner:
     def __init__(self, name: str):
         self.name = name
         self.instance_id = secrets.token_hex(6)
-        self.state = CloudRunnerState.ACTIVE
+        self.cloud_state = CloudRunnerState.ACTIVE
         self.github_state = GitHubRunnerState.IDLE
         self.health = True
 
@@ -94,17 +94,21 @@ class MockCloudRunnerManager(CloudRunnerManager):
             return runner.to_cloud_runner()
         return None
 
-    def get_runners(self, states: Sequence[CloudRunnerState]) -> tuple[CloudRunnerInstance, ...]:
+    def get_runners(self, states: Sequence[CloudRunnerState] | None = None) -> tuple[CloudRunnerInstance, ...]:
         """Get self-hosted runners by state.
 
         Args:
             states: Filter for the runners with these github states. If None all states will be
                 included.
         """
+        if states is None:
+            states = [member.value for member in CloudRunnerState]
+
+        state_set = set(states)
         return tuple(
             runner.to_cloud_runner()
             for runner in self.state.runners.values()
-            if runner.state in states
+            if runner.cloud_state in state_set
         )
 
     def delete_runner(self, instance_id: InstanceId, remove_token: str) -> RunnerMetrics | None:
@@ -158,7 +162,7 @@ class MockGitHubRunnerManager:
     def get_registration_token(self) -> str:
         return "mock_registration_token"
 
-    def get_remove_token(self) -> str:
+    def get_removal_token(self) -> str:
         return "mock_remove_token"
 
     def get_runners(

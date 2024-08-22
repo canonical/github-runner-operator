@@ -37,10 +37,10 @@ class GitHubRunnerState(str, Enum):
         """
         state = GitHubRunnerState.OFFLINE
         # A runner that is busy and offline is possible.
-        if runner.busy:
+        if runner["busy"]:
             state = GitHubRunnerState.BUSY
-        if runner.status == GitHubRunnerStatus.ONLINE:
-            if not runner.busy:
+        if runner["status"] == GitHubRunnerStatus.ONLINE:
+            if not runner["busy"]:
                 state = GitHubRunnerState.IDLE
         return state
 

@@ -7,7 +7,7 @@ import logging
 from dataclasses import dataclass
 from enum import Enum, auto
 from multiprocessing import Pool
-from typing import Iterator, Sequence, Type, cast
+from typing import Iterable, Iterator, Sequence, Type, cast
 
 from charm_state import GitHubPath
 from errors import GithubMetricsError, RunnerCreateError
@@ -125,21 +125,8 @@ class RunnerManager:
         create_runner_args = [
             RunnerManager._CreateRunnerArgs(self._cloud, registration_token) for _ in range(num)
         ]
-        instance_id_list = []
-        with Pool(processes=min(num, 10)) as pool:
-            jobs = pool.imap_unordered(
-                func=RunnerManager._create_runner, iterable=create_runner_args
-            )
-            for _ in range(num):
-                try:
-                    instance_id = next(jobs)
-                except RunnerCreateError:
-                    logger.exception("Failed to spawn a runner.")
-                except StopIteration:
-                    break
-                else:
-                    instance_id_list.append(instance_id)
-        return tuple(instance_id_list)
+        return RunnerManager._spawn_runners(create_runner_args)
+    
 
     def get_runners(
         self,
@@ -162,7 +149,7 @@ class RunnerManager:
         logger.info("Getting runners...")
         github_infos = self._github.get_runners(github_states)
         cloud_infos = self._cloud.get_runners(cloud_states)
-        github_infos_map = {info.name: info for info in github_infos}
+        github_infos_map = {info["name"]: info for info in github_infos}
         cloud_infos_map = {info.name: info for info in cloud_infos}
         logger.info(
             "Found following runners: %s", cloud_infos_map.keys() | github_infos_map.keys()
@@ -253,6 +240,38 @@ class RunnerManager:
         remove_token = self._github.get_removal_token()
         deleted_runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)
+
+    @staticmethod
+    def _spawn_runners(create_runner_args: Iterable["RunnerManager._CreateRunnerArgs"]) -> tuple[InstanceId, ...]:
+        """Parallel spawn of runners.
+        
+        The length of the create_runner_args is number _create_runner invocation, and therefore the 
+        number of runner spawned.
+
+        Args:
+            create_runner_args: List of arg for invoking _create_runner method.
+
+        Returns:
+            A list of instance ID of runner spawned.        
+        """
+        num = len(create_runner_args)
+
+        instance_id_list = []
+        with Pool(processes=min(num, 10)) as pool:
+            jobs = pool.imap_unordered(
+                func=RunnerManager._create_runner, iterable=create_runner_args
+            )
+            for _ in range(num):
+                try:
+                    instance_id = next(jobs)
+                except RunnerCreateError:
+                    logger.exception("Failed to spawn a runner.")
+                except StopIteration:
+                    break
+                else:
+                    instance_id_list.append(instance_id)
+        return tuple(instance_id_list)
+        
 
     def _delete_runners(
         self, runners: Sequence[RunnerInstance], remove_token: str
