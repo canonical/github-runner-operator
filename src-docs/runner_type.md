@@ -11,7 +11,7 @@ Types used by Runner class.
 
 <a href="../src/runner_type.py#L14"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>class</kbd> `RunnerByHealth`
+## <kbd>class</kbd> `RunnerNameByHealth`
 Set of runners instance by health state. 
 
 

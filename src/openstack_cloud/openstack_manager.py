@@ -32,7 +32,7 @@ import openstack.connection
 import openstack.exceptions
 import openstack.image.v2.image
 import paramiko
-from fabric import Connection as SshConnection
+from fabric import Connection as SSHConnection
 from openstack.compute.v2.server import Server
 from openstack.connection import Connection as OpenstackConnection
 from openstack.exceptions import SDKException
@@ -62,7 +62,7 @@ from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner_manager import IssuedMetricEventsStats
 from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
-from runner_type import GithubPath, RunnerByHealth, RunnerGithubInfo
+from runner_type import GithubPath, RunnerGithubInfo, RunnerNameByHealth
 from utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
@@ -237,8 +237,6 @@ def _generate_runner_env(
         pre_job_script=str(PRE_JOB_SCRIPT),
         dockerhub_mirror=dockerhub_mirror or "",
         ssh_debug_info=(secrets.choice(ssh_debug_connections) if ssh_debug_connections else None),
-        # Proxies are handled by aproxy.
-        proxies={},
     )
 
 
@@ -419,7 +417,7 @@ class OpenstackRunnerManager:
             if runner["name"].startswith(f"{self.instance_name}-")
         )
 
-    def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
+    def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerNameByHealth:
         """Get status on OpenStack of each runner.
 
         Args:
@@ -440,7 +438,7 @@ class OpenstackRunnerManager:
             else:
                 healthy_runner.append(instance.name)
 
-        return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
+        return RunnerNameByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
 
     def _get_openstack_instances(self, conn: OpenstackConnection) -> list[Server]:
         """Get the OpenStack servers managed by this unit.
@@ -556,7 +554,7 @@ class OpenstackRunnerManager:
     @retry(tries=3, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _get_ssh_connection(
         conn: OpenstackConnection, server_name: str, timeout: int = 30
-    ) -> SshConnection:
+    ) -> SSHConnection:
         """Get a valid ssh connection within a network for a given openstack instance.
 
         The SSH connection will attempt to establish connection until the timeout configured.
@@ -593,7 +591,7 @@ class OpenstackRunnerManager:
         ]
         for ip in server_addresses:
             try:
-                connection = SshConnection(
+                connection = SSHConnection(
                     host=ip,
                     user="ubuntu",
                     connect_kwargs={"key_filename": str(key_path)},
@@ -1093,7 +1091,7 @@ class OpenstackRunnerManager:
             return
 
     def _pull_file(
-        self, ssh_conn: SshConnection, remote_path: str, local_path: str, max_size: int
+        self, ssh_conn: SSHConnection, remote_path: str, local_path: str, max_size: int
     ) -> None:
         """Pull file from the runner instance.
 
@@ -1302,7 +1300,7 @@ class OpenstackRunnerManager:
                     )
 
     def _clean_up_runners(
-        self, conn: OpenstackConnection, runner_by_health: RunnerByHealth, remove_token: str
+        self, conn: OpenstackConnection, runner_by_health: RunnerNameByHealth, remove_token: str
     ) -> None:
         """Clean up offline or unhealthy runners.
 
@@ -1355,7 +1353,7 @@ class OpenstackRunnerManager:
         self,
         quantity: int,
         conn: OpenstackConnection,
-        runner_by_health: RunnerByHealth,
+        runner_by_health: RunnerNameByHealth,
         remove_token: str,
     ) -> int:
         """Scale the number of runners.
@@ -1462,7 +1460,7 @@ class OpenstackRunnerManager:
 
         for extracted_metrics in runner_metrics.extract(
             metrics_storage_manager=metrics_storage,
-            ignore_runners=instance_names,
+            runners=instance_names,
         ):
             try:
                 job_metrics = github_metrics.job(
@@ -1488,7 +1486,7 @@ class OpenstackRunnerManager:
         metric_stats: IssuedMetricEventsStats,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
-        runner_states: RunnerByHealth,
+        runner_states: RunnerNameByHealth,
     ) -> None:
         """Issue reconciliation metric.
 
@@ -1589,7 +1587,7 @@ class OpenstackRunnerManager:
 
         servers = self._get_openstack_instances(conn=conn)
         for server in servers:
-            ssh_conn: SshConnection = self._get_ssh_connection(conn=conn, server_name=server.name)
+            ssh_conn: SSHConnection = self._get_ssh_connection(conn=conn, server_name=server.name)
             result: invoke.runners.Result = ssh_conn.run(
                 killer_command,
                 warn=True,

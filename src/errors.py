@@ -166,3 +166,11 @@ class OpenStackInvalidConfigError(OpenStackError):
 
 class OpenStackUnauthorizedError(OpenStackError):
     """Represents an unauthorized connection to OpenStack."""
+
+
+class SSHError(Exception):
+    """Represents an error while interacting with SSH."""
+
+
+class KeyfileError(SSHError):
+    """Represents missing keyfile for SSH."""

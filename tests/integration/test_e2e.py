@@ -44,7 +44,7 @@ async def test_e2e_workflow(
     """
     arrange: An app connected to an OpenStack cloud with no runners.
     act: Run e2e test workflow.
-    assert:
+    assert: No exception thrown.
     """
     virt_type: str
     if instance_type == InstanceType.OPENSTACK:
