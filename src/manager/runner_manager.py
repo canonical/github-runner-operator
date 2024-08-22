@@ -9,7 +9,7 @@ from enum import Enum, auto
 from multiprocessing import Pool
 from typing import Iterator, Sequence, Type, cast
 
-from charm_state import GithubPath
+from charm_state import GitHubPath
 from errors import GithubMetricsError, RunnerCreateError
 from github_type import SelfHostedRunner
 from manager.cloud_runner_manager import (
@@ -19,7 +19,7 @@ from manager.cloud_runner_manager import (
     HealthState,
     InstanceId,
 )
-from manager.github_runner_manager import GithubRunnerManager, GitHubRunnerState
+from manager.github_runner_manager import GitHubRunnerManager, GitHubRunnerState
 from metrics import events as metric_events
 from metrics import github as github_metrics
 from metrics import runner as runner_metrics
@@ -86,7 +86,7 @@ class RunnerManagerConfig:
     """
 
     token: str
-    path: GithubPath
+    path: GitHubPath
 
 
 class RunnerManager:
@@ -106,7 +106,7 @@ class RunnerManager:
         self._config = config
         self._cloud = cloud_runner_manager
         self.name_prefix = self._cloud.name_prefix
-        self._github = GithubRunnerManager(
+        self._github = GitHubRunnerManager(
             prefix=self.name_prefix, token=self._config.token, path=self._config.path
         )
 

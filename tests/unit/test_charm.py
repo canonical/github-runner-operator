@@ -27,8 +27,8 @@ from charm_state import (
     VM_CPU_CONFIG_NAME,
     VM_DISK_CONFIG_NAME,
     Arch,
-    GithubOrg,
-    GithubRepo,
+    GitHubOrg,
+    GitHubRepo,
     InstanceType,
     OpenstackImage,
     ProxyConfig,
@@ -461,7 +461,7 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             LXDRunnerManagerConfig(
-                path=GithubOrg(org="mockorg", group="mockgroup"),
+                path=GitHubOrg(org="mockorg", group="mockgroup"),
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
@@ -491,7 +491,7 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             LXDRunnerManagerConfig(
-                path=GithubRepo(owner="mockorg", repo="repo"),
+                path=GitHubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
@@ -549,7 +549,7 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             LXDRunnerManagerConfig(
-                path=GithubRepo(owner="mockorg", repo="repo"),
+                path=GitHubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
@@ -571,7 +571,7 @@ class TestCharm(unittest.TestCase):
             "github-runner",
             "0",
             LXDRunnerManagerConfig(
-                path=GithubRepo(owner="mockorg", repo="repo"),
+                path=GitHubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
                 image="jammy",
                 service_token=token,

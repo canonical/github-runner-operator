@@ -16,8 +16,8 @@ from charm_state import (
     Arch,
     CharmConfig,
     CharmState,
-    GithubOrg,
-    GithubRepo,
+    GitHubOrg,
+    GitHubRepo,
     ProxyConfig,
     ReactiveConfig,
     VirtualMachineResources,
@@ -67,9 +67,9 @@ def charm_state_fixture(charm_config: MagicMock):
     scope="function",
     name="runner_manager",
     params=[
-        (GithubOrg("test_org", "test_group"), ProxyConfig()),
+        (GitHubOrg("test_org", "test_group"), ProxyConfig()),
         (
-            GithubRepo("test_owner", "test_repo"),
+            GitHubRepo("test_owner", "test_repo"),
             ProxyConfig(
                 no_proxy="test_no_proxy",
                 http=TEST_PROXY_SERVER_URL,

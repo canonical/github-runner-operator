@@ -59,7 +59,7 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
-    GithubPath,
+    GitHubPath,
     InstanceType,
     OpenstackImage,
     ProxyConfig,
@@ -372,7 +372,7 @@ class GithubRunnerCharm(CharmBase):
             raise
 
     def _get_runner_manager(
-        self, state: CharmState, token: str | None = None, path: GithubPath | None = None
+        self, state: CharmState, token: str | None = None, path: GitHubPath | None = None
     ) -> LXDRunnerManager:
         """Get a RunnerManager instance.
 
@@ -1191,7 +1191,7 @@ class GithubRunnerCharm(CharmBase):
         return True
 
     def _get_runner_scaler(
-        self, state: CharmState, token: str | None = None, path: GithubPath | None = None
+        self, state: CharmState, token: str | None = None, path: GitHubPath | None = None
     ) -> RunnerScaler:
         """Get runner scaler instance for scaling runners.
 

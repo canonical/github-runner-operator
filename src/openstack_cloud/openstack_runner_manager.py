@@ -16,7 +16,7 @@ import paramiko
 import paramiko.ssh_exception
 from fabric import Connection as SSHConnection
 
-from charm_state import GithubOrg
+from charm_state import GitHubOrg
 from errors import (
     CreateMetricsStorageError,
     GetMetricsStorageError,
@@ -432,7 +432,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
         runner_group = None
-        if isinstance(self._runner_config.github_path, GithubOrg):
+        if isinstance(self._runner_config.github_path, GitHubOrg):
             runner_group = self._runner_config.github_path.group
         aproxy_address = (
             self._service_config.proxy_config.aproxy_address

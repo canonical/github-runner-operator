@@ -17,7 +17,7 @@ from github.Repository import Repository
 from github.Workflow import Workflow
 from openstack.connection import Connection as OpenstackConnection
 
-from charm_state import GithubPath, ProxyConfig, parse_github_path
+from charm_state import GitHubPath, ProxyConfig, parse_github_path
 from manager.cloud_runner_manager import CloudRunnerState, GitHubRunnerConfig, SupportServiceConfig
 from manager.github_runner_manager import GitHubRunnerState
 from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
@@ -64,7 +64,7 @@ def log_dir_base_path_fixture(
 
 
 @pytest.fixture(scope="module", name="github_path")
-def github_path_fixture(path: str) -> GithubPath:
+def github_path_fixture(path: str) -> GitHubPath:
     return parse_github_path(path, "Default")
 
 
@@ -92,7 +92,7 @@ async def openstack_runner_manager_fixture(
     openstack_test_image: str,
     flavor_name: str,
     network_name: str,
-    github_path: GithubPath,
+    github_path: GitHubPath,
     proxy_config: ProxyConfig,
     runner_label: str,
     openstack_connection: OpenstackConnection,
@@ -134,7 +134,7 @@ async def openstack_runner_manager_fixture(
 async def runner_manager_fixture(
     openstack_runner_manager: OpenStackRunnerManager,
     token: str,
-    github_path: GithubPath,
+    github_path: GitHubPath,
     log_dir_base_path: dict[str, Path],
 ) -> RunnerManager:
     """Get RunnerManager instance.

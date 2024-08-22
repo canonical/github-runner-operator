@@ -10,7 +10,7 @@ from typing import Iterable
 
 import jinja2
 
-from charm_state import CharmState, GithubPath, ReactiveConfig
+from charm_state import CharmState, GitHubPath, ReactiveConfig
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
 from lxd import LxdClient
@@ -81,7 +81,7 @@ class LXDRunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     charm_state: CharmState
     image: str
     lxd_storage_path: Path
-    path: GithubPath
+    path: GitHubPath
     service_token: str
     token: str
     dockerhub_mirror: str | None = None
@@ -113,7 +113,7 @@ class OpenstackRunnerManagerConfig:  # pylint: disable=too-many-instance-attribu
     """
 
     charm_state: CharmState
-    path: GithubPath
+    path: GitHubPath
     labels: Iterable[str]
     token: str
     flavor: str

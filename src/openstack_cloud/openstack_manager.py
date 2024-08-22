@@ -40,7 +40,7 @@ from openstack.network.v2.security_group import SecurityGroup
 from paramiko.ssh_exception import NoValidConnectionsError
 
 import reactive.runner_manager as reactive_runner_manager
-from charm_state import CharmState, GithubOrg, ProxyConfig, SSHDebugConnection
+from charm_state import CharmState, GitHubOrg, ProxyConfig, SSHDebugConnection
 from errors import (
     CreateMetricsStorageError,
     GetMetricsStorageError,
@@ -62,7 +62,7 @@ from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner_manager import IssuedMetricEventsStats
 from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
-from runner_type import GithubPath, RunnerGithubInfo, RunnerNameByHealth
+from runner_type import GitHubPath, RunnerGithubInfo, RunnerNameByHealth
 from utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
@@ -120,7 +120,7 @@ class InstanceConfig:
         registration_token: Token for registering the runner on GitHub.
     """
 
-    github_path: GithubPath
+    github_path: GitHubPath
     image_id: str
     labels: Iterable[str]
     name: str
@@ -188,7 +188,7 @@ def create_instance_config(  # pylint: disable=too-many-arguments
     app_name: str,
     unit_num: int,
     image_id: str,
-    path: GithubPath,
+    path: GitHubPath,
     labels: Iterable[str],
     registration_token: str,
 ) -> InstanceConfig:
@@ -257,7 +257,7 @@ def _generate_cloud_init_userdata(
     instance_config = cloud_init_userdata.instance_config
     proxies = cloud_init_userdata.proxies
 
-    if isinstance(instance_config.github_path, GithubOrg):
+    if isinstance(instance_config.github_path, GitHubOrg):
         runner_group = instance_config.github_path.group
 
     aproxy_address = proxies.aproxy_address if proxies is not None else None

@@ -4,9 +4,9 @@
 """Client for managing self-hosted runner on GitHub side."""
 
 from enum import Enum, auto
-from typing import Sequence
+from typing import Iterable
 
-from charm_state import GithubPath
+from charm_state import GitHubPath
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus, SelfHostedRunner
 
@@ -45,10 +45,10 @@ class GitHubRunnerState(str, Enum):
         return state
 
 
-class GithubRunnerManager:
+class GitHubRunnerManager:
     """Manage self-hosted runner on GitHub side."""
 
-    def __init__(self, prefix: str, token: str, path: GithubPath):
+    def __init__(self, prefix: str, token: str, path: GitHubPath):
         """Construct the object.
 
         Args:
@@ -61,8 +61,8 @@ class GithubRunnerManager:
         self.github = GithubClient(token)
 
     def get_runners(
-        self, states: Sequence[GitHubRunnerState] | None = None
-    ) -> tuple[SelfHostedRunner]:
+        self, states: Iterable[GitHubRunnerState] | None = None
+    ) -> tuple[SelfHostedRunner, ...]:
         """Get info on self-hosted runners of certain states.
 
         Args:
@@ -72,14 +72,15 @@ class GithubRunnerManager:
             Information on the runners.
         """
         runner_list = self.github.get_runner_github_info(self._path)
+        state_set = set(states)
         return tuple(
             runner
             for runner in runner_list
             if runner.name.startswith(self._prefix)
-            and GithubRunnerManager._is_runner_in_state(runner, states)
+            and GitHubRunnerManager._is_runner_in_state(runner, state_set)
         )
 
-    def delete_runners(self, states: Sequence[GitHubRunnerState] | None = None) -> None:
+    def delete_runners(self, states: Iterable[GitHubRunnerState] | None = None) -> None:
         """Delete the self-hosted runners of certain states.
 
         Args:
@@ -111,7 +112,7 @@ class GithubRunnerManager:
 
     @staticmethod
     def _is_runner_in_state(
-        runner: SelfHostedRunner, states: Sequence[GitHubRunnerState] | None
+        runner: SelfHostedRunner, states: set[GitHubRunnerState] | None
     ) -> bool:
         """Check that the runner is in one of the states provided.
 

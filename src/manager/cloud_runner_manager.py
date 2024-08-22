@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Iterator, Sequence, Tuple
 
-from charm_state import GithubPath, ProxyConfig, SSHDebugConnection
+from charm_state import GitHubPath, ProxyConfig, SSHDebugConnection
 from metrics.runner import RunnerMetrics
 
 logger = logging.getLogger(__name__)
@@ -52,8 +52,9 @@ class CloudRunnerState(str, Enum):
     UNKNOWN = auto()
     UNEXPECTED = auto()
 
+    # Exclude from coverage as not much value for testing this object conversion.
     @staticmethod
-    def from_openstack_server_status(
+    def from_openstack_server_status(  # pragma: no cover
         openstack_server_status: str,
     ) -> "CloudRunnerState":
         """Create from openstack server status.
@@ -97,7 +98,7 @@ class GitHubRunnerConfig:
         labels: The labels to add to runners.
     """
 
-    github_path: GithubPath
+    github_path: GitHubPath
     labels: list[str]
 
 
@@ -158,7 +159,7 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_runner(self, instance_id: InstanceId) -> CloudRunnerInstance:
+    def get_runner(self, instance_id: InstanceId) -> CloudRunnerInstance | None:
         """Get a self-hosted runner by instance id.
 
         Args:

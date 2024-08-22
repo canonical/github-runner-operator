@@ -97,7 +97,7 @@ __init__(
     charm_state: CharmState,
     image: str,
     lxd_storage_path: Path,
-    path: GithubOrg | GithubRepo,
+    path: GitHubOrg | GitHubRepo,
     service_token: str,
     token: str,
     dockerhub_mirror: str | None = None,
@@ -147,7 +147,7 @@ Configuration of runner manager.
 ```python
 __init__(
     charm_state: CharmState,
-    path: GithubOrg | GithubRepo,
+    path: GitHubOrg | GitHubRepo,
     labels: Iterable[str],
     token: str,
     flavor: str,
