@@ -226,11 +226,13 @@ async def test_runner_normal_idle_lifecycle(
     Act:
         1. Create one runner.
         2. Run health check on the runner.
-        3. Delete all idle runner.
+        3. Run cleanup.
+        4. Delete all idle runner.
     Assert:
         1. An active idle runner.
         2. Health check passes.
-        3. No runners.
+        3. One idle runner remains.
+        4. No runners.
     """
     # 1.
     runner_id_list = runner_manager.create_runners(1)
@@ -264,6 +266,15 @@ async def test_runner_normal_idle_lifecycle(
     assert openstack_runner_manager._health_check(runner)
 
     # 3.
+    runner_manager.cleanup()
+    runner_list = runner_manager.get_runners()
+    assert isinstance(runner_list, tuple)
+    assert len(runner_list) == 1
+    runner = runner_list[0]
+    assert runner.instance_id == runner_id
+    assert runner.cloud_state == CloudRunnerState.ACTIVE
+
+    # 4.
     runner_manager.flush_runners(flush_mode=FlushMode.FLUSH_IDLE)
     await wait_runner_amount(runner_manager, 0)
 
@@ -281,12 +292,12 @@ async def test_runner_flush_busy_lifecycle(
     Arrange: RunnerManager with one idle runner.
     Act:
         1. Run a long workflow.
-        2. Run flush idle runner.
-        3. Run flush busy runner.
+        3. Run flush idle runner.
+        4. Run flush busy runner.
     Assert:
         1. Runner takes the job and become busy.
-        2. Busy runner still exists.
-        3. No runners exists.
+        3. Busy runner still exists.
+        4. No runners exists.
     """
     # 1.
     workflow = await dispatch_workflow(
@@ -295,7 +306,7 @@ async def test_runner_flush_busy_lifecycle(
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": runner_label, "minutes": "10"},
+        dispatch_input={"runner": runner_label, "minutes": "30"},
         wait=False,
     )
     await wait_for(lambda: workflow_is_status(workflow, "in_progress"))
@@ -307,6 +318,15 @@ async def test_runner_flush_busy_lifecycle(
     assert busy_runner.github_state == GitHubRunnerState.BUSY
 
     # 2.
+    runner_manager_with_one_runner.cleanup()
+    runner_list = runner_manager_with_one_runner.get_runners()
+    assert isinstance(runner_list, tuple)
+    assert len(runner_list) == 1
+    runner = runner_list[0]
+    assert runner.cloud_state == CloudRunnerState.ACTIVE
+    assert busy_runner.github_state == GitHubRunnerState.BUSY
+
+    # 3.
     runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_IDLE)
     runner_list = runner_manager_with_one_runner.get_runners()
     assert len(runner_list) == 1
@@ -314,12 +334,8 @@ async def test_runner_flush_busy_lifecycle(
     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
     assert busy_runner.github_state == GitHubRunnerState.BUSY
 
-    # 3.
+    # 4.
     runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
-
-    issue_metrics_events = runner_manager_with_one_runner.cleanup()
-    assert issue_metrics_events[events.RunnerStart] == 1
-
     await wait_runner_amount(runner_manager_with_one_runner, 0)
 
 

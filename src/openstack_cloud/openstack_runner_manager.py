@@ -490,29 +490,31 @@ class OpenStackRunnerManager(CloudRunnerManager):
             return
         except SSHError:
             logger.exception(
-                "SSH connection failure with %s during health check", instance.server_name
+                "SSH connection failure with %s during flushing", instance.server_name
             )
             raise
 
-        if not busy:
-            # only kill Runner.Listener if Runner.Worker does not exist.
-            kill_command = (
-                "! pgrep -x Runner.Worker && pgrep -x Runner.Listener && "
-                "kill $(pgrep -x Runner.Listener)"
-            )
-        else:
+        # Using a single command to determine the state and kill the process if needed.
+        # This makes it more robust when network is unstable.
+        if busy:
+            logger.info("Attempting to kill all runner process on %s", instance.server_name)
             # kill both Runner.Listener and Runner.Worker processes.
             # This kills pre-job.sh, a child process of Runner.Worker.
             kill_command = (
-                "pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);"
-                "pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);"
+                f"pgrep -x {RUNNER_LISTENER_PROCESS} && kill $(pgrep -x {RUNNER_LISTENER_PROCESS});"
+                f"pgrep -x {RUNNER_WORKER_PROCESS} && kill $(pgrep -x {RUNNER_WORKER_PROCESS});"
             )
-
-        result: invoke.runners.Result = ssh_conn.run(kill_command, warn=True)
-        if not result.ok:
-            logger.warning("Unable to SSH to kill runner process on %s", instance.name)
-            return
-        logger.info("Killed runner process on %s", instance.name)
+        else:
+            logger.info(
+                "Attempting to kill runner process on %s if not busy", instance.server_name
+            )
+            # Only kill Runner.Listener if Runner.Worker does not exist.
+            kill_command = (
+                f"pgrep -x {RUNNER_WORKER_PROCESS} || pgrep -x {RUNNER_LISTENER_PROCESS} && "
+                f"kill $(pgrep -x {RUNNER_LISTENER_PROCESS})"
+            )
+        # Checking the result of kill command is not useful, as the exit code does not reveal much.
+        ssh_conn.run(kill_command, warn=True)
 
     @retry(tries=3, delay=5, backoff=2, local_logger=logger)
     def _health_check(self, instance: OpenstackInstance) -> bool:
@@ -554,7 +556,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
         if not result.ok:
-            logger.warning("SSH run of `ps aux` failed on %s", name)
+            logger.warning("SSH run of `ps aux` failed on %s: %s", name, result.stderr)
             return False
         if (
             RUNNER_WORKER_PROCESS not in result.stdout
