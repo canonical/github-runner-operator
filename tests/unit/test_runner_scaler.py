@@ -250,5 +250,5 @@ def test_get_runner_unknown_runner(runner_scaler_one_runner: RunnerScaler):
     """
     runner_scaler = runner_scaler_one_runner
     set_one_runner_state(runner_scaler, "UNKNOWN")
-    
+
     assert_runner_info(runner_scaler=runner_scaler, unknown=1)
