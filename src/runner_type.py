@@ -12,7 +12,7 @@ from charm_state import GithubPath, SSHDebugConnection
 
 
 @dataclass
-class RunnerByHealth:
+class RunnerNameByHealth:
     """Set of runners instance by health state.
 
     Attributes:

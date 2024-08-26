@@ -10,7 +10,7 @@ import jinja2
 import openstack.connection
 import openstack.exceptions
 import pytest
-from fabric.connection import Connection as SshConnection
+from fabric.connection import Connection as SSHConnection
 from invoke import Result
 from openstack.compute.v2.keypair import Keypair
 from openstack.compute.v2.server import Server
@@ -27,7 +27,7 @@ from metrics.storage import MetricsStorage
 from openstack_cloud import openstack_manager
 from openstack_cloud.openstack_manager import MAX_METRICS_FILE_SIZE, METRICS_EXCHANGE_PATH
 from runner_manager_type import FlushMode
-from runner_type import RunnerByHealth, RunnerGithubInfo
+from runner_type import RunnerGithubInfo, RunnerNameByHealth
 from tests.unit import factories
 
 FAKE_MONGODB_URI = "mongodb://example.com/db"
@@ -57,7 +57,7 @@ def patch_get_ssh_connection_health_check_fixture(monkeypatch: pytest.MonkeyPatc
     mock_get_ssh_connection = MagicMock(
         spec=openstack_manager.OpenstackRunnerManager._get_ssh_connection
     )
-    mock_ssh_connection = MagicMock(spec=SshConnection)
+    mock_ssh_connection = MagicMock(spec=SSHConnection)
     mock_ssh_connection.host = "test host IP"
     mock_result = MagicMock(spec=Result)
     mock_result.ok = True
@@ -79,7 +79,7 @@ def ssh_connection_health_check_fixture(monkeypatch: pytest.MonkeyPatch):
     mock_get_ssh_connection = MagicMock(
         spec=openstack_manager.OpenstackRunnerManager._get_ssh_connection
     )
-    mock_ssh_connection = MagicMock(spec=SshConnection)
+    mock_ssh_connection = MagicMock(spec=SSHConnection)
     mock_ssh_connection.host = "test host IP"
     mock_result = MagicMock(spec=Result)
     mock_result.ok = True
@@ -97,7 +97,7 @@ def patch_ssh_connection_error_fixture(monkeypatch: pytest.MonkeyPatch):
     mock_get_ssh_connection = MagicMock(
         spec=openstack_manager.OpenstackRunnerManager._get_ssh_connection
     )
-    mock_ssh_connection = MagicMock(spec=SshConnection)
+    mock_ssh_connection = MagicMock(spec=SSHConnection)
     mock_result = MagicMock(spec=Result)
     mock_result.ok = False
     mock_result.stdout = "Mock stdout"
@@ -153,7 +153,7 @@ def patched_create_connection_context_fixture(monkeypatch: pytest.MonkeyPatch):
 def ssh_connection_mock_fixture() -> MagicMock:
     """Return a mocked ssh connection."""
     test_file_content = secrets.token_hex(16)
-    ssh_conn_mock = MagicMock(spec=openstack_manager.SshConnection)
+    ssh_conn_mock = MagicMock(spec=openstack_manager.SSHConnection)
     ssh_conn_mock.get.side_effect = lambda remote, local: Path(local).write_text(test_file_content)
     ssh_conn_mock.run.side_effect = lambda cmd, **kwargs: (
         Result(stdout="1") if cmd.startswith("stat") else Result()
@@ -287,17 +287,12 @@ def test__create_connection(
 
 
 @pytest.mark.parametrize(
-    "proxy_config, dockerhub_mirror, ssh_debug_connections, expected_env_contents",
+    "dockerhub_mirror, ssh_debug_connections, expected_env_contents",
     [
         pytest.param(
             None,
             None,
-            None,
             """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
 
 LANG=C.UTF-8
 ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
@@ -305,33 +300,9 @@ ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
             id="all values empty",
         ),
         pytest.param(
-            openstack_manager.ProxyConfig(
-                http="http://test.internal",
-                https="https://test.internal",
-                no_proxy="http://no_proxy.internal",
-            ),
-            None,
-            None,
-            """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
-
-LANG=C.UTF-8
-ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
-""",
-            id="proxy value set",
-        ),
-        pytest.param(
-            None,
             "http://dockerhub_mirror.test",
             None,
             """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
 
 DOCKERHUB_MIRROR=http://dockerhub_mirror.test
 CONTAINER_REGISTRY_URL=http://dockerhub_mirror.test
@@ -343,7 +314,6 @@ ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
         ),
         pytest.param(
             None,
-            None,
             [
                 openstack_manager.SSHDebugConnection(
                     host="127.0.0.1",
@@ -353,10 +323,6 @@ ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
                 )
             ],
             """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
 
 LANG=C.UTF-8
 ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
@@ -369,11 +335,6 @@ TMATE_SERVER_ED25519_FINGERPRINT=SHA256:tested25519
             id="ssh debug connection set",
         ),
         pytest.param(
-            openstack_manager.ProxyConfig(
-                http="http://test.internal",
-                https="https://test.internal",
-                no_proxy="http://no_proxy.internal",
-            ),
             "http://dockerhub_mirror.test",
             [
                 openstack_manager.SSHDebugConnection(
@@ -384,10 +345,6 @@ TMATE_SERVER_ED25519_FINGERPRINT=SHA256:tested25519
                 )
             ],
             """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
 
 DOCKERHUB_MIRROR=http://dockerhub_mirror.test
 CONTAINER_REGISTRY_URL=http://dockerhub_mirror.test
@@ -405,7 +362,6 @@ TMATE_SERVER_ED25519_FINGERPRINT=SHA256:tested25519
     ],
 )
 def test__generate_runner_env(
-    proxy_config: Optional[openstack_manager.ProxyConfig],
     dockerhub_mirror: Optional[str],
     ssh_debug_connections: Optional[list[openstack_manager.SSHDebugConnection]],
     expected_env_contents: str,
@@ -510,7 +466,7 @@ def test_reconcile_pulls_metric_files(
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
-        return_value=RunnerByHealth(healthy=(), unhealthy=("test_runner",))
+        return_value=RunnerNameByHealth(healthy=(), unhealthy=("test_runner",))
     )
     ssh_connection_mock.get.side_effect = MagicMock()
     openstack_manager_for_reconcile.reconcile(quantity=0)
@@ -545,7 +501,7 @@ def test_reconcile_does_not_pull_too_large_files(
         Result(stdout=f"{MAX_METRICS_FILE_SIZE + 1}") if cmd.startswith("stat") else Result()
     )
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
-        return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
+        return_value=RunnerNameByHealth(healthy=("test_runner",), unhealthy=())
     )
 
     openstack_manager_for_reconcile.reconcile(quantity=0)
@@ -570,7 +526,7 @@ def test_reconcile_issue_reconciliation_metrics(
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
-        return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
+        return_value=RunnerNameByHealth(healthy=("test_runner",), unhealthy=())
     )
 
     openstack_manager.runner_metrics.extract.return_value = (MagicMock() for _ in range(2))
@@ -635,7 +591,7 @@ def test_reconcile_ignores_metrics_for_openstack_online_runners(
         ]
     }
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
-        return_value=RunnerByHealth(
+        return_value=RunnerNameByHealth(
             healthy=(runner_names["healthy_online"], runner_names["healthy_offline"]),
             unhealthy=(
                 runner_names["unhealthy_online"],
@@ -692,7 +648,7 @@ def test_reconcile_ignores_metrics_for_openstack_online_runners(
 
     openstack_manager.runner_metrics.extract.assert_called_once_with(
         metrics_storage_manager=metrics.storage,
-        ignore_runners=set(openstack_online_runner_names),
+        runners=set(openstack_online_runner_names),
     )
 
 
@@ -862,7 +818,7 @@ def test__ssh_health_check_error(monkeypatch: pytest.MonkeyPatch, mock_server: M
     mock_ssh_connection = MagicMock()
     mock_ssh_connection.run = MagicMock(side_effect=TimeoutError)
     monkeypatch.setattr(
-        openstack_manager, "SshConnection", MagicMock(return_value=mock_ssh_connection)
+        openstack_manager, "SSHConnection", MagicMock(return_value=mock_ssh_connection)
     )
 
     with pytest.raises(openstack_manager._SSHError) as exc:
@@ -1132,7 +1088,7 @@ def test__get_ssh_connection_server_no_valid_connections(
     mock_ssh_connection = MagicMock()
     mock_ssh_connection.run = run
     monkeypatch.setattr(
-        openstack_manager, "SshConnection", MagicMock(return_value=mock_ssh_connection)
+        openstack_manager, "SSHConnection", MagicMock(return_value=mock_ssh_connection)
     )
 
     with pytest.raises(openstack_manager._SSHError) as exc:
@@ -1164,7 +1120,7 @@ def test__get_ssh_connection_server(monkeypatch: pytest.MonkeyPatch):
         return_value=factories.MockSSHRunResult(exited=0, stdout="hello world")
     )
     monkeypatch.setattr(
-        openstack_manager, "SshConnection", MagicMock(return_value=mock_ssh_connection)
+        openstack_manager, "SSHConnection", MagicMock(return_value=mock_ssh_connection)
     )
 
     assert (

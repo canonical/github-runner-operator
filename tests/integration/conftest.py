@@ -93,7 +93,7 @@ def test_id_fixture() -> str:
 def app_name_fixture(existing_app: Optional[str], test_id: str) -> str:
     """Randomized application name."""
     # Randomized app name to avoid collision when runner is connecting to GitHub.
-    return existing_app or f"integration-id{test_id}"
+    return existing_app or f"test-{secrets.token_hex(4)}"
 
 
 @pytest.fixture(scope="module", name="charm_file")
@@ -309,6 +309,22 @@ def openstack_config_fixture(
     return OpenstackConfig(
         clouds_yaml=clouds_yaml_contents, network=network_name, flavor=flavor_name
     )
+
+
+@pytest.fixture(scope="module", name="openstack_test_image")
+def openstack_test_image_fixture(pytestconfig: pytest.Config) -> str:
+    """Image for testing openstack interfaces."""
+    test_image = pytestconfig.getoption("--openstack-test-image")
+    assert test_image, "Please specify the --openstack-test-image command line option"
+    return test_image
+
+
+@pytest.fixture(scope="module", name="openstack_test_flavor")
+def openstack_test_flavor_fixture(pytestconfig: pytest.Config) -> str:
+    """Flavor for testing openstack interfaces."""
+    test_flavor = pytestconfig.getoption("--openstack-test-flavor")
+    assert test_flavor, "Please specify the --openstack-test-flavor command line option"
+    return test_flavor
 
 
 @pytest.fixture(scope="module", name="openstack_connection")
