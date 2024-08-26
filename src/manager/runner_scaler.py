@@ -21,15 +21,19 @@ class RunnerInfo(TypedDict):
 
     Attributes:
         online: The number of runner in online state.
+        busy: The number of the runner in busy state.
         offline: The number of runner in offline state.
         unknown: The number of runner in unknown state.
         runners: The names of the online runners.
+        busy_runners: The names of the busy runners.
     """
 
     online: int
+    busy: int
     offline: int
     unknown: int
     runners: tuple[str, ...]
+    busy_runners: tuple[str, ...]
 
 
 class RunnerScaler:
@@ -51,14 +55,18 @@ class RunnerScaler:
         """
         runner_list = self._manager.get_runners()
         online = 0
+        busy = 0
         offline = 0
         unknown = 0
         online_runners = []
+        busy_runners = []
         for runner in runner_list:
             match runner.github_state:
                 case GitHubRunnerState.BUSY:
                     online += 1
                     online_runners.append(runner.name)
+                    busy += 1
+                    busy_runners.append(runner.name)
                 case GitHubRunnerState.IDLE:
                     online += 1
                     online_runners.append(runner.name)
@@ -67,7 +75,12 @@ class RunnerScaler:
                 case _:
                     unknown += 1
         return RunnerInfo(
-            online=online, offline=offline, unknown=unknown, runners=tuple(online_runners)
+            online=online,
+            busy=busy,
+            offline=offline,
+            unknown=unknown,
+            runners=tuple(online_runners),
+            busy_runners=tuple(busy_runners),
         )
 
     def flush(self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE) -> int:
@@ -138,8 +151,12 @@ class RunnerScaler:
         ]
 
         try:
-            available_runners = set(runner.name for runner in idle_runners) | set(runner.name for runner in offline_healthy_runners)
-            logger.info("Current available runners (idle + healthy offline): %s", available_runners)
+            available_runners = set(runner.name for runner in idle_runners) | set(
+                runner.name for runner in offline_healthy_runners
+            )
+            logger.info(
+                "Current available runners (idle + healthy offline): %s", available_runners
+            )
             metric_events.issue_event(
                 metric_events.Reconciliation(
                     timestamp=time.time(),

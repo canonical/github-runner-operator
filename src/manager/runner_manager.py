@@ -126,7 +126,6 @@ class RunnerManager:
             RunnerManager._CreateRunnerArgs(self._cloud, registration_token) for _ in range(num)
         ]
         return RunnerManager._spawn_runners(create_runner_args)
-    
 
     def get_runners(
         self,
@@ -242,17 +241,19 @@ class RunnerManager:
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)
 
     @staticmethod
-    def _spawn_runners(create_runner_args: Iterable["RunnerManager._CreateRunnerArgs"]) -> tuple[InstanceId, ...]:
+    def _spawn_runners(
+        create_runner_args: Iterable["RunnerManager._CreateRunnerArgs"],
+    ) -> tuple[InstanceId, ...]:
         """Parallel spawn of runners.
-        
-        The length of the create_runner_args is number _create_runner invocation, and therefore the 
+
+        The length of the create_runner_args is number _create_runner invocation, and therefore the
         number of runner spawned.
 
         Args:
             create_runner_args: List of arg for invoking _create_runner method.
 
         Returns:
-            A list of instance ID of runner spawned.        
+            A list of instance ID of runner spawned.
         """
         num = len(create_runner_args)
 
@@ -271,7 +272,6 @@ class RunnerManager:
                 else:
                     instance_id_list.append(instance_id)
         return tuple(instance_id_list)
-        
 
     def _delete_runners(
         self, runners: Sequence[RunnerInstance], remove_token: str

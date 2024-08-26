@@ -20,7 +20,7 @@ from metrics.runner import RunnerMetrics
 
 @dataclass
 class MockRunner:
-    """Mock of a runner"""
+    """Mock of a runner."""
 
     name: str
     instance_id: InstanceId
@@ -29,6 +29,11 @@ class MockRunner:
     health: bool
 
     def __init__(self, name: str):
+        """Construct the object.
+
+        Args:
+            name: The name of the runner.
+        """
         self.name = name
         self.instance_id = secrets.token_hex(6)
         self.cloud_state = CloudRunnerState.ACTIVE
@@ -36,6 +41,7 @@ class MockRunner:
         self.health = True
 
     def to_cloud_runner(self) -> CloudRunnerInstance:
+        """Construct CloudRunnerInstance from this object."""
         return CloudRunnerInstance(
             name=self.name,
             instance_id=self.instance_id,
@@ -54,6 +60,7 @@ class SharedMockRunnerManagerState:
     runners: dict[InstanceId, MockRunner]
 
     def __init__(self):
+        """Construct the object."""
         self.runners = {}
 
 
@@ -64,6 +71,11 @@ class MockCloudRunnerManager(CloudRunnerManager):
     """
 
     def __init__(self, state: SharedMockRunnerManagerState):
+        """Construct the object.
+
+        Args:
+            state: The shared state between cloud and github runner managers.
+        """
         self.prefix = f"mock_{secrets.token_hex(4)}"
         self.state = state
 
@@ -94,7 +106,9 @@ class MockCloudRunnerManager(CloudRunnerManager):
             return runner.to_cloud_runner()
         return None
 
-    def get_runners(self, states: Sequence[CloudRunnerState] | None = None) -> tuple[CloudRunnerInstance, ...]:
+    def get_runners(
+        self, states: Sequence[CloudRunnerState] | None = None
+    ) -> tuple[CloudRunnerInstance, ...]:
         """Get self-hosted runners by state.
 
         Args:
