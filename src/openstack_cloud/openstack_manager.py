@@ -62,7 +62,7 @@ from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner_manager import IssuedMetricEventsStats
 from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
-from runner_type import GitHubPath, RunnerGithubInfo, RunnerNameByHealth
+from runner_type import GithubPath, RunnerByHealth, RunnerGithubInfo
 from utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
