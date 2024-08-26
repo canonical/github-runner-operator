@@ -14,21 +14,24 @@ import platform
 import re
 from enum import Enum
 from pathlib import Path
-from typing import NamedTuple, Optional, cast
+from typing import Annotated, NamedTuple, Optional, cast
 from urllib.parse import urlsplit
 
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from ops import CharmBase
 from pydantic import (
+    AfterValidator,
     AnyHttpUrl,
     BaseModel,
+    ConfigDict,
     Field,
     IPvAnyAddress,
     MongoDsn,
     ValidationError,
-    validator,
+    field_validator,
 )
+from pydantic_core import Url
 
 import openstack_cloud
 from errors import MissingMongoDBError, OpenStackInvalidConfigError
@@ -76,14 +79,16 @@ StorageSize = str
 """Representation of storage size with KiB, MiB, GiB, TiB, PiB, EiB as unit."""
 
 
-class AnyHttpsUrl(AnyHttpUrl):
-    """Represents an HTTPS URL.
+def validate_https(url: Url) -> str:
+    if url.scheme == "https":
+        url_str = str(url)
+        print(f"{url_str=}")
+        return url_str
 
-    Attributes:
-        allowed_schemes: Allowed schemes for the URL.
-    """
+    raise ValueError("URL: %s is not a valid https url!", url)
 
-    allowed_schemes = {"https"}
+
+AnyHttpsUrl = Annotated[AnyHttpUrl, AfterValidator(validate_https)]
 
 
 @dataclasses.dataclass
@@ -364,12 +369,12 @@ class CharmConfig(BaseModel):
     """
 
     denylist: list[FirewallEntry]
-    dockerhub_mirror: AnyHttpsUrl | None
+    dockerhub_mirror: AnyHttpsUrl | None = None
     labels: tuple[str, ...]
-    openstack_clouds_yaml: dict[str, dict] | None
+    openstack_clouds_yaml: dict[str, dict] | None = None
     path: GithubPath
     reconcile_interval: int
-    repo_policy_compliance: RepoPolicyComplianceConfig | None
+    repo_policy_compliance: RepoPolicyComplianceConfig | None = None
     token: str
 
     @classmethod
@@ -388,6 +393,7 @@ class CharmConfig(BaseModel):
         denylist = [FirewallEntry.decode(entry) for entry in entry_list if entry]
         return denylist
 
+    # *** docker hub mirror url changed from a string to an https url ***
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
         """Parse and validate dockerhub mirror URL.
@@ -460,7 +466,7 @@ class CharmConfig(BaseModel):
 
         return cast(dict, openstack_clouds_yaml)
 
-    @validator("reconcile_interval")
+    @field_validator("reconcile_interval")
     @classmethod
     def check_reconcile_interval(cls, reconcile_interval: int) -> int:
         """Validate the general charm configuration.
@@ -590,8 +596,8 @@ class OpenstackImage(BaseModel):
         tags: Image tags, e.g. jammy
     """
 
-    id: str | None
-    tags: list[str] | None
+    id: str | None = None
+    tags: list[str] | None = None
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "OpenstackImage | None":
@@ -633,7 +639,7 @@ class OpenstackRunnerConfig(BaseModel):
     virtual_machines: int
     openstack_flavor: str
     openstack_network: str
-    openstack_image: OpenstackImage | None
+    openstack_image: OpenstackImage | None = None
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "OpenstackRunnerConfig":
@@ -735,7 +741,7 @@ class LocalLxdRunnerConfig(BaseModel):
             runner_storage=runner_storage,
         )
 
-    @validator("virtual_machines")
+    @field_validator("virtual_machines")
     @classmethod
     def check_virtual_machines(cls, virtual_machines: int) -> int:
         """Validate the virtual machines configuration value.
@@ -757,7 +763,7 @@ class LocalLxdRunnerConfig(BaseModel):
 
         return virtual_machines
 
-    @validator("virtual_machine_resources")
+    @field_validator("virtual_machine_resources")
     @classmethod
     def check_virtual_machine_resources(
         cls, vm_resources: VirtualMachineResources
@@ -804,9 +810,9 @@ class ProxyConfig(BaseModel):
         use_aproxy: Whether aproxy should be used for the runners.
     """
 
-    http: Optional[AnyHttpUrl]
-    https: Optional[AnyHttpUrl]
-    no_proxy: Optional[str]
+    http: Optional[AnyHttpUrl] = None
+    https: Optional[AnyHttpUrl] = None
+    no_proxy: Optional[str] = None
     use_aproxy: bool = False
 
     @property
@@ -818,16 +824,14 @@ class ProxyConfig(BaseModel):
             assert (
                 proxy_address is not None and proxy_address.host is not None
             )  # nosec for [B101:assert_used]
-            aproxy_address = (
-                proxy_address.host
-                if not proxy_address.port
-                else f"{proxy_address.host}:{proxy_address.port}"
-            )
+            aproxy_address = proxy_address.host
         else:
             aproxy_address = None
         return aproxy_address
 
-    @validator("use_aproxy")
+    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
+    @field_validator("use_aproxy")
     @classmethod
     def check_use_aproxy(cls, use_aproxy: bool, values: dict) -> bool:
         """Validate the proxy configuration.
@@ -842,7 +846,12 @@ class ProxyConfig(BaseModel):
         Returns:
             Validated use_aproxy value.
         """
-        if use_aproxy and not (values.get("http") or values.get("https")):
+        try:
+            if use_aproxy and not (values.data.get("http") or values.data.get("https")):
+                raise ValueError("aproxy requires http or https to be set")
+        except (
+            AttributeError
+        ) as e:  # needed because when http or https are not passed, it raises an AttributeError
             raise ValueError("aproxy requires http or https to be set")
 
         return use_aproxy
@@ -881,14 +890,9 @@ class ProxyConfig(BaseModel):
             use_aproxy=use_aproxy,
         )
 
-    class Config:  # pylint: disable=too-few-public-methods
-        """Pydantic model configuration.
-
-        Attributes:
-            allow_mutation: Whether the model is mutable.
-        """
-
-        allow_mutation = False
+    # TODO[pydantic]: The following keys were removed: `allow_mutation`.
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
+    model_config = ConfigDict(allow_mutation=False)
 
 
 class UnsupportedArchitectureError(Exception):
@@ -980,6 +984,14 @@ class SSHDebugConnection(BaseModel):
         return ssh_debug_connections
 
 
+def get_mongo_uri(mongo_dsn: MongoDsn) -> str:
+    """Return a mongo URI from a MongoDsn."""
+    return str(mongo_dsn)
+
+
+MongoURI = Annotated[MongoDsn, AfterValidator(get_mongo_uri)]
+
+
 class ReactiveConfig(BaseModel):
     """Represents the configuration for reactive scheduling.
 
@@ -987,7 +999,7 @@ class ReactiveConfig(BaseModel):
         mq_uri: The URI of the MQ to use to spawn runners reactively.
     """
 
-    mq_uri: MongoDsn
+    mq_uri: MongoURI
 
     @classmethod
     def from_database(cls, database: DatabaseRequires) -> "ReactiveConfig | None":
