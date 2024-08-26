@@ -42,10 +42,10 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
-      juju-channel: 3.2/stable
+      juju-channel: 3.5/stable
       pre-run-script: tests/integration/setup_private_endpoint_model.sh
       provider: lxd
-      test-tox-env: integration-juju3.2
+      test-tox-env: integration-juju3.5
       modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_runner"]'
       extra-arguments: "-m openstack"
       builder-runner-label: ARM64
