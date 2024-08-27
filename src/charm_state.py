@@ -79,11 +79,9 @@ StorageSize = str
 """Representation of storage size with KiB, MiB, GiB, TiB, PiB, EiB as unit."""
 
 
-def validate_https(url: Url) -> str:
+def validate_https(url: AnyHttpUrl) -> AnyHttpUrl:
     if url.scheme == "https":
-        url_str = str(url)
-        print(f"{url_str=}")
-        return url_str
+        return url
 
     raise ValueError("URL: %s is not a valid https url!", url)
 
@@ -984,14 +982,6 @@ class SSHDebugConnection(BaseModel):
         return ssh_debug_connections
 
 
-def get_mongo_uri(mongo_dsn: MongoDsn) -> str:
-    """Return a mongo URI from a MongoDsn."""
-    return str(mongo_dsn)
-
-
-MongoURI = Annotated[MongoDsn, AfterValidator(get_mongo_uri)]
-
-
 class ReactiveConfig(BaseModel):
     """Represents the configuration for reactive scheduling.
 
@@ -999,7 +989,7 @@ class ReactiveConfig(BaseModel):
         mq_uri: The URI of the MQ to use to spawn runners reactively.
     """
 
-    mq_uri: MongoURI
+    mq_uri: MongoDsn
 
     @classmethod
     def from_database(cls, database: DatabaseRequires) -> "ReactiveConfig | None":

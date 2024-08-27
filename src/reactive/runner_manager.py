@@ -11,6 +11,8 @@ import signal
 import subprocess  # nosec
 from pathlib import Path
 
+from pydantic import MongoDsn
+
 from utilities import secure_run_subprocess
 
 logger = logging.getLogger(__name__)
@@ -36,7 +38,7 @@ class ReactiveRunnerError(Exception):
     """Raised when a reactive runner error occurs."""
 
 
-def reconcile(quantity: int, mq_uri: str, queue_name: str) -> int:
+def reconcile(quantity: int, mq_uri: MongoDsn, queue_name: str) -> int:
     """Spawn a runner reactively.
 
     Args:

@@ -30,7 +30,7 @@ def test_consume(caplog: pytest.LogCaptureFixture):
     # we use construct to avoid pydantic validation as IN_MEMORY_URI is not a valid URL
     consumer.consume(IN_MEMORY_URI, queue_name)
     assert str(job_details.labels) in caplog.text
-    assert job_details.run_url in caplog.text
+    assert job_details.run_url.host in caplog.text
 
 
 @pytest.mark.parametrize(

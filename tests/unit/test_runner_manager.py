@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, call
 
 import pytest
+from pydantic import MongoDsn
 from pytest import LogCaptureFixture, MonkeyPatch
 
 import reactive.runner_manager
@@ -32,7 +33,7 @@ from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerMan
 from runner_type import RunnerNameByHealth
 from tests.unit.mock import TEST_BINARY, MockLxdImageManager
 
-FAKE_MONGODB_URI = "mongodb://example.com/db"
+FAKE_MONGODB_URI = "mongodb://example.com:27017/db"
 
 IMAGE_NAME = "jammy"
 
@@ -537,7 +538,7 @@ def test_reconcile_reactive_mode(
 
     assert actual_count == count
     reactive_reconcile_mock.assert_called_with(
-        quantity=count, mq_uri=FAKE_MONGODB_URI, queue_name=runner_manager.app_name
+        quantity=count, mq_uri=MongoDsn(FAKE_MONGODB_URI), queue_name=runner_manager.app_name
     )
 
 

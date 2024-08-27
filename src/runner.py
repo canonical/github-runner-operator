@@ -716,7 +716,9 @@ class Runner:
                 }
             }
         }
-        docker_client_proxy_content = json.dumps(docker_client_proxy)
+        docker_client_proxy_content = json.dumps(
+            docker_client_proxy, default=lambda x: x.unicode_string()
+        )
         # Configure the docker client for root user and ubuntu user.
         self._put_file("/root/.docker/config.json", docker_client_proxy_content)
         self._put_file("/home/ubuntu/.docker/config.json", docker_client_proxy_content)

@@ -10,10 +10,8 @@ from unittest.mock import MagicMock
 
 import pytest
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
-from pydantic import BaseModel
-from pydantic.error_wrappers import ValidationError
+from pydantic import AnyHttpUrl, BaseModel, MongoDsn
 from pydantic.networks import IPv4Address
-from pydantic_core import Url
 
 import charm_state
 import openstack_cloud
@@ -486,8 +484,8 @@ def test_charm_config_from_charm_valid():
         FirewallEntry(ip_range="192.168.1.1"),
         FirewallEntry(ip_range="192.168.1.2"),
     ]
-    assert (
-        result.dockerhub_mirror == "https://example.com"
+    assert result.dockerhub_mirror == AnyHttpUrl(
+        "https://example.com"
     )  # *** new Url lib adds '/' to the end of urls ***
     assert result.openstack_clouds_yaml == {
         "clouds": {"openstack": {"auth": {"username": "admin"}}}
@@ -999,7 +997,7 @@ def test_reactive_config_from_charm():
 
     connection_info = charm_state.ReactiveConfig.from_database(database)
     assert isinstance(connection_info, charm_state.ReactiveConfig)
-    assert connection_info.mq_uri == mongodb_uri
+    assert connection_info.mq_uri == MongoDsn(mongodb_uri)
 
 
 def test_reactive_config_from_database_returns_none():
