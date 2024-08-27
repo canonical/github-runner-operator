@@ -247,7 +247,9 @@ class OpenStackRunnerManager(CloudRunnerManager):
         ]
         if states is None:
             return tuple(instance_list)
-        return tuple(instance for instance in instance_list if instance.state in states)
+
+        state_set = set(states)
+        return tuple(instance for instance in instance_list if instance.state in state_set)
 
     def delete_runner(
         self, instance_id: InstanceId, remove_token: str

@@ -72,12 +72,16 @@ class GitHubRunnerManager:
             Information on the runners.
         """
         runner_list = self.github.get_runner_github_info(self._path)
+        runner_list = [runner for runner in runner_list if runner.name.startswith(self._prefix)]
+
+        if states is None:
+            return tuple(runner_list)
+
         state_set = set(states)
         return tuple(
             runner
             for runner in runner_list
-            if runner.name.startswith(self._prefix)
-            and GitHubRunnerManager._is_runner_in_state(runner, state_set)
+            if GitHubRunnerManager._is_runner_in_state(runner, state_set)
         )
 
     def delete_runners(self, states: Iterable[GitHubRunnerState] | None = None) -> None:
