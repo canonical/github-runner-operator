@@ -773,7 +773,7 @@ class GithubRunnerCharm(CharmBase):
                     "offline": info.offline,
                     "unknown": info.unknown,
                     "runners": info.runners,
-                    "busy_runners": info.busy_runners,
+                    "busy-runners": info.busy_runners,
                 }
             )
             return
