@@ -487,7 +487,7 @@ def test_charm_config_from_charm_valid():
         FirewallEntry(ip_range="192.168.1.2"),
     ]
     assert (
-        result.dockerhub_mirror == "https://example.com/"
+        result.dockerhub_mirror == "https://example.com"
     )  # *** new Url lib adds '/' to the end of urls ***
     assert result.openstack_clouds_yaml == {
         "clouds": {"openstack": {"auth": {"username": "admin"}}}
