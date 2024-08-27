@@ -141,7 +141,7 @@ def test_extract(runner_fs_base: Path):
     runner_all_metrics_name = secrets.token_hex(16)
     runner_all_metrics = _create_metrics_data(runner_all_metrics_name)
     runner_wihout_post_job_name = secrets.token_hex(16)
-    runner_without_post_job_metrics = runner_all_metrics.copy()
+    runner_without_post_job_metrics = runner_all_metrics.model_copy()
     runner_without_post_job_metrics.post_job = None
     runner_without_post_job_metrics.runner_name = runner_wihout_post_job_name
 
@@ -237,7 +237,7 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
     runner_metrics_data = _create_metrics_data(runner_name=runner_name)
 
     # 1. Runner has noncompliant pre-job metrics inside shared fs
-    invalid_pre_job_data = runner_metrics_data.pre_job.copy(update={"timestamp": -1})
+    invalid_pre_job_data = runner_metrics_data.pre_job.model_copy(update={"timestamp": -1})
     runner_fs = _create_runner_files(
         runner_fs_base,
         runner_name,
@@ -328,7 +328,7 @@ def test_extract_raises_error_for_too_large_files(
     runner_metrics_data = _create_metrics_data(runner_name)
 
     # 1. Runner has a pre-job metrics file that is too large
-    invalid_pre_job_data = runner_metrics_data.pre_job.copy(
+    invalid_pre_job_data = runner_metrics_data.pre_job.model_copy(
         update={"workflow": "a" * runner_metrics.FILE_SIZE_BYTES_LIMIT + "b"}
     )
 
@@ -356,7 +356,7 @@ def test_extract_raises_error_for_too_large_files(
     # 2. Runner has a post-job metrics file that is too large
     runner_name = secrets.token_hex(16)
     runner_metrics_data = _create_metrics_data(runner_name)
-    invalid_post_job_data = runner_metrics_data.post_job.copy(
+    invalid_post_job_data = runner_metrics_data.post_job.model_copy(
         update={"status": "a" * runner_metrics.FILE_SIZE_BYTES_LIMIT + "b"}
     )
     runner_fs = _create_runner_files(
