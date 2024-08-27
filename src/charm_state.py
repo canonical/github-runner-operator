@@ -822,7 +822,7 @@ class ProxyConfig(BaseModel):
             aproxy_address = None
         return aproxy_address
 
-    @field_validator("use_aproxy")
+    @field_validator("use_aproxy")  # type: ignore
     @classmethod
     def check_use_aproxy(cls, use_aproxy: bool, values: dict) -> bool:
         """Validate the proxy configuration.
@@ -838,7 +838,7 @@ class ProxyConfig(BaseModel):
             Validated use_aproxy value.
         """
         try:
-            if use_aproxy and not (values.data.get("http") or values.data.get("https")):
+            if use_aproxy and not (values.data.get("http") or values.data.get("https")):  # type: ignore
                 raise ValueError("aproxy requires http or https to be set")
         except AttributeError as e:  # noqa: F841
             # when http or https are not passed, raises an AttributeError
