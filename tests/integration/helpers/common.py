@@ -283,6 +283,7 @@ async def deploy_github_runner_charm(
     if config:
         default_config.update(config)
 
+    logger.info("STORAGE: %s", storage)
     application = await model.deploy(
         charm_file,
         application_name=app_name,
