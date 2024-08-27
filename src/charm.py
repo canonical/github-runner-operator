@@ -765,7 +765,17 @@ class GithubRunnerCharm(CharmBase):
 
         if state.instance_type == InstanceType.OPENSTACK:
             runner_scaler = self._get_runner_scaler(state)
-            event.set_results(runner_scaler.get_runner_info())
+            info = runner_scaler.get_runner_info()
+            event.set_results(
+                {
+                    "online": info.online,
+                    "busy": info.busy,
+                    "offline": info.offline,
+                    "unknown": info.unknown,
+                    "runners": info.runners,
+                    "busy_runners": info.busy_runners,
+                }
+            )
             return
 
         runner_manager = self._get_runner_manager(state)

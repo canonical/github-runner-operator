@@ -5,6 +5,7 @@
 
 import logging
 import time
+from dataclasses import dataclass
 from typing import TypedDict
 
 from errors import IssueMetricEventError, MissingServerConfigError
@@ -16,7 +17,8 @@ from metrics import events as metric_events
 logger = logging.getLogger(__name__)
 
 
-class RunnerInfo(TypedDict):
+@dataclass
+class RunnerInfo:
     """Information on the runners.
 
     Attributes:

@@ -111,14 +111,14 @@ def assert_runner_info(
         unknown: The number of unknown runners to assert for.
     """
     info = runner_scaler.get_runner_info()
-    assert info["offline"] == offline
-    assert info["online"] == online
-    assert info["busy"] == busy
-    assert info["unknown"] == unknown
-    assert isinstance(info["runners"], tuple)
-    assert len(info["runners"]) == online
-    assert isinstance(info["busy_runners"], tuple)
-    assert len(info["busy_runners"]) == busy
+    assert info.offline == offline
+    assert info.online == online
+    assert info.busy == busy
+    assert info.unknown == unknown
+    assert isinstance(info.runners, tuple)
+    assert len(info.runners) == online
+    assert isinstance(info.busy_runners, tuple)
+    assert len(info.busy_runners) == busy
 
 
 def test_get_no_runner(runner_scaler: RunnerScaler):
