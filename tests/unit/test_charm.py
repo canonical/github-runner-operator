@@ -357,7 +357,7 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
             "host": test_unit_ip_addresses[0],
             "port": "10022",
             "rsa_fingerprint": "SHA256:abcd",
-            "ed25519_fingerprint": "abcd",
+            "ed25519_fingerprint": "SHA256:abcd",
         },
     )
     harness.update_relation_data(
@@ -367,7 +367,7 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
             "host": test_unit_ip_addresses[1],
             "port": "10022",
             "rsa_fingerprint": "SHA256:abcd",
-            "ed25519_fingerprint": "abcd",
+            "ed25519_fingerprint": "SHA256:abcd",
         },
     )
     harness.update_relation_data(
@@ -377,7 +377,7 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
             "host": test_unit_ip_addresses[2],
             "port": "10022",
             "rsa_fingerprint": "SHA256:abcd",
-            "ed25519_fingerprint": "abcd",
+            "ed25519_fingerprint": "SHA256:abcd",
         },
     )
 
