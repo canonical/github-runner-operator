@@ -1243,8 +1243,7 @@ class GithubRunnerCharm(CharmBase):
             proxy_config=state.proxy_config,
             dockerhub_mirror=state.charm_config.dockerhub_mirror,
             ssh_debug_connections=state.ssh_debug_connections,
-            repo_policy_url=state.charm_config.repo_policy_compliance.url,
-            repo_policy_token=state.charm_config.repo_policy_compliance.token,
+            repo_policy_compliance=state.charm_config.repo_policy_compliance,
         )
         openstack_runner_manager = OpenStackRunnerManager(
             app_name,

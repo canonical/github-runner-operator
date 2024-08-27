@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Iterator, Sequence, Tuple
 
-from charm_state import GitHubPath, ProxyConfig, SSHDebugConnection
+from charm_state import GitHubPath, ProxyConfig, RepoPolicyComplianceConfig, SSHDebugConnection
 from metrics.runner import RunnerMetrics
 
 logger = logging.getLogger(__name__)
@@ -110,15 +110,13 @@ class SupportServiceConfig:
         proxy_config: The proxy configuration.
         dockerhub_mirror: The dockerhub mirror to use for runners.
         ssh_debug_connections: The information on the ssh debug services.
-        repo_policy_url: The URL of the repo policy service.
-        repo_policy_token: The token to access the repo policy service.
+        repo_policy_compliance: The configuration of the repo policy compliance service.
     """
 
     proxy_config: ProxyConfig | None
     dockerhub_mirror: str | None
     ssh_debug_connections: list[SSHDebugConnection] | None
-    repo_policy_url: str | None
-    repo_policy_token: str | None
+    repo_policy_compliance: RepoPolicyComplianceConfig | None
 
 
 @dataclass

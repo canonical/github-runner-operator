@@ -122,8 +122,7 @@ async def openstack_runner_manager_fixture(
         proxy_config=proxy_config,
         dockerhub_mirror=None,
         ssh_debug_connections=None,
-        repo_policy_url=None,
-        repo_policy_token=None,
+        repo_policy_compliance=None,
     )
     return OpenStackRunnerManager(
         app_name, cloud_config, server_config, runner_config, service_config
