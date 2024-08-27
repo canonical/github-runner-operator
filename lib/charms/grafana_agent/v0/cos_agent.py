@@ -365,7 +365,7 @@ if int(pydantic.version.VERSION.split(".")[0]) < 2:  # type: ignore
                 raise DataValidationError(msg) from e
 
             try:
-                return cls.parse_raw(json.dumps(data))  # type: ignore
+                return cls.model_validate_json(json.dumps(data))  # type: ignore
             except pydantic.ValidationError as e:
                 msg = f"failed to validate databag: {databag}"
                 logger.debug(msg, exc_info=True)
