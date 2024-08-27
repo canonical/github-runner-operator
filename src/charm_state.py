@@ -799,12 +799,14 @@ class ProxyConfig(BaseModel):
         https: HTTPS proxy address.
         no_proxy: Comma-separated list of hosts that should not be proxied.
         use_aproxy: Whether aproxy should be used for the runners.
+        model_config: Config for the pydantic model
     """
 
     http: Optional[AnyHttpUrl] = None
     https: Optional[AnyHttpUrl] = None
     no_proxy: Optional[str] = None
     use_aproxy: bool = False
+    model_config = ConfigDict(frozen=True)
 
     @property
     def aproxy_address(self) -> Optional[str]:
@@ -820,8 +822,6 @@ class ProxyConfig(BaseModel):
             aproxy_address = None
         return aproxy_address
 
-    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
     @field_validator("use_aproxy")
     @classmethod
     def check_use_aproxy(cls, use_aproxy: bool, values: dict) -> bool:
@@ -840,9 +840,8 @@ class ProxyConfig(BaseModel):
         try:
             if use_aproxy and not (values.data.get("http") or values.data.get("https")):
                 raise ValueError("aproxy requires http or https to be set")
-        except (
-            AttributeError
-        ) as e:  # needed because when http or https are not passed, it raises an AttributeError
+        except AttributeError as e:  # noqa: F841
+            # when http or https are not passed, raises an AttributeError
             raise ValueError("aproxy requires http or https to be set")
 
         return use_aproxy
@@ -880,8 +879,6 @@ class ProxyConfig(BaseModel):
             no_proxy=no_proxy,
             use_aproxy=use_aproxy,
         )
-
-    model_config = ConfigDict(frozen=True)
 
 
 class UnsupportedArchitectureError(Exception):
