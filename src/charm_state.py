@@ -21,13 +21,13 @@ import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from ops import CharmBase
 from pydantic import (
-    AfterValidator,
     AnyHttpUrl,
     BaseModel,
     ConfigDict,
     Field,
     IPvAnyAddress,
     MongoDsn,
+    UrlConstraints,
     ValidationError,
     field_validator,
 )
@@ -79,14 +79,7 @@ StorageSize = str
 """Representation of storage size with KiB, MiB, GiB, TiB, PiB, EiB as unit."""
 
 
-def validate_https(url: AnyHttpUrl) -> AnyHttpUrl:
-    if url.scheme == "https":
-        return url
-
-    raise ValueError("URL: %s is not a valid https url!", url)
-
-
-AnyHttpsUrl = Annotated[AnyHttpUrl, AfterValidator(validate_https)]
+AnyHttpsUrl = Annotated[Url, UrlConstraints(allowed_schemes=["https"])]
 
 
 @dataclasses.dataclass
