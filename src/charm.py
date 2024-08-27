@@ -1223,8 +1223,6 @@ class GithubRunnerCharm(CharmBase):
         if path is None:
             path = state.charm_config.path
 
-        app_name, _ = self.unit.name.rsplit("/", 1)
-
         clouds = list(state.charm_config.openstack_clouds_yaml["clouds"].keys())
         if len(clouds) > 1:
             logger.warning(
@@ -1255,8 +1253,9 @@ class GithubRunnerCharm(CharmBase):
             ssh_debug_connections=state.ssh_debug_connections,
             repo_policy_compliance=state.charm_config.repo_policy_compliance,
         )
+        # The prefix is set to f"{application_name}-{unit number}"
         openstack_runner_manager = OpenStackRunnerManager(
-            app_name,
+            prefix=self.unit.name.replace("/", "-"),
             cloud_config=cloud_config,
             server_config=server_config,
             runner_config=runner_config,
