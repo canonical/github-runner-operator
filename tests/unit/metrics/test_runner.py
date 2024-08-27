@@ -284,7 +284,7 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
         runner_fs_base,
         runner_name,
         runner_metrics_data.pre_job.model_dump_json(),
-        json.dumps([runner_metrics_data.post_job.dict()]),
+        json.dumps([runner_metrics_data.post_job.model_dump()]),
         str(runner_metrics_data.installed_timestamp),
     )
     metrics_storage_manager.list_all.return_value = [runner_fs]
