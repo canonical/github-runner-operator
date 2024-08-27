@@ -6,7 +6,6 @@
 import logging
 import time
 from dataclasses import dataclass
-from typing import TypedDict
 
 from errors import IssueMetricEventError, MissingServerConfigError
 from manager.cloud_runner_manager import HealthState

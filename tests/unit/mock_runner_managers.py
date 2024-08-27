@@ -80,9 +80,14 @@ class SharedMockRunnerManagerState:
 
 
 class MockCloudRunnerManager(CloudRunnerManager):
-    """Mock for CloudRunnerManager.
+    """Mock of CloudRunnerManager.
 
     Metrics is not supported in this mock.
+
+    Attributes:
+        name_prefix: The naming prefix for runners managed.
+        prefix: The naming prefix for runners managed.
+        state: The shared state between mocks runner managers.
     """
 
     def __init__(self, state: SharedMockRunnerManagerState):
@@ -200,21 +205,53 @@ class MockCloudRunnerManager(CloudRunnerManager):
 
 
 class MockGitHubRunnerManager:
+    """Mock of GitHubRunnerManager.
+
+    Attributes:
+        name_prefix: The naming prefix for runner managed.
+        state: The shared state between mock runner managers.
+        path: The GitHub path to register the runners under.
+    """
 
     def __init__(self, name_prefix: str, path: GitHubPath, state: SharedMockRunnerManagerState):
+        """Construct the object.
+
+        Args:
+            name_prefix: The naming prefix for runner managed.
+            path: The GitHub path to register the runners under.
+            state: The shared state between mock runner managers.
+        """
         self.name_prefix = name_prefix
         self.state = state
         self.path = path
 
     def get_registration_token(self) -> str:
+        """Get the registration token for registering runners on GitHub.
+
+        Returns:
+            The registration token.
+        """
         return "mock_registration_token"
 
     def get_removal_token(self) -> str:
+        """Get the remove token for removing runners on GitHub.
+
+        Returns:
+            The remove token.
+        """
         return "mock_remove_token"
 
     def get_runners(
         self, github_states: Iterable[GitHubRunnerState] | None = None
     ) -> tuple[SelfHostedRunner, ...]:
+        """Get the runners.
+
+        Args:
+            github_states: The states to filter for.
+
+        Returns:
+            List of runners.
+        """
         if github_states is None:
             github_states = [member.value for member in GitHubRunnerState]
 
@@ -237,6 +274,11 @@ class MockGitHubRunnerManager:
         )
 
     def delete_runners(self, states: Iterable[GitHubRunnerState]) -> None:
+        """Delete the runners.
+
+        Args:
+            states: The states to filter the runners to delete.
+        """
         github_states = set(states)
         self.state.runners = {
             instance_id: runner

@@ -238,7 +238,7 @@ def test_get_runner_one_busy_runner(
 
 def test_get_runner_offline_runner(runner_scaler_one_runner: RunnerScaler):
     """
-    Arrange: A RunnerScaler with one offline runner
+    Arrange: A RunnerScaler with one offline runner.
     Act: Run get runners.
     Assert: One offline runner.
     """
@@ -250,7 +250,7 @@ def test_get_runner_offline_runner(runner_scaler_one_runner: RunnerScaler):
 
 def test_get_runner_unknown_runner(runner_scaler_one_runner: RunnerScaler):
     """
-    Arrange: A RunnerScaler with one offline runner
+    Arrange: A RunnerScaler with one offline runner.
     Act: Run get runners.
     Assert: One offline runner.
     """

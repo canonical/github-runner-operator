@@ -7,7 +7,7 @@ import logging
 from dataclasses import dataclass
 from enum import Enum, auto
 from multiprocessing import Pool
-from typing import Iterable, Iterator, Sequence, Type, cast
+from typing import Iterator, Sequence, Type, cast
 
 from charm_state import GitHubPath
 from errors import GithubMetricsError, RunnerCreateError
@@ -242,7 +242,7 @@ class RunnerManager:
 
     @staticmethod
     def _spawn_runners(
-        create_runner_args: Iterable["RunnerManager._CreateRunnerArgs"],
+        create_runner_args: Sequence["RunnerManager._CreateRunnerArgs"],
     ) -> tuple[InstanceId, ...]:
         """Parallel spawn of runners.
 
