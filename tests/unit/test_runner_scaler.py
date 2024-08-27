@@ -81,7 +81,14 @@ def set_one_runner_state(
     runner_scaler: RunnerScaler,
     github_state: GitHubRunnerState | None = None,
     cloud_state: CloudRunnerState | None = None,
-) -> RunnerScaler:
+):
+    """Set the runner state for a RunnerScaler with one runner.
+
+    Args:
+        runner_scaler: The RunnerScaler instance to modify.
+        github_state: The github state to set the runner.
+        cloud_state: The cloud state to set the runner.
+    """
     runner_dict = runner_scaler._manager._github.state.runners
     assert len(runner_dict) == 1, "Test arrange failed: One runner should be present"
     instance_id = list(runner_dict.keys())[0]
@@ -89,7 +96,6 @@ def set_one_runner_state(
         runner_dict[instance_id].github_state = github_state
     if cloud_state is not None:
         runner_dict[instance_id].cloud_state = cloud_state
-    return runner_scaler
 
 
 def assert_runner_info(

@@ -20,7 +20,15 @@ from metrics.runner import RunnerMetrics
 
 @dataclass
 class MockRunner:
-    """Mock of a runner."""
+    """Mock of a runner.
+
+    Attributes:
+        name: The name of the runner.
+        instance_id: The instance id of the runner.
+        cloud_state: The cloud state of the runner.
+        github_state: The github state of the runner.
+        health: The health state of the runner.
+    """
 
     name: str
     instance_id: InstanceId
@@ -41,7 +49,11 @@ class MockRunner:
         self.health = True
 
     def to_cloud_runner(self) -> CloudRunnerInstance:
-        """Construct CloudRunnerInstance from this object."""
+        """Construct CloudRunnerInstance from this object.
+
+        Returns:
+            The CloudRunnerInstance instance.
+        """
         return CloudRunnerInstance(
             name=self.name,
             instance_id=self.instance_id,
@@ -55,6 +67,9 @@ class SharedMockRunnerManagerState:
     """State shared by mock runner managers.
 
     For sharing the mock runner states between MockCloudRunnerManager and MockGitHubRunnerManager.
+
+    Attributes:
+        runners: The runners.
     """
 
     runners: dict[InstanceId, MockRunner]
@@ -89,6 +104,9 @@ class MockCloudRunnerManager(CloudRunnerManager):
 
         Args:
             registration_token: The GitHub registration token for registering runners.
+
+        Returns:
+            The instance id of the runner created.
         """
         name = f"{self.name_prefix}-{secrets.token_hex(6)}"
         runner = MockRunner(name)
@@ -100,6 +118,9 @@ class MockCloudRunnerManager(CloudRunnerManager):
 
         Args:
             instance_id: The instance id.
+
+        Returns:
+            The runner instance if found else None.
         """
         runner = self.state.runners.get(instance_id, None)
         if runner is not None:
@@ -114,6 +135,9 @@ class MockCloudRunnerManager(CloudRunnerManager):
         Args:
             states: Filter for the runners with these github states. If None all states will be
                 included.
+
+        Returns:
+            The list of runner instances.
         """
         if states is None:
             states = [member.value for member in CloudRunnerState]
@@ -131,6 +155,9 @@ class MockCloudRunnerManager(CloudRunnerManager):
         Args:
             instance_id: The instance id of the runner to delete.
             remove_token: The GitHub remove token.
+
+        Returns:
+            Any runner metrics produced during deletion.
         """
         self.state.runners.pop(instance_id, None)
         return iter([])
@@ -142,6 +169,9 @@ class MockCloudRunnerManager(CloudRunnerManager):
             remove_token: The GitHub remove token for removing runners.
             busy: If false, only idle runners are removed. If true, both idle and busy runners are
                 removed.
+
+        Returns:
+            Any runner metrics produced during flushing.
         """
         # No supporting metrics in the mocks.
         if busy:
@@ -161,6 +191,9 @@ class MockCloudRunnerManager(CloudRunnerManager):
 
         Args:
             remove_token: The GitHub remove token for removing runners.
+
+        Returns:
+            Any runner metrics produced during cleanup.
         """
         # No supporting metrics in the mocks.
         return iter([])
