@@ -406,7 +406,7 @@ def test_extract_ignores_filesystems_without_ts(runner_fs_base: Path):
     assert: No metrics are extracted and shared filesystem is removed.
     """
     runner_name = secrets.token_hex(16)
-    runner_metrics_data = RunnerMetrics.construct(
+    runner_metrics_data = RunnerMetrics.model_construct(
         installed_timestamp=1,
         pre_job=PreJobMetrics(
             timestamp=1,
