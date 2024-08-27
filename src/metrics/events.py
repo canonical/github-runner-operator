@@ -162,6 +162,6 @@ def issue_event(event: Event) -> None:
     """
     try:
         with METRICS_LOG_PATH.open(mode="a", encoding="utf-8") as metrics_file:
-            metrics_file.write(f"{event.json(exclude_none=True)}\n")
+            metrics_file.write(f"{event.model_dump_json(exclude_none=True)}\n")
     except OSError as exc:
         raise IssueMetricEventError(f"Cannot write to {METRICS_LOG_PATH}") from exc

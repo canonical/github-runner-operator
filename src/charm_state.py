@@ -1070,13 +1070,15 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         """
         state_dict = dataclasses.asdict(state)
         # Convert pydantic object to python object serializable by json module.
-        state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
-        state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
+        state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].model_dump_json())
+        state_dict["charm_config"] = json.loads(state_dict["charm_config"].model_dump_json())
         if state.reactive_config:
-            state_dict["reactive_config"] = json.loads(state_dict["reactive_config"].json())
-        state_dict["runner_config"] = json.loads(state_dict["runner_config"].json())
+            state_dict["reactive_config"] = json.loads(
+                state_dict["reactive_config"].model_dump_json()
+            )
+        state_dict["runner_config"] = json.loads(state_dict["runner_config"].model_dump_json())
         state_dict["ssh_debug_connections"] = [
-            debug_info.json() for debug_info in state_dict["ssh_debug_connections"]
+            debug_info.model_dump_json() for debug_info in state_dict["ssh_debug_connections"]
         ]
         json_data = json.dumps(state_dict, ensure_ascii=False)
         CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
