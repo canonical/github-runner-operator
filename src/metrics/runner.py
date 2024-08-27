@@ -46,7 +46,7 @@ class PreJobMetrics(BaseModel):
     timestamp: NonNegativeFloat
     workflow: str
     workflow_run_id: str
-    repository: str = Field(None, regex=r"^.+/.+$")
+    repository: str = Field(None, pattern=r"^.+/.+$")
     event: str
 
 
