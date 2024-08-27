@@ -888,9 +888,7 @@ class ProxyConfig(BaseModel):
             use_aproxy=use_aproxy,
         )
 
-    # TODO[pydantic]: The following keys were removed: `allow_mutation`.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
-    model_config = ConfigDict(allow_mutation=False)
+    model_config = ConfigDict(frozen=True)
 
 
 class UnsupportedArchitectureError(Exception):
