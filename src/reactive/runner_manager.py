@@ -106,7 +106,7 @@ def _setup_logging_for_processes() -> None:
         shutil.chown(REACTIVE_RUNNER_LOG_DIR, user=UBUNTU_USER, group=UBUNTU_USER)
 
 
-def _spawn_runner(mq_uri: str, queue_name: str) -> None:
+def _spawn_runner(mq_uri: MongoDsn, queue_name: str) -> None:
     """Spawn a runner.
 
     Args:
@@ -115,7 +115,7 @@ def _spawn_runner(mq_uri: str, queue_name: str) -> None:
     """
     env = {
         "PYTHONPATH": "src:lib:venv",
-        MQ_URI_ENV_VAR: mq_uri,
+        MQ_URI_ENV_VAR: str(mq_uri),
         QUEUE_NAME_ENV_VAR: queue_name,
     }
     # We do not want to wait for the process to finish, so we do not use with statement.
