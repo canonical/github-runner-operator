@@ -43,6 +43,8 @@ from charm_state import (
     GithubOrg,
     GithubRepo,
     ImmutableConfigChangedError,
+    IntegrationDataNotReadyError,
+    IntegrationNotFoundError,
     LocalLxdRunnerConfig,
     OpenstackImage,
     OpenstackRunnerConfig,
@@ -551,23 +553,24 @@ def test_openstack_image_from_charm_no_connections():
     """
     arrange: Mock CharmBase instance without relation.
     act: Call OpenstackImage.from_charm method.
-    assert: Verify that the method returns the expected None value.
+    assert: IntegrationNotFoundError is raised.
     """
     mock_charm = MockGithubRunnerCharmFactory()
     relation_mock = MagicMock()
     relation_mock.units = []
     mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
 
-    image = OpenstackImage.from_charm(mock_charm)
+    with pytest.raises(IntegrationNotFoundError) as exc:
+        OpenstackImage.from_charm(mock_charm)
 
-    assert image is None
+    assert f"Please provide {IMAGE_INTEGRATION_NAME} integration." in str(exc.getrepr())
 
 
 def test_openstack_image_from_charm_data_not_ready():
     """
     arrange: Mock CharmBase instance with no relation data.
     act: Call OpenstackImage.from_charm method.
-    assert: Verify that the method returns the expected None value for id and tags.
+    assert: IntegrationDataNotReadyError is raised.
     """
     mock_charm = MockGithubRunnerCharmFactory()
     relation_mock = MagicMock()
@@ -576,11 +579,10 @@ def test_openstack_image_from_charm_data_not_ready():
     relation_mock.data = {unit_mock: {}}
     mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = [relation_mock]
 
-    image = OpenstackImage.from_charm(mock_charm)
+    with pytest.raises(IntegrationDataNotReadyError) as exc:
+        OpenstackImage.from_charm(mock_charm)
 
-    assert isinstance(image, OpenstackImage)
-    assert image.id is None
-    assert image.tags is None
+    assert f"Waiting for {IMAGE_INTEGRATION_NAME} integration data." in str(exc.getrepr())
 
 
 def test_openstack_image_from_charm():
