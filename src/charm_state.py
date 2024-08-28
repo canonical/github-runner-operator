@@ -838,11 +838,13 @@ class ProxyConfig(BaseModel):
             Validated use_aproxy value.
         """
         try:
-            if use_aproxy and not (values.data.get("http") or values.data.get("https")):  # type: ignore
-                raise ValueError("aproxy requires http or https to be set")
-        except AttributeError as e:  # noqa: F841
+            if use_aproxy:
+                values_data = values.data  # type: ignore
+                if not (values_data.get("http") or values_data.get("https")):
+                    raise ValueError("aproxy requires http or https to be set")
+        except AttributeError as exc:  # noqa: F841
             # when http or https are not passed, raises an AttributeError
-            raise ValueError("aproxy requires http or https to be set")
+            raise ValueError("aproxy requires http or https to be set") from exc
 
         return use_aproxy
 
