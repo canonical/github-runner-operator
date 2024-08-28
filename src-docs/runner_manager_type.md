@@ -11,7 +11,7 @@ Types used by RunnerManager class.
 
 <a href="../src/runner_manager_type.py#L20"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>class</kbd> `FlushMode`
+## <kbd>class</kbd> `LXDFlushMode`
 Strategy for flushing runners. 
 
 During pre-job (repo-check), the runners are marked as idle and if the pre-job fails, the runner falls back to being idle again. Hence wait_repo_check is required. 

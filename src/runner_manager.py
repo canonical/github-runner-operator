@@ -41,7 +41,7 @@ from metrics import runner_logs
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
-from runner_manager_type import FlushMode, LXDRunnerManagerConfig, RunnerInfo, RunnerManagerClients
+from runner_manager_type import LXDFlushMode, LXDRunnerManagerConfig, RunnerInfo, RunnerManagerClients
 from runner_type import ProxySetting as RunnerProxySetting
 from runner_type import RunnerNameByHealth
 from utilities import execute_command, retry, set_env_var
@@ -619,7 +619,7 @@ class LXDRunnerManager:
                 return False
         return True
 
-    def flush(self, mode: FlushMode = FlushMode.FLUSH_IDLE) -> int:
+    def flush(self, mode: LXDFlushMode = LXDFlushMode.FLUSH_IDLE) -> int:
         """Remove existing runners.
 
         Args:
@@ -636,7 +636,7 @@ class LXDRunnerManager:
             remove_token = self._clients.github.get_runner_remove_token(self.config.path)
         except GithubClientError:
             logger.exception("Failed to get remove-token to unregister runners from GitHub.")
-            if mode != FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK:
+            if mode != LXDFlushMode.FORCE_FLUSH_WAIT_REPO_CHECK:
                 raise
             logger.info("Proceeding with flush without remove-token.")
             remove_token = None
@@ -656,9 +656,9 @@ class LXDRunnerManager:
             logger.info(REMOVED_RUNNER_LOG_STR, runner.config.name)
 
         if mode in (
-            FlushMode.FLUSH_IDLE_WAIT_REPO_CHECK,
-            FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK,
-            FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK,
+            LXDFlushMode.FLUSH_IDLE_WAIT_REPO_CHECK,
+            LXDFlushMode.FLUSH_BUSY_WAIT_REPO_CHECK,
+            LXDFlushMode.FORCE_FLUSH_WAIT_REPO_CHECK,
         ):
             for _ in range(5):
                 if not self._runners_in_pre_job():
@@ -673,9 +673,9 @@ class LXDRunnerManager:
                 )
 
         if mode in (
-            FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK,
-            FlushMode.FLUSH_BUSY,
-            FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK,
+            LXDFlushMode.FLUSH_BUSY_WAIT_REPO_CHECK,
+            LXDFlushMode.FLUSH_BUSY,
+            LXDFlushMode.FORCE_FLUSH_WAIT_REPO_CHECK,
         ):
             busy_runners = [runner for runner in self._get_runners() if runner.status.exist]
 

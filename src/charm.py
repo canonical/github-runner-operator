@@ -9,7 +9,7 @@
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
 from manager.cloud_runner_manager import GitHubRunnerConfig, SupportServiceConfig
-from manager.runner_manager import RunnerManager, RunnerManagerConfig
+from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
 from manager.runner_scaler import RunnerScaler
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
@@ -88,7 +88,7 @@ from openstack_cloud.openstack_runner_manager import (
 )
 from runner import LXD_PROFILE_YAML
 from runner_manager import LXDRunnerManager, LXDRunnerManagerConfig
-from runner_manager_type import FlushMode
+from runner_manager_type import LXDFlushMode
 
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
 
@@ -515,7 +515,7 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = MaintenanceStatus("Starting runners")
         try:
-            runner_manager.flush(FlushMode.FLUSH_IDLE)
+            runner_manager.flush(LXDFlushMode.FLUSH_IDLE)
             self._reconcile_runners(
                 runner_manager,
                 state.runner_config.virtual_machines,
@@ -581,7 +581,7 @@ class GithubRunnerCharm(CharmBase):
 
         runner_manager = self._get_runner_manager(state)
         logger.info("Flushing the runners...")
-        runner_manager.flush(FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
+        runner_manager.flush(LXDFlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
         self._reconcile_runners(
             runner_manager,
             state.runner_config.virtual_machines,
@@ -617,7 +617,7 @@ class GithubRunnerCharm(CharmBase):
                 if prev_runner_manager:
                     self.unit.status = MaintenanceStatus("Removing runners due to config change")
                     # Flush runner in case the prev token has expired.
-                    prev_runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
+                    prev_runner_manager.flush(LXDFlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
 
         state = self._setup_state()
 
@@ -636,7 +636,7 @@ class GithubRunnerCharm(CharmBase):
 
         runner_manager = self._get_runner_manager(state)
         if state.charm_config.token != self._stored.token:
-            runner_manager.flush(FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
+            runner_manager.flush(LXDFlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
             self._stored.token = state.charm_config.token
         self._reconcile_runners(
             runner_manager,
@@ -697,7 +697,7 @@ class GithubRunnerCharm(CharmBase):
                 runner_bin_updated,
             )
             self.unit.status = MaintenanceStatus("Flushing runners due to updated deps")
-            runner_manager.flush(FlushMode.FLUSH_IDLE_WAIT_REPO_CHECK)
+            runner_manager.flush(LXDFlushMode.FLUSH_IDLE_WAIT_REPO_CHECK)
             self._start_services(token, proxy_config)
 
         self.unit.status = ActiveStatus()
@@ -850,21 +850,21 @@ class GithubRunnerCharm(CharmBase):
         if state.instance_type == InstanceType.OPENSTACK:
             # Flushing mode not implemented for OpenStack yet.
             runner_scaler = self._get_runner_scaler(state)
-            flushed = runner_scaler.flush()
-            event.set_results({"delta": {"virtual-machines": flushed}})
+            flushed = runner_scaler.flush(flush_mode=FlushMode.FLUSH_BUSY)
+            logger.info("Flushed %s runners", flushed)
+            delta = runner_scaler.reconcile(state.runner_config.virtual_machines)
+            event.set_results({"delta": {"virtual-machines": delta}})
             return
 
         runner_manager = self._get_runner_manager(state)
 
-        runner_manager.flush(FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
+        runner_manager.flush(LXDFlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
         delta = self._reconcile_runners(
             runner_manager,
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
         )
-
-        self._on_check_runners_action(event)
-        event.set_results(delta)
+        event.set_results({"delta": {"virtual-machines": delta}})
 
     @catch_action_errors
     def _on_update_dependencies_action(self, event: ActionEvent) -> None:
@@ -902,7 +902,7 @@ class GithubRunnerCharm(CharmBase):
             return
 
         runner_manager = self._get_runner_manager(state)
-        runner_manager.flush(FlushMode.FLUSH_BUSY)
+        runner_manager.flush(LXDFlushMode.FLUSH_BUSY)
 
     def _reconcile_runners(
         self, runner_manager: LXDRunnerManager, num: int, resources: VirtualMachineResources
@@ -1158,7 +1158,7 @@ class GithubRunnerCharm(CharmBase):
 
         self._refresh_firewall(state)
         runner_manager = self._get_runner_manager(state)
-        runner_manager.flush(FlushMode.FLUSH_IDLE)
+        runner_manager.flush(LXDFlushMode.FLUSH_IDLE)
         self._reconcile_runners(
             runner_manager,
             state.runner_config.virtual_machines,

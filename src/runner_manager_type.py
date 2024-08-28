@@ -17,7 +17,7 @@ from lxd import LxdClient
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 
 
-class FlushMode(Enum):
+class LXDFlushMode(Enum):
     """Strategy for flushing runners.
 
     During pre-job (repo-check), the runners are marked as idle and if the pre-job fails, the

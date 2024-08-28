@@ -94,7 +94,7 @@ Check if runner binary exists.
 ### <kbd>method</kbd> `flush`
 
 ```python
-flush(mode: FlushMode = <FlushMode.FLUSH_IDLE: 1>) → int
+flush(mode: LXDFlushMode = <LXDFlushMode.FLUSH_IDLE: 1>) → int
 ```
 
 Remove existing runners. 
