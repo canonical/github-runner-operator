@@ -1255,6 +1255,7 @@ class GithubRunnerCharm(CharmBase):
         )
         # The prefix is set to f"{application_name}-{unit number}"
         openstack_runner_manager = OpenStackRunnerManager(
+            manager_name=self.app.name,
             prefix=self.unit.name.replace("/", "-"),
             cloud_config=cloud_config,
             server_config=server_config,

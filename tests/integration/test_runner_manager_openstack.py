@@ -125,7 +125,7 @@ async def openstack_runner_manager_fixture(
         repo_policy_compliance=None,
     )
     return OpenStackRunnerManager(
-        app_name, cloud_config, server_config, runner_config, service_config
+        app_name, f"{app_name}-0", cloud_config, server_config, runner_config, service_config
     )
 
 

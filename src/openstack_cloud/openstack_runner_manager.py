@@ -119,6 +119,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
     # Ignore "Too many arguments", as the class requires a lot of configurations.
     def __init__(  # pylint: disable=R0913
         self,
+        manager_name: str,
         prefix: str,
         cloud_config: OpenStackCloudConfig,
         server_config: OpenStackServerConfig | None,
@@ -128,6 +129,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """Construct the object.
 
         Args:
+            manager_name: A name to identify this manager.
             prefix: The prefix to runner name.
             cloud_config: The configuration for OpenStack authorisation.
             server_config: The configuration for creating OpenStack server. Unable to create
@@ -135,6 +137,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             runner_config: The configuration for the runner.
             service_config: The configuration of supporting services of the runners.
         """
+        self._manager_name = manager_name
         self._prefix = prefix
         self._cloud_config = cloud_config
         self._server_config = server_config
@@ -194,7 +197,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         end_timestamp = time.time()
         OpenStackRunnerManager._issue_runner_installed_metric(
             name=instance_name,
-            flavor=self.name_prefix,
+            flavor=self._manager_name,
             install_start_timestamp=start_timestamp,
             install_end_timestamp=end_timestamp,
         )
