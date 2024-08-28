@@ -141,7 +141,7 @@ async def runner_manager_fixture(
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
     config = RunnerManagerConfig(token, github_path)
-    return RunnerManager(openstack_runner_manager, config)
+    return RunnerManager("test_runner", openstack_runner_manager, config)
 
 
 @pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")
