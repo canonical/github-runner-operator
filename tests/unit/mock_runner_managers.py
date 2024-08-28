@@ -5,8 +5,10 @@ import random
 import secrets
 from dataclasses import dataclass
 from typing import Iterable, Iterator, Sequence
+from unittest.mock import MagicMock
 
 from charm_state import GitHubPath
+from github_client import GithubClient
 from github_type import GitHubRunnerStatus, SelfHostedRunner
 from manager.cloud_runner_manager import (
     CloudRunnerInstance,
@@ -15,7 +17,9 @@ from manager.cloud_runner_manager import (
     InstanceId,
 )
 from manager.github_runner_manager import GitHubRunnerState
+from metrics.events import RunnerStop
 from metrics.runner import RunnerMetrics
+from tests.unit.mock import MockGhapiClient
 
 
 @dataclass
@@ -164,7 +168,9 @@ class MockCloudRunnerManager(CloudRunnerManager):
         Returns:
             Any runner metrics produced during deletion.
         """
-        self.state.runners.pop(instance_id, None)
+        runner = self.state.runners.pop(instance_id, None)
+        if runner is not None:
+            return iter([MagicMock()])
         return iter([])
 
     def flush_runners(self, remove_token: str, busy: bool = False) -> Iterator[RunnerMetrics]:
@@ -178,7 +184,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
         Returns:
             Any runner metrics produced during flushing.
         """
-        # No supporting metrics in the mocks.
+        num = len(self.state.runners)
         if busy:
             self.state.runners = {}
         else:
@@ -187,7 +193,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
                 for instance_id, runner in self.state.runners.items()
                 if runner.github_state == GitHubRunnerState.BUSY
             }
-        return iter([])
+        return iter([MagicMock()])
 
     def cleanup(self, remove_token: str) -> Iterator[RunnerMetrics]:
         """Cleanup runner and resource on the cloud.
@@ -200,14 +206,15 @@ class MockCloudRunnerManager(CloudRunnerManager):
         Returns:
             Any runner metrics produced during cleanup.
         """
-        # No supporting metrics in the mocks.
-        return iter([])
+        # Do nothing in mocks.
+        return iter([MagicMock()])
 
 
 class MockGitHubRunnerManager:
     """Mock of GitHubRunnerManager.
 
     Attributes:
+        github: The GitHub client.
         name_prefix: The naming prefix for runner managed.
         state: The shared state between mock runner managers.
         path: The GitHub path to register the runners under.
@@ -221,6 +228,8 @@ class MockGitHubRunnerManager:
             path: The GitHub path to register the runners under.
             state: The shared state between mock runner managers.
         """
+        self.github = GithubClient("mock_token")
+        self.github._client = MockGhapiClient("mock_token")
         self.name_prefix = name_prefix
         self.state = state
         self.path = path

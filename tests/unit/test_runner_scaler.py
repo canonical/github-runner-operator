@@ -3,6 +3,7 @@
 
 
 from typing import Iterable
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -59,8 +60,16 @@ def runner_manager_fixture(
     monkeypatch.setattr(
         "manager.runner_manager.RunnerManager._spawn_runners", mock_runner_manager_spawn_runners
     )
+    # Patch out the metrics, as metrics has their own tests.
+    monkeypatch.setattr(
+        "manager.runner_manager.github_metrics.job", MagicMock()
+    )
+    monkeypatch.setattr(
+        "manager.runner_manager.runner_metrics.issue_events", MagicMock()
+    )
+
     config = RunnerManagerConfig("mock_token", github_path)
-    runner_manager = RunnerManager(mock_cloud, config)
+    runner_manager = RunnerManager("mock_runners", mock_cloud, config)
     runner_manager._github = mock_github
     return runner_manager
 

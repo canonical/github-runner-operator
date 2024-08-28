@@ -93,16 +93,24 @@ class RunnerManager:
     """Manage the runners.
 
     Attributes:
+        manager_name: A name to identify this manager.
         name_prefix: The name prefix of the runners.
     """
 
-    def __init__(self, cloud_runner_manager: CloudRunnerManager, config: RunnerManagerConfig):
+    def __init__(
+        self,
+        manager_name: str,
+        cloud_runner_manager: CloudRunnerManager,
+        config: RunnerManagerConfig,
+    ):
         """Construct the object.
 
         Args:
+            manager_name: A name to identify this manager.
             cloud_runner_manager: For managing the cloud instance of the runner.
             config: Configuration of this class.
         """
+        self.manager_name = manager_name
         self._config = config
         self._cloud = cloud_runner_manager
         self.name_prefix = self._cloud.name_prefix
@@ -321,7 +329,7 @@ class RunnerManager:
             issued_events = runner_metrics.issue_events(
                 runner_metrics=extracted_metrics,
                 job_metrics=job_metrics,
-                flavor=self.name_prefix,
+                flavor=self.manager_name,
             )
 
             for event_type in issued_events:

@@ -1266,7 +1266,9 @@ class GithubRunnerCharm(CharmBase):
             path=path,
         )
         runner_manager = RunnerManager(
-            cloud_runner_manager=openstack_runner_manager, config=runner_manager_config
+            manager_name=self.app.name,
+            cloud_runner_manager=openstack_runner_manager,
+            config=runner_manager_config,
         )
         return RunnerScaler(runner_manager=runner_manager)
 
