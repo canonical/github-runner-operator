@@ -235,7 +235,7 @@ def _generate_runner_env(
     """
     return templates_env.get_template("env.j2").render(
         pre_job_script=str(PRE_JOB_SCRIPT),
-        dockerhub_mirror=str(dockerhub_mirror) or "",
+        dockerhub_mirror=str(dockerhub_mirror) if dockerhub_mirror else "",
         ssh_debug_info=(secrets.choice(ssh_debug_connections) if ssh_debug_connections else None),
     )
 
@@ -271,7 +271,11 @@ def _generate_cloud_init_userdata(
         pre_job_contents=cloud_init_userdata.pre_job_contents,
         metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
         aproxy_address=aproxy_address,
-        dockerhub_mirror=str(cloud_init_userdata.dockerhub_mirror),
+        dockerhub_mirror=(
+            str(cloud_init_userdata.dockerhub_mirror)
+            if cloud_init_userdata.dockerhub_mirror
+            else None
+        ),
     )
 
 
@@ -668,7 +672,9 @@ class OpenstackRunnerManager:
 
         env_contents = _generate_runner_env(
             templates_env=environment,
-            dockerhub_mirror=str(args.config.dockerhub_mirror),
+            dockerhub_mirror=(
+                str(args.config.dockerhub_mirror) if args.config.dockerhub_mirror else None
+            ),
             ssh_debug_connections=args.config.charm_state.ssh_debug_connections,
         )
 
@@ -688,7 +694,9 @@ class OpenstackRunnerManager:
             instance_config=instance_config,
             runner_env=env_contents,
             pre_job_contents=pre_job_contents,
-            dockerhub_mirror=str(args.config.dockerhub_mirror),
+            dockerhub_mirror=(
+                str(args.config.dockerhub_mirror) if args.config.dockerhub_mirror else None
+            ),
             proxies=args.config.charm_state.proxy_config,
         )
         cloud_userdata_str = _generate_cloud_init_userdata(
