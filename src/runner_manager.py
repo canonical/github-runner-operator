@@ -89,9 +89,9 @@ class RunnerManager:
         if no_proxy := self.proxies.no_proxy:
             set_env_var("NO_PROXY", no_proxy)
         if http_proxy := self.proxies.http:
-            set_env_var("HTTP_PROXY", http_proxy)
+            set_env_var("HTTP_PROXY", str(http_proxy))
         if https_proxy := self.proxies.https:
-            set_env_var("HTTPS_PROXY", https_proxy)
+            set_env_var("HTTPS_PROXY", str(https_proxy))
 
         self.session = requests.Session()
         adapter = requests.adapters.HTTPAdapter(
@@ -826,8 +826,9 @@ class RunnerManager:
     def schedule_build_runner_image(self) -> None:
         """Install cron job for building runner image."""
         # Replace empty string in the build image command list and form a string.
+        # Add str to convert pydantic_core.Url to string
         build_image_command = " ".join(
-            [part if part else "''" for part in self._build_image_command()]
+            [str(part) if part else "''" for part in self._build_image_command()]
         )
 
         cron_file = self.cron_path / "build-runner-image"

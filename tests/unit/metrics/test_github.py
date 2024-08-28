@@ -19,7 +19,7 @@ def pre_job_metrics_fixture() -> PreJobMetrics:
     """Create a PreJobMetrics object."""
     return PreJobMetrics(
         repository="owner/repo",
-        workflow_run_id=1,
+        workflow_run_id="1",
         workflow="workflow",
         job_name="job",
         job_started_at=datetime(2021, 10, 1, 1, 0, 0, tzinfo=timezone.utc),

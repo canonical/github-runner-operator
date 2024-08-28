@@ -25,12 +25,12 @@ def test_consume(caplog: pytest.LogCaptureFixture):
         labels=[secrets.token_hex(16), secrets.token_hex(16)],
         run_url=FAKE_RUN_URL,
     )
-    _put_in_queue(job_details.json(), queue_name)
+    _put_in_queue(job_details.model_dump_json(), queue_name)
 
     # we use construct to avoid pydantic validation as IN_MEMORY_URI is not a valid URL
     consumer.consume(IN_MEMORY_URI, queue_name)
     assert str(job_details.labels) in caplog.text
-    assert job_details.run_url in caplog.text
+    assert job_details.run_url.host in caplog.text
 
 
 @pytest.mark.parametrize(

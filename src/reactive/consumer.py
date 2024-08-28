@@ -51,7 +51,7 @@ def consume(mongodb_uri: str, queue_name: str) -> None:
             with signal_handler(signal.SIGTERM):
                 msg = simple_queue.get(block=True)
                 try:
-                    job_details = cast(JobDetails, JobDetails.parse_raw(msg.payload))
+                    job_details = cast(JobDetails, JobDetails.model_validate_json(msg.payload))
                 except ValidationError as exc:
                     msg.reject(requeue=True)
                     raise JobError(f"Invalid job details: {msg.payload}") from exc

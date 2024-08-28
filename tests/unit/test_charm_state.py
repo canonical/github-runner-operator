@@ -10,8 +10,7 @@ from unittest.mock import MagicMock
 
 import pytest
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
-from pydantic import BaseModel
-from pydantic.error_wrappers import ValidationError
+from pydantic import AnyHttpUrl, BaseModel, MongoDsn
 from pydantic.networks import IPv4Address
 
 import charm_state
@@ -485,7 +484,9 @@ def test_charm_config_from_charm_valid():
         FirewallEntry(ip_range="192.168.1.1"),
         FirewallEntry(ip_range="192.168.1.2"),
     ]
-    assert result.dockerhub_mirror == "https://example.com"
+    assert result.dockerhub_mirror == AnyHttpUrl(
+        "https://example.com"
+    )  # *** new Url lib adds '/' to the end of urls ***
     assert result.openstack_clouds_yaml == {
         "clouds": {"openstack": {"auth": {"username": "admin"}}}
     }
@@ -995,9 +996,8 @@ def test_reactive_config_from_charm():
     )
 
     connection_info = charm_state.ReactiveConfig.from_database(database)
-
     assert isinstance(connection_info, charm_state.ReactiveConfig)
-    assert connection_info.mq_uri == mongodb_uri
+    assert connection_info.mq_uri == MongoDsn(mongodb_uri)
 
 
 def test_reactive_config_from_database_returns_none():
@@ -1194,7 +1194,7 @@ class MockModel(BaseModel):
         (
             ProxyConfig,
             "from_charm",
-            ValidationError([], MockModel),
+            ValueError,
         ),
         (ProxyConfig, "from_charm", ValueError),
         (
@@ -1202,10 +1202,10 @@ class MockModel(BaseModel):
             "_check_immutable_config_change",
             ImmutableConfigChangedError("Immutable config changed"),
         ),
-        (CharmConfig, "from_charm", ValidationError([], MockModel)),
+        (CharmConfig, "from_charm", ValueError),
         (CharmConfig, "from_charm", ValueError),
         (charm_state, "_get_supported_arch", UnsupportedArchitectureError(arch="testarch")),
-        (SSHDebugConnection, "from_charm", ValidationError([], MockModel)),
+        (SSHDebugConnection, "from_charm", CharmConfigInvalidError("Invalid SSH Debug info")),
     ],
 )
 def test_charm_state_from_charm_invalid_cases(

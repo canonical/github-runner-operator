@@ -314,9 +314,9 @@ class OpenstackRunnerManager:
         if no_proxy := proxies.no_proxy:
             set_env_var("NO_PROXY", no_proxy)
         if http_proxy := proxies.http:
-            set_env_var("HTTP_PROXY", http_proxy)
+            set_env_var("HTTP_PROXY", str(http_proxy))
         if https_proxy := proxies.https:
-            set_env_var("HTTPS_PROXY", https_proxy)
+            set_env_var("HTTPS_PROXY", str(https_proxy))
 
         self.app_name = app_name
         self.unit_num = unit_num

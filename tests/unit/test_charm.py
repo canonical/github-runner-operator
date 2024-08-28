@@ -14,6 +14,7 @@ import pytest
 import yaml
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
+from pydantic import AnyHttpUrl
 
 from charm import GithubRunnerCharm, catch_action_errors, catch_charm_errors
 from charm_state import (
@@ -183,8 +184,8 @@ def test_proxy_setting(harness: Harness):
     assert: The proxy configuration are set.
     """
     state = harness.charm._setup_state()
-    assert state.proxy_config.https == TEST_PROXY_SERVER_URL
-    assert state.proxy_config.http == TEST_PROXY_SERVER_URL
+    assert state.proxy_config.https == AnyHttpUrl(TEST_PROXY_SERVER_URL)
+    assert state.proxy_config.http == AnyHttpUrl(TEST_PROXY_SERVER_URL)
     assert state.proxy_config.no_proxy == "127.0.0.1,localhost"
 
 
@@ -357,7 +358,7 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
             "host": test_unit_ip_addresses[0],
             "port": "10022",
             "rsa_fingerprint": "SHA256:abcd",
-            "ed25519_fingerprint": "abcd",
+            "ed25519_fingerprint": "SHA256:abcd",
         },
     )
     harness.update_relation_data(
@@ -367,7 +368,7 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
             "host": test_unit_ip_addresses[1],
             "port": "10022",
             "rsa_fingerprint": "SHA256:abcd",
-            "ed25519_fingerprint": "abcd",
+            "ed25519_fingerprint": "SHA256:abcd",
         },
     )
     harness.update_relation_data(
@@ -377,7 +378,7 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
             "host": test_unit_ip_addresses[2],
             "port": "10022",
             "rsa_fingerprint": "SHA256:abcd",
-            "ed25519_fingerprint": "abcd",
+            "ed25519_fingerprint": "SHA256:abcd",
         },
     )
 
