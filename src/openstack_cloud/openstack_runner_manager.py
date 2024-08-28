@@ -41,7 +41,6 @@ from metrics import events as metric_events
 from metrics import runner as runner_metrics
 from metrics import storage as metrics_storage
 from openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
-from openstack_cloud.openstack_manager import GithubRunnerRemoveError
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from utilities import retry
 
@@ -59,6 +58,10 @@ RUNNER_STARTUP_PROCESS = "/home/ubuntu/actions-runner/run.sh"
 RUNNER_LISTENER_PROCESS = "Runner.Listener"
 RUNNER_WORKER_PROCESS = "Runner.Worker"
 CREATE_SERVER_TIMEOUT = 5 * 60
+
+
+class _GithubRunnerRemoveError(Exception):
+    """Represents an error while SSH into a runner and running the remove script."""
 
 
 class _PullFileError(Exception):
@@ -337,7 +340,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 OpenStackRunnerManager._run_runner_removal_script(
                     instance.server_name, ssh_conn, remove_token
                 )
-            except GithubRunnerRemoveError:
+            except _GithubRunnerRemoveError:
                 logger.warning(
                     "Unable to run github runner removal script for %s",
                     instance.server_name,
@@ -784,7 +787,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             remove_token: The GitHub instance removal token.
 
         Raises:
-            GithubRunnerRemoveError: Unable to remove runner from GitHub.
+            _GithubRunnerRemoveError: Unable to remove runner from GitHub.
         """
         try:
             result = ssh_conn.run(
@@ -804,12 +807,12 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 result.stdout,
                 result.stderr,
             )
-            raise GithubRunnerRemoveError(f"Failed to remove runner {instance_name} from Github.")
+            raise _GithubRunnerRemoveError(f"Failed to remove runner {instance_name} from Github.")
         except (
             TimeoutError,
             paramiko.ssh_exception.NoValidConnectionsError,
             paramiko.ssh_exception.SSHException,
         ) as exc:
-            raise GithubRunnerRemoveError(
+            raise _GithubRunnerRemoveError(
                 f"Failed to remove runner {instance_name} from Github."
             ) from exc

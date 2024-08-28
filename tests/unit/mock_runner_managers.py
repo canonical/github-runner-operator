@@ -17,7 +17,6 @@ from manager.cloud_runner_manager import (
     InstanceId,
 )
 from manager.github_runner_manager import GitHubRunnerState
-from metrics.events import RunnerStop
 from metrics.runner import RunnerMetrics
 from tests.unit.mock import MockGhapiClient
 
@@ -184,7 +183,6 @@ class MockCloudRunnerManager(CloudRunnerManager):
         Returns:
             Any runner metrics produced during flushing.
         """
-        num = len(self.state.runners)
         if busy:
             self.state.runners = {}
         else:

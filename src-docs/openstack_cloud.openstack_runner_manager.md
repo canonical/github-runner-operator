@@ -17,7 +17,7 @@ Manager for self-hosted runner on OpenStack.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L68"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L71"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenStackCloudConfig`
 Configuration for OpenStack cloud authorisation information. 
@@ -47,7 +47,7 @@ __init__(clouds_config: dict[str, dict], cloud: str) → None
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L81"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L84"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenStackServerConfig`
 Configuration for OpenStack server. 
@@ -78,7 +78,7 @@ __init__(image: str, flavor: str, network: str) → None
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L109"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L112"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenStackRunnerManager`
 Manage self-hosted runner on OpenStack cloud. 
@@ -89,7 +89,7 @@ Manage self-hosted runner on OpenStack cloud.
  
  - <b>`name_prefix`</b>:  The name prefix of the runners created. 
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L117"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L120"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -131,7 +131,7 @@ The prefix of runner names.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L305"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L308"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `cleanup`
 
@@ -154,7 +154,7 @@ Cleanup runner and resource on the cloud.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L155"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L158"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `create_runner`
 
@@ -184,7 +184,7 @@ Create a self-hosted runner.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L254"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L257"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `delete_runner`
 
@@ -208,7 +208,7 @@ Delete self-hosted runners.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L280"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L283"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `flush_runners`
 
@@ -231,7 +231,7 @@ Remove idle and/or busy runners.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L200"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L203"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_runner`
 
@@ -254,7 +254,7 @@ Get a self-hosted runner by instance id.
 
 ---
 
-<a href="../src/openstack_cloud/openstack_runner_manager.py#L222"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/openstack_cloud/openstack_runner_manager.py#L225"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_runners`
 
