@@ -55,7 +55,7 @@ async def app_fixture(
         {
             VIRTUAL_MACHINES_CONFIG_NAME: "0",
             "repo-policy-compliance-token": "",
-            "repo-policy-compliance-url": "",
+            "repo-policy-compliance-url": "http://fake_site.com",
         }
     )
     await reconcile(app=app_for_metric, model=model)
