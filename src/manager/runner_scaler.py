@@ -161,7 +161,7 @@ class RunnerScaler:
             metric_events.issue_event(
                 metric_events.Reconciliation(
                     timestamp=time.time(),
-                    flavor=self._manager.name_prefix,
+                    flavor=self._manager.manager_name,
                     crashed_runners=metric_stats.get(metric_events.RunnerStart, 0)
                     - metric_stats.get(metric_events.RunnerStop, 0),
                     idle_runners=len(available_runners),
