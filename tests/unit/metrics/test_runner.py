@@ -6,9 +6,6 @@ from pathlib import Path
 from unittest.mock import MagicMock, call
 
 import pytest
-
-from errors import DeleteMetricsStorageError, IssueMetricEventError
-from github_type import JobConclusion
 from metrics import events as metric_events
 from metrics import runner as runner_metrics
 from metrics import type as metrics_type
@@ -20,6 +17,9 @@ from metrics.runner import (
     RunnerMetrics,
 )
 from metrics.storage import MetricsStorage
+
+from errors import DeleteMetricsStorageError, IssueMetricEventError
+from github_type import JobConclusion
 
 
 @pytest.fixture(autouse=True, name="issue_event_mock")

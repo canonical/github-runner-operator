@@ -15,19 +15,19 @@ import yaml
 from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
-from openstack.connection import Connection as OpenstackConnection
-
-from charm_state import GitHubPath, ProxyConfig, parse_github_path
 from manager.cloud_runner_manager import CloudRunnerState, GitHubRunnerConfig, SupportServiceConfig
 from manager.github_runner_manager import GitHubRunnerState
 from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
 from metrics import events, storage
+from openstack.connection import Connection as OpenstackConnection
 from openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from openstack_cloud.openstack_runner_manager import (
     OpenStackCloudConfig,
     OpenStackRunnerManager,
     OpenStackServerConfig,
 )
+
+from charm_state import GitHubPath, ProxyConfig, parse_github_path
 from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,

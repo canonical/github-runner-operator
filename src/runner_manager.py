@@ -13,12 +13,18 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Iterator, Optional, Type
 
+import github_runner_manager.reactive.runner_manager as reactive_runner_manager
 import jinja2
 import requests
 import requests.adapters
 import urllib3
+from github_runner_manager.metrics import events as metric_events
+from github_runner_manager.metrics import github as github_metrics
+from github_runner_manager.metrics import runner as runner_metrics
+from github_runner_manager.metrics import runner_logs
+from github_runner_manager.metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
+from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
 
-import reactive.runner_manager as reactive_runner_manager
 import shared_fs
 from charm_state import VirtualMachineResources
 from errors import (
@@ -34,12 +40,6 @@ from errors import (
 from github_client import GithubClient
 from github_type import RunnerApplication, SelfHostedRunner
 from lxd import LxdClient, LxdInstance
-from metrics import events as metric_events
-from metrics import github as github_metrics
-from metrics import runner as runner_metrics
-from metrics import runner_logs
-from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
-from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import (
     LXDFlushMode,

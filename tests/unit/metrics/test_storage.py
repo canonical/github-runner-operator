@@ -5,6 +5,8 @@ import tarfile
 from pathlib import Path
 
 import pytest
+from metrics import storage
+from metrics.storage import MetricsStorage
 
 from errors import (
     CreateMetricsStorageError,
@@ -12,8 +14,6 @@ from errors import (
     GetMetricsStorageError,
     QuarantineMetricsStorageError,
 )
-from metrics import storage
-from metrics.storage import MetricsStorage
 
 
 @pytest.fixture(autouse=True, name="filesystem_paths")

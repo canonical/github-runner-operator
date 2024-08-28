@@ -6,7 +6,6 @@ from contextlib import closing
 
 import pytest
 from kombu import Connection, Message
-
 from reactive import consumer
 from reactive.consumer import JobError
 

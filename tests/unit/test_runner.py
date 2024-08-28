@@ -9,10 +9,11 @@ from pathlib import Path
 from unittest.mock import MagicMock, call
 
 import jinja2
+import metrics.runner_logs
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
+from metrics.storage import MetricsStorage
 
-import metrics.runner_logs
 from charm_state import GitHubOrg, GitHubRepo, SSHDebugConnection, VirtualMachineResources
 from errors import (
     CreateMetricsStorageError,
@@ -22,7 +23,6 @@ from errors import (
     RunnerRemoveError,
 )
 from lxd import LxdInstance, LxdInstanceFileManager
-from metrics.storage import MetricsStorage
 from runner import DIAG_DIR_PATH, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerManagerClients
 from runner_type import ProxySetting

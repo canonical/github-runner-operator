@@ -8,7 +8,6 @@ from subprocess import CompletedProcess
 from unittest.mock import MagicMock
 
 import pytest
-
 from reactive.runner_manager import (
     PIDS_COMMAND_LINE,
     PYTHON_BIN,
@@ -16,6 +15,7 @@ from reactive.runner_manager import (
     ReactiveRunnerError,
     reconcile,
 )
+
 from utilities import secure_run_subprocess
 
 EXAMPLE_MQ_URI = "http://example.com"

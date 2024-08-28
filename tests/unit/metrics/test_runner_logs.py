@@ -3,7 +3,6 @@
 from pathlib import Path
 
 import pytest
-
 from metrics import runner_logs
 
 

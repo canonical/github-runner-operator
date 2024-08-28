@@ -9,12 +9,12 @@ from pathlib import Path
 from typing import Iterable
 
 import jinja2
+from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
 
 from charm_state import CharmState, GitHubPath, ReactiveConfig
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
 from lxd import LxdClient
-from repo_policy_compliance_client import RepoPolicyComplianceClient
 
 
 class LXDFlushMode(Enum):

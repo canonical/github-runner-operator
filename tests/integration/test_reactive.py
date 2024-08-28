@@ -11,9 +11,9 @@ from juju.model import Model
 from juju.unit import Unit
 from kombu import Connection
 from pytest_operator.plugin import OpsTest
-
 from reactive.consumer import JobDetails
 from reactive.runner_manager import REACTIVE_RUNNER_LOG_DIR
+
 from tests.integration.helpers.common import get_file_content, reconcile, run_in_unit
 
 FAKE_URL = "http://example.com"

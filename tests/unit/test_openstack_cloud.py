@@ -2,10 +2,10 @@
 #  See LICENSE file for licensing details.
 from pathlib import Path
 
+import openstack_cloud
 import pytest
 import yaml
 
-import openstack_cloud
 from errors import OpenStackInvalidConfigError
 
 

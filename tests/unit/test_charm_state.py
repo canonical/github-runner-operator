@@ -8,6 +8,7 @@ import typing
 from pathlib import Path
 from unittest.mock import MagicMock
 
+import openstack_cloud
 import pytest
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from pydantic import BaseModel
@@ -15,7 +16,6 @@ from pydantic.error_wrappers import ValidationError
 from pydantic.networks import IPv4Address
 
 import charm_state
-import openstack_cloud
 from charm_state import (
     BASE_IMAGE_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,

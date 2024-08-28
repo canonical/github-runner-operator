@@ -6,12 +6,12 @@ from typing import Iterable
 from unittest.mock import MagicMock
 
 import pytest
-
-from charm_state import GitHubPath, GitHubRepo
 from manager.cloud_runner_manager import CloudRunnerState, InstanceId
 from manager.github_runner_manager import GitHubRunnerState
 from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
 from manager.runner_scaler import RunnerScaler
+
+from charm_state import GitHubPath, GitHubRepo
 from tests.unit.mock_runner_managers import (
     MockCloudRunnerManager,
     MockGitHubRunnerManager,

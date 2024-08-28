@@ -8,9 +8,22 @@
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
-from manager.cloud_runner_manager import GitHubRunnerConfig, SupportServiceConfig
-from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
-from manager.runner_scaler import RunnerScaler
+from github_runner_manager.manager.cloud_runner_manager import (
+    GitHubRunnerConfig,
+    SupportServiceConfig,
+)
+from github_runner_manager.manager.runner_manager import (
+    FlushMode,
+    RunnerManager,
+    RunnerManagerConfig,
+)
+from github_runner_manager.manager.runner_scaler import RunnerScaler
+from github_runner_manager.openstack_cloud.openstack_runner_manager import (
+    OpenStackCloudConfig,
+    OpenStackRunnerManager,
+    OpenStackServerConfig,
+)
+
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
@@ -81,11 +94,6 @@ from errors import (
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
 from github_type import GitHubRunnerStatus
-from openstack_cloud.openstack_runner_manager import (
-    OpenStackCloudConfig,
-    OpenStackRunnerManager,
-    OpenStackServerConfig,
-)
 from runner import LXD_PROFILE_YAML
 from runner_manager import LXDRunnerManager, LXDRunnerManagerConfig
 from runner_manager_type import LXDFlushMode

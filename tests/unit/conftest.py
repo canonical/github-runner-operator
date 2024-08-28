@@ -8,9 +8,9 @@ import unittest.mock
 from pathlib import Path
 
 import pytest
+from manager.runner_scaler import RunnerScaler
 
 import utilities
-from manager.runner_scaler import RunnerScaler
 from tests.unit.mock import MockGhapiClient, MockLxdClient, MockRepoPolicyComplianceClient
 
 

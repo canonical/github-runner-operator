@@ -6,12 +6,12 @@ from random import randint
 from unittest.mock import MagicMock
 
 import pytest
+from metrics import github as github_metrics
+from metrics.runner import PreJobMetrics
 
 from errors import GithubMetricsError, JobNotFoundError
 from github_client import GithubClient
 from github_type import JobConclusion, JobStats
-from metrics import github as github_metrics
-from metrics.runner import PreJobMetrics
 
 
 @pytest.fixture(name="pre_job_metrics")
