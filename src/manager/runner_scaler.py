@@ -136,7 +136,7 @@ class RunnerScaler:
         # Merge the two metric stats.
         if delete_metric_stats is not None:
             metric_stats = {
-                delete_metric_stats.get(event_name, 0) + metric_stats.get(event_name, 0)
+                event_name: delete_metric_stats.get(event_name, 0) + metric_stats.get(event_name, 0)
                 for event_name in set(delete_metric_stats) | set(metric_stats)
             }
 
