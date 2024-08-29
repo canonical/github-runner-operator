@@ -850,7 +850,7 @@ class GithubRunnerCharm(CharmBase):
         if state.instance_type == InstanceType.OPENSTACK:
             # Flushing mode not implemented for OpenStack yet.
             runner_scaler = self._get_runner_scaler(state)
-            flushed = runner_scaler.flush(flush_mode=FlushMode.FLUSH_BUSY)
+            flushed = runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
             logger.info("Flushed %s runners", flushed)
             delta = runner_scaler.reconcile(state.runner_config.virtual_machines)
             event.set_results({"delta": {"virtual-machines": delta}})
