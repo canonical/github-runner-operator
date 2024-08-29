@@ -12,7 +12,7 @@ from github.Branch import Branch
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
-from metrics.runner import PostJobStatus
+from github_runner_manager.metrics.runner import PostJobStatus
 
 from charm_state import PATH_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.charm_metrics import (

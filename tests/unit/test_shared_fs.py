@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, Mock
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
-from metrics.storage import MetricsStorage
+from github_runner_manager.metrics.storage import MetricsStorage
 
 import shared_fs
 from errors import (

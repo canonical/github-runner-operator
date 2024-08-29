@@ -8,7 +8,7 @@ import typing
 from pathlib import Path
 from unittest.mock import MagicMock
 
-import openstack_cloud
+import github_runner_manager.openstack_cloud
 import pytest
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from pydantic import BaseModel
@@ -366,9 +366,9 @@ def test_parse_openstack_clouds_initialize_fail(
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = valid_yaml_config
     monkeypatch.setattr(
-        openstack_cloud,
+        github_runner_manager.openstack_cloud,
         "initialize",
-        MagicMock(side_effect=openstack_cloud.OpenStackInvalidConfigError),
+        MagicMock(side_effect=github_runner_manager.openstack_cloud.OpenStackInvalidConfigError),
     )
 
     with pytest.raises(CharmConfigInvalidError):
