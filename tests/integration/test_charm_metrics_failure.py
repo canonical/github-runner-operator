@@ -55,7 +55,7 @@ async def app_fixture(
         {
             VIRTUAL_MACHINES_CONFIG_NAME: "0",
             "repo-policy-compliance-token": "",
-            "repo-policy-compliance-url": "http://fake_site.com",
+            "repo-policy-compliance-url": "",
         }
     )
     await reconcile(app=app_for_metric, model=model)
@@ -84,6 +84,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
 
     if isinstance(instance_helper, OpenStackInstanceHelper):
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         await setup_repo_policy(
             app=app,
             openstack_connection=instance_helper.openstack_connection,
