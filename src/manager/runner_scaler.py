@@ -136,7 +136,8 @@ class RunnerScaler:
         # Merge the two metric stats.
         if delete_metric_stats is not None:
             metric_stats = {
-                event_name: delete_metric_stats.get(event_name, 0) + metric_stats.get(event_name, 0)
+                event_name: delete_metric_stats.get(event_name, 0)
+                + metric_stats.get(event_name, 0)
                 for event_name in set(delete_metric_stats) | set(metric_stats)
             }
 
@@ -154,13 +155,15 @@ class RunnerScaler:
             and runner.health == HealthState.HEALTHY
         ]
         unhealthy_runners = [
-            runner
-            for runner in runner_list
-            if runner.health == HealthState.HEALTHY
+            runner for runner in runner_list if runner.health == HealthState.HEALTHY
         ]
         logger.info("Found %s busy runners: %s", len(busy_runners), busy_runners)
         logger.info("Found %s idle runners: %s", len(idle_runners), idle_runners)
-        logger.info("Found %s offline runners that are healthy: %s", len(offline_healthy_runners), offline_healthy_runners)
+        logger.info(
+            "Found %s offline runners that are healthy: %s",
+            len(offline_healthy_runners),
+            offline_healthy_runners,
+        )
         logger.info("Found %s unhealthy runners: %s", len(unhealthy_runners), unhealthy_runners)
 
         try:
