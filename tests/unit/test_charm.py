@@ -18,6 +18,7 @@ from ops.testing import Harness
 from charm import GithubRunnerCharm, catch_action_errors, catch_charm_errors
 from charm_state import (
     GROUP_CONFIG_NAME,
+    IMAGE_INTEGRATION_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
@@ -30,6 +31,7 @@ from charm_state import (
     GithubOrg,
     GithubRepo,
     InstanceType,
+    OpenStackCloudsYAML,
     OpenstackImage,
     ProxyConfig,
     VirtualMachineResources,
@@ -874,11 +876,18 @@ def test_openstack_image_ready_status(
     assert is_ready == expected_value
 
 
-def test__on_image_relation_changed_lxd():
+@pytest.mark.parametrize(
+    "hook",
+    [
+        pytest.param("_on_image_relation_changed", id="image relation changed"),
+        pytest.param("_on_image_relation_joined", id="image relation joined"),
+    ],
+)
+def test__on_image_relation_hooks_not_openstack(hook: str):
     """
-    arrange: given a charm with LXD instance type.
-    act: when _on_image_relation_changed is called.
-    assert: nothing happens.
+    arrange: given a hook that is for OpenStack mode but the image relation exists.
+    act: when the hook is triggered.
+    assert: the charm falls into BlockedStatus.
     """
     harness = Harness(GithubRunnerCharm)
     harness.begin()
@@ -886,10 +895,11 @@ def test__on_image_relation_changed_lxd():
     state_mock.instance_type = InstanceType.LOCAL_LXD
     harness.charm._setup_state = MagicMock(return_value=state_mock)
 
-    harness.charm._on_image_relation_changed(MagicMock())
+    getattr(harness.charm, hook)(MagicMock())
 
-    # the unit is in maintenance status since nothing has happened.
-    assert harness.charm.unit.status.name == BlockedStatus.name
+    assert harness.charm.unit.status == BlockedStatus(
+        "Openstack mode not enabled. Please remove the image integration."
+    )
 
 
 def test__on_image_relation_image_not_ready():
@@ -933,3 +943,38 @@ def test__on_image_relation_image_ready():
     assert harness.charm.unit.status.name == ActiveStatus.name
     runner_manager_mock.flush.assert_called_once()
     runner_manager_mock.reconcile.assert_called_once()
+
+
+def test__on_image_relation_joined():
+    """
+    arrange: given an OpenStack mode charm.
+    act: when _on_image_relation_joined is fired.
+    assert: the relation data is populated with openstack creds.
+    """
+    harness = Harness(GithubRunnerCharm)
+    relation_id = harness.add_relation(IMAGE_INTEGRATION_NAME, "image-builder")
+    harness.add_relation_unit(relation_id, "image-builder/0")
+    harness.begin()
+    state_mock = MagicMock()
+    state_mock.instance_type = InstanceType.OPENSTACK
+    state_mock.charm_config.openstack_clouds_yaml = OpenStackCloudsYAML(
+        clouds={
+            "test-cloud": {
+                "auth": (
+                    test_auth_data := {
+                        "auth_url": "http://test-auth.url",
+                        "password": secrets.token_hex(16),
+                        "project_domain_name": "Default",
+                        "project_name": "test-project-name",
+                        "user_domain_name": "Default",
+                        "username": "test-user-name",
+                    }
+                )
+            }
+        }
+    )
+    harness.charm._setup_state = MagicMock(return_value=state_mock)
+
+    harness.charm._on_image_relation_joined(MagicMock())
+
+    assert harness.get_relation_data(relation_id, harness.charm.unit) == test_auth_data
