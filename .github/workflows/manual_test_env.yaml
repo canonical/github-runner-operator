@@ -6,7 +6,7 @@ on:
 jobs:
   manual-test-env:
     name: manual-test-env
-    runs-on: ["self-hosted", "stg-private-endpoint"]
+    runs-on: ["self-hosted", "stg-private-endpoint", "x64"]
     steps:
       - run: sudo apt update -yq
       - run: sudo apt install pipx -yq
