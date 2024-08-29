@@ -817,10 +817,12 @@ class ProxyConfig(BaseModel):
             assert (
                 proxy_address is not None and proxy_address.host is not None
             )  # nosec for [B101:assert_used]
-            if 'https' in proxy_address.host:
+            if "https" in proxy_address.host:
                 aproxy_address = proxy_address.host[8:]
-            elif 'http' in proxy_address.host:
+            elif "http" in proxy_address.host:
                 aproxy_address = proxy_address.host[7:]
+            else:
+                aproxy_address = proxy_address.host
         else:
             aproxy_address = None
         return aproxy_address
