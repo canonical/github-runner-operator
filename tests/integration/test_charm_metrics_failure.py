@@ -83,8 +83,11 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     """
     await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
 
+    # TODO: debug
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print(instance_helper)
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     if isinstance(instance_helper, OpenStackInstanceHelper):
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         await setup_repo_policy(
             app=app,
             openstack_connection=instance_helper.openstack_connection,

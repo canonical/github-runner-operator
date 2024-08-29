@@ -41,7 +41,12 @@ from metrics import runner_logs
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
-from runner_manager_type import LXDFlushMode, LXDRunnerManagerConfig, RunnerInfo, RunnerManagerClients
+from runner_manager_type import (
+    LXDFlushMode,
+    LXDRunnerManagerConfig,
+    RunnerInfo,
+    RunnerManagerClients,
+)
 from runner_type import ProxySetting as RunnerProxySetting
 from runner_type import RunnerNameByHealth
 from utilities import execute_command, retry, set_env_var
