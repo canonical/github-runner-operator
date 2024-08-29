@@ -1166,6 +1166,23 @@ class GithubRunnerCharm(CharmBase):
         )
 
     @catch_charm_errors
+    def _on_image_relation_joined(self, _: ops.RelationJoinedEvent) -> None:
+        """Handle image relation joined event."""
+        state = self._setup_state()
+
+        if state.instance_type != InstanceType.OPENSTACK:
+            self.unit.status = BlockedStatus(
+                "Openstack mode not enabled. Please remove the image integration."
+            )
+            return
+
+        clouds_yaml = state.charm_config.openstack_clouds_yaml
+        cloud = list(clouds_yaml["clouds"].keys())[0]
+        auth_map = clouds_yaml["clouds"][cloud]["auth"]
+        for relation in self.model.relations[IMAGE_INTEGRATION_NAME]:
+            relation.data[self.model.unit].update(auth_map)
+
+    @catch_charm_errors
     def _on_image_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle image relation changed event."""
         state = self._setup_state()
