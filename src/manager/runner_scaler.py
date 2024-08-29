@@ -141,6 +141,9 @@ class RunnerScaler:
             }
 
         runner_list = self._manager.get_runners()
+        busy_runners = [
+            runner for runner in runner_list if runner.github_state == GitHubRunnerState.BUSY
+        ]
         idle_runners = [
             runner for runner in runner_list if runner.github_state == GitHubRunnerState.IDLE
         ]
@@ -150,6 +153,15 @@ class RunnerScaler:
             if runner.github_state == GitHubRunnerState.OFFLINE
             and runner.health == HealthState.HEALTHY
         ]
+        unhealthy_runners = [
+            runner
+            for runner in runner_list
+            if runner.health == HealthState.HEALTHY
+        ]
+        logger.info("Found %s busy runners: %s", len(busy_runners), busy_runners)
+        logger.info("Found %s idle runners: %s", len(idle_runners), idle_runners)
+        logger.info("Found %s offline runners that are healthy: %s", len(offline_healthy_runners), offline_healthy_runners)
+        logger.info("Found %s unhealthy runners: %s", len(unhealthy_runners), unhealthy_runners)
 
         try:
             available_runners = set(runner.name for runner in idle_runners) | set(
