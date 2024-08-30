@@ -624,9 +624,9 @@ class GithubRunnerCharm(CharmBase):
         if state.instance_type == InstanceType.OPENSTACK:
             if not self._get_set_image_ready_status():
                 return
-            if state.charm_config.token != self._stored.token:
+            if should_flush_runners:
                 runner_scaler = self._get_runner_scaler(state)
-                runner_scaler.flush()
+                runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
                 runner_scaler.reconcile(state.runner_config.virtual_machines)
                 # TODO: 2024-04-12: Flush on token changes.
                 self.unit.status = ActiveStatus()
