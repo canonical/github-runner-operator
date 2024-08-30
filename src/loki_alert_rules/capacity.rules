@@ -6,6 +6,7 @@ groups:
           quantile_over_time(0.5, {filename="/var/log/github-runner-metrics.log"} | json event="event",duration="queue_duration",flavor="flavor" | __error__="" | event="runner_start" | unwrap duration[1h]) by(flavor) > 1800
         labels:
             severity: high
+            type: runner-capacity
         for: 1h
         annotations:
             description: Job queue duration is higher than 30 minutes for half of the runners of application {{$labels.flavor}}
@@ -15,6 +16,7 @@ groups:
           sum by(flavor)(last_over_time({filename="/var/log/github-runner-metrics.log"} | json event="event",idle_runners="idle_runners",flavor="flavor" | event="reconciliation" | unwrap idle_runners[1h])) == 0
         labels:
             severity: high
+            type: runner-capacity
         for: 2h
         annotations:
             summary: No idle runners for application "{{$labels.flavor}}"
@@ -23,6 +25,7 @@ groups:
           avg_over_time({filename="/var/log/github-runner-metrics.log"} | json event="event",idle="idle",flavor="flavor" | event="runner_start" | unwrap idle[1h]) by(flavor) < 300
         labels:
             severity: high
+            type: runner-capacity
         for: 2h
         annotations:
             description: Idle time for application "{{$labels.flavor}}" is on average smaller than 5 minutes.
