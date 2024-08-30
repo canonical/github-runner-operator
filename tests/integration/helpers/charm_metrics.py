@@ -182,6 +182,10 @@ async def assert_events_after_reconciliation(
     metrics_log = await get_metrics_log(unit=unit)
     log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
     events = set(map(lambda line: line.get("event"), log_lines))
+    # TODO: debug
+    import pytest
+    pytest.set_trace()
+
     assert {
         "runner_start",
         "runner_stop",
@@ -209,6 +213,10 @@ async def assert_events_after_reconciliation(
                     JobConclusion.CANCELLED,
                 ]
             elif post_job_status == PostJobStatus.REPO_POLICY_CHECK_FAILURE:
+                # TODO: debug
+                import pytest
+                pytest.set_trace()
+
                 assert metric_log.get("status_info", {}).get("code", 0) == 403
                 assert metric_log.get("job_conclusion") == JobConclusion.FAILURE
             else:
