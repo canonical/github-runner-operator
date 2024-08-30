@@ -166,6 +166,11 @@ class OpenStackInstanceHelper(InstanceHelper):
             The runner server.
         """
         servers: list[Server] = self.openstack_connection.list_servers()
+        
+        # TODO: debug
+        import pytest
+        pytest.set_trace()
+
         runner = None
         unit_name_without_slash = unit.name.replace("/", "-")
         for server in servers:
@@ -212,8 +217,17 @@ async def setup_repo_policy(
         }
     )
 
+    # TODO: debug
+    import pytest
+    pytest.set_trace()
     await instance_helper.ensure_charm_has_runner(app=app)
+    # TODO: debug
+    import pytest
+    pytest.set_trace()
     await instance_helper.expose_to_instance(unit, 8080)
+    # TODO: debug
+    import pytest
+    pytest.set_trace()
 
 
 async def _install_repo_policy(
