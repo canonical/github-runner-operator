@@ -55,17 +55,9 @@ class OpenStackInstanceHelper(InstanceHelper):
                 break
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
-        # TODO: debug
-        import pytest
-        pytest.set_trace()
-
         ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i /home/ubuntu/.ssh/runner-{runner.name}.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
         exit_code, _, stderr = await run_in_unit(unit, ssh_cmd)
         assert exit_code == 0, f"Error in SSH remote forwarding of port {port}: {stderr}"
-
-        # TODO: debug
-        import pytest
-        pytest.set_trace()
 
     async def run_in_instance(
         self,
@@ -174,11 +166,6 @@ class OpenStackInstanceHelper(InstanceHelper):
             The runner server.
         """
         servers: list[Server] = self.openstack_connection.list_servers()
-        
-        # TODO: debug
-        import pytest
-        pytest.set_trace()
-
         runner = None
         unit_name_without_slash = unit.name.replace("/", "-")
         for server in servers:
@@ -260,7 +247,7 @@ async def _install_repo_policy(
     )
     await run_in_unit(
         unit,
-        f'sudo -u ubuntu HTTPS_PROXY={https_proxy if https_proxy else ""} pip install --proxy http://squid.internal:3128 -r /home/ubuntu/repo_policy_compliance/requirements.txt',
+        f'sudo -u ubuntu HTTPS_PROXY={https_proxy if https_proxy else ""} pip install {f"--proxy {https_proxy}" if https_proxy else ""} -r /home/ubuntu/repo_policy_compliance/requirements.txt',
         assert_on_failure=True,
         assert_msg="Failed to install repo-policy-compliance requirements",
     )

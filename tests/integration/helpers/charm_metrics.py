@@ -182,10 +182,6 @@ async def assert_events_after_reconciliation(
     metrics_log = await get_metrics_log(unit=unit)
     log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
     events = set(map(lambda line: line.get("event"), log_lines))
-    # TODO: debug
-    import pytest
-    pytest.set_trace()
-
     assert {
         "runner_start",
         "runner_stop",
