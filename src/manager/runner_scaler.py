@@ -165,7 +165,7 @@ class RunnerScaler:
             and runner.health == HealthState.HEALTHY
         ]
         unhealthy_runners = [
-            runner for runner in runner_list if runner.health == HealthState.HEALTHY
+            runner for runner in runner_list if runner.health == HealthState.UNHEALTHY or runner.health == HealthState.UNKNOWN
         ]
         logger.info("Found %s busy runners: %s", len(busy_runners), busy_runners)
         logger.info("Found %s idle runners: %s", len(idle_runners), idle_runners)

@@ -55,9 +55,17 @@ class OpenStackInstanceHelper(InstanceHelper):
                 break
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
+        # TODO: debug
+        import pytest
+        pytest.set_trace()
+
         ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i /home/ubuntu/.ssh/runner-{runner.name}.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
         exit_code, _, stderr = await run_in_unit(unit, ssh_cmd)
         assert exit_code == 0, f"Error in SSH remote forwarding of port {port}: {stderr}"
+
+        # TODO: debug
+        import pytest
+        pytest.set_trace()
 
     async def run_in_instance(
         self,
@@ -217,17 +225,8 @@ async def setup_repo_policy(
         }
     )
 
-    # TODO: debug
-    import pytest
-    pytest.set_trace()
     await instance_helper.ensure_charm_has_runner(app=app)
-    # TODO: debug
-    import pytest
-    pytest.set_trace()
     await instance_helper.expose_to_instance(unit, 8080)
-    # TODO: debug
-    import pytest
-    pytest.set_trace()
 
 
 async def _install_repo_policy(
