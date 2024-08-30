@@ -1288,7 +1288,7 @@ class GithubRunnerCharm(CharmBase):
             cloud_runner_manager=openstack_runner_manager,
             config=runner_manager_config,
         )
-        return RunnerScaler(runner_manager=runner_manager)
+        return RunnerScaler(runner_manager=runner_manager, reactive_config=state.reactive_config)
 
 
 if __name__ == "__main__":

@@ -72,7 +72,7 @@ def runner_manager_fixture(
 
 @pytest.fixture(scope="function", name="runner_scaler")
 def runner_scaler_fixture(runner_manager: RunnerManager) -> RunnerScaler:
-    return RunnerScaler(runner_manager)
+    return RunnerScaler(runner_manager, None)
 
 
 @pytest.fixture(scope="function", name="runner_scaler_one_runner")
@@ -162,7 +162,7 @@ def test_reconcile_runner_create_one(runner_scaler: RunnerScaler):
     Act: Reconcile to no runners.
     Assert: No changes. Runner info should contain no runners.
     """
-    diff = runner_scaler.reconcile(num_of_runner=0)
+    diff = runner_scaler.reconcile(quantity=0)
     assert diff == 0
     assert_runner_info(runner_scaler, online=0)
 
