@@ -10,6 +10,7 @@ from juju.unit import Unit
 from openstack.compute.v2.server import Server
 
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
+from openstack_cloud.openstack_cloud import OpenstackCloud
 from tests.integration.helpers.common import InstanceHelper, reconcile, run_in_unit, wait_for
 
 logger = logging.getLogger(__name__)
@@ -55,12 +56,9 @@ class OpenStackInstanceHelper(InstanceHelper):
                 break
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
-        # TODO: debug
-        import pytest
-
-        pytest.set_trace()
-
-        ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i /home/ubuntu/.ssh/runner-{runner.name}.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
+        key_path = OpenstackCloud._get_key_path(runner.name)
+        assert key_path.exists(), f"SSH key for runner {runner.name} not found in the juju unit"
+        ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i /home/ubuntu/.ssh/{runner.name}.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
         exit_code, _, stderr = await run_in_unit(unit, ssh_cmd)
         assert exit_code == 0, f"Error in SSH remote forwarding of port {port}: {stderr}"
 
@@ -99,7 +97,9 @@ class OpenStackInstanceHelper(InstanceHelper):
                 break
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
-        ssh_cmd = f'ssh -i /home/ubuntu/.ssh/runner-{runner.name}.key -o "StrictHostKeyChecking no" ubuntu@{ip} {command}'
+        key_path = OpenstackCloud._get_key_path(runner.name)
+        assert key_path.exists(), f"SSH key for runner {runner.name} not found in the juju unit"
+        ssh_cmd = f'ssh -i {key_path} -o "StrictHostKeyChecking no" ubuntu@{ip} {command}'
         ssh_cmd_as_ubuntu_user = f"su - ubuntu -c '{ssh_cmd}'"
         logging.warning("ssh_cmd: %s", ssh_cmd_as_ubuntu_user)
         exit_code, stdout, stderr = await run_in_unit(unit, ssh_cmd, timeout)
