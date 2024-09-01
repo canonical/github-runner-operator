@@ -127,9 +127,8 @@ class RunnerScaler:
         delete_metric_stats = None
         metric_stats = self._manager.cleanup()
         runners = self._manager.get_runners()
-        current_num = len(runners)
-        logger.info("Reconcile runners from %s to %s", current_num, quantity)
-        runner_diff = quantity - current_num
+        logger.info("Reconcile runners from %s to %s", len(runners), quantity)
+        runner_diff = quantity - len(runners) 
         if runner_diff > 0:
             try:
                 self._manager.create_runners(runner_diff)
@@ -164,7 +163,7 @@ class RunnerScaler:
             if runner.github_state == GitHubRunnerState.OFFLINE
             and runner.health == HealthState.HEALTHY
         ]
-        unhealthy_states = set(HealthState.UNHEALTHY, HealthState.UNKNOWN)
+        unhealthy_states = set((HealthState.UNHEALTHY, HealthState.UNKNOWN))
         unhealthy_runners = [runner for runner in runner_list if runner.health in unhealthy_states]
         logger.info("Found %s busy runners: %s", len(busy_runners), busy_runners)
         logger.info("Found %s idle runners: %s", len(idle_runners), idle_runners)
