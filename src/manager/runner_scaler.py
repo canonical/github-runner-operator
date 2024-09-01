@@ -164,9 +164,8 @@ class RunnerScaler:
             if runner.github_state == GitHubRunnerState.OFFLINE
             and runner.health == HealthState.HEALTHY
         ]
-        unhealthy_runners = [
-            runner for runner in runner_list if runner.health == HealthState.UNHEALTHY or runner.health == HealthState.UNKNOWN
-        ]
+        unhealthy_states = set(HealthState.UNHEALTHY, HealthState.UNKNOWN)
+        unhealthy_runners = [runner for runner in runner_list if runner.health in unhealthy_states]
         logger.info("Found %s busy runners: %s", len(busy_runners), busy_runners)
         logger.info("Found %s idle runners: %s", len(idle_runners), idle_runners)
         logger.info(
