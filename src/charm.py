@@ -8,7 +8,12 @@
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
-from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
+from utilities import (
+    bytes_with_unit_to_kib,
+    execute_command,
+    remove_residual_venv_dirs,
+    retry,
+)
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
 # pylint: disable=wrong-import-position,wrong-import-order
@@ -1175,8 +1180,9 @@ class GithubRunnerCharm(CharmBase):
             return
 
         clouds_yaml = state.charm_config.openstack_clouds_yaml
-        cloud = list(clouds_yaml["clouds"].keys())[0]
-        auth_map = clouds_yaml["clouds"][cloud]["auth"]
+        # unsubscriptable-object / E1136 thinks cloud_yaml is kind of a list
+        cloud = list(clouds_yaml["clouds"].keys())[0]  # pylint: disable=E1136
+        auth_map = clouds_yaml["clouds"][cloud]["auth"]  # pylint: disable=E1136
         for relation in self.model.relations[IMAGE_INTEGRATION_NAME]:
             relation.data[self.model.unit].update(auth_map)
 

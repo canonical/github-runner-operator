@@ -32,6 +32,7 @@ from pydantic import (
     field_validator,
 )
 from pydantic_core import Url
+from typing_extensions import TypedDict
 
 import openstack_cloud
 from errors import MissingMongoDBError, OpenStackInvalidConfigError
@@ -404,7 +405,7 @@ class CharmConfig(BaseModel):
     denylist: list[FirewallEntry]
     dockerhub_mirror: AnyHttpsUrl | None = None
     labels: tuple[str, ...]
-    openstack_clouds_yaml: dict[str, dict] | None = None
+    openstack_clouds_yaml: OpenStackCloudsYAML | None = None
     path: GithubPath
     reconcile_interval: int
     repo_policy_compliance: RepoPolicyComplianceConfig | None = None
@@ -482,8 +483,6 @@ class CharmConfig(BaseModel):
             openstack_clouds_yaml: OpenStackCloudsYAML = yaml.safe_load(
                 cast(str, openstack_clouds_yaml_str)
             )
-            # use Pydantic to validate TypedDict.
-            create_model_from_typeddict(OpenStackCloudsYAML)(**openstack_clouds_yaml)
         except (yaml.YAMLError, TypeError) as exc:
             logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
             raise CharmConfigInvalidError(
@@ -492,7 +491,7 @@ class CharmConfig(BaseModel):
 
         try:
             openstack_cloud.initialize(openstack_clouds_yaml)
-        except OpenStackInvalidConfigError as exc:
+        except (OpenStackInvalidConfigError, TypeError ) as exc:
             logger.error("Invalid openstack config, %s.", exc)
             raise CharmConfigInvalidError(
                 "Invalid openstack config. Not able to initialize openstack integration."

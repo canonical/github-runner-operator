@@ -506,9 +506,7 @@ def test_charm_config_from_charm_valid():
     assert result.dockerhub_mirror == AnyHttpUrl(
         "https://example.com"
     )  # *** new Url lib adds '/' to the end of urls ***
-    assert result.openstack_clouds_yaml == {
-        "clouds": {"openstack": {"auth": {"username": "admin"}}}
-    }
+    assert result.openstack_clouds_yaml == test_openstack_config
     assert result.labels == ("label1", "label2", "label3")
     assert result.token == "abc123"
 
