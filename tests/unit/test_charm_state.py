@@ -9,6 +9,7 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
+import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from pydantic import AnyHttpUrl, BaseModel, MongoDsn
 from pydantic.networks import IPv4Address
@@ -471,7 +472,25 @@ def test_charm_config_from_charm_valid():
         RECONCILE_INTERVAL_CONFIG_NAME: "5",
         DENYLIST_CONFIG_NAME: "192.168.1.1,192.168.1.2",
         DOCKERHUB_MIRROR_CONFIG_NAME: "https://example.com",
-        OPENSTACK_CLOUDS_YAML_CONFIG_NAME: "clouds: { openstack: { auth: { username: 'admin' }}}",
+        # "clouds: { openstack: { auth: { username: 'admin' }}}"
+        OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(
+            (
+                test_openstack_config := {
+                    "clouds": {
+                        "openstack": {
+                            "auth": {
+                                "auth_url": "https://project-keystone.url/",
+                                "password": secrets.token_hex(16),
+                                "project_domain_name": "Default",
+                                "project_name": "test-project-name",
+                                "user_domain_name": "Default",
+                                "username": "test-user-name",
+                            }
+                        }
+                    }
+                }
+            )
+        ),
         LABELS_CONFIG_NAME: "label1,label2,label3",
         TOKEN_CONFIG_NAME: "abc123",
     }

@@ -342,6 +342,48 @@ class RepoPolicyComplianceConfig(BaseModel):
         return cls(url=url, token=token)  # type: ignore
 
 
+class _OpenStackAuth(TypedDict):
+    """The OpenStack cloud connection authentication info.
+
+    Attributes:
+        auth_url: The OpenStack authentication URL (keystone).
+        password: The OpenStack project user's password.
+        project_domain_name: The project domain in which the project belongs to.
+        project_name: The OpenStack project to connect to.
+        user_domain_name: The user domain in which the user belongs to.
+        username: The user to authenticate as.
+    """
+
+    auth_url: str
+    password: str
+    project_domain_name: str
+    project_name: str
+    user_domain_name: str
+    username: str
+
+
+class _OpenStackCloud(TypedDict):
+    """The OpenStack cloud connection info.
+
+    See https://docs.openstack.org/python-openstackclient/pike/configuration/index.html.
+
+    Attributes:
+        auth: The connection authentication info.
+    """
+
+    auth: _OpenStackAuth
+
+
+class OpenStackCloudsYAML(TypedDict):
+    """The OpenStack clouds YAML dict mapping.
+
+    Attributes:
+        clouds: The map of cloud name to cloud connection info.
+    """
+
+    clouds: dict[str, _OpenStackCloud]
+
+
 class CharmConfig(BaseModel):
     """General charm configuration.
 
@@ -418,7 +460,7 @@ class CharmConfig(BaseModel):
         return dockerhub_mirror
 
     @classmethod
-    def _parse_openstack_clouds_config(cls, charm: CharmBase) -> dict | None:
+    def _parse_openstack_clouds_config(cls, charm: CharmBase) -> OpenStackCloudsYAML | None:
         """Parse and validate openstack clouds yaml config value.
 
         Args:
@@ -437,16 +479,17 @@ class CharmConfig(BaseModel):
             return None
 
         try:
-            openstack_clouds_yaml = yaml.safe_load(cast(str, openstack_clouds_yaml_str))
-        except yaml.YAMLError as exc:
+            openstack_clouds_yaml: OpenStackCloudsYAML = yaml.safe_load(
+                cast(str, openstack_clouds_yaml_str)
+            )
+            # use Pydantic to validate TypedDict.
+            create_model_from_typeddict(OpenStackCloudsYAML)(**openstack_clouds_yaml)
+        except (yaml.YAMLError, TypeError) as exc:
             logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
             raise CharmConfigInvalidError(
                 f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config. Invalid yaml."
             ) from exc
-        if (config_type := type(openstack_clouds_yaml)) is not dict:
-            raise CharmConfigInvalidError(
-                f"Invalid openstack config format, expected dict, got {config_type}"
-            )
+
         try:
             openstack_cloud.initialize(openstack_clouds_yaml)
         except OpenStackInvalidConfigError as exc:
@@ -455,7 +498,7 @@ class CharmConfig(BaseModel):
                 "Invalid openstack config. Not able to initialize openstack integration."
             ) from exc
 
-        return cast(dict, openstack_clouds_yaml)
+        return openstack_clouds_yaml
 
     @field_validator("reconcile_interval")
     @classmethod
