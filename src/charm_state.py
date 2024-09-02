@@ -491,7 +491,7 @@ class CharmConfig(BaseModel):
 
         try:
             openstack_cloud.initialize(openstack_clouds_yaml)
-        except (OpenStackInvalidConfigError, TypeError ) as exc:
+        except (OpenStackInvalidConfigError, TypeError) as exc:
             logger.error("Invalid openstack config, %s.", exc)
             raise CharmConfigInvalidError(
                 "Invalid openstack config. Not able to initialize openstack integration."

@@ -8,12 +8,7 @@
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
 
-from utilities import (
-    bytes_with_unit_to_kib,
-    execute_command,
-    remove_residual_venv_dirs,
-    retry,
-)
+from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
 # pylint: disable=wrong-import-position,wrong-import-order
