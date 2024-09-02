@@ -57,7 +57,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
         key_path = OpenstackCloud._get_key_path(runner.name)
-        exit_code, stdout, stderr = await run_in_unit(unit, "ls {key_path}")
+        exit_code, stdout, stderr = await run_in_unit(unit, "ls f{key_path}")
         # TODO: debug
         import pytest
         pytest.set_trace()
@@ -104,7 +104,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
         key_path = OpenstackCloud._get_key_path(runner.name)
-        exit_code, stdout, stderr = await run_in_unit(unit, "ls {key_path}")
+        exit_code, stdout, stderr = await run_in_unit(unit, f"ls {key_path}")
         # TODO: debug
         import pytest
         pytest.set_trace()
