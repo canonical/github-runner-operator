@@ -57,8 +57,9 @@ class OpenStackInstanceHelper(InstanceHelper):
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
         key_path = OpenstackCloud._get_key_path(runner.name)
-        assert key_path.exists(), f"SSH key for runner {runner.name} not found in the juju unit"
-        ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i /home/ubuntu/.ssh/{runner.name}.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
+        exit_code, _, _ = await run_in_unit(unit, "ls {key_path}")
+        assert exit_code == 0, f"Unable to find key file {key_path}"
+        ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i {key_path} -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
         exit_code, _, stderr = await run_in_unit(unit, ssh_cmd)
         assert (
             exit_code == 0
@@ -100,7 +101,8 @@ class OpenStackInstanceHelper(InstanceHelper):
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
         key_path = OpenstackCloud._get_key_path(runner.name)
-        assert key_path.exists(), f"SSH key for runner {runner.name} not found in the juju unit"
+        exit_code, _, _ = await run_in_unit(unit, "ls {key_path}")
+        assert exit_code == 0, f"Unable to find key file {key_path}"
         ssh_cmd = f'ssh -i {key_path} -o "StrictHostKeyChecking no" ubuntu@{ip} {command}'
         ssh_cmd_as_ubuntu_user = f"su - ubuntu -c '{ssh_cmd}'"
         logging.warning("ssh_cmd: %s", ssh_cmd_as_ubuntu_user)
