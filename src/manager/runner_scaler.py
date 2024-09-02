@@ -128,7 +128,7 @@ class RunnerScaler:
         metric_stats = self._manager.cleanup()
         runners = self._manager.get_runners()
         logger.info("Reconcile runners from %s to %s", len(runners), quantity)
-        runner_diff = quantity - len(runners) 
+        runner_diff = quantity - len(runners)
         if runner_diff > 0:
             try:
                 self._manager.create_runners(runner_diff)

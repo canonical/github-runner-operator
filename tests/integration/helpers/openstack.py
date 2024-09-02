@@ -41,7 +41,7 @@ class OpenStackInstanceHelper(InstanceHelper):
             unit: The juju unit of the github-runner charm.
             port: The port on the juju machine to expose to the runner.
         """
-        runner = self._get_runner(unit=unit)
+        runner = self._get_single_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
         network_address_list = runner.addresses.values()
         logger.warning(network_address_list)
@@ -60,7 +60,9 @@ class OpenStackInstanceHelper(InstanceHelper):
         assert key_path.exists(), f"SSH key for runner {runner.name} not found in the juju unit"
         ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i /home/ubuntu/.ssh/{runner.name}.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
         exit_code, _, stderr = await run_in_unit(unit, ssh_cmd)
-        assert exit_code == 0, f"Error in SSH remote forwarding of port {port}: {stderr}"
+        assert (
+            exit_code == 0
+        ), f"Error in starting background process of SSH remote forwarding of port {port}: {stderr}"
 
     async def run_in_instance(
         self,
@@ -82,7 +84,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         Returns:
             Tuple of return code, stdout and stderr.
         """
-        runner = self._get_runner(unit=unit)
+        runner = self._get_single_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
         network_address_list = runner.addresses.values()
         logger.warning(network_address_list)
@@ -157,12 +159,14 @@ class OpenStackInstanceHelper(InstanceHelper):
         Returns:
             Tuple of runner names.
         """
-        runner = self._get_runner(unit)
+        runner = self._get_single_runner(unit)
         assert runner, "Failed to find runner server"
         return (cast(str, runner.name),)
 
-    def _get_runner(self, unit: Unit) -> Server | None:
-        """Get the runner server.
+    def _get_single_runner(self, unit: Unit) -> Server | None:
+        """Get the only runner for the unit.
+
+        This method asserts for exactly one runner for the unit.
 
         Args:
             unit: The unit to get the runner for.
@@ -171,14 +175,12 @@ class OpenStackInstanceHelper(InstanceHelper):
             The runner server.
         """
         servers: list[Server] = self.openstack_connection.list_servers()
-        runner = None
         unit_name_without_slash = unit.name.replace("/", "-")
-        for server in servers:
-            if server.name.startswith(unit_name_without_slash):
-                runner = server
-                break
-
-        return runner
+        runners = [server for server in servers if server.name.startswith(unit_name_without_slash)]
+        assert (
+            len(runners) == 1
+        ), f"In {unit.name} found more than one runners or no runners: {runners}"
+        return runners[0]
 
 
 async def setup_repo_policy(
@@ -219,6 +221,13 @@ async def setup_repo_policy(
 
     await instance_helper.ensure_charm_has_runner(app=app)
     await instance_helper.expose_to_instance(unit, 8080)
+    # This tests the connection to the repo policy compliance, not a health check of service.
+    await instance_helper.run_in_instance(
+        unit=unit,
+        command="curl http://localhost/8080",
+        assert_on_failure=True,
+        assert_msg="Unable to reach the repo policy compliance server setup",
+    )
 
 
 async def _install_repo_policy(
