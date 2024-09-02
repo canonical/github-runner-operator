@@ -57,7 +57,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
         key_path = OpenstackCloud._get_key_path(runner.name)
-        exit_code, _, _ = await run_in_unit(unit, "ls {key_path}")
+        exit_code, _, _ = await run_in_unit(unit, "ls f{key_path}")
         assert exit_code == 0, f"Unable to find key file {key_path}"
         ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i {key_path} -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
         exit_code, _, stderr = await run_in_unit(unit, ssh_cmd)
@@ -101,7 +101,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
         key_path = OpenstackCloud._get_key_path(runner.name)
-        exit_code, _, _ = await run_in_unit(unit, "ls {key_path}")
+        exit_code, _, _ = await run_in_unit(unit, f"ls {key_path}")
         assert exit_code == 0, f"Unable to find key file {key_path}"
         ssh_cmd = f'ssh -i {key_path} -o "StrictHostKeyChecking no" ubuntu@{ip} {command}'
         ssh_cmd_as_ubuntu_user = f"su - ubuntu -c '{ssh_cmd}'"
