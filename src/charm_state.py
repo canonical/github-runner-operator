@@ -823,6 +823,9 @@ class ProxyConfig(BaseModel):
                 aproxy_address = proxy_address.host[7:]
             else:
                 aproxy_address = proxy_address.host
+
+            if proxy_address.port:
+                aproxy_address = f"{proxy_address.host}:{proxy_address.port}"
         else:
             aproxy_address = None
         return aproxy_address

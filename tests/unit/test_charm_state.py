@@ -787,8 +787,9 @@ def test_runner_charm_config_from_charm_valid():
 @pytest.mark.parametrize(
     "http, https, use_aproxy, expected_address",
     [
-        ("http://proxy.example.com", None, True, "proxy.example.com"),
-        (None, "https://secureproxy.example.com", True, "secureproxy.example.com"),
+        ("http://proxy.example.com", None, True, "proxy.example.com:80"),
+        ("http://squid.internal:3128", None, True, "squid.internal:3128"),
+        (None, "https://secureproxy.example.com", True, "secureproxy.example.com:443"),
         (None, None, False, None),
         ("http://proxy.example.com", None, False, None),
     ],
