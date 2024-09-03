@@ -12,6 +12,7 @@ import github_runner_manager.reactive.runner_manager
 from github_runner_manager.metrics.events import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
 from github_runner_manager.metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from github_runner_manager.metrics.storage import MetricsStorage
+from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
 from pytest import LogCaptureFixture, MonkeyPatch
 
 import shared_fs
@@ -19,8 +20,6 @@ from charm_state import (
     Arch,
     CharmConfig,
     CharmState,
-    GitHubOrg,
-    GitHubRepo,
     ProxyConfig,
     ReactiveConfig,
     VirtualMachineResources,

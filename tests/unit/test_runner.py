@@ -13,8 +13,9 @@ import github_runner_manager.metrics.runner_logs
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from github_runner_manager.metrics.storage import MetricsStorage
+from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
 
-from charm_state import GitHubOrg, GitHubRepo, SSHDebugConnection, VirtualMachineResources
+from charm_state import SSHDebugConnection, VirtualMachineResources
 from errors import (
     CreateMetricsStorageError,
     LxdError,

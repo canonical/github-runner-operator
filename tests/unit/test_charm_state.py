@@ -11,6 +11,8 @@ from unittest.mock import MagicMock
 import github_runner_manager.openstack_cloud
 import pytest
 import yaml
+from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
+
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
@@ -41,8 +43,6 @@ from charm_state import (
     CharmState,
     FirewallEntry,
     GithubConfig,
-    GitHubOrg,
-    GitHubRepo,
     ImmutableConfigChangedError,
     LocalLxdRunnerConfig,
     OpenstackImage,

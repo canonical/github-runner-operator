@@ -23,9 +23,10 @@ from typing import Iterable, NamedTuple, Optional, Sequence
 import yaml
 from github_runner_manager.metrics.runner_logs import SYSLOG_PATH, create_logs_dir
 from github_runner_manager.metrics.storage import MetricsStorage
+from github_runner_manager.types_.github import GitHubOrg
 
 import shared_fs
-from charm_state import Arch, GitHubOrg, SSHDebugConnection, VirtualMachineResources
+from charm_state import Arch, SSHDebugConnection, VirtualMachineResources
 from errors import (
     CreateMetricsStorageError,
     GithubClientError,

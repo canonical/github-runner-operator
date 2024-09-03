@@ -9,6 +9,7 @@ from time import sleep
 import github
 import pytest
 from github.Repository import Repository
+from github_runner_manager.types_.github import GitHubRepo
 from juju.application import Application
 from juju.model import Model
 
@@ -16,7 +17,6 @@ from charm_state import (
     DOCKERHUB_MIRROR_CONFIG_NAME,
     PATH_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
-    GitHubRepo,
 )
 from github_client import GithubClient
 from tests.integration.helpers.common import (
