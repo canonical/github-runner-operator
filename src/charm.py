@@ -1222,9 +1222,6 @@ class GithubRunnerCharm(CharmBase):
     ) -> RunnerScaler:
         """Get runner scaler instance for scaling runners.
 
-        TODO: 2024-07-09 Combine this with `_get_runner_manager` during the runner manager \
-        interface refactor.
-
         Args:
             state: Charm state.
             token: GitHub personal access token to manage the runners with. If None the token in

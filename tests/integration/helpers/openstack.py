@@ -69,7 +69,9 @@ class OpenStackInstanceHelper(InstanceHelper):
 
         await sleep(1)
         for _ in range(6):
-            exit_code, _, _ = self.run_in_instance(unit=unit, command=f"nc -z localhost {port}")
+            exit_code, _, _ = await self.run_in_instance(
+                unit=unit, command=f"nc -z localhost {port}"
+            )
             if exit_code == 0:
                 return
             await sleep(10)
