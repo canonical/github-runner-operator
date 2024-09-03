@@ -225,6 +225,11 @@ async def setup_repo_policy(
 
     await instance_helper.ensure_charm_has_runner(app=app)
     await instance_helper.expose_to_instance(unit, 8080)
+
+    # TODO: debug
+    import pytest
+    pytest.set_trace()
+
     # This tests the connection to the repo policy compliance, not a health check of service.
     await instance_helper.run_in_instance(
         unit=unit,
