@@ -239,7 +239,7 @@ async def setup_repo_policy(
     # This tests the connection to the repo policy compliance, not a health check of service.
     await instance_helper.run_in_instance(
         unit=unit,
-        command="curl http://localhost/8080",
+        command="curl http://localhost:8080",
         assert_on_failure=True,
         assert_msg="Unable to reach the repo policy compliance server setup",
     )
