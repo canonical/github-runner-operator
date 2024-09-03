@@ -500,6 +500,7 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         if state.instance_type == InstanceType.OPENSTACK:
+            self.unit.status = MaintenanceStatus("Starting runners")
             if not self._get_set_image_ready_status():
                 return
             runner_scaler = self._get_runner_scaler(state)
@@ -1186,6 +1187,7 @@ class GithubRunnerCharm(CharmBase):
     def _on_image_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle image relation changed event."""
         state = self._setup_state()
+        self.unit.status = MaintenanceStatus("Update image for runners")
 
         if state.instance_type != InstanceType.OPENSTACK:
             self.unit.status = BlockedStatus(
@@ -1196,8 +1198,7 @@ class GithubRunnerCharm(CharmBase):
             return
 
         runner_scaler = self._get_runner_scaler(state)
-        # TODO: 2024-04-12: Should be flush idle.
-        runner_scaler.flush()
+        runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
         runner_scaler.reconcile(state.runner_config.virtual_machines)
         self.unit.status = ActiveStatus()
         return
