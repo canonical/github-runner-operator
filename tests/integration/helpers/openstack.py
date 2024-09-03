@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 import logging
 import secrets
+from asyncio import sleep
 from typing import Optional, TypedDict, cast
 
 import openstack.connection
@@ -43,6 +44,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         """
         runner = self._get_single_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
+        logger.info("[TEST SETUP] Exposing port %s on %s", port, runner.name)
         network_address_list = runner.addresses.values()
         logger.warning(network_address_list)
         assert (
@@ -64,6 +66,16 @@ class OpenStackInstanceHelper(InstanceHelper):
         assert (
             exit_code == 0
         ), f"Error in starting background process of SSH remote forwarding of port {port}: {stderr}"
+
+        await sleep(1)
+        for _ in range(6):
+            exit_code, _, _ = await self.run_in_instance(
+                unit=unit, command=f"nc -z localhost {port}"
+            )
+            if exit_code == 0:
+                return
+            await sleep(10)
+        assert False, f"Exposing the port {port} failed"
 
     async def run_in_instance(
         self,
@@ -87,6 +99,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         """
         runner = self._get_single_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
+        logger.info("[TEST SETUP] Run command %s on %s", command, runner.name)
         network_address_list = runner.addresses.values()
         logger.warning(network_address_list)
         assert (
@@ -226,7 +239,7 @@ async def setup_repo_policy(
     # This tests the connection to the repo policy compliance, not a health check of service.
     await instance_helper.run_in_instance(
         unit=unit,
-        command="curl http://localhost/8080",
+        command="curl http://localhost:8080",
         assert_on_failure=True,
         assert_msg="Unable to reach the repo policy compliance server setup",
     )
