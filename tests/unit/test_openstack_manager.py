@@ -14,6 +14,7 @@ from fabric.connection import Connection as SSHConnection
 from invoke import Result
 from openstack.compute.v2.keypair import Keypair
 from openstack.compute.v2.server import Server
+from pydantic import MongoDsn
 from pytest import LogCaptureFixture, MonkeyPatch
 
 import metrics.storage
@@ -30,7 +31,7 @@ from runner_manager_type import FlushMode
 from runner_type import RunnerGithubInfo, RunnerNameByHealth
 from tests.unit import factories
 
-FAKE_MONGODB_URI = "mongodb://example.com/db"
+FAKE_MONGODB_URI = "mongodb://example.com:27017/db"
 CLOUD_NAME = "microstack"
 
 
@@ -671,7 +672,7 @@ def test_reconcile_reactive_mode(
     assert actual_count == count
     reactive_reconcile_mock.assert_called_with(
         quantity=count,
-        mq_uri=FAKE_MONGODB_URI,
+        mq_uri=MongoDsn(FAKE_MONGODB_URI),
         queue_name=openstack_manager_for_reconcile.app_name,
     )
 

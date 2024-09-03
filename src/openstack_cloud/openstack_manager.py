@@ -235,7 +235,7 @@ def _generate_runner_env(
     """
     return templates_env.get_template("env.j2").render(
         pre_job_script=str(PRE_JOB_SCRIPT),
-        dockerhub_mirror=dockerhub_mirror or "",
+        dockerhub_mirror=str(dockerhub_mirror) if dockerhub_mirror else "",
         ssh_debug_info=(secrets.choice(ssh_debug_connections) if ssh_debug_connections else None),
     )
 
@@ -271,7 +271,11 @@ def _generate_cloud_init_userdata(
         pre_job_contents=cloud_init_userdata.pre_job_contents,
         metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
         aproxy_address=aproxy_address,
-        dockerhub_mirror=cloud_init_userdata.dockerhub_mirror,
+        dockerhub_mirror=(
+            str(cloud_init_userdata.dockerhub_mirror)
+            if cloud_init_userdata.dockerhub_mirror
+            else None
+        ),
     )
 
 
@@ -314,9 +318,9 @@ class OpenstackRunnerManager:
         if no_proxy := proxies.no_proxy:
             set_env_var("NO_PROXY", no_proxy)
         if http_proxy := proxies.http:
-            set_env_var("HTTP_PROXY", http_proxy)
+            set_env_var("HTTP_PROXY", str(http_proxy))
         if https_proxy := proxies.https:
-            set_env_var("HTTPS_PROXY", https_proxy)
+            set_env_var("HTTPS_PROXY", str(https_proxy))
 
         self.app_name = app_name
         self.unit_num = unit_num
@@ -668,7 +672,9 @@ class OpenstackRunnerManager:
 
         env_contents = _generate_runner_env(
             templates_env=environment,
-            dockerhub_mirror=args.config.dockerhub_mirror,
+            dockerhub_mirror=(
+                str(args.config.dockerhub_mirror) if args.config.dockerhub_mirror else None
+            ),
             ssh_debug_connections=args.config.charm_state.ssh_debug_connections,
         )
 
@@ -688,7 +694,9 @@ class OpenstackRunnerManager:
             instance_config=instance_config,
             runner_env=env_contents,
             pre_job_contents=pre_job_contents,
-            dockerhub_mirror=args.config.dockerhub_mirror,
+            dockerhub_mirror=(
+                str(args.config.dockerhub_mirror) if args.config.dockerhub_mirror else None
+            ),
             proxies=args.config.charm_state.proxy_config,
         )
         cloud_userdata_str = _generate_cloud_init_userdata(
@@ -780,7 +788,7 @@ class OpenstackRunnerManager:
             )
             pre_job_contents_dict.update(
                 {
-                    "repo_policy_base_url": repo_policy_client.base_url,
+                    "repo_policy_base_url": str(repo_policy_client.base_url),
                     "repo_policy_one_time_token": repo_policy_client.get_one_time_token(),
                     "do_repo_policy_check": True,
                 }

@@ -46,7 +46,7 @@ class PreJobMetrics(BaseModel):
     timestamp: NonNegativeFloat
     workflow: str
     workflow_run_id: str
-    repository: str = Field(None, regex=r"^.+/.+$")
+    repository: str = Field(None, pattern=r"^.+/.+$")
     event: str
 
 
@@ -85,7 +85,7 @@ class PostJobMetrics(BaseModel):
 
     timestamp: NonNegativeFloat
     status: PostJobStatus
-    status_info: Optional[CodeInformation]
+    status_info: Optional[CodeInformation] = None
 
 
 class RunnerMetrics(BaseModel):
@@ -100,7 +100,7 @@ class RunnerMetrics(BaseModel):
 
     installed_timestamp: NonNegativeFloat
     pre_job: PreJobMetrics
-    post_job: Optional[PostJobMetrics]
+    post_job: Optional[PostJobMetrics] = None
     runner_name: str
 
 

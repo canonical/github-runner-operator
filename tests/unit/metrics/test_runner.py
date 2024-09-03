@@ -141,7 +141,7 @@ def test_extract(runner_fs_base: Path):
     runner_all_metrics_name = secrets.token_hex(16)
     runner_all_metrics = _create_metrics_data(runner_all_metrics_name)
     runner_wihout_post_job_name = secrets.token_hex(16)
-    runner_without_post_job_metrics = runner_all_metrics.copy()
+    runner_without_post_job_metrics = runner_all_metrics.model_copy()
     runner_without_post_job_metrics.post_job = None
     runner_without_post_job_metrics.runner_name = runner_wihout_post_job_name
 
@@ -149,8 +149,8 @@ def test_extract(runner_fs_base: Path):
     runner1_fs = _create_runner_files(
         runner_fs_base,
         runner_all_metrics_name,
-        runner_all_metrics.pre_job.json(),
-        runner_all_metrics.post_job.json(),
+        runner_all_metrics.pre_job.model_dump_json(),
+        runner_all_metrics.post_job.model_dump_json(),
         str(runner_all_metrics.installed_timestamp),
     )
 
@@ -158,7 +158,7 @@ def test_extract(runner_fs_base: Path):
     runner2_fs = _create_runner_files(
         runner_fs_base,
         runner_wihout_post_job_name,
-        runner_without_post_job_metrics.pre_job.json(),
+        runner_without_post_job_metrics.pre_job.model_dump_json(),
         None,
         str(runner_without_post_job_metrics.installed_timestamp),
     )
@@ -203,8 +203,8 @@ def test_extract_ignores_runners(runner_fs_base: Path):
         runner_fs = _create_runner_files(
             runner_fs_base,
             runner_name,
-            data.pre_job.json(),
-            data.post_job.json(),
+            data.pre_job.model_dump_json(),
+            data.post_job.model_dump_json(),
             str(data.installed_timestamp),
         )
         runner_filesystems.append(runner_fs)
@@ -237,12 +237,12 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
     runner_metrics_data = _create_metrics_data(runner_name=runner_name)
 
     # 1. Runner has noncompliant pre-job metrics inside shared fs
-    invalid_pre_job_data = runner_metrics_data.pre_job.copy(update={"timestamp": -1})
+    invalid_pre_job_data = runner_metrics_data.pre_job.model_copy(update={"timestamp": -1})
     runner_fs = _create_runner_files(
         runner_fs_base,
         runner_name,
-        invalid_pre_job_data.json(),
-        runner_metrics_data.post_job.json(),
+        invalid_pre_job_data.model_dump_json(),
+        runner_metrics_data.post_job.model_dump_json(),
         str(runner_metrics_data.installed_timestamp),
     )
     metrics_storage_manager = MagicMock()
@@ -264,7 +264,7 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
     runner_fs = _create_runner_files(
         runner_fs_base,
         runner_name,
-        runner_metrics_data.pre_job.json(),
+        runner_metrics_data.pre_job.model_dump_json(),
         b"\x00",
         str(runner_metrics_data.installed_timestamp),
     )
@@ -283,8 +283,8 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
     runner_fs = _create_runner_files(
         runner_fs_base,
         runner_name,
-        runner_metrics_data.pre_job.json(),
-        json.dumps([runner_metrics_data.post_job.dict()]),
+        runner_metrics_data.pre_job.model_dump_json(),
+        json.dumps([runner_metrics_data.post_job.model_dump()]),
         str(runner_metrics_data.installed_timestamp),
     )
     metrics_storage_manager.list_all.return_value = [runner_fs]
@@ -302,8 +302,8 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
     runner_fs = _create_runner_files(
         runner_fs_base,
         runner_name,
-        runner_metrics_data.pre_job.json(),
-        runner_metrics_data.post_job.json(),
+        runner_metrics_data.pre_job.model_dump_json(),
+        runner_metrics_data.post_job.model_dump_json(),
         b"\x00",
     )
     metrics_storage_manager.list_all.return_value = [runner_fs]
@@ -328,15 +328,15 @@ def test_extract_raises_error_for_too_large_files(
     runner_metrics_data = _create_metrics_data(runner_name)
 
     # 1. Runner has a pre-job metrics file that is too large
-    invalid_pre_job_data = runner_metrics_data.pre_job.copy(
+    invalid_pre_job_data = runner_metrics_data.pre_job.model_copy(
         update={"workflow": "a" * runner_metrics.FILE_SIZE_BYTES_LIMIT + "b"}
     )
 
     runner_fs = _create_runner_files(
         runner_fs_base,
         runner_name,
-        invalid_pre_job_data.json(),
-        runner_metrics_data.post_job.json(),
+        invalid_pre_job_data.model_dump_json(),
+        runner_metrics_data.post_job.model_dump_json(),
         str(runner_metrics_data.installed_timestamp),
     )
     metrics_storage_manager = MagicMock()
@@ -356,14 +356,14 @@ def test_extract_raises_error_for_too_large_files(
     # 2. Runner has a post-job metrics file that is too large
     runner_name = secrets.token_hex(16)
     runner_metrics_data = _create_metrics_data(runner_name)
-    invalid_post_job_data = runner_metrics_data.post_job.copy(
+    invalid_post_job_data = runner_metrics_data.post_job.model_copy(
         update={"status": "a" * runner_metrics.FILE_SIZE_BYTES_LIMIT + "b"}
     )
     runner_fs = _create_runner_files(
         runner_fs_base,
         runner_name,
-        runner_metrics_data.pre_job.json(),
-        invalid_post_job_data.json(),
+        runner_metrics_data.pre_job.model_dump_json(),
+        invalid_post_job_data.model_dump_json(),
         str(runner_metrics_data.installed_timestamp),
     )
     metrics_storage_manager.list_all.return_value = [runner_fs]
@@ -385,8 +385,8 @@ def test_extract_raises_error_for_too_large_files(
     runner_fs = _create_runner_files(
         runner_fs_base,
         runner_name,
-        runner_metrics_data.pre_job.json(),
-        runner_metrics_data.post_job.json(),
+        runner_metrics_data.pre_job.model_dump_json(),
+        runner_metrics_data.post_job.model_dump_json(),
         invalid_ts,
     )
     metrics_storage_manager.list_all.return_value = [runner_fs]
@@ -406,7 +406,7 @@ def test_extract_ignores_filesystems_without_ts(runner_fs_base: Path):
     assert: No metrics are extracted and shared filesystem is removed.
     """
     runner_name = secrets.token_hex(16)
-    runner_metrics_data = RunnerMetrics.construct(
+    runner_metrics_data = RunnerMetrics.model_construct(
         installed_timestamp=1,
         pre_job=PreJobMetrics(
             timestamp=1,
@@ -422,8 +422,8 @@ def test_extract_ignores_filesystems_without_ts(runner_fs_base: Path):
     runner_fs = _create_runner_files(
         runner_fs_base,
         runner_name,
-        runner_metrics_data.pre_job.json(),
-        runner_metrics_data.post_job.json(),
+        runner_metrics_data.pre_job.model_dump_json(),
+        runner_metrics_data.post_job.model_dump_json(),
         None,
     )
     metrics_storage_manager = MagicMock()
@@ -450,8 +450,8 @@ def test_extract_ignores_failure_on_shared_fs_cleanup(
     runner_fs = _create_runner_files(
         runner_fs_base,
         runner_metrics_data.runner_name,
-        runner_metrics_data.pre_job.json(),
-        runner_metrics_data.post_job.json(),
+        runner_metrics_data.pre_job.model_dump_json(),
+        runner_metrics_data.post_job.model_dump_json(),
         str(runner_metrics_data.installed_timestamp),
     )
     metrics_storage_manager = MagicMock()

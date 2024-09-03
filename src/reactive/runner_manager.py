@@ -11,6 +11,8 @@ import signal
 import subprocess  # nosec
 from pathlib import Path
 
+from pydantic import MongoDsn
+
 from utilities import secure_run_subprocess
 
 logger = logging.getLogger(__name__)
@@ -36,7 +38,7 @@ class ReactiveRunnerError(Exception):
     """Raised when a reactive runner error occurs."""
 
 
-def reconcile(quantity: int, mq_uri: str, queue_name: str) -> int:
+def reconcile(quantity: int, mq_uri: MongoDsn, queue_name: str) -> int:
     """Spawn a runner reactively.
 
     Args:
@@ -104,7 +106,7 @@ def _setup_logging_for_processes() -> None:
         shutil.chown(REACTIVE_RUNNER_LOG_DIR, user=UBUNTU_USER, group=UBUNTU_USER)
 
 
-def _spawn_runner(mq_uri: str, queue_name: str) -> None:
+def _spawn_runner(mq_uri: MongoDsn, queue_name: str) -> None:
     """Spawn a runner.
 
     Args:
@@ -113,7 +115,7 @@ def _spawn_runner(mq_uri: str, queue_name: str) -> None:
     """
     env = {
         "PYTHONPATH": "src:lib:venv",
-        MQ_URI_ENV_VAR: mq_uri,
+        MQ_URI_ENV_VAR: str(mq_uri),
         QUEUE_NAME_ENV_VAR: queue_name,
     }
     # We do not want to wait for the process to finish, so we do not use with statement.
