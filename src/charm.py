@@ -23,6 +23,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackServerConfig,
 )
+from github_runner_manager.types_.github import parse_github_path, GitHubPath
 
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
@@ -72,13 +73,11 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
-    GitHubPath,
     InstanceType,
     OpenstackImage,
     ProxyConfig,
     RunnerStorage,
     VirtualMachineResources,
-    parse_github_path,
 )
 from errors import (
     ConfigurationError,

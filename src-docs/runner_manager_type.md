@@ -9,7 +9,7 @@ Types used by RunnerManager class.
 
 ---
 
-<a href="../src/runner_manager_type.py#L20"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager_type.py#L21"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `LXDFlushMode`
 Strategy for flushing runners. 
@@ -32,7 +32,7 @@ During pre-job (repo-check), the runners are marked as idle and if the pre-job f
 
 ---
 
-<a href="../src/runner_manager_type.py#L45"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager_type.py#L46"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerManagerClients`
 Clients for accessing various services. 
@@ -69,7 +69,7 @@ __init__(
 
 ---
 
-<a href="../src/runner_manager_type.py#L62"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager_type.py#L63"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `LXDRunnerManagerConfig`
 Configuration of runner manager. 
@@ -121,7 +121,7 @@ Whether metrics for the runners should be collected.
 
 ---
 
-<a href="../src/runner_manager_type.py#L97"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager_type.py#L98"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenstackRunnerManagerConfig`
 Configuration of runner manager. 
@@ -168,7 +168,7 @@ __init__(
 
 ---
 
-<a href="../src/runner_manager_type.py#L126"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager_type.py#L127"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerInfo`
 Information from GitHub of a runner. 

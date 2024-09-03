@@ -14,9 +14,10 @@ from urllib.error import HTTPError
 
 from ghapi.all import GhApi, pages
 from ghapi.page import paged
+from github_runner_manager.types_.github import GitHubOrg, GitHubRepo, GitHubPath
 from typing_extensions import assert_never
 
-from charm_state import Arch, GitHubOrg, GitHubPath, GitHubRepo
+from charm_state import Arch
 from errors import GithubApiError, JobNotFoundError, RunnerBinaryError, TokenError
 from github_type import (
     JobStats,

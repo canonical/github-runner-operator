@@ -18,6 +18,8 @@ from typing import NamedTuple, Optional, TypedDict, cast
 from urllib.parse import urlsplit
 
 import yaml
+from github_runner_manager.types_.github import GitHubPath, parse_github_path
+
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager import openstack_cloud
 from ops import CharmBase
@@ -85,75 +87,6 @@ class AnyHttpsUrl(AnyHttpUrl):
     """
 
     allowed_schemes = {"https"}
-
-
-@dataclasses.dataclass
-class GitHubRepo:
-    """Represent GitHub repository.
-
-    Attributes:
-        owner: Owner of the GitHub repository.
-        repo: Name of the GitHub repository.
-    """
-
-    owner: str
-    repo: str
-
-    def path(self) -> str:
-        """Return a string representing the path.
-
-        Returns:
-            Path to the GitHub entity.
-        """
-        return f"{self.owner}/{self.repo}"
-
-
-@dataclasses.dataclass
-class GitHubOrg:
-    """Represent GitHub organization.
-
-    Attributes:
-        org: Name of the GitHub organization.
-        group: Runner group to spawn the runners in.
-    """
-
-    org: str
-    group: str
-
-    def path(self) -> str:
-        """Return a string representing the path.
-
-        Returns:
-            Path to the GitHub entity.
-        """
-        return self.org
-
-
-GitHubPath = GitHubOrg | GitHubRepo
-
-
-def parse_github_path(path_str: str, runner_group: str) -> GitHubPath:
-    """Parse GitHub path.
-
-    Args:
-        path_str: GitHub path in string format.
-        runner_group: Runner group name for GitHub organization. If the path is
-            a repository this argument is ignored.
-
-    Raises:
-        CharmConfigInvalidError: if an invalid path string was given.
-
-    Returns:
-        GithubPath object representing the GitHub repository, or the GitHub
-        organization with runner group information.
-    """
-    if "/" in path_str:
-        paths = tuple(segment for segment in path_str.split("/") if segment)
-        if len(paths) != 2:
-            raise CharmConfigInvalidError(f"Invalid path configuration {path_str}")
-        owner, repo = paths
-        return GitHubRepo(owner=owner, repo=repo)
-    return GitHubOrg(org=path_str, group=runner_group)
 
 
 @dataclasses.dataclass

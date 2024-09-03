@@ -10,8 +10,9 @@ from typing import Iterable
 
 import jinja2
 from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
+from github_runner_manager.types_.github import GitHubPath
 
-from charm_state import CharmState, GitHubPath, ReactiveConfig
+from charm_state import CharmState, ReactiveConfig
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
 from lxd import LxdClient
