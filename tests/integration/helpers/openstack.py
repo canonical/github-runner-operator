@@ -43,6 +43,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         """
         runner = self._get_single_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
+        logger.info("[TEST SETUP] Exposing port %s on %s", port, runner.name)
         network_address_list = runner.addresses.values()
         logger.warning(network_address_list)
         assert (
@@ -87,6 +88,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         """
         runner = self._get_single_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
+        logger.info("[TEST SETUP] Run command %s on %s", command, runner.name)
         network_address_list = runner.addresses.values()
         logger.warning(network_address_list)
         assert (
