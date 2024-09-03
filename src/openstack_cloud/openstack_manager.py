@@ -788,7 +788,7 @@ class OpenstackRunnerManager:
             )
             pre_job_contents_dict.update(
                 {
-                    "repo_policy_base_url": repo_policy_client.base_url,
+                    "repo_policy_base_url": str(repo_policy_client.base_url),
                     "repo_policy_one_time_token": repo_policy_client.get_one_time_token(),
                     "do_repo_policy_check": True,
                 }
