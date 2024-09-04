@@ -6,12 +6,12 @@ from asyncio import sleep
 from typing import Optional, TypedDict, cast
 
 import openstack.connection
+from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud
 from juju.application import Application
 from juju.unit import Unit
 from openstack.compute.v2.server import Server
 
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
-from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud
 from tests.integration.helpers.common import InstanceHelper, reconcile, run_in_unit, wait_for
 
 logger = logging.getLogger(__name__)

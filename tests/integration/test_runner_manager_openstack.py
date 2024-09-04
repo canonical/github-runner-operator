@@ -15,18 +15,26 @@ import yaml
 from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
-from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState, GitHubRunnerConfig, SupportServiceConfig
+from github_runner_manager.manager.cloud_runner_manager import (
+    CloudRunnerState,
+    GitHubRunnerConfig,
+    SupportServiceConfig,
+)
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
-from github_runner_manager.manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
+from github_runner_manager.manager.runner_manager import (
+    FlushMode,
+    RunnerManager,
+    RunnerManagerConfig,
+)
 from github_runner_manager.metrics import events, storage
-from github_runner_manager.types_.github import GitHubPath, parse_github_path
-from openstack.connection import Connection as OpenstackConnection
 from github_runner_manager.openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCloudConfig,
     OpenStackRunnerManager,
     OpenStackServerConfig,
 )
+from github_runner_manager.types_.github import GitHubPath, parse_github_path
+from openstack.connection import Connection as OpenstackConnection
 
 from charm_state import ProxyConfig
 from tests.integration.helpers.common import (

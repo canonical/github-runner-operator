@@ -18,10 +18,10 @@ from typing import NamedTuple, Optional, TypedDict, cast
 from urllib.parse import urlsplit
 
 import yaml
-from github_runner_manager.types_.github import GitHubPath, parse_github_path
-
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager import openstack_cloud
+from github_runner_manager.errors import OpenStackInvalidConfigError
+from github_runner_manager.types_.github import GitHubPath, parse_github_path
 from ops import CharmBase
 from pydantic import (
     AnyHttpUrl,
@@ -34,7 +34,7 @@ from pydantic import (
     validator,
 )
 
-from errors import MissingMongoDBError, OpenStackInvalidConfigError
+from errors import MissingMongoDBError
 from firewall import FirewallEntry
 from utilities import get_env_var
 
@@ -119,7 +119,10 @@ class GithubConfig:
         path_str = cast(str, charm.config.get(PATH_CONFIG_NAME, ""))
         if not path_str:
             raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
-        path = parse_github_path(cast(str, path_str), cast(str, runner_group))
+        try:
+            path = parse_github_path(cast(str, path_str), cast(str, runner_group))
+        except ValueError as e:
+            raise CharmConfigInvalidError(str(e)) from e
 
         token = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
         if not token:

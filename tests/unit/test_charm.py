@@ -12,7 +12,8 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 import yaml
-from github_runner_manager.types_.github import GitHubRepo, GitHubOrg
+from github_runner_manager.errors import OpenStackUnauthorizedError
+from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
 
@@ -40,7 +41,6 @@ from errors import (
     LogrotateSetupError,
     MissingMongoDBError,
     MissingRunnerBinaryError,
-    OpenStackUnauthorizedError,
     RunnerError,
     SubprocessError,
     TokenError,

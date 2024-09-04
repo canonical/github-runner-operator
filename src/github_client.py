@@ -14,7 +14,7 @@ from urllib.error import HTTPError
 
 from ghapi.all import GhApi, pages
 from ghapi.page import paged
-from github_runner_manager.types_.github import GitHubOrg, GitHubRepo, GitHubPath
+from github_runner_manager.types_.github import GitHubOrg, GitHubPath, GitHubRepo
 from typing_extensions import assert_never
 
 from charm_state import Arch

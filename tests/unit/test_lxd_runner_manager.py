@@ -7,9 +7,14 @@ import secrets
 from pathlib import Path
 from unittest.mock import MagicMock, call
 
-import pytest
 import github_runner_manager.reactive.runner_manager
-from github_runner_manager.metrics.events import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
+import pytest
+from github_runner_manager.metrics.events import (
+    Reconciliation,
+    RunnerInstalled,
+    RunnerStart,
+    RunnerStop,
+)
 from github_runner_manager.metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from github_runner_manager.metrics.storage import MetricsStorage
 from github_runner_manager.types_.github import GitHubOrg, GitHubRepo

@@ -11,9 +11,8 @@ from unittest.mock import MagicMock
 import github_runner_manager.openstack_cloud
 import pytest
 import yaml
-from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
-
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
+from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
 from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
 from pydantic.networks import IPv4Address
@@ -24,6 +23,7 @@ from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     DENYLIST_CONFIG_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
+    GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
@@ -87,20 +87,21 @@ def test_github_org_path():
     assert path == org
 
 
-def test_parse_github_path_invalid():
+def test_github_config_from_charm_invalud_path():
     """
     arrange: Create an invalid GitHub path string and runner group name.
     act: Call parse_github_path with the invalid path string and runner group name.
     assert: Verify that the function raises CharmConfigInvalidError.
     """
-    path_str = "invalidpath/"
-    runner_group = "test_group"
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[PATH_CONFIG_NAME] = "invalidpath/"
+    mock_charm.config[GROUP_CONFIG_NAME] = "test_group"
 
     with pytest.raises(CharmConfigInvalidError):
-        charm_state.parse_github_path(path_str, runner_group)
+        GithubConfig.from_charm(mock_charm)
 
 
-def test_github_config_from_charm_invalid_path():
+def test_github_config_from_charm_empty_path():
     """
     arrange: Create a mock CharmBase instance with an empty path configuration.
     act: Call from_charm method with the mock CharmBase instance.

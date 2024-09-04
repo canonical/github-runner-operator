@@ -11,10 +11,6 @@ class RunnerError(Exception):
     """Generic runner error as base exception."""
 
 
-class RunnerExecutionError(RunnerError):
-    """Error for executing commands on runner."""
-
-
 class RunnerFileLoadError(RunnerError):
     """Error for loading file on runner."""
 
@@ -37,10 +33,6 @@ class RunnerBinaryError(RunnerError):
 
 class RunnerAproxyError(RunnerError):
     """Error for setting up aproxy."""
-
-
-class MissingServerConfigError(RunnerError):
-    """Error for unable to create runner due to missing server configurations."""
 
 
 class MissingRunnerBinaryError(Exception):
@@ -128,14 +120,6 @@ class SharedFilesystemMountError(SharedFilesystemError):
     """Represents an error related to the mounting of the shared filesystem."""
 
 
-class RunnerMetricsError(Exception):
-    """Base class for all runner metrics errors."""
-
-
-class CorruptMetricDataError(RunnerMetricsError):
-    """Represents an error with the data being corrupt."""
-
-
 class GithubMetricsError(Exception):
     """Base class for all github metrics errors."""
 
@@ -158,23 +142,3 @@ class JobNotFoundError(GithubClientError):
 
 class RunnerLogsError(Exception):
     """Base class for all runner logs errors."""
-
-
-class OpenStackError(Exception):
-    """Base class for OpenStack errors."""
-
-
-class OpenStackInvalidConfigError(OpenStackError):
-    """Represents an invalid OpenStack configuration."""
-
-
-class OpenStackUnauthorizedError(OpenStackError):
-    """Represents an unauthorized connection to OpenStack."""
-
-
-class SSHError(Exception):
-    """Represents an error while interacting with SSH."""
-
-
-class KeyfileError(SSHError):
-    """Represents missing keyfile for SSH."""

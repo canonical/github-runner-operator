@@ -7,7 +7,7 @@
 # pylint: disable=too-many-lines
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
-
+from github_runner_manager.errors import OpenStackUnauthorizedError
 from github_runner_manager.manager.cloud_runner_manager import (
     GitHubRunnerConfig,
     SupportServiceConfig,
@@ -23,7 +23,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackServerConfig,
 )
-from github_runner_manager.types_.github import parse_github_path, GitHubPath
+from github_runner_manager.types_.github import GitHubPath, parse_github_path
 
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
@@ -84,7 +84,6 @@ from errors import (
     LogrotateSetupError,
     MissingMongoDBError,
     MissingRunnerBinaryError,
-    OpenStackUnauthorizedError,
     RunnerBinaryError,
     RunnerError,
     SubprocessError,

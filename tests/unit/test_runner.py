@@ -8,8 +8,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, call
 
-import jinja2
 import github_runner_manager.metrics.runner_logs
+import jinja2
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from github_runner_manager.metrics.storage import MetricsStorage
@@ -103,7 +103,9 @@ def log_dir_base_path_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
 
         return target_log_path
 
-    create_logs_dir_mock = MagicMock(spec=github_runner_manager.metrics.runner_logs.create_logs_dir)
+    create_logs_dir_mock = MagicMock(
+        spec=github_runner_manager.metrics.runner_logs.create_logs_dir
+    )
     create_logs_dir_mock.side_effect = create_logs_dir
     monkeypatch.setattr("runner.create_logs_dir", create_logs_dir_mock)
 

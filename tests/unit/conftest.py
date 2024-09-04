@@ -76,7 +76,9 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     monkeypatch.setattr("firewall.Firewall.refresh_firewall", unittest.mock.MagicMock())
     monkeypatch.setattr("runner.execute_command", lxd_exec_command)
     monkeypatch.setattr("runner.shared_fs", unittest.mock.MagicMock())
-    monkeypatch.setattr("github_runner_manager.metrics.events.METRICS_LOG_PATH", Path(tmp_path / "metrics.log"))
+    monkeypatch.setattr(
+        "github_runner_manager.metrics.events.METRICS_LOG_PATH", Path(tmp_path / "metrics.log")
+    )
     monkeypatch.setattr("runner.time", unittest.mock.MagicMock())
     monkeypatch.setattr("github_client.GhApi", MockGhapiClient)
     monkeypatch.setattr("runner_manager_type.jinja2", unittest.mock.MagicMock())

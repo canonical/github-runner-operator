@@ -6,13 +6,13 @@ import re
 import secrets
 
 import pytest
+from github_runner_manager.reactive.consumer import JobDetails
+from github_runner_manager.reactive.runner_manager import REACTIVE_RUNNER_LOG_DIR
 from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
 from kombu import Connection
 from pytest_operator.plugin import OpsTest
-from github_runner_manager.reactive.consumer import JobDetails
-from github_runner_manager.reactive.runner_manager import REACTIVE_RUNNER_LOG_DIR
 
 from tests.integration.helpers.common import get_file_content, reconcile, run_in_unit
 
