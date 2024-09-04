@@ -39,7 +39,7 @@ async def test_reactive_mode_consumes_jobs(ops_test: OpsTest, app_for_reactive: 
         labels=[secrets.token_hex(16) for _ in range(random.randint(1, 4))], run_url=FAKE_URL
     )
     _add_to_queue(
-        json.dumps(job.dict() | {"ignored_noise": "foobar"}),
+        json.dumps(job.dict() | {"ignored_noise": "foobar"}, default=lambda x: str(x)),
         mongodb_uri,
         app_for_reactive.name,
     )
