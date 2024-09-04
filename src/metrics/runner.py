@@ -301,7 +301,11 @@ def _create_runner_stop(
         repo=runner_metrics.pre_job.repository,
         github_event=runner_metrics.pre_job.event,
         status=runner_metrics.post_job.status,
-        status_info=runner_metrics.post_job.status_info.dict() if runner_metrics.post_job.status_info else None,
+        status_info=(
+            runner_metrics.post_job.status_info.dict()
+            if runner_metrics.post_job.status_info
+            else None
+        ),
         job_duration=job_duration,
         job_conclusion=job_metrics.conclusion if job_metrics else None,
     )

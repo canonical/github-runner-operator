@@ -82,9 +82,9 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
         The Reconciliation metric has the post job status set to failure.
     """
     await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-    print('111111111111111')
+    print("111111111111111")
     if isinstance(instance_helper, OpenStackInstanceHelper):
-        print('222222222222222222')
+        print("222222222222222222")
         await setup_repo_policy(
             app=app,
             openstack_connection=instance_helper.openstack_connection,
@@ -92,13 +92,13 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
             https_proxy=https_proxy,
         )
     else:
-        print('333333333333333333')
+        print("333333333333333333")
         await instance_helper.ensure_charm_has_runner(app)
-    print('4444444444444444444444')
+    print("4444444444444444444444")
     # Clear metrics log to make reconciliation event more predictable
     unit = app.units[0]
     await clear_metrics_log(unit)
-    print('555555555555555555555555')
+    print("555555555555555555555555")
     await dispatch_workflow(
         app=app,
         branch=forked_github_branch,
@@ -106,7 +106,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
         conclusion="failure",
         workflow_id_or_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     )
-    print('66666666666666666')
+    print("66666666666666666")
 
     # Set the number of virtual machines to 0 to speedup reconciliation
     await app.set_config(
@@ -114,9 +114,9 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
             VIRTUAL_MACHINES_CONFIG_NAME: "0",
         }
     )
-    print('77777777777777777777')
+    print("77777777777777777777")
     await reconcile(app=app, model=model)
-    print('888888888888888888888')
+    print("888888888888888888888")
 
     print(f"{app=}")
     print(f"{forked_github_repository=}")
