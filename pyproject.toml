@@ -13,8 +13,6 @@ omit = [
     # These are covered by `tests/integration/test_runner_manager_openstack.py`.
     "src/openstack_cloud/openstack_cloud.py",
     "src/openstack_cloud/openstack_runner_manager.py",
-    # Thin wrapper around GitHub API. Not a lot of value in unit tests.
-    "src/manager/github_runner_manager.py",
     # Contains interface for calling LXD. Tested in integration tests and end to end tests.
     "src/lxd.py",
     # Contains interface for calling repo policy compliance service. Tested in integration test

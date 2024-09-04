@@ -45,7 +45,8 @@ class GitHubRunnerState(str, Enum):
         return state
 
 
-class GitHubRunnerManager:
+# Thin wrapper around the GitHub Client. Not much value in unit testing.
+class GitHubRunnerManager:  # pragma: no cover
     """Manage self-hosted runner on GitHub side."""
 
     def __init__(self, prefix: str, token: str, path: GitHubPath):
