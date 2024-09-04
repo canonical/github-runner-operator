@@ -178,7 +178,8 @@ def test_one_runner(runner_scaler: RunnerScaler):
     Assert:
         1. Runner info has one runner.
         2. No changes to number of runner.
-        3. Runner info has one runner.
+        3. No runners.
+        4. Runner info has one runner.
     """
     # 1.
     diff = runner_scaler.reconcile(1)
@@ -194,7 +195,7 @@ def test_one_runner(runner_scaler: RunnerScaler):
     runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
     assert_runner_info(runner_scaler, online=0)
 
-    # 3.
+    # 4.
     diff = runner_scaler.reconcile(1)
     assert diff == 1
     assert_runner_info(runner_scaler, online=1)
