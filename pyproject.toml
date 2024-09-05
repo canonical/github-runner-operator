@@ -25,7 +25,7 @@ omit = [
 ]
 
 [tool.coverage.report]
-fail_under = 83  # TODO: increase to 85 to match team standard
+fail_under = 83
 show_missing = true
 
 [tool.pytest.ini_options]
