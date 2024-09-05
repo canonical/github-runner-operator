@@ -10,7 +10,7 @@ from typing import Iterable
 
 import jinja2
 
-from charm_state import CharmState, GithubPath
+from charm_state import CharmState, GithubPath, ReactiveConfig
 from github_client import GithubClient
 from github_type import GitHubRunnerStatus
 from lxd import LxdClient
@@ -19,6 +19,9 @@ from repo_policy_compliance_client import RepoPolicyComplianceClient
 
 class FlushMode(Enum):
     """Strategy for flushing runners.
+
+    During pre-job (repo-check), the runners are marked as idle and if the pre-job fails, the
+    runner falls back to being idle again. Hence wait_repo_check is required.
 
     Attributes:
         FLUSH_IDLE: Flush only idle runners.
@@ -72,6 +75,7 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
         token: GitHub personal access token to register runner to the
             repository or organization.
         dockerhub_mirror: URL of dockerhub mirror to use.
+        reactive_config: The configuration to spawn runners reactively.
     """
 
     charm_state: CharmState
@@ -81,6 +85,7 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     service_token: str
     token: str
     dockerhub_mirror: str | None = None
+    reactive_config: ReactiveConfig | None = None
 
     @property
     def are_metrics_enabled(self) -> bool:
@@ -88,8 +93,9 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
         return self.charm_state.is_metrics_logging_available
 
 
+# This class is subject to refactor.
 @dataclass
-class OpenstackRunnerManagerConfig:
+class OpenstackRunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     """Configuration of runner manager.
 
     Attributes:
@@ -100,8 +106,10 @@ class OpenstackRunnerManagerConfig:
         token: GitHub personal access token to register runner to the
             repository or organization.
         flavor: OpenStack flavor for defining the runner resources.
+        image: Openstack image id to boot the runner with.
         network: OpenStack network for runner network access.
         dockerhub_mirror: URL of dockerhub mirror to use.
+        reactive_config: The configuration to spawn runners reactively.
     """
 
     charm_state: CharmState
@@ -109,8 +117,10 @@ class OpenstackRunnerManagerConfig:
     labels: Iterable[str]
     token: str
     flavor: str
+    image: str
     network: str
     dockerhub_mirror: str | None
+    reactive_config: ReactiveConfig | None = None
 
 
 @dataclass

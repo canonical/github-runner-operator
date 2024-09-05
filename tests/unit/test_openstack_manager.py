@@ -10,23 +10,27 @@ import jinja2
 import openstack.connection
 import openstack.exceptions
 import pytest
-from fabric.connection import Connection as SshConnection
+from fabric.connection import Connection as SSHConnection
 from invoke import Result
 from openstack.compute.v2.keypair import Keypair
 from openstack.compute.v2.server import Server
+from pytest import LogCaptureFixture, MonkeyPatch
 
 import metrics.storage
-from charm_state import CharmState, ProxyConfig, RepoPolicyComplianceConfig
+import reactive.runner_manager
+from charm_state import CharmState, ProxyConfig, ReactiveConfig, RepoPolicyComplianceConfig
 from errors import OpenStackError, RunnerStartError
-from github_type import GitHubRunnerStatus, SelfHostedRunner
+from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
 from metrics import events as metric_events
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from metrics.storage import MetricsStorage
 from openstack_cloud import openstack_manager
 from openstack_cloud.openstack_manager import MAX_METRICS_FILE_SIZE, METRICS_EXCHANGE_PATH
-from runner_type import RunnerByHealth, RunnerGithubInfo
+from runner_manager_type import FlushMode
+from runner_type import RunnerGithubInfo, RunnerNameByHealth
 from tests.unit import factories
 
+FAKE_MONGODB_URI = "mongodb://example.com/db"
 CLOUD_NAME = "microstack"
 
 
@@ -53,7 +57,7 @@ def patch_get_ssh_connection_health_check_fixture(monkeypatch: pytest.MonkeyPatc
     mock_get_ssh_connection = MagicMock(
         spec=openstack_manager.OpenstackRunnerManager._get_ssh_connection
     )
-    mock_ssh_connection = MagicMock(spec=SshConnection)
+    mock_ssh_connection = MagicMock(spec=SSHConnection)
     mock_ssh_connection.host = "test host IP"
     mock_result = MagicMock(spec=Result)
     mock_result.ok = True
@@ -75,7 +79,7 @@ def ssh_connection_health_check_fixture(monkeypatch: pytest.MonkeyPatch):
     mock_get_ssh_connection = MagicMock(
         spec=openstack_manager.OpenstackRunnerManager._get_ssh_connection
     )
-    mock_ssh_connection = MagicMock(spec=SshConnection)
+    mock_ssh_connection = MagicMock(spec=SSHConnection)
     mock_ssh_connection.host = "test host IP"
     mock_result = MagicMock(spec=Result)
     mock_result.ok = True
@@ -93,7 +97,7 @@ def patch_ssh_connection_error_fixture(monkeypatch: pytest.MonkeyPatch):
     mock_get_ssh_connection = MagicMock(
         spec=openstack_manager.OpenstackRunnerManager._get_ssh_connection
     )
-    mock_ssh_connection = MagicMock(spec=SshConnection)
+    mock_ssh_connection = MagicMock(spec=SSHConnection)
     mock_result = MagicMock(spec=Result)
     mock_result.ok = False
     mock_result.stdout = "Mock stdout"
@@ -112,7 +116,7 @@ def patch_ssh_connection_error_fixture(monkeypatch: pytest.MonkeyPatch):
 def mock_github_client_fixture() -> MagicMock:
     """Mocked github client that returns runner application."""
     mock_github_client = MagicMock(spec=openstack_manager.GithubClient)
-    mock_github_client.get_runner_application.return_value = openstack_manager.RunnerApplication(
+    mock_github_client.get_runner_application.return_value = RunnerApplication(
         os="linux",
         architecture="x64",
         download_url="http://test_url",
@@ -146,10 +150,10 @@ def patched_create_connection_context_fixture(monkeypatch: pytest.MonkeyPatch):
 
 
 @pytest.fixture(name="ssh_connection_mock")
-def ssh_connection_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
+def ssh_connection_mock_fixture() -> MagicMock:
     """Return a mocked ssh connection."""
     test_file_content = secrets.token_hex(16)
-    ssh_conn_mock = MagicMock(spec=openstack_manager.SshConnection)
+    ssh_conn_mock = MagicMock(spec=openstack_manager.SSHConnection)
     ssh_conn_mock.get.side_effect = lambda remote, local: Path(local).write_text(test_file_content)
     ssh_conn_mock.run.side_effect = lambda cmd, **kwargs: (
         Result(stdout="1") if cmd.startswith("stat") else Result()
@@ -208,6 +212,7 @@ def openstack_manager_for_reconcile_fixture(
         labels=[],
         token=secrets.token_hex(16),
         flavor=app_name,
+        image="test-image-id",
         network=secrets.token_hex(16),
         dockerhub_mirror=None,
     )
@@ -232,6 +237,17 @@ def openstack_manager_for_reconcile_fixture(
     monkeypatch.setattr(openstack_manager.shutil, "chown", MagicMock())
 
     return os_runner_manager
+
+
+@pytest.fixture(name="reactive_reconcile_mock")
+def reactive_reconcile_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> MagicMock:
+    """Mock the job class."""
+    reconcile_mock = MagicMock(spec=reactive.runner_manager.reconcile)
+    monkeypatch.setattr(
+        "openstack_cloud.openstack_manager.reactive_runner_manager.reconcile", reconcile_mock
+    )
+    reconcile_mock.side_effect = lambda quantity, **kwargs: quantity
+    return reconcile_mock
 
 
 def test__create_connection_error(clouds_yaml: dict, openstack_connect_mock: MagicMock):
@@ -271,55 +287,12 @@ def test__create_connection(
 
 
 @pytest.mark.parametrize(
-    "arch",
-    [
-        pytest.param("s390x", id="s390x"),
-        pytest.param("riscv64", id="riscv64"),
-        pytest.param("ppc64el", id="ppc64el"),
-        pytest.param("armhf", id="armhf"),
-        pytest.param("test", id="test"),
-    ],
-)
-def test__get_supported_runner_arch_invalid_arch(arch: str):
-    """
-    arrange: given supported architectures.
-    act: when _get_supported_runner_arch is called.
-    assert: supported cloud image architecture type is returned.
-    """
-    with pytest.raises(openstack_manager.UnsupportedArchitectureError) as exc:
-        openstack_manager._get_supported_runner_arch(arch=arch)
-
-    assert arch in str(exc)
-
-
-@pytest.mark.parametrize(
-    "arch, image_arch",
-    [
-        pytest.param("x64", "amd64", id="x64"),
-        pytest.param("arm64", "arm64", id="arm64"),
-    ],
-)
-def test__get_supported_runner_arch(arch: str, image_arch: str):
-    """
-    arrange: given supported architectures.
-    act: when _get_supported_runner_arch is called.
-    assert: supported cloud image architecture type is returned.
-    """
-    assert openstack_manager._get_supported_runner_arch(arch=arch) == image_arch
-
-
-@pytest.mark.parametrize(
-    "proxy_config, dockerhub_mirror, ssh_debug_connections, expected_env_contents",
+    "dockerhub_mirror, ssh_debug_connections, expected_env_contents",
     [
         pytest.param(
             None,
             None,
-            None,
             """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
 
 LANG=C.UTF-8
 ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
@@ -327,33 +300,9 @@ ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
             id="all values empty",
         ),
         pytest.param(
-            openstack_manager.ProxyConfig(
-                http="http://test.internal",
-                https="https://test.internal",
-                no_proxy="http://no_proxy.internal",
-            ),
-            None,
-            None,
-            """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
-
-LANG=C.UTF-8
-ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
-""",
-            id="proxy value set",
-        ),
-        pytest.param(
-            None,
             "http://dockerhub_mirror.test",
             None,
             """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
 
 DOCKERHUB_MIRROR=http://dockerhub_mirror.test
 CONTAINER_REGISTRY_URL=http://dockerhub_mirror.test
@@ -365,7 +314,6 @@ ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
         ),
         pytest.param(
             None,
-            None,
             [
                 openstack_manager.SSHDebugConnection(
                     host="127.0.0.1",
@@ -375,10 +323,6 @@ ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
                 )
             ],
             """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
 
 LANG=C.UTF-8
 ACTIONS_RUNNER_HOOK_JOB_STARTED=/home/ubuntu/actions-runner/pre-job.sh
@@ -391,11 +335,6 @@ TMATE_SERVER_ED25519_FINGERPRINT=SHA256:tested25519
             id="ssh debug connection set",
         ),
         pytest.param(
-            openstack_manager.ProxyConfig(
-                http="http://test.internal",
-                https="https://test.internal",
-                no_proxy="http://no_proxy.internal",
-            ),
             "http://dockerhub_mirror.test",
             [
                 openstack_manager.SSHDebugConnection(
@@ -406,10 +345,6 @@ TMATE_SERVER_ED25519_FINGERPRINT=SHA256:tested25519
                 )
             ],
             """PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-
-
-
 
 DOCKERHUB_MIRROR=http://dockerhub_mirror.test
 CONTAINER_REGISTRY_URL=http://dockerhub_mirror.test
@@ -427,7 +362,6 @@ TMATE_SERVER_ED25519_FINGERPRINT=SHA256:tested25519
     ],
 )
 def test__generate_runner_env(
-    proxy_config: Optional[openstack_manager.ProxyConfig],
     dockerhub_mirror: Optional[str],
     ssh_debug_connections: Optional[list[openstack_manager.SSHDebugConnection]],
     expected_env_contents: str,
@@ -445,280 +379,6 @@ def test__generate_runner_env(
             ssh_debug_connections=ssh_debug_connections,
         )
         == expected_env_contents
-    )
-
-
-def test__build_image_command():
-    """
-    arrange: given a mock Github runner application and proxy config.
-    act: when _build_image_command is called.
-    assert: command for build image bash script with args are returned.
-    """
-    test_runner_info = openstack_manager.RunnerApplication(
-        os="linux",
-        architecture="x64",
-        download_url=(test_download_url := "https://testdownloadurl.com"),
-        filename="test_filename",
-        temp_download_token=secrets.token_hex(16),
-    )
-    test_proxy_config = openstack_manager.ProxyConfig(
-        http=(test_http_proxy := "http://proxy.test"),
-        https=(test_https_proxy := "https://proxy.test"),
-        no_proxy=(test_no_proxy := "http://no.proxy"),
-        use_aproxy=False,
-    )
-
-    command = openstack_manager._build_image_command(
-        runner_info=test_runner_info, proxies=test_proxy_config
-    )
-    assert command == [
-        "/usr/bin/bash",
-        openstack_manager.BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME,
-        test_download_url,
-        test_http_proxy,
-        test_https_proxy,
-        test_no_proxy,
-    ], "Unexpected build image command."
-
-
-def test_build_image_runner_binary_error():
-    """
-    arrange: given a mocked github client get_runner_application function that raises an error.
-    act: when build_image is called.
-    assert: ImageBuildError is raised.
-    """
-    mock_github_client = MagicMock(spec=openstack_manager.GithubClient)
-    mock_github_client.get_runner_application.side_effect = openstack_manager.RunnerBinaryError
-
-    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
-        openstack_manager.build_image(
-            arch=openstack_manager.Arch.X64,
-            cloud_config=MagicMock(),
-            github_client=mock_github_client,
-            path=MagicMock(),
-        )
-
-    assert "Failed to fetch runner application." in str(exc)
-
-
-def test_build_image_script_error(monkeypatch: pytest.MonkeyPatch):
-    """
-    arrange: given a monkeypatched execute_command function that raises an error.
-    act: when build_image is called.
-    assert: ImageBuildError is raised.
-    """
-    monkeypatch.setattr(
-        openstack_manager,
-        "execute_command",
-        MagicMock(
-            side_effect=openstack_manager.SubprocessError(
-                cmd=[], return_code=1, stdout="", stderr=""
-            )
-        ),
-    )
-
-    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
-        openstack_manager.build_image(
-            arch=openstack_manager.Arch.X64,
-            cloud_config=MagicMock(),
-            github_client=MagicMock(),
-            path=MagicMock(),
-        )
-
-    assert "Failed to build image." in str(exc)
-
-
-@pytest.mark.usefixtures("patch_execute_command")
-def test_build_image_runner_arch_error(
-    monkeypatch: pytest.MonkeyPatch, mock_github_client: MagicMock
-):
-    """
-    arrange: given _get_supported_runner_arch that raises unsupported architecture error.
-    act: when build_image is called.
-    assert: ImageBuildError error is raised with unsupported arch message.
-    """
-    mock_get_supported_runner_arch = MagicMock(
-        spec=openstack_manager._get_supported_runner_arch,
-        side_effect=openstack_manager.UnsupportedArchitectureError(arch="x64"),
-    )
-    monkeypatch.setattr(
-        openstack_manager, "_get_supported_runner_arch", mock_get_supported_runner_arch
-    )
-
-    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
-        openstack_manager.build_image(
-            arch=openstack_manager.Arch.X64,
-            cloud_config=MagicMock(),
-            github_client=mock_github_client,
-            path=MagicMock(),
-        )
-
-    assert "Unsupported architecture" in str(exc)
-
-
-@pytest.mark.usefixtures("patch_execute_command")
-def test_build_image_delete_image_error(
-    mock_github_client: MagicMock, patched_create_connection_context: MagicMock
-):
-    """
-    arrange: given a mocked openstack connection that returns existing images and delete_image \
-        that returns False (failed to delete image).
-    act: when build_image is called.
-    assert: ImageBuildError is raised.
-    """
-    patched_create_connection_context.search_images.return_value = (
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-    )
-    patched_create_connection_context.delete_image.return_value = False
-
-    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
-        openstack_manager.build_image(
-            arch=openstack_manager.Arch.X64,
-            cloud_config=MagicMock(),
-            github_client=mock_github_client,
-            path=MagicMock(),
-        )
-
-    assert "Failed to delete duplicate image on Openstack." in str(exc)
-
-
-@pytest.mark.usefixtures("patch_execute_command")
-def test_build_image_create_image_error(
-    patched_create_connection_context: MagicMock, mock_github_client: MagicMock
-):
-    """
-    arrange: given a mocked connection that raises OpenStackCloudException on create_image.
-    act: when build_image is called.
-    assert: ImageBuildError is raised.
-    """
-    patched_create_connection_context.create_image.side_effect = (
-        openstack_manager.OpenStackCloudException
-    )
-
-    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
-        openstack_manager.build_image(
-            arch=openstack_manager.Arch.X64,
-            cloud_config=MagicMock(),
-            github_client=mock_github_client,
-            path=MagicMock(),
-            proxies=None,
-        )
-
-    assert "Failed to update image" in str(exc)
-
-
-@pytest.mark.usefixtures("patch_execute_command")
-def test_build_image(
-    patched_create_connection_context: MagicMock,
-    mock_github_client: MagicMock,
-):
-    """
-    arrange: given monkeypatched execute_command and mocked openstack connection.
-    act: when build_image is called.
-    assert: Openstack image is successfully created.
-    """
-    patched_create_connection_context.search_images.return_value = (
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-    )
-
-    openstack_manager.build_image(
-        arch=openstack_manager.Arch.X64,
-        cloud_config=MagicMock(),
-        github_client=mock_github_client,
-        path=MagicMock(),
-    )
-
-
-@pytest.mark.usefixtures("patch_execute_command")
-def test_build_image_on_arm64(
-    patched_create_connection_context: MagicMock, mock_github_client: MagicMock
-):
-    """
-    arrange: given monkeypatched execute_command and mocked openstack connection.
-    act: when build_image is called on arm64.
-    assert: Openstack image is successfully created.
-    """
-    patched_create_connection_context.search_images.return_value = (
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-    )
-
-    openstack_manager.build_image(
-        arch=openstack_manager.Arch.ARM64,
-        cloud_config=MagicMock(),
-        github_client=mock_github_client,
-        path=MagicMock(),
-    )
-
-
-@pytest.mark.usefixtures("patch_execute_command")
-def test_build_image_on_unsupported_arch(
-    patched_create_connection_context: MagicMock, mock_github_client: MagicMock
-):
-    """
-    arrange: given monkeypatched execute_command and mocked openstack connection.
-    act: when build_image is called on unknown architecture.
-    assert: UnsupportedArchitectureError is raised.
-    """
-    patched_create_connection_context.search_images.return_value = (
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-    )
-
-    with pytest.raises(openstack_manager.OpenstackImageBuildError) as exc:
-        openstack_manager.build_image(
-            # Use mock to represent unknown architecture.
-            arch=MagicMock(),
-            cloud_config=MagicMock(),
-            github_client=mock_github_client,
-            path=MagicMock(),
-        )
-    assert str(exc.value) == "Unsupported architecture x64"
-
-
-@pytest.mark.usefixtures("patch_execute_command")
-def test_build_image_with_proxy_config(
-    patched_create_connection_context: MagicMock, mock_github_client: MagicMock
-):
-    """
-    arrange: given monkeypatched execute_command and mocked openstack connection.
-    act: when build_image is called with various valid ProxyConfig objects.
-    assert: Openstack image is successfully created.
-    """
-    patched_create_connection_context.search_images.return_value = (
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-        MagicMock(spec=openstack_manager.openstack.image.v2.image.Image),
-    )
-
-    test_proxy_config = openstack_manager.ProxyConfig(
-        http=None,
-        https=None,
-        no_proxy=None,
-        use_aproxy=False,
-    )
-
-    openstack_manager.build_image(
-        arch=openstack_manager.Arch.ARM64,
-        cloud_config=MagicMock(),
-        github_client=mock_github_client,
-        path=MagicMock(),
-        proxies=test_proxy_config,
-    )
-
-    test_proxy_config = openstack_manager.ProxyConfig(
-        http="http://proxy.test",
-        https="https://proxy.test",
-        no_proxy="http://no.proxy",
-        use_aproxy=False,
-    )
-
-    openstack_manager.build_image(
-        arch=openstack_manager.Arch.ARM64,
-        cloud_config=MagicMock(),
-        github_client=mock_github_client,
-        path=MagicMock(),
-        proxies=test_proxy_config,
     )
 
 
@@ -806,7 +466,7 @@ def test_reconcile_pulls_metric_files(
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
-        return_value=RunnerByHealth(healthy=(), unhealthy=("test_runner",))
+        return_value=RunnerNameByHealth(healthy=(), unhealthy=("test_runner",))
     )
     ssh_connection_mock.get.side_effect = MagicMock()
     openstack_manager_for_reconcile.reconcile(quantity=0)
@@ -841,7 +501,7 @@ def test_reconcile_does_not_pull_too_large_files(
         Result(stdout=f"{MAX_METRICS_FILE_SIZE + 1}") if cmd.startswith("stat") else Result()
     )
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
-        return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
+        return_value=RunnerNameByHealth(healthy=("test_runner",), unhealthy=())
     )
 
     openstack_manager_for_reconcile.reconcile(quantity=0)
@@ -866,7 +526,7 @@ def test_reconcile_issue_reconciliation_metrics(
     monkeypatch.setattr(openstack_manager.metrics_storage, "create", MagicMock(return_value=ms))
     monkeypatch.setattr(openstack_manager.metrics_storage, "get", MagicMock(return_value=ms))
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
-        return_value=RunnerByHealth(healthy=("test_runner",), unhealthy=())
+        return_value=RunnerNameByHealth(healthy=("test_runner",), unhealthy=())
     )
 
     openstack_manager.runner_metrics.extract.return_value = (MagicMock() for _ in range(2))
@@ -931,7 +591,7 @@ def test_reconcile_ignores_metrics_for_openstack_online_runners(
         ]
     }
     openstack_manager_for_reconcile._get_openstack_runner_status = MagicMock(
-        return_value=RunnerByHealth(
+        return_value=RunnerNameByHealth(
             healthy=(runner_names["healthy_online"], runner_names["healthy_offline"]),
             unhealthy=(
                 runner_names["unhealthy_online"],
@@ -988,7 +648,31 @@ def test_reconcile_ignores_metrics_for_openstack_online_runners(
 
     openstack_manager.runner_metrics.extract.assert_called_once_with(
         metrics_storage_manager=metrics.storage,
-        ignore_runners=set(openstack_online_runner_names),
+        runners=set(openstack_online_runner_names),
+    )
+
+
+def test_reconcile_reactive_mode(
+    openstack_manager_for_reconcile: openstack_manager.OpenstackRunnerManager,
+    reactive_reconcile_mock: MagicMock,
+    caplog: LogCaptureFixture,
+):
+    """
+    arrange: Enable reactive mode and mock the job class to return a job.
+    act: Call reconcile with a random quantity n.
+    assert: The mocked job is picked up n times and the expected log message is present.
+    """
+    count = random.randint(0, 5)
+    openstack_manager_for_reconcile._config.reactive_config = ReactiveConfig(
+        mq_uri=FAKE_MONGODB_URI
+    )
+    actual_count = openstack_manager_for_reconcile.reconcile(quantity=count)
+
+    assert actual_count == count
+    reactive_reconcile_mock.assert_called_with(
+        quantity=count,
+        mq_uri=FAKE_MONGODB_URI,
+        queue_name=openstack_manager_for_reconcile.app_name,
     )
 
 
@@ -1034,13 +718,16 @@ def test__ensure_security_group_with_existing_rules():
     assert: The security rules are not created again.
     """
     connection_mock = MagicMock(spec=openstack.connection.Connection)
-    connection_mock.get_security_group.return_value = {
-        "security_group_rules": [
-            {"protocol": "icmp"},
-            {"protocol": "tcp", "port_range_min": 22, "port_range_max": 22},
-            {"protocol": "tcp", "port_range_min": 10022, "port_range_max": 10022},
-        ]
-    }
+    connection_mock.list_security_groups.return_value = [
+        {
+            "security_group_rules": [
+                {"protocol": "icmp"},
+                {"protocol": "tcp", "port_range_min": 22, "port_range_max": 22},
+                {"protocol": "tcp", "port_range_min": 10022, "port_range_max": 10022},
+            ],
+            "id": "TEST_ID",
+        }
+    ]
 
     openstack_manager.OpenstackRunnerManager._ensure_security_group(connection_mock)
     connection_mock.create_security_group_rule.assert_not_called()
@@ -1073,21 +760,31 @@ def test__get_ssh_connection(
     assert conn is not None
 
 
-def test__ssh_health_check_success(
-    mock_server: MagicMock,
-):
+@pytest.mark.usefixtures("skip_retry")
+def test__ssh_health_check_success(monkeypatch: pytest.MonkeyPatch, mock_server: MagicMock):
     """
     arrange: A server with SSH correctly setup.
     act: Run health check on the server.
     assert: The health check passes.
     """
+    ssh_connection_mock = MagicMock()
+    result_mock = MagicMock()
+    result_mock.stdout = "/home/ubuntu/actions-runner/run.sh\nRunner.Worker"
+    ssh_connection_mock.run.return_value = result_mock
+    monkeypatch.setattr(
+        openstack_manager.OpenstackRunnerManager,
+        "_get_ssh_connection",
+        MagicMock(return_value=ssh_connection_mock),
+    )
     mock_connection = MagicMock(spec=openstack.connection.Connection)
     mock_connection.get_server.return_value = mock_server
+
     assert openstack_manager.OpenstackRunnerManager._ssh_health_check(
         mock_connection, mock_server.name, False
     )
 
 
+@pytest.mark.usefixtures("skip_retry")
 def test__ssh_health_check_no_key(mock_server: MagicMock):
     """
     arrange: A server with no key available.
@@ -1100,22 +797,36 @@ def test__ssh_health_check_no_key(mock_server: MagicMock):
     mock_connection = MagicMock(spec=openstack.connection.Connection)
     mock_connection.get_server.return_value = mock_server
 
-    assert openstack_manager.OpenstackRunnerManager._ssh_health_check(
-        mock_connection, mock_server.name, False
-    )
+    with pytest.raises(openstack_manager._SSHError) as exc:
+        openstack_manager.OpenstackRunnerManager._ssh_health_check(
+            mock_connection, mock_server.name, False
+        )
+
+    assert "no valid keypair found" in str(exc)
 
 
-def test__ssh_health_check_error(mock_server: MagicMock, patch_ssh_connection_error):
+@pytest.mark.usefixtures("skip_retry")
+def test__ssh_health_check_error(monkeypatch: pytest.MonkeyPatch, mock_server: MagicMock):
     """
     arrange: A server with error on SSH run.
     act: Run health check on the server.
     assert: The health check fails.
     """
+    monkeypatch.setattr(openstack_manager.OpenstackRunnerManager, "_get_key_path", MagicMock())
     mock_connection = MagicMock(spec=openstack.connection.Connection)
     mock_connection.get_server.return_value = mock_server
-    openstack_manager.OpenstackRunnerManager._ssh_health_check(
-        mock_connection, mock_server.name, False
+    mock_ssh_connection = MagicMock()
+    mock_ssh_connection.run = MagicMock(side_effect=TimeoutError)
+    monkeypatch.setattr(
+        openstack_manager, "SSHConnection", MagicMock(return_value=mock_ssh_connection)
     )
+
+    with pytest.raises(openstack_manager._SSHError) as exc:
+        openstack_manager.OpenstackRunnerManager._ssh_health_check(
+            mock_connection, mock_server.name, False
+        )
+
+    assert "No connectable SSH addresses found" in str(exc)
 
 
 def test__wait_until_runner_process_running_no_server():
@@ -1377,7 +1088,7 @@ def test__get_ssh_connection_server_no_valid_connections(
     mock_ssh_connection = MagicMock()
     mock_ssh_connection.run = run
     monkeypatch.setattr(
-        openstack_manager, "SshConnection", MagicMock(return_value=mock_ssh_connection)
+        openstack_manager, "SSHConnection", MagicMock(return_value=mock_ssh_connection)
     )
 
     with pytest.raises(openstack_manager._SSHError) as exc:
@@ -1409,7 +1120,7 @@ def test__get_ssh_connection_server(monkeypatch: pytest.MonkeyPatch):
         return_value=factories.MockSSHRunResult(exited=0, stdout="hello world")
     )
     monkeypatch.setattr(
-        openstack_manager, "SshConnection", MagicMock(return_value=mock_ssh_connection)
+        openstack_manager, "SSHConnection", MagicMock(return_value=mock_ssh_connection)
     )
 
     assert (
@@ -1418,3 +1129,72 @@ def test__get_ssh_connection_server(monkeypatch: pytest.MonkeyPatch):
         )
         == mock_ssh_connection
     )
+
+
+def test_flush(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: given monkeypatched sub functions of flush.
+    act: when flush is called.
+    assert: sub functions are called.
+    """
+    monkeypatch.setattr(openstack_manager, "_create_connection", MagicMock())
+    monkeypatch.setattr(openstack_manager, "set_env_var", MagicMock())
+    runner_manager = openstack_manager.OpenstackRunnerManager(
+        app_name=MagicMock(),
+        unit_num=MagicMock(),
+        openstack_runner_manager_config=MagicMock(),
+        cloud_config=MagicMock(),
+    )
+    runner_manager._kill_runner_processes = MagicMock()
+    runner_manager._get_openstack_runner_status = MagicMock()
+    runner_manager._github = MagicMock()
+    runner_manager._remove_runners = MagicMock()
+
+    runner_manager.flush(mode=MagicMock())
+
+    runner_manager._kill_runner_processes.assert_called()
+    runner_manager._get_openstack_runner_status.assert_called()
+    runner_manager._github.get_runner_remove_token.assert_called()
+    runner_manager._remove_runners.assert_called()
+
+
+@pytest.mark.parametrize(
+    "flush_mode, expected_command",
+    [
+        pytest.param(
+            FlushMode.FLUSH_BUSY,
+            "pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);"
+            "pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);",
+            id="Flush Busy",
+        ),
+        pytest.param(
+            FlushMode.FLUSH_IDLE,
+            "! pgrep -x Runner.Worker && pgrep -x Runner.Listener && "
+            "kill $(pgrep -x Runner.Listener)",
+            id="Flush Idle",
+        ),
+    ],
+)
+def test__kill_runner_processes(
+    monkeypatch: pytest.MonkeyPatch, flush_mode: FlushMode, expected_command: str
+):
+    """
+    arrange: given supported flush modes.
+    act: when _kill_runner_processes is called.
+    assert: expected kill commands are issued.
+    """
+    monkeypatch.setattr(openstack_manager, "_create_connection", MagicMock())
+    monkeypatch.setattr(openstack_manager, "set_env_var", MagicMock())
+    runner_manager = openstack_manager.OpenstackRunnerManager(
+        app_name=MagicMock(),
+        unit_num=MagicMock(),
+        openstack_runner_manager_config=MagicMock(),
+        cloud_config=MagicMock(),
+    )
+    runner_manager._get_openstack_instances = MagicMock(return_value=[MagicMock(), MagicMock()])
+    mock_connection = MagicMock()
+    runner_manager._get_ssh_connection = MagicMock(return_value=mock_connection)
+
+    runner_manager._kill_runner_processes(conn=MagicMock(), mode=flush_mode)
+
+    mock_connection.run.assert_called_with(expected_command, warn=True)

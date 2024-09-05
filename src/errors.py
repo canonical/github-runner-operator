@@ -47,6 +47,10 @@ class ConfigurationError(Exception):
     """Error for juju configuration."""
 
 
+class MissingMongoDBError(Exception):
+    """Error for missing integration data."""
+
+
 class LxdError(Exception):
     """Error for executing LXD actions."""
 
@@ -164,9 +168,9 @@ class OpenStackUnauthorizedError(OpenStackError):
     """Represents an unauthorized connection to OpenStack."""
 
 
-class OpenstackImageBuildError(Exception):
-    """Exception representing an error during image build process."""
+class SSHError(Exception):
+    """Represents an error while interacting with SSH."""
 
 
-class OpenstackInstanceLaunchError(Exception):
-    """Exception representing an error during instance launch process."""
+class KeyfileError(SSHError):
+    """Represents missing keyfile for SSH."""

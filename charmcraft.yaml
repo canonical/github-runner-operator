@@ -12,10 +12,15 @@ parts:
       - libssl-dev  # for cryptography
       - rust-all  # for cryptography
       - pkg-config # for cryptography
+  scripts:
+    plugin: dump
+    source: scripts
+    organize:
+      build-lxd-image.sh: scripts/build-lxd-image.sh
+      reactive_runner.py: scripts/reactive_runner.py
+      repo_policy_compliance_service.py: scripts/repo_policy_compliance_service.py
     prime:
-      - scripts/build-lxd-image.sh
-      - scripts/build-openstack-image.sh
-      - scripts/repo_policy_compliance_service.py
+      - scripts/
 bases:
   - build-on:
     - name: "ubuntu"

@@ -20,7 +20,12 @@ from juju.unit import Unit
 from github_type import JobConclusion
 from metrics.events import METRICS_LOG_PATH
 from metrics.runner import PostJobStatus
-from tests.integration.helpers.common import InstanceHelper, run_in_unit, wait_for
+from tests.integration.helpers.common import (
+    InstanceHelper,
+    get_file_content,
+    run_in_unit,
+    wait_for,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -131,14 +136,7 @@ async def get_metrics_log(unit: Unit) -> str:
     Returns:
         The metrics log.
     """
-    retcode, stdout, stderr = await run_in_unit(
-        unit=unit,
-        command=f"if [ -f {METRICS_LOG_PATH} ]; then cat {METRICS_LOG_PATH}; else echo ''; fi",
-    )
-    assert retcode == 0, f"Failed to get metrics log: {stdout} {stderr}"
-    assert stdout is not None, "Failed to get metrics log, no stdout message"
-    logging.info("Metrics log: %s", stdout)
-    return stdout.strip()
+    return await get_file_content(unit=unit, filepath=METRICS_LOG_PATH)
 
 
 async def cancel_workflow_run(

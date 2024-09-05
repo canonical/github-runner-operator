@@ -4,6 +4,7 @@
 """Integration tests for github-runner charm with no runner."""
 import functools
 import json
+import logging
 from datetime import datetime, timezone
 
 import pytest
@@ -23,6 +24,8 @@ from tests.integration.helpers.common import (
 )
 from tests.integration.helpers.lxd import wait_till_num_of_runners
 from tests.status_name import ACTIVE
+
+logger = logging.getLogger(__name__)
 
 REPO_POLICY_COMPLIANCE_VER_0_2_GIT_SOURCE = (
     "git+https://github.com/canonical/"
@@ -210,16 +213,21 @@ async def test_charm_no_runner_upgrade(
     act: Upgrade the charm.
     assert: The upgrade_charm hook ran successfully and the image has not been rebuilt.
     """
+    logger.info("Wait for idlle before test start")
+    await model.wait_for_idle(apps=[app_no_runner.name])
     start_time = datetime.now(tz=timezone.utc)
 
+    logger.info("Refreshing runner")
     await app_no_runner.refresh(path=charm_file)
 
     unit = app_no_runner.units[0]
+    logger.info("Waiting for upgrade event")
     await wait_for(
         functools.partial(is_upgrade_charm_event_emitted, unit), timeout=360, check_interval=60
     )
     await model.wait_for_idle(status=ACTIVE)
 
+    logger.info("Running 'lxd image list' in unit")
     ret_code, stdout, stderr = await run_in_unit(
         unit=unit, command="/snap/bin/lxc image list --format json"
     )

@@ -18,6 +18,7 @@ import requests
 import requests.adapters
 import urllib3
 
+import reactive.runner_manager as reactive_runner_manager
 import shared_fs
 from charm_state import VirtualMachineResources
 from errors import (
@@ -42,7 +43,7 @@ from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import FlushMode, RunnerInfo, RunnerManagerClients, RunnerManagerConfig
 from runner_type import ProxySetting as RunnerProxySetting
-from runner_type import RunnerByHealth
+from runner_type import RunnerNameByHealth
 from utilities import execute_command, retry, set_env_var
 
 REMOVED_RUNNER_LOG_STR = "Removed runner: %s"
@@ -165,7 +166,7 @@ class RunnerManager:
 
         try:
             # Download the new file
-            response = self.session.get(binary["download_url"], stream=True)
+            response = self.session.get(binary["download_url"], stream=True, timeout=10 * 60)
 
             logger.info(
                 "Download of runner binary from %s return status code: %i",
@@ -221,7 +222,7 @@ class RunnerManager:
             for runner in remote_runners.values()
         )
 
-    def _get_runner_health_states(self) -> RunnerByHealth:
+    def _get_runner_health_states(self) -> RunnerNameByHealth:
         """Get all runners sorted into health groups.
 
         Returns:
@@ -238,13 +239,15 @@ class RunnerManager:
         unhealthy = []
 
         for runner in local_runners:
-            _, stdout, _ = runner.execute(["ps", "aux"])
+            # we need to hide the command to prevent sensitive information on the workload
+            # from being exposed.
+            _, stdout, _ = runner.execute(["ps", "aux"], hide_cmd=True)
             if f"/bin/bash {Runner.runner_script}" in stdout.read().decode("utf-8"):
                 healthy.append(runner.name)
             else:
                 unhealthy.append(runner.name)
 
-        return RunnerByHealth(healthy, unhealthy)
+        return RunnerNameByHealth(healthy, unhealthy)
 
     def _create_runner(
         self, registration_token: str, resources: VirtualMachineResources, runner: Runner
@@ -322,7 +325,7 @@ class RunnerManager:
 
         total_stats: IssuedMetricEventsStats = {}
         for extracted_metrics in runner_metrics.extract(
-            metrics_storage_manager=shared_fs, ignore_runners=set(runner_states.healthy)
+            metrics_storage_manager=shared_fs, runners=set(runner_states.healthy)
         ):
             try:
                 job_metrics = github_metrics.job(
@@ -488,7 +491,7 @@ class RunnerManager:
             logger.info("There are no idle runners to remove.")
 
     def _cleanup_offline_runners(
-        self, runner_states: RunnerByHealth, all_runners: list[Runner]
+        self, runner_states: RunnerNameByHealth, all_runners: list[Runner]
     ) -> None:
         """Cleanup runners that are not running the github run.sh script.
 
@@ -526,6 +529,9 @@ class RunnerManager:
         Returns:
             Difference between intended runners and actual runners.
         """
+        if self.config.reactive_config:
+            logger.info("Reactive configuration detected, going into experimental reactive mode.")
+            return self._reconcile_reactive(quantity)
         start_ts = time.time()
 
         runners = self._get_runners()
@@ -569,6 +575,21 @@ class RunnerManager:
                 reconciliation_end_ts=end_ts,
             )
         return delta
+
+    def _reconcile_reactive(self, quantity: int) -> int:
+        """Reconcile runners reactively.
+
+        Args:
+            quantity: Number of intended runners.
+
+        Returns:
+            The difference between intended runners and actual runners. In reactive mode
+            this number is never negative as additional processes should terminate after a timeout.
+        """
+        logger.info("Reactive mode is experimental and not yet fully implemented.")
+        return reactive_runner_manager.reconcile(
+            quantity=quantity, mq_uri=self.config.reactive_config.mq_uri, queue_name=self.app_name
+        )
 
     def _runners_in_pre_job(self) -> bool:
         """Check there exist runners in the pre-job script stage.
@@ -651,11 +672,11 @@ class RunnerManager:
                     )
                 )
 
-        if mode in {
+        if mode in (
             FlushMode.FLUSH_BUSY_WAIT_REPO_CHECK,
             FlushMode.FLUSH_BUSY,
             FlushMode.FORCE_FLUSH_WAIT_REPO_CHECK,
-        }:
+        ):
             busy_runners = [runner for runner in self._get_runners() if runner.status.exist]
 
             logger.info("Removing existing %i busy local runners", len(runners))

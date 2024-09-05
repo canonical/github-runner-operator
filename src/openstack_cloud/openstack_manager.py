@@ -1,10 +1,10 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-# 2024/04/11 The module contains too many lines which are scheduled for refactoring.
+# TODO: 2024-04-11 The module contains too many lines which are scheduled for refactoring.
 # pylint: disable=too-many-lines
 
-# 2024/04/22 The module contains duplicate code which is scheduled for refactoring.
+# TODO: 2024-04-22 The module contains duplicate code which is scheduled for refactoring.
 # Lines related to issuing metrics are duplicated:
 #  ==openstack_cloud.openstack_manager:[1320:1337]
 #  ==runner_manager:[383:413]
@@ -20,9 +20,10 @@ import shutil
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass
+from datetime import datetime
 from multiprocessing import Pool
 from pathlib import Path
-from typing import Iterable, Iterator, Literal, NamedTuple, Optional, cast
+from typing import Iterable, Iterator, Literal, Optional, cast
 
 import invoke
 import jinja2
@@ -31,21 +32,15 @@ import openstack.connection
 import openstack.exceptions
 import openstack.image.v2.image
 import paramiko
-from fabric import Connection as SshConnection
-from invoke.runners import Result
+from fabric import Connection as SSHConnection
 from openstack.compute.v2.server import Server
 from openstack.connection import Connection as OpenstackConnection
-from openstack.exceptions import OpenStackCloudException, SDKException
+from openstack.exceptions import SDKException
+from openstack.network.v2.security_group import SecurityGroup
 from paramiko.ssh_exception import NoValidConnectionsError
 
-from charm_state import (
-    Arch,
-    CharmState,
-    GithubOrg,
-    ProxyConfig,
-    SSHDebugConnection,
-    UnsupportedArchitectureError,
-)
+import reactive.runner_manager as reactive_runner_manager
+from charm_state import CharmState, GithubOrg, ProxyConfig, SSHDebugConnection
 from errors import (
     CreateMetricsStorageError,
     GetMetricsStorageError,
@@ -54,15 +49,11 @@ from errors import (
     GithubMetricsError,
     IssueMetricEventError,
     OpenStackError,
-    OpenstackImageBuildError,
-    OpenstackInstanceLaunchError,
-    RunnerBinaryError,
     RunnerCreateError,
     RunnerStartError,
-    SubprocessError,
 )
 from github_client import GithubClient
-from github_type import GitHubRunnerStatus, RunnerApplication, SelfHostedRunner
+from github_type import GitHubRunnerStatus, SelfHostedRunner
 from metrics import events as metric_events
 from metrics import github as github_metrics
 from metrics import runner as runner_metrics
@@ -70,15 +61,12 @@ from metrics import storage as metrics_storage
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from runner_manager import IssuedMetricEventsStats
-from runner_manager_type import OpenstackRunnerManagerConfig
-from runner_type import GithubPath, RunnerByHealth, RunnerGithubInfo
-from utilities import execute_command, retry, set_env_var
+from runner_manager_type import FlushMode, OpenstackRunnerManagerConfig
+from runner_type import GithubPath, RunnerGithubInfo, RunnerNameByHealth
+from utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
 
-IMAGE_PATH_TMPL = "jammy-server-cloudimg-{architecture}-compressed.img"
-# Update the version when the image is not backward compatible.
-IMAGE_NAME = "github-runner-jammy-v1"
 # Update the version when the security group rules are not backward compatible.
 SECURITY_GROUP_NAME = "github-runner-v1"
 BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
@@ -125,18 +113,18 @@ class InstanceConfig:
     """The configuration values for creating a single runner instance.
 
     Attributes:
-        name: Name of the image to launch the GitHub runner instance with.
-        labels: The runner instance labels.
-        registration_token: Token for registering the runner on GitHub.
         github_path: The GitHub repo/org path to register the runner.
-        openstack_image: The Openstack image to use to boot the instance with.
+        image_id: The Openstack image id to use to boot the instance with.
+        labels: The runner instance labels.
+        name: Name of the image to launch the GitHub runner instance with.
+        registration_token: Token for registering the runner on GitHub.
     """
 
-    name: str
-    labels: Iterable[str]
-    registration_token: str
     github_path: GithubPath
-    openstack_image: str
+    image_id: str
+    labels: Iterable[str]
+    name: str
+    registration_token: str
 
 
 SupportedCloudImageArch = Literal["amd64", "arm64"]
@@ -157,8 +145,8 @@ class _CloudInitUserData:
     instance_config: InstanceConfig
     runner_env: str
     pre_job_contents: str
-    proxies: Optional[ProxyConfig] = None
     dockerhub_mirror: Optional[str] = None
+    proxies: Optional[ProxyConfig] = None
 
 
 @contextmanager
@@ -195,251 +183,36 @@ def _create_connection(cloud_config: dict[str, dict]) -> Iterator[openstack.conn
         raise OpenStackError("Failed OpenStack API call") from exc
 
 
-class ProxyStringValues(NamedTuple):
-    """Wrapper class to proxy values to string.
-
-    Attributes:
-        http: HTTP proxy address.
-        https: HTTPS proxy address.
-        no_proxy: Comma-separated list of hosts that should not be proxied.
-    """
-
-    http: str
-    https: str
-    no_proxy: str
-
-
-def _get_default_proxy_values(proxies: Optional[ProxyConfig] = None) -> ProxyStringValues:
-    """Get default proxy string values, empty string if None.
-
-    Used to parse proxy values for file configurations, empty strings if None.
-
-    Args:
-        proxies: The proxy configuration information.
-
-    Returns:
-        Proxy strings if set, empty string otherwise.
-    """
-    if not proxies:
-        return ProxyStringValues(http="", https="", no_proxy="")
-    return ProxyStringValues(
-        http=str(proxies.http or ""),
-        https=str(proxies.https or ""),
-        no_proxy=proxies.no_proxy or "",
-    )
-
-
-def _build_image_command(
-    runner_info: RunnerApplication,
-    proxies: Optional[ProxyConfig] = None,
-) -> list[str]:
-    """Get command for building runner image.
-
-    Args:
-        runner_info: The runner application to fetch runner tar download url.
-        proxies: HTTP proxy settings.
-
-    Returns:
-        Command to execute to build runner image.
-    """
-    proxy_values = _get_default_proxy_values(proxies=proxies)
-    cmd = [
-        "/usr/bin/bash",
-        BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME,
-        runner_info["download_url"],
-        proxy_values.http,
-        proxy_values.https,
-        proxy_values.no_proxy,
-    ]
-    return cmd
-
-
-def _get_supported_runner_arch(arch: str) -> SupportedCloudImageArch:
-    """Validate and return supported runner architecture.
-
-    The supported runner architecture takes in arch value from Github supported architecture and
-    outputs architectures supported by ubuntu cloud images.
-    See: https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners\
-/about-self-hosted-runners#architectures
-    and https://cloud-images.ubuntu.com/jammy/current/
-
-    Args:
-        arch: The compute architecture to check support for.
-
-    Raises:
-        UnsupportedArchitectureError: If an unsupported architecture was passed.
-
-    Returns:
-        The supported architecture.
-    """
-    match arch:
-        case Arch.X64:
-            return "amd64"
-        case Arch.ARM64:
-            return "arm64"
-        case _:
-            raise UnsupportedArchitectureError(arch)
-
-
-def _get_openstack_architecture(arch: Arch) -> str:
-    """Get openstack architecture.
-
-    See https://docs.openstack.org/glance/latest/admin/useful-image-properties.html
-
-    Args:
-        arch: The architecture the runner is running on.
-
-    Raises:
-        UnsupportedArchitectureError: If an unsupported architecture was passed.
-
-    Returns:
-        The architecture formatted for openstack image property.
-    """
-    match arch:
-        case arch.X64:
-            return "x86_64"
-        case arch.ARM64:
-            return "aarch64"
-        case _:
-            raise UnsupportedArchitectureError(arch)
-
-
-class OpenstackUpdateImageError(Exception):
-    """Represents an error while updating image on Openstack."""
-
-
-@retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
-def _update_image(
-    cloud_config: dict[str, dict], ubuntu_image_arch: str, openstack_image_arch: str
-) -> int:
-    """Update the openstack image if it exists, create new otherwise.
-
-    Args:
-        cloud_config: The cloud configuration to connect OpenStack with.
-        ubuntu_image_arch: The cloud-image architecture.
-        openstack_image_arch: The Openstack image architecture.
-
-    Raises:
-        OpenstackUpdateImageError: If there was an error interacting with images on Openstack.
-
-    Returns:
-        The created image ID.
-    """
-    try:
-        with _create_connection(cloud_config) as conn:
-            existing_image: openstack.image.v2.image.Image
-            for existing_image in conn.search_images(name_or_id=IMAGE_NAME):
-                # images with same name (different ID) can be created and will error during server
-                # instantiation.
-                if not conn.delete_image(name_or_id=existing_image.id, wait=True):
-                    raise OpenstackUpdateImageError(
-                        "Failed to delete duplicate image on Openstack."
-                    )
-            image: openstack.image.v2.image.Image = conn.create_image(
-                name=IMAGE_NAME,
-                filename=IMAGE_PATH_TMPL.format(architecture=ubuntu_image_arch),
-                wait=True,
-                properties={"architecture": openstack_image_arch},
-            )
-            return image.id
-    except OpenStackCloudException as exc:
-        raise OpenstackUpdateImageError("Failed to upload image.") from exc
-
-
-# Ignore the flake8 function too complex (C901). The function does not have much logic, the lint
-# is likely triggered with the multiple try-excepts, which are needed.
-def build_image(  # noqa: C901
-    arch: Arch,
-    cloud_config: dict[str, dict],
-    github_client: GithubClient,
-    path: GithubPath,
-    proxies: Optional[ProxyConfig] = None,
-) -> str:
-    """Build and upload an image to OpenStack.
-
-    Args:
-        arch: The architecture of the image.
-        cloud_config: The cloud configuration to connect OpenStack with.
-        github_client: The Github client to interact with Github API.
-        path: Github organisation or repository path.
-        proxies: HTTP proxy settings.
-
-    Raises:
-        OpenstackImageBuildError: If there were errors building/creating the image.
-
-    Returns:
-        The created OpenStack image id.
-    """
-    # Setting the env var to this process and any child process spawned.
-    # Needed for GitHub API with GhApi used by GithubClient class.
-    if proxies is not None:
-        if no_proxy := proxies.no_proxy:
-            set_env_var("NO_PROXY", no_proxy)
-        if http_proxy := proxies.http:
-            set_env_var("HTTP_PROXY", http_proxy)
-        if https_proxy := proxies.https:
-            set_env_var("HTTPS_PROXY", https_proxy)
-
-    try:
-        runner_application = github_client.get_runner_application(path=path, arch=arch)
-    except RunnerBinaryError as exc:
-        raise OpenstackImageBuildError("Failed to fetch runner application.") from exc
-
-    try:
-        execute_command(
-            _build_image_command(runner_application, proxies),
-            check_exit=True,
-        )
-    except SubprocessError as exc:
-        raise OpenstackImageBuildError("Failed to build image.") from exc
-
-    runner_arch = runner_application["architecture"]
-    try:
-        image_arch = _get_supported_runner_arch(arch=arch)
-    except UnsupportedArchitectureError as exc:
-        raise OpenstackImageBuildError(f"Unsupported architecture {runner_arch}") from exc
-
-    try:
-        return _update_image(
-            cloud_config=cloud_config,
-            ubuntu_image_arch=image_arch,
-            openstack_image_arch=_get_openstack_architecture(arch),
-        )
-    except OpenstackUpdateImageError as exc:
-        raise OpenstackImageBuildError(f"Failed to update image, {exc}") from exc
-
-
 # Disable too many arguments, as they are needed to create the dataclass.
 def create_instance_config(  # pylint: disable=too-many-arguments
     app_name: str,
     unit_num: int,
-    openstack_image: str,
+    image_id: str,
     path: GithubPath,
     labels: Iterable[str],
-    github_token: str,
+    registration_token: str,
 ) -> InstanceConfig:
     """Create an instance config from charm data.
 
     Args:
         app_name: The juju application name.
         unit_num: The juju unit number.
-        openstack_image: The openstack image object to create the instance with.
+        image_id: The openstack image id to create the instance with.
         path: Github organisation or repository path.
         labels: Addition labels for the runner.
-        github_token: The Github PAT for interaction with Github API.
+        registration_token: The Github runner registration token. See \
+            https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#create-a-registration-token-for-a-repository
 
     Returns:
         Instance configuration created.
     """
-    github_client = GithubClient(token=github_token)
     suffix = secrets.token_hex(12)
-    registration_token = github_client.get_runner_registration_token(path=path)
     return InstanceConfig(
-        name=f"{app_name}-{unit_num}-{suffix}",
-        labels=("jammy", *labels),
-        registration_token=registration_token,
         github_path=path,
-        openstack_image=openstack_image,
+        image_id=image_id,
+        labels=labels,
+        name=f"{app_name}-{unit_num}-{suffix}",
+        registration_token=registration_token,
     )
 
 
@@ -464,8 +237,6 @@ def _generate_runner_env(
         pre_job_script=str(PRE_JOB_SCRIPT),
         dockerhub_mirror=dockerhub_mirror or "",
         ssh_debug_info=(secrets.choice(ssh_debug_connections) if ssh_debug_connections else None),
-        # Proxies are handled by aproxy.
-        proxies={},
     )
 
 
@@ -563,6 +334,10 @@ class OpenstackRunnerManager:
         Returns:
             The change in number of runners.
         """
+        if self._config.reactive_config:
+            logger.info("Reactive configuration detected, going into experimental reactive mode.")
+            return self._reconcile_reactive(quantity)
+
         start_ts = time.time()
         try:
             delta = self._reconcile_runners(quantity)
@@ -573,6 +348,21 @@ class OpenstackRunnerManager:
             )
 
         return delta
+
+    def _reconcile_reactive(self, quantity: int) -> int:
+        """Reconcile runners reactively.
+
+        Args:
+            quantity: Number of intended runners.
+
+        Returns:
+            The difference between intended runners and actual runners. In reactive mode
+            this number is never negative as additional processes should terminate after a timeout.
+        """
+        logger.info("Reactive mode is experimental and not yet fully implemented.")
+        return reactive_runner_manager.reconcile(
+            quantity=quantity, mq_uri=self._config.reactive_config.mq_uri, queue_name=self.app_name
+        )
 
     def _reconcile_runners(self, quantity: int) -> int:
         """Reconcile the number of runners.
@@ -627,7 +417,7 @@ class OpenstackRunnerManager:
             if runner["name"].startswith(f"{self.instance_name}-")
         )
 
-    def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerByHealth:
+    def _get_openstack_runner_status(self, conn: OpenstackConnection) -> RunnerNameByHealth:
         """Get status on OpenStack of each runner.
 
         Args:
@@ -648,7 +438,7 @@ class OpenstackRunnerManager:
             else:
                 healthy_runner.append(instance.name)
 
-        return RunnerByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
+        return RunnerNameByHealth(healthy=tuple(healthy_runner), unhealthy=tuple(unhealthy_runner))
 
     def _get_openstack_instances(self, conn: OpenstackConnection) -> list[Server]:
         """Get the OpenStack servers managed by this unit.
@@ -666,14 +456,19 @@ class OpenstackRunnerManager:
         ]
 
     @staticmethod
-    def _health_check(conn: OpenstackConnection, server_name: str, startup: bool = False) -> bool:
+    def _health_check(
+        conn: OpenstackConnection,
+        server_name: str,
+        startup: bool = False,
+    ) -> bool:
         """Health check a server instance.
 
         A healthy server is defined as:
             1. Openstack instance status is ACTIVE or BUILDING.
-            2. Runner.Worker exists (running a job).
-            3. Runner.Listener exists (waiting for job).
-            3. GitHub runner status is Idle or Active.
+            2. Openstack instance status is in BUILDING less than CREATE_SERVER_TIMEOUT seconds.
+            3. Runner.Worker exists (running a job).
+            4. Runner.Listener exists (waiting for job).
+            5. GitHub runner status is Idle or Active.
 
         An undetermined server is marked as healthy when:
             1. SSH fails - could be a transient network error.
@@ -695,11 +490,21 @@ class OpenstackRunnerManager:
             return False
         if server.status not in (_INSTANCE_STATUS_ACTIVE, _INSTANCE_STATUS_BUILDING):
             return False
-        return OpenstackRunnerManager._ssh_health_check(
-            conn=conn, server_name=server_name, startup=startup
-        )
+        created_at = datetime.strptime(server.created_at, "%Y-%m-%dT%H:%M:%SZ")
+        current_time = datetime.now(created_at.tzinfo)
+        elapsed_min = (created_at - current_time).total_seconds()
+        if server.status == _INSTANCE_STATUS_BUILDING:
+            return elapsed_min < CREATE_SERVER_TIMEOUT
+        try:
+            return OpenstackRunnerManager._ssh_health_check(
+                conn=conn, server_name=server_name, startup=startup
+            )
+        except _SSHError:
+            logger.warning("Health check failed, unable to SSH into server: %s", server_name)
+            return False
 
     @staticmethod
+    @retry(tries=3, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _ssh_health_check(conn: OpenstackConnection, server_name: str, startup: bool) -> bool:
         """Use SSH to check whether runner application is running.
 
@@ -713,6 +518,9 @@ class OpenstackRunnerManager:
             server_name: The openstack server instance to check connections.
             startup: Check only whether the startup is successful.
 
+        Raises:
+            _SSHError: if there was an error SSH-ing into the machine or with the SSH command.
+
         Returns:
             Whether the runner application is running.
         """
@@ -722,14 +530,17 @@ class OpenstackRunnerManager:
             )
         except _SSHError as exc:
             logger.error("[ALERT]: Unable to SSH to server: %s, reason: %s", server_name, str(exc))
-            return True
+            raise
 
         result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
         logger.debug("Output of `ps aux` on %s stderr: %s", server_name, result.stderr)
-        logger.debug("Output of `ps aux` on %s stdout: %s", server_name, result.stdout)
-        if not result.ok or RUNNER_STARTUP_PROCESS not in result.stdout:
-            logger.warning("List all process command failed on %s ", server_name)
-            return False
+        if not result.ok:
+            logger.warning("List all process command failed on %s.", server_name)
+            raise _SSHError(f"List process command failed on {server_name}.")
+        if RUNNER_STARTUP_PROCESS not in result.stdout:
+            logger.warning("No startup process found on server %s.", server_name)
+            raise _SSHError(f"Runner not yet started on {server_name}.")
+
         logger.info("Runner process found to be healthy on %s", server_name)
         if startup:
             return True
@@ -737,14 +548,13 @@ class OpenstackRunnerManager:
         if RUNNER_WORKER_PROCESS in result.stdout or RUNNER_LISTENER_PROCESS in result.stdout:
             return True
 
-        logger.error("[ALERT] Health check failed for server: %s", server_name)
-        return True
+        return False
 
     @staticmethod
     @retry(tries=3, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _get_ssh_connection(
         conn: OpenstackConnection, server_name: str, timeout: int = 30
-    ) -> SshConnection:
+    ) -> SSHConnection:
         """Get a valid ssh connection within a network for a given openstack instance.
 
         The SSH connection will attempt to establish connection until the timeout configured.
@@ -781,7 +591,7 @@ class OpenstackRunnerManager:
         ]
         for ip in server_addresses:
             try:
-                connection = SshConnection(
+                connection = SSHConnection(
                     host=ip,
                     user="ubuntu",
                     connect_kwargs={"key_filename": str(key_path)},
@@ -805,7 +615,7 @@ class OpenstackRunnerManager:
                 continue
         raise _SSHError(
             f"No connectable SSH addresses found, server: {server.name}, "
-            "addresses: {server_addresses}"
+            f"addresses: {server_addresses}"
         )
 
     @staticmethod
@@ -825,17 +635,19 @@ class OpenstackRunnerManager:
         """Arguments for _create_runner method.
 
         Attributes:
+            app_name: The juju application name.
             cloud_config: The clouds.yaml containing the OpenStack credentials. The first cloud
                 in the file will be used.
-            app_name: The juju application name.
-            unit_num: The juju unit number.
             config: Configurations related to runner manager.
+            registration_token: Token for registering the runner on GitHub.
+            unit_num: The juju unit number.
         """
 
-        cloud_config: dict[str, dict]
         app_name: str
-        unit_num: int
+        cloud_config: dict[str, dict]
         config: OpenstackRunnerManagerConfig
+        registration_token: str
+        unit_num: int
 
     @staticmethod
     def _create_runner(args: _CreateRunnerArgs) -> None:
@@ -863,20 +675,21 @@ class OpenstackRunnerManager:
         pre_job_contents = OpenstackRunnerManager._render_pre_job_contents(
             charm_state=args.config.charm_state, templates_env=environment
         )
+
         instance_config = create_instance_config(
             args.app_name,
             args.unit_num,
-            IMAGE_NAME,
+            args.config.image,
             args.config.path,
             args.config.labels,
-            args.config.token,
+            args.registration_token,
         )
         cloud_user_data = _CloudInitUserData(
             instance_config=instance_config,
             runner_env=env_contents,
             pre_job_contents=pre_job_contents,
-            proxies=args.config.charm_state.proxy_config,
             dockerhub_mirror=args.config.dockerhub_mirror,
+            proxies=args.config.charm_state.proxy_config,
         )
         cloud_userdata_str = _generate_cloud_init_userdata(
             templates_env=environment,
@@ -884,18 +697,18 @@ class OpenstackRunnerManager:
         )
 
         with _create_connection(cloud_config=args.cloud_config) as conn:
-            OpenstackRunnerManager._ensure_security_group(conn)
+            runner_security_group = OpenstackRunnerManager._ensure_security_group(conn)
             OpenstackRunnerManager._setup_runner_keypair(conn, instance_config.name)
 
             logger.info("Creating runner %s", instance_config.name)
             try:
                 instance = conn.create_server(
                     name=instance_config.name,
-                    image=IMAGE_NAME,
+                    image=instance_config.image_id,
                     key_name=instance_config.name,
                     flavor=args.config.flavor,
                     network=args.config.network,
-                    security_groups=[SECURITY_GROUP_NAME],
+                    security_groups=[runner_security_group["id"]],
                     userdata=cloud_userdata_str,
                     auto_ip=False,
                     timeout=CREATE_SERVER_TIMEOUT,
@@ -976,29 +789,37 @@ class OpenstackRunnerManager:
         return pre_job_contents
 
     @staticmethod
-    def _ensure_security_group(conn: OpenstackConnection) -> None:
+    def _ensure_security_group(conn: OpenstackConnection) -> SecurityGroup:
         """Ensure runner security group exists.
 
         Args:
             conn: The connection object to access OpenStack cloud.
+
+        Returns:
+            The security group with the rules for runners.
         """
         rule_exists_icmp = False
         rule_exists_ssh = False
         rule_exists_tmate_ssh = False
 
-        existing_security_group = conn.get_security_group(name_or_id=SECURITY_GROUP_NAME)
-        if existing_security_group is None:
+        security_group_list = conn.list_security_groups(filters={"name": SECURITY_GROUP_NAME})
+        # Pick the first security_group returned.
+        security_group = next(iter(security_group_list), None)
+
+        if security_group is None:
             logger.info("Security group %s not found, creating it", SECURITY_GROUP_NAME)
-            conn.create_security_group(
+            security_group = conn.create_security_group(
                 name=SECURITY_GROUP_NAME,
                 description="For servers managed by the github-runner charm.",
             )
         else:
-            existing_rules = existing_security_group["security_group_rules"]
+            existing_rules = security_group["security_group_rules"]
             for rule in existing_rules:
                 if rule["protocol"] == "icmp":
                     logger.debug(
-                        "Found ICMP rule in existing security group %s", SECURITY_GROUP_NAME
+                        "Found ICMP rule in existing security group %s of ID %s",
+                        SECURITY_GROUP_NAME,
+                        security_group["id"],
                     )
                     rule_exists_icmp = True
                 if (
@@ -1006,7 +827,9 @@ class OpenstackRunnerManager:
                     and rule["port_range_min"] == rule["port_range_max"] == 22
                 ):
                     logger.debug(
-                        "Found SSH rule in existing security group %s", SECURITY_GROUP_NAME
+                        "Found SSH rule in existing security group %s of ID %s",
+                        SECURITY_GROUP_NAME,
+                        security_group["id"],
                     )
                     rule_exists_ssh = True
                 if (
@@ -1014,20 +837,22 @@ class OpenstackRunnerManager:
                     and rule["port_range_min"] == rule["port_range_max"] == 10022
                 ):
                     logger.debug(
-                        "Found tmate SSH rule in existing security group %s", SECURITY_GROUP_NAME
+                        "Found tmate SSH rule in existing security group %s of ID %s",
+                        SECURITY_GROUP_NAME,
+                        security_group["id"],
                     )
                     rule_exists_tmate_ssh = True
 
         if not rule_exists_icmp:
             conn.create_security_group_rule(
-                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                secgroup_name_or_id=security_group["id"],
                 protocol="icmp",
                 direction="ingress",
                 ethertype="IPv4",
             )
         if not rule_exists_ssh:
             conn.create_security_group_rule(
-                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                secgroup_name_or_id=security_group["id"],
                 port_range_min="22",
                 port_range_max="22",
                 protocol="tcp",
@@ -1036,13 +861,14 @@ class OpenstackRunnerManager:
             )
         if not rule_exists_tmate_ssh:
             conn.create_security_group_rule(
-                secgroup_name_or_id=SECURITY_GROUP_NAME,
+                secgroup_name_or_id=security_group["id"],
                 port_range_min="10022",
                 port_range_max="10022",
                 protocol="tcp",
                 direction="egress",
                 ethertype="IPv4",
             )
+        return security_group
 
     @staticmethod
     def _setup_runner_keypair(conn: OpenstackConnection, name: str) -> None:
@@ -1212,7 +1038,7 @@ class OpenstackRunnerManager:
                 self._github.delete_runner(self._config.path, github_id)
             except GithubClientError as exc:
                 logger.warning("Failed to remove runner from Github %s, %s", instance_name, exc)
-            # 2024/04/23: The broad except clause is for logging purposes.
+            # TODO: 2024-04-23: The broad except clause is for logging purposes.
             # Will be removed in future versions.
             except Exception:  # pylint: disable=broad-exception-caught
                 logger.critical(
@@ -1265,7 +1091,7 @@ class OpenstackRunnerManager:
             return
 
     def _pull_file(
-        self, ssh_conn: SshConnection, remote_path: str, local_path: str, max_size: int
+        self, ssh_conn: SSHConnection, remote_path: str, local_path: str, max_size: int
     ) -> None:
         """Pull file from the runner instance.
 
@@ -1334,7 +1160,7 @@ class OpenstackRunnerManager:
             logger.warning(
                 "Failed to run runner removal script for %s", server.name, exc_info=True
             )
-        # 2024/04/23: The broad except clause is for logging purposes.
+        # TODO: 2024-04-23: The broad except clause is for logging purposes.
         # Will be removed in future versions.
         except Exception:  # pylint: disable=broad-exception-caught
             logger.critical(
@@ -1345,7 +1171,7 @@ class OpenstackRunnerManager:
                 logger.warning("Server does not exist %s", server.name)
         except SDKException as exc:
             logger.error("Something wrong deleting the server %s, %s", server.name, exc)
-        # 2024/04/23: The broad except clause is for logging purposes.
+        # TODO: 2024-04-23: The broad except clause is for logging purposes.
         # Will be removed in future versions.
         except Exception:  # pylint: disable=broad-exception-caught
             logger.critical(
@@ -1382,7 +1208,7 @@ class OpenstackRunnerManager:
             ) from exc
 
         try:
-            result: Result = ssh_conn.run(
+            result: invoke.runners.Result = ssh_conn.run(
                 f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}",
                 warn=True,
             )
@@ -1398,7 +1224,7 @@ class OpenstackRunnerManager:
                     result.stderr,
                 )
             return
-        # 2024/04/23: The broad except clause is for logging purposes.
+        # TODO: 2024-04-23: The broad except clause is for logging purposes.
         # Will be removed in future versions.
         except Exception:  # pylint: disable=broad-exception-caught
             logger.critical(
@@ -1474,7 +1300,7 @@ class OpenstackRunnerManager:
                     )
 
     def _clean_up_runners(
-        self, conn: OpenstackConnection, runner_by_health: RunnerByHealth, remove_token: str
+        self, conn: OpenstackConnection, runner_by_health: RunnerNameByHealth, remove_token: str
     ) -> None:
         """Clean up offline or unhealthy runners.
 
@@ -1527,7 +1353,7 @@ class OpenstackRunnerManager:
         self,
         quantity: int,
         conn: OpenstackConnection,
-        runner_by_health: RunnerByHealth,
+        runner_by_health: RunnerNameByHealth,
         remove_token: str,
     ) -> int:
         """Scale the number of runners.
@@ -1538,9 +1364,6 @@ class OpenstackRunnerManager:
             runner_by_health: The runner status grouped by health.
             remove_token: The GitHub runner remove token.
 
-        Raises:
-            OpenstackInstanceLaunchError: Unable to launch OpenStack instance.
-
         Returns:
             The change in number of runners.
         """
@@ -1548,27 +1371,18 @@ class OpenstackRunnerManager:
         # This is not calculated due to there might be removal failures.
         servers = self._get_openstack_instances(conn)
         delta = quantity - len(servers)
+        registration_token = self._github.get_runner_registration_token(path=self._config.path)
 
         # Spawn new runners
         if delta > 0:
-            # Skip this reconcile if image not present.
-            try:
-                if conn.get_image(name_or_id=IMAGE_NAME) is None:
-                    logger.warning("No OpenStack runner was spawned due to image needed not found")
-            except openstack.exceptions.SDKException as exc:
-                # Will be resolved by charm integration with image build charm.
-                logger.exception("Multiple image named %s found", IMAGE_NAME)
-                raise OpenstackInstanceLaunchError(
-                    "Multiple image found, unable to determine the image to use"
-                ) from exc
-
             logger.info("Creating %s OpenStack runners", delta)
             args = [
                 OpenstackRunnerManager._CreateRunnerArgs(
-                    cloud_config=self._cloud_config,
                     app_name=self.app_name,
-                    unit_num=self.unit_num,
                     config=self._config,
+                    cloud_config=self._cloud_config,
+                    registration_token=registration_token,
+                    unit_num=self.unit_num,
                 )
                 for _ in range(delta)
             ]
@@ -1646,7 +1460,7 @@ class OpenstackRunnerManager:
 
         for extracted_metrics in runner_metrics.extract(
             metrics_storage_manager=metrics_storage,
-            ignore_runners=instance_names,
+            runners=instance_names,
         ):
             try:
                 job_metrics = github_metrics.job(
@@ -1672,7 +1486,7 @@ class OpenstackRunnerManager:
         metric_stats: IssuedMetricEventsStats,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
-        runner_states: RunnerByHealth,
+        runner_states: RunnerNameByHealth,
     ) -> None:
         """Issue reconciliation metric.
 
@@ -1714,20 +1528,71 @@ class OpenstackRunnerManager:
         except IssueMetricEventError:
             logger.exception("Failed to issue Reconciliation metric")
 
-    def flush(self) -> int:
+    def flush(self, mode: FlushMode = FlushMode.FLUSH_IDLE) -> int:
         """Flush Openstack servers.
+
+        1. Kill the processes depending on flush mode.
+        2. Get unhealthy runners after process purging.
+        3. Delete unhealthy runners.
+
+        Args:
+            mode: The mode to determine which runner to flush.
 
         Returns:
             The number of runners flushed.
         """
         logger.info("Flushing OpenStack all runners")
         with _create_connection(self._cloud_config) as conn:
+            self._kill_runner_processes(conn=conn, mode=mode)
             runner_by_health = self._get_openstack_runner_status(conn)
             remove_token = self._github.get_runner_remove_token(path=self._config.path)
-            runners_to_delete = (*runner_by_health.healthy, *runner_by_health.unhealthy)
             self._remove_runners(
                 conn=conn,
-                instance_names=runners_to_delete,
+                instance_names=runner_by_health.unhealthy,
                 remove_token=remove_token,
             )
-            return len(runners_to_delete)
+        return len(runner_by_health.unhealthy)
+
+    def _kill_runner_processes(self, conn: OpenstackConnection, mode: FlushMode) -> None:
+        """Kill runner application that are not running any jobs.
+
+        Runners that have not picked up a job has
+        1. no Runner.Worker process
+        2. no pre-run.sh job process
+
+        Args:
+            conn: The connection object to access OpenStack cloud.
+            mode: The flush mode to determine which runner processes to kill.
+
+        Raises:
+            NotImplementedError: If unsupported flush mode has been passed.
+        """
+        killer_command: str
+        match mode:
+            case FlushMode.FLUSH_IDLE:
+                # only kill Runner.Listener if Runner.Worker does not exist.
+                killer_command = (
+                    "! pgrep -x Runner.Worker && pgrep -x Runner.Listener && "
+                    "kill $(pgrep -x Runner.Listener)"
+                )
+            case FlushMode.FLUSH_BUSY:
+                # kill both Runner.Listener and Runner.Worker processes.
+                # This kills pre-job.sh, a child process of Runner.Worker.
+                killer_command = (
+                    "pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);"
+                    "pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);"
+                )
+            case _:
+                raise NotImplementedError(f"Unsupported flush mode {mode}")
+
+        servers = self._get_openstack_instances(conn=conn)
+        for server in servers:
+            ssh_conn: SSHConnection = self._get_ssh_connection(conn=conn, server_name=server.name)
+            result: invoke.runners.Result = ssh_conn.run(
+                killer_command,
+                warn=True,
+            )
+            if not result.ok:
+                logger.warning("Failed to kill runner process. Instance: %s", server.name)
+                continue
+            logger.info("Successfully killed runner process. Instance: %s", server.name)

@@ -46,6 +46,7 @@ DISPATCH_WAIT_TEST_WORKFLOW_FILENAME = "workflow_dispatch_wait_test.yaml"
 DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME = "e2e_test_run.yaml"
 DISPATCH_E2E_TEST_RUN_OPENSTACK_WORKFLOW_FILENAME = "e2e_test_run_openstack.yaml"
 
+MONGODB_APP_NAME = "mongodb"
 DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15}
 
 logger = logging.getLogger(__name__)
@@ -293,7 +294,7 @@ async def deploy_github_runner_charm(
     )
 
     if wait_idle:
-        await model.wait_for_idle(status=ACTIVE, timeout=60 * 30)
+        await model.wait_for_idle(status=ACTIVE, timeout=60 * 40)
 
     return application
 
@@ -374,13 +375,14 @@ def _is_workflow_run_complete(run: WorkflowRun) -> bool:
 
 
 async def dispatch_workflow(
-    app: Application,
+    app: Application | None,
     branch: Branch,
     github_repository: Repository,
     conclusion: str,
     workflow_id_or_name: str,
     dispatch_input: dict | None = None,
-):
+    wait: bool = True,
+) -> WorkflowRun:
     """Dispatch a workflow on a branch for the runner to run.
 
     The function assumes that there is only one runner running in the unit.
@@ -393,18 +395,21 @@ async def dispatch_workflow(
         workflow_id_or_name: The workflow filename in .github/workflows in main branch to run or
             its id.
         dispatch_input: Workflow input values.
+        wait: Whether to wait for runner to run workflow until completion.
 
     Returns:
-        A completed workflow.
+        The workflow run.
     """
+    if dispatch_input is None:
+        assert app is not None, "If dispatch input not given the app cannot be None."
+        dispatch_input = {"runner": app.name}
+
     start_time = datetime.now(timezone.utc)
 
     workflow = github_repository.get_workflow(id_or_file_name=workflow_id_or_name)
 
     # The `create_dispatch` returns True on success.
-    assert workflow.create_dispatch(
-        branch, dispatch_input or {"runner": app.name}
-    ), "Failed to create workflow"
+    assert workflow.create_dispatch(branch, dispatch_input), "Failed to create workflow"
 
     # There is a very small chance of selecting a run not created by the dispatch above.
     run: WorkflowRun | None = await wait_for(
@@ -412,14 +417,16 @@ async def dispatch_workflow(
         timeout=10 * 60,
     )
     assert run, f"Run not found for workflow: {workflow.name} ({workflow.id})"
-    await wait_for(partial(_is_workflow_run_complete, run=run), timeout=60 * 30, check_interval=60)
 
+    if not wait:
+        return run
+    await wait_for(partial(_is_workflow_run_complete, run=run), timeout=60 * 30, check_interval=60)
     # The run object is updated by _is_workflow_run_complete function above.
     assert (
         run.conclusion == conclusion
     ), f"Unexpected run conclusion, expected: {conclusion}, got: {run.conclusion}"
 
-    return workflow
+    return run
 
 
 P = ParamSpec("P")
@@ -454,6 +461,7 @@ async def wait_for(
         else:
             if result := func():
                 return cast(R, result)
+        logger.info("Wait for condition not met, sleeping %s", check_interval)
         time.sleep(check_interval)
 
     # final check before raising TimeoutError.
@@ -519,3 +527,23 @@ async def is_upgrade_charm_event_emitted(unit: Unit) -> bool:
     ret_code, stdout, stderr = await run_in_unit(unit=unit, command=f"cat {juju_unit_log_file}")
     assert ret_code == 0, f"Failed to read the log file: {stderr}"
     return stdout is not None and "Emitting Juju event upgrade_charm." in stdout
+
+
+async def get_file_content(unit: Unit, filepath: pathlib.Path) -> str:
+    """Retrieve the file content in the unit.
+
+    Args:
+        unit: The unit to retrieve the file content from.
+        filepath: The path of the file to retrieve.
+
+    Returns:
+        The file content
+    """
+    retcode, stdout, stderr = await run_in_unit(
+        unit=unit,
+        command=f"if [ -f {filepath} ]; then cat {filepath}; else echo ''; fi",
+    )
+    assert retcode == 0, f"Failed to get content of {filepath}: {stdout} {stderr}"
+    assert stdout is not None, f"Failed to get content of {filepath}, no stdout message"
+    logging.info("File content of %s: %s", filepath, stdout)
+    return stdout.strip()

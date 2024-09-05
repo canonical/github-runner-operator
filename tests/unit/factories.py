@@ -23,9 +23,9 @@ from charm_state import (
     DOCKERHUB_MIRROR_CONFIG_NAME,
     GROUP_CONFIG_NAME,
     LABELS_CONFIG_NAME,
+    MONGO_DB_INTEGRATION_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
-    OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
@@ -105,7 +105,13 @@ class MockGithubRunnerCharmModelFactory(factory.Factory):
 
         model = MagicMock
 
-    relations: dict[str, list] = {COS_AGENT_INTEGRATION_NAME: [], DEBUG_SSH_INTEGRATION_NAME: []}
+    relations: dict[str, list] = factory.Dict(
+        {
+            COS_AGENT_INTEGRATION_NAME: [],
+            DEBUG_SSH_INTEGRATION_NAME: [],
+            MONGO_DB_INTEGRATION_NAME: [],
+        }
+    )
 
 
 class MockGithubRunnerCharmFactory(factory.Factory):
@@ -128,7 +134,6 @@ class MockGithubRunnerCharmFactory(factory.Factory):
             OPENSTACK_CLOUDS_YAML_CONFIG_NAME: "",
             OPENSTACK_NETWORK_CONFIG_NAME: "external",
             OPENSTACK_FLAVOR_CONFIG_NAME: "m1.small",
-            OPENSTACK_IMAGE_BUILD_UNIT_CONFIG_NAME: -1,
             PATH_CONFIG_NAME: factory.Sequence(lambda n: f"mock_path_{n}"),
             RECONCILE_INTERVAL_CONFIG_NAME: 10,
             RUNNER_STORAGE_CONFIG_NAME: "juju-storage",

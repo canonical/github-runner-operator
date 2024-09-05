@@ -37,6 +37,7 @@ from charm_state import (
 )
 from github_client import GithubClient
 from tests.integration.helpers.common import (
+    MONGODB_APP_NAME,
     InstanceHelper,
     deploy_github_runner_charm,
     inject_lxd_profile,
@@ -44,7 +45,7 @@ from tests.integration.helpers.common import (
     wait_for,
 )
 from tests.integration.helpers.lxd import LXDInstanceHelper, ensure_charm_has_runner
-from tests.integration.helpers.openstack import OpenStackInstanceHelper
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
 
 # The following line is required because we are using request.getfixturevalue in conjunction
@@ -84,7 +85,7 @@ def existing_app(pytestconfig: pytest.Config) -> Optional[str]:
 def app_name(existing_app: Optional[str]) -> str:
     """Randomized application name."""
     # Randomized app name to avoid collision when runner is connecting to GitHub.
-    return existing_app or f"integration-id{secrets.token_hex(2)}"
+    return existing_app or f"test-{secrets.token_hex(4)}"
 
 
 @pytest.fixture(scope="module", name="openstack_clouds_yaml")
@@ -163,22 +164,43 @@ def no_proxy(pytestconfig: pytest.Config) -> str:
     return "" if no_proxy is None else no_proxy
 
 
+@pytest.fixture(scope="module", name="openstack_http_proxy")
+def openstack_http_proxy_fixture(pytestconfig: pytest.Config) -> str:
+    """Configured http_proxy setting for openstack runners."""
+    http_proxy = pytestconfig.getoption("--openstack-http-proxy")
+    return "" if http_proxy is None else http_proxy
+
+
+@pytest.fixture(scope="module", name="openstack_https_proxy")
+def openstack_https_proxy_fixture(pytestconfig: pytest.Config) -> str:
+    """Configured https_proxy setting for openstack runners."""
+    https_proxy = pytestconfig.getoption("--openstack-https-proxy")
+    return "" if https_proxy is None else https_proxy
+
+
+@pytest.fixture(scope="module", name="openstack_no_proxy")
+def openstack_no_proxy_fixture(pytestconfig: pytest.Config) -> str:
+    """Configured no_proxy setting for openstack runners."""
+    no_proxy = pytestconfig.getoption("--openstack-no-proxy")
+    return "" if no_proxy is None else no_proxy
+
+
 @pytest.fixture(scope="module")
 def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
     """Configured loop_device setting."""
     return pytestconfig.getoption("--loop-device")
 
 
-@pytest.fixture(scope="module", name="private_endpoint_clouds_yaml")
-def private_endpoint_clouds_yaml_fixture(pytestconfig: pytest.Config) -> Optional[str]:
-    """The openstack private endpoint clouds yaml."""
-    auth_url = pytestconfig.getoption("--openstack-auth-url")
-    password = pytestconfig.getoption("--openstack-password")
-    project_domain_name = pytestconfig.getoption("--openstack-project-domain-name")
-    project_name = pytestconfig.getoption("--openstack-project-name")
-    user_domain_name = pytestconfig.getoption("--openstack-user-domain-name")
-    user_name = pytestconfig.getoption("--openstack-username")
-    region_name = pytestconfig.getoption("--openstack-region-name")
+@pytest.fixture(scope="module", name="private_endpoint_config")
+def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpointConfigs | None:
+    """The private endpoint configuration values."""
+    auth_url = pytestconfig.getoption("--openstack-auth-url-amd64")
+    password = pytestconfig.getoption("--openstack-password-amd64")
+    project_domain_name = pytestconfig.getoption("--openstack-project-domain-name-amd64")
+    project_name = pytestconfig.getoption("--openstack-project-name-amd64")
+    user_domain_name = pytestconfig.getoption("--openstack-user-domain-name-amd64")
+    user_name = pytestconfig.getoption("--openstack-username-amd64")
+    region_name = pytestconfig.getoption("--openstack-region-name-amd64")
     if any(
         not val
         for val in (
@@ -192,17 +214,35 @@ def private_endpoint_clouds_yaml_fixture(pytestconfig: pytest.Config) -> Optiona
         )
     ):
         return None
+    return {
+        "auth_url": auth_url,
+        "password": password,
+        "project_domain_name": project_domain_name,
+        "project_name": project_name,
+        "user_domain_name": user_domain_name,
+        "username": user_name,
+        "region_name": region_name,
+    }
+
+
+@pytest.fixture(scope="module", name="private_endpoint_clouds_yaml")
+def private_endpoint_clouds_yaml_fixture(
+    private_endpoint_config: PrivateEndpointConfigs | None,
+) -> Optional[str]:
+    """The openstack private endpoint clouds yaml."""
+    if not private_endpoint_config:
+        return None
     return string.Template(
         Path("tests/integration/data/clouds.yaml.tmpl").read_text(encoding="utf-8")
     ).substitute(
         {
-            "auth_url": auth_url,
-            "password": password,
-            "project_domain_name": project_domain_name,
-            "project_name": project_name,
-            "user_domain_name": user_domain_name,
-            "username": user_name,
-            "region_name": region_name,
+            "auth_url": private_endpoint_config["auth_url"],
+            "password": private_endpoint_config["password"],
+            "project_domain_name": private_endpoint_config["project_domain_name"],
+            "project_name": private_endpoint_config["project_name"],
+            "user_domain_name": private_endpoint_config["user_domain_name"],
+            "username": private_endpoint_config["username"],
+            "region_name": private_endpoint_config["region_name"],
         }
     )
 
@@ -225,17 +265,33 @@ def clouds_yaml_contents_fixture(
 @pytest.fixture(scope="module", name="network_name")
 def network_name_fixture(pytestconfig: pytest.Config) -> str:
     """Network to use to spawn test instances under."""
-    network_name = pytestconfig.getoption("--openstack-network-name")
-    assert network_name, "Please specify the --openstack-network-name command line option"
+    network_name = pytestconfig.getoption("--openstack-network-name-amd64")
+    assert network_name, "Please specify the --openstack-network-name-amd64 command line option"
     return network_name
 
 
 @pytest.fixture(scope="module", name="flavor_name")
 def flavor_name_fixture(pytestconfig: pytest.Config) -> str:
     """Flavor to create testing instances with."""
-    flavor_name = pytestconfig.getoption("--openstack-flavor-name")
+    flavor_name = pytestconfig.getoption("--openstack-flavor-name-amd64")
     assert flavor_name, "Please specify the --openstack-flavor-name command line option"
     return flavor_name
+
+
+@pytest.fixture(scope="module", name="openstack_test_image")
+def openstack_test_image_fixture(pytestconfig: pytest.Config) -> str:
+    """Image for testing openstack interfaces."""
+    test_image = pytestconfig.getoption("--openstack-test-image")
+    assert test_image, "Please specify the --openstack-test-image command line option"
+    return test_image
+
+
+@pytest.fixture(scope="module", name="openstack_test_flavor")
+def openstack_test_flavor_fixture(pytestconfig: pytest.Config) -> str:
+    """Flavor for testing openstack interfaces."""
+    test_flavor = pytestconfig.getoption("--openstack-test-flavor")
+    assert test_flavor, "Please specify the --openstack-test-flavor command line option"
+    return test_flavor
 
 
 @pytest.fixture(scope="module", name="openstack_connection")
@@ -285,22 +341,56 @@ async def app_no_runner(
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
+    existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
-    # Set the scheduled event to 1 hour to avoid interfering with the tests.
-    application = await deploy_github_runner_charm(
-        model=model,
-        charm_file=charm_file,
-        app_name=app_name,
-        path=path,
-        token=token,
-        runner_storage="memory",
-        http_proxy=http_proxy,
-        https_proxy=https_proxy,
-        no_proxy=no_proxy,
-        reconcile_interval=60,
-    )
+    if existing_app:
+        application = model.applications[existing_app]
+    else:
+        # Set the scheduled event to 1 hour to avoid interfering with the tests.
+        application = await deploy_github_runner_charm(
+            model=model,
+            charm_file=charm_file,
+            app_name=app_name,
+            path=path,
+            token=token,
+            runner_storage="memory",
+            http_proxy=http_proxy,
+            https_proxy=https_proxy,
+            no_proxy=no_proxy,
+            reconcile_interval=60,
+        )
+    await model.wait_for_idle(apps=[application.name], status=ACTIVE)
     return application
+
+
+@pytest_asyncio.fixture(scope="module", name="image_builder")
+async def image_builder_fixture(
+    model: Model, private_endpoint_config: PrivateEndpointConfigs | None
+):
+    """The image builder application for OpenStack runners."""
+    if not private_endpoint_config:
+        raise ValueError("Private endpoints are required for testing OpenStack runners.")
+    app = await model.deploy(
+        "github-runner-image-builder",
+        channel="latest/edge",
+        revision=2,
+        constraints="cores=2 mem=16G root-disk=20G virt-type=virtual-machine",
+        config={
+            "app-channel": "edge",
+            "build-interval": "12",
+            "revision-history-limit": "5",
+            "openstack-auth-url": private_endpoint_config["auth_url"],
+            # Bandit thinks this is a hardcoded password
+            "openstack-password": private_endpoint_config["password"],  # nosec: B105
+            "openstack-project-domain-name": private_endpoint_config["project_domain_name"],
+            "openstack-project-name": private_endpoint_config["project_name"],
+            "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
+            "openstack-user-name": private_endpoint_config["username"],
+        },
+    )
+    await model.wait_for_idle(apps=[app.name], wait_for_active=True, timeout=15 * 60)
+    return app
 
 
 @pytest_asyncio.fixture(scope="module", name="app_openstack_runner")
@@ -310,13 +400,14 @@ async def app_openstack_runner_fixture(
     app_name: str,
     path: str,
     token: str,
-    http_proxy: str,
-    https_proxy: str,
-    no_proxy: str,
+    openstack_http_proxy: str,
+    openstack_https_proxy: str,
+    openstack_no_proxy: str,
     clouds_yaml_contents: str,
     network_name: str,
     flavor_name: str,
     existing_app: Optional[str],
+    image_builder: Application,
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
     if existing_app:
@@ -329,14 +420,13 @@ async def app_openstack_runner_fixture(
             path=path,
             token=token,
             runner_storage="juju-storage",
-            http_proxy=http_proxy,
-            https_proxy=https_proxy,
-            no_proxy=no_proxy,
+            http_proxy=openstack_http_proxy,
+            https_proxy=openstack_https_proxy,
+            no_proxy=openstack_no_proxy,
             reconcile_interval=60,
             constraints={
                 "root-disk": 50 * 1024,
                 "mem": 16 * 1024,
-                # "arch": "arm64",
             },
             config={
                 OPENSTACK_CLOUDS_YAML_CONFIG_NAME: clouds_yaml_contents,
@@ -348,6 +438,7 @@ async def app_openstack_runner_fixture(
             wait_idle=False,
             use_local_lxd=False,
         )
+        await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
 
     return application
@@ -654,6 +745,34 @@ async def app_for_metric_fixture(
         await model.wait_for_idle(apps=[grafana_agent.name])
 
     yield basic_app
+
+
+@pytest_asyncio.fixture(scope="module", name="mongodb")
+async def mongodb_fixture(model: Model, existing_app: str | None) -> Application:
+    """Deploy MongoDB."""
+    if not existing_app:
+        mongodb = await model.deploy(MONGODB_APP_NAME, channel="6/edge")
+        await model.wait_for_idle(apps=[MONGODB_APP_NAME], status=ACTIVE)
+    else:
+        mongodb = model.applications["mongodb"]
+    return mongodb
+
+
+@pytest_asyncio.fixture(scope="module", name="app_for_reactive")
+async def app_for_reactive_fixture(
+    model: Model,
+    basic_app: Application,
+    mongodb: Application,
+    existing_app: Optional[str],
+) -> Application:
+    """Application for testing reactive."""
+    if not existing_app:
+        await model.relate(f"{basic_app.name}:mongodb", f"{mongodb.name}:database")
+
+    await basic_app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    await model.wait_for_idle(apps=[basic_app.name, mongodb.name], status=ACTIVE)
+
+    return basic_app
 
 
 @pytest_asyncio.fixture(scope="module", name="basic_app")
