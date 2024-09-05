@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  self-hosted-noble:
-    name: self-hosted noble test
-    runs-on: [self-hosted, X64, noble, noble-test]
+  self-hosted-wait-test:
+    name: self-hosted wait test
+    runs-on: [self-hosted, X64, large]
     # 24 hours
     timeout-minutes: 1440
     steps:
