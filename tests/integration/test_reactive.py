@@ -90,7 +90,7 @@ async def _get_mongodb_uri_from_secrets(ops_test, model: Model) -> str | None:
     for secret in juju_secrets["results"]:
         if re.match(r"^database.\d+.user.secret$", secret.label):
             _, show_secret, _ = await ops_test.juju(
-                "show-secret", secret.uri, "--reveal", "--format", "json"
+                "show-secret", str(secret.uri), "--reveal", "--format", "json"
             )
             show_secret = json.loads(show_secret)
             for value in show_secret.values():
@@ -147,5 +147,5 @@ async def _assert_job_details_in_reactive_log(unit: Unit, jobs: list[JobDetails]
         reactive_logs += await get_file_content(unit, REACTIVE_RUNNER_LOG_DIR / log_file)
 
     for job in jobs:
-        assert job.run_url in reactive_logs
+        assert str(job.run_url) in reactive_logs
         assert str(job.labels) in reactive_logs
