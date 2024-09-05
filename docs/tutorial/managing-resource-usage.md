@@ -22,7 +22,7 @@ The recommended combined resource usage is:
 - memory: number of virtual machines * (memory per virtual machine + disk per virtual machine) + 4GiB
 - disk: 20GiB
 
-If memory is used as [runner storage](https://charmhub.io/github-runner/docs/configure-runner-storage):
+If memory is used as [runner storage](https://charmhub.io/github-runner/docs/how-to-configure-runner-storage):
 
 - memory: number of virtual machines * (memory per virtual machine + disk per virtual machine) + 4GiB
 
