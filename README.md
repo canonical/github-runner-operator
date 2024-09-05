@@ -61,13 +61,6 @@ Testing is run via tox and pytest. The unit test can be ran with `tox -e unit` a
 
 Dependencies are installed in virtual environments. Integration testing requires a juju controller to execute. These tests will use the existing controller, creating an ephemeral model for the tests which is removed after testing. If you do not already have a controller setup, you can configure a local instance via LXD, see the [upstream documentation](https://juju.is/docs/lxd-cloud) for details.
 
-There are integration and E2E tests that test runners on the OpenStack cloud. These require access to an openstack cloud.
-The tests are currently adapted to run on the CI infrastructure configured on the `github-runner-operator` repository,
-and use private endpoint runners. This means that they are not suitable for local execution and may contain
-commands using sudo privileges.
-
-```bash
-
 ## Generating src docs for every commit
 
 Run the following command:
