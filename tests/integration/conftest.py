@@ -47,6 +47,7 @@ from tests.integration.helpers.common import (
 from tests.integration.helpers.lxd import LXDInstanceHelper, ensure_charm_has_runner
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
+from utilities import execute_command, get_env_var
 
 # The following line is required because we are using request.getfixturevalue in conjunction
 # with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
@@ -439,6 +440,17 @@ async def app_openstack_runner_fixture(
             use_local_lxd=False,
         )
         await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
+
+    # The openstack charm is likely to be deployed on a self-hosted runner with aproxy active,
+    # which means that we cannot properly test proxy-related issues (because aproxy will forward
+    # everything anyway), therefore we disable aproxy in this case.
+    # if get_env_var("RUNNER_ENVIRONMENT") == "self-hosted":
+    logging.info(get_env_var("RUNNER_ENVIRONMENT"))
+    logging.info(
+        "Assuming to be executed on a runner with aproxy running, therefore disabling aproxy..."
+    )
+    execute_command(["sudo", "/usr/bin/snap", "disable", "aproxy"], check_exit=True)
+
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
 
     return application
