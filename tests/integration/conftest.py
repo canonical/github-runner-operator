@@ -444,11 +444,12 @@ async def app_openstack_runner_fixture(
     # The openstack charm is likely to be deployed on a self-hosted runner with aproxy active,
     # which means that we cannot properly test proxy-related issues (because aproxy will forward
     # everything anyway), therefore we disable aproxy in this case.
-    if get_env_var("RUNNER_NAME") == "self-hosted":
-        logging.info(
-            "Assuming to be executed on a runner with aproxy running, therefore disabling aproxy..."
-        )
-        execute_command(["sudo", "/usr/bin/snap", "disable", "aproxy"], check_exit=True)
+    # if get_env_var("RUNNER_ENVIRONMENT") == "self-hosted":
+    logging.info(get_env_var("RUNNER_ENVIRONMENT"))
+    logging.info(
+        "Assuming to be executed on a runner with aproxy running, therefore disabling aproxy..."
+    )
+    execute_command(["sudo", "/usr/bin/snap", "disable", "aproxy"], check_exit=True)
 
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
 
