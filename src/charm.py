@@ -247,6 +247,10 @@ class GithubRunnerCharm(CharmBase):
             self._on_debug_ssh_relation_changed,
         )
         self.framework.observe(
+            self.on[IMAGE_INTEGRATION_NAME].relation_joined,
+            self._on_image_relation_joined,
+        )
+        self.framework.observe(
             self.on[IMAGE_INTEGRATION_NAME].relation_changed,
             self._on_image_relation_changed,
         )
@@ -1178,7 +1182,7 @@ class GithubRunnerCharm(CharmBase):
         cloud = list(clouds_yaml["clouds"].keys())[0]
         auth_map = clouds_yaml["clouds"][cloud]["auth"]
         for relation in self.model.relations[IMAGE_INTEGRATION_NAME]:
-            relation.data[self.model.unit].update(auth_map)
+            relation.data[self.unit].update(auth_map)
 
     @catch_charm_errors
     def _on_image_relation_changed(self, _: ops.RelationChangedEvent) -> None:
