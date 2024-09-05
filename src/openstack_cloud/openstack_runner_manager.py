@@ -158,7 +158,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
         if https_proxy := proxies.https:
             set_env_var("HTTPS_PROXY", https_proxy)
 
-
     @property
     def name_prefix(self) -> str:
         """The prefix of runner names.
