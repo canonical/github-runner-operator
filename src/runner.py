@@ -23,7 +23,7 @@ from typing import Iterable, NamedTuple, Optional, Sequence
 import yaml
 
 import shared_fs
-from charm_state import Arch, GithubOrg, SSHDebugConnection, VirtualMachineResources
+from charm_state import Arch, GitHubOrg, SSHDebugConnection, VirtualMachineResources
 from errors import (
     CreateMetricsStorageError,
     GithubClientError,
@@ -840,7 +840,7 @@ class Runner:
             self.instance.name,
         ]
 
-        if isinstance(self.config.path, GithubOrg):
+        if isinstance(self.config.path, GitHubOrg):
             register_cmd += ["--runnergroup", self.config.path.group]
 
         logger.info("Executing registration command...")

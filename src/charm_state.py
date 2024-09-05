@@ -84,7 +84,7 @@ AnyHttpsUrl = Annotated[Url, UrlConstraints(allowed_schemes=["https"])]
 
 
 @dataclasses.dataclass
-class GithubRepo:
+class GitHubRepo:
     """Represent GitHub repository.
 
     Attributes:
@@ -105,7 +105,7 @@ class GithubRepo:
 
 
 @dataclasses.dataclass
-class GithubOrg:
+class GitHubOrg:
     """Represent GitHub organization.
 
     Attributes:
@@ -125,10 +125,10 @@ class GithubOrg:
         return self.org
 
 
-GithubPath = GithubOrg | GithubRepo
+GitHubPath = GitHubOrg | GitHubRepo
 
 
-def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
+def parse_github_path(path_str: str, runner_group: str) -> GitHubPath:
     """Parse GitHub path.
 
     Args:
@@ -148,8 +148,8 @@ def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
         if len(paths) != 2:
             raise CharmConfigInvalidError(f"Invalid path configuration {path_str}")
         owner, repo = paths
-        return GithubRepo(owner=owner, repo=repo)
-    return GithubOrg(org=path_str, group=runner_group)
+        return GitHubRepo(owner=owner, repo=repo)
+    return GitHubOrg(org=path_str, group=runner_group)
 
 
 @dataclasses.dataclass
@@ -162,7 +162,7 @@ class GithubConfig:
     """
 
     token: str
-    path: GithubPath
+    path: GitHubPath
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "GithubConfig":
@@ -406,7 +406,7 @@ class CharmConfig(BaseModel):
     dockerhub_mirror: AnyHttpsUrl | None = None
     labels: tuple[str, ...]
     openstack_clouds_yaml: OpenStackCloudsYAML | None = None
-    path: GithubPath
+    path: GitHubPath
     reconcile_interval: int
     repo_policy_compliance: RepoPolicyComplianceConfig | None = None
     token: str

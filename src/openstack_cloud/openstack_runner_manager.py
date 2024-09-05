@@ -16,12 +16,13 @@ import paramiko
 import paramiko.ssh_exception
 from fabric import Connection as SSHConnection
 
-from charm_state import GithubOrg
+from charm_state import GitHubOrg
 from errors import (
     CreateMetricsStorageError,
     GetMetricsStorageError,
     IssueMetricEventError,
     KeyfileError,
+    MissingServerConfigError,
     OpenStackError,
     RunnerCreateError,
     RunnerStartError,
@@ -40,7 +41,6 @@ from metrics import events as metric_events
 from metrics import runner as runner_metrics
 from metrics import storage as metrics_storage
 from openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
-from openstack_cloud.openstack_manager import GithubRunnerRemoveError
 from repo_policy_compliance_client import RepoPolicyComplianceClient
 from utilities import retry
 
@@ -58,6 +58,10 @@ RUNNER_STARTUP_PROCESS = "/home/ubuntu/actions-runner/run.sh"
 RUNNER_LISTENER_PROCESS = "Runner.Listener"
 RUNNER_WORKER_PROCESS = "Runner.Worker"
 CREATE_SERVER_TIMEOUT = 5 * 60
+
+
+class _GithubRunnerRemoveError(Exception):
+    """Represents an error while SSH into a runner and running the remove script."""
 
 
 class _PullFileError(Exception):
@@ -105,7 +109,7 @@ class _RunnerHealth:
     unhealthy: tuple[OpenstackInstance, ...]
 
 
-class OpenstackRunnerManager(CloudRunnerManager):
+class OpenStackRunnerManager(CloudRunnerManager):
     """Manage self-hosted runner on OpenStack cloud.
 
     Attributes:
@@ -115,21 +119,25 @@ class OpenstackRunnerManager(CloudRunnerManager):
     # Ignore "Too many arguments", as the class requires a lot of configurations.
     def __init__(  # pylint: disable=R0913
         self,
+        manager_name: str,
         prefix: str,
         cloud_config: OpenStackCloudConfig,
-        server_config: OpenStackServerConfig,
+        server_config: OpenStackServerConfig | None,
         runner_config: GitHubRunnerConfig,
         service_config: SupportServiceConfig,
     ) -> None:
         """Construct the object.
 
         Args:
+            manager_name: A name to identify this manager.
             prefix: The prefix to runner name.
             cloud_config: The configuration for OpenStack authorisation.
-            server_config: The configuration for creating OpenStack server.
+            server_config: The configuration for creating OpenStack server. Unable to create
+                runner if None.
             runner_config: The configuration for the runner.
             service_config: The configuration of supporting services of the runners.
         """
+        self._manager_name = manager_name
         self._prefix = prefix
         self._cloud_config = cloud_config
         self._server_config = server_config
@@ -157,13 +165,17 @@ class OpenstackRunnerManager(CloudRunnerManager):
             registration_token: The GitHub registration token for registering runners.
 
         Raises:
+            MissingServerConfigError: Unable to create runner due to missing configuration.
             RunnerCreateError: Unable to create runner due to OpenStack issues.
 
         Returns:
             Instance ID of the runner.
         """
+        if self._server_config is None:
+            raise MissingServerConfigError("Missing server configuration to create runners")
+
         start_timestamp = time.time()
-        instance_id = OpenstackRunnerManager._generate_instance_id()
+        instance_id = OpenStackRunnerManager._generate_instance_id()
         instance_name = self._openstack_cloud.get_server_name(instance_id=instance_id)
         cloud_init = self._generate_cloud_init(
             instance_name=instance_name, registration_token=registration_token
@@ -183,9 +195,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
         self._wait_runner_running(instance)
 
         end_timestamp = time.time()
-        OpenstackRunnerManager._issue_runner_installed_metric(
+        OpenStackRunnerManager._issue_runner_installed_metric(
             name=instance_name,
-            flavor=self.name_prefix,
+            flavor=self._manager_name,
             install_start_timestamp=start_timestamp,
             install_end_timestamp=end_timestamp,
         )
@@ -241,7 +253,9 @@ class OpenstackRunnerManager(CloudRunnerManager):
         ]
         if states is None:
             return tuple(instance_list)
-        return tuple(instance for instance in instance_list if instance.state in states)
+
+        state_set = set(states)
+        return tuple(instance for instance in instance_list if instance.state in state_set)
 
     def delete_runner(
         self, instance_id: InstanceId, remove_token: str
@@ -326,10 +340,10 @@ class OpenstackRunnerManager(CloudRunnerManager):
             self._pull_runner_metrics(instance.server_name, ssh_conn)
 
             try:
-                OpenstackRunnerManager._run_runner_removal_script(
+                OpenStackRunnerManager._run_runner_removal_script(
                     instance.server_name, ssh_conn, remove_token
                 )
-            except GithubRunnerRemoveError:
+            except _GithubRunnerRemoveError:
                 logger.warning(
                     "Unable to run github runner removal script for %s",
                     instance.server_name,
@@ -426,7 +440,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
         runner_group = None
-        if isinstance(self._runner_config.github_path, GithubOrg):
+        if isinstance(self._runner_config.github_path, GitHubOrg):
             runner_group = self._runner_config.github_path.group
         aproxy_address = (
             self._service_config.proxy_config.aproxy_address
@@ -452,9 +466,10 @@ class OpenstackRunnerManager(CloudRunnerManager):
         Returns:
             The repo policy compliance client.
         """
-        if self._service_config.repo_policy_url and self._service_config.repo_policy_token:
+        if self._service_config.repo_policy_compliance is not None:
             return RepoPolicyComplianceClient(
-                self._service_config.repo_policy_url, self._service_config.repo_policy_token
+                self._service_config.repo_policy_compliance.url,
+                self._service_config.repo_policy_compliance.token,
             )
         return None
 
@@ -535,7 +550,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 "SSH connection failure with %s during health check", instance.server_name
             )
             raise
-        return OpenstackRunnerManager._run_health_check(ssh_conn, instance.server_name)
+        return OpenStackRunnerManager._run_health_check(ssh_conn, instance.server_name)
 
     @staticmethod
     def _run_health_check(ssh_conn: SSHConnection, name: str) -> bool:
@@ -686,13 +701,13 @@ class OpenstackRunnerManager(CloudRunnerManager):
             return
 
         try:
-            OpenstackRunnerManager._ssh_pull_file(
+            OpenStackRunnerManager._ssh_pull_file(
                 ssh_conn=ssh_conn,
                 remote_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"),
                 local_path=str(storage.path / "pre-job-metrics.json"),
                 max_size=MAX_METRICS_FILE_SIZE,
             )
-            OpenstackRunnerManager._ssh_pull_file(
+            OpenStackRunnerManager._ssh_pull_file(
                 ssh_conn=ssh_conn,
                 remote_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"),
                 local_path=str(storage.path / "post-job-metrics.json"),
@@ -775,7 +790,7 @@ class OpenstackRunnerManager(CloudRunnerManager):
             remove_token: The GitHub instance removal token.
 
         Raises:
-            GithubRunnerRemoveError: Unable to remove runner from GitHub.
+            _GithubRunnerRemoveError: Unable to remove runner from GitHub.
         """
         try:
             result = ssh_conn.run(
@@ -795,12 +810,12 @@ class OpenstackRunnerManager(CloudRunnerManager):
                 result.stdout,
                 result.stderr,
             )
-            raise GithubRunnerRemoveError(f"Failed to remove runner {instance_name} from Github.")
+            raise _GithubRunnerRemoveError(f"Failed to remove runner {instance_name} from Github.")
         except (
             TimeoutError,
             paramiko.ssh_exception.NoValidConnectionsError,
             paramiko.ssh_exception.SSHException,
         ) as exc:
-            raise GithubRunnerRemoveError(
+            raise _GithubRunnerRemoveError(
                 f"Failed to remove runner {instance_name} from Github."
             ) from exc

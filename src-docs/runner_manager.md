@@ -13,9 +13,9 @@ Runner Manager manages the runners on LXD and GitHub.
 
 ---
 
-<a href="../src/runner_manager.py#L59"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L64"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>class</kbd> `RunnerManager`
+## <kbd>class</kbd> `LXDRunnerManager`
 Manage a group of runners according to configuration. 
 
 
@@ -25,7 +25,7 @@ Manage a group of runners according to configuration.
  - <b>`runner_bin_path`</b>:  The github runner app scripts path. 
  - <b>`cron_path`</b>:  The path to runner build image cron job. 
 
-<a href="../src/runner_manager.py#L70"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L75"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -33,7 +33,7 @@ Manage a group of runners according to configuration.
 __init__(
     app_name: str,
     unit: int,
-    runner_manager_config: RunnerManagerConfig
+    runner_manager_config: LXDRunnerManagerConfig
 ) → None
 ```
 
@@ -52,7 +52,7 @@ Construct RunnerManager object for creating and managing runners.
 
 ---
 
-<a href="../src/utilities.py#L811"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L816"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `build_runner_image`
 
@@ -72,7 +72,7 @@ Build container image in test mode, else virtual machine image.
 
 ---
 
-<a href="../src/runner_manager.py#L112"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L117"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `check_runner_bin`
 
@@ -89,12 +89,12 @@ Check if runner binary exists.
 
 ---
 
-<a href="../src/runner_manager.py#L622"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L627"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `flush`
 
 ```python
-flush(mode: FlushMode = <FlushMode.FLUSH_IDLE: 1>) → int
+flush(mode: LXDFlushMode = <LXDFlushMode.FLUSH_IDLE: 1>) → int
 ```
 
 Remove existing runners. 
@@ -118,7 +118,7 @@ Remove existing runners.
 
 ---
 
-<a href="../src/runner_manager.py#L213"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L218"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_github_info`
 
@@ -135,7 +135,7 @@ Get information on the runners from GitHub.
 
 ---
 
-<a href="../src/utilities.py#L120"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L125"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_latest_runner_bin_url`
 
@@ -166,7 +166,7 @@ The runner binary URL changes when a new version is available.
 
 ---
 
-<a href="../src/runner_manager.py#L803"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L808"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `has_runner_image`
 
@@ -183,7 +183,7 @@ Check if the runner image exists.
 
 ---
 
-<a href="../src/runner_manager.py#L522"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L527"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `reconcile`
 
@@ -207,7 +207,7 @@ Bring runners in line with target.
 
 ---
 
-<a href="../src/runner_manager.py#L826"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L831"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `schedule_build_runner_image`
 
@@ -219,7 +219,7 @@ Install cron job for building runner image.
 
 ---
 
-<a href="../src/utilities.py#L143"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L148"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `update_runner_bin`
 

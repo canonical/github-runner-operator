@@ -40,8 +40,8 @@ from charm_state import (
     CharmState,
     FirewallEntry,
     GithubConfig,
-    GithubOrg,
-    GithubRepo,
+    GitHubOrg,
+    GitHubRepo,
     ImmutableConfigChangedError,
     LocalLxdRunnerConfig,
     OpenstackImage,
@@ -64,7 +64,7 @@ def test_github_repo_path():
     """
     owner = "test_owner"
     repo = "test_repo"
-    github_repo = GithubRepo(owner, repo)
+    github_repo = GitHubRepo(owner, repo)
 
     path = github_repo.path()
 
@@ -79,7 +79,7 @@ def test_github_org_path():
     """
     org = "test_org"
     group = "test_group"
-    github_org = GithubOrg(org, group)
+    github_org = GitHubOrg(org, group)
 
     path = github_org.path()
 
@@ -128,14 +128,14 @@ def test_github_config_from_charm_invalid_token():
 @pytest.mark.parametrize(
     "path_str, runner_group, expected_type, expected_attrs",
     [
-        ("owner/repo", "test_group", GithubRepo, {"owner": "owner", "repo": "repo"}),
-        ("test_org", "test_group", GithubOrg, {"org": "test_org", "group": "test_group"}),
+        ("owner/repo", "test_group", GitHubRepo, {"owner": "owner", "repo": "repo"}),
+        ("test_org", "test_group", GitHubOrg, {"org": "test_org", "group": "test_group"}),
     ],
 )
 def test_parse_github_path(
     path_str: str,
     runner_group: str,
-    expected_type: GithubRepo | GithubOrg,
+    expected_type: GitHubRepo | GitHubOrg,
     expected_attrs: dict[str, str],
 ):
     """
@@ -497,7 +497,7 @@ def test_charm_config_from_charm_valid():
 
     result = CharmConfig.from_charm(mock_charm)
 
-    assert result.path == GithubRepo(owner="owner", repo="repo")
+    assert result.path == GitHubRepo(owner="owner", repo="repo")
     assert result.reconcile_interval == 5
     assert result.denylist == [
         FirewallEntry(ip_range="192.168.1.1"),

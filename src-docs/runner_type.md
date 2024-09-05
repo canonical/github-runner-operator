@@ -106,7 +106,7 @@ __init__(
     labels: tuple[str],
     lxd_storage_path: Path,
     name: str,
-    path: GithubOrg | GithubRepo,
+    path: GitHubOrg | GitHubRepo,
     proxies: ProxySetting,
     dockerhub_mirror: str | None = None,
     ssh_debug_connections: list[SSHDebugConnection] | None = None

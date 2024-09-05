@@ -13,7 +13,7 @@ import pytest
 from juju.application import Application
 from juju.model import Model
 
-from runner_manager import RunnerManager
+from runner_manager import LXDRunnerManager
 from tests.integration.helpers.common import check_runner_binary_exists
 from tests.integration.helpers.lxd import get_runner_names, run_in_unit, wait_till_num_of_runners
 from tests.status_name import ACTIVE
@@ -40,7 +40,7 @@ async def test_update_interval(model: Model, app_scheduled_events: Application) 
     unit = app_scheduled_events.units[0]
     assert await check_runner_binary_exists(unit)
 
-    ret_code, stdout, stderr = await run_in_unit(unit, f"rm -f {RunnerManager.runner_bin_path}")
+    ret_code, stdout, stderr = await run_in_unit(unit, f"rm -f {LXDRunnerManager.runner_bin_path}")
     assert ret_code == 0, f"Failed to remove runner binary {stdout} {stderr}"
     assert not await check_runner_binary_exists(unit)
 

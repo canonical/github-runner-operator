@@ -16,7 +16,7 @@ from ghapi.all import GhApi, pages
 from ghapi.page import paged
 from typing_extensions import assert_never
 
-from charm_state import Arch, GithubOrg, GithubPath, GithubRepo
+from charm_state import Arch, GitHubOrg, GitHubPath, GitHubRepo
 from errors import GithubApiError, JobNotFoundError, RunnerBinaryError, TokenError
 from github_type import (
     JobStats,
@@ -88,7 +88,7 @@ class GithubClient:
 
     @catch_http_errors
     def get_runner_application(
-        self, path: GithubPath, arch: Arch, os: str = "linux"
+        self, path: GitHubPath, arch: Arch, os: str = "linux"
     ) -> RunnerApplication:
         """Get runner application available for download for given arch.
 
@@ -106,11 +106,11 @@ class GithubClient:
             The runner application.
         """
         runner_applications: RunnerApplicationList = []
-        if isinstance(path, GithubRepo):
+        if isinstance(path, GitHubRepo):
             runner_applications = self._client.actions.list_runner_applications_for_repo(
                 owner=path.owner, repo=path.repo
             )
-        if isinstance(path, GithubOrg):
+        if isinstance(path, GitHubOrg):
             runner_applications = self._client.actions.list_runner_applications_for_org(
                 org=path.org
             )
@@ -127,7 +127,7 @@ class GithubClient:
             ) from err
 
     @catch_http_errors
-    def get_runner_github_info(self, path: GithubPath) -> list[SelfHostedRunner]:
+    def get_runner_github_info(self, path: GitHubPath) -> list[SelfHostedRunner]:
         """Get runner information on GitHub under a repo or org.
 
         Args:
@@ -139,7 +139,7 @@ class GithubClient:
         """
         remote_runners_list: list[SelfHostedRunner] = []
 
-        if isinstance(path, GithubRepo):
+        if isinstance(path, GitHubRepo):
             # The documentation of ghapi for pagination is incorrect and examples will give errors.
             # This workaround is a temp solution. Will be moving to PyGitHub in the future.
             self._client.actions.list_self_hosted_runners_for_repo(
@@ -157,7 +157,7 @@ class GithubClient:
                 )
                 for item in page["runners"]
             ]
-        if isinstance(path, GithubOrg):
+        if isinstance(path, GitHubOrg):
             # The documentation of ghapi for pagination is incorrect and examples will give errors.
             # This workaround is a temp solution. Will be moving to PyGitHub in the future.
             self._client.actions.list_self_hosted_runners_for_org(org=path.org, per_page=100)
@@ -175,7 +175,7 @@ class GithubClient:
         return remote_runners_list
 
     @catch_http_errors
-    def get_runner_remove_token(self, path: GithubPath) -> str:
+    def get_runner_remove_token(self, path: GitHubPath) -> str:
         """Get token from GitHub used for removing runners.
 
         Args:
@@ -185,11 +185,11 @@ class GithubClient:
             The removing token.
         """
         token: RemoveToken
-        if isinstance(path, GithubRepo):
+        if isinstance(path, GitHubRepo):
             token = self._client.actions.create_remove_token_for_repo(
                 owner=path.owner, repo=path.repo
             )
-        elif isinstance(path, GithubOrg):
+        elif isinstance(path, GitHubOrg):
             token = self._client.actions.create_remove_token_for_org(org=path.org)
         else:
             assert_never(token)
@@ -197,7 +197,7 @@ class GithubClient:
         return token["token"]
 
     @catch_http_errors
-    def get_runner_registration_token(self, path: GithubPath) -> str:
+    def get_runner_registration_token(self, path: GitHubPath) -> str:
         """Get token from GitHub used for registering runners.
 
         Args:
@@ -208,11 +208,11 @@ class GithubClient:
             The registration token.
         """
         token: RegistrationToken
-        if isinstance(path, GithubRepo):
+        if isinstance(path, GitHubRepo):
             token = self._client.actions.create_registration_token_for_repo(
                 owner=path.owner, repo=path.repo
             )
-        elif isinstance(path, GithubOrg):
+        elif isinstance(path, GitHubOrg):
             token = self._client.actions.create_registration_token_for_org(org=path.org)
         else:
             assert_never(token)
@@ -220,7 +220,7 @@ class GithubClient:
         return token["token"]
 
     @catch_http_errors
-    def delete_runner(self, path: GithubPath, runner_id: int) -> None:
+    def delete_runner(self, path: GitHubPath, runner_id: int) -> None:
         """Delete the self-hosted runner from GitHub.
 
         Args:
@@ -228,19 +228,19 @@ class GithubClient:
                 name.
             runner_id: Id of the runner.
         """
-        if isinstance(path, GithubRepo):
+        if isinstance(path, GitHubRepo):
             self._client.actions.delete_self_hosted_runner_from_repo(
                 owner=path.owner,
                 repo=path.repo,
                 runner_id=runner_id,
             )
-        if isinstance(path, GithubOrg):
+        if isinstance(path, GitHubOrg):
             self._client.actions.delete_self_hosted_runner_from_org(
                 org=path.org,
                 runner_id=runner_id,
             )
 
-    def get_job_info(self, path: GithubRepo, workflow_run_id: str, runner_name: str) -> JobStats:
+    def get_job_info(self, path: GitHubRepo, workflow_run_id: str, runner_name: str) -> JobStats:
         """Get information about a job for a specific workflow run.
 
         Args:
