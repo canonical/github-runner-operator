@@ -39,6 +39,10 @@ class RunnerAproxyError(RunnerError):
     """Error for setting up aproxy."""
 
 
+class MissingServerConfigError(RunnerError):
+    """Error for unable to create runner due to missing server configurations."""
+
+
 class MissingRunnerBinaryError(Exception):
     """Error for missing runner binary."""
 

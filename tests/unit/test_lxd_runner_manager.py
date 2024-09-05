@@ -1,7 +1,7 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Test cases of RunnerManager class."""
+"""Test cases of LXDRunnerManager class."""
 import random
 import secrets
 from pathlib import Path
@@ -16,8 +16,8 @@ from charm_state import (
     Arch,
     CharmConfig,
     CharmState,
-    GithubOrg,
-    GithubRepo,
+    GitHubOrg,
+    GitHubRepo,
     ProxyConfig,
     ReactiveConfig,
     VirtualMachineResources,
@@ -28,7 +28,7 @@ from metrics.events import Reconciliation, RunnerInstalled, RunnerStart, RunnerS
 from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from metrics.storage import MetricsStorage
 from runner import Runner, RunnerStatus
-from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, RunnerManager, RunnerManagerConfig
+from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, LXDRunnerManager, LXDRunnerManagerConfig
 from runner_type import RunnerNameByHealth
 from tests.unit.mock import TEST_BINARY, MockLxdImageManager
 
@@ -67,9 +67,9 @@ def charm_state_fixture(charm_config: MagicMock):
     scope="function",
     name="runner_manager",
     params=[
-        (GithubOrg("test_org", "test_group"), ProxyConfig()),
+        (GitHubOrg("test_org", "test_group"), ProxyConfig()),
         (
-            GithubRepo("test_owner", "test_repo"),
+            GitHubRepo("test_owner", "test_repo"),
             ProxyConfig(
                 no_proxy="test_no_proxy",
                 http=TEST_PROXY_SERVER_URL,
@@ -82,15 +82,15 @@ def charm_state_fixture(charm_config: MagicMock):
 def runner_manager_fixture(request, tmp_path, monkeypatch, token, charm_state):
     charm_state.proxy_config = request.param[1]
     monkeypatch.setattr(
-        "runner_manager.RunnerManager.runner_bin_path", tmp_path / "mock_runner_binary"
+        "runner_manager.LXDRunnerManager.runner_bin_path", tmp_path / "mock_runner_binary"
     )
     pool_path = tmp_path / "test_storage"
     pool_path.mkdir(exist_ok=True)
 
-    runner_manager = RunnerManager(
+    runner_manager = LXDRunnerManager(
         "test app",
         "0",
-        RunnerManagerConfig(
+        LXDRunnerManagerConfig(
             path=request.param[0],
             token=token,
             image=IMAGE_NAME,
@@ -144,7 +144,7 @@ def reactive_reconcile_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> Magi
         pytest.param(Arch.X64),
     ],
 )
-def test_get_latest_runner_bin_url(runner_manager: RunnerManager, arch: Arch, charm_state):
+def test_get_latest_runner_bin_url(runner_manager: LXDRunnerManager, arch: Arch, charm_state):
     """
     arrange: Nothing.
     act: Get runner bin url of existing binary.
@@ -168,7 +168,7 @@ def test_get_latest_runner_bin_url(runner_manager: RunnerManager, arch: Arch, ch
     assert runner_bin["filename"] == filename
 
 
-def test_get_latest_runner_bin_url_missing_binary(runner_manager: RunnerManager):
+def test_get_latest_runner_bin_url_missing_binary(runner_manager: LXDRunnerManager):
     """
     arrange: Given a mocked GH API client that does not return any runner binaries.
     act: Get runner bin url of non-existing binary.
@@ -181,7 +181,7 @@ def test_get_latest_runner_bin_url_missing_binary(runner_manager: RunnerManager)
         runner_manager.get_latest_runner_bin_url(os_name="not_exist")
 
 
-def test_update_runner_bin(runner_manager: RunnerManager):
+def test_update_runner_bin(runner_manager: LXDRunnerManager):
     """
     arrange: Remove the existing runner binary.
     act: Update runner binary.
@@ -222,7 +222,7 @@ def test_update_runner_bin(runner_manager: RunnerManager):
     assert runner_manager.runner_bin_path.read_bytes() == TEST_BINARY
 
 
-def test_reconcile_zero_count(runner_manager: RunnerManager):
+def test_reconcile_zero_count(runner_manager: LXDRunnerManager):
     """
     arrange: Nothing.
     act: Reconcile with the current amount of runner.
@@ -234,7 +234,7 @@ def test_reconcile_zero_count(runner_manager: RunnerManager):
     assert delta == 0
 
 
-def test_reconcile_create_runner(runner_manager: RunnerManager):
+def test_reconcile_create_runner(runner_manager: LXDRunnerManager):
     """
     arrange: Nothing.
     act: Reconcile to create a runner.
@@ -246,7 +246,7 @@ def test_reconcile_create_runner(runner_manager: RunnerManager):
     assert delta == 1
 
 
-def test_reconcile_remove_runner(runner_manager: RunnerManager):
+def test_reconcile_remove_runner(runner_manager: LXDRunnerManager):
     """
     arrange: Create online runners.
     act: Reconcile to remove a runner.
@@ -282,7 +282,7 @@ def test_reconcile_remove_runner(runner_manager: RunnerManager):
     assert delta == -1
 
 
-def test_reconcile(runner_manager: RunnerManager, tmp_path: Path):
+def test_reconcile(runner_manager: LXDRunnerManager, tmp_path: Path):
     """
     arrange: Setup one runner.
     act: Reconcile with the current amount of runner.
@@ -295,7 +295,7 @@ def test_reconcile(runner_manager: RunnerManager, tmp_path: Path):
     assert len(runner_manager._get_runners()) == 1
 
 
-def test_empty_flush(runner_manager: RunnerManager):
+def test_empty_flush(runner_manager: LXDRunnerManager):
     """
     arrange: No initial runners.
     act: Perform flushing with no runners.
@@ -305,7 +305,7 @@ def test_empty_flush(runner_manager: RunnerManager):
     runner_manager.flush()
 
 
-def test_flush(runner_manager: RunnerManager, tmp_path: Path):
+def test_flush(runner_manager: LXDRunnerManager, tmp_path: Path):
     """
     arrange: Create some runners.
     act: Perform flushing.
@@ -319,7 +319,7 @@ def test_flush(runner_manager: RunnerManager, tmp_path: Path):
 
 
 def test_reconcile_issues_runner_installed_event(
-    runner_manager: RunnerManager,
+    runner_manager: LXDRunnerManager,
     monkeypatch: MonkeyPatch,
     issue_event_mock: MagicMock,
     charm_state: MagicMock,
@@ -341,7 +341,7 @@ def test_reconcile_issues_runner_installed_event(
 
 
 def test_reconcile_issues_no_runner_installed_event_if_metrics_disabled(
-    runner_manager: RunnerManager, issue_event_mock: MagicMock, charm_state: MagicMock
+    runner_manager: LXDRunnerManager, issue_event_mock: MagicMock, charm_state: MagicMock
 ):
     """
     arrange: Disable issuing of metrics.
@@ -356,7 +356,7 @@ def test_reconcile_issues_no_runner_installed_event_if_metrics_disabled(
 
 
 def test_reconcile_error_on_issue_event_is_ignored(
-    runner_manager: RunnerManager,
+    runner_manager: LXDRunnerManager,
     issue_event_mock: MagicMock,
     charm_state: MagicMock,
 ):
@@ -375,7 +375,7 @@ def test_reconcile_error_on_issue_event_is_ignored(
 
 
 def test_reconcile_issues_reconciliation_metric_event(
-    runner_manager: RunnerManager,
+    runner_manager: LXDRunnerManager,
     monkeypatch: MonkeyPatch,
     issue_event_mock: MagicMock,
     runner_metrics: MagicMock,
@@ -458,7 +458,7 @@ def test_reconcile_issues_reconciliation_metric_event(
 
 
 def test_reconcile_places_timestamp_in_newly_created_runner(
-    runner_manager: RunnerManager,
+    runner_manager: LXDRunnerManager,
     monkeypatch: MonkeyPatch,
     shared_fs: MagicMock,
     tmp_path: Path,
@@ -485,7 +485,7 @@ def test_reconcile_places_timestamp_in_newly_created_runner(
 
 
 def test_reconcile_error_on_placing_timestamp_is_ignored(
-    runner_manager: RunnerManager, shared_fs: MagicMock, tmp_path: Path, charm_state: MagicMock
+    runner_manager: LXDRunnerManager, shared_fs: MagicMock, tmp_path: Path, charm_state: MagicMock
 ):
     """
     arrange: Enable issuing of metrics and do not create the directory for the shared filesystem\
@@ -504,7 +504,7 @@ def test_reconcile_error_on_placing_timestamp_is_ignored(
 
 
 def test_reconcile_places_no_timestamp_in_newly_created_runner_if_metrics_disabled(
-    runner_manager: RunnerManager, shared_fs: MagicMock, tmp_path: Path, charm_state: MagicMock
+    runner_manager: LXDRunnerManager, shared_fs: MagicMock, tmp_path: Path, charm_state: MagicMock
 ):
     """
     arrange: Disable issuing of metrics, mock timestamps and the shared filesystem module.
@@ -522,7 +522,7 @@ def test_reconcile_places_no_timestamp_in_newly_created_runner_if_metrics_disabl
 
 
 def test_reconcile_reactive_mode(
-    runner_manager: RunnerManager,
+    runner_manager: LXDRunnerManager,
     reactive_reconcile_mock: MagicMock,
     caplog: LogCaptureFixture,
 ):
@@ -542,7 +542,7 @@ def test_reconcile_reactive_mode(
 
 
 def test_schedule_build_runner_image(
-    runner_manager: RunnerManager,
+    runner_manager: LXDRunnerManager,
     tmp_path: Path,
     charm_state: CharmState,
     monkeypatch: MonkeyPatch,
@@ -569,7 +569,7 @@ def test_schedule_build_runner_image(
     assert cronfile.read_text() == f"4 4,10,16,22 * * * ubuntu {cmd} jammy\n"
 
 
-def test_has_runner_image(runner_manager: RunnerManager):
+def test_has_runner_image(runner_manager: LXDRunnerManager):
     """
     arrange: Multiple setups.
         1. no runner image exists.

@@ -36,7 +36,7 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
 )
-from runner_manager import RunnerManager
+from runner_manager import LXDRunnerManager
 from tests.status_name import ACTIVE
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
@@ -93,7 +93,7 @@ async def check_runner_binary_exists(unit: Unit) -> bool:
     Returns:
         Whether the runner binary file exists in the charm.
     """
-    return_code, _, _ = await run_in_unit(unit, f"test -f {RunnerManager.runner_bin_path}")
+    return_code, _, _ = await run_in_unit(unit, f"test -f {LXDRunnerManager.runner_bin_path}")
     return return_code == 0
 
 
@@ -141,10 +141,10 @@ async def remove_runner_bin(unit: Unit) -> None:
     Args:
         unit: Unit instance to check for the LXD profile.
     """
-    await run_in_unit(unit, f"rm {RunnerManager.runner_bin_path}")
+    await run_in_unit(unit, f"rm {LXDRunnerManager.runner_bin_path}")
 
     # No file should exists under with the filename.
-    return_code, _, _ = await run_in_unit(unit, f"test -f {RunnerManager.runner_bin_path}")
+    return_code, _, _ = await run_in_unit(unit, f"test -f {LXDRunnerManager.runner_bin_path}")
     assert return_code != 0
 
 

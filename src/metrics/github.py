@@ -4,7 +4,7 @@
 """Functions to calculate metrics from data retrieved from GitHub."""
 import logging
 
-from charm_state import GithubRepo
+from charm_state import GitHubRepo
 from errors import GithubMetricsError, JobNotFoundError
 from github_client import GithubClient
 from metrics.runner import PreJobMetrics
@@ -35,7 +35,7 @@ def job(
 
     try:
         job_info = github_client.get_job_info(
-            path=GithubRepo(owner=owner, repo=repo),
+            path=GitHubRepo(owner=owner, repo=repo),
             workflow_run_id=pre_job_metrics.workflow_run_id,
             runner_name=runner_name,
         )

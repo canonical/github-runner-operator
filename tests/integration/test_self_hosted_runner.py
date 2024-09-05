@@ -16,7 +16,7 @@ from charm_state import (
     DOCKERHUB_MIRROR_CONFIG_NAME,
     PATH_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
-    GithubRepo,
+    GitHubRepo,
 )
 from github_client import GithubClient
 from tests.integration.helpers.common import (
@@ -150,7 +150,7 @@ async def test_flush_busy_runner(
     # Wait until runner online and then busy.
     for _ in range(30):
         all_runners = runner_manager_github_client.get_runner_github_info(
-            GithubRepo(
+            GitHubRepo(
                 owner=forked_github_repository.owner.login, repo=forked_github_repository.name
             )
         )

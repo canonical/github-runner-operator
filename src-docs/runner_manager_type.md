@@ -11,7 +11,7 @@ Types used by RunnerManager class.
 
 <a href="../src/runner_manager_type.py#L20"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>class</kbd> `FlushMode`
+## <kbd>class</kbd> `LXDFlushMode`
 Strategy for flushing runners. 
 
 During pre-job (repo-check), the runners are marked as idle and if the pre-job fails, the runner falls back to being idle again. Hence wait_repo_check is required. 
@@ -71,7 +71,7 @@ __init__(
 
 <a href="../src/runner_manager_type.py#L62"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-## <kbd>class</kbd> `RunnerManagerConfig`
+## <kbd>class</kbd> `LXDRunnerManagerConfig`
 Configuration of runner manager. 
 
 
@@ -97,7 +97,7 @@ __init__(
     charm_state: CharmState,
     image: str,
     lxd_storage_path: Path,
-    path: GithubOrg | GithubRepo,
+    path: GitHubOrg | GitHubRepo,
     service_token: str,
     token: str,
     dockerhub_mirror: str | None = None,
@@ -147,7 +147,7 @@ Configuration of runner manager.
 ```python
 __init__(
     charm_state: CharmState,
-    path: GithubOrg | GithubRepo,
+    path: GitHubOrg | GitHubRepo,
     labels: Iterable[str],
     token: str,
     flavor: str,
