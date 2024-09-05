@@ -27,7 +27,7 @@ create_instance_config(
     app_name: str,
     unit_num: int,
     image_id: str,
-    path: GithubOrg | GithubRepo,
+    path: GitHubOrg | GitHubRepo,
     labels: Iterable[str],
     registration_token: str
 ) → InstanceConfig
@@ -75,7 +75,7 @@ The configuration values for creating a single runner instance.
 
 ```python
 __init__(
-    github_path: GithubOrg | GithubRepo,
+    github_path: GitHubOrg | GitHubRepo,
     image_id: str,
     labels: Iterable[str],
     name: str,

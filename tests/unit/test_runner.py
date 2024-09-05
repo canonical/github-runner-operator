@@ -13,7 +13,7 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 
 import metrics.runner_logs
-from charm_state import GithubOrg, GithubRepo, SSHDebugConnection, VirtualMachineResources
+from charm_state import GitHubOrg, GitHubRepo, SSHDebugConnection, VirtualMachineResources
 from errors import (
     CreateMetricsStorageError,
     LxdError,
@@ -138,11 +138,11 @@ def ssh_debug_connections_fixture() -> list[SSHDebugConnection]:
     name="runner",
     params=[
         (
-            GithubOrg("test_org", "test_group"),
+            GitHubOrg("test_org", "test_group"),
             ProxySetting(no_proxy=None, http=None, https=None, aproxy_address=None),
         ),
         (
-            GithubRepo("test_owner", "test_repo"),
+            GitHubRepo("test_owner", "test_repo"),
             ProxySetting(
                 no_proxy="test_no_proxy",
                 http=TEST_PROXY_SERVER_URL,

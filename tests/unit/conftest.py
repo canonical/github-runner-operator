@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 
 import utilities
-from openstack_cloud import openstack_manager
+from manager.runner_scaler import RunnerScaler
 from tests.unit.mock import MockGhapiClient, MockLxdClient, MockRepoPolicyComplianceClient
 
 
@@ -46,7 +46,7 @@ def disk_usage_mock(total_disk: int):
 
 @pytest.fixture(autouse=True)
 def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_path):
-    openstack_manager_mock = unittest.mock.MagicMock(spec=openstack_manager)
+    runner_scaler_mock = unittest.mock.MagicMock(spec=RunnerScaler)
 
     cron_path = tmp_path / "cron.d"
     cron_path.mkdir()
@@ -61,7 +61,7 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     monkeypatch.setattr(
         "charm.GithubRunnerCharm.repo_check_systemd_service", tmp_path / "systemd_service"
     )
-    monkeypatch.setattr("charm.OpenstackRunnerManager", openstack_manager_mock)
+    monkeypatch.setattr("charm.RunnerScaler", runner_scaler_mock)
     monkeypatch.setattr("charm.GithubRunnerCharm.kernel_module_path", tmp_path / "modules")
     monkeypatch.setattr("charm.GithubRunnerCharm._update_kernel", lambda self, now: None)
     monkeypatch.setattr("charm.execute_command", exec_command)
@@ -86,8 +86,8 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     monkeypatch.setattr("runner_manager.LxdClient", MockLxdClient)
     monkeypatch.setattr("runner_manager.shared_fs", unittest.mock.MagicMock())
     monkeypatch.setattr("runner_manager.execute_command", exec_command)
-    monkeypatch.setattr("runner_manager.RunnerManager.runner_bin_path", runner_binary_path)
-    monkeypatch.setattr("runner_manager.RunnerManager.cron_path", cron_path)
+    monkeypatch.setattr("runner_manager.LXDRunnerManager.runner_bin_path", runner_binary_path)
+    monkeypatch.setattr("runner_manager.LXDRunnerManager.cron_path", cron_path)
     monkeypatch.setattr(
         "runner_manager.RepoPolicyComplianceClient", MockRepoPolicyComplianceClient
     )

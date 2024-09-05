@@ -10,7 +10,7 @@ from urllib.error import HTTPError
 
 import pytest
 
-from charm_state import GithubRepo
+from charm_state import GitHubRepo
 from errors import JobNotFoundError
 from github_client import GithubClient
 from github_type import JobConclusion, JobStats
@@ -95,7 +95,7 @@ def test_get_job_info(github_client: GithubClient, job_stats_raw: JobStatsRawDat
     act: Call get_job_info.
     assert: The correct JobStats object is returned.
     """
-    github_repo = GithubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
+    github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
     job_stats = github_client.get_job_info(
         path=github_repo,
         workflow_run_id=secrets.token_hex(16),
@@ -128,7 +128,7 @@ def test_get_job_info_no_conclusion(github_client: GithubClient, job_stats_raw: 
             }
         ]
     }
-    github_repo = GithubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
+    github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
     job_stats = github_client.get_job_info(
         path=github_repo,
         workflow_run_id=secrets.token_hex(16),
@@ -156,7 +156,7 @@ def test_github_api_pagination_multiple_pages(
         github_client=github_client, job_stats_raw=job_stats_raw, include_runner=True
     )
 
-    github_repo = GithubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
+    github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
     job_stats = github_client.get_job_info(
         path=github_repo,
         workflow_run_id=secrets.token_hex(16),
@@ -184,7 +184,7 @@ def test_github_api_pagination_job_not_found(
         github_client=github_client, job_stats_raw=job_stats_raw, include_runner=False
     )
 
-    github_repo = GithubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
+    github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
 
     with pytest.raises(JobNotFoundError):
         github_client.get_job_info(
@@ -198,7 +198,7 @@ def test_github_api_http_error(github_client: GithubClient, job_stats_raw: JobSt
     github_client._client.actions.list_jobs_for_workflow_run.side_effect = HTTPError(
         "http://test.com", 500, "", http.client.HTTPMessage(), None
     )
-    github_repo = GithubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
+    github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
 
     with pytest.raises(JobNotFoundError):
         github_client.get_job_info(

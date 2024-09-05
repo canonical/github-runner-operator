@@ -28,8 +28,8 @@ from charm_state import (
     VM_CPU_CONFIG_NAME,
     VM_DISK_CONFIG_NAME,
     Arch,
-    GithubOrg,
-    GithubRepo,
+    GitHubOrg,
+    GitHubRepo,
     InstanceType,
     OpenStackCloudsYAML,
     OpenstackImage,
@@ -49,7 +49,7 @@ from errors import (
 from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
 from github_type import GitHubRunnerStatus
-from runner_manager import RunnerInfo, RunnerManagerConfig
+from runner_manager import LXDRunnerManagerConfig, RunnerInfo
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
@@ -158,8 +158,10 @@ def setup_charm_harness(monkeypatch: pytest.MonkeyPatch, runner_bin_path: Path) 
     harness = Harness(GithubRunnerCharm)
     harness.update_config({PATH_CONFIG_NAME: "mock/repo", TOKEN_CONFIG_NAME: "mocktoken"})
     harness.begin()
-    monkeypatch.setattr("runner_manager.RunnerManager.update_runner_bin", stub_update_runner_bin)
-    monkeypatch.setattr("runner_manager.RunnerManager._runners_in_pre_job", lambda self: False)
+    monkeypatch.setattr(
+        "runner_manager.LXDRunnerManager.update_runner_bin", stub_update_runner_bin
+    )
+    monkeypatch.setattr("runner_manager.LXDRunnerManager._runners_in_pre_job", lambda self: False)
     monkeypatch.setattr("charm.EventTimer.ensure_event_timer", MagicMock())
     monkeypatch.setattr("charm.logrotate.setup", MagicMock())
     return harness
@@ -208,7 +210,7 @@ def test_common_install_code(
     monkeypatch.setattr("charm.logrotate.setup", setup_logrotate := MagicMock())
 
     monkeypatch.setattr(
-        "runner_manager.RunnerManager.schedule_build_runner_image",
+        "runner_manager.LXDRunnerManager.schedule_build_runner_image",
         schedule_build_runner_image := MagicMock(),
     )
     event_timer_mock = MagicMock(spec=EventTimer)
@@ -243,11 +245,11 @@ def test_common_install_code_does_not_rebuild_image(
     assert: Image is not rebuilt.
     """
     monkeypatch.setattr(
-        "runner_manager.RunnerManager.build_runner_image",
+        "runner_manager.LXDRunnerManager.build_runner_image",
         build_runner_image := MagicMock(),
     )
     monkeypatch.setattr(
-        "runner_manager.RunnerManager.has_runner_image",
+        "runner_manager.LXDRunnerManager.has_runner_image",
         MagicMock(return_value=True),
     )
     getattr(harness.charm.on, hook).emit()
@@ -439,7 +441,7 @@ def test_database_integration_events_trigger_reconciliation(
 class TestCharm(unittest.TestCase):
     """Test the GithubRunner charm."""
 
-    @patch("charm.RunnerManager")
+    @patch("charm.LXDRunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -460,8 +462,8 @@ class TestCharm(unittest.TestCase):
         rm.assert_called_with(
             "github-runner",
             "0",
-            RunnerManagerConfig(
-                path=GithubOrg(org="mockorg", group="mockgroup"),
+            LXDRunnerManagerConfig(
+                path=GitHubOrg(org="mockorg", group="mockgroup"),
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
@@ -470,7 +472,7 @@ class TestCharm(unittest.TestCase):
             ),
         )
 
-    @patch("charm.RunnerManager")
+    @patch("charm.LXDRunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -490,8 +492,8 @@ class TestCharm(unittest.TestCase):
         rm.assert_called_with(
             "github-runner",
             "0",
-            RunnerManagerConfig(
-                path=GithubRepo(owner="mockorg", repo="repo"),
+            LXDRunnerManagerConfig(
+                path=GitHubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
@@ -500,7 +502,7 @@ class TestCharm(unittest.TestCase):
             ),
         )
 
-    @patch("charm.RunnerManager")
+    @patch("charm.LXDRunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -527,7 +529,7 @@ class TestCharm(unittest.TestCase):
             )
         )
 
-    @patch("charm.RunnerManager")
+    @patch("charm.LXDRunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -548,8 +550,8 @@ class TestCharm(unittest.TestCase):
         rm.assert_called_with(
             "github-runner",
             "0",
-            RunnerManagerConfig(
-                path=GithubRepo(owner="mockorg", repo="repo"),
+            LXDRunnerManagerConfig(
+                path=GitHubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
@@ -570,8 +572,8 @@ class TestCharm(unittest.TestCase):
         rm.assert_called_with(
             "github-runner",
             "0",
-            RunnerManagerConfig(
-                path=GithubRepo(owner="mockorg", repo="repo"),
+            LXDRunnerManagerConfig(
+                path=GitHubRepo(owner="mockorg", repo="repo"),
                 token="mocktoken",
                 image="jammy",
                 service_token=token,
@@ -584,7 +586,7 @@ class TestCharm(unittest.TestCase):
         )
         mock_rm.reset_mock()
 
-    @patch("charm.RunnerManager")
+    @patch("charm.LXDRunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -629,7 +631,7 @@ class TestCharm(unittest.TestCase):
         with pytest.raises(TimerEnableError):
             harness.charm.on.update_status.emit()
 
-    @patch("charm.RunnerManager")
+    @patch("charm.LXDRunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -641,7 +643,7 @@ class TestCharm(unittest.TestCase):
         harness.charm.on.stop.emit()
         mock_rm.flush.assert_called()
 
-    @patch("charm.RunnerManager")
+    @patch("charm.LXDRunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -660,8 +662,8 @@ class TestCharm(unittest.TestCase):
             "Failed to start runners: mock error"
         )
 
-    @patch("charm.RunnerManager")
-    @patch("charm.OpenstackRunnerManager")
+    @patch("charm.LXDRunnerManager")
+    @patch("charm.RunnerScaler")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -700,7 +702,7 @@ class TestCharm(unittest.TestCase):
 
         assert harness.charm.unit.status == BlockedStatus("Please provide image integration.")
 
-    @patch("charm.RunnerManager")
+    @patch("charm.LXDRunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -719,7 +721,7 @@ class TestCharm(unittest.TestCase):
             {"online": 2, "offline": 2, "unknown": 1, "runners": "test runner 0, test runner 1"}
         )
 
-    @patch("charm.RunnerManager")
+    @patch("charm.LXDRunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -733,7 +735,7 @@ class TestCharm(unittest.TestCase):
         harness.charm._on_check_runners_action(mock_event)
         mock_event.fail.assert_called_with("Invalid Github config, Missing path configuration")
 
-    @patch("charm.RunnerManager")
+    @patch("charm.LXDRunnerManager")
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
     @patch("subprocess.run")
@@ -936,7 +938,7 @@ def test__on_image_relation_image_ready():
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._get_set_image_ready_status = MagicMock(return_value=True)
     runner_manager_mock = MagicMock()
-    harness.charm._get_openstack_runner_manager = MagicMock(return_value=runner_manager_mock)
+    harness.charm._get_runner_scaler = MagicMock(return_value=runner_manager_mock)
 
     harness.charm._on_image_relation_changed(MagicMock())
 
