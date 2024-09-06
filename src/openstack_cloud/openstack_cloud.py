@@ -22,7 +22,7 @@ from openstack.connection import Connection as OpenstackConnection
 from openstack.network.v2.security_group import SecurityGroup as OpenstackSecurityGroup
 from paramiko.ssh_exception import NoValidConnectionsError
 
-from errors import KeyfileError, OpenStackError, SSHError
+from errors import KeyfileError, OpenStackError, OpenStackUnauthorizedError, SSHError
 from utilities import retry
 
 logger = logging.getLogger(__name__)
@@ -120,7 +120,7 @@ def _get_openstack_connection(
     # pylint thinks this isn't an exception, but does inherit from Exception class.
     except openstack.exceptions.HttpException as exc:  # pylint: disable=bad-exception-cause
         logger.exception("OpenStack API call failure")
-        raise OpenStackError("Failed OpenStack API call") from exc
+        raise OpenStackUnauthorizedError("Failed OpenStack API call") from exc
 
 
 class OpenstackCloud:
