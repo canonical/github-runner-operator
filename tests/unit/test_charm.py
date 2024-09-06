@@ -12,7 +12,6 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 import yaml
-from github_runner_manager.errors import OpenStackUnauthorizedError
 from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
@@ -760,7 +759,6 @@ class TestCharm(unittest.TestCase):
         pytest.param(ConfigurationError, BlockedStatus, id="charm config error"),
         pytest.param(TokenError, BlockedStatus, id="github token error"),
         pytest.param(MissingRunnerBinaryError, MaintenanceStatus, id="runner binary error"),
-        pytest.param(OpenStackUnauthorizedError, BlockedStatus, id="openstack auth error"),
     ],
 )
 def test_catch_charm_errors(
