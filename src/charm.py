@@ -1182,9 +1182,9 @@ class GithubRunnerCharm(CharmBase):
             return
 
         clouds_yaml = state.charm_config.openstack_clouds_yaml
-        # unsubscriptable-object / E1136 thinks cloud_yaml is kind of a list
-        cloud = list(clouds_yaml["clouds"].keys())[0]  # pylint: disable=E1136
-        auth_map = clouds_yaml["clouds"][cloud]["auth"]  # pylint: disable=E1136
+        # unsubscriptable-object / thinks cloud_yaml is kind of a list
+        cloud = list(clouds_yaml["clouds"].keys())[0]  # pylint: disable=unsubscriptable-object
+        auth_map = clouds_yaml["clouds"][cloud]["auth"]  # pylint: disable=unsubscriptable-object
         for relation in self.model.relations[IMAGE_INTEGRATION_NAME]:
             relation.data[self.unit].update(auth_map)
 
