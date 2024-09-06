@@ -194,7 +194,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 instance_id=instance_id,
                 image=self._server_config.image,
                 flavor=self._server_config.flavor,
-                network=str(self._server_config.network) if self._server_config.network else None,
+                network=self._server_config.network,
                 cloud_init=cloud_init,
             )
         except OpenStackError as err:

@@ -404,12 +404,12 @@ class CharmConfig(BaseModel):
     """
 
     denylist: list[FirewallEntry]
-    dockerhub_mirror: AnyHttpsUrl | None = None
+    dockerhub_mirror: AnyHttpsUrl | None
     labels: tuple[str, ...]
-    openstack_clouds_yaml: OpenStackCloudsYAML | None = None
+    openstack_clouds_yaml: OpenStackCloudsYAML | None
     path: GitHubPath
     reconcile_interval: int
-    repo_policy_compliance: RepoPolicyComplianceConfig | None = None
+    repo_policy_compliance: RepoPolicyComplianceConfig | None
     token: str
 
     @classmethod
@@ -492,7 +492,7 @@ class CharmConfig(BaseModel):
 
         try:
             openstack_cloud.initialize(openstack_clouds_yaml)
-        except (OpenStackInvalidConfigError, TypeError) as exc:
+        except OpenStackInvalidConfigError as exc:
             logger.error("Invalid openstack config, %s.", exc)
             raise CharmConfigInvalidError(
                 "Invalid openstack config. Not able to initialize openstack integration."
@@ -630,8 +630,8 @@ class OpenstackImage(BaseModel):
         tags: Image tags, e.g. jammy
     """
 
-    id: str | None = None
-    tags: list[str] | None = None
+    id: str | None
+    tags: list[str] | None
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "OpenstackImage | None":
@@ -673,7 +673,7 @@ class OpenstackRunnerConfig(BaseModel):
     virtual_machines: int
     openstack_flavor: str
     openstack_network: str
-    openstack_image: OpenstackImage | None = None
+    openstack_image: OpenstackImage | None
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "OpenstackRunnerConfig":
@@ -845,9 +845,9 @@ class ProxyConfig(BaseModel):
         model_config: Config for the pydantic model
     """
 
-    http: Optional[AnyHttpUrl] = None
-    https: Optional[AnyHttpUrl] = None
-    no_proxy: Optional[str] = None
+    http: Optional[AnyHttpUrl]
+    https: Optional[AnyHttpUrl]
+    no_proxy: Optional[str]
     use_aproxy: bool = False
     model_config = ConfigDict(frozen=True)
 
@@ -860,12 +860,7 @@ class ProxyConfig(BaseModel):
             assert (
                 proxy_address is not None and proxy_address.host is not None
             )  # nosec for [B101:assert_used]
-            if "http" in proxy_address.host:
-                aproxy_address = proxy_address.host[7:]
-            elif "https" in proxy_address.host:
-                aproxy_address = proxy_address.host[8:]
-            else:
-                aproxy_address = proxy_address.host
+            aproxy_address = proxy_address.host
 
             if proxy_address.port:
                 aproxy_address = f"{proxy_address.host}:{proxy_address.port}"
@@ -888,14 +883,8 @@ class ProxyConfig(BaseModel):
         Returns:
             Validated use_aproxy value.
         """
-        try:
-            if use_aproxy:
-                values_data = values.data
-                if not (values_data.get("http") or values_data.get("https")):
-                    raise ValueError("aproxy requires http or https to be set")
-        except AttributeError as exc:  # noqa: F841
-            # when http or https are not passed, raises an AttributeError
-            raise ValueError("aproxy requires http or https to be set") from exc
+        if use_aproxy and not (values.get("http") or values.get("https")):
+            raise ValueError("aproxy requires http or https to be set")
 
         return use_aproxy
 

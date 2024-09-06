@@ -212,8 +212,8 @@ def set_env_var(env_var: str, value: str) -> None:
         env_var: Name of the environment variable.
         value: Value to set environment variable to.
     """
-    os.environ[env_var.upper()] = str(value)
-    os.environ[env_var.lower()] = str(value)
+    os.environ[env_var.upper()] = value
+    os.environ[env_var.lower()] = value
 
 
 def bytes_with_unit_to_kib(num_bytes: str) -> int:

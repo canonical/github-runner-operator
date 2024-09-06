@@ -92,7 +92,7 @@ class RunnerStart(Event):
     repo: str
     github_event: str
     idle: NonNegativeFloat
-    queue_duration: Optional[NonNegativeFloat] = None
+    queue_duration: Optional[NonNegativeFloat]
 
 
 class CodeInformation(BaseModel):
@@ -127,9 +127,9 @@ class RunnerStop(Event):
     repo: str
     github_event: str
     status: str
-    status_info: Optional[CodeInformation] = None
+    status_info: Optional[CodeInformation]
     job_duration: NonNegativeFloat
-    job_conclusion: Optional[str] = None
+    job_conclusion: Optional[str]
 
 
 class Reconciliation(Event):

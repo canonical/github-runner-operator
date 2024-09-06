@@ -11,7 +11,12 @@
 from manager.cloud_runner_manager import GitHubRunnerConfig, SupportServiceConfig
 from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
 from manager.runner_scaler import RunnerScaler
-from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
+from utilities import (
+    bytes_with_unit_to_kib,
+    execute_command,
+    remove_residual_venv_dirs,
+    retry,
+)
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
 # pylint: disable=wrong-import-position,wrong-import-order
@@ -1182,9 +1187,8 @@ class GithubRunnerCharm(CharmBase):
             return
 
         clouds_yaml = state.charm_config.openstack_clouds_yaml
-        # unsubscriptable-object / thinks cloud_yaml is kind of a list
-        cloud = list(clouds_yaml["clouds"].keys())[0]  # pylint: disable=unsubscriptable-object
-        auth_map = clouds_yaml["clouds"][cloud]["auth"]  # pylint: disable=unsubscriptable-object
+        cloud = list(clouds_yaml["clouds"].keys())[0]
+        auth_map = clouds_yaml["clouds"][cloud]["auth"]
         for relation in self.model.relations[IMAGE_INTEGRATION_NAME]:
             relation.data[self.unit].update(auth_map)
 

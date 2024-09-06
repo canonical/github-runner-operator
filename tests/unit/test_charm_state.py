@@ -503,9 +503,7 @@ def test_charm_config_from_charm_valid():
         FirewallEntry(ip_range="192.168.1.1"),
         FirewallEntry(ip_range="192.168.1.2"),
     ]
-    assert result.dockerhub_mirror == AnyHttpUrl(
-        "https://example.com"
-    )  # *** new Url lib adds '/' to the end of urls ***
+    assert result.dockerhub_mirror == AnyHttpUrl("https://example.com")
     assert result.openstack_clouds_yaml == test_openstack_config
     assert result.labels == ("label1", "label2", "label3")
     assert result.token == "abc123"

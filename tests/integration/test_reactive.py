@@ -32,9 +32,6 @@ async def test_reactive_mode_consumes_jobs(ops_test: OpsTest, app_for_reactive: 
         mongodb_uri = await _get_mongodb_uri_from_secrets(ops_test, unit.model)
     assert mongodb_uri, "mongodb uri not found in integration data or secret"
 
-    # need to convert Url type to str type to be able to serialize
-    mongodb_uri = str(mongodb_uri)
-
     job = JobDetails(
         labels=[secrets.token_hex(16) for _ in range(random.randint(1, 4))], run_url=FAKE_URL
     )

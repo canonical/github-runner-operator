@@ -19,9 +19,8 @@ from errors import (
     RunnerMetricsError,
 )
 from metrics import events as metric_events
-from metrics.storage import MetricsStorage
+from metrics.storage import MetricsStorage, move_to_quarantine
 from metrics.storage import StorageManager as MetricsStorageManager
-from metrics.storage import move_to_quarantine
 from metrics.type import GithubJobMetrics
 
 logger = logging.getLogger(__name__)
@@ -85,7 +84,7 @@ class PostJobMetrics(BaseModel):
 
     timestamp: NonNegativeFloat
     status: PostJobStatus
-    status_info: Optional[CodeInformation] = None
+    status_info: Optional[CodeInformation]
 
 
 class RunnerMetrics(BaseModel):
@@ -100,7 +99,7 @@ class RunnerMetrics(BaseModel):
 
     installed_timestamp: NonNegativeFloat
     pre_job: PreJobMetrics
-    post_job: Optional[PostJobMetrics] = None
+    post_job: Optional[PostJobMetrics]
     runner_name: str
 
 
@@ -301,11 +300,7 @@ def _create_runner_stop(
         repo=runner_metrics.pre_job.repository,
         github_event=runner_metrics.pre_job.event,
         status=runner_metrics.post_job.status,
-        status_info=(
-            runner_metrics.post_job.status_info.dict()
-            if runner_metrics.post_job.status_info
-            else None
-        ),
+        status_info=runner_metrics.post_job.status_info,
         job_duration=job_duration,
         job_conclusion=job_metrics.conclusion if job_metrics else None,
     )
