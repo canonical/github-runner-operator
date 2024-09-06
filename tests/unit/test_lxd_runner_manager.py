@@ -17,7 +17,7 @@ from github_runner_manager.metrics.events import (
 )
 from github_runner_manager.metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from github_runner_manager.metrics.storage import MetricsStorage
-from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
+from github_runner_manager.types_.github import GitHubOrg, GitHubRepo, RunnerApplication
 from pytest import LogCaptureFixture, MonkeyPatch
 
 import shared_fs
@@ -30,7 +30,6 @@ from charm_state import (
     VirtualMachineResources,
 )
 from errors import IssueMetricEventError, RunnerBinaryError
-from github_type import RunnerApplication
 from runner import Runner, RunnerStatus
 from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, LXDRunnerManager, LXDRunnerManagerConfig
 from runner_type import RunnerNameByHealth

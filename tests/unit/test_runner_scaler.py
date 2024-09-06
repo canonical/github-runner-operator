@@ -8,7 +8,11 @@ from unittest.mock import MagicMock
 import pytest
 from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState, InstanceId
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
-from github_runner_manager.manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
+from github_runner_manager.manager.runner_manager import (
+    FlushMode,
+    RunnerManager,
+    RunnerManagerConfig,
+)
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.types_.github import GitHubPath, GitHubRepo
 
@@ -58,11 +62,16 @@ def runner_manager_fixture(
 ) -> RunnerManager:
     mock_cloud, mock_github = mock_runner_managers
     monkeypatch.setattr(
-        "github_runner_manager.manager.runner_manager.RunnerManager._spawn_runners", mock_runner_manager_spawn_runners
+        "github_runner_manager.manager.runner_manager.RunnerManager._spawn_runners",
+        mock_runner_manager_spawn_runners,
     )
     # Patch out the metrics, as metrics has their own tests.
-    monkeypatch.setattr("github_runner_manager.manager.runner_manager.github_metrics.job", MagicMock())
-    monkeypatch.setattr("github_runner_manager.manager.runner_manager.runner_metrics.issue_events", MagicMock())
+    monkeypatch.setattr(
+        "github_runner_manager.manager.runner_manager.github_metrics.job", MagicMock()
+    )
+    monkeypatch.setattr(
+        "github_runner_manager.manager.runner_manager.runner_metrics.issue_events", MagicMock()
+    )
 
     config = RunnerManagerConfig("mock_token", github_path)
     runner_manager = RunnerManager("mock_runners", mock_cloud, config)

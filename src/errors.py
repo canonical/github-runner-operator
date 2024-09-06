@@ -6,25 +6,29 @@ from __future__ import annotations
 
 from typing import Union
 
-
-class RunnerError(Exception):
-    """Generic runner error as base exception."""
-
-
-class RunnerFileLoadError(RunnerError):
-    """Error for loading file on runner."""
+# we import the errors from the module, these are used in the charm
+from github_runner_manager.errors import (  # noqa: F401  pylint: disable=unused-import
+    CreateMetricsStorageError,
+    DeleteMetricsStorageError,
+    GetMetricsStorageError,
+    GithubClientError,
+    GithubMetricsError,
+    MetricsStorageError,
+    RunnerError,
+    TokenError,
+)
 
 
 class RunnerCreateError(RunnerError):
     """Error for runner creation failure."""
 
 
+class RunnerFileLoadError(RunnerError):
+    """Error for loading file on runner."""
+
+
 class RunnerRemoveError(RunnerError):
     """Error for runner removal failure."""
-
-
-class RunnerStartError(RunnerError):
-    """Error for runner start failure."""
 
 
 class RunnerBinaryError(RunnerError):
@@ -96,52 +100,12 @@ class LogrotateSetupError(Exception):
     """Represents an error raised when logrotate cannot be setup."""
 
 
-class MetricsStorageError(Exception):
-    """Base class for all metrics storage errors."""
-
-
 class SharedFilesystemError(MetricsStorageError):
     """Base class for all shared filesystem errors."""
 
 
-class CreateMetricsStorageError(MetricsStorageError):
-    """Represents an error when the metrics storage could not be created."""
-
-
-class DeleteMetricsStorageError(MetricsStorageError):
-    """Represents an error when the metrics storage could not be deleted."""
-
-
-class GetMetricsStorageError(MetricsStorageError):
-    """Represents an error when the metrics storage could not be retrieved."""
-
-
-class QuarantineMetricsStorageError(MetricsStorageError):
-    """Represents an error when the metrics storage could not be quarantined."""
-
-
 class SharedFilesystemMountError(SharedFilesystemError):
     """Represents an error related to the mounting of the shared filesystem."""
-
-
-class GithubMetricsError(Exception):
-    """Base class for all github metrics errors."""
-
-
-class GithubClientError(Exception):
-    """Base class for all github client errors."""
-
-
-class GithubApiError(GithubClientError):
-    """Represents an error when the GitHub API returns an error."""
-
-
-class TokenError(GithubClientError):
-    """Represents an error when the token is invalid or has not enough permissions."""
-
-
-class JobNotFoundError(GithubClientError):
-    """Represents an error when the job could not be found on GitHub."""
 
 
 class RunnerLogsError(Exception):

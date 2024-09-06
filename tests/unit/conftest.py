@@ -80,7 +80,7 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
         "github_runner_manager.metrics.events.METRICS_LOG_PATH", Path(tmp_path / "metrics.log")
     )
     monkeypatch.setattr("runner.time", unittest.mock.MagicMock())
-    monkeypatch.setattr("github_client.GhApi", MockGhapiClient)
+    monkeypatch.setattr("github_runner_manager.github_client.GhApi", MockGhapiClient)
     monkeypatch.setattr("runner_manager_type.jinja2", unittest.mock.MagicMock())
     monkeypatch.setattr("runner_manager_type.LxdClient", MockLxdClient)
     monkeypatch.setattr("runner_manager.github_metrics", unittest.mock.MagicMock())
@@ -93,7 +93,7 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     monkeypatch.setattr(
         "runner_manager.RepoPolicyComplianceClient", MockRepoPolicyComplianceClient
     )
-    monkeypatch.setattr("utilities.time", unittest.mock.MagicMock())
+    monkeypatch.setattr("github_runner_manager.utilities.time", unittest.mock.MagicMock())
 
 
 @pytest.fixture(autouse=True, name="cloud_name")

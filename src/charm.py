@@ -22,7 +22,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackServerConfig,
 )
-from github_runner_manager.types_.github import GitHubPath, parse_github_path
+from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus, parse_github_path
 
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
@@ -90,7 +90,6 @@ from errors import (
 )
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
-from github_type import GitHubRunnerStatus
 from runner import LXD_PROFILE_YAML
 from runner_manager import LXDRunnerManager, LXDRunnerManagerConfig
 from runner_manager_type import LXDFlushMode

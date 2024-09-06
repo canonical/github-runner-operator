@@ -12,8 +12,9 @@ import secrets
 from pathlib import Path
 from typing import IO, Optional, Sequence, Union
 
+from github_runner_manager.types_.github import RegistrationToken, RemoveToken, RunnerApplication
+
 from errors import LxdError, RunnerError
-from github_type import RegistrationToken, RemoveToken, RunnerApplication
 from lxd_type import LxdNetwork
 from runner import LxdInstanceConfig
 

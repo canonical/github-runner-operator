@@ -12,7 +12,7 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 import yaml
-from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
+from github_runner_manager.types_.github import GitHubOrg, GitHubRepo, GitHubRunnerStatus
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
 
@@ -46,7 +46,6 @@ from errors import (
 )
 from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
-from github_type import GitHubRunnerStatus
 from runner_manager import LXDRunnerManagerConfig, RunnerInfo
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"

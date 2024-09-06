@@ -24,6 +24,7 @@ from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics import runner_logs
 from github_runner_manager.metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
+from github_runner_manager.types_.github import RunnerApplication, SelfHostedRunner
 
 import shared_fs
 from charm_state import VirtualMachineResources
@@ -38,7 +39,6 @@ from errors import (
     SubprocessError,
 )
 from github_client import GithubClient
-from github_type import RunnerApplication, SelfHostedRunner
 from lxd import LxdClient, LxdInstance
 from runner import LXD_PROFILE_YAML, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import (

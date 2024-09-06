@@ -16,10 +16,10 @@ from github.Workflow import Workflow
 from github.WorkflowJob import WorkflowJob
 from github_runner_manager.metrics.events import METRICS_LOG_PATH
 from github_runner_manager.metrics.runner import PostJobStatus
+from github_runner_manager.types_.github import JobConclusion
 from juju.application import Application
 from juju.unit import Unit
 
-from github_type import JobConclusion
 from tests.integration.helpers.common import (
     InstanceHelper,
     get_file_content,
