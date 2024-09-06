@@ -872,7 +872,7 @@ class ProxyConfig(BaseModel):
             aproxy_address = None
         return aproxy_address
 
-    @field_validator("use_aproxy")  # type: ignore
+    @field_validator("use_aproxy")  # type: ignore[type-var]
     @classmethod
     def check_use_aproxy(cls, use_aproxy: bool, values: dict) -> bool:
         """Validate the proxy configuration.
@@ -889,7 +889,8 @@ class ProxyConfig(BaseModel):
         """
         try:
             if use_aproxy:
-                values_data = values.data  # type: ignore
+                # Mypy thinks values doesn't have `data` attribute defined
+                values_data = values.data  # type: ignore[attr-defined]
                 if not (values_data.get("http") or values_data.get("https")):
                     raise ValueError("aproxy requires http or https to be set")
         except AttributeError as exc:  # noqa: F841
