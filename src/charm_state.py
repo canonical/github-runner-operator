@@ -29,6 +29,7 @@ from pydantic import (
     MongoDsn,
     UrlConstraints,
     ValidationError,
+    ValidationInfo,
     field_validator,
 )
 from pydantic_core import Url
@@ -872,9 +873,9 @@ class ProxyConfig(BaseModel):
             aproxy_address = None
         return aproxy_address
 
-    @field_validator("use_aproxy")  # type: ignore[type-var]
+    @field_validator("use_aproxy")
     @classmethod
-    def check_use_aproxy(cls, use_aproxy: bool, values: dict) -> bool:
+    def check_use_aproxy(cls, use_aproxy: bool, values: ValidationInfo) -> bool:
         """Validate the proxy configuration.
 
         Args:
@@ -889,8 +890,7 @@ class ProxyConfig(BaseModel):
         """
         try:
             if use_aproxy:
-                # Mypy thinks values doesn't have `data` attribute defined
-                values_data = values.data  # type: ignore[attr-defined]
+                values_data = values.data
                 if not (values_data.get("http") or values_data.get("https")):
                     raise ValueError("aproxy requires http or https to be set")
         except AttributeError as exc:  # noqa: F841
