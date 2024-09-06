@@ -7,14 +7,14 @@ from dataclasses import dataclass
 from typing import Iterable, Iterator, Sequence
 from unittest.mock import MagicMock
 
-from manager.cloud_runner_manager import (
+from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
     InstanceId,
 )
-from manager.github_runner_manager import GitHubRunnerState
-from metrics.runner import RunnerMetrics
+from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
+from github_runner_manager.metrics.runner import RunnerMetrics
 
 from charm_state import GitHubPath
 from github_client import GithubClient

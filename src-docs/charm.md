@@ -20,7 +20,7 @@ Charm for creating and managing GitHub self-hosted runner instances.
 
 ---
 
-<a href="../src/charm.py#L109"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L114"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_charm_errors`
 
@@ -72,7 +72,7 @@ Catch common errors in actions.
 
 ---
 
-<a href="../src/charm.py#L102"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L107"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `ReconcileRunnersEvent`
 Event representing a periodic check to ensure runners are ok. 
