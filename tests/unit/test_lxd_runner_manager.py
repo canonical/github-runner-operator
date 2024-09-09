@@ -7,29 +7,36 @@ import secrets
 from pathlib import Path
 from unittest.mock import MagicMock, call
 
+import github_runner_manager.reactive.runner_manager
 import pytest
+from github_runner_manager.metrics.events import (
+    Reconciliation,
+    RunnerInstalled,
+    RunnerStart,
+    RunnerStop,
+)
+from github_runner_manager.metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
+from github_runner_manager.metrics.storage import MetricsStorage
+from github_runner_manager.types_.github import GitHubOrg, GitHubRepo, RunnerApplication
 from pydantic import MongoDsn
 from pytest import LogCaptureFixture, MonkeyPatch
 
-import reactive.runner_manager
 import shared_fs
 from charm_state import (
     Arch,
     CharmConfig,
     CharmState,
-    GitHubOrg,
-    GitHubRepo,
     ProxyConfig,
     ReactiveConfig,
     VirtualMachineResources,
 )
 from errors import IssueMetricEventError, RunnerBinaryError
-from github_type import RunnerApplication
-from metrics.events import Reconciliation, RunnerInstalled, RunnerStart, RunnerStop
-from metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
-from metrics.storage import MetricsStorage
 from runner import Runner, RunnerStatus
-from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, LXDRunnerManager, LXDRunnerManagerConfig
+from runner_manager import (
+    BUILD_IMAGE_SCRIPT_FILENAME,
+    LXDRunnerManager,
+    LXDRunnerManagerConfig,
+)
 from runner_type import RunnerNameByHealth
 from tests.unit.mock import TEST_BINARY, MockLxdImageManager
 
@@ -108,7 +115,7 @@ def runner_manager_fixture(request, tmp_path, monkeypatch, token, charm_state):
 def issue_event_mock_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
     """Mock the issue_event function."""
     issue_event_mock = MagicMock()
-    monkeypatch.setattr("metrics.events.issue_event", issue_event_mock)
+    monkeypatch.setattr("github_runner_manager.metrics.events.issue_event", issue_event_mock)
     return issue_event_mock
 
 
@@ -132,7 +139,7 @@ def runner_metrics_fixture(monkeypatch: MonkeyPatch) -> MagicMock:
 @pytest.fixture(name="reactive_reconcile_mock")
 def reactive_reconcile_fixture(monkeypatch: MonkeyPatch, tmp_path: Path) -> MagicMock:
     """Mock the job class."""
-    reconcile_mock = MagicMock(spec=reactive.runner_manager.reconcile)
+    reconcile_mock = MagicMock(spec=github_runner_manager.reactive.runner_manager.reconcile)
     monkeypatch.setattr("runner_manager.reactive_runner_manager.reconcile", reconcile_mock)
     reconcile_mock.side_effect = lambda quantity, **kwargs: quantity
     return reconcile_mock

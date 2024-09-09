@@ -12,6 +12,7 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 import yaml
+from github_runner_manager.types_.github import GitHubOrg, GitHubRepo, GitHubRunnerStatus
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
 from pydantic import AnyHttpUrl
@@ -29,8 +30,6 @@ from charm_state import (
     VM_CPU_CONFIG_NAME,
     VM_DISK_CONFIG_NAME,
     Arch,
-    GitHubOrg,
-    GitHubRepo,
     InstanceType,
     OpenStackCloudsYAML,
     OpenstackImage,
@@ -42,14 +41,12 @@ from errors import (
     LogrotateSetupError,
     MissingMongoDBError,
     MissingRunnerBinaryError,
-    OpenStackUnauthorizedError,
     RunnerError,
     SubprocessError,
     TokenError,
 )
 from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
-from github_type import GitHubRunnerStatus
 from runner_manager import LXDRunnerManagerConfig, RunnerInfo
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
@@ -762,7 +759,6 @@ class TestCharm(unittest.TestCase):
         pytest.param(ConfigurationError, BlockedStatus, id="charm config error"),
         pytest.param(TokenError, BlockedStatus, id="github token error"),
         pytest.param(MissingRunnerBinaryError, MaintenanceStatus, id="runner binary error"),
-        pytest.param(OpenStackUnauthorizedError, BlockedStatus, id="openstack auth error"),
     ],
 )
 def test_catch_charm_errors(

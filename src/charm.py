@@ -7,10 +7,23 @@
 # pylint: disable=too-many-lines
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
+from github_runner_manager.manager.cloud_runner_manager import (
+    GitHubRunnerConfig,
+    SupportServiceConfig,
+)
+from github_runner_manager.manager.runner_manager import (
+    FlushMode,
+    RunnerManager,
+    RunnerManagerConfig,
+)
+from github_runner_manager.manager.runner_scaler import RunnerScaler
+from github_runner_manager.openstack_cloud.openstack_runner_manager import (
+    OpenStackCloudConfig,
+    OpenStackRunnerManager,
+    OpenStackServerConfig,
+)
+from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus, parse_github_path
 
-from manager.cloud_runner_manager import GitHubRunnerConfig, SupportServiceConfig
-from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
-from manager.runner_scaler import RunnerScaler
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
@@ -59,20 +72,17 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
-    GitHubPath,
     InstanceType,
     OpenstackImage,
     ProxyConfig,
     RunnerStorage,
     VirtualMachineResources,
-    parse_github_path,
 )
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
     MissingMongoDBError,
     MissingRunnerBinaryError,
-    OpenStackUnauthorizedError,
     RunnerBinaryError,
     RunnerError,
     SubprocessError,
@@ -80,12 +90,6 @@ from errors import (
 )
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
-from github_type import GitHubRunnerStatus
-from openstack_cloud.openstack_runner_manager import (
-    OpenStackCloudConfig,
-    OpenStackRunnerManager,
-    OpenStackServerConfig,
-)
 from runner import LXD_PROFILE_YAML
 from runner_manager import LXDRunnerManager, LXDRunnerManagerConfig
 from runner_manager_type import LXDFlushMode
@@ -139,11 +143,6 @@ def catch_charm_errors(
             self.unit.status = MaintenanceStatus(
                 "GitHub runner application not downloaded; the charm will retry download on "
                 "reconcile interval"
-            )
-        except OpenStackUnauthorizedError:
-            logger.exception("Unauthorized OpenStack connection")
-            self.unit.status = BlockedStatus(
-                "Unauthorized OpenStack connection. Check credentials."
             )
         except MissingMongoDBError as err:
             logger.exception("Missing integration data")

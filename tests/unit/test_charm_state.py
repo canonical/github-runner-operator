@@ -8,19 +8,21 @@ import typing
 from pathlib import Path
 from unittest.mock import MagicMock
 
+import github_runner_manager.openstack_cloud
 import pytest
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
+from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
 from pydantic import AnyHttpUrl, BaseModel, MongoDsn
 from pydantic.networks import IPv4Address
 
 import charm_state
-import openstack_cloud
 from charm_state import (
     BASE_IMAGE_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
     DENYLIST_CONFIG_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
+    GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
@@ -40,8 +42,6 @@ from charm_state import (
     CharmState,
     FirewallEntry,
     GithubConfig,
-    GitHubOrg,
-    GitHubRepo,
     ImmutableConfigChangedError,
     LocalLxdRunnerConfig,
     OpenstackImage,
@@ -86,20 +86,21 @@ def test_github_org_path():
     assert path == org
 
 
-def test_parse_github_path_invalid():
+def test_github_config_from_charm_invalud_path():
     """
     arrange: Create an invalid GitHub path string and runner group name.
     act: Call parse_github_path with the invalid path string and runner group name.
     assert: Verify that the function raises CharmConfigInvalidError.
     """
-    path_str = "invalidpath/"
-    runner_group = "test_group"
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[PATH_CONFIG_NAME] = "invalidpath/"
+    mock_charm.config[GROUP_CONFIG_NAME] = "test_group"
 
     with pytest.raises(CharmConfigInvalidError):
-        charm_state.parse_github_path(path_str, runner_group)
+        GithubConfig.from_charm(mock_charm)
 
 
-def test_github_config_from_charm_invalid_path():
+def test_github_config_from_charm_empty_path():
     """
     arrange: Create a mock CharmBase instance with an empty path configuration.
     act: Call from_charm method with the mock CharmBase instance.
@@ -366,9 +367,9 @@ def test_parse_openstack_clouds_initialize_fail(
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = valid_yaml_config
     monkeypatch.setattr(
-        openstack_cloud,
+        github_runner_manager.openstack_cloud,
         "initialize",
-        MagicMock(side_effect=openstack_cloud.OpenStackInvalidConfigError),
+        MagicMock(side_effect=github_runner_manager.openstack_cloud.OpenStackInvalidConfigError),
     )
 
     with pytest.raises(CharmConfigInvalidError):

@@ -8,7 +8,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
-from charm_state import GitHubPath, SSHDebugConnection
+from github_runner_manager.types_.github import GitHubPath
+
+from charm_state import SSHDebugConnection
 
 
 @dataclass
