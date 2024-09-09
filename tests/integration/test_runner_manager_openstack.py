@@ -36,8 +36,8 @@ from tests.integration.helpers.common import (
 
 
 @pytest.fixture(scope="module", name="runner_label")
-def runner_label():
-    return f"test-{token_hex(6)}"
+def runner_label(app_name: str):
+    return f"{app_name}-{token_hex(6)}"
 
 
 @pytest.fixture(scope="module", name="log_dir_base_path")
