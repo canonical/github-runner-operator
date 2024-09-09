@@ -127,9 +127,9 @@ class RunnerStop(Event):
     repo: str
     github_event: str
     status: str
-    status_info: Optional[CodeInformation]
+    status_info: Optional[CodeInformation] = None
     job_duration: NonNegativeFloat
-    job_conclusion: Optional[str]
+    job_conclusion: Optional[str] = None
 
 
 class Reconciliation(Event):

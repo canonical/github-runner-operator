@@ -84,7 +84,7 @@ class PostJobMetrics(BaseModel):
 
     timestamp: NonNegativeFloat
     status: PostJobStatus
-    status_info: Optional[CodeInformation]
+    status_info: Optional[CodeInformation] = None
 
 
 class RunnerMetrics(BaseModel):

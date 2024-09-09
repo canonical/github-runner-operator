@@ -845,9 +845,9 @@ class ProxyConfig(BaseModel):
         model_config: Config for the pydantic model
     """
 
-    http: Optional[AnyHttpUrl]
-    https: Optional[AnyHttpUrl]
-    no_proxy: Optional[str]
+    http: Optional[AnyHttpUrl] = None
+    https: Optional[AnyHttpUrl] = None
+    no_proxy: Optional[str] = None
     use_aproxy: bool = False
     model_config = ConfigDict(frozen=True)
 
