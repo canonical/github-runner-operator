@@ -555,7 +555,10 @@ class GithubRunnerCharm(CharmBase):
         self._event_timer.ensure_event_timer(
             event_name="reconcile-runners",
             interval=int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
-            timeout=int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]) - 1,
+            # We assume a stuck reconcile event when it takes longer
+            # than 10 times a normal interval. Currently, we are only aware of
+            # https://bugs.launchpad.net/juju/+bug/2055184 causing a stuck reconcile event.
+            timeout=10 * int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
         )
 
     def _ensure_reconcile_timer_is_active(self) -> None:

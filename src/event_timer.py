@@ -46,7 +46,7 @@ class EventConfig(TypedDict):
     event: str
     interval: int
     random_delay: int
-    timeout: int
+    timeout: Optional[int]
     unit: str
 
 
@@ -107,9 +107,7 @@ class EventTimer:
 
         return ret_code == 0
 
-    def ensure_event_timer(
-        self, event_name: str, interval: int, timeout: Optional[int] = None
-    ) -> None:
+    def ensure_event_timer(self, event_name: str, interval: int, timeout: int) -> None:
         """Ensure that a systemd service and timer are registered to dispatch the given event.
 
         The interval is how frequently, in minutes, the event should be dispatched.
@@ -125,10 +123,7 @@ class EventTimer:
         Raises:
             TimerEnableError: Timer cannot be started. Events will be not emitted.
         """
-        if timeout is not None:
-            timeout_in_secs = timeout * 60
-        else:
-            timeout_in_secs = interval * 30
+        timeout_in_secs = timeout * 60 if timeout is not None else None
 
         context: EventConfig = {
             "event": event_name,
