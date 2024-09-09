@@ -484,7 +484,8 @@ class CharmConfig(BaseModel):
             openstack_clouds_yaml: OpenStackCloudsYAML = yaml.safe_load(
                 cast(str, openstack_clouds_yaml_str)
             )
-        except (yaml.YAMLError, TypeError) as exc:
+            TypeAdapter(OpenStackCloudsYAML).validate_python(openstack_clouds_yaml)
+        except (yaml.YAMLError, TypeError, ValidationError) as exc:
             logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
             raise CharmConfigInvalidError(
                 f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config. Invalid yaml."
