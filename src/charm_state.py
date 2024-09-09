@@ -429,7 +429,6 @@ class CharmConfig(BaseModel):
         denylist = [FirewallEntry.decode(entry) for entry in entry_list if entry]
         return denylist
 
-    # *** docker hub mirror url changed from a string to an https url ***
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
         """Parse and validate dockerhub mirror URL.
@@ -862,10 +861,11 @@ class ProxyConfig(BaseModel):
             assert (
                 proxy_address is not None and proxy_address.host is not None
             )  # nosec for [B101:assert_used]
-            aproxy_address = proxy_address.host
-
-            if proxy_address.port:
-                aproxy_address = f"{proxy_address.host}:{proxy_address.port}"
+            aproxy_address = (
+                proxy_address.host
+                if not proxy_address.port
+                else f"{proxy_address.host}:{proxy_address.port}"
+            )
         else:
             aproxy_address = None
         return aproxy_address
