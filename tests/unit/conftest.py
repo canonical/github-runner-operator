@@ -8,9 +8,9 @@ import unittest.mock
 from pathlib import Path
 
 import pytest
+from github_runner_manager.manager.runner_scaler import RunnerScaler
 
 import utilities
-from manager.runner_scaler import RunnerScaler
 from tests.unit.mock import MockGhapiClient, MockLxdClient, MockRepoPolicyComplianceClient
 
 
@@ -76,9 +76,11 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     monkeypatch.setattr("firewall.Firewall.refresh_firewall", unittest.mock.MagicMock())
     monkeypatch.setattr("runner.execute_command", lxd_exec_command)
     monkeypatch.setattr("runner.shared_fs", unittest.mock.MagicMock())
-    monkeypatch.setattr("metrics.events.METRICS_LOG_PATH", Path(tmp_path / "metrics.log"))
+    monkeypatch.setattr(
+        "github_runner_manager.metrics.events.METRICS_LOG_PATH", Path(tmp_path / "metrics.log")
+    )
     monkeypatch.setattr("runner.time", unittest.mock.MagicMock())
-    monkeypatch.setattr("github_client.GhApi", MockGhapiClient)
+    monkeypatch.setattr("github_runner_manager.github_client.GhApi", MockGhapiClient)
     monkeypatch.setattr("runner_manager_type.jinja2", unittest.mock.MagicMock())
     monkeypatch.setattr("runner_manager_type.LxdClient", MockLxdClient)
     monkeypatch.setattr("runner_manager.github_metrics", unittest.mock.MagicMock())
@@ -91,7 +93,7 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     monkeypatch.setattr(
         "runner_manager.RepoPolicyComplianceClient", MockRepoPolicyComplianceClient
     )
-    monkeypatch.setattr("utilities.time", unittest.mock.MagicMock())
+    monkeypatch.setattr("github_runner_manager.utilities.time", unittest.mock.MagicMock())
 
 
 @pytest.fixture(autouse=True, name="cloud_name")
@@ -108,7 +110,7 @@ def clouds_yaml_path(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
         Path: Mocked clouds.yaml path.
     """
     clouds_yaml_path = tmp_path / "clouds.yaml"
-    monkeypatch.setattr("openstack_cloud.CLOUDS_YAML_PATH", clouds_yaml_path)
+    monkeypatch.setattr("github_runner_manager.openstack_cloud.CLOUDS_YAML_PATH", clouds_yaml_path)
     return clouds_yaml_path
 
 
