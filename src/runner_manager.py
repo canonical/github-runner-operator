@@ -419,8 +419,8 @@ class LXDRunnerManager:
 
             proxies = RunnerProxySetting(
                 no_proxy=no_proxy,
-                http=self.proxies.http,
-                https=self.proxies.https,
+                http=str(self.proxies.http) if self.proxies.http else None,
+                https=str(self.proxies.https) if self.proxies.https else None,
                 aproxy_address=None,
             )
         elif self.proxies.use_aproxy:
@@ -789,8 +789,8 @@ class LXDRunnerManager:
         Returns:
             Command to execute to build runner image.
         """
-        http_proxy = self.proxies.http or ""
-        https_proxy = self.proxies.https or ""
+        http_proxy = str(self.proxies.http) if self.proxies.http else ""
+        https_proxy = str(self.proxies.https) if self.proxies.https else ""
         no_proxy = self.proxies.no_proxy or ""
 
         cmd = [
@@ -833,7 +833,7 @@ class LXDRunnerManager:
         # Replace empty string in the build image command list and form a string.
         # Add str to convert pydantic_core.Url to string
         build_image_command = " ".join(
-            [str(part) if part else "''" for part in self._build_image_command()]
+            [part if part else "''" for part in self._build_image_command()]
         )
 
         cron_file = self.cron_path / "build-runner-image"

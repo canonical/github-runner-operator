@@ -42,7 +42,7 @@ class RepoPolicyComplianceClient:  # pylint: disable=too-few-public-methods
         Returns:
             The one-time token to be used in a single request of repo policy compliance check.
         """
-        url = urljoin(str(self.base_url), "one-time-token")
+        url = urljoin(self.base_url, "one-time-token")
         try:
             response = self._session.get(url, headers={"Authorization": f"Bearer {self.token}"})
             response.raise_for_status()

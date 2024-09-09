@@ -477,7 +477,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         if self._service_config.repo_policy_compliance is not None:
             return RepoPolicyComplianceClient(
-                self._service_config.repo_policy_compliance.url,
+                str(self._service_config.repo_policy_compliance.url),
                 self._service_config.repo_policy_compliance.token,
             )
         return None
