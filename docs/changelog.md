@@ -2,4 +2,4 @@
 
 ## 2024-09-09
 
-- Added changelog for tracking user-relevent changes.
+- Added changelog for tracking user-relevant changes.
