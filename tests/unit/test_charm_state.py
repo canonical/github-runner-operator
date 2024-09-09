@@ -831,13 +831,10 @@ def test_check_use_aproxy():
     act: Call the check_use_aproxy method with the provided values.
     assert: Verify that the method raises a ValueError with the expected message.
     """
-    values = {"http": None, "https": None}
-    use_aproxy = True
-
     with pytest.raises(ValueError) as exc_info:
-        ProxyConfig.check_use_aproxy(use_aproxy, values)
+        ProxyConfig(use_aproxy=True)
 
-    assert str(exc_info.value) == "aproxy requires http or https to be set"
+    assert "aproxy requires http or https to be set" in str(exc_info.value)
 
 
 @pytest.mark.parametrize(

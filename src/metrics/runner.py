@@ -19,8 +19,9 @@ from errors import (
     RunnerMetricsError,
 )
 from metrics import events as metric_events
-from metrics.storage import MetricsStorage, move_to_quarantine
+from metrics.storage import MetricsStorage
 from metrics.storage import StorageManager as MetricsStorageManager
+from metrics.storage import move_to_quarantine
 from metrics.type import GithubJobMetrics
 
 logger = logging.getLogger(__name__)

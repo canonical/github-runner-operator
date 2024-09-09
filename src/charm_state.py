@@ -27,9 +27,11 @@ from pydantic import (
     Field,
     IPvAnyAddress,
     MongoDsn,
+    TypeAdapter,
     UrlConstraints,
     ValidationError,
     field_validator,
+    model_validator,
 )
 from pydantic_core import Url
 from typing_extensions import TypedDict
