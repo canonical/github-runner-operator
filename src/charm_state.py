@@ -29,7 +29,6 @@ from pydantic import (
     MongoDsn,
     UrlConstraints,
     ValidationError,
-    ValidationInfo,
     field_validator,
 )
 from pydantic_core import Url
