@@ -7,7 +7,7 @@
 import json
 from pathlib import Path
 from secrets import token_hex
-from typing import Iterator
+from typing import AsyncGenerator, Iterator
 
 import pytest
 import pytest_asyncio
@@ -36,8 +36,8 @@ from tests.integration.helpers.common import (
 
 
 @pytest.fixture(scope="module", name="runner_label")
-def runner_label(app_name: str):
-    return f"{app_name}-test-{token_hex(6)}"
+def runner_label():
+    return f"test-{token_hex(6)}"
 
 
 @pytest.fixture(scope="module", name="log_dir_base_path")
@@ -96,7 +96,7 @@ async def openstack_runner_manager_fixture(
     proxy_config: ProxyConfig,
     runner_label: str,
     openstack_connection: OpenstackConnection,
-) -> OpenStackRunnerManager:
+) -> AsyncGenerator[OpenStackRunnerManager, None, None]:
     """Create OpenstackRunnerManager instance.
 
     The prefix args of OpenstackRunnerManager set to app_name to let openstack_connection_fixture
@@ -124,7 +124,7 @@ async def openstack_runner_manager_fixture(
         ssh_debug_connections=None,
         repo_policy_compliance=None,
     )
-    return OpenStackRunnerManager(
+    yield OpenStackRunnerManager(
         app_name, f"{app_name}-0", cloud_config, server_config, runner_config, service_config
     )
 
@@ -135,13 +135,13 @@ async def runner_manager_fixture(
     token: str,
     github_path: GitHubPath,
     log_dir_base_path: dict[str, Path],
-) -> RunnerManager:
+) -> AsyncGenerator[RunnerManager, None, None]:
     """Get RunnerManager instance.
 
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
     config = RunnerManagerConfig(token, github_path)
-    return RunnerManager("test_runner", openstack_runner_manager, config)
+    yield RunnerManager("test_runner", openstack_runner_manager, config)
 
 
 @pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")
@@ -263,6 +263,9 @@ async def test_runner_normal_idle_lifecycle(
     runner = openstack_instances[0]
 
     assert openstack_runner_manager._health_check(runner)
+    
+    # TODO: debug only
+    assert False, "Testing failure"
 
     # 3.
     runner_manager.cleanup()
