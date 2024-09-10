@@ -5,7 +5,7 @@
 import logging
 import subprocess  # nosec B404
 from pathlib import Path
-from typing import Optional, TypedDict
+from typing import TypedDict
 
 import jinja2
 
@@ -46,7 +46,7 @@ class EventConfig(TypedDict):
     event: str
     interval: int
     random_delay: int
-    timeout: Optional[int]
+    timeout: int
     unit: str
 
 
@@ -123,7 +123,7 @@ class EventTimer:
         Raises:
             TimerEnableError: Timer cannot be started. Events will be not emitted.
         """
-        timeout_in_secs = timeout * 60 if timeout is not None else None
+        timeout_in_secs = timeout * 60
 
         context: EventConfig = {
             "event": event_name,
