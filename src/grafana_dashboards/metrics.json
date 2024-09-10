@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 557,
+  "id": 567,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -866,7 +866,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "The average actual reconciliation interval.",
+      "description": "The average actual reconciliation interval.\n\nUnlike the Reconciliation Duration panel, this panel shows the time between the actual start of reconciliations. This is useful for identifying problems where the reconciliation itself is behaving normally, but the event itself is not being scheduled as expected.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -908,7 +908,20 @@
           },
           "unit": "s"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Duration"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -947,12 +960,26 @@
           "editorMode": "code",
           "expr": "1 / sum by (flavor) (rate({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", flavor=\"flavor\" | event=\"reconciliation\" [$__range]))",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
-          "legendFormat": "50%",
+          "legendFormat": "",
           "queryType": "instant",
           "refId": "A"
         }
       ],
-      "title": "Actual Average Reconciliation Interval",
+      "title": "Average Reconciliation Interval",
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Value #A"
+              }
+            ]
+          }
+        }
+      ],
       "type": "barchart"
     },
     {
