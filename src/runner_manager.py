@@ -88,15 +88,33 @@ class LXDRunnerManager:
         self.app_name = app_name
         self.instance_name = f"{app_name}-{unit}"
         self.config = runner_manager_config
-        self.proxies = runner_manager_config.charm_state.proxy_config
+        self.proxies = RunnerProxySetting(
+            use_aproxy=runner_manager_config.charm_state.proxy_config.use_aproxy,
+            no_proxy=runner_manager_config.charm_state.proxy_config.no_proxy,
+            http=(
+                str(runner_manager_config.charm_state.proxy_config.http)
+                if runner_manager_config.charm_state.proxy_config.http
+                else None
+            ),
+            https=(
+                str(runner_manager_config.charm_state.proxy_config.https)
+                if runner_manager_config.charm_state.proxy_config.https
+                else None
+            ),
+            aproxy_address=(
+                str(runner_manager_config.charm_state.proxy_config.aproxy_address)
+                if runner_manager_config.charm_state.proxy_config.aproxy_address
+                else None
+            ),
+        )
 
         # Setting the env var to this process and any child process spawned.
         if no_proxy := self.proxies.no_proxy:
             set_env_var("NO_PROXY", no_proxy)
         if http_proxy := self.proxies.http:
-            set_env_var("HTTP_PROXY", str(http_proxy))
+            set_env_var("HTTP_PROXY", http_proxy)
         if https_proxy := self.proxies.https:
-            set_env_var("HTTPS_PROXY", str(https_proxy))
+            set_env_var("HTTPS_PROXY", https_proxy)
 
         self.session = requests.Session()
         adapter = requests.adapters.HTTPAdapter(
@@ -419,8 +437,8 @@ class LXDRunnerManager:
 
             proxies = RunnerProxySetting(
                 no_proxy=no_proxy,
-                http=str(self.proxies.http) if self.proxies.http else None,
-                https=str(self.proxies.https) if self.proxies.https else None,
+                http=self.proxies.http,
+                https=self.proxies.https,
                 aproxy_address=None,
             )
         elif self.proxies.use_aproxy:
@@ -789,8 +807,8 @@ class LXDRunnerManager:
         Returns:
             Command to execute to build runner image.
         """
-        http_proxy = str(self.proxies.http) if self.proxies.http else ""
-        https_proxy = str(self.proxies.https) if self.proxies.https else ""
+        http_proxy = self.proxies.http or ""
+        https_proxy = self.proxies.https or ""
         no_proxy = self.proxies.no_proxy or ""
 
         cmd = [
@@ -831,7 +849,6 @@ class LXDRunnerManager:
     def schedule_build_runner_image(self) -> None:
         """Install cron job for building runner image."""
         # Replace empty string in the build image command list and form a string.
-        # Add str to convert pydantic_core.Url to string
         build_image_command = " ".join(
             [part if part else "''" for part in self._build_image_command()]
         )
