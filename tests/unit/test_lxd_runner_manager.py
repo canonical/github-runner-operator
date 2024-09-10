@@ -32,11 +32,7 @@ from charm_state import (
 )
 from errors import IssueMetricEventError, RunnerBinaryError
 from runner import Runner, RunnerStatus
-from runner_manager import (
-    BUILD_IMAGE_SCRIPT_FILENAME,
-    LXDRunnerManager,
-    LXDRunnerManagerConfig,
-)
+from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, LXDRunnerManager, LXDRunnerManagerConfig
 from runner_type import RunnerNameByHealth
 from tests.unit.mock import TEST_BINARY, MockLxdImageManager
 
