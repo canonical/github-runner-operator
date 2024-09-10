@@ -48,6 +48,7 @@ Represent HTTP-related proxy settings.
 
 **Attributes:**
  
+ - <b>`use_aproxy`</b>:  Whether aproxy should be used for the runners. 
  - <b>`no_proxy`</b>:  The comma separated URLs to not go through proxy. 
  - <b>`http`</b>:  HTTP proxy URL. 
  - <b>`https`</b>:  HTTPS proxy URL. 
@@ -59,10 +60,11 @@ Represent HTTP-related proxy settings.
 
 ```python
 __init__(
-    no_proxy: Optional[str],
-    http: Optional[str],
-    https: Optional[str],
-    aproxy_address: Optional[str]
+    use_aproxy: bool = False,
+    no_proxy: str | None = None,
+    http: str | None = None,
+    https: str | None = None,
+    aproxy_address: str | None = None
 ) → None
 ```
 
@@ -76,7 +78,7 @@ __init__(
 
 ---
 
-<a href="../src/runner_type.py#L46"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_type.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerConfig`
 Configuration for runner. 
@@ -123,7 +125,7 @@ __init__(
 
 ---
 
-<a href="../src/runner_type.py#L75"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_type.py#L77"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerStatus`
 Status of runner. 
@@ -160,7 +162,7 @@ __init__(
 
 ---
 
-<a href="../src/runner_type.py#L92"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_type.py#L94"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerGithubInfo`
 GitHub info of a runner. 

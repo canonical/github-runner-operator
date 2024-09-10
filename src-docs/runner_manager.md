@@ -52,7 +52,7 @@ Construct RunnerManager object for creating and managing runners.
 
 ---
 
-<a href="../.tox/src-docs/lib/python3.10/site-packages/github_runner_manager/utilities.py#L816"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../.tox/src-docs/lib/python3.10/site-packages/github_runner_manager/utilities.py#L834"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `build_runner_image`
 
@@ -72,7 +72,7 @@ Build container image in test mode, else virtual machine image.
 
 ---
 
-<a href="../src/runner_manager.py#L117"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L135"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `check_runner_bin`
 
@@ -89,7 +89,7 @@ Check if runner binary exists.
 
 ---
 
-<a href="../src/runner_manager.py#L627"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L645"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `flush`
 
@@ -118,7 +118,7 @@ Remove existing runners.
 
 ---
 
-<a href="../src/runner_manager.py#L218"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L236"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_github_info`
 
@@ -135,7 +135,7 @@ Get information on the runners from GitHub.
 
 ---
 
-<a href="../.tox/src-docs/lib/python3.10/site-packages/github_runner_manager/utilities.py#L125"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../.tox/src-docs/lib/python3.10/site-packages/github_runner_manager/utilities.py#L143"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_latest_runner_bin_url`
 
@@ -166,7 +166,7 @@ The runner binary URL changes when a new version is available.
 
 ---
 
-<a href="../src/runner_manager.py#L808"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L826"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `has_runner_image`
 
@@ -183,7 +183,7 @@ Check if the runner image exists.
 
 ---
 
-<a href="../src/runner_manager.py#L527"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L545"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `reconcile`
 
@@ -207,7 +207,7 @@ Bring runners in line with target.
 
 ---
 
-<a href="../src/runner_manager.py#L831"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_manager.py#L849"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `schedule_build_runner_image`
 
@@ -219,7 +219,7 @@ Install cron job for building runner image.
 
 ---
 
-<a href="../.tox/src-docs/lib/python3.10/site-packages/github_runner_manager/utilities.py#L148"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../.tox/src-docs/lib/python3.10/site-packages/github_runner_manager/utilities.py#L166"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `update_runner_bin`
 

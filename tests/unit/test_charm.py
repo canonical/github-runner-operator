@@ -33,7 +33,6 @@ from charm_state import (
     InstanceType,
     OpenStackCloudsYAML,
     OpenstackImage,
-    ProxyConfig,
     VirtualMachineResources,
 )
 from errors import (
@@ -48,6 +47,7 @@ from errors import (
 from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
 from runner_manager import LXDRunnerManagerConfig, RunnerInfo
+from runner_type import ProxySetting
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
@@ -277,7 +277,7 @@ def test_get_runner_manager(harness: Harness):
     runner_manager = harness.charm._get_runner_manager(state)
     assert runner_manager is not None
     assert runner_manager.config.token == "mocktoken"
-    assert runner_manager.proxies == ProxyConfig(
+    assert runner_manager.proxies == ProxySetting(
         http=None, https=None, no_proxy=None, use_aproxy=False
     )
 
