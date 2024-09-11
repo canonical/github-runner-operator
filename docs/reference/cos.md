@@ -19,6 +19,8 @@ The "GitHub Self-Hosted Runner Metrics" metrics dashboard presents the following
       - Runner idle duration
       - Charm reconciliation duration
       - Job queue duration - how long a job waits in the queue before a runner picks it up
+  - Max job queue duration by application: Similar to "Job queue duration" panel, but shows maximum durations by charm application.
+  - Average reconciliation interval: Shows the average time between reconciliation events, broken down by charm application.
 - Jobs: Displays certain metrics about the jobs executed by the runners. These metrics can be displayed per repository by specifying a
  regular expression on the `Repository` variable. The following metrics are displayed:
   - Proportion charts: Share of jobs by completion status, job conclusion, application, repo policy check failure http codes and github events over time.

@@ -94,6 +94,10 @@ from runner import LXD_PROFILE_YAML
 from runner_manager import LXDRunnerManager, LXDRunnerManagerConfig
 from runner_manager_type import LXDFlushMode
 
+# We assume a stuck reconcile event when it takes longer
+# than 10 times a normal interval. Currently, we are only aware of
+# https://bugs.launchpad.net/juju/+bug/2055184 causing a stuck reconcile event.
+RECONCILIATION_INTERVAL_TIMEOUT_FACTOR = 10
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
 
 # This is currently hardcoded and may be moved to a config option in the future.
@@ -555,7 +559,8 @@ class GithubRunnerCharm(CharmBase):
         self._event_timer.ensure_event_timer(
             event_name="reconcile-runners",
             interval=int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
-            timeout=int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]) - 1,
+            timeout=RECONCILIATION_INTERVAL_TIMEOUT_FACTOR
+            * int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
         )
 
     def _ensure_reconcile_timer_is_active(self) -> None:
