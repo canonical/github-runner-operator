@@ -532,20 +532,33 @@ class OpenstackRunnerManager:
             logger.error("[ALERT]: Unable to SSH to server: %s, reason: %s", server_name, str(exc))
             raise
 
-        result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
-        logger.debug("Output of `ps aux` on %s stderr: %s", server_name, result.stderr)
-        if not result.ok:
+        cloud_init_result: invoke.runners.Result = ssh_conn.run("cloud-init status", warn=True)
+        logger.debug(
+            "Output of `cloud-init status` on %s stderr: %s", server_name, cloud_init_result.stderr
+        )
+        if not cloud_init_result.ok:
+            logger.warning("cloud-init status command failed on %s.", server_name)
+            raise _SSHError(f"cloud-init status command failed on {server_name}.")
+        # cloud-init status should be "running"
+        if "error" in cloud_init_result.stdout or "done" in cloud_init_result.stdout:
+            return False
+        ps_result: invoke.runners.Result = ssh_conn.run("ps aux", warn=True)
+        logger.debug("Output of `ps aux` on %s stderr: %s", server_name, ps_result.stderr)
+        if not ps_result.ok:
             logger.warning("List all process command failed on %s.", server_name)
             raise _SSHError(f"List process command failed on {server_name}.")
-        if RUNNER_STARTUP_PROCESS not in result.stdout:
+        if RUNNER_STARTUP_PROCESS not in ps_result.stdout:
             logger.warning("No startup process found on server %s.", server_name)
-            raise _SSHError(f"Runner not yet started on {server_name}.")
+            raise _SSHError(f"Runner failed to start on {server_name}.")
 
         logger.info("Runner process found to be healthy on %s", server_name)
         if startup:
             return True
 
-        if RUNNER_WORKER_PROCESS in result.stdout or RUNNER_LISTENER_PROCESS in result.stdout:
+        if (
+            RUNNER_WORKER_PROCESS in ps_result.stdout
+            or RUNNER_LISTENER_PROCESS in ps_result.stdout
+        ):
             return True
 
         return False
