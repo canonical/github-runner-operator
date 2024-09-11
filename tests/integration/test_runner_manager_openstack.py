@@ -105,7 +105,7 @@ async def openstack_runner_manager_fixture(
     proxy_config: ProxyConfig,
     runner_label: str,
     openstack_connection: OpenstackConnection,
-) -> AsyncGenerator[OpenStackRunnerManager, None, None]:
+) -> AsyncGenerator[OpenStackRunnerManager, None]:
     """Create OpenstackRunnerManager instance.
 
     The prefix args of OpenstackRunnerManager set to app_name to let openstack_connection_fixture
@@ -144,7 +144,7 @@ async def runner_manager_fixture(
     token: str,
     github_path: GitHubPath,
     log_dir_base_path: dict[str, Path],
-) -> AsyncGenerator[RunnerManager, None, None]:
+) -> AsyncGenerator[RunnerManager, None]:
     """Get RunnerManager instance.
 
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
