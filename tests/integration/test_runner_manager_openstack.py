@@ -273,9 +273,6 @@ async def test_runner_normal_idle_lifecycle(
 
     assert openstack_runner_manager._health_check(runner)
     
-    # TODO: debug only
-    assert False, "Testing failure"
-
     # 3.
     runner_manager.cleanup()
     runner_list = runner_manager.get_runners()
