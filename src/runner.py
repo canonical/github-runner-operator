@@ -21,9 +21,12 @@ from pathlib import Path
 from typing import Iterable, NamedTuple, Optional, Sequence
 
 import yaml
+from github_runner_manager.metrics.runner_logs import SYSLOG_PATH, create_logs_dir
+from github_runner_manager.metrics.storage import MetricsStorage
+from github_runner_manager.types_.github import GitHubOrg
 
 import shared_fs
-from charm_state import Arch, GithubOrg, SSHDebugConnection, VirtualMachineResources
+from charm_state import Arch, SSHDebugConnection, VirtualMachineResources
 from errors import (
     CreateMetricsStorageError,
     GithubClientError,
@@ -38,8 +41,6 @@ from errors import (
 )
 from lxd import LxdInstance
 from lxd_type import LxdInstanceConfig
-from metrics.runner_logs import SYSLOG_PATH, create_logs_dir
-from metrics.storage import MetricsStorage
 from runner_manager_type import RunnerManagerClients
 from runner_type import RunnerConfig, RunnerStatus
 from utilities import execute_command, retry
@@ -838,7 +839,7 @@ class Runner:
             self.instance.name,
         ]
 
-        if isinstance(self.config.path, GithubOrg):
+        if isinstance(self.config.path, GitHubOrg):
             register_cmd += ["--runnergroup", self.config.path.group]
 
         logger.info("Executing registration command...")

@@ -8,12 +8,14 @@ import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, call
 
+import github_runner_manager.metrics.runner_logs
 import jinja2
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
+from github_runner_manager.metrics.storage import MetricsStorage
+from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
 
-import metrics.runner_logs
-from charm_state import GithubOrg, GithubRepo, SSHDebugConnection, VirtualMachineResources
+from charm_state import SSHDebugConnection, VirtualMachineResources
 from errors import (
     CreateMetricsStorageError,
     LxdError,
@@ -22,7 +24,6 @@ from errors import (
     RunnerRemoveError,
 )
 from lxd import LxdInstance, LxdInstanceFileManager
-from metrics.storage import MetricsStorage
 from runner import DIAG_DIR_PATH, CreateRunnerConfig, Runner, RunnerConfig, RunnerStatus
 from runner_manager_type import RunnerManagerClients
 from runner_type import ProxySetting
@@ -102,7 +103,9 @@ def log_dir_base_path_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
 
         return target_log_path
 
-    create_logs_dir_mock = MagicMock(spec=metrics.runner_logs.create_logs_dir)
+    create_logs_dir_mock = MagicMock(
+        spec=github_runner_manager.metrics.runner_logs.create_logs_dir
+    )
     create_logs_dir_mock.side_effect = create_logs_dir
     monkeypatch.setattr("runner.create_logs_dir", create_logs_dir_mock)
 
@@ -138,11 +141,11 @@ def ssh_debug_connections_fixture() -> list[SSHDebugConnection]:
     name="runner",
     params=[
         (
-            GithubOrg("test_org", "test_group"),
+            GitHubOrg("test_org", "test_group"),
             ProxySetting(no_proxy=None, http=None, https=None, aproxy_address=None),
         ),
         (
-            GithubRepo("test_owner", "test_repo"),
+            GitHubRepo("test_owner", "test_repo"),
             ProxySetting(
                 no_proxy="test_no_proxy",
                 http=TEST_PROXY_SERVER_URL,
@@ -522,7 +525,7 @@ def test_pull_logs(runner: Runner, log_dir_base_path: Path):
     runner.instance.files.pull_file.assert_has_calls(
         [
             call(str(DIAG_DIR_PATH), str(log_dir_path), is_dir=True),
-            call(str(metrics.runner_logs.SYSLOG_PATH), str(log_dir_path)),
+            call(str(github_runner_manager.metrics.runner_logs.SYSLOG_PATH), str(log_dir_path)),
         ]
     )
 

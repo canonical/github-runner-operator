@@ -8,9 +8,9 @@ import unittest.mock
 from pathlib import Path
 
 import pytest
+from github_runner_manager.manager.runner_scaler import RunnerScaler
 
 import utilities
-from openstack_cloud import openstack_manager
 from tests.unit.mock import MockGhapiClient, MockLxdClient, MockRepoPolicyComplianceClient
 
 
@@ -46,7 +46,7 @@ def disk_usage_mock(total_disk: int):
 
 @pytest.fixture(autouse=True)
 def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_path):
-    openstack_manager_mock = unittest.mock.MagicMock(spec=openstack_manager)
+    runner_scaler_mock = unittest.mock.MagicMock(spec=RunnerScaler)
 
     cron_path = tmp_path / "cron.d"
     cron_path.mkdir()
@@ -61,7 +61,7 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     monkeypatch.setattr(
         "charm.GithubRunnerCharm.repo_check_systemd_service", tmp_path / "systemd_service"
     )
-    monkeypatch.setattr("charm.OpenstackRunnerManager", openstack_manager_mock)
+    monkeypatch.setattr("charm.RunnerScaler", runner_scaler_mock)
     monkeypatch.setattr("charm.GithubRunnerCharm.kernel_module_path", tmp_path / "modules")
     monkeypatch.setattr("charm.GithubRunnerCharm._update_kernel", lambda self, now: None)
     monkeypatch.setattr("charm.execute_command", exec_command)
@@ -76,9 +76,11 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     monkeypatch.setattr("firewall.Firewall.refresh_firewall", unittest.mock.MagicMock())
     monkeypatch.setattr("runner.execute_command", lxd_exec_command)
     monkeypatch.setattr("runner.shared_fs", unittest.mock.MagicMock())
-    monkeypatch.setattr("metrics.events.METRICS_LOG_PATH", Path(tmp_path / "metrics.log"))
+    monkeypatch.setattr(
+        "github_runner_manager.metrics.events.METRICS_LOG_PATH", Path(tmp_path / "metrics.log")
+    )
     monkeypatch.setattr("runner.time", unittest.mock.MagicMock())
-    monkeypatch.setattr("github_client.GhApi", MockGhapiClient)
+    monkeypatch.setattr("github_runner_manager.github_client.GhApi", MockGhapiClient)
     monkeypatch.setattr("runner_manager_type.jinja2", unittest.mock.MagicMock())
     monkeypatch.setattr("runner_manager_type.LxdClient", MockLxdClient)
     monkeypatch.setattr("runner_manager.github_metrics", unittest.mock.MagicMock())
@@ -86,12 +88,12 @@ def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command, runner_binary_p
     monkeypatch.setattr("runner_manager.LxdClient", MockLxdClient)
     monkeypatch.setattr("runner_manager.shared_fs", unittest.mock.MagicMock())
     monkeypatch.setattr("runner_manager.execute_command", exec_command)
-    monkeypatch.setattr("runner_manager.RunnerManager.runner_bin_path", runner_binary_path)
-    monkeypatch.setattr("runner_manager.RunnerManager.cron_path", cron_path)
+    monkeypatch.setattr("runner_manager.LXDRunnerManager.runner_bin_path", runner_binary_path)
+    monkeypatch.setattr("runner_manager.LXDRunnerManager.cron_path", cron_path)
     monkeypatch.setattr(
         "runner_manager.RepoPolicyComplianceClient", MockRepoPolicyComplianceClient
     )
-    monkeypatch.setattr("utilities.time", unittest.mock.MagicMock())
+    monkeypatch.setattr("github_runner_manager.utilities.time", unittest.mock.MagicMock())
 
 
 @pytest.fixture(autouse=True, name="cloud_name")
@@ -108,7 +110,7 @@ def clouds_yaml_path(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
         Path: Mocked clouds.yaml path.
     """
     clouds_yaml_path = tmp_path / "clouds.yaml"
-    monkeypatch.setattr("openstack_cloud.CLOUDS_YAML_PATH", clouds_yaml_path)
+    monkeypatch.setattr("github_runner_manager.openstack_cloud.CLOUDS_YAML_PATH", clouds_yaml_path)
     return clouds_yaml_path
 
 
