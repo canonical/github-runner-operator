@@ -60,7 +60,7 @@ The charm will spawn new runners on a schedule. During this time, the charm will
 
 Once the self-hosted runner is available on GitHub, it can be used to run GitHub Actions jobs similar to runners provided by GitHub. The only difference being the label specified in the `runs-on` of a job.
 
-The self-hosted runner managed by the charm will have the following labels: `self-hosted`, `linux`, the application name, and labels from the `labels` charm configuration.
+The self-hosted runner managed by the charm will have the following labels: `self-hosted`, `linux`, the application name, and labels from the [`labels` charm configuration](https://charmhub.io/github-runner/configurations#labels).
 
 In the above deployment, the application name was not specified, hence the default value of `github-runner` was used. As such, `github-runner` will be a label for the self-hosted runner managed by the application instance.
 
