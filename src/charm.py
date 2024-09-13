@@ -20,8 +20,11 @@ from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCloudConfig,
     OpenStackRunnerManager,
+    OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
+from github_runner_manager.reactive.types_ import QueueConfig as ReactiveQueueConfig
+from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
 from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus, parse_github_path
 
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
@@ -1276,25 +1279,40 @@ class GithubRunnerCharm(CharmBase):
             ssh_debug_connections=state.ssh_debug_connections,
             repo_policy_compliance=state.charm_config.repo_policy_compliance,
         )
-        # The prefix is set to f"{application_name}-{unit number}"
-        openstack_runner_manager = OpenStackRunnerManager(
-            manager_name=self.app.name,
+
+        openstack_runner_manager_config = OpenStackRunnerManagerConfig(
+            manager_name=self.app.name,  # TODO: rename to name
+            # The prefix is set to f"{application_name}-{unit number}"
             prefix=self.unit.name.replace("/", "-"),
             cloud_config=cloud_config,
             server_config=server_config,
             runner_config=runner_config,
             service_config=service_config,
         )
+        openstack_runner_manager = OpenStackRunnerManager(
+            config=openstack_runner_manager_config,
+        )
         runner_manager_config = RunnerManagerConfig(
+            name=self.app.name,
             token=token,
             path=path,
         )
         runner_manager = RunnerManager(
-            manager_name=self.app.name,
             cloud_runner_manager=openstack_runner_manager,
             config=runner_manager_config,
         )
-        return RunnerScaler(runner_manager=runner_manager, reactive_config=state.reactive_config)
+        reactive_runner_config = None
+        if reactive_config := state.reactive_config:
+            reactive_runner_config = ReactiveRunnerConfig(
+                queue=ReactiveQueueConfig(
+                    mongodb_uri=reactive_config.mq_uri, queue_name=self.app.name
+                ),  # TODO think if queue_name should be really decided by charm
+                runner_manager=runner_manager_config,
+                cloud_runner_manager=openstack_runner_manager_config,
+            )
+        return RunnerScaler(
+            runner_manager=runner_manager, reactive_runner_config=reactive_runner_config
+        )
 
 
 if __name__ == "__main__":
