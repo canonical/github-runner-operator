@@ -10,11 +10,11 @@ import pytest
 import pytest_asyncio
 from github.Branch import Branch
 from github.Repository import Repository
+from github_runner_manager.metrics.runner import PostJobStatus
 from juju.application import Application
 from juju.model import Model
 
 from charm_state import PATH_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
-from metrics.runner import PostJobStatus
 from tests.integration.helpers.charm_metrics import (
     assert_events_after_reconciliation,
     clear_metrics_log,

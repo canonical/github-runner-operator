@@ -8,19 +8,22 @@ import typing
 from pathlib import Path
 from unittest.mock import MagicMock
 
+import github_runner_manager.openstack_cloud
 import pytest
+import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
+from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
 from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
 from pydantic.networks import IPv4Address
 
 import charm_state
-import openstack_cloud
 from charm_state import (
     BASE_IMAGE_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
     DENYLIST_CONFIG_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
+    GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
@@ -40,8 +43,6 @@ from charm_state import (
     CharmState,
     FirewallEntry,
     GithubConfig,
-    GithubOrg,
-    GithubRepo,
     ImmutableConfigChangedError,
     LocalLxdRunnerConfig,
     OpenstackImage,
@@ -64,7 +65,7 @@ def test_github_repo_path():
     """
     owner = "test_owner"
     repo = "test_repo"
-    github_repo = GithubRepo(owner, repo)
+    github_repo = GitHubRepo(owner, repo)
 
     path = github_repo.path()
 
@@ -79,27 +80,28 @@ def test_github_org_path():
     """
     org = "test_org"
     group = "test_group"
-    github_org = GithubOrg(org, group)
+    github_org = GitHubOrg(org, group)
 
     path = github_org.path()
 
     assert path == org
 
 
-def test_parse_github_path_invalid():
+def test_github_config_from_charm_invalud_path():
     """
     arrange: Create an invalid GitHub path string and runner group name.
     act: Call parse_github_path with the invalid path string and runner group name.
     assert: Verify that the function raises CharmConfigInvalidError.
     """
-    path_str = "invalidpath/"
-    runner_group = "test_group"
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[PATH_CONFIG_NAME] = "invalidpath/"
+    mock_charm.config[GROUP_CONFIG_NAME] = "test_group"
 
     with pytest.raises(CharmConfigInvalidError):
-        charm_state.parse_github_path(path_str, runner_group)
+        GithubConfig.from_charm(mock_charm)
 
 
-def test_github_config_from_charm_invalid_path():
+def test_github_config_from_charm_empty_path():
     """
     arrange: Create a mock CharmBase instance with an empty path configuration.
     act: Call from_charm method with the mock CharmBase instance.
@@ -128,14 +130,14 @@ def test_github_config_from_charm_invalid_token():
 @pytest.mark.parametrize(
     "path_str, runner_group, expected_type, expected_attrs",
     [
-        ("owner/repo", "test_group", GithubRepo, {"owner": "owner", "repo": "repo"}),
-        ("test_org", "test_group", GithubOrg, {"org": "test_org", "group": "test_group"}),
+        ("owner/repo", "test_group", GitHubRepo, {"owner": "owner", "repo": "repo"}),
+        ("test_org", "test_group", GitHubOrg, {"org": "test_org", "group": "test_group"}),
     ],
 )
 def test_parse_github_path(
     path_str: str,
     runner_group: str,
-    expected_type: GithubRepo | GithubOrg,
+    expected_type: GitHubRepo | GitHubOrg,
     expected_attrs: dict[str, str],
 ):
     """
@@ -366,9 +368,9 @@ def test_parse_openstack_clouds_initialize_fail(
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = valid_yaml_config
     monkeypatch.setattr(
-        openstack_cloud,
+        github_runner_manager.openstack_cloud,
         "initialize",
-        MagicMock(side_effect=openstack_cloud.OpenStackInvalidConfigError),
+        MagicMock(side_effect=github_runner_manager.openstack_cloud.OpenStackInvalidConfigError),
     )
 
     with pytest.raises(CharmConfigInvalidError):
@@ -472,23 +474,39 @@ def test_charm_config_from_charm_valid():
         RECONCILE_INTERVAL_CONFIG_NAME: "5",
         DENYLIST_CONFIG_NAME: "192.168.1.1,192.168.1.2",
         DOCKERHUB_MIRROR_CONFIG_NAME: "https://example.com",
-        OPENSTACK_CLOUDS_YAML_CONFIG_NAME: "clouds: { openstack: { auth: { username: 'admin' }}}",
+        # "clouds: { openstack: { auth: { username: 'admin' }}}"
+        OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(
+            (
+                test_openstack_config := {
+                    "clouds": {
+                        "openstack": {
+                            "auth": {
+                                "auth_url": "https://project-keystone.url/",
+                                "password": secrets.token_hex(16),
+                                "project_domain_name": "Default",
+                                "project_name": "test-project-name",
+                                "user_domain_name": "Default",
+                                "username": "test-user-name",
+                            }
+                        }
+                    }
+                }
+            )
+        ),
         LABELS_CONFIG_NAME: "label1,label2,label3",
         TOKEN_CONFIG_NAME: "abc123",
     }
 
     result = CharmConfig.from_charm(mock_charm)
 
-    assert result.path == GithubRepo(owner="owner", repo="repo")
+    assert result.path == GitHubRepo(owner="owner", repo="repo")
     assert result.reconcile_interval == 5
     assert result.denylist == [
         FirewallEntry(ip_range="192.168.1.1"),
         FirewallEntry(ip_range="192.168.1.2"),
     ]
     assert result.dockerhub_mirror == "https://example.com"
-    assert result.openstack_clouds_yaml == {
-        "clouds": {"openstack": {"auth": {"username": "admin"}}}
-    }
+    assert result.openstack_clouds_yaml == test_openstack_config
     assert result.labels == ("label1", "label2", "label3")
     assert result.token == "abc123"
 

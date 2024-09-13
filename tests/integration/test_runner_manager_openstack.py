@@ -1,5 +1,5 @@
-# Copyright 2024 Canonical Ltd.
-# See LICENSE file for licensing details.
+#  Copyright 2024 Canonical Ltd.
+#  See LICENSE file for licensing details.
 
 """Testing the RunnerManager class with OpenStackRunnerManager as CloudManager."""
 
@@ -15,19 +15,28 @@ import yaml
 from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
-from openstack.connection import Connection as OpenstackConnection
-
-from charm_state import GithubPath, ProxyConfig, parse_github_path
-from manager.cloud_runner_manager import CloudRunnerState, GitHubRunnerConfig, SupportServiceConfig
-from manager.github_runner_manager import GitHubRunnerState
-from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
-from metrics import events, storage
-from openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
-from openstack_cloud.openstack_runner_manager import (
+from github_runner_manager.manager.cloud_runner_manager import (
+    CloudRunnerState,
+    GitHubRunnerConfig,
+    SupportServiceConfig,
+)
+from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
+from github_runner_manager.manager.runner_manager import (
+    FlushMode,
+    RunnerManager,
+    RunnerManagerConfig,
+)
+from github_runner_manager.metrics import events, storage
+from github_runner_manager.openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
+from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCloudConfig,
-    OpenstackRunnerManager,
+    OpenStackRunnerManager,
     OpenStackServerConfig,
 )
+from github_runner_manager.types_.github import GitHubPath, parse_github_path
+from openstack.connection import Connection as OpenstackConnection
+
+from charm_state import ProxyConfig
 from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
@@ -64,7 +73,7 @@ def log_dir_base_path_fixture(
 
 
 @pytest.fixture(scope="module", name="github_path")
-def github_path_fixture(path: str) -> GithubPath:
+def github_path_fixture(path: str) -> GitHubPath:
     return parse_github_path(path, "Default")
 
 
@@ -92,11 +101,11 @@ async def openstack_runner_manager_fixture(
     openstack_test_image: str,
     flavor_name: str,
     network_name: str,
-    github_path: GithubPath,
+    github_path: GitHubPath,
     proxy_config: ProxyConfig,
     runner_label: str,
     openstack_connection: OpenstackConnection,
-) -> OpenstackRunnerManager:
+) -> OpenStackRunnerManager:
     """Create OpenstackRunnerManager instance.
 
     The prefix args of OpenstackRunnerManager set to app_name to let openstack_connection_fixture
@@ -122,19 +131,18 @@ async def openstack_runner_manager_fixture(
         proxy_config=proxy_config,
         dockerhub_mirror=None,
         ssh_debug_connections=None,
-        repo_policy_url=None,
-        repo_policy_token=None,
+        repo_policy_compliance=None,
     )
-    return OpenstackRunnerManager(
-        app_name, cloud_config, server_config, runner_config, service_config
+    return OpenStackRunnerManager(
+        app_name, f"{app_name}-0", cloud_config, server_config, runner_config, service_config
     )
 
 
 @pytest_asyncio.fixture(scope="module", name="runner_manager")
 async def runner_manager_fixture(
-    openstack_runner_manager: OpenstackRunnerManager,
+    openstack_runner_manager: OpenStackRunnerManager,
     token: str,
-    github_path: GithubPath,
+    github_path: GitHubPath,
     log_dir_base_path: dict[str, Path],
 ) -> RunnerManager:
     """Get RunnerManager instance.
@@ -142,7 +150,7 @@ async def runner_manager_fixture(
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
     config = RunnerManagerConfig(token, github_path)
-    return RunnerManager(openstack_runner_manager, config)
+    return RunnerManager("test_runner", openstack_runner_manager, config)
 
 
 @pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")
@@ -219,7 +227,7 @@ async def test_get_no_runner(runner_manager: RunnerManager) -> None:
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_runner_normal_idle_lifecycle(
-    runner_manager: RunnerManager, openstack_runner_manager: OpenstackRunnerManager
+    runner_manager: RunnerManager, openstack_runner_manager: OpenStackRunnerManager
 ) -> None:
     """
     Arrange: RunnerManager instance with no runners.
@@ -397,7 +405,7 @@ async def test_runner_normal_lifecycle(
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_runner_spawn_two(
-    runner_manager: RunnerManager, openstack_runner_manager: OpenstackRunnerManager
+    runner_manager: RunnerManager, openstack_runner_manager: OpenStackRunnerManager
 ) -> None:
     """
     Arrange: RunnerManager instance with no runners.

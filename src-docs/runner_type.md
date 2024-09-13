@@ -9,7 +9,7 @@ Types used by Runner class.
 
 ---
 
-<a href="../src/runner_type.py#L14"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_type.py#L16"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerNameByHealth`
 Set of runners instance by health state. 
@@ -39,7 +39,7 @@ __init__(healthy: tuple[str, ], unhealthy: tuple[str, ]) → None
 
 ---
 
-<a href="../src/runner_type.py#L27"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_type.py#L29"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `ProxySetting`
 Represent HTTP-related proxy settings. 
@@ -76,7 +76,7 @@ __init__(
 
 ---
 
-<a href="../src/runner_type.py#L44"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_type.py#L46"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerConfig`
 Configuration for runner. 
@@ -106,7 +106,7 @@ __init__(
     labels: tuple[str],
     lxd_storage_path: Path,
     name: str,
-    path: GithubOrg | GithubRepo,
+    path: GitHubOrg | GitHubRepo,
     proxies: ProxySetting,
     dockerhub_mirror: str | None = None,
     ssh_debug_connections: list[SSHDebugConnection] | None = None
@@ -123,7 +123,7 @@ __init__(
 
 ---
 
-<a href="../src/runner_type.py#L73"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_type.py#L75"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerStatus`
 Status of runner. 
@@ -160,7 +160,7 @@ __init__(
 
 ---
 
-<a href="../src/runner_type.py#L90"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/runner_type.py#L92"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerGithubInfo`
 GitHub info of a runner. 
