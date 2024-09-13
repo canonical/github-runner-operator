@@ -29,7 +29,7 @@ from github_runner_manager.manager.runner_manager import (
 from github_runner_manager.metrics import events, storage
 from github_runner_manager.openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
-    OpenStackCloudConfig,
+    OpenStackCredentials,
     OpenStackRunnerManager,
     OpenStackServerConfig,
 )
@@ -114,10 +114,22 @@ async def openstack_runner_manager_fixture(
     _CLOUDS_YAML_PATH.unlink(missing_ok=True)
     clouds_config = yaml.safe_load(private_endpoint_clouds_yaml)
 
-    cloud_config = OpenStackCloudConfig(
-        clouds_config=clouds_config,
-        cloud="testcloud",
-    )
+    try:
+        # Pick the first cloud in the clouds.yaml 
+        cloud = clouds_config["clouds"].values()[0]
+
+        credentials = OpenStackCredentials(
+            auth_url=cloud["auth"]["auth_url"],
+            project_name=cloud["auth"]["project_name"],
+            username=cloud["auth"]["username"],
+            password=cloud["auth"]["password"],
+            user_domain_name=cloud["auth"]["user_domain_name"],
+            project_domain_name=cloud["auth"]["project_domain_name"],
+            region_name=cloud["region_name"],
+        )
+    except KeyError as err:
+        raise AssertionError("Issue with the format of the clouds.yaml used in test") from err
+
     server_config = OpenStackServerConfig(
         image=openstack_test_image,
         flavor=flavor_name,
@@ -134,7 +146,7 @@ async def openstack_runner_manager_fixture(
         repo_policy_compliance=None,
     )
     return OpenStackRunnerManager(
-        app_name, f"{app_name}-0", cloud_config, server_config, runner_config, service_config
+        app_name, f"{app_name}-0", credentials, server_config, runner_config, service_config
     )
 
 
