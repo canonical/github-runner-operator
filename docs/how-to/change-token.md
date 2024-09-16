@@ -10,7 +10,7 @@ An example classic token scope for repository use:
 
 - `repo`
 
-For managing token scopes (fine-grained token), refer to (reference/token-scopes.md).
+For managing token scopes (fine-grained token), refer to [the token scopes Reference page](https://charmhub.io/github-runner/docs/reference-token-scopes).
 
 By using [`juju config`](https://juju.is/docs/juju/juju-config) to change the [charm configuration token](https://charmhub.io/github-runner/configure#token) the charm unregisters and removes the old self-hosted runners and instantiates new ones.
 
