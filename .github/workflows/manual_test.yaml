@@ -14,15 +14,16 @@ jobs:
     steps:
       - run: sleep 3d
         timeout-minutes: 1440
-  # self-host-stg:
-    # name: self-hosted stg test
-    # runs-on: [self-hosted, ARM64, test-arm]
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    # steps:
-    #   - run: groups
+  self-host-stg:
+    name: self-hosted stg test
+    runs-on: [self-hosted, ARM64, staging]
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0, 1, 2]
+    steps:
+      - run: groups
+      - run: echo hello
     #   - run: cat /etc/docker/daemon.json
     #   - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
     #   - run: docker pull jujusolutions/charm-base:ubuntu-20.04
