@@ -1,8 +1,8 @@
 # How to comply with security requirements
 
-[Running code inside the GitHub self-hosted runner poses significant security risk of arbitrary code execution according to GitHub](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security). The self-hosted runners managed by the charm are isolated in its own single-use virtual machine instance. In addition, the charm enforces some repository settings to ensure all code running on the self-hosted runners is reviewed by someone trusted.
+According to GitHub, running code inside the GitHub self-hosted runner [poses a significant security risk of arbitrary code execution](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security). The self-hosted runners managed by the charm are isolated in its own single-use virtual machine instance. In addition, the charm enforces some repository settings to ensure all code running on the self-hosted runners is reviewed by someone trusted.
 
-The repository settings are enforced with this [Python library](https://github.com/canonical/repo-policy-compliance). The rules enforced are different depending on how the GitHub Actions workflow is triggered. The details can be found in the README.
+The repository settings are enforced with the [repo-policy-compliance Python library](https://github.com/canonical/repo-policy-compliance). The enforced rules differ depending on how the GitHub Actions workflow is triggered. The details can be found in the [README](https://github.com/canonical/repo-policy-compliance/blob/main/README.md).
 
 In this guide, a recommended set of policies will be presented, but any set repository settings that passes the [Python library](https://github.com/canonical/repo-policy-compliance) checks will work with the self-hosted runners managed by this charm.
 
@@ -16,7 +16,7 @@ In this guide, a recommended set of policies will be presented, but any set repo
     - `Required signed commits`
     - `Do not allow bypassing the above settings`
 
-With these settings, the common workflow of creating branches with pull requests and merging to the default branch is supported. Other GitHub Actions workflow triggers such as workflow_dispatch, push, and schedule are supported as well.
+With these settings, the common workflow of creating branches with pull requests and merging to the default branch is supported. Other GitHub Actions workflow triggers such as `workflow_dispatch`, `push`, and `schedule` are supported as well.
 
 ### Working with outside collaborators
 
