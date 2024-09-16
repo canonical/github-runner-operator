@@ -7,6 +7,7 @@
 # pylint: disable=too-many-lines
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
+from ghapi.actions import github_token
 from github_runner_manager.manager.cloud_runner_manager import (
     GitHubRunnerConfig,
     SupportServiceConfig,
@@ -1309,6 +1310,7 @@ class GithubRunnerCharm(CharmBase):
                 ),  # TODO think if queue_name should be really decided by charm
                 runner_manager=runner_manager_config,
                 cloud_runner_manager=openstack_runner_manager_config,
+                github_token=token
             )
         return RunnerScaler(
             runner_manager=runner_manager, reactive_runner_config=reactive_runner_config
