@@ -1,6 +1,7 @@
 name: build arm charm
 
-on: [push]
+on: 
+  push:
 
 jobs:
   build:
