@@ -15,4 +15,4 @@ of tmate session with `-a` option, which adds the user's SSH key to `~/.ssh/auth
 
 By default, if there are any overlapping IPs within the `denylist` config option with the IP
 assigned to `tmate-ssh-server`, an exception to that IP will be made so that the `debug-ssh`
-relation can be setup correctly.
+relation can be set up correctly.
