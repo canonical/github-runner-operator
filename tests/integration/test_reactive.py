@@ -53,6 +53,8 @@ async def test_reactive_mode_consumes_jobs(ops_test: OpsTest, app_for_reactive: 
         app_for_reactive.name,
     )
 
+    await reconcile(app_for_reactive, app_for_reactive.model)
+
     await wait_for_completion(run, conclusion="success")
     _assert_queue_is_empty(mongodb_uri, app_for_reactive.name)
 
