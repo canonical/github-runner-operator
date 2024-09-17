@@ -5,7 +5,7 @@ The charm exposes an integration `debug-ssh` interface which can be used with
 environment variables to be picked up by [action-tmate](https://github.com/canonical/action-tmate/)
 for automatic configuration.
 
-## Prerequisites
+## Requirements
 
 To enhance the security of self-hosted runners and its infrastructure, only authorized connections
 can be established. Hence, action-tmate users must have

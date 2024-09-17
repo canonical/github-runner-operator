@@ -6,8 +6,8 @@ GitHub runner uses [LXD](https://github.com/canonical/lxd) to create a virtual m
 GitHub runner's binary. Some versions of the ARM64 architecture do not support nested 
 virtualizations. 
 
-Furthermore LXD by default uses QEMU with KVM acceleration options and such behavior cannot
-overridden. When run on a machine without KVM support,
+Furthermore LXD by default uses QEMU with KVM acceleration options and such behaviour cannot
+be overridden. When run on a machine without KVM support,
 the following error will occur:
 ```
 Error: Failed instance creation: Failed creating instance record: Instance type "virtual-machine"
