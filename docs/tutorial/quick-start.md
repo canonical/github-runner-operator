@@ -26,7 +26,7 @@ To create a GitHub repository, log in to [GitHub](https://github.com) with your 
 
 ### Activate GitHub APIs related to self-hosted runner
 
-> ***NOTE: This must be done for the GitHub runner charm to function correctly.***
+> ***⚠️ This must be done for the GitHub runner charm to function correctly.***
 
 The GitHub runner charm relies on GitHub APIs for self-hosted runners. Some of the APIs will only be functional after a self-hosted runner registration token is requested for the repository for the first time.
 
