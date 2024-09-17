@@ -391,7 +391,7 @@ async def dispatch_workflow(
         app: The charm to dispatch the workflow for.
         branch: The branch to dispatch the workflow on.
         github_repository: The github repository to dispatch the workflow on.
-        conclusion: The expected workflow run conclusion.
+        conclusion: The expected workflow run conclusion. This argument is ignored if wait is False.
         workflow_id_or_name: The workflow filename in .github/workflows in main branch to run or
             its id.
         dispatch_input: Workflow input values.
@@ -420,13 +420,24 @@ async def dispatch_workflow(
 
     if not wait:
         return run
-    await wait_for(partial(_is_workflow_run_complete, run=run), timeout=60 * 30, check_interval=60)
-    # The run object is updated by _is_workflow_run_complete function above.
-    assert (
-        run.conclusion == conclusion
-    ), f"Unexpected run conclusion, expected: {conclusion}, got: {run.conclusion}"
+    await wait_for_completion(run=run, conclusion=conclusion)
 
     return run
+
+async def wait_for_completion(run: WorkflowRun, conclusion: str) -> None:
+    """Wait for the workflow run to complete.
+
+    Args:
+        run: The workflow run to wait for.
+        conclusion: The expected conclusion of the run.
+    """
+    await wait_for(
+        partial(_is_workflow_run_complete, run=run),
+        timeout=60 * 30,
+        check_interval=60,
+    )
+    # The run object is updated by _is_workflow_run_complete function above.
+    assert run.conclusion == conclusion, f"Unexpected run conclusion, expected: {conclusion}, got: {run.conclusion}"
 
 
 P = ParamSpec("P")

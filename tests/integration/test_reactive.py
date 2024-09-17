@@ -6,21 +6,21 @@ import re
 import secrets
 
 import pytest
+from github import Branch, Repository
 from github_runner_manager.reactive.consumer import JobDetails
-from github_runner_manager.reactive.runner_manager import REACTIVE_RUNNER_LOG_DIR
 from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
 from kombu import Connection
 from pytest_operator.plugin import OpsTest
 
-from tests.integration.helpers.common import get_file_content, reconcile, run_in_unit
-
-FAKE_URL = "http://example.com"
+from tests.integration.helpers.common import get_file_content, reconcile, run_in_unit, \
+    dispatch_workflow, DISPATCH_TEST_WORKFLOW_FILENAME, wait_for_completion
 
 
 @pytest.mark.openstack
-async def test_reactive_mode_consumes_jobs(ops_test: OpsTest, app_for_reactive: Application):
+async def test_reactive_mode_consumes_jobs(ops_test: OpsTest, app_for_reactive: Application,  github_repository: Repository,
+    test_github_branch: Branch):
     """
     arrange: A charm integrated with mongodb and a message is added to the queue.
     act: Call reconcile.
@@ -32,8 +32,20 @@ async def test_reactive_mode_consumes_jobs(ops_test: OpsTest, app_for_reactive: 
         mongodb_uri = await _get_mongodb_uri_from_secrets(ops_test, unit.model)
     assert mongodb_uri, "mongodb uri not found in integration data or secret"
 
+    run  = await dispatch_workflow(
+        app=app_for_reactive,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+        wait=False
+    )
+    jobs = list(run.jobs())
+    assert len(jobs) == 1, "Expected 1 job to be created"
+    job = jobs[0]
+    job_url = job.url
     job = JobDetails(
-        labels=[secrets.token_hex(16) for _ in range(random.randint(1, 4))], run_url=FAKE_URL
+        labels=[secrets.token_hex(16) for _ in range(random.randint(1, 4))], job_url=job_url
     )
     _add_to_queue(
         json.dumps(job.dict() | {"ignored_noise": "foobar"}),
@@ -41,9 +53,11 @@ async def test_reactive_mode_consumes_jobs(ops_test: OpsTest, app_for_reactive: 
         app_for_reactive.name,
     )
 
-    await reconcile(app_for_reactive, app_for_reactive.model)
+    await wait_for_completion(run, conclusion="success")
     _assert_queue_is_empty(mongodb_uri, app_for_reactive.name)
-    await _assert_job_details_in_reactive_log(unit, jobs=[job])
+
+    # Call reconcile to enable cleanup of the runner
+    await reconcile(app_for_reactive, app_for_reactive.model)
 
 
 async def _get_mongodb_uri_from_integration_data(ops_test: OpsTest, unit: Unit) -> str | None:
@@ -122,27 +136,3 @@ def _assert_queue_is_empty(mongodb_uri: str, queue_name: str):
     with Connection(mongodb_uri) as conn:
         with conn.SimpleQueue(queue_name) as simple_queue:
             assert simple_queue.qsize() == 0
-
-
-async def _assert_job_details_in_reactive_log(unit: Unit, jobs: list[JobDetails]):
-    """Assert that the job details are in the reactive log.
-
-    Args:
-        unit: The juju unit.
-        jobs: The list of job details to check.
-    """
-    retcode, stdout, stderr = await run_in_unit(
-        unit=unit,
-        command=f"ls {REACTIVE_RUNNER_LOG_DIR}",
-    )
-    assert retcode == 0, f"Failed to list the reactive log dir: {stderr}"
-    assert stdout, "No log files found in the reactive log dir."
-    log_files = [log_file for log_file in stdout.split()]
-
-    reactive_logs = ""
-    for log_file in log_files:
-        reactive_logs += await get_file_content(unit, REACTIVE_RUNNER_LOG_DIR / log_file)
-
-    for job in jobs:
-        assert job.run_url in reactive_logs
-        assert str(job.labels) in reactive_logs
