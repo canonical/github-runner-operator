@@ -1249,6 +1249,46 @@ class GithubRunnerCharm(CharmBase):
         if path is None:
             path = state.charm_config.path
 
+        openstack_runner_manager_config = self._create_openstack_runner_manager_config(path, state)
+        openstack_runner_manager = OpenStackRunnerManager(
+            config=openstack_runner_manager_config,
+        )
+        runner_manager_config = RunnerManagerConfig(
+            name=self.app.name,
+            token=token,
+            path=path,
+        )
+        runner_manager = RunnerManager(
+            cloud_runner_manager=openstack_runner_manager,
+            config=runner_manager_config,
+        )
+        reactive_runner_config = None
+        if reactive_config := state.reactive_config:
+            reactive_runner_config = ReactiveRunnerConfig(
+                queue=ReactiveQueueConfig(
+                    mongodb_uri=reactive_config.mq_uri, queue_name=self.app.name
+                ),
+                runner_manager=runner_manager_config,
+                cloud_runner_manager=openstack_runner_manager_config,
+                github_token=token,
+            )
+        return RunnerScaler(
+            runner_manager=runner_manager, reactive_runner_config=reactive_runner_config
+        )
+
+    def _create_openstack_runner_manager_config(
+        self, path: GitHubPath, state: CharmState
+    ) -> OpenStackRunnerManagerConfig:
+        """Create OpenStackRunnerManagerConfig instance.
+
+        Args:
+            path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
+                name.
+            state: Charm state.
+
+        Returns:
+            An instance of OpenStackRunnerManagerConfig.
+        """
         clouds = list(state.charm_config.openstack_clouds_yaml["clouds"].keys())
         if len(clouds) > 1:
             logger.warning(
@@ -1269,7 +1309,6 @@ class GithubRunnerCharm(CharmBase):
             )
             if image.tags:
                 image_labels += image.tags
-
         runner_config = GitHubRunnerConfig(
             github_path=path, labels=(*state.charm_config.labels, *image_labels)
         )
@@ -1279,9 +1318,8 @@ class GithubRunnerCharm(CharmBase):
             ssh_debug_connections=state.ssh_debug_connections,
             repo_policy_compliance=state.charm_config.repo_policy_compliance,
         )
-
         openstack_runner_manager_config = OpenStackRunnerManagerConfig(
-            manager_name=self.app.name,  # TODO: rename to name
+            name=self.app.name,
             # The prefix is set to f"{application_name}-{unit number}"
             prefix=self.unit.name.replace("/", "-"),
             cloud_config=cloud_config,
@@ -1289,31 +1327,7 @@ class GithubRunnerCharm(CharmBase):
             runner_config=runner_config,
             service_config=service_config,
         )
-        openstack_runner_manager = OpenStackRunnerManager(
-            config=openstack_runner_manager_config,
-        )
-        runner_manager_config = RunnerManagerConfig(
-            name=self.app.name,
-            token=token,
-            path=path,
-        )
-        runner_manager = RunnerManager(
-            cloud_runner_manager=openstack_runner_manager,
-            config=runner_manager_config,
-        )
-        reactive_runner_config = None
-        if reactive_config := state.reactive_config:
-            reactive_runner_config = ReactiveRunnerConfig(
-                queue=ReactiveQueueConfig(
-                    mongodb_uri=reactive_config.mq_uri, queue_name=self.app.name
-                ),  # TODO think if queue_name should be really decided by charm
-                runner_manager=runner_manager_config,
-                cloud_runner_manager=openstack_runner_manager_config,
-                github_token=token,
-            )
-        return RunnerScaler(
-            runner_manager=runner_manager, reactive_runner_config=reactive_runner_config
-        )
+        return openstack_runner_manager_config
 
 
 if __name__ == "__main__":
