@@ -7,7 +7,8 @@ import shutil
 from pathlib import Path
 from typing import Iterator
 
-import metrics.storage as metrics_storage
+import github_runner_manager.metrics.storage as metrics_storage
+
 from errors import (
     CreateMetricsStorageError,
     DeleteMetricsStorageError,

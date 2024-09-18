@@ -19,6 +19,9 @@ from urllib.parse import urlsplit
 
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
+from github_runner_manager import openstack_cloud
+from github_runner_manager.errors import OpenStackInvalidConfigError
+from github_runner_manager.types_.github import GitHubPath, parse_github_path
 from ops import CharmBase
 from pydantic import (
     AnyHttpUrl,
@@ -31,8 +34,7 @@ from pydantic import (
     validator,
 )
 
-import openstack_cloud
-from errors import MissingMongoDBError, OpenStackInvalidConfigError
+from errors import MissingMongoDBError
 from firewall import FirewallEntry
 from utilities import get_env_var
 
@@ -88,75 +90,6 @@ class AnyHttpsUrl(AnyHttpUrl):
 
 
 @dataclasses.dataclass
-class GitHubRepo:
-    """Represent GitHub repository.
-
-    Attributes:
-        owner: Owner of the GitHub repository.
-        repo: Name of the GitHub repository.
-    """
-
-    owner: str
-    repo: str
-
-    def path(self) -> str:
-        """Return a string representing the path.
-
-        Returns:
-            Path to the GitHub entity.
-        """
-        return f"{self.owner}/{self.repo}"
-
-
-@dataclasses.dataclass
-class GitHubOrg:
-    """Represent GitHub organization.
-
-    Attributes:
-        org: Name of the GitHub organization.
-        group: Runner group to spawn the runners in.
-    """
-
-    org: str
-    group: str
-
-    def path(self) -> str:
-        """Return a string representing the path.
-
-        Returns:
-            Path to the GitHub entity.
-        """
-        return self.org
-
-
-GitHubPath = GitHubOrg | GitHubRepo
-
-
-def parse_github_path(path_str: str, runner_group: str) -> GitHubPath:
-    """Parse GitHub path.
-
-    Args:
-        path_str: GitHub path in string format.
-        runner_group: Runner group name for GitHub organization. If the path is
-            a repository this argument is ignored.
-
-    Raises:
-        CharmConfigInvalidError: if an invalid path string was given.
-
-    Returns:
-        GithubPath object representing the GitHub repository, or the GitHub
-        organization with runner group information.
-    """
-    if "/" in path_str:
-        paths = tuple(segment for segment in path_str.split("/") if segment)
-        if len(paths) != 2:
-            raise CharmConfigInvalidError(f"Invalid path configuration {path_str}")
-        owner, repo = paths
-        return GitHubRepo(owner=owner, repo=repo)
-    return GitHubOrg(org=path_str, group=runner_group)
-
-
-@dataclasses.dataclass
 class GithubConfig:
     """Charm configuration related to GitHub.
 
@@ -186,7 +119,10 @@ class GithubConfig:
         path_str = cast(str, charm.config.get(PATH_CONFIG_NAME, ""))
         if not path_str:
             raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
-        path = parse_github_path(cast(str, path_str), cast(str, runner_group))
+        try:
+            path = parse_github_path(cast(str, path_str), cast(str, runner_group))
+        except ValueError as e:
+            raise CharmConfigInvalidError(str(e)) from e
 
         token = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
         if not token:

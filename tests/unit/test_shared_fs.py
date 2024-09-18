@@ -7,6 +7,7 @@ from unittest.mock import MagicMock, Mock
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
+from github_runner_manager.metrics.storage import MetricsStorage
 
 import shared_fs
 from errors import (
@@ -15,7 +16,6 @@ from errors import (
     GetMetricsStorageError,
     SubprocessError,
 )
-from metrics.storage import MetricsStorage
 
 MOUNTPOINT_FAILURE_EXIT_CODE = 1
 
