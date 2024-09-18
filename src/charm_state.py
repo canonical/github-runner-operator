@@ -1196,6 +1196,14 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
 
         reactive_config = ReactiveConfig.from_database(database)
 
+        if instance_type == InstanceType.LOCAL_LXD and reactive_config:
+            logger.error(
+                "Reactive mode not supported for local LXD instances. Please remove the mongodb integration."
+            )
+            raise CharmConfigInvalidError(
+                "Reactive mode not supported for local LXD instances. Please remove the mongodb integration."
+            )
+
         state = cls(
             arch=arch,
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
