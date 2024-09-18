@@ -21,8 +21,8 @@ On schedule or upon configuration change, the charm performs a reconcile to ensu
 
 To prevent disk IO exhaustion on the Juju machine on disk-intensive GitHub workflows, the charm has two storage options provided by [`runner-storage` configuration](https://charmhub.io/github-runner/configure#runner-storage):
 
-- Use memory of the juju machine as disk. Under this option, the [`vm-disk` configuration](https://charmhub.io/github-runner/configure#vm-disk) can impact the memory usage of the Juju machine.
-- Use storage mount by juju as the disk.
+- Use memory of the Juju machine as disk. Under this option, the [`vm-disk` configuration](https://charmhub.io/github-runner/configure#vm-disk) can impact the memory usage of the Juju machine.
+- Use storage mount by Juju as the disk.
 
 ## Virtual machine image
 
@@ -84,7 +84,7 @@ The charm requires a GitHub personal access token for the [`token` configuration
 - Requesting self-hosted runner removal tokens
 - Requesting a list of runner applications
 - Requesting a list of self-hosted runners configured in an organization or repository
-- Deletion of self-hosted runners
+- Deleting self-hosted runners
 
 The token is also passed to [repo-policy-compliance](https://github.com/canonical/repo-policy-compliance) to access GitHub API for the service.
 
