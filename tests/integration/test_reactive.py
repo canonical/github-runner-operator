@@ -14,13 +14,21 @@ from juju.unit import Unit
 from kombu import Connection
 from pytest_operator.plugin import OpsTest
 
-from tests.integration.helpers.common import get_file_content, reconcile, run_in_unit, \
-    dispatch_workflow, DISPATCH_TEST_WORKFLOW_FILENAME, wait_for_completion
+from tests.integration.helpers.common import (
+    DISPATCH_TEST_WORKFLOW_FILENAME,
+    dispatch_workflow,
+    reconcile,
+    wait_for_completion,
+)
 
 
 @pytest.mark.openstack
-async def test_reactive_mode_consumes_jobs(ops_test: OpsTest, app_for_reactive: Application,  github_repository: Repository,
-    test_github_branch: Branch):
+async def test_reactive_mode_consumes_jobs(
+    ops_test: OpsTest,
+    app_for_reactive: Application,
+    github_repository: Repository,
+    test_github_branch: Branch,
+):
     """
     arrange: A charm integrated with mongodb and a message is added to the queue.
     act: Call reconcile.
@@ -32,13 +40,13 @@ async def test_reactive_mode_consumes_jobs(ops_test: OpsTest, app_for_reactive: 
         mongodb_uri = await _get_mongodb_uri_from_secrets(ops_test, unit.model)
     assert mongodb_uri, "mongodb uri not found in integration data or secret"
 
-    run  = await dispatch_workflow(
+    run = await dispatch_workflow(
         app=app_for_reactive,
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
-        wait=False
+        wait=False,
     )
     jobs = list(run.jobs())
     assert len(jobs) == 1, "Expected 1 job to be created"

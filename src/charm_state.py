@@ -38,6 +38,11 @@ from errors import MissingMongoDBError
 from firewall import FirewallEntry
 from utilities import get_env_var
 
+REACTIVE_MODE_NOT_SUPPORTED_WITH_LXD_ERR_MSG = (
+    "Reactive mode not supported for local LXD instances. "
+    "Please remove the mongodb integration."
+)
+
 logger = logging.getLogger(__name__)
 
 ARCHITECTURES_ARM64 = {"aarch64", "arm64"}
@@ -1197,12 +1202,8 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         reactive_config = ReactiveConfig.from_database(database)
 
         if instance_type == InstanceType.LOCAL_LXD and reactive_config:
-            logger.error(
-                "Reactive mode not supported for local LXD instances. Please remove the mongodb integration."
-            )
-            raise CharmConfigInvalidError(
-                "Reactive mode not supported for local LXD instances. Please remove the mongodb integration."
-            )
+            logger.error(REACTIVE_MODE_NOT_SUPPORTED_WITH_LXD_ERR_MSG)
+            raise CharmConfigInvalidError(REACTIVE_MODE_NOT_SUPPORTED_WITH_LXD_ERR_MSG)
 
         state = cls(
             arch=arch,

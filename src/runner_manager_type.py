@@ -6,7 +6,6 @@
 from dataclasses import dataclass
 from enum import Enum, auto
 from pathlib import Path
-from typing import Iterable
 
 import jinja2
 from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
