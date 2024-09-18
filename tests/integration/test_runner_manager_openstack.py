@@ -115,7 +115,7 @@ async def openstack_runner_manager_fixture(
     clouds_config = yaml.safe_load(private_endpoint_clouds_yaml)
 
     try:
-        # Pick the first cloud in the clouds.yaml 
+        # Pick the first cloud in the clouds.yaml
         cloud = clouds_config["clouds"].values()[0]
 
         credentials = OpenStackCredentials(

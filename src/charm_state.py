@@ -430,14 +430,6 @@ class CharmConfig(BaseModel):
                 f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config. Invalid yaml."
             ) from exc
 
-        try:
-            openstack_cloud.initialize(openstack_clouds_yaml)
-        except OpenStackInvalidConfigError as exc:
-            logger.error("Invalid openstack config, %s.", exc)
-            raise CharmConfigInvalidError(
-                "Invalid openstack config. Not able to initialize openstack integration."
-            ) from exc
-
         return openstack_clouds_yaml
 
     @validator("reconcile_interval")
