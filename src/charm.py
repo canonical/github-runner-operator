@@ -577,6 +577,22 @@ class GithubRunnerCharm(CharmBase):
                 logger.error("Reconciliation event timer is not activated")
                 self._set_reconcile_timer()
 
+    @staticmethod
+    def _log_juju_processes() -> None:
+        """Log the running Juju processes.
+
+        Log all processes with 'juju' in the command line.
+        """
+        try:
+            processes, _ = execute_command(
+                ["ps", "afuwwx"],
+                check_exit=True,
+            )
+            juju_processes = "\n".join(line for line in processes.splitlines() if "juju" in line)
+            logger.info("Juju processes: %s", juju_processes)
+        except SubprocessError:
+            logger.exception("Failed to get Juju processes")
+
     @catch_charm_errors
     def _on_upgrade_charm(self, _: UpgradeCharmEvent) -> None:
         """Handle the update of charm."""
@@ -901,6 +917,7 @@ class GithubRunnerCharm(CharmBase):
     def _on_update_status(self, _: UpdateStatusEvent) -> None:
         """Handle the update of charm status."""
         self._ensure_reconcile_timer_is_active()
+        self._log_juju_processes()
 
     @catch_charm_errors
     def _on_stop(self, _: StopEvent) -> None:
