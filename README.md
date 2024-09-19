@@ -15,7 +15,7 @@ runners. Both the reconciliation interval and the number of runners to maintain 
 
 ## Usage
 
-Please refer to the quick start guide in `docs/tutorial/quick-start.md`.
+Please refer to the tutorial in `docs/tutorial/quick-start.md`.
 
 ## COS
 The charm is designed to provide comprehensive metrics and monitoring capabilities for both the Runners and the Charm itself. These metrics are made available through the `cos-agent` integration with the `cos_agent` interface. Additionally, a Grafana Dashboard is included to help visualize these metrics effectively.
