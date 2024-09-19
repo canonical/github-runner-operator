@@ -20,8 +20,11 @@ from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCloudConfig,
     OpenStackRunnerManager,
+    OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
+from github_runner_manager.reactive.types_ import QueueConfig as ReactiveQueueConfig
+from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
 from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus, parse_github_path
 
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
@@ -1246,6 +1249,46 @@ class GithubRunnerCharm(CharmBase):
         if path is None:
             path = state.charm_config.path
 
+        openstack_runner_manager_config = self._create_openstack_runner_manager_config(path, state)
+        openstack_runner_manager = OpenStackRunnerManager(
+            config=openstack_runner_manager_config,
+        )
+        runner_manager_config = RunnerManagerConfig(
+            name=self.app.name,
+            token=token,
+            path=path,
+        )
+        runner_manager = RunnerManager(
+            cloud_runner_manager=openstack_runner_manager,
+            config=runner_manager_config,
+        )
+        reactive_runner_config = None
+        if reactive_config := state.reactive_config:
+            reactive_runner_config = ReactiveRunnerConfig(
+                queue=ReactiveQueueConfig(
+                    mongodb_uri=reactive_config.mq_uri, queue_name=self.app.name
+                ),
+                runner_manager=runner_manager_config,
+                cloud_runner_manager=openstack_runner_manager_config,
+                github_token=token,
+            )
+        return RunnerScaler(
+            runner_manager=runner_manager, reactive_runner_config=reactive_runner_config
+        )
+
+    def _create_openstack_runner_manager_config(
+        self, path: GitHubPath, state: CharmState
+    ) -> OpenStackRunnerManagerConfig:
+        """Create OpenStackRunnerManagerConfig instance.
+
+        Args:
+            path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
+                name.
+            state: Charm state.
+
+        Returns:
+            An instance of OpenStackRunnerManagerConfig.
+        """
         clouds = list(state.charm_config.openstack_clouds_yaml["clouds"].keys())
         if len(clouds) > 1:
             logger.warning(
@@ -1266,7 +1309,6 @@ class GithubRunnerCharm(CharmBase):
             )
             if image.tags:
                 image_labels += image.tags
-
         runner_config = GitHubRunnerConfig(
             github_path=path, labels=(*state.charm_config.labels, *image_labels)
         )
@@ -1276,25 +1318,16 @@ class GithubRunnerCharm(CharmBase):
             ssh_debug_connections=state.ssh_debug_connections,
             repo_policy_compliance=state.charm_config.repo_policy_compliance,
         )
-        # The prefix is set to f"{application_name}-{unit number}"
-        openstack_runner_manager = OpenStackRunnerManager(
-            manager_name=self.app.name,
+        openstack_runner_manager_config = OpenStackRunnerManagerConfig(
+            name=self.app.name,
+            # The prefix is set to f"{application_name}-{unit number}"
             prefix=self.unit.name.replace("/", "-"),
             cloud_config=cloud_config,
             server_config=server_config,
             runner_config=runner_config,
             service_config=service_config,
         )
-        runner_manager_config = RunnerManagerConfig(
-            token=token,
-            path=path,
-        )
-        runner_manager = RunnerManager(
-            manager_name=self.app.name,
-            cloud_runner_manager=openstack_runner_manager,
-            config=runner_manager_config,
-        )
-        return RunnerScaler(runner_manager=runner_manager, reactive_config=state.reactive_config)
+        return openstack_runner_manager_config
 
 
 if __name__ == "__main__":
