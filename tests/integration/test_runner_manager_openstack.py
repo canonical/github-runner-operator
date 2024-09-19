@@ -31,7 +31,8 @@ from github_runner_manager.openstack_cloud.openstack_cloud import _CLOUDS_YAML_P
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCloudConfig,
     OpenStackRunnerManager,
-    OpenStackServerConfig, OpenStackRunnerManagerConfig,
+    OpenStackRunnerManagerConfig,
+    OpenStackServerConfig,
 )
 from github_runner_manager.types_.github import GitHubPath, parse_github_path
 from openstack.connection import Connection as OpenstackConnection
@@ -159,8 +160,8 @@ async def runner_manager_fixture(
 
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
-    config = RunnerManagerConfig(token, github_path)
-    return RunnerManager("test_runner", openstack_runner_manager, config)
+    config = RunnerManagerConfig("test_runner", token, github_path)
+    return RunnerManager(openstack_runner_manager, config)
 
 
 @pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")
