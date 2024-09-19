@@ -73,8 +73,8 @@ def runner_manager_fixture(
         "github_runner_manager.manager.runner_manager.runner_metrics.issue_events", MagicMock()
     )
 
-    config = RunnerManagerConfig("mock_token", github_path)
-    runner_manager = RunnerManager("mock_runners", mock_cloud, config)
+    config = RunnerManagerConfig("mock_runners", "mock_token", github_path)
+    runner_manager = RunnerManager(mock_cloud, config)
     runner_manager._github = mock_github
     return runner_manager
 
