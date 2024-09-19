@@ -8,7 +8,6 @@ import typing
 from pathlib import Path
 from unittest.mock import MagicMock
 
-import github_runner_manager.openstack_cloud
 import pytest
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires

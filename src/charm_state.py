@@ -19,8 +19,6 @@ from urllib.parse import urlsplit
 
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
-from github_runner_manager import openstack_cloud
-from github_runner_manager.errors import OpenStackInvalidConfigError
 from github_runner_manager.types_.github import GitHubPath, parse_github_path
 from ops import CharmBase
 from pydantic import (
