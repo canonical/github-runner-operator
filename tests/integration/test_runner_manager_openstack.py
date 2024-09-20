@@ -7,7 +7,7 @@
 import json
 from pathlib import Path
 from secrets import token_hex
-from typing import Iterator
+from typing import AsyncGenerator, Iterator
 
 import pytest
 import pytest_asyncio
@@ -106,7 +106,7 @@ async def openstack_runner_manager_fixture(
     proxy_config: ProxyConfig,
     runner_label: str,
     openstack_connection: OpenstackConnection,
-) -> OpenStackRunnerManager:
+) -> AsyncGenerator[OpenStackRunnerManager, None]:
     """Create OpenstackRunnerManager instance.
 
     The prefix args of OpenstackRunnerManager set to app_name to let openstack_connection_fixture
@@ -144,7 +144,7 @@ async def openstack_runner_manager_fixture(
         service_config=service_config,
     )
 
-    return OpenStackRunnerManager(
+    yield OpenStackRunnerManager(
         config=openstack_runner_manager_config,
     )
 
@@ -155,13 +155,13 @@ async def runner_manager_fixture(
     token: str,
     github_path: GitHubPath,
     log_dir_base_path: dict[str, Path],
-) -> RunnerManager:
+) -> AsyncGenerator[RunnerManager, None]:
     """Get RunnerManager instance.
 
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
     config = RunnerManagerConfig("test_runner", token, github_path)
-    return RunnerManager(openstack_runner_manager, config)
+    yield RunnerManager(openstack_runner_manager, config)
 
 
 @pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")
