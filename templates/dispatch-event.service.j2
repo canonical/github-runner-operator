@@ -4,7 +4,7 @@ Description=Dispatch the {{event}} event on {{unit}}
 [Service]
 Type=oneshot
 # For juju 3 and juju 2 compatibility. The juju-run binary was renamed to juju-exec for juju 3.
-ExecStart=/usr/bin/timeout "{{timeout}}" /usr/bin/run-one /usr/bin/bash -c '/usr/bin/juju-exec "{{unit}}" "JUJU_DISPATCH_PATH={{event}} ./dispatch" || /usr/bin/juju-run "{{unit}}" "JUJU_DISPATCH_PATH={{event}} ./dispatch"'
+ExecStart=/usr/bin/timeout "{{timeout}}" /usr/bin/run-one /usr/bin/bash -c '/usr/bin/juju-exec "{{unit}}" "JUJU_DISPATCH_PATH={{event}} /usr/bin/timeout {{timeout}} ./dispatch" || /usr/bin/juju-run "{{unit}}" "JUJU_DISPATCH_PATH={{event}} /usr/bin/timeout {{timeout}} ./dispatch"'
 
 [Install]
 WantedBy=multi-user.target
