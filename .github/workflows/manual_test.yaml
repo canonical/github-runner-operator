@@ -13,14 +13,12 @@ jobs:
   #     - run: echo hello
   self-host-stg:
     name: self-hosted stg test
-    runs-on: [self-hosted, ARM64, staging]
-    strategy:
-      fail-fast: false
-      matrix:
-        index: [0, 1, 2]
+    runs-on: [self-hosted, X64, large]
     steps:
       - run: groups
-      - run: echo hello
+      - name: tmate ssh
+        uses: canonical/action-tmate@debug
+      # - run: echo hello
     #   - run: cat /etc/docker/daemon.json
     #   - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
     #   - run: docker pull jujusolutions/charm-base:ubuntu-20.04
