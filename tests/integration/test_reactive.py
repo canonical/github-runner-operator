@@ -53,7 +53,7 @@ async def test_reactive_mode_consumes_jobs(
     job = jobs[0]
     job_url = job.url
     job = JobDetails(
-        labels=[secrets.token_hex(16) for _ in range(random.randint(1, 4))], job_url=job_url
+        labels=[secrets.token_hex(16) for _ in range(random.randint(1, 4))], url=job_url
     )
     _add_to_queue(
         json.dumps(job.dict() | {"ignored_noise": "foobar"}),
