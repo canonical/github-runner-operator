@@ -19,7 +19,7 @@ jobs:
         uses: charmed-kubernetes/actions-operator@1.1.0
         with:
           provider: microk8s
-          channel: 1.25-strict/stable
+          channel: 1.30-strict/stable
           microk8s-addons: "hostpath-storage rbac dns registry"
           juju-channel: 3.4/stable
       - name: Setup tmate session
