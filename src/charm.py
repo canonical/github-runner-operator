@@ -451,6 +451,12 @@ class GithubRunnerCharm(CharmBase):
             logger.error("Failed to install charm dependencies")
             raise
 
+        try:
+            logrotate.setup()
+        except LogrotateSetupError:
+            logger.error("Failed to setup logrotate")
+            raise
+
         if state.instance_type == InstanceType.OPENSTACK:
             return True
 
@@ -461,12 +467,6 @@ class GithubRunnerCharm(CharmBase):
             self._start_services(state.charm_config.token, state.proxy_config)
         except SubprocessError:
             logger.error("Failed to install or start local LXD runner dependencies")
-            raise
-
-        try:
-            logrotate.setup()
-        except LogrotateSetupError:
-            logger.error("Failed to setup logrotate")
             raise
 
         self._refresh_firewall(state)
