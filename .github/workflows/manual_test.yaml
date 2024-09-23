@@ -15,16 +15,6 @@ jobs:
     name: self-hosted large
     runs-on: [self-hosted, X64, large, jammy]
     steps:
-      # - name: Load netsuite client library
-      #   uses: alnvdl-work/setup-private-repo@v2
-      #   with:
-      #     repository: canonical/netsuite-client
-      #     ssh-key: ${{ secrets.NETSUITE_CLIENT_SSH_KEY }}
-      # - name: Load decimal library
-      #   uses: alnvdl-work/setup-private-repo@v2
-      #   with:
-      #     repository: canonical/decimal
-      #     ssh-key: ${{ secrets.DECIMAL_SSH_KEY }}
       - name: Setup operator environment
         uses: charmed-kubernetes/actions-operator@1.1.0
         with:
