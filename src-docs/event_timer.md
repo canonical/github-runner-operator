@@ -109,7 +109,7 @@ Construct the timer manager.
 
 ---
 
-<a href="../src/event_timer.py#L151"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/event_timer.py#L146"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `disable_event_timer`
 
@@ -138,11 +138,7 @@ Disable the systemd timer for the given event.
 ### <kbd>method</kbd> `ensure_event_timer`
 
 ```python
-ensure_event_timer(
-    event_name: str,
-    interval: int,
-    timeout: Optional[int] = None
-) → None
+ensure_event_timer(event_name: str, interval: int, timeout: int) → None
 ```
 
 Ensure that a systemd service and timer are registered to dispatch the given event. 

@@ -1,5 +1,5 @@
-# Copyright 2024 Canonical Ltd.
-# See LICENSE file for licensing details.
+#  Copyright 2024 Canonical Ltd.
+#  See LICENSE file for licensing details.
 
 """Testing the RunnerManager class with OpenStackRunnerManager as CloudManager."""
 
@@ -7,7 +7,7 @@
 import json
 from pathlib import Path
 from secrets import token_hex
-from typing import Iterator
+from typing import AsyncGenerator, Iterator
 
 import pytest
 import pytest_asyncio
@@ -15,19 +15,28 @@ import yaml
 from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
-from openstack.connection import Connection as OpenstackConnection
-
-from charm_state import GitHubPath, ProxyConfig, parse_github_path
-from manager.cloud_runner_manager import CloudRunnerState, GitHubRunnerConfig, SupportServiceConfig
-from manager.github_runner_manager import GitHubRunnerState
-from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
-from metrics import events, storage
-from openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
-from openstack_cloud.openstack_runner_manager import (
+from github_runner_manager.manager.cloud_runner_manager import (
+    CloudRunnerState,
+    GitHubRunnerConfig,
+    SupportServiceConfig,
+)
+from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
+from github_runner_manager.manager.runner_manager import (
+    FlushMode,
+    RunnerManager,
+    RunnerManagerConfig,
+)
+from github_runner_manager.metrics import events, storage
+from github_runner_manager.openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
+from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCloudConfig,
     OpenStackRunnerManager,
     OpenStackServerConfig,
 )
+from github_runner_manager.types_.github import GitHubPath, parse_github_path
+from openstack.connection import Connection as OpenstackConnection
+
+from charm_state import ProxyConfig
 from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
@@ -96,7 +105,7 @@ async def openstack_runner_manager_fixture(
     proxy_config: ProxyConfig,
     runner_label: str,
     openstack_connection: OpenstackConnection,
-) -> OpenStackRunnerManager:
+) -> AsyncGenerator[OpenStackRunnerManager, None]:
     """Create OpenstackRunnerManager instance.
 
     The prefix args of OpenstackRunnerManager set to app_name to let openstack_connection_fixture
@@ -124,7 +133,7 @@ async def openstack_runner_manager_fixture(
         ssh_debug_connections=None,
         repo_policy_compliance=None,
     )
-    return OpenStackRunnerManager(
+    yield OpenStackRunnerManager(
         app_name, f"{app_name}-0", cloud_config, server_config, runner_config, service_config
     )
 
@@ -135,13 +144,13 @@ async def runner_manager_fixture(
     token: str,
     github_path: GitHubPath,
     log_dir_base_path: dict[str, Path],
-) -> RunnerManager:
+) -> AsyncGenerator[RunnerManager, None]:
     """Get RunnerManager instance.
 
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
     config = RunnerManagerConfig(token, github_path)
-    return RunnerManager("test_runner", openstack_runner_manager, config)
+    yield RunnerManager("test_runner", openstack_runner_manager, config)
 
 
 @pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")

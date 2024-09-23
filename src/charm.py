@@ -7,10 +7,23 @@
 # pylint: disable=too-many-lines
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
+from github_runner_manager.manager.cloud_runner_manager import (
+    GitHubRunnerConfig,
+    SupportServiceConfig,
+)
+from github_runner_manager.manager.runner_manager import (
+    FlushMode,
+    RunnerManager,
+    RunnerManagerConfig,
+)
+from github_runner_manager.manager.runner_scaler import RunnerScaler
+from github_runner_manager.openstack_cloud.openstack_runner_manager import (
+    OpenStackCloudConfig,
+    OpenStackRunnerManager,
+    OpenStackServerConfig,
+)
+from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus, parse_github_path
 
-from manager.cloud_runner_manager import GitHubRunnerConfig, SupportServiceConfig
-from manager.runner_manager import FlushMode, RunnerManager, RunnerManagerConfig
-from manager.runner_scaler import RunnerScaler
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
@@ -59,20 +72,17 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
-    GitHubPath,
     InstanceType,
     OpenstackImage,
     ProxyConfig,
     RunnerStorage,
     VirtualMachineResources,
-    parse_github_path,
 )
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
     MissingMongoDBError,
     MissingRunnerBinaryError,
-    OpenStackUnauthorizedError,
     RunnerBinaryError,
     RunnerError,
     SubprocessError,
@@ -80,16 +90,14 @@ from errors import (
 )
 from event_timer import EventTimer, TimerStatusError
 from firewall import Firewall, FirewallEntry
-from github_type import GitHubRunnerStatus
-from openstack_cloud.openstack_runner_manager import (
-    OpenStackCloudConfig,
-    OpenStackRunnerManager,
-    OpenStackServerConfig,
-)
 from runner import LXD_PROFILE_YAML
 from runner_manager import LXDRunnerManager, LXDRunnerManagerConfig
 from runner_manager_type import LXDFlushMode
 
+# We assume a stuck reconcile event when it takes longer
+# than 10 times a normal interval. Currently, we are only aware of
+# https://bugs.launchpad.net/juju/+bug/2055184 causing a stuck reconcile event.
+RECONCILIATION_INTERVAL_TIMEOUT_FACTOR = 10
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
 
 # This is currently hardcoded and may be moved to a config option in the future.
@@ -139,11 +147,6 @@ def catch_charm_errors(
             self.unit.status = MaintenanceStatus(
                 "GitHub runner application not downloaded; the charm will retry download on "
                 "reconcile interval"
-            )
-        except OpenStackUnauthorizedError:
-            logger.exception("Unauthorized OpenStack connection")
-            self.unit.status = BlockedStatus(
-                "Unauthorized OpenStack connection. Check credentials."
             )
         except MissingMongoDBError as err:
             logger.exception("Missing integration data")
@@ -556,7 +559,8 @@ class GithubRunnerCharm(CharmBase):
         self._event_timer.ensure_event_timer(
             event_name="reconcile-runners",
             interval=int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
-            timeout=int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]) - 1,
+            timeout=RECONCILIATION_INTERVAL_TIMEOUT_FACTOR
+            * int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
         )
 
     def _ensure_reconcile_timer_is_active(self) -> None:
@@ -569,6 +573,22 @@ class GithubRunnerCharm(CharmBase):
             if not reconcile_timer_is_active:
                 logger.error("Reconciliation event timer is not activated")
                 self._set_reconcile_timer()
+
+    @staticmethod
+    def _log_juju_processes() -> None:
+        """Log the running Juju processes.
+
+        Log all processes with 'juju' in the command line.
+        """
+        try:
+            processes, _ = execute_command(
+                ["ps", "afuwwx"],
+                check_exit=True,
+            )
+            juju_processes = "\n".join(line for line in processes.splitlines() if "juju" in line)
+            logger.info("Juju processes: %s", juju_processes)
+        except SubprocessError:
+            logger.exception("Failed to get Juju processes")
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _: UpgradeCharmEvent) -> None:
@@ -894,6 +914,7 @@ class GithubRunnerCharm(CharmBase):
     def _on_update_status(self, _: UpdateStatusEvent) -> None:
         """Handle the update of charm status."""
         self._ensure_reconcile_timer_is_active()
+        self._log_juju_processes()
 
     @catch_charm_errors
     def _on_stop(self, _: StopEvent) -> None:
