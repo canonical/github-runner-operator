@@ -18,6 +18,9 @@ jobs:
       - run: groups
       - name: Setup operator environment
         uses: charmed-kubernetes/actions-operator@main
+        with:
+          juju-channel: 3.1/stable
+          provider: lxd
       - name: tmate ssh
         uses: canonical/action-tmate@debug
       # - run: echo hello
