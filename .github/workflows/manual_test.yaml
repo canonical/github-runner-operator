@@ -15,7 +15,7 @@ jobs:
     name: self-hosted large
     runs-on: [self-hosted, X64, large]
     steps:
-      - run: groups
+      - run: sudo apt install tox -yq
       - name: Setup operator environment
         uses: charmed-kubernetes/actions-operator@main
         with:
