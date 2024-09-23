@@ -11,11 +11,13 @@ jobs:
   #   runs-on: [self-hosted, X64, edge]
   #   steps:
   #     - run: echo hello
-  self-host-stg:
-    name: self-hosted stg test
+  self-host:
+    name: self-hosted large
     runs-on: [self-hosted, X64, large]
     steps:
       - run: groups
+      - name: Setup operator environment
+        uses: charmed-kubernetes/actions-operator@main
       - name: tmate ssh
         uses: canonical/action-tmate@debug
       # - run: echo hello
