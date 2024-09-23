@@ -15,14 +15,25 @@ jobs:
     name: self-hosted large
     runs-on: [self-hosted, X64, large, jammy]
     steps:
-      - run: sudo apt install tox -yq
+      # - name: Load netsuite client library
+      #   uses: alnvdl-work/setup-private-repo@v2
+      #   with:
+      #     repository: canonical/netsuite-client
+      #     ssh-key: ${{ secrets.NETSUITE_CLIENT_SSH_KEY }}
+      # - name: Load decimal library
+      #   uses: alnvdl-work/setup-private-repo@v2
+      #   with:
+      #     repository: canonical/decimal
+      #     ssh-key: ${{ secrets.DECIMAL_SSH_KEY }}
       - name: Setup operator environment
-        uses: charmed-kubernetes/actions-operator@main
+        uses: charmed-kubernetes/actions-operator@1.1.0
         with:
           provider: microk8s
+          channel: 1.25-strict/stable
+          microk8s-addons: "hostpath-storage rbac dns registry"
           juju-channel: 3.4/stable
-      - name: tmate ssh
-        uses: canonical/action-tmate@debug
+      - name: Setup tmate session
+        uses: canonical/action-tmate@main
       # - run: echo hello
     #   - run: cat /etc/docker/daemon.json
     #   - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
