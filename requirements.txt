@@ -14,4 +14,5 @@ PyYAML ==6.0.*
 pyOpenSSL==24.2.1
 kombu==5.4.1
 pymongo==4.8.0
+# TODO: Use commit after PR is merge.
 github_runner_manager @ git+https://github.com/canonical/github-runner-manager.git@fix/openstack-connection-creation
