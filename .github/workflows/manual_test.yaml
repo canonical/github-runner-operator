@@ -13,13 +13,14 @@ jobs:
   #     - run: echo hello
   self-host:
     name: self-hosted large
-    runs-on: [self-hosted, X64, large]
+    runs-on: [self-hosted, X64, large, jammy]
     steps:
       - run: sudo apt install tox -yq
       - name: Setup operator environment
         uses: charmed-kubernetes/actions-operator@main
         with:
           provider: microk8s
+          juju-channel: 3.4/stable
       - name: tmate ssh
         uses: canonical/action-tmate@debug
       # - run: echo hello
