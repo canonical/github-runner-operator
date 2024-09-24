@@ -150,7 +150,7 @@ async def openstack_runner_manager_fixture(
     openstack_runner_manager_config = OpenStackRunnerManagerConfig(
         name=app_name,
         prefix=f"{app_name}-0",
-        cloud_config=cloud_config,
+        credentials=credentials,
         server_config=server_config,
         runner_config=runner_config,
         service_config=service_config,
