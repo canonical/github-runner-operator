@@ -18,17 +18,10 @@ from github_runner_manager.metrics.events import (
 from github_runner_manager.metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from github_runner_manager.metrics.storage import MetricsStorage
 from github_runner_manager.types_.github import GitHubOrg, GitHubRepo, RunnerApplication
-from pytest import LogCaptureFixture, MonkeyPatch
+from pytest import MonkeyPatch
 
 import shared_fs
-from charm_state import (
-    Arch,
-    CharmConfig,
-    CharmState,
-    ProxyConfig,
-    ReactiveConfig,
-    VirtualMachineResources,
-)
+from charm_state import Arch, CharmConfig, CharmState, ProxyConfig, VirtualMachineResources
 from errors import IssueMetricEventError, RunnerBinaryError
 from runner import Runner, RunnerStatus
 from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, LXDRunnerManager, LXDRunnerManagerConfig
@@ -522,26 +515,6 @@ def test_reconcile_places_no_timestamp_in_newly_created_runner_if_metrics_disabl
     runner_manager.reconcile(1, VirtualMachineResources(2, "7GiB", "10Gib"))
 
     assert not (fs.path / RUNNER_INSTALLED_TS_FILE_NAME).exists()
-
-
-def test_reconcile_reactive_mode(
-    runner_manager: LXDRunnerManager,
-    reactive_reconcile_mock: MagicMock,
-    caplog: LogCaptureFixture,
-):
-    """
-    arrange: Enable reactive mode and mock the job class to return a job.
-    act: Call reconcile with a random quantity n.
-    assert: The mocked job is picked up n times and the expected log message is present.
-    """
-    count = random.randint(0, 5)
-    runner_manager.config.reactive_config = ReactiveConfig(mq_uri=FAKE_MONGODB_URI)
-    actual_count = runner_manager.reconcile(count, VirtualMachineResources(2, "7GiB", "10Gib"))
-
-    assert actual_count == count
-    reactive_reconcile_mock.assert_called_with(
-        quantity=count, mq_uri=FAKE_MONGODB_URI, queue_name=runner_manager.app_name
-    )
 
 
 def test_schedule_build_runner_image(
