@@ -35,7 +35,7 @@ async def setup_queue_fixture(
     _assert_queue_is_empty(mongodb_uri, app_for_reactive.name)
 
 
-async def test_reactive_mode_consumes_jobs(
+async def test_reactive_mode_spawns_runner(
     ops_test: OpsTest,
     app_for_reactive: Application,
     github_repository: Repository,
@@ -44,7 +44,7 @@ async def test_reactive_mode_consumes_jobs(
     """
     arrange: A charm integrated with mongodb and a message is added to the queue.
     act: Call reconcile.
-    assert: The message is consumed and the job details are logged.
+    assert: The message is consumed and a runner is spawned.
     """
     mongodb_uri = await _get_mongodb_uri(ops_test, app_for_reactive)
 
@@ -86,6 +86,11 @@ async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
     github_repository: Repository,
     test_github_branch: Branch,
 ):
+    """
+    arrange: A charm integrated with mongodb and an unsupported label is added to the queue.
+    act: Call reconcile.
+    assert: No runner is spawned and the message is requeued.
+    """
     mongodb_uri = await _get_mongodb_uri(ops_test, app_for_reactive)
 
     run = await dispatch_workflow(
