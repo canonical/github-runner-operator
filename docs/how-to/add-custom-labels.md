@@ -11,5 +11,5 @@ juju config <APP_NAME> labels=<COMMA_SEPARATED_LABELS>
 ```
 
 An example of a COMMA_SEPARATED_LABELS value would be "large,gpu", "small,arm64".
-Accepted values are alphanumeric values with underscores (_), whitespaces before and after the the
+Accepted values are alphanumeric values with underscores (_); whitespaces before and after the the
 word will be automatically trimmed.
