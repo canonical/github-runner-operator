@@ -761,18 +761,18 @@ async def mongodb_fixture(model: Model, existing_app: str | None) -> Application
 @pytest_asyncio.fixture(scope="module", name="app_for_reactive")
 async def app_for_reactive_fixture(
     model: Model,
-    basic_app: Application,
+    app_openstack_runner: Application,
     mongodb: Application,
     existing_app: Optional[str],
 ) -> Application:
     """Application for testing reactive."""
     if not existing_app:
-        await model.relate(f"{basic_app.name}:mongodb", f"{mongodb.name}:database")
+        await model.relate(f"{app_openstack_runner.name}:mongodb", f"{mongodb.name}:database")
 
-    await basic_app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
-    await model.wait_for_idle(apps=[basic_app.name, mongodb.name], status=ACTIVE)
+    await app_openstack_runner.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    await model.wait_for_idle(apps=[app_openstack_runner.name, mongodb.name], status=ACTIVE)
 
-    return basic_app
+    return app_openstack_runner
 
 
 @pytest_asyncio.fixture(scope="module", name="basic_app")
