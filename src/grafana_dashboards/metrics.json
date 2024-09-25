@@ -24,10 +24,23 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 537,
+  "id": 567,
   "links": [],
   "liveNow": false,
   "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 10,
+      "panels": [],
+      "title": "General",
+      "type": "row"
+    },
     {
       "datasource": {
         "type": "loki",
@@ -91,7 +104,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 3,
       "options": {
@@ -212,7 +225,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 0
+        "y": 1
       },
       "id": 22,
       "options": {
@@ -252,19 +265,6 @@
       ],
       "title": "Available Runners",
       "type": "barchart"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 8
-      },
-      "id": 10,
-      "panels": [],
-      "title": "General",
-      "type": "row"
     },
     {
       "datasource": {
@@ -485,7 +485,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "builder",
-          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", duration=\"queue_duration\", flavor=\"flavor\" | __error__=`` | event = `runner_start` | flavor =~ `$flavor` | unwrap duration [1h]) by (flavor)",
+          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"queue_duration\",flavor=\"flavor\" | __error__=\"\" | event=\"runner_start\" | flavor=~\"$flavor\" | unwrap duration[1h]) by(flavor)",
           "hide": false,
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "{{flavor}}",
@@ -493,7 +493,7 @@
           "refId": "E"
         }
       ],
-      "title": "Max Job Queue Duration By Flavour",
+      "title": "Max Job Queue Duration By Application",
       "type": "timeseries"
     },
     {
@@ -789,8 +789,263 @@
       "gridPos": {
         "h": 8,
         "w": 12,
+        "x": 0,
+        "y": 25
+      },
+      "id": 24,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "builder",
+          "expr": "quantile_over_time(0.5,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap duration[1h]) by(filename)",
+          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
+          "legendFormat": "50%",
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "builder",
+          "expr": "quantile_over_time(0.95,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap duration[1h]) by(filename)",
+          "hide": false,
+          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
+          "legendFormat": "95%",
+          "queryType": "range",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "builder",
+          "expr": "quantile_over_time(0.99,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap duration[1h]) by(filename)",
+          "hide": false,
+          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
+          "legendFormat": "99%",
+          "queryType": "range",
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "builder",
+          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap duration[1h]) by(filename)",
+          "hide": false,
+          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
+          "legendFormat": "Max",
+          "queryType": "range",
+          "refId": "C"
+        }
+      ],
+      "title": "Reconciliation Duration (Percentile)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${lokids}"
+      },
+      "description": "The average actual reconciliation interval.\n\nUnlike the Reconciliation Duration panel, this panel shows the time between the actual start of reconciliations. This is useful for identifying problems where the reconciliation itself is behaving normally, but the event itself is not being scheduled as expected.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Duration"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
         "x": 12,
         "y": 25
+      },
+      "id": 6,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": false
+        },
+        "orientation": "horizontal",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "1 / sum by (flavor) (rate({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", flavor=\"flavor\" | event=\"reconciliation\" [$__range]))",
+          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
+          "legendFormat": "",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Average Reconciliation Interval",
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Value #A"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${lokids}"
+      },
+      "description": "All aggregations are based on a 1-hour time period.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 33
       },
       "id": 4,
       "options": {
@@ -859,140 +1114,6 @@
         }
       ],
       "title": "Runner Idle Duration (Percentile)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "${lokids}"
-      },
-      "description": "All aggregations are based on a 1-hour time period.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 33
-      },
-      "id": 6,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "builder",
-          "expr": "quantile_over_time(0.5,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap duration[1h]) by(filename)",
-          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
-          "legendFormat": "50%",
-          "queryType": "range",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "builder",
-          "expr": "quantile_over_time(0.95,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap duration[1h]) by(filename)",
-          "hide": false,
-          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
-          "legendFormat": "95%",
-          "queryType": "range",
-          "refId": "D"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "builder",
-          "expr": "quantile_over_time(0.99,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap duration[1h]) by(filename)",
-          "hide": false,
-          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
-          "legendFormat": "99%",
-          "queryType": "range",
-          "refId": "E"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "builder",
-          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",duration=\"duration\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap duration[1h]) by(filename)",
-          "hide": false,
-          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
-          "legendFormat": "Max",
-          "queryType": "range",
-          "refId": "C"
-        }
-      ],
-      "title": "Reconciliation Duration (Percentile)",
       "type": "timeseries"
     },
     {
@@ -1924,6 +2045,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics",
-  "version": 14,
+  "version": 15,
   "weekStart": ""
 }

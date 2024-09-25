@@ -7,7 +7,7 @@
 import json
 from pathlib import Path
 from secrets import token_hex
-from typing import Iterator
+from typing import AsyncGenerator, Iterator
 
 import pytest
 import pytest_asyncio
@@ -31,6 +31,7 @@ from github_runner_manager.openstack_cloud.openstack_cloud import _CLOUDS_YAML_P
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCloudConfig,
     OpenStackRunnerManager,
+    OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
 from github_runner_manager.types_.github import GitHubPath, parse_github_path
@@ -105,7 +106,7 @@ async def openstack_runner_manager_fixture(
     proxy_config: ProxyConfig,
     runner_label: str,
     openstack_connection: OpenstackConnection,
-) -> OpenStackRunnerManager:
+) -> AsyncGenerator[OpenStackRunnerManager, None]:
     """Create OpenstackRunnerManager instance.
 
     The prefix args of OpenstackRunnerManager set to app_name to let openstack_connection_fixture
@@ -133,8 +134,18 @@ async def openstack_runner_manager_fixture(
         ssh_debug_connections=None,
         repo_policy_compliance=None,
     )
-    return OpenStackRunnerManager(
-        app_name, f"{app_name}-0", cloud_config, server_config, runner_config, service_config
+
+    openstack_runner_manager_config = OpenStackRunnerManagerConfig(
+        name=app_name,
+        prefix=f"{app_name}-0",
+        cloud_config=cloud_config,
+        server_config=server_config,
+        runner_config=runner_config,
+        service_config=service_config,
+    )
+
+    yield OpenStackRunnerManager(
+        config=openstack_runner_manager_config,
     )
 
 
@@ -144,13 +155,13 @@ async def runner_manager_fixture(
     token: str,
     github_path: GitHubPath,
     log_dir_base_path: dict[str, Path],
-) -> RunnerManager:
+) -> AsyncGenerator[RunnerManager, None]:
     """Get RunnerManager instance.
 
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
-    config = RunnerManagerConfig(token, github_path)
-    return RunnerManager("test_runner", openstack_runner_manager, config)
+    config = RunnerManagerConfig("test_runner", token, github_path)
+    yield RunnerManager(openstack_runner_manager, config)
 
 
 @pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")

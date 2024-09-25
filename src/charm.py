@@ -20,8 +20,11 @@ from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCloudConfig,
     OpenStackRunnerManager,
+    OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
+from github_runner_manager.reactive.types_ import QueueConfig as ReactiveQueueConfig
+from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
 from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus, parse_github_path
 
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
@@ -94,6 +97,10 @@ from runner import LXD_PROFILE_YAML
 from runner_manager import LXDRunnerManager, LXDRunnerManagerConfig
 from runner_manager_type import LXDFlushMode
 
+# We assume a stuck reconcile event when it takes longer
+# than 10 times a normal interval. Currently, we are only aware of
+# https://bugs.launchpad.net/juju/+bug/2055184 causing a stuck reconcile event.
+RECONCILIATION_INTERVAL_TIMEOUT_FACTOR = 10
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
 
 # This is currently hardcoded and may be moved to a config option in the future.
@@ -444,6 +451,12 @@ class GithubRunnerCharm(CharmBase):
             logger.error("Failed to install charm dependencies")
             raise
 
+        try:
+            logrotate.setup()
+        except LogrotateSetupError:
+            logger.error("Failed to setup logrotate")
+            raise
+
         if state.instance_type == InstanceType.OPENSTACK:
             return True
 
@@ -454,12 +467,6 @@ class GithubRunnerCharm(CharmBase):
             self._start_services(state.charm_config.token, state.proxy_config)
         except SubprocessError:
             logger.error("Failed to install or start local LXD runner dependencies")
-            raise
-
-        try:
-            logrotate.setup()
-        except LogrotateSetupError:
-            logger.error("Failed to setup logrotate")
             raise
 
         self._refresh_firewall(state)
@@ -555,7 +562,8 @@ class GithubRunnerCharm(CharmBase):
         self._event_timer.ensure_event_timer(
             event_name="reconcile-runners",
             interval=int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
-            timeout=int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]) - 1,
+            timeout=RECONCILIATION_INTERVAL_TIMEOUT_FACTOR
+            * int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
         )
 
     def _ensure_reconcile_timer_is_active(self) -> None:
@@ -568,6 +576,22 @@ class GithubRunnerCharm(CharmBase):
             if not reconcile_timer_is_active:
                 logger.error("Reconciliation event timer is not activated")
                 self._set_reconcile_timer()
+
+    @staticmethod
+    def _log_juju_processes() -> None:
+        """Log the running Juju processes.
+
+        Log all processes with 'juju' in the command line.
+        """
+        try:
+            processes, _ = execute_command(
+                ["ps", "afuwwx"],
+                check_exit=True,
+            )
+            juju_processes = "\n".join(line for line in processes.splitlines() if "juju" in line)
+            logger.info("Juju processes: %s", juju_processes)
+        except SubprocessError:
+            logger.exception("Failed to get Juju processes")
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _: UpgradeCharmEvent) -> None:
@@ -893,6 +917,7 @@ class GithubRunnerCharm(CharmBase):
     def _on_update_status(self, _: UpdateStatusEvent) -> None:
         """Handle the update of charm status."""
         self._ensure_reconcile_timer_is_active()
+        self._log_juju_processes()
 
     @catch_charm_errors
     def _on_stop(self, _: StopEvent) -> None:
@@ -1241,6 +1266,46 @@ class GithubRunnerCharm(CharmBase):
         if path is None:
             path = state.charm_config.path
 
+        openstack_runner_manager_config = self._create_openstack_runner_manager_config(path, state)
+        openstack_runner_manager = OpenStackRunnerManager(
+            config=openstack_runner_manager_config,
+        )
+        runner_manager_config = RunnerManagerConfig(
+            name=self.app.name,
+            token=token,
+            path=path,
+        )
+        runner_manager = RunnerManager(
+            cloud_runner_manager=openstack_runner_manager,
+            config=runner_manager_config,
+        )
+        reactive_runner_config = None
+        if reactive_config := state.reactive_config:
+            reactive_runner_config = ReactiveRunnerConfig(
+                queue=ReactiveQueueConfig(
+                    mongodb_uri=reactive_config.mq_uri, queue_name=self.app.name
+                ),
+                runner_manager=runner_manager_config,
+                cloud_runner_manager=openstack_runner_manager_config,
+                github_token=token,
+            )
+        return RunnerScaler(
+            runner_manager=runner_manager, reactive_runner_config=reactive_runner_config
+        )
+
+    def _create_openstack_runner_manager_config(
+        self, path: GitHubPath, state: CharmState
+    ) -> OpenStackRunnerManagerConfig:
+        """Create OpenStackRunnerManagerConfig instance.
+
+        Args:
+            path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
+                name.
+            state: Charm state.
+
+        Returns:
+            An instance of OpenStackRunnerManagerConfig.
+        """
         clouds = list(state.charm_config.openstack_clouds_yaml["clouds"].keys())
         if len(clouds) > 1:
             logger.warning(
@@ -1261,7 +1326,6 @@ class GithubRunnerCharm(CharmBase):
             )
             if image.tags:
                 image_labels += image.tags
-
         runner_config = GitHubRunnerConfig(
             github_path=path, labels=(*state.charm_config.labels, *image_labels)
         )
@@ -1271,25 +1335,16 @@ class GithubRunnerCharm(CharmBase):
             ssh_debug_connections=state.ssh_debug_connections,
             repo_policy_compliance=state.charm_config.repo_policy_compliance,
         )
-        # The prefix is set to f"{application_name}-{unit number}"
-        openstack_runner_manager = OpenStackRunnerManager(
-            manager_name=self.app.name,
+        openstack_runner_manager_config = OpenStackRunnerManagerConfig(
+            name=self.app.name,
+            # The prefix is set to f"{application_name}-{unit number}"
             prefix=self.unit.name.replace("/", "-"),
             cloud_config=cloud_config,
             server_config=server_config,
             runner_config=runner_config,
             service_config=service_config,
         )
-        runner_manager_config = RunnerManagerConfig(
-            token=token,
-            path=path,
-        )
-        runner_manager = RunnerManager(
-            manager_name=self.app.name,
-            cloud_runner_manager=openstack_runner_manager,
-            config=runner_manager_config,
-        )
-        return RunnerScaler(runner_manager=runner_manager, reactive_config=state.reactive_config)
+        return openstack_runner_manager_config
 
 
 if __name__ == "__main__":
