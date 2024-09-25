@@ -36,9 +36,6 @@ jobs:
       modules: '["test_runner_manager_openstack"]'
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
-      # TODO: debug only
-      tmate-debug: true
-      tmate-timeout: 600
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
@@ -53,6 +50,3 @@ jobs:
       extra-arguments: "-m openstack"
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
-      # TODO: debug only
-      tmate-debug: true
-      tmate-timeout: 600
