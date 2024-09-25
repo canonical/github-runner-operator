@@ -9,7 +9,7 @@ Some of the charm dependencies upgrades on a schedule to migrate security risks.
 
 The charm maintains a set of ephemeral self-hosted runners, each isolated in a single-use virtual machine instance. In addition, resource limits for the self-hosted runners can be configured.
 
-See [charm architecture](https://charmhub.io/github-runner/docs/charm-architecture) for more information.
+See [charm architecture](https://charmhub.io/github-runner/docs/explanation-charm-architecture) for more information.
 
 The charm operates in a stateless manner. It can be redeployed without losing any data and there is no need to backup the charm's state.
 
@@ -18,7 +18,7 @@ Metrics and logs about the runners and the charm itself are collected and sent t
 
 This charm will make operating GitHub self-hosted runners simple and straightforward for DevOps or SRE teams through Juju's clean interface.
 
-The charm enforces a set of GitHub repository settings as best practice. This is planned to be opt-in in the future. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/repo-policy).
+The charm enforces a set of GitHub repository settings as best practice. This is planned to be opt-in in the future. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/how-to-repo-policy).
 
 ## In this documentation
 
@@ -42,7 +42,7 @@ The GitHub runner charm is a member of the Ubuntu family. It's an open-source pr
 - [Join our online chat](https://matrix.to/#/#charmhub-charmdev:ubuntu.com)
 - [Contribute](Contribute)
 
-Thinking about using the GitHub runner charm for your next project? [Get in touch](https://chat.charmhub.io/charmhub/channels/charm-dev)!
+Thinking about using the GitHub runner charm for your next project? [Get in touch](https://matrix.to/#/#charmhub-charmdev:ubuntu.com)!
 
 # Contents
 
@@ -72,6 +72,8 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [COS Integration](reference/cos.md)
   1. [External Access](reference/external-access.md)
   1. [Integrations](reference/integrations.md)
+  1. [Token scopes](reference/token-scopes.md)
 1. [Tutorial](tutorial)
   1. [Managing resource usage](tutorial/managing-resource-usage.md)
   1. [Quick start](tutorial/quick-start.md)
+1. [Changelog](changelog.md)
