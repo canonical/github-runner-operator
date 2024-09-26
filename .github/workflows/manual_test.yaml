@@ -48,6 +48,7 @@ jobs:
           sg 'snap_microk8s' -c "microk8s config > ~/.kube/config"
       - run: sudo snap install juju
       - run: sudo usermod -a -G snap_microk8s ubuntu
+      - run: juju bootstrap microk8s
       - run: juju add-model test
       - run:  juju deploy postgresql-k8s --channel 14/edge --trust
       - name: Setup tmate session
