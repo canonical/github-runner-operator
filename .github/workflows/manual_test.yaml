@@ -54,6 +54,7 @@ jobs:
       - name: Setup tmate session
         if: always()
         uses: canonical/action-tmate@main
+
       # - run: echo hello
     #   - run: cat /etc/docker/daemon.json
     #   - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
