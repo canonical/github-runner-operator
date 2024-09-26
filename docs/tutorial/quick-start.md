@@ -93,10 +93,10 @@ If the workflow failed at the `Set up runner` step with the following message:
 
 The repository setting does not comply with the best practice enforce by the charm. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/repo-policy).
 
-#### Removing the charm
+### Clean up the environment
 
-The charm and the self-hosted runners can be removed with the following command:
+The Juju model, charm and the self-hosted runners can be removed with the following command:
 
 ```shell
-juju remove-application github-runner
+juju destroy-model --destroy-storage github-runner-tutorial
 ```
