@@ -14,6 +14,10 @@ jobs:
   self-host:
     name: self-hosted large
     runs-on: [self-hosted, X64, large, jammy]
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     steps:
       - name: Set up microk8s
         timeout-minutes: 5
@@ -52,6 +56,7 @@ jobs:
       - run: juju add-model test
       - run: juju deploy postgresql-k8s --channel 14/edge --trust
       - name: Setup tmate session
+        if: failure()
         uses: canonical/action-tmate@main
 
       # - run: echo hello
