@@ -1311,7 +1311,7 @@ class GithubRunnerCharm(CharmBase):
             logger.warning(
                 "Multiple clouds defined in clouds.yaml. Using the first one to connect."
             )
-        first_cloud_config = clouds[0]
+        first_cloud_config = state.charm_config.openstack_clouds_yaml[clouds[0]]
         credentials = OpenStackCredentials(
             auth_url=first_cloud_config["auth"]["auth_url"],
             project_name=first_cloud_config["auth"]["project_name"],
