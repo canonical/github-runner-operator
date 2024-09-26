@@ -60,6 +60,8 @@ The `--storage` option mounts a juju storage to be used as the disk for LXD inst
 
 The charm performs various installation and configuration on startup. The charm might upgrade the kernel of the Juju machine and reboot the Juju machine. During reboot, the Juju machine will go into the `down` state; this is a part of the normal reboot process and the Juju machine should be restarted after a while.
 
+Monitor the deployment status using `juju status --watch 5s`. The deployment finishes when the status shows "Active".
+
 Once the charm reaches active status, visit the runner page for the GitHub repository (`https://github.com/{OWNER}/{REPO}/settings/actions/runners`) according to the instructions [here](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/using-self-hosted-runners-in-a-workflow#viewing-available-runners-for-a-repository). A single new runner should be available as it is the default number of self-hosted runners created.
 
 The charm will spawn new runners on a schedule. During this time, the charm will enter maintenance status.
