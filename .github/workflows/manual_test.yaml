@@ -52,7 +52,6 @@ jobs:
       - run: juju add-model test
       - run: juju deploy postgresql-k8s --channel 14/edge --trust
       - name: Setup tmate session
-        if: always()
         uses: canonical/action-tmate@main
 
       # - run: echo hello
