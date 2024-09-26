@@ -1,4 +1,4 @@
-# Quick start
+# Deploy the GitHub runner charm for the first time
 
 ## What you'll do
 
