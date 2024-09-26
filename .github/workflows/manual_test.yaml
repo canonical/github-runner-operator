@@ -15,14 +15,39 @@ jobs:
     name: self-hosted large
     runs-on: [self-hosted, X64, large, jammy]
     steps:
-      - name: Setup operator environment
-        uses: charmed-kubernetes/actions-operator@1.1.0
-        with:
-          provider: microk8s
-          channel: 1.30-strict/stable
-          microk8s-addons: "hostpath-storage rbac dns registry"
-          juju-channel: 3.4/stable
+      - name: Set up microk8s
+        timeout-minutes: 5
+        run: |
+          sudo apt-get update
+          sudo apt-get install retry -y
+          sudo snap install microk8s --channel='1.31-strict/stable'
+          sudo adduser "$USER" 'snap_microk8s'
+      - name: (IS hosted) Configure microk8s Docker Hub mirror
+        timeout-minutes: 5
+        run: |
+          sudo tee /var/snap/microk8s/current/args/certs.d/docker.io/hosts.toml << EOF
+          server = "$DOCKERHUB_MIRROR"
+          [host."${DOCKERHUB_MIRROR#'https://'}"]
+          capabilities = ["pull", "resolve"]
+          EOF
+          sudo microk8s stop
+          sudo microk8s start
+      - name: Set up microk8s
+        id: microk8s-setup
+        timeout-minutes: 15
+        run: |
+          # `newgrp` does not work in GitHub Actions; use `sg` instead
+          sg 'snap_microk8s' -c "microk8s status --wait-ready"
+          sg 'snap_microk8s' -c "retry --times 3 --delay 5 -- sudo microk8s enable dns"
+          sg 'snap_microk8s' -c "microk8s status --wait-ready"
+          sg 'snap_microk8s' -c "microk8s.kubectl rollout status --namespace kube-system --watch --timeout=5m deployments/coredns"
+          sg 'snap_microk8s' -c "retry --times 3 --delay 5 -- sudo microk8s enable hostpath-storage"
+          sg 'snap_microk8s' -c "microk8s.kubectl rollout status --namespace kube-system --watch --timeout=5m deployments/hostpath-provisioner"
+          mkdir ~/.kube/
+          # Used by lightkube and kubernetes (Python package)
+          sg 'snap_microk8s' -c "microk8s config > ~/.kube/config"
       - name: Setup tmate session
+        if: always()
         uses: canonical/action-tmate@main
       # - run: echo hello
     #   - run: cat /etc/docker/daemon.json
