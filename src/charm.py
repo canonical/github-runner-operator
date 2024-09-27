@@ -107,6 +107,8 @@ RECONCILE_RUNNERS_EVENT = "reconcile-runners"
 REACTIVE_MQ_DB_NAME = "github-runner-webhook-router"
 
 
+GITHUB_SELF_HOSTED_ARCH_LABELS = {"x64", "arm64"}
+
 logger = logging.getLogger(__name__)
 
 
@@ -1281,6 +1283,9 @@ class GithubRunnerCharm(CharmBase):
         )
         reactive_runner_config = None
         if reactive_config := state.reactive_config:
+            # The charm is not able to determine which architecture the runner is running on,
+            # so we add all architectures to the supported labels.
+            supported_labels = set(self._create_labels(state)) | GITHUB_SELF_HOSTED_ARCH_LABELS
             reactive_runner_config = ReactiveRunnerConfig(
                 queue=ReactiveQueueConfig(
                     mongodb_uri=reactive_config.mq_uri, queue_name=self.app.name
@@ -1288,10 +1293,28 @@ class GithubRunnerCharm(CharmBase):
                 runner_manager=runner_manager_config,
                 cloud_runner_manager=openstack_runner_manager_config,
                 github_token=token,
+                supported_labels=supported_labels,
             )
         return RunnerScaler(
             runner_manager=runner_manager, reactive_runner_config=reactive_runner_config
         )
+
+    @staticmethod
+    def _create_labels(state: CharmState) -> list[str]:
+        """Create Labels instance.
+
+        Args:
+            state: Charm state used to create the labels.
+
+        Returns:
+            An instance of Labels.
+        """
+        image_labels = []
+        image = state.runner_config.openstack_image
+        if image and image.id and image.tags:
+            image_labels = image.tags
+
+        return list(state.charm_config.labels) + image_labels
 
     def _create_openstack_runner_manager_config(
         self, path: GitHubPath, state: CharmState
@@ -1316,7 +1339,6 @@ class GithubRunnerCharm(CharmBase):
             cloud=clouds[0],
         )
         server_config = None
-        image_labels = []
         image = state.runner_config.openstack_image
         if image and image.id:
             server_config = OpenStackServerConfig(
@@ -1324,11 +1346,8 @@ class GithubRunnerCharm(CharmBase):
                 flavor=state.runner_config.openstack_flavor,
                 network=state.runner_config.openstack_network,
             )
-            if image.tags:
-                image_labels += image.tags
-        runner_config = GitHubRunnerConfig(
-            github_path=path, labels=(*state.charm_config.labels, *image_labels)
-        )
+        labels = self._create_labels(state)
+        runner_config = GitHubRunnerConfig(github_path=path, labels=labels)
         service_config = SupportServiceConfig(
             proxy_config=state.proxy_config,
             dockerhub_mirror=state.charm_config.dockerhub_mirror,
