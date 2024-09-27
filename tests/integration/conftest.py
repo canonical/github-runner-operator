@@ -769,7 +769,6 @@ async def app_for_reactive_fixture(
     if not existing_app:
         await model.relate(f"{app_openstack_runner.name}:mongodb", f"{mongodb.name}:database")
 
-    await app_openstack_runner.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await model.wait_for_idle(apps=[app_openstack_runner.name, mongodb.name], status=ACTIVE)
 
     return app_openstack_runner
