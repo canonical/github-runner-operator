@@ -2,8 +2,15 @@ name: CI
 on: [push, pull_request]
 jobs:
   build:
-    runs-on: ["self-hosted", "staging"]
-    steps:
-        - name: Hello world
-          run: |
-            echo "Hello, world"
+    name: Integration test stg-private-endpoint
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    secrets: inherit
+    with:
+      juju-channel: 3.2/stable
+      pre-run-script: scripts/setup-lxd.sh
+      provider: lxd
+      test-tox-env: integration-juju3.2
+      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_runner", "test_reactive"]'
+      extra-arguments: "-m openstack"
+      self-hosted-runner: true
+      self-hosted-runner-label: yanks-testing
