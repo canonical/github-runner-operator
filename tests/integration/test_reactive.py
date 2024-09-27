@@ -23,6 +23,7 @@ from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
     reconcile,
+    wait_for,
     wait_for_completion,
     wait_for_status,
 )
@@ -32,13 +33,14 @@ pytestmark = pytest.mark.openstack
 
 @pytest_asyncio.fixture(name="app")
 async def app_fixture(app_for_reactive: Application) -> AsyncIterator[Application]:
-    """Setup the reactive charm with 1 virtual machine."""
+    """Setup the reactive charm with 1 virtual machine and tear down afterwards."""
     await app_for_reactive.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await reconcile(app_for_reactive, app_for_reactive.model)
 
     yield app_for_reactive
 
     # Call reconcile to enable cleanup of any runner spawned
+    await app_for_reactive.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await reconcile(app_for_reactive, app_for_reactive.model)
 
 
@@ -83,14 +85,11 @@ async def test_reactive_mode_spawns_runner(
         app.name,
     )
 
+    # This reconcile call is to check that we are not killing machines that are under
+    # construction in a subsequent reconciliation.
     await reconcile(app, app.model)
 
     await wait_for_completion(run, conclusion="success")
-
-    # there is an edge case that reconciliation kills a process that has not yet
-    # acknowledged the message, so we trigger again a reconciliation and assume that
-    # the next process will pick up the message if it was not acknowledged
-    await reconcile(app, app.model)
 
     _assert_queue_is_empty(mongodb_uri, app.name)
 
@@ -123,13 +122,12 @@ async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
         app.name,
     )
 
-    await reconcile(app, app.model)
-
-    run.update()
-    assert run.status == "queued"
-
+    # wait for queue being empty, there could be a race condition where it takes some
+    # time for the job message to be consumed and the queue to be empty
     try:
-        _assert_queue_is_empty(mongodb_uri, app.name)
+        await wait_for(lambda: _get_queue_size(mongodb_uri, app.name) == 0)
+        run.update()
+        assert run.status == "queued"
     finally:
         run.cancel()  # cancel the run to avoid a queued run in GitHub actions page
 
@@ -177,9 +175,7 @@ async def test_reactive_mode_scale_down(
 
     # we assume that the runner got deleted while running the job, so we expect a failed job
     await wait_for_completion(run, conclusion="failure")
-    # there is an edge case that reconciliation kills a process that has not yet
-    # acknowledged the message, so we clear the queue
-    _clear_queue(mongodb_uri, app.name)
+    _assert_queue_is_empty(mongodb_uri, app.name)
 
     # 2. Spawn a job.
     run = await dispatch_workflow(
@@ -342,6 +338,19 @@ def _assert_queue_has_size(mongodb_uri: str, queue_name: str, size: int):
         queue_name: The name of the queue to check.
         size: The expected size of the queue.
     """
+    assert _get_queue_size(mongodb_uri, queue_name) == size
+
+
+def _get_queue_size(mongodb_uri: str, queue_name: str) -> int:
+    """Get the size of the queue.
+
+    Args:
+        mongodb_uri: The mongodb uri.
+        queue_name: The name of the queue to check.
+
+    Returns:
+        The size of the queue.
+    """
     with Connection(mongodb_uri) as conn:
         with conn.SimpleQueue(queue_name) as simple_queue:
-            assert simple_queue.qsize() == size
+            return simple_queue.qsize()
