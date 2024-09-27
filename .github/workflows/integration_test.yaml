@@ -24,6 +24,21 @@ jobs:
       # test_debug_ssh ensures tmate SSH actions works.
       # TODO: Add OpenStack integration versions of these tests.
       modules: '["test_charm_scheduled_events", "test_debug_ssh"]'
+  # TODO: debug
+  debug-reactive:
+    name: debug reactive
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    secrets: inherit
+    with:
+      juju-channel: 3.2/stable
+      pre-run-script: scripts/setup-lxd.sh
+      provider: lxd
+      test-tox-env: integration-juju3.2
+      modules: '["test_reactive"]'
+      self-hosted-runner: true
+      self-hosted-runner-label: stg-private-endpoint
+      tmate-debug: true
+      tmate-timeout: 300
   openstack-interface-tests-private-endpoint:
     name: openstack interface test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
