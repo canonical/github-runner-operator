@@ -13,7 +13,7 @@ jobs:
   #     - run: echo hello
   self-host:
     name: self-hosted large
-    runs-on: [self-hosted, X64, large, jammy]
+    runs-on: [self-hosted, X64, edge, jammy]
     strategy:
       fail-fast: false
       matrix:
