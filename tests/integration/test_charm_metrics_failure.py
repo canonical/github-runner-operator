@@ -38,6 +38,7 @@ from tests.integration.helpers.lxd import (
     run_in_lxd_instance,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
+from tests.integration.helpers.types import ProxyConfig
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -72,7 +73,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     forked_github_repository: Repository,
     forked_github_branch: Branch,
     token: str,
-    https_proxy: str,
+    proxy: ProxyConfig,
     instance_helper: InstanceHelper,
 ):
     """
@@ -88,7 +89,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
             app=app,
             openstack_connection=instance_helper.openstack_connection,
             token=token,
-            https_proxy=https_proxy,
+            https_proxy=proxy.https,
         )
     else:
         await instance_helper.ensure_charm_has_runner(app)

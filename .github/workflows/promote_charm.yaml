@@ -3,6 +3,12 @@ name: Promote charm
 on:
   workflow_dispatch:
     inputs:
+      base-architecture:
+        type: choice
+        description: 'Architecture of the charm to promote'
+        options:
+        - amd64
+        - arm64
       origin-channel:
         type: choice
         description: 'Origin Channel'
@@ -28,4 +34,5 @@ jobs:
       origin-channel: ${{ github.event.inputs.origin-channel }}
       destination-channel: ${{ github.event.inputs.destination-channel }}
       doc-automation-disabled: false
+      base-architecture: ${{ github.event.inputs.base-architecture }}
     secrets: inherit
