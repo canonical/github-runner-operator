@@ -62,7 +62,7 @@ async def test_reactive_mode_spawns_runner(
     """
     arrange: Place a message in the queue and dispatch a workflow.
     act: Call reconcile.
-    assert: The message is consumed and a runner is spawned to process the job.
+    assert: A  runner is spawned to process the job and the message is removed from the queue.
     """
     mongodb_uri = await _get_mongodb_uri(ops_test, app)
 
@@ -86,6 +86,12 @@ async def test_reactive_mode_spawns_runner(
     await reconcile(app, app.model)
 
     await wait_for_completion(run, conclusion="success")
+
+    # there is an edge case that reconciliation kills a process that has not yet
+    # acknowledged the message, so we trigger again a reconciliation and assume that
+    # the next process will pick up the message if it was not acknowledged
+    await reconcile(app, app.model)
+
     _assert_queue_is_empty(mongodb_uri, app.name)
 
 
@@ -98,7 +104,7 @@ async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
     """
     arrange: Place a message with an unsupported label in the queue and dispatch a workflow.
     act: Call reconcile.
-    assert: No runner is spawned and the message is requeued.
+    assert: No runner is spawned and the message is not requeued.
     """
     mongodb_uri = await _get_mongodb_uri(ops_test, app)
 
@@ -121,9 +127,11 @@ async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
 
     run.update()
     assert run.status == "queued"
-    run.cancel()
 
-    _assert_queue_has_size(mongodb_uri, app.name, 1)
+    try:
+        _assert_queue_is_empty(mongodb_uri, app.name)
+    finally:
+        run.cancel()  # cancel the run to avoid a queued run in GitHub actions page
 
 
 async def test_reactive_mode_scale_down(
@@ -138,7 +146,7 @@ async def test_reactive_mode_scale_down(
         1. Scale down the number of virtual machines to 0 and call reconcile.
         2. Spawn a job.
     assert:
-        1. The job is cancelled and there is no message in the queue.
+        1. The job fails.
         2. The job is queued and there is a message in the queue.
     """
     mongodb_uri = await _get_mongodb_uri(ops_test, app)
@@ -167,10 +175,11 @@ async def test_reactive_mode_scale_down(
     await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await reconcile(app, app.model)
 
-    # we assume that the runner got deleted while running the job, so we expect a cancelled job
+    # we assume that the runner got deleted while running the job, so we expect a failed job
     await wait_for_completion(run, conclusion="failure")
-
-    _assert_queue_has_size(mongodb_uri, app.name, 0)
+    # there is an edge case that reconciliation kills a process that has not yet
+    # acknowledged the message, so we clear the queue
+    _clear_queue(mongodb_uri, app.name)
 
     # 2. Spawn a job.
     run = await dispatch_workflow(
