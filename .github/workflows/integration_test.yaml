@@ -52,3 +52,4 @@ jobs:
       extra-arguments: "-m openstack"
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
+      tmate-debug: true
