@@ -18,8 +18,7 @@ from github_runner_manager.metrics.events import (
 from github_runner_manager.metrics.runner import RUNNER_INSTALLED_TS_FILE_NAME
 from github_runner_manager.metrics.storage import MetricsStorage
 from github_runner_manager.types_.github import GitHubOrg, GitHubRepo, RunnerApplication
-from pydantic import MongoDsn
-from pytest import LogCaptureFixture, MonkeyPatch
+from pytest import MonkeyPatch
 
 import shared_fs
 from charm_state import Arch, CharmConfig, CharmState, ProxyConfig, VirtualMachineResources
