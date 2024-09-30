@@ -118,6 +118,9 @@ async def openstack_runner_manager_fixture(
     try:
         # Pick the first cloud in the clouds.yaml
         cloud = tuple(clouds_config["clouds"].values())[0]
+        print('============================================')
+        print(cloud)
+        print('============================================')
 
         credentials = OpenStackCredentials(
             auth_url=cloud["auth"]["auth_url"],
@@ -126,7 +129,7 @@ async def openstack_runner_manager_fixture(
             password=cloud["auth"]["password"],
             user_domain_name=cloud["auth"]["user_domain_name"],
             project_domain_name=cloud["auth"]["project_domain_name"],
-            region_name=cloud["region_name"],
+            region_name=cloud.get(["region_name"], None),
         )
     except KeyError as err:
         raise AssertionError("Issue with the format of the clouds.yaml used in test") from err
