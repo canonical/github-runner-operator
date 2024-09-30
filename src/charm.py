@@ -1346,7 +1346,7 @@ class GithubRunnerCharm(CharmBase):
             password=first_cloud_config["auth"]["password"],
             user_domain_name=first_cloud_config["auth"]["user_domain_name"],
             project_domain_name=first_cloud_config["auth"]["project_domain_name"],
-            region_name=first_cloud_config.get("region_name", None),
+            region_name=first_cloud_config["region_name"],
         )
         server_config = None
         image = state.runner_config.openstack_image
