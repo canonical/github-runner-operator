@@ -87,25 +87,7 @@ class LXDRunnerManager:
         self.app_name = app_name
         self.instance_name = f"{app_name}-{unit}"
         self.config = runner_manager_config
-        self.proxies = RunnerProxySetting(
-            use_aproxy=runner_manager_config.charm_state.proxy_config.use_aproxy,
-            no_proxy=runner_manager_config.charm_state.proxy_config.no_proxy,
-            http=(
-                str(runner_manager_config.charm_state.proxy_config.http)
-                if runner_manager_config.charm_state.proxy_config.http
-                else None
-            ),
-            https=(
-                str(runner_manager_config.charm_state.proxy_config.https)
-                if runner_manager_config.charm_state.proxy_config.https
-                else None
-            ),
-            aproxy_address=(
-                str(runner_manager_config.charm_state.proxy_config.aproxy_address)
-                if runner_manager_config.charm_state.proxy_config.aproxy_address
-                else None
-            ),
-        )
+        self.proxies = runner_manager_config.charm_state.proxy_config
 
         # Setting the env var to this process and any child process spawned.
         if no_proxy := self.proxies.no_proxy:

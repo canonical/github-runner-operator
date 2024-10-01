@@ -819,7 +819,7 @@ def test_apropy_address(
     act: Access the aproxy_address property of the ProxyConfig instance.
     assert: Verify that the property returns the expected apropy address.
     """
-    proxy_config = ProxyConfig(http=http, https=https, use_aproxy=use_aproxy)
+    proxy_config = ProxyConfig(http_url=http, https_url=https, use_aproxy=use_aproxy)
 
     result = proxy_config.aproxy_address
 
@@ -858,7 +858,7 @@ def test___bool__(http: str | None, https: str | None, expected_result: bool):
     act: Call the __bool__ method on the instance.
     assert: Verify that the method returns the expected boolean value.
     """
-    proxy_instance = ProxyConfig(http=http, https=https)
+    proxy_instance = ProxyConfig(http_url=http, https_url=https)
 
     result = bool(proxy_instance)
 

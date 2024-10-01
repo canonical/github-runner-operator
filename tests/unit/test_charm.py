@@ -15,7 +15,6 @@ import yaml
 from github_runner_manager.types_.github import GitHubOrg, GitHubRepo, GitHubRunnerStatus
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
-from pydantic import AnyHttpUrl
 
 from charm import GithubRunnerCharm, catch_action_errors, catch_charm_errors
 from charm_state import (
@@ -33,6 +32,7 @@ from charm_state import (
     InstanceType,
     OpenStackCloudsYAML,
     OpenstackImage,
+    ProxyConfig,
     VirtualMachineResources,
 )
 from errors import (
@@ -47,7 +47,6 @@ from errors import (
 from event_timer import EventTimer, TimerEnableError
 from firewall import FirewallEntry
 from runner_manager import LXDRunnerManagerConfig, RunnerInfo
-from runner_type import ProxySetting
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
@@ -185,8 +184,8 @@ def test_proxy_setting(harness: Harness):
     assert: The proxy configuration are set.
     """
     state = harness.charm._setup_state()
-    assert state.proxy_config.https == AnyHttpUrl(TEST_PROXY_SERVER_URL)
-    assert state.proxy_config.http == AnyHttpUrl(TEST_PROXY_SERVER_URL)
+    assert state.proxy_config.https == f"{TEST_PROXY_SERVER_URL}/"
+    assert state.proxy_config.http == f"{TEST_PROXY_SERVER_URL}/"
     assert state.proxy_config.no_proxy == "127.0.0.1,localhost"
 
 
@@ -277,8 +276,8 @@ def test_get_runner_manager(harness: Harness):
     runner_manager = harness.charm._get_runner_manager(state)
     assert runner_manager is not None
     assert runner_manager.config.token == "mocktoken"
-    assert runner_manager.proxies == ProxySetting(
-        http=None, https=None, no_proxy=None, use_aproxy=False
+    assert runner_manager.proxies == ProxyConfig(
+        http_url=None, https_url=None, no_proxy=None, use_aproxy=False
     )
 
 

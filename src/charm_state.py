@@ -780,24 +780,36 @@ class ProxyConfig(BaseModel):
 
     Attributes:
         aproxy_address: The address of aproxy snap instance if use_aproxy is enabled.
-        http: HTTP proxy address.
-        https: HTTPS proxy address.
+        http: HTTP proxy address string.
+        http_url: HTTP proxy address url.
+        https: HTTPS proxy address string.
+        https_url: HTTPS proxy address url.
         no_proxy: Comma-separated list of hosts that should not be proxied.
         use_aproxy: Whether aproxy should be used for the runners.
         model_config: Config for the pydantic model
     """
 
-    http: Optional[AnyHttpUrl] = None
-    https: Optional[AnyHttpUrl] = None
+    http_url: Optional[AnyHttpUrl] = None
+    https_url: Optional[AnyHttpUrl] = None
     no_proxy: Optional[str] = None
     use_aproxy: bool = False
     model_config = ConfigDict(frozen=True)
 
     @property
+    def http(self) -> Optional[str]:
+        """Return string version of http url."""
+        return str(self.http_url) if self.http_url else None
+
+    @property
+    def https(self) -> Optional[str]:
+        """Return string version of https url."""
+        return str(self.https_url) if self.https_url else None
+
+    @property
     def aproxy_address(self) -> Optional[str]:
         """Return the aproxy address."""
         if self.use_aproxy:
-            proxy_address = self.http or self.https
+            proxy_address = self.http_url or self.https_url
             # assert is only used to make mypy happy
             assert (
                 proxy_address is not None and proxy_address.host is not None
@@ -821,7 +833,7 @@ class ProxyConfig(BaseModel):
         Returns:
             Validated ProxyConfig instance.
         """
-        if self.use_aproxy and not (self.http or self.https):
+        if self.use_aproxy and not (self.http_url or self.https_url):
             raise ValueError("aproxy requires http or https to be set")
 
         return self
@@ -832,7 +844,7 @@ class ProxyConfig(BaseModel):
         Returns:
             Whether the proxy config is set.
         """
-        return bool(self.http or self.https)
+        return bool(self.http_url or self.https_url)
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "ProxyConfig":
@@ -854,8 +866,8 @@ class ProxyConfig(BaseModel):
             no_proxy = None
 
         return cls(
-            http=http_proxy,
-            https=https_proxy,
+            http_url=http_proxy,
+            https_url=https_proxy,
             no_proxy=no_proxy,
             use_aproxy=use_aproxy,
         )
@@ -938,11 +950,9 @@ class SSHDebugConnection(BaseModel):
                 )
                 continue
             ssh_debug_connections.append(
-                # pydantic allows string to be passed as IPvAnyAddress and as int,
-                # mypy complains about it
                 SSHDebugConnection(
-                    host=host,  # type: ignore
-                    port=port,  # type: ignore
+                    host=IPvAnyAddress(host),
+                    port=int(port),
                     rsa_fingerprint=rsa_fingerprint,
                     ed25519_fingerprint=ed25519_fingerprint,
                 )
