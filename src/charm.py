@@ -48,6 +48,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
 )
 from github_runner_manager.reactive.types_ import QueueConfig as ReactiveQueueConfig
 from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
+from github_runner_manager.types_ import SystemUserConfig
 from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus, parse_github_path
 from ops.charm import (
     ActionEvent,
@@ -109,6 +110,9 @@ REACTIVE_MQ_DB_NAME = "github-runner-webhook-router"
 
 
 GITHUB_SELF_HOSTED_ARCH_LABELS = {"x64", "arm64"}
+
+RUNNER_MANAGER_USER = "runner-manager"
+RUNNER_MANAGER_GROUP = "runner-manager"
 
 logger = logging.getLogger(__name__)
 
@@ -452,6 +456,12 @@ class GithubRunnerCharm(CharmBase):
             self._install_deps()
         except SubprocessError:
             logger.error("Failed to install charm dependencies")
+            raise
+
+        try:
+            self._setup_runner_manager_user()
+        except SubprocessError:
+            logger.error("Failed to setup runner manager user")
             raise
 
         try:
@@ -1033,6 +1043,19 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Installing charm dependencies.")
         self._apt_install(["run-one"])
 
+    @staticmethod
+    def _setup_runner_manager_user() -> None:
+        """Create the user for the runner manager."""
+        execute_command(
+            [
+                "/usr/sbin/useradd",
+                "--system",
+                "--no-create-home",
+                "--user-group",
+                RUNNER_MANAGER_USER,
+            ]
+        )
+
     @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _install_local_lxd_deps(self) -> None:
         """Install dependencies for running local LXD runners."""
@@ -1295,6 +1318,7 @@ class GithubRunnerCharm(CharmBase):
                 cloud_runner_manager=openstack_runner_manager_config,
                 github_token=token,
                 supported_labels=supported_labels,
+                system_user=SystemUserConfig(user=RUNNER_MANAGER_USER, group=RUNNER_MANAGER_GROUP),
             )
         return RunnerScaler(
             runner_manager=runner_manager, reactive_runner_config=reactive_runner_config
