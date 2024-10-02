@@ -53,3 +53,4 @@ jobs:
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
       tmate-debug: true
+      tmate-timeout: 120m
