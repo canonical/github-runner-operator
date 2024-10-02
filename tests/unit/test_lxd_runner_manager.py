@@ -68,8 +68,8 @@ def charm_state_fixture(charm_config: MagicMock):
             GitHubRepo("test_owner", "test_repo"),
             ProxyConfig(
                 no_proxy="test_no_proxy",
-                http=TEST_PROXY_SERVER_URL,
-                https=TEST_PROXY_SERVER_URL,
+                http_url=TEST_PROXY_SERVER_URL,
+                https_url=TEST_PROXY_SERVER_URL,
                 use_aproxy=False,
             ),
         ),
