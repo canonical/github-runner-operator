@@ -127,80 +127,81 @@ async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
     finally:
         run.cancel()  # cancel the run to avoid a queued run in GitHub actions page
 
+
+async def test_reactive_mode_scale_down(
+    ops_test: OpsTest,
+    app: Application,
+    github_repository: Repository,
+    test_github_branch: Branch,
+):
+    """
+    arrange: Scale down the number of virtual machines to 2 and spawn a job.
+    act:
+        1. Scale down the number of virtual machines to 0 and call reconcile.
+        2. Spawn a job.
+    assert:
+        1. The job fails.
+        2. The job is queued and there is a message in the queue.
+    """
+    mongodb_uri = await _get_mongodb_uri(ops_test, app)
+
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "2"})
+    await reconcile(app, app.model)
+
+    run = await dispatch_workflow(
+        app=app,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",  # this is ignored currently if wait=False kwarg is used
+        workflow_id_or_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
+        wait=False,
+    )
+    job = _create_job_details(run=run, labels={app.name})
+    _add_to_queue(
+        job.json(),
+        mongodb_uri,
+        app.name,
+    )
+
+    await wait_for_status(run, "in_progress")
+
+    # 1. Scale down the number of virtual machines to 0 and call reconcile.
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await reconcile(app, app.model)
+
+    # we assume that the runner got deleted while running the job, so we expect a failed job
+    await wait_for_completion(run, conclusion="failure")
+    # there is an edge case that reconciliation kills a process that has not yet
+    # acknowledged the message, so we clear the queue
+    _clear_queue(mongodb_uri, app.name)
+
+    # 2. Spawn a job.
+    run = await dispatch_workflow(
+        app=app,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",  # this is ignored currently if wait=False kwarg is used
+        workflow_id_or_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
+        wait=False,
+    )
+    job = _create_job_details(run=run, labels={app.name})
+    _add_to_queue(
+        job.json(),
+        mongodb_uri,
+        app.name,
+    )
+
+    await reconcile(app, app.model)
+
+    run.update()
+    assert run.status == "queued"
+    run.cancel()
+
+    _assert_queue_has_size(mongodb_uri, app.name, 1)
+
+
 def test_sleep():
     sleep(4 * 60 * 60)
-
-#
-# async def test_reactive_mode_scale_down(
-#     ops_test: OpsTest,
-#     app: Application,
-#     github_repository: Repository,
-#     test_github_branch: Branch,
-# ):
-#     """
-#     arrange: Scale down the number of virtual machines to 2 and spawn a job.
-#     act:
-#         1. Scale down the number of virtual machines to 0 and call reconcile.
-#         2. Spawn a job.
-#     assert:
-#         1. The job fails.
-#         2. The job is queued and there is a message in the queue.
-#     """
-#     mongodb_uri = await _get_mongodb_uri(ops_test, app)
-#
-#     await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "2"})
-#     await reconcile(app, app.model)
-#
-#     run = await dispatch_workflow(
-#         app=app,
-#         branch=test_github_branch,
-#         github_repository=github_repository,
-#         conclusion="success",  # this is ignored currently if wait=False kwarg is used
-#         workflow_id_or_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
-#         wait=False,
-#     )
-#     job = _create_job_details(run=run, labels={app.name})
-#     _add_to_queue(
-#         job.json(),
-#         mongodb_uri,
-#         app.name,
-#     )
-#
-#     await wait_for_status(run, "in_progress")
-#
-#     # 1. Scale down the number of virtual machines to 0 and call reconcile.
-#     await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-#     await reconcile(app, app.model)
-#
-#     # we assume that the runner got deleted while running the job, so we expect a failed job
-#     await wait_for_completion(run, conclusion="failure")
-#     # there is an edge case that reconciliation kills a process that has not yet
-#     # acknowledged the message, so we clear the queue
-#     _clear_queue(mongodb_uri, app.name)
-#
-#     # 2. Spawn a job.
-#     run = await dispatch_workflow(
-#         app=app,
-#         branch=test_github_branch,
-#         github_repository=github_repository,
-#         conclusion="success",  # this is ignored currently if wait=False kwarg is used
-#         workflow_id_or_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
-#         wait=False,
-#     )
-#     job = _create_job_details(run=run, labels={app.name})
-#     _add_to_queue(
-#         job.json(),
-#         mongodb_uri,
-#         app.name,
-#     )
-#
-#     await reconcile(app, app.model)
-#
-#     run.update()
-#     assert run.status == "queued"
-#     run.cancel()
-#
-#     _assert_queue_has_size(mongodb_uri, app.name, 1)
 
 
 async def _get_mongodb_uri(ops_test: OpsTest, app: Application) -> str:
