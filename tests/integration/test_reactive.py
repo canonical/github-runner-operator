@@ -90,44 +90,46 @@ async def test_reactive_mode_spawns_runner(
     _assert_queue_is_empty(mongodb_uri, app.name)
 
 
+
+async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
+    ops_test: OpsTest,
+    app: Application,
+    github_repository: Repository,
+    test_github_branch: Branch,
+):
+    """
+    arrange: Place a message with an unsupported label in the queue and dispatch a workflow.
+    act: Call reconcile.
+    assert: No runner is spawned and the message is not requeued.
+    """
+    mongodb_uri = await _get_mongodb_uri(ops_test, app)
+
+    run = await dispatch_workflow(
+        app=app,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",  # this is ignored currently if wait=False kwarg is used
+        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+        wait=False,
+    )
+    job = _create_job_details(run=run, labels={"not supported label"})
+    _add_to_queue(
+        job.json(),
+        mongodb_uri,
+        app.name,
+    )
+
+    run.update()
+    assert run.status == "queued"
+
+    try:
+        _assert_queue_is_empty(mongodb_uri, app.name)
+    finally:
+        run.cancel()  # cancel the run to avoid a queued run in GitHub actions page
+
 def test_sleep():
     sleep(4 * 60 * 60)
-# async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
-#     ops_test: OpsTest,
-#     app: Application,
-#     github_repository: Repository,
-#     test_github_branch: Branch,
-# ):
-#     """
-#     arrange: Place a message with an unsupported label in the queue and dispatch a workflow.
-#     act: Call reconcile.
-#     assert: No runner is spawned and the message is not requeued.
-#     """
-#     mongodb_uri = await _get_mongodb_uri(ops_test, app)
-#
-#     run = await dispatch_workflow(
-#         app=app,
-#         branch=test_github_branch,
-#         github_repository=github_repository,
-#         conclusion="success",  # this is ignored currently if wait=False kwarg is used
-#         workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
-#         wait=False,
-#     )
-#     job = _create_job_details(run=run, labels={"not supported label"})
-#     _add_to_queue(
-#         job.json(),
-#         mongodb_uri,
-#         app.name,
-#     )
-#
-#     run.update()
-#     assert run.status == "queued"
-#
-#     try:
-#         _assert_queue_is_empty(mongodb_uri, app.name)
-#     finally:
-#         run.cancel()  # cancel the run to avoid a queued run in GitHub actions page
-#
+
 #
 # async def test_reactive_mode_scale_down(
 #     ops_test: OpsTest,
