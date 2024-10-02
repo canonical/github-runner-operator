@@ -32,13 +32,14 @@ pytestmark = pytest.mark.openstack
 
 @pytest_asyncio.fixture(name="app")
 async def app_fixture(app_for_reactive: Application) -> AsyncIterator[Application]:
-    """Setup the reactive charm with 1 virtual machine."""
+    """Setup the reactive charm with 1 virtual machine and tear down afterwards."""
     await app_for_reactive.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await reconcile(app_for_reactive, app_for_reactive.model)
 
     yield app_for_reactive
 
     # Call reconcile to enable cleanup of any runner spawned
+    await app_for_reactive.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await reconcile(app_for_reactive, app_for_reactive.model)
 
 
@@ -83,14 +84,7 @@ async def test_reactive_mode_spawns_runner(
         app.name,
     )
 
-    await reconcile(app, app.model)
-
     await wait_for_completion(run, conclusion="success")
-
-    # there is an edge case that reconciliation kills a process that has not yet
-    # acknowledged the message, so we trigger again a reconciliation and assume that
-    # the next process will pick up the message if it was not acknowledged
-    await reconcile(app, app.model)
 
     _assert_queue_is_empty(mongodb_uri, app.name)
 
@@ -122,8 +116,6 @@ async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
         mongodb_uri,
         app.name,
     )
-
-    await reconcile(app, app.model)
 
     run.update()
     assert run.status == "queued"
