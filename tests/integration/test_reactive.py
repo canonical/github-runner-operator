@@ -4,6 +4,7 @@
 """Testing reactive mode. This is only supported for the OpenStack cloud."""
 import json
 import re
+from time import sleep
 from typing import AsyncIterator
 
 import pytest
@@ -89,6 +90,8 @@ async def test_reactive_mode_spawns_runner(
     _assert_queue_is_empty(mongodb_uri, app.name)
 
 
+def test_sleep():
+    sleep(4 * 60 * 60)
 # async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
 #     ops_test: OpsTest,
 #     app: Application,
