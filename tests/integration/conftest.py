@@ -366,30 +366,35 @@ async def app_no_runner(
 
 @pytest_asyncio.fixture(scope="module", name="image_builder")
 async def image_builder_fixture(
-    model: Model, private_endpoint_config: PrivateEndpointConfigs | None
+    model: Model,
+    private_endpoint_config: PrivateEndpointConfigs | None,
+    existing_app: Optional[str],
 ):
     """The image builder application for OpenStack runners."""
     if not private_endpoint_config:
         raise ValueError("Private endpoints are required for testing OpenStack runners.")
-    app = await model.deploy(
-        "github-runner-image-builder",
-        channel="latest/edge",
-        revision=2,
-        constraints="cores=2 mem=16G root-disk=20G virt-type=virtual-machine",
-        config={
-            "app-channel": "edge",
-            "build-interval": "12",
-            "revision-history-limit": "5",
-            "openstack-auth-url": private_endpoint_config["auth_url"],
-            # Bandit thinks this is a hardcoded password
-            "openstack-password": private_endpoint_config["password"],  # nosec: B105
-            "openstack-project-domain-name": private_endpoint_config["project_domain_name"],
-            "openstack-project-name": private_endpoint_config["project_name"],
-            "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
-            "openstack-user-name": private_endpoint_config["username"],
-        },
-    )
-    await model.wait_for_idle(apps=[app.name], wait_for_active=True, timeout=15 * 60)
+    if not existing_app:
+        app = await model.deploy(
+            "github-runner-image-builder",
+            channel="latest/edge",
+            revision=2,
+            constraints="cores=2 mem=16G root-disk=20G virt-type=virtual-machine",
+            config={
+                "app-channel": "edge",
+                "build-interval": "12",
+                "revision-history-limit": "5",
+                "openstack-auth-url": private_endpoint_config["auth_url"],
+                # Bandit thinks this is a hardcoded password
+                "openstack-password": private_endpoint_config["password"],  # nosec: B105
+                "openstack-project-domain-name": private_endpoint_config["project_domain_name"],
+                "openstack-project-name": private_endpoint_config["project_name"],
+                "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
+                "openstack-user-name": private_endpoint_config["username"],
+            },
+        )
+        await model.wait_for_idle(apps=[app.name], wait_for_active=True, timeout=15 * 60)
+    else:
+        app = model.applications["github-runner-image-builder"]
     return app
 
 
@@ -769,7 +774,6 @@ async def app_for_reactive_fixture(
     if not existing_app:
         await model.relate(f"{app_openstack_runner.name}:mongodb", f"{mongodb.name}:database")
 
-    await app_openstack_runner.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await model.wait_for_idle(apps=[app_openstack_runner.name, mongodb.name], status=ACTIVE)
 
     return app_openstack_runner
