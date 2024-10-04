@@ -366,7 +366,8 @@ async def app_no_runner(
 
 @pytest_asyncio.fixture(scope="module", name="image_builder")
 async def image_builder_fixture(
-    model: Model, private_endpoint_config: PrivateEndpointConfigs | None,
+    model: Model,
+    private_endpoint_config: PrivateEndpointConfigs | None,
     existing_app: Optional[str],
 ):
     """The image builder application for OpenStack runners."""
