@@ -4,8 +4,7 @@ name: Scheduled integration tests
 # These tests is for local LXD and is ran weekly.
 
 on:
-  schedule:
-    - cron: "15 5 * * 2"
+  pull_request:
 
 jobs:
   # test option values defined at test/conftest.py are passed on via repository secret
