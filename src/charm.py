@@ -20,8 +20,11 @@ from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCloudConfig,
     OpenStackRunnerManager,
+    OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
+from github_runner_manager.reactive.types_ import QueueConfig as ReactiveQueueConfig
+from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
 from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus, parse_github_path
 
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
@@ -103,6 +106,8 @@ RECONCILE_RUNNERS_EVENT = "reconcile-runners"
 # This is currently hardcoded and may be moved to a config option in the future.
 REACTIVE_MQ_DB_NAME = "github-runner-webhook-router"
 
+
+GITHUB_SELF_HOSTED_ARCH_LABELS = {"x64", "arm64"}
 
 logger = logging.getLogger(__name__)
 
@@ -448,6 +453,12 @@ class GithubRunnerCharm(CharmBase):
             logger.error("Failed to install charm dependencies")
             raise
 
+        try:
+            logrotate.setup()
+        except LogrotateSetupError:
+            logger.error("Failed to setup logrotate")
+            raise
+
         if state.instance_type == InstanceType.OPENSTACK:
             return True
 
@@ -458,12 +469,6 @@ class GithubRunnerCharm(CharmBase):
             self._start_services(state.charm_config.token, state.proxy_config)
         except SubprocessError:
             logger.error("Failed to install or start local LXD runner dependencies")
-            raise
-
-        try:
-            logrotate.setup()
-        except LogrotateSetupError:
-            logger.error("Failed to setup logrotate")
             raise
 
         self._refresh_firewall(state)
@@ -1263,6 +1268,67 @@ class GithubRunnerCharm(CharmBase):
         if path is None:
             path = state.charm_config.path
 
+        openstack_runner_manager_config = self._create_openstack_runner_manager_config(path, state)
+        openstack_runner_manager = OpenStackRunnerManager(
+            config=openstack_runner_manager_config,
+        )
+        runner_manager_config = RunnerManagerConfig(
+            name=self.app.name,
+            token=token,
+            path=path,
+        )
+        runner_manager = RunnerManager(
+            cloud_runner_manager=openstack_runner_manager,
+            config=runner_manager_config,
+        )
+        reactive_runner_config = None
+        if reactive_config := state.reactive_config:
+            # The charm is not able to determine which architecture the runner is running on,
+            # so we add all architectures to the supported labels.
+            supported_labels = set(self._create_labels(state)) | GITHUB_SELF_HOSTED_ARCH_LABELS
+            reactive_runner_config = ReactiveRunnerConfig(
+                queue=ReactiveQueueConfig(
+                    mongodb_uri=reactive_config.mq_uri, queue_name=self.app.name
+                ),
+                runner_manager=runner_manager_config,
+                cloud_runner_manager=openstack_runner_manager_config,
+                github_token=token,
+                supported_labels=supported_labels,
+            )
+        return RunnerScaler(
+            runner_manager=runner_manager, reactive_runner_config=reactive_runner_config
+        )
+
+    @staticmethod
+    def _create_labels(state: CharmState) -> list[str]:
+        """Create Labels instance.
+
+        Args:
+            state: Charm state used to create the labels.
+
+        Returns:
+            An instance of Labels.
+        """
+        image_labels = []
+        image = state.runner_config.openstack_image
+        if image and image.id and image.tags:
+            image_labels = image.tags
+
+        return list(state.charm_config.labels) + image_labels
+
+    def _create_openstack_runner_manager_config(
+        self, path: GitHubPath, state: CharmState
+    ) -> OpenStackRunnerManagerConfig:
+        """Create OpenStackRunnerManagerConfig instance.
+
+        Args:
+            path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
+                name.
+            state: Charm state.
+
+        Returns:
+            An instance of OpenStackRunnerManagerConfig.
+        """
         clouds = list(state.charm_config.openstack_clouds_yaml["clouds"].keys())
         if len(clouds) > 1:
             logger.warning(
@@ -1273,7 +1339,6 @@ class GithubRunnerCharm(CharmBase):
             cloud=clouds[0],
         )
         server_config = None
-        image_labels = []
         image = state.runner_config.openstack_image
         if image and image.id:
             server_config = OpenStackServerConfig(
@@ -1281,37 +1346,24 @@ class GithubRunnerCharm(CharmBase):
                 flavor=state.runner_config.openstack_flavor,
                 network=state.runner_config.openstack_network,
             )
-            if image.tags:
-                image_labels += image.tags
-
-        runner_config = GitHubRunnerConfig(
-            github_path=path, labels=(*state.charm_config.labels, *image_labels)
-        )
+        labels = self._create_labels(state)
+        runner_config = GitHubRunnerConfig(github_path=path, labels=labels)
         service_config = SupportServiceConfig(
             proxy_config=state.proxy_config,
             dockerhub_mirror=state.charm_config.dockerhub_mirror,
             ssh_debug_connections=state.ssh_debug_connections,
             repo_policy_compliance=state.charm_config.repo_policy_compliance,
         )
-        # The prefix is set to f"{application_name}-{unit number}"
-        openstack_runner_manager = OpenStackRunnerManager(
-            manager_name=self.app.name,
+        openstack_runner_manager_config = OpenStackRunnerManagerConfig(
+            name=self.app.name,
+            # The prefix is set to f"{application_name}-{unit number}"
             prefix=self.unit.name.replace("/", "-"),
             cloud_config=cloud_config,
             server_config=server_config,
             runner_config=runner_config,
             service_config=service_config,
         )
-        runner_manager_config = RunnerManagerConfig(
-            token=token,
-            path=path,
-        )
-        runner_manager = RunnerManager(
-            manager_name=self.app.name,
-            cloud_runner_manager=openstack_runner_manager,
-            config=runner_manager_config,
-        )
-        return RunnerScaler(runner_manager=runner_manager, reactive_config=state.reactive_config)
+        return openstack_runner_manager_config
 
 
 if __name__ == "__main__":

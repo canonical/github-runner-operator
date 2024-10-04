@@ -1,49 +1,142 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
+
+"""Testing reactive mode. This is only supported for the OpenStack cloud."""
 import json
-import random
 import re
-import secrets
 
 import pytest
+from github import Branch, Repository
 from github_runner_manager.reactive.consumer import JobDetails
-from github_runner_manager.reactive.runner_manager import REACTIVE_RUNNER_LOG_DIR
 from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
 from kombu import Connection
 from pytest_operator.plugin import OpsTest
 
-from tests.integration.helpers.common import get_file_content, reconcile, run_in_unit
+from tests.integration.helpers.common import (
+    DISPATCH_TEST_WORKFLOW_FILENAME,
+    dispatch_workflow,
+    reconcile,
+    wait_for_completion,
+)
 
-FAKE_URL = "http://example.com"
+pytestmark = pytest.mark.openstack
 
 
-@pytest.mark.openstack
-async def test_reactive_mode_consumes_jobs(ops_test: OpsTest, app_for_reactive: Application):
+@pytest.fixture(name="setup_queue", autouse=True)
+async def setup_queue_fixture(
+    ops_test: OpsTest,
+    app_for_reactive: Application,
+):
+    mongodb_uri = await _get_mongodb_uri(ops_test, app_for_reactive)
+
+    _clear_queue(mongodb_uri, app_for_reactive.name)
+    _assert_queue_is_empty(mongodb_uri, app_for_reactive.name)
+
+
+async def test_reactive_mode_spawns_runner(
+    ops_test: OpsTest,
+    app_for_reactive: Application,
+    github_repository: Repository,
+    test_github_branch: Branch,
+):
     """
     arrange: A charm integrated with mongodb and a message is added to the queue.
     act: Call reconcile.
-    assert: The message is consumed and the job details are logged.
+    assert: The message is consumed and a runner is spawned.
     """
-    unit = app_for_reactive.units[0]
-    mongodb_uri = await _get_mongodb_uri_from_integration_data(ops_test, unit)
-    if not mongodb_uri:
-        mongodb_uri = await _get_mongodb_uri_from_secrets(ops_test, unit.model)
-    assert mongodb_uri, "mongodb uri not found in integration data or secret"
+    mongodb_uri = await _get_mongodb_uri(ops_test, app_for_reactive)
 
+    run = await dispatch_workflow(
+        app=app_for_reactive,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+        wait=False,
+    )
+    jobs = list(run.jobs())
+    assert len(jobs) == 1, "Expected 1 job to be created"
+    job = jobs[0]
+    job_url = job.url
     job = JobDetails(
-        labels=[secrets.token_hex(16) for _ in range(random.randint(1, 4))], run_url=FAKE_URL
+        labels={app_for_reactive.name, "x64"},  # The architecture label should be ignored in the
+        # label validation in the reactive consumer.
+        url=job_url,
     )
     _add_to_queue(
-        json.dumps(job.dict() | {"ignored_noise": "foobar"}),
+        json.dumps(json.loads(job.json()) | {"ignored_noise": "foobar"}),
         mongodb_uri,
         app_for_reactive.name,
     )
 
     await reconcile(app_for_reactive, app_for_reactive.model)
+
+    await wait_for_completion(run, conclusion="success")
     _assert_queue_is_empty(mongodb_uri, app_for_reactive.name)
-    await _assert_job_details_in_reactive_log(unit, jobs=[job])
+
+    # Call reconcile to enable cleanup of the runner
+    await reconcile(app_for_reactive, app_for_reactive.model)
+
+
+async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
+    ops_test: OpsTest,
+    app_for_reactive: Application,
+    github_repository: Repository,
+    test_github_branch: Branch,
+):
+    """
+    arrange: A charm integrated with mongodb and an unsupported label is added to the queue.
+    act: Call reconcile.
+    assert: No runner is spawned and the message is requeued.
+    """
+    mongodb_uri = await _get_mongodb_uri(ops_test, app_for_reactive)
+
+    run = await dispatch_workflow(
+        app=app_for_reactive,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",  # this is ignored currently if wait=False kwarg is used
+        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+        wait=False,
+    )
+    jobs = list(run.jobs())
+    assert len(jobs) == 1, "Expected 1 job to be created"
+    job = jobs[0]
+    job_url = job.url
+    job = JobDetails(labels={"not supported label"}, url=job_url)
+    _add_to_queue(
+        job.json(),
+        mongodb_uri,
+        app_for_reactive.name,
+    )
+
+    await reconcile(app_for_reactive, app_for_reactive.model)
+
+    run.update()
+    assert run.status == "queued"
+    run.cancel()
+
+    _assert_queue_has_size(mongodb_uri, app_for_reactive.name, 1)
+
+
+async def _get_mongodb_uri(ops_test: OpsTest, app_for_reactive: Application) -> str:
+    """Get the mongodb uri.
+
+    Args:
+        ops_test: The ops_test plugin.
+        app_for_reactive: The juju application containing the unit.
+
+    Returns:
+        The mongodb uri.
+
+    """
+    mongodb_uri = await _get_mongodb_uri_from_integration_data(ops_test, app_for_reactive.units[0])
+    if not mongodb_uri:
+        mongodb_uri = await _get_mongodb_uri_from_secrets(ops_test, app_for_reactive.model)
+    assert mongodb_uri, "mongodb uri not found in integration data or secret"
+    return mongodb_uri
 
 
 async def _get_mongodb_uri_from_integration_data(ops_test: OpsTest, unit: Unit) -> str | None:
@@ -112,6 +205,18 @@ def _add_to_queue(msg: str, mongodb_uri: str, queue_name: str) -> None:
             simple_queue.put(msg, retry=True)
 
 
+def _clear_queue(mongodb_uri: str, queue_name: str) -> None:
+    """Clear the queue.
+
+    Args:
+        mongodb_uri: The mongodb uri.
+        queue_name: The name of the queue to clear.
+    """
+    with Connection(mongodb_uri) as conn:
+        with conn.SimpleQueue(queue_name) as simple_queue:
+            simple_queue.clear()
+
+
 def _assert_queue_is_empty(mongodb_uri: str, queue_name: str):
     """Assert that the queue is empty.
 
@@ -119,30 +224,17 @@ def _assert_queue_is_empty(mongodb_uri: str, queue_name: str):
         mongodb_uri: The mongodb uri.
         queue_name: The name of the queue to check.
     """
-    with Connection(mongodb_uri) as conn:
-        with conn.SimpleQueue(queue_name) as simple_queue:
-            assert simple_queue.qsize() == 0
+    _assert_queue_has_size(mongodb_uri, queue_name, 0)
 
 
-async def _assert_job_details_in_reactive_log(unit: Unit, jobs: list[JobDetails]):
-    """Assert that the job details are in the reactive log.
+def _assert_queue_has_size(mongodb_uri: str, queue_name: str, size: int):
+    """Assert that the queue is empty.
 
     Args:
-        unit: The juju unit.
-        jobs: The list of job details to check.
+        mongodb_uri: The mongodb uri.
+        queue_name: The name of the queue to check.
+        size: The expected size of the queue.
     """
-    retcode, stdout, stderr = await run_in_unit(
-        unit=unit,
-        command=f"ls {REACTIVE_RUNNER_LOG_DIR}",
-    )
-    assert retcode == 0, f"Failed to list the reactive log dir: {stderr}"
-    assert stdout, "No log files found in the reactive log dir."
-    log_files = [log_file for log_file in stdout.split()]
-
-    reactive_logs = ""
-    for log_file in log_files:
-        reactive_logs += await get_file_content(unit, REACTIVE_RUNNER_LOG_DIR / log_file)
-
-    for job in jobs:
-        assert job.run_url in reactive_logs
-        assert str(job.labels) in reactive_logs
+    with Connection(mongodb_uri) as conn:
+        with conn.SimpleQueue(queue_name) as simple_queue:
+            assert simple_queue.qsize() == size

@@ -1,4 +1,4 @@
-# Quick start
+# Deploy the GitHub runner charm for the first time
 
 ## What you'll do
 
@@ -12,7 +12,7 @@
 
 - GitHub Account.
 - Juju 3 installed.
-- Juju controller on OpenStack or LXD (see [How to run on LXD cloud](https://charmhub.io/github-runner/docs/how-to-run-on-lxd)) and a Juju model.
+- Juju controller on OpenStack or LXD (see [How to run on LXD cloud](https://charmhub.io/github-runner/docs/how-to-run-on-lxd)).
 
 For more information about how to install and use Juju, see [Get started with Juju](https://juju.is/docs/olm/get-started-with-juju).
 
@@ -31,6 +31,14 @@ To create a GitHub repository, log in to [GitHub](https://github.com) with your 
 The GitHub runner charm relies on GitHub APIs for self-hosted runners. Some of the APIs will only be functional after a self-hosted runner registration token is requested for the repository for the first time.
 
 The registration token can be requested by calling the [GitHub API](https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#create-a-registration-token-for-a-repository). Alternatively, it can also be requested by visiting the "New self-hosted runner" page for the repository (`https://github.com/{OWNER}/{REPO}/settings/actions/runners/new`). This can be done by following the instruction to the 4th step provided [here](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/adding-self-hosted-runners#adding-a-self-hosted-runner-to-a-repository).
+
+### Set up the tutorial model
+
+To easily clean up the resources and to separate your workload from the contents of this tutorial, set up a new Juju model with the following command.
+
+```
+juju add-model github-runner-tutorial
+```
 
 ### Deploy the GitHub runner charm
 
@@ -51,6 +59,8 @@ The `--constraints` option for the `juju deploy` sets the resource requirements 
 The `--storage` option mounts a juju storage to be used as the disk for LXD instances hosting the self-hosted runners. Refer [How to configure runner storage](https://charmhub.io/github-runner/docs/configure-runner-storage) for more information.
 
 The charm performs various installation and configuration on startup. The charm might upgrade the kernel of the Juju machine and reboot the Juju machine. During reboot, the Juju machine will go into the `down` state; this is a part of the normal reboot process and the Juju machine should be restarted after a while.
+
+Monitor the deployment status using `juju status --watch 5s`. The deployment finishes when the status shows "Active".
 
 Once the charm reaches active status, visit the runner page for the GitHub repository (`https://github.com/{OWNER}/{REPO}/settings/actions/runners`) according to the instructions [here](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/using-self-hosted-runners-in-a-workflow#viewing-available-runners-for-a-repository). A single new runner should be available as it is the default number of self-hosted runners created.
 
@@ -85,10 +95,10 @@ If the workflow failed at the `Set up runner` step with the following message:
 
 The repository setting does not comply with the best practice enforce by the charm. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/repo-policy).
 
-#### Removing the charm
+### Clean up the environment
 
-The charm and the self-hosted runners can be removed with the following command:
+The Juju model, charm and the self-hosted runners can be removed with the following command:
 
 ```shell
-juju remove-application github-runner
+juju destroy-model --destroy-storage github-runner-tutorial
 ```
