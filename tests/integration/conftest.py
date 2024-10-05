@@ -89,7 +89,7 @@ def app_name(existing_app: Optional[str]) -> str:
     return (
         existing_app
         or f"test-{random.choice(string.ascii_lowercase)}"
-        f"{random.choices(string.ascii_lowercase + string.digits, k=7)}"
+        f"{''.join(random.choices(string.ascii_lowercase + string.digits, k=7))}"
     )
 
 
