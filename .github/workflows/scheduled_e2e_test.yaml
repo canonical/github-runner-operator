@@ -247,21 +247,17 @@ jobs:
         run: |
           # Base any future branches on the current branch
           # We need to reference GITHUB_REF_NAME if this e2e_test workflow is scheduled
+          # otherwise use GITHUB_HEAD_REF for pull_request or push probably used for manual testing
+          if $GITHUB_EVENT_NAME == 'schedule'; then
+              REF_NAME=$GITHUB_REF_NAME
+          else
+              REF_NAME=$GITHUB_HEAD_REF
+          fi
           REF_SHA=$(gh api \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            /repos/${{ secrets.E2E_TESTING_REPO }}/git/ref/heads/$GITHUB_REF_NAME \
-            --jq .object.sha) || echo "Failed to get REF_SHA using $GITHUB_REF_NAME" 
-          # If REF_SHA is empty, use GITHUB_HEAD_REF, if the e2e_test workflow is triggered using pull_request or push,
-          # e.g. on manual testing.
-          if [ -z "$REF_SHA" ]; then
-              echo "Using GITHUB_HEAD_REF for REF_SHA"
-              REF_SHA=$(gh api \
-              -H "Accept: application/vnd.github+json" \
-              -H "X-GitHub-Api-Version: 2022-11-28" \
-              /repos/${{ secrets.E2E_TESTING_REPO }}/git/ref/heads/$GITHUB_HEAD_REF \
-              --jq .object.sha) || (echo "Failed to get REF_SHA using $GITHUB_HEAD_REF" && false)
-          fi
+            /repos/${{ secrets.E2E_TESTING_REPO }}/git/ref/heads/$REF_NAME \
+            --jq .object.sha) || (echo "Failed to get REF_SHA using $REF_NAME" && false)
 
           # Create a temporary reference/branch
           # For push, this should trigger the "Push Event Tests" workflow automatically
