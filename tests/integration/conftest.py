@@ -85,7 +85,12 @@ def existing_app(pytestconfig: pytest.Config) -> Optional[str]:
 def app_name(existing_app: Optional[str]) -> str:
     """Randomized application name."""
     # Randomized app name to avoid collision when runner is connecting to GitHub.
-    return existing_app or f"test-{secrets.token_hex(4)}"
+    # The char after the hyphen has to be a letter.
+    return (
+        existing_app
+        or f"test-{random.choice(string.ascii_lowercase)}"
+        f"{''.join(random.choices(string.ascii_lowercase + string.digits, k=7))}"
+    )
 
 
 @pytest.fixture(scope="module", name="openstack_clouds_yaml")
