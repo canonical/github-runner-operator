@@ -1,4 +1,4 @@
-# Quick start
+# Deploy the GitHub runner charm for the first time
 
 ## What you'll do
 
@@ -12,7 +12,7 @@
 
 - GitHub Account.
 - Juju 3 installed.
-- Juju controller on OpenStack or LXD (see [How to run on LXD cloud](https://charmhub.io/github-runner/docs/how-to-run-on-lxd)) and a juju model.
+- Juju controller on OpenStack or LXD (see [How to run on LXD cloud](https://charmhub.io/github-runner/docs/how-to-run-on-lxd)).
 
 For more information about how to install and use Juju, see [Get started with Juju](https://juju.is/docs/olm/get-started-with-juju).
 
@@ -26,11 +26,19 @@ To create a GitHub repository, log in to [GitHub](https://github.com) with your 
 
 ### Activate GitHub APIs related to self-hosted runner
 
-***This must be done for the GitHub runner charm to function correctly.***
+> ***⚠️ This must be done for the GitHub runner charm to function correctly.***
 
 The GitHub runner charm relies on GitHub APIs for self-hosted runners. Some of the APIs will only be functional after a self-hosted runner registration token is requested for the repository for the first time.
 
 The registration token can be requested by calling the [GitHub API](https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#create-a-registration-token-for-a-repository). Alternatively, it can also be requested by visiting the "New self-hosted runner" page for the repository (`https://github.com/{OWNER}/{REPO}/settings/actions/runners/new`). This can be done by following the instruction to the 4th step provided [here](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/adding-self-hosted-runners#adding-a-self-hosted-runner-to-a-repository).
+
+### Set up the tutorial model
+
+To easily clean up the resources and to separate your workload from the contents of this tutorial, set up a new Juju model with the following command.
+
+```
+juju add-model github-runner-tutorial
+```
 
 ### Deploy the GitHub runner charm
 
@@ -41,12 +49,18 @@ For information on token scopes, see [How to change GitHub personal access token
 Once the personal access token is created, the charm can be deployed with:
 
 ```shell
-juju deploy github-runner --constraints="cores=4 mem=16G root-disk=20G" --config token=<TOKEN> --config path=<OWNER/REPO>
+juju deploy github-runner --constraints="cores=4 mem=16G root-disk=20G virt-type=virtual-machine" --config token=<TOKEN> --config path=<OWNER/REPO> --config runner-storage=memory --config vm-memory=2GiB --config vm-disk=10GiB
 ```
 
 Replacing the `<TOKEN>` with the personal access token, and `<OWNER/REPO>` the GitHub account name and GitHub repository separated with `/`.
 
-The `--constraints` option for the `juju deploy` sets the resource requirements for the juju machine hosting the charm application. This is used to accommodate different sizes of self-hosted runners. For details, refer to [Managing resource usage](https://charmhub.io/github-runner/docs/managing-resource-usage).
+The `--constraints` option for the `juju deploy` sets the resource requirements for the Juju machine hosting the charm application. This is used to accommodate different sizes of self-hosted runners. For details, refer to [Managing resource usage](https://charmhub.io/github-runner/docs/managing-resource-usage).
+
+The `--storage` option mounts a juju storage to be used as the disk for LXD instances hosting the self-hosted runners. Refer [How to configure runner storage](https://charmhub.io/github-runner/docs/configure-runner-storage) for more information.
+
+The charm performs various installation and configuration on startup. The charm might upgrade the kernel of the Juju machine and reboot the Juju machine. During reboot, the Juju machine will go into the `down` state; this is a part of the normal reboot process and the Juju machine should be restarted after a while.
+
+Monitor the deployment status using `juju status --watch 5s`. The deployment finishes when the status shows "Active".
 
 Once the charm reaches active status, visit the runner page for the GitHub repository (`https://github.com/{OWNER}/{REPO}/settings/actions/runners`) according to the instructions [here](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/using-self-hosted-runners-in-a-workflow#viewing-available-runners-for-a-repository). A single new runner should be available as it is the default number of self-hosted runners created.
 
@@ -56,9 +70,7 @@ The charm will spawn new runners on a schedule. During this time, the charm will
 
 Once the self-hosted runner is available on GitHub, it can be used to run GitHub Actions jobs similar to runners provided by GitHub. The only difference being the label specified in the `runs-on` of a job.
 
-The self-hosted runner managed by the charm will have the following labels: `self-hosted`, `linux`, and the application name.
-
-In the above deployment, the application name was not specified, hence the default value of `github-runner` was used. As such, `github-runner` will be a label for the self-hosted runner managed by the application instance.
+In addition to the labels added by the GitHub runner application by default, the charm will include labels from the [`labels` charm configuration](https://charmhub.io/github-runner/configurations#labels).
 
 To test out the self-hosted runner, create the following file under the path `.github/workflows/runner_test.yaml` in the repository with the following content:
 
@@ -70,7 +82,7 @@ on:
 
 jobs:
   hello-world-test:
-    runs-on: [self-hosted, github-runner]
+    runs-on: [self-hosted]
     steps:
         - run: echo "hello world"
 ```
@@ -81,12 +93,12 @@ If the workflow failed at the `Set up runner` step with the following message:
 
 > This job has failed to pass a repository policy compliance check as defined in the https://github.com/canonical/repo-policy-compliance repository. The specific failure is listed below. Please update the settings on this project to fix the relevant policy.
 
-The repository setting does not comply with the best practice enforce by the charm. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/how-to-repo-policy).
+The repository setting does not comply with the best practice enforce by the charm. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/repo-policy).
 
-#### Removing the charm
+### Clean up the environment
 
-The charm and the self-hosted runners can be removed with the following command:
+The Juju model, charm and the self-hosted runners can be removed with the following command:
 
 ```shell
-juju remove-application github-runner
+juju destroy-model --destroy-storage github-runner-tutorial
 ```
