@@ -1,5 +1,9 @@
 # Changelog
 
+### 2024-10-07
+
+- Fixed a regression in the removal of leftover directories.
+
 ### 2024-09-18
 
 - Changed code to be able to spawn a runner in reactive mode.
