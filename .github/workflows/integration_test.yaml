@@ -23,7 +23,6 @@ jobs:
       # test_charm_scheduled_events ensures reconcile events are fired on a schedule.
       # test_debug_ssh ensures tmate SSH actions works.
       # The test test_charm_upgrade needs to run to ensure the charm can be upgraded.
-      # TODO: Add OpenStack integration versions of these tests.
       modules: '["test_charm_scheduled_events", "test_debug_ssh", "test_charm_upgrade"]'
   openstack-interface-tests-private-endpoint:
     name: openstack interface test using private-endpoint
