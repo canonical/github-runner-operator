@@ -1,0 +1,33 @@
+name: End-to-End tests
+
+on:
+  pull_request:
+  
+
+jobs:
+  # test option values defined at test/conftest.py are passed on via repository secret
+  # INTEGRATION_TEST_ARGS to operator-workflows automatically.
+  openstack-integration-end-to-end-test:
+    name: end-to-end test using private-endpoint
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    secrets: inherit
+    with:
+      juju-channel: 3.2/stable
+      pre-run-script: scripts/setup-lxd.sh
+      provider: lxd
+      test-tox-env: integration-juju3.2
+      modules: '["test_e2e"]'
+      extra-arguments: "-m openstack"
+      self-hosted-runner: true
+      self-hosted-runner-label: stg-private-endpoint
+
+  required_status_checks:
+    name: Required E2E Test Status Checks
+    runs-on: ubuntu-latest
+    needs:
+      - openstack-integration-end-to-end-test
+    if: always() && !cancelled()
+    timeout-minutes: 5
+    steps:
+      - run: |
+          [ '${{ needs.openstack-integration-end-to-end-test.result }}' = 'success' ] || (echo openstack-integration-end-to-end-test failed && false)
