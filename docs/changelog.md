@@ -1,5 +1,9 @@
 # Changelog
 
+### 2024-10-07
+
+- Fix removal of proxy vars in `.env` file for LXD runners.
+
 ### 2024-09-18
 
 - Changed code to be able to spawn a runner in reactive mode.
