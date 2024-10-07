@@ -1,5 +1,9 @@
 # Changelog
 
+### 2024-10-07
+
+- Fixed the removal of proxy vars in `.env` file for LXD runners.
+
 ### 2024-09-30
 
 - Improve reconciliation for reactive runners
