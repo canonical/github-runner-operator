@@ -7,6 +7,30 @@
 # pylint: disable=too-many-lines
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
+
+from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
+
+# This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
+# It is important that this is run before importation of any other modules.
+
+# pylint: disable=wrong-import-position,wrong-import-order
+# TODO: 2024-07-17 remove this once the issue has been fixed
+remove_residual_venv_dirs()
+
+
+import functools
+import logging
+import os
+import secrets
+import shutil
+import urllib.error
+from pathlib import Path
+from typing import Any, Callable, Dict, Sequence, TypeVar
+
+import jinja2
+import ops
+from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
+from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from github_runner_manager.manager.cloud_runner_manager import (
     GitHubRunnerConfig,
     SupportServiceConfig,
@@ -26,28 +50,6 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
 from github_runner_manager.reactive.types_ import QueueConfig as ReactiveQueueConfig
 from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
 from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus, parse_github_path
-
-from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
-
-# This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
-# pylint: disable=wrong-import-position,wrong-import-order
-# TODO: 2024-07-17 remove this once the issue has been fixed
-remove_residual_venv_dirs()
-
-
-import functools
-import logging
-import os
-import secrets
-import shutil
-import urllib.error
-from pathlib import Path
-from typing import Any, Callable, Dict, Sequence, TypeVar
-
-import jinja2
-import ops
-from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
-from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from ops.charm import (
     ActionEvent,
     CharmBase,
