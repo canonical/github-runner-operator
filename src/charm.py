@@ -111,6 +111,7 @@ REACTIVE_MQ_DB_NAME = "github-runner-webhook-router"
 
 GITHUB_SELF_HOSTED_ARCH_LABELS = {"x64", "arm64"}
 
+ROOT_USER = "root"
 RUNNER_MANAGER_USER = "runner-manager"
 RUNNER_MANAGER_GROUP = "runner-manager"
 
@@ -1387,6 +1388,9 @@ class GithubRunnerCharm(CharmBase):
             server_config=server_config,
             runner_config=runner_config,
             service_config=service_config,
+            # non-reactive executes everything in the charm process which is executed by root.
+            # TODO: check consequences of passing root here.
+            system_user_config=SystemUserConfig(user=ROOT_USER, group=ROOT_USER),
         )
         return openstack_runner_manager_config
 
