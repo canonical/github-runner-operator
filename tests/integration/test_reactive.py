@@ -55,6 +55,7 @@ async def setup_queue_fixture(
     _assert_queue_is_empty(mongodb_uri, app.name)
 
 
+@pytest.mark.abort_on_fail
 async def test_reactive_mode_spawns_runner(
     ops_test: OpsTest,
     app: Application,
@@ -89,11 +90,18 @@ async def test_reactive_mode_spawns_runner(
     # construction in a subsequent reconciliation.
     await reconcile(app, app.model)
 
-    await wait_for_completion(run, conclusion="success")
+    try:
+        await wait_for_completion(run, conclusion="success")
+    except TimeoutError:
+        assert False, (
+            "Job did not complete successfully, check the reactive log using tmate,"
+            " it might be due to infrastructure issues"
+        )
 
     _assert_queue_is_empty(mongodb_uri, app.name)
 
 
+@pytest.mark.abort_on_fail
 async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
     ops_test: OpsTest,
     app: Application,
@@ -132,6 +140,7 @@ async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
         run.cancel()  # cancel the run to avoid a queued run in GitHub actions page
 
 
+@pytest.mark.abort_on_fail
 async def test_reactive_mode_scale_down(
     ops_test: OpsTest,
     app: Application,
