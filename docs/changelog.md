@@ -2,7 +2,8 @@
 
 ### 2024-10-07
 
-- Fix removal of proxy vars in `.env` file for LXD runners.
+- Fixed a regression in the removal of leftover directories.
+- Fixed the removal of proxy vars in `.env` file for LXD runners.
 
 ### 2024-09-18
 
