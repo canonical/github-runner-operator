@@ -19,11 +19,12 @@ jobs:
       pre-run-script: scripts/pre-integration-test.sh
       provider: lxd
       test-tox-env: integration-juju3.1
-      # These important local LXD test has no OpenStack integration versions.
+      # These important local LXD test have no OpenStack integration versions.
       # test_charm_scheduled_events ensures reconcile events are fired on a schedule.
       # test_debug_ssh ensures tmate SSH actions works.
+      # The test test_charm_upgrade needs to run to ensure the charm can be upgraded.
       # TODO: Add OpenStack integration versions of these tests.
-      modules: '["test_charm_scheduled_events", "test_debug_ssh"]'
+      modules: '["test_charm_scheduled_events", "test_debug_ssh", "test_charm_upgrade"]'
   openstack-interface-tests-private-endpoint:
     name: openstack interface test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main

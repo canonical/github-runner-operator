@@ -12,7 +12,6 @@ from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_v
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
 # It is important that this is run before importation of any other modules.
-
 # pylint: disable=wrong-import-position,wrong-import-order
 # TODO: 2024-07-17 remove this once the issue has been fixed
 remove_residual_venv_dirs()
