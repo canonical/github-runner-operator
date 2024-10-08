@@ -1051,7 +1051,6 @@ class GithubRunnerCharm(CharmBase):
             [
                 "/usr/sbin/useradd",
                 "--system",
-                "--no-create-home",
                 "--user-group",
                 RUNNER_MANAGER_USER,
             ]
