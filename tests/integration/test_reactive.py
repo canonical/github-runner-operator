@@ -32,8 +32,14 @@ pytestmark = pytest.mark.openstack
 
 
 @pytest_asyncio.fixture(name="app")
-async def app_fixture(app_for_reactive: Application) -> AsyncIterator[Application]:
+async def app_fixture(
+    ops_test: OpsTest, app_for_reactive: Application
+) -> AsyncIterator[Application]:
     """Setup the reactive charm with 1 virtual machine and tear down afterwards."""
+    mongodb_uri = await _get_mongodb_uri(ops_test, app_for_reactive)
+    _clear_queue(mongodb_uri, app_for_reactive.name)
+    _assert_queue_is_empty(mongodb_uri, app_for_reactive.name)
+
     await app_for_reactive.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await reconcile(app_for_reactive, app_for_reactive.model)
 
@@ -44,18 +50,6 @@ async def app_fixture(app_for_reactive: Application) -> AsyncIterator[Applicatio
     await reconcile(app_for_reactive, app_for_reactive.model)
 
 
-@pytest_asyncio.fixture(name="setup_queue", autouse=True)
-async def setup_queue_fixture(
-    ops_test: OpsTest,
-    app: Application,
-):
-    mongodb_uri = await _get_mongodb_uri(ops_test, app)
-
-    _clear_queue(mongodb_uri, app.name)
-    _assert_queue_is_empty(mongodb_uri, app.name)
-
-
-@pytest.mark.abort_on_fail
 async def test_reactive_mode_spawns_runner(
     ops_test: OpsTest,
     app: Application,
@@ -101,7 +95,6 @@ async def test_reactive_mode_spawns_runner(
     _assert_queue_is_empty(mongodb_uri, app.name)
 
 
-@pytest.mark.abort_on_fail
 async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
     ops_test: OpsTest,
     app: Application,
@@ -140,7 +133,6 @@ async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
         run.cancel()  # cancel the run to avoid a queued run in GitHub actions page
 
 
-@pytest.mark.abort_on_fail
 async def test_reactive_mode_scale_down(
     ops_test: OpsTest,
     app: Application,
