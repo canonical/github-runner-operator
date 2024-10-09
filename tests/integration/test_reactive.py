@@ -18,19 +18,16 @@ from juju.unit import Unit
 from kombu import Connection
 from pytest_operator.plugin import OpsTest
 
+from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.charm_metrics import (
     assert_events_after_reconciliation,
     get_metrics_log,
 )
-from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import (
-    DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
     DISPATCH_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
     reconcile,
-    wait_for,
     wait_for_completion,
-    wait_for_status,
 )
 
 pytestmark = pytest.mark.openstack
@@ -117,6 +114,7 @@ async def test_reactive_mode_spawns_runner(
         github_repository=github_repository,
         post_job_status=PostJobStatus.NORMAL,
     )
+
 
 # async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
 #     ops_test: OpsTest,

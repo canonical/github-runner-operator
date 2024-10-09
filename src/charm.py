@@ -1046,7 +1046,7 @@ class GithubRunnerCharm(CharmBase):
 
     @staticmethod
     def _setup_runner_manager_user() -> None:
-        """Create the user for the runner manager."""
+        """Create the user and required directories for the runner manager."""
         execute_command(
             [
                 "/usr/sbin/useradd",
@@ -1056,6 +1056,14 @@ class GithubRunnerCharm(CharmBase):
                 RUNNER_MANAGER_USER,
             ]
         )
+        execute_command("/usr/bin/mkdir", "-p", f"/home/{RUNNER_MANAGER_USER}/.ssh")
+        execute_command(
+            "/usr/bin/chown",
+            "-R",
+            f"{RUNNER_MANAGER_USER}:{RUNNER_MANAGER_USER}",
+            f"/home/{RUNNER_MANAGER_USER}/.ssh",
+        )
+        execute_command("/usr/bin/chmod", "700", f"/home/{RUNNER_MANAGER_USER}/.ssh")
 
     @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _install_local_lxd_deps(self) -> None:
@@ -1388,9 +1396,9 @@ class GithubRunnerCharm(CharmBase):
             server_config=server_config,
             runner_config=runner_config,
             service_config=service_config,
-            # non-reactive executes everything in the charm process which is executed by root.
-            # TODO: check consequences of passing root here.
-            system_user_config=SystemUserConfig(user=ROOT_USER, group=ROOT_USER),
+            system_user_config=SystemUserConfig(
+                user=RUNNER_MANAGER_USER, group=RUNNER_MANAGER_GROUP
+            ),
         )
         return openstack_runner_manager_config
 

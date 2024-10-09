@@ -186,11 +186,7 @@ def move_to_quarantine(
             f"Failed to get metrics storage for runner {runner_name}"
         ) from exc
 
-    tarfile_path = (
-        FILESYSTEM_QUARANTINE_PATH
-        .joinpath(runner_name)
-        .with_suffix(".tar.gz")
-    )
+    tarfile_path = FILESYSTEM_QUARANTINE_PATH.joinpath(runner_name).with_suffix(".tar.gz")
     try:
         with tarfile.open(tarfile_path, "w:gz") as tar:
             tar.add(runner_fs.path, arcname=runner_fs.path.name)
