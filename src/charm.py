@@ -1047,23 +1047,29 @@ class GithubRunnerCharm(CharmBase):
     @staticmethod
     def _setup_runner_manager_user() -> None:
         """Create the user and required directories for the runner manager."""
+        # check if runner_manager user is already existing
+        _, retcode = execute_command(["/usr/bin/id", RUNNER_MANAGER_USER], check_exit=False)
+        if retcode != 0:
+            logger.info("Creating user %s", RUNNER_MANAGER_USER)
+            execute_command(
+                [
+                    "/usr/sbin/useradd",
+                    "--system",
+                    "--create-home",
+                    "--user-group",
+                    RUNNER_MANAGER_USER,
+                ],
+            )
+        execute_command(["/usr/bin/mkdir", "-p", f"/home/{RUNNER_MANAGER_USER}/.ssh"])
         execute_command(
             [
-                "/usr/sbin/useradd",
-                "--system",
-                "--create-home",
-                "--user-group",
-                RUNNER_MANAGER_USER,
+                "/usr/bin/chown",
+                "-R",
+                f"{RUNNER_MANAGER_USER}:{RUNNER_MANAGER_USER}",
+                f"/home/{RUNNER_MANAGER_USER}/.ssh",
             ]
         )
-        execute_command("/usr/bin/mkdir", "-p", f"/home/{RUNNER_MANAGER_USER}/.ssh")
-        execute_command(
-            "/usr/bin/chown",
-            "-R",
-            f"{RUNNER_MANAGER_USER}:{RUNNER_MANAGER_USER}",
-            f"/home/{RUNNER_MANAGER_USER}/.ssh",
-        )
-        execute_command("/usr/bin/chmod", "700", f"/home/{RUNNER_MANAGER_USER}/.ssh")
+        execute_command(["/usr/bin/chmod", "700", f"/home/{RUNNER_MANAGER_USER}/.ssh"])
 
     @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _install_local_lxd_deps(self) -> None:
