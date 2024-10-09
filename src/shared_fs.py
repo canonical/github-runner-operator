@@ -4,10 +4,12 @@
 """Classes and functions to operate on the shared filesystem between the charm and the runners."""
 import logging
 import shutil
+import tarfile
 from pathlib import Path
 from typing import Iterator
 
 import github_runner_manager.metrics.storage as metrics_storage
+from github_runner_manager.errors import QuarantineMetricsStorageError
 
 from errors import (
     CreateMetricsStorageError,
@@ -24,6 +26,7 @@ logger = logging.getLogger(__name__)
 
 FILESYSTEM_OWNER = "ubuntu:ubuntu"
 FILESYSTEM_IMAGES_PATH = Path("/home/ubuntu/runner-fs-images")
+FILESYSTEM_QUARANTINE_PATH = Path("/home/ubuntu/runner-fs-quarantine")
 FILESYSTEM_SIZE = "1M"
 
 
@@ -162,6 +165,45 @@ def delete(runner_name: str) -> None:
     except OSError as exc:
         raise DeleteMetricsStorageError(
             f"Failed to remove shared filesystem for runner {runner_name}"
+        ) from exc
+
+
+def move_to_quarantine(
+    runner_name: str,
+) -> None:
+    """Archive the mshared filesystem for the runner and delete it.
+
+    Args:
+        runner_name: The name of the runner.
+
+    Raises:
+        QuarantineMetricsStorageError: If the metrics storage could not be quarantined.
+    """
+    try:
+        runner_fs = get(runner_name)
+    except GetMetricsStorageError as exc:
+        raise QuarantineMetricsStorageError(
+            f"Failed to get metrics storage for runner {runner_name}"
+        ) from exc
+
+    tarfile_path = (
+        FILESYSTEM_QUARANTINE_PATH
+        .joinpath(runner_name)
+        .with_suffix(".tar.gz")
+    )
+    try:
+        with tarfile.open(tarfile_path, "w:gz") as tar:
+            tar.add(runner_fs.path, arcname=runner_fs.path.name)
+    except OSError as exc:
+        raise QuarantineMetricsStorageError(
+            f"Failed to archive metrics storage for runner {runner_name}"
+        ) from exc
+
+    try:
+        delete(runner_name)
+    except DeleteMetricsStorageError as exc:
+        raise QuarantineMetricsStorageError(
+            f"Failed to delete metrics storage for runner {runner_name}"
         ) from exc
 
 
