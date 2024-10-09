@@ -3,7 +3,7 @@
 A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) for deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines. The charm maintains a set of ephemeral self-hosted runners, each isolated in a single-use virtual machine instance. 
 
 Like any Juju charm, this charm supports one-line deployment, configuration, integration, scaling, and more. 
-For github-runner-operator, this includes:
+For the github-runner-operator charm, this includes:
 * Stateless operation.
 * Configurable resource limits.
 * Ability to redeploy without losing any data (no need to back up).
@@ -43,10 +43,10 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
 
 # Contents
 
-1. [Explanation](explanation)
-  1. [ARM64](explanation/arm64.md)
-  1. [Charm architecture](explanation/charm-architecture.md)
-1. [How To](how-to)
+1. [Tutorial](tutorial)
+  1. [Managing resource usage](tutorial/managing-resource-usage.md)
+  1. [Quick start](tutorial/quick-start.md)
+1. [How to](how-to)
   1. [Add custom labels](how-to/add-custom-labels.md)
   1. [Change repository or organization](how-to/change-path.md)
   1. [Change GitHub personal access token](how-to/change-token.md)
@@ -65,6 +65,6 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [External Access](reference/external-access.md)
   1. [Integrations](reference/integrations.md)
   1. [Token scopes](reference/token-scopes.md)
-1. [Tutorial](tutorial)
-  1. [Managing resource usage](tutorial/managing-resource-usage.md)
-  1. [Quick start](tutorial/quick-start.md)
+1. [Explanation](explanation)
+  1. [ARM64](explanation/arm64.md)
+  1. [Charm architecture](explanation/charm-architecture.md)
