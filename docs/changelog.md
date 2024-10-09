@@ -2,8 +2,18 @@
 
 ### 2024-10-07
 
-- Fixed a regression in the removal of leftover directories.
 - Fixed the removal of proxy vars in `.env` file for LXD runners.
+- Fixed a regression in the removal of leftover directories.
+- Improved reconciliation for reactive runners.
+
+### 2024-09-27
+
+- Added job label validation when consuming a job from the message queue.
+
+### 2024-09-24
+
+- Added support for spawning a runner reactively.
+- Fixed a bug where busy runners are killed instead of only idle runners.
 
 ### 2024-09-18
 
