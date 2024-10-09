@@ -25,7 +25,34 @@ git clone https://github.com/canonical/github-runner-operator.git
 
 Prior to working on the charm ensure juju is connected to an LXD cloud,  see the [upstream documentation](https://juju.is/docs/lxd-cloud) for details.
 
-To test the charm, unit test can be ran with `tox -e unit` and the integration test on juju 3.1 can be ran with `tox -e integration-juju3.1`.
+### Testing
+
+This project uses `tox` for managing test environments. There are some pre-configured environments
+that can be used for linting and formatting code when you're preparing contributions to the charm:
+
+* `tox`: Runs all of the basic checks (`lint`, `unit`, `static`, and `coverage-report`).
+* `tox -e fmt`: Runs formatting using `black` and `isort`.
+* `tox -e lint`: Runs a range of static code analysis to check the code.
+* `tox -e static`: Runs other checks such as `bandit` for security issues.
+* `tox -e unit`: Runs the unit tests.
+* `tox -e integration`: Runs the integration tests.
+
+### Generating src docs for every commit
+
+Run the following command:
+
+```bash
+echo -e "tox -e src-docs\ngit add src-docs\n" >> .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+
+### Building the charm
+
+Build the charm in this git repository using:
+
+```shell
+charmcraft pack
+```
 
 ## Canonical Contributor Agreement
 
