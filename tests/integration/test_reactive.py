@@ -97,6 +97,9 @@ async def test_reactive_mode_spawns_runner(
 
     _assert_queue_is_empty(mongodb_uri, app.name)
 
+    # trigger reconcile which extracts metrics
+    await reconcile(app, app.model)
+
     # Check that metrics are logged.
     metrics_log = await get_metrics_log(app.units[0])
     log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
