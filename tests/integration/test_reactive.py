@@ -24,10 +24,13 @@ from tests.integration.helpers.charm_metrics import (
     get_metrics_log,
 )
 from tests.integration.helpers.common import (
+    DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
     DISPATCH_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
     reconcile,
-    wait_for_completion, wait_for, DISPATCH_CRASH_TEST_WORKFLOW_FILENAME, wait_for_status,
+    wait_for,
+    wait_for_completion,
+    wait_for_status,
 )
 
 pytestmark = pytest.mark.openstack
