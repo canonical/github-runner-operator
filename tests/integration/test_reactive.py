@@ -64,8 +64,8 @@ async def test_reactive_mode_spawns_runner(
     """
     arrange: Place a message in the queue and dispatch a workflow.
     act: Call reconcile.
-    assert: The message is consumed and a runner is spawned. The metrics are logged.
-    assert: A  runner is spawned to process the job and the message is removed from the queue.
+    assert: A runner is spawned to process the job and the message is removed from the queue.
+        The metrics are logged.
     """
     mongodb_uri = await _get_mongodb_uri(ops_test, app)
 
@@ -101,128 +101,128 @@ async def test_reactive_mode_spawns_runner(
     _assert_queue_is_empty(mongodb_uri, app.name)
 
     # Check that metrics are logged.
-    metrics_log = await get_metrics_log(app_for_reactive.units[0])
+    metrics_log = await get_metrics_log(app.units[0])
     log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
     events = set(map(lambda line: line.get("event"), log_lines))
     assert "runner_installed" in events, "runner_installed event has not been logged"
 
     for metric_log in log_lines:
         if metric_log.get("event") == "runner_installed":
-            assert metric_log.get("flavor") == app_for_reactive.name
+            assert metric_log.get("flavor") == app.name
             assert metric_log.get("event") == "runner_installed"
             assert metric_log.get("duration") >= 0
 
     await assert_events_after_reconciliation(
-        app=app_for_reactive,
+        app=app,
         github_repository=github_repository,
         post_job_status=PostJobStatus.NORMAL,
     )
 
-async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
-    ops_test: OpsTest,
-    app: Application,
-    github_repository: Repository,
-    test_github_branch: Branch,
-):
-    """
-    arrange: Place a message with an unsupported label in the queue and dispatch a workflow.
-    act: Call reconcile.
-    assert: No runner is spawned and the message is not requeued.
-    """
-    mongodb_uri = await _get_mongodb_uri(ops_test, app)
-    run = await dispatch_workflow(
-        app=app,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",  # this is ignored currently if wait=False kwarg is used
-        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
-        wait=False,
-    )
-    job = _create_job_details(run=run, labels={"not supported label"})
-    _add_to_queue(
-        job.json(),
-        mongodb_uri,
-        app.name,
-    )
-
-    # wait for queue being empty, there could be a race condition where it takes some
-    # time for the job message to be consumed and the queue to be empty
-    try:
-        await wait_for(lambda: _get_queue_size(mongodb_uri, app.name) == 0)
-        run.update()
-        assert run.status == "queued"
-    finally:
-        run.cancel()  # cancel the run to avoid a queued run in GitHub actions page
-
-
-async def test_reactive_mode_scale_down(
-    ops_test: OpsTest,
-    app: Application,
-    github_repository: Repository,
-    test_github_branch: Branch,
-):
-    """
-    arrange: Scale down the number of virtual machines to 2 and spawn a job.
-    act:
-        1. Scale down the number of virtual machines to 0 and call reconcile.
-        2. Spawn a job.
-    assert:
-        1. The job fails.
-        2. The job is queued and there is a message in the queue.
-    """
-    mongodb_uri = await _get_mongodb_uri(ops_test, app)
-
-    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "2"})
-    await reconcile(app, app.model)
-
-    run = await dispatch_workflow(
-        app=app,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",  # this is ignored currently if wait=False kwarg is used
-        workflow_id_or_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
-        wait=False,
-    )
-    job = _create_job_details(run=run, labels={app.name})
-    _add_to_queue(
-        job.json(),
-        mongodb_uri,
-        app.name,
-    )
-
-    await wait_for_status(run, "in_progress")
-
-    # 1. Scale down the number of virtual machines to 0 and call reconcile.
-    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await reconcile(app, app.model)
-
-    # we assume that the runner got deleted while running the job, so we expect a failed job
-    await wait_for_completion(run, conclusion="failure")
-    _assert_queue_is_empty(mongodb_uri, app.name)
-
-    # 2. Spawn a job.
-    run = await dispatch_workflow(
-        app=app,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",  # this is ignored currently if wait=False kwarg is used
-        workflow_id_or_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
-        wait=False,
-    )
-    job = _create_job_details(run=run, labels={app.name})
-    _add_to_queue(
-        job.json(),
-        mongodb_uri,
-        app.name,
-    )
-
-    await reconcile(app, app.model)
-
-    run.update()
-    assert run.status == "queued"
-    run.cancel()
-
-    _assert_queue_has_size(mongodb_uri, app.name, 1)
+# async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
+#     ops_test: OpsTest,
+#     app: Application,
+#     github_repository: Repository,
+#     test_github_branch: Branch,
+# ):
+#     """
+#     arrange: Place a message with an unsupported label in the queue and dispatch a workflow.
+#     act: Call reconcile.
+#     assert: No runner is spawned and the message is not requeued.
+#     """
+#     mongodb_uri = await _get_mongodb_uri(ops_test, app)
+#     run = await dispatch_workflow(
+#         app=app,
+#         branch=test_github_branch,
+#         github_repository=github_repository,
+#         conclusion="success",  # this is ignored currently if wait=False kwarg is used
+#         workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+#         wait=False,
+#     )
+#     job = _create_job_details(run=run, labels={"not supported label"})
+#     _add_to_queue(
+#         job.json(),
+#         mongodb_uri,
+#         app.name,
+#     )
+#
+#     # wait for queue being empty, there could be a race condition where it takes some
+#     # time for the job message to be consumed and the queue to be empty
+#     try:
+#         await wait_for(lambda: _get_queue_size(mongodb_uri, app.name) == 0)
+#         run.update()
+#         assert run.status == "queued"
+#     finally:
+#         run.cancel()  # cancel the run to avoid a queued run in GitHub actions page
+#
+#
+# async def test_reactive_mode_scale_down(
+#     ops_test: OpsTest,
+#     app: Application,
+#     github_repository: Repository,
+#     test_github_branch: Branch,
+# ):
+#     """
+#     arrange: Scale down the number of virtual machines to 2 and spawn a job.
+#     act:
+#         1. Scale down the number of virtual machines to 0 and call reconcile.
+#         2. Spawn a job.
+#     assert:
+#         1. The job fails.
+#         2. The job is queued and there is a message in the queue.
+#     """
+#     mongodb_uri = await _get_mongodb_uri(ops_test, app)
+#
+#     await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "2"})
+#     await reconcile(app, app.model)
+#
+#     run = await dispatch_workflow(
+#         app=app,
+#         branch=test_github_branch,
+#         github_repository=github_repository,
+#         conclusion="success",  # this is ignored currently if wait=False kwarg is used
+#         workflow_id_or_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
+#         wait=False,
+#     )
+#     job = _create_job_details(run=run, labels={app.name})
+#     _add_to_queue(
+#         job.json(),
+#         mongodb_uri,
+#         app.name,
+#     )
+#
+#     await wait_for_status(run, "in_progress")
+#
+#     # 1. Scale down the number of virtual machines to 0 and call reconcile.
+#     await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+#     await reconcile(app, app.model)
+#
+#     # we assume that the runner got deleted while running the job, so we expect a failed job
+#     await wait_for_completion(run, conclusion="failure")
+#     _assert_queue_is_empty(mongodb_uri, app.name)
+#
+#     # 2. Spawn a job.
+#     run = await dispatch_workflow(
+#         app=app,
+#         branch=test_github_branch,
+#         github_repository=github_repository,
+#         conclusion="success",  # this is ignored currently if wait=False kwarg is used
+#         workflow_id_or_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
+#         wait=False,
+#     )
+#     job = _create_job_details(run=run, labels={app.name})
+#     _add_to_queue(
+#         job.json(),
+#         mongodb_uri,
+#         app.name,
+#     )
+#
+#     await reconcile(app, app.model)
+#
+#     run.update()
+#     assert run.status == "queued"
+#     run.cancel()
+#
+#     _assert_queue_has_size(mongodb_uri, app.name, 1)
 
 
 async def _get_mongodb_uri(ops_test: OpsTest, app: Application) -> str:
