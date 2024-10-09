@@ -1,22 +1,19 @@
-A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) for deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines.
+# GitHub Runner Operator
 
-This charm simplifies the initial deployment and "day N" operations of GitHub self-hosted runners. The charm makes it easy to manage self-hosted runners with security and hardware resource usage in mind.
+A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) for deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines. The charm maintains a set of ephemeral self-hosted runners, each isolated in a single-use virtual machine instance. 
+
+Like any Juju charm, this charm supports one-line deployment, configuration, integration, scaling, and more. 
+For github-runner-operator, this includes:
+* Stateless operation.
+* Configurable resource limits.
+* Ability to redeploy without losing any data (no need to back up).
+* Supported observability through the `cos-agent` integration.
+* Scheduled dependences upgrades to mitigate security risks. Furthermore, the landscape-client charm can be deployed with this charm to ensure other dependencies are kept up to date.
 
 Operating a self-hosted runner comes with [certain security concerns according to GitHub](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
-Just like GitHub's, the self-hosted runners managed by the charm are isolated in a single-use virtual machine.
+Just like GitHub's runners, the self-hosted runners managed by the charm are isolated in a single-use virtual machine.
 
-Some of the charm dependencies upgrades on a schedule to migrate security risks. The landscape-client charm can be deployed with this charm to ensure other dependencies are up to date.
-
-The charm maintains a set of ephemeral self-hosted runners, each isolated in a single-use virtual machine instance. In addition, resource limits for the self-hosted runners can be configured.
-
-See [charm architecture](https://charmhub.io/github-runner/docs/explanation-charm-architecture) for more information.
-
-The charm operates in a stateless manner. It can be redeployed without losing any data and there is no need to backup the charm's state.
-
-The charm also supports observability through the optional `cos-agent` integration.
 Metrics and logs about the runners and the charm itself are collected and sent to the [Canonical Observability Stack](https://charmhub.io/topics/canonical-observability-stack) for analysis and visualisation.
-
-This charm will make operating GitHub self-hosted runners simple and straightforward for DevOps or SRE teams through Juju's clean interface.
 
 The charm enforces a set of GitHub repository settings as best practice. This is planned to be opt-in in the future. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/how-to-repo-policy).
 
