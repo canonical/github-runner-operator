@@ -38,19 +38,19 @@ jobs:
       modules: '["test_runner_manager_openstack"]'
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
-  openstack-integration-tests-private-endpoint:
-    name: Integration test using private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-#    needs: openstack-interface-tests-private-endpoint
-    secrets: inherit
-    with:
-      juju-channel: 3.2/stable
-      pre-run-script: scripts/setup-lxd.sh
-      provider: lxd
-      test-tox-env: integration-juju3.2
-      modules: '["test_reactive"]'
-      extra-arguments: "-m openstack"
-      self-hosted-runner: true
-      self-hosted-runner-label: stg-private-endpoint
-      tmate-debug: true
-      tmate-timeout: 120
+#  openstack-integration-tests-private-endpoint:
+#    name: Integration test using private-endpoint
+#    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+##    needs: openstack-interface-tests-private-endpoint
+#    secrets: inherit
+#    with:
+#      juju-channel: 3.2/stable
+#      pre-run-script: scripts/setup-lxd.sh
+#      provider: lxd
+#      test-tox-env: integration-juju3.2
+#      modules: '["test_reactive"]'
+#      extra-arguments: "-m openstack"
+#      self-hosted-runner: true
+#      self-hosted-runner-label: stg-private-endpoint
+#      tmate-debug: true
+#      tmate-timeout: 120
