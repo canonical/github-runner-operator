@@ -13,7 +13,7 @@ Classes and functions to operate on the shared filesystem between the charm and 
 
 ---
 
-<a href="../src/shared_fs.py#L37"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L43"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create`
 
@@ -45,7 +45,7 @@ The method is not idempotent and will raise an exception if the shared filesyste
 
 ---
 
-<a href="../src/shared_fs.py#L75"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L81"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `list_all`
 
@@ -63,7 +63,7 @@ List all the metric storages.
 
 ---
 
-<a href="../src/shared_fs.py#L91"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L97"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `get`
 
@@ -95,7 +95,7 @@ Mounts the filesystem if it is not currently mounted.
 
 ---
 
-<a href="../src/shared_fs.py#L131"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L137"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `delete`
 
@@ -120,7 +120,7 @@ Delete the shared filesystem for the runner.
 
 ---
 
-<a href="../src/shared_fs.py#L171"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/shared_fs.py#L177"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `move_to_quarantine`
 
@@ -135,11 +135,5 @@ Archive the mshared filesystem for the runner and delete it.
 **Args:**
  
  - <b>`runner_name`</b>:  The name of the runner. 
-
-
-
-**Raises:**
- 
- - <b>`QuarantineMetricsStorageError`</b>:  If the metrics storage could not be quarantined. 
 
 

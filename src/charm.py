@@ -62,7 +62,6 @@ from ops.charm import (
     UpgradeCharmEvent,
 )
 from ops.framework import StoredState
-from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, WaitingStatus
 
 import logrotate
@@ -1410,4 +1409,4 @@ class GithubRunnerCharm(CharmBase):
 
 
 if __name__ == "__main__":
-    main(GithubRunnerCharm)
+    ops.main(GithubRunnerCharm)
