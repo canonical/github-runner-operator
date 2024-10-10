@@ -34,6 +34,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
+from github_runner_manager.types_ import SystemUserConfig
 from github_runner_manager.types_.github import GitHubPath, parse_github_path
 from openstack.connection import Connection as OpenstackConnection
 
@@ -142,6 +143,8 @@ async def openstack_runner_manager_fixture(
         server_config=server_config,
         runner_config=runner_config,
         service_config=service_config,
+        # we assume the test runs as ubuntu user
+        system_user_config=SystemUserConfig("ubuntu", "ubuntu"),
     )
 
     yield OpenStackRunnerManager(
