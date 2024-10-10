@@ -53,7 +53,7 @@ The registration token can be requested by calling the [GitHub API](https://docs
 
 ### Set up the tutorial model
 
-Switch to the LXD controller:
+Switch to the LXD controller(`lxd` is the default LXD controller name if you are using the Multipass VM, if you bootstrapped LXD yourself please use the name set for it):
 ```
 juju switch lxd
 ```
