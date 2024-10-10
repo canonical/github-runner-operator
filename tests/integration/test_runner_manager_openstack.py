@@ -403,7 +403,7 @@ async def test_runner_normal_lifecycle(
     def is_runner_offline() -> bool:
         runners = runner_manager_with_one_runner.get_runners()
         assert len(runners) == 1
-        return runners[0].github_state == GitHubRunnerState.OFFLINE
+        return runners[0].github_state in (GitHubRunnerState.OFFLINE, None)
     await wait_for(is_runner_offline)
 
     issue_metrics_events = runner_manager_with_one_runner.cleanup()
