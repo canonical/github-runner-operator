@@ -45,7 +45,7 @@ from charm_state import ProxyConfig
 from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
-    wait_for,
+    wait_for, wait_for_completion,
 )
 
 
@@ -400,8 +400,14 @@ async def test_runner_normal_lifecycle(
     )
     await wait_for(lambda: workflow_is_status(workflow, "completed"))
 
-    sleep(60) # test if sleep fixes issues
+    def is_runner_offline() -> bool:
+        runners = runner_manager_with_one_runner.get_runners()
+        assert len(runners) == 1
+        return runners[0].github_state == GitHubRunnerState.OFFLINE
+    await wait_for(is_runner_offline)
+
     issue_metrics_events = runner_manager_with_one_runner.cleanup()
+    assert issue_metrics_events[events.RunnerInstalled] == 1
     assert issue_metrics_events[events.RunnerStart] == 1
     assert issue_metrics_events[events.RunnerStop] == 1
 
@@ -412,12 +418,14 @@ async def test_runner_normal_lifecycle(
     metric_log_new_content = metric_log_full_content[len(metric_log_existing_content) :]
     metric_logs = [json.loads(metric) for metric in metric_log_new_content.splitlines()]
     assert (
-        len(metric_logs) == 2
-    ), "Assuming two events should be runner_start and runner_stop, modify this if new events are added"
-    assert metric_logs[0]["event"] == "runner_start"
-    assert metric_logs[0]["workflow"] == "Workflow Dispatch Wait Tests"
-    assert metric_logs[1]["event"] == "runner_stop"
+        len(metric_logs) == 3
+    ), "Assuming three events should be runner_installed, runner_start and runner_stop, modify this if new events are added"
+    assert metric_logs[0]["event"] == "runner_installed"
+    assert metric_logs[0]["flavor"] == runner_manager_with_one_runner.manager_name
+    assert metric_logs[1]["event"] == "runner_start"
     assert metric_logs[1]["workflow"] == "Workflow Dispatch Wait Tests"
+    assert metric_logs[2]["event"] == "runner_stop"
+    assert metric_logs[2]["workflow"] == "Workflow Dispatch Wait Tests"
 
     await wait_runner_amount(runner_manager_with_one_runner, 0)
 
