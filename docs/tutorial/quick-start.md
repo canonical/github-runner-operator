@@ -2,7 +2,7 @@
 
 ## What you'll do
 
-- Setup a GitHub repository
+- Set up a GitHub repository
 - Activate the GitHub APIs related to self-hosted runner
 - Deploy the [GitHub runner charm](https://charmhub.io/github-runner)
 - Ensure GitHub repository setting are secure
@@ -11,12 +11,31 @@
 ## Requirements
 
 - GitHub Account.
-- Juju 3 installed.
-- Juju controller on OpenStack or LXD (see [How to run on LXD cloud](https://charmhub.io/github-runner/docs/how-to-run-on-lxd)).
+- A working station, e.g., a laptop, with amd64 architecture and at least 16 GB of RAM.
+- Juju 3 installed and bootstrapped to an LXD controller. You can accomplish this process by following this guide: [Set up / Tear down your test environment](https://juju.is/docs/juju/set-up--tear-down-your-test-environment)
 
-For more information about how to install and use Juju, see [Get started with Juju](https://juju.is/docs/olm/get-started-with-juju).
-
+For more information about how to install Juju, see [Get started with Juju](https://juju.is/docs/olm/get-started-with-juju).
 ## Steps
+
+### Add more RAM to the Multipass VM
+> NOTE: If you're working locally, you don't need to do this step.
+The blueprint used for deploying Multipass VM is configured with 8 GB of RAM. To add more RAM to the VM, follow these steps:
+Stop the VM:
+```
+multipass stop my-juju-vm
+```
+Set the RAM to 16 GB with the following command:
+```
+multipass set local.my-juju-vm.memory=16G
+```
+
+### Shell into the Multipass VM
+> NOTE: If you're working locally, you don't need to do this step.
+
+To be able to work inside the Multipass VM first you need to log in with the following command:
+```
+multipass shell my-juju-vm
+```
 
 ### Create GitHub repository
 
@@ -34,6 +53,11 @@ The registration token can be requested by calling the [GitHub API](https://docs
 
 ### Set up the tutorial model
 
+Switch to the LXD controller:
+```
+juju switch lxd
+```
+
 To easily clean up the resources and to separate your workload from the contents of this tutorial, set up a new Juju model with the following command.
 
 ```
@@ -48,7 +72,7 @@ For information on token scopes, see [How to change GitHub personal access token
 
 Once the personal access token is created, the charm can be deployed with:
 
-```shell
+```
 juju deploy github-runner --constraints="cores=4 mem=16G root-disk=20G virt-type=virtual-machine" --config token=<TOKEN> --config path=<OWNER/REPO> --config runner-storage=memory --config vm-memory=2GiB --config vm-disk=10GiB
 ```
 
@@ -68,7 +92,7 @@ The charm will spawn new runners on a schedule. During this time, the charm will
 
 ### Run a simple workflow on the self-hosted runner
 
-Once the self-hosted runner is available on GitHub, it can be used to run GitHub Actions jobs similar to runners provided by GitHub. The only difference being the label specified in the `runs-on` of a job.
+Once the self-hosted runner is available on GitHub, the runner can be used to run GitHub Actions jobs similar to runners provided by GitHub. The only difference being the label specified in the `runs-on` of a job.
 
 In addition to the labels added by the GitHub runner application by default, the charm will include labels from the [`labels` charm configuration](https://charmhub.io/github-runner/configurations#labels).
 
@@ -101,4 +125,10 @@ The Juju model, charm and the self-hosted runners can be removed with the follow
 
 ```shell
 juju destroy-model --destroy-storage github-runner-tutorial
+```
+
+If you used Multipass, to remove the Multipass instance you created for this tutorial, run the following command outside of the VM.
+
+```
+multipass delete --purge my-juju-vm
 ```
