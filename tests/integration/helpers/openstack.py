@@ -11,6 +11,7 @@ from juju.application import Application
 from juju.unit import Unit
 from openstack.compute.v2.server import Server
 
+from charm import RUNNER_MANAGER_USER
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import InstanceHelper, reconcile, run_in_unit, wait_for
 
@@ -58,7 +59,7 @@ class OpenStackInstanceHelper(InstanceHelper):
                 break
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
-        key_path = OpenstackCloud._get_key_path(runner.name)
+        key_path = f"/home/{RUNNER_MANAGER_USER}/.ssh/{runner.name}.key"
         exit_code, _, _ = await run_in_unit(unit, f"ls {key_path}")
         assert exit_code == 0, f"Unable to find key file {key_path}"
         ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i {key_path} -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
