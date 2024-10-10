@@ -144,7 +144,7 @@ async def openstack_runner_manager_fixture(
         runner_config=runner_config,
         service_config=service_config,
         # we assume the test runs as ubuntu user
-        system_user_config=SystemUserConfig("ubuntu", "ubuntu"),
+        system_user_config=SystemUserConfig(user="ubuntu", group="ubuntu"),
     )
 
     yield OpenStackRunnerManager(
