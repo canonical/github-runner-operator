@@ -101,17 +101,27 @@ async def test_reactive_mode_spawns_runner(
 
     _assert_queue_is_empty(mongodb_uri, app.name)
 
-    sleep(60) # add sleep to assume runner is offline - REVERT ME
+    async def _runner_installed_in_metrics_log():
+        # trigger reconcile which extracts metrics
+        await reconcile(app, app.model)
+        metrics_log = await get_metrics_log(app.units[0])
+        log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
+        events = set(map(lambda line: line.get("event"), log_lines))
+        return "runner_installed" in events
 
-    # trigger reconcile which extracts metrics
-    await reconcile(app, app.model)
+    try:
+        await wait_for(_runner_installed_in_metrics_log)
+    except TimeoutError:
+        assert False, "runner_installed event has not been logged"
 
-    # Check that metrics are logged.
+    # # Check that metrics are logged.
+    # metrics_log = await get_metrics_log(app.units[0])
+    # log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
+    # events = set(map(lambda line: line.get("event"), log_lines))
+    # assert "runner_installed" in events, "runner_installed event has not been logged"
+
     metrics_log = await get_metrics_log(app.units[0])
     log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
-    events = set(map(lambda line: line.get("event"), log_lines))
-    assert "runner_installed" in events, "runner_installed event has not been logged"
-
     for metric_log in log_lines:
         if metric_log.get("event") == "runner_installed":
             assert metric_log.get("flavor") == app.name
