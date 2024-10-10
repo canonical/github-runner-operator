@@ -6,7 +6,6 @@ from asyncio import sleep
 from typing import Optional, TypedDict, cast
 
 import openstack.connection
-from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud
 from juju.application import Application
 from juju.unit import Unit
 from openstack.compute.v2.server import Server
@@ -114,7 +113,7 @@ class OpenStackInstanceHelper(InstanceHelper):
                 break
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
-        key_path = OpenstackCloud._get_key_path(runner.name)
+        key_path = f"/home/{RUNNER_MANAGER_USER}/.ssh/{runner.name}.key"
         exit_code, _, _ = await run_in_unit(unit, f"ls {key_path}")
         assert exit_code == 0, f"Unable to find key file {key_path}"
         ssh_cmd = f'ssh -i {key_path} -o "StrictHostKeyChecking no" ubuntu@{ip} {command}'
