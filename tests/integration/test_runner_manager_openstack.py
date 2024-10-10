@@ -1,7 +1,9 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
-"""Testing the RunnerManager class with OpenStackRunnerManager as CloudManager."""
+"""Testing the RunnerManager class with OpenStackRunnerManager as CloudManager.
+It is assumed that the test runs in the CI under the ubuntu user.
+"""
 
 
 import json
@@ -59,17 +61,17 @@ def log_dir_base_path_fixture(
     with pytest.MonkeyPatch.context() as monkeypatch:
         temp_log_dir = tmp_path_factory.mktemp("log")
 
-        filesystem_base_path = temp_log_dir / "runner-fs"
-        filesystem_quarantine_path = temp_log_dir / "runner-fs-quarantine"
+        # filesystem_base_path = temp_log_dir / "runner-fs"
+        # filesystem_quarantine_path = temp_log_dir / "runner-fs-quarantine"
         metric_log_path = temp_log_dir / "metric_log"
 
-        monkeypatch.setattr(storage, "FILESYSTEM_BASE_PATH", filesystem_base_path)
-        monkeypatch.setattr(storage, "FILESYSTEM_QUARANTINE_PATH", filesystem_quarantine_path)
+        # monkeypatch.setattr(storage.StorageManager, "FILESYSTEM_BASE_PATH", filesystem_base_path)
+        # monkeypatch.setattr(storage, "FILESYSTEM_QUARANTINE_PATH", filesystem_quarantine_path)
         monkeypatch.setattr(events, "METRICS_LOG_PATH", metric_log_path)
 
         yield {
-            "filesystem_base_path": filesystem_base_path,
-            "filesystem_quarantine_path": filesystem_quarantine_path,
+            # "filesystem_base_path": filesystem_base_path,
+            # "filesystem_quarantine_path": filesystem_quarantine_path,
             "metric_log": metric_log_path,
         }
 
@@ -152,12 +154,12 @@ async def openstack_runner_manager_fixture(
     )
 
 
+@pytest.mark.usefixtures("log_dir_base_path")
 @pytest_asyncio.fixture(scope="module", name="runner_manager")
 async def runner_manager_fixture(
     openstack_runner_manager: OpenStackRunnerManager,
     token: str,
     github_path: GitHubPath,
-    log_dir_base_path: dict[str, Path],
 ) -> AsyncGenerator[RunnerManager, None]:
     """Get RunnerManager instance.
 
