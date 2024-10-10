@@ -154,11 +154,11 @@ async def openstack_runner_manager_fixture(
     )
 
 
-@pytest.mark.usefixtures("log_dir_base_path")
 @pytest_asyncio.fixture(scope="module", name="runner_manager")
 async def runner_manager_fixture(
     openstack_runner_manager: OpenStackRunnerManager,
     token: str,
+    log_dir_base_path: dict[str, Path],
     github_path: GitHubPath,
 ) -> AsyncGenerator[RunnerManager, None]:
     """Get RunnerManager instance.
