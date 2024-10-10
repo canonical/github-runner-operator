@@ -383,7 +383,10 @@ async def test_runner_normal_lifecycle(
         2. The runner should be deleted. The metrics should be recorded.
     """
     metric_log_path = log_dir_base_path["metric_log"]
-    metric_log_existing_content = metric_log_path.read_text(encoding="utf-8")
+    try:
+        metric_log_existing_content = metric_log_path.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        metric_log_existing_content = ""
 
     workflow = await dispatch_workflow(
         app=None,
