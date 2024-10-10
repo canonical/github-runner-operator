@@ -37,6 +37,7 @@ that can be used for linting and formatting code when you're preparing contribut
 * `tox -e unit`: Runs the unit tests.
 * `tox -e integration`: Runs the integration tests.
 
+> NOTE: Integration tests require a lot of arguments, secrets and OpenStack client so they would not work well locally.
 ### Generating src docs for every commit
 
 Run the following command:
