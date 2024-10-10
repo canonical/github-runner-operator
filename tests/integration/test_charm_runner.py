@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm containing one runner."""
+from time import sleep
 from typing import AsyncIterator
 
 import pytest
@@ -156,6 +157,7 @@ async def test_flush_runner_and_resource_config(
         assert action.results["delta"]["virtual-machines"] == "0"
 
         await wait_for(lambda: workflow.update() or workflow.status == "completed")
+        sleep(60) # test if sleep fixes it , REVERT ME
         action = await app.units[0].run_action("flush-runners")
         await action.wait()
 
