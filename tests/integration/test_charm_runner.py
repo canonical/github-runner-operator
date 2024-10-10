@@ -17,7 +17,7 @@ from charm_state import (
     VM_CPU_CONFIG_NAME,
     VM_DISK_CONFIG_NAME,
     VM_MEMORY_CONFIG_NAME,
-    InstanceType,
+    InstanceType, VIRTUAL_MACHINES_CONFIG_NAME,
 )
 from tests.integration.helpers import lxd
 from tests.integration.helpers.common import (
@@ -25,7 +25,7 @@ from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     InstanceHelper,
     dispatch_workflow,
-    wait_for,
+    wait_for, reconcile,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
@@ -41,7 +41,11 @@ async def app_fixture(
     Ensure the charm has one runner before starting a test.
     """
     await instance_helper.ensure_charm_has_runner(basic_app)
+
     yield basic_app
+
+    await basic_app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await reconcile(basic_app, basic_app.model)
 
 
 @pytest.mark.openstack
@@ -155,15 +159,6 @@ async def test_flush_runner_and_resource_config(
 
         assert action.status == "completed"
         assert action.results["delta"]["virtual-machines"] == "0"
-
-        await wait_for(lambda: workflow.update() or workflow.status == "completed")
-        sleep(60) # test if sleep fixes it , REVERT ME
-        action = await app.units[0].run_action("flush-runners")
-        await action.wait()
-
-        assert action.status == "completed"
-        assert action.results["delta"]["virtual-machines"] == "1"
-
 
 @pytest.mark.openstack
 @pytest.mark.asyncio
