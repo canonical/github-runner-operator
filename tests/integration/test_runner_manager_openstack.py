@@ -9,6 +9,7 @@ It is assumed that the test runs in the CI under the ubuntu user.
 import json
 from pathlib import Path
 from secrets import token_hex
+from time import sleep
 from typing import AsyncGenerator, Iterator
 
 import pytest
@@ -399,6 +400,7 @@ async def test_runner_normal_lifecycle(
     )
     await wait_for(lambda: workflow_is_status(workflow, "completed"))
 
+    sleep(60) # test if sleep fixes issues
     issue_metrics_events = runner_manager_with_one_runner.cleanup()
     assert issue_metrics_events[events.RunnerStart] == 1
     assert issue_metrics_events[events.RunnerStop] == 1
