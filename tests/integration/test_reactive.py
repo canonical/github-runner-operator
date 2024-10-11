@@ -110,7 +110,7 @@ async def test_reactive_mode_spawns_runner(
         return "runner_installed" in events
 
     try:
-        await wait_for(_runner_installed_in_metrics_log, check_interval=30)
+        await wait_for(_runner_installed_in_metrics_log, check_interval=30, timeout=600)
     except TimeoutError:
         assert False, "runner_installed event has not been logged"
 
