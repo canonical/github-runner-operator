@@ -1,4 +1,9 @@
 # Changelog
+### 2024-10-11
+
+- Added support for COS integration with reactive runners.
+- The charm now creates a dedicated user which is used for running the reactive process and 
+  storing metrics and ssh keys (also for non-reactive mode).
 
 ### 2024-10-07
 
