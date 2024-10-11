@@ -9,7 +9,6 @@ It is assumed that the test runs in the CI under the ubuntu user.
 import json
 from pathlib import Path
 from secrets import token_hex
-from time import sleep
 from typing import AsyncGenerator, Iterator
 
 import pytest
