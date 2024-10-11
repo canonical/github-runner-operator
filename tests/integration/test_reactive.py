@@ -110,29 +110,12 @@ async def test_reactive_mode_spawns_runner(
         return "runner_installed" in events
 
     try:
-        await wait_for(_runner_installed_in_metrics_log)
+        await wait_for(_runner_installed_in_metrics_log, check_interval=30)
     except TimeoutError:
         assert False, "runner_installed event has not been logged"
 
-    # # Check that metrics are logged.
-    # metrics_log = await get_metrics_log(app.units[0])
-    # log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
-    # events = set(map(lambda line: line.get("event"), log_lines))
-    # assert "runner_installed" in events, "runner_installed event has not been logged"
+    await _assert_metrics_are_logged(app, github_repository)
 
-    metrics_log = await get_metrics_log(app.units[0])
-    log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
-    for metric_log in log_lines:
-        if metric_log.get("event") == "runner_installed":
-            assert metric_log.get("flavor") == app.name
-            assert metric_log.get("event") == "runner_installed"
-            assert metric_log.get("duration") >= 0
-
-    await assert_events_after_reconciliation(
-        app=app,
-        github_repository=github_repository,
-        post_job_status=PostJobStatus.NORMAL,
-    )
 
 
 async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
@@ -394,3 +377,24 @@ def _get_queue_size(mongodb_uri: str, queue_name: str) -> int:
     with Connection(mongodb_uri) as conn:
         with conn.SimpleQueue(queue_name) as simple_queue:
             return simple_queue.qsize()
+
+
+async def _assert_metrics_are_logged(app: Application, github_repository: Repository):
+    """Assert that all runner metrics are logged.
+
+    Args:
+        app: The juju application, used to extract the metrics log and flavor name.
+        github_repository: The GitHub repository to be included in the metrics.
+    """
+    metrics_log = await get_metrics_log(app.units[0])
+    log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
+    for metric_log in log_lines:
+        if metric_log.get("event") == "runner_installed":
+            assert metric_log.get("flavor") == app.name
+            assert metric_log.get("event") == "runner_installed"
+            assert metric_log.get("duration") >= 0
+    await assert_events_after_reconciliation(
+        app=app,
+        github_repository=github_repository,
+        post_job_status=PostJobStatus.NORMAL,
+    )
