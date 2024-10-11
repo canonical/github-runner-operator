@@ -64,17 +64,11 @@ def log_dir_base_path_fixture(
     with pytest.MonkeyPatch.context() as monkeypatch:
         temp_log_dir = tmp_path_factory.mktemp("log")
 
-        # filesystem_base_path = temp_log_dir / "runner-fs"
-        # filesystem_quarantine_path = temp_log_dir / "runner-fs-quarantine"
         metric_log_path = temp_log_dir / "metric_log"
 
-        # monkeypatch.setattr(storage.StorageManager, "FILESYSTEM_BASE_PATH", filesystem_base_path)
-        # monkeypatch.setattr(storage, "FILESYSTEM_QUARANTINE_PATH", filesystem_quarantine_path)
         monkeypatch.setattr(events, "METRICS_LOG_PATH", metric_log_path)
 
         yield {
-            # "filesystem_base_path": filesystem_base_path,
-            # "filesystem_quarantine_path": filesystem_quarantine_path,
             "metric_log": metric_log_path,
         }
 
@@ -413,7 +407,7 @@ async def test_runner_normal_lifecycle(
         logger.info("issued_metrics_events: %s", issued_metrics_events)
         return (
             {events.RunnerInstalled, events.RunnerStart, events.RunnerStop}
-            == set(issued_metrics_events.keys())
+            == set(issued_metrics_events)
             and issued_metrics_events[events.RunnerInstalled] == 1
             and issued_metrics_events[events.RunnerStart] == 1
             and issued_metrics_events[events.RunnerStop] == 1
