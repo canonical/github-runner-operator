@@ -117,7 +117,6 @@ async def test_reactive_mode_spawns_runner(
     await _assert_metrics_are_logged(app, github_repository)
 
 
-
 async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
     ops_test: OpsTest,
     app: Application,

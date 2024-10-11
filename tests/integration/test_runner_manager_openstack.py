@@ -405,6 +405,17 @@ async def test_runner_normal_lifecycle(
     )
     await wait_for(lambda: workflow_is_status(workflow, "completed"))
 
+    # We encountered a race condition where runner_manager.cleanup was called while
+    # there was no runner process, but the post-metrics still had not yet been issued.
+    # Make the test more robust by waiting for the runner to go offline
+    # to reduce the race condition.
+    def is_runner_offline() -> bool:
+        runners = runner_manager_with_one_runner.get_runners()
+        assert len(runners) == 1
+        return runners[0].github_state in (GitHubRunnerState.OFFLINE, None)
+
+    await wait_for(is_runner_offline, check_interval=60, timeout=600)
+
     def have_metrics_been_issued() -> bool:
         issued_metrics_events = runner_manager_with_one_runner.cleanup()
         logger.info("issued_metrics_events: %s", issued_metrics_events)
@@ -429,7 +440,9 @@ async def test_runner_normal_lifecycle(
     metric_logs = [json.loads(metric) for metric in metric_log_new_content.splitlines()]
     assert (
         len(metric_logs) == 3
-    ), "Assuming three events should be runner_installed, runner_start and runner_stop, modify this if new events are added"
+    ), ("Assuming three events "
+        "should be runner_installed, runner_start and runner_stop, "
+        "modify this if new events are added")
     assert metric_logs[0]["event"] == "runner_installed"
     assert metric_logs[0]["flavor"] == runner_manager_with_one_runner.manager_name
     assert metric_logs[1]["event"] == "runner_start"
