@@ -7,6 +7,7 @@ It is assumed that the test runs in the CI under the ubuntu user.
 
 
 import json
+import logging
 from pathlib import Path
 from secrets import token_hex
 from typing import AsyncGenerator, Iterator
@@ -44,8 +45,10 @@ from charm_state import ProxyConfig
 from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
-    wait_for, wait_for_completion,
+    wait_for,
 )
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope="module", name="runner_label")
@@ -207,7 +210,9 @@ def workflow_is_status(workflow: Workflow, status: str) -> bool:
     return workflow.status == status
 
 
-async def wait_runner_amount(runner_manager: RunnerManager, num: int):
+async def wait_runner_amount(
+    runner_manager: RunnerManager, num: int, timeout: int = 600, check_interval: int = 60
+) -> None:
     """Wait until the runner manager has the number of runners.
 
     A TimeoutError will be thrown if runners amount is not correct after timeout.
@@ -222,7 +227,11 @@ async def wait_runner_amount(runner_manager: RunnerManager, num: int):
         return
 
     # The openstack server can take sometime to fully clean up or create.
-    await wait_for(lambda: len(runner_manager.get_runners()) == num)
+    await wait_for(
+        lambda: len(runner_manager.get_runners()) == num,
+        timeout=timeout,
+        check_interval=check_interval,
+    )
 
 
 @pytest.mark.openstack
@@ -399,14 +408,26 @@ async def test_runner_normal_lifecycle(
     )
     await wait_for(lambda: workflow_is_status(workflow, "completed"))
 
-    def is_runner_offline() -> bool:
-        runners = runner_manager_with_one_runner.get_runners()
-        assert len(runners) == 1
-        return runners[0].github_state in (GitHubRunnerState.OFFLINE, None)
-    await wait_for(is_runner_offline)
+    def have_metrics_been_issued() -> bool:
+        issued_metrics_events = runner_manager_with_one_runner.cleanup()
+        logger.info("issued_metrics_events: %s", issued_metrics_events)
+        return (
+            {events.RunnerInstalled, events.RunnerStart, events.RunnerStop}
+            == set(issued_metrics_events.keys())
+            and issued_metrics_events[events.RunnerInstalled] == 1
+            and issued_metrics_events[events.RunnerStart] == 1
+            and issued_metrics_events[events.RunnerStop] == 1
+        )
+
+    try:
+        await wait_for(have_metrics_been_issued, check_interval=60, timeout=600)
+    except TimeoutError:
+        assert False, "The expected metrics were not issued"
 
     issue_metrics_events = runner_manager_with_one_runner.cleanup()
-    assert {events.RunnerInstalled, events.RunnerStart, events.RunnerStop} == set(issue_metrics_events.keys())
+    assert {events.RunnerInstalled, events.RunnerStart, events.RunnerStop} == set(
+        issue_metrics_events.keys()
+    )
     assert issue_metrics_events[events.RunnerInstalled] == 1
     assert issue_metrics_events[events.RunnerStart] == 1
     assert issue_metrics_events[events.RunnerStop] == 1

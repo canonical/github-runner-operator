@@ -14,10 +14,11 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import (
+    VIRTUAL_MACHINES_CONFIG_NAME,
     VM_CPU_CONFIG_NAME,
     VM_DISK_CONFIG_NAME,
     VM_MEMORY_CONFIG_NAME,
-    InstanceType, VIRTUAL_MACHINES_CONFIG_NAME,
+    InstanceType,
 )
 from tests.integration.helpers import lxd
 from tests.integration.helpers.common import (
@@ -25,7 +26,8 @@ from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     InstanceHelper,
     dispatch_workflow,
-    wait_for, reconcile,
+    reconcile,
+    wait_for,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
@@ -159,6 +161,7 @@ async def test_flush_runner_and_resource_config(
 
         assert action.status == "completed"
         assert action.results["delta"]["virtual-machines"] == "0"
+
 
 @pytest.mark.openstack
 @pytest.mark.asyncio
