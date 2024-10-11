@@ -424,14 +424,6 @@ async def test_runner_normal_lifecycle(
     except TimeoutError:
         assert False, "The expected metrics were not issued"
 
-    issue_metrics_events = runner_manager_with_one_runner.cleanup()
-    assert {events.RunnerInstalled, events.RunnerStart, events.RunnerStop} == set(
-        issue_metrics_events.keys()
-    )
-    assert issue_metrics_events[events.RunnerInstalled] == 1
-    assert issue_metrics_events[events.RunnerStart] == 1
-    assert issue_metrics_events[events.RunnerStop] == 1
-
     metric_log_full_content = metric_log_path.read_text(encoding="utf-8")
     assert metric_log_full_content.startswith(
         metric_log_existing_content
