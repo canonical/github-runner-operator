@@ -30,6 +30,7 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManagerConfig,
 )
 from github_runner_manager.metrics import events, storage
+from github_runner_manager.openstack_cloud import health_checks
 from github_runner_manager.openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCloudConfig,
@@ -287,10 +288,12 @@ async def test_runner_normal_idle_lifecycle(
 
     # 2.
     openstack_instances = openstack_runner_manager._openstack_cloud.get_instances()
+
     assert len(openstack_instances) == 1, "Test arrange failed: Needs one runner."
     runner = openstack_instances[0]
 
-    assert openstack_runner_manager._health_check(runner)
+    ssh_conn = openstack_runner_manager._openstack_cloud.get_ssh_connection(runner)
+    assert health_checks.check_active_runner(ssh_conn=ssh_conn, instance=runner)
 
     # 3.
     runner_manager.cleanup()
