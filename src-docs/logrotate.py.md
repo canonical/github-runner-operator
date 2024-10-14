@@ -2,7 +2,7 @@
 
 <a href="../src/logrotate.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `logrotate`
+# <kbd>module</kbd> `logrotate.py`
 Logrotate setup and configuration. 
 
 **Global Variables**
@@ -31,28 +31,6 @@ Enable and configure logrotate.
 
 
 ---
-
-<a href="../src/logrotate.py#L21"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>class</kbd> `LogrotateFrequency`
-The frequency of log rotation. 
-
-
-
-**Attributes:**
- 
- - <b>`DAILY`</b>:  Rotate the log daily. 
- - <b>`WEEKLY`</b>:  Rotate the log weekly. 
- - <b>`MONTHLY`</b>:  Rotate the log monthly. 
- - <b>`YEARLY`</b>:  Rotate the log yearly. 
-
-
-
-
-
----
-
-<a href="../src/logrotate.py#L37"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `LogrotateConfig`
 Configuration for logrotate. 
@@ -90,6 +68,24 @@ Returns the set of fields that have been explicitly set on this model instance.
 
 **Returns:**
   A set of strings representing the fields that have been set,  i.e. that were not filled from defaults. 
+
+
+
+
+---
+
+## <kbd>class</kbd> `LogrotateFrequency`
+The frequency of log rotation. 
+
+
+
+**Attributes:**
+ 
+ - <b>`DAILY`</b>:  Rotate the log daily. 
+ - <b>`WEEKLY`</b>:  Rotate the log weekly. 
+ - <b>`MONTHLY`</b>:  Rotate the log monthly. 
+ - <b>`YEARLY`</b>:  Rotate the log yearly. 
+
 
 
 

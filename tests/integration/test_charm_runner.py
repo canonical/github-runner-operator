@@ -86,7 +86,7 @@ async def test_flush_runner_and_resource_config(
         4.  a. The runner name should be different to the runner prior running
                 the action.
             b. LXD profile matching virtual machine resources of step 2 exists.
-        5. The runner is not flushed since by default it flushes idle.
+        5. The runner is not flushed since by default it flushes idle. (Only valid for OpenStack)
 
     Test are combined to reduce number of runner spawned.
     """
@@ -138,28 +138,29 @@ async def test_flush_runner_and_resource_config(
     assert new_runner_names[0] != runner_names[0]
 
     # 5.
-    workflow = await dispatch_workflow(
-        app=app,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",
-        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": app.name, "minutes": "5"},
-        wait=False,
-    )
-    await wait_for(lambda: workflow.update() or workflow.status == "in_progress")
-    action = await app.units[0].run_action("flush-runners")
-    await action.wait()
+    if instance_type == InstanceType.OPENSTACK:
+        workflow = await dispatch_workflow(
+            app=app,
+            branch=test_github_branch,
+            github_repository=github_repository,
+            conclusion="success",
+            workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+            dispatch_input={"runner": app.name, "minutes": "5"},
+            wait=False,
+        )
+        await wait_for(lambda: workflow.update() or workflow.status == "in_progress")
+        action = await app.units[0].run_action("flush-runners")
+        await action.wait()
 
-    assert action.status == "completed"
-    assert action.results["delta"]["virtual-machines"] == "0"
+        assert action.status == "completed"
+        assert action.results["delta"]["virtual-machines"] == "0"
 
-    await wait_for(lambda: workflow.update() or workflow.status == "completed")
-    action = await app.units[0].run_action("flush-runners")
-    await action.wait()
+        await wait_for(lambda: workflow.update() or workflow.status == "completed")
+        action = await app.units[0].run_action("flush-runners")
+        await action.wait()
 
-    assert action.status == "completed"
-    assert action.results["delta"]["virtual-machines"] == "1"
+        assert action.status == "completed"
+        assert action.results["delta"]["virtual-machines"] == "1"
 
 
 @pytest.mark.openstack
