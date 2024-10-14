@@ -2,7 +2,6 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm containing one runner."""
-from time import sleep
 from typing import AsyncIterator
 
 import pytest

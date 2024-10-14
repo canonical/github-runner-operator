@@ -4,7 +4,6 @@
 """Testing reactive mode. This is only supported for the OpenStack cloud."""
 import json
 import re
-from time import sleep
 from typing import AsyncIterator
 
 import pytest
@@ -101,7 +100,12 @@ async def test_reactive_mode_spawns_runner(
 
     _assert_queue_is_empty(mongodb_uri, app.name)
 
-    async def _runner_installed_in_metrics_log():
+    async def _runner_installed_in_metrics_log() -> bool:
+        """Check if the runner_installed event is logged in the metrics log.
+
+        Returns:
+            True if the runner_installed event is logged, False otherwise.
+        """
         # trigger reconcile which extracts metrics
         await reconcile(app, app.model)
         metrics_log = await get_metrics_log(app.units[0])

@@ -29,7 +29,7 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManager,
     RunnerManagerConfig,
 )
-from github_runner_manager.metrics import events, storage
+from github_runner_manager.metrics import events
 from github_runner_manager.openstack_cloud import health_checks
 from github_runner_manager.openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
@@ -215,6 +215,8 @@ async def wait_runner_amount(
     Args:
         runner_manager: The RunnerManager to check.
         num: Number of runner to check for.
+        timeout: The timeout in seconds.
+        check_interval: The interval to check in seconds.
     """
     runner_list = runner_manager.get_runners()
     assert isinstance(runner_list, tuple)
@@ -410,6 +412,11 @@ async def test_runner_normal_lifecycle(
     # Make the test more robust by waiting for the runner to go offline
     # to reduce the race condition.
     def is_runner_offline() -> bool:
+        """Check if the runner is offline.
+
+        Returns:
+            True if the runner is offline, False otherwise.
+        """
         runners = runner_manager_with_one_runner.get_runners()
         assert len(runners) == 1
         return runners[0].github_state in (GitHubRunnerState.OFFLINE, None)
@@ -417,6 +424,11 @@ async def test_runner_normal_lifecycle(
     await wait_for(is_runner_offline, check_interval=60, timeout=600)
 
     def have_metrics_been_issued() -> bool:
+        """Check if the expected metrics have been issued.
+
+        Returns:
+            True if the expected metrics have been issued, False otherwise.
+        """
         issued_metrics_events = runner_manager_with_one_runner.cleanup()
         logger.info("issued_metrics_events: %s", issued_metrics_events)
         return (
@@ -438,11 +450,11 @@ async def test_runner_normal_lifecycle(
     ), "The metric log was modified in ways other than appending"
     metric_log_new_content = metric_log_full_content[len(metric_log_existing_content) :]
     metric_logs = [json.loads(metric) for metric in metric_log_new_content.splitlines()]
-    assert (
-        len(metric_logs) == 3
-    ), ("Assuming three events "
+    assert len(metric_logs) == 3, (
+        "Assuming three events "
         "should be runner_installed, runner_start and runner_stop, "
-        "modify this if new events are added")
+        "modify this if new events are added"
+    )
     assert metric_logs[0]["event"] == "runner_installed"
     assert metric_logs[0]["flavor"] == runner_manager_with_one_runner.manager_name
     assert metric_logs[1]["event"] == "runner_start"
