@@ -16,6 +16,7 @@ Represent HTTP-related proxy settings.
 
 **Attributes:**
  
+ - <b>`use_aproxy`</b>:  Whether aproxy should be used for the runners. 
  - <b>`no_proxy`</b>:  The comma separated URLs to not go through proxy. 
  - <b>`http`</b>:  HTTP proxy URL. 
  - <b>`https`</b>:  HTTPS proxy URL. 
