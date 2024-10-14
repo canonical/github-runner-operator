@@ -459,7 +459,6 @@ class CharmConfig(BaseModel):
         Returns:
             The validated reconcile_interval value.
         """
-        # TODO: this comment is no longer true
         # The EventTimer class sets a timeout of `reconcile_interval` - 1.
         # Therefore the `reconcile_interval` must be at least 2.
         if reconcile_interval < 2:
