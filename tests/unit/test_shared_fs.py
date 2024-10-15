@@ -35,7 +35,8 @@ def metrics_storage_fixture(
 ) -> MagicMock:
     """Mock the metrics storage."""
     metrics_storage_mock = MagicMock()
-    monkeypatch.setattr(shared_fs, "metrics_storage_manager", metrics_storage_mock)
+    storage_manager_cls_mock = MagicMock(return_value=metrics_storage_mock)
+    monkeypatch.setattr(shared_fs.metrics_storage, "StorageManager", storage_manager_cls_mock)
     fs_base_path = filesystem_paths["base"]
     fs_base_path.mkdir()
 
