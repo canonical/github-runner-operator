@@ -31,7 +31,6 @@ from github_runner_manager.manager.runner_manager import (
 )
 from github_runner_manager.metrics import events
 from github_runner_manager.openstack_cloud import health_checks
-from github_runner_manager.openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCredentials,
     OpenStackRunnerManager,
@@ -113,7 +112,6 @@ async def openstack_runner_manager_fixture(
     The prefix args of OpenstackRunnerManager set to app_name to let openstack_connection_fixture
     perform the cleanup of openstack resources.
     """
-    _CLOUDS_YAML_PATH.unlink(missing_ok=True)
     clouds_config = yaml.safe_load(private_endpoint_clouds_yaml)
 
     try:
@@ -130,7 +128,7 @@ async def openstack_runner_manager_fixture(
             password=cloud["auth"]["password"],
             user_domain_name=cloud["auth"]["user_domain_name"],
             project_domain_name=cloud["auth"]["project_domain_name"],
-            region_name=cloud.get(["region_name"], None),
+            region_name=cloud["region_name"],
         )
     except KeyError as err:
         raise AssertionError("Issue with the format of the clouds.yaml used in test") from err
