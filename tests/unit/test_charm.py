@@ -184,8 +184,8 @@ def test_proxy_setting(harness: Harness):
     assert: The proxy configuration are set.
     """
     state = harness.charm._setup_state()
-    assert state.proxy_config.https == TEST_PROXY_SERVER_URL
-    assert state.proxy_config.http == TEST_PROXY_SERVER_URL
+    assert state.proxy_config.https == f"{TEST_PROXY_SERVER_URL}/"
+    assert state.proxy_config.http == f"{TEST_PROXY_SERVER_URL}/"
     assert state.proxy_config.no_proxy == "127.0.0.1,localhost"
 
 
@@ -277,7 +277,7 @@ def test_get_runner_manager(harness: Harness):
     assert runner_manager is not None
     assert runner_manager.config.token == "mocktoken"
     assert runner_manager.proxies == ProxyConfig(
-        http=None, https=None, no_proxy=None, use_aproxy=False
+        http_url=None, https_url=None, no_proxy=None, use_aproxy=False
     )
 
 
@@ -358,7 +358,7 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
             "host": test_unit_ip_addresses[0],
             "port": "10022",
             "rsa_fingerprint": "SHA256:abcd",
-            "ed25519_fingerprint": "abcd",
+            "ed25519_fingerprint": "SHA256:abcd",
         },
     )
     harness.update_relation_data(
@@ -368,7 +368,7 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
             "host": test_unit_ip_addresses[1],
             "port": "10022",
             "rsa_fingerprint": "SHA256:abcd",
-            "ed25519_fingerprint": "abcd",
+            "ed25519_fingerprint": "SHA256:abcd",
         },
     )
     harness.update_relation_data(
@@ -378,7 +378,7 @@ def test__refresh_firewall(monkeypatch, harness: Harness, runner_binary_path: Pa
             "host": test_unit_ip_addresses[2],
             "port": "10022",
             "rsa_fingerprint": "SHA256:abcd",
-            "ed25519_fingerprint": "abcd",
+            "ed25519_fingerprint": "SHA256:abcd",
         },
     )
 

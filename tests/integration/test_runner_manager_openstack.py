@@ -88,8 +88,8 @@ def openstack_proxy_config_fixture(
     http_proxy = openstack_http_proxy if openstack_http_proxy else None
     https_proxy = openstack_https_proxy if openstack_https_proxy else None
     return ProxyConfig(
-        http=http_proxy,
-        https=https_proxy,
+        http_url=http_proxy,
+        https_url=https_proxy,
         no_proxy=openstack_no_proxy,
         use_aproxy=use_aproxy,
     )

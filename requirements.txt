@@ -7,9 +7,9 @@ pylxd @ git+https://github.com/canonical/pylxd
 requests
 typing-extensions
 cryptography <=43.0.1
-pydantic ==1.10.18
+pydantic ==2.8.2
 cosl ==0.0.15
 # juju 3.1.2.0 depends on pyyaml<=6.0 and >=5.1.2
 PyYAML ==6.0.*
 pyOpenSSL==24.2.1
-github_runner_manager @ git+https://github.com/canonical/github-runner-manager.git@33bbaff42d7cc0f250006fdd08d24659cef364c9
+github_runner_manager @ git+https://github.com/canonical/github-runner-manager.git@feat-pydantic-v2

@@ -14,7 +14,7 @@ import platform
 import re
 from enum import Enum
 from pathlib import Path
-from typing import NamedTuple, Optional, TypedDict, cast
+from typing import Annotated, NamedTuple, Optional, cast
 from urllib.parse import urlsplit
 
 import yaml
@@ -26,13 +26,18 @@ from ops import CharmBase
 from pydantic import (
     AnyHttpUrl,
     BaseModel,
+    ConfigDict,
     Field,
     IPvAnyAddress,
     MongoDsn,
+    TypeAdapter,
+    UrlConstraints,
     ValidationError,
-    create_model_from_typeddict,
-    validator,
+    field_validator,
+    model_validator,
 )
+from pydantic_core import Url
+from typing_extensions import TypedDict
 
 from errors import MissingMongoDBError
 from firewall import FirewallEntry
@@ -84,14 +89,7 @@ StorageSize = str
 """Representation of storage size with KiB, MiB, GiB, TiB, PiB, EiB as unit."""
 
 
-class AnyHttpsUrl(AnyHttpUrl):
-    """Represents an HTTPS URL.
-
-    Attributes:
-        allowed_schemes: Allowed schemes for the URL.
-    """
-
-    allowed_schemes = {"https"}
+AnyHttpsUrl = Annotated[Url, UrlConstraints(allowed_schemes=["https"])]
 
 
 @dataclasses.dataclass
@@ -427,9 +425,8 @@ class CharmConfig(BaseModel):
             openstack_clouds_yaml: OpenStackCloudsYAML = yaml.safe_load(
                 cast(str, openstack_clouds_yaml_str)
             )
-            # use Pydantic to validate TypedDict.
-            create_model_from_typeddict(OpenStackCloudsYAML)(**openstack_clouds_yaml)
-        except (yaml.YAMLError, TypeError) as exc:
+            TypeAdapter(OpenStackCloudsYAML).validate_python(openstack_clouds_yaml)
+        except (yaml.YAMLError, TypeError, ValidationError) as exc:
             logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
             raise CharmConfigInvalidError(
                 f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config. Invalid yaml."
@@ -445,7 +442,7 @@ class CharmConfig(BaseModel):
 
         return openstack_clouds_yaml
 
-    @validator("reconcile_interval")
+    @field_validator("reconcile_interval")
     @classmethod
     def check_reconcile_interval(cls, reconcile_interval: int) -> int:
         """Validate the general charm configuration.
@@ -720,7 +717,7 @@ class LocalLxdRunnerConfig(BaseModel):
             runner_storage=runner_storage,
         )
 
-    @validator("virtual_machines")
+    @field_validator("virtual_machines")
     @classmethod
     def check_virtual_machines(cls, virtual_machines: int) -> int:
         """Validate the virtual machines configuration value.
@@ -742,7 +739,7 @@ class LocalLxdRunnerConfig(BaseModel):
 
         return virtual_machines
 
-    @validator("virtual_machine_resources")
+    @field_validator("virtual_machine_resources")
     @classmethod
     def check_virtual_machine_resources(
         cls, vm_resources: VirtualMachineResources
@@ -783,22 +780,36 @@ class ProxyConfig(BaseModel):
 
     Attributes:
         aproxy_address: The address of aproxy snap instance if use_aproxy is enabled.
-        http: HTTP proxy address.
-        https: HTTPS proxy address.
+        http: HTTP proxy address string.
+        http_url: HTTP proxy address url.
+        https: HTTPS proxy address string.
+        https_url: HTTPS proxy address url.
         no_proxy: Comma-separated list of hosts that should not be proxied.
         use_aproxy: Whether aproxy should be used for the runners.
+        model_config: Config for the pydantic model
     """
 
-    http: Optional[AnyHttpUrl]
-    https: Optional[AnyHttpUrl]
-    no_proxy: Optional[str]
+    http_url: Optional[AnyHttpUrl] = None
+    https_url: Optional[AnyHttpUrl] = None
+    no_proxy: Optional[str] = None
     use_aproxy: bool = False
+    model_config = ConfigDict(frozen=True)
+
+    @property
+    def http(self) -> Optional[str]:
+        """Return string version of http url."""
+        return str(self.http_url) if self.http_url else None
+
+    @property
+    def https(self) -> Optional[str]:
+        """Return string version of https url."""
+        return str(self.https_url) if self.https_url else None
 
     @property
     def aproxy_address(self) -> Optional[str]:
         """Return the aproxy address."""
         if self.use_aproxy:
-            proxy_address = self.http or self.https
+            proxy_address = self.http_url or self.https_url
             # assert is only used to make mypy happy
             assert (
                 proxy_address is not None and proxy_address.host is not None
@@ -812,25 +823,20 @@ class ProxyConfig(BaseModel):
             aproxy_address = None
         return aproxy_address
 
-    @validator("use_aproxy")
-    @classmethod
-    def check_use_aproxy(cls, use_aproxy: bool, values: dict) -> bool:
+    @model_validator(mode="after")
+    def check_use_aproxy(self: "ProxyConfig") -> "ProxyConfig":
         """Validate the proxy configuration.
-
-        Args:
-            use_aproxy: Value of use_aproxy variable.
-            values: Values in the pydantic model.
 
         Raises:
             ValueError: if use_aproxy was set but no http/https was passed.
 
         Returns:
-            Validated use_aproxy value.
+            Validated ProxyConfig instance.
         """
-        if use_aproxy and not (values.get("http") or values.get("https")):
+        if self.use_aproxy and not (self.http_url or self.https_url):
             raise ValueError("aproxy requires http or https to be set")
 
-        return use_aproxy
+        return self
 
     def __bool__(self) -> bool:
         """Return whether the proxy config is set.
@@ -838,7 +844,7 @@ class ProxyConfig(BaseModel):
         Returns:
             Whether the proxy config is set.
         """
-        return bool(self.http or self.https)
+        return bool(self.http_url or self.https_url)
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "ProxyConfig":
@@ -860,20 +866,11 @@ class ProxyConfig(BaseModel):
             no_proxy = None
 
         return cls(
-            http=http_proxy,
-            https=https_proxy,
+            http_url=http_proxy,
+            https_url=https_proxy,
             no_proxy=no_proxy,
             use_aproxy=use_aproxy,
         )
-
-    class Config:  # pylint: disable=too-few-public-methods
-        """Pydantic model configuration.
-
-        Attributes:
-            allow_mutation: Whether the model is mutable.
-        """
-
-        allow_mutation = False
 
 
 class UnsupportedArchitectureError(Exception):
@@ -953,11 +950,9 @@ class SSHDebugConnection(BaseModel):
                 )
                 continue
             ssh_debug_connections.append(
-                # pydantic allows string to be passed as IPvAnyAddress and as int,
-                # mypy complains about it
                 SSHDebugConnection(
-                    host=host,  # type: ignore
-                    port=port,  # type: ignore
+                    host=IPvAnyAddress(host),
+                    port=int(port),
                     rsa_fingerprint=rsa_fingerprint,
                     ed25519_fingerprint=ed25519_fingerprint,
                 )
@@ -972,7 +967,7 @@ class ReactiveConfig(BaseModel):
         mq_uri: The URI of the MQ to use to spawn runners reactively.
     """
 
-    mq_uri: MongoDsn
+    mq_uri: Annotated[str, MongoDsn]
 
     @classmethod
     def from_database(cls, database: DatabaseRequires) -> "ReactiveConfig | None":
@@ -1055,13 +1050,15 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         """
         state_dict = dataclasses.asdict(state)
         # Convert pydantic object to python object serializable by json module.
-        state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
-        state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
+        state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].model_dump_json())
+        state_dict["charm_config"] = json.loads(state_dict["charm_config"].model_dump_json())
         if state.reactive_config:
-            state_dict["reactive_config"] = json.loads(state_dict["reactive_config"].json())
-        state_dict["runner_config"] = json.loads(state_dict["runner_config"].json())
+            state_dict["reactive_config"] = json.loads(
+                state_dict["reactive_config"].model_dump_json()
+            )
+        state_dict["runner_config"] = json.loads(state_dict["runner_config"].model_dump_json())
         state_dict["ssh_debug_connections"] = [
-            debug_info.json() for debug_info in state_dict["ssh_debug_connections"]
+            debug_info.model_dump_json() for debug_info in state_dict["ssh_debug_connections"]
         ]
         json_data = json.dumps(state_dict, ensure_ascii=False)
         CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")

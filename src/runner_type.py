@@ -31,16 +31,18 @@ class ProxySetting:
     """Represent HTTP-related proxy settings.
 
     Attributes:
+        use_aproxy: Whether aproxy should be used for the runners.
         no_proxy: The comma separated URLs to not go through proxy.
         http: HTTP proxy URL.
         https: HTTPS proxy URL.
         aproxy_address: Aproxy URL.
     """
 
-    no_proxy: Optional[str]
-    http: Optional[str]
-    https: Optional[str]
-    aproxy_address: Optional[str]
+    use_aproxy: bool = False
+    no_proxy: str | None = None
+    http: str | None = None
+    https: str | None = None
+    aproxy_address: str | None = None
 
 
 @dataclass

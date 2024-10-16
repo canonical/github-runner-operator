@@ -75,7 +75,7 @@ async def test_reactive_mode_spawns_runner(
     # label validation in the reactive consumer.
     job = _create_job_details(run=run, labels=labels)
     _add_to_queue(
-        json.dumps(json.loads(job.json()) | {"ignored_noise": "foobar"}),
+        json.dumps(job.dict() | {"ignored_noise": "foobar"}, default=lambda x: str(x)),
         mongodb_uri,
         app.name,
     )

@@ -40,21 +40,6 @@ State of the Charm.
 
 ---
 
-## <kbd>class</kbd> `AnyHttpsUrl`
-Represents an HTTPS URL. 
-
-
-
-**Attributes:**
- 
- - <b>`allowed_schemes`</b>:  Allowed schemes for the URL. 
-
-
-
-
-
----
-
 ## <kbd>class</kbd> `Arch`
 Supported system architectures. 
 
@@ -106,11 +91,33 @@ Some charm configurations are grouped into other configuration models.
  - <b>`token`</b>:  GitHub personal access token for GitHub API. 
 
 
+---
+
+#### <kbd>property</kbd> model_extra
+
+Get extra fields set during validation. 
+
+
+
+**Returns:**
+  A dictionary of extra fields, or `None` if `config.extra` is not set to `"allow"`. 
+
+---
+
+#### <kbd>property</kbd> model_fields_set
+
+Returns the set of fields that have been explicitly set on this model instance. 
+
+
+
+**Returns:**
+  A set of strings representing the fields that have been set,  i.e. that were not filled from defaults. 
+
 
 
 ---
 
-<a href="../src/charm_state.py#L448"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L445"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_reconcile_interval`
 
@@ -139,7 +146,7 @@ Validate the general charm configuration.
 
 ---
 
-<a href="../src/charm_state.py#L475"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L472"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -178,7 +185,7 @@ Raised when charm config is invalid.
  
  - <b>`msg`</b>:  Explanation of the error. 
 
-<a href="../src/charm_state.py#L196"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L194"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -221,7 +228,7 @@ The charm state.
 
 ---
 
-<a href="../src/charm_state.py#L1146"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L1143"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -267,7 +274,7 @@ Charm configuration related to GitHub.
 
 ---
 
-<a href="../src/charm_state.py#L109"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L107"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -300,7 +307,7 @@ Get github related charm configuration values from charm.
 ## <kbd>class</kbd> `ImmutableConfigChangedError`
 Represents an error when changing immutable charm state. 
 
-<a href="../src/charm_state.py#L1014"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L1009"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -351,11 +358,33 @@ Runner configurations for local LXD instances.
  - <b>`runner_storage`</b>:  Storage to be used as disk for the runner. 
 
 
+---
+
+#### <kbd>property</kbd> model_extra
+
+Get extra fields set during validation. 
+
+
+
+**Returns:**
+  A dictionary of extra fields, or `None` if `config.extra` is not set to `"allow"`. 
+
+---
+
+#### <kbd>property</kbd> model_fields_set
+
+Returns the set of fields that have been explicitly set on this model instance. 
+
+
+
+**Returns:**
+  A set of strings representing the fields that have been set,  i.e. that were not filled from defaults. 
+
 
 
 ---
 
-<a href="../src/charm_state.py#L745"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L742"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_virtual_machine_resources`
 
@@ -386,7 +415,7 @@ Validate the virtual_machine_resources field values.
 
 ---
 
-<a href="../src/charm_state.py#L723"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L720"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_virtual_machines`
 
@@ -415,7 +444,7 @@ Validate the virtual machines configuration value.
 
 ---
 
-<a href="../src/charm_state.py#L671"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L668"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -471,11 +500,33 @@ OpenstackImage from image builder relation data.
  - <b>`tags`</b>:  Image tags, e.g. jammy 
 
 
+---
+
+#### <kbd>property</kbd> model_extra
+
+Get extra fields set during validation. 
+
+
+
+**Returns:**
+  A dictionary of extra fields, or `None` if `config.extra` is not set to `"allow"`. 
+
+---
+
+#### <kbd>property</kbd> model_fields_set
+
+Returns the set of fields that have been explicitly set on this model instance. 
+
+
+
+**Returns:**
+  A set of strings representing the fields that have been set,  i.e. that were not filled from defaults. 
+
 
 
 ---
 
-<a href="../src/charm_state.py#L581"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L578"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -514,11 +565,33 @@ Runner configuration for OpenStack Instances.
  - <b>`openstack_image`</b>:  Openstack image to use for virtual machines. 
 
 
+---
+
+#### <kbd>property</kbd> model_extra
+
+Get extra fields set during validation. 
+
+
+
+**Returns:**
+  A dictionary of extra fields, or `None` if `config.extra` is not set to `"allow"`. 
+
+---
+
+#### <kbd>property</kbd> model_fields_set
+
+Returns the set of fields that have been explicitly set on this model instance. 
+
+
+
+**Returns:**
+  A set of strings representing the fields that have been set,  i.e. that were not filled from defaults. 
+
 
 
 ---
 
-<a href="../src/charm_state.py#L623"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L620"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -556,10 +629,13 @@ Proxy configuration.
 **Attributes:**
  
  - <b>`aproxy_address`</b>:  The address of aproxy snap instance if use_aproxy is enabled. 
- - <b>`http`</b>:  HTTP proxy address. 
- - <b>`https`</b>:  HTTPS proxy address. 
+ - <b>`http`</b>:  HTTP proxy address string. 
+ - <b>`http_url`</b>:  HTTP proxy address url. 
+ - <b>`https`</b>:  HTTPS proxy address string. 
+ - <b>`https_url`</b>:  HTTPS proxy address url. 
  - <b>`no_proxy`</b>:  Comma-separated list of hosts that should not be proxied. 
  - <b>`use_aproxy`</b>:  Whether aproxy should be used for the runners. 
+ - <b>`model_config`</b>:  Config for the pydantic model 
 
 
 ---
@@ -568,26 +644,53 @@ Proxy configuration.
 
 Return the aproxy address. 
 
+---
+
+#### <kbd>property</kbd> http
+
+Return string version of http url. 
+
+---
+
+#### <kbd>property</kbd> https
+
+Return string version of https url. 
+
+---
+
+#### <kbd>property</kbd> model_extra
+
+Get extra fields set during validation. 
+
+
+
+**Returns:**
+  A dictionary of extra fields, or `None` if `config.extra` is not set to `"allow"`. 
+
+---
+
+#### <kbd>property</kbd> model_fields_set
+
+Returns the set of fields that have been explicitly set on this model instance. 
+
+
+
+**Returns:**
+  A set of strings representing the fields that have been set,  i.e. that were not filled from defaults. 
+
 
 
 ---
 
-<a href="../src/charm_state.py#L815"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L826"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>classmethod</kbd> `check_use_aproxy`
+### <kbd>function</kbd> `check_use_aproxy`
 
 ```python
-check_use_aproxy(use_aproxy: bool, values: dict) → bool
+check_use_aproxy(self: 'ProxyConfig') → ProxyConfig
 ```
 
 Validate the proxy configuration. 
-
-
-
-**Args:**
- 
- - <b>`use_aproxy`</b>:  Value of use_aproxy variable. 
- - <b>`values`</b>:  Values in the pydantic model. 
 
 
 
@@ -598,11 +701,11 @@ Validate the proxy configuration.
 
 
 **Returns:**
- Validated use_aproxy value. 
+ Validated ProxyConfig instance. 
 
 ---
 
-<a href="../src/charm_state.py#L843"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L849"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -636,11 +739,33 @@ Represents the configuration for reactive scheduling.
  - <b>`mq_uri`</b>:  The URI of the MQ to use to spawn runners reactively. 
 
 
+---
+
+#### <kbd>property</kbd> model_extra
+
+Get extra fields set during validation. 
+
+
+
+**Returns:**
+  A dictionary of extra fields, or `None` if `config.extra` is not set to `"allow"`. 
+
+---
+
+#### <kbd>property</kbd> model_fields_set
+
+Returns the set of fields that have been explicitly set on this model instance. 
+
+
+
+**Returns:**
+  A set of strings representing the fields that have been set,  i.e. that were not filled from defaults. 
+
 
 
 ---
 
-<a href="../src/charm_state.py#L977"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L972"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_database`
 
@@ -681,11 +806,33 @@ Configuration for the repo policy compliance service.
  - <b>`url`</b>:  URL of the repo policy compliance service. 
 
 
+---
+
+#### <kbd>property</kbd> model_extra
+
+Get extra fields set during validation. 
+
+
+
+**Returns:**
+  A dictionary of extra fields, or `None` if `config.extra` is not set to `"allow"`. 
+
+---
+
+#### <kbd>property</kbd> model_fields_set
+
+Returns the set of fields that have been explicitly set on this model instance. 
+
+
+
+**Returns:**
+  A set of strings representing the fields that have been set,  i.e. that were not filled from defaults. 
+
 
 
 ---
 
-<a href="../src/charm_state.py#L263"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L261"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -744,11 +891,33 @@ SSH connection information for debug workflow.
  - <b>`ed25519_fingerprint`</b>:  The host SSH server public ed25519 key fingerprint. 
 
 
+---
+
+#### <kbd>property</kbd> model_extra
+
+Get extra fields set during validation. 
+
+
+
+**Returns:**
+  A dictionary of extra fields, or `None` if `config.extra` is not set to `"allow"`. 
+
+---
+
+#### <kbd>property</kbd> model_fields_set
+
+Returns the set of fields that have been explicitly set on this model instance. 
+
+
+
+**Returns:**
+  A set of strings representing the fields that have been set,  i.e. that were not filled from defaults. 
+
 
 
 ---
 
-<a href="../src/charm_state.py#L929"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L926"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `from_charm`
 
@@ -781,7 +950,7 @@ Raised when given machine charm architecture is unsupported.
  
  - <b>`arch`</b>:  The current machine architecture. 
 
-<a href="../src/charm_state.py#L886"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm_state.py#L883"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

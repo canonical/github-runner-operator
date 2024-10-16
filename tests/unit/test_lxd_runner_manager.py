@@ -28,7 +28,7 @@ from runner_manager import BUILD_IMAGE_SCRIPT_FILENAME, LXDRunnerManager, LXDRun
 from runner_type import RunnerNameByHealth
 from tests.unit.mock import TEST_BINARY, MockLxdImageManager
 
-FAKE_MONGODB_URI = "mongodb://example.com/db"
+FAKE_MONGODB_URI = "mongodb://example.com:27017/db"
 
 IMAGE_NAME = "jammy"
 
@@ -68,8 +68,8 @@ def charm_state_fixture(charm_config: MagicMock):
             GitHubRepo("test_owner", "test_repo"),
             ProxyConfig(
                 no_proxy="test_no_proxy",
-                http=TEST_PROXY_SERVER_URL,
-                https=TEST_PROXY_SERVER_URL,
+                http_url=TEST_PROXY_SERVER_URL,
+                https_url=TEST_PROXY_SERVER_URL,
                 use_aproxy=False,
             ),
         ),

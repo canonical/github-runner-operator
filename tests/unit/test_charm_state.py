@@ -13,8 +13,7 @@ import pytest
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
-from pydantic import BaseModel
-from pydantic.error_wrappers import ValidationError
+from pydantic import AnyHttpUrl, BaseModel
 from pydantic.networks import IPv4Address
 
 import charm_state
@@ -506,7 +505,7 @@ def test_charm_config_from_charm_valid():
         FirewallEntry(ip_range="192.168.1.1"),
         FirewallEntry(ip_range="192.168.1.2"),
     ]
-    assert result.dockerhub_mirror == "https://example.com"
+    assert result.dockerhub_mirror == AnyHttpUrl("https://example.com")
     assert result.openstack_clouds_yaml == test_openstack_config
     assert result.labels == ("label1", "label2", "label3")
     assert result.token == "abc123"
@@ -805,8 +804,9 @@ def test_runner_charm_config_from_charm_valid():
 @pytest.mark.parametrize(
     "http, https, use_aproxy, expected_address",
     [
-        ("http://proxy.example.com", None, True, "proxy.example.com"),
-        (None, "https://secureproxy.example.com", True, "secureproxy.example.com"),
+        ("http://proxy.example.com", None, True, "proxy.example.com:80"),
+        ("http://squid.internal:3128", None, True, "squid.internal:3128"),
+        (None, "https://secureproxy.example.com", True, "secureproxy.example.com:443"),
         (None, None, False, None),
         ("http://proxy.example.com", None, False, None),
     ],
@@ -819,7 +819,7 @@ def test_apropy_address(
     act: Access the aproxy_address property of the ProxyConfig instance.
     assert: Verify that the property returns the expected apropy address.
     """
-    proxy_config = ProxyConfig(http=http, https=https, use_aproxy=use_aproxy)
+    proxy_config = ProxyConfig(http_url=http, https_url=https, use_aproxy=use_aproxy)
 
     result = proxy_config.aproxy_address
 
@@ -833,13 +833,10 @@ def test_check_use_aproxy():
     act: Call the check_use_aproxy method with the provided values.
     assert: Verify that the method raises a ValueError with the expected message.
     """
-    values = {"http": None, "https": None}
-    use_aproxy = True
-
     with pytest.raises(ValueError) as exc_info:
-        ProxyConfig.check_use_aproxy(use_aproxy, values)
+        ProxyConfig(use_aproxy=True)
 
-    assert str(exc_info.value) == "aproxy requires http or https to be set"
+    assert "aproxy requires http or https to be set" in str(exc_info.value)
 
 
 @pytest.mark.parametrize(
@@ -861,7 +858,7 @@ def test___bool__(http: str | None, https: str | None, expected_result: bool):
     act: Call the __bool__ method on the instance.
     assert: Verify that the method returns the expected boolean value.
     """
-    proxy_instance = ProxyConfig(http=http, https=https)
+    proxy_instance = ProxyConfig(http_url=http, https_url=https)
 
     result = bool(proxy_instance)
 
@@ -1014,7 +1011,6 @@ def test_reactive_config_from_charm():
     )
 
     connection_info = charm_state.ReactiveConfig.from_database(database)
-
     assert isinstance(connection_info, charm_state.ReactiveConfig)
     assert connection_info.mq_uri == mongodb_uri
 
@@ -1213,7 +1209,7 @@ class MockModel(BaseModel):
         (
             ProxyConfig,
             "from_charm",
-            ValidationError([], MockModel),
+            ValueError,
         ),
         (ProxyConfig, "from_charm", ValueError),
         (
@@ -1221,10 +1217,10 @@ class MockModel(BaseModel):
             "_check_immutable_config_change",
             ImmutableConfigChangedError("Immutable config changed"),
         ),
-        (CharmConfig, "from_charm", ValidationError([], MockModel)),
+        (CharmConfig, "from_charm", ValueError),
         (CharmConfig, "from_charm", ValueError),
         (charm_state, "_get_supported_arch", UnsupportedArchitectureError(arch="testarch")),
-        (SSHDebugConnection, "from_charm", ValidationError([], MockModel)),
+        (SSHDebugConnection, "from_charm", CharmConfigInvalidError("Invalid SSH Debug info")),
     ],
 )
 def test_charm_state_from_charm_invalid_cases(
