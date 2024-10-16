@@ -13,7 +13,7 @@ import pytest
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
-from pydantic import AnyHttpUrl, BaseModel, MongoDsn
+from pydantic import AnyHttpUrl, BaseModel
 from pydantic.networks import IPv4Address
 
 import charm_state
@@ -1012,7 +1012,7 @@ def test_reactive_config_from_charm():
 
     connection_info = charm_state.ReactiveConfig.from_database(database)
     assert isinstance(connection_info, charm_state.ReactiveConfig)
-    assert connection_info.mq_uri == MongoDsn(mongodb_uri)
+    assert connection_info.mq_uri == mongodb_uri
 
 
 def test_reactive_config_from_database_returns_none():
