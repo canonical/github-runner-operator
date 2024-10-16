@@ -448,6 +448,7 @@ def test_reconcile_issues_reconciliation_metric_event(
             flavor=runner_manager.app_name,
             crashed_runners=1,
             idle_runners=2,
+            active_runners=1,
             duration=0,
         )
     )

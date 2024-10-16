@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Iterator
 
 import github_runner_manager.metrics.storage as metrics_storage
+from github_runner_manager.types_ import SystemUserConfig
 
 from errors import (
     CreateMetricsStorageError,
@@ -19,11 +20,16 @@ from errors import (
 from utilities import execute_command
 
 DIR_NO_MOUNTPOINT_EXIT_CODE = 32
+METRICS_STORAGE_USER_CONFIG = SystemUserConfig(
+    user="ubuntu",
+    group="ubuntu",
+)
 
 logger = logging.getLogger(__name__)
 
 FILESYSTEM_OWNER = "ubuntu:ubuntu"
 FILESYSTEM_IMAGES_PATH = Path("/home/ubuntu/runner-fs-images")
+FILESYSTEM_QUARANTINE_PATH = Path("/home/ubuntu/runner-fs-quarantine")
 FILESYSTEM_SIZE = "1M"
 
 
@@ -46,7 +52,9 @@ def create(runner_name: str) -> metrics_storage.MetricsStorage:
     Raises:
         CreateMetricsStorageError: If the creation of the shared filesystem fails.
     """
-    ms = metrics_storage.create(runner_name)
+    ms = metrics_storage.StorageManager(system_user_config=METRICS_STORAGE_USER_CONFIG).create(
+        runner_name
+    )
     try:
         FILESYSTEM_IMAGES_PATH.mkdir(exist_ok=True)
     except OSError as exc:
@@ -75,7 +83,9 @@ def list_all() -> Iterator[metrics_storage.MetricsStorage]:
     Yields:
         A metrics storage object.
     """
-    for ms in metrics_storage.list_all():
+    for ms in metrics_storage.StorageManager(
+        system_user_config=METRICS_STORAGE_USER_CONFIG
+    ).list_all():
         try:
             # we try to check if it is mounted by using this module's get function
             get(ms.runner_name)
@@ -99,7 +109,9 @@ def get(runner_name: str) -> metrics_storage.MetricsStorage:
     Raises:
         GetMetricsStorageError: If the shared filesystem could not be retrieved/mounted.
     """
-    ms = metrics_storage.get(runner_name)
+    ms = metrics_storage.StorageManager(system_user_config=METRICS_STORAGE_USER_CONFIG).get(
+        runner_name
+    )
 
     try:
         is_mounted = _is_mountpoint(ms.path)
@@ -135,7 +147,11 @@ def delete(runner_name: str) -> None:
         DeleteMetricsStorageError: If the shared filesystem could not be deleted.
     """
     try:
-        runner_fs_path = metrics_storage.get(runner_name).path
+        runner_fs_path = (
+            metrics_storage.StorageManager(system_user_config=METRICS_STORAGE_USER_CONFIG)
+            .get(runner_name)
+            .path
+        )
     except GetMetricsStorageError as exc:
         raise DeleteMetricsStorageError(
             f"Failed to get shared filesystem for runner {runner_name}"
@@ -163,6 +179,19 @@ def delete(runner_name: str) -> None:
         raise DeleteMetricsStorageError(
             f"Failed to remove shared filesystem for runner {runner_name}"
         ) from exc
+
+
+def move_to_quarantine(
+    runner_name: str,
+) -> None:
+    """Archive the mshared filesystem for the runner and delete it.
+
+    Args:
+        runner_name: The name of the runner.
+    """
+    metrics_storage.StorageManager(
+        system_user_config=METRICS_STORAGE_USER_CONFIG
+    ).move_to_quarantine(runner_name)
 
 
 def _unmount_runner_fs_path(runner_fs_path: Path) -> Path:
