@@ -10,20 +10,20 @@ concurrency:
 jobs:
   # test option values defined at test/conftest.py are passed on via repository secret
   # INTEGRATION_TEST_ARGS to operator-workflows automatically.
-#  integration-tests:
-#    name: Integration test with juju 3.1
-#    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-#    secrets: inherit
-#    with:
-#      juju-channel: 3.1/stable
-#      pre-run-script: scripts/pre-integration-test.sh
-#      provider: lxd
-#      test-tox-env: integration-juju3.1
-#      # These important local LXD test have no OpenStack integration versions.
-#      # test_charm_scheduled_events ensures reconcile events are fired on a schedule.
-#      # test_debug_ssh ensures tmate SSH actions works.
-#      # The test test_charm_upgrade needs to run to ensure the charm can be upgraded.
-#      modules: '["test_charm_scheduled_events", "test_debug_ssh", "test_charm_upgrade"]'
+  integration-tests:
+    name: Integration test with juju 3.1
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    secrets: inherit
+    with:
+      juju-channel: 3.1/stable
+      pre-run-script: scripts/pre-integration-test.sh
+      provider: lxd
+      test-tox-env: integration-juju3.1
+      # These important local LXD test have no OpenStack integration versions.
+      # test_charm_scheduled_events ensures reconcile events are fired on a schedule.
+      # test_debug_ssh ensures tmate SSH actions works.
+      # The test test_charm_upgrade needs to run to ensure the charm can be upgraded.
+      modules: '["test_charm_scheduled_events", "test_debug_ssh", "test_charm_upgrade"]'
   openstack-interface-tests-private-endpoint:
     name: openstack interface test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
@@ -39,16 +39,14 @@ jobs:
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-#    needs: openstack-interface-tests-private-endpoint
+    needs: openstack-interface-tests-private-endpoint
     secrets: inherit
     with:
       juju-channel: 3.2/stable
       pre-run-script: scripts/setup-lxd.sh
       provider: lxd
       test-tox-env: integration-juju3.2
-      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_runner"]'
+      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_runner", "test_reactive"]'
       extra-arguments: "-m openstack"
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
-      tmate-debug: true
-      tmate-timeout: 300
