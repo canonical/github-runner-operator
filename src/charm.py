@@ -459,7 +459,7 @@ class GithubRunnerCharm(CharmBase):
             raise
 
         try:
-            self._setup_runner_manager_user()
+            _setup_runner_manager_user()
         except SubprocessError:
             logger.error("Failed to setup runner manager user")
             raise
@@ -1043,33 +1043,6 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Installing charm dependencies.")
         self._apt_install(["run-one"])
 
-    @staticmethod
-    def _setup_runner_manager_user() -> None:
-        """Create the user and required directories for the runner manager."""
-        # check if runner_manager user is already existing
-        _, retcode = execute_command(["/usr/bin/id", RUNNER_MANAGER_USER], check_exit=False)
-        if retcode != 0:
-            logger.info("Creating user %s", RUNNER_MANAGER_USER)
-            execute_command(
-                [
-                    "/usr/sbin/useradd",
-                    "--system",
-                    "--create-home",
-                    "--user-group",
-                    RUNNER_MANAGER_USER,
-                ],
-            )
-        execute_command(["/usr/bin/mkdir", "-p", f"/home/{RUNNER_MANAGER_USER}/.ssh"])
-        execute_command(
-            [
-                "/usr/bin/chown",
-                "-R",
-                f"{RUNNER_MANAGER_USER}:{RUNNER_MANAGER_USER}",
-                f"/home/{RUNNER_MANAGER_USER}/.ssh",
-            ]
-        )
-        execute_command(["/usr/bin/chmod", "700", f"/home/{RUNNER_MANAGER_USER}/.ssh"])
-
     @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
     def _install_local_lxd_deps(self) -> None:
         """Install dependencies for running local LXD runners."""
@@ -1406,6 +1379,33 @@ class GithubRunnerCharm(CharmBase):
             ),
         )
         return openstack_runner_manager_config
+
+
+def _setup_runner_manager_user() -> None:
+    """Create the user and required directories for the runner manager."""
+    # check if runner_manager user is already existing
+    _, retcode = execute_command(["/usr/bin/id", RUNNER_MANAGER_USER], check_exit=False)
+    if retcode != 0:
+        logger.info("Creating user %s", RUNNER_MANAGER_USER)
+        execute_command(
+            [
+                "/usr/sbin/useradd",
+                "--system",
+                "--create-home",
+                "--user-group",
+                RUNNER_MANAGER_USER,
+            ],
+        )
+    execute_command(["/usr/bin/mkdir", "-p", f"/home/{RUNNER_MANAGER_USER}/.ssh"])
+    execute_command(
+        [
+            "/usr/bin/chown",
+            "-R",
+            f"{RUNNER_MANAGER_USER}:{RUNNER_MANAGER_USER}",
+            f"/home/{RUNNER_MANAGER_USER}/.ssh",
+        ]
+    )
+    execute_command(["/usr/bin/chmod", "700", f"/home/{RUNNER_MANAGER_USER}/.ssh"])
 
 
 if __name__ == "__main__":
