@@ -967,7 +967,7 @@ class ReactiveConfig(BaseModel):
         mq_uri: The URI of the MQ to use to spawn runners reactively.
     """
 
-    mq_uri: MongoDsn
+    mq_uri: Annotated[str, MongoDsn]
 
     @classmethod
     def from_database(cls, database: DatabaseRequires) -> "ReactiveConfig | None":
