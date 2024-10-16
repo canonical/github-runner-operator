@@ -296,7 +296,7 @@ clouds:
             auth_url: 'http://keystone.openstack.svc.cluster.local:5000/v3'
             user_domain_name: 'Default'
             project_domain_name: 'Default'
-            region_name: 'RegionOne'
+        region_name: 'RegionOne'
     """
 
 
@@ -313,7 +313,7 @@ clouds: asdfsadf
             auth_url: 'http://keystone.openstack.svc.cluster.local:5000/v3'
             user_domain_name: 'Default'
             project_domain_name: 'Default'
-            region_name: 'RegionOne'
+        region_name: 'RegionOne'
     """
 
 
@@ -467,7 +467,8 @@ def test_charm_config_from_charm_valid():
                                 "project_name": "test-project-name",
                                 "user_domain_name": "Default",
                                 "username": "test-user-name",
-                            }
+                            },
+                            "region_name": secrets.token_hex(16),
                         }
                     }
                 }
