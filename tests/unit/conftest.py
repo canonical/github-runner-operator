@@ -101,6 +101,7 @@ def cloud_name_fixture() -> str:
     """The testing cloud name."""
     return "microstack"
 
+
 @pytest.fixture(name="clouds_yaml")
 def clouds_yaml_fixture(cloud_name: str) -> dict:
     """Testing clouds.yaml."""
