@@ -48,6 +48,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
 )
 from github_runner_manager.reactive.types_ import QueueConfig as ReactiveQueueConfig
 from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
+from github_runner_manager.types_ import SystemUserConfig
 from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus, parse_github_path
 from ops.charm import (
     ActionEvent,
@@ -61,7 +62,6 @@ from ops.charm import (
     UpgradeCharmEvent,
 )
 from ops.framework import StoredState
-from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, WaitingStatus
 
 import logrotate
@@ -109,6 +109,10 @@ REACTIVE_MQ_DB_NAME = "github-runner-webhook-router"
 
 
 GITHUB_SELF_HOSTED_ARCH_LABELS = {"x64", "arm64"}
+
+ROOT_USER = "root"
+RUNNER_MANAGER_USER = "runner-manager"
+RUNNER_MANAGER_GROUP = "runner-manager"
 
 logger = logging.getLogger(__name__)
 
@@ -452,6 +456,12 @@ class GithubRunnerCharm(CharmBase):
             self._install_deps()
         except SubprocessError:
             logger.error("Failed to install charm dependencies")
+            raise
+
+        try:
+            _setup_runner_manager_user()
+        except SubprocessError:
+            logger.error("Failed to setup runner manager user")
             raise
 
         try:
@@ -1295,6 +1305,7 @@ class GithubRunnerCharm(CharmBase):
                 cloud_runner_manager=openstack_runner_manager_config,
                 github_token=token,
                 supported_labels=supported_labels,
+                system_user=SystemUserConfig(user=RUNNER_MANAGER_USER, group=RUNNER_MANAGER_GROUP),
             )
         return RunnerScaler(
             runner_manager=runner_manager, reactive_runner_config=reactive_runner_config
@@ -1373,9 +1384,39 @@ class GithubRunnerCharm(CharmBase):
             server_config=server_config,
             runner_config=runner_config,
             service_config=service_config,
+            system_user_config=SystemUserConfig(
+                user=RUNNER_MANAGER_USER, group=RUNNER_MANAGER_GROUP
+            ),
         )
         return openstack_runner_manager_config
 
 
+def _setup_runner_manager_user() -> None:
+    """Create the user and required directories for the runner manager."""
+    # check if runner_manager user is already existing
+    _, retcode = execute_command(["/usr/bin/id", RUNNER_MANAGER_USER], check_exit=False)
+    if retcode != 0:
+        logger.info("Creating user %s", RUNNER_MANAGER_USER)
+        execute_command(
+            [
+                "/usr/sbin/useradd",
+                "--system",
+                "--create-home",
+                "--user-group",
+                RUNNER_MANAGER_USER,
+            ],
+        )
+    execute_command(["/usr/bin/mkdir", "-p", f"/home/{RUNNER_MANAGER_USER}/.ssh"])
+    execute_command(
+        [
+            "/usr/bin/chown",
+            "-R",
+            f"{RUNNER_MANAGER_USER}:{RUNNER_MANAGER_USER}",
+            f"/home/{RUNNER_MANAGER_USER}/.ssh",
+        ]
+    )
+    execute_command(["/usr/bin/chmod", "700", f"/home/{RUNNER_MANAGER_USER}/.ssh"])
+
+
 if __name__ == "__main__":
-    main(GithubRunnerCharm)
+    ops.main(GithubRunnerCharm)

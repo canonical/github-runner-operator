@@ -1,10 +1,13 @@
 #  Copyright 2024 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
-"""Testing the RunnerManager class with OpenStackRunnerManager as CloudManager."""
+"""Testing the RunnerManager class with OpenStackRunnerManager as CloudManager.
+It is assumed that the test runs in the CI under the ubuntu user.
+"""
 
 
 import json
+import logging
 from pathlib import Path
 from secrets import token_hex
 from typing import AsyncGenerator, Iterator
@@ -26,7 +29,8 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManager,
     RunnerManagerConfig,
 )
-from github_runner_manager.metrics import events, storage
+from github_runner_manager.metrics import events
+from github_runner_manager.openstack_cloud import health_checks
 from github_runner_manager.openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCredentials,
@@ -34,6 +38,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
+from github_runner_manager.types_ import SystemUserConfig
 from github_runner_manager.types_.github import GitHubPath, parse_github_path
 from openstack.connection import Connection as OpenstackConnection
 
@@ -43,6 +48,8 @@ from tests.integration.helpers.common import (
     dispatch_workflow,
     wait_for,
 )
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope="module", name="runner_label")
@@ -58,17 +65,11 @@ def log_dir_base_path_fixture(
     with pytest.MonkeyPatch.context() as monkeypatch:
         temp_log_dir = tmp_path_factory.mktemp("log")
 
-        filesystem_base_path = temp_log_dir / "runner-fs"
-        filesystem_quarantine_path = temp_log_dir / "runner-fs-quarantine"
         metric_log_path = temp_log_dir / "metric_log"
 
-        monkeypatch.setattr(storage, "FILESYSTEM_BASE_PATH", filesystem_base_path)
-        monkeypatch.setattr(storage, "FILESYSTEM_QUARANTINE_PATH", filesystem_quarantine_path)
         monkeypatch.setattr(events, "METRICS_LOG_PATH", metric_log_path)
 
         yield {
-            "filesystem_base_path": filesystem_base_path,
-            "filesystem_quarantine_path": filesystem_quarantine_path,
             "metric_log": metric_log_path,
         }
 
@@ -157,6 +158,8 @@ async def openstack_runner_manager_fixture(
         server_config=server_config,
         runner_config=runner_config,
         service_config=service_config,
+        # we assume the test runs as ubuntu user
+        system_user_config=SystemUserConfig(user="ubuntu", group="ubuntu"),
     )
 
     yield OpenStackRunnerManager(
@@ -168,8 +171,8 @@ async def openstack_runner_manager_fixture(
 async def runner_manager_fixture(
     openstack_runner_manager: OpenStackRunnerManager,
     token: str,
-    github_path: GitHubPath,
     log_dir_base_path: dict[str, Path],
+    github_path: GitHubPath,
 ) -> AsyncGenerator[RunnerManager, None]:
     """Get RunnerManager instance.
 
@@ -217,7 +220,9 @@ def workflow_is_status(workflow: Workflow, status: str) -> bool:
     return workflow.status == status
 
 
-async def wait_runner_amount(runner_manager: RunnerManager, num: int):
+async def wait_runner_amount(
+    runner_manager: RunnerManager, num: int, timeout: int = 600, check_interval: int = 60
+) -> None:
     """Wait until the runner manager has the number of runners.
 
     A TimeoutError will be thrown if runners amount is not correct after timeout.
@@ -225,6 +230,8 @@ async def wait_runner_amount(runner_manager: RunnerManager, num: int):
     Args:
         runner_manager: The RunnerManager to check.
         num: Number of runner to check for.
+        timeout: The timeout in seconds.
+        check_interval: The interval to check in seconds.
     """
     runner_list = runner_manager.get_runners()
     assert isinstance(runner_list, tuple)
@@ -232,7 +239,11 @@ async def wait_runner_amount(runner_manager: RunnerManager, num: int):
         return
 
     # The openstack server can take sometime to fully clean up or create.
-    await wait_for(lambda: len(runner_manager.get_runners()) == num)
+    await wait_for(
+        lambda: len(runner_manager.get_runners()) == num,
+        timeout=timeout,
+        check_interval=check_interval,
+    )
 
 
 @pytest.mark.openstack
@@ -294,10 +305,12 @@ async def test_runner_normal_idle_lifecycle(
 
     # 2.
     openstack_instances = openstack_runner_manager._openstack_cloud.get_instances()
+
     assert len(openstack_instances) == 1, "Test arrange failed: Needs one runner."
     runner = openstack_instances[0]
 
-    assert openstack_runner_manager._health_check(runner)
+    ssh_conn = openstack_runner_manager._openstack_cloud.get_ssh_connection(runner)
+    assert health_checks.check_active_runner(ssh_conn=ssh_conn, instance=runner)
 
     # 3.
     runner_manager.cleanup()
@@ -393,7 +406,10 @@ async def test_runner_normal_lifecycle(
         2. The runner should be deleted. The metrics should be recorded.
     """
     metric_log_path = log_dir_base_path["metric_log"]
-    metric_log_existing_content = metric_log_path.read_text(encoding="utf-8")
+    try:
+        metric_log_existing_content = metric_log_path.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        metric_log_existing_content = ""
 
     workflow = await dispatch_workflow(
         app=None,
@@ -406,9 +422,42 @@ async def test_runner_normal_lifecycle(
     )
     await wait_for(lambda: workflow_is_status(workflow, "completed"))
 
-    issue_metrics_events = runner_manager_with_one_runner.cleanup()
-    assert issue_metrics_events[events.RunnerStart] == 1
-    assert issue_metrics_events[events.RunnerStop] == 1
+    # We encountered a race condition where runner_manager.cleanup was called while
+    # there was no runner process, but the post-metrics still had not yet been issued.
+    # Make the test more robust by waiting for the runner to go offline
+    # to reduce the race condition.
+    def is_runner_offline() -> bool:
+        """Check if the runner is offline.
+
+        Returns:
+            True if the runner is offline, False otherwise.
+        """
+        runners = runner_manager_with_one_runner.get_runners()
+        assert len(runners) == 1
+        return runners[0].github_state in (GitHubRunnerState.OFFLINE, None)
+
+    await wait_for(is_runner_offline, check_interval=60, timeout=600)
+
+    def have_metrics_been_issued() -> bool:
+        """Check if the expected metrics have been issued.
+
+        Returns:
+            True if the expected metrics have been issued, False otherwise.
+        """
+        issued_metrics_events = runner_manager_with_one_runner.cleanup()
+        logger.info("issued_metrics_events: %s", issued_metrics_events)
+        return (
+            {events.RunnerInstalled, events.RunnerStart, events.RunnerStop}
+            == set(issued_metrics_events)
+            and issued_metrics_events[events.RunnerInstalled] == 1
+            and issued_metrics_events[events.RunnerStart] == 1
+            and issued_metrics_events[events.RunnerStop] == 1
+        )
+
+    try:
+        await wait_for(have_metrics_been_issued, check_interval=60, timeout=600)
+    except TimeoutError:
+        assert False, "The expected metrics were not issued"
 
     metric_log_full_content = metric_log_path.read_text(encoding="utf-8")
     assert metric_log_full_content.startswith(
@@ -416,13 +465,17 @@ async def test_runner_normal_lifecycle(
     ), "The metric log was modified in ways other than appending"
     metric_log_new_content = metric_log_full_content[len(metric_log_existing_content) :]
     metric_logs = [json.loads(metric) for metric in metric_log_new_content.splitlines()]
-    assert (
-        len(metric_logs) == 2
-    ), "Assuming two events should be runner_start and runner_stop, modify this if new events are added"
-    assert metric_logs[0]["event"] == "runner_start"
-    assert metric_logs[0]["workflow"] == "Workflow Dispatch Wait Tests"
-    assert metric_logs[1]["event"] == "runner_stop"
+    assert len(metric_logs) == 3, (
+        "Assuming three events "
+        "should be runner_installed, runner_start and runner_stop, "
+        "modify this if new events are added"
+    )
+    assert metric_logs[0]["event"] == "runner_installed"
+    assert metric_logs[0]["flavor"] == runner_manager_with_one_runner.manager_name
+    assert metric_logs[1]["event"] == "runner_start"
     assert metric_logs[1]["workflow"] == "Workflow Dispatch Wait Tests"
+    assert metric_logs[2]["event"] == "runner_stop"
+    assert metric_logs[2]["workflow"] == "Workflow Dispatch Wait Tests"
 
     await wait_runner_amount(runner_manager_with_one_runner, 0)
 

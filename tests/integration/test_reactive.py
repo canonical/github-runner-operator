@@ -10,6 +10,7 @@ import pytest
 import pytest_asyncio
 from github import Branch, Repository
 from github.WorkflowRun import WorkflowRun
+from github_runner_manager.metrics.runner import PostJobStatus
 from github_runner_manager.reactive.consumer import JobDetails
 from juju.application import Application
 from juju.model import Model
@@ -18,6 +19,10 @@ from kombu import Connection
 from pytest_operator.plugin import OpsTest
 
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
+from tests.integration.helpers.charm_metrics import (
+    assert_events_after_reconciliation,
+    get_metrics_log,
+)
 from tests.integration.helpers.common import (
     DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
     DISPATCH_TEST_WORKFLOW_FILENAME,
@@ -59,7 +64,8 @@ async def test_reactive_mode_spawns_runner(
     """
     arrange: Place a message in the queue and dispatch a workflow.
     act: Call reconcile.
-    assert: A  runner is spawned to process the job and the message is removed from the queue.
+    assert: A runner is spawned to process the job and the message is removed from the queue.
+        The metrics are logged.
     """
     mongodb_uri = await _get_mongodb_uri(ops_test, app)
 
@@ -94,6 +100,26 @@ async def test_reactive_mode_spawns_runner(
 
     _assert_queue_is_empty(mongodb_uri, app.name)
 
+    async def _runner_installed_in_metrics_log() -> bool:
+        """Check if the runner_installed event is logged in the metrics log.
+
+        Returns:
+            True if the runner_installed event is logged, False otherwise.
+        """
+        # trigger reconcile which extracts metrics
+        await reconcile(app, app.model)
+        metrics_log = await get_metrics_log(app.units[0])
+        log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
+        events = set(map(lambda line: line.get("event"), log_lines))
+        return "runner_installed" in events
+
+    try:
+        await wait_for(_runner_installed_in_metrics_log, check_interval=30, timeout=600)
+    except TimeoutError:
+        assert False, "runner_installed event has not been logged"
+
+    await _assert_metrics_are_logged(app, github_repository)
+
 
 async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
     ops_test: OpsTest,
@@ -107,7 +133,6 @@ async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
     assert: No runner is spawned and the message is not requeued.
     """
     mongodb_uri = await _get_mongodb_uri(ops_test, app)
-
     run = await dispatch_workflow(
         app=app,
         branch=test_github_branch,
@@ -355,3 +380,24 @@ def _get_queue_size(mongodb_uri: str, queue_name: str) -> int:
     with Connection(mongodb_uri) as conn:
         with conn.SimpleQueue(queue_name) as simple_queue:
             return simple_queue.qsize()
+
+
+async def _assert_metrics_are_logged(app: Application, github_repository: Repository):
+    """Assert that all runner metrics are logged.
+
+    Args:
+        app: The juju application, used to extract the metrics log and flavor name.
+        github_repository: The GitHub repository to be included in the metrics.
+    """
+    metrics_log = await get_metrics_log(app.units[0])
+    log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
+    for metric_log in log_lines:
+        if metric_log.get("event") == "runner_installed":
+            assert metric_log.get("flavor") == app.name
+            assert metric_log.get("event") == "runner_installed"
+            assert metric_log.get("duration") >= 0
+    await assert_events_after_reconciliation(
+        app=app,
+        github_repository=github_repository,
+        post_job_status=PostJobStatus.NORMAL,
+    )

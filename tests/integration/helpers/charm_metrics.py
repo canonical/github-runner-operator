@@ -220,6 +220,7 @@ async def assert_events_after_reconciliation(
             assert metric_log.get("duration") >= 0
             assert metric_log.get("crashed_runners") == 0
             assert metric_log.get("idle_runners") >= 0
+            assert metric_log.get("active_runners") >= 0
 
 
 async def wait_for_runner_to_be_marked_offline(
