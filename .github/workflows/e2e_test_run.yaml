@@ -37,6 +37,7 @@ jobs:
     runs-on: [self-hosted, linux, "${{ inputs.runner-tag }}"]
     steps:
       - name: Hostname is set to "github-runner"
+        if: "${{ github.event.inputs.runner-virt-type == 'openstack' }}"
         run: sudo hostnamectl hostname | grep github-runner
       # Snapd can have some issues in privileged LXD containers without setting
       # security.nesting=True and this.

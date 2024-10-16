@@ -2,7 +2,7 @@
 
 <a href="../src/github_client.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `github_client`
+# <kbd>module</kbd> `github_client.py`
 GitHub API client. 
 
 Migrate to PyGithub in the future. PyGithub is still lacking some API such as remove token for runner. 
@@ -10,8 +10,6 @@ Migrate to PyGithub in the future. PyGithub is still lacking some API such as re
 
 
 ---
-
-<a href="../src/github_client.py#L33"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `GithubClient`
 GitHub API client. 
@@ -23,7 +21,7 @@ GitHub API client.
 
 <a href="../.tox/src-docs/lib/python3.10/site-packages/github_runner_manager/github_client.py#L36"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>method</kbd> `get_runner_application`
+### <kbd>function</kbd> `get_runner_application`
 
 ```python
 get_runner_application(

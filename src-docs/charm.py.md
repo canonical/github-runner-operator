@@ -2,7 +2,7 @@
 
 <a href="../src/charm.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `charm`
+# <kbd>module</kbd> `charm.py`
 Charm for creating and managing GitHub self-hosted runner instances. 
 
 **Global Variables**
@@ -22,7 +22,7 @@ Charm for creating and managing GitHub self-hosted runner instances.
 
 ---
 
-<a href="../src/charm.py#L122"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L123"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_charm_errors`
 
@@ -48,7 +48,7 @@ Catch common errors in charm.
 
 ---
 
-<a href="../src/charm.py#L163"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L164"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_action_errors`
 
@@ -74,19 +74,6 @@ Catch common errors in actions.
 
 ---
 
-<a href="../src/charm.py#L115"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>class</kbd> `ReconcileRunnersEvent`
-Event representing a periodic check to ensure runners are ok. 
-
-
-
-
-
----
-
-<a href="../src/charm.py#L201"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
 ## <kbd>class</kbd> `GithubRunnerCharm`
 Charm for managing GitHub self-hosted runners. 
 
@@ -102,9 +89,9 @@ Charm for managing GitHub self-hosted runners.
  - <b>`ram_pool_path`</b>:  The path to memdisk storage. 
  - <b>`kernel_module_path`</b>:  The path to kernel modules. 
 
-<a href="../src/charm.py#L224"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L225"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>method</kbd> `__init__`
+### <kbd>function</kbd> `__init__`
 
 ```python
 __init__(*args: Any, **kwargs: Any) → None
@@ -161,6 +148,15 @@ Shortcut for more simple access the model.
 #### <kbd>property</kbd> unit
 
 Unit that this execution is responsible for. 
+
+
+
+
+---
+
+## <kbd>class</kbd> `ReconcileRunnersEvent`
+Event representing a periodic check to ensure runners are ok. 
+
 
 
 

@@ -7,6 +7,8 @@ on:
   schedule:
     - cron: "15 4 * * 2"
 
+  workflow_dispatch:
+
 jobs:
   build-charm:
     name: Build Charm
@@ -246,12 +248,12 @@ jobs:
           # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
           GH_TOKEN: ${{ matrix.event.name == 'workflow_dispatch' && secrets.GITHUB_TOKEN || secrets.E2E_TESTING_TOKEN }}
         run: |
-          # Base any future branches on the current branch
+          # Base any future branches on the current branch.
           REF_SHA=$(gh api \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             /repos/${{ secrets.E2E_TESTING_REPO }}/git/ref/heads/$GITHUB_REF_NAME \
-            --jq .object.sha)
+            --jq .object.sha) || (echo "Failed to get REF_SHA using $GITHUB_REF_NAME" && false)
 
           # Create a temporary reference/branch
           # For push, this should trigger the "Push Event Tests" workflow automatically
