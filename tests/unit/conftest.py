@@ -101,19 +101,6 @@ def cloud_name_fixture() -> str:
     """The testing cloud name."""
     return "microstack"
 
-
-@pytest.fixture(autouse=True, name="clouds_yaml_path")
-def clouds_yaml_path(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
-    """Mocked clouds.yaml path.
-
-    Returns:
-        Path: Mocked clouds.yaml path.
-    """
-    clouds_yaml_path = tmp_path / "clouds.yaml"
-    monkeypatch.setattr("github_runner_manager.openstack_cloud.CLOUDS_YAML_PATH", clouds_yaml_path)
-    return clouds_yaml_path
-
-
 @pytest.fixture(name="clouds_yaml")
 def clouds_yaml_fixture(cloud_name: str) -> dict:
     """Testing clouds.yaml."""
