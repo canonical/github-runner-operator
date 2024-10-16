@@ -296,6 +296,7 @@ class _OpenStackAuth(TypedDict):
         project_name: The OpenStack project to connect to.
         user_domain_name: The user domain in which the user belongs to.
         username: The user to authenticate as.
+        region_name: The OpenStack region to authenticate to.
     """
 
     auth_url: str
@@ -304,6 +305,7 @@ class _OpenStackAuth(TypedDict):
     project_name: str
     user_domain_name: str
     username: str
+    region_name: str
 
 
 class _OpenStackCloud(TypedDict):
