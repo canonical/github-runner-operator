@@ -48,6 +48,8 @@ from tests.integration.helpers.lxd import LXDInstanceHelper, ensure_charm_has_ru
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
 
+IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 30 * 60
+
 # The following line is required because we are using request.getfixturevalue in conjunction
 # with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
 nest_asyncio.apply()
@@ -397,7 +399,7 @@ async def image_builder_fixture(
                 "openstack-user-name": private_endpoint_config["username"],
             },
         )
-        await model.wait_for_idle(apps=[app.name], wait_for_active=True, timeout=15 * 60)
+        await model.wait_for_idle(apps=[app.name], wait_for_active=True, timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS)
     else:
         app = model.applications["github-runner-image-builder"]
     return app
