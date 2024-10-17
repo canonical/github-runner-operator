@@ -681,7 +681,8 @@ class TestCharm(unittest.TestCase):
                         "username": secrets.token_hex(16),
                         "user_domain_name": secrets.token_hex(16),
                         "password": secrets.token_hex(16),
-                    }
+                    },
+                    "region_name": secrets.token_hex(16),
                 }
             }
         }

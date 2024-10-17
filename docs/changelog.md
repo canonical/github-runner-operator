@@ -1,4 +1,12 @@
 # Changelog
+
+### 2024-10-17
+
+- Use in-memory authentication instead of clouds.yaml on disk for OpenStack. This prevents
+the multi-processing fighting over the file handle for the clouds.yaml file in the github-runner-manager.
+
+- Fixed a bug where metrics storage for unmatched runners could not get cleaned up.
+
 ### 2024-10-11
 
 - Added support for COS integration with reactive runners.
