@@ -31,9 +31,8 @@ from github_runner_manager.manager.runner_manager import (
 )
 from github_runner_manager.metrics import events
 from github_runner_manager.openstack_cloud import health_checks
-from github_runner_manager.openstack_cloud.openstack_cloud import _CLOUDS_YAML_PATH
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
-    OpenStackCloudConfig,
+    OpenStackCredentials,
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
@@ -113,13 +112,27 @@ async def openstack_runner_manager_fixture(
     The prefix args of OpenstackRunnerManager set to app_name to let openstack_connection_fixture
     perform the cleanup of openstack resources.
     """
-    _CLOUDS_YAML_PATH.unlink(missing_ok=True)
     clouds_config = yaml.safe_load(private_endpoint_clouds_yaml)
 
-    cloud_config = OpenStackCloudConfig(
-        clouds_config=clouds_config,
-        cloud="testcloud",
-    )
+    try:
+        # Pick the first cloud in the clouds.yaml
+        cloud = tuple(clouds_config["clouds"].values())[0]
+        print("============================================")
+        print(cloud)
+        print("============================================")
+
+        credentials = OpenStackCredentials(
+            auth_url=cloud["auth"]["auth_url"],
+            project_name=cloud["auth"]["project_name"],
+            username=cloud["auth"]["username"],
+            password=cloud["auth"]["password"],
+            user_domain_name=cloud["auth"]["user_domain_name"],
+            project_domain_name=cloud["auth"]["project_domain_name"],
+            region_name=cloud["region_name"],
+        )
+    except KeyError as err:
+        raise AssertionError("Issue with the format of the clouds.yaml used in test") from err
+
     server_config = OpenStackServerConfig(
         image=openstack_test_image,
         flavor=flavor_name,
@@ -139,7 +152,7 @@ async def openstack_runner_manager_fixture(
     openstack_runner_manager_config = OpenStackRunnerManagerConfig(
         name=app_name,
         prefix=f"{app_name}-0",
-        cloud_config=cloud_config,
+        credentials=credentials,
         server_config=server_config,
         runner_config=runner_config,
         service_config=service_config,

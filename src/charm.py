@@ -41,7 +41,7 @@ from github_runner_manager.manager.runner_manager import (
 )
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
-    OpenStackCloudConfig,
+    OpenStackCredentials,
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
@@ -1346,9 +1346,15 @@ class GithubRunnerCharm(CharmBase):
             logger.warning(
                 "Multiple clouds defined in clouds.yaml. Using the first one to connect."
             )
-        cloud_config = OpenStackCloudConfig(
-            clouds_config=state.charm_config.openstack_clouds_yaml,
-            cloud=clouds[0],
+        first_cloud_config = state.charm_config.openstack_clouds_yaml["clouds"][clouds[0]]
+        credentials = OpenStackCredentials(
+            auth_url=first_cloud_config["auth"]["auth_url"],
+            project_name=first_cloud_config["auth"]["project_name"],
+            username=first_cloud_config["auth"]["username"],
+            password=first_cloud_config["auth"]["password"],
+            user_domain_name=first_cloud_config["auth"]["user_domain_name"],
+            project_domain_name=first_cloud_config["auth"]["project_domain_name"],
+            region_name=first_cloud_config["region_name"],
         )
         server_config = None
         image = state.runner_config.openstack_image
@@ -1370,7 +1376,7 @@ class GithubRunnerCharm(CharmBase):
             name=self.app.name,
             # The prefix is set to f"{application_name}-{unit number}"
             prefix=self.unit.name.replace("/", "-"),
-            cloud_config=cloud_config,
+            credentials=credentials,
             server_config=server_config,
             runner_config=runner_config,
             service_config=service_config,
