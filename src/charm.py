@@ -1346,10 +1346,6 @@ class GithubRunnerCharm(CharmBase):
             logger.warning(
                 "Multiple clouds defined in clouds.yaml. Using the first one to connect."
             )
-        # TODO: The fields will be replace with charm configuration, the clouds.yaml configuration
-        # will be removed.
-        # The clouds and the auth are assumed to be there as the `_parse_openstack_clouds_config`
-        # has use pydantic to verify the fields.
         first_cloud_config = state.charm_config.openstack_clouds_yaml["clouds"][clouds[0]]
         credentials = OpenStackCredentials(
             auth_url=first_cloud_config["auth"]["auth_url"],
