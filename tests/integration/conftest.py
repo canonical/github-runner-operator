@@ -399,7 +399,9 @@ async def image_builder_fixture(
                 "openstack-user-name": private_endpoint_config["username"],
             },
         )
-        await model.wait_for_idle(apps=[app.name], wait_for_active=True, timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS)
+        await model.wait_for_idle(
+            apps=[app.name], wait_for_active=True, timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
+        )
     else:
         app = model.applications["github-runner-image-builder"]
     return app
