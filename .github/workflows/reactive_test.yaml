@@ -4,6 +4,6 @@ jobs:
   build:
     runs-on: ["self-hosted", "stg-reactive"]
     steps:
-        - name: Hello world
+        - name: sleep for 6 minutes
           run: |
-            echo "Hello, world"
+            sleep 360
