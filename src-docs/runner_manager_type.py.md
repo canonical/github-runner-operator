@@ -2,14 +2,12 @@
 
 <a href="../src/runner_manager_type.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `runner_manager_type`
+# <kbd>module</kbd> `runner_manager_type.py`
 Types used by RunnerManager class. 
 
 
 
 ---
-
-<a href="../src/runner_manager_type.py#L19"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `LXDFlushMode`
 Strategy for flushing runners. 
@@ -32,45 +30,6 @@ During pre-job (repo-check), the runners are marked as idle and if the pre-job f
 
 ---
 
-<a href="../src/runner_manager_type.py#L44"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>class</kbd> `RunnerManagerClients`
-Clients for accessing various services. 
-
-
-
-**Attributes:**
- 
- - <b>`github`</b>:  Used to query GitHub API. 
- - <b>`jinja`</b>:  Used for templating. 
- - <b>`lxd`</b>:  Used to interact with LXD API. 
- - <b>`repo`</b>:  Used to interact with repo-policy-compliance API. 
-
-<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>method</kbd> `__init__`
-
-```python
-__init__(
-    github: GithubClient,
-    jinja: Environment,
-    lxd: LxdClient,
-    repo: RepoPolicyComplianceClient
-) → None
-```
-
-
-
-
-
-
-
-
-
----
-
-<a href="../src/runner_manager_type.py#L61"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
 ## <kbd>class</kbd> `LXDRunnerManagerConfig`
 Configuration of runner manager. 
 
@@ -88,27 +47,6 @@ Configuration of runner manager.
  - <b>`dockerhub_mirror`</b>:  URL of dockerhub mirror to use. 
  - <b>`reactive_config`</b>:  The configuration to spawn runners reactively. 
 
-<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>method</kbd> `__init__`
-
-```python
-__init__(
-    charm_state: CharmState,
-    image: str,
-    lxd_storage_path: Path,
-    path: GitHubOrg | GitHubRepo,
-    service_token: str,
-    token: str,
-    dockerhub_mirror: str | None = None,
-    reactive_config: ReactiveConfig | None = None
-) → None
-```
-
-
-
-
-
 
 ---
 
@@ -120,8 +58,6 @@ Whether metrics for the runners should be collected.
 
 
 ---
-
-<a href="../src/runner_manager_type.py#L95"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerInfo`
 Information from GitHub of a runner. 
@@ -136,17 +72,23 @@ Used as a returned type to method querying runner information.
  - <b>`status`</b>:  Status of the runner. 
  - <b>`busy`</b>:  Whether the runner has taken a job. 
 
-<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>method</kbd> `__init__`
-
-```python
-__init__(name: str, status: GitHubRunnerStatus, busy: bool) → None
-```
 
 
 
 
+---
+
+## <kbd>class</kbd> `RunnerManagerClients`
+Clients for accessing various services. 
+
+
+
+**Attributes:**
+ 
+ - <b>`github`</b>:  Used to query GitHub API. 
+ - <b>`jinja`</b>:  Used for templating. 
+ - <b>`lxd`</b>:  Used to interact with LXD API. 
+ - <b>`repo`</b>:  Used to interact with repo-policy-compliance API. 
 
 
 

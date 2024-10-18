@@ -29,5 +29,6 @@ Applicable spec: <link>
 - [ ] The documentation for charmhub is updated.
 - [ ] The PR is tagged with appropriate label (`urgent`, `trivial`, `complex`).
 - [ ] The changelog is updated with changes that affects the users of the charm.
+- [ ] The changes do not introduce any regression in code or tests related to LXD runner mode.
 
 <!-- Explanation for any unchecked items above -->

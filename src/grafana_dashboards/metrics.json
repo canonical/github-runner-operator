@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 567,
+  "id": 313,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -635,7 +635,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "This panel totals the number of idle runners reported by the charm units after a reconciliation event. Note that there may be active runners in the time between reconciliations which will not be shown in this panel.",
+      "description": "This panel totals the number of active/idle runners reported by charm units after reconciliation.  Note that this is not a real-time metric and should only be used to identify trends or to investigate problems. A given point in time shows the aggregation of the last reported values from the reconciliation. This means, for example, that if the graph shows 10 idle runners at a particular time, it doesn't mean that there are 10 idle runners at that time, just that this is the most recently reported value. Also note that runners who are reported as idle at the time of reconciliation may become active immediately afterwards. And active runners may become offline/inactive.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -702,7 +702,7 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": false
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -721,9 +721,21 @@
           "legendFormat": "Idle",
           "queryType": "range",
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",active_runners=\"active_runners\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap active_runners[60m]))",
+          "hide": false,
+          "legendFormat": "Active",
+          "queryType": "range",
+          "refId": "A"
         }
       ],
-      "title": "Idle Runners after Reconciliation",
+      "title": "Runners after Reconciliation",
       "transformations": [],
       "type": "timeseries"
     },
@@ -958,7 +970,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "1 / sum by (flavor) (rate({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", flavor=\"flavor\" | event=\"reconciliation\" [$__range]))",
+          "expr": "(1 / sum by(flavor)(rate({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"reconciliation\"[$__range])))",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "",
           "queryType": "instant",
@@ -1028,8 +1040,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2045,6 +2056,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics",
-  "version": 15,
+  "version": 16,
   "weekStart": ""
 }
