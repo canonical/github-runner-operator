@@ -124,8 +124,8 @@ def _write_config(logrotate_config: LogrotateConfig) -> None:
 {logrotate_config.frequency}
 rotate {logrotate_config.rotate}
 missingok
-{"notifempty" if logrotate_config.notifempty else ""}
-{"create" if logrotate_config.create else ""}
+{"notifempty" if logrotate_config.notifempty else "ifempty"}
+{"create" if logrotate_config.create else "nocreate"}
 }}
 """,
         encoding="utf-8",
