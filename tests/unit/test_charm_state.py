@@ -8,7 +8,6 @@ import typing
 from pathlib import Path
 from unittest.mock import MagicMock
 
-import github_runner_manager.openstack_cloud
 import pytest
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
@@ -297,7 +296,7 @@ clouds:
             auth_url: 'http://keystone.openstack.svc.cluster.local:5000/v3'
             user_domain_name: 'Default'
             project_domain_name: 'Default'
-            region_name: 'RegionOne'
+        region_name: 'RegionOne'
     """
 
 
@@ -314,7 +313,7 @@ clouds: asdfsadf
             auth_url: 'http://keystone.openstack.svc.cluster.local:5000/v3'
             user_domain_name: 'Default'
             project_domain_name: 'Default'
-            region_name: 'RegionOne'
+        region_name: 'RegionOne'
     """
 
 
@@ -353,26 +352,6 @@ def test_parse_openstack_clouds_config_invalid_yaml_list():
     """
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = "-1\n-2\n-3"
-
-    with pytest.raises(CharmConfigInvalidError):
-        CharmConfig._parse_openstack_clouds_config(mock_charm)
-
-
-def test_parse_openstack_clouds_initialize_fail(
-    valid_yaml_config: str, monkeypatch: pytest.MonkeyPatch
-):
-    """
-    arrange: Given monkeypatched openstack_cloud.initialize that raises an error.
-    act: Call _parse_openstack_clouds_config method with the mock CharmBase instance.
-    assert: Verify that the method raises CharmConfigInvalidError.
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = valid_yaml_config
-    monkeypatch.setattr(
-        github_runner_manager.openstack_cloud,
-        "initialize",
-        MagicMock(side_effect=github_runner_manager.openstack_cloud.OpenStackInvalidConfigError),
-    )
 
     with pytest.raises(CharmConfigInvalidError):
         CharmConfig._parse_openstack_clouds_config(mock_charm)
@@ -488,7 +467,8 @@ def test_charm_config_from_charm_valid():
                                 "project_name": "test-project-name",
                                 "user_domain_name": "Default",
                                 "username": "test-user-name",
-                            }
+                            },
+                            "region_name": secrets.token_hex(16),
                         }
                     }
                 }

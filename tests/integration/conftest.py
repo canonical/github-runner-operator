@@ -48,6 +48,8 @@ from tests.integration.helpers.lxd import LXDInstanceHelper, ensure_charm_has_ru
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
 
+IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 30 * 60
+
 # The following line is required because we are using request.getfixturevalue in conjunction
 # with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
 nest_asyncio.apply()
@@ -85,7 +87,12 @@ def existing_app(pytestconfig: pytest.Config) -> Optional[str]:
 def app_name(existing_app: Optional[str]) -> str:
     """Randomized application name."""
     # Randomized app name to avoid collision when runner is connecting to GitHub.
-    return existing_app or f"test-{secrets.token_hex(4)}"
+    # The char after the hyphen has to be a letter.
+    return (
+        existing_app
+        or f"test-{random.choice(string.ascii_lowercase)}"
+        f"{''.join(random.choices(string.ascii_lowercase + string.digits, k=7))}"
+    )
 
 
 @pytest.fixture(scope="module", name="openstack_clouds_yaml")
@@ -366,30 +373,37 @@ async def app_no_runner(
 
 @pytest_asyncio.fixture(scope="module", name="image_builder")
 async def image_builder_fixture(
-    model: Model, private_endpoint_config: PrivateEndpointConfigs | None
+    model: Model,
+    private_endpoint_config: PrivateEndpointConfigs | None,
+    existing_app: Optional[str],
 ):
     """The image builder application for OpenStack runners."""
     if not private_endpoint_config:
         raise ValueError("Private endpoints are required for testing OpenStack runners.")
-    app = await model.deploy(
-        "github-runner-image-builder",
-        channel="latest/edge",
-        revision=2,
-        constraints="cores=2 mem=16G root-disk=20G virt-type=virtual-machine",
-        config={
-            "app-channel": "edge",
-            "build-interval": "12",
-            "revision-history-limit": "5",
-            "openstack-auth-url": private_endpoint_config["auth_url"],
-            # Bandit thinks this is a hardcoded password
-            "openstack-password": private_endpoint_config["password"],  # nosec: B105
-            "openstack-project-domain-name": private_endpoint_config["project_domain_name"],
-            "openstack-project-name": private_endpoint_config["project_name"],
-            "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
-            "openstack-user-name": private_endpoint_config["username"],
-        },
-    )
-    await model.wait_for_idle(apps=[app.name], wait_for_active=True, timeout=15 * 60)
+    if not existing_app:
+        app = await model.deploy(
+            "github-runner-image-builder",
+            channel="latest/edge",
+            revision=2,
+            constraints="cores=2 mem=16G root-disk=20G virt-type=virtual-machine",
+            config={
+                "app-channel": "edge",
+                "build-interval": "12",
+                "revision-history-limit": "5",
+                "openstack-auth-url": private_endpoint_config["auth_url"],
+                # Bandit thinks this is a hardcoded password
+                "openstack-password": private_endpoint_config["password"],  # nosec: B105
+                "openstack-project-domain-name": private_endpoint_config["project_domain_name"],
+                "openstack-project-name": private_endpoint_config["project_name"],
+                "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
+                "openstack-user-name": private_endpoint_config["username"],
+            },
+        )
+        await model.wait_for_idle(
+            apps=[app.name], wait_for_active=True, timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
+        )
+    else:
+        app = model.applications["github-runner-image-builder"]
     return app
 
 
@@ -769,7 +783,6 @@ async def app_for_reactive_fixture(
     if not existing_app:
         await model.relate(f"{app_openstack_runner.name}:mongodb", f"{mongodb.name}:database")
 
-    await app_openstack_runner.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await model.wait_for_idle(apps=[app_openstack_runner.name, mongodb.name], status=ACTIVE)
 
     return app_openstack_runner
