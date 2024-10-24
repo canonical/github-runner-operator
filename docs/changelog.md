@@ -1,5 +1,9 @@
 # Changelog
 
+### 2024-10-23
+
+- Fixed the wrong dateformat usage in the server uniqueness check.
+
 ### 2024-10-21
 
 - Fixed bug with charm upgrade due to wrong ownership of reactive runner log directory.
