@@ -21,7 +21,8 @@ from pytest_operator.plugin import OpsTest
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.charm_metrics import (
     assert_events_after_reconciliation,
-    get_metrics_log, clear_metrics_log,
+    clear_metrics_log,
+    get_metrics_log,
 )
 from tests.integration.helpers.common import (
     DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
