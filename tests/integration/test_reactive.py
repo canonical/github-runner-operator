@@ -400,4 +400,5 @@ async def _assert_metrics_are_logged(app: Application, github_repository: Reposi
         app=app,
         github_repository=github_repository,
         post_job_status=PostJobStatus.NORMAL,
+        reactive_mode=True,
     )
