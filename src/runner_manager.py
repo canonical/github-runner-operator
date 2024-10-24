@@ -362,6 +362,7 @@ class LXDRunnerManager:
         metric_stats: IssuedMetricEventsStats,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
+        expected_quantity: int,
     ) -> None:
         """Issue reconciliation metric.
 
@@ -369,6 +370,7 @@ class LXDRunnerManager:
             metric_stats: The stats of issued metric events.
             reconciliation_start_ts: The timestamp of when reconciliation started.
             reconciliation_end_ts: The timestamp of when reconciliation ended.
+            expected_quantity: The expected quantity of runners.
         """
         runners = self._get_runners()
         runner_states = self._get_runner_health_states()
@@ -398,6 +400,7 @@ class LXDRunnerManager:
                     - metric_stats.get(metric_events.RunnerStop, 0),
                     idle_runners=idle_online_count + idle_offline_count,
                     active_runners=active_count,
+                    expected_runners=expected_quantity,
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )
             )
@@ -582,6 +585,7 @@ class LXDRunnerManager:
                 metric_stats=metric_stats,
                 reconciliation_start_ts=start_ts,
                 reconciliation_end_ts=end_ts,
+                expected_quantity=quantity,
             )
         return delta
 
