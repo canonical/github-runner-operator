@@ -449,6 +449,7 @@ def test_reconcile_issues_reconciliation_metric_event(
             crashed_runners=1,
             idle_runners=2,
             active_runners=1,
+            expected_runners=3,
             duration=0,
         )
     )
