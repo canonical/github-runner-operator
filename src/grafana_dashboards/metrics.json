@@ -176,7 +176,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "Shows the number of available and total expected runners per application. Note: Available equals idle after reconciliation and is not a real-time metric as it is only updated after each reconciliation interval for each unit.\n\nNote also: There is no expected number of runners for runners in reactive mode.",
+      "description": "Shows the number of available runners per application. Note: Available equals idle after reconciliation and is not a real-time metric as it is only updated after each reconciliation interval for each unit.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -235,12 +235,7 @@
               "id": "byName",
               "options": "Value #B"
             },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Expected"
-              }
-            ]
+            "properties": []
           }
         ]
       },
@@ -264,7 +259,7 @@
         },
         "orientation": "horizontal",
         "showValue": "always",
-        "stacking": "normal",
+        "stacking": "none",
         "tooltip": {
           "mode": "single",
           "sort": "none"
@@ -284,18 +279,6 @@
           "legendFormat": "",
           "queryType": "instant",
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "code",
-          "expr": "sum by(flavor)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",expected_runners=\"expected_runners\",flavor=\"flavor\" | __error__=\"\" | event=\"reconciliation\" | unwrap expected_runners[$__range]))",
-          "hide": false,
-          "legendFormat": "",
-          "queryType": "instant",
-          "refId": "B"
         }
       ],
       "title": "Available Runners",
