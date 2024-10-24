@@ -1,5 +1,9 @@
 # Changelog
 
+### 2024-10-24
+
+- Added documentation for the reactive mode (howto and mongodb integration references).
+
 ### 2024-10-23
 
 - Fixed the wrong dateformat usage in the server uniqueness check.
