@@ -21,7 +21,7 @@ from pytest_operator.plugin import OpsTest
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.charm_metrics import (
     assert_events_after_reconciliation,
-    get_metrics_log,
+    get_metrics_log, clear_metrics_log,
 )
 from tests.integration.helpers.common import (
     DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
@@ -47,6 +47,7 @@ async def app_fixture(
 
     await app_for_reactive.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await reconcile(app_for_reactive, app_for_reactive.model)
+    await clear_metrics_log(app_for_reactive.units[0])
 
     yield app_for_reactive
 
