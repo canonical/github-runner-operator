@@ -438,8 +438,9 @@ def test_reconcile_issues_reconciliation_metric_event(
         unhealthy=(),
     )
 
+    quantity = random.randint(0, 5)
     runner_manager.reconcile(
-        quantity=random.randint(0, 5), resources=VirtualMachineResources(2, "7GiB", "10Gib")
+        quantity=quantity, resources=VirtualMachineResources(2, "7GiB", "10Gib")
     )
 
     issue_event_mock.assert_any_call(
@@ -449,7 +450,7 @@ def test_reconcile_issues_reconciliation_metric_event(
             crashed_runners=1,
             idle_runners=2,
             active_runners=1,
-            expected_runners=3,
+            expected_runners=quantity,
             duration=0,
         )
     )
