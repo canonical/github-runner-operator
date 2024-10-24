@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 313,
+  "id": 317,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -176,7 +176,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "Shows the number of available runners per application. Note: Available equals idle after reconciliation and is not a real-time metric as it is only updated after each reconciliation interval for each unit.",
+      "description": "Shows the number of available and total expected runners per application. Note: Available equals idle after reconciliation and is not a real-time metric as it is only updated after each reconciliation interval for each unit.\n\nNote also: There is no expected number of runners for runners in reactive mode.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -202,7 +202,6 @@
               "mode": "off"
             }
           },
-          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -216,10 +215,34 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "short"
+          }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Available"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Expected"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -241,7 +264,7 @@
         },
         "orientation": "horizontal",
         "showValue": "always",
-        "stacking": "none",
+        "stacking": "normal",
         "tooltip": {
           "mode": "single",
           "sort": "none"
@@ -261,6 +284,18 @@
           "legendFormat": "",
           "queryType": "instant",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(flavor)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",expected_runners=\"expected_runners\",flavor=\"flavor\" | __error__=\"\" | event=\"reconciliation\" | unwrap expected_runners[$__range]))",
+          "hide": false,
+          "legendFormat": "",
+          "queryType": "instant",
+          "refId": "B"
         }
       ],
       "title": "Available Runners",
@@ -635,7 +670,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "This panel totals the number of active/idle runners reported by charm units after reconciliation.  Note that this is not a real-time metric and should only be used to identify trends or to investigate problems. A given point in time shows the aggregation of the last reported values from the reconciliation. This means, for example, that if the graph shows 10 idle runners at a particular time, it doesn't mean that there are 10 idle runners at that time, just that this is the most recently reported value. Also note that runners who are reported as idle at the time of reconciliation may become active immediately afterwards. And active runners may become offline/inactive.",
+      "description": "This panel totals the number of active/idle/total expected runners reported by charm units after reconciliation.  Note that this is not a real-time metric and should only be used to identify trends or to investigate problems. A given point in time shows the aggregation of the last reported values from the reconciliation. This means, for example, that if the graph shows 10 idle runners at a particular time, it doesn't mean that there are 10 idle runners at that time, just that this is the most recently reported value. Also note that runners who are reported as idle at the time of reconciliation may become active immediately afterwards. And active runners may become offline/inactive.\n\nThere is no expected number of runners for runners in reactive mode.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -733,6 +768,18 @@
           "legendFormat": "Active",
           "queryType": "range",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",expected_runners=\"expected_runners\",flavor=\"flavor\" | __error__=\"\" |  event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap expected_runners[60m]))",
+          "hide": false,
+          "legendFormat": "Expected",
+          "queryType": "range",
+          "refId": "B"
         }
       ],
       "title": "Runners after Reconciliation",
@@ -1040,7 +1087,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2056,6 +2104,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics",
-  "version": 16,
+  "version": 17,
   "weekStart": ""
 }
