@@ -12,7 +12,7 @@ The "GitHub Self-Hosted Runner Metrics" metrics dashboard presents the following
 
 - General: Displays general metrics about the charm and runners, such as:
   - Lifecycle counters: Tracks the frequency of Runner initialisation, start, stop, and crash events.
-  - Available runners: A horizontal bar graph showing the number of runners available during the last reconciliation event. Note: This data is updated after each reconciliation event and is not real-time.
+  - Available runners: A horizontal bar graph showing the number of runners available (and max expected) during the last reconciliation event. Note: This data is updated after each reconciliation event and is not real-time. 
   - Runners after reconciliation: A time series graph showing the number of runners marked as active/idle and the number of expected runners during the last reconciliation event over time. Note: This data is updated after each reconciliation event and is not real-time.
   - Duration observations: Each data point aggregates the last hour and shows the 50th, 90th, 95th percentile and maximum durations for:
       - Runner installation
