@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 317,
+  "id": 319,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -229,13 +229,6 @@
                 "value": "Available"
               }
             ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Value #B"
-            },
-            "properties": []
           }
         ]
       },
@@ -653,7 +646,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "This panel totals the number of active/idle/total expected runners reported by charm units after reconciliation.  Note that this is not a real-time metric and should only be used to identify trends or to investigate problems. A given point in time shows the aggregation of the last reported values from the reconciliation. This means, for example, that if the graph shows 10 idle runners at a particular time, it doesn't mean that there are 10 idle runners at that time, just that this is the most recently reported value. Also note that runners who are reported as idle at the time of reconciliation may become active immediately afterwards. And active runners may become offline/inactive.\n\nThere is no expected number of runners for runners in reactive mode.",
+      "description": "This panel totals the number of active/idle/total expected runners reported by charm units after reconciliation.  Note that this is not a real-time metric and should only be used to identify trends or to investigate problems. A given point in time shows the aggregation of the last reported values from the reconciliation. This means, for example, that if the graph shows 10 idle runners at a particular time, it doesn't mean that there are 10 idle runners at that time, just that this is the most recently reported value. Also note that runners who are reported as idle at the time of reconciliation may become active immediately afterwards. And active runners may become offline/inactive.\n\nThere is no expected number of runners for runners in reactive mode, which means that the total number of idle + active runners could be greater than expected if reactive applications are not filtered out in this view.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -758,7 +751,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",expected_runners=\"expected_runners\",flavor=\"flavor\" | __error__=\"\" |  event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap expected_runners[60m]))",
+          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",expected_runners=\"expected_runners\",flavor=\"flavor\" | __error__=\"\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap expected_runners[60m]))",
           "hide": false,
           "legendFormat": "Expected",
           "queryType": "range",
@@ -1070,8 +1063,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
