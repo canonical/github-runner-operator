@@ -7,6 +7,7 @@
 # pylint: disable=too-many-lines
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
+from github_runner_manager.errors import ReconcileError
 
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
@@ -527,8 +528,14 @@ class GithubRunnerCharm(CharmBase):
             if not self._get_set_image_ready_status():
                 return
             runner_scaler = self._get_runner_scaler(state)
-            runner_scaler.reconcile(state.runner_config.virtual_machines)
-            self.unit.status = ActiveStatus()
+            try:
+                runner_scaler.reconcile(state.runner_config.virtual_machines)
+            except ReconcileError:
+
+                logger.exception("Failed to reconcile runners")
+                self.unit.status = MaintenanceStatus("Failed to reconcile runners")
+            else:
+                self.unit.status = ActiveStatus()
             return
 
         runner_manager = self._get_runner_manager(state)
@@ -668,9 +675,14 @@ class GithubRunnerCharm(CharmBase):
             if state.charm_config.token != self._stored.token:
                 runner_scaler = self._get_runner_scaler(state)
                 runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
-                runner_scaler.reconcile(state.runner_config.virtual_machines)
+                try:
+                    runner_scaler.reconcile(state.runner_config.virtual_machines)
+                except ReconcileError:
+                    logger.exception("Failed to reconcile runners")
+                    self.unit.status = MaintenanceStatus("Failed to reconcile runners")
+                else:
+                    self.unit.status = ActiveStatus()
                 # TODO: 2024-04-12: Flush on token changes.
-                self.unit.status = ActiveStatus()
             return
 
         self._refresh_firewall(state)
@@ -768,8 +780,13 @@ class GithubRunnerCharm(CharmBase):
             if not self._get_set_image_ready_status():
                 return
             runner_scaler = self._get_runner_scaler(state)
-            runner_scaler.reconcile(state.runner_config.virtual_machines)
-            self.unit.status = ActiveStatus()
+            try:
+                runner_scaler.reconcile(state.runner_config.virtual_machines)
+            except ReconcileError:
+                logger.exception("Failed to reconcile runners")
+                self.unit.status = MaintenanceStatus("Failed to reconcile runners")
+            else:
+                self.unit.status = ActiveStatus()
             return
 
         runner_manager = self._get_runner_manager(state)
@@ -859,7 +876,14 @@ class GithubRunnerCharm(CharmBase):
                 return
             runner_scaler = self._get_runner_scaler(state)
 
-            delta = runner_scaler.reconcile(state.runner_config.virtual_machines)
+            try:
+                delta = runner_scaler.reconcile(state.runner_config.virtual_machines)
+            except ReconcileError:
+                logger.exception("Failed to reconcile runners")
+                self.unit.status = MaintenanceStatus("Failed to reconcile runners")
+                event.fail("Failed to reconcile runners")
+                return
+
             self.unit.status = ActiveStatus()
             event.set_results({"delta": {"virtual-machines": delta}})
             return
@@ -893,7 +917,12 @@ class GithubRunnerCharm(CharmBase):
             runner_scaler = self._get_runner_scaler(state)
             flushed = runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
             logger.info("Flushed %s runners", flushed)
-            delta = runner_scaler.reconcile(state.runner_config.virtual_machines)
+            try:
+                delta = runner_scaler.reconcile(state.runner_config.virtual_machines)
+            except ReconcileError:
+                logger.exception("Failed to reconcile runners")
+                event.fail("Failed to reconcile runners")
+                return
             event.set_results({"delta": {"virtual-machines": delta}})
             return
 
@@ -1195,17 +1224,23 @@ class GithubRunnerCharm(CharmBase):
             runner_scaler = self._get_runner_scaler(state)
             # TODO: 2024-04-12: Should be flush idle.
             runner_scaler.flush()
-            runner_scaler.reconcile(state.runner_config.virtual_machines)
+            try:
+                runner_scaler.reconcile(state.runner_config.virtual_machines)
+            except ReconcileError:
+                logger.exception("Failed to reconcile runners")
             return
 
         self._refresh_firewall(state)
         runner_manager = self._get_runner_manager(state)
         runner_manager.flush(LXDFlushMode.FLUSH_IDLE)
-        self._reconcile_runners(
-            runner_manager,
-            state.runner_config.virtual_machines,
-            state.runner_config.virtual_machine_resources,
-        )
+        try:
+            self._reconcile_runners(
+                runner_manager,
+                state.runner_config.virtual_machines,
+                state.runner_config.virtual_machine_resources,
+            )
+        except ReconcileError:
+            logger.exception("Failed to reconcile runners")
 
     @catch_charm_errors
     def _on_image_relation_joined(self, _: ops.RelationJoinedEvent) -> None:
@@ -1240,9 +1275,13 @@ class GithubRunnerCharm(CharmBase):
 
         runner_scaler = self._get_runner_scaler(state)
         runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
-        runner_scaler.reconcile(state.runner_config.virtual_machines)
-        self.unit.status = ActiveStatus()
-        return
+        try:
+            runner_scaler.reconcile(state.runner_config.virtual_machines)
+        except ReconcileError:
+            logger.exception("Failed to reconcile runners")
+            self.unit.status = MaintenanceStatus("Failed to reconcile runners")
+        else:
+            self.unit.status = ActiveStatus()
 
     def _get_set_image_ready_status(self) -> bool:
         """Check if image is ready for Openstack and charm status accordingly.
