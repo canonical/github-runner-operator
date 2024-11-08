@@ -18,7 +18,6 @@ from github_runner_manager.types_.github import GitHubOrg, GitHubRepo, GitHubRun
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
 
-import charm
 from charm import GithubRunnerCharm, catch_action_errors, catch_charm_errors
 from charm_state import (
     GROUP_CONFIG_NAME,

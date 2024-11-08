@@ -7,8 +7,6 @@
 # pylint: disable=too-many-lines
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
-from github_runner_manager.errors import ReconcileError
-
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
@@ -31,6 +29,7 @@ import jinja2
 import ops
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
+from github_runner_manager.errors import ReconcileError
 from github_runner_manager.manager.cloud_runner_manager import (
     GitHubRunnerConfig,
     SupportServiceConfig,
