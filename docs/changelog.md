@@ -1,5 +1,9 @@
 # Changelog
 
+### 2024-11-08
+
+- Catch ReconcileError and set appropriate MaintenanceStatus.
+
 ### 2024-10-24
 
 - Add "expected_runners" to reconciliation metric.
