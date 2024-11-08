@@ -1221,7 +1221,6 @@ class GithubRunnerCharm(CharmBase):
             if not self._get_set_image_ready_status():
                 return
             runner_scaler = self._get_runner_scaler(state)
-            # TODO: 2024-04-12: Should be flush idle.
             runner_scaler.flush()
             try:
                 runner_scaler.reconcile(state.runner_config.virtual_machines)
