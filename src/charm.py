@@ -1001,7 +1001,6 @@ class GithubRunnerCharm(CharmBase):
             runner_scaler.reconcile(num)
         except ReconcileError:
             logger.exception("Failed to reconcile runners")
-            # TODO: add review comment: is MaintenanceStatus the right status for this purpose?
             self.unit.status = MaintenanceStatus("Failed to reconcile runners")
         else:
             self.unit.status = ActiveStatus()
