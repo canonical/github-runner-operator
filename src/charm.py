@@ -531,7 +531,6 @@ class GithubRunnerCharm(CharmBase):
             try:
                 runner_scaler.reconcile(state.runner_config.virtual_machines)
             except ReconcileError:
-
                 logger.exception("Failed to reconcile runners")
                 self.unit.status = MaintenanceStatus("Failed to reconcile runners")
             else:
@@ -547,7 +546,7 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Starting runners")
         try:
             runner_manager.flush(LXDFlushMode.FLUSH_IDLE)
-            self._reconcile_runners(
+            self._reconcile_lxd_runners(
                 runner_manager,
                 state.runner_config.virtual_machines,
                 state.runner_config.virtual_machine_resources,
@@ -630,7 +629,7 @@ class GithubRunnerCharm(CharmBase):
         runner_manager = self._get_runner_manager(state)
         logger.info("Flushing the runners...")
         runner_manager.flush(LXDFlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
-        self._reconcile_runners(
+        self._reconcile_lxd_runners(
             runner_manager,
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
@@ -691,7 +690,7 @@ class GithubRunnerCharm(CharmBase):
         if state.charm_config.token != self._stored.token:
             runner_manager.flush(LXDFlushMode.FORCE_FLUSH_WAIT_REPO_CHECK)
             self._stored.token = state.charm_config.token
-        self._reconcile_runners(
+        self._reconcile_lxd_runners(
             runner_manager,
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
@@ -799,7 +798,7 @@ class GithubRunnerCharm(CharmBase):
         if all(not info.busy for info in runner_info):
             self._update_kernel(now=True)
 
-        self._reconcile_runners(
+        self._reconcile_lxd_runners(
             runner_manager,
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
@@ -894,7 +893,7 @@ class GithubRunnerCharm(CharmBase):
             runner_manager, state.charm_config.token, state.proxy_config
         )
 
-        delta = self._reconcile_runners(
+        delta = self._reconcile_lxd_runners(
             runner_manager,
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
@@ -929,7 +928,7 @@ class GithubRunnerCharm(CharmBase):
         runner_manager = self._get_runner_manager(state)
 
         runner_manager.flush(LXDFlushMode.FLUSH_BUSY_WAIT_REPO_CHECK)
-        delta = self._reconcile_runners(
+        delta = self._reconcile_lxd_runners(
             runner_manager,
             state.runner_config.virtual_machines,
             state.runner_config.virtual_machine_resources,
@@ -975,10 +974,10 @@ class GithubRunnerCharm(CharmBase):
         runner_manager = self._get_runner_manager(state)
         runner_manager.flush(LXDFlushMode.FLUSH_BUSY)
 
-    def _reconcile_runners(
+    def _reconcile_lxd_runners(
         self, runner_manager: LXDRunnerManager, num: int, resources: VirtualMachineResources
     ) -> Dict[str, Any]:
-        """Reconcile the current runners state and intended runner state.
+        """Reconcile the current runners state and intended runner state for LXD mode.
 
         Args:
             runner_manager: For querying and managing the runner state.
@@ -1233,14 +1232,11 @@ class GithubRunnerCharm(CharmBase):
         self._refresh_firewall(state)
         runner_manager = self._get_runner_manager(state)
         runner_manager.flush(LXDFlushMode.FLUSH_IDLE)
-        try:
-            self._reconcile_runners(
-                runner_manager,
-                state.runner_config.virtual_machines,
-                state.runner_config.virtual_machine_resources,
-            )
-        except ReconcileError:
-            logger.exception("Failed to reconcile runners")
+        self._reconcile_lxd_runners(
+            runner_manager,
+            state.runner_config.virtual_machines,
+            state.runner_config.virtual_machine_resources,
+        )
 
     @catch_charm_errors
     def _on_image_relation_joined(self, _: ops.RelationJoinedEvent) -> None:
