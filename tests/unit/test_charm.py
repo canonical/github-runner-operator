@@ -12,10 +12,13 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 import yaml
+from github_runner_manager.errors import ReconcileError
+from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.types_.github import GitHubOrg, GitHubRepo, GitHubRunnerStatus
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
 
+import charm
 from charm import GithubRunnerCharm, catch_action_errors, catch_charm_errors
 from charm_state import (
     GROUP_CONFIG_NAME,
@@ -296,6 +299,25 @@ def test_on_flush_runners_action_fail(harness: Harness, runner_binary_path: Path
     )
 
 
+def test_on_flush_runners_reconcile_error_fail(harness: Harness):
+    """
+    arrange: Set up charm with Openstack mode and ReconcileError.
+    act: Run flush runner action.
+    assert: Action fails with generic message.
+    """
+    state_mock = MagicMock()
+    state_mock.instance_type = InstanceType.OPENSTACK
+    harness.charm._setup_state = MagicMock(return_value=state_mock)
+
+    runner_scaler_mock = MagicMock(spec=RunnerScaler)
+    runner_scaler_mock.reconcile.side_effect = ReconcileError("mock error")
+    harness.charm._get_runner_scaler = MagicMock(return_value=runner_scaler_mock)
+
+    mock_event = MagicMock()
+    harness.charm._on_flush_runners_action(mock_event)
+    mock_event.fail.assert_called_with("Failed to reconcile runners")
+
+
 def test_on_flush_runners_action_success(harness: Harness, runner_binary_path: Path):
     """
     arrange: Set up charm without runner binary downloaded.
@@ -306,6 +328,58 @@ def test_on_flush_runners_action_success(harness: Harness, runner_binary_path: P
     runner_binary_path.touch()
     harness.charm._on_flush_runners_action(mock_event)
     mock_event.set_results.assert_called()
+
+
+def test_on_reconcile_runners_action_reconcile_error_fail(
+    harness: Harness, monkeypatch: pytest.MonkeyPatch
+):
+    """
+    arrange: Set up charm with Openstack mode, ready image, and ReconcileError.
+    act: Run reconcile runners action.
+    assert: Action fails with generic message.
+    """
+    state_mock = MagicMock()
+    state_mock.instance_type = InstanceType.OPENSTACK
+    harness.charm._setup_state = MagicMock(return_value=state_mock)
+
+    runner_scaler_mock = MagicMock(spec=RunnerScaler)
+    runner_scaler_mock.reconcile.side_effect = ReconcileError("mock error")
+    harness.charm._get_runner_scaler = MagicMock(return_value=runner_scaler_mock)
+    monkeypatch.setattr(
+        OpenstackImage,
+        "from_charm",
+        MagicMock(return_value=OpenstackImage(id="test", tags=["test"])),
+    )
+
+    mock_event = MagicMock()
+    harness.charm._on_reconcile_runners_action(mock_event)
+    mock_event.fail.assert_called_with("Failed to reconcile runners")
+
+
+def test_on_reconcile_runners_reconcile_error(harness: Harness, monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: Set up charm with Openstack mode, ready image, and ReconcileError.
+    act: Trigger reconcile_runners event.
+    assert: Unit goes into MaintenanceStatus with error message.
+    """
+    state_mock = MagicMock()
+    state_mock.instance_type = InstanceType.OPENSTACK
+    harness.charm._setup_state = MagicMock(return_value=state_mock)
+
+    runner_scaler_mock = MagicMock(spec=RunnerScaler)
+    runner_scaler_mock.reconcile.side_effect = ReconcileError("mock error")
+    harness.charm._get_runner_scaler = MagicMock(return_value=runner_scaler_mock)
+    monkeypatch.setattr(
+        OpenstackImage,
+        "from_charm",
+        MagicMock(return_value=OpenstackImage(id="test", tags=["test"])),
+    )
+
+    mock_event = MagicMock()
+    harness.charm._on_reconcile_runners(mock_event)
+
+    assert harness.charm.unit.status.name == MaintenanceStatus.name
+    assert harness.charm.unit.status.message == "Failed to reconcile runners"
 
 
 @pytest.mark.parametrize(
@@ -653,7 +727,7 @@ class TestCharm(unittest.TestCase):
         harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
         harness.begin()
 
-        harness.charm._reconcile_runners = raise_runner_error
+        harness.charm._reconcile_lxd_runners = raise_runner_error
         harness.charm.on.start.emit()
         assert harness.charm.unit.status == MaintenanceStatus(
             "Failed to start runners: mock error"
