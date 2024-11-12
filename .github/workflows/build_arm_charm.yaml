@@ -11,7 +11,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         repository: 'canonical/github-runner-operator'
-        ref: 'main'
+        ref: 'b9dce2243310ef2c627fe7244b62824e5d44b541'
     - name: Install dependencies
       run: |
           sudo snap install charmcraft --classic
