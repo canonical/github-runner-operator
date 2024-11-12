@@ -6,7 +6,7 @@
 
 ## Description
 
-This machine charm creates [self-hosted runners for running GitHub Actions](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners). Each unit of this charm will start a configurable number of LXD based containers and virtual
+This machine charm creates [self-hosted runners for running GitHub Actions](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners). Each unit of this charm will start a configurable number of OpenStack or LXD based containers and virtual
 machines to host them. Every runner performs only one job, after which it unregisters from GitHub to ensure that each job runs in
 a clean environment.
 

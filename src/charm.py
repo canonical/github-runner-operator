@@ -7,29 +7,11 @@
 # pylint: disable=too-many-lines
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
-from github_runner_manager.manager.cloud_runner_manager import (
-    GitHubRunnerConfig,
-    SupportServiceConfig,
-)
-from github_runner_manager.manager.runner_manager import (
-    FlushMode,
-    RunnerManager,
-    RunnerManagerConfig,
-)
-from github_runner_manager.manager.runner_scaler import RunnerScaler
-from github_runner_manager.openstack_cloud.openstack_runner_manager import (
-    OpenStackCloudConfig,
-    OpenStackRunnerManager,
-    OpenStackRunnerManagerConfig,
-    OpenStackServerConfig,
-)
-from github_runner_manager.reactive.types_ import QueueConfig as ReactiveQueueConfig
-from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
-from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus, parse_github_path
 
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
+# It is important that this is run before importation of any other modules.
 # pylint: disable=wrong-import-position,wrong-import-order
 # TODO: 2024-07-17 remove this once the issue has been fixed
 remove_residual_venv_dirs()
@@ -48,6 +30,26 @@ import jinja2
 import ops
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
+from github_runner_manager.manager.cloud_runner_manager import (
+    GitHubRunnerConfig,
+    SupportServiceConfig,
+)
+from github_runner_manager.manager.runner_manager import (
+    FlushMode,
+    RunnerManager,
+    RunnerManagerConfig,
+)
+from github_runner_manager.manager.runner_scaler import RunnerScaler
+from github_runner_manager.openstack_cloud.openstack_runner_manager import (
+    OpenStackCredentials,
+    OpenStackRunnerManager,
+    OpenStackRunnerManagerConfig,
+    OpenStackServerConfig,
+)
+from github_runner_manager.reactive.types_ import QueueConfig as ReactiveQueueConfig
+from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
+from github_runner_manager.types_ import SystemUserConfig
+from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus, parse_github_path
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -60,7 +62,6 @@ from ops.charm import (
     UpgradeCharmEvent,
 )
 from ops.framework import StoredState
-from ops.main import main
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, WaitingStatus
 
 import logrotate
@@ -108,6 +109,10 @@ REACTIVE_MQ_DB_NAME = "github-runner-webhook-router"
 
 
 GITHUB_SELF_HOSTED_ARCH_LABELS = {"x64", "arm64"}
+
+ROOT_USER = "root"
+RUNNER_MANAGER_USER = "runner-manager"
+RUNNER_MANAGER_GROUP = "runner-manager"
 
 logger = logging.getLogger(__name__)
 
@@ -451,6 +456,12 @@ class GithubRunnerCharm(CharmBase):
             self._install_deps()
         except SubprocessError:
             logger.error("Failed to install charm dependencies")
+            raise
+
+        try:
+            _setup_runner_manager_user()
+        except SubprocessError:
+            logger.error("Failed to setup runner manager user")
             raise
 
         try:
@@ -1294,6 +1305,7 @@ class GithubRunnerCharm(CharmBase):
                 cloud_runner_manager=openstack_runner_manager_config,
                 github_token=token,
                 supported_labels=supported_labels,
+                system_user=SystemUserConfig(user=RUNNER_MANAGER_USER, group=RUNNER_MANAGER_GROUP),
             )
         return RunnerScaler(
             runner_manager=runner_manager, reactive_runner_config=reactive_runner_config
@@ -1334,9 +1346,15 @@ class GithubRunnerCharm(CharmBase):
             logger.warning(
                 "Multiple clouds defined in clouds.yaml. Using the first one to connect."
             )
-        cloud_config = OpenStackCloudConfig(
-            clouds_config=state.charm_config.openstack_clouds_yaml,
-            cloud=clouds[0],
+        first_cloud_config = state.charm_config.openstack_clouds_yaml["clouds"][clouds[0]]
+        credentials = OpenStackCredentials(
+            auth_url=first_cloud_config["auth"]["auth_url"],
+            project_name=first_cloud_config["auth"]["project_name"],
+            username=first_cloud_config["auth"]["username"],
+            password=first_cloud_config["auth"]["password"],
+            user_domain_name=first_cloud_config["auth"]["user_domain_name"],
+            project_domain_name=first_cloud_config["auth"]["project_domain_name"],
+            region_name=first_cloud_config["region_name"],
         )
         server_config = None
         image = state.runner_config.openstack_image
@@ -1358,13 +1376,43 @@ class GithubRunnerCharm(CharmBase):
             name=self.app.name,
             # The prefix is set to f"{application_name}-{unit number}"
             prefix=self.unit.name.replace("/", "-"),
-            cloud_config=cloud_config,
+            credentials=credentials,
             server_config=server_config,
             runner_config=runner_config,
             service_config=service_config,
+            system_user_config=SystemUserConfig(
+                user=RUNNER_MANAGER_USER, group=RUNNER_MANAGER_GROUP
+            ),
         )
         return openstack_runner_manager_config
 
 
+def _setup_runner_manager_user() -> None:
+    """Create the user and required directories for the runner manager."""
+    # check if runner_manager user is already existing
+    _, retcode = execute_command(["/usr/bin/id", RUNNER_MANAGER_USER], check_exit=False)
+    if retcode != 0:
+        logger.info("Creating user %s", RUNNER_MANAGER_USER)
+        execute_command(
+            [
+                "/usr/sbin/useradd",
+                "--system",
+                "--create-home",
+                "--user-group",
+                RUNNER_MANAGER_USER,
+            ],
+        )
+    execute_command(["/usr/bin/mkdir", "-p", f"/home/{RUNNER_MANAGER_USER}/.ssh"])
+    execute_command(
+        [
+            "/usr/bin/chown",
+            "-R",
+            f"{RUNNER_MANAGER_USER}:{RUNNER_MANAGER_USER}",
+            f"/home/{RUNNER_MANAGER_USER}/.ssh",
+        ]
+    )
+    execute_command(["/usr/bin/chmod", "700", f"/home/{RUNNER_MANAGER_USER}/.ssh"])
+
+
 if __name__ == "__main__":
-    main(GithubRunnerCharm)
+    ops.main(GithubRunnerCharm)

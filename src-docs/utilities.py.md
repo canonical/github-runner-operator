@@ -2,7 +2,7 @@
 
 <a href="../src/utilities.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `utilities`
+# <kbd>module</kbd> `utilities.py`
 Utilities used by the charm. 
 
 

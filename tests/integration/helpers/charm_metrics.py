@@ -168,7 +168,10 @@ async def cancel_workflow_run(
 
 
 async def assert_events_after_reconciliation(
-    app: Application, github_repository: Repository, post_job_status: PostJobStatus
+    app: Application,
+    github_repository: Repository,
+    post_job_status: PostJobStatus,
+    reactive_mode: bool = False,
 ):
     """Assert that the RunnerStart, RunnerStop and Reconciliation metric is logged.
 
@@ -176,6 +179,8 @@ async def assert_events_after_reconciliation(
         app: The charm to assert the events for.
         github_repository: The github repository to assert the events for.
         post_job_status: The expected post job status of the reconciliation event.
+        reactive_mode: Whether the charm manages reactive runners,
+         this changes the expected events.
     """
     unit = app.units[0]
 
@@ -220,6 +225,11 @@ async def assert_events_after_reconciliation(
             assert metric_log.get("duration") >= 0
             assert metric_log.get("crashed_runners") == 0
             assert metric_log.get("idle_runners") >= 0
+            assert metric_log.get("active_runners") >= 0
+            if not reactive_mode:
+                assert metric_log.get("expected_runners") >= 0
+            else:
+                assert "expected_runners" not in metric_log
 
 
 async def wait_for_runner_to_be_marked_offline(

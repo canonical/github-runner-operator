@@ -331,14 +331,21 @@ class LXDRunnerManager:
         for extracted_metrics in runner_metrics.extract(
             metrics_storage_manager=shared_fs, runners=set(runner_states.healthy)
         ):
-            try:
-                job_metrics = github_metrics.job(
-                    github_client=self._clients.github,
-                    pre_job_metrics=extracted_metrics.pre_job,
-                    runner_name=extracted_metrics.runner_name,
+            if extracted_metrics.pre_job:
+                try:
+                    job_metrics = github_metrics.job(
+                        github_client=self._clients.github,
+                        pre_job_metrics=extracted_metrics.pre_job,
+                        runner_name=extracted_metrics.runner_name,
+                    )
+                except GithubMetricsError:
+                    logger.exception("Failed to calculate job metrics")
+                    job_metrics = None
+            else:
+                logger.debug(
+                    "No pre-job metrics found for %s, will not calculate job metrics.",
+                    extracted_metrics.runner_name,
                 )
-            except GithubMetricsError:
-                logger.exception("Failed to calculate job metrics")
                 job_metrics = None
 
             issued_events = runner_metrics.issue_events(
@@ -355,6 +362,7 @@ class LXDRunnerManager:
         metric_stats: IssuedMetricEventsStats,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
+        expected_quantity: int,
     ) -> None:
         """Issue reconciliation metric.
 
@@ -362,6 +370,7 @@ class LXDRunnerManager:
             metric_stats: The stats of issued metric events.
             reconciliation_start_ts: The timestamp of when reconciliation started.
             reconciliation_end_ts: The timestamp of when reconciliation ended.
+            expected_quantity: The expected quantity of runners.
         """
         runners = self._get_runners()
         runner_states = self._get_runner_health_states()
@@ -390,6 +399,8 @@ class LXDRunnerManager:
                     crashed_runners=metric_stats.get(metric_events.RunnerStart, 0)
                     - metric_stats.get(metric_events.RunnerStop, 0),
                     idle_runners=idle_online_count + idle_offline_count,
+                    active_runners=active_count,
+                    expected_runners=expected_quantity,
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )
             )
@@ -574,6 +585,7 @@ class LXDRunnerManager:
                 metric_stats=metric_stats,
                 reconciliation_start_ts=start_ts,
                 reconciliation_end_ts=end_ts,
+                expected_quantity=quantity,
             )
         return delta
 

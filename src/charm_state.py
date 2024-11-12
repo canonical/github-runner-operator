@@ -19,8 +19,6 @@ from urllib.parse import urlsplit
 
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
-from github_runner_manager import openstack_cloud
-from github_runner_manager.errors import OpenStackInvalidConfigError
 from github_runner_manager.types_.github import GitHubPath, parse_github_path
 from ops import CharmBase
 from pydantic import (
@@ -315,9 +313,11 @@ class _OpenStackCloud(TypedDict):
 
     Attributes:
         auth: The connection authentication info.
+        region_name: The OpenStack region to authenticate to.
     """
 
     auth: _OpenStackAuth
+    region_name: str
 
 
 class OpenStackCloudsYAML(TypedDict):
@@ -433,14 +433,6 @@ class CharmConfig(BaseModel):
             logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
             raise CharmConfigInvalidError(
                 f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config. Invalid yaml."
-            ) from exc
-
-        try:
-            openstack_cloud.initialize(openstack_clouds_yaml)
-        except OpenStackInvalidConfigError as exc:
-            logger.error("Invalid openstack config, %s.", exc)
-            raise CharmConfigInvalidError(
-                "Invalid openstack config. Not able to initialize openstack integration."
             ) from exc
 
         return openstack_clouds_yaml
