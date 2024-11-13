@@ -1,8 +1,12 @@
 # Changelog
 
-### 2024-10-24
+### 2024-11-13
 
 - Added documentation for the reactive mode (howto and mongodb integration references).
+
+### 2024-10-24
+
+- Add "expected_runners" to reconciliation metric.
 
 ### 2024-10-23
 
