@@ -13,13 +13,13 @@ The router and the GitHub runner charm must both be integrated with the same mon
 ## Steps
 We are going to showcase the steps required to set up a reactive spawning environment with three runner flavors (large, large-arm, small) and a MongoDB database as a message queue.
 
-Note, that the specific revisions/channels in the steps are only marked here to have the howto reproducible, you should adapt these to your needs.
+Note, that the specific revisions/channels in the steps are only marked here for reproducibility, you should adapt the revisions/channels to your needs.
 
 We assume that you have a machine model (named "machine-model") for the runners and MongoDB, and a k8s model (named "k8s-model") for the webhook router.
 
 ### GitHub Runner flavors
 
-For this howto, we decided to have deployed three runner flavors: `large`, `large-arm`, `small` . We need
+For this howto-guide, we decided to have deployed three runner flavors: `large`, `large-arm`, `small` . We need
 to deploy those with these names, to comply with the routing table defined below.
 
 ```shell
@@ -58,7 +58,7 @@ juju integrate small mongodb
 
 ### Define a webhook in your organisation or repository where the self-hosted runners are registered.
 
-On your repository or organisations page on Github, you need to go to the settings and create a Webhook
+On your repository or organisation's page on Github, you need to go to the settings and create a Webhook
 (e.g. https://github.com/canonical/github-runner-operator/settings/hooks). Please make sure to select
 
 - the Webhook url to be the URL of the webhook router
@@ -97,7 +97,7 @@ In this example we use "small" as the default flavor, to which all jobs with emp
 are routed to.
 
 
-We also need to make the webhook publicly available, so you will probably need an ingress or traefik charm to expose the webhook router.
+In order to be reachable from GitHub, you need to make the webhook publicly available, you will need an ingress or the traefik charm to expose the webhook router.
 
 ```shell
 juju deploy nginx-ingress-integrator --channel latest/edge --revision 117 --config path-routes='/' --config service-hostname='githubu-runner-webhook-router.my.domain' --config trust=True
