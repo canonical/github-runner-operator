@@ -15,7 +15,7 @@ We are going to showcase the steps required to set up a reactive spawning enviro
 
 Note, that the specific revisions/channels in the steps are only marked here for reproducibility, you should adapt the revisions/channels to your needs.
 
-We assume that you have a machine model (named "machine-model") for the runners and MongoDB, and a k8s model (named "k8s-model") for the webhook router.
+We assume that you have a machine model (named "machine-model") for the runners and MongoDB, and a Kubernetes (k8s) model (named "k8s-model") for the webhook router.
 
 ### GitHub Runner flavors
 
@@ -70,7 +70,7 @@ On your repository or organisation's page on Github, you need to go to the setti
 
 The webhook router is a k8s charm, therefore you need to deploy it on a k8s model.
 
-First, define a routing table to decide which labels should be routed to which runner flavor
+First, define a routing table to decide which labels should be routed to which runner flavor:
 
 ```shell
 cat <<EOF > routing_table.yaml 
@@ -85,6 +85,7 @@ and labels with `small` to small.
 This means, depending on which labels your users are setting in the workflow file, a different runner flavor will be used to
 execute the job.
 
+Switch to the k8s model and deploy the webhook router charm:
 
 ```shell
 juju switch k8s-model
@@ -97,7 +98,7 @@ In this example we use "small" as the default flavor, to which all jobs with emp
 are routed to.
 
 
-In order to be reachable from GitHub, you need to make the webhook publicly available, you will need an ingress or the traefik charm to expose the webhook router.
+In order to be reachable from GitHub, you need to make the webhook publicly available, you will need an ingress or the traefik charm to expose the webhook router:
 
 ```shell
 juju deploy nginx-ingress-integrator --channel latest/edge --revision 117 --config path-routes='/' --config service-hostname='githubu-runner-webhook-router.my.domain' --config trust=True
