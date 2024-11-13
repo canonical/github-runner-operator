@@ -9,6 +9,8 @@ You need to deploy a webhook router, which listens for incoming jobs from GitHub
 labels and stores those labels in a MongoDB database. You can use the [GitHub Runner Webhook Router](https://charmhub.io/github-runner-webhook-router) for this purpose.
 The router and the GitHub runner charm must both be integrated with the same mongodb database.
 
+For the purposes of this howto-guide, we assume that you have a machine model (named "machine-model") for the runners and MongoDB,
+and a k8s model (named "k8s-model") for the webhook router.
 
 ## Steps
 We are going to showcase the steps required to set up a reactive spawning environment with three runner flavors (large, large-arm, small) and a MongoDB database as a message queue.
