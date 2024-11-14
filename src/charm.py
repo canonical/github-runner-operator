@@ -9,10 +9,6 @@
 """Charm for creating and managing GitHub self-hosted runner instances."""
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
-FAILED_RECONCILE_ACTION_ERR_MSG = (
-    "Failed to reconcile runners. Look at the juju logs for more information."
-)
-
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
 # It is important that this is run before importation of any other modules.
 # pylint: disable=wrong-import-position,wrong-import-order
@@ -117,6 +113,11 @@ GITHUB_SELF_HOSTED_ARCH_LABELS = {"x64", "arm64"}
 ROOT_USER = "root"
 RUNNER_MANAGER_USER = "runner-manager"
 RUNNER_MANAGER_GROUP = "runner-manager"
+
+FAILED_RECONCILE_ACTION_ERR_MSG = (
+    "Failed to reconcile runners. Look at the juju logs for more information."
+)
+
 
 logger = logging.getLogger(__name__)
 
