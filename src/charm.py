@@ -553,7 +553,7 @@ class GithubRunnerCharm(CharmBase):
             )
         except RunnerError as err:
             logger.exception("Failed to start runners")
-            self.unit.status = MaintenanceStatus(f"Failed to start runners: {err}")
+            self.unit.status = ActiveStatus(f"Failed to start runners: {err}")
             return
 
         self.unit.status = ActiveStatus()

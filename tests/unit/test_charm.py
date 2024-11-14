@@ -739,9 +739,7 @@ class TestCharm(unittest.TestCase):
 
         harness.charm._reconcile_lxd_runners = raise_runner_error
         harness.charm.on.start.emit()
-        assert harness.charm.unit.status == MaintenanceStatus(
-            "Failed to start runners: mock error"
-        )
+        assert harness.charm.unit.status == ActiveStatus("Failed to start runners: mock error")
 
     @patch("charm.LXDRunnerManager")
     @patch("charm.RunnerScaler")
