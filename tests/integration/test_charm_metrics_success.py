@@ -59,6 +59,10 @@ async def test_charm_issues_runner_installed_metric(
     """
     await instance_helper.ensure_charm_has_runner(app)
 
+    # Set the number of virtual machines to 0 to speedup reconciliation
+    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await reconcile(app=app, model=model)
+
     metrics_log = await get_metrics_log(app.units[0])
     log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
     events = set(map(lambda line: line.get("event"), log_lines))

@@ -2,7 +2,7 @@
 
 <a href="../src/runner.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `runner`
+# <kbd>module</kbd> `runner.py`
 Manage the lifecycle of runners. 
 
 The `Runner` class stores the information on the runners and manages the lifecycle of the runners on LXD and GitHub. 
@@ -17,57 +17,6 @@ The `RunnerManager` class from `runner_manager.py` creates and manages a collect
 
 ---
 
-<a href="../src/runner.py#L61"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>class</kbd> `Snap`
-This class represents a snap installation. 
-
-
-
-**Attributes:**
- 
- - <b>`name`</b>:  The snap application name. 
- - <b>`channel`</b>:  The channel to install the snap from. 
- - <b>`revision`</b>:  The revision number of the snap installation. 
-
-
-
-
-
----
-
-<a href="../src/runner.py#L75"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>class</kbd> `WgetExecutable`
-The executable to be installed through wget. 
-
-
-
-**Attributes:**
- 
- - <b>`url`</b>:  The URL of the executable binary. 
- - <b>`cmd`</b>:  Executable command name. E.g. yq_linux_amd64 -> yq 
-
-<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>method</kbd> `__init__`
-
-```python
-__init__(url: str, cmd: str) → None
-```
-
-
-
-
-
-
-
-
-
----
-
-<a href="../src/runner.py#L88"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
 ## <kbd>class</kbd> `CreateRunnerConfig`
 The configuration values for creating a single runner instance. 
 
@@ -81,31 +30,11 @@ The configuration values for creating a single runner instance.
  - <b>`registration_token`</b>:  Token for registering the runner on GitHub. 
  - <b>`arch`</b>:  Current machine architecture. 
 
-<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-### <kbd>method</kbd> `__init__`
-
-```python
-__init__(
-    image: str,
-    resources: VirtualMachineResources,
-    binary_path: Path,
-    registration_token: str,
-    arch: Arch = <Arch.X64: 'x64'>
-) → None
-```
-
-
-
-
-
 
 
 
 
 ---
-
-<a href="../src/runner.py#L107"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `Runner`
 Single instance of GitHub self-hosted runner. 
@@ -122,7 +51,7 @@ Single instance of GitHub self-hosted runner.
 
 <a href="../src/runner.py#L125"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>method</kbd> `__init__`
+### <kbd>function</kbd> `__init__`
 
 ```python
 __init__(
@@ -151,7 +80,7 @@ Construct the runner instance.
 
 <a href="../src/runner.py#L148"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>method</kbd> `create`
+### <kbd>function</kbd> `create`
 
 ```python
 create(config: CreateRunnerConfig) → None
@@ -175,7 +104,7 @@ Create the runner instance on LXD and register it on GitHub.
 
 <a href="../src/runner.py#L276"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>method</kbd> `pull_logs`
+### <kbd>function</kbd> `pull_logs`
 
 ```python
 pull_logs() → None
@@ -195,7 +124,7 @@ Expects the runner to have an instance.
 
 <a href="../src/runner.py#L241"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>method</kbd> `remove`
+### <kbd>function</kbd> `remove`
 
 ```python
 remove(remove_token: Optional[str]) → None
@@ -214,5 +143,38 @@ Remove this runner instance from LXD and GitHub.
 **Raises:**
  
  - <b>`RunnerRemoveError`</b>:  Failure in removing runner. 
+
+
+---
+
+## <kbd>class</kbd> `Snap`
+This class represents a snap installation. 
+
+
+
+**Attributes:**
+ 
+ - <b>`name`</b>:  The snap application name. 
+ - <b>`channel`</b>:  The channel to install the snap from. 
+ - <b>`revision`</b>:  The revision number of the snap installation. 
+
+
+
+
+
+---
+
+## <kbd>class</kbd> `WgetExecutable`
+The executable to be installed through wget. 
+
+
+
+**Attributes:**
+ 
+ - <b>`url`</b>:  The URL of the executable binary. 
+ - <b>`cmd`</b>:  Executable command name. E.g. yq_linux_amd64 -> yq 
+
+
+
 
 

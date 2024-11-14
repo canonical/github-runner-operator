@@ -13,7 +13,6 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Iterator, Optional, Type
 
-import github_runner_manager.reactive.runner_manager as reactive_runner_manager
 import jinja2
 import requests
 import requests.adapters
@@ -332,14 +331,21 @@ class LXDRunnerManager:
         for extracted_metrics in runner_metrics.extract(
             metrics_storage_manager=shared_fs, runners=set(runner_states.healthy)
         ):
-            try:
-                job_metrics = github_metrics.job(
-                    github_client=self._clients.github,
-                    pre_job_metrics=extracted_metrics.pre_job,
-                    runner_name=extracted_metrics.runner_name,
+            if extracted_metrics.pre_job:
+                try:
+                    job_metrics = github_metrics.job(
+                        github_client=self._clients.github,
+                        pre_job_metrics=extracted_metrics.pre_job,
+                        runner_name=extracted_metrics.runner_name,
+                    )
+                except GithubMetricsError:
+                    logger.exception("Failed to calculate job metrics")
+                    job_metrics = None
+            else:
+                logger.debug(
+                    "No pre-job metrics found for %s, will not calculate job metrics.",
+                    extracted_metrics.runner_name,
                 )
-            except GithubMetricsError:
-                logger.exception("Failed to calculate job metrics")
                 job_metrics = None
 
             issued_events = runner_metrics.issue_events(
@@ -356,6 +362,7 @@ class LXDRunnerManager:
         metric_stats: IssuedMetricEventsStats,
         reconciliation_start_ts: float,
         reconciliation_end_ts: float,
+        expected_quantity: int,
     ) -> None:
         """Issue reconciliation metric.
 
@@ -363,6 +370,7 @@ class LXDRunnerManager:
             metric_stats: The stats of issued metric events.
             reconciliation_start_ts: The timestamp of when reconciliation started.
             reconciliation_end_ts: The timestamp of when reconciliation ended.
+            expected_quantity: The expected quantity of runners.
         """
         runners = self._get_runners()
         runner_states = self._get_runner_health_states()
@@ -391,6 +399,8 @@ class LXDRunnerManager:
                     crashed_runners=metric_stats.get(metric_events.RunnerStart, 0)
                     - metric_stats.get(metric_events.RunnerStop, 0),
                     idle_runners=idle_online_count + idle_offline_count,
+                    active_runners=active_count,
+                    expected_runners=expected_quantity,
                     duration=reconciliation_end_ts - reconciliation_start_ts,
                 )
             )
@@ -534,9 +544,6 @@ class LXDRunnerManager:
         Returns:
             Difference between intended runners and actual runners.
         """
-        if self.config.reactive_config:
-            logger.info("Reactive configuration detected, going into experimental reactive mode.")
-            return self._reconcile_reactive(quantity)
         start_ts = time.time()
 
         runners = self._get_runners()
@@ -578,23 +585,9 @@ class LXDRunnerManager:
                 metric_stats=metric_stats,
                 reconciliation_start_ts=start_ts,
                 reconciliation_end_ts=end_ts,
+                expected_quantity=quantity,
             )
         return delta
-
-    def _reconcile_reactive(self, quantity: int) -> int:
-        """Reconcile runners reactively.
-
-        Args:
-            quantity: Number of intended runners.
-
-        Returns:
-            The difference between intended runners and actual runners. In reactive mode
-            this number is never negative as additional processes should terminate after a timeout.
-        """
-        logger.info("Reactive mode is experimental and not yet fully implemented.")
-        return reactive_runner_manager.reconcile(
-            quantity=quantity, mq_uri=self.config.reactive_config.mq_uri, queue_name=self.app_name
-        )
 
     def _runners_in_pre_job(self) -> bool:
         """Check there exist runners in the pre-job script stage.

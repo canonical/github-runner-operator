@@ -2,7 +2,7 @@
 
 <a href="../src/charm.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-# <kbd>module</kbd> `charm`
+# <kbd>module</kbd> `charm.py`
 Charm for creating and managing GitHub self-hosted runner instances. 
 
 **Global Variables**
@@ -18,10 +18,14 @@ Charm for creating and managing GitHub self-hosted runner instances.
 - **RECONCILIATION_INTERVAL_TIMEOUT_FACTOR**
 - **RECONCILE_RUNNERS_EVENT**
 - **REACTIVE_MQ_DB_NAME**
+- **GITHUB_SELF_HOSTED_ARCH_LABELS**
+- **ROOT_USER**
+- **RUNNER_MANAGER_USER**
+- **RUNNER_MANAGER_GROUP**
 
 ---
 
-<a href="../src/charm.py#L117"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L127"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_charm_errors`
 
@@ -47,7 +51,7 @@ Catch common errors in charm.
 
 ---
 
-<a href="../src/charm.py#L158"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L168"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_action_errors`
 
@@ -73,19 +77,6 @@ Catch common errors in actions.
 
 ---
 
-<a href="../src/charm.py#L110"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>class</kbd> `ReconcileRunnersEvent`
-Event representing a periodic check to ensure runners are ok. 
-
-
-
-
-
----
-
-<a href="../src/charm.py#L196"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
 ## <kbd>class</kbd> `GithubRunnerCharm`
 Charm for managing GitHub self-hosted runners. 
 
@@ -101,9 +92,9 @@ Charm for managing GitHub self-hosted runners.
  - <b>`ram_pool_path`</b>:  The path to memdisk storage. 
  - <b>`kernel_module_path`</b>:  The path to kernel modules. 
 
-<a href="../src/charm.py#L219"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L229"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
-### <kbd>method</kbd> `__init__`
+### <kbd>function</kbd> `__init__`
 
 ```python
 __init__(*args: Any, **kwargs: Any) → None
@@ -160,6 +151,15 @@ Shortcut for more simple access the model.
 #### <kbd>property</kbd> unit
 
 Unit that this execution is responsible for. 
+
+
+
+
+---
+
+## <kbd>class</kbd> `ReconcileRunnersEvent`
+Event representing a periodic check to ensure runners are ok. 
+
 
 
 
