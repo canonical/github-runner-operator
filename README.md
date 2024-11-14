@@ -24,8 +24,6 @@ For more information about a production deployment, the how-to-guide
 [How to spawn OpenStack runner](https://charmhub.io/github-runner/docs/how-to-openstack-runner) can be useful.
 
 ### Basic operations
-<!--Brief walkthrough of performing standard configurations or operations-->
-
 A usual deployment of the charm can be done with the following command (please replace items in `<>` with your own values):
 
 ```bash
