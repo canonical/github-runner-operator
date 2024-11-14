@@ -111,8 +111,8 @@ def test__write_config(
 {frequency}
 rotate {rotate}
 missingok
-{"notifempty" if notifempty else ""}
-{"create" if create else ""}
+{"notifempty" if notifempty else "ifempty"}
+{"create" if create else "nocreate"}
 }}
 """
     assert (

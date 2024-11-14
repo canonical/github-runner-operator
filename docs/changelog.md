@@ -1,5 +1,21 @@
 # Changelog
 
+### 2024-10-24
+
+- Add "expected_runners" to reconciliation metric.
+
+### 2024-10-23
+
+- Fixed the wrong dateformat usage in the server uniqueness check.
+
+### 2024-10-21
+
+- Fixed bug with charm upgrade due to wrong ownership of reactive runner log directory.
+
+### 2024-10-18
+
+- Bugfix for logrotate configuration ("nocreate" must be passed explicitly)
+
 ### 2024-10-17
 
 - Use in-memory authentication instead of clouds.yaml on disk for OpenStack. This prevents
