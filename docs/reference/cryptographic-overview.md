@@ -11,12 +11,12 @@ In OpenStack mode, the runner creates virtual machines to run the workload in Op
 
 [DockerHub Registry](https://charmhub.io/docker-registry) is used as a cache between the official DockerHub and GitHub runners to avoid rate limiting. Communication between GitHub runners and DockerHub cache is secured via TLS 1.3 and certified by [Let’s Encrypt](https://letsencrypt.org/).
 
-Images that run in the OpenStack vm are built using the [Image Builder](https://github.com/canonical/github-runner-image-builder. This application needs to download the runner binary, yq and the cloud image to base the image on. All these images are downloaded with TLS.
+Images that run in the OpenStack vm are built using the [Image Builder](https://github.com/canonical/github-runner-image-builder). This application needs to download the runner binary, yq and the cloud image to base the image on. All these images are downloaded with TLS.
 
 The GitHub runner charm supports being deployed behind an HTTP proxy. [Aproxy](https://github.com/canonical/aproxy) is installed and enabled when an HTTP proxy is detected so that jobs executing in the runner VMs don’t have to configure the proxy themselves. Aproxy is a transparent proxy service for HTTP and HTTPS/TLS connections. Aproxy works by pre-reading the Host header in HTTP requests and SNI in TLS hellos; it forwards HTTP proxy requests with the hostname therefore, complies with HTTP proxies requiring destination hostname for auditing or access control. Aproxy doesn't and can't decrypt the TLS connections. It works by reading the plaintext SNI information in the client hello during the TLS handshake, so the authentication and encryption of TLS are never compromised. Aproxy supports TLS 1.0 and above except TLS 1.3 Encrypted Client Hello.
 
 ### Signature Verification
-Cloud image is verified by SHA256 checksum. Runner binary is also downloaded by [GitHub Runner Charm](https://github.com/canonical/github-runner-operator) and verified by SHA256 in this charm.
+Images that run in the OpenStack vm (Cloud images) are verified by SHA256 checksum. Runner binary is also downloaded by [GitHub Runner Charm](https://github.com/canonical/github-runner-operator) and verified by SHA256 in this charm.
 
 ### User SSH Access
 Sometimes users need to access the VM instance that is running the workload, to establish this connection [Tmate](https://tmate.io/) is used. Tmate uses the SSH protocol to secure shell connections between users and the GitHub runner. The connection is secured with rsa keypair and ed25519 fingerprints.
