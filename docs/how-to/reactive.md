@@ -4,13 +4,8 @@ The charm provides an experimental feature to spawn runners reactively, dependin
 This feature is disabled by default and can be enabled by integrating the charm with a MongoDB database.
 
 ## Requirements
-
-You need to deploy a webhook router, which listens for incoming jobs from GitHub, transforms them into
-labels and stores those labels in a MongoDB database. You can use the [GitHub Runner Webhook Router](https://charmhub.io/github-runner-webhook-router) for this purpose.
-The router and the GitHub runner charm must both be integrated with the same mongodb database.
-
-For the purposes of this howto-guide, we assume that you have a machine model (named "machine-model") for the runners and MongoDB,
-and a k8s model (named "k8s-model") for the webhook router.
+For the purposes of this how-to-guide, we assume that you have a machine model (named "machine-model") for the runners and [MongoDB](https://charmhub.io/mongodb),
+and a k8s model (named "k8s-model") for the [webhook router](https://charmhub.io/github-runner-webhook-router).
 
 ## Steps
 We are going to showcase the steps required to set up a reactive spawning environment with three runner flavors (large, large-arm, small) and a MongoDB database as a message queue.
@@ -21,7 +16,7 @@ We assume that you have a machine model (named "machine-model") for the runners 
 
 ### GitHub Runner flavors
 
-For this howto-guide, we decided to have deployed three runner flavors: `large`, `large-arm`, `small` . We need
+For this how-to-guide, we decided to have deployed three runner flavors: `large`, `large-arm`, `small` . We need
 to deploy those with these names, to comply with the routing table defined below.
 
 ```shell
