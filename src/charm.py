@@ -9,6 +9,10 @@
 """Charm for creating and managing GitHub self-hosted runner instances."""
 from utilities import bytes_with_unit_to_kib, execute_command, remove_residual_venv_dirs, retry
 
+FAILED_RECONCILE_ACTION_ERR_MSG = (
+    "Failed to reconcile runners. Look at the juju logs for more information."
+)
+
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
 # It is important that this is run before importation of any other modules.
 # pylint: disable=wrong-import-position,wrong-import-order
@@ -864,7 +868,7 @@ class GithubRunnerCharm(CharmBase):
             except ReconcileError:
                 logger.exception("Failed to reconcile runners")
                 self.unit.status = MaintenanceStatus("Failed to reconcile runners")
-                event.fail("Failed to reconcile runners")
+                event.fail(FAILED_RECONCILE_ACTION_ERR_MSG)
                 return
 
             self.unit.status = ActiveStatus()
@@ -905,7 +909,8 @@ class GithubRunnerCharm(CharmBase):
                 delta = runner_scaler.reconcile(state.runner_config.virtual_machines)
             except ReconcileError:
                 logger.exception("Failed to reconcile runners")
-                event.fail("Failed to reconcile runners")
+                self.unit.status = MaintenanceStatus("Failed to reconcile runners")
+                event.fail(FAILED_RECONCILE_ACTION_ERR_MSG)
                 return
             self.unit.status = ActiveStatus()
             event.set_results({"delta": {"virtual-machines": delta}})

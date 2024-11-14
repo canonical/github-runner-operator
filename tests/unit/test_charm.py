@@ -18,7 +18,12 @@ from github_runner_manager.types_.github import GitHubOrg, GitHubRepo, GitHubRun
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
 
-from charm import GithubRunnerCharm, catch_action_errors, catch_charm_errors
+from charm import (
+    FAILED_RECONCILE_ACTION_ERR_MSG,
+    GithubRunnerCharm,
+    catch_action_errors,
+    catch_charm_errors,
+)
 from charm_state import (
     GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
@@ -314,7 +319,7 @@ def test_on_flush_runners_reconcile_error_fail(harness: Harness):
 
     mock_event = MagicMock()
     harness.charm._on_flush_runners_action(mock_event)
-    mock_event.fail.assert_called_with("Failed to reconcile runners")
+    mock_event.fail.assert_called_with(FAILED_RECONCILE_ACTION_ERR_MSG)
 
 
 def test_on_flush_runners_action_success(harness: Harness, runner_binary_path: Path):
@@ -352,7 +357,8 @@ def test_on_reconcile_runners_action_reconcile_error_fail(
 
     mock_event = MagicMock()
     harness.charm._on_reconcile_runners_action(mock_event)
-    mock_event.fail.assert_called_with("Failed to reconcile runners")
+
+    mock_event.fail.assert_called_with(FAILED_RECONCILE_ACTION_ERR_MSG)
 
 
 def test_on_reconcile_runners_reconcile_error(harness: Harness, monkeypatch: pytest.MonkeyPatch):
