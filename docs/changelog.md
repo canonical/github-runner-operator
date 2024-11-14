@@ -2,7 +2,7 @@
 
 ### 2024-11-08
 
-- Catch ReconcileError and set appropriate MaintenanceStatus.
+- Catch ReconcileError and set appropriate message in unit status.
 
 ### 2024-10-24
 

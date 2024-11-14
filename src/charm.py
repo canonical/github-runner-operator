@@ -114,6 +114,8 @@ ROOT_USER = "root"
 RUNNER_MANAGER_USER = "runner-manager"
 RUNNER_MANAGER_GROUP = "runner-manager"
 
+ACTIVE_STATUS_RECONCILIATION_FAILED_MSG = "Last reconciliation failed."
+FAILED_TO_RECONCILE_RUNNERS_MSG = "Failed to reconcile runners"
 FAILED_RECONCILE_ACTION_ERR_MSG = (
     "Failed to reconcile runners. Look at the juju logs for more information."
 )
@@ -867,8 +869,8 @@ class GithubRunnerCharm(CharmBase):
             try:
                 delta = runner_scaler.reconcile(state.runner_config.virtual_machines)
             except ReconcileError:
-                logger.exception("Failed to reconcile runners")
-                self.unit.status = MaintenanceStatus("Failed to reconcile runners")
+                logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
+                self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
                 event.fail(FAILED_RECONCILE_ACTION_ERR_MSG)
                 return
 
@@ -909,8 +911,8 @@ class GithubRunnerCharm(CharmBase):
             try:
                 delta = runner_scaler.reconcile(state.runner_config.virtual_machines)
             except ReconcileError:
-                logger.exception("Failed to reconcile runners")
-                self.unit.status = MaintenanceStatus("Failed to reconcile runners")
+                logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
+                self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
                 event.fail(FAILED_RECONCILE_ACTION_ERR_MSG)
                 return
             self.unit.status = ActiveStatus()
@@ -1006,8 +1008,8 @@ class GithubRunnerCharm(CharmBase):
         try:
             runner_scaler.reconcile(num)
         except ReconcileError:
-            logger.exception("Failed to reconcile runners")
-            self.unit.status = MaintenanceStatus("Failed to reconcile runners")
+            logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
+            self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
         else:
             self.unit.status = ActiveStatus()
 
@@ -1233,7 +1235,7 @@ class GithubRunnerCharm(CharmBase):
             try:
                 runner_scaler.reconcile(state.runner_config.virtual_machines)
             except ReconcileError:
-                logger.exception("Failed to reconcile runners")
+                logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
             return
 
         self._refresh_firewall(state)
