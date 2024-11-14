@@ -7,6 +7,7 @@ from unittest.mock import MagicMock, Mock
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
+from github_runner_manager.metrics.storage import MetricsStorage
 
 import shared_fs
 from errors import (
@@ -15,7 +16,6 @@ from errors import (
     GetMetricsStorageError,
     SubprocessError,
 )
-from metrics.storage import MetricsStorage
 
 MOUNTPOINT_FAILURE_EXIT_CODE = 1
 
@@ -35,7 +35,8 @@ def metrics_storage_fixture(
 ) -> MagicMock:
     """Mock the metrics storage."""
     metrics_storage_mock = MagicMock()
-    monkeypatch.setattr(shared_fs, "metrics_storage", metrics_storage_mock)
+    storage_manager_cls_mock = MagicMock(return_value=metrics_storage_mock)
+    monkeypatch.setattr(shared_fs.metrics_storage, "StorageManager", storage_manager_cls_mock)
     fs_base_path = filesystem_paths["base"]
     fs_base_path.mkdir()
 
@@ -318,3 +319,16 @@ def test_get_mounts_if_unmounted(filesystem_paths: dict[str, Path], exc_cmd_mock
         ],
         check_exit=True,
     )
+
+
+def test_move_to_quarantine(metrics_storage_mock: MagicMock):
+    """
+    arrange: Given a runner name.
+    act: Call move_to_quarantine.
+    assert: The method is called on the metrics storage manager.
+    """
+    runner_name = secrets.token_hex(16)
+
+    shared_fs.move_to_quarantine(runner_name)
+
+    metrics_storage_mock.move_to_quarantine.assert_called_once_with(runner_name)

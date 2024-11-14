@@ -10,6 +10,9 @@ skips = ["*/*test.py", "*/test_*.py", "*tests/*.py"]
 [tool.coverage.run]
 branch = true
 omit = [
+    # These are covered by `tests/integration/test_runner_manager_openstack.py`.
+    "src/openstack_cloud/openstack_cloud.py",
+    "src/openstack_cloud/openstack_runner_manager.py",
     # Contains interface for calling LXD. Tested in integration tests and end to end tests.
     "src/lxd.py",
     # Contains interface for calling repo policy compliance service. Tested in integration test
@@ -54,9 +57,9 @@ max-doc-length = 99
 max-complexity = 10
 exclude = [".git", "__pycache__", ".tox", "build", "dist", "*.egg_info", "venv"]
 select = ["E", "W", "F", "C", "N", "R", "D", "H"]
-# Ignore W503, E501 because using black creates errors with this
+# Ignore W503, E501, E203 because using black creates errors with this
 # Ignore D107 Missing docstring in __init__
-ignore = ["W503", "E501", "D107"]
+ignore = ["W503", "E501", "D107", "E203"]
 # D100, D101, D102, D103, D104: Ignore docstring style issues in tests
 # temporary disable E402 for the fix in charm.py for lp:2058335
 per-file-ignores = ["src/charm.py:E402", "tests/*:D100,D101,D102,D103,D104,D205,D212"]

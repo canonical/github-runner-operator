@@ -6,19 +6,21 @@
 from dataclasses import dataclass
 from enum import Enum, auto
 from pathlib import Path
-from typing import Iterable
 
 import jinja2
+from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
+from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus
 
-from charm_state import CharmState, GithubPath, ReactiveConfig
+from charm_state import CharmState, ReactiveConfig
 from github_client import GithubClient
-from github_type import GitHubRunnerStatus
 from lxd import LxdClient
-from repo_policy_compliance_client import RepoPolicyComplianceClient
 
 
-class FlushMode(Enum):
+class LXDFlushMode(Enum):
     """Strategy for flushing runners.
+
+    During pre-job (repo-check), the runners are marked as idle and if the pre-job fails, the
+    runner falls back to being idle again. Hence wait_repo_check is required.
 
     Attributes:
         FLUSH_IDLE: Flush only idle runners.
@@ -58,7 +60,7 @@ class RunnerManagerClients:
 
 @dataclass
 # The instance attributes are all required.
-class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
+class LXDRunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     """Configuration of runner manager.
 
     Attributes:
@@ -78,7 +80,7 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     charm_state: CharmState
     image: str
     lxd_storage_path: Path
-    path: GithubPath
+    path: GitHubPath
     service_token: str
     token: str
     dockerhub_mirror: str | None = None
@@ -88,36 +90,6 @@ class RunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
     def are_metrics_enabled(self) -> bool:
         """Whether metrics for the runners should be collected."""
         return self.charm_state.is_metrics_logging_available
-
-
-# This class is subject to refactor.
-@dataclass
-class OpenstackRunnerManagerConfig:  # pylint: disable=too-many-instance-attributes
-    """Configuration of runner manager.
-
-    Attributes:
-        charm_state: The state of the charm.
-        path: GitHub repository path in the format '<owner>/<repo>', or the
-            GitHub organization name.
-        labels: Additional labels for the runners.
-        token: GitHub personal access token to register runner to the
-            repository or organization.
-        flavor: OpenStack flavor for defining the runner resources.
-        image: Openstack image id to boot the runner with.
-        network: OpenStack network for runner network access.
-        dockerhub_mirror: URL of dockerhub mirror to use.
-        reactive_config: The configuration to spawn runners reactively.
-    """
-
-    charm_state: CharmState
-    path: GithubPath
-    labels: Iterable[str]
-    token: str
-    flavor: str
-    image: str
-    network: str
-    dockerhub_mirror: str | None
-    reactive_config: ReactiveConfig | None = None
 
 
 @dataclass

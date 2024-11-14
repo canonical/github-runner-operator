@@ -18,8 +18,8 @@ Repository:
 
 - Actions: read (required if COS integration is enabled and private repositories exist)
 - Administration: read
-- Contents: read
-- Pull requests: read
+- Contents: read (not required if the charm is configured to use OpenStack runners)
+- Pull requests: read (not required if the charm is configured to use OpenStack runners)
 
 ### Repository Runners
 
@@ -28,9 +28,9 @@ repository runner.
 
 - Actions: read (required if COS integration is enabled and the repository is private)
 - Administration: read & write
-- Contents: read
+- Contents: read (not required if the charm is configured to use OpenStack runners)
 - Metadata: read
-- Pull requests: read
+- Pull requests: read (not required if the charm is configured to use OpenStack runners)
 
 ## Personal access token scopes
 

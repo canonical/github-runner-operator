@@ -56,6 +56,7 @@ def pytest_addoption(parser: Parser):
         "--openstack-clouds-yaml",
         action="store",
         help="The OpenStack clouds yaml file for the charm to use.",
+        default="",
     )
     parser.addoption(
         "--use-existing-app",
@@ -66,7 +67,7 @@ def pytest_addoption(parser: Parser):
         "It is expected that the existing app is already integrated with other apps "
         "like grafana-agent, etc. ",
     )
-    # Private endpoint options
+    # Private endpoint shared options
     parser.addoption(
         "--openstack-http-proxy",
         action="store",
@@ -85,57 +86,108 @@ def pytest_addoption(parser: Parser):
         help="The no proxy used to openstack integration.",
         default=None,
     )
+    # Private endpoint options AMD64
     parser.addoption(
-        "--openstack-network-name",
+        "--openstack-network-name-amd64",
         action="store",
         help="The Openstack network to create testing instances under.",
-        default=None,
     )
     parser.addoption(
-        "--openstack-flavor-name",
+        "--openstack-flavor-name-amd64",
         action="store",
         help="The Openstack flavor to create testing instances with.",
-        default=None,
     )
     parser.addoption(
-        "--openstack-auth-url",
+        "--openstack-auth-url-amd64",
         action="store",
         help="The URL to Openstack authentication service, i.e. keystone.",
-        default=None,
     )
     parser.addoption(
-        "--openstack-password",
+        "--openstack-password-amd64",
         action="store",
         help="The password to authenticate to Openstack service.",
-        default=None,
     )
     parser.addoption(
-        "--openstack-project-domain-name",
+        "--openstack-project-domain-name-amd64",
         action="store",
         help="The Openstack project domain name to use.",
-        default=None,
     )
     parser.addoption(
-        "--openstack-project-name",
+        "--openstack-project-name-amd64",
         action="store",
         help="The Openstack project name to use.",
-        default=None,
     )
     parser.addoption(
-        "--openstack-user-domain-name",
+        "--openstack-user-domain-name-amd64",
         action="store",
         help="The Openstack user domain name to use.",
-        default=None,
     )
     parser.addoption(
-        "--openstack-username",
+        "--openstack-username-amd64",
         action="store",
         help="The Openstack user to authenticate as.",
+    )
+    parser.addoption(
+        "--openstack-region-name-amd64",
+        action="store",
+        help="The Openstack region to authenticate to.",
+    )
+    # Private endpoint options ARM64
+    parser.addoption(
+        "--openstack-network-name-arm64",
+        action="store",
+        help="The Openstack network to create testing instances under.",
+    )
+    parser.addoption(
+        "--openstack-flavor-name-arm64",
+        action="store",
+        help="The Openstack flavor to create testing instances with.",
+    )
+    parser.addoption(
+        "--openstack-auth-url-arm64",
+        action="store",
+        help="The URL to Openstack authentication service, i.e. keystone.",
+    )
+    parser.addoption(
+        "--openstack-password-arm64",
+        action="store",
+        help="The password to authenticate to Openstack service.",
+    )
+    parser.addoption(
+        "--openstack-project-domain-name-arm64",
+        action="store",
+        help="The Openstack project domain name to use.",
+    )
+    parser.addoption(
+        "--openstack-project-name-arm64",
+        action="store",
+        help="The Openstack project name to use.",
+    )
+    parser.addoption(
+        "--openstack-user-domain-name-arm64",
+        action="store",
+        help="The Openstack user domain name to use.",
+    )
+    parser.addoption(
+        "--openstack-username-arm64",
+        action="store",
+        help="The Openstack user to authenticate as.",
+    )
+    parser.addoption(
+        "--openstack-region-name-arm64",
+        action="store",
+        help="The Openstack region to authenticate to.",
+    )
+    # Interface testing args
+    parser.addoption(
+        "--openstack-test-image",
+        action="store",
+        help="The image for testing openstack interfaces. Any ubuntu image should work.",
         default=None,
     )
     parser.addoption(
-        "--openstack-region-name",
+        "--openstack-test-flavor",
         action="store",
-        help="The Openstack region to authenticate to.",
+        help="The flavor for testing openstack interfaces. The resource should be enough to boot the test image.",
         default=None,
     )

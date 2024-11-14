@@ -72,7 +72,6 @@ def test_setup_writes_logrotate_config(logrotate_dir: Path):
     logrotate.setup()
     assert logrotate.LOGROTATE_CONFIG_DIR.is_dir()
     assert (logrotate_dir / logrotate.METRICS_LOGROTATE_CONFIG.name).exists()
-    assert (logrotate_dir / logrotate.RUNNER_LOGROTATE_CONFIG.name).exists()
     assert (logrotate_dir / logrotate.REACTIVE_LOGROTATE_CONFIG.name).exists()
 
 
@@ -112,8 +111,8 @@ def test__write_config(
 {frequency}
 rotate {rotate}
 missingok
-{"notifempty" if notifempty else ""}
-{"create" if create else ""}
+{"notifempty" if notifempty else "ifempty"}
+{"create" if create else "nocreate"}
 }}
 """
     assert (

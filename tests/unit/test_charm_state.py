@@ -9,18 +9,20 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
+import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
+from github_runner_manager.types_.github import GitHubOrg, GitHubRepo
 from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
 from pydantic.networks import IPv4Address
 
 import charm_state
-import openstack_cloud
 from charm_state import (
     BASE_IMAGE_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
     DENYLIST_CONFIG_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
+    GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
@@ -40,13 +42,12 @@ from charm_state import (
     CharmState,
     FirewallEntry,
     GithubConfig,
-    GithubOrg,
-    GithubRepo,
     ImmutableConfigChangedError,
     LocalLxdRunnerConfig,
     OpenstackImage,
     OpenstackRunnerConfig,
     ProxyConfig,
+    ReactiveConfig,
     RunnerStorage,
     SSHDebugConnection,
     UnsupportedArchitectureError,
@@ -64,7 +65,7 @@ def test_github_repo_path():
     """
     owner = "test_owner"
     repo = "test_repo"
-    github_repo = GithubRepo(owner, repo)
+    github_repo = GitHubRepo(owner, repo)
 
     path = github_repo.path()
 
@@ -79,27 +80,28 @@ def test_github_org_path():
     """
     org = "test_org"
     group = "test_group"
-    github_org = GithubOrg(org, group)
+    github_org = GitHubOrg(org, group)
 
     path = github_org.path()
 
     assert path == org
 
 
-def test_parse_github_path_invalid():
+def test_github_config_from_charm_invalud_path():
     """
     arrange: Create an invalid GitHub path string and runner group name.
     act: Call parse_github_path with the invalid path string and runner group name.
     assert: Verify that the function raises CharmConfigInvalidError.
     """
-    path_str = "invalidpath/"
-    runner_group = "test_group"
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[PATH_CONFIG_NAME] = "invalidpath/"
+    mock_charm.config[GROUP_CONFIG_NAME] = "test_group"
 
     with pytest.raises(CharmConfigInvalidError):
-        charm_state.parse_github_path(path_str, runner_group)
+        GithubConfig.from_charm(mock_charm)
 
 
-def test_github_config_from_charm_invalid_path():
+def test_github_config_from_charm_empty_path():
     """
     arrange: Create a mock CharmBase instance with an empty path configuration.
     act: Call from_charm method with the mock CharmBase instance.
@@ -128,14 +130,14 @@ def test_github_config_from_charm_invalid_token():
 @pytest.mark.parametrize(
     "path_str, runner_group, expected_type, expected_attrs",
     [
-        ("owner/repo", "test_group", GithubRepo, {"owner": "owner", "repo": "repo"}),
-        ("test_org", "test_group", GithubOrg, {"org": "test_org", "group": "test_group"}),
+        ("owner/repo", "test_group", GitHubRepo, {"owner": "owner", "repo": "repo"}),
+        ("test_org", "test_group", GitHubOrg, {"org": "test_org", "group": "test_group"}),
     ],
 )
 def test_parse_github_path(
     path_str: str,
     runner_group: str,
-    expected_type: GithubRepo | GithubOrg,
+    expected_type: GitHubRepo | GitHubOrg,
     expected_attrs: dict[str, str],
 ):
     """
@@ -294,7 +296,7 @@ clouds:
             auth_url: 'http://keystone.openstack.svc.cluster.local:5000/v3'
             user_domain_name: 'Default'
             project_domain_name: 'Default'
-            region_name: 'RegionOne'
+        region_name: 'RegionOne'
     """
 
 
@@ -311,7 +313,7 @@ clouds: asdfsadf
             auth_url: 'http://keystone.openstack.svc.cluster.local:5000/v3'
             user_domain_name: 'Default'
             project_domain_name: 'Default'
-            region_name: 'RegionOne'
+        region_name: 'RegionOne'
     """
 
 
@@ -350,26 +352,6 @@ def test_parse_openstack_clouds_config_invalid_yaml_list():
     """
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = "-1\n-2\n-3"
-
-    with pytest.raises(CharmConfigInvalidError):
-        CharmConfig._parse_openstack_clouds_config(mock_charm)
-
-
-def test_parse_openstack_clouds_initialize_fail(
-    valid_yaml_config: str, monkeypatch: pytest.MonkeyPatch
-):
-    """
-    arrange: Given monkeypatched openstack_cloud.initialize that raises an error.
-    act: Call _parse_openstack_clouds_config method with the mock CharmBase instance.
-    assert: Verify that the method raises CharmConfigInvalidError.
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = valid_yaml_config
-    monkeypatch.setattr(
-        openstack_cloud,
-        "initialize",
-        MagicMock(side_effect=openstack_cloud.OpenStackInvalidConfigError),
-    )
 
     with pytest.raises(CharmConfigInvalidError):
         CharmConfig._parse_openstack_clouds_config(mock_charm)
@@ -472,23 +454,40 @@ def test_charm_config_from_charm_valid():
         RECONCILE_INTERVAL_CONFIG_NAME: "5",
         DENYLIST_CONFIG_NAME: "192.168.1.1,192.168.1.2",
         DOCKERHUB_MIRROR_CONFIG_NAME: "https://example.com",
-        OPENSTACK_CLOUDS_YAML_CONFIG_NAME: "clouds: { openstack: { auth: { username: 'admin' }}}",
+        # "clouds: { openstack: { auth: { username: 'admin' }}}"
+        OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(
+            (
+                test_openstack_config := {
+                    "clouds": {
+                        "openstack": {
+                            "auth": {
+                                "auth_url": "https://project-keystone.url/",
+                                "password": secrets.token_hex(16),
+                                "project_domain_name": "Default",
+                                "project_name": "test-project-name",
+                                "user_domain_name": "Default",
+                                "username": "test-user-name",
+                            },
+                            "region_name": secrets.token_hex(16),
+                        }
+                    }
+                }
+            )
+        ),
         LABELS_CONFIG_NAME: "label1,label2,label3",
         TOKEN_CONFIG_NAME: "abc123",
     }
 
     result = CharmConfig.from_charm(mock_charm)
 
-    assert result.path == GithubRepo(owner="owner", repo="repo")
+    assert result.path == GitHubRepo(owner="owner", repo="repo")
     assert result.reconcile_interval == 5
     assert result.denylist == [
         FirewallEntry(ip_range="192.168.1.1"),
         FirewallEntry(ip_range="192.168.1.2"),
     ]
     assert result.dockerhub_mirror == "https://example.com"
-    assert result.openstack_clouds_yaml == {
-        "clouds": {"openstack": {"auth": {"username": "admin"}}}
-    }
+    assert result.openstack_clouds_yaml == test_openstack_config
     assert result.labels == ("label1", "label2", "label3")
     assert result.token == "abc123"
 
@@ -1270,3 +1269,38 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
 
     assert mock_charm_state_data["charm_config"]["token"] not in caplog.text
     assert charm_state.SENSITIVE_PLACEHOLDER in caplog.text
+
+
+def test_charm_state_from_charm_reactive_with_lxd_raises_error(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: Mock CharmBase and necessary methods to enable reactive config and lxd storage.
+    act: Call CharmState.from_charm.
+    assert: Ensure an error is raised
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_database = MagicMock(spec=DatabaseRequires)
+
+    monkeypatch.setattr(
+        ReactiveConfig,
+        "from_database",
+        MagicMock(return_value=ReactiveConfig(mq_uri="mongodb://localhost:27017")),
+    )
+    charm_config_mock = MagicMock()
+    charm_config_mock.openstack_clouds_yaml = None
+    monkeypatch.setattr(CharmConfig, "from_charm", MagicMock(return_value=charm_config_mock))
+
+    # mock all other required methods
+    monkeypatch.setattr(ProxyConfig, "from_charm", MagicMock())
+    monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
+    monkeypatch.setattr(LocalLxdRunnerConfig, "from_charm", MagicMock())
+    monkeypatch.setattr(CharmState, "_check_immutable_config_change", MagicMock())
+    monkeypatch.setattr(charm_state, "_get_supported_arch", MagicMock())
+    monkeypatch.setattr(SSHDebugConnection, "from_charm", MagicMock())
+    monkeypatch.setattr(json, "loads", MagicMock())
+    monkeypatch.setattr(json, "dumps", MagicMock())
+    monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
+
+    with pytest.raises(CharmConfigInvalidError) as exc:
+        CharmState.from_charm(mock_charm, mock_database)
+
+    assert "Reactive mode not supported for local LXD instances" in str(exc.value)

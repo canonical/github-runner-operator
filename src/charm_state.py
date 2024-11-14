@@ -14,11 +14,12 @@ import platform
 import re
 from enum import Enum
 from pathlib import Path
-from typing import NamedTuple, Optional, cast
+from typing import NamedTuple, Optional, TypedDict, cast
 from urllib.parse import urlsplit
 
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
+from github_runner_manager.types_.github import GitHubPath, parse_github_path
 from ops import CharmBase
 from pydantic import (
     AnyHttpUrl,
@@ -27,13 +28,18 @@ from pydantic import (
     IPvAnyAddress,
     MongoDsn,
     ValidationError,
+    create_model_from_typeddict,
     validator,
 )
 
-import openstack_cloud
-from errors import MissingMongoDBError, OpenStackInvalidConfigError
+from errors import MissingMongoDBError
 from firewall import FirewallEntry
 from utilities import get_env_var
+
+REACTIVE_MODE_NOT_SUPPORTED_WITH_LXD_ERR_MSG = (
+    "Reactive mode not supported for local LXD instances. "
+    "Please remove the mongodb integration."
+)
 
 logger = logging.getLogger(__name__)
 
@@ -87,75 +93,6 @@ class AnyHttpsUrl(AnyHttpUrl):
 
 
 @dataclasses.dataclass
-class GithubRepo:
-    """Represent GitHub repository.
-
-    Attributes:
-        owner: Owner of the GitHub repository.
-        repo: Name of the GitHub repository.
-    """
-
-    owner: str
-    repo: str
-
-    def path(self) -> str:
-        """Return a string representing the path.
-
-        Returns:
-            Path to the GitHub entity.
-        """
-        return f"{self.owner}/{self.repo}"
-
-
-@dataclasses.dataclass
-class GithubOrg:
-    """Represent GitHub organization.
-
-    Attributes:
-        org: Name of the GitHub organization.
-        group: Runner group to spawn the runners in.
-    """
-
-    org: str
-    group: str
-
-    def path(self) -> str:
-        """Return a string representing the path.
-
-        Returns:
-            Path to the GitHub entity.
-        """
-        return self.org
-
-
-GithubPath = GithubOrg | GithubRepo
-
-
-def parse_github_path(path_str: str, runner_group: str) -> GithubPath:
-    """Parse GitHub path.
-
-    Args:
-        path_str: GitHub path in string format.
-        runner_group: Runner group name for GitHub organization. If the path is
-            a repository this argument is ignored.
-
-    Raises:
-        CharmConfigInvalidError: if an invalid path string was given.
-
-    Returns:
-        GithubPath object representing the GitHub repository, or the GitHub
-        organization with runner group information.
-    """
-    if "/" in path_str:
-        paths = tuple(segment for segment in path_str.split("/") if segment)
-        if len(paths) != 2:
-            raise CharmConfigInvalidError(f"Invalid path configuration {path_str}")
-        owner, repo = paths
-        return GithubRepo(owner=owner, repo=repo)
-    return GithubOrg(org=path_str, group=runner_group)
-
-
-@dataclasses.dataclass
 class GithubConfig:
     """Charm configuration related to GitHub.
 
@@ -165,7 +102,7 @@ class GithubConfig:
     """
 
     token: str
-    path: GithubPath
+    path: GitHubPath
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "GithubConfig":
@@ -185,7 +122,10 @@ class GithubConfig:
         path_str = cast(str, charm.config.get(PATH_CONFIG_NAME, ""))
         if not path_str:
             raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
-        path = parse_github_path(cast(str, path_str), cast(str, runner_group))
+        try:
+            path = parse_github_path(cast(str, path_str), cast(str, runner_group))
+        except ValueError as e:
+            raise CharmConfigInvalidError(str(e)) from e
 
         token = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
         if not token:
@@ -346,6 +286,50 @@ class RepoPolicyComplianceConfig(BaseModel):
         return cls(url=url, token=token)  # type: ignore
 
 
+class _OpenStackAuth(TypedDict):
+    """The OpenStack cloud connection authentication info.
+
+    Attributes:
+        auth_url: The OpenStack authentication URL (keystone).
+        password: The OpenStack project user's password.
+        project_domain_name: The project domain in which the project belongs to.
+        project_name: The OpenStack project to connect to.
+        user_domain_name: The user domain in which the user belongs to.
+        username: The user to authenticate as.
+    """
+
+    auth_url: str
+    password: str
+    project_domain_name: str
+    project_name: str
+    user_domain_name: str
+    username: str
+
+
+class _OpenStackCloud(TypedDict):
+    """The OpenStack cloud connection info.
+
+    See https://docs.openstack.org/python-openstackclient/pike/configuration/index.html.
+
+    Attributes:
+        auth: The connection authentication info.
+        region_name: The OpenStack region to authenticate to.
+    """
+
+    auth: _OpenStackAuth
+    region_name: str
+
+
+class OpenStackCloudsYAML(TypedDict):
+    """The OpenStack clouds YAML dict mapping.
+
+    Attributes:
+        clouds: The map of cloud name to cloud connection info.
+    """
+
+    clouds: dict[str, _OpenStackCloud]
+
+
 class CharmConfig(BaseModel):
     """General charm configuration.
 
@@ -366,8 +350,8 @@ class CharmConfig(BaseModel):
     denylist: list[FirewallEntry]
     dockerhub_mirror: AnyHttpsUrl | None
     labels: tuple[str, ...]
-    openstack_clouds_yaml: dict[str, dict] | None
-    path: GithubPath
+    openstack_clouds_yaml: OpenStackCloudsYAML | None
+    path: GitHubPath
     reconcile_interval: int
     repo_policy_compliance: RepoPolicyComplianceConfig | None
     token: str
@@ -421,7 +405,7 @@ class CharmConfig(BaseModel):
         return dockerhub_mirror
 
     @classmethod
-    def _parse_openstack_clouds_config(cls, charm: CharmBase) -> dict | None:
+    def _parse_openstack_clouds_config(cls, charm: CharmBase) -> OpenStackCloudsYAML | None:
         """Parse and validate openstack clouds yaml config value.
 
         Args:
@@ -440,25 +424,18 @@ class CharmConfig(BaseModel):
             return None
 
         try:
-            openstack_clouds_yaml = yaml.safe_load(cast(str, openstack_clouds_yaml_str))
-        except yaml.YAMLError as exc:
+            openstack_clouds_yaml: OpenStackCloudsYAML = yaml.safe_load(
+                cast(str, openstack_clouds_yaml_str)
+            )
+            # use Pydantic to validate TypedDict.
+            create_model_from_typeddict(OpenStackCloudsYAML)(**openstack_clouds_yaml)
+        except (yaml.YAMLError, TypeError) as exc:
             logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
             raise CharmConfigInvalidError(
                 f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config. Invalid yaml."
             ) from exc
-        if (config_type := type(openstack_clouds_yaml)) is not dict:
-            raise CharmConfigInvalidError(
-                f"Invalid openstack config format, expected dict, got {config_type}"
-            )
-        try:
-            openstack_cloud.initialize(openstack_clouds_yaml)
-        except OpenStackInvalidConfigError as exc:
-            logger.error("Invalid openstack config, %s.", exc)
-            raise CharmConfigInvalidError(
-                "Invalid openstack config. Not able to initialize openstack integration."
-            ) from exc
 
-        return cast(dict, openstack_clouds_yaml)
+        return openstack_clouds_yaml
 
     @validator("reconcile_interval")
     @classmethod
@@ -1215,6 +1192,10 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
         reactive_config = ReactiveConfig.from_database(database)
+
+        if instance_type == InstanceType.LOCAL_LXD and reactive_config:
+            logger.error(REACTIVE_MODE_NOT_SUPPORTED_WITH_LXD_ERR_MSG)
+            raise CharmConfigInvalidError(REACTIVE_MODE_NOT_SUPPORTED_WITH_LXD_ERR_MSG)
 
         state = cls(
             arch=arch,

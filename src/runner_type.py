@@ -8,11 +8,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
-from charm_state import GithubPath, SSHDebugConnection
+from github_runner_manager.types_.github import GitHubPath
+
+from charm_state import SSHDebugConnection
 
 
 @dataclass
-class RunnerByHealth:
+class RunnerNameByHealth:
     """Set of runners instance by health state.
 
     Attributes:
@@ -64,7 +66,7 @@ class RunnerConfig:  # pylint: disable=too-many-instance-attributes
     labels: tuple[str]
     lxd_storage_path: Path
     name: str
-    path: GithubPath
+    path: GitHubPath
     proxies: ProxySetting
     dockerhub_mirror: str | None = None
     ssh_debug_connections: list[SSHDebugConnection] | None = None

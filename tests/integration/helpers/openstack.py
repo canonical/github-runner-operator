@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 import logging
 import secrets
+from asyncio import sleep
 from typing import Optional, TypedDict, cast
 
 import openstack.connection
@@ -9,6 +10,7 @@ from juju.application import Application
 from juju.unit import Unit
 from openstack.compute.v2.server import Server
 
+from charm import RUNNER_MANAGER_USER
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import InstanceHelper, reconcile, run_in_unit, wait_for
 
@@ -40,8 +42,9 @@ class OpenStackInstanceHelper(InstanceHelper):
             unit: The juju unit of the github-runner charm.
             port: The port on the juju machine to expose to the runner.
         """
-        runner = self._get_runner(unit=unit)
+        runner = self._get_single_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
+        logger.info("[TEST SETUP] Exposing port %s on %s", port, runner.name)
         network_address_list = runner.addresses.values()
         logger.warning(network_address_list)
         assert (
@@ -55,9 +58,24 @@ class OpenStackInstanceHelper(InstanceHelper):
                 break
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
-        ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i /home/ubuntu/.ssh/runner-{runner.name}.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
+        key_path = f"/home/{RUNNER_MANAGER_USER}/.ssh/{runner.name}.key"
+        exit_code, _, _ = await run_in_unit(unit, f"ls {key_path}")
+        assert exit_code == 0, f"Unable to find key file {key_path}"
+        ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i {key_path} -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
         exit_code, _, stderr = await run_in_unit(unit, ssh_cmd)
-        assert exit_code == 0, f"Error in SSH remote forwarding of port {port}: {stderr}"
+        assert (
+            exit_code == 0
+        ), f"Error in starting background process of SSH remote forwarding of port {port}: {stderr}"
+
+        await sleep(1)
+        for _ in range(6):
+            exit_code, _, _ = await self.run_in_instance(
+                unit=unit, command=f"nc -z localhost {port}"
+            )
+            if exit_code == 0:
+                return
+            await sleep(10)
+        assert False, f"Exposing the port {port} failed"
 
     async def run_in_instance(
         self,
@@ -79,8 +97,9 @@ class OpenStackInstanceHelper(InstanceHelper):
         Returns:
             Tuple of return code, stdout and stderr.
         """
-        runner = self._get_runner(unit=unit)
+        runner = self._get_single_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
+        logger.info("[TEST SETUP] Run command %s on %s", command, runner.name)
         network_address_list = runner.addresses.values()
         logger.warning(network_address_list)
         assert (
@@ -94,7 +113,10 @@ class OpenStackInstanceHelper(InstanceHelper):
                 break
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
-        ssh_cmd = f'ssh -i /home/ubuntu/.ssh/runner-{runner.name}.key -o "StrictHostKeyChecking no" ubuntu@{ip} {command}'
+        key_path = f"/home/{RUNNER_MANAGER_USER}/.ssh/{runner.name}.key"
+        exit_code, _, _ = await run_in_unit(unit, f"ls {key_path}")
+        assert exit_code == 0, f"Unable to find key file {key_path}"
+        ssh_cmd = f'ssh -i {key_path} -o "StrictHostKeyChecking no" ubuntu@{ip} {command}'
         ssh_cmd_as_ubuntu_user = f"su - ubuntu -c '{ssh_cmd}'"
         logging.warning("ssh_cmd: %s", ssh_cmd_as_ubuntu_user)
         exit_code, stdout, stderr = await run_in_unit(unit, ssh_cmd, timeout)
@@ -152,12 +174,14 @@ class OpenStackInstanceHelper(InstanceHelper):
         Returns:
             Tuple of runner names.
         """
-        runner = self._get_runner(unit)
+        runner = self._get_single_runner(unit)
         assert runner, "Failed to find runner server"
         return (cast(str, runner.name),)
 
-    def _get_runner(self, unit: Unit) -> Server | None:
-        """Get the runner server.
+    def _get_single_runner(self, unit: Unit) -> Server | None:
+        """Get the only runner for the unit.
+
+        This method asserts for exactly one runner for the unit.
 
         Args:
             unit: The unit to get the runner for.
@@ -166,14 +190,12 @@ class OpenStackInstanceHelper(InstanceHelper):
             The runner server.
         """
         servers: list[Server] = self.openstack_connection.list_servers()
-        runner = None
         unit_name_without_slash = unit.name.replace("/", "-")
-        for server in servers:
-            if server.name.startswith(unit_name_without_slash):
-                runner = server
-                break
-
-        return runner
+        runners = [server for server in servers if server.name.startswith(unit_name_without_slash)]
+        assert (
+            len(runners) == 1
+        ), f"In {unit.name} found more than one runners or no runners: {runners}"
+        return runners[0]
 
 
 async def setup_repo_policy(
@@ -214,6 +236,13 @@ async def setup_repo_policy(
 
     await instance_helper.ensure_charm_has_runner(app=app)
     await instance_helper.expose_to_instance(unit, 8080)
+    # This tests the connection to the repo policy compliance, not a health check of service.
+    await instance_helper.run_in_instance(
+        unit=unit,
+        command="curl http://localhost:8080",
+        assert_on_failure=True,
+        assert_msg="Unable to reach the repo policy compliance server setup",
+    )
 
 
 async def _install_repo_policy(
@@ -247,7 +276,7 @@ async def _install_repo_policy(
     )
     await run_in_unit(
         unit,
-        f'sudo -u ubuntu HTTPS_PROXY={https_proxy if https_proxy else ""} pip install --proxy http://squid.internal:3128 -r /home/ubuntu/repo_policy_compliance/requirements.txt',
+        f'sudo -u ubuntu HTTPS_PROXY={https_proxy if https_proxy else ""} pip install {f"--proxy {https_proxy}" if https_proxy else ""} -r /home/ubuntu/repo_policy_compliance/requirements.txt',
         assert_on_failure=True,
         assert_msg="Failed to install repo-policy-compliance requirements",
     )

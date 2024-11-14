@@ -40,7 +40,7 @@ async def test_charm_upgrade(
     assert: the charm is upgraded successfully.
     """
     latest_stable_path = tmp_path / "github-runner.charm"
-    latest_stable_revision = 161  # update this value every release to stable.
+    latest_stable_revision = 282  # update this value every release to stable.
     # download the charm and inject lxd profile for testing
     retcode, stdout, stderr = await ops_test.juju(
         "download",
