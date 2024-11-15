@@ -11,15 +11,15 @@ In OpenStack mode, the runner creates virtual machines to run the workload in Op
 
 [DockerHub Registry](https://charmhub.io/docker-registry) is used as a cache between the official DockerHub and GitHub runners to avoid rate limiting. Communication between GitHub runners and DockerHub cache is secured via TLS 1.3 and certified by [Let’s Encrypt](https://letsencrypt.org/).
 
-Images that run in the OpenStack vm are built using the [Image Builder](https://github.com/canonical/github-runner-image-builder). This application needs to download the runner binary, yq and the cloud image to base the image on. All these images are downloaded with TLS.
+Images that run in the OpenStack VM are built using the [Image Builder](https://github.com/canonical/github-runner-image-builder). This application needs to download the runner binary, yq and the cloud image to base the image on. All these images are downloaded with TLS.
 
 The GitHub runner charm supports being deployed behind an HTTP proxy. [Aproxy](https://github.com/canonical/aproxy) is installed and enabled when an HTTP proxy is detected so that jobs executing in the runner VMs don’t have to configure the proxy themselves. Aproxy is a transparent proxy service for HTTP and HTTPS/TLS connections. Aproxy works by pre-reading the Host header in HTTP requests and SNI in TLS hellos; it forwards HTTP proxy requests with the hostname therefore, complies with HTTP proxies requiring destination hostname for auditing or access control. Aproxy doesn't and can't decrypt the TLS connections. It works by reading the plaintext SNI information in the client hello during the TLS handshake, so the authentication and encryption of TLS are never compromised. Aproxy supports TLS 1.0 and above except TLS 1.3 Encrypted Client Hello.
 
 ### Signature Verification
-Images that run in the OpenStack vm (Cloud images) are verified by SHA256 checksum. Runner binary is also downloaded by [GitHub Runner Charm](https://github.com/canonical/github-runner-operator) and verified by SHA256 in this charm.
+Images that run in the OpenStack VM (Cloud images) are verified by SHA256 checksum. Runner binary is also downloaded by [GitHub Runner Charm](https://github.com/canonical/github-runner-operator) and verified by SHA256 in this charm.
 
 ### User SSH Access
-Sometimes users need to access the VM instance that is running the workload, to establish this connection [Tmate](https://tmate.io/) is used. Tmate uses the SSH protocol to secure shell connections between users and the GitHub runner. The connection is secured with rsa keypair and ed25519 fingerprints.
+Sometimes users need to access the VM instance that is running the workload, to establish this connection [Tmate](https://tmate.io/) is used. Tmate uses the SSH protocol to secure shell connections between users and the GitHub runner. The connection is secured with RSA keypair and ed25519 fingerprints.
 
 ## Cryptographic Technology Used by the Product
 The following cryptographic technologies are used internally by our product:
@@ -52,9 +52,9 @@ The following sections describe the cryptographic technologies exposed to the us
 
 ## Packages or Technology Providing Cryptographic Functionality
 The following packages or technologies provide cryptographic functionality:
-- [OpenSSL](https://www.openssl.org/) library is being used.
-- For TLS and HTTPS connections urllib3 python library is used.
+- [OpenSSL](https://www.openssl.org/) library is being used for TLS and HTTPS connections.
+- Urllib3 python library is being used for TLS and HTTPS connections.
 - Default clients in Ubuntu for SSH and TLS are being used.
 - [Python hashlib](https://docs.python.org/3/library/hashlib.html) package is being used for SHA256 checksum calculation/verification of runner binary and Cloud Init.
 - OpenStack client is being used to generate keypairs.
-- [Aproxy](https://github.com/canonical/aproxy) using the [golang.org/x/crypto](http://golang.org/x/crypto) package.
+- [Aproxy](https://github.com/canonical/aproxy) using the [golang.org/x/crypto](http://golang.org/x/crypto) package to parse TLS client hello message.
