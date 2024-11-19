@@ -12,8 +12,6 @@ We are going to showcase the steps required to set up a reactive spawning enviro
 
 Note, that the specific revisions/channels in the steps are only marked here for reproducibility, you should adapt the revisions/channels to your needs.
 
-We assume that you have a machine model (named "machine-model") for the runners and MongoDB, and a Kubernetes (k8s) model (named "k8s-model") for the webhook router.
-
 ### GitHub Runner flavors
 
 For this how-to-guide, we decided to have deployed three runner flavors: `large`, `large-arm`, `small` . We need
