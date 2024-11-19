@@ -8,7 +8,12 @@ import time
 from dataclasses import dataclass
 
 import github_runner_manager.reactive.runner_manager as reactive_runner_manager
-from github_runner_manager.errors import IssueMetricEventError, MissingServerConfigError
+from github_runner_manager.errors import (
+    CloudError,
+    IssueMetricEventError,
+    MissingServerConfigError,
+    ReconcileError,
+)
 from github_runner_manager.manager.cloud_runner_manager import HealthState
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.runner_manager import (
@@ -156,6 +161,9 @@ class RunnerScaler:
 
         Returns:
             The Change in number of runners or reactive processes.
+
+        Raises:
+            ReconcileError: If an expected error occurred during the reconciliation.
         """
         logger.info("Start reconcile to %s runner", quantity)
 
@@ -180,6 +188,9 @@ class RunnerScaler:
                 reconcile_result = self._reconcile_non_reactive(quantity)
                 reconcile_diff = reconcile_result.runner_diff
                 metric_stats = reconcile_result.metric_stats
+        except CloudError as exc:
+            logger.error("Failed to reconcile runners.")
+            raise ReconcileError("Failed to reconcile runners.") from exc
         finally:
             runner_list = self._manager.get_runners()
             self._log_runners(runner_list)
@@ -193,6 +204,8 @@ class RunnerScaler:
                 expected_runner_quantity=expected_runner_quantity,
             )
             _issue_reconciliation_metric(reconcile_metric_data)
+
+        logger.info("Finished reconciliation.")
 
         return reconcile_diff
 

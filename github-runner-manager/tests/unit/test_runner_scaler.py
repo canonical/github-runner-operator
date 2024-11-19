@@ -7,6 +7,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from github_runner_manager.errors import CloudError, ReconcileError
 from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState, InstanceId
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.runner_manager import (
@@ -202,6 +203,22 @@ def test_reconcile_error_still_issue_metrics(
     issue_events_mock.assert_called_once()
     issued_event = issue_events_mock.call_args[0][0]
     assert isinstance(issued_event, Reconciliation)
+
+
+def test_reconcile_raises_reconcile_error(
+    runner_scaler: RunnerScaler, monkeypatch: pytest.MonkeyPatch, issue_events_mock: MagicMock
+):
+    """
+    Arrange: A RunnerScaler with no runners which raises a Cloud error on reconcile.
+    Act: Reconcile to one runner.
+    Assert: ReconcileError should be raised.
+    """
+    monkeypatch.setattr(
+        runner_scaler._manager, "cleanup", MagicMock(side_effect=CloudError("Mock error"))
+    )
+    with pytest.raises(ReconcileError) as exc:
+        runner_scaler.reconcile(1)
+    assert "Failed to reconcile runners." in str(exc.value)
 
 
 def test_one_runner(runner_scaler: RunnerScaler):

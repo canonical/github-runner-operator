@@ -2,7 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Class for accessing OpenStack API for managing servers."""
-
+import functools
 import logging
 import shutil
 from contextlib import contextmanager
@@ -10,8 +10,9 @@ from dataclasses import dataclass
 from datetime import datetime
 from functools import reduce
 from pathlib import Path
-from typing import Iterable, Iterator, cast
+from typing import Callable, Iterable, Iterator, ParamSpec, TypeVar, cast
 
+import keystoneauth1.exceptions
 import openstack
 import openstack.exceptions
 import paramiko
@@ -24,7 +25,6 @@ from paramiko.ssh_exception import NoValidConnectionsError
 
 from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
-from github_runner_manager.utilities import retry
 
 logger = logging.getLogger(__name__)
 
@@ -106,38 +106,71 @@ class OpenstackInstance:
         self.status = server.status
 
 
+P = ParamSpec("P")
+T = TypeVar("T")
+
+
+def _catch_openstack_errors(func: Callable[P, T]) -> Callable[P, T]:
+    """Decorate a function to wrap OpenStack exceptions in a custom exception.
+
+    Args:
+        func: The function to decorate.
+
+    Returns:
+        The decorated function.
+    """
+
+    @functools.wraps(func)
+    def exception_handling_wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
+        """Wrap the function with exception handling.
+
+        Args:
+            args: The positional arguments.
+            kwargs: The keyword arguments.
+
+        Raises:
+            OpenStackError: If any OpenStack exception is caught.
+
+        Returns:
+            The return value of the decorated function.
+        """
+        try:
+            return func(*args, **kwargs)
+        except (
+            openstack.exceptions.SDKException,
+            keystoneauth1.exceptions.ClientException,
+        ) as exc:
+            logger.error("OpenStack API call failure")
+            raise OpenStackError("Failed OpenStack API call") from exc
+
+    return exception_handling_wrapper
+
+
 @contextmanager
-@retry(tries=2, delay=5, local_logger=logger)
 def _get_openstack_connection(credentials: OpenStackCredentials) -> Iterator[OpenstackConnection]:
     """Create a connection context managed object, to be used within with statements.
 
+    Using the context manager ensures that the connection is properly closed after use.
+
     Args:
         credentials: The OpenStack authorization information.
-
-    Raises:
-        OpenStackError: if the credentials provided is not authorized.
 
     Yields:
         An openstack.connection.Connection object.
     """
     # api documents that keystoneauth1.exceptions.MissingRequiredOptions can be raised but
     # I could not reproduce it. Therefore, no catch here for such exception.
-    try:
-        with openstack.connect(
-            auth_url=credentials.auth_url,
-            project_name=credentials.project_name,
-            username=credentials.username,
-            password=credentials.password,
-            region_name=credentials.region_name,
-            user_domain_name=credentials.user_domain_name,
-            project_domain_name=credentials.project_domain_name,
-        ) as conn:
-            conn.authorize()
-            yield conn
-    # pylint thinks this isn't an exception, but does inherit from Exception class.
-    except openstack.exceptions.HttpException as exc:  # pylint: disable=bad-exception-cause
-        logger.exception("OpenStack API call failure")
-        raise OpenStackError("Failed OpenStack API call") from exc
+    with openstack.connect(
+        auth_url=credentials.auth_url,
+        project_name=credentials.project_name,
+        username=credentials.username,
+        password=credentials.password,
+        region_name=credentials.region_name,
+        user_domain_name=credentials.user_domain_name,
+        project_domain_name=credentials.project_domain_name,
+    ) as conn:
+        conn.authorize()
+        yield conn
 
 
 class OpenstackCloud:
@@ -162,6 +195,7 @@ class OpenstackCloud:
         self._system_user = system_user
         self._ssh_key_dir = Path(f"~{system_user}").expanduser() / ".ssh"
 
+    @_catch_openstack_errors
     # Ignore "Too many arguments" as 6 args should be fine. Move to a dataclass if new args are
     # added.
     def launch_instance(  # pylint: disable=too-many-arguments, too-many-positional-arguments
@@ -217,6 +251,7 @@ class OpenstackCloud:
 
             return OpenstackInstance(server, self.prefix)
 
+    @_catch_openstack_errors
     def get_instance(self, instance_id: str) -> OpenstackInstance | None:
         """Get OpenStack instance by instance ID.
 
@@ -235,6 +270,7 @@ class OpenstackCloud:
                 return OpenstackInstance(server, self.prefix)
         return None
 
+    @_catch_openstack_errors
     def delete_instance(self, instance_id: str) -> None:
         """Delete a openstack instance.
 
@@ -268,6 +304,7 @@ class OpenstackCloud:
         ) as err:
             raise OpenStackError(f"Failed to remove openstack runner {full_name}") from err
 
+    @_catch_openstack_errors
     def get_ssh_connection(self, instance: OpenstackInstance) -> SSHConnection:
         """Get SSH connection to an OpenStack instance.
 
@@ -321,6 +358,7 @@ class OpenstackCloud:
             f"addresses: {instance.addresses}"
         )
 
+    @_catch_openstack_errors
     def get_instances(self) -> tuple[OpenstackInstance, ...]:
         """Get all OpenStack instances.
 
@@ -342,6 +380,7 @@ class OpenstackCloud:
                 if server is not None
             )
 
+    @_catch_openstack_errors
     def cleanup(self) -> None:
         """Cleanup unused key files and openstack keypairs."""
         with _get_openstack_connection(credentials=self._credentials) as conn:
@@ -350,6 +389,7 @@ class OpenstackCloud:
             self._cleanup_key_files(exclude_list)
             self._cleanup_openstack_keypairs(conn, exclude_list)
 
+    @_catch_openstack_errors
     def get_server_name(self, instance_id: str) -> str:
         """Get server name on OpenStack.
 

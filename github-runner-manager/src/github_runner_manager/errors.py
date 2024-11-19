@@ -73,7 +73,11 @@ class JobNotFoundError(GithubClientError):
     """Represents an error when the job could not be found on GitHub."""
 
 
-class OpenStackError(Exception):
+class CloudError(Exception):
+    """Base class for cloud (as e.g. OpenStack) errors."""
+
+
+class OpenStackError(CloudError):
     """Base class for OpenStack errors."""
 
 
@@ -87,3 +91,7 @@ class SSHError(Exception):
 
 class KeyfileError(SSHError):
     """Represents missing keyfile for SSH."""
+
+
+class ReconcileError(Exception):
+    """Base class for all reconcile errors."""

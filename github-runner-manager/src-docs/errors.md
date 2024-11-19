@@ -198,6 +198,17 @@ Represents an error when the job could not be found on GitHub.
 
 <a href="../src/github_runner_manager/errors.py#L76"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
+## <kbd>class</kbd> `CloudError`
+Base class for cloud (as e.g. OpenStack) errors. 
+
+
+
+
+
+---
+
+<a href="../src/github_runner_manager/errors.py#L80"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
 ## <kbd>class</kbd> `OpenStackError`
 Base class for OpenStack errors. 
 
@@ -207,7 +218,7 @@ Base class for OpenStack errors.
 
 ---
 
-<a href="../src/github_runner_manager/errors.py#L80"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_runner_manager/errors.py#L84"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `OpenStackInvalidConfigError`
 Represents an invalid OpenStack configuration. 
@@ -218,7 +229,7 @@ Represents an invalid OpenStack configuration.
 
 ---
 
-<a href="../src/github_runner_manager/errors.py#L84"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_runner_manager/errors.py#L88"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `SSHError`
 Represents an error while interacting with SSH. 
@@ -229,10 +240,21 @@ Represents an error while interacting with SSH.
 
 ---
 
-<a href="../src/github_runner_manager/errors.py#L88"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/github_runner_manager/errors.py#L92"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `KeyfileError`
 Represents missing keyfile for SSH. 
+
+
+
+
+
+---
+
+<a href="../src/github_runner_manager/errors.py#L96"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `ReconcileError`
+Base class for all reconcile errors. 
 
 
 
