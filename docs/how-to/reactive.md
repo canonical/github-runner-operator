@@ -1,10 +1,12 @@
 # How to set up reactive spawning
 
 The charm provides an experimental feature to spawn runners reactively, depending on the jobs requested by GitHub.
-This feature is disabled by default and can be enabled by integrating the charm with a MongoDB database.
+This feature is only available for runners on OpenStack cloud and is
+disabled by default and can be enabled by integrating the charm with a MongoDB database.
 
 ## Requirements
-For the purposes of this how-to-guide, we assume that you have a machine model (named "machine-model") for the runners and [MongoDB](https://charmhub.io/mongodb),
+For the purposes of this how-to-guide, we assume that you have a machine model (named "machine-model") 
+that can be used to deploy runners on an OpenStack cloud and [MongoDB](https://charmhub.io/mongodb),
 and a k8s model (named "k8s-model") for the [webhook router](https://charmhub.io/github-runner-webhook-router).
 
 ## Steps
@@ -24,9 +26,7 @@ juju deploy github-runner large-arm --channel latest/stable ....
 juju deploy github-runner small --channel latest/stable ....
 ```
 
-More steps are required if you are deploying runners on OpenStack cloud.
-
-Please refer to [How to spawn OpenStack runner](how-to/openstack-runner.md) or [How to run on LXD cloud](how-to/run-on-lxd.md)
+Please refer to [How to spawn OpenStack runner](how-to/openstack-runner.md).
 for more information on how to deploy the runners.
 
 ### MongoDB
