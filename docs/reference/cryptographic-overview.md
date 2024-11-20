@@ -1,5 +1,5 @@
 # GitHub runner cryptographic overview
-This document provides an overview of the cryptographic technologies used in the GitHub runner charm, including encryption/decryption, hashing, and digital signatures.
+This document provides an overview of the cryptographic technologies used in the GitHub runner charm, including encryption, decryption, hashing and digital signatures.
 
 ## Overall Description of Cryptographic Technology Use
 The GitHub runner charm uses various cryptographic technologies to ensure secure communication and data integrity. The following sections describe each of the components.
