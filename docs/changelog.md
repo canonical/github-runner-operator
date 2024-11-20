@@ -1,5 +1,14 @@
 # Changelog
 
+
+### 2024-11-15
+
+- Catch ReconcileError and set appropriate message in unit status.
+
+### 2024-11-13
+
+- Align the README with the one in https://github.com/canonical/is-charms-template-repo.
+
 ### 2024-10-24
 
 - Add "expected_runners" to reconciliation metric.
