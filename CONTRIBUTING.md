@@ -25,9 +25,12 @@ git clone https://github.com/canonical/github-runner-operator.git
 
 Prior to working on the charm ensure juju is connected to an LXD cloud,  see the [upstream documentation](https://juju.is/docs/lxd-cloud) for details.
 
+
 ### Testing
 
-This project uses `tox` for managing test environments. There are some pre-configured environments
+This project uses `tox` for managing test environments. There are two `tox` working directories,
+one in the root directory and one in the directory `github-runner-manager` for
+the Python library. For each `tox` working directory, there are some pre-configured environments
 that can be used for linting and formatting code when you're preparing contributions to the charm:
 
 * `tox`: Runs all of the basic checks (`lint`, `unit`, `static`, and `coverage-report`).
