@@ -583,18 +583,8 @@ class OpenstackImage(BaseModel):
         Returns:
             OpenstackImage metadata from charm relation data.
         """
-        relations = charm.model.relations[IMAGE_INTEGRATION_NAME]
-        if not relations or not (relation := relations[0]).units:
-            return None
-        for unit in relation.units:
-            relation_data = relation.data[unit]
-            if not relation_data:
-                continue
-            return OpenstackImage(
-                id=relation_data.get("id", None),
-                tags=[tag.strip() for tag in relation_data.get("tags", "").split(",") if tag],
-            )
-        return OpenstackImage(id=None, tags=None)
+        # hardcode image id for launchpad PoC ISD-2684
+        return OpenstackImage(id="bbd5ffc7-c152-463b-98ec-8344a183e32e", tags=None)
 
 
 class OpenstackRunnerConfig(BaseModel):
