@@ -1,0 +1,11 @@
+name: Tests
+
+on:
+  push:
+
+jobs:
+  unit-tests:
+    uses: canonical/operator-workflows/.github/workflows/test.yaml@feat/add-vale
+    secrets: inherit
+    with:
+      self-hosted-runner: true
