@@ -9,7 +9,7 @@ from enum import Enum, auto
 from multiprocessing import Pool
 from typing import Iterator, Sequence, Type, cast
 
-from github_runner_manager.errors import GithubMetricsError, RunnerCreateError
+from github_runner_manager.errors import GithubMetricsError, RunnerError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
@@ -274,7 +274,7 @@ class RunnerManager:
         if num == 1:
             try:
                 return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
-            except RunnerCreateError:
+            except RunnerError:
                 logger.exception("Failed to spawn a runner.")
                 return tuple()
 
@@ -304,7 +304,7 @@ class RunnerManager:
             for _ in range(num):
                 try:
                     instance_id = next(jobs)
-                except RunnerCreateError:
+                except RunnerError:
                     logger.exception("Failed to spawn a runner.")
                 except StopIteration:
                     break
