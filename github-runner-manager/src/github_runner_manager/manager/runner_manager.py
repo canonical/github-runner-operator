@@ -252,7 +252,7 @@ class RunnerManager:
 
     @staticmethod
     def _spawn_runners(
-        create_runner_args: Sequence["RunnerManager._CreateRunnerArgs"],
+        create_runner_args_sequence: Sequence["RunnerManager._CreateRunnerArgs"],
     ) -> tuple[InstanceId, ...]:
         """Spawn runners in parallel using multiprocessing.
 
@@ -264,21 +264,25 @@ class RunnerManager:
         number of runner spawned.
 
         Args:
-            create_runner_args: List of arg for invoking _create_runner method.
+            create_runner_args_sequence: Sequence of args for invoking _create_runner method.
 
         Returns:
             A tuple of instance ID's of runners spawned.
         """
-        num = len(create_runner_args)
+        num = len(create_runner_args_sequence)
 
         if num == 1:
-            return (RunnerManager._create_runner(create_runner_args[0]),)
+            try:
+                return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+            except RunnerCreateError:
+                logger.exception("Failed to spawn a runner.")
+                return tuple()
 
-        return RunnerManager._spawn_runners_using_multiprocessing(create_runner_args, num)
+        return RunnerManager._spawn_runners_using_multiprocessing(create_runner_args_sequence, num)
 
     @staticmethod
     def _spawn_runners_using_multiprocessing(
-        create_runner_args: Sequence["RunnerManager._CreateRunnerArgs"], num: int
+        create_runner_args_sequence: Sequence["RunnerManager._CreateRunnerArgs"], num: int
     ) -> tuple[InstanceId, ...]:
         """Parallel spawn of runners.
 
@@ -286,7 +290,7 @@ class RunnerManager:
         number of runner spawned.
 
         Args:
-            create_runner_args: List of arg for invoking _create_runner method.
+            create_runner_args_sequence: Sequence of args for invoking _create_runner method.
             num: The number of runners to spawn.
 
         Returns:
@@ -295,7 +299,7 @@ class RunnerManager:
         instance_id_list = []
         with Pool(processes=min(num, 10)) as pool:
             jobs = pool.imap_unordered(
-                func=RunnerManager._create_runner, iterable=create_runner_args
+                func=RunnerManager._create_runner, iterable=create_runner_args_sequence
             )
             for _ in range(num):
                 try:

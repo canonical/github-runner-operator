@@ -50,7 +50,7 @@ Construct RunnerManager object for creating and managing runners.
 
 ---
 
-<a href="../.tox/src-docs/lib/python3.12/site-packages/github_runner_manager/utilities.py#L809"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../github-runner-manager/src-docs/lib/python3.10/site-packages/github_runner_manager/utilities.py#L809"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `build_runner_image`
 
@@ -133,7 +133,7 @@ Get information on the runners from GitHub.
 
 ---
 
-<a href="../.tox/src-docs/lib/python3.12/site-packages/github_runner_manager/utilities.py#L124"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../github-runner-manager/src-docs/lib/python3.10/site-packages/github_runner_manager/utilities.py#L124"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_latest_runner_bin_url`
 
@@ -217,7 +217,7 @@ Install cron job for building runner image.
 
 ---
 
-<a href="../.tox/src-docs/lib/python3.12/site-packages/github_runner_manager/utilities.py#L147"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../github-runner-manager/src-docs/lib/python3.10/site-packages/github_runner_manager/utilities.py#L147"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `update_runner_bin`
 
