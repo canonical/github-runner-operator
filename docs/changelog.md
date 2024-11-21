@@ -1,5 +1,8 @@
 # Changelog
 
+### 2024-11-21
+
+- Catch RunnerError during runner creation.
 
 ### 2024-11-15
 
