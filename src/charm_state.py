@@ -351,10 +351,10 @@ class CharmConfig(BaseModel):
     dockerhub_mirror: AnyHttpsUrl | None
     labels: tuple[str, ...]
     openstack_clouds_yaml: OpenStackCloudsYAML | None
-    path: GitHubPath
+    path: GitHubPath | None
     reconcile_interval: int
     repo_policy_compliance: RepoPolicyComplianceConfig | None
-    token: str
+    token: str | None
 
     @classmethod
     def _parse_denylist(cls, charm: CharmBase) -> list[FirewallEntry]:
@@ -477,10 +477,11 @@ class CharmConfig(BaseModel):
         Returns:
             Current config of the charm.
         """
-        try:
-            github_config = GithubConfig.from_charm(charm)
-        except CharmConfigInvalidError as exc:
-            raise CharmConfigInvalidError(f"Invalid Github config, {str(exc)}") from exc
+        # Don't parse Github config for launchpad POC ISD-2684
+        # try:
+        #     github_config = GithubConfig.from_charm(charm)
+        # except CharmConfigInvalidError as exc:
+        #     raise CharmConfigInvalidError(f"Invalid Github config, {str(exc)}") from exc
 
         try:
             reconcile_interval = int(charm.config[RECONCILE_INTERVAL_CONFIG_NAME])
@@ -514,10 +515,10 @@ class CharmConfig(BaseModel):
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
             labels=labels,
             openstack_clouds_yaml=openstack_clouds_yaml,
-            path=github_config.path,
+            path=None,
             reconcile_interval=reconcile_interval,
             repo_policy_compliance=repo_policy_compliance,
-            token=github_config.token,
+            token=None,
         )
 
 
