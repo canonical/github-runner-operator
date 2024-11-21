@@ -46,7 +46,7 @@ that can be used for linting and formatting code when you're preparing contribut
 Run the following command:
 
 ```bash
-echo -e "set -euo pipefail" >> .git/hooks/pre-commit
+echo -e "set -eu" >> .git/hooks/pre-commit
 echo -e "tox -e src-docs" >> .git/hooks/pre-commit
 echo -e "git add src-docs\ngit add github-runner-manager/src-docs" >> .git/hooks/pre-commit
 chmod +x .git/hooks/pre-commit
