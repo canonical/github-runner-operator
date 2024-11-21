@@ -327,7 +327,7 @@ def _assert_msg_has_been_requeued(queue_name: str, payload: str) -> None:
 
     Args:
         queue_name: The name of the queue.
-        payload: The payload message to assert.
+        payload: The payload of the message to assert.
     """
     with Connection(IN_MEMORY_URI) as conn:
         with closing(conn.SimpleQueue(queue_name)) as simple_queue:
