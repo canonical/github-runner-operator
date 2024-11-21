@@ -2,11 +2,8 @@ name: Reactive Test
 on: push
 jobs:
   build:
-    strategy:
-        matrix:
-            runs: [1, 2]
     runs-on: ["self-hosted", "stg-reactive"]
     steps:
-        - name: sleep for 2 minutes
+        - name: sleep for 6 minutes
           run: |
-            sleep 120
+            sleep 360
