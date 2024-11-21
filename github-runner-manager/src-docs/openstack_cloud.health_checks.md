@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/github_runner_manager/openstack_cloud/health_checks.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/openstack_cloud/health_checks.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `openstack_cloud.health_checks`
 Collection of functions related to health checks for a runner VM. 
@@ -13,7 +13,7 @@ Collection of functions related to health checks for a runner VM.
 
 ---
 
-<a href="../src/github_runner_manager/openstack_cloud/health_checks.py#L29"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/openstack_cloud/health_checks.py#L29"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `check_runner`
 
@@ -43,7 +43,7 @@ This check applies to runners in any OpenStack state (ACTIVE, STOPPED, etc).
 
 ---
 
-<a href="../src/github_runner_manager/openstack_cloud/health_checks.py#L58"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/openstack_cloud/health_checks.py#L58"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `check_active_runner`
 

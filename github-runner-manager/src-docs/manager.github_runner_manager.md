@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/github_runner_manager/manager/github_runner_manager.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/github_runner_manager.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `manager.github_runner_manager`
 Client for managing self-hosted runner on GitHub side. 
@@ -9,7 +9,7 @@ Client for managing self-hosted runner on GitHub side.
 
 ---
 
-<a href="../src/github_runner_manager/manager/github_runner_manager.py#L13"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/github_runner_manager.py#L13"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `GitHubRunnerState`
 State of the self-hosted runner on GitHub. 
@@ -28,12 +28,12 @@ State of the self-hosted runner on GitHub.
 
 ---
 
-<a href="../src/github_runner_manager/manager/github_runner_manager.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/github_runner_manager.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `GitHubRunnerManager`
 Manage self-hosted runner on GitHub side. 
 
-<a href="../src/github_runner_manager/manager/github_runner_manager.py#L51"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/github_runner_manager.py#L51"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -56,7 +56,7 @@ Construct the object.
 
 ---
 
-<a href="../src/github_runner_manager/manager/github_runner_manager.py#L87"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/github_runner_manager.py#L87"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `delete_runners`
 
@@ -74,7 +74,7 @@ Delete the self-hosted runners of certain states.
 
 ---
 
-<a href="../src/github_runner_manager/manager/github_runner_manager.py#L97"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/github_runner_manager.py#L97"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_registration_token`
 
@@ -93,7 +93,7 @@ This token is used for registering self-hosted runners.
 
 ---
 
-<a href="../src/github_runner_manager/manager/github_runner_manager.py#L107"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/github_runner_manager.py#L107"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_removal_token`
 
@@ -112,7 +112,7 @@ This token is used for removing self-hosted runners.
 
 ---
 
-<a href="../src/github_runner_manager/manager/github_runner_manager.py#L63"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/github_runner_manager.py#L63"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_runners`
 

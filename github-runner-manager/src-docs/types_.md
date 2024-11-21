@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/github_runner_manager/types_/__init__.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/__init__.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `types_`
 Package containing modules with type definitions. 
@@ -9,7 +9,7 @@ Package containing modules with type definitions.
 
 ---
 
-<a href="../src/github_runner_manager/types_/__init__.py#L10"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/__init__.py#L10"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `ProxyConfig`
 Proxy configuration. 
@@ -35,7 +35,7 @@ Return the aproxy address.
 
 ---
 
-<a href="../src/github_runner_manager/types_/__init__.py#L44"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/__init__.py#L44"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_use_aproxy`
 
@@ -66,7 +66,7 @@ Validate the proxy configuration.
 
 ---
 
-<a href="../src/github_runner_manager/types_/__init__.py#L73"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/__init__.py#L73"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `SSHDebugConnection`
 SSH connection information for debug workflow. 
@@ -86,7 +86,7 @@ SSH connection information for debug workflow.
 
 ---
 
-<a href="../src/github_runner_manager/types_/__init__.py#L89"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/__init__.py#L89"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RepoPolicyComplianceConfig`
 Configuration for the repo policy compliance service. 
@@ -104,7 +104,7 @@ Configuration for the repo policy compliance service.
 
 ---
 
-<a href="../src/github_runner_manager/types_/__init__.py#L101"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/__init__.py#L101"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `SystemUserConfig`
 Configuration for which user to use when spawning processes or accessing resources. 
