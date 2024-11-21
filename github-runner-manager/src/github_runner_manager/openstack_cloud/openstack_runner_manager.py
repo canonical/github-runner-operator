@@ -176,7 +176,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         return self._config.prefix
 
-    def create_runner(self, registration_token: str) -> InstanceId:
+    def create_runner(self, registration_token: str | None) -> InstanceId:
         """Create a self-hosted runner.
 
         Args:
@@ -197,9 +197,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         instance_name = self._openstack_cloud.get_server_name(instance_id=instance_id)
         self._init_metrics_storage(name=instance_name, install_start_timestamp=start_timestamp)
 
-        cloud_init = self._generate_cloud_init(
-            instance_name=instance_name, registration_token=registration_token
-        )
+        cloud_init = self._generate_cloud_init(instance_name=instance_name)
         try:
             instance = self._openstack_cloud.launch_instance(
                 instance_id=instance_id,
@@ -347,7 +345,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Runners successfully flushed, cleaning up.")
         return self.cleanup(remove_token)
 
-    def cleanup(self, remove_token: str) -> Iterator[runner_metrics.RunnerMetrics]:
+    def cleanup(self, remove_token: str | None) -> Iterator[runner_metrics.RunnerMetrics]:
         """Cleanup runner and resource on the cloud.
 
         Args:
@@ -418,34 +416,34 @@ class OpenStackRunnerManager(CloudRunnerManager):
             include=True,
         )
 
-    def _delete_runner(self, instance: OpenstackInstance, remove_token: str) -> None:
+    def _delete_runner(self, instance: OpenstackInstance, remove_token: str | None) -> None:
         """Delete self-hosted runners by openstack instance.
 
         Args:
             instance: The OpenStack instance.
             remove_token: The GitHub remove token.
         """
-        try:
-            ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-            self._pull_runner_metrics(instance.server_name, ssh_conn)
-
-            try:
-                OpenStackRunnerManager._run_runner_removal_script(
-                    instance.server_name, ssh_conn, remove_token
-                )
-            except _GithubRunnerRemoveError:
-                logger.warning(
-                    "Unable to run github runner removal script for %s",
-                    instance.server_name,
-                    stack_info=True,
-                )
-        except SSHError:
-            logger.exception(
-                "Failed to get SSH connection while removing %s", instance.server_name
-            )
-            logger.warning(
-                "Skipping runner remove script for %s due to SSH issues", instance.server_name
-            )
+        # try:
+        #     ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+        #     self._pull_runner_metrics(instance.server_name, ssh_conn)
+        #
+        #     try:
+        #         OpenStackRunnerManager._run_runner_removal_script(
+        #             instance.server_name, ssh_conn, remove_token
+        #         )
+        #     except _GithubRunnerRemoveError:
+        #         logger.warning(
+        #             "Unable to run github runner removal script for %s",
+        #             instance.server_name,
+        #             stack_info=True,
+        #         )
+        # except SSHError:
+        #     logger.exception(
+        #         "Failed to get SSH connection while removing %s", instance.server_name
+        #     )
+        #     logger.warning(
+        #         "Skipping runner remove script for %s due to SSH issues", instance.server_name
+        #     )
 
         try:
             self._openstack_cloud.delete_instance(instance.instance_id)
@@ -470,7 +468,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 unhealthy.append(runner)
         return _RunnerHealth(healthy=tuple(healthy), unhealthy=tuple(unhealthy))
 
-    def _generate_cloud_init(self, instance_name: str, registration_token: str) -> str:
+    def _generate_cloud_init(self, instance_name: str) -> str:
         """Generate cloud init userdata.
 
         This is the script the openstack server runs on startup.
@@ -526,7 +524,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         return jinja.get_template("openstack-userdata.sh.j2").render(
             github_url=f"https://github.com/{runner_config.github_path.path()}",
             runner_group=runner_group,
-            token=registration_token,
+            token="",
             instance_labels=",".join(runner_config.labels),
             instance_name=instance_name,
             env_contents=env_contents,

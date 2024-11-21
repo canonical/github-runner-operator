@@ -130,10 +130,10 @@ class RunnerManager:
             List of instance ID of the runners.
         """
         logger.info("Creating %s runners", num)
-        registration_token = self._github.get_registration_token()
+        registration_token = None # self._github.get_registration_token()
 
         create_runner_args = [
-            RunnerManager._CreateRunnerArgs(self._cloud, registration_token) for _ in range(num)
+            RunnerManager._CreateRunnerArgs(self._cloud, None) for _ in range(num)
         ]
         return RunnerManager._spawn_runners(create_runner_args)
 
@@ -156,9 +156,9 @@ class RunnerManager:
             Information on the runners.
         """
         logger.info("Getting runners...")
-        github_infos = self._github.get_runners(github_states)
+        # github_infos = self._github.get_runners(github_states)
         cloud_infos = self._cloud.get_runners(cloud_states)
-        github_infos_map = {info["name"]: info for info in github_infos}
+        github_infos_map = {}#{info["name"]: info for info in github_infos}
         cloud_infos_map = {info.name: info for info in cloud_infos}
         logger.info(
             "Found following runners: %s", cloud_infos_map.keys() | github_infos_map.keys()
@@ -245,8 +245,8 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the cleanup of runners.
         """
-        self._github.delete_runners([GitHubRunnerState.OFFLINE])
-        remove_token = self._github.get_removal_token()
+        # self._github.delete_runners([GitHubRunnerState.OFFLINE])
+        remove_token = None # self._github.get_removal_token()
         deleted_runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)
 
@@ -383,7 +383,7 @@ class RunnerManager:
         """
 
         cloud_runner_manager: CloudRunnerManager
-        registration_token: str
+        registration_token: str | None
 
     @staticmethod
     def _create_runner(args: _CreateRunnerArgs) -> InstanceId:
