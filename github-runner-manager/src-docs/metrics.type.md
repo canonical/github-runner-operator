@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/github_runner_manager/metrics/type.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/type.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `metrics.type`
 Data types used by modules handling metrics. 
@@ -9,7 +9,7 @@ Data types used by modules handling metrics.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/type.py#L14"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/type.py#L14"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `GithubJobMetrics`
 Metrics about a job. 

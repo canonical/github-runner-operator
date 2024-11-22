@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/github_runner_manager/types_/github.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `types_.github`
 Module containing GitHub API related types. 
@@ -8,7 +8,7 @@ Module containing GitHub API related types.
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L235"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L235"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `parse_github_path`
 
@@ -39,7 +39,7 @@ Parse GitHub path.
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L18"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L18"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `GitHubRunnerStatus`
 Status of runner on GitHub. 
@@ -57,7 +57,7 @@ Status of runner on GitHub.
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L32"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L32"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerApplication`
 Information on the runner application. 
@@ -79,7 +79,7 @@ Information on the runner application.
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L56"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L56"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `SelfHostedRunnerLabel`
 A single label of self-hosted runners. 
@@ -98,7 +98,7 @@ A single label of self-hosted runners.
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L71"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L71"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `SelfHostedRunner`
 Information on a single self-hosted runner. 
@@ -120,7 +120,7 @@ Information on a single self-hosted runner.
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L91"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L91"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `SelfHostedRunnerList`
 Information on a collection of self-hosted runners. 
@@ -138,7 +138,7 @@ Information on a collection of self-hosted runners.
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L103"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L103"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RegistrationToken`
 Token used for registering GitHub runners. 
@@ -156,7 +156,7 @@ Token used for registering GitHub runners.
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L115"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L115"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RemoveToken`
 Token used for removing GitHub runners. 
@@ -174,7 +174,7 @@ Token used for removing GitHub runners.
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L127"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L127"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `JobConclusion`
 Conclusion of a job on GitHub. 
@@ -199,7 +199,7 @@ See :https://docs.github.com/en/rest/actions/workflow-runs?apiVersion=2022-11-28
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L152"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L152"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `JobStatus`
 Status of a job on GitHub. 
@@ -221,7 +221,7 @@ Status of a job on GitHub.
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L172"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L172"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `JobInfo`
 Stats for a job on GitHub. 
@@ -242,7 +242,7 @@ Stats for a job on GitHub.
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L190"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L190"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `GitHubRepo`
 Represent GitHub repository. 
@@ -254,7 +254,7 @@ Represent GitHub repository.
  - <b>`owner`</b>:  Owner of the GitHub repository. 
  - <b>`repo`</b>:  Name of the GitHub repository. 
 
-<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -271,7 +271,7 @@ __init__(owner: 'str', repo: 'str') → None
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L202"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L202"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `path`
 
@@ -289,7 +289,7 @@ Return a string representing the path.
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L211"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L211"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `GitHubOrg`
 Represent GitHub organization. 
@@ -301,7 +301,7 @@ Represent GitHub organization.
  - <b>`org`</b>:  Name of the GitHub organization. 
  - <b>`group`</b>:  Runner group to spawn the runners in. 
 
-<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -318,7 +318,7 @@ __init__(org: 'str', group: 'str') → None
 
 ---
 
-<a href="../src/github_runner_manager/types_/github.py#L223"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/types_/github.py#L223"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `path`
 

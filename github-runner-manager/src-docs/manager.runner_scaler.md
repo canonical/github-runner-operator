@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/github_runner_manager/manager/runner_scaler.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_scaler.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `manager.runner_scaler`
 Module for scaling the runners amount. 
@@ -9,7 +9,7 @@ Module for scaling the runners amount.
 
 ---
 
-<a href="../src/github_runner_manager/manager/runner_scaler.py#L31"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_scaler.py#L31"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerInfo`
 Information on the runners. 
@@ -25,7 +25,7 @@ Information on the runners.
  - <b>`runners`</b>:  The names of the online runners. 
  - <b>`busy_runners`</b>:  The names of the busy runners. 
 
-<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -50,12 +50,12 @@ __init__(
 
 ---
 
-<a href="../src/github_runner_manager/manager/runner_scaler.py#L87"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_scaler.py#L87"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerScaler`
 Manage the reconcile of runners. 
 
-<a href="../src/github_runner_manager/manager/runner_scaler.py#L90"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_scaler.py#L90"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -80,7 +80,7 @@ Construct the object.
 
 ---
 
-<a href="../src/github_runner_manager/manager/runner_scaler.py#L138"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_scaler.py#L138"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `flush`
 
@@ -103,7 +103,7 @@ Flush the runners.
 
 ---
 
-<a href="../src/github_runner_manager/manager/runner_scaler.py#L102"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_scaler.py#L102"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_runner_info`
 
@@ -120,7 +120,7 @@ Get information on the runners.
 
 ---
 
-<a href="../src/github_runner_manager/manager/runner_scaler.py#L156"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_scaler.py#L156"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `reconcile`
 
