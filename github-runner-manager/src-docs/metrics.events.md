@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/github_runner_manager/metrics/events.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/events.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `metrics.events`
 Models and functions for the metric events. 
@@ -8,7 +8,7 @@ Models and functions for the metric events.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/events.py#L157"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/events.py#L157"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `issue_event`
 
@@ -35,7 +35,7 @@ The metric event is logged to the metrics log.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/events.py#L19"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/events.py#L19"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `Event`
 Base class for metric events. 
@@ -47,7 +47,7 @@ Base class for metric events.
  - <b>`timestamp`</b>:  The UNIX time stamp of the time at which the event was originally issued. 
  - <b>`event`</b>:  The name of the event. Will be set to the class name in snake case if not provided. 
 
-<a href="../src/github_runner_manager/metrics/events.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/events.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -70,7 +70,7 @@ Initialize the event.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/events.py#L62"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/events.py#L62"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerInstalled`
 Metric event for when a runner is installed. 
@@ -82,7 +82,7 @@ Metric event for when a runner is installed.
  - <b>`flavor`</b>:  Describes the characteristics of the runner.  The flavor could be for example "small". 
  - <b>`duration`</b>:  The duration of the installation in seconds. 
 
-<a href="../src/github_runner_manager/metrics/events.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/events.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -105,7 +105,7 @@ Initialize the event.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/events.py#L75"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/events.py#L75"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerStart`
 Metric event for when a runner is started. 
@@ -121,7 +121,7 @@ Metric event for when a runner is started.
  - <b>`idle`</b>:  The idle time in seconds. 
  - <b>`queue_duration`</b>:  The time in seconds it took before the runner picked up the job.  This is optional as we rely on the Github API and there may be problems  retrieving the data. 
 
-<a href="../src/github_runner_manager/metrics/events.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/events.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -144,7 +144,7 @@ Initialize the event.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/events.py#L98"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/events.py#L98"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `CodeInformation`
 Information about a status code. 
@@ -163,7 +163,7 @@ This could e.g. be an exit code or a http status code.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/events.py#L110"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/events.py#L110"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerStop`
 Metric event for when a runner is stopped. 
@@ -181,7 +181,7 @@ Metric event for when a runner is stopped.
  - <b>`job_duration`</b>:  The duration of the job in seconds. 
  - <b>`job_conclusion`</b>:  The job conclusion, e.g. "success", "failure", ... 
 
-<a href="../src/github_runner_manager/metrics/events.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/events.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -204,7 +204,7 @@ Initialize the event.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/events.py#L135"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/events.py#L135"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `Reconciliation`
 Metric event for when the charm has finished reconciliation. 
@@ -220,7 +220,7 @@ Metric event for when the charm has finished reconciliation.
  - <b>`expected_runners`</b>:  The expected number of runners. This is optional as it is not suitable  for reactive runners. 
  - <b>`duration`</b>:  The duration of the reconciliation in seconds. 
 
-<a href="../src/github_runner_manager/metrics/events.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/events.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
