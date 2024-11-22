@@ -19,7 +19,7 @@ GitHub API client.
 
 ---
 
-<a href="../.tox/src-docs/lib/python3.10/site-packages/github_runner_manager/github_client.py#L36"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../.tox/src-docs/lib/python3.12/site-packages/github_runner_manager/github_client.py#L36"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `get_runner_application`
 
