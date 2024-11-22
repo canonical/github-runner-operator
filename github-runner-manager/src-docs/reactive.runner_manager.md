@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/github_runner_manager/reactive/runner_manager.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/reactive/runner_manager.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `reactive.runner_manager`
 Module for reconciling amount of runner and reactive runner processes. 
@@ -8,7 +8,7 @@ Module for reconciling amount of runner and reactive runner processes.
 
 ---
 
-<a href="../src/github_runner_manager/reactive/runner_manager.py#L34"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/reactive/runner_manager.py#L34"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `reconcile`
 
@@ -56,7 +56,7 @@ In addition to this behaviour, reconciliation also checks the queue at the start
 
 ---
 
-<a href="../src/github_runner_manager/reactive/runner_manager.py#L21"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/reactive/runner_manager.py#L21"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `ReconcileResult`
 The result of the reconciliation. 
@@ -68,7 +68,7 @@ The result of the reconciliation.
  - <b>`processes_diff`</b>:  The number of reactive processes created/removed. 
  - <b>`metric_stats`</b>:  The stats of the issued metric events 
 
-<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 

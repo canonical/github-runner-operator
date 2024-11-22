@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/github_runner_manager/manager/runner_manager.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_manager.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `manager.runner_manager`
 Class for managing the GitHub self-hosted runners hosted on cloud instances. 
@@ -9,7 +9,7 @@ Class for managing the GitHub self-hosted runners hosted on cloud instances.
 
 ---
 
-<a href="../src/github_runner_manager/manager/runner_manager.py#L35"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_manager.py#L35"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `FlushMode`
 Strategy for flushing runners. 
@@ -27,7 +27,7 @@ Strategy for flushing runners.
 
 ---
 
-<a href="../src/github_runner_manager/manager/runner_manager.py#L47"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_manager.py#L47"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerInstance`
 Represents an instance of runner. 
@@ -42,7 +42,7 @@ Represents an instance of runner.
  - <b>`github_state`</b>:  State on github. 
  - <b>`cloud_state`</b>:  State on cloud. 
 
-<a href="../src/github_runner_manager/manager/runner_manager.py#L65"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_manager.py#L65"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -68,7 +68,7 @@ Construct an instance.
 
 ---
 
-<a href="../src/github_runner_manager/manager/runner_manager.py#L81"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_manager.py#L81"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerManagerConfig`
 Configuration for the runner manager. 
@@ -81,7 +81,7 @@ Configuration for the runner manager.
  - <b>`token`</b>:  GitHub personal access token to query GitHub API. 
  - <b>`path`</b>:  Path to GitHub repository or organization to registry the runners. 
 
-<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -99,7 +99,7 @@ __init__(name: str, token: str, path: GitHubOrg | GitHubRepo) → None
 
 ---
 
-<a href="../src/github_runner_manager/manager/runner_manager.py#L96"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_manager.py#L96"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RunnerManager`
 Manage the runners. 
@@ -111,7 +111,7 @@ Manage the runners.
  - <b>`manager_name`</b>:  A name to identify this manager. 
  - <b>`name_prefix`</b>:  The name prefix of the runners. 
 
-<a href="../src/github_runner_manager/manager/runner_manager.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_manager.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -133,7 +133,7 @@ Construct the object.
 
 ---
 
-<a href="../src/github_runner_manager/manager/runner_manager.py#L242"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_manager.py#L242"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `cleanup`
 
@@ -150,7 +150,7 @@ Run cleanup of the runners and other resources.
 
 ---
 
-<a href="../src/github_runner_manager/manager/runner_manager.py#L123"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_manager.py#L123"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `create_runners`
 
@@ -173,7 +173,7 @@ Create runners.
 
 ---
 
-<a href="../src/github_runner_manager/manager/runner_manager.py#L198"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_manager.py#L198"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `delete_runners`
 
@@ -196,7 +196,7 @@ Delete runners.
 
 ---
 
-<a href="../src/github_runner_manager/manager/runner_manager.py#L214"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_manager.py#L214"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `flush_runners`
 
@@ -221,7 +221,7 @@ Delete runners according to state.
 
 ---
 
-<a href="../src/github_runner_manager/manager/runner_manager.py#L140"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/runner_manager.py#L140"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_runners`
 

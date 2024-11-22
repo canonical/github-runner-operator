@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/github_runner_manager/metrics/storage.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/storage.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `metrics.storage`
 Classes and functions defining the metrics storage. 
@@ -11,7 +11,7 @@ It contains a protocol and reference implementation.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/storage.py#L29"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/storage.py#L29"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `MetricsStorage`
 Storage for the metrics. 
@@ -23,7 +23,7 @@ Storage for the metrics.
  - <b>`path`</b>:  The path to the directory holding the metrics inside the charm. 
  - <b>`runner_name`</b>:  The name of the associated runner. 
 
-<a href="../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../<string>"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -41,7 +41,7 @@ __init__(path: Path, runner_name: str) → None
 
 ---
 
-<a href="../src/github_runner_manager/metrics/storage.py#L42"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/storage.py#L42"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `StorageManagerProtocol`
 A protocol defining the methods for managing the metrics storage. 
@@ -62,12 +62,12 @@ A protocol defining the methods for managing the metrics storage.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/storage.py#L61"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/storage.py#L61"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `StorageManager`
 Manager for the metrics storage. 
 
-<a href="../src/github_runner_manager/metrics/storage.py#L64"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/storage.py#L64"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -88,7 +88,7 @@ Initialize the storage manager.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/storage.py#L79"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/storage.py#L79"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `create`
 
@@ -119,7 +119,7 @@ The method is not idempotent and will raise an exception if the storage already 
 
 ---
 
-<a href="../src/github_runner_manager/metrics/storage.py#L176"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/storage.py#L176"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `delete`
 
@@ -143,7 +143,7 @@ Delete the metrics storage for the runner.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/storage.py#L156"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/storage.py#L156"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get`
 
@@ -172,7 +172,7 @@ Get the metrics storage for the runner.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/storage.py#L138"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/storage.py#L138"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `list_all`
 
@@ -189,7 +189,7 @@ List all the metric storages.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/storage.py#L194"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/storage.py#L194"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `move_to_quarantine`
 

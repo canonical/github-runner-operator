@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/github_runner_manager/reactive/consumer.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/reactive/consumer.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `reactive.consumer`
 Module responsible for consuming jobs from the message queue. 
@@ -8,7 +8,7 @@ Module responsible for consuming jobs from the message queue.
 
 ---
 
-<a href="../src/github_runner_manager/reactive/consumer.py#L80"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/reactive/consumer.py#L80"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `get_queue_size`
 
@@ -38,7 +38,7 @@ Get the size of the message queue.
 
 ---
 
-<a href="../src/github_runner_manager/reactive/consumer.py#L100"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/reactive/consumer.py#L100"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `consume`
 
@@ -74,7 +74,7 @@ Log the job details and acknowledge the message. If the job details are invalid,
 
 ---
 
-<a href="../reactive/consumer/signal_handler#L234"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../reactive/consumer/signal_handler#L234"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `signal_handler`
 
@@ -95,7 +95,7 @@ The signal handler exits the process.
 
 ---
 
-<a href="../src/github_runner_manager/reactive/consumer.py#L30"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/reactive/consumer.py#L30"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `JobPickedUpStates`
 The states of a job that indicate it has been picked up. 
@@ -113,7 +113,7 @@ The states of a job that indicate it has been picked up.
 
 ---
 
-<a href="../src/github_runner_manager/reactive/consumer.py#L42"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/reactive/consumer.py#L42"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `JobDetails`
 A class to translate the payload. 
@@ -130,7 +130,7 @@ A class to translate the payload.
 
 ---
 
-<a href="../src/github_runner_manager/reactive/consumer.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/reactive/consumer.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>classmethod</kbd> `check_job_url_path_is_not_empty`
 
@@ -160,7 +160,7 @@ Check that the job_url path is not empty.
 
 ---
 
-<a href="../src/github_runner_manager/reactive/consumer.py#L72"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/reactive/consumer.py#L72"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `JobError`
 Raised when a job error occurs. 
@@ -171,7 +171,7 @@ Raised when a job error occurs.
 
 ---
 
-<a href="../src/github_runner_manager/reactive/consumer.py#L76"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/reactive/consumer.py#L76"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `QueueError`
 Raised when an error when communicating with the queue occurs. 

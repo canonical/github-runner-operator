@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/github_runner_manager/reactive/process_manager.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/reactive/process_manager.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `reactive.process_manager`
 Module for managing processes which spawn runners reactively. 
@@ -17,7 +17,7 @@ Module for managing processes which spawn runners reactively.
 
 ---
 
-<a href="../src/github_runner_manager/reactive/process_manager.py#L41"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/reactive/process_manager.py#L41"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `reconcile`
 
@@ -44,7 +44,7 @@ Raises a ReactiveRunnerError if the runner fails to spawn.
 
 ---
 
-<a href="../src/github_runner_manager/reactive/process_manager.py#L37"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/reactive/process_manager.py#L37"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `ReactiveRunnerError`
 Raised when a reactive runner error occurs. 
