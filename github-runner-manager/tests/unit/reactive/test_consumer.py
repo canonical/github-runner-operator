@@ -99,9 +99,36 @@ def test_consume_reject_if_job_gets_not_picked_up(queue_config: QueueConfig):
         supported_labels=labels,
     )
 
-    # Ensure message has been requeued by reconsuming it
-    msg = _consume_from_queue(queue_config.queue_name)
-    assert msg.payload == job_details.json()
+    _assert_msg_has_been_requeued(queue_config.queue_name, job_details.json())
+
+
+def test_consume_reject_if_spawning_failed(queue_config: QueueConfig):
+    """
+    arrange: A job placed in the message queue and spawning a runner fails.
+    act: Call consume.
+    assert: The message is requeued.
+    """
+    labels = {secrets.token_hex(16), secrets.token_hex(16)}
+    job_details = consumer.JobDetails(
+        labels=labels,
+        url=FAKE_JOB_URL,
+    )
+    _put_in_queue(job_details.json(), queue_config.queue_name)
+
+    runner_manager_mock = MagicMock(spec=consumer.RunnerManager)
+    runner_manager_mock.create_runners.return_value = tuple()
+
+    github_client_mock = MagicMock(spec=consumer.GithubClient)
+    github_client_mock.get_job_info.return_value = _create_job_info(JobStatus.QUEUED)
+
+    consumer.consume(
+        queue_config=queue_config,
+        runner_manager=runner_manager_mock,
+        github_client=github_client_mock,
+        supported_labels=labels,
+    )
+
+    _assert_msg_has_been_requeued(queue_config.queue_name, job_details.json())
 
 
 def test_consume_raises_queue_error(monkeypatch: pytest.MonkeyPatch, queue_config: QueueConfig):
@@ -291,3 +318,17 @@ def _assert_queue_is_empty(queue_name: str) -> None:
     with Connection(IN_MEMORY_URI) as conn:
         with closing(conn.SimpleQueue(queue_name)) as simple_queue:
             assert simple_queue.qsize() == 0
+
+
+def _assert_msg_has_been_requeued(queue_name: str, payload: str) -> None:
+    """Assert that the message is requeued.
+
+    This will consume message from the queue and assert that the payload is the same as the given.
+
+    Args:
+        queue_name: The name of the queue.
+        payload: The payload of the message to assert.
+    """
+    with Connection(IN_MEMORY_URI) as conn:
+        with closing(conn.SimpleQueue(queue_name)) as simple_queue:
+            assert simple_queue.get(block=False).payload == payload
