@@ -7,15 +7,6 @@ tox devenv -e unit
 source venv/bin/activate
 ```
 
-## Generating src docs for every commit
-
-Run the following command:
-
-```bash
-echo -e "tox -e src-docs\ngit add src-docs\n" >> .git/hooks/pre-commit
-chmod +x .git/hooks/pre-commit
-```
-
 ## Testing
 
 This project uses `tox` for managing test environments. There are some pre-configured environments

@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-<a href="../src/github_runner_manager/metrics/runner_logs.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/runner_logs.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `metrics.runner_logs`
 Functions to pull and remove the logs of the crashed runners. 
@@ -11,7 +11,7 @@ Functions to pull and remove the logs of the crashed runners.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/runner_logs.py#L21"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/runner_logs.py#L21"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `create_logs_dir`
 
@@ -35,7 +35,7 @@ Create the directory to store the logs of the crashed runners.
 
 ---
 
-<a href="../src/github_runner_manager/metrics/runner_logs.py#L36"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/metrics/runner_logs.py#L36"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `remove_outdated`
 
