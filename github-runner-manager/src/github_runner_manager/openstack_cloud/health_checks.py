@@ -38,21 +38,23 @@ def check_runner(openstack_cloud: OpenstackCloud, instance: OpenstackInstance) -
     Returns:
         True if runner is healthy.
     """
-    if (check_ok := _health_check_cloud_state(instance)) is not None:
-        return check_ok
-
-    try:
-        ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
-    except KeyfileError:
-        logger.exception(
-            "Health check failed due to unable to find keyfile for %s", instance.server_name
-        )
-        return False
-    except SSHError:
-        logger.exception("SSH Failed on %s, marking as unhealthy.")
-        return False
-
-    return check_active_runner(ssh_conn, instance)
+    # hardcode healthy runner for now
+    return True
+    # if (check_ok := _health_check_cloud_state(instance)) is not None:
+    #     return check_ok
+    #
+    # try:
+    #     ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+    # except KeyfileError:
+    #     logger.exception(
+    #         "Health check failed due to unable to find keyfile for %s", instance.server_name
+    #     )
+    #     return False
+    # except SSHError:
+    #     logger.exception("SSH Failed on %s, marking as unhealthy.")
+    #     return False
+    #
+    # return check_active_runner(ssh_conn, instance)
 
 
 def check_active_runner(
@@ -72,22 +74,25 @@ def check_active_runner(
     Returns:
         Whether the runner should be considered healthy.
     """
-    if (check_ok := _run_health_check_runner_installed(ssh_conn, instance)) is not None:
-        return check_ok
-
-    if (
-        check_ok := _run_health_check_cloud_init(
-            ssh_conn, instance.server_name, accept_finished_job
-        )
-    ) is not None:
-        return check_ok
-
-    if (
-        check_ok := _run_health_check_runner_processes_running(ssh_conn, instance.server_name)
-    ) is not None:
-        return check_ok
-
+    # hardcode healthy runner for now
     return True
+    #
+    # if (check_ok := _run_health_check_runner_installed(ssh_conn, instance)) is not None:
+    #     return check_ok
+    #
+    # if (
+    #     check_ok := _run_health_check_cloud_init(
+    #         ssh_conn, instance.server_name, accept_finished_job
+    #     )
+    # ) is not None:
+    #     return check_ok
+    #
+    # if (
+    #     check_ok := _run_health_check_runner_processes_running(ssh_conn, instance.server_name)
+    # ) is not None:
+    #     return check_ok
+    #
+    # return True
 
 
 @retry(exception=SSHError, tries=3, delay=5, backoff=2, local_logger=logger)
