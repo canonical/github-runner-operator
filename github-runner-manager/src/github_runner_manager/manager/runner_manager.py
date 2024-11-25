@@ -208,7 +208,7 @@ class RunnerManager:
         runners_list = self.get_runners()[:num]
         runner_names = [runner.name for runner in runners_list]
         logger.info("Deleting runners: %s", runner_names)
-        remove_token = self._github.get_removal_token()
+        remove_token = None #self._github.get_removal_token()
         return self._delete_runners(runners=runners_list, remove_token=remove_token)
 
     def flush_runners(
@@ -235,7 +235,7 @@ class RunnerManager:
         busy = False
         if flush_mode == FlushMode.FLUSH_BUSY:
             busy = True
-        remove_token = self._github.get_removal_token()
+        remove_token = None #self._github.get_removal_token()
         stats = self._cloud.flush_runners(remove_token, busy)
         return self._issue_runner_metrics(metrics=stats)
 
@@ -313,7 +313,7 @@ class RunnerManager:
         return tuple(instance_id_list)
 
     def _delete_runners(
-        self, runners: Sequence[RunnerInstance], remove_token: str
+        self, runners: Sequence[RunnerInstance], remove_token: str | None
     ) -> IssuedMetricEventsStats:
         """Delete list of runners.
 
@@ -344,36 +344,36 @@ class RunnerManager:
         """
         total_stats: IssuedMetricEventsStats = {}
 
-        for extracted_metrics in metrics:
-            job_metrics = None
-
-            # We need a guard because pre-job metrics may not be available for idle runners
-            # that are deleted.
-            if extracted_metrics.pre_job:
-                try:
-                    job_metrics = github_metrics.job(
-                        github_client=self._github.github,
-                        pre_job_metrics=extracted_metrics.pre_job,
-                        runner_name=extracted_metrics.runner_name,
-                    )
-                except GithubMetricsError:
-                    logger.exception(
-                        "Failed to calculate job metrics for %s", extracted_metrics.runner_name
-                    )
-            else:
-                logger.debug(
-                    "No pre-job metrics found for %s, will not calculate job metrics.",
-                    extracted_metrics.runner_name,
-                )
-
-            issued_events = runner_metrics.issue_events(
-                runner_metrics=extracted_metrics,
-                job_metrics=job_metrics,
-                flavor=self.manager_name,
-            )
-
-            for event_type in issued_events:
-                total_stats[event_type] = total_stats.get(event_type, 0) + 1
+        # for extracted_metrics in metrics:
+        #     job_metrics = None
+        #
+        #     # We need a guard because pre-job metrics may not be available for idle runners
+        #     # that are deleted.
+        #     if extracted_metrics.pre_job:
+        #         try:
+        #             job_metrics = github_metrics.job(
+        #                 github_client=self._github.github,
+        #                 pre_job_metrics=extracted_metrics.pre_job,
+        #                 runner_name=extracted_metrics.runner_name,
+        #             )
+        #         except GithubMetricsError:
+        #             logger.exception(
+        #                 "Failed to calculate job metrics for %s", extracted_metrics.runner_name
+        #             )
+        #     else:
+        #         logger.debug(
+        #             "No pre-job metrics found for %s, will not calculate job metrics.",
+        #             extracted_metrics.runner_name,
+        #         )
+        #
+        #     issued_events = runner_metrics.issue_events(
+        #         runner_metrics=extracted_metrics,
+        #         job_metrics=job_metrics,
+        #         flavor=self.manager_name,
+        #     )
+        #
+        #     for event_type in issued_events:
+        #         total_stats[event_type] = total_stats.get(event_type, 0) + 1
 
         return total_stats
 

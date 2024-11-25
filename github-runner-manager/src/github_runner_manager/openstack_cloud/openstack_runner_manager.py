@@ -281,7 +281,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         return tuple(instance for instance in instance_list if instance.state in state_set)
 
     def delete_runner(
-        self, instance_id: InstanceId, remove_token: str
+        self, instance_id: InstanceId, remove_token: str | None
     ) -> runner_metrics.RunnerMetrics | None:
         """Delete self-hosted runners.
 
@@ -315,7 +315,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         return next(extracted_metrics, None)
 
     def flush_runners(
-        self, remove_token: str, busy: bool = False
+        self, remove_token: str | None, busy: bool = False
     ) -> Iterator[runner_metrics.RunnerMetrics]:
         """Remove idle and/or busy runners.
 
