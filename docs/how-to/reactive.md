@@ -51,7 +51,7 @@ juju integrate large-arm mongodb
 juju integrate small mongodb
 ```
 
-### Define a webhook in your organisation or repository where the self-hosted runners are registered.
+### Define a webhook in your organisation or repository where the self-hosted runners are registered
 
 On your repository or organisation's page on Github, you need to go to the settings and create a Webhook
 (e.g. https://github.com/canonical/github-runner-operator/settings/hooks). Please make sure to select
