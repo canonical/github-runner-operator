@@ -2,8 +2,8 @@ name: Comment on the pull request
 
 on:
   pull_request:
-    types:
-      - opened
+    # types:
+    #   - opened
     branches:
       - 'track/**'
 
