@@ -2,12 +2,12 @@ name: Comment on the pull request
 
 on:
   pull_request:
-    # types:
-    #   - opened
+    types:
+      - opened
     branches:
       - 'track/**'
 
 jobs:
   comment-on-pr:
-    uses: canonical/operator-workflows/.github/workflows/comment_contributing.yaml@javi-testing
+    uses: canonical/operator-workflows/.github/workflows/comment_contributing.yaml@main
     secrets: inherit
