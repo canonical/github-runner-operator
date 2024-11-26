@@ -2,7 +2,7 @@
 
 The charm provides an experimental feature to spawn runners reactively, depending on the jobs requested by GitHub.
 This feature is only available for runners on OpenStack cloud and is
-disabled by default and can be enabled by integrating the charm with a MongoDB database.
+disabled by default and can be enabled by integrating the charm with a MongoDB charm.
 
 ## Requirements
 For the purposes of this how-to-guide, we assume that you have a machine model (named "machine-model") 
