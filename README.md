@@ -84,6 +84,12 @@ with an image-builder using the [image](https://charmhub.io/github-runner/integr
 endpoint. Via this integration, the charm detects the supported images to use for spawning the virtual machines.
 
 
+## Repository structure
+
+This repository contains the charm in the root directory and the Python package `github-runner-manager` in the
+`github-runner-manager` directory. Refer to [Contributing](CONTRIBUTING.md) for more information.
+
+
 ## Learn more
 * [Read more](https://charmhub.io/github-runner)
 * [Developer documentation](https://charmhub.io/github-runner/docs/how-to-contribute)
