@@ -1,0 +1,100 @@
+# Copyright 2024 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+[project]
+name = "github-runner-manager"
+version = "0.5.0"
+authors = [
+    { name = "Canonical IS DevOps", email = "is-devops-team@canonical.com" },
+]
+description = "An application to manage self-hosted runners"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache License",
+    "Operating System :: OS Independent",
+]
+dynamic = ["dependencies"]
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+
+[tool.setuptools.package-data]
+"github_runner_manager.templates" = ["*.j2"]
+
+[project.urls]
+Homepage = "https://github.com/canonical/github-runner-manager"
+Issues = "https://github.com/canonical/github-runner-manager/issues"
+
+
+[tool.bandit]
+exclude_dirs = ["/venv/"]
+[tool.bandit.assert_used]
+skips = ["*/*test.py", "*/test_*.py", "*tests/*.py"]
+
+# Testing tools configuration
+[tool.coverage.run]
+branch = true
+omit = [
+    # These are covered by `tests/integration/test_runner_manager_openstack.py` in the github-runner-operator.
+    "src/github_runner_manager/openstack_cloud/openstack_cloud.py",
+    "src/github_runner_manager/openstack_cloud/openstack_runner_manager.py",
+    # Contains interface for calling repo policy compliance service. Tested in integration test
+    # and end to end tests.
+    "src/github_runner_manager/repo_policy_compliance_client.py",
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+
+
+[tool.pylint.'MESSAGES CONTROL']
+# see https://github.com/pydantic/pydantic/issues/1961#issuecomment-759522422
+extension-pkg-whitelist = "pydantic"
+# Ignore W0511 TODO comments because the functions are subject to refactor.
+disable = "W0511"
+
+
+[tool.pytest.ini_options]
+log_cli_level = "INFO"
+markers = ["amd64", "arm64"]
+
+# Formatting tools configuration
+[tool.black]
+line-length = 99
+target-version = ["py310"]
+
+[tool.isort]
+line_length = 99
+profile = "black"
+
+# Linting tools configuration
+[tool.flake8]
+max-line-length = 99
+max-doc-length = 99
+max-complexity = 10
+exclude = [".git", "__pycache__", ".tox", "build", "dist", "*.egg_info", "venv"]
+select = ["E", "W", "F", "C", "N", "R", "D", "H"]
+# Ignore W503,E203 because using black creates errors with this
+# Ignore D107 Missing docstring in __init__
+ignore = ["W503", "D107", "E203"]
+# D100, D101, D102, D103, D104: Ignore docstring style issues in tests
+per-file-ignores = ["tests/*:D100,D101,D102,D103,D104,D205,D212"]
+docstring-convention = "google"
+# Check for properly formatted copyright header in each file
+copyright-check = "True"
+copyright-author = "Canonical Ltd."
+copyright-regexp = "Copyright\\s\\d{4}([-,]\\d{4})*\\s+%(author)s"
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_untyped_defs = true
+explicit_package_bases = true
+ignore_missing_imports = true
+namespace_packages = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
