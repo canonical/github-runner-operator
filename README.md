@@ -29,7 +29,7 @@ For more information about a production deployment, the how-to-guide
 A usual deployment of the charm can be done with the following command (please replace items in `<>` with your own values):
 
 ```bash
-juju deploy github-runner --channel=latest/stable --config openstack-clouds-yaml="$(cat clouds.yaml)" --config openstack-flavor=<flavor> --config openstack-network=<openstack-network> --config path=<org>/<repo> --config token=<github-token>
+juju deploy github-runner --channel=local-lxd/stable --config openstack-clouds-yaml="$(cat clouds.yaml)" --config openstack-flavor=<flavor> --config openstack-network=<openstack-network> --config path=<org>/<repo> --config token=<github-token>
 ```
 
 with a cloud configuration (for the OpenStack tenant used to spawn runner VM's) in `clouds.yaml`:
