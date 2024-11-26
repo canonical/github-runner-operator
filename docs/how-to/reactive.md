@@ -14,9 +14,9 @@ We are going to showcase the steps required to set up a reactive spawning enviro
 
 Note, that the specific revisions/channels in the steps are only marked here for reproducibility, you should adapt the revisions/channels to your needs.
 
-### GitHub Runner flavors
+### GitHub Runner Applications
 
-For this how-to-guide, we decided to have deployed three runner flavors: `large`, `large-arm`, `small` . We need
+For this how-to-guide, we decided to have deployed three GitHub Runner charm applications: `large`, `large-arm`, `small` . We need
 to deploy those with these names, to comply with the routing table defined below.
 
 ```shell
@@ -65,7 +65,7 @@ On your repository or organisation's page on Github, you need to go to the setti
 
 The webhook router is a k8s charm, therefore you need to deploy it on a k8s model.
 
-First, define a routing table to decide which labels should be routed to which runner flavor:
+First, define a routing table to decide which labels should be routed to which GitHub Runner charm application:
 
 ```shell
 cat <<EOF > routing_table.yaml 
@@ -75,9 +75,9 @@ cat <<EOF > routing_table.yaml
 EOF
 ```
 
-We decide to route all jobs with any label combination in the set `large,x64` to the large flavor, `large,arm64` to large-arm,
+We decide to route all jobs with any label combination in the set `large,x64` to the large application, `large,arm64` to large-arm,
 and labels with `small` to small.
-This means, depending on which labels your users are setting in the workflow file, a different runner flavor will be used to
+This means, depending on which labels your users are setting in the workflow file, a VM of a different runner application will be used to
 execute the job.
 
 Switch to the k8s model and deploy the webhook router charm:
@@ -89,7 +89,7 @@ juju consume <offer-url>
 juju integrate github-runner-webhook-router mongodb
 ```
 
-In this example we use "small" as the default flavor, to which all jobs with empty labels (or default labels such as `self-hosted`,`linux`) 
+In this example we use "small" as the default runner application, to which all jobs with empty labels (or default labels such as `self-hosted`,`linux`) 
 are routed to.
 
 
