@@ -5,7 +5,7 @@
 
 This machine charm creates self-hosted runners for running GitHub Actions. Each unit of this charm will start a configurable number of OpenStack or LXD based virtual machines to host them. Every runner performs only one job, after which it unregisters from GitHub to ensure that each job runs in a clean environment.
 
-To host local LXD based virtual machines, you have to use the track `lxd-local`. See [juju channels](https://discourse.charmhub.io/t/channel/6562) for more information on channels.
+To host local LXD based virtual machines, you have to use the track `local-lxd`. See [juju channels](https://discourse.charmhub.io/t/channel/6562) for more information on channels.
 
 The charm will periodically check the number of runners and spawn or destroy runners as necessary to match the number provided by configuration of runners. Both the reconciliation interval and the number of runners to maintain are configurable.
 
