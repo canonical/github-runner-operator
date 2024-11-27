@@ -1,5 +1,8 @@
 # Changelog
 
+### 2024-11-27
+
+- Fix "Available Runners" dashboard panel to work for multiple flavors.
 
 ### 2024-11-15
 
