@@ -73,7 +73,7 @@ For information on token scopes, see [How to change GitHub personal access token
 Once the personal access token is created, the charm can be deployed with:
 
 ```
-juju deploy github-runner --constraints="cores=4 mem=16G root-disk=20G virt-type=virtual-machine" --config token=<TOKEN> --config path=<OWNER/REPO> --config runner-storage=memory --config vm-memory=2GiB --config vm-disk=10GiB
+juju deploy github-runner --channel=local-lxd/stable --constraints="cores=4 mem=16G root-disk=20G virt-type=virtual-machine" --config token=<TOKEN> --config path=<OWNER/REPO> --config runner-storage=memory --config vm-memory=2GiB --config vm-disk=10GiB
 ```
 
 Replacing the `<TOKEN>` with the personal access token, and `<OWNER/REPO>` the GitHub account name and GitHub repository separated with `/`.
