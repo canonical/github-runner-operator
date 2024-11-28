@@ -289,7 +289,7 @@ async def deploy_github_runner_charm(
         base="ubuntu@22.04",
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
-        storage=storage,
+        storage=storage,  # type: ignore[arg-type]
         **(deploy_kwargs or {}),
     )
 
