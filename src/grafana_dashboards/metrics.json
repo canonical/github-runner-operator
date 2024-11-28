@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 319,
+  "id": 1034,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -307,6 +307,15 @@
         }
       ],
       "title": "Available Runners",
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "flavor",
+            "mode": "outer"
+          }
+        }
+      ],
       "type": "barchart"
     },
     {
@@ -2111,6 +2120,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics",
-  "version": 17,
+  "version": 18,
   "weekStart": ""
 }
