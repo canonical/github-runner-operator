@@ -15,7 +15,6 @@ from functools import partial
 from typing import Awaitable, Callable, ParamSpec, TypeVar, cast
 
 import github
-import juju.version
 import requests
 from github.Branch import Branch
 from github.Repository import Repository
