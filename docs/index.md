@@ -66,6 +66,7 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [ARM64](reference/arm64.md)
   1. [Configurations](reference/configurations.md)
   1. [COS Integration](reference/cos.md)
+  1. [GitHub runner cryptographic overview](reference/cryptographic-overview.md)
   1. [External Access](reference/external-access.md)
   1. [Integrations](reference/integrations.md)
   1. [Token scopes](reference/token-scopes.md)
