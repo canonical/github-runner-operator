@@ -12,7 +12,7 @@ jobs:
   # INTEGRATION_TEST_ARGS to operator-workflows automatically.
   integration-tests:
     name: Integration test with juju 3.1
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@ISD-2620-allure
     secrets: inherit
     with:
       juju-channel: 3.1/stable
