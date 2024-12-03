@@ -385,7 +385,7 @@ async def image_builder_fixture(
             "github-runner-image-builder",
             channel="latest/edge",
             revision=2,
-            constraints="cores=2 mem=16G root-disk=20G virt-type=virtual-machine",
+            constraints="cores=2 mem=2G root-disk=20G virt-type=virtual-machine",
             config={
                 "app-channel": "edge",
                 "build-interval": "12",
