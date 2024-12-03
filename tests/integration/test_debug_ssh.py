@@ -4,6 +4,7 @@
 """Integration tests for github-runner charm with ssh-debug integration."""
 import logging
 
+import pytest
 from github.Branch import Branch
 from github.Repository import Repository
 from juju.application import Application
@@ -17,10 +18,12 @@ logger = logging.getLogger(__name__)
 
 SSH_DEBUG_WORKFLOW_FILE_NAME = "workflow_dispatch_ssh_debug.yaml"
 
+pytestmark = pytest.mark.openstack
+
 
 async def test_ssh_debug(
     model: Model,
-    app_no_wait: Application,
+    app_no_wait_openstack: Application,
     github_repository: Repository,
     test_github_branch: Branch,
     tmate_ssh_server_unit_ip: str,
@@ -31,7 +34,7 @@ async def test_ssh_debug(
     act: when canonical/action-tmate is triggered.
     assert: the ssh connection info from action-log and tmate-ssh-server matches.
     """
-    await app_no_wait.set_config(
+    await app_no_wait_openstack.set_config(
         {
             DENYLIST_CONFIG_NAME: (
                 "0.0.0.0/8,10.0.0.0/8,100.64.0.0/10,169.254.0.0/16,"
@@ -48,7 +51,7 @@ async def test_ssh_debug(
 
     # expect failure since the ssh workflow will timeout
     workflow_run = await dispatch_workflow(
-        app=app_no_wait,
+        app=app_no_wait_openstack,
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="failure",
