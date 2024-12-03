@@ -56,6 +56,29 @@ class LXDInstanceHelper(InstanceHelper):
         """
         return await get_runner_name(unit)
 
+    async def get_runner_names(self, unit: Unit) -> list[str]:
+        """Get the name of all the runners in the unit.
+
+        Args:
+            unit: The GitHub Runner Charm unit to get the runner names for.
+
+        Raises:
+            NotImplementedError: Not implemented yet.
+        """
+        raise NotImplementedError
+
+    async def delete_single_runner(self, unit: Unit) -> None:
+        """Delete the only runner.
+
+
+        Args:
+            unit: The GitHub Runner Charm unit to check.
+
+        Raises:
+            NotImplementedError: Not implemented yet.
+        """
+        raise NotImplementedError
+
 
 async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> None:
     """Check for LXD profile of the matching resource config.

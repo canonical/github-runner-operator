@@ -74,11 +74,27 @@ class InstanceHelper(typing.Protocol):
         """
         ...
 
+    async def get_runner_names(self, unit: Unit) -> list[str]:
+        """Get the name of all the runners in the unit.
+
+        Args:
+            unit: The GitHub Runner Charm unit to get the runner names for.
+        """
+        ...
+
     async def get_runner_name(self, unit: Unit) -> str:
         """Get the name of the runner.
 
         Args:
             unit: The GitHub Runner Charm unit to get the runner name for.
+        """
+        ...
+
+    async def delete_single_runner(self, unit: Unit) -> None:
+        """Delete the only runner.
+
+        Args:
+            unit: The GitHub Runner Charm unit to delete the runner name for.
         """
         ...
 

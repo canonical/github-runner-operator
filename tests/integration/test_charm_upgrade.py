@@ -7,17 +7,26 @@ import functools
 import pathlib
 
 import pytest
+from juju.application import Application
 from juju.client import client
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
+from charm_state import (
+    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    OPENSTACK_FLAVOR_CONFIG_NAME,
+    OPENSTACK_NETWORK_CONFIG_NAME,
+    USE_APROXY_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+)
 from tests.integration.helpers.common import (
     deploy_github_runner_charm,
     inject_lxd_profile,
     is_upgrade_charm_event_emitted,
     wait_for,
 )
+
+pytestmark = pytest.mark.openstack
 
 
 @pytest.mark.asyncio
@@ -33,14 +42,18 @@ async def test_charm_upgrade(
     https_proxy: str,
     no_proxy: str,
     tmp_path: pathlib.Path,
+    clouds_yaml_contents: str,
+    network_name: str,
+    flavor_name: str,
+    image_builder: Application,
 ):
     """
-    arrange: given latest stable version of the charm (current 161).
+    arrange: given latest stable version of the charm.
     act: charm upgrade is called.
     assert: the charm is upgraded successfully.
     """
     latest_stable_path = tmp_path / "github-runner.charm"
-    latest_stable_revision = 282  # update this value every release to stable.
+    latest_stable_revision = 302  # update this value every release to stable.
     # download the charm and inject lxd profile for testing
     retcode, stdout, stderr = await ops_test.juju(
         "download",
@@ -71,8 +84,17 @@ async def test_charm_upgrade(
         no_proxy=no_proxy,
         reconcile_interval=5,
         # override default virtual_machines=0 config.
-        config={VIRTUAL_MACHINES_CONFIG_NAME: 1},
+        config={
+            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: clouds_yaml_contents,
+            OPENSTACK_NETWORK_CONFIG_NAME: network_name,
+            OPENSTACK_FLAVOR_CONFIG_NAME: flavor_name,
+            USE_APROXY_CONFIG_NAME: "true",
+            VIRTUAL_MACHINES_CONFIG_NAME: 1,
+        },
+        wait_idle=False,
+        use_local_lxd=False,
     )
+    await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(
         apps=[application.name],
         raise_on_error=False,
