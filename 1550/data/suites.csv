@@ -1,16 +1,6 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Tue Dec 03 05:20:22 GMT 2024","Tue Dec 03 05:35:28 GMT 2024","905202","tests.integration","test_charm_scheduled_events","","","","test_update_interval","
-    arrange: A working application with one runner.
-    act:
-        1.  a. Remove runner binary.
-            b. Crash the one runner
-        2.  Wait for 6 minutes, and then wait for ActiveStatus.
-    assert:
-        1. a. No runner binary exists.
-           b. No runner exists.
-        2.  a. Runner binary exists.
-            b. One runner exists. The runner name should not be the same as the starting one.
-
-    This tests whether the reconcile-runner event is triggered, and updates the dependencies.
-    The reconciliation logic is tested with the reconcile-runners action.
+"passed","Tue Dec 03 05:03:03 GMT 2024","Tue Dec 03 05:35:52 GMT 2024","1968774","tests.integration","test_charm_upgrade","","","","test_charm_upgrade","
+    arrange: given latest stable version of the charm (current 161).
+    act: charm upgrade is called.
+    assert: the charm is upgraded successfully.
     "

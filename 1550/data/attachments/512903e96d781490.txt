@@ -1,0 +1,159 @@
+INFO     pytest_operator.plugin:plugin.py:724 Adding model github-pr-68080-lxd:test-charm-upgrade-ltdx on cloud localhost
+WARNING  juju.client.connection:connection.py:893 unexpected facade AgentLifeFlag received from the controller
+WARNING  juju.client.connection:connection.py:909 unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+WARNING  juju.client.connection:connection.py:893 unexpected facade SecretsDrain received from the controller
+INFO     juju.model:model.py:1988 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz (not enough units yet - 0/1)
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Installing packages
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Installing packages
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Checking for service updates
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [rebooting] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [rebooting] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [rebooting] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Checking for service updates
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [idle] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [executing] maintenance: Checking for runner binary updates
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gz9gx1oz/0 [idle] active:
+INFO     pytest_operator.plugin:plugin.py:903 Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-ltdx  github-pr-68080-lxd  localhost/localhost  3.1.10   unsupported  05:35:52Z
+
+App            Version  Status  Scale  Charm          Channel  Rev  Exposed  Message
+test-gz9gx1oz           active      1  github-runner             1  no       
+
+Unit              Workload  Agent  Machine  Public address  Ports  Message
+test-gz9gx1oz/0*  active    idle   0        10.102.20.68           
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.102.20.68  juju-783290-0  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:909 Juju error logs:
+
+machine-0: 05:07:51 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 05:07:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 05:07:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-gz9gx1oz-0: 05:07:51 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-gz9gx1oz-0: 05:08:00 CRITICAL unit.test-gz9gx1oz/0.juju-log test mode is enabled
+unit-test-gz9gx1oz-0: 05:08:02 CRITICAL unit.test-gz9gx1oz/0.juju-log test mode is enabled
+unit-test-gz9gx1oz-0: 05:13:45 CRITICAL unit.test-gz9gx1oz/0.juju-log test mode is enabled
+machine-0: 05:14:51 ERROR juju.worker.deployer fatal error "test-gz9gx1oz/0": machine needs to reboot
+unit-test-gz9gx1oz-0: 05:16:32 CRITICAL unit.test-gz9gx1oz/0.juju-log test mode is enabled
+unit-test-gz9gx1oz-0: 05:16:34 CRITICAL unit.test-gz9gx1oz/0.juju-log test mode is enabled
+unit-test-gz9gx1oz-0: 05:16:59 ERROR unit.test-gz9gx1oz/0.juju-log Command /usr/bin/systemctl is-active repo-policy-compliance failed with code 3: b''
+unit-test-gz9gx1oz-0: 05:16:59 ERROR unit.test-gz9gx1oz/0.juju-log Found inactive repo-policy-compliance service.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-gz9gx1oz-0/charm/src/utilities.py", line 55, in execute_command
+    result.check_returncode()
+  File "/usr/lib/python3.10/subprocess.py", line 457, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '['/usr/bin/systemctl', 'is-active', 'repo-policy-compliance']' returned non-zero exit status 3.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-gz9gx1oz-0/charm/./src/charm.py", line 391, in _ensure_service_health
+    execute_command(["/usr/bin/systemctl", "is-active", "repo-policy-compliance"])
+  File "/var/lib/juju/agents/unit-test-gz9gx1oz-0/charm/src/utilities.py", line 64, in execute_command
+    raise SubprocessError(cmd, err.returncode, err.stdout, err.stderr) from err
+errors.SubprocessError: [/usr/bin/systemctl is-active repo-policy-compliance] failed with return code 3: b''
+unit-test-gz9gx1oz-0: 05:20:43 CRITICAL unit.test-gz9gx1oz/0.juju-log test mode is enabled
+unit-test-gz9gx1oz-0: 05:20:54 CRITICAL unit.test-gz9gx1oz/0.juju-log test mode is enabled
+unit-test-gz9gx1oz-0: 05:25:43 CRITICAL unit.test-gz9gx1oz/0.juju-log test mode is enabled
+unit-test-gz9gx1oz-0: 05:25:46 CRITICAL unit.test-gz9gx1oz/0.juju-log test mode is enabled
+unit-test-gz9gx1oz-0: 05:26:13 CRITICAL unit.test-gz9gx1oz/0.juju-log test mode is enabled
+unit-test-gz9gx1oz-0: 05:27:01 CRITICAL unit.test-gz9gx1oz/0.juju-log test mode is enabled
+unit-test-gz9gx1oz-0: 05:34:39 CRITICAL unit.test-gz9gx1oz/0.juju-log test mode is enabled
+unit-test-gz9gx1oz-0: 05:34:49 CRITICAL unit.test-gz9gx1oz/0.juju-log test mode is enabled
+unit-test-gz9gx1oz-0: 05:34:52 CRITICAL unit.test-gz9gx1oz/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:991 Forgetting model main...
