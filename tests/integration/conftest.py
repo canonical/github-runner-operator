@@ -384,7 +384,7 @@ async def image_builder_fixture(
         app = await model.deploy(
             "github-runner-image-builder",
             channel="latest/edge",
-            revision=2,
+            revision=43,
             constraints="cores=2 mem=2G root-disk=20G virt-type=virtual-machine",
             config={
                 "app-channel": "edge",
@@ -400,7 +400,7 @@ async def image_builder_fixture(
             },
         )
         await model.wait_for_idle(
-            apps=[app.name], wait_for_active=True, timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
+            apps=[app.name], timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
         )
     else:
         app = model.applications["github-runner-image-builder"]
