@@ -16,13 +16,13 @@ import jinja2
 import paramiko
 import paramiko.ssh_exception
 from fabric import Connection as SSHConnection
-
 from github_runner_manager.errors import (
     CreateMetricsStorageError,
     GetMetricsStorageError,
     KeyfileError,
     MissingServerConfigError,
     OpenStackError,
+    OpenstackHealthCheckError,
     RunnerCreateError,
     RunnerStartError,
     SSHError,
@@ -124,10 +124,12 @@ class _RunnerHealth:
     Attributes:
         healthy: The list of healthy runners.
         unhealthy:  The list of unhealthy runners.
+        undecided: The list of runners whose health state could not be determined.
     """
 
     healthy: tuple[OpenstackInstance, ...]
     unhealthy: tuple[OpenstackInstance, ...]
+    undecided: tuple[OpenstackInstance, ...]
 
 
 class OpenStackRunnerManager(CloudRunnerManager):
@@ -361,8 +363,10 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         healthy_runner_names = {runner.server_name for runner in runners.healthy}
         unhealthy_runner_names = {runner.server_name for runner in runners.unhealthy}
+        undecided_runner_names = {runner.server_name for runner in runners.undecided}
         logger.debug("Healthy runners: %s", healthy_runner_names)
         logger.debug("Unhealthy runners: %s", unhealthy_runner_names)
+        logger.debug("Runners with unknown health: %s", undecided_runner_names)
 
         logger.debug("Deleting unhealthy runners.")
         for runner in runners.unhealthy:
@@ -462,13 +466,21 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         runner_list = self._openstack_cloud.get_instances()
 
-        healthy, unhealthy = [], []
+        healthy, unhealthy, undecided = [], [], []
         for runner in runner_list:
-            if health_checks.check_runner(openstack_cloud=self._openstack_cloud, instance=runner):
-                healthy.append(runner)
-            else:
-                unhealthy.append(runner)
-        return _RunnerHealth(healthy=tuple(healthy), unhealthy=tuple(unhealthy))
+            try:
+                if health_checks.check_runner(
+                    openstack_cloud=self._openstack_cloud, instance=runner
+                ):
+                    healthy.append(runner)
+                else:
+                    unhealthy.append(runner)
+            except OpenstackHealthCheckError:
+                logger.exception("Health check could not be completed for %s", runner.server_name)
+                undecided.append(runner)
+        return _RunnerHealth(
+            healthy=tuple(healthy), unhealthy=tuple(unhealthy), undecided=tuple(undecided)
+        )
 
     def _generate_cloud_init(self, instance_name: str, registration_token: str) -> str:
         """Generate cloud init userdata.

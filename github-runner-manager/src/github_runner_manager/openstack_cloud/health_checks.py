@@ -8,8 +8,7 @@ from datetime import datetime, timedelta
 
 import invoke
 from fabric import Connection as SSHConnection
-
-from github_runner_manager.errors import KeyfileError, SSHError
+from github_runner_manager.errors import KeyfileError, OpenstackHealthCheckError, SSHError
 from github_runner_manager.manager.cloud_runner_manager import CloudInitStatus, CloudRunnerState
 from github_runner_manager.openstack_cloud.constants import (
     METRICS_EXCHANGE_PATH,
@@ -69,23 +68,31 @@ def check_active_runner(
             the flag, the health check would fail as it checks for running processes
             which would not be present in this case.
 
+    Raises:
+        OpenstackHealthCheckError: If the health check could not be completed.
+
     Returns:
         Whether the runner should be considered healthy.
     """
-    if (check_ok := _run_health_check_runner_installed(ssh_conn, instance)) is not None:
-        return check_ok
+    try:
+        if (check_ok := _run_health_check_runner_installed(ssh_conn, instance)) is not None:
+            return check_ok
 
-    if (
-        check_ok := _run_health_check_cloud_init(
-            ssh_conn, instance.server_name, accept_finished_job
-        )
-    ) is not None:
-        return check_ok
+        if (
+            check_ok := _run_health_check_cloud_init(
+                ssh_conn, instance.server_name, accept_finished_job
+            )
+        ) is not None:
+            return check_ok
 
-    if (
-        check_ok := _run_health_check_runner_processes_running(ssh_conn, instance.server_name)
-    ) is not None:
-        return check_ok
+        if (
+            check_ok := _run_health_check_runner_processes_running(ssh_conn, instance.server_name)
+        ) is not None:
+            return check_ok
+    except invoke.exceptions.Failure as exc:
+        raise OpenstackHealthCheckError(
+            "Health check execution failed due to SSH command failure."
+        ) from exc
 
     return True
 
