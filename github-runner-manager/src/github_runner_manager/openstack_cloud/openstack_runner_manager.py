@@ -125,12 +125,12 @@ class _RunnerHealth:
     Attributes:
         healthy: The list of healthy runners.
         unhealthy:  The list of unhealthy runners.
-        undecided: The list of runners whose health state could not be determined.
+        unknown: The list of runners whose health state could not be determined.
     """
 
     healthy: tuple[OpenstackInstance, ...]
     unhealthy: tuple[OpenstackInstance, ...]
-    undecided: tuple[OpenstackInstance, ...]
+    unknown: tuple[OpenstackInstance, ...]
 
 
 class OpenStackRunnerManager(CloudRunnerManager):
@@ -373,10 +373,10 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         healthy_runner_names = {runner.server_name for runner in runners.healthy}
         unhealthy_runner_names = {runner.server_name for runner in runners.unhealthy}
-        undecided_runner_names = {runner.server_name for runner in runners.undecided}
+        unknown_runner_names = {runner.server_name for runner in runners.unknown}
         logger.debug("Healthy runners: %s", healthy_runner_names)
         logger.debug("Unhealthy runners: %s", unhealthy_runner_names)
-        logger.debug("Runners with unknown health: %s", undecided_runner_names)
+        logger.debug("Unknown health runners: %s", unknown_runner_names)
 
         logger.debug("Deleting unhealthy runners.")
         for runner in runners.unhealthy:
@@ -388,7 +388,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Extracting metrics.")
         return self._cleanup_extract_metrics(
             metrics_storage_manager=self._metrics_storage_manager,
-            healthy_runner_names=healthy_runner_names,
+            healthy_runner_names=healthy_runner_names | unknown_runner_names, # TODO: add to unit test
             unhealthy_runner_names=unhealthy_runner_names,
         )
 
@@ -476,7 +476,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         runner_list = self._openstack_cloud.get_instances()
 
-        healthy, unhealthy, undecided = [], [], []
+        healthy, unhealthy, unknown = [], [], []
         for runner in runner_list:
             try:
                 if health_checks.check_runner(
@@ -487,9 +487,9 @@ class OpenStackRunnerManager(CloudRunnerManager):
                     unhealthy.append(runner)
             except OpenstackHealthCheckError:
                 logger.exception("Health check could not be completed for %s", runner.server_name)
-                undecided.append(runner)
+                unknown.append(runner)
         return _RunnerHealth(
-            healthy=tuple(healthy), unhealthy=tuple(unhealthy), undecided=tuple(undecided)
+            healthy=tuple(healthy), unhealthy=tuple(unhealthy), unknown=tuple(unknown)
         )
 
     def _generate_cloud_init(self, instance_name: str, registration_token: str) -> str:
