@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
+
 from github_runner_manager.errors import OpenstackHealthCheckError
 from github_runner_manager.manager.cloud_runner_manager import SupportServiceConfig
 from github_runner_manager.metrics import runner
@@ -22,7 +23,6 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
 )
-
 from tests.unit.factories import openstack_factory
 
 

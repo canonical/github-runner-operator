@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 
 import invoke
 from fabric import Connection as SSHConnection
+
 from github_runner_manager.errors import KeyfileError, OpenstackHealthCheckError, SSHError
 from github_runner_manager.manager.cloud_runner_manager import CloudInitStatus, CloudRunnerState
 from github_runner_manager.openstack_cloud.constants import (

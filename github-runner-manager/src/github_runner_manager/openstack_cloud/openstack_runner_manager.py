@@ -16,6 +16,7 @@ import jinja2
 import paramiko
 import paramiko.ssh_exception
 from fabric import Connection as SSHConnection
+
 from github_runner_manager.errors import (
     CreateMetricsStorageError,
     GetMetricsStorageError,
@@ -235,15 +236,20 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug(
             "Runner info fetched, checking health %s %s", instance_id, instance.server_name
         )
-        healthy = health_checks.check_runner(
-            openstack_cloud=self._openstack_cloud, instance=instance
-        )
-        logger.debug("Runner health check completed %s %s", instance.server_name, healthy)
+
+        try:
+            healthy = health_checks.check_runner(
+                openstack_cloud=self._openstack_cloud, instance=instance
+            )
+            logger.debug("Runner health check completed %s %s", instance.server_name, healthy)
+        except OpenstackHealthCheckError:
+            logger.exception("Health check could not be completed for %s", instance.server_name)
+            healthy = None
         return (
             CloudRunnerInstance(
                 name=instance.server_name,
                 instance_id=instance_id,
-                health=HealthState.HEALTHY if healthy else HealthState.UNHEALTHY,
+                health=HealthState.from_value(healthy),
                 state=CloudRunnerState.from_openstack_server_status(instance.status),
             )
             if instance is not None
@@ -262,27 +268,31 @@ class OpenStackRunnerManager(CloudRunnerManager):
         Returns:
             Information on the runner instances.
         """
-        instance_list = self._openstack_cloud.get_instances()
-        instance_list = [
-            CloudRunnerInstance(
-                name=instance.server_name,
-                instance_id=instance.instance_id,
-                health=(
-                    HealthState.HEALTHY
-                    if health_checks.check_runner(
-                        openstack_cloud=self._openstack_cloud, instance=instance
-                    )
-                    else HealthState.UNHEALTHY
-                ),
-                state=CloudRunnerState.from_openstack_server_status(instance.status),
+        instances = self._openstack_cloud.get_instances()
+        runners = []
+        for instance in instances:
+            try:
+                healthy = health_checks.check_runner(
+                    openstack_cloud=self._openstack_cloud, instance=instance
+                )
+            except OpenstackHealthCheckError:
+                logger.exception(
+                    "Health check could not be completed for %s", instance.server_name
+                )
+                healthy = None
+            runners.append(
+                CloudRunnerInstance(
+                    name=instance.server_name,
+                    instance_id=instance.instance_id,
+                    health=HealthState.from_value(healthy),
+                    state=CloudRunnerState.from_openstack_server_status(instance.status),
+                )
             )
-            for instance in instance_list
-        ]
         if states is None:
-            return tuple(instance_list)
+            return tuple(runners)
 
         state_set = set(states)
-        return tuple(instance for instance in instance_list if instance.state in state_set)
+        return tuple(runner for runner in runners if runner.state in state_set)
 
     def delete_runner(
         self, instance_id: InstanceId, remove_token: str
@@ -680,15 +690,21 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 f"Failed to SSH connect to {instance.server_name} openstack runner"
             ) from err
 
-        if not health_checks.check_active_runner(
-            ssh_conn=ssh_conn, instance=instance, accept_finished_job=True
-        ):
-            logger.info("Runner process not found on %s", instance.server_name)
+        try:
+            healthy = health_checks.check_active_runner(
+                ssh_conn=ssh_conn, instance=instance, accept_finished_job=True
+            )
+        except OpenstackHealthCheckError as exc:
             raise RunnerStartError(
-                f"Runner process on {instance.server_name} failed to initialize on after starting"
+                f"Failed to check health of runner process on {instance.server_name}"
+            ) from exc
+        if not healthy:
+            logger.info("Runner %s not considered healthy", instance.server_name)
+            raise RunnerStartError(
+                f"Runner {instance.server_name} failed to initialize after starting"
             )
 
-        logger.info("Runner process found to be healthy on %s", instance.server_name)
+        logger.info("Runner %s found to be healthy", instance.server_name)
 
     @staticmethod
     def _generate_instance_id() -> InstanceId:
