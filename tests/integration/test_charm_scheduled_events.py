@@ -12,8 +12,8 @@ from asyncio import sleep
 import pytest
 from juju.application import Application
 from juju.model import Model
-
 from runner_manager import LXDRunnerManager
+
 from tests.integration.helpers.common import check_runner_binary_exists
 from tests.integration.helpers.lxd import get_runner_names, run_in_unit, wait_till_num_of_runners
 from tests.status_name import ACTIVE

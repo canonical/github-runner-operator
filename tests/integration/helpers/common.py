@@ -25,6 +25,7 @@ from juju.action import Action
 from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
+from runner_manager import LXDRunnerManager
 
 from charm_state import (
     DENYLIST_CONFIG_NAME,
@@ -35,7 +36,6 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
 )
-from runner_manager import LXDRunnerManager
 from tests.status_name import ACTIVE
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
