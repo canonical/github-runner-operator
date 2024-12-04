@@ -4,6 +4,7 @@
 """Integration tests for charm upgrades."""
 
 import functools
+import logging
 import pathlib
 
 import pytest
@@ -21,7 +22,6 @@ from charm_state import (
 )
 from tests.integration.helpers.common import (
     deploy_github_runner_charm,
-    inject_lxd_profile,
     is_upgrade_charm_event_emitted,
     wait_for,
 )
@@ -69,8 +69,8 @@ async def test_charm_upgrade(
         "--no-progress",
     )
     assert retcode == 0, f"failed to download charm, {stdout} {stderr}"
-    inject_lxd_profile(pathlib.Path(latest_stable_path), loop_device=loop_device)
 
+    logging.info("proxy value %s", http_proxy)
     # deploy latest stable version of the charm
     application = await deploy_github_runner_charm(
         model=model,

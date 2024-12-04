@@ -10,13 +10,13 @@ concurrency:
 jobs:
   # test option values defined at test/conftest.py are passed on via repository secret
   # INTEGRATION_TEST_ARGS to operator-workflows automatically.
-  integration-tests:
+  openstack-integration-tests:
     name: Integration test with juju 3.1
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
       juju-channel: 3.1/stable
-      pre-run-script: scripts/pre-integration-test.sh
+      pre-run-script: scripts/setup-lxd.sh
       provider: lxd
       test-tox-env: integration-juju3.1
       modules: '["test_charm_scheduled_events", "test_debug_ssh", "test_charm_upgrade"]'
