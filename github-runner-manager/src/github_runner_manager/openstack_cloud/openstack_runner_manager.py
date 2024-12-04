@@ -71,6 +71,8 @@ RUNNER_STARTUP_PROCESS = "/home/ubuntu/actions-runner/run.sh"
 
 OUTDATED_METRICS_STORAGE_IN_SECONDS = CREATE_SERVER_TIMEOUT + 30  # add a bit on top of the timeout
 
+HEALTH_CHECK_ERROR_LOG_MSG = "Health check could not be completed for %s"
+
 
 class _GithubRunnerRemoveError(Exception):
     """Represents an error while SSH into a runner and running the remove script."""
@@ -243,7 +245,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             )
             logger.debug("Runner health check completed %s %s", instance.server_name, healthy)
         except OpenstackHealthCheckError:
-            logger.exception("Health check could not be completed for %s", instance.server_name)
+            logger.exception(HEALTH_CHECK_ERROR_LOG_MSG, instance.server_name)
             healthy = None
         return (
             CloudRunnerInstance(
@@ -276,9 +278,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
                     openstack_cloud=self._openstack_cloud, instance=instance
                 )
             except OpenstackHealthCheckError:
-                logger.exception(
-                    "Health check could not be completed for %s", instance.server_name
-                )
+                logger.exception(HEALTH_CHECK_ERROR_LOG_MSG, instance.server_name)
                 healthy = None
             runners.append(
                 CloudRunnerInstance(
@@ -484,7 +484,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 else:
                     unhealthy.append(runner)
             except OpenstackHealthCheckError:
-                logger.exception("Health check could not be completed for %s", runner.server_name)
+                logger.exception(HEALTH_CHECK_ERROR_LOG_MSG, runner.server_name)
                 unknown.append(runner)
         return _RunnerHealth(
             healthy=tuple(healthy), unhealthy=tuple(unhealthy), unknown=tuple(unknown)
