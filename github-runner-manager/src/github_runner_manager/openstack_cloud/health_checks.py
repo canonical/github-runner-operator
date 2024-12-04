@@ -52,8 +52,11 @@ def check_runner(openstack_cloud: OpenstackCloud, instance: OpenstackInstance) -
             "Health check failed due to unable to find keyfile for %s", instance.server_name
         )
         return False
-    except SSHError:
-        logger.exception("SSH Failed on %s, marking as unhealthy.")
+    except _SSHError:
+        logger.exception(
+            "Unable to get SSH connection for instance %s, marking as unhealthy.",
+            instance.server_name,
+        )
         return False
 
     return check_active_runner(ssh_conn, instance)
@@ -113,7 +116,7 @@ def _get_ssh_connection(
         instance: The OpenStack instance to conduit the health check.
 
     Raises:
-        SSHError: Unable to get a SSH connection to the instance.
+        _SSHError: Unable to get a SSH connection to the instance.
 
     Returns:
         Whether the runner is healthy.
@@ -121,11 +124,8 @@ def _get_ssh_connection(
     try:
         ssh_conn = openstack_cloud.get_ssh_connection(instance)
 
-    except SSHError:
-        logger.exception(
-            "SSH connection failure with %s during health check", instance.server_name
-        )
-        raise
+    except SSHError as exc:
+        raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
     return ssh_conn
 
 
