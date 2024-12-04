@@ -19,6 +19,7 @@ from git import Repo
 from github import Github, GithubException
 from github.Branch import Branch
 from github.Repository import Repository
+from github_runner_manager.github_client import GithubClient
 from juju.application import Application
 from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
@@ -35,7 +36,6 @@ from charm_state import (
     VIRTUAL_MACHINES_CONFIG_NAME,
     InstanceType,
 )
-from github_client import GithubClient
 from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
     InstanceHelper,
@@ -44,7 +44,6 @@ from tests.integration.helpers.common import (
     reconcile,
     wait_for,
 )
-from tests.integration.helpers.lxd import LXDInstanceHelper, ensure_charm_has_runner
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
 
@@ -458,18 +457,6 @@ async def app_openstack_runner_fixture(
     return application
 
 
-@pytest_asyncio.fixture(scope="module")
-async def app_one_runner(model: Model, app_no_runner: Application) -> AsyncIterator[Application]:
-    """Application with a single runner.
-
-    Test should ensure it returns with the application in a good state and has
-    one runner.
-    """
-    await ensure_charm_has_runner(app=app_no_runner, model=model)
-
-    return app_no_runner
-
-
 @pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
 async def app_scheduled_events_fixture(
     model: Model,
@@ -795,5 +782,5 @@ async def instance_helper_fixture(
         openstack_connection = request.getfixturevalue("openstack_connection")
         helper = OpenStackInstanceHelper(openstack_connection=openstack_connection)
     else:
-        helper = LXDInstanceHelper()
+        raise AssertionError(f"Wrong instance_type {instance_type}")
     return helper

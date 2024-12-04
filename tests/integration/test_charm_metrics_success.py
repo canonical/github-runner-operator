@@ -14,7 +14,7 @@ from github_runner_manager.metrics.runner import PostJobStatus
 from juju.application import Application
 from juju.model import Model
 
-from charm_state import PATH_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
+from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.charm_metrics import (
     assert_events_after_reconciliation,
     clear_metrics_log,
@@ -26,9 +26,7 @@ from tests.integration.helpers.common import (
     InstanceHelper,
     dispatch_workflow,
     reconcile,
-    run_in_unit,
 )
-from tests.integration.helpers.lxd import ensure_charm_has_runner, get_runner_name
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -110,44 +108,4 @@ async def test_charm_issues_metrics_after_reconciliation(
 
     await assert_events_after_reconciliation(
         app=app, github_repository=github_repository, post_job_status=PostJobStatus.NORMAL
-    )
-
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_charm_remounts_shared_fs(
-    model: Model,
-    app: Application,
-    forked_github_repository: Repository,
-    forked_github_branch: Branch,
-):
-    """
-    arrange: A properly integrated charm with a runner registered on the fork repo.
-    act: Dispatch a test workflow and afterwards unmount the shared fs. After that, reconcile.
-    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
-    """
-    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-    await ensure_charm_has_runner(app=app, model=model)
-
-    # Clear metrics log to make reconciliation event more predictable
-    unit = app.units[0]
-    runner_name = await get_runner_name(unit)
-    await clear_metrics_log(unit)
-    await dispatch_workflow(
-        app=app,
-        branch=forked_github_branch,
-        github_repository=forked_github_repository,
-        conclusion="success",
-        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
-    )
-
-    # unmount shared fs
-    await run_in_unit(unit, f"sudo umount /home/ubuntu/runner-fs/{runner_name}")
-
-    # Set the number of virtual machines to 0 to speedup reconciliation
-    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await reconcile(app=app, model=model)
-
-    await assert_events_after_reconciliation(
-        app=app, github_repository=forked_github_repository, post_job_status=PostJobStatus.NORMAL
     )
