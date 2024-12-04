@@ -26,6 +26,10 @@ INSTANCE_IN_BUILD_MODE_TIMEOUT_IN_HOURS = 1
 _HealthCheckResult = bool | None  # None indicates that the check can not determine health status
 
 
+class _SSHError(Exception):
+    """Error on SSH command execution."""
+
+
 def check_runner(openstack_cloud: OpenstackCloud, instance: OpenstackInstance) -> bool:
     """Run a general health check on a runner instance.
 
@@ -90,7 +94,7 @@ def check_active_runner(
             check_ok := _run_health_check_runner_processes_running(ssh_conn, instance.server_name)
         ) is not None:
             return check_ok
-    except invoke.exceptions.Failure as exc:
+    except _SSHError as exc:
         raise OpenstackHealthCheckError(
             "Health check execution failed due to SSH command failure."
         ) from exc
@@ -178,7 +182,7 @@ def _run_health_check_cloud_init(
     Returns:
         Whether the cloud-init status indicates the run is healthy or None.
     """
-    result: invoke.runners.Result = ssh_conn.run("cloud-init status", warn=True, timeout=30)
+    result: invoke.runners.Result = _execute_ssh_command(ssh_conn, "cloud-init status")
     if not result.ok:
         logger.warning("cloud-init status command failed on %s: %s.", server_name, result.stderr)
         return False
@@ -214,8 +218,8 @@ def _run_health_check_runner_installed(
         If the run can be considered healthy depending on the existence of
         the runner-installed.timestamp.
     """
-    result = ssh_conn.run(
-        f"[ -f {METRICS_EXCHANGE_PATH}/runner-installed.timestamp ]", warn=True, timeout=30
+    result = _execute_ssh_command(
+        ssh_conn, f"[ -f {METRICS_EXCHANGE_PATH}/runner-installed.timestamp ]"
     )
     if not result.ok:
         logger.info(
@@ -247,7 +251,7 @@ def _run_health_check_runner_processes_running(
     Returns:
         If the run can be considered healthy depending on the existence of the processes.
     """
-    result = ssh_conn.run("ps aux", warn=True, timeout=30)
+    result = _execute_ssh_command(ssh_conn, "ps aux")
     if not result.ok:
         logger.warning("SSH run of `ps aux` failed on %s: %s", server_name, result.stderr)
         return False
@@ -255,3 +259,24 @@ def _run_health_check_runner_processes_running(
         logger.warning("Runner process not found on %s", server_name)
         return False
     return None
+
+
+def _execute_ssh_command(ssh_conn: SSHConnection, command: str) -> invoke.runners.Result:
+    """Run a command on the remote server.
+
+    Args:
+        ssh_conn: The SSH connection to the runner.
+        command: The command to run.
+
+    Returns:
+        The result of the command.
+
+    Raises:
+        _SSHError: If the command execution failed.
+    """
+    try:
+        return ssh_conn.run(command, warn=True, timeout=30)
+    except invoke.exceptions.CommandTimedOut as exc:
+        raise _SSHError(
+            f"SSH command execution timed out for command '{command}' on {ssh_conn.host}"
+        ) from exc
