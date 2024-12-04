@@ -1,0 +1,26 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"
+    arrange: A working application with one runner.
+    act:
+        1.  a. Remove runner binary.
+            b. Crash the one runner
+        2.  Wait for 6 minutes, and then wait for ActiveStatus.
+    assert:
+        1. a. No runner binary exists.
+           b. No runner exists.
+        2.  a. Runner binary exists.
+            b. One runner exists. The runner name should not be the same as the starting one.
+
+    This tests whether the reconcile-runner event is triggered, and updates the dependencies.
+    The reconciliation logic is tested with the reconcile-runners action.
+    ","884562","test_update_interval","tests.integration","Wed Dec 04 10:55:59 UTC 2024","passed","Wed Dec 04 11:10:44 UTC 2024","","test_charm_scheduled_events","",""
+"
+    arrange: given latest stable version of the charm (current 161).
+    act: charm upgrade is called.
+    assert: the charm is upgraded successfully.
+    ","1817360","test_charm_upgrade","tests.integration","Wed Dec 04 10:40:20 UTC 2024","passed","Wed Dec 04 11:10:38 UTC 2024","","test_charm_upgrade","",""
+"
+    arrange: given an integrated GitHub-Runner charm and tmate-ssh-server charm with a denylist         covering ip ranges of tmate-ssh-server.
+    act: when canonical/action-tmate is triggered.
+    assert: the ssh connection info from action-log and tmate-ssh-server matches.
+    ","1636604","test_ssh_debug","tests.integration","Wed Dec 04 10:42:46 UTC 2024","passed","Wed Dec 04 11:10:02 UTC 2024","","test_debug_ssh","",""

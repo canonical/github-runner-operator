@@ -1,0 +1,141 @@
+INFO     pytest_operator.plugin:plugin.py:724 Adding model github-pr-07d9d-lxd:test-charm-scheduled-events-5q9j on cloud localhost
+WARNING  juju.client.connection:connection.py:893 unexpected facade AgentLifeFlag received from the controller
+WARNING  juju.client.connection:connection.py:909 unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+WARNING  juju.client.connection:connection.py:893 unexpected facade SecretsDrain received from the controller
+INFO     juju.model:model.py:1988 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0 (not enough units yet - 0/1)
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Installing packages
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Installing packages
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Checking for service updates
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [rebooting] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [rebooting] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [rebooting] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [rebooting] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [idle] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [idle] active:
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Flushing runners due to updated deps
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Flushing runners due to updated deps
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Flushing runners due to updated deps
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Flushing runners due to updated deps
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Flushing runners due to updated deps
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-q0kboik0/0 [idle] active:
+INFO     pytest_operator.plugin:plugin.py:903 Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-5q9j  github-pr-07d9d-lxd  localhost/localhost  3.1.10   unsupported  11:10:44Z
+
+App            Version  Status  Scale  Charm          Channel  Rev  Exposed  Message
+test-q0kboik0           active      1  github-runner             0  no       
+
+Unit              Workload  Agent  Machine  Public address  Ports  Message
+test-q0kboik0/0*  active    idle   0        10.62.219.251          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.62.219.251  juju-2c760d-0  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:909 Juju error logs:
+
+machine-0: 10:44:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 10:44:20 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 10:44:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-q0kboik0-0: 10:44:20 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-q0kboik0-0: 10:44:27 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+unit-test-q0kboik0-0: 10:44:28 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+unit-test-q0kboik0-0: 10:49:29 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+machine-0: 10:50:32 ERROR juju.worker.deployer fatal error "test-q0kboik0/0": machine needs to reboot
+unit-test-q0kboik0-0: 10:52:10 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+unit-test-q0kboik0-0: 10:52:11 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+unit-test-q0kboik0-0: 10:52:37 ERROR unit.test-q0kboik0/0.juju-log Command /usr/bin/systemctl is-active repo-policy-compliance failed with code 3: b''
+unit-test-q0kboik0-0: 10:52:37 ERROR unit.test-q0kboik0/0.juju-log Found inactive repo-policy-compliance service.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-q0kboik0-0/charm/src/utilities.py", line 55, in execute_command
+    result.check_returncode()
+  File "/usr/lib/python3.10/subprocess.py", line 457, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '['/usr/bin/systemctl', 'is-active', 'repo-policy-compliance']' returned non-zero exit status 3.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-q0kboik0-0/charm/./src/charm.py", line 391, in _ensure_service_health
+    execute_command(["/usr/bin/systemctl", "is-active", "repo-policy-compliance"])
+  File "/var/lib/juju/agents/unit-test-q0kboik0-0/charm/src/utilities.py", line 64, in execute_command
+    raise SubprocessError(cmd, err.returncode, err.stdout, err.stderr) from err
+errors.SubprocessError: [/usr/bin/systemctl is-active repo-policy-compliance] failed with return code 3: b''
+unit-test-q0kboik0-0: 10:52:43 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+unit-test-q0kboik0-0: 10:52:51 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+unit-test-q0kboik0-0: 10:53:12 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+unit-test-q0kboik0-0: 10:55:20 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+unit-test-q0kboik0-0: 10:55:26 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+unit-test-q0kboik0-0: 10:55:34 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+unit-test-q0kboik0-0: 10:55:37 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+unit-test-q0kboik0-0: 10:58:06 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+unit-test-q0kboik0-0: 11:03:22 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+unit-test-q0kboik0-0: 11:05:41 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+unit-test-q0kboik0-0: 11:10:26 CRITICAL unit.test-q0kboik0/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:991 Forgetting model main...
