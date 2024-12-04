@@ -157,8 +157,8 @@ def test__cleanup_extract_metrics(
 
     OpenStackRunnerManager._cleanup_extract_metrics(
         metrics_storage_manager=metric_storage_manager,
-        healthy_runner_names=healthy_runner_names,
-        unhealthy_runner_names=unhealthy_runner_names,
+        ignore_runner_names=healthy_runner_names,
+        include_runner_names=unhealthy_runner_names,
     )
 
     assert runner_metrics_mock.extract.call_count == 1

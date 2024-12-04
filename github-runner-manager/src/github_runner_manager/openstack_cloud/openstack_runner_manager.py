@@ -388,33 +388,31 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Extracting metrics.")
         return self._cleanup_extract_metrics(
             metrics_storage_manager=self._metrics_storage_manager,
-            healthy_runner_names=healthy_runner_names | unknown_runner_names,
-            unhealthy_runner_names=unhealthy_runner_names,
+            ignore_runner_names=healthy_runner_names | unknown_runner_names,
+            include_runner_names=unhealthy_runner_names,
         )
 
     @staticmethod
     def _cleanup_extract_metrics(
         metrics_storage_manager: StorageManager,
-        healthy_runner_names: set[str],
-        unhealthy_runner_names: set[str],
+        ignore_runner_names: set[str],
+        include_runner_names: set[str],
     ) -> Iterator[runner_metrics.RunnerMetrics]:
-        """Extract metrics for unhealthy runners and dangling metrics storage.
+        """Extract metrics for certain runners and dangling metrics storage.
 
         Args:
             metrics_storage_manager: The metrics storage manager.
-            healthy_runner_names: The names of healthy runners.
-            unhealthy_runner_names: The names of unhealthy runners.
+            ignore_runner_names: The names of the runners whose metrics should not be extracted.
+            include_runner_names: The names of the runners whose metrics should be extracted.
 
         Returns:
-            Any metrics retrieved from unhealthy runners and dangling storage.
+            Any metrics retrieved from the include_runner_names and dangling storage.
         """
-        # We want to extract metrics for unhealthy runners(runners to clean up).
-        # But there may be runners under construction
-        # (not marked as healthy and unhealthy because they do not yet exist in OpenStack)
-        # that should not be cleaned up.
+        # There may be runners under construction that are not included in the runner_names sets
+        # because they do not yet exist in OpenStack and that should not be cleaned up.
         # On the other hand, there could be storage for runners from the past that
         # should be cleaned up.
-        all_runner_names = healthy_runner_names | unhealthy_runner_names
+        all_runner_names = ignore_runner_names | include_runner_names
         unmatched_metrics_storage = (
             ms
             for ms in metrics_storage_manager.list_all()
@@ -428,7 +426,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         }
         return runner_metrics.extract(
             metrics_storage_manager=metrics_storage_manager,
-            runners=unhealthy_runner_names | dangling_storage_runner_names,
+            runners=include_runner_names | dangling_storage_runner_names,
             include=True,
         )
 
