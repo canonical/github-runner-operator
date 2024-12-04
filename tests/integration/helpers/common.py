@@ -25,7 +25,6 @@ from juju.action import Action
 from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
-from runner_manager import LXDRunnerManager
 
 from charm_state import (
     DENYLIST_CONFIG_NAME,
@@ -99,19 +98,6 @@ class InstanceHelper(typing.Protocol):
         ...
 
 
-async def check_runner_binary_exists(unit: Unit) -> bool:
-    """Checks if runner binary exists in the charm.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-
-    Returns:
-        Whether the runner binary file exists in the charm.
-    """
-    return_code, _, _ = await run_in_unit(unit, f"test -f {LXDRunnerManager.runner_bin_path}")
-    return return_code == 0
-
-
 async def get_repo_policy_compliance_pip_info(unit: Unit) -> None | str:
     """Get pip info for repo-policy-compliance.
 
@@ -148,19 +134,6 @@ async def install_repo_policy_compliance_from_git_source(unit: Unit, source: Non
         assert (
             return_code == 0
         ), f"Failed to install repo-policy-compliance from source, {stdout} {stderr}"
-
-
-async def remove_runner_bin(unit: Unit) -> None:
-    """Remove runner binary.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-    """
-    await run_in_unit(unit, f"rm {LXDRunnerManager.runner_bin_path}")
-
-    # No file should exists under with the filename.
-    return_code, _, _ = await run_in_unit(unit, f"test -f {LXDRunnerManager.runner_bin_path}")
-    assert return_code != 0
 
 
 async def run_in_unit(

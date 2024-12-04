@@ -291,15 +291,6 @@ class GithubRunnerCharm(CharmBase):
         except CharmConfigInvalidError as exc:
             raise ConfigurationError(exc.msg) from exc
 
-    def _javi_ensure_openstack(self) -> None:
-        """Ensure openstack. REMOVE AFTER THE REFACTOR."""
-        state = self._setup_state()
-        if state.instance_type != InstanceType.OPENSTACK:
-            # pyright: ignore
-            raise Exception(  # pylint: disable=broad-exception-raised
-                f"JAVI NOT OPENSTACK MODE. MODE: {state.instance_type}"
-            )
-
     def _common_install_code(self) -> bool:  # noqa: C901
         """Installation code shared between install and upgrade hook.
 
@@ -310,7 +301,6 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             True if installation was successful, False otherwise.
         """
-        self._javi_ensure_openstack()
         try:
             self._install_deps()
         except SubprocessError:
@@ -341,13 +331,11 @@ class GithubRunnerCharm(CharmBase):
         """Handle the start of the charm."""
         state = self._setup_state()
 
-        if state.instance_type == InstanceType.OPENSTACK:
-            self.unit.status = MaintenanceStatus("Starting runners")
-            if not self._get_set_image_ready_status():
-                return
-            runner_scaler = self._get_runner_scaler(state)
-            self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+        self.unit.status = MaintenanceStatus("Starting runners")
+        if not self._get_set_image_ready_status():
             return
+        runner_scaler = self._get_runner_scaler(state)
+        self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
 
     def _set_reconcile_timer(self) -> None:
         """Set the timer for regular reconciliation checks."""
@@ -459,7 +447,6 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: The event fired on check_runners action.
         """
-        self._javi_ensure_openstack()
         state = self._setup_state()
 
         runner_scaler = self._get_runner_scaler(state)
@@ -511,7 +498,6 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Action event of flushing all runners.
         """
-        self._javi_ensure_openstack()
         state = self._setup_state()
 
         # Flushing mode not implemented for OpenStack yet.
@@ -570,69 +556,6 @@ class GithubRunnerCharm(CharmBase):
             self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
         else:
             self.unit.status = ActiveStatus()
-
-    def _install_repo_policy_compliance(self, proxy_config: ProxyConfig) -> bool:
-        """Install latest version of repo_policy_compliance service.
-
-        Args:
-            proxy_config: Proxy configuration.
-
-        Returns:
-            Whether version install is changed. Going from not installed to
-            installed will return True.
-        """
-        # Prepare environment variables for pip subprocess
-        env = {}
-        if http_proxy := proxy_config.http:
-            env["HTTP_PROXY"] = http_proxy
-            env["http_proxy"] = http_proxy
-        if https_proxy := proxy_config.https:
-            env["HTTPS_PROXY"] = https_proxy
-            env["https_proxy"] = https_proxy
-        if no_proxy := proxy_config.no_proxy:
-            env["NO_PROXY"] = no_proxy
-            env["no_proxy"] = no_proxy
-
-        old_version = execute_command(
-            [
-                "/usr/bin/python3",
-                "-m",
-                "pip",
-                "show",
-                "repo-policy-compliance",
-            ],
-            check_exit=False,
-        )
-
-        execute_command(
-            [
-                "/usr/bin/python3",
-                "-m",
-                "pip",
-                "install",
-                "--upgrade",
-                "git+https://github.com/canonical/repo-policy-compliance@main",
-            ],
-            env=env,
-        )
-
-        new_version = execute_command(
-            [
-                "/usr/bin/python3",
-                "-m",
-                "pip",
-                "show",
-                "repo-policy-compliance",
-            ],
-            check_exit=False,
-        )
-        return old_version != new_version
-
-    def _enable_kernel_modules(self) -> None:
-        """Enable kernel modules needed by the charm."""
-        execute_command(["/usr/sbin/modprobe", "br_netfilter"])
-        with self.kernel_module_path.open("a", encoding="utf-8") as modules_file:
-            modules_file.write("br_netfilter\n")
 
     def _install_deps(self) -> None:
         """Install dependences for the charm."""

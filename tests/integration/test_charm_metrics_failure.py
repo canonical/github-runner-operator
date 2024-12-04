@@ -10,7 +10,6 @@ import pytest
 import pytest_asyncio
 from github.Branch import Branch
 from github.Repository import Repository
-from github_runner_manager.metrics import runner_logs
 from github_runner_manager.metrics.runner import PostJobStatus
 from juju.application import Application
 from juju.model import Model
@@ -30,12 +29,6 @@ from tests.integration.helpers.common import (
     InstanceHelper,
     dispatch_workflow,
     reconcile,
-    run_in_unit,
-)
-from tests.integration.helpers.lxd import (
-    ensure_charm_has_runner,
-    get_runner_name,
-    run_in_lxd_instance,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
@@ -180,41 +173,3 @@ async def test_charm_issues_metrics_for_abnormal_termination(
         github_repository=github_repository,
         post_job_status=PostJobStatus.ABNORMAL,
     )
-
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_charm_retrieves_logs_from_unhealthy_runners(
-    model: Model,
-    app: Application,
-):
-    """
-    arrange: A properly integrated charm with one runner.
-    act: Kill the start.sh script, which marks the runner as unhealthy. After that, reconcile.
-    assert: The logs are pulled from the crashed runner.
-    """
-    await ensure_charm_has_runner(app=app, model=model)
-
-    unit = app.units[0]
-    runner_name = await get_runner_name(unit)
-
-    kill_start_sh_cmd = "pkill -9 start.sh"
-    ret_code, stdout, stderr = await run_in_lxd_instance(unit, runner_name, kill_start_sh_cmd)
-    assert ret_code == 0, f"Failed to kill start.sh, {stdout} {stderr}"
-
-    # Set the number of virtual machines to 0 to avoid to speedup reconciliation.
-    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await reconcile(app=app, model=model)
-
-    ret_code, stdout, stderr = await run_in_unit(unit, f"ls {runner_logs.RUNNER_LOGS_DIR_PATH}")
-    assert ret_code == 0, f"Failed to list crashed runner logs {stdout} {stderr}"
-    assert stdout
-    assert runner_name in stdout, "Failed to find crashed runner log"
-
-    ret_code, stdout, _ = await run_in_unit(
-        unit, f"ls {runner_logs.RUNNER_LOGS_DIR_PATH}/{runner_name}"
-    )
-    assert ret_code == 0, "Failed to list crashed runner log"
-    assert stdout
-    assert "_diag" in stdout, "Failed to find crashed runner diag log"
-    assert "syslog" in stdout, "Failed to find crashed runner syslog log"

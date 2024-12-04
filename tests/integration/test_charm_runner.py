@@ -19,7 +19,6 @@ from charm_state import (
     VM_MEMORY_CONFIG_NAME,
     InstanceType,
 )
-from tests.integration.helpers import lxd
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
@@ -96,8 +95,6 @@ async def test_flush_runner_and_resource_config(
 
     Test are combined to reduce number of runner spawned.
     """
-    unit = app.units[0]
-
     # 1.
     action: Action = await app.units[0].run_action("check-runners")
     await action.wait()
@@ -112,9 +109,6 @@ async def test_flush_runner_and_resource_config(
 
     # 2.
     # Check if the LXD profile is checked by the charm. Only for local LXD.
-    configs = await app.get_config()
-    if instance_type == InstanceType.LOCAL_LXD:
-        await lxd.assert_resource_lxd_profile(unit, configs)
     # OpenStack flavor is not managed by the charm. The charm takes it as a config option.
     # Therefore no need to check it.
 
@@ -126,10 +120,6 @@ async def test_flush_runner_and_resource_config(
     # 4.
     action = await app.units[0].run_action("flush-runners")
     await action.wait()
-
-    configs = await app.get_config()
-    if instance_type == InstanceType.LOCAL_LXD:
-        await lxd.assert_resource_lxd_profile(unit, configs)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()

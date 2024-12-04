@@ -12,6 +12,7 @@ from asyncio import sleep
 import pytest
 from juju.application import Application
 from juju.model import Model
+
 from tests.integration.helpers.common import InstanceHelper, wait_for
 from tests.status_name import ACTIVE
 
