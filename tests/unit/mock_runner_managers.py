@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from typing import Iterable, Iterator, Sequence
 from unittest.mock import MagicMock
 
+from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
@@ -18,7 +19,6 @@ from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 from charm_state import GitHubPath
-from github_client import GithubClient
 from tests.unit.mock import MockGhapiClient
 
 
