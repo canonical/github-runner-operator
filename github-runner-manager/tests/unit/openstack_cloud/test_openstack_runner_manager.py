@@ -147,9 +147,10 @@ def test_cleanup_ignores_runners_with_health_check_errors(
     """
     arrange: Given a combination of healthy/unhealthy/undecided (with a health check error) runners.
     act: When the cleanup method is called.
-    assert: Only the unhealthy runners are deleted.
+    assert: Only the unhealthy runners are deleted and got metrics extracted.
     """
     # TODO: Try to see if something can move to a fixture or helper function as this is a lot of setup.
+
     service_config_mock = MagicMock(spec=SupportServiceConfig)
     service_config_mock.proxy_config = None
     config = OpenStackRunnerManagerConfig(
@@ -206,6 +207,16 @@ def test_cleanup_ignores_runners_with_health_check_errors(
     )
     runner_manager = OpenStackRunnerManager(config=config)
     runner_manager._openstack_cloud = openstack_cloud_mock
+
+    metric_storage_manager = MagicMock(spec=StorageManager)
+    runner_metrics_mock = MagicMock(spec=runner)
+    monkeypatch.setattr(openstack_runner_manager, "runner_metrics", runner_metrics_mock)
+    now = datetime.now()
+    all_runner_name_metrics_storage = [
+        _create_metrics_storage(runner_name, now) for runner_name in names
+    ]
+    metric_storage_manager.list_all = (all_runner_name_metrics_storage).__iter__
+
     runner_manager.cleanup(secrets.token_hex(16))
 
     assert openstack_cloud_mock.delete_instance.call_count == unhealthy_count
@@ -213,6 +224,11 @@ def test_cleanup_ignores_runners_with_health_check_errors(
         name_without_prefix = name[len(prefix) :]
         if name_without_prefix.startswith("unhealthy"):
             openstack_cloud_mock.delete_instance.assert_any_call(name_without_prefix)
+
+    assert runner_metrics_mock.extract.call_count == 1
+    assert runner_metrics_mock.extract.call_args[1]["runners"] == {
+        names for names in names if names.startswith("test-unhealthy")
+    }
 
 
 def _create_metrics_storage(runner_name: str, mtime: datetime) -> MetricsStorage:

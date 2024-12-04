@@ -388,7 +388,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Extracting metrics.")
         return self._cleanup_extract_metrics(
             metrics_storage_manager=self._metrics_storage_manager,
-            healthy_runner_names=healthy_runner_names | unknown_runner_names, # TODO: add to unit test
+            healthy_runner_names=healthy_runner_names | unknown_runner_names,
             unhealthy_runner_names=unhealthy_runner_names,
         )
 
