@@ -4,7 +4,6 @@
 """Integration tests for charm upgrades."""
 
 import functools
-import logging
 import pathlib
 
 import pytest
