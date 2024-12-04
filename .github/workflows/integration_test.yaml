@@ -59,6 +59,7 @@ jobs:
       - integration-tests
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    if: always() && !cancelled()
     steps:
       - name: Download Allure
         # Following instructions from https://allurereport.org/docs/gettingstarted-installation/#install-via-the-system-package-manager-for-linux
