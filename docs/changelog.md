@@ -1,5 +1,9 @@
 # Changelog
 
+### 2024-12-04
+
+- Bugfix to no longer stop the reconciliation when a runner's health check fails.
+
 ### 2024-11-27
 
 - Fix "Available Runners" dashboard panel to work for multiple flavors.
