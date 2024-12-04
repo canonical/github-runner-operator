@@ -1,0 +1,26 @@
+INFO     pytest_operator.plugin:plugin.py:724 Adding model github-pr-172c4-lxd:test-debug-ssh-30fh on cloud localhost
+WARNING  juju.client.connection:connection.py:893 unexpected facade AgentLifeFlag received from the controller
+WARNING  juju.client.connection:connection.py:909 unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+WARNING  juju.client.connection:connection.py:893 unexpected facade SecretsDrain received from the controller
+INFO     juju.model:model.py:1988 Deploying local:jammy/github-runner-0
+INFO     root:conftest.py:604 GitHub token rate limit: Rate(reset=2024-12-04 17:16:13+00:00, remaining=4611, limit=5000)
+INFO     pytest_operator.plugin:plugin.py:903 Model status:
+
+Model                Controller           Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-30fh  github-pr-172c4-lxd  localhost/localhost  3.1.10   unsupported  16:43:20Z
+
+App            Version  Status   Scale  Charm          Channel  Rev  Exposed  Message
+test-oy9b2slh           waiting    0/1  github-runner             0  no       waiting for machine
+
+Unit             Workload  Agent       Machine  Public address  Ports  Message
+test-oy9b2slh/0  waiting   allocating  0                               waiting for machine
+
+Machine  State    Address  Inst id  Base          AZ  Message
+0        pending           pending  ubuntu@22.04      Creating container
+
+INFO     pytest_operator.plugin:plugin.py:909 Juju error logs:
+
+
+INFO     pytest_operator.plugin:plugin.py:991 Forgetting model main...

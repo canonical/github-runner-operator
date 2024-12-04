@@ -1,0 +1,74 @@
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:132 Creating 2 runners
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-zu9fpvxg-0-3036201a9926', 'test-zu9fpvxg-0-c8e7f3a727e1'}
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-zu9fpvxg-0-3036201a9926', 'test-zu9fpvxg-0-c8e7f3a727e1'}
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:227 Flushing idle runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:594 Attempting to kill runner process on test-zu9fpvxg-0-3036201a9926 if not busy
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:602 Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:605 Kill process command output, ok: True code 0, out: 2424
+, err: 
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:594 Attempting to kill runner process on test-zu9fpvxg-0-c8e7f3a727e1 if not busy
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:602 Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:605 Kill process command output, ok: True code 0, out: 2426
+, err: 
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     paramiko.transport.sftp:sftp.py:169 [chan 2] Opened sftp connection (server version 3)
+WARNING  github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:798 Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.111, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+WARNING  github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:767 Failed to pull metrics for test-zu9fpvxg-0-3036201a9926: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:281 Deleting openstack server with test-zu9fpvxg-0-3036201a9926
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     paramiko.transport.sftp:sftp.py:169 [chan 2] Opened sftp connection (server version 3)
+WARNING  github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:798 Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.63, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+WARNING  github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:767 Failed to pull metrics for test-zu9fpvxg-0-c8e7f3a727e1: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:281 Deleting openstack server with test-zu9fpvxg-0-c8e7f3a727e1
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:410 Cleaning up SSH key files
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:423 Found 0 key files, clean up 0 key files
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:434 Cleaning up openstack keypairs
+ERROR    github_runner_manager.metrics.runner:runner.py:559 pre-job-metrics.json not found for runner test-zu9fpvxg-0-c8e7f3a727e1
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/runner-fs/test-zu9fpvxg-0-c8e7f3a727e1/pre-job-metrics.json'
+ERROR    github_runner_manager.metrics.runner:runner.py:475 Pre-job metrics for runner test-zu9fpvxg-0-c8e7f3a727e1 not found, stop extracting post-jobs metrics.
+ERROR    github_runner_manager.metrics.runner:runner.py:559 pre-job-metrics.json not found for runner test-zu9fpvxg-0-3036201a9926
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/runner-fs/test-zu9fpvxg-0-3036201a9926/pre-job-metrics.json'
+ERROR    github_runner_manager.metrics.runner:runner.py:475 Pre-job metrics for runner test-zu9fpvxg-0-3036201a9926 not found, stop extracting post-jobs metrics.
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()
