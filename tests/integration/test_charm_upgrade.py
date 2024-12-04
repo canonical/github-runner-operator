@@ -38,9 +38,9 @@ async def test_charm_upgrade(
     app_name: str,
     path: str,
     token: str,
-    http_proxy: str,
-    https_proxy: str,
-    no_proxy: str,
+    openstack_http_proxy: str,
+    openstack_https_proxy: str,
+    openstack_no_proxy: str,
     tmp_path: pathlib.Path,
     clouds_yaml_contents: str,
     network_name: str,
@@ -70,7 +70,6 @@ async def test_charm_upgrade(
     )
     assert retcode == 0, f"failed to download charm, {stdout} {stderr}"
 
-    logging.info("proxy value %s", http_proxy)
     # deploy latest stable version of the charm
     application = await deploy_github_runner_charm(
         model=model,
@@ -79,9 +78,9 @@ async def test_charm_upgrade(
         path=path,
         token=token,
         runner_storage="juju-storage",
-        http_proxy=http_proxy,
-        https_proxy=https_proxy,
-        no_proxy=no_proxy,
+        http_proxy=openstack_http_proxy,
+        https_proxy=openstack_https_proxy,
+        no_proxy=openstack_no_proxy,
         reconcile_interval=5,
         # override default virtual_machines=0 config.
         config={
