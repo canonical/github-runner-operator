@@ -1,6 +1,0 @@
-"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Tue Dec 03 05:05:16 GMT 2024","Tue Dec 03 05:37:05 GMT 2024","1909110","tests.integration","test_debug_ssh","","","","test_ssh_debug","
-    arrange: given an integrated GitHub-Runner charm and tmate-ssh-server charm with a denylist         covering ip ranges of tmate-ssh-server.
-    act: when canonical/action-tmate is triggered.
-    assert: the ssh connection info from action-log and tmate-ssh-server matches.
-    "
