@@ -61,7 +61,7 @@ jobs:
     timeout-minutes: 5
     if: always() && !cancelled()
     steps:
-      - name: Download Allure
+      - name: Download Allure from allure-framwork
         # Following instructions from https://allurereport.org/docs/gettingstarted-installation/#install-via-the-system-package-manager-for-linux
         run: gh release download --repo allure-framework/allure2 --pattern 'allure_*.deb'
         env:
@@ -140,5 +140,5 @@ jobs:
           # Uses token set in checkout step
           git push origin gh-pages
 
-          
+
 
