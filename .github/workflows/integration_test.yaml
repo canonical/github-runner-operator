@@ -56,7 +56,9 @@ jobs:
   allure-report:
     name: (beta) Publish Allure report
     needs:
-      - integration-tests
+      - integration-test
+      - openstack-interface-tests-private-endpoint
+      - openstack-integration-tests-private-endpoint
     runs-on: ubuntu-latest
     timeout-minutes: 5
     if: always() && !cancelled()
