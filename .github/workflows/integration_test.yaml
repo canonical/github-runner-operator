@@ -56,7 +56,7 @@ jobs:
   allure-report:
     name: (beta) Publish Allure report
     needs:
-      - integration-test
+      - integration-tests
       - openstack-interface-tests-private-endpoint
       - openstack-integration-tests-private-endpoint
     runs-on: ubuntu-latest
