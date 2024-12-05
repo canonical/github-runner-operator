@@ -20,7 +20,12 @@ class LXDInstanceHelper(InstanceHelper):
     """Helper class to interact with LXD instances."""
 
     async def run_in_instance(
-        self, unit: Unit, command: str, timeout: int | None = None
+        self,
+        unit: Unit,
+        command: str,
+        timeout: int | None = None,
+        assert_on_failure: bool = False,
+        assert_msg: str | None = None,
     ) -> tuple[int, str | None, str | None]:
         """Run command in LXD instance.
 
@@ -28,6 +33,8 @@ class LXDInstanceHelper(InstanceHelper):
             unit: Juju unit to execute the command in.
             command: Command to execute.
             timeout: Amount of time to wait for the execution.
+            assert_on_failure: Not used in lxd
+            assert_msg: Not used in lxd
 
         Returns:
             Tuple of return code, stdout and stderr.
