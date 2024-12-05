@@ -3,7 +3,7 @@
 import logging
 import secrets
 from asyncio import sleep
-from typing import Optional, TypedDict, cast
+from typing import Optional, TypedDict
 
 import openstack.connection
 from juju.application import Application
@@ -150,6 +150,18 @@ class OpenStackInstanceHelper(InstanceHelper):
         await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
         await reconcile(app=app, model=app.model)
 
+    async def get_runner_names(self, unit: Unit) -> list[str]:
+        """Get the name of all the runners in the unit.
+
+        Args:
+            unit: The GitHub Runner Charm unit to get the runner names for.
+
+        Returns:
+            List of names for the runners.
+        """
+        runners = self._get_runners(unit)
+        return [runner.name for runner in runners]
+
     async def get_runner_name(self, unit: Unit) -> str:
         """Get the name of the runner.
 
@@ -161,24 +173,27 @@ class OpenStackInstanceHelper(InstanceHelper):
         Returns:
             The Github runner name deployed in the given unit.
         """
-        runners = await self._get_runner_names(unit)
+        runners = self._get_runners(unit)
         assert len(runners) == 1
-        return runners[0]
+        return runners[0].name
 
-    async def _get_runner_names(self, unit: Unit) -> tuple[str, ...]:
-        """Get names of the runners in LXD.
+    async def delete_single_runner(self, unit: Unit) -> None:
+        """Delete the only runner.
 
         Args:
-            unit: Unit instance to check for the LXD profile.
-
-        Returns:
-            Tuple of runner names.
+            unit: The GitHub Runner Charm unit to delete the runner name for.
         """
         runner = self._get_single_runner(unit)
-        assert runner, "Failed to find runner server"
-        return (cast(str, runner.name),)
+        self.openstack_connection.delete_server(name_or_id=runner.id)
 
-    def _get_single_runner(self, unit: Unit) -> Server | None:
+    def _get_runners(self, unit: Unit) -> list[Server]:
+        """Get all runners for the unit."""
+        servers: list[Server] = self.openstack_connection.list_servers()
+        unit_name_without_slash = unit.name.replace("/", "-")
+        runners = [server for server in servers if server.name.startswith(unit_name_without_slash)]
+        return runners
+
+    def _get_single_runner(self, unit: Unit) -> Server:
         """Get the only runner for the unit.
 
         This method asserts for exactly one runner for the unit.
@@ -189,9 +204,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         Returns:
             The runner server.
         """
-        servers: list[Server] = self.openstack_connection.list_servers()
-        unit_name_without_slash = unit.name.replace("/", "-")
-        runners = [server for server in servers if server.name.startswith(unit_name_without_slash)]
+        runners = self._get_runners(unit)
         assert (
             len(runners) == 1
         ), f"In {unit.name} found more than one runners or no runners: {runners}"
