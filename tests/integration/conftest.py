@@ -440,7 +440,7 @@ async def app_openstack_runner_fixture(
             reconcile_interval=60,
             constraints={
                 "root-disk": 50 * 1024,
-                "mem": 16 * 1024,
+                "mem": 2 * 1024,
             },
             config={
                 OPENSTACK_CLOUDS_YAML_CONFIG_NAME: clouds_yaml_contents,
@@ -470,43 +470,28 @@ async def app_one_runner(model: Model, app_no_runner: Application) -> AsyncItera
     return app_no_runner
 
 
-@pytest_asyncio.fixture(scope="module")
-async def app_scheduled_events(
+@pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
+async def app_scheduled_events_fixture(
     model: Model,
-    charm_file: str,
-    app_name: str,
-    path: str,
-    token: str,
-    http_proxy: str,
-    https_proxy: str,
-    no_proxy: str,
-) -> AsyncIterator[Application]:
-    """Application with no token.
-
-    Test should ensure it returns with the application having one runner.
-
-    This fixture has to deploy a new application. The scheduled events are set
-    to one hour in other application to avoid conflicting with the tests.
-    Changes to the duration of scheduled interval only takes effect after the
-    next trigger. Therefore, it would take a hour for the duration change to
-    take effect.
-    """
-    application = await deploy_github_runner_charm(
-        model=model,
-        charm_file=charm_file,
-        app_name=app_name,
-        path=path,
-        token=token,
-        runner_storage="memory",
-        http_proxy=http_proxy,
-        https_proxy=https_proxy,
-        no_proxy=no_proxy,
-        reconcile_interval=8,
-    )
-
+    app_openstack_runner,
+):
+    """Application to check scheduled events."""
+    application = app_openstack_runner
+    await application.set_config({"reconcile-interval": "8"})
     await application.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
     await reconcile(app=application, model=model)
+    return application
 
+
+@pytest_asyncio.fixture(scope="module", name="app_no_wait_openstack")
+async def app_no_wait_openstack_fixture(
+    model: Model,
+    app_openstack_runner,
+):
+    """Application to theck tmate ssh with openstack."""
+    application = app_openstack_runner
+    await application.set_config({"reconcile-interval": "60", VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     return application
 
 
@@ -569,11 +554,11 @@ async def app_no_wait_fixture(
 
 @pytest_asyncio.fixture(scope="module", name="tmate_ssh_server_app")
 async def tmate_ssh_server_app_fixture(
-    model: Model, app_no_wait: Application
+    model: Model, app_no_wait_openstack: Application
 ) -> AsyncIterator[Application]:
     """tmate-ssh-server charm application related to GitHub-Runner app charm."""
     tmate_app: Application = await model.deploy("tmate-ssh-server", channel="edge")
-    await app_no_wait.relate("debug-ssh", f"{tmate_app.name}:debug-ssh")
+    await app_no_wait_openstack.relate("debug-ssh", f"{tmate_app.name}:debug-ssh")
     await model.wait_for_idle(apps=[tmate_app.name], status=ACTIVE, timeout=60 * 30)
 
     return tmate_app

@@ -20,7 +20,12 @@ class LXDInstanceHelper(InstanceHelper):
     """Helper class to interact with LXD instances."""
 
     async def run_in_instance(
-        self, unit: Unit, command: str, timeout: int | None = None
+        self,
+        unit: Unit,
+        command: str,
+        timeout: int | None = None,
+        assert_on_failure: bool = False,
+        assert_msg: str | None = None,
     ) -> tuple[int, str | None, str | None]:
         """Run command in LXD instance.
 
@@ -28,6 +33,8 @@ class LXDInstanceHelper(InstanceHelper):
             unit: Juju unit to execute the command in.
             command: Command to execute.
             timeout: Amount of time to wait for the execution.
+            assert_on_failure: Not used in lxd
+            assert_msg: Not used in lxd
 
         Returns:
             Tuple of return code, stdout and stderr.
@@ -55,6 +62,29 @@ class LXDInstanceHelper(InstanceHelper):
             The Github runner name deployed in the given unit.
         """
         return await get_runner_name(unit)
+
+    async def get_runner_names(self, unit: Unit) -> list[str]:
+        """Get the name of all the runners in the unit.
+
+        Args:
+            unit: The GitHub Runner Charm unit to get the runner names for.
+
+        Raises:
+            NotImplementedError: Not implemented yet.
+        """
+        raise NotImplementedError
+
+    async def delete_single_runner(self, unit: Unit) -> None:
+        """Delete the only runner.
+
+
+        Args:
+            unit: The GitHub Runner Charm unit to check.
+
+        Raises:
+            NotImplementedError: Not implemented yet.
+        """
+        raise NotImplementedError
 
 
 async def assert_resource_lxd_profile(unit: Unit, configs: dict[str, Any]) -> None:
