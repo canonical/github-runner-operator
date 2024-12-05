@@ -15,8 +15,6 @@ from typing import IO, Optional, Sequence, Union
 from github_runner_manager.types_.github import RegistrationToken, RemoveToken, RunnerApplication
 
 from errors import LxdError, RunnerError
-from lxd_type import LxdNetwork
-from runner import LxdInstanceConfig
 
 logger = logging.getLogger(__name__)
 
@@ -37,51 +35,9 @@ class MockLxdClient:
 
     def __init__(self):
         """Fake init implementation for LxdClient."""
-        self.instances = MockLxdInstanceManager()
         self.profiles = MockLxdProfileManager()
-        self.networks = MockLxdNetworkManager()
         self.storage_pools = MockLxdStoragePoolManager()
         self.images = MockLxdImageManager()
-
-
-class MockLxdInstanceManager:
-    """Mock the behavior of the LXD Instances."""
-
-    def __init__(self):
-        """Fake init implementation for LxdInstanceManager."""
-        self.instances = {}
-
-    def create(self, config: LxdInstanceConfig, wait: bool = False) -> MockLxdInstance:
-        """Create an instance with given config.
-
-        Args:
-            config: The instance configuration to create the instance with.
-            wait: Placeholder for wait argument.
-
-        Returns:
-            Mock instance that was created.
-        """
-        self.instances[config["name"]] = MockLxdInstance(config["name"])
-        return self.instances[config["name"]]
-
-    def get(self, name: str):
-        """Get an instance with given name.
-
-        Args:
-            name: The name of the instance to get.
-
-        Returns:
-            Instance with given name.
-        """
-        return self.instances[name]
-
-    def all(self):
-        """Return all instances that have not been deleted.
-
-        Returns:
-            All Lxd fake instances that have not been deleted.
-        """
-        return [i for i in self.instances.values() if not i.deleted]
 
 
 class MockLxdProfileManager:
@@ -111,27 +67,6 @@ class MockLxdProfileManager:
             Whether given LXD profile exists.
         """
         return name in self.profiles
-
-
-class MockLxdNetworkManager:
-    """Mock the behavior of the LXD networks."""
-
-    def __init__(self):
-        """Placeholder for initialization method for LxdInstance stub."""
-        pass
-
-    def get(self, name: str) -> LxdNetwork:
-        """Stub method get for LxdNetworkManager.
-
-        Args:
-            name: the name of the LxdNetwork to get.
-
-        Returns:
-            LxdNetwork stub.
-        """
-        return LxdNetwork(
-            "lxdbr0", "", "bridge", {"ipv4.address": "10.1.1.1/24"}, True, ("default")
-        )
 
 
 class MockLxdInstance:
