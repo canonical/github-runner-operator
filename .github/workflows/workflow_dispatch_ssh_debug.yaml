@@ -12,8 +12,6 @@ jobs:
   workflow-dispatch-tests:
     runs-on: [self-hosted, linux, "${{ inputs.runner }}"]
     steps:
-    - name: Wait
-      run: sleep 300
     - name: Setup tmate session
       uses: canonical/action-tmate@chore/env_var_change
       timeout-minutes: 5
