@@ -25,7 +25,7 @@ jobs:
       self-hosted-runner-label: stg-private-endpoint
   openstack-interface-tests-private-endpoint:
     name: openstack interface test using private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@disable-snap-autorefresh
     secrets: inherit
     with:
       juju-channel: 3.6/stable
@@ -37,7 +37,7 @@ jobs:
       self-hosted-runner-label: stg-private-endpoint
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@disable-snap-autorefresh
     needs: openstack-interface-tests-private-endpoint
     secrets: inherit
     with:
