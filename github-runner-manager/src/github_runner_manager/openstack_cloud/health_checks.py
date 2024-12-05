@@ -51,12 +51,17 @@ def check_runner(openstack_cloud: OpenstackCloud, instance: OpenstackInstance) -
         logger.exception(
             "Health check failed due to unable to find keyfile for %s", instance.server_name
         )
+        # KeyfileError indicates that we'll never be able to ssh into the unit,
+        # so we mark it as unhealthy.
         return False
     except _SSHError:
         logger.exception(
             "Unable to get SSH connection for instance %s, marking as unhealthy.",
             instance.server_name,
         )
+        # We assume that the failure to get the SSH connection is not transient, and mark
+        # the runner as unhealthy.
+        # It is debatable whether we should throw an exception here instead.
         return False
 
     return check_active_runner(ssh_conn, instance)
