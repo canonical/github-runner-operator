@@ -12,6 +12,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 import yaml
 from github_runner_manager.errors import ReconcileError
+from github_runner_manager.manager.runner_manager import FlushMode
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
@@ -270,6 +271,24 @@ def test_on_reconcile_runners_reconcile_error(harness: Harness, monkeypatch: pyt
 
     assert harness.charm.unit.status.name == ActiveStatus.name
     assert harness.charm.unit.status.message == ACTIVE_STATUS_RECONCILIATION_FAILED_MSG
+
+
+def test_on_stop_busy_flush(harness: Harness, monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: Set up charm with Openstack mode and runner scaler mock.
+    act: Trigger stop event.
+    assert: Runner scaler mock flushes the runners using busy mode.
+    """
+    state_mock = MagicMock()
+    state_mock.instance_type = InstanceType.OPENSTACK
+    harness.charm._setup_state = MagicMock(return_value=state_mock)
+    runner_scaler_mock = MagicMock(spec=RunnerScaler)
+    harness.charm._get_runner_scaler = MagicMock(return_value=runner_scaler_mock)
+    mock_event = MagicMock()
+
+    harness.charm._on_stop(mock_event)
+
+    runner_scaler_mock.flush.assert_called_once_with(FlushMode.FLUSH_BUSY)
 
 
 @pytest.mark.parametrize(

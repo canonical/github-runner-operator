@@ -537,9 +537,8 @@ class GithubRunnerCharm(CharmBase):
         """Handle the stopping of the charm."""
         self._event_timer.disable_event_timer("reconcile-runners")
         state = self._setup_state()
-
         runner_scaler = self._get_runner_scaler(state)
-        runner_scaler.flush()
+        runner_scaler.flush(FlushMode.FLUSH_BUSY)
 
     def _reconcile_openstack_runners(self, runner_scaler: RunnerScaler, num: int) -> None:
         """Reconcile the current runners state and intended runner state for OpenStack mode.
