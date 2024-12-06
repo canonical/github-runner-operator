@@ -32,6 +32,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         self,
         unit: Unit,
         port: int,
+        host: str = "localhost",
     ) -> None:
         """Expose a port on the juju machine to the OpenStack instance.
 
@@ -41,6 +42,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         Args:
             unit: The juju unit of the github-runner charm.
             port: The port on the juju machine to expose to the runner.
+            host: Host for the reverse tunnel.
         """
         runner = self._get_single_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
@@ -61,7 +63,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         key_path = f"/home/{RUNNER_MANAGER_USER}/.ssh/{runner.name}.key"
         exit_code, _, _ = await run_in_unit(unit, f"ls {key_path}")
         assert exit_code == 0, f"Unable to find key file {key_path}"
-        ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i {key_path} -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
+        ssh_cmd = f'ssh -fNT -R {port}:{host}:{port} -i {key_path} -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
         exit_code, _, stderr = await run_in_unit(unit, ssh_cmd)
         assert (
             exit_code == 0

@@ -3,8 +3,6 @@
 
 """Integration tests for github-runner charm with ssh-debug integration."""
 import logging
-import socket
-import subprocess
 
 import pytest
 from github.Branch import Branch
@@ -37,13 +35,6 @@ async def test_ssh_debug(
     act: when canonical/action-tmate is triggered.
     assert: the ssh connection info from action-log and tmate-ssh-server matches.
     """
-    # As the tmate_ssh_server runs in lxd under this host, we need all the connection
-    # that arrive to this host to port 10022 to go to the tmate_ssh_server unit.
-    subprocess.run(["sudo", "bash", "-c", "echo 1 > /proc/sys/net/ipv4/ip_forward"], check=True)
-    # This maybe problematic if we run the test twice in the same machine.
-    dnat_command_in_test_machine = f"sudo iptables -t nat -A PREROUTING -p tcp --dport 10022 -j DNAT --to-destination {tmate_ssh_server_unit_ip}:10022"
-    subprocess.run(dnat_command_in_test_machine.split(), check=True)
-
     await app_no_wait_openstack.set_config(
         {
             DENYLIST_CONFIG_NAME: (
@@ -59,13 +50,13 @@ async def test_ssh_debug(
     unit = app_no_wait_openstack.units[0]
     # We need the runner to connect to the current machine, instead of the tmate_ssh_server unit,
     # as the tmate_ssh_server is not routable.
-    this_host_ip = _get_current_ip()
-    dnat_comman_in_runner = f"sudo iptables -t nat -A OUTPUT -p tcp --dport 10022 -j DNAT --to-destination {this_host_ip}:10022"
+    dnat_comman_in_runner = "sudo iptables -t nat -A OUTPUT -p tcp --dport 10022 -j DNAT --to-destination 127.0.0.1:10022"
     ret_code, stdout, stderr = await instance_helper.run_in_instance(
         unit,
         dnat_comman_in_runner,
         assert_on_failure=True,
     )
+    await instance_helper.expose_to_instance(unit=unit, port=10022, host=tmate_ssh_server_unit_ip)  # type: ignore[attr-defined]
 
     # trigger tmate action
     logger.info("Dispatching workflow_dispatch_ssh_debug.yaml workflow.")
@@ -85,14 +76,3 @@ async def test_ssh_debug(
     logger.info("Logs: %s", logs)
     assert tmate_ssh_server_unit_ip in logs, "Tmate ssh server IP not found in action logs."
     assert "10022" in logs, "Tmate ssh server connection port not found in action logs."
-
-
-def _get_current_ip():
-    """Get the IP for the current machine."""
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.settimeout(0)
-    try:
-        s.connect(("2.2.2.2", 1))
-        return s.getsockname()[0]
-    finally:
-        s.close()
