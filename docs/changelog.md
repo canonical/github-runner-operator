@@ -1,5 +1,13 @@
 # Changelog
 
+### 2024-12-05
+
+- Bugfix to no longer stop the reconciliation when a runner's health check fails.
+
+### 2024-12-04
+
+- Clean up corresponding OpenStack runner resources when a unit of the charm is removed.
+
 ### 2024-11-27
 
 - Fix "Available Runners" dashboard panel to work for multiple flavors.
