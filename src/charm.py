@@ -962,7 +962,7 @@ class GithubRunnerCharm(CharmBase):
 
         if state.instance_type == InstanceType.OPENSTACK:
             runner_scaler = self._get_runner_scaler(state)
-            runner_scaler.flush()
+            runner_scaler.flush(FlushMode.FLUSH_BUSY)
             return
 
         runner_manager = self._get_runner_manager(state)

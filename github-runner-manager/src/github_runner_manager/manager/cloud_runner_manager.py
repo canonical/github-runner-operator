@@ -35,6 +35,20 @@ class HealthState(Enum):
     UNHEALTHY = auto()
     UNKNOWN = auto()
 
+    @staticmethod
+    def from_value(health: bool | None) -> "HealthState":
+        """Create from a health value.
+
+        Args:
+            health: The health value as boolean or None.
+
+        Returns:
+            The health state.
+        """
+        if health is None:
+            return HealthState.UNKNOWN
+        return HealthState.HEALTHY if health else HealthState.UNHEALTHY
+
 
 class CloudRunnerState(str, Enum):
     """Represent state of the instance hosting the runner.
