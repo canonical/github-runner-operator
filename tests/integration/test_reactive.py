@@ -286,7 +286,12 @@ async def _get_mongodb_uri_from_secrets(ops_test, model: Model) -> str | None:
     mongodb_uri = None
 
     juju_secrets = await model.list_secrets()
-    for secret in juju_secrets["results"]:
+
+    # Juju < 3.6 returns a dictionary instead of a list
+    if not isinstance(juju_secrets, list):
+        juju_secrets = juju_secrets["results"]
+
+    for secret in juju_secrets:
         if re.match(r"^database.\d+.user.secret$", secret.label):
             _, show_secret, _ = await ops_test.juju(
                 "show-secret", secret.uri, "--reveal", "--format", "json"
