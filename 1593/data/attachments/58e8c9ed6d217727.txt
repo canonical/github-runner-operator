@@ -1,0 +1,65 @@
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                   Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-usgs  lxd         localhost/localhost  3.6.0    unsupported  17:40:34Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-ahf7022c                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.94.164.209          
+test-ahf7022c/0*                active    idle   1        10.94.164.153          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.94.164.209  juju-ec6355-0  ubuntu@22.04      Running
+1        started  10.94.164.153  juju-ec6355-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+unit-test-ahf7022c-0: 17:29:11 CRITICAL unit.test-ahf7022c/0.juju-log test mode is enabled
+unit-test-ahf7022c-0: 17:29:56 CRITICAL unit.test-ahf7022c/0.juju-log test mode is enabled
+unit-test-ahf7022c-0: 17:30:05 CRITICAL unit.test-ahf7022c/0.juju-log test mode is enabled
+unit-test-ahf7022c-0: 17:30:06 CRITICAL unit.test-ahf7022c/0.juju-log test mode is enabled
+unit-test-ahf7022c-0: 17:30:45 ERROR unit.test-ahf7022c/0.juju-log pre-job-metrics.json not found for runner test-ahf7022c-0-2658c36b1a5f
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ahf7022c-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-ahf7022c-0-2658c36b1a5f/pre-job-metrics.json'
+unit-test-ahf7022c-0: 17:30:45 ERROR unit.test-ahf7022c/0.juju-log Pre-job metrics for runner test-ahf7022c-0-2658c36b1a5f not found, stop extracting post-jobs metrics.
+unit-test-ahf7022c-0: 17:30:52 CRITICAL unit.test-ahf7022c/0.juju-log test mode is enabled
+unit-test-ahf7022c-0: 17:31:32 CRITICAL unit.test-ahf7022c/0.juju-log test mode is enabled
+unit-test-ahf7022c-0: 17:31:33 CRITICAL unit.test-ahf7022c/0.juju-log test mode is enabled
+unit-test-ahf7022c-0: 17:33:15 CRITICAL unit.test-ahf7022c/0.juju-log test mode is enabled
+unit-test-ahf7022c-0: 17:33:46 CRITICAL unit.test-ahf7022c/0.juju-log image:0: test mode is enabled
+unit-test-ahf7022c-0: 17:34:22 ERROR unit.test-ahf7022c/0.juju-log image:0: pre-job-metrics.json not found for runner test-ahf7022c-0-fd5dbf7bf067
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ahf7022c-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-ahf7022c-0-fd5dbf7bf067/pre-job-metrics.json'
+unit-test-ahf7022c-0: 17:34:22 ERROR unit.test-ahf7022c/0.juju-log image:0: Pre-job metrics for runner test-ahf7022c-0-fd5dbf7bf067 not found, stop extracting post-jobs metrics.
+unit-test-ahf7022c-0: 17:38:32 CRITICAL unit.test-ahf7022c/0.juju-log test mode is enabled
+unit-test-ahf7022c-0: 17:38:48 CRITICAL unit.test-ahf7022c/0.juju-log test mode is enabled
+unit-test-ahf7022c-0: 17:38:56 CRITICAL unit.test-ahf7022c/0.juju-log test mode is enabled
+unit-test-ahf7022c-0: 17:38:58 CRITICAL unit.test-ahf7022c/0.juju-log test mode is enabled
+unit-test-ahf7022c-0: 17:39:41 ERROR unit.test-ahf7022c/0.juju-log pre-job-metrics.json not found for runner test-ahf7022c-0-18272d28488c
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ahf7022c-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-ahf7022c-0-18272d28488c/pre-job-metrics.json'
+unit-test-ahf7022c-0: 17:39:41 ERROR unit.test-ahf7022c/0.juju-log Pre-job metrics for runner test-ahf7022c-0-18272d28488c not found, stop extracting post-jobs metrics.
+unit-test-ahf7022c-0: 17:39:56 CRITICAL unit.test-ahf7022c/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...

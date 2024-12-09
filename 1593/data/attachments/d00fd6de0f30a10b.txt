@@ -1,0 +1,58 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-metrics-failure-2vnz on cloud localhost
+INFO     root:conftest.py:604 GitHub token rate limit: Rate(reset=2024-12-09 17:10:53+00:00, remaining=4463, limit=5000)
+INFO     juju.model:model.py:2284 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] active: Waiting for first image.
+INFO     juju.model:model.py:2284 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-t9v6wpyl/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-t9v6wpyl/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-t9v6wpyl/0 [allocating] waiting: agent initialising
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-t9v6wpyl/0 [executing] maintenance: Update image for runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-t9v6wpyl/0 [executing] maintenance: Reconciling runners
+INFO     root:charm_metrics.py:127 Loop device None not found
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-t9v6wpyl/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-t9v6wpyl/0 [idle] active:
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-t9v6wpyl/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-t9v6wpyl/0 [executing] maintenance: Reconciling runners
+INFO     tests.integration.helpers.openstack:openstack.py:47 [TEST SETUP] Exposing port 8080 on test-t9v6wpyl-0-6bdb400a0559
+WARNING  tests.integration.helpers.openstack:openstack.py:49 dict_values([[{'version': 4, 'addr': '10.145.193.107', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b8:93:b3'}]])
+INFO     tests.integration.helpers.openstack:openstack.py:102 [TEST SETUP] Run command nc -z localhost 8080 on test-t9v6wpyl-0-6bdb400a0559
+WARNING  tests.integration.helpers.openstack:openstack.py:104 dict_values([[{'version': 4, 'addr': '10.145.193.107', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b8:93:b3'}]])
+WARNING  root:openstack.py:121 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-t9v6wpyl-0-6bdb400a0559.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.107 nc -z localhost 8080'
+INFO     tests.integration.helpers.openstack:openstack.py:102 [TEST SETUP] Run command curl http://localhost:8080 on test-t9v6wpyl-0-6bdb400a0559
+WARNING  tests.integration.helpers.openstack:openstack.py:104 dict_values([[{'version': 4, 'addr': '10.145.193.107', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b8:93:b3'}]])
+WARNING  root:openstack.py:121 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-t9v6wpyl-0-6bdb400a0559.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.107 curl http://localhost:8080'
+INFO     tests.integration.helpers.common:common.py:484 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:484 Wait for condition not met, sleeping 60
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-t9v6wpyl/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-t9v6wpyl/0 [idle] active: 
+INFO     root:common.py:568 File content of /var/log/github-runner-metrics.log: {"timestamp": 1733763821.0, "event": "runner_installed", "flavor": "test-t9v6wpyl", "duration": 57.29192519187927}
+{"timestamp": 1733763928.0, "event": "runner_start", "flavor": "test-t9v6wpyl", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "canonical-github-runners-ps6/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 107.0, "queue_duration": 8.0}
+{"timestamp": 1733763928.0, "event": "runner_stop", "flavor": "test-t9v6wpyl", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "canonical-github-runners-ps6/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1733764101.3859277, "event": "reconciliation", "flavor": "test-t9v6wpyl", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 134.26177978515625}
+{"timestamp": 1733764079.0, "event": "runner_installed", "flavor": "test-t9v6wpyl", "duration": 96.59673309326172}
+{"timestamp": 1733764150.8706975, "event": "reconciliation", "flavor": "test-t9v6wpyl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 48.21533942222595}
+{"timestamp": 1733764171.1842022, "event": "reconciliation", "flavor": "test-t9v6wpyl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.932152032852173}

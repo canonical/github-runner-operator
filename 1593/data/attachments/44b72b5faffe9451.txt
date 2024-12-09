@@ -1,0 +1,37 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-runner-usgs on cloud localhost
+INFO     juju.model:model.py:2284 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+INFO     juju.model:model.py:2284 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ahf7022c/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ahf7022c/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ahf7022c/0 [executing] maintenance: installing charm software
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ahf7022c/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ahf7022c/0 [idle] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ahf7022c/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ahf7022c/0 [idle] active:
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ahf7022c/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ahf7022c/0 [idle] active:

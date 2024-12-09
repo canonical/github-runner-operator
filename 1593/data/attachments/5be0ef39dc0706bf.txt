@@ -1,0 +1,110 @@
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:132 Creating 1 runners
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:220 Creating openstack server with test-ngz6e37u-0-f330915f3043
+WARNING  github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:349 Unable to SSH into test-ngz6e37u-0-f330915f3043 with address 10.145.193.29
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 338, in get_ssh_connection
+    result = connection.run(f"echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/fabric/connection.py", line 22, in opens
+    self.open()
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/fabric/connection.py", line 665, in open
+    result = self.client.connect(**kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/paramiko/client.py", line 409, in connect
+    raise NoValidConnectionsError(errors)
+paramiko.ssh_exception.NoValidConnectionsError: [Errno None] Unable to connect to port 22 on 10.145.193.29
+WARNING  github_runner_manager.openstack_cloud.openstack_runner_manager:utilities.py:88 Retrying error in 60 seconds: Failed to SSH to test-ngz6e37u-0-f330915f3043 during creation possible due to setup not completed
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:672 Runner startup process found to be healthy on test-ngz6e37u-0-f330915f3043
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:705 Runner test-ngz6e37u-0-f330915f3043 found to be healthy
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:224 Runner test-ngz6e37u-0-f330915f3043 created successfully
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-ngz6e37u-0-f330915f3043'}
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-ngz6e37u-0-f330915f3043'}
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-ngz6e37u-0-f330915f3043'}
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:410 Cleaning up SSH key files
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:423 Found 1 key files, clean up 0 key files
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:434 Cleaning up openstack keypairs
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-ngz6e37u-0-f330915f3043'}
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:227 Flushing idle runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:614 Attempting to kill runner process on test-ngz6e37u-0-f330915f3043 if not busy
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:622 Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:625 Kill process command output, ok: True code 0, out: 2431
+, err: 
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     paramiko.transport.sftp:sftp.py:169 [chan 2] Opened sftp connection (server version 3)
+WARNING  github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:824 Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.29, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+WARNING  github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:793 Failed to pull metrics for test-ngz6e37u-0-f330915f3043: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:281 Deleting openstack server with test-ngz6e37u-0-f330915f3043
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:410 Cleaning up SSH key files
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:423 Found 0 key files, clean up 0 key files
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:434 Cleaning up openstack keypairs
+ERROR    github_runner_manager.metrics.runner:runner.py:559 pre-job-metrics.json not found for runner test-ngz6e37u-0-f330915f3043
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/runner-fs/test-ngz6e37u-0-f330915f3043/pre-job-metrics.json'
+ERROR    github_runner_manager.metrics.runner:runner.py:475 Pre-job metrics for runner test-ngz6e37u-0-f330915f3043 not found, stop extracting post-jobs metrics.
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+ERROR    github_runner_manager.openstack_cloud.health_checks:health_checks.py:58 Unable to get SSH connection for instance test-ngz6e37u-0-f330915f3043, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ngz6e37u-0-f330915f3043, key path: /home/ubuntu/.ssh/test-ngz6e37u-0-f330915f3043.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ngz6e37u-0-f330915f3043
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-ngz6e37u-0-f330915f3043'}
+WARNING  github_runner_manager.manager.runner_manager:runner_manager.py:171 Found runner instance on cloud but not registered on GitHub: {'test-ngz6e37u-0-f330915f3043'}
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()

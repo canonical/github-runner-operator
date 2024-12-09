@@ -1,0 +1,196 @@
+INFO     root:conftest.py:604 GitHub token rate limit: Rate(reset=2024-12-09 16:48:40+00:00, remaining=4926, limit=5000)
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:132 Creating 1 runners
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:220 Creating openstack server with test-ngz6e37u-0-a03eed0f8210
+WARNING  github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:349 Unable to SSH into test-ngz6e37u-0-a03eed0f8210 with address 10.145.193.157
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 338, in get_ssh_connection
+    result = connection.run(f"echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/fabric/connection.py", line 22, in opens
+    self.open()
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/fabric/connection.py", line 665, in open
+    result = self.client.connect(**kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/paramiko/client.py", line 409, in connect
+    raise NoValidConnectionsError(errors)
+paramiko.ssh_exception.NoValidConnectionsError: [Errno None] Unable to connect to port 22 on 10.145.193.157
+WARNING  github_runner_manager.openstack_cloud.openstack_runner_manager:utilities.py:88 Retrying error in 60 seconds: Failed to SSH to test-ngz6e37u-0-a03eed0f8210 during creation possible due to setup not completed
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:672 Runner startup process found to be healthy on test-ngz6e37u-0-a03eed0f8210
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:705 Runner test-ngz6e37u-0-a03eed0f8210 found to be healthy
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:224 Runner test-ngz6e37u-0-a03eed0f8210 created successfully
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-ngz6e37u-0-a03eed0f8210'}
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-ngz6e37u-0-a03eed0f8210'}
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-ngz6e37u-0-a03eed0f8210'}
+INFO     tests.integration.helpers.common:common.py:484 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:484 Wait for condition not met, sleeping 10
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-ngz6e37u-0-a03eed0f8210'}
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:410 Cleaning up SSH key files
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:423 Found 1 key files, clean up 0 key files
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:434 Cleaning up openstack keypairs
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-ngz6e37u-0-a03eed0f8210'}
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:227 Flushing idle runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:614 Attempting to kill runner process on test-ngz6e37u-0-a03eed0f8210 if not busy
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:622 Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:625 Kill process command output, ok: False code 1, out: 2810
+, err: 
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:410 Cleaning up SSH key files
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:423 Found 1 key files, clean up 0 key files
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:434 Cleaning up openstack keypairs
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-ngz6e37u-0-a03eed0f8210'}
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:229 Flushing idle and busy runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:605 Attempting to kill all runner process on test-ngz6e37u-0-a03eed0f8210
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:622 Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:625 Kill process command output, ok: True code 0, out: 2417
+2810
+, err: 
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     paramiko.transport.sftp:sftp.py:169 [chan 2] Opened sftp connection (server version 3)
+WARNING  github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:878 Unable to run removal script on instance test-ngz6e37u-0-a03eed0f8210, exit code: 1, stdout: 
+# Runner removal
+
+, stderr: ldd: ./bin/libcoreclr.so: No such file or directory
+ldd: ./bin/libSystem.Security.Cryptography.Native.OpenSsl.so: No such file or directory
+ldd: ./bin/libSystem.IO.Compression.Native.so: No such file or directory
+Failed: Removing runner from the server
+Runner "test-ngz6e37u-0-a03eed0f8210" is still running a job"
+
+WARNING  github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:449 Unable to run github runner removal script for test-ngz6e37u-0-a03eed0f8210
+Stack (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/bin/pytest", line 8, in <module>
+    sys.exit(console_main())
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/config/__init__.py", line 201, in console_main
+    code = main()
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/config/__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_hooks.py", line 513, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_callers.py", line 103, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/main.py", line 330, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/main.py", line 283, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/main.py", line 337, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_hooks.py", line 513, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_callers.py", line 103, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/main.py", line 362, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_hooks.py", line 513, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_callers.py", line 103, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/runner.py", line 113, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/runner.py", line 132, in runtestprotocol
+    reports.append(call_and_report(item, "call", log))
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/runner.py", line 241, in call_and_report
+    call = CallInfo.from_call(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/runner.py", line 341, in from_call
+    result: TResult | None = func()
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/runner.py", line 242, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_hooks.py", line 513, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_callers.py", line 103, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/runner.py", line 174, in pytest_runtest_call
+    item.runtest()
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/python.py", line 1627, in runtest
+    self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_hooks.py", line 513, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_callers.py", line 103, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/python.py", line 159, in pytest_pyfunc_call
+    result = testfunction(**testargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pytest_asyncio/plugin.py", line 529, in inner
+    _loop.run_until_complete(task)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/nest_asyncio.py", line 92, in run_until_complete
+    self._run_once()
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/nest_asyncio.py", line 133, in _run_once
+    handle._run()
+  File "/usr/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/lib/python3.10/asyncio/tasks.py", line 232, in __step
+    result = coro.send(None)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/tests/integration/test_runner_manager_openstack.py", line 384, in test_runner_flush_busy_lifecycle
+    runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 239, in flush_runners
+    stats = self._cloud.flush_runners(remove_token, busy)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 360, in flush_runners
+    return self.cleanup(remove_token)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 383, in cleanup
+    self._delete_runner(runner, remove_token)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 449, in _delete_runner
+    logger.warning(
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:281 Deleting openstack server with test-ngz6e37u-0-a03eed0f8210
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:410 Cleaning up SSH key files
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:423 Found 0 key files, clean up 0 key files
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:434 Cleaning up openstack keypairs
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:229 Flushing idle and busy runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:410 Cleaning up SSH key files
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:423 Found 0 key files, clean up 0 key files
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:434 Cleaning up openstack keypairs
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-ngz6e37u-0-a03eed0f8210'}
+WARNING  github_runner_manager.manager.runner_manager:runner_manager.py:175 Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-ngz6e37u-0-a03eed0f8210'}

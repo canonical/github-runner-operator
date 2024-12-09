@@ -1,0 +1,86 @@
+INFO     root:conftest.py:604 GitHub token rate limit: Rate(reset=2024-12-09 17:49:09+00:00, remaining=4945, limit=5000)
+INFO     root:charm_metrics.py:127 Loop device None not found
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-puj0y91z/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-puj0y91z/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-puj0y91z/0 [executing] maintenance: Update image for runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-puj0y91z/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-puj0y91z/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-puj0y91z/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-puj0y91z/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-puj0y91z/0 [idle] active: 
+INFO     tests.integration.helpers.common:common.py:484 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:484 Wait for condition not met, sleeping 60
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-puj0y91z/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-puj0y91z/0 [idle] active: 
+INFO     root:common.py:568 File content of /var/log/github-runner-metrics.log: {"timestamp": 1733764279.0, "event": "runner_installed", "flavor": "test-puj0y91z", "duration": 76.83835363388062}
+{"timestamp": 1733764340.0, "event": "runner_start", "flavor": "test-puj0y91z", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 61.0, "queue_duration": 7.0}
+{"timestamp": 1733764349.0, "event": "runner_stop", "flavor": "test-puj0y91z", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 9.0, "job_conclusion": "success"}
+{"timestamp": 1733764435.8707802, "event": "reconciliation", "flavor": "test-puj0y91z", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 30.236204385757446}
+{"timestamp": 1733764457.342694, "event": "reconciliation", "flavor": "test-puj0y91z", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.356086492538452}
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                            Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-wr4q  lxd         localhost/localhost  3.6.0    unsupported  17:14:41Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-puj0y91z                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.225.102.253         
+test-puj0y91z/0*                active    idle   1        10.225.102.208         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.225.102.253  juju-58f316-0  ubuntu@22.04      Running
+1        started  10.225.102.208  juju-58f316-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+unit-test-puj0y91z-0: 17:01:36 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+unit-test-puj0y91z-0: 17:01:37 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+unit-test-puj0y91z-0: 17:03:47 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+unit-test-puj0y91z-0: 17:04:31 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+unit-test-puj0y91z-0: 17:04:33 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+unit-test-puj0y91z-0: 17:05:18 ERROR unit.test-puj0y91z/0.juju-log pre-job-metrics.json not found for runner test-puj0y91z-0-2010ec706bd6
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-puj0y91z-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-puj0y91z-0-2010ec706bd6/pre-job-metrics.json'
+unit-test-puj0y91z-0: 17:05:18 ERROR unit.test-puj0y91z/0.juju-log Pre-job metrics for runner test-puj0y91z-0-2010ec706bd6 not found, stop extracting post-jobs metrics.
+unit-test-puj0y91z-0: 17:05:27 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+unit-test-puj0y91z-0: 17:05:48 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+unit-test-puj0y91z-0: 17:06:10 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+unit-test-puj0y91z-0: 17:06:12 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+unit-test-puj0y91z-0: 17:08:25 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+unit-test-puj0y91z-0: 17:09:01 CRITICAL unit.test-puj0y91z/0.juju-log image:0: test mode is enabled
+unit-test-puj0y91z-0: 17:09:45 ERROR unit.test-puj0y91z/0.juju-log image:0: pre-job-metrics.json not found for runner test-puj0y91z-0-856c3947ebf2
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-puj0y91z-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-puj0y91z-0-856c3947ebf2/pre-job-metrics.json'
+unit-test-puj0y91z-0: 17:09:45 ERROR unit.test-puj0y91z/0.juju-log image:0: Pre-job metrics for runner test-puj0y91z-0-856c3947ebf2 not found, stop extracting post-jobs metrics.
+unit-test-puj0y91z-0: 17:11:53 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+unit-test-puj0y91z-0: 17:13:08 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+unit-test-puj0y91z-0: 17:13:23 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+unit-test-puj0y91z-0: 17:13:25 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+unit-test-puj0y91z-0: 17:13:56 CRITICAL unit.test-puj0y91z/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
