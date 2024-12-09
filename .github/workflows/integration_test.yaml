@@ -3,9 +3,6 @@ name: integration-tests
 on:
   pull_request:
 
-permissions:
-  contents: write
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -54,93 +51,11 @@ jobs:
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
   allure-report:
-    name: (beta) Publish Allure report
+    if: always() && !cancelled()
     needs:
       - integration-tests
       - openstack-interface-tests-private-endpoint
       - openstack-integration-tests-private-endpoint
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    if: always() && !cancelled()
-    steps:
-      - name: Download Allure from allure-framwork
-        # Following instructions from https://allurereport.org/docs/gettingstarted-installation/#install-via-the-system-package-manager-for-linux
-        run: gh release download --repo allure-framework/allure2 --pattern 'allure_*.deb'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Install Allure
-        run: |
-          sudo apt-get update
-          sudo apt-get install ./allure_*.deb -y
-      # For first run, manually create branch with no history
-      # (e.g.
-      # git checkout --orphan gh-pages-beta
-      # git rm -rf .
-      # touch .nojekyll
-      # git add .nojekyll
-      # git commit -m "Initial commit"
-      # git push origin gh-pages-beta
-      # )
-      - name: Checkout GitHub pages branch
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          path: repo/
-      - name: Download first test results
-        uses: actions/download-artifact@v4
-        with:
-          path: allure-results/
-          pattern: allure-results*
-          merge-multiple: true
-      - name: Load test report history
-        run: |
-          if [[ -d repo/_latest/history/ ]]
-          then
-            echo 'Loading history'
-            cp -r repo/_latest/history/ allure-results/
-          fi
-      - name: Create executor.json
-        shell: python
-        run: |
-          # Reverse engineered from https://github.com/simple-elf/allure-report-action/blob/eca283b643d577c69b8e4f048dd6cd8eb8457cfd/entrypoint.sh
-          import json
-
-          DATA = {
-              "name": "GitHub Actions",
-              "type": "github",
-              "buildOrder": ${{ github.run_number }},  # TODO future improvement: use run ID
-              "buildName": "Run ${{ github.run_id }}",
-              "buildUrl": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-              "reportUrl": "../${{ github.run_number }}/",
-          }
-          with open("allure-results/executor.json", "w") as file:
-              json.dump(DATA, file)
-      - name: Generate Allure report
-        run: allure generate
-      - name: Create index.html
-        shell: python
-        run: |
-          DATA = f"""<!DOCTYPE html>
-          <meta charset="utf-8">
-          <meta http-equiv="cache-control" content="no-cache">
-          <meta http-equiv="refresh" content="0; url=${{ github.run_number }}">
-          """
-          with open("repo/index.html", "w") as file:
-              file.write(DATA)
-      - name: Update GitHub pages branch
-        working-directory: repo/
-        # TODO future improvement: commit message
-        run: |
-          mkdir '${{ github.run_number }}'
-          rm -f _latest
-          ln -s '${{ github.run_number }}' _latest
-          cp -r ../allure-report/. _latest/
-          git add .
-          git config user.name "GitHub Actions"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Allure report ${{ github.run_number }}"
-          # Uses token set in checkout step
-          git push origin gh-pages
-
+    uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@ISD-2620-allure
 
 
