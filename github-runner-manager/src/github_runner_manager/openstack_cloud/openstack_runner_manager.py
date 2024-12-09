@@ -23,6 +23,7 @@ from github_runner_manager.errors import (
     KeyfileError,
     MissingServerConfigError,
     OpenStackError,
+    OpenstackHealthCheckError,
     RunnerCreateError,
     RunnerStartError,
     SSHError,
@@ -69,6 +70,8 @@ MAX_METRICS_FILE_SIZE = 1024
 RUNNER_STARTUP_PROCESS = "/home/ubuntu/actions-runner/run.sh"
 
 OUTDATED_METRICS_STORAGE_IN_SECONDS = CREATE_SERVER_TIMEOUT + 30  # add a bit on top of the timeout
+
+HEALTH_CHECK_ERROR_LOG_MSG = "Health check could not be completed for %s"
 
 
 class _GithubRunnerRemoveError(Exception):
@@ -124,10 +127,12 @@ class _RunnerHealth:
     Attributes:
         healthy: The list of healthy runners.
         unhealthy:  The list of unhealthy runners.
+        unknown: The list of runners whose health state could not be determined.
     """
 
     healthy: tuple[OpenstackInstance, ...]
     unhealthy: tuple[OpenstackInstance, ...]
+    unknown: tuple[OpenstackInstance, ...]
 
 
 class OpenStackRunnerManager(CloudRunnerManager):
@@ -233,15 +238,20 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug(
             "Runner info fetched, checking health %s %s", instance_id, instance.server_name
         )
-        healthy = health_checks.check_runner(
-            openstack_cloud=self._openstack_cloud, instance=instance
-        )
-        logger.debug("Runner health check completed %s %s", instance.server_name, healthy)
+
+        try:
+            healthy = health_checks.check_runner(
+                openstack_cloud=self._openstack_cloud, instance=instance
+            )
+            logger.debug("Runner health check completed %s %s", instance.server_name, healthy)
+        except OpenstackHealthCheckError:
+            logger.exception(HEALTH_CHECK_ERROR_LOG_MSG, instance.server_name)
+            healthy = None
         return (
             CloudRunnerInstance(
                 name=instance.server_name,
                 instance_id=instance_id,
-                health=HealthState.HEALTHY if healthy else HealthState.UNHEALTHY,
+                health=HealthState.from_value(healthy),
                 state=CloudRunnerState.from_openstack_server_status(instance.status),
             )
             if instance is not None
@@ -260,27 +270,29 @@ class OpenStackRunnerManager(CloudRunnerManager):
         Returns:
             Information on the runner instances.
         """
-        instance_list = self._openstack_cloud.get_instances()
-        instance_list = [
-            CloudRunnerInstance(
-                name=instance.server_name,
-                instance_id=instance.instance_id,
-                health=(
-                    HealthState.HEALTHY
-                    if health_checks.check_runner(
-                        openstack_cloud=self._openstack_cloud, instance=instance
-                    )
-                    else HealthState.UNHEALTHY
-                ),
-                state=CloudRunnerState.from_openstack_server_status(instance.status),
+        instances = self._openstack_cloud.get_instances()
+        runners = []
+        for instance in instances:
+            try:
+                healthy = health_checks.check_runner(
+                    openstack_cloud=self._openstack_cloud, instance=instance
+                )
+            except OpenstackHealthCheckError:
+                logger.exception(HEALTH_CHECK_ERROR_LOG_MSG, instance.server_name)
+                healthy = None
+            runners.append(
+                CloudRunnerInstance(
+                    name=instance.server_name,
+                    instance_id=instance.instance_id,
+                    health=HealthState.from_value(healthy),
+                    state=CloudRunnerState.from_openstack_server_status(instance.status),
+                )
             )
-            for instance in instance_list
-        ]
         if states is None:
-            return tuple(instance_list)
+            return tuple(runners)
 
         state_set = set(states)
-        return tuple(instance for instance in instance_list if instance.state in state_set)
+        return tuple(runner for runner in runners if runner.state in state_set)
 
     def delete_runner(
         self, instance_id: InstanceId, remove_token: str
@@ -361,8 +373,10 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         healthy_runner_names = {runner.server_name for runner in runners.healthy}
         unhealthy_runner_names = {runner.server_name for runner in runners.unhealthy}
+        unknown_runner_names = {runner.server_name for runner in runners.unknown}
         logger.debug("Healthy runners: %s", healthy_runner_names)
         logger.debug("Unhealthy runners: %s", unhealthy_runner_names)
+        logger.debug("Unknown health runners: %s", unknown_runner_names)
 
         logger.debug("Deleting unhealthy runners.")
         for runner in runners.unhealthy:
@@ -374,33 +388,31 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Extracting metrics.")
         return self._cleanup_extract_metrics(
             metrics_storage_manager=self._metrics_storage_manager,
-            healthy_runner_names=healthy_runner_names,
-            unhealthy_runner_names=unhealthy_runner_names,
+            ignore_runner_names=healthy_runner_names | unknown_runner_names,
+            include_runner_names=unhealthy_runner_names,
         )
 
     @staticmethod
     def _cleanup_extract_metrics(
         metrics_storage_manager: StorageManager,
-        healthy_runner_names: set[str],
-        unhealthy_runner_names: set[str],
+        ignore_runner_names: set[str],
+        include_runner_names: set[str],
     ) -> Iterator[runner_metrics.RunnerMetrics]:
-        """Extract metrics for unhealthy runners and dangling metrics storage.
+        """Extract metrics for certain runners and dangling metrics storage.
 
         Args:
             metrics_storage_manager: The metrics storage manager.
-            healthy_runner_names: The names of healthy runners.
-            unhealthy_runner_names: The names of unhealthy runners.
+            ignore_runner_names: The names of the runners whose metrics should not be extracted.
+            include_runner_names: The names of the runners whose metrics should be extracted.
 
         Returns:
-            Any metrics retrieved from unhealthy runners and dangling storage.
+            Any metrics retrieved from the include_runner_names and dangling storage.
         """
-        # We want to extract metrics for unhealthy runners(runners to clean up).
-        # But there may be runners under construction
-        # (not marked as healthy and unhealthy because they do not yet exist in OpenStack)
-        # that should not be cleaned up.
+        # There may be runners under construction that are not included in the runner_names sets
+        # because they do not yet exist in OpenStack and that should not be cleaned up.
         # On the other hand, there could be storage for runners from the past that
         # should be cleaned up.
-        all_runner_names = healthy_runner_names | unhealthy_runner_names
+        all_runner_names = ignore_runner_names | include_runner_names
         unmatched_metrics_storage = (
             ms
             for ms in metrics_storage_manager.list_all()
@@ -414,7 +426,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         }
         return runner_metrics.extract(
             metrics_storage_manager=metrics_storage_manager,
-            runners=unhealthy_runner_names | dangling_storage_runner_names,
+            runners=include_runner_names | dangling_storage_runner_names,
             include=True,
         )
 
@@ -462,13 +474,21 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         runner_list = self._openstack_cloud.get_instances()
 
-        healthy, unhealthy = [], []
+        healthy, unhealthy, unknown = [], [], []
         for runner in runner_list:
-            if health_checks.check_runner(openstack_cloud=self._openstack_cloud, instance=runner):
-                healthy.append(runner)
-            else:
-                unhealthy.append(runner)
-        return _RunnerHealth(healthy=tuple(healthy), unhealthy=tuple(unhealthy))
+            try:
+                if health_checks.check_runner(
+                    openstack_cloud=self._openstack_cloud, instance=runner
+                ):
+                    healthy.append(runner)
+                else:
+                    unhealthy.append(runner)
+            except OpenstackHealthCheckError:
+                logger.exception(HEALTH_CHECK_ERROR_LOG_MSG, runner.server_name)
+                unknown.append(runner)
+        return _RunnerHealth(
+            healthy=tuple(healthy), unhealthy=tuple(unhealthy), unknown=tuple(unknown)
+        )
 
     def _generate_cloud_init(self, instance_name: str, registration_token: str) -> str:
         """Generate cloud init userdata.
@@ -668,15 +688,21 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 f"Failed to SSH connect to {instance.server_name} openstack runner"
             ) from err
 
-        if not health_checks.check_active_runner(
-            ssh_conn=ssh_conn, instance=instance, accept_finished_job=True
-        ):
-            logger.info("Runner process not found on %s", instance.server_name)
+        try:
+            healthy = health_checks.check_active_runner(
+                ssh_conn=ssh_conn, instance=instance, accept_finished_job=True
+            )
+        except OpenstackHealthCheckError as exc:
             raise RunnerStartError(
-                f"Runner process on {instance.server_name} failed to initialize on after starting"
+                f"Failed to check health of runner process on {instance.server_name}"
+            ) from exc
+        if not healthy:
+            logger.info("Runner %s not considered healthy", instance.server_name)
+            raise RunnerStartError(
+                f"Runner {instance.server_name} failed to initialize after starting"
             )
 
-        logger.info("Runner process found to be healthy on %s", instance.server_name)
+        logger.info("Runner %s found to be healthy", instance.server_name)
 
     @staticmethod
     def _generate_instance_id() -> InstanceId:

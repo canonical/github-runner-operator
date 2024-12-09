@@ -29,10 +29,10 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@ISD-2620-allure
     secrets: inherit
     with:
-      juju-channel: 3.2/stable
+      juju-channel: 3.6/stable
       pre-run-script: scripts/setup-lxd.sh
       provider: lxd
-      test-tox-env: integration-juju3.2
+      test-tox-env: integration-juju3.6
       modules: '["test_runner_manager_openstack"]'
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
@@ -42,10 +42,10 @@ jobs:
     needs: openstack-interface-tests-private-endpoint
     secrets: inherit
     with:
-      juju-channel: 3.2/stable
+      juju-channel: 3.6/stable
       pre-run-script: scripts/setup-lxd.sh
       provider: lxd
-      test-tox-env: integration-juju3.2
+      test-tox-env: integration-juju3.6
       modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_runner", "test_reactive"]'
       extra-arguments: "-m openstack"
       self-hosted-runner: true
