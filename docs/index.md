@@ -58,6 +58,7 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [Deploy on ARM64](how-to/deploy-on-arm64.md)
   1. [Integrate with COS](how-to/integrate-with-cos.md)
   1. [Spawn OpenStack runner](how-to/openstack-runner.md)
+  1. [Set up reactive spawning](how-to/reactive.md)
   1. [Comply with repository policies](how-to/repo-policy.md)
   1. [Run on LXD cloud](how-to/run-on-lxd.md)
   1. [Set base image](how-to/set-base-image.md)
