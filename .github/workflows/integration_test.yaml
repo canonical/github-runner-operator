@@ -56,4 +56,4 @@ jobs:
       - integration-tests
       - openstack-interface-tests-private-endpoint
       - openstack-integration-tests-private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@ISD-2620-allure 
+    uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main
