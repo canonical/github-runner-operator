@@ -1,0 +1,323 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model github-pr-5ef04-lxd:test-debug-ssh-dcbe on cloud localhost
+WARNING  juju.client.connection:connection.py:893 unexpected facade AgentLifeFlag received from the controller
+WARNING  juju.client.connection:connection.py:909 unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+WARNING  juju.client.connection:connection.py:893 unexpected facade SecretsDrain received from the controller
+INFO     juju.model:model.py:1988 Deploying local:jammy/github-runner-0
+INFO     root:conftest.py:604 GitHub token rate limit: Rate(reset=2024-12-11 10:20:17+00:00, remaining=4826, limit=5000)
+INFO     juju.model:model.py:1988 Deploying ch:amd64/jammy/tmate-ssh-server-6
+WARNING  juju.model:model.py:1513 relate is deprecated and will be removed. Use integrate instead.
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [executing] maintenance: Generating keys.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [allocating] waiting: waiting for machine
+  tmate-ssh-server/0 [idle] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Installing packages
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Installing packages
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Building runner image
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [rebooting] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [rebooting] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [rebooting] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+  tmate-ssh-server/0 [idle] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Starting runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-uo450w5y/0 [idle] active: 
+INFO     tests.integration.test_debug_ssh:test_debug_ssh.py:47 Dispatching workflow_dispatch_ssh_debug.yaml workflow.
+INFO     tests.integration.helpers.common:common.py:484 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:484 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:484 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:484 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:484 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:484 Wait for condition not met, sleeping 60
+INFO     tests.integration.test_debug_ssh:test_debug_ssh.py:61 Logs: ﻿2024-12-11T10:20:04.7165183Z Current runner version: '2.321.0'
+2024-12-11T10:20:04.7174200Z Runner name: 'test-uo450w5y-0-96d28a5f015251dbe1070205'
+2024-12-11T10:20:04.7175331Z Runner group name: 'Default'
+2024-12-11T10:20:04.7176500Z Machine name: 'test-uo450w5y-0-96d28a5f015251dbe1070205'
+2024-12-11T10:20:04.7181126Z ##[group]GITHUB_TOKEN Permissions
+2024-12-11T10:20:04.7184038Z Actions: write
+2024-12-11T10:20:04.7185236Z Attestations: write
+2024-12-11T10:20:04.7185805Z Checks: write
+2024-12-11T10:20:04.7186359Z Contents: write
+2024-12-11T10:20:04.7186987Z Deployments: write
+2024-12-11T10:20:04.7187536Z Discussions: write
+2024-12-11T10:20:04.7188090Z Issues: write
+2024-12-11T10:20:04.7188710Z Metadata: read
+2024-12-11T10:20:04.7189236Z Packages: write
+2024-12-11T10:20:04.7189803Z Pages: write
+2024-12-11T10:20:04.7190416Z PullRequests: write
+2024-12-11T10:20:04.7190982Z RepositoryProjects: write
+2024-12-11T10:20:04.7191586Z SecurityEvents: write
+2024-12-11T10:20:04.7192203Z Statuses: write
+2024-12-11T10:20:04.7192950Z ##[endgroup]
+2024-12-11T10:20:04.7196452Z Secret source: Actions
+2024-12-11T10:20:04.7197573Z Prepare workflow directory
+2024-12-11T10:20:04.7527153Z Prepare all required actions
+2024-12-11T10:20:04.7565258Z Getting action download info
+2024-12-11T10:20:04.9167294Z Download action repository 'canonical/action-tmate@chore/env_var_change' (SHA:54a3e453506add85df1ab1a5d29ef6bb1dcd2f55)
+2024-12-11T10:20:05.2608774Z Complete job name: workflow-dispatch-tests
+2024-12-11T10:20:05.3071389Z A job started hook has been configured by the self-hosted runner administrator
+2024-12-11T10:20:05.3227378Z ##[group]Run '/home/ubuntu/github-runner/pre-job.sh'
+2024-12-11T10:20:05.3265161Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2024-12-11T10:20:05.3266435Z ##[endgroup]
+2024-12-11T10:20:05.3467714Z <13>Dec 11 10:20:05 ubuntu: GITHUB_EVENT_NAME: workflow_dispatch,       GITHUB_REPOSITORY: canonical/github-runner-operator,       GITHUB_SHA: 5ef041d40bba8be3c9025df10d1b7f408fce2d3f
+2024-12-11T10:20:05.3504717Z <13>Dec 11 10:20:05 ubuntu: GITHUB_REF_NAME: test-432fd359
+2024-12-11T10:20:05.9405180Z <13>Dec 11 10:20:05 ubuntu: The repository setup check has passed, proceeding to execute jobs
+2024-12-11T10:20:05.9676119Z ##[group]Run canonical/action-tmate@chore/env_var_change
+2024-12-11T10:20:05.9677554Z with:
+2024-12-11T10:20:05.9678382Z   sudo: auto
+2024-12-11T10:20:05.9679342Z   install-dependencies: true
+2024-12-11T10:20:05.9680453Z   limit-access-to-actor: auto
+2024-12-11T10:20:05.9681500Z   detached: false
+2024-12-11T10:20:05.9682760Z   github-token: ***
+2024-12-11T10:20:05.9683708Z ##[endgroup]
+2024-12-11T10:20:06.3505224Z Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+2024-12-11T10:20:06.4107406Z Hit:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+2024-12-11T10:20:06.4996625Z Hit:3 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+2024-12-11T10:20:06.5288359Z Hit:4 http://security.ubuntu.com/ubuntu jammy-security InRelease
+2024-12-11T10:20:12.8795926Z Reading package lists...
+2024-12-11T10:20:12.9427708Z Reading package lists...
+2024-12-11T10:20:13.1200256Z Building dependency tree...
+2024-12-11T10:20:13.1207093Z Reading state information...
+2024-12-11T10:20:13.2850109Z xz-utils is already the newest version (5.2.5-2ubuntu1).
+2024-12-11T10:20:13.2851254Z xz-utils set to manually installed.
+2024-12-11T10:20:13.2852152Z openssh-client is already the newest version (1:8.9p1-3ubuntu0.10).
+2024-12-11T10:20:13.2852845Z openssh-client set to manually installed.
+2024-12-11T10:20:13.2854611Z 0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+2024-12-11T10:21:36.5427329Z ssh -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:21:36.5455140Z 
+2024-12-11T10:21:36.5472511Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:21:36.5473485Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:21:41.5506045Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:21:41.5508976Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:21:46.5553528Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:21:46.5554281Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:21:51.5572561Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:21:51.5573295Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:21:56.5586721Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:21:56.5588102Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:01.5612136Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:01.5612848Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:06.5635707Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:06.5639778Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:11.5672473Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:11.5674151Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:16.5726377Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:16.5727237Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:21.5747667Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:21.5748428Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:26.5767771Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:26.5768459Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:31.5805652Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:31.5806541Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:36.5857979Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:36.5859809Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:41.5909979Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:41.5910909Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:46.5929568Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:46.5931474Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:51.5952389Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:51.5953525Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:56.5990858Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:22:56.5991839Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:01.6045473Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:01.6046694Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:06.6074996Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:06.6075658Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:11.6085294Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:11.6085957Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:16.6101257Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:16.6104019Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:21.6156043Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:21.6156737Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:26.6194935Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:26.6196987Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:31.6247889Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:31.6249151Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:36.6300396Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:36.6300982Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:41.6348742Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:41.6350023Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:46.6376145Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:46.6377225Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:51.6426844Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:51.6427543Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:56.6465697Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:23:56.6466706Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:01.6515680Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:01.6516330Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:06.6529723Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:06.6531363Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:11.6537890Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:11.6539793Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:16.6583636Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:16.6586944Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:21.6634770Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:21.6635794Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:26.6677246Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:26.6678037Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:31.6701059Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:31.6701692Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:36.6742394Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:36.6743400Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:41.6771311Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:41.6772107Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:46.6820813Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:46.6822261Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:51.6860314Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:51.6861235Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:56.6915003Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:24:56.6916042Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:25:01.6963678Z SSH: ssh -p 10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:25:01.6964547Z or: ssh -i <path-to-private-SSH-key> -p10022 tPMquZqfjUEU6uaKHu6eAnQ87@10.42.115.216
+2024-12-11T10:25:05.9654963Z ##[error]The action 'Setup tmate session' has timed out after 5 minutes.
+2024-12-11T10:25:05.9750277Z Post job cleanup.
+2024-12-11T10:25:06.0691554Z Cleaning up orphan processes
+2024-12-11T10:25:06.0892541Z Terminate orphan process: pid (1541) (tmate)
+2024-12-11T10:25:06.0957621Z Terminate orphan process: pid (1542) (bash)
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                Controller           Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-dcbe  github-pr-5ef04-lxd  localhost/localhost  3.1.10   unsupported  10:25:11Z
+
+App               Version  Status  Scale  Charm             Channel  Rev  Exposed  Message
+test-uo450w5y              active      1  github-runner                0  no       
+tmate-ssh-server           active      1  tmate-ssh-server  edge       6  no       
+
+Unit                 Workload  Agent  Machine  Public address  Ports      Message
+test-uo450w5y/0*     active    idle   0        10.42.115.33               
+tmate-ssh-server/0*  active    idle   1        10.42.115.216   10022/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.42.115.33   juju-d16528-0  ubuntu@22.04      Running
+1        started  10.42.115.216  juju-d16528-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-1: 09:56:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:56:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:56:53 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-tmate-ssh-server-0: 09:56:53 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-0: 09:59:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 09:59:13 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 09:59:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-uo450w5y-0: 09:59:13 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-uo450w5y-0: 09:59:22 CRITICAL unit.test-uo450w5y/0.juju-log test mode is enabled
+unit-test-uo450w5y-0: 09:59:24 CRITICAL unit.test-uo450w5y/0.juju-log test mode is enabled
+unit-test-uo450w5y-0: 10:04:15 CRITICAL unit.test-uo450w5y/0.juju-log debug-ssh:0: test mode is enabled
+unit-test-uo450w5y-0: 10:04:16 CRITICAL unit.test-uo450w5y/0.juju-log test mode is enabled
+machine-0: 10:05:12 ERROR juju.worker.deployer fatal error "test-uo450w5y/0": machine needs to reboot
+unit-test-uo450w5y-0: 10:06:52 CRITICAL unit.test-uo450w5y/0.juju-log test mode is enabled
+unit-test-uo450w5y-0: 10:06:53 CRITICAL unit.test-uo450w5y/0.juju-log test mode is enabled
+unit-test-uo450w5y-0: 10:07:19 ERROR unit.test-uo450w5y/0.juju-log Command /usr/bin/systemctl is-active repo-policy-compliance failed with code 3: b''
+unit-test-uo450w5y-0: 10:07:19 ERROR unit.test-uo450w5y/0.juju-log Found inactive repo-policy-compliance service.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-uo450w5y-0/charm/src/utilities.py", line 55, in execute_command
+    result.check_returncode()
+  File "/usr/lib/python3.10/subprocess.py", line 457, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '['/usr/bin/systemctl', 'is-active', 'repo-policy-compliance']' returned non-zero exit status 3.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-uo450w5y-0/charm/./src/charm.py", line 391, in _ensure_service_health
+    execute_command(["/usr/bin/systemctl", "is-active", "repo-policy-compliance"])
+  File "/var/lib/juju/agents/unit-test-uo450w5y-0/charm/src/utilities.py", line 64, in execute_command
+    raise SubprocessError(cmd, err.returncode, err.stdout, err.stderr) from err
+errors.SubprocessError: [/usr/bin/systemctl is-active repo-policy-compliance] failed with return code 3: b''
+unit-test-uo450w5y-0: 10:11:56 CRITICAL unit.test-uo450w5y/0.juju-log test mode is enabled
+unit-test-uo450w5y-0: 10:12:06 CRITICAL unit.test-uo450w5y/0.juju-log test mode is enabled
+unit-test-uo450w5y-0: 10:15:50 CRITICAL unit.test-uo450w5y/0.juju-log test mode is enabled
+unit-test-uo450w5y-0: 10:15:53 CRITICAL unit.test-uo450w5y/0.juju-log test mode is enabled
+unit-test-uo450w5y-0: 10:16:01 CRITICAL unit.test-uo450w5y/0.juju-log debug-ssh:0: test mode is enabled
+unit-test-uo450w5y-0: 10:16:02 CRITICAL unit.test-uo450w5y/0.juju-log debug-ssh:0: test mode is enabled
+unit-test-uo450w5y-0: 10:19:41 CRITICAL unit.test-uo450w5y/0.juju-log test mode is enabled
+unit-test-uo450w5y-0: 10:21:30 CRITICAL unit.test-uo450w5y/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
