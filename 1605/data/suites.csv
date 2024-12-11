@@ -1,0 +1,73 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"
+    Arrange: RunnerManager with one runner. Clean metric logs.
+    Act:
+        1. Start a test workflow for the runner.
+        2. Run cleanup.
+    Assert:
+        1. The workflow complete successfully.
+        2. The runner should be deleted. The metrics should be recorded.
+    ","60794","test_runner_normal_lifecycle","tests.integration","Wed Dec 11 13:24:16 UTC 2024","passed","Wed Dec 11 13:25:17 UTC 2024","","test_runner_manager_openstack","",""
+"
+    Arrange: RunnerManager instance with no runners.
+    Act: Get runners.
+    Assert: Empty tuple returned.
+    ","4791","test_get_no_runner","tests.integration","Wed Dec 11 13:14:40 UTC 2024","passed","Wed Dec 11 13:14:45 UTC 2024","","test_runner_manager_openstack","",""
+"
+    arrange: A working application with one runner.
+    act:
+        1.  a. Remove runner binary.
+            b. Crash the one runner
+        2.  Wait for 6 minutes, and then wait for ActiveStatus.
+    assert:
+        1. a. No runner binary exists.
+           b. No runner exists.
+        2.  a. Runner binary exists.
+            b. One runner exists. The runner name should not be the same as the starting one.
+
+    This tests whether the reconcile-runner event is triggered, and updates the dependencies.
+    The reconciliation logic is tested with the reconcile-runners action.
+    ","626243","test_update_interval","tests.integration","Wed Dec 11 13:28:32 UTC 2024","passed","Wed Dec 11 13:38:59 UTC 2024","","test_charm_scheduled_events","",""
+"
+    arrange: given an integrated GitHub-Runner charm and tmate-ssh-server charm with a denylist         covering ip ranges of tmate-ssh-server.
+    act: when canonical/action-tmate is triggered.
+    assert: the ssh connection info from action-log and tmate-ssh-server matches.
+    ","1786508","test_ssh_debug","tests.integration","Wed Dec 11 13:16:24 UTC 2024","passed","Wed Dec 11 13:46:10 UTC 2024","","test_debug_ssh","",""
+"
+    arrange: given latest stable version of the charm (current 161).
+    act: charm upgrade is called.
+    assert: the charm is upgraded successfully.
+    ","1778604","test_charm_upgrade","tests.integration","Wed Dec 11 13:14:28 UTC 2024","passed","Wed Dec 11 13:44:07 UTC 2024","","test_charm_upgrade","",""
+"
+    Arrange: RunnerManager instance with no runners.
+    Act:
+        1. Create two runner.
+        2. Delete all idle runner.
+    Assert:
+        1. Two active idle runner.
+        2. No runners.
+    ","84531","test_runner_spawn_two","tests.integration","Wed Dec 11 13:25:17 UTC 2024","failed","Wed Dec 11 13:26:41 UTC 2024","","test_runner_manager_openstack","",""
+"
+    Arrange: RunnerManager instance with no runners.
+    Act:
+        1. Create one runner.
+        2. Run health check on the runner.
+        3. Run cleanup.
+        4. Delete all idle runner.
+    Assert:
+        1. An active idle runner.
+        2. Health check passes.
+        3. One idle runner remains.
+        4. No runners.
+    ","148306","test_runner_normal_idle_lifecycle","tests.integration","Wed Dec 11 13:14:45 UTC 2024","passed","Wed Dec 11 13:17:13 UTC 2024","","test_runner_manager_openstack","",""
+"
+    Arrange: RunnerManager with one idle runner.
+    Act:
+        1. Run a long workflow.
+        3. Run flush idle runner.
+        4. Run flush busy runner.
+    Assert:
+        1. Runner takes the job and become busy.
+        3. Busy runner still exists.
+        4. No runners exists.
+    ","119849","test_runner_flush_busy_lifecycle","tests.integration","Wed Dec 11 13:19:23 UTC 2024","passed","Wed Dec 11 13:21:23 UTC 2024","","test_runner_manager_openstack","",""
