@@ -12,10 +12,10 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
-      juju-channel: 3.2/stable
+      juju-channel: 3.6/stable
       pre-run-script: scripts/setup-lxd.sh
       provider: lxd
-      test-tox-env: integration-juju3.2
+      test-tox-env: integration-juju3.6
       modules: '["test_e2e"]'
       extra-arguments: "-m openstack"
       self-hosted-runner: true

@@ -92,7 +92,14 @@ async def test_charm_upgrade(
     )
 
     # upgrade the charm with current local charm
-    await application.local_refresh(path=charm_file, charm_origin=origin)
+    await application.local_refresh(
+        path=charm_file,
+        charm_origin=origin,
+        force=False,
+        force_series=False,
+        force_units=False,
+        resources=None,
+    )
     unit = application.units[0]
     await wait_for(
         functools.partial(is_upgrade_charm_event_emitted, unit), timeout=360, check_interval=60

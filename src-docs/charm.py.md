@@ -22,10 +22,13 @@ Charm for creating and managing GitHub self-hosted runner instances.
 - **ROOT_USER**
 - **RUNNER_MANAGER_USER**
 - **RUNNER_MANAGER_GROUP**
+- **ACTIVE_STATUS_RECONCILIATION_FAILED_MSG**
+- **FAILED_TO_RECONCILE_RUNNERS_MSG**
+- **FAILED_RECONCILE_ACTION_ERR_MSG**
 
 ---
 
-<a href="../src/charm.py#L127"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L134"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_charm_errors`
 
@@ -51,7 +54,7 @@ Catch common errors in charm.
 
 ---
 
-<a href="../src/charm.py#L168"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L175"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_action_errors`
 
@@ -92,7 +95,7 @@ Charm for managing GitHub self-hosted runners.
  - <b>`ram_pool_path`</b>:  The path to memdisk storage. 
  - <b>`kernel_module_path`</b>:  The path to kernel modules. 
 
-<a href="../src/charm.py#L229"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L236"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

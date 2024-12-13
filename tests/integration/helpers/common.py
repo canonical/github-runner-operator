@@ -15,7 +15,6 @@ from functools import partial
 from typing import Awaitable, Callable, ParamSpec, TypeVar, cast
 
 import github
-import juju.version
 import requests
 from github.Branch import Branch
 from github.Repository import Repository
@@ -148,23 +147,10 @@ async def remove_runner_bin(unit: Unit) -> None:
     assert return_code != 0
 
 
-def on_juju_2() -> bool:
-    """Check if juju 2 is used.
-
-    Returns:
-        Whether juju 2 is used.
-    """
-    # The juju library does not support `__version__`.
-    # Prior to juju 3, the SUPPORTED_MAJOR_VERSION was not defined.
-    return not hasattr(juju.version, "SUPPORTED_MAJOR_VERSION")
-
-
 async def run_in_unit(
     unit: Unit, command: str, timeout=None, assert_on_failure=False, assert_msg=""
 ) -> tuple[int, str | None, str | None]:
     """Run command in juju unit.
-
-    Compatible with juju 3 and juju 2.
 
     Args:
         unit: Juju unit to execute the command in.
@@ -178,20 +164,12 @@ async def run_in_unit(
     """
     action: Action = await unit.run(command, timeout)
 
-    # For compatibility with juju 2.
-    if on_juju_2():
-        code, stdout, stderr = (
-            int(action.results["Code"]),
-            action.results.get("Stdout", None),
-            action.results.get("Stderr", None),
-        )
-    else:
-        await action.wait()
-        code, stdout, stderr = (
-            action.results["return-code"],
-            action.results.get("stdout", None),
-            action.results.get("stderr", None),
-        )
+    await action.wait()
+    code, stdout, stderr = (
+        action.results["return-code"],
+        action.results.get("stdout", None),
+        action.results.get("stderr", None),
+    )
 
     if assert_on_failure:
         assert code == 0, f"{assert_msg}: {stderr}"
@@ -289,7 +267,7 @@ async def deploy_github_runner_charm(
         base="ubuntu@22.04",
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
-        storage=storage,
+        storage=storage,  # type: ignore[arg-type]
         **(deploy_kwargs or {}),
     )
 

@@ -61,6 +61,7 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [Comply with repository policies](how-to/repo-policy.md)
   1. [Run on LXD cloud](how-to/run-on-lxd.md)
   1. [Set base image](how-to/set-base-image.md)
+  1. [Set up reactive spawning](how-to/reactive.md)
 1. [Reference](reference)
   1. [Actions](reference/actions.md)
   1. [ARM64](reference/arm64.md)

@@ -6,6 +6,7 @@ It is assumed that the test runs in the CI under the ubuntu user.
 """
 
 
+import asyncio
 import json
 import logging
 from pathlib import Path
@@ -380,6 +381,10 @@ async def test_runner_flush_busy_lifecycle(
     assert busy_runner.github_state == GitHubRunnerState.BUSY
 
     # 4.
+    runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
+    # It takes a bit for the github agent to die, and it may not be cleaned
+    # in the first run. Just do it twice.
+    await asyncio.sleep(10)
     runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
     await wait_runner_amount(runner_manager_with_one_runner, 0)
 

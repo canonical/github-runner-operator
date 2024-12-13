@@ -5,33 +5,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  github-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Echo test
-        run: echo hello
-      - name: Disk usage
-        run: df -h
-  # test:
-  #   runs-on: [self-hosted, github-runner]
-  #   strategy:
-  #     matrix:
-  #       num: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-  #   steps:
-  #     - name: Echo test
-  #       run: echo hello
-  #     - name: Disk usage
-  #       run: df -h
-  # test:
-  #   runs-on: [self-hosted, large]
-  #   steps:
-  #     - uses: canonical/craft-actions/rockcraft-pack@main
-  #       with:
-  #         path: mlserver-huggingface
-  #         verbosity: trace
-  #     - if: failure()
-  #       run: sleep 10000
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
-      #   with:
-      #     limit-access-to-actor: true
+
+  unit-tests:
+    uses: canonical/operator-workflows/.github/workflows/test.yaml@main
+    secrets: inherit
+    with:
+      self-hosted-runner: true
