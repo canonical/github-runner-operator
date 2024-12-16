@@ -40,7 +40,6 @@ from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
     InstanceHelper,
     deploy_github_runner_charm,
-    inject_lxd_profile,
     reconcile,
     wait_for,
 )
@@ -101,18 +100,12 @@ def openstack_clouds_yaml_fixture(pytestconfig: pytest.Config) -> str | None:
 
 
 @pytest.fixture(scope="module")
-def charm_file(
-    pytestconfig: pytest.Config, loop_device: Optional[str], openstack_clouds_yaml: Optional[str]
-) -> str:
+def charm_file(pytestconfig: pytest.Config, openstack_clouds_yaml: Optional[str]) -> str:
     """Path to the built charm."""
     charm = pytestconfig.getoption("--charm-file")
     assert charm, "Please specify the --charm-file command line option"
     charm_path_str = f"./{charm}"
 
-    if openstack_clouds_yaml:
-        return charm_path_str
-
-    inject_lxd_profile(charm_file=Path(charm_path_str), loop_device=loop_device)
     return charm_path_str
 
 
@@ -189,12 +182,6 @@ def openstack_no_proxy_fixture(pytestconfig: pytest.Config) -> str:
     """Configured no_proxy setting for openstack runners."""
     no_proxy = pytestconfig.getoption("--openstack-no-proxy")
     return "" if no_proxy is None else no_proxy
-
-
-@pytest.fixture(scope="module")
-def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
-    """Configured loop_device setting."""
-    return pytestconfig.getoption("--loop-device")
 
 
 @pytest.fixture(scope="module", name="private_endpoint_config")

@@ -105,28 +105,6 @@ async def clear_metrics_log(unit: Unit) -> None:
     assert retcode == 0, f"Failed to clear metrics log, {stderr}"
 
 
-async def print_loop_device_info(unit: Unit, loop_device: str) -> None:
-    """Print loop device info on the unit.
-
-    Args:
-        unit: The unit to print the loop device info on.
-        loop_device: The loop device to print the info for.
-    """
-    retcode, stdout, stderr = await run_in_unit(
-        unit=unit,
-        command="sudo losetup -lJ",
-    )
-    assert retcode == 0, f"Failed to get loop devices: {stdout} {stderr}"
-    assert stdout is not None, "Failed to get loop devices, no stdout message"
-    loop_devices_info = json.loads(stdout)
-    for loop_device_info in loop_devices_info["loopdevices"]:
-        if loop_device_info["name"] == loop_device:
-            logging.info("Loop device %s info: %s", loop_device, loop_device_info)
-            break
-    else:
-        logging.info("Loop device %s not found", loop_device)
-
-
 async def get_metrics_log(unit: Unit) -> str:
     """Retrieve the metrics log from the unit.
 

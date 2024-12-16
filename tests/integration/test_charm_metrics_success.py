@@ -19,7 +19,6 @@ from tests.integration.helpers.charm_metrics import (
     assert_events_after_reconciliation,
     clear_metrics_log,
     get_metrics_log,
-    print_loop_device_info,
 )
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
@@ -30,16 +29,13 @@ from tests.integration.helpers.common import (
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
-async def app_fixture(
-    model: Model, app_for_metric: Application, loop_device: str
-) -> AsyncIterator[Application]:
+async def app_fixture(model: Model, app_for_metric: Application) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
     Clear the metrics log before each test.
     """
     unit = app_for_metric.units[0]
     await clear_metrics_log(unit)
-    await print_loop_device_info(unit, loop_device)
 
     yield app_for_metric
 
