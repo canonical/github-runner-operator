@@ -33,7 +33,6 @@ async def test_charm_upgrade(
     model: Model,
     ops_test: OpsTest,
     charm_file: str,
-    loop_device: str | None,
     app_name: str,
     path: str,
     token: str,
@@ -53,7 +52,7 @@ async def test_charm_upgrade(
     """
     latest_stable_path = tmp_path / "github-runner.charm"
     latest_stable_revision = 302  # update this value every release to stable.
-    # download the charm and inject lxd profile for testing
+    # download the charm
     retcode, stdout, stderr = await ops_test.juju(
         "download",
         "github-runner",
