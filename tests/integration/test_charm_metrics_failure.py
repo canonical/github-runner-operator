@@ -4,8 +4,10 @@
 """Integration tests for metrics/logs assuming Github workflow failures or a runner crash."""
 import time
 from asyncio import sleep
+from typing import AsyncIterator
 
 import pytest
+import pytest_asyncio
 from github.Branch import Branch
 from github.Repository import Repository
 from github_runner_manager.metrics.runner import PostJobStatus
@@ -28,6 +30,28 @@ from tests.integration.helpers.common import (
     reconcile,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
+
+
+@pytest_asyncio.fixture(scope="function", name="app")
+async def app_fixture(
+    model: Model, app_for_metric: Application, loop_device: str
+) -> AsyncIterator[Application]:
+    """Setup and teardown the charm after each test.
+
+    Clear the metrics log before each test.
+    """
+    unit = app_for_metric.units[0]
+    await clear_metrics_log(unit)
+    await app_for_metric.set_config(
+        {
+            VIRTUAL_MACHINES_CONFIG_NAME: "0",
+            "repo-policy-compliance-token": "",
+            "repo-policy-compliance-url": "",
+        }
+    )
+    await reconcile(app=app_for_metric, model=model)
+
+    yield app_for_metric
 
 
 @pytest.mark.openstack
