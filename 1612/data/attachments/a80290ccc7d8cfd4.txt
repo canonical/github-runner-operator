@@ -1,0 +1,83 @@
+INFO     root:charm_metrics.py:127 Loop device None not found
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-z1oiovy9/0 [executing] active:
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-z1oiovy9/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-z1oiovy9/0 [idle] active: 
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 30
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command pkill -9 run.sh on test-z1oiovy9-0-7df979c99b24
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.180', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:f7:3e:c6'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-z1oiovy9-0-7df979c99b24.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.180 pkill -9 run.sh'
+INFO     root:charm_metrics.py:248 Runner test-z1oiovy9-0-7df979c99b24 status: online
+INFO     root:charm_metrics.py:250 Runner still marked as online, waiting for it to be marked offline
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-z1oiovy9/0 [executing] active: 
+INFO     root:common.py:591 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734342719.0571349, "event": "reconciliation", "flavor": "test-z1oiovy9", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.349419116973877}
+{"timestamp": 1734342733.4419217, "event": "reconciliation", "flavor": "test-z1oiovy9", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.424507141113281}
+{"timestamp": 1734342880.8748114, "event": "reconciliation", "flavor": "test-z1oiovy9", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 129.69946789741516}
+{"timestamp": 1734342901.969548, "event": "reconciliation", "flavor": "test-z1oiovy9", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 20.088439226150513}
+{"timestamp": 1734342851.0, "event": "runner_installed", "flavor": "test-z1oiovy9", "duration": 90.07980680465698}
+{"timestamp": 1734342928.0, "event": "runner_start", "flavor": "test-z1oiovy9", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 77.0, "queue_duration": 7.0}
+{"timestamp": 1734342966.0, "event": "runner_stop", "flavor": "test-z1oiovy9", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 38.0, "job_conclusion": "cancelled"}
+{"timestamp": 1734343053.5335555, "event": "reconciliation", "flavor": "test-z1oiovy9", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.731069803237915}
+{"timestamp": 1734343065.3719964, "event": "reconciliation", "flavor": "test-z1oiovy9", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.885501861572266}
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                            Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-o1q7  lxd         localhost/localhost  3.6.1    unsupported  09:58:04Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-z1oiovy9                         active      1  github-runner                               0  yes      
+
+Unit                            Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder/0*  active    idle   0        10.28.69.112              
+test-z1oiovy9/0*                active    idle   1        10.28.69.158    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.28.69.112  juju-c5e9bd-0  ubuntu@22.04      Running
+1        started  10.28.69.158  juju-c5e9bd-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 09:39:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 09:39:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 09:39:17 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 09:42:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:42:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-z1oiovy9-0: 09:42:46 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-z1oiovy9-0: 09:43:03 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:43:05 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:43:08 CRITICAL unit.test-z1oiovy9/0.juju-log image:0: test mode is enabled
+unit-test-z1oiovy9-0: 09:43:09 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:43:10 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:43:12 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:43:13 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:43:14 CRITICAL unit.test-z1oiovy9/0.juju-log image:0: test mode is enabled
+unit-test-z1oiovy9-0: 09:43:15 CRITICAL unit.test-z1oiovy9/0.juju-log image:0: test mode is enabled
+unit-test-z1oiovy9-0: 09:44:02 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:44:03 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:44:18 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:44:50 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:45:06 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:45:47 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:45:48 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:47:57 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:48:24 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:50:06 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:50:07 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:50:34 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:50:56 CRITICAL unit.test-z1oiovy9/0.juju-log image:0: test mode is enabled
+unit-test-z1oiovy9-0: 09:51:45 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:51:46 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:51:59 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:52:29 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:52:31 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:54:41 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:55:02 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:57:11 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:57:12 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+unit-test-z1oiovy9-0: 09:57:34 CRITICAL unit.test-z1oiovy9/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...

@@ -1,0 +1,193 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-debug-ssh-xhtq on cloud localhost
+WARNING  juju.client.connection:connection.py:893 unexpected facade AgentLifeFlag received from the controller
+WARNING  juju.client.connection:connection.py:909 unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+WARNING  juju.client.connection:connection.py:893 unexpected facade SecretsDrain received from the controller
+INFO     juju.model:model.py:1988 Deploying ch:amd64/github-runner-image-builder-2
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder (not enough units yet - 0/1)
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+INFO     juju.model:model.py:1988 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-m5x538sa/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-m5x538sa/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-m5x538sa/0 [executing] blocked: Please provide image integration.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-m5x538sa/0 [executing] maintenance: Reconciling runners
+INFO     root:conftest.py:589 GitHub token rate limit: Rate(reset=2024-12-16 10:44:12+00:00, remaining=4530, limit=5000)
+INFO     juju.model:model.py:1988 Deploying ch:amd64/jammy/tmate-ssh-server-6
+WARNING  juju.model:model.py:1513 relate is deprecated and will be removed. Use integrate instead.
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [idle] active:
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+  test-m5x538sa/0 [executing] maintenance: Reconciling runners
+  tmate-ssh-server/0 [idle] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-m5x538sa/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-m5x538sa/0 [executing] maintenance: Reconciling runners
+  tmate-ssh-server/0 [idle] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-m5x538sa/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-m5x538sa/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-m5x538sa/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-m5x538sa/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-m5x538sa/0 [idle] active: 
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp --dport 10022 -j DNAT --to-destination 127.0.0.1:10022 on test-m5x538sa-0-9bb37c1086f3
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.130', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b6:06:2b'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-m5x538sa-0-9bb37c1086f3.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.130 sudo iptables -t nat -A OUTPUT -p tcp --dport 10022 -j DNAT --to-destination 127.0.0.1:10022'
+INFO     tests.integration.helpers.openstack:openstack.py:49 [TEST SETUP] Exposing port 10022 on test-m5x538sa-0-9bb37c1086f3
+WARNING  tests.integration.helpers.openstack:openstack.py:51 dict_values([[{'version': 4, 'addr': '10.145.193.130', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b6:06:2b'}]])
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command nc -z localhost 10022 on test-m5x538sa-0-9bb37c1086f3
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.130', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b6:06:2b'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-m5x538sa-0-9bb37c1086f3.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.130 nc -z localhost 10022'
+INFO     tests.integration.test_debug_ssh:test_debug_ssh.py:62 Dispatching workflow_dispatch_ssh_debug.yaml workflow.
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:507 Wait for condition not met, sleeping 60
+INFO     tests.integration.test_debug_ssh:test_debug_ssh.py:76 Logs: 2024-12-16T10:14:07.6481790Z Requested labels: self-hosted, linux, test-m5x538sa
+2024-12-16T10:14:07.6482071Z Job defined at: canonical/github-runner-operator/.github/workflows/workflow_dispatch_ssh_debug.yaml@refs/heads/test-6457c2a0
+2024-12-16T10:14:07.6482150Z Waiting for a runner to pick up this job...
+2024-12-16T10:14:07.8326215Z Job is about to start running on the runner: test-m5x538sa-0-9bb37c1086f3 (repository)
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                Controller  Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-xhtq  lxd         localhost/localhost  3.1.10   unsupported  10:27:27Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-m5x538sa                         active      1  github-runner                               0  no       
+tmate-ssh-server                      active      1  tmate-ssh-server             edge           6  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder/0*  active    idle   0        10.74.32.154               
+test-m5x538sa/0*                active    idle   1        10.74.32.182               
+tmate-ssh-server/0*             active    idle   2        10.74.32.25     10022/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.74.32.154  juju-9ca90a-0  ubuntu@22.04      Running
+1        started  10.74.32.182  juju-9ca90a-1  ubuntu@22.04      Running
+2        started  10.74.32.25   juju-9ca90a-2  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 10:04:44 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 10:04:44 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 10:04:44 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-github-runner-image-builder-0: 10:04:44 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 10:07:46 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 10:07:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 10:07:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-m5x538sa-0: 10:07:46 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-m5x538sa-0: 10:07:58 CRITICAL unit.test-m5x538sa/0.juju-log test mode is enabled
+unit-test-m5x538sa-0: 10:08:00 CRITICAL unit.test-m5x538sa/0.juju-log test mode is enabled
+unit-test-m5x538sa-0: 10:08:03 CRITICAL unit.test-m5x538sa/0.juju-log image:0: test mode is enabled
+unit-test-m5x538sa-0: 10:08:04 CRITICAL unit.test-m5x538sa/0.juju-log test mode is enabled
+unit-test-m5x538sa-0: 10:08:05 CRITICAL unit.test-m5x538sa/0.juju-log test mode is enabled
+unit-test-m5x538sa-0: 10:08:06 CRITICAL unit.test-m5x538sa/0.juju-log test mode is enabled
+unit-test-m5x538sa-0: 10:08:08 CRITICAL unit.test-m5x538sa/0.juju-log test mode is enabled
+unit-test-m5x538sa-0: 10:08:09 CRITICAL unit.test-m5x538sa/0.juju-log image:0: test mode is enabled
+unit-test-m5x538sa-0: 10:08:10 CRITICAL unit.test-m5x538sa/0.juju-log image:0: test mode is enabled
+unit-test-m5x538sa-0: 10:08:57 CRITICAL unit.test-m5x538sa/0.juju-log test mode is enabled
+unit-test-m5x538sa-0: 10:08:58 CRITICAL unit.test-m5x538sa/0.juju-log test mode is enabled
+machine-2: 10:09:39 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 10:09:39 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 10:09:39 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-tmate-ssh-server-0: 10:09:39 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-m5x538sa-0: 10:11:03 CRITICAL unit.test-m5x538sa/0.juju-log debug-ssh:1: test mode is enabled
+unit-test-m5x538sa-0: 10:11:04 CRITICAL unit.test-m5x538sa/0.juju-log test mode is enabled
+unit-test-m5x538sa-0: 10:11:06 CRITICAL unit.test-m5x538sa/0.juju-log test mode is enabled
+unit-test-m5x538sa-0: 10:11:26 CRITICAL unit.test-m5x538sa/0.juju-log debug-ssh:1: test mode is enabled
+unit-test-m5x538sa-0: 10:11:27 CRITICAL unit.test-m5x538sa/0.juju-log debug-ssh:1: test mode is enabled
+unit-test-m5x538sa-0: 10:11:58 ERROR unit.test-m5x538sa/0.juju-log debug-ssh:1: pre-job-metrics.json not found for runner test-m5x538sa-0-d6a6a6110b72
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-m5x538sa-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-m5x538sa-0-d6a6a6110b72/pre-job-metrics.json'
+unit-test-m5x538sa-0: 10:11:58 ERROR unit.test-m5x538sa/0.juju-log debug-ssh:1: Pre-job metrics for runner test-m5x538sa-0-d6a6a6110b72 not found, stop extracting post-jobs metrics.
+unit-test-m5x538sa-0: 10:13:36 CRITICAL unit.test-m5x538sa/0.juju-log test mode is enabled
+unit-test-m5x538sa-0: 10:14:58 CRITICAL unit.test-m5x538sa/0.juju-log image:0: test mode is enabled
+unit-test-m5x538sa-0: 10:15:03 ERROR unit.test-m5x538sa/0.juju-log image:0: Unable to get SSH connection for instance test-m5x538sa-0-9bb37c1086f3, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-m5x538sa-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-m5x538sa-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-m5x538sa-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 356, in get_ssh_connection
+    raise SSHError(
+github_runner_manager.errors.SSHError: No connectable SSH addresses found, server: test-m5x538sa-0-9bb37c1086f3, addresses: ['10.145.193.130']
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-m5x538sa-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-m5x538sa-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-m5x538sa-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-m5x538sa-0-9bb37c1086f3
+unit-test-m5x538sa-0: 10:15:03 ERROR unit.test-m5x538sa/0.juju-log image:0: Failed to get SSH connection while removing test-m5x538sa-0-9bb37c1086f3
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-m5x538sa-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 441, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-m5x538sa-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-m5x538sa-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 356, in get_ssh_connection
+    raise SSHError(
+github_runner_manager.errors.SSHError: No connectable SSH addresses found, server: test-m5x538sa-0-9bb37c1086f3, addresses: ['10.145.193.130']
+unit-test-m5x538sa-0: 10:15:09 ERROR unit.test-m5x538sa/0.juju-log image:0: runner-installed.timestamp not found for runner test-m5x538sa-0-9bb37c1086f3
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-m5x538sa-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-m5x538sa-0-9bb37c1086f3/runner-installed.timestamp'
+unit-test-m5x538sa-0: 10:15:09 ERROR unit.test-m5x538sa/0.juju-log image:0: installed timestamp not found for runner test-m5x538sa-0-9bb37c1086f3, will not extract any metrics.
+unit-test-m5x538sa-0: 10:17:19 CRITICAL unit.test-m5x538sa/0.juju-log test mode is enabled
+unit-test-m5x538sa-0: 10:21:46 CRITICAL unit.test-m5x538sa/0.juju-log test mode is enabled
+unit-test-m5x538sa-0: 10:27:06 CRITICAL unit.test-m5x538sa/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
