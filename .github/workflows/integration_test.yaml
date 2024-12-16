@@ -38,7 +38,6 @@ jobs:
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@disable-snap-autorefresh
-    needs: openstack-interface-tests-private-endpoint
     secrets: inherit
     with:
       juju-channel: 3.6/stable
