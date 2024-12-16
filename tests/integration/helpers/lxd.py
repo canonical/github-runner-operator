@@ -42,6 +42,27 @@ class LXDInstanceHelper(InstanceHelper):
         name = await self.get_runner_name(unit)
         return await run_in_lxd_instance(unit, name, command, timeout=timeout)
 
+    async def expose_to_instance(
+        self,
+        unit: Unit,
+        port: int,
+        host: str = "localhost",
+    ) -> None:
+        """Expose a port on the juju machine to the OpenStack instance.
+
+        Uses SSH remote port forwarding from the juju machine to the OpenStack instance containing
+        the runner.
+
+        Args:
+            unit: The juju unit of the github-runner charm.
+            port: The port on the juju machine to expose to the runner.
+            host: Host for the reverse tunnel.
+
+        Raises:
+            NotImplementedError: Not implemented yet.
+        """
+        raise NotImplementedError
+
     async def ensure_charm_has_runner(self, app: Application):
         """Reconcile the charm to contain one runner.
 

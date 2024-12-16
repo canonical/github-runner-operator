@@ -73,6 +73,24 @@ class InstanceHelper(typing.Protocol):
         """
         ...
 
+    async def expose_to_instance(
+        self,
+        unit: Unit,
+        port: int,
+        host: str = "localhost",
+    ) -> None:
+        """Expose a port on the juju machine to the OpenStack instance.
+
+        Uses SSH remote port forwarding from the juju machine to the OpenStack instance containing
+        the runner.
+
+        Args:
+            unit: The juju unit of the github-runner charm.
+            port: The port on the juju machine to expose to the runner.
+            host: Host for the reverse tunnel.
+        """
+        ...
+
     async def ensure_charm_has_runner(self, app: Application):
         """Ensure charm has a runner.
 

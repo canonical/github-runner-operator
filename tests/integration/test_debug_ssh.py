@@ -56,7 +56,7 @@ async def test_ssh_debug(
         dnat_comman_in_runner,
         assert_on_failure=True,
     )
-    await instance_helper.expose_to_instance(unit=unit, port=10022, host=tmate_ssh_server_unit_ip)  # type: ignore[attr-defined]
+    await instance_helper.expose_to_instance(unit=unit, port=10022, host=tmate_ssh_server_unit_ip)
 
     # trigger tmate action
     logger.info("Dispatching workflow_dispatch_ssh_debug.yaml workflow.")
