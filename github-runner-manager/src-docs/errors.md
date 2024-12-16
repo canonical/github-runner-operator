@@ -260,3 +260,14 @@ Base class for all reconcile errors.
 
 
 
+---
+
+<a href="../../github-runner-manager/src/github_runner_manager/errors.py#L100"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `OpenstackHealthCheckError`
+Base class for all health check errors. 
+
+
+
+
+

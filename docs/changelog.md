@@ -1,5 +1,9 @@
 # Changelog
 
+### 2024-12-05
+
+- Bugfix to no longer stop the reconciliation when a runner's health check fails.
+
 ### 2024-12-04
 
 - Clean up corresponding OpenStack runner resources when a unit of the charm is removed.
@@ -14,6 +18,7 @@
 
 ### 2024-11-13
 
+- Added documentation for the reactive mode (howto and mongodb integration references).
 - Align the README with the one in https://github.com/canonical/is-charms-template-repo.
 
 ### 2024-10-24

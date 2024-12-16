@@ -28,7 +28,7 @@ Health state of the runners.
 
 ---
 
-<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L39"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `CloudRunnerState`
 Represent state of the instance hosting the runner. 
@@ -51,7 +51,7 @@ Represent state of the instance hosting the runner.
 
 ---
 
-<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L97"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L111"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `CloudInitStatus`
 Represents the state of cloud-init script. 
@@ -77,7 +77,7 @@ Refer to the official documentation on cloud-init status: https://cloudinit.read
 
 ---
 
-<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L124"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L138"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `GitHubRunnerConfig`
 Configuration for GitHub runner spawned. 
@@ -107,7 +107,7 @@ __init__(github_path: GitHubOrg | GitHubRepo, labels: list[str]) → None
 
 ---
 
-<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L137"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L151"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `SupportServiceConfig`
 Configuration for supporting services for runners. 
@@ -144,7 +144,7 @@ __init__(
 
 ---
 
-<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L154"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L168"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `CloudRunnerInstance`
 Information on the runner on the cloud. 
@@ -181,7 +181,7 @@ __init__(
 
 ---
 
-<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L171"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L185"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `CloudRunnerManager`
 Manage runner instance on cloud. 
@@ -203,7 +203,7 @@ Get the name prefix of the self-hosted runners.
 
 ---
 
-<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L227"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L241"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `cleanup`
 
@@ -223,7 +223,7 @@ Perform health check on runner and delete the runner if it fails.
 
 ---
 
-<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L183"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L197"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `create_runner`
 
@@ -241,7 +241,7 @@ Create a self-hosted runner.
 
 ---
 
-<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L208"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L222"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `delete_runner`
 
@@ -260,7 +260,7 @@ Delete self-hosted runner.
 
 ---
 
-<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L217"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L231"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `flush_runners`
 
@@ -279,7 +279,7 @@ Stop all runners.
 
 ---
 
-<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L191"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L205"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_runner`
 
@@ -297,7 +297,7 @@ Get a self-hosted runner by instance id.
 
 ---
 
-<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L199"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/manager/cloud_runner_manager.py#L213"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_runners`
 

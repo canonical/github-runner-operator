@@ -95,3 +95,7 @@ class KeyfileError(SSHError):
 
 class ReconcileError(Exception):
     """Base class for all reconcile errors."""
+
+
+class OpenstackHealthCheckError(Exception):
+    """Base class for all health check errors."""

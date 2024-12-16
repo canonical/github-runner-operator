@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 import invoke
 from fabric import Connection as SSHConnection
 
-from github_runner_manager.errors import KeyfileError, SSHError
+from github_runner_manager.errors import KeyfileError, OpenstackHealthCheckError, SSHError
 from github_runner_manager.manager.cloud_runner_manager import CloudInitStatus, CloudRunnerState
 from github_runner_manager.openstack_cloud.constants import (
     METRICS_EXCHANGE_PATH,
@@ -24,6 +24,10 @@ logger = logging.getLogger(__name__)
 INSTANCE_IN_BUILD_MODE_TIMEOUT_IN_HOURS = 1
 
 _HealthCheckResult = bool | None  # None indicates that the check can not determine health status
+
+
+class _SSHError(Exception):
+    """Error on SSH command execution."""
 
 
 def check_runner(openstack_cloud: OpenstackCloud, instance: OpenstackInstance) -> bool:
@@ -47,9 +51,17 @@ def check_runner(openstack_cloud: OpenstackCloud, instance: OpenstackInstance) -
         logger.exception(
             "Health check failed due to unable to find keyfile for %s", instance.server_name
         )
+        # KeyfileError indicates that we'll never be able to ssh into the unit,
+        # so we mark it as unhealthy.
         return False
-    except SSHError:
-        logger.exception("SSH Failed on %s, marking as unhealthy.")
+    except _SSHError:
+        logger.exception(
+            "Unable to get SSH connection for instance %s, marking as unhealthy.",
+            instance.server_name,
+        )
+        # We assume that the failure to get the SSH connection is not transient, and mark
+        # the runner as unhealthy.
+        # It is debatable whether we should throw an exception here instead.
         return False
 
     return check_active_runner(ssh_conn, instance)
@@ -69,23 +81,31 @@ def check_active_runner(
             the flag, the health check would fail as it checks for running processes
             which would not be present in this case.
 
+    Raises:
+        OpenstackHealthCheckError: If the health check could not be completed.
+
     Returns:
         Whether the runner should be considered healthy.
     """
-    if (check_ok := _run_health_check_runner_installed(ssh_conn, instance)) is not None:
-        return check_ok
+    try:
+        if (check_ok := _run_health_check_runner_installed(ssh_conn, instance)) is not None:
+            return check_ok
 
-    if (
-        check_ok := _run_health_check_cloud_init(
-            ssh_conn, instance.server_name, accept_finished_job
-        )
-    ) is not None:
-        return check_ok
+        if (
+            check_ok := _run_health_check_cloud_init(
+                ssh_conn, instance.server_name, accept_finished_job
+            )
+        ) is not None:
+            return check_ok
 
-    if (
-        check_ok := _run_health_check_runner_processes_running(ssh_conn, instance.server_name)
-    ) is not None:
-        return check_ok
+        if (
+            check_ok := _run_health_check_runner_processes_running(ssh_conn, instance.server_name)
+        ) is not None:
+            return check_ok
+    except _SSHError as exc:
+        raise OpenstackHealthCheckError(
+            "Health check execution failed due to SSH command failure."
+        ) from exc
 
     return True
 
@@ -101,7 +121,7 @@ def _get_ssh_connection(
         instance: The OpenStack instance to conduit the health check.
 
     Raises:
-        SSHError: Unable to get a SSH connection to the instance.
+        _SSHError: Unable to get a SSH connection to the instance.
 
     Returns:
         Whether the runner is healthy.
@@ -109,11 +129,8 @@ def _get_ssh_connection(
     try:
         ssh_conn = openstack_cloud.get_ssh_connection(instance)
 
-    except SSHError:
-        logger.exception(
-            "SSH connection failure with %s during health check", instance.server_name
-        )
-        raise
+    except SSHError as exc:
+        raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
     return ssh_conn
 
 
@@ -170,7 +187,7 @@ def _run_health_check_cloud_init(
     Returns:
         Whether the cloud-init status indicates the run is healthy or None.
     """
-    result: invoke.runners.Result = ssh_conn.run("cloud-init status", warn=True, timeout=30)
+    result: invoke.runners.Result = _execute_ssh_command(ssh_conn, "cloud-init status")
     if not result.ok:
         logger.warning("cloud-init status command failed on %s: %s.", server_name, result.stderr)
         return False
@@ -206,8 +223,8 @@ def _run_health_check_runner_installed(
         If the run can be considered healthy depending on the existence of
         the runner-installed.timestamp.
     """
-    result = ssh_conn.run(
-        f"[ -f {METRICS_EXCHANGE_PATH}/runner-installed.timestamp ]", warn=True, timeout=30
+    result = _execute_ssh_command(
+        ssh_conn, f"[ -f {METRICS_EXCHANGE_PATH}/runner-installed.timestamp ]"
     )
     if not result.ok:
         logger.info(
@@ -239,7 +256,7 @@ def _run_health_check_runner_processes_running(
     Returns:
         If the run can be considered healthy depending on the existence of the processes.
     """
-    result = ssh_conn.run("ps aux", warn=True, timeout=30)
+    result = _execute_ssh_command(ssh_conn, "ps aux")
     if not result.ok:
         logger.warning("SSH run of `ps aux` failed on %s: %s", server_name, result.stderr)
         return False
@@ -247,3 +264,24 @@ def _run_health_check_runner_processes_running(
         logger.warning("Runner process not found on %s", server_name)
         return False
     return None
+
+
+def _execute_ssh_command(ssh_conn: SSHConnection, command: str) -> invoke.runners.Result:
+    """Run a command on the remote server.
+
+    Args:
+        ssh_conn: The SSH connection to the runner.
+        command: The command to run.
+
+    Returns:
+        The result of the command.
+
+    Raises:
+        _SSHError: If the command execution failed.
+    """
+    try:
+        return ssh_conn.run(command, warn=True, timeout=30)
+    except invoke.exceptions.CommandTimedOut as exc:
+        raise _SSHError(
+            f"SSH command execution timed out for command '{command}' on {ssh_conn.host}"
+        ) from exc
