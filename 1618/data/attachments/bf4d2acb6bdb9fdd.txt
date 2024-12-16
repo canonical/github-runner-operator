@@ -1,0 +1,77 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-reactive-1uzi on cloud localhost
+INFO     root:conftest.py:563 GitHub token rate limit: Rate(reset=2024-12-16 19:33:42+00:00, remaining=4895, limit=5000)
+INFO     juju.model:model.py:2284 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2284 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-tbcdnbfv/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-tbcdnbfv/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-tbcdnbfv/0 [allocating] waiting: agent initialising
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-tbcdnbfv/0 [executing] maintenance: Update image for runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-tbcdnbfv/0 [idle] active: 
+INFO     juju.model:model.py:2284 Deploying ch:amd64/jammy/mongodb-206
+INFO     juju.model:model.py:3211 Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+INFO     juju.model:model.py:3211 Waiting for model:
+  mongodb/0 [executing] active: 
+WARNING  juju.model:model.py:1666 relate is deprecated and will be removed. Use integrate instead.
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-tbcdnbfv/0 [idle] active: 
+  mongodb/0 [idle] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-tbcdnbfv/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-tbcdnbfv/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-tbcdnbfv/0 [idle] active:
+INFO     tests.integration.helpers.common:common.py:497 Wait for condition not met, sleeping 10
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-tbcdnbfv/0 [executing] active: 
+INFO     tests.integration.helpers.common:common.py:497 Wait for condition not met, sleeping 60
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-tbcdnbfv/0 [idle] active: 
+INFO     root:common.py:544 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734375033.1998444, "event": "reconciliation", "flavor": "test-tbcdnbfv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 47.420411348342896}
+{"timestamp": 1734375065.0, "event": "runner_installed", "flavor": "test-tbcdnbfv", "duration": 78.46589159965515}
+{"timestamp": 1734375077.0, "event": "runner_start", "flavor": "test-tbcdnbfv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 12.0, "queue_duration": 102.0}
+{"timestamp": 1734375086.0, "event": "runner_stop", "flavor": "test-tbcdnbfv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 9.0, "job_conclusion": "success"}
+{"timestamp": 1734375131.023197, "event": "reconciliation", "flavor": "test-tbcdnbfv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 28.04759407043457}
+{"timestamp": 1734375154.8937, "event": "reconciliation", "flavor": "test-tbcdnbfv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.802232265472412}
+
+INFO     root:common.py:544 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734375033.1998444, "event": "reconciliation", "flavor": "test-tbcdnbfv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 47.420411348342896}
+{"timestamp": 1734375065.0, "event": "runner_installed", "flavor": "test-tbcdnbfv", "duration": 78.46589159965515}
+{"timestamp": 1734375077.0, "event": "runner_start", "flavor": "test-tbcdnbfv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 12.0, "queue_duration": 102.0}
+{"timestamp": 1734375086.0, "event": "runner_stop", "flavor": "test-tbcdnbfv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 9.0, "job_conclusion": "success"}
+{"timestamp": 1734375131.023197, "event": "reconciliation", "flavor": "test-tbcdnbfv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 28.04759407043457}
+{"timestamp": 1734375154.8937, "event": "reconciliation", "flavor": "test-tbcdnbfv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.802232265472412}
+
+INFO     root:common.py:544 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734375033.1998444, "event": "reconciliation", "flavor": "test-tbcdnbfv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 47.420411348342896}
+{"timestamp": 1734375065.0, "event": "runner_installed", "flavor": "test-tbcdnbfv", "duration": 78.46589159965515}
+{"timestamp": 1734375077.0, "event": "runner_start", "flavor": "test-tbcdnbfv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 12.0, "queue_duration": 102.0}
+{"timestamp": 1734375086.0, "event": "runner_stop", "flavor": "test-tbcdnbfv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 9.0, "job_conclusion": "success"}
+{"timestamp": 1734375131.023197, "event": "reconciliation", "flavor": "test-tbcdnbfv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 28.04759407043457}
+{"timestamp": 1734375154.8937, "event": "reconciliation", "flavor": "test-tbcdnbfv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.802232265472412}
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-tbcdnbfv/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-tbcdnbfv/0 [idle] active:
