@@ -34,7 +34,7 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_r
 
 @pytest_asyncio.fixture(scope="function", name="app")
 async def app_fixture(
-    model: Model, app_for_metric: Application, loop_device: str
+    model: Model, app_for_metric: Application
 ) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
