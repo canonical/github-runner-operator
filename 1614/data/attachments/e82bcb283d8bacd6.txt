@@ -1,0 +1,71 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-fork-repo-5byy on cloud localhost
+INFO     juju.model:model.py:2284 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+INFO     juju.model:model.py:2284 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-bmo8vf6q/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-bmo8vf6q/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-bmo8vf6q/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-bmo8vf6q/0 [executing] maintenance: Update image for runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-bmo8vf6q/0 [idle] active: 
+INFO     root:conftest.py:576 GitHub token rate limit: Rate(reset=2024-12-16 13:33:01+00:00, remaining=4509, limit=5000)
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-bmo8vf6q/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-bmo8vf6q/0 [executing] maintenance: Reconciling runners
+INFO     tests.integration.helpers.openstack:openstack.py:49 [TEST SETUP] Exposing port 8080 on test-bmo8vf6q-0-21a4c0545cce
+WARNING  tests.integration.helpers.openstack:openstack.py:51 dict_values([[{'version': 4, 'addr': '10.145.193.163', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0b:3f:bf'}]])
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command nc -z localhost 8080 on test-bmo8vf6q-0-21a4c0545cce
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.163', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0b:3f:bf'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-bmo8vf6q-0-21a4c0545cce.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.163 nc -z localhost 8080'
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command curl http://localhost:8080 on test-bmo8vf6q-0-21a4c0545cce
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.163', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0b:3f:bf'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-bmo8vf6q-0-21a4c0545cce.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.163 curl http://localhost:8080'
+INFO     tests.integration.helpers.common:common.py:498 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:498 Wait for condition not met, sleeping 60
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                      Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-5byy  lxd         localhost/localhost  3.6.1    unsupported  13:17:21Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-bmo8vf6q                         active      1  github-runner                               0  yes      
+
+Unit                            Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder/0*  active    idle   0        10.119.114.68             
+test-bmo8vf6q/0*                active    idle   1        10.119.114.37   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.119.114.68  juju-a3b9a0-0  ubuntu@22.04      Running
+1        started  10.119.114.37  juju-a3b9a0-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 13:06:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 13:06:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 13:06:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 13:10:05 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 13:10:05 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-bmo8vf6q-0: 13:10:05 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
