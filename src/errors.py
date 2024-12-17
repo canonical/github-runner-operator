@@ -55,10 +55,6 @@ class MissingMongoDBError(Exception):
     """Error for missing integration data."""
 
 
-class LxdError(Exception):
-    """Error for executing LXD actions."""
-
-
 class SubprocessError(Exception):
     """Error for Subprocess calls.
 

@@ -705,17 +705,6 @@ async def app_for_metric_fixture(
     instance_type: InstanceType,
     existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
-    # OpenStack integration does not need the grafana agent to collect metric.
-    if instance_type == InstanceType.LOCAL_LXD and not existing_app:
-        grafana_agent = await model.deploy(
-            "grafana-agent",
-            application_name=f"grafana-agent-{basic_app.name}",
-            channel="latest/edge",
-        )
-        await model.relate(f"{basic_app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
-        await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE)
-        await model.wait_for_idle(apps=[grafana_agent.name])
-
     yield basic_app
 
 
