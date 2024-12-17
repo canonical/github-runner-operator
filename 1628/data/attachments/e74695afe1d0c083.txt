@@ -1,0 +1,85 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-reactive-1vbw on cloud localhost
+INFO     root:conftest.py:562 GitHub token rate limit: Rate(reset=2024-12-17 18:22:21+00:00, remaining=4722, limit=5000)
+INFO     juju.model:model.py:2284 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+INFO     juju.model:model.py:2284 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-afjdyvu4/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-afjdyvu4/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-afjdyvu4/0 [allocating] waiting: agent initialising
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-afjdyvu4/0 [executing] maintenance: Update image for runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-afjdyvu4/0 [idle] active: 
+INFO     juju.model:model.py:2284 Deploying ch:amd64/jammy/mongodb-206
+INFO     juju.model:model.py:3211 Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+INFO     juju.model:model.py:3211 Waiting for model:
+  mongodb/0 [executing] active: 
+WARNING  juju.model:model.py:1666 relate is deprecated and will be removed. Use integrate instead.
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-afjdyvu4/0 [idle] active: 
+  mongodb/0 [idle] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-afjdyvu4/0 [idle] active: 
+  mongodb/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-afjdyvu4/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-afjdyvu4/0 [idle] active:
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 10
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-afjdyvu4/0 [executing] active: 
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-afjdyvu4/0 [executing] maintenance: Reconciling runners
