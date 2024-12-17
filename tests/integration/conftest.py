@@ -64,7 +64,7 @@ async def instance_type_fixture(
     if openstack_marker:
         return InstanceType.OPENSTACK
     else:
-        return InstanceType.LOCAL_LXD
+        raise ValueError("-m must be openstack")
 
 
 @pytest.fixture(scope="module")
@@ -436,7 +436,6 @@ async def app_openstack_runner_fixture(
                 LABELS_CONFIG_NAME: app_name,
             },
             wait_idle=False,
-            use_local_lxd=False,
         )
         await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)

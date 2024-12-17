@@ -14,7 +14,7 @@ import platform
 import re
 from enum import Enum
 from pathlib import Path
-from typing import NamedTuple, Optional, TypedDict, cast
+from typing import Optional, TypedDict, cast
 from urllib.parse import urlsplit
 
 import yaml
@@ -48,7 +48,6 @@ ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
 
-BASE_IMAGE_CONFIG_NAME = "base-image"
 DENYLIST_CONFIG_NAME = "denylist"
 DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
 GROUP_CONFIG_NAME = "group"
@@ -61,16 +60,12 @@ RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
 # bandit thinks this is a hardcoded password
 REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"  # nosec
 REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME = "repo-policy-compliance-url"
-RUNNER_STORAGE_CONFIG_NAME = "runner-storage"
 SENSITIVE_PLACEHOLDER = "*****"
 TEST_MODE_CONFIG_NAME = "test-mode"
 # bandit thinks this is a hardcoded password.
 TOKEN_CONFIG_NAME = "token"  # nosec
 USE_APROXY_CONFIG_NAME = "experimental-use-aproxy"
 VIRTUAL_MACHINES_CONFIG_NAME = "virtual-machines"
-VM_CPU_CONFIG_NAME = "vm-cpu"
-VM_MEMORY_CONFIG_NAME = "vm-memory"
-VM_DISK_CONFIG_NAME = "vm-disk"
 
 # Integration names
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
@@ -134,20 +129,6 @@ class GithubConfig:
         return cls(token=cast(str, token), path=path)
 
 
-class VirtualMachineResources(NamedTuple):
-    """Virtual machine resource configuration.
-
-    Attributes:
-        cpu: Number of vCPU for the virtual machine.
-        memory: Amount of memory for the virtual machine.
-        disk: Amount of disk for the virtual machine.
-    """
-
-    cpu: int
-    memory: StorageSize
-    disk: StorageSize
-
-
 class Arch(str, Enum):
     """Supported system architectures.
 
@@ -160,27 +141,13 @@ class Arch(str, Enum):
     X64 = "x64"
 
 
-class RunnerStorage(str, Enum):
-    """Supported storage as runner disk.
-
-    Attributes:
-        JUJU_STORAGE: Represents runner storage from Juju storage.
-        MEMORY: Represents tempfs storage (ramdisk).
-    """
-
-    JUJU_STORAGE = "juju-storage"
-    MEMORY = "memory"
-
-
 class InstanceType(str, Enum):
     """Type of instance for runner.
 
     Attributes:
-        LOCAL_LXD: LXD instance on the local juju machine.
         OPENSTACK: OpenStack instance on a cloud.
     """
 
-    LOCAL_LXD = "local_lxd"
     OPENSTACK = "openstack"
 
 
@@ -350,7 +317,7 @@ class CharmConfig(BaseModel):
     denylist: list[FirewallEntry]
     dockerhub_mirror: AnyHttpsUrl | None
     labels: tuple[str, ...]
-    openstack_clouds_yaml: OpenStackCloudsYAML | None
+    openstack_clouds_yaml: OpenStackCloudsYAML
     path: GitHubPath
     reconcile_interval: int
     repo_policy_compliance: RepoPolicyComplianceConfig | None
@@ -405,7 +372,7 @@ class CharmConfig(BaseModel):
         return dockerhub_mirror
 
     @classmethod
-    def _parse_openstack_clouds_config(cls, charm: CharmBase) -> OpenStackCloudsYAML | None:
+    def _parse_openstack_clouds_config(cls, charm: CharmBase) -> OpenStackCloudsYAML:
         """Parse and validate openstack clouds yaml config value.
 
         Args:
@@ -421,7 +388,7 @@ class CharmConfig(BaseModel):
             str, charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
         )
         if not openstack_clouds_yaml_str:
-            return None
+            raise CharmConfigInvalidError("No openstack_clouds_yaml")
 
         try:
             openstack_clouds_yaml: OpenStackCloudsYAML = yaml.safe_load(
@@ -521,44 +488,6 @@ class CharmConfig(BaseModel):
         )
 
 
-LTS_IMAGE_VERSION_TAG_MAP = {"22.04": "jammy", "24.04": "noble"}
-
-
-class BaseImage(str, Enum):
-    """The ubuntu OS base image to build and deploy runners on.
-
-    Attributes:
-        JAMMY: The jammy ubuntu LTS image.
-        NOBLE: The noble ubuntu LTS image.
-    """
-
-    JAMMY = "jammy"
-    NOBLE = "noble"
-
-    def __str__(self) -> str:
-        """Interpolate to string value.
-
-        Returns:
-            The enum string value.
-        """
-        return self.value
-
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "BaseImage":
-        """Retrieve the base image tag from charm.
-
-        Args:
-            charm: The charm instance.
-
-        Returns:
-            The base image configuration of the charm.
-        """
-        image_name = cast(str, charm.config.get(BASE_IMAGE_CONFIG_NAME, "jammy")).lower().strip()
-        if image_name in LTS_IMAGE_VERSION_TAG_MAP:
-            return cls(LTS_IMAGE_VERSION_TAG_MAP[image_name])
-        return cls(image_name)
-
-
 class OpenstackImage(BaseModel):
     """OpenstackImage from image builder relation data.
 
@@ -645,129 +574,7 @@ class OpenstackRunnerConfig(BaseModel):
         )
 
 
-class LocalLxdRunnerConfig(BaseModel):
-    """Runner configurations for local LXD instances.
-
-    Attributes:
-        base_image: The ubuntu base image to run the runner virtual machines on.
-        virtual_machines: Number of virtual machine-based runner to spawn.
-        virtual_machine_resources: Hardware resource used by one virtual machine for a runner.
-        runner_storage: Storage to be used as disk for the runner.
-    """
-
-    base_image: BaseImage
-    virtual_machines: int
-    virtual_machine_resources: VirtualMachineResources
-    runner_storage: RunnerStorage
-
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "LocalLxdRunnerConfig":
-        """Initialize the config from charm.
-
-        Args:
-            charm: The charm instance.
-
-        Raises:
-            CharmConfigInvalidError: if an invalid runner charm config has been set on the charm.
-
-        Returns:
-            Local LXD runner config of the charm.
-        """
-        try:
-            base_image = BaseImage.from_charm(charm)
-        except ValueError as err:
-            raise CharmConfigInvalidError("Invalid base image") from err
-
-        try:
-            runner_storage = RunnerStorage(charm.config[RUNNER_STORAGE_CONFIG_NAME])
-        except ValueError as err:
-            raise CharmConfigInvalidError(
-                f"Invalid {RUNNER_STORAGE_CONFIG_NAME} configuration"
-            ) from err
-        except CharmConfigInvalidError as exc:
-            raise CharmConfigInvalidError(f"Invalid runner storage config, {str(exc)}") from exc
-
-        try:
-            virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
-        except ValueError as err:
-            raise CharmConfigInvalidError(
-                f"The {VIRTUAL_MACHINES_CONFIG_NAME} configuration must be int"
-            ) from err
-
-        try:
-            cpu = int(charm.config[VM_CPU_CONFIG_NAME])
-        except ValueError as err:
-            raise CharmConfigInvalidError(f"Invalid {VM_CPU_CONFIG_NAME} configuration") from err
-
-        virtual_machine_resources = VirtualMachineResources(
-            cpu,
-            cast(str, charm.config[VM_MEMORY_CONFIG_NAME]),
-            cast(str, charm.config[VM_DISK_CONFIG_NAME]),
-        )
-
-        return cls(
-            base_image=base_image,
-            virtual_machines=virtual_machines,
-            virtual_machine_resources=virtual_machine_resources,
-            runner_storage=runner_storage,
-        )
-
-    @validator("virtual_machines")
-    @classmethod
-    def check_virtual_machines(cls, virtual_machines: int) -> int:
-        """Validate the virtual machines configuration value.
-
-        Args:
-            virtual_machines: The virtual machines value to validate.
-
-        Raises:
-            ValueError: if a negative integer was passed.
-
-        Returns:
-            Validated virtual_machines value.
-        """
-        if virtual_machines < 0:
-            raise ValueError(
-                f"The {VIRTUAL_MACHINES_CONFIG_NAME} configuration needs to be greater or equal "
-                "to 0"
-            )
-
-        return virtual_machines
-
-    @validator("virtual_machine_resources")
-    @classmethod
-    def check_virtual_machine_resources(
-        cls, vm_resources: VirtualMachineResources
-    ) -> VirtualMachineResources:
-        """Validate the virtual_machine_resources field values.
-
-        Args:
-            vm_resources: the virtual_machine_resources value to validate.
-
-        Raises:
-            ValueError: if an invalid number of cpu was given or invalid memory/disk size was
-                given.
-
-        Returns:
-            The validated virtual_machine_resources value.
-        """
-        if vm_resources.cpu < 1:
-            raise ValueError(f"The {VM_CPU_CONFIG_NAME} configuration needs to be greater than 0")
-        if not _valid_storage_size_str(vm_resources.memory):
-            raise ValueError(
-                f"Invalid format for {VM_MEMORY_CONFIG_NAME} configuration, must be int with unit "
-                "(e.g. MiB, GiB)"
-            )
-        if not _valid_storage_size_str(vm_resources.disk):
-            raise ValueError(
-                f"Invalid format for {VM_DISK_CONFIG_NAME} configuration, must be int with unit "
-                "(e.g., MiB, GiB)"
-            )
-
-        return vm_resources
-
-
-RunnerConfig = OpenstackRunnerConfig | LocalLxdRunnerConfig
+RunnerConfig = OpenstackRunnerConfig
 
 
 class ProxyConfig(BaseModel):
@@ -1000,18 +807,6 @@ class ReactiveConfig(BaseModel):
         )
 
 
-class ImmutableConfigChangedError(Exception):
-    """Represents an error when changing immutable charm state."""
-
-    def __init__(self, msg: str):
-        """Initialize a new instance of the ImmutableConfigChangedError exception.
-
-        Args:
-            msg: Explanation of the error.
-        """
-        self.msg = msg
-
-
 # Charm State is a list of all the configurations and states of the charm and
 # has therefore a lot of attributes.
 @dataclasses.dataclass(frozen=True)
@@ -1057,56 +852,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         ]
         json_data = json.dumps(state_dict, ensure_ascii=False)
         CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
-
-    @classmethod
-    def _check_immutable_config_change(
-        cls, runner_storage: RunnerStorage, base_image: BaseImage
-    ) -> None:
-        """Ensure immutable config has not changed.
-
-        Args:
-            runner_storage: The current runner_storage configuration.
-            base_image: The current base_image configuration.
-
-        Raises:
-            ImmutableConfigChangedError: If an immutable configuration has changed.
-        """
-        if not CHARM_STATE_PATH.exists():
-            return
-
-        json_data = CHARM_STATE_PATH.read_text(encoding="utf-8")
-        prev_state = json.loads(json_data)
-
-        cls._log_prev_state(prev_state)
-
-        try:
-            if prev_state["runner_config"]["runner_storage"] != runner_storage:
-                logger.error(
-                    "Storage option changed from %s to %s, blocking the charm",
-                    prev_state["runner_config"]["runner_storage"],
-                    runner_storage,
-                )
-                raise ImmutableConfigChangedError(
-                    msg=(
-                        "runner-storage config cannot be changed after deployment, "
-                        "redeploy if needed"
-                    )
-                )
-        except KeyError as exc:
-            logger.info("Key %s not found, this will be updated to current config.", exc.args[0])
-
-        try:
-            if prev_state["runner_config"]["base_image"] != base_image.value:
-                logger.error(
-                    "Base image option changed from %s to %s, blocking the charm",
-                    prev_state["runner_config"]["base_image"],
-                    runner_storage,
-                )
-                raise ImmutableConfigChangedError(
-                    msg="base-image config cannot be changed after deployment, redeploy if needed"
-                )
-        except KeyError as exc:
-            logger.info("Key %s not found, this will be updated to current config.", exc.args[0])
 
     @classmethod
     def _log_prev_state(cls, prev_state_dict: dict) -> None:
@@ -1164,20 +909,10 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
 
         try:
             runner_config: RunnerConfig
-            if charm_config.openstack_clouds_yaml is not None:
-                instance_type = InstanceType.OPENSTACK
-                runner_config = OpenstackRunnerConfig.from_charm(charm)
-            else:
-                instance_type = InstanceType.LOCAL_LXD
-                runner_config = LocalLxdRunnerConfig.from_charm(charm)
-                cls._check_immutable_config_change(
-                    runner_storage=runner_config.runner_storage,
-                    base_image=runner_config.base_image,
-                )
+            instance_type = InstanceType.OPENSTACK
+            runner_config = OpenstackRunnerConfig.from_charm(charm)
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
-        except ImmutableConfigChangedError as exc:
-            raise CharmConfigInvalidError(exc.msg) from exc
 
         try:
             arch = _get_supported_arch()
@@ -1192,10 +927,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
         reactive_config = ReactiveConfig.from_database(database)
-
-        if instance_type == InstanceType.LOCAL_LXD and reactive_config:
-            logger.error(REACTIVE_MODE_NOT_SUPPORTED_WITH_LXD_ERR_MSG)
-            raise CharmConfigInvalidError(REACTIVE_MODE_NOT_SUPPORTED_WITH_LXD_ERR_MSG)
 
         state = cls(
             arch=arch,

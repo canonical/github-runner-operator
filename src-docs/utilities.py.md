@@ -74,37 +74,7 @@ Looks for all upper-case and all low-case of the `env_var`.
 
 ---
 
-<a href="../src/utilities.py#L86"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
-
-## <kbd>function</kbd> `bytes_with_unit_to_kib`
-
-```python
-bytes_with_unit_to_kib(num_bytes: str) → int
-```
-
-Convert a positive integer followed by a unit to number of kibibytes. 
-
-
-
-**Args:**
- 
- - <b>`num_bytes`</b>:  A positive integer followed by one of the following unit: KiB, MiB, GiB, TiB,  PiB, EiB. 
-
-
-
-**Raises:**
- 
- - <b>`ValueError`</b>:  If invalid unit was detected. 
-
-
-
-**Returns:**
- Number of kilobytes. 
-
-
----
-
-<a href="../src/utilities.py#L119"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/utilities.py#L87"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `remove_residual_venv_dirs`
 

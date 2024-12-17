@@ -12,13 +12,7 @@ from juju.action import Action
 from juju.application import Application
 from juju.model import Model
 
-from charm_state import (
-    VIRTUAL_MACHINES_CONFIG_NAME,
-    VM_CPU_CONFIG_NAME,
-    VM_DISK_CONFIG_NAME,
-    VM_MEMORY_CONFIG_NAME,
-    InstanceType,
-)
+from charm_state import VIRTUAL_MACHINES_CONFIG_NAME, InstanceType
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
@@ -87,11 +81,7 @@ async def test_flush_runner_and_resource_config(
     assert:
         1. One runner exists.
         2. Check the resource matches the configuration.
-        3. Nothing.
-        4.  a. The runner name should be different to the runner prior running
-                the action.
-            b. LXD profile matching virtual machine resources of step 2 exists.
-        5. The runner is not flushed since by default it flushes idle. (Only valid for OpenStack)
+        3. The runner is not flushed since by default it flushes idle. (Only valid for OpenStack)
 
     Test are combined to reduce number of runner spawned.
     """
@@ -108,16 +98,6 @@ async def test_flush_runner_and_resource_config(
     assert len(runner_names) == 1
 
     # 2.
-    # Check if the LXD profile is checked by the charm. Only for local LXD.
-    # OpenStack flavor is not managed by the charm. The charm takes it as a config option.
-    # Therefore no need to check it.
-
-    # 3.
-    await app.set_config(
-        {VM_CPU_CONFIG_NAME: "1", VM_MEMORY_CONFIG_NAME: "3GiB", VM_DISK_CONFIG_NAME: "8GiB"}
-    )
-
-    # 4.
     action = await app.units[0].run_action("flush-runners")
     await action.wait()
 
@@ -133,7 +113,7 @@ async def test_flush_runner_and_resource_config(
     assert len(new_runner_names) == 1
     assert new_runner_names[0] != runner_names[0]
 
-    # 5.
+    # 3.
     if instance_type == InstanceType.OPENSTACK:
         workflow = await dispatch_workflow(
             app=app,

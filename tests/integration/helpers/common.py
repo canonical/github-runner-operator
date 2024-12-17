@@ -6,7 +6,6 @@
 import inspect
 import logging
 import pathlib
-import subprocess
 import time
 import typing
 from datetime import datetime, timezone
@@ -26,10 +25,8 @@ from juju.model import Model
 from juju.unit import Unit
 
 from charm_state import (
-    DENYLIST_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
-    RUNNER_STORAGE_CONFIG_NAME,
     TEST_MODE_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
@@ -219,7 +216,6 @@ async def deploy_github_runner_charm(
     config: dict | None = None,
     deploy_kwargs: dict | None = None,
     wait_idle: bool = True,
-    use_local_lxd: bool = True,
 ) -> Application:
     """Deploy github-runner charm.
 
@@ -239,14 +235,10 @@ async def deploy_github_runner_charm(
         config: Additional custom config to use.
         deploy_kwargs: Additional model deploy arguments.
         wait_idle: wait for model to become idle.
-        use_local_lxd: Whether to use local LXD or not.
 
     Returns:
         The charm application that was deployed.
     """
-    if use_local_lxd:
-        subprocess.run(["sudo", "modprobe", "br_netfilter"])
-
     await model.set_config(
         {
             "juju-http-proxy": http_proxy,
@@ -266,10 +258,7 @@ async def deploy_github_runner_charm(
         VIRTUAL_MACHINES_CONFIG_NAME: 0,
         TEST_MODE_CONFIG_NAME: "insecure",
         RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
-        RUNNER_STORAGE_CONFIG_NAME: runner_storage,
     }
-    if use_local_lxd:
-        default_config[DENYLIST_CONFIG_NAME] = "10.10.0.0/16"
 
     if config:
         default_config.update(config)
