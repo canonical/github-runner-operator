@@ -554,11 +554,11 @@ async def app_no_wait_fixture(
 
 @pytest_asyncio.fixture(scope="module", name="tmate_ssh_server_app")
 async def tmate_ssh_server_app_fixture(
-    model: Model, app_no_wait_openstack: Application
+    model: Model, app_no_wait_tmate: Application
 ) -> AsyncIterator[Application]:
     """tmate-ssh-server charm application related to GitHub-Runner app charm."""
     tmate_app: Application = await model.deploy("tmate-ssh-server", channel="edge")
-    await app_no_wait_openstack.relate("debug-ssh", f"{tmate_app.name}:debug-ssh")
+    await app_no_wait_tmate.relate("debug-ssh", f"{tmate_app.name}:debug-ssh")
     await model.wait_for_idle(apps=[tmate_app.name], status=ACTIVE, timeout=60 * 30)
 
     return tmate_app
