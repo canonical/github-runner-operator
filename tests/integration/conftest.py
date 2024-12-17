@@ -484,8 +484,8 @@ async def app_scheduled_events_fixture(
     return application
 
 
-@pytest_asyncio.fixture(scope="module", name="app_no_wait_openstack")
-async def app_no_wait_openstack_fixture(
+@pytest_asyncio.fixture(scope="module", name="app_no_wait_tmate")
+async def app_no_wait_tmate_fixture(
     model: Model,
     app_openstack_runner,
 ):
