@@ -13,7 +13,7 @@ Collection of functions related to health checks for a runner VM.
 
 ---
 
-<a href="../../github-runner-manager/src/github_runner_manager/openstack_cloud/health_checks.py#L29"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/openstack_cloud/health_checks.py#L33"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `check_runner`
 
@@ -43,7 +43,7 @@ This check applies to runners in any OpenStack state (ACTIVE, STOPPED, etc).
 
 ---
 
-<a href="../../github-runner-manager/src/github_runner_manager/openstack_cloud/health_checks.py#L58"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../github-runner-manager/src/github_runner_manager/openstack_cloud/health_checks.py#L70"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `check_active_runner`
 
@@ -64,6 +64,12 @@ Run a health check for a runner whose openstack instance is ACTIVE.
  - <b>`ssh_conn`</b>:  The SSH connection to the runner. 
  - <b>`instance`</b>:  The OpenStack instance to conduit the health check. 
  - <b>`accept_finished_job`</b>:  Whether a job that has finished should be marked healthy.  This is useful for runners in construction whose job has already finished  while the code is still waiting for the runner to be fully operational. Without  the flag, the health check would fail as it checks for running processes  which would not be present in this case. 
+
+
+
+**Raises:**
+ 
+ - <b>`OpenstackHealthCheckError`</b>:  If the health check could not be completed. 
 
 
 
