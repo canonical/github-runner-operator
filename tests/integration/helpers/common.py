@@ -119,44 +119,6 @@ class InstanceHelper(typing.Protocol):
         ...
 
 
-async def get_repo_policy_compliance_pip_info(unit: Unit) -> None | str:
-    """Get pip info for repo-policy-compliance.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-
-    Returns:
-        If repo-policy-compliance is installed, returns the pip show output, else returns none.
-    """
-    return_code, stdout, stderr = await run_in_unit(
-        unit, "python3 -m pip show repo-policy-compliance"
-    )
-
-    if return_code == 0:
-        return stdout or stderr
-
-    return None
-
-
-async def install_repo_policy_compliance_from_git_source(unit: Unit, source: None | str) -> None:
-    """Install repo-policy-compliance pip package from the git source.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-        source: The git source to install the package. If none the package is removed.
-    """
-    return_code, stdout, stderr = await run_in_unit(
-        unit, "python3 -m pip uninstall --yes repo-policy-compliance"
-    )
-    assert return_code == 0, f"Failed to uninstall repo-policy-compliance: {stdout} {stderr}"
-
-    if source:
-        return_code, stdout, stderr = await run_in_unit(unit, f"python3 -m pip install {source}")
-        assert (
-            return_code == 0
-        ), f"Failed to install repo-policy-compliance from source, {stdout} {stderr}"
-
-
 async def run_in_unit(
     unit: Unit, command: str, timeout=None, assert_on_failure=False, assert_msg=""
 ) -> tuple[int, str | None, str | None]:
