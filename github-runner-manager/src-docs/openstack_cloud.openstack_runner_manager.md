@@ -214,6 +214,7 @@ Delete self-hosted runners.
 
 <a href="../../github-runner-manager/src/github_runner_manager/openstack_cloud/openstack_runner_manager.py#L330"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
+
 ### <kbd>method</kbd> `flush_runners`
 
 ```python
@@ -236,6 +237,7 @@ Remove idle and/or busy runners.
 ---
 
 <a href="../../github-runner-manager/src/github_runner_manager/openstack_cloud/openstack_runner_manager.py#L226"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
 
 ### <kbd>method</kbd> `get_runner`
 

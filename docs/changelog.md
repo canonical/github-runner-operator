@@ -1,5 +1,9 @@
 # Changelog
 
+### 2024-12-13
+
+- Add the difference between expected and actual runners to the "Runners after reconciliation" dashboard panel.
+
 ### 2024-12-05
 
 - Bugfix to no longer stop the reconciliation when a runner's health check fails.
