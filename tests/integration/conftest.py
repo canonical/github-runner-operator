@@ -489,7 +489,7 @@ async def app_no_wait_tmate_fixture(
     model: Model,
     app_openstack_runner,
 ):
-    """Application to theck tmate ssh with openstack."""
+    """Application to check tmate ssh with openstack without waiting for active."""
     application = app_openstack_runner
     await application.set_config({"reconcile-interval": "60", VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     return application
