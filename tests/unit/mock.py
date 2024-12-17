@@ -14,7 +14,7 @@ from typing import IO, Optional, Sequence, Union
 
 from github_runner_manager.types_.github import RegistrationToken, RemoveToken, RunnerApplication
 
-from errors import LxdError, RunnerError
+from errors import RunnerError
 
 logger = logging.getLogger(__name__)
 
@@ -290,19 +290,6 @@ class MockErrorResponse:
             Test error response.
         """
         return {"metadata": {"err": "test error"}}
-
-
-def mock_lxd_error_func(*args, **kwargs):
-    """A stub function that always raises LxdError.
-
-    Args:
-        args: Placeholder for positional arguments.
-        kwargs: Placeholder for key word arguments.
-
-    Raises:
-        LxdError: always.
-    """
-    raise LxdError(MockErrorResponse())
 
 
 def mock_runner_error_func(*args, **kwargs):
