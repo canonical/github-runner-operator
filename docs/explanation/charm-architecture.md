@@ -72,10 +72,6 @@ It's worth noting that this setup deviates from the behaviour when not using apr
 where these variables are set in the runner environment. In that scenario, traffic to non-standard ports 
 would also be directed to the HTTP(s) proxy, unlike when using aproxy.
 
-### denylist
-
-The nftables on the Juju machine are configured to deny traffic from the runner virtual machine to IPs on the [`denylist` configuration](https://charmhub.io/github-runner/configure#denylist). The runner will always have access to essential services such as DHCP and DNS, regardless of the denylist configuration.
-
 ## GitHub API usage
 
 The charm requires a GitHub personal access token for the [`token` configuration](https://charmhub.io/github-runner/configure#token). This token is used for:
@@ -96,32 +92,6 @@ BlockedStatus. The charm will automatically recover from this state once the rat
 The [repo-policy-compliance](https://github.com/canonical/repo-policy-compliance) is a [Flask application](https://flask.palletsprojects.com/) hosted on [Gunicorn](https://gunicorn.org/) that provides a RESTful HTTP API to check the settings of GitHub repositories. This ensures the GitHub repository settings do not allow the execution of code not reviewed by maintainers on the self-hosted runners.
 
 Using the [pre-job script](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/running-scripts-before-or-after-a-job#about-pre--and-post-job-scripts), the self-hosted runners call the Python web service to check if the GitHub repository settings for the job are compliant. If not compliant, it will output an error message and force stop the runner to prevent code from being executed.
-
-## Dependencies management
-
-Upon installing or upgrading the charm, the kernel will be upgraded, and the Juju machine will be restarted if needed.
-
-The charm installs the following dependencies:
-
-- For running repo-policy-compliance
-  - gunicorn
-- For firewall to prevent runners from accessing web service on the denylist
-  - nftables
-- For virtualization and virtual machine management
-  - lxd
-  - cpu-checker
-  - libvirt-clients
-  - libvirt-daemon-driver-qemu
-  - apparmor-utils
-
-These dependencies can be regularly updated using the [landscape-client charm](https://charmhub.io/landscape-client).
-
-The charm installs the following dependencies and regularly updates them:
-
-- repo-policy-compliance
-- GitHub self-hosted runner application
-
-The charm checks if the installed versions are the latest and performs upgrades if needed before creating new virtual machines for runners.
 
 ## COS Integration
 Upon integration through the `cos-agent`, the charm initiates the logging of specific metric events

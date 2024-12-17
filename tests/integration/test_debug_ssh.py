@@ -10,7 +10,6 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from charm_state import DENYLIST_CONFIG_NAME
 from tests.integration.helpers.common import InstanceHelper, dispatch_workflow, get_job_logs
 from tests.status_name import ACTIVE
 
@@ -30,21 +29,10 @@ async def test_ssh_debug(
     instance_helper: InstanceHelper,
 ):
     """
-    arrange: given an integrated GitHub-Runner charm and tmate-ssh-server charm with a denylist \
-        covering ip ranges of tmate-ssh-server.
+    arrange: given an integrated GitHub-Runner charm and tmate-ssh-server charm.
     act: when canonical/action-tmate is triggered.
     assert: the ssh connection info from action-log and tmate-ssh-server matches.
     """
-    await app_no_wait_openstack.set_config(
-        {
-            DENYLIST_CONFIG_NAME: (
-                "0.0.0.0/8,10.0.0.0/8,100.64.0.0/10,169.254.0.0/16,"
-                "172.16.0.0/12,192.0.0.0/24,192.0.2.0/24,192.88.99.0/24,192.168.0.0/16,"
-                "198.18.0.0/15,198.51.100.0/24,203.0.113.0/24,224.0.0.0/4,233.252.0.0/24,"
-                "240.0.0.0/4"
-            ),
-        }
-    )
     await model.wait_for_idle(status=ACTIVE, timeout=60 * 120)
 
     unit = app_no_wait_openstack.units[0]

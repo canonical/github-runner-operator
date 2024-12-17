@@ -4,7 +4,6 @@ import json
 import logging
 import platform
 import secrets
-import typing
 from unittest.mock import MagicMock
 
 import pytest
@@ -18,7 +17,6 @@ from pydantic.networks import IPv4Address
 import charm_state
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
-    DENYLIST_CONFIG_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
     GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
@@ -32,7 +30,6 @@ from charm_state import (
     CharmConfig,
     CharmConfigInvalidError,
     CharmState,
-    FirewallEntry,
     GithubConfig,
     OpenstackImage,
     OpenstackRunnerConfig,
@@ -205,35 +202,6 @@ def test_parse_labels(labels, expected_valid_labels):
     result = charm_state._parse_labels(labels)
 
     assert result == expected_valid_labels
-
-
-@pytest.mark.parametrize(
-    "denylist_config, expected_entries",
-    [
-        ("", []),
-        ("192.168.1.1", [FirewallEntry(ip_range="192.168.1.1")]),
-        (
-            "192.168.1.1, 192.168.1.2, 192.168.1.3",
-            [
-                FirewallEntry(ip_range="192.168.1.1"),
-                FirewallEntry(ip_range="192.168.1.2"),
-                FirewallEntry(ip_range="192.168.1.3"),
-            ],
-        ),
-    ],
-)
-def test_parse_denylist(denylist_config: str, expected_entries: typing.List[FirewallEntry]):
-    """
-    arrange: Create a mock CharmBase instance with provided denylist configuration.
-    act: Call _parse_denylist method with the mock CharmBase instance.
-    assert: Verify that the method returns the expected list of FirewallEntry objects.
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config[DENYLIST_CONFIG_NAME] = denylist_config
-
-    result = CharmConfig._parse_denylist(mock_charm)
-
-    assert result == expected_entries
 
 
 def test_parse_dockerhub_mirror_invalid_scheme():
@@ -438,7 +406,6 @@ def test_charm_config_from_charm_valid():
     mock_charm.config = {
         PATH_CONFIG_NAME: "owner/repo",
         RECONCILE_INTERVAL_CONFIG_NAME: "5",
-        DENYLIST_CONFIG_NAME: "192.168.1.1,192.168.1.2",
         DOCKERHUB_MIRROR_CONFIG_NAME: "https://example.com",
         # "clouds: { openstack: { auth: { username: 'admin' }}}"
         OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(
@@ -468,10 +435,6 @@ def test_charm_config_from_charm_valid():
 
     assert result.path == GitHubRepo(owner="owner", repo="repo")
     assert result.reconcile_interval == 5
-    assert result.denylist == [
-        FirewallEntry(ip_range="192.168.1.1"),
-        FirewallEntry(ip_range="192.168.1.2"),
-    ]
     assert result.dockerhub_mirror == "https://example.com"
     assert result.openstack_clouds_yaml == test_openstack_config
     assert result.labels == ("label1", "label2", "label3")
@@ -816,7 +779,7 @@ def mock_charm_state_data():
         "arch": "x86_64",
         "is_metrics_logging_available": True,
         "proxy_config": {"http": "http://example.com", "https": "https://example.com"},
-        "charm_config": {"denylist": ["192.168.1.1"], "token": secrets.token_hex(16)},
+        "charm_config": {"token": secrets.token_hex(16)},
         "reactive_config": {"uri": "mongodb://user:password@localhost:27017"},
         "runner_config": {
             "base_image": "jammy",

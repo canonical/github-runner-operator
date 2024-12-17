@@ -33,7 +33,6 @@ from pydantic import (
 )
 
 from errors import MissingMongoDBError
-from firewall import FirewallEntry
 from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
@@ -43,7 +42,6 @@ ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
 
-DENYLIST_CONFIG_NAME = "denylist"
 DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
 GROUP_CONFIG_NAME = "group"
 LABELS_CONFIG_NAME = "labels"
@@ -298,7 +296,6 @@ class CharmConfig(BaseModel):
     Some charm configurations are grouped into other configuration models.
 
     Attributes:
-        denylist: List of IPv4 to block the runners from accessing.
         dockerhub_mirror: Private docker registry as dockerhub mirror for the runners to use.
         labels: Additional runner labels to append to default (i.e. os, flavor, architecture).
         openstack_clouds_yaml: The openstack clouds.yaml configuration.
@@ -309,7 +306,6 @@ class CharmConfig(BaseModel):
         token: GitHub personal access token for GitHub API.
     """
 
-    denylist: list[FirewallEntry]
     dockerhub_mirror: AnyHttpsUrl | None
     labels: tuple[str, ...]
     openstack_clouds_yaml: OpenStackCloudsYAML
@@ -317,22 +313,6 @@ class CharmConfig(BaseModel):
     reconcile_interval: int
     repo_policy_compliance: RepoPolicyComplianceConfig | None
     token: str
-
-    @classmethod
-    def _parse_denylist(cls, charm: CharmBase) -> list[FirewallEntry]:
-        """Read charm denylist configuration and parse it into firewall deny entries.
-
-        Args:
-            charm: The charm instance.
-
-        Returns:
-            The firewall deny entries.
-        """
-        denylist_str = cast(str, charm.config.get(DENYLIST_CONFIG_NAME, ""))
-
-        entry_list = [entry.strip() for entry in denylist_str.split(",")]
-        denylist = [FirewallEntry.decode(entry) for entry in entry_list if entry]
-        return denylist
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
@@ -451,7 +431,6 @@ class CharmConfig(BaseModel):
                 f"The {RECONCILE_INTERVAL_CONFIG_NAME} config must be int"
             ) from err
 
-        denylist = cls._parse_denylist(charm)
         dockerhub_mirror = cast(str, charm.config.get(DOCKERHUB_MIRROR_CONFIG_NAME, "")) or None
         openstack_clouds_yaml = cls._parse_openstack_clouds_config(charm)
 
@@ -472,7 +451,6 @@ class CharmConfig(BaseModel):
 
         # pydantic allows to pass str as AnyHttpUrl, mypy complains about it
         return cls(
-            denylist=denylist,
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
             labels=labels,
             openstack_clouds_yaml=openstack_clouds_yaml,

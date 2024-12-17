@@ -21,7 +21,6 @@ from pydantic.networks import IPvAnyAddress
 from charm_state import (
     COS_AGENT_INTEGRATION_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
-    DENYLIST_CONFIG_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
     GROUP_CONFIG_NAME,
     LABELS_CONFIG_NAME,
@@ -125,7 +124,6 @@ class MockGithubRunnerCharmFactory(factory.Factory):
     model = factory.SubFactory(MockGithubRunnerCharmModelFactory)
     config = factory.Dict(
         {
-            DENYLIST_CONFIG_NAME: "",
             DOCKERHUB_MIRROR_CONFIG_NAME: "",
             GROUP_CONFIG_NAME: "default",
             LABELS_CONFIG_NAME: "",

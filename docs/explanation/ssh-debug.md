@@ -11,7 +11,7 @@ Authorized keys are registered via [action-tmate](https://github.com/canonical/a
 `limit-access-to-actor` feature. This feature uses GitHub users's SSH key to launch an instance
 of tmate session with `-a` option, which adds the user's SSH key to `~/.ssh/authorized_keys`.
 
-### Firewall rules
+### Firewall rules TODO JAVI DELETE THIS?
 
 By default, if there are any overlapping IPs within the `denylist` config option with the IP
 assigned to `tmate-ssh-server`, an exception to that IP will be made so that the `debug-ssh`
