@@ -1,0 +1,86 @@
+INFO     root:charm_metrics.py:127 Loop device None not found
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-v4slxqmn/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-v4slxqmn/0 [idle] active:
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-v4slxqmn/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-v4slxqmn/0 [executing] maintenance: Reconciling runners
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command pkill -9 run.sh on test-v4slxqmn-0-2dfa6d8cc8e0
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.196', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:70:46:b2'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-v4slxqmn-0-2dfa6d8cc8e0.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.196 pkill -9 run.sh'
+INFO     root:charm_metrics.py:248 Runner test-v4slxqmn-0-2dfa6d8cc8e0 status: online
+INFO     root:charm_metrics.py:250 Runner still marked as online, waiting for it to be marked offline
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-v4slxqmn/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-v4slxqmn/0 [idle] active: 
+INFO     root:common.py:609 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734436406.9936547, "event": "reconciliation", "flavor": "test-v4slxqmn", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.582263231277466}
+{"timestamp": 1734436423.246397, "event": "reconciliation", "flavor": "test-v4slxqmn", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.27165699005127}
+{"timestamp": 1734436573.2042956, "event": "reconciliation", "flavor": "test-v4slxqmn", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 132.16445922851562}
+{"timestamp": 1734436604.0681157, "event": "reconciliation", "flavor": "test-v4slxqmn", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 29.760389804840088}
+{"timestamp": 1734436542.0, "event": "runner_installed", "flavor": "test-v4slxqmn", "duration": 90.03073620796204}
+{"timestamp": 1734436631.0, "event": "runner_start", "flavor": "test-v4slxqmn", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 89.0, "queue_duration": 7.0}
+{"timestamp": 1734436640.0, "event": "runner_stop", "flavor": "test-v4slxqmn", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 9.0, "job_conclusion": "cancelled"}
+{"timestamp": 1734436732.8022735, "event": "reconciliation", "flavor": "test-v4slxqmn", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 24.56813645362854}
+{"timestamp": 1734436749.6131082, "event": "reconciliation", "flavor": "test-v4slxqmn", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.789971590042114}
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                            Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-dwnc  lxd         localhost/localhost  3.6.1    unsupported  11:59:28Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-v4slxqmn                         active      1  github-runner                               0  yes      
+
+Unit                            Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder/0*  active    idle   0        10.101.239.122            
+test-v4slxqmn/0*                active    idle   1        10.101.239.160  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.101.239.122  juju-ff7b24-0  ubuntu@22.04      Running
+1        started  10.101.239.160  juju-ff7b24-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 11:41:04 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 11:41:04 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 11:41:04 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 11:44:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 11:44:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-v4slxqmn-0: 11:44:23 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-v4slxqmn-0: 11:44:36 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:44:38 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:44:42 CRITICAL unit.test-v4slxqmn/0.juju-log image:0: test mode is enabled
+unit-test-v4slxqmn-0: 11:44:43 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:44:44 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:44:46 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:44:47 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:44:49 CRITICAL unit.test-v4slxqmn/0.juju-log image:0: test mode is enabled
+unit-test-v4slxqmn-0: 11:44:50 CRITICAL unit.test-v4slxqmn/0.juju-log image:0: test mode is enabled
+unit-test-v4slxqmn-0: 11:45:40 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:45:42 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:45:59 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:46:33 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:46:48 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:47:30 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:47:32 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:49:33 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:50:13 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:51:36 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:51:38 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:52:05 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:52:21 CRITICAL unit.test-v4slxqmn/0.juju-log image:0: test mode is enabled
+unit-test-v4slxqmn-0: 11:53:12 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:53:13 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:53:27 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:53:59 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:54:00 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:56:14 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:56:44 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:58:26 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:58:28 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+unit-test-v4slxqmn-0: 11:58:53 CRITICAL unit.test-v4slxqmn/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
