@@ -51,7 +51,7 @@ async def test_ssh_debug(
     # We need the runner to connect to the current machine, instead of the tmate_ssh_server unit,
     # as the tmate_ssh_server is not routable.
     dnat_comman_in_runner = "sudo iptables -t nat -A OUTPUT -p tcp --dport 10022 -j DNAT --to-destination 127.0.0.1:10022"
-    ret_code, stdout, stderr = await instance_helper.run_in_instance(
+    _, _, _ = await instance_helper.run_in_instance(
         unit,
         dnat_comman_in_runner,
         assert_on_failure=True,
