@@ -36,11 +36,6 @@ from errors import MissingMongoDBError
 from firewall import FirewallEntry
 from utilities import get_env_var
 
-REACTIVE_MODE_NOT_SUPPORTED_WITH_LXD_ERR_MSG = (
-    "Reactive mode not supported for local LXD instances. "
-    "Please remove the mongodb integration."
-)
-
 logger = logging.getLogger(__name__)
 
 ARCHITECTURES_ARM64 = {"aarch64", "arm64"}

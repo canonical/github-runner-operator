@@ -36,15 +36,6 @@ Represents an error raised when logrotate cannot be setup.
 
 ---
 
-## <kbd>class</kbd> `LxdError`
-Error for executing LXD actions. 
-
-
-
-
-
----
-
 ## <kbd>class</kbd> `MissingMongoDBError`
 Error for missing integration data. 
 
@@ -156,7 +147,7 @@ Error for Subprocess calls.
  - <b>`stdout`</b>:  Content of stdout of the subprocess. 
  - <b>`stderr`</b>:  Content of stderr of the subprocess. 
 
-<a href="../src/errors.py#L72"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/errors.py#L68"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 

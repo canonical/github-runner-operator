@@ -50,7 +50,7 @@ async def test_e2e_workflow(
     if instance_type == InstanceType.OPENSTACK:
         virt_type = "openstack"
     else:
-        virt_type = "lxd"
+        raise ValueError(f"virt_type {instance_type} not supported")
 
     await dispatch_workflow(
         app=app,
