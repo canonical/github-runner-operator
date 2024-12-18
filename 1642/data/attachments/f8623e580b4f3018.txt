@@ -1,0 +1,190 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-reactive-wzja on cloud localhost
+INFO     root:conftest.py:547 GitHub token rate limit: Rate(reset=2024-12-18 17:35:02+00:00, remaining=4715, limit=5000)
+INFO     juju.model:model.py:2284 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2284 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [allocating] waiting: agent initialising
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [executing] maintenance: Update image for runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [idle] active: 
+INFO     juju.model:model.py:2284 Deploying ch:amd64/jammy/mongodb-206
+INFO     juju.model:model.py:3211 Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+INFO     juju.model:model.py:3211 Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+INFO     juju.model:model.py:3211 Waiting for model:
+  mongodb/0 [idle] active: 
+WARNING  juju.model:model.py:1666 relate is deprecated and will be removed. Use integrate instead.
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [idle] active: 
+  mongodb/0 [idle] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [idle] active: 
+  mongodb/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [idle] active:
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 10
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [executing] active: 
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [idle] active: 
+INFO     root:common.py:495 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734543713.9294364, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 30.175122261047363}
+{"timestamp": 1734543880.361805, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 26.05826687812805}
+
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 30
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [idle] active: 
+INFO     root:common.py:495 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734543713.9294364, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 30.175122261047363}
+{"timestamp": 1734543880.361805, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 26.05826687812805}
+{"timestamp": 1734543951.5221577, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.8705952167511}
+
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 30
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [idle] active: 
+INFO     root:common.py:495 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734543713.9294364, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 30.175122261047363}
+{"timestamp": 1734543880.361805, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 26.05826687812805}
+{"timestamp": 1734543951.5221577, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.8705952167511}
+{"timestamp": 1734544021.0938783, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.14739751815796}
+
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 30
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [idle] active: 
+INFO     root:common.py:495 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734543713.9294364, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 30.175122261047363}
+{"timestamp": 1734543880.361805, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 26.05826687812805}
+{"timestamp": 1734543951.5221577, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.8705952167511}
+{"timestamp": 1734544021.0938783, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.14739751815796}
+{"timestamp": 1734544092.3574073, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.981377840042114}
+
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 30
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [idle] active: 
+INFO     root:common.py:495 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734543713.9294364, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 30.175122261047363}
+{"timestamp": 1734543880.361805, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 26.05826687812805}
+{"timestamp": 1734543951.5221577, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.8705952167511}
+{"timestamp": 1734544021.0938783, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.14739751815796}
+{"timestamp": 1734544092.3574073, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.981377840042114}
+{"timestamp": 1734544165.5241988, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 25.72251605987549}
+
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 30
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [idle] active: 
+INFO     root:common.py:495 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734543713.9294364, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 30.175122261047363}
+{"timestamp": 1734543880.361805, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 26.05826687812805}
+{"timestamp": 1734543951.5221577, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.8705952167511}
+{"timestamp": 1734544021.0938783, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.14739751815796}
+{"timestamp": 1734544092.3574073, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.981377840042114}
+{"timestamp": 1734544165.5241988, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 25.72251605987549}
+{"timestamp": 1734544236.9972084, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 23.83302092552185}
+
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 30
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [executing] active: 
+INFO     root:common.py:495 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734543713.9294364, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 30.175122261047363}
+{"timestamp": 1734543880.361805, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 26.05826687812805}
+{"timestamp": 1734543951.5221577, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.8705952167511}
+{"timestamp": 1734544021.0938783, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.14739751815796}
+{"timestamp": 1734544092.3574073, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.981377840042114}
+{"timestamp": 1734544165.5241988, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 25.72251605987549}
+{"timestamp": 1734544236.9972084, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 23.83302092552185}
+{"timestamp": 1734544307.2372413, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.746177196502686}
+
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 30
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [idle] active: 
+INFO     root:common.py:495 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734543713.9294364, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 30.175122261047363}
+{"timestamp": 1734543880.361805, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 26.05826687812805}
+{"timestamp": 1734543951.5221577, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.8705952167511}
+{"timestamp": 1734544021.0938783, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.14739751815796}
+{"timestamp": 1734544092.3574073, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.981377840042114}
+{"timestamp": 1734544165.5241988, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 25.72251605987549}
+{"timestamp": 1734544236.9972084, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 23.83302092552185}
+{"timestamp": 1734544307.2372413, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.746177196502686}
+{"timestamp": 1734544381.8570006, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 25.987388372421265}
+
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 30
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [idle] active: 
+INFO     root:common.py:495 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734543713.9294364, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 30.175122261047363}
+{"timestamp": 1734543880.361805, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 26.05826687812805}
+{"timestamp": 1734543951.5221577, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.8705952167511}
+{"timestamp": 1734544021.0938783, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.14739751815796}
+{"timestamp": 1734544092.3574073, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.981377840042114}
+{"timestamp": 1734544165.5241988, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 25.72251605987549}
+{"timestamp": 1734544236.9972084, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 23.83302092552185}
+{"timestamp": 1734544307.2372413, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.746177196502686}
+{"timestamp": 1734544381.8570006, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 25.987388372421265}
+{"timestamp": 1734544452.3235047, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 28.635137796401978}
+{"timestamp": 1734544477.6558774, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 24.191644430160522}
+
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 30
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [idle] active: 
+INFO     root:common.py:495 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734543713.9294364, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 30.175122261047363}
+{"timestamp": 1734543880.361805, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 26.05826687812805}
+{"timestamp": 1734543951.5221577, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.8705952167511}
+{"timestamp": 1734544021.0938783, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.14739751815796}
+{"timestamp": 1734544092.3574073, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.981377840042114}
+{"timestamp": 1734544165.5241988, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 25.72251605987549}
+{"timestamp": 1734544236.9972084, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 23.83302092552185}
+{"timestamp": 1734544307.2372413, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 22.746177196502686}
+{"timestamp": 1734544381.8570006, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 25.987388372421265}
+{"timestamp": 1734544452.3235047, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 28.635137796401978}
+{"timestamp": 1734544477.6558774, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 24.191644430160522}
+{"timestamp": 1734544546.1987438, "event": "reconciliation", "flavor": "test-nopbq1rw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 20.455873727798462}
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-nopbq1rw/0 [idle] active:

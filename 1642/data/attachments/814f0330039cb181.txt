@@ -1,0 +1,97 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-fork-repo-mwmb on cloud localhost
+INFO     juju.model:model.py:2284 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2284 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-jyfpqfrt/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-jyfpqfrt/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-jyfpqfrt/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-jyfpqfrt/0 [executing] blocked: Please provide image integration.
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-jyfpqfrt/0 [executing] maintenance: Reconciling runners
+INFO     root:conftest.py:547 GitHub token rate limit: Rate(reset=2024-12-18 17:35:02+00:00, remaining=4911, limit=5000)
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-jyfpqfrt/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-jyfpqfrt/0 [idle] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-jyfpqfrt/0 [executing] maintenance: Update image for runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-jyfpqfrt/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-jyfpqfrt/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-jyfpqfrt/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-jyfpqfrt/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-jyfpqfrt/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-jyfpqfrt/0 [idle] active: 
+INFO     tests.integration.helpers.openstack:openstack.py:49 [TEST SETUP] Exposing port 8080 on test-jyfpqfrt-0-ca241c8b624f
+WARNING  tests.integration.helpers.openstack:openstack.py:51 dict_values([[{'version': 4, 'addr': '10.145.193.211', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4a:b5:dd'}]])
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command nc -z localhost 8080 on test-jyfpqfrt-0-ca241c8b624f
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.211', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4a:b5:dd'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-jyfpqfrt-0-ca241c8b624f.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.211 nc -z localhost 8080'
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command curl http://localhost:8080 on test-jyfpqfrt-0-ca241c8b624f
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.211', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4a:b5:dd'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-jyfpqfrt-0-ca241c8b624f.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.211 curl http://localhost:8080'
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 60
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                      Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-mwmb  lxd         localhost/localhost  3.6.1    unsupported  17:13:10Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-jyfpqfrt                         active      1  github-runner                               0  yes      
+
+Unit                            Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder/0*  active    idle   0        10.100.177.59             
+test-jyfpqfrt/0*                active    idle   1        10.100.177.6    8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.100.177.59  juju-70ce3c-0  ubuntu@22.04      Running
+1        started  10.100.177.6   juju-70ce3c-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 16:56:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 16:56:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 16:56:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 17:00:21 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 17:00:21 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-jyfpqfrt-0: 17:00:21 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-jyfpqfrt-0: 17:08:38 ERROR unit.test-jyfpqfrt/0.juju-log image:0: pre-job-metrics.json not found for runner test-jyfpqfrt-0-87f634fcfd8c
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-jyfpqfrt-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-jyfpqfrt-0-87f634fcfd8c/pre-job-metrics.json'
+unit-test-jyfpqfrt-0: 17:08:38 ERROR unit.test-jyfpqfrt/0.juju-log image:0: Pre-job metrics for runner test-jyfpqfrt-0-87f634fcfd8c not found, stop extracting post-jobs metrics.
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
