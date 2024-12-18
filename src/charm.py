@@ -76,7 +76,6 @@ from errors import (
     ConfigurationError,
     LogrotateSetupError,
     MissingMongoDBError,
-    MissingRunnerBinaryError,
     SubprocessError,
     TokenError,
 )
@@ -143,12 +142,6 @@ def catch_charm_errors(
         except TokenError as err:
             logger.exception("Issue with GitHub token")
             self.unit.status = BlockedStatus(str(err))
-        except MissingRunnerBinaryError:
-            logger.exception("Missing runner binary")
-            self.unit.status = MaintenanceStatus(
-                "GitHub runner application not downloaded; the charm will retry download on "
-                "reconcile interval"
-            )
         except MissingMongoDBError as err:
             logger.exception("Missing integration data")
             self.unit.status = WaitingStatus(str(err))
@@ -182,14 +175,6 @@ def catch_action_errors(
             logger.exception("Issue with charm configuration")
             self.unit.status = BlockedStatus(str(err))
             event.fail(str(err))
-        except MissingRunnerBinaryError:
-            logger.exception("Missing runner binary")
-            err_msg = (
-                "GitHub runner application not downloaded; the charm will retry download on "
-                "reconcile interval"
-            )
-            self.unit.status = MaintenanceStatus(err_msg)
-            event.fail(err_msg)
 
     return func_with_catch_errors
 

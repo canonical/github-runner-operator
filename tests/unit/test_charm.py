@@ -39,7 +39,6 @@ from errors import (
     ConfigurationError,
     LogrotateSetupError,
     MissingMongoDBError,
-    MissingRunnerBinaryError,
     RunnerError,
     SubprocessError,
     TokenError,
@@ -489,7 +488,6 @@ class TestCharm(unittest.TestCase):
     [
         pytest.param(ConfigurationError, BlockedStatus, id="charm config error"),
         pytest.param(TokenError, BlockedStatus, id="github token error"),
-        pytest.param(MissingRunnerBinaryError, MaintenanceStatus, id="runner binary error"),
     ],
 )
 def test_catch_charm_errors(
@@ -531,7 +529,6 @@ def test_catch_charm_errors(
     "exception, expected_status",
     [
         pytest.param(ConfigurationError, BlockedStatus, id="charm config error"),
-        pytest.param(MissingRunnerBinaryError, MaintenanceStatus, id="runner binary error"),
     ],
 )
 def test_catch_action_errors(
