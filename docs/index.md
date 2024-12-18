@@ -49,7 +49,6 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [Change repository or organization](how-to/change-path.md)
   1. [Change GitHub personal access token](how-to/change-token.md)
   1. [Comply with security requirements](how-to/comply-security.md)
-  1. [Restrict self-hosted runner network access](how-to/configure-denylist.md) TODO JAVI I THINK I HAVE TO DELETE denylist
   1. [Contribute](how-to/contribute.md)
   1. [Debug with SSH](how-to/debug-with-ssh.md)
   1. [Integrate with COS](how-to/integrate-with-cos.md)
