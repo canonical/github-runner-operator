@@ -11,9 +11,9 @@ Conceptually, the charm can be divided into the following:
 - Management of [Python web service for checking GitHub repository settings](https://github.com/canonical/repo-policy-compliance)
 - Management of dependencies
 
-## Ephemeral virtual machines
+## Virtual machines
 
-To ensure a clean and isolated environment for every runner, self-hosted runners use Openstack virtual machines. The charm spawns virtual machines, setting resources based on charm configurations. The self-hosted runners start with the ephemeral option and will clean themselves up once the execution has finished, freeing the resources. This is [similar to how GitHub hosts their runners due to security concerns](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
+To ensure a clean and isolated environment for every runner, self-hosted runners use Openstack virtual machines. The charm spawns virtual machines, setting resources based on charm configurations. Virtual machines will not be reused between jobs, this is [similar to how GitHub hosts their runners due to security concerns](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
 
 As the virtual machines are single-use, the charm will replenish virtual machines on a regular schedule. This time period is determined by the [`reconcile-interval` configuration](https://charmhub.io/github-runner/configure#reconcile-interval).
 
