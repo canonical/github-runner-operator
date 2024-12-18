@@ -9,7 +9,6 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from charm_state import InstanceType
 from tests.integration.helpers.common import (
     DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
     InstanceHelper,
@@ -39,7 +38,6 @@ async def test_e2e_workflow(
     app: Application,
     github_repository: Repository,
     test_github_branch: Branch,
-    instance_type: InstanceType,
 ):
     """
     arrange: An app connected to an OpenStack cloud with no runners.
@@ -47,10 +45,7 @@ async def test_e2e_workflow(
     assert: No exception thrown.
     """
     virt_type: str
-    if instance_type == InstanceType.OPENSTACK:
-        virt_type = "openstack"
-    else:
-        raise ValueError(f"virt_type {instance_type} not supported")
+    virt_type = "openstack"
 
     await dispatch_workflow(
         app=app,

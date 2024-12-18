@@ -12,7 +12,7 @@ from juju.action import Action
 from juju.application import Application
 from juju.model import Model
 
-from charm_state import VIRTUAL_MACHINES_CONFIG_NAME, InstanceType
+from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
@@ -65,7 +65,6 @@ async def test_check_runner(app: Application) -> None:
 @pytest.mark.abort_on_fail
 async def test_flush_runner_and_resource_config(
     app: Application,
-    instance_type: InstanceType,
     github_repository: Repository,
     test_github_branch: Branch,
 ) -> None:
@@ -114,22 +113,21 @@ async def test_flush_runner_and_resource_config(
     assert new_runner_names[0] != runner_names[0]
 
     # 3.
-    if instance_type == InstanceType.OPENSTACK:
-        workflow = await dispatch_workflow(
-            app=app,
-            branch=test_github_branch,
-            github_repository=github_repository,
-            conclusion="success",
-            workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-            dispatch_input={"runner": app.name, "minutes": "5"},
-            wait=False,
-        )
-        await wait_for(lambda: workflow.update() or workflow.status == "in_progress")
-        action = await app.units[0].run_action("flush-runners")
-        await action.wait()
+    workflow = await dispatch_workflow(
+        app=app,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+        dispatch_input={"runner": app.name, "minutes": "5"},
+        wait=False,
+    )
+    await wait_for(lambda: workflow.update() or workflow.status == "in_progress")
+    action = await app.units[0].run_action("flush-runners")
+    await action.wait()
 
-        assert action.status == "completed"
-        assert action.results["delta"]["virtual-machines"] == "0"
+    assert action.status == "completed"
+    assert action.results["delta"]["virtual-machines"] == "0"
 
 
 @pytest.mark.openstack

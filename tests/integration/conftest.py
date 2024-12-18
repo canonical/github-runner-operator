@@ -34,7 +34,6 @@ from charm_state import (
     PATH_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
-    InstanceType,
 )
 from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
@@ -51,20 +50,6 @@ IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 30 * 60
 # The following line is required because we are using request.getfixturevalue in conjunction
 # with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
 nest_asyncio.apply()
-
-
-@pytest_asyncio.fixture(scope="module", name="instance_type")
-async def instance_type_fixture(
-    request: pytest.FixtureRequest, pytestconfig: pytest.Config
-) -> InstanceType:
-    # Due to scope being module we cannot use request.node.get_closes_marker as openstack
-    # mark is not available in this scope.
-    openstack_marker = pytestconfig.getoption("-m") == "openstack"
-
-    if openstack_marker:
-        return InstanceType.OPENSTACK
-    else:
-        raise ValueError("-m must be openstack")
 
 
 @pytest.fixture(scope="module")
@@ -702,7 +687,6 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
 async def app_for_metric_fixture(
     model: Model,
     basic_app: Application,
-    instance_type: InstanceType,
     existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
     yield basic_app
@@ -736,26 +720,13 @@ async def app_for_reactive_fixture(
 
 
 @pytest_asyncio.fixture(scope="module", name="basic_app")
-async def basic_app_fixture(
-    request: pytest.FixtureRequest, instance_type: InstanceType
-) -> Application:
+async def basic_app_fixture(request: pytest.FixtureRequest) -> Application:
     """Setup the charm with the basic configuration."""
-    if instance_type == InstanceType.OPENSTACK:
-        app = request.getfixturevalue("app_openstack_runner")
-    else:
-        app = request.getfixturevalue("app_no_runner")
-    return app
+    return request.getfixturevalue("app_openstack_runner")
 
 
 @pytest_asyncio.fixture(scope="function", name="instance_helper")
-async def instance_helper_fixture(
-    request: pytest.FixtureRequest, instance_type: InstanceType
-) -> InstanceHelper:
+async def instance_helper_fixture(request: pytest.FixtureRequest) -> InstanceHelper:
     """Instance helper fixture."""
-    helper: InstanceHelper
-    if instance_type == InstanceType.OPENSTACK:
-        openstack_connection = request.getfixturevalue("openstack_connection")
-        helper = OpenStackInstanceHelper(openstack_connection=openstack_connection)
-    else:
-        raise AssertionError(f"Wrong instance_type {instance_type}")
-    return helper
+    openstack_connection = request.getfixturevalue("openstack_connection")
+    return OpenStackInstanceHelper(openstack_connection=openstack_connection)

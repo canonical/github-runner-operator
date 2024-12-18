@@ -65,7 +65,6 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
-    InstanceType,
     OpenstackImage,
 )
 from errors import (
@@ -522,16 +521,14 @@ class GithubRunnerCharm(CharmBase):
         """Handle debug ssh relation changed event."""
         state = self._setup_state()
 
-        if state.instance_type == InstanceType.OPENSTACK:
-            if not self._get_set_image_ready_status():
-                return
-            runner_scaler = self._get_runner_scaler(state)
-            runner_scaler.flush()
-            try:
-                runner_scaler.reconcile(state.runner_config.virtual_machines)
-            except ReconcileError:
-                logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
+        if not self._get_set_image_ready_status():
             return
+        runner_scaler = self._get_runner_scaler(state)
+        runner_scaler.flush()
+        try:
+            runner_scaler.reconcile(state.runner_config.virtual_machines)
+        except ReconcileError:
+            logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
 
     @catch_charm_errors
     def _on_image_relation_joined(self, _: ops.RelationJoinedEvent) -> None:

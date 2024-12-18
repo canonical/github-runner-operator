@@ -31,7 +31,6 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
     Arch,
-    InstanceType,
     OpenStackCloudsYAML,
     OpenstackImage,
 )
@@ -193,7 +192,6 @@ def test_common_install_code(
     assert: Common install commands are run on the mock.
     """
     state_mock = MagicMock()
-    state_mock.instance_type = InstanceType.OPENSTACK
     harness.charm._setup_state = MagicMock(return_value=state_mock)
 
     monkeypatch.setattr("charm.logrotate.setup", setup_logrotate := MagicMock())
@@ -224,7 +222,6 @@ def test_on_flush_runners_reconcile_error_fail(harness: Harness):
     assert: Action fails with generic message and goes in ActiveStatus.
     """
     state_mock = MagicMock()
-    state_mock.instance_type = InstanceType.OPENSTACK
     harness.charm._setup_state = MagicMock(return_value=state_mock)
 
     runner_scaler_mock = MagicMock(spec=RunnerScaler)
@@ -247,7 +244,6 @@ def test_on_reconcile_runners_action_reconcile_error_fail(
     assert: Action fails with generic message and goes in ActiveStatus
     """
     state_mock = MagicMock()
-    state_mock.instance_type = InstanceType.OPENSTACK
     harness.charm._setup_state = MagicMock(return_value=state_mock)
 
     runner_scaler_mock = MagicMock(spec=RunnerScaler)
@@ -274,7 +270,6 @@ def test_on_reconcile_runners_reconcile_error(harness: Harness, monkeypatch: pyt
     assert: Unit goes into ActiveStatus with error message.
     """
     state_mock = MagicMock()
-    state_mock.instance_type = InstanceType.OPENSTACK
     harness.charm._setup_state = MagicMock(return_value=state_mock)
 
     runner_scaler_mock = MagicMock(spec=RunnerScaler)
@@ -300,7 +295,6 @@ def test_on_stop_busy_flush(harness: Harness, monkeypatch: pytest.MonkeyPatch):
     assert: Runner scaler mock flushes the runners using busy mode.
     """
     state_mock = MagicMock()
-    state_mock.instance_type = InstanceType.OPENSTACK
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     runner_scaler_mock = MagicMock(spec=RunnerScaler)
     harness.charm._get_runner_scaler = MagicMock(return_value=runner_scaler_mock)
@@ -327,7 +321,6 @@ def test_on_install_failure(hook: str, harness: Harness, monkeypatch: pytest.Mon
     assert: Charm goes into error state in both cases.
     """
     state_mock = MagicMock()
-    state_mock.instance_type = InstanceType.OPENSTACK
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     monkeypatch.setattr("charm.logrotate.setup", setup_logrotate := unittest.mock.MagicMock())
 
@@ -613,7 +606,6 @@ def test__on_image_relation_image_not_ready():
     harness = Harness(GithubRunnerCharm)
     harness.begin()
     state_mock = MagicMock()
-    state_mock.instance_type = InstanceType.OPENSTACK
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._get_set_image_ready_status = MagicMock(return_value=False)
 
@@ -633,7 +625,6 @@ def test__on_image_relation_image_ready():
     harness = Harness(GithubRunnerCharm)
     harness.begin()
     state_mock = MagicMock()
-    state_mock.instance_type = InstanceType.OPENSTACK
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._get_set_image_ready_status = MagicMock(return_value=True)
     runner_manager_mock = MagicMock()
@@ -657,7 +648,6 @@ def test__on_image_relation_joined():
     harness.add_relation_unit(relation_id, "image-builder/0")
     harness.begin()
     state_mock = MagicMock()
-    state_mock.instance_type = InstanceType.OPENSTACK
     state_mock.charm_config.openstack_clouds_yaml = OpenStackCloudsYAML(
         clouds={
             "test-cloud": {

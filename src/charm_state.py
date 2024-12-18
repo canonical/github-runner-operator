@@ -134,16 +134,6 @@ class Arch(str, Enum):
     X64 = "x64"
 
 
-class InstanceType(str, Enum):
-    """Type of instance for runner.
-
-    Attributes:
-        OPENSTACK: OpenStack instance on a cloud.
-    """
-
-    OPENSTACK = "openstack"
-
-
 class CharmConfigInvalidError(Exception):
     """Raised when charm config is invalid.
 
@@ -791,7 +781,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         charm_config: Configuration of the juju charm.
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
-        instance_type: The type of instances, e.g., openstack.
         reactive_config: The charm configuration related to reactive spawning mode.
         runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.
@@ -800,7 +789,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
     arch: Arch
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
-    instance_type: InstanceType
     charm_config: CharmConfig
     runner_config: RunnerConfig
     reactive_config: ReactiveConfig | None
@@ -882,7 +870,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
 
         try:
             runner_config: RunnerConfig
-            instance_type = InstanceType.OPENSTACK
             runner_config = OpenstackRunnerConfig.from_charm(charm)
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
@@ -909,7 +896,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             runner_config=runner_config,
             reactive_config=reactive_config,
             ssh_debug_connections=ssh_debug_connections,
-            instance_type=instance_type,
         )
 
         cls._store_state(state)
