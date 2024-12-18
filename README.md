@@ -19,10 +19,7 @@ For information about how to deploy, integrate, and manage this charm, see the o
 
 ## Get started
 
-In order to get familiar with the charm, it is recommended to follow the [GitHub Runner tutorial](https://charmhub.io/github-runner/docs/tutorial-quick-start) which will guide you through the process of deploying the charm
-and executing a workflow job using GitHub actions.
-
-For more information about a production deployment, the how-to-guide
+For information about a production deployment, the how-to-guide
 [How to spawn OpenStack runner](https://charmhub.io/github-runner/docs/how-to-openstack-runner) can be useful.
 
 ### Basic operations
