@@ -13,7 +13,7 @@ options:
     type: string
     default: ""
     description: >-
-      The clouds.yaml yaml content that will enable OpenStack integration.
+      The clouds.yaml yaml necessary for OpenStack integration.
       The format for the clouds.yaml is described in the docs:
       (https://docs.openstack.org/python-openstackclient/pike/configuration/index.html#clouds-yaml).
   openstack-flavor:
