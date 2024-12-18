@@ -125,7 +125,28 @@ def setup_charm_harness(monkeypatch: pytest.MonkeyPatch) -> Harness:
         Harness with patched RunnerManager instance.
     """
     harness = Harness(GithubRunnerCharm)
-    harness.update_config({PATH_CONFIG_NAME: "mock/repo", TOKEN_CONFIG_NAME: "mocktoken"})
+    cloud_yaml = {
+        "clouds": {
+            "microstack": {
+                "auth": {
+                    "auth_url": secrets.token_hex(16),
+                    "project_name": secrets.token_hex(16),
+                    "project_domain_name": secrets.token_hex(16),
+                    "username": secrets.token_hex(16),
+                    "user_domain_name": secrets.token_hex(16),
+                    "password": secrets.token_hex(16),
+                },
+                "region_name": secrets.token_hex(16),
+            }
+        }
+    }
+    harness.update_config(
+        {
+            PATH_CONFIG_NAME: "mock/repo",
+            TOKEN_CONFIG_NAME: "mocktoken",
+            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(cloud_yaml),
+        }
+    )
     harness.begin()
     monkeypatch.setattr("charm.EventTimer.ensure_event_timer", MagicMock())
     monkeypatch.setattr("charm.logrotate.setup", MagicMock())

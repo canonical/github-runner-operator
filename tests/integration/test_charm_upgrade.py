@@ -89,7 +89,6 @@ async def test_charm_upgrade(
             VIRTUAL_MACHINES_CONFIG_NAME: 1,
         },
         wait_idle=False,
-        use_local_lxd=False,
     )
     await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(

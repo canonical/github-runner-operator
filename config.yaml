@@ -2,13 +2,6 @@
 # See LICENSE file for licensing details.
 
 options:
-  base-image:
-    type: string
-    default: "jammy"
-    description: >-
-      The base ubuntu OS image to use for the runners. Codename (e.g. "jammy") or version tag
-      (e.g. 22.04) is supported as input. Currently only supports LTS versions of jammy and higher,
-      i.e. jammy, noble. Only applicable for LXD mode.
   denylist:
     type: string
     default: ""
@@ -100,15 +93,6 @@ options:
       The URL to the repository-policy-compliance service. This option requires the
       repo-policy-compliance-token to be set. If not set, the repository-policy-compliance service
       will not be used. This option is only supported when using OpenStack Cloud.
-  runner-storage:
-    type: string
-    default: "juju-storage"
-    description: >-
-      The storage for runner LXD instance to mount as disk. Can be "memory" or "juju-storage". If
-      set to "memory", memory-based storage created with tmpfs will be used as disk for LXD
-      instances. If set to "juju-storage", storage provided by juju will be used as disk for LXD
-      instances. This configuration cannot be changed after deployment. The charm needs to be
-      redeployed to change the storage option.
   test-mode:
     type: string
     description: >-
@@ -128,20 +112,3 @@ options:
     description: >-
       The number of virtual machine runners. This charm will spawn or destroy virtual machines
       runners to match this setting.
-  vm-cpu:
-    type: int
-    default: 2
-    description: >-
-      The number of CPUs used per virtual machine runner.
-  vm-memory:
-    type: string
-    default: 7GiB
-    description: >-
-      Amount of memory to allocate per virtual machine runner. Positive integers with KiB, MiB, GiB,
-      TiB, PiB, EiB suffix.
-  vm-disk:
-    type: string
-    default: 10GiB
-    description: >-
-      Amount of disk space to allocate to root disk for virtual machine runner. Positive integers
-      with KiB, MiB, GiB, TiB, PiB, EiB suffix.

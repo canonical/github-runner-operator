@@ -13,7 +13,6 @@ Charm for creating and managing GitHub self-hosted runner instances.
 - **LABELS_CONFIG_NAME**
 - **PATH_CONFIG_NAME**
 - **RECONCILE_INTERVAL_CONFIG_NAME**
-- **TEST_MODE_CONFIG_NAME**
 - **TOKEN_CONFIG_NAME**
 - **RECONCILIATION_INTERVAL_TIMEOUT_FACTOR**
 - **RECONCILE_RUNNERS_EVENT**
@@ -28,7 +27,7 @@ Charm for creating and managing GitHub self-hosted runner instances.
 
 ---
 
-<a href="../src/charm.py#L134"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L118"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_charm_errors`
 
@@ -54,7 +53,7 @@ Catch common errors in charm.
 
 ---
 
-<a href="../src/charm.py#L175"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L159"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `catch_action_errors`
 
@@ -83,19 +82,7 @@ Catch common errors in actions.
 ## <kbd>class</kbd> `GithubRunnerCharm`
 Charm for managing GitHub self-hosted runners. 
 
-
-
-**Attributes:**
- 
- - <b>`service_token_path`</b>:  The path to token to access local services. 
- - <b>`repo_check_web_service_path`</b>:  The path to repo-policy-compliance service directory. 
- - <b>`repo_check_web_service_script`</b>:  The path to repo-policy-compliance web service script. 
- - <b>`repo_check_systemd_service`</b>:  The path to repo-policy-compliance unit file. 
- - <b>`juju_storage_path`</b>:  The path to juju storage. 
- - <b>`ram_pool_path`</b>:  The path to memdisk storage. 
- - <b>`kernel_module_path`</b>:  The path to kernel modules. 
-
-<a href="../src/charm.py#L236"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/charm.py#L202"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>function</kbd> `__init__`
 
@@ -111,12 +98,6 @@ Construct the charm.
  
  - <b>`args`</b>:  List of arguments to be passed to the `CharmBase` class. 
  - <b>`kwargs`</b>:  List of keyword arguments to be passed to the `CharmBase`  class. 
-
-
-
-**Raises:**
- 
- - <b>`RuntimeError`</b>:  If invalid test configuration was detected. 
 
 
 ---

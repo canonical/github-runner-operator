@@ -7,7 +7,7 @@
 # pylint: disable=too-many-lines
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
-from utilities import execute_command, remove_residual_venv_dirs, retry
+from utilities import execute_command, remove_residual_venv_dirs
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
 # It is important that this is run before importation of any other modules.
@@ -18,13 +18,8 @@ remove_residual_venv_dirs()
 
 import functools
 import logging
-import os
-import secrets
-import shutil
-from pathlib import Path
 from typing import Any, Callable, Sequence, TypeVar
 
-import jinja2
 import ops
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
@@ -76,7 +71,6 @@ from charm_state import (
     CharmState,
     InstanceType,
     OpenstackImage,
-    ProxyConfig,
 )
 from errors import (
     ConfigurationError,
@@ -201,27 +195,9 @@ def catch_action_errors(
 
 
 class GithubRunnerCharm(CharmBase):
-    """Charm for managing GitHub self-hosted runners.
-
-    Attributes:
-        service_token_path: The path to token to access local services.
-        repo_check_web_service_path: The path to repo-policy-compliance service directory.
-        repo_check_web_service_script: The path to repo-policy-compliance web service script.
-        repo_check_systemd_service: The path to repo-policy-compliance unit file.
-        juju_storage_path: The path to juju storage.
-        ram_pool_path: The path to memdisk storage.
-        kernel_module_path: The path to kernel modules.
-    """
+    """Charm for managing GitHub self-hosted runners."""
 
     _stored = StoredState()
-
-    service_token_path = Path("service_token")
-    repo_check_web_service_path = Path("/home/ubuntu/repo_policy_compliance_service")
-    repo_check_web_service_script = Path("scripts/repo_policy_compliance_service.py")
-    repo_check_systemd_service = Path("/etc/systemd/system/repo-policy-compliance.service")
-    juju_storage_path = Path("/storage/juju")
-    ram_pool_path = Path("/storage/ram")
-    kernel_module_path = Path("/etc/modules")
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Construct the charm.
@@ -234,14 +210,12 @@ class GithubRunnerCharm(CharmBase):
         super().__init__(*args, **kwargs)
         self._grafana_agent = COSAgentProvider(self)
 
-        self.service_token: str | None = None
         self._event_timer = EventTimer(self.unit.name)
 
         self._stored.set_default(
             path=self.config[PATH_CONFIG_NAME],  # for detecting changes
             token=self.config[TOKEN_CONFIG_NAME],  # for detecting changes
             labels=self.config[LABELS_CONFIG_NAME],  # for detecting changes
-            runner_bin_url=None,
         )
 
         self.on.define_event("reconcile_runners", ReconcileRunnersEvent)
@@ -392,7 +366,6 @@ class GithubRunnerCharm(CharmBase):
         prev_config_for_flush: dict[str, str] = {}
         if state.charm_config.token != self._stored.token:
             prev_config_for_flush[TOKEN_CONFIG_NAME] = str(self._stored.token)
-            self._start_services(state.charm_config.token, state.proxy_config)
             self._stored.token = None
         if self.config[PATH_CONFIG_NAME] != self._stored.path:
             prev_config_for_flush[PATH_CONFIG_NAME] = parse_github_path(
@@ -558,63 +531,6 @@ class GithubRunnerCharm(CharmBase):
         """Install dependences for the charm."""
         logger.info("Installing charm dependencies.")
         self._apt_install(["run-one"])
-
-    @retry(tries=5, delay=5, max_delay=60, backoff=2, local_logger=logger)
-    def _start_services(self, token: str, proxy_config: ProxyConfig) -> None:
-        """Ensure all services managed by the charm is running.
-
-        Args:
-            token: GitHub personal access token for repo-policy-compliance to use.
-            proxy_config: Proxy configuration.
-        """
-        logger.info("Starting charm services...")
-
-        if self.service_token is None:
-            self.service_token = self._get_service_token()
-
-        # Move script to home directory
-        logger.info("Loading the repo policy compliance flask app...")
-        os.makedirs(self.repo_check_web_service_path, exist_ok=True)
-        shutil.copyfile(
-            self.repo_check_web_service_script,
-            self.repo_check_web_service_path / "app.py",
-        )
-
-        # Move the systemd service.
-        logger.info("Loading the repo policy compliance gunicorn systemd service...")
-        environment = jinja2.Environment(
-            loader=jinja2.FileSystemLoader("templates"), autoescape=True
-        )
-
-        service_content = environment.get_template("repo-policy-compliance.service.j2").render(
-            working_directory=str(self.repo_check_web_service_path),
-            charm_token=self.service_token,
-            github_token=token,
-            proxies=proxy_config,
-        )
-        self.repo_check_systemd_service.write_text(service_content, encoding="utf-8")
-
-        execute_command(["/usr/bin/systemctl", "daemon-reload"])
-        execute_command(["/usr/bin/systemctl", "restart", "repo-policy-compliance"])
-        execute_command(["/usr/bin/systemctl", "enable", "repo-policy-compliance"])
-
-        logger.info("Finished starting charm services")
-
-    def _get_service_token(self) -> str:
-        """Get the service token.
-
-        Returns:
-            The service token.
-        """
-        logger.info("Getting the secret token...")
-        if self.service_token_path.exists():
-            logger.info("Found existing token file.")
-            service_token = self.service_token_path.read_text(encoding="utf-8")
-        else:
-            logger.info("Generate new token.")
-            service_token = secrets.token_hex(16)
-            self.service_token_path.write_text(service_token, encoding="utf-8")
-        return service_token
 
     def _apt_install(self, packages: Sequence[str]) -> None:
         """Execute apt install command.
