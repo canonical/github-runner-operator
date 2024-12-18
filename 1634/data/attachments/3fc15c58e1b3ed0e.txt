@@ -1,0 +1,59 @@
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-xbdak83z/0 [executing] active:
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-xbdak83z/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-xbdak83z/0 [idle] active: 
+INFO     tests.integration.helpers.common:common.py:448 Wait for condition not met, sleeping 30
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command pkill -9 run.sh on test-xbdak83z-0-0ada9261449b
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.92', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4e:b4:e7'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-xbdak83z-0-0ada9261449b.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.92 pkill -9 run.sh'
+INFO     root:charm_metrics.py:226 Runner test-xbdak83z-0-0ada9261449b status: online
+INFO     root:charm_metrics.py:228 Runner still marked as online, waiting for it to be marked offline
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-xbdak83z/0 [executing] maintenance: Reconciling runners
+INFO     root:common.py:495 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734517916.3455148, "event": "reconciliation", "flavor": "test-xbdak83z", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.282344102859497}
+{"timestamp": 1734517929.1879435, "event": "reconciliation", "flavor": "test-xbdak83z", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.828616857528687}
+{"timestamp": 1734518080.4959338, "event": "reconciliation", "flavor": "test-xbdak83z", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 133.66919898986816}
+{"timestamp": 1734518103.1660736, "event": "reconciliation", "flavor": "test-xbdak83z", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 21.557141065597534}
+{"timestamp": 1734518052.0, "event": "runner_installed", "flavor": "test-xbdak83z", "duration": 95.55212593078613}
+{"timestamp": 1734518128.0, "event": "runner_start", "flavor": "test-xbdak83z", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 76.0, "queue_duration": 7.0}
+{"timestamp": 1734518166.0, "event": "runner_stop", "flavor": "test-xbdak83z", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 38.0, "job_conclusion": "cancelled"}
+{"timestamp": 1734518265.0844555, "event": "reconciliation", "flavor": "test-xbdak83z", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 30.899073600769043}
+{"timestamp": 1734518278.4337335, "event": "reconciliation", "flavor": "test-xbdak83z", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.088412761688232}
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                            Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-urj5  lxd         localhost/localhost  3.6.1    unsupported  10:38:17Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-xbdak83z                         active      1  github-runner                               0  yes      
+
+Unit                            Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder/0*  active    idle   0        10.83.31.96               
+test-xbdak83z/0*                active    idle   1        10.83.31.237    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.83.31.96   juju-2538d4-0  ubuntu@22.04      Running
+1        started  10.83.31.237  juju-2538d4-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 10:19:48 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 10:19:48 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 10:19:48 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 10:23:10 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 10:23:10 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-xbdak83z-0: 10:23:10 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-xbdak83z-0: 10:37:39 ERROR unit.test-xbdak83z/0.juju-log Failed to get SSH connection while removing test-xbdak83z-0-0ada9261449b
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-xbdak83z-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-xbdak83z-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-xbdak83z-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-xbdak83z-0-0ada9261449b, key path: /home/runner-manager/.ssh/test-xbdak83z-0-0ada9261449b.key
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
