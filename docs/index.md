@@ -43,7 +43,6 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
 
 # Contents
 
-1. [Tutorial](tutorial)
 1. [How to](how-to)
   1. [Add custom labels](how-to/add-custom-labels.md)
   1. [Change repository or organization](how-to/change-path.md)
