@@ -14,8 +14,8 @@ options:
     default: ""
     description: >-
       Providing a valid clouds.yaml will enable OpenStack integration. Setting the
-      openstack-clouds-yaml would enable spawning runners on OpenStack, and disable usage of
-      local LXD for runners. The format for the clouds.yaml is described in the docs:
+      openstack-clouds-yaml would enable spawning runners on OpenStack. The format for the clouds.yaml
+      is described in the docs:
       (https://docs.openstack.org/python-openstackclient/pike/configuration/index.html#clouds-yaml).
   openstack-flavor:
     type: string

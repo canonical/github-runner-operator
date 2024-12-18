@@ -21,8 +21,8 @@ The charm enforces a set of GitHub repository settings as best practice. This is
 
 | | |
 |--|--|
-|  [Tutorials](https://charmhub.io/github-runner/docs/quick-start)</br>  Get started - a hands-on introduction to using the GitHub runner charm for new users </br> | [How-to guides](https://charmhub.io/github-runner/docs/run-on-lxd) </br> Step-by-step guides covering key operations and common tasks |
-| [Reference](https://charmhub.io/github-runner/docs/actions) </br> Technical information - specifications, APIs, architecture | [Explanation](https://charmhub.io/github-runner/docs/charm-architecture) </br> Concepts - discussion and clarification of key topics  |
+|  [Overview](https://charmhub.io/github-runner)</br>  Overview of the charm </br> | [How-to guides](https://charmhub.io/github-runner/docs/how-to-openstack-runner) </br> Step-by-step guides covering key operations and common tasks |
+| [Reference](https://charmhub.io/github-runner/docs/reference-actions) </br> Technical information - specifications, APIs, architecture | [Explanation](https://charmhub.io/github-runner/docs/explanation-charm-architecture) </br> Concepts - discussion and clarification of key topics  |
 
 ## Contributing to this documentation
 

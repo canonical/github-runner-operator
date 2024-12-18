@@ -13,7 +13,7 @@ on:
         type: string
         required: true
       runner-virt-type:
-        description: The e2e test runner virtualization type. E.g. lxd, or openstack.
+        description: The e2e test runner virtualization type. E.g. openstack.
         # workflow_call does not support choice type.
         type: string
         required: true
@@ -28,7 +28,6 @@ on:
         type: choice
         required: true
         options:
-          - lxd
           - openstack
 
 jobs:
@@ -104,11 +103,3 @@ jobs:
       # ~/.local/bin is added to path runner env through in scripts/env.j2
       - name: test check-jsonschema
         run: check-jsonschema --version
-      - name: Test Firewall
-        if: "${{ github.event.inputs.runner-virt-type == 'lxd' }}"
-        run: |
-          HOST_IP=$(ip route | grep default | cut -f 3 -d" ")
-          [ $((ping $HOST_IP -c 5 || :) | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
-      - name: Test sctp support
-        if: "${{ github.event.inputs.runner-virt-type == 'lxd' }}"
-        run: sudo apt-get install lksctp-tools -yq && checksctp

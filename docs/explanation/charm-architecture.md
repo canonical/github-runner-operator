@@ -4,50 +4,24 @@ A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) t
 
 Conceptually, the charm can be divided into the following:
 
-- Management of LXD ephemeral virtual machines to host [ephemeral self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/autoscaling-with-self-hosted-runners#using-ephemeral-runners-for-autoscaling)
+- Management of Openstack virtual machines to host self-hosted runners
 - Management of the virtual machine image
 - Management of the network
 - GitHub API usage
 - Management of [Python web service for checking GitHub repository settings](https://github.com/canonical/repo-policy-compliance)
 - Management of dependencies
 
-## LXD ephemeral virtual machines
+## Ephemeral virtual machines
 
-To ensure a clean and isolated environment for every runner, self-hosted runners use LXD virtual machines. The charm spawns virtual machines, setting resources based on charm configurations. The self-hosted runners start with the ephemeral option and will clean themselves up once the execution has finished, freeing the resources. This is [similar to how GitHub hosts their runners due to security concerns](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
+To ensure a clean and isolated environment for every runner, self-hosted runners use Openstack virtual machines. The charm spawns virtual machines, setting resources based on charm configurations. The self-hosted runners start with the ephemeral option and will clean themselves up once the execution has finished, freeing the resources. This is [similar to how GitHub hosts their runners due to security concerns](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
 
 As the virtual machines are single-use, the charm will replenish virtual machines on a regular schedule. This time period is determined by the [`reconcile-interval` configuration](https://charmhub.io/github-runner/configure#reconcile-interval).
 
 On schedule or upon configuration change, the charm performs a reconcile to ensure the number of runners managed by the charm matches the [`virtual-machines` configuration](https://charmhub.io/github-runner/configure#virtual-machines), and the resources used by the runners match the various resource configurations.
 
-To prevent disk IO exhaustion on the Juju machine on disk-intensive GitHub workflows, the charm has two storage options provided by [`runner-storage` configuration](https://charmhub.io/github-runner/configure#runner-storage):
-
-- Use memory of the Juju machine as disk. Under this option, the [`vm-disk` configuration](https://charmhub.io/github-runner/configure#vm-disk) can impact the memory usage of the Juju machine.
-- Use storage mount by Juju as the disk.
-
 ## Virtual machine image
 
-The virtual machine images are built on installation and on a schedule every 6 hours. These images are constructed by launching a virtual machine instance, modifying the instance with configurations and software installs, and then exporting the instance as an image. This process reduces the time needed to launch a virtual machine instance for hosting the self-hosted runner application.
-
-The software installed in the image includes:
-
-- APT packages:
-  - docker.io
-  - npm
-  - python3-pip
-  - shellcheck
-  - jq
-  - wget
-- npm packages:
-  - yarn
-- Binary downloaded:
-  - yq
-
-The configurations applied in the image include:
-
-- Creating a group named `microk8s`.
-- Adding the `ubuntu` user to the `microk8s` group. Note that the `microk8s` package is not installed in the image; this preconfigures the group for users who install the package.
-- Adding the `ubuntu` user to the `docker` group.
-- Adding iptables rules to accept traffic for the DOCKER-USER chain. This resolves a networking conflict with LXD.
+The virtual machine images are built on installation and on a schedule using the [gitrunner-image-builder](https://github.com/canonical/github-runner-image-builder).
 
 ## Network configuration
 

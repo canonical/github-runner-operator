@@ -19,11 +19,6 @@ def exec_command_fixture():
     return unittest.mock.MagicMock(return_value=("", 0))
 
 
-@pytest.fixture(name="lxd_exec_command")
-def lxd_exec_command_fixture():
-    return unittest.mock.MagicMock(return_value=("", 0))
-
-
 def disk_usage_mock(total_disk: int):
     """Mock disk usage factory.
 
@@ -40,7 +35,7 @@ def disk_usage_mock(total_disk: int):
 
 
 @pytest.fixture(autouse=True)
-def mocks(monkeypatch, tmp_path, exec_command, lxd_exec_command):
+def mocks(monkeypatch, tmp_path, exec_command):
     runner_scaler_mock = unittest.mock.MagicMock(spec=RunnerScaler)
 
     cron_path = tmp_path / "cron.d"

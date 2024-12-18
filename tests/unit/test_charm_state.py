@@ -782,11 +782,9 @@ def mock_charm_state_data():
         "charm_config": {"token": secrets.token_hex(16)},
         "reactive_config": {"uri": "mongodb://user:password@localhost:27017"},
         "runner_config": {
-            "base_image": "jammy",
             "virtual_machines": 2,
-            "runner_storage": "memory",
         },
-        "instance_type": "local-lxd",
+        "instance_type": "openstack",
         "ssh_debug_connections": [
             {"host": "10.1.2.4", "port": 22},
         ],

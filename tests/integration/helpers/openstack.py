@@ -266,7 +266,7 @@ async def _install_repo_policy(
     """Start the repo policy compliance service.
 
     Args:
-        unit: Unit instance to check for the LXD profile.
+        unit: Unit instance to check for the profile.
         github_token: GitHub token to use in the repo-policy service.
         charm_token: Charm token to use in the repo-policy service.
         https_proxy: HTTPS proxy url to use.

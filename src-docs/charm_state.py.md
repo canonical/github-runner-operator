@@ -186,7 +186,7 @@ The charm state.
  - <b>`charm_config`</b>:  Configuration of the juju charm. 
  - <b>`is_metrics_logging_available`</b>:  Whether the charm is able to issue metrics. 
  - <b>`proxy_config`</b>:  Proxy-related configuration. 
- - <b>`instance_type`</b>:  The type of instances, e.g., local lxd, openstack. 
+ - <b>`instance_type`</b>:  The type of instances, e.g., openstack. 
  - <b>`reactive_config`</b>:  The charm configuration related to reactive spawning mode. 
  - <b>`runner_config`</b>:  The charm configuration related to runner VM configuration. 
  - <b>`ssh_debug_connections`</b>:  SSH debug connections configuration information. 
