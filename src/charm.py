@@ -3,9 +3,6 @@
 # Copyright 2024 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-# TODO: 2024-03-12 The module contains too many lines which are scheduled for refactoring.
-# pylint: disable=too-many-lines
-
 """Charm for creating and managing GitHub self-hosted runner instances."""
 from utilities import execute_command, remove_residual_venv_dirs
 
@@ -43,7 +40,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
 from github_runner_manager.reactive.types_ import QueueConfig as ReactiveQueueConfig
 from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
 from github_runner_manager.types_ import SystemUserConfig
-from github_runner_manager.types_.github import GitHubPath, parse_github_path
+from github_runner_manager.types_.github import GitHubPath
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -61,7 +58,6 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, WaitingSta
 import logrotate
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
-    GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     PATH_CONFIG_NAME,
@@ -336,10 +332,7 @@ class GithubRunnerCharm(CharmBase):
     def _on_upgrade_charm(self, _: UpgradeCharmEvent) -> None:
         """Handle the update of charm."""
         logger.info("Reinstalling dependencies...")
-        if not self._common_install_code():
-            return
-
-        return
+        self._common_install_code()
 
     # Temporarily ignore too-complex since this is subject to refactor.
     @catch_charm_errors
@@ -348,14 +341,9 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
         self._set_reconcile_timer()
 
-        prev_config_for_flush: dict[str, str] = {}
         if state.charm_config.token != self._stored.token:
-            prev_config_for_flush[TOKEN_CONFIG_NAME] = str(self._stored.token)
             self._stored.token = None
         if self.config[PATH_CONFIG_NAME] != self._stored.path:
-            prev_config_for_flush[PATH_CONFIG_NAME] = parse_github_path(
-                self._stored.path, self.config[GROUP_CONFIG_NAME]
-            )
             self._stored.path = self.config[PATH_CONFIG_NAME]
         if self.config[LABELS_CONFIG_NAME] != self._stored.labels:
             self._stored.labels = self.config[LABELS_CONFIG_NAME]
@@ -369,7 +357,6 @@ class GithubRunnerCharm(CharmBase):
             runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
             self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
             # TODO: 2024-04-12: Flush on token changes.
-        return
 
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
@@ -391,12 +378,10 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Reconciling runners")
         state = self._setup_state()
 
-        if state.instance_type == InstanceType.OPENSTACK:
-            if not self._get_set_image_ready_status():
-                return
-            runner_scaler = self._get_runner_scaler(state)
-            self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+        if not self._get_set_image_ready_status():
             return
+        runner_scaler = self._get_runner_scaler(state)
+        self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
 
     @catch_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:
@@ -470,7 +455,6 @@ class GithubRunnerCharm(CharmBase):
             return
         self.unit.status = ActiveStatus()
         event.set_results({"delta": {"virtual-machines": delta}})
-        return
 
     @catch_action_errors
     def _on_update_dependencies_action(self, event: ActionEvent) -> None:
