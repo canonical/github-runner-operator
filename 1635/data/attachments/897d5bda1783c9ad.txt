@@ -1,0 +1,39 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-metrics-success-spxg on cloud localhost
+INFO     juju.model:model.py:2284 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+INFO     juju.model:model.py:2284 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ewo51o16/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ewo51o16/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ewo51o16/0 [executing] maintenance: installing charm software
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ewo51o16/0 [executing] maintenance: Reconciling runners
+INFO     root:charm_metrics.py:127 Loop device None not found
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ewo51o16/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ewo51o16/0 [idle] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-ewo51o16/0 [executing] active: 
+INFO     root:common.py:609 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734521947.5176888, "event": "reconciliation", "flavor": "test-ewo51o16", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 99.54255938529968}
+{"timestamp": 1734521971.9051354, "event": "reconciliation", "flavor": "test-ewo51o16", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 23.392070293426514}
+{"timestamp": 1734521914.0, "event": "runner_installed", "flavor": "test-ewo51o16", "duration": 55.0438232421875}
+{"timestamp": 1734522030.1623905, "event": "reconciliation", "flavor": "test-ewo51o16", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 40.515767097473145}
+{"timestamp": 1734522044.3147957, "event": "reconciliation", "flavor": "test-ewo51o16", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.1515531539917}

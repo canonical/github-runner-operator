@@ -1,0 +1,58 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-metrics-failure-gl3n on cloud localhost
+INFO     root:conftest.py:589 GitHub token rate limit: Rate(reset=2024-12-18 11:59:19+00:00, remaining=4845, limit=5000)
+INFO     juju.model:model.py:2284 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] active: Waiting for first image.
+INFO     juju.model:model.py:2284 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-xasz2tk8/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-xasz2tk8/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-xasz2tk8/0 [allocating] waiting: agent initialising
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-xasz2tk8/0 [executing] maintenance: Update image for runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-xasz2tk8/0 [idle] active: 
+INFO     root:charm_metrics.py:127 Loop device None not found
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-xasz2tk8/0 [executing] active:
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-xasz2tk8/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-xasz2tk8/0 [idle] active: 
+INFO     tests.integration.helpers.openstack:openstack.py:49 [TEST SETUP] Exposing port 8080 on test-xasz2tk8-0-68d0fe96f937
+WARNING  tests.integration.helpers.openstack:openstack.py:51 dict_values([[{'version': 4, 'addr': '10.145.193.239', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:fb:d2:5e'}]])
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command nc -z localhost 8080 on test-xasz2tk8-0-68d0fe96f937
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.239', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:fb:d2:5e'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-xasz2tk8-0-68d0fe96f937.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.239 nc -z localhost 8080'
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command curl http://localhost:8080 on test-xasz2tk8-0-68d0fe96f937
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.239', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:fb:d2:5e'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-xasz2tk8-0-68d0fe96f937.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.239 curl http://localhost:8080'
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-xasz2tk8/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-xasz2tk8/0 [idle] active: 
+INFO     root:common.py:609 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734522941.0, "event": "runner_installed", "flavor": "test-xasz2tk8", "duration": 61.49684190750122}
+{"timestamp": 1734523032.0, "event": "runner_start", "flavor": "test-xasz2tk8", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 91.0, "queue_duration": 9.0}
+{"timestamp": 1734523032.0, "event": "runner_stop", "flavor": "test-xasz2tk8", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1734523228.0232215, "event": "reconciliation", "flavor": "test-xasz2tk8", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 123.73331427574158}
+{"timestamp": 1734523210.0, "event": "runner_installed", "flavor": "test-xasz2tk8", "duration": 96.21215891838074}
+{"timestamp": 1734523269.4653375, "event": "reconciliation", "flavor": "test-xasz2tk8", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 40.3492636680603}
+{"timestamp": 1734523286.2001052, "event": "reconciliation", "flavor": "test-xasz2tk8", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.340647220611572}
