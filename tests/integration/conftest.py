@@ -310,9 +310,12 @@ def runner_manager_github_client(token: str) -> GithubClient:
 
 @pytest_asyncio.fixture(scope="module")
 async def app_no_runner(
+    model: Model,
     basic_app: Application,
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
+    await basic_app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE, timeout=90 * 60)
     yield basic_app
 
 
