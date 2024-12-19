@@ -60,7 +60,6 @@ from github_runner_manager.utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
 
-BUILD_OPENSTACK_IMAGE_SCRIPT_FILENAME = "scripts/build-openstack-image.sh"
 _CONFIG_SCRIPT_PATH = Path("/home/ubuntu/actions-runner/config.sh")
 
 RUNNER_APPLICATION = Path("/home/ubuntu/actions-runner")

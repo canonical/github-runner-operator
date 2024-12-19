@@ -13,7 +13,8 @@ import pytest
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers.common import InstanceHelper, wait_for
+from tests.integration.helpers.common import wait_for
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 from tests.status_name import ACTIVE
 
 pytestmark = pytest.mark.openstack
@@ -24,7 +25,7 @@ pytestmark = pytest.mark.openstack
 async def test_update_interval(
     model: Model,
     app_scheduled_events: Application,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
 ) -> None:
     """
     arrange: A working application with one runner.
