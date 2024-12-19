@@ -38,7 +38,7 @@ async def test_check_runners_no_runners(app_no_runner: Application) -> None:
     assert action.results["online"] == "0"
     assert action.results["offline"] == "0"
     assert action.results["unknown"] == "0"
-    assert action.results["runners"] == '()'
+    assert action.results["runners"] == "()"
 
 
 @pytest.mark.asyncio
