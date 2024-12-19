@@ -4,7 +4,7 @@ This guide demonstrates the process of integrating with the [Canonical Observabi
 
 The `cos-agent` integration can be consumed by the [grafana-agent](https://charmhub.io/grafana-agent) charm, which is responsible for transmitting logs, Prometheus metrics, and Grafana dashboards to the COS stack.
 
-> NOTE: The Github Runner charm and `grafana-agent` charm function as machine charms, while the COS stack comprises Kubernetes charms. Therefore, establishing [cross-model integrations](https://juju.is/docs/juju/manage-cross-model-integrations) is necessary, along with potential firewall rule configurations to allow inter-model traffic.
+> NOTE: The Github Runner charm and `grafana-agent` charm function as machine charms, while the COS stack contains Kubernetes charms. Therefore, establishing [cross-model integrations](https://juju.is/docs/juju/manage-cross-model-integrations) is necessary, along with potential firewall rule configurations to allow inter-model traffic.
 
 
 ## Requirements 

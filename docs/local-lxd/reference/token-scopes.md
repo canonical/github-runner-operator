@@ -3,14 +3,14 @@
 ## Fine grained access token scopes
 
 **Note**: In addition to having a token with the necessary permissions, the user who owns the
-token also must have admin access to the organisation or repository.
+token also must have admin access to the organization or repository.
 
 ### Organizational Runners
 
 The following are the permissions scopes required for the GitHub runners when registering as an
-organisational runner.
+organizational runner.
 
-Organisation:
+Organization:
 
 - Self-hosted runners: read & write
 
@@ -36,7 +36,7 @@ repository runner.
 
 ### Organizational Runners
 
-To use this charm for GitHub organisations, the following scopes should be selected:
+To use this charm for GitHub organizations, the following scopes should be selected:
 
 - `repo`
 - `admin:org`

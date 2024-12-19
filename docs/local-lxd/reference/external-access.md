@@ -1,6 +1,6 @@
 # External Access
 
-The GitHub Runner Charm itself requires access to the
+The GitHub Runner Charm itself requires access to:
 
 - GitHub API (e.g. to register and remove runners).
 - GitHub website (e.g. to download the runner binary or other applications like yq)

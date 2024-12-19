@@ -8,7 +8,7 @@ registered on [Authorized Keys](https://github.com/tmate-io/tmate-ssh-server/pul
 by default on [tmate-ssh-server charm](https://charmhub.io/tmate-ssh-server/).
 
 Authorized keys are registered via [action-tmate](https://github.com/canonical/action-tmate/)'s
-`limit-access-to-actor` feature. This feature uses GitHub users's SSH key to launch an instance
+`limit-access-to-actor` feature. This feature uses a GitHub users's SSH key to launch an instance
 of tmate session with `-a` option, which adds the user's SSH key to `~/.ssh/authorized_keys`.
 
 ### Firewall rules

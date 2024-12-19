@@ -11,7 +11,7 @@ called "GitHub Self-Hosted Runner Metrics (Long-Term)".
 The "GitHub Self-Hosted Runner Metrics" metrics dashboard presents the following rows:
 
 - General: Displays general metrics about the charm and runners, such as:
-  - Lifecycle counters: Tracks the frequency of Runner initialisation, start, stop, and crash events.
+  - Lifecycle counters: Tracks the frequency of Runner initialization, start, stop, and crash events.
   - Available runners: A horizontal bar graph showing the number of runners available (and max expected) during the last reconciliation event. Note: This data is updated after each reconciliation event and is not real-time. 
   - Runners after reconciliation: A time series graph showing the number of runners marked as active/idle, the number of expected runners, and the difference between expected and the former (unknown) during the last reconciliation event over time. Note: This data is updated after each reconciliation event and is not real-time.
   - Duration observations: Each data point aggregates the last hour and shows the 50th, 90th, 95th percentile and maximum durations for:
@@ -23,7 +23,7 @@ The "GitHub Self-Hosted Runner Metrics" metrics dashboard presents the following
   - Average reconciliation interval: Shows the average time between reconciliation events, broken down by charm application.
 - Jobs: Displays certain metrics about the jobs executed by the runners. These metrics can be displayed per repository by specifying a
  regular expression on the `Repository` variable. The following metrics are displayed:
-  - Proportion charts: Share of jobs by completion status, job conclusion, application, repo policy check failure http codes and github events over time.
+  - Proportion charts: Share of jobs by completion status, job conclusion, application, repo policy check failure, HTTP codes and GitHub events over time.
   - Job duration observation
   - Number of jobs per repository
 
@@ -39,16 +39,16 @@ The "GitHub Self-Hosted Runner Metrics (Long-Term)" metrics dashboard displays t
 Both dashboards allow for filtering by charm application by specifying a regular expression on the `Application` variable.
 
 
-While the dashboard visualises a subset of potential metrics, these metrics are logged in a file named `/var/log/github-runner-metrics.log`. Use following Loki query to retrieve lines from this file:
+While the dashboard visualizes a subset of potential metrics, these metrics are logged in a file named `/var/log/github-runner-metrics.log`. Use following Loki query to retrieve lines from this file:
 
 ```
 {filename="/var/log/github-runner-metrics.log"}
 ```
 
-These log events contain valuable details such as charm application, GitHub events triggering workflows along with their respective repositories, and more. Customising metric visualisation is possible to suit specific needs.
+These log events contain valuable details such as charm application, GitHub events triggering workflows along with their respective repositories, and more. Customizing metric visualization is possible to suit specific needs.
 
 ### Machine Host Metrics
-The `grafana-agent` autonomously transmits machine host metrics, which are visualised in the `System Resources` dashboard.
+The `grafana-agent` autonomously transmits machine host metrics, which are visualized in the `System Resources` dashboard.
 
 ## Logs
 
