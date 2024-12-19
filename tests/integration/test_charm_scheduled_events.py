@@ -7,6 +7,7 @@ Scheduled events can interfere with most tests. Therefore, an application with
 scheduled events are in its own module.
 """
 
+import logging
 from asyncio import sleep
 
 import pytest
@@ -17,6 +18,7 @@ from tests.integration.helpers.common import wait_for
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 from tests.status_name import ACTIVE
 
+logger = logging.getLogger(__name__)
 pytestmark = pytest.mark.openstack
 
 
@@ -53,6 +55,7 @@ async def test_update_interval(
 
     await wait_for(_no_runners_available, timeout=30, check_interval=3)
 
+    logger.info("Wait for 10 minutes")
     await sleep(10 * 60)
     await model.wait_for_idle(status=ACTIVE, timeout=20 * 60)
 
