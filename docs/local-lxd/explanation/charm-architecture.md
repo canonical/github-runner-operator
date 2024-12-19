@@ -112,7 +112,7 @@ The charm installs the following dependencies:
   - libvirt-daemon-driver-qemu
   - apparmor-utils
 
-These dependencies can be regularly updated using the [landscape-client charm](https://charmhub.io/landscape-client).
+These dependencies can be regularly updated using the [`landscape-client` charm](https://charmhub.io/landscape-client).
 
 The charm installs the following dependencies and regularly updates them:
 
