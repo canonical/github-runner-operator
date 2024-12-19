@@ -83,38 +83,6 @@ def get_env_var(env_var: str) -> Optional[str]:
     return os.environ.get(env_var.upper(), os.environ.get(env_var.lower(), None))
 
 
-def bytes_with_unit_to_kib(num_bytes: str) -> int:
-    """Convert a positive integer followed by a unit to number of kibibytes.
-
-    Args:
-        num_bytes: A positive integer followed by one of the following unit: KiB, MiB, GiB, TiB,
-            PiB, EiB.
-
-    Raises:
-        ValueError: If invalid unit was detected.
-
-    Returns:
-        Number of kilobytes.
-    """
-    num_of_kib = {
-        "KiB": 1024**0,
-        "MiB": 1024**1,
-        "GiB": 1024**2,
-        "TiB": 1024**3,
-        "PiB": 1024**4,
-        "EiB": 1024**5,
-    }
-
-    num = num_bytes[:-3]
-    unit = num_bytes[-3:]
-    if unit not in num_of_kib:
-        raise ValueError(
-            "Must be a positive integer followed by a unit",
-        )
-
-    return num_of_kib[unit] * int(num)
-
-
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
 def remove_residual_venv_dirs() -> None:  # pragma: no cover
     """Remove the residual empty directories from last revision if it exists."""
