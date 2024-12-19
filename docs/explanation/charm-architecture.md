@@ -21,7 +21,7 @@ On schedule or upon configuration change, the charm performs a reconcile to ensu
 
 ## Virtual machine image
 
-The virtual machine images are built on installation and on a schedule using the [gitrunner-image-builder](https://github.com/canonical/github-runner-image-builder).
+The virtual machine images are built on installation and on a schedule using the [github-runner-image-builder](https://github.com/canonical/github-runner-image-builder).
 
 ## Network configuration
 

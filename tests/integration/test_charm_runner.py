@@ -80,7 +80,7 @@ async def test_flush_runner_and_resource_config(
     assert:
         1. One runner exists.
         2. Check the resource matches the configuration.
-        3. The runner is not flushed since by default it flushes idle. (Only valid for OpenStack)
+        3. The runner is not flushed since by default it flushes idle.
 
     Test are combined to reduce number of runner spawned.
     """

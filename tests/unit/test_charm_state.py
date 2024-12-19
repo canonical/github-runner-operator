@@ -784,7 +784,6 @@ def mock_charm_state_data():
         "runner_config": {
             "virtual_machines": 2,
         },
-        "instance_type": "openstack",
         "ssh_debug_connections": [
             {"host": "10.1.2.4", "port": 22},
         ],
