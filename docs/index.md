@@ -24,7 +24,7 @@ The charm enforces a set of GitHub repository settings as best practice. This is
 |  [Overview](https://charmhub.io/github-runner)</br>  Overview of the charm </br> | [How-to guides](https://charmhub.io/github-runner/docs/how-to-openstack-runner) </br> Step-by-step guides covering key operations and common tasks |
 | [Reference](https://charmhub.io/github-runner/docs/reference-actions) </br> Technical information - specifications, APIs, architecture | [Explanation](https://charmhub.io/github-runner/docs/explanation-charm-architecture) </br> Concepts - discussion and clarification of key topics  |
 
-If you want to use ephemeral LXD virtual machines, that run inside the charm machine, you can refer to the section [Track local-lxd](https://charmhub.io/github-runner/docs/local-lxd/index.md).
+If you want to use ephemeral LXD virtual machines, that run inside the charm machine, you can refer to the section [Track local-lxd](https://charmhub.io/github-runner/docs/local-lxd).
 
 ## Contributing to this documentation
 
@@ -66,7 +66,7 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
 1. [Explanation](explanation)
   1. [Charm architecture](explanation/charm-architecture.md)
   1. [SSH Debug](explanation/ssh-debug.md)
-1. [Track local-lxd](local-lxd/index.md)
+1. [Track local-lxd](local-lxd)
   1. [Tutorial](local-lxd/tutorial)
     1. [Managing resource usage](local-lxd/tutorial/managing-resource-usage.md)
     1. [Quick start](local-lxd/tutorial/quick-start.md)
