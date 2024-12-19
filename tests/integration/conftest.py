@@ -310,34 +310,10 @@ def runner_manager_github_client(token: str) -> GithubClient:
 
 @pytest_asyncio.fixture(scope="module")
 async def app_no_runner(
-    model: Model,
-    charm_file: str,
-    app_name: str,
-    path: str,
-    token: str,
-    http_proxy: str,
-    https_proxy: str,
-    no_proxy: str,
-    existing_app: Optional[str],
+    basic_app: Application,
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
-    if existing_app:
-        application = model.applications[existing_app]
-    else:
-        # Set the scheduled event to 1 hour to avoid interfering with the tests.
-        application = await deploy_github_runner_charm(
-            model=model,
-            charm_file=charm_file,
-            app_name=app_name,
-            path=path,
-            token=token,
-            http_proxy=http_proxy,
-            https_proxy=https_proxy,
-            no_proxy=no_proxy,
-            reconcile_interval=60,
-        )
-    await model.wait_for_idle(apps=[application.name], status=ACTIVE)
-    return application
+    yield basic_app
 
 
 @pytest_asyncio.fixture(scope="module", name="image_builder")
@@ -652,9 +628,7 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
 
 @pytest_asyncio.fixture(scope="module", name="app_for_metric")
 async def app_for_metric_fixture(
-    model: Model,
     basic_app: Application,
-    existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
     yield basic_app
 
