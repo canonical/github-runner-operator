@@ -9,8 +9,8 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers.common import reconcile
-from tests.integration.helpers.lxd import wait_till_num_of_runners
+from tests.integration.helpers.common import reconcile, wait_for
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +43,11 @@ async def test_check_runners_no_runners(app_no_runner: Application) -> None:
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_reconcile_runners(model: Model, app_no_runner: Application) -> None:
+async def test_reconcile_runners(
+    model: Model,
+    app_no_runner: Application,
+    instance_helper: OpenStackInstanceHelper,
+) -> None:
     """
     arrange: A working application with no runners.
     act:
@@ -68,11 +72,15 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
 
     await reconcile(app=app, model=model)
 
-    await wait_till_num_of_runners(unit, 1)
+    async def _runners_number(number) -> bool:
+        """Check if there is the expected number of runners."""
+        return len(await instance_helper.get_runner_names(unit)) == number
+
+    await wait_for(lambda: _runners_number(1), timeout=10 * 60, check_interval=10)
 
     # 2.
     await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
 
     await reconcile(app=app, model=model)
 
-    await wait_till_num_of_runners(unit, 0)
+    await wait_for(lambda: _runners_number(0), timeout=10 * 60, check_interval=10)
