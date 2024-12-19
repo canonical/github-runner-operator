@@ -13,7 +13,7 @@ from juju.model import Model
 
 from charm_state import PATH_CONFIG_NAME
 from tests.integration.helpers.common import reconcile
-from tests.integration.helpers.lxd import ensure_charm_has_runner, get_runner_names
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 
 @pytest.mark.openstack
@@ -24,6 +24,7 @@ async def test_path_config_change(
     app_with_forked_repo: Application,
     github_repository: Repository,
     path: str,
+    instance_helper: OpenStackInstanceHelper,
 ) -> None:
     """
     arrange: A working application with one runner in a forked repository.
@@ -31,13 +32,13 @@ async def test_path_config_change(
     assert: No runners connected to the forked repository and one runner in the main repository.
     """
     unit = app_with_forked_repo.units[0]
-    await ensure_charm_has_runner(app=app_with_forked_repo, model=model)
+    await instance_helper.ensure_charm_has_runner(app_with_forked_repo)
 
     await app_with_forked_repo.set_config({PATH_CONFIG_NAME: path})
 
     await reconcile(app=app_with_forked_repo, model=model)
 
-    runner_names = await get_runner_names(unit)
+    runner_names = await instance_helper.get_runner_names(unit)
     assert len(runner_names) == 1
     runner_name = runner_names[0]
 
