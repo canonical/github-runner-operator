@@ -1,0 +1,57 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-metrics-failure-f44n on cloud localhost
+INFO     root:conftest.py:542 GitHub token rate limit: Rate(reset=2024-12-19 12:59:08+00:00, remaining=4492, limit=5000)
+INFO     juju.model:model.py:2284 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: installing charm software
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:3211 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2284 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-dwkzxcer/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-dwkzxcer/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-dwkzxcer/0 [allocating] waiting: agent initialising
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-dwkzxcer/0 [executing] maintenance: Update image for runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-dwkzxcer/0 [idle] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-dwkzxcer/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-dwkzxcer/0 [idle] active:
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-dwkzxcer/0 [executing] active: 
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-dwkzxcer/0 [idle] active: 
+INFO     tests.integration.helpers.openstack:openstack.py:49 [TEST SETUP] Exposing port 8080 on test-dwkzxcer-0-f946e435c5b7
+WARNING  tests.integration.helpers.openstack:openstack.py:51 dict_values([[{'version': 4, 'addr': '10.145.193.91', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:97:81:3c'}]])
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command nc -z localhost 8080 on test-dwkzxcer-0-f946e435c5b7
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.91', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:97:81:3c'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-dwkzxcer-0-f946e435c5b7.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.91 nc -z localhost 8080'
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command curl http://localhost:8080 on test-dwkzxcer-0-f946e435c5b7
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.91', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:97:81:3c'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-dwkzxcer-0-f946e435c5b7.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.91 curl http://localhost:8080'
+INFO     tests.integration.helpers.common:common.py:368 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:368 Wait for condition not met, sleeping 60
+INFO     juju.model:model.py:3211 Waiting for model:
+  test-dwkzxcer/0 [executing] active: 
+INFO     root:common.py:415 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734612556.0, "event": "runner_installed", "flavor": "test-dwkzxcer", "duration": 116.21143555641174}
+{"timestamp": 1734612650.0, "event": "runner_start", "flavor": "test-dwkzxcer", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "canonical-github-runners-ps6/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 94.0, "queue_duration": 10.0}
+{"timestamp": 1734612650.0, "event": "runner_stop", "flavor": "test-dwkzxcer", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "canonical-github-runners-ps6/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1734612847.3356261, "event": "reconciliation", "flavor": "test-dwkzxcer", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 149.61365699768066}
+{"timestamp": 1734612818.0, "event": "runner_installed", "flavor": "test-dwkzxcer", "duration": 110.15457224845886}
+{"timestamp": 1734612890.1825762, "event": "reconciliation", "flavor": "test-dwkzxcer", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 41.83054065704346}
+{"timestamp": 1734612903.5194764, "event": "reconciliation", "flavor": "test-dwkzxcer", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.042397499084473}

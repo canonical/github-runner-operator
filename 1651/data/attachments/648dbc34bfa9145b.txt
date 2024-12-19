@@ -1,0 +1,75 @@
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                   Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-k1kd  lxd         localhost/localhost  3.6.1    unsupported  12:59:17Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-bztfhtwq                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.119.155.122         
+test-bztfhtwq/0*                active    idle   1        10.119.155.200         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.119.155.122  juju-035430-0  ubuntu@22.04      Running
+1        started  10.119.155.200  juju-035430-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 12:41:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 12:41:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 12:41:32 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 12:44:38 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 12:44:38 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-bztfhtwq-0: 12:44:38 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-bztfhtwq-0: 12:49:35 ERROR unit.test-bztfhtwq/0.juju-log pre-job-metrics.json not found for runner test-bztfhtwq-0-268131068693
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-bztfhtwq-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-bztfhtwq-0-268131068693/pre-job-metrics.json'
+unit-test-bztfhtwq-0: 12:49:35 ERROR unit.test-bztfhtwq/0.juju-log Pre-job metrics for runner test-bztfhtwq-0-268131068693 not found, stop extracting post-jobs metrics.
+unit-test-bztfhtwq-0: 12:53:51 ERROR unit.test-bztfhtwq/0.juju-log image:0: pre-job-metrics.json not found for runner test-bztfhtwq-0-0eb46b5e60b0
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-bztfhtwq-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-bztfhtwq-0-0eb46b5e60b0/pre-job-metrics.json'
+unit-test-bztfhtwq-0: 12:53:51 ERROR unit.test-bztfhtwq/0.juju-log image:0: Pre-job metrics for runner test-bztfhtwq-0-0eb46b5e60b0 not found, stop extracting post-jobs metrics.
+unit-test-bztfhtwq-0: 12:53:56 ERROR unit.test-bztfhtwq/0.juju-log image:0: Failed to get SSH connection while removing test-bztfhtwq-0-0eb46b5e60b0
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-bztfhtwq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-bztfhtwq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-bztfhtwq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-bztfhtwq-0-0eb46b5e60b0, key path: /home/runner-manager/.ssh/test-bztfhtwq-0-0eb46b5e60b0.key
+unit-test-bztfhtwq-0: 12:57:53 ERROR unit.test-bztfhtwq/0.juju-log pre-job-metrics.json not found for runner test-bztfhtwq-0-57c27ec42c16
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-bztfhtwq-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-bztfhtwq-0-57c27ec42c16/pre-job-metrics.json'
+unit-test-bztfhtwq-0: 12:57:53 ERROR unit.test-bztfhtwq/0.juju-log Pre-job metrics for runner test-bztfhtwq-0-57c27ec42c16 not found, stop extracting post-jobs metrics.
+unit-test-bztfhtwq-0: 12:58:00 ERROR unit.test-bztfhtwq/0.juju-log Failed to get SSH connection while removing test-bztfhtwq-0-57c27ec42c16
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-bztfhtwq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-bztfhtwq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-bztfhtwq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-bztfhtwq-0-57c27ec42c16, key path: /home/runner-manager/.ssh/test-bztfhtwq-0-57c27ec42c16.key
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
