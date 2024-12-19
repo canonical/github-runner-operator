@@ -245,7 +245,7 @@ class GithubRunnerCharm(CharmBase):
         except CharmConfigInvalidError as exc:
             raise ConfigurationError(exc.msg) from exc
 
-    def _common_install_code(self) -> bool:  # noqa: C901
+    def _common_install_code(self) -> bool:
         """Installation code shared between install and upgrade hook.
 
         Raises:
@@ -333,9 +333,8 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Reinstalling dependencies...")
         self._common_install_code()
 
-    # Temporarily ignore too-complex since this is subject to refactor.
     @catch_charm_errors
-    def _on_config_changed(self, _: ConfigChangedEvent) -> None:  # noqa: C901
+    def _on_config_changed(self, _: ConfigChangedEvent) -> None:
         """Handle the configuration change."""
         state = self._setup_state()
         self._set_reconcile_timer()

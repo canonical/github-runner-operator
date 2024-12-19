@@ -37,7 +37,6 @@ from charm_state import (
 )
 from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
-    InstanceHelper,
     deploy_github_runner_charm,
     reconcile,
     wait_for,
@@ -694,7 +693,7 @@ async def basic_app_fixture(request: pytest.FixtureRequest) -> Application:
 
 
 @pytest_asyncio.fixture(scope="function", name="instance_helper")
-async def instance_helper_fixture(request: pytest.FixtureRequest) -> InstanceHelper:
+async def instance_helper_fixture(request: pytest.FixtureRequest) -> OpenStackInstanceHelper:
     """Instance helper fixture."""
     openstack_connection = request.getfixturevalue("openstack_connection")
     return OpenStackInstanceHelper(openstack_connection=openstack_connection)

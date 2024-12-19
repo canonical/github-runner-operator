@@ -16,7 +16,6 @@ from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-    InstanceHelper,
     dispatch_workflow,
     reconcile,
     wait_for,
@@ -28,7 +27,7 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_r
 async def app_fixture(
     model: Model,
     basic_app: Application,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
 ) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
@@ -139,7 +138,7 @@ async def test_repo_policy_enabled(
     test_github_branch: Branch,
     token: str,
     https_proxy: str,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
 ) -> None:
     """
     arrange: A working application with one runner with repo policy enabled.

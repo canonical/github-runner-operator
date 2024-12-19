@@ -10,7 +10,8 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers.common import InstanceHelper, dispatch_workflow, get_job_logs
+from tests.integration.helpers.common import dispatch_workflow, get_job_logs
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 from tests.status_name import ACTIVE
 
 logger = logging.getLogger(__name__)
@@ -26,7 +27,7 @@ async def test_ssh_debug(
     github_repository: Repository,
     test_github_branch: Branch,
     tmate_ssh_server_unit_ip: str,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
 ):
     """
     arrange: given an integrated GitHub-Runner charm and tmate-ssh-server charm.

@@ -22,10 +22,10 @@ from tests.integration.helpers.charm_metrics import (
 )
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
-    InstanceHelper,
     dispatch_workflow,
     reconcile,
 )
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -44,7 +44,7 @@ async def app_fixture(model: Model, app_for_metric: Application) -> AsyncIterato
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_runner_installed_metric(
-    app: Application, model: Model, instance_helper: InstanceHelper
+    app: Application, model: Model, instance_helper: OpenStackInstanceHelper
 ):
     """
     arrange: A charm integrated with grafana-agent using the cos-agent integration.
@@ -77,7 +77,7 @@ async def test_charm_issues_metrics_after_reconciliation(
     app: Application,
     github_repository: Repository,
     test_github_branch: Branch,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.

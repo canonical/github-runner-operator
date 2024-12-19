@@ -11,16 +11,16 @@ from juju.model import Model
 
 from tests.integration.helpers.common import (
     DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
-    InstanceHelper,
     dispatch_workflow,
 )
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
 async def app_fixture(
     model: Model,
     basic_app: Application,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
 ) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 

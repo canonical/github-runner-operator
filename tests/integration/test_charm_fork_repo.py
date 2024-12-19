@@ -17,11 +17,9 @@ from juju.model import Model
 
 from tests.integration.helpers.common import (
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
-    InstanceHelper,
     dispatch_workflow,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
-from tests.status_name import ACTIVE
 
 
 @pytest.mark.openstack
@@ -32,7 +30,7 @@ async def test_dispatch_workflow_failure(
     app_with_forked_repo: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
     token: str,
     https_proxy: str,
 ) -> None:
@@ -46,25 +44,12 @@ async def test_dispatch_workflow_failure(
     """
     start_time = datetime.now(timezone.utc)
 
-    if isinstance(instance_helper, OpenStackInstanceHelper):
-        await setup_repo_policy(
-            app=app_with_forked_repo,
-            openstack_connection=instance_helper.openstack_connection,
-            token=token,
-            https_proxy=https_proxy,
-        )
-    else:
-        grafana_agent = await model.deploy(
-            "grafana-agent",
-            application_name=f"grafana-agent-{app_with_forked_repo.name}",
-            channel="latest/edge",
-        )
-        await model.relate(
-            f"{app_with_forked_repo.name}:cos-agent", f"{grafana_agent.name}:cos-agent"
-        )
-        await model.wait_for_idle(apps=[app_with_forked_repo.name], status=ACTIVE)
-        await model.wait_for_idle(apps=[grafana_agent.name])
-        await instance_helper.ensure_charm_has_runner(app_with_forked_repo)
+    await setup_repo_policy(
+        app=app_with_forked_repo,
+        openstack_connection=instance_helper.openstack_connection,
+        token=token,
+        https_proxy=https_proxy,
+    )
 
     workflow = forked_github_repository.get_workflow(
         id_or_file_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME

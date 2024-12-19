@@ -20,12 +20,8 @@ from github_runner_manager.types_.github import JobConclusion
 from juju.application import Application
 from juju.unit import Unit
 
-from tests.integration.helpers.common import (
-    InstanceHelper,
-    get_file_content,
-    run_in_unit,
-    wait_for,
-)
+from tests.integration.helpers.common import get_file_content, run_in_unit, wait_for
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +35,7 @@ TEST_WORKFLOW_NAMES = [
 async def wait_for_workflow_to_start(
     unit: Unit,
     workflow: Workflow,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
     branch: Branch | None = None,
     started_time: float | None = None,
     timeout: int = 20 * 60,
@@ -118,7 +114,10 @@ async def get_metrics_log(unit: Unit) -> str:
 
 
 async def cancel_workflow_run(
-    unit: Unit, workflow: Workflow, instance_helper: InstanceHelper, branch: Branch | None = None
+    unit: Unit,
+    workflow: Workflow,
+    instance_helper: OpenStackInstanceHelper,
+    branch: Branch | None = None,
 ):
     """Cancel the workflow run.
 

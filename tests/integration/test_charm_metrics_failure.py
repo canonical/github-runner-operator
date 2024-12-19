@@ -25,7 +25,6 @@ from tests.integration.helpers.charm_metrics import (
 from tests.integration.helpers.common import (
     DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
-    InstanceHelper,
     dispatch_workflow,
     reconcile,
 )
@@ -62,7 +61,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     forked_github_branch: Branch,
     token: str,
     https_proxy: str,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
@@ -72,15 +71,12 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     """
     await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
 
-    if isinstance(instance_helper, OpenStackInstanceHelper):
-        await setup_repo_policy(
-            app=app,
-            openstack_connection=instance_helper.openstack_connection,
-            token=token,
-            https_proxy=https_proxy,
-        )
-    else:
-        await instance_helper.ensure_charm_has_runner(app)
+    await setup_repo_policy(
+        app=app,
+        openstack_connection=instance_helper.openstack_connection,
+        token=token,
+        https_proxy=https_proxy,
+    )
 
     # Clear metrics log to make reconciliation event more predictable
     unit = app.units[0]
@@ -116,7 +112,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     app: Application,
     github_repository: Repository,
     test_github_branch: Branch,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
