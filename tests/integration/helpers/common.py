@@ -169,7 +169,6 @@ async def deploy_github_runner_charm(
     app_name: str,
     path: str,
     token: str,
-    runner_storage: str,
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
@@ -187,7 +186,6 @@ async def deploy_github_runner_charm(
         app_name: Application name for the deployment.
         path: Path representing the GitHub repo/org.
         token: GitHub Personal Token for the application to use.
-        runner_storage: Runner storage to use, i.e. "memory" or "juju_storage",
         http_proxy: HTTP proxy for the application to use.
         https_proxy: HTTPS proxy for the application to use.
         no_proxy: No proxy configuration for the application.
@@ -210,10 +208,6 @@ async def deploy_github_runner_charm(
         }
     )
 
-    storage = {}
-    if runner_storage == "juju-storage":
-        storage["runner"] = {"pool": "rootfs", "size": 11}
-
     default_config = {
         PATH_CONFIG_NAME: path,
         TOKEN_CONFIG_NAME: token,
@@ -231,7 +225,6 @@ async def deploy_github_runner_charm(
         base="ubuntu@22.04",
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
-        storage=storage,  # type: ignore[arg-type]
         **(deploy_kwargs or {}),
     )
 

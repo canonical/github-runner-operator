@@ -75,7 +75,6 @@ async def test_charm_upgrade(
         app_name=app_name,
         path=path,
         token=token,
-        runner_storage="juju-storage",
         http_proxy=openstack_http_proxy,
         https_proxy=openstack_https_proxy,
         no_proxy=openstack_no_proxy,
