@@ -1,7 +1,5 @@
 # Charm architecture
 
-A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) to operate a set of [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) while managing security and resource usage.
-
 Conceptually, the charm can be divided into the following:
 
 - Management of LXD ephemeral virtual machines to host [ephemeral self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/autoscaling-with-self-hosted-runners#using-ephemeral-runners-for-autoscaling)
@@ -31,16 +29,16 @@ The virtual machine images are built on installation and on a schedule every 6 h
 The software installed in the image includes:
 
 - APT packages:
-  - docker.io
-  - npm
-  - python3-pip
-  - shellcheck
-  - jq
-  - wget
+  - `docker.io`
+  - `npm`
+  - `python3-pip`
+  - `shellcheck`
+  - `jq`
+  - `wget`
 - npm packages:
-  - yarn
+  - `yarn`
 - Binary downloaded:
-  - yq
+  - `yq`
 
 The configurations applied in the image include:
 
