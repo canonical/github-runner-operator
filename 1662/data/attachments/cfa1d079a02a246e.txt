@@ -1,0 +1,54 @@
+19:05:23 INFO Waiting for model:
+  test-i4grhtkd/0 [executing] active: 
+19:05:54 INFO Waiting for model:
+  test-i4grhtkd/0 [idle] active: 
+19:06:42 INFO Waiting for model:
+  test-i4grhtkd/0 [executing] active: 
+19:07:12 INFO Waiting for model:
+  test-i4grhtkd/0 [idle] active:
+19:07:16 INFO Model status:
+
+Model                      Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-x41x  lxd         localhost/localhost  3.6.1    unsupported  19:07:16Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-i4grhtkd                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.173.198.36          
+test-i4grhtkd/0*                active    idle   1        10.173.198.8           
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.173.198.36  juju-6f8221-0  ubuntu@22.04      Running
+1        started  10.173.198.8   juju-6f8221-1  ubuntu@22.04      Running
+
+19:07:16 INFO Juju error logs:
+
+machine-0: 18:56:36 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:56:36 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 18:56:37 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 19:00:06 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 19:00:06 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-i4grhtkd-0: 19:00:06 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-i4grhtkd-0: 19:06:37 ERROR unit.test-i4grhtkd/0.juju-log pre-job-metrics.json not found for runner test-i4grhtkd-0-985b359ae617
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-i4grhtkd-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-i4grhtkd-0-985b359ae617/pre-job-metrics.json'
+unit-test-i4grhtkd-0: 19:06:37 ERROR unit.test-i4grhtkd/0.juju-log Pre-job metrics for runner test-i4grhtkd-0-985b359ae617 not found, stop extracting post-jobs metrics.
+unit-test-i4grhtkd-0: 19:06:47 ERROR unit.test-i4grhtkd/0.juju-log Failed to get SSH connection while removing test-i4grhtkd-0-985b359ae617
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-i4grhtkd-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-i4grhtkd-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-i4grhtkd-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-i4grhtkd-0-985b359ae617, key path: /home/runner-manager/.ssh/test-i4grhtkd-0-985b359ae617.key
+
+19:07:16 INFO Forgetting model main...

@@ -1,0 +1,168 @@
+19:24:23 INFO Waiting for model:
+  test-mhbr7n5m/0 [executing] active: 
+19:24:53 INFO Waiting for model:
+  test-mhbr7n5m/0 [idle] active:
+19:25:28 INFO Waiting for model:
+  test-mhbr7n5m/0 [executing] maintenance: Reconciling runners
+19:25:59 INFO Waiting for model:
+  test-mhbr7n5m/0 [idle] active: 
+19:26:03 INFO Wait for condition not met, sleeping 10
+19:26:14 INFO Wait for condition not met, sleeping 10
+19:26:25 INFO Wait for condition not met, sleeping 10
+19:26:35 INFO Wait for condition not met, sleeping 10
+19:26:45 INFO Wait for condition not met, sleeping 10
+19:26:55 INFO Wait for condition not met, sleeping 10
+19:27:06 INFO Wait for condition not met, sleeping 10
+19:27:16 INFO Wait for condition not met, sleeping 10
+19:27:26 INFO Wait for condition not met, sleeping 10
+19:27:36 INFO Wait for condition not met, sleeping 10
+19:27:47 INFO Wait for condition not met, sleeping 10
+19:27:57 INFO Wait for condition not met, sleeping 10
+19:28:07 INFO Wait for condition not met, sleeping 10
+19:28:18 INFO Wait for condition not met, sleeping 10
+19:28:28 INFO Wait for condition not met, sleeping 10
+19:28:38 INFO Wait for condition not met, sleeping 10
+19:28:48 INFO Wait for condition not met, sleeping 10
+19:28:59 INFO Wait for condition not met, sleeping 10
+19:29:09 INFO Wait for condition not met, sleeping 10
+19:29:19 INFO Wait for condition not met, sleeping 10
+19:29:30 INFO Wait for condition not met, sleeping 10
+19:30:32 INFO Waiting for model:
+  test-mhbr7n5m/0 [executing] active: 
+19:31:02 INFO Waiting for model:
+  test-mhbr7n5m/0 [executing] active: 
+19:31:18 INFO Wait for condition not met, sleeping 60
+19:32:19 INFO Wait for condition not met, sleeping 60
+19:33:19 INFO Wait for condition not met, sleeping 60
+19:34:20 INFO Wait for condition not met, sleeping 60
+19:35:21 INFO Wait for condition not met, sleeping 60
+19:36:21 INFO Wait for condition not met, sleeping 60
+19:37:22 INFO Wait for condition not met, sleeping 60
+19:38:22 INFO Wait for condition not met, sleeping 60
+19:39:23 INFO Wait for condition not met, sleeping 60
+19:40:23 INFO Wait for condition not met, sleeping 60
+19:41:25 INFO Wait for condition not met, sleeping 10
+19:41:52 INFO Waiting for model:
+  test-mhbr7n5m/0 [idle] active:
+19:42:23 INFO Waiting for model:
+  test-mhbr7n5m/0 [idle] active: 
+19:42:38 INFO Model status:
+
+Model               Controller  Cloud/Region         Version  SLA          Timestamp
+test-reactive-j7p1  lxd         localhost/localhost  3.6.1    unsupported  19:42:38Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+mongodb                               active      1  mongodb                      6/edge       206  no       
+test-mhbr7n5m                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder/0*  active    idle   0        10.61.162.45               
+mongodb/0*                      active    idle   2        10.61.162.99    27017/tcp  Primary
+test-mhbr7n5m/0*                active    idle   1        10.61.162.102              
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.61.162.45   juju-f32dfa-0  ubuntu@22.04      Running
+1        started  10.61.162.102  juju-f32dfa-1  ubuntu@22.04      Running
+2        started  10.61.162.99   juju-f32dfa-2  ubuntu@22.04      Running
+
+19:42:38 INFO Juju error logs:
+
+unit-test-mhbr7n5m-0: 19:17:47 ERROR unit.test-mhbr7n5m/0.juju-log SSH connection failure with test-mhbr7n5m-0-e856629b64c1 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-mhbr7n5m-0-e856629b64c1
+unit-test-mhbr7n5m-0: 19:17:52 ERROR unit.test-mhbr7n5m/0.juju-log SSH connection failure with test-mhbr7n5m-0-e856629b64c1 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-mhbr7n5m-0-e856629b64c1
+unit-test-mhbr7n5m-0: 19:18:02 ERROR unit.test-mhbr7n5m/0.juju-log SSH connection failure with test-mhbr7n5m-0-e856629b64c1 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-mhbr7n5m-0-e856629b64c1
+unit-test-mhbr7n5m-0: 19:18:02 ERROR unit.test-mhbr7n5m/0.juju-log Retry limit of 3 exceed: No addresses found for OpenStack server test-mhbr7n5m-0-e856629b64c1
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-mhbr7n5m-0-e856629b64c1
+unit-test-mhbr7n5m-0: 19:30:26 ERROR unit.test-mhbr7n5m/0.juju-log post-job-metrics.json not found for runner test-mhbr7n5m-0-41830e748f0e
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-mhbr7n5m-0-41830e748f0e/post-job-metrics.json'
+unit-test-mhbr7n5m-0: 19:30:31 ERROR unit.test-mhbr7n5m/0.juju-log Unable to get SSH connection for instance test-mhbr7n5m-0-41830e748f0e, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-mhbr7n5m-0-41830e748f0e, key path: /home/runner-manager/.ssh/test-mhbr7n5m-0-41830e748f0e.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-mhbr7n5m-0-41830e748f0e
+unit-test-mhbr7n5m-0: 19:30:39 ERROR unit.test-mhbr7n5m/0.juju-log Unable to get SSH connection for instance test-mhbr7n5m-0-41830e748f0e, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-mhbr7n5m-0-41830e748f0e, key path: /home/runner-manager/.ssh/test-mhbr7n5m-0-41830e748f0e.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-mhbr7n5m-0-41830e748f0e
+unit-test-mhbr7n5m-0: 19:30:39 ERROR unit.test-mhbr7n5m/0.juju-log Failed to get SSH connection while removing test-mhbr7n5m-0-41830e748f0e
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-mhbr7n5m-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-mhbr7n5m-0-41830e748f0e, key path: /home/runner-manager/.ssh/test-mhbr7n5m-0-41830e748f0e.key
+
+19:42:38 INFO Forgetting model main...

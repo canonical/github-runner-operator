@@ -1,0 +1,73 @@
+18:29:08 INFO Adding model lxd:test-charm-fork-repo-urrs on cloud localhost
+18:29:09 INFO Deploying ch:amd64/jammy/github-runner-image-builder-2
+18:29:10 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+18:29:40 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+18:30:10 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+18:30:40 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+18:31:10 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+18:31:40 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+18:32:10 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+18:32:40 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+18:33:11 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+18:33:39 INFO Deploying local:jammy/github-runner-0
+18:33:39 INFO Waiting for model:
+  test-eofdc76z/0 [allocating] waiting: waiting for machine
+18:34:09 INFO Waiting for model:
+  test-eofdc76z/0 [allocating] waiting: waiting for machine
+18:34:39 INFO Waiting for model:
+  test-eofdc76z/0 [allocating] waiting: agent initialising
+18:35:10 INFO Waiting for model:
+  test-eofdc76z/0 [executing] blocked: Please provide image integration.
+18:35:40 INFO Waiting for model:
+  test-eofdc76z/0 [idle] active: 
+18:35:51 INFO GitHub token rate limit: Rate(reset=2024-12-19 19:00:28+00:00, remaining=4617, limit=5000)
+18:38:34 INFO Waiting for model:
+  test-eofdc76z/0 [executing] maintenance: Reconciling runners
+18:39:05 INFO Waiting for model:
+  test-eofdc76z/0 [idle] active: 
+18:39:11 INFO [TEST SETUP] Exposing port 8080 on test-eofdc76z-0-75a59d7954b9
+18:39:11 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.193', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:f9:d4:3e'}]])
+18:39:15 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-eofdc76z-0-75a59d7954b9
+18:39:15 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.193', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:f9:d4:3e'}]])
+18:39:16 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-eofdc76z-0-75a59d7954b9.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.193 nc -z localhost 8080'
+18:39:18 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-eofdc76z-0-75a59d7954b9
+18:39:18 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.193', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:f9:d4:3e'}]])
+18:39:19 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-eofdc76z-0-75a59d7954b9.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.193 curl http://localhost:8080'
+18:39:22 INFO Wait for condition not met, sleeping 10
+18:39:32 INFO Wait for condition not met, sleeping 60
+18:40:37 INFO Model status:
+
+Model                      Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-urrs  lxd         localhost/localhost  3.6.1    unsupported  18:40:37Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-eofdc76z                         active      1  github-runner                               0  yes      
+
+Unit                            Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder/0*  active    idle   0        10.30.242.200             
+test-eofdc76z/0*                active    idle   1        10.30.242.82    8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.30.242.200  juju-7dc0e0-0  ubuntu@22.04      Running
+1        started  10.30.242.82   juju-7dc0e0-1  ubuntu@22.04      Running
+
+18:40:37 INFO Juju error logs:
+
+machine-0: 18:31:03 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:31:03 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 18:31:03 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:34:37 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:34:37 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-eofdc76z-0: 18:34:37 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+18:40:37 INFO Forgetting model main...
