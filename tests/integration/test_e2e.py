@@ -44,14 +44,11 @@ async def test_e2e_workflow(
     act: Run e2e test workflow.
     assert: No exception thrown.
     """
-    virt_type: str
-    virt_type = "openstack"
-
     await dispatch_workflow(
         app=app,
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
-        dispatch_input={"runner-tag": app.name, "runner-virt-type": virt_type},
+        dispatch_input={"runner-tag": app.name},
     )
