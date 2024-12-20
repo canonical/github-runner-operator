@@ -1,0 +1,393 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-debug-ssh-8ehs on cloud localhost
+WARNING  juju.client.connection:connection.py:893 unexpected facade AgentLifeFlag received from the controller
+WARNING  juju.client.connection:connection.py:909 unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+WARNING  juju.client.connection:connection.py:893 unexpected facade SecretsDrain received from the controller
+INFO     juju.model:model.py:1988 Deploying ch:amd64/github-runner-image-builder-2
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder (not enough units yet - 0/1)
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+INFO     juju.model:model.py:1988 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: installing charm software
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+INFO     root:conftest.py:589 GitHub token rate limit: Rate(reset=2024-12-20 19:10:38+00:00, remaining=4680, limit=5000)
+INFO     juju.model:model.py:1988 Deploying ch:amd64/jammy/tmate-ssh-server-6
+WARNING  juju.model:model.py:1513 relate is deprecated and will be removed. Use integrate instead.
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [idle] active:
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+  tmate-ssh-server/0 [idle] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] active: 
+  test-rluyx9md/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Update image for runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-rluyx9md/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [idle] active: 
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp --dport 10022 -j DNAT --to-destination 127.0.0.1:10022 on test-rluyx9md-0-a6dec91a7ab8
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.93', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:23:44:17'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-rluyx9md-0-a6dec91a7ab8.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.93 sudo iptables -t nat -A OUTPUT -p tcp --dport 10022 -j DNAT --to-destination 127.0.0.1:10022'
+INFO     tests.integration.helpers.openstack:openstack.py:49 [TEST SETUP] Exposing port 10022 on test-rluyx9md-0-a6dec91a7ab8
+WARNING  tests.integration.helpers.openstack:openstack.py:51 dict_values([[{'version': 4, 'addr': '10.145.193.93', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:23:44:17'}]])
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command nc -z localhost 10022 on test-rluyx9md-0-a6dec91a7ab8
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.93', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:23:44:17'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-rluyx9md-0-a6dec91a7ab8.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.93 nc -z localhost 10022'
+INFO     tests.integration.test_debug_ssh:test_debug_ssh.py:62 Dispatching workflow_dispatch_ssh_debug.yaml workflow.
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.test_debug_ssh:test_debug_ssh.py:76 Logs: ﻿2024-12-20T18:39:38.2504086Z Current runner version: '2.321.0'
+2024-12-20T18:39:38.2513163Z Runner name: 'test-rluyx9md-0-a6dec91a7ab8'
+2024-12-20T18:39:38.2514552Z Runner group name: 'Default'
+2024-12-20T18:39:38.2516384Z Machine name: 'github-runner'
+2024-12-20T18:39:38.2523757Z ##[group]GITHUB_TOKEN Permissions
+2024-12-20T18:39:38.2527371Z Actions: write
+2024-12-20T18:39:38.2528351Z Attestations: write
+2024-12-20T18:39:38.2529299Z Checks: write
+2024-12-20T18:39:38.2530197Z Contents: write
+2024-12-20T18:39:38.2531125Z Deployments: write
+2024-12-20T18:39:38.2532060Z Discussions: write
+2024-12-20T18:39:38.2533004Z Issues: write
+2024-12-20T18:39:38.2533897Z Metadata: read
+2024-12-20T18:39:38.2534802Z Packages: write
+2024-12-20T18:39:38.2535718Z Pages: write
+2024-12-20T18:39:38.2536846Z PullRequests: write
+2024-12-20T18:39:38.2537861Z RepositoryProjects: write
+2024-12-20T18:39:38.2538942Z SecurityEvents: write
+2024-12-20T18:39:38.2539895Z Statuses: write
+2024-12-20T18:39:38.2540755Z ##[endgroup]
+2024-12-20T18:39:38.2544676Z Secret source: Actions
+2024-12-20T18:39:38.2546214Z Prepare workflow directory
+2024-12-20T18:39:38.2887716Z Prepare all required actions
+2024-12-20T18:39:38.2924402Z Getting action download info
+2024-12-20T18:39:38.6285417Z Download action repository 'canonical/action-tmate@chore/env_var_change' (SHA:54a3e453506add85df1ab1a5d29ef6bb1dcd2f55)
+2024-12-20T18:39:39.9691646Z Complete job name: workflow-dispatch-tests
+2024-12-20T18:39:40.0282672Z A job started hook has been configured by the self-hosted runner administrator
+2024-12-20T18:39:40.0419136Z ##[group]Run '/home/ubuntu/actions-runner/pre-job.sh'
+2024-12-20T18:39:40.0439488Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2024-12-20T18:39:40.0441174Z ##[endgroup]
+2024-12-20T18:39:40.0874158Z ##[group]Run canonical/action-tmate@chore/env_var_change
+2024-12-20T18:39:40.0875320Z with:
+2024-12-20T18:39:40.0876148Z   sudo: auto
+2024-12-20T18:39:40.0877103Z   install-dependencies: true
+2024-12-20T18:39:40.0878001Z   limit-access-to-actor: auto
+2024-12-20T18:39:40.0878877Z   detached: false
+2024-12-20T18:39:40.0879949Z   github-token: ***
+2024-12-20T18:39:40.0880730Z ##[endgroup]
+2024-12-20T18:39:40.5670943Z Hit:1 http://security.ubuntu.com/ubuntu noble-security InRelease
+2024-12-20T18:39:40.6312440Z Get:2 http://availability-zone-2.clouds.archive.ubuntu.com/ubuntu noble InRelease [256 kB]
+2024-12-20T18:39:41.2038776Z Get:3 http://availability-zone-2.clouds.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2024-12-20T18:39:41.6468497Z Get:4 http://availability-zone-2.clouds.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2024-12-20T18:39:42.0624320Z Fetched 508 kB in 2s (319 kB/s)
+2024-12-20T18:39:42.7820110Z Reading package lists...
+2024-12-20T18:39:42.8158064Z Reading package lists...
+2024-12-20T18:39:43.0177196Z Building dependency tree...
+2024-12-20T18:39:43.0191611Z Reading state information...
+2024-12-20T18:39:43.2978779Z openssh-client is already the newest version (1:9.6p1-3ubuntu13.5).
+2024-12-20T18:39:43.2979862Z openssh-client set to manually installed.
+2024-12-20T18:39:43.2981238Z xz-utils is already the newest version (5.6.1+really5.4.5-1build0.1).
+2024-12-20T18:39:43.2981948Z xz-utils set to manually installed.
+2024-12-20T18:39:43.2990012Z 0 upgraded, 0 newly installed, 0 to remove and 19 not upgraded.
+2024-12-20T18:39:46.2427762Z ssh -p10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:39:46.2470242Z 
+2024-12-20T18:39:46.2503412Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:39:46.2510356Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:39:51.2500903Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:39:51.2504658Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:39:56.2516326Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:39:56.2519527Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:40:01.2570922Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:40:01.2587240Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:40:06.2636919Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:40:06.2640018Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:40:11.2712134Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:40:11.2714860Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:40:16.2770111Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:40:16.2773789Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:40:21.2832700Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:40:21.2835897Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:40:26.2895894Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:40:26.2910824Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:40:31.2969763Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:40:31.2995564Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:40:36.3031955Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:40:36.3039265Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:40:41.3098361Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:40:41.3105385Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:40:46.3162279Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:40:46.3165171Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:40:51.3218145Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:40:51.3227469Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:40:56.3279392Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:40:56.3284627Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:41:01.3340547Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:41:01.3343021Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:41:06.3395828Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:41:06.3402538Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:41:11.3459754Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:41:11.3463141Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:41:16.3505420Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:41:16.3508379Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:41:21.3558994Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:41:21.3562086Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:41:26.3613261Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:41:26.3616112Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:41:31.3666650Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:41:31.3669069Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:41:36.3718221Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:41:36.3723612Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:41:41.3774868Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:41:41.3777946Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:41:46.3824327Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:41:46.3827153Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:41:51.3879236Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:41:51.3881385Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:41:56.3945903Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:41:56.3948647Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:42:01.3955066Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:42:01.3963376Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:42:06.4010033Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:42:06.4012856Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:42:11.4063087Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:42:11.4065620Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:42:16.4119552Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:42:16.4136893Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:42:21.4184002Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:42:21.4186890Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:42:26.4222982Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:42:26.4230084Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:42:31.4285306Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:42:31.4288296Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:42:36.4308013Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:42:36.4310419Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:42:41.4359543Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:42:41.4363975Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:42:46.4374598Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:42:46.4378835Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:42:51.4437040Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:42:51.4439434Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:42:56.4492813Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:42:56.4495185Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:43:01.4547584Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:43:01.4552359Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:43:06.4601089Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:43:06.4603994Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:43:11.4657208Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:43:11.4666249Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:43:16.4677062Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:43:16.4679204Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:43:21.4692775Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:43:21.4697865Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:43:26.4700297Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:43:26.4705790Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:43:31.4714298Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:43:31.4716879Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:43:36.4727491Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:43:36.4730308Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:43:41.4740792Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:43:41.4744436Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:43:46.4755338Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:43:46.4758323Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:43:51.4766734Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:43:51.4771318Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:43:56.4782159Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:43:56.4785192Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:44:01.4797171Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:44:01.4799629Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:44:06.4844726Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:44:06.4847363Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:44:11.4821585Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:44:11.4824864Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:44:16.4835326Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:44:16.4840711Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:44:21.4900045Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:44:21.4905839Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:44:26.4962559Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:44:26.4968474Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:44:31.5023881Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:44:31.5029698Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:44:36.5086474Z ##[warning]No public SSH keys found for canonical-github-runners-ps6; continuing without them even if it is less secure (please consider adding an SSH key, see https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+2024-12-20T18:44:36.5089102Z SSH: ssh -p 10022 zYpy8H9WUqdNzkrwQVkrVJTeq@10.221.59.37
+2024-12-20T18:44:40.0859173Z ##[error]The action 'Setup tmate session' has timed out after 5 minutes.
+2024-12-20T18:44:40.0938499Z Post job cleanup.
+2024-12-20T18:44:40.1758980Z Cleaning up orphan processes
+2024-12-20T18:44:40.2137393Z Terminate orphan process: pid (3074) (tmate)
+2024-12-20T18:44:40.2192589Z Terminate orphan process: pid (3075) (sh)
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                Controller  Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-8ehs  lxd         localhost/localhost  3.1.10   unsupported  18:45:46Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-rluyx9md                         active      1  github-runner                               0  no       
+tmate-ssh-server                      active      1  tmate-ssh-server             edge           6  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder/0*  active    idle   0        10.221.59.45               
+test-rluyx9md/0*                active    idle   1        10.221.59.40               
+tmate-ssh-server/0*             active    idle   2        10.221.59.37    10022/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.221.59.45  juju-113fbf-0  ubuntu@22.04      Running
+1        started  10.221.59.40  juju-113fbf-1  ubuntu@22.04      Running
+2        started  10.221.59.37  juju-113fbf-2  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 18:25:47 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 18:25:47 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:47 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 18:25:47 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:28:41 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 18:28:41 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:28:41 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-rluyx9md-0: 18:28:41 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-rluyx9md-0: 18:28:57 CRITICAL unit.test-rluyx9md/0.juju-log test mode is enabled
+unit-test-rluyx9md-0: 18:28:58 CRITICAL unit.test-rluyx9md/0.juju-log test mode is enabled
+unit-test-rluyx9md-0: 18:29:02 CRITICAL unit.test-rluyx9md/0.juju-log image:0: test mode is enabled
+unit-test-rluyx9md-0: 18:29:03 CRITICAL unit.test-rluyx9md/0.juju-log test mode is enabled
+unit-test-rluyx9md-0: 18:29:04 CRITICAL unit.test-rluyx9md/0.juju-log test mode is enabled
+unit-test-rluyx9md-0: 18:29:05 CRITICAL unit.test-rluyx9md/0.juju-log test mode is enabled
+unit-test-rluyx9md-0: 18:29:07 CRITICAL unit.test-rluyx9md/0.juju-log test mode is enabled
+unit-test-rluyx9md-0: 18:29:08 CRITICAL unit.test-rluyx9md/0.juju-log image:0: test mode is enabled
+unit-test-rluyx9md-0: 18:29:09 CRITICAL unit.test-rluyx9md/0.juju-log image:0: test mode is enabled
+unit-test-rluyx9md-0: 18:29:52 CRITICAL unit.test-rluyx9md/0.juju-log test mode is enabled
+unit-test-rluyx9md-0: 18:29:53 CRITICAL unit.test-rluyx9md/0.juju-log test mode is enabled
+machine-2: 18:30:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:30:34 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-2: 18:30:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-tmate-ssh-server-0: 18:30:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-rluyx9md-0: 18:35:07 ERROR unit.test-rluyx9md/0.juju-log Timeout creating openstack server test-rluyx9md-0-5aa5f5b52f1a
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/openstack/cloud/_compute.py", line 1159, in wait_for_server
+    raise exceptions.ResourceTimeout(timeout_message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+unit-test-rluyx9md-0: 18:35:08 ERROR unit.test-rluyx9md/0.juju-log Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/openstack/cloud/_compute.py", line 1159, in wait_for_server
+    raise exceptions.ResourceTimeout(timeout_message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 209, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 246, in launch_instance
+    raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
+github_runner_manager.errors.OpenStackError: Timeout creating openstack server test-rluyx9md-0-5aa5f5b52f1a
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 276, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 404, in _create_runner
+    return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 217, in create_runner
+    raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
+github_runner_manager.errors.RunnerCreateError: Failed to create test-rluyx9md-0-5aa5f5b52f1a openstack runner
+unit-test-rluyx9md-0: 18:35:14 CRITICAL unit.test-rluyx9md/0.juju-log debug-ssh:1: test mode is enabled
+unit-test-rluyx9md-0: 18:35:15 CRITICAL unit.test-rluyx9md/0.juju-log test mode is enabled
+unit-test-rluyx9md-0: 18:35:16 CRITICAL unit.test-rluyx9md/0.juju-log test mode is enabled
+unit-test-rluyx9md-0: 18:35:31 CRITICAL unit.test-rluyx9md/0.juju-log debug-ssh:1: test mode is enabled
+unit-test-rluyx9md-0: 18:35:32 CRITICAL unit.test-rluyx9md/0.juju-log debug-ssh:1: test mode is enabled
+unit-test-rluyx9md-0: 18:35:41 ERROR unit.test-rluyx9md/0.juju-log debug-ssh:1: Health check failed due to unable to find keyfile for test-rluyx9md-0-5aa5f5b52f1a
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-rluyx9md-0-5aa5f5b52f1a, key path: /home/runner-manager/.ssh/test-rluyx9md-0-5aa5f5b52f1a.key
+unit-test-rluyx9md-0: 18:36:02 CRITICAL unit.test-rluyx9md/0.juju-log image:0: test mode is enabled
+unit-test-rluyx9md-0: 18:36:14 ERROR unit.test-rluyx9md/0.juju-log image:0: runner-installed.timestamp not found for runner test-rluyx9md-0-5aa5f5b52f1a
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-rluyx9md-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-rluyx9md-0-5aa5f5b52f1a/runner-installed.timestamp'
+unit-test-rluyx9md-0: 18:36:14 ERROR unit.test-rluyx9md/0.juju-log image:0: installed timestamp not found for runner test-rluyx9md-0-5aa5f5b52f1a, will not extract any metrics.
+unit-test-rluyx9md-0: 18:39:42 CRITICAL unit.test-rluyx9md/0.juju-log test mode is enabled
+unit-test-rluyx9md-0: 18:45:13 CRITICAL unit.test-rluyx9md/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
