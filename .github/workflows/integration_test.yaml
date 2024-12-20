@@ -2,6 +2,9 @@ name: integration-tests
 
 on:
   pull_request:
+  schedule:
+    # Trigger at 6:00 AM and 6:00 PM UTC
+    - cron: "0 6,18 * * *"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -49,7 +52,7 @@ jobs:
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
   allure-report:
-    if: always() && !cancelled()
+    if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
     needs:
       - integration-tests
       - openstack-interface-tests-private-endpoint
