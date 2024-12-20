@@ -1,0 +1,42 @@
+08:36:00 INFO Adding model lxd:test-charm-metrics-failure-04in on cloud localhost
+08:36:01 INFO GitHub token rate limit: Rate(reset=2024-12-20 09:05:53+00:00, remaining=4608, limit=5000)
+08:36:15 INFO Deploying ch:amd64/jammy/github-runner-image-builder-2
+08:36:15 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:36:46 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:37:16 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:37:46 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:38:16 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:38:47 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+08:39:17 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+08:39:48 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+08:40:18 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+08:41:02 INFO Deploying local:jammy/github-runner-0
+08:41:02 INFO Waiting for model:
+  test-f6hs2vup/0 [allocating] waiting: waiting for machine
+08:41:33 INFO Waiting for model:
+  test-f6hs2vup/0 [allocating] waiting: waiting for machine
+08:42:03 INFO Waiting for model:
+  test-f6hs2vup/0 [allocating] waiting: agent initialising
+08:42:33 INFO Waiting for model:
+  test-f6hs2vup/0 [executing] maintenance: Update image for runners
+08:43:03 INFO Waiting for model:
+  test-f6hs2vup/0 [idle] active: 
+08:43:25 INFO Waiting for model:
+  test-f6hs2vup/0 [executing] maintenance: Reconciling runners
+08:49:31 INFO Waiting for model:
+  test-f6hs2vup/0 [executing] maintenance: Reconciling runners
+08:50:01 INFO Waiting for model:
+  test-f6hs2vup/0 [executing] maintenance: Update image for runners
+08:50:31 INFO Waiting for model:
+  test-f6hs2vup/0 [executing] maintenance: Reconciling runners
+08:50:58 INFO [TEST SETUP] Exposing port 8080 on test-f6hs2vup-0-9937c604b42f
+08:50:58 WARNING dict_values([])

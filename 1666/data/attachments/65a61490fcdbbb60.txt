@@ -1,0 +1,67 @@
+08:36:00 INFO Adding model lxd:test-charm-fork-path-change-c510 on cloud localhost
+08:36:02 INFO Deploying ch:amd64/jammy/github-runner-image-builder-2
+08:36:02 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:36:33 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:37:03 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:37:33 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:38:04 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+08:38:34 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+08:39:04 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+08:39:35 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+08:40:19 INFO Deploying local:jammy/github-runner-0
+08:40:19 INFO Waiting for model:
+  test-casc0ohc/0 [allocating] waiting: waiting for machine
+08:40:49 INFO Waiting for model:
+  test-casc0ohc/0 [allocating] waiting: waiting for machine
+08:41:20 INFO Waiting for model:
+  test-casc0ohc/0 [allocating] waiting: agent initialising
+08:41:50 INFO Waiting for model:
+  test-casc0ohc/0 [executing] maintenance: Update image for runners
+08:42:20 INFO Waiting for model:
+  test-casc0ohc/0 [idle] active: 
+08:42:22 INFO GitHub token rate limit: Rate(reset=2024-12-20 09:05:53+00:00, remaining=4486, limit=5000)
+08:44:11 INFO Waiting for model:
+  test-casc0ohc/0 [executing] maintenance: Reconciling runners
+08:44:41 INFO Waiting for model:
+  test-casc0ohc/0 [executing] maintenance: Reconciling runners
+08:45:11 INFO Waiting for model:
+  test-casc0ohc/0 [idle] active: 
+08:45:40 INFO Waiting for model:
+  test-casc0ohc/0 [executing] active: 
+08:46:10 INFO Waiting for model:
+  test-casc0ohc/0 [idle] active:
+08:46:25 INFO Model status:
+
+Model                             Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-c510  lxd         localhost/localhost  3.6.1    unsupported  08:46:25Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-casc0ohc                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.147.121.123         
+test-casc0ohc/0*                active    idle   1        10.147.121.198         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.147.121.123  juju-44ee2d-0  ubuntu@22.04      Running
+1        started  10.147.121.198  juju-44ee2d-1  ubuntu@22.04      Running
+
+08:46:26 INFO Juju error logs:
+
+machine-0: 08:37:49 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 08:37:49 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 08:37:49 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 08:41:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 08:41:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-casc0ohc-0: 08:41:09 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+08:46:26 INFO Forgetting model main...

@@ -1,0 +1,90 @@
+09:15:41 INFO GitHub token rate limit: Rate(reset=2024-12-20 10:05:54+00:00, remaining=4819, limit=5000)
+09:17:40 INFO Waiting for model:
+  test-opoq5vmt/0 [executing] active: 
+09:18:10 INFO Waiting for model:
+  test-opoq5vmt/0 [idle] active: 
+09:18:19 INFO Wait for condition not met, sleeping 10
+09:18:30 INFO Wait for condition not met, sleeping 60
+09:20:02 INFO Waiting for model:
+  test-opoq5vmt/0 [executing] maintenance: Reconciling runners
+09:20:32 INFO Waiting for model:
+  test-opoq5vmt/0 [idle] active: 
+09:20:45 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1734686233.0, "event": "runner_installed", "flavor": "test-opoq5vmt", "duration": 78.47394037246704}
+{"timestamp": 1734686308.0, "event": "runner_start", "flavor": "test-opoq5vmt", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 75.0, "queue_duration": 7.0}
+{"timestamp": 1734686317.0, "event": "runner_stop", "flavor": "test-opoq5vmt", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 9.0, "job_conclusion": "success"}
+{"timestamp": 1734686401.076843, "event": "reconciliation", "flavor": "test-opoq5vmt", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 28.35007405281067}
+{"timestamp": 1734686428.0844626, "event": "reconciliation", "flavor": "test-opoq5vmt", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 25.92725706100464}
+09:20:47 INFO Model status:
+
+Model                            Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-63lu  lxd         localhost/localhost  3.6.1    unsupported  09:20:47Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-opoq5vmt                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.79.171.14           
+test-opoq5vmt/0*                active    idle   1        10.79.171.249          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.79.171.14   juju-9c5770-0  ubuntu@22.04      Running
+1        started  10.79.171.249  juju-9c5770-1  ubuntu@22.04      Running
+
+09:20:48 INFO Juju error logs:
+
+machine-0: 09:02:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 09:02:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 09:02:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 09:05:24 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:05:24 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-opoq5vmt-0: 09:05:24 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-opoq5vmt-0: 09:12:09 ERROR unit.test-opoq5vmt/0.juju-log image:0: pre-job-metrics.json not found for runner test-opoq5vmt-0-538453f5e393
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-opoq5vmt-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-opoq5vmt-0-538453f5e393/pre-job-metrics.json'
+unit-test-opoq5vmt-0: 09:12:09 ERROR unit.test-opoq5vmt/0.juju-log image:0: Pre-job metrics for runner test-opoq5vmt-0-538453f5e393 not found, stop extracting post-jobs metrics.
+unit-test-opoq5vmt-0: 09:15:07 ERROR unit.test-opoq5vmt/0.juju-log pre-job-metrics.json not found for runner test-opoq5vmt-0-671a52062458
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-opoq5vmt-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-opoq5vmt-0-671a52062458/pre-job-metrics.json'
+unit-test-opoq5vmt-0: 09:15:07 ERROR unit.test-opoq5vmt/0.juju-log Pre-job metrics for runner test-opoq5vmt-0-671a52062458 not found, stop extracting post-jobs metrics.
+unit-test-opoq5vmt-0: 09:19:55 ERROR unit.test-opoq5vmt/0.juju-log Failed to get SSH connection while removing test-opoq5vmt-0-7c06c7588c54
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-opoq5vmt-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-opoq5vmt-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-opoq5vmt-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-opoq5vmt-0-7c06c7588c54, key path: /home/runner-manager/.ssh/test-opoq5vmt-0-7c06c7588c54.key
+unit-test-opoq5vmt-0: 09:20:06 ERROR unit.test-opoq5vmt/0.juju-log Failed to get SSH connection while removing test-opoq5vmt-0-7c06c7588c54
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-opoq5vmt-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-opoq5vmt-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-opoq5vmt-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-opoq5vmt-0-7c06c7588c54, key path: /home/runner-manager/.ssh/test-opoq5vmt-0-7c06c7588c54.key
+unit-test-opoq5vmt-0: 09:20:21 ERROR unit.test-opoq5vmt/0.juju-log Failed to get SSH connection while removing test-opoq5vmt-0-7c06c7588c54
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-opoq5vmt-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-opoq5vmt-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-opoq5vmt-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-opoq5vmt-0-7c06c7588c54, key path: /home/runner-manager/.ssh/test-opoq5vmt-0-7c06c7588c54.key
+
+09:20:48 INFO Forgetting model main...

@@ -1,0 +1,541 @@
+09:31:29 INFO Waiting for model:
+  test-lhhvaljr/0 [executing] maintenance: Reconciling runners
+09:32:00 INFO Waiting for model:
+  test-lhhvaljr/0 [idle] active:
+09:32:27 INFO Waiting for model:
+  test-lhhvaljr/0 [executing] active: 
+09:32:57 INFO Waiting for model:
+  test-lhhvaljr/0 [idle] active: 
+09:33:02 INFO Wait for condition not met, sleeping 10
+09:33:13 INFO Wait for condition not met, sleeping 10
+09:33:23 INFO Wait for condition not met, sleeping 10
+09:33:34 INFO Wait for condition not met, sleeping 10
+09:33:44 INFO Wait for condition not met, sleeping 10
+09:33:54 INFO Wait for condition not met, sleeping 10
+09:34:05 INFO Wait for condition not met, sleeping 10
+09:34:15 INFO Wait for condition not met, sleeping 10
+09:34:25 INFO Wait for condition not met, sleeping 10
+09:34:35 INFO Wait for condition not met, sleeping 10
+09:34:46 INFO Wait for condition not met, sleeping 10
+09:34:56 INFO Wait for condition not met, sleeping 10
+09:35:06 INFO Wait for condition not met, sleeping 10
+09:35:17 INFO Wait for condition not met, sleeping 10
+09:35:27 INFO Wait for condition not met, sleeping 10
+09:35:37 INFO Wait for condition not met, sleeping 10
+09:35:48 INFO Wait for condition not met, sleeping 10
+09:35:58 INFO Wait for condition not met, sleeping 10
+09:36:08 INFO Wait for condition not met, sleeping 10
+09:36:18 INFO Wait for condition not met, sleeping 10
+09:36:29 INFO Wait for condition not met, sleeping 10
+09:36:39 INFO Wait for condition not met, sleeping 10
+09:36:49 INFO Wait for condition not met, sleeping 10
+09:36:59 INFO Wait for condition not met, sleeping 10
+09:37:10 INFO Wait for condition not met, sleeping 10
+09:37:20 INFO Wait for condition not met, sleeping 10
+09:37:30 INFO Wait for condition not met, sleeping 10
+09:37:41 INFO Wait for condition not met, sleeping 10
+09:37:51 INFO Wait for condition not met, sleeping 10
+09:38:01 INFO Wait for condition not met, sleeping 10
+09:38:12 INFO Wait for condition not met, sleeping 10
+09:39:07 INFO Waiting for model:
+  test-lhhvaljr/0 [executing] active: 
+09:39:37 INFO Waiting for model:
+  test-lhhvaljr/0 [idle] active: 
+09:39:43 INFO Model status:
+
+Model               Controller  Cloud/Region         Version  SLA          Timestamp
+test-reactive-scs8  lxd         localhost/localhost  3.6.1    unsupported  09:39:43Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+mongodb                               active      1  mongodb                      6/edge       206  no       
+test-lhhvaljr                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder/0*  active    idle   0        10.36.226.129              
+mongodb/0*                      active    idle   2        10.36.226.36    27017/tcp  Primary
+test-lhhvaljr/0*                active    idle   1        10.36.226.228              
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.36.226.129  juju-5c37a8-0  ubuntu@22.04      Running
+1        started  10.36.226.228  juju-5c37a8-1  ubuntu@22.04      Running
+2        started  10.36.226.36   juju-5c37a8-2  ubuntu@22.04      Running
+
+09:39:44 INFO Juju error logs:
+
+unit-mongodb-0: 09:21:51 ERROR unit.mongodb/0.juju-log _on_secret_remove: Secret secret:ctije6gs2b3t5ge6dbf0 seems to have no observers, could be removed
+unit-test-lhhvaljr-0: 09:24:15 ERROR unit.test-lhhvaljr/0.juju-log SSH connection failure with test-lhhvaljr-0-6fa0ea50898b during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:24:20 ERROR unit.test-lhhvaljr/0.juju-log SSH connection failure with test-lhhvaljr-0-6fa0ea50898b during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:24:30 ERROR unit.test-lhhvaljr/0.juju-log SSH connection failure with test-lhhvaljr-0-6fa0ea50898b during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:24:30 ERROR unit.test-lhhvaljr/0.juju-log Retry limit of 3 exceed: No addresses found for OpenStack server test-lhhvaljr-0-6fa0ea50898b
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:26:24 ERROR unit.test-lhhvaljr/0.juju-log Health check failed due to unable to find keyfile for test-lhhvaljr-0-6fa0ea50898b
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+unit-test-lhhvaljr-0: 09:26:28 ERROR unit.test-lhhvaljr/0.juju-log Unable to get SSH connection for instance test-lhhvaljr-0-6fa0ea50898b, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:26:28 ERROR unit.test-lhhvaljr/0.juju-log Failed to get SSH connection while removing test-lhhvaljr-0-6fa0ea50898b
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+unit-test-lhhvaljr-0: 09:26:37 ERROR unit.test-lhhvaljr/0.juju-log Unable to get SSH connection for instance test-lhhvaljr-0-6fa0ea50898b, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:26:41 ERROR unit.test-lhhvaljr/0.juju-log Unable to get SSH connection for instance test-lhhvaljr-0-6fa0ea50898b, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:26:47 ERROR unit.test-lhhvaljr/0.juju-log image:0: Unable to get SSH connection for instance test-lhhvaljr-0-6fa0ea50898b, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:26:47 ERROR unit.test-lhhvaljr/0.juju-log image:0: Failed to get SSH connection while removing test-lhhvaljr-0-6fa0ea50898b
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+unit-test-lhhvaljr-0: 09:26:55 ERROR unit.test-lhhvaljr/0.juju-log image:0: Health check failed due to unable to find keyfile for test-lhhvaljr-0-6fa0ea50898b
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+unit-test-lhhvaljr-0: 09:26:58 ERROR unit.test-lhhvaljr/0.juju-log image:0: Unable to get SSH connection for instance test-lhhvaljr-0-6fa0ea50898b, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:26:58 ERROR unit.test-lhhvaljr/0.juju-log image:0: Failed to get SSH connection while removing test-lhhvaljr-0-6fa0ea50898b
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+unit-test-lhhvaljr-0: 09:27:08 ERROR unit.test-lhhvaljr/0.juju-log image:0: Unable to get SSH connection for instance test-lhhvaljr-0-6fa0ea50898b, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:27:09 ERROR unit.test-lhhvaljr/0.juju-log image:0: Failed to get SSH connection while removing test-lhhvaljr-0-6fa0ea50898b
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+unit-test-lhhvaljr-0: 09:27:17 ERROR unit.test-lhhvaljr/0.juju-log image:0: Health check failed due to unable to find keyfile for test-lhhvaljr-0-6fa0ea50898b
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+unit-test-lhhvaljr-0: 09:27:20 ERROR unit.test-lhhvaljr/0.juju-log image:0: Unable to get SSH connection for instance test-lhhvaljr-0-6fa0ea50898b, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:27:20 ERROR unit.test-lhhvaljr/0.juju-log image:0: Failed to get SSH connection while removing test-lhhvaljr-0-6fa0ea50898b
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+unit-test-lhhvaljr-0: 09:27:28 ERROR unit.test-lhhvaljr/0.juju-log image:0: Unable to get SSH connection for instance test-lhhvaljr-0-6fa0ea50898b, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:27:32 ERROR unit.test-lhhvaljr/0.juju-log image:0: Unable to get SSH connection for instance test-lhhvaljr-0-6fa0ea50898b, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:27:57 ERROR unit.test-lhhvaljr/0.juju-log Unable to get SSH connection for instance test-lhhvaljr-0-6fa0ea50898b, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:27:57 ERROR unit.test-lhhvaljr/0.juju-log Failed to get SSH connection while removing test-lhhvaljr-0-6fa0ea50898b
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+unit-test-lhhvaljr-0: 09:28:04 ERROR unit.test-lhhvaljr/0.juju-log Health check failed due to unable to find keyfile for test-lhhvaljr-0-6fa0ea50898b
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+unit-test-lhhvaljr-0: 09:28:07 ERROR unit.test-lhhvaljr/0.juju-log Unable to get SSH connection for instance test-lhhvaljr-0-6fa0ea50898b, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:28:07 ERROR unit.test-lhhvaljr/0.juju-log Failed to get SSH connection while removing test-lhhvaljr-0-6fa0ea50898b
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+unit-test-lhhvaljr-0: 09:28:15 ERROR unit.test-lhhvaljr/0.juju-log Unable to get SSH connection for instance test-lhhvaljr-0-6fa0ea50898b, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:28:19 ERROR unit.test-lhhvaljr/0.juju-log Unable to get SSH connection for instance test-lhhvaljr-0-6fa0ea50898b, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:28:25 ERROR unit.test-lhhvaljr/0.juju-log Unable to get SSH connection for instance test-lhhvaljr-0-6fa0ea50898b, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-lhhvaljr-0-6fa0ea50898b
+unit-test-lhhvaljr-0: 09:28:25 ERROR unit.test-lhhvaljr/0.juju-log Failed to get SSH connection while removing test-lhhvaljr-0-6fa0ea50898b
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 440, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-6fa0ea50898b, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-6fa0ea50898b.key
+unit-test-lhhvaljr-0: 09:38:37 ERROR unit.test-lhhvaljr/0.juju-log SSH connection failure with test-lhhvaljr-0-17240e0f16ea during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-lhhvaljr-0-17240e0f16ea
+unit-test-lhhvaljr-0: 09:38:42 ERROR unit.test-lhhvaljr/0.juju-log SSH connection failure with test-lhhvaljr-0-17240e0f16ea during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-lhhvaljr-0-17240e0f16ea
+unit-test-lhhvaljr-0: 09:38:52 ERROR unit.test-lhhvaljr/0.juju-log SSH connection failure with test-lhhvaljr-0-17240e0f16ea during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-lhhvaljr-0-17240e0f16ea
+unit-test-lhhvaljr-0: 09:38:52 ERROR unit.test-lhhvaljr/0.juju-log Retry limit of 3 exceed: No addresses found for OpenStack server test-lhhvaljr-0-17240e0f16ea
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-lhhvaljr-0-17240e0f16ea
+unit-test-lhhvaljr-0: 09:38:52 ERROR unit.test-lhhvaljr/0.juju-log Health check failed due to unable to find keyfile for test-lhhvaljr-0-568c53887937
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 589, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-lhhvaljr-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-lhhvaljr-0-568c53887937, key path: /home/runner-manager/.ssh/test-lhhvaljr-0-568c53887937.key
+
+09:39:44 INFO Forgetting model main...

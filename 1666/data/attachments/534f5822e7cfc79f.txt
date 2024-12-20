@@ -1,0 +1,82 @@
+09:13:55 INFO Adding model lxd:test-reactive-scs8 on cloud localhost
+09:13:56 INFO GitHub token rate limit: Rate(reset=2024-12-20 10:05:54+00:00, remaining=4852, limit=5000)
+09:13:59 INFO Deploying ch:amd64/jammy/github-runner-image-builder-2
+09:14:00 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+09:14:30 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+09:15:00 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+09:15:31 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+09:16:01 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+09:16:32 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+09:17:02 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+09:17:32 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] active: Waiting for first image.
+09:18:06 INFO Deploying local:jammy/github-runner-0
+09:18:06 INFO Waiting for model:
+  test-lhhvaljr/0 [allocating] waiting: waiting for machine
+09:18:36 INFO Waiting for model:
+  test-lhhvaljr/0 [allocating] waiting: waiting for machine
+09:19:06 INFO Waiting for model:
+  test-lhhvaljr/0 [allocating] waiting: agent initialising
+09:19:37 INFO Waiting for model:
+  test-lhhvaljr/0 [executing] maintenance: Update image for runners
+09:20:08 INFO Deploying ch:amd64/jammy/mongodb-206
+09:20:09 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+09:20:39 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+09:21:09 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: agent initialising
+09:21:39 INFO Waiting for model:
+  mongodb/0 [executing] active: 
+09:22:09 WARNING relate is deprecated and will be removed. Use integrate instead.
+09:22:10 INFO Waiting for model:
+  test-lhhvaljr/0 [idle] active: 
+  mongodb/0 [idle] active: 
+09:22:40 INFO Waiting for model:
+  test-lhhvaljr/0 [idle] active: 
+  mongodb/0 [idle] active: 
+09:23:15 INFO Waiting for model:
+  test-lhhvaljr/0 [executing] maintenance: Reconciling runners
+09:23:45 INFO Waiting for model:
+  test-lhhvaljr/0 [idle] active:
+09:23:54 INFO Wait for condition not met, sleeping 10
+09:24:46 INFO Waiting for model:
+  test-lhhvaljr/0 [executing] active: 
+09:25:07 INFO Wait for condition not met, sleeping 60
+09:26:42 INFO Waiting for model:
+  test-lhhvaljr/0 [executing] active: 
+09:27:12 INFO Waiting for model:
+  test-lhhvaljr/0 [executing] maintenance: Reconciling runners
+09:27:42 INFO Waiting for model:
+  test-lhhvaljr/0 [idle] active: 
+09:27:49 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1734686685.3340642, "event": "reconciliation", "flavor": "test-lhhvaljr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 39.5563325881958}
+{"timestamp": 1734686737.0, "event": "runner_installed", "flavor": "test-lhhvaljr", "duration": 90.02829909324646}
+{"timestamp": 1734686749.0, "event": "runner_start", "flavor": "test-lhhvaljr", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 12.0, "queue_duration": 114.0}
+{"timestamp": 1734686758.0, "event": "runner_stop", "flavor": "test-lhhvaljr", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 9.0, "job_conclusion": "success"}
+{"timestamp": 1734686801.4766467, "event": "reconciliation", "flavor": "test-lhhvaljr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 32.578272581100464}
+{"timestamp": 1734686852.1139445, "event": "reconciliation", "flavor": "test-lhhvaljr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 27.815427780151367}
+
+09:27:50 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1734686685.3340642, "event": "reconciliation", "flavor": "test-lhhvaljr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 39.5563325881958}
+{"timestamp": 1734686737.0, "event": "runner_installed", "flavor": "test-lhhvaljr", "duration": 90.02829909324646}
+{"timestamp": 1734686749.0, "event": "runner_start", "flavor": "test-lhhvaljr", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 12.0, "queue_duration": 114.0}
+{"timestamp": 1734686758.0, "event": "runner_stop", "flavor": "test-lhhvaljr", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 9.0, "job_conclusion": "success"}
+{"timestamp": 1734686801.4766467, "event": "reconciliation", "flavor": "test-lhhvaljr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 32.578272581100464}
+{"timestamp": 1734686852.1139445, "event": "reconciliation", "flavor": "test-lhhvaljr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 27.815427780151367}
+
+09:27:51 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1734686685.3340642, "event": "reconciliation", "flavor": "test-lhhvaljr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 39.5563325881958}
+{"timestamp": 1734686737.0, "event": "runner_installed", "flavor": "test-lhhvaljr", "duration": 90.02829909324646}
+{"timestamp": 1734686749.0, "event": "runner_start", "flavor": "test-lhhvaljr", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 12.0, "queue_duration": 114.0}
+{"timestamp": 1734686758.0, "event": "runner_stop", "flavor": "test-lhhvaljr", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 9.0, "job_conclusion": "success"}
+{"timestamp": 1734686801.4766467, "event": "reconciliation", "flavor": "test-lhhvaljr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 32.578272581100464}
+{"timestamp": 1734686852.1139445, "event": "reconciliation", "flavor": "test-lhhvaljr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 27.815427780151367}
+09:28:21 INFO Waiting for model:
+  test-lhhvaljr/0 [executing] maintenance: Reconciling runners
+09:28:51 INFO Waiting for model:
+  test-lhhvaljr/0 [idle] active:

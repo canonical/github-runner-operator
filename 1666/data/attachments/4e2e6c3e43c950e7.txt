@@ -1,0 +1,95 @@
+08:34:48 INFO Adding model lxd:test-charm-scheduled-events-n7t1 on cloud localhost
+08:34:48 WARNING unexpected facade AgentLifeFlag received from the controller
+08:34:48 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+08:34:48 WARNING unexpected facade SecretsDrain received from the controller
+08:34:50 INFO Deploying ch:amd64/github-runner-image-builder-2
+08:34:50 INFO Waiting for model:
+  github-runner-image-builder (not enough units yet - 0/1)
+08:35:20 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:35:50 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:36:20 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:36:50 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+08:37:20 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+08:37:50 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+08:38:20 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+08:38:59 INFO Deploying local:jammy/github-runner-0
+08:38:59 INFO Waiting for model:
+  test-dngzrw3r/0 [allocating] waiting: waiting for machine
+08:39:29 INFO Waiting for model:
+  test-dngzrw3r/0 [allocating] waiting: waiting for machine
+08:39:59 INFO Waiting for model:
+  test-dngzrw3r/0 [executing] waiting: agent initialising
+08:40:29 INFO Waiting for model:
+  test-dngzrw3r/0 [executing] maintenance: Reconciling runners
+08:40:58 INFO Waiting for model:
+  test-dngzrw3r/0 [idle] active: 
+08:41:28 INFO Waiting for model:
+  test-dngzrw3r/0 [executing] maintenance: Reconciling runners
+08:41:59 INFO Waiting for model:
+  test-dngzrw3r/0 [executing] maintenance: Reconciling runners
+08:42:29 INFO Waiting for model:
+  test-dngzrw3r/0 [executing] maintenance: Reconciling runners
+08:42:59 INFO Waiting for model:
+  test-dngzrw3r/0 [executing] maintenance: Reconciling runners
+08:43:29 INFO Waiting for model:
+  test-dngzrw3r/0 [executing] maintenance: Reconciling runners
+08:43:59 INFO Waiting for model:
+  test-dngzrw3r/0 [executing] maintenance: Reconciling runners
+08:44:29 INFO Waiting for model:
+  test-dngzrw3r/0 [executing] maintenance: Reconciling runners
+08:44:59 INFO Waiting for model:
+  test-dngzrw3r/0 [idle] active: 
+08:45:25 INFO Waiting for model:
+  test-dngzrw3r/0 [idle] active:
+08:45:48 INFO Wait for 10 minutes
+08:55:48 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+  test-dngzrw3r/0 [idle] active:
+08:56:05 INFO Model status:
+
+Model                             Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-n7t1  lxd         localhost/localhost  3.1.10   unsupported  08:56:05Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-dngzrw3r                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.82.213.162          
+test-dngzrw3r/0*                active    idle   1        10.82.213.16           
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.82.213.162  juju-830770-0  ubuntu@22.04      Running
+1        started  10.82.213.16   juju-830770-1  ubuntu@22.04      Running
+
+08:56:06 INFO Juju error logs:
+
+machine-0: 08:36:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 08:36:34 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 08:36:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 08:36:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 08:39:40 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 08:39:40 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 08:39:40 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-dngzrw3r-0: 08:39:41 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-dngzrw3r-0: 08:46:49 ERROR unit.test-dngzrw3r/0.juju-log image:0: runner-installed.timestamp not found for runner test-dngzrw3r-0-a7a8f91d3933
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dngzrw3r-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-dngzrw3r-0-a7a8f91d3933/runner-installed.timestamp'
+unit-test-dngzrw3r-0: 08:46:49 ERROR unit.test-dngzrw3r/0.juju-log image:0: installed timestamp not found for runner test-dngzrw3r-0-a7a8f91d3933, will not extract any metrics.
+
+08:56:07 INFO Forgetting model main...

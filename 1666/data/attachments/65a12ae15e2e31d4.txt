@@ -1,0 +1,73 @@
+08:06:00 INFO Adding model lxd:test-charm-upgrade-atu1 on cloud localhost
+08:06:01 WARNING unexpected facade AgentLifeFlag received from the controller
+08:06:01 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+08:06:01 WARNING unexpected facade SecretsDrain received from the controller
+08:06:02 INFO Deploying ch:amd64/github-runner-image-builder-2
+08:06:02 INFO Waiting for model:
+  github-runner-image-builder (not enough units yet - 0/1)
+08:06:32 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:07:02 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:07:33 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+08:08:03 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+08:08:33 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+08:09:03 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+08:09:33 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+08:10:03 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] active:
+08:10:27 INFO Deploying local:jammy/github-runner-0
+08:10:28 INFO Waiting for model:
+  test-vmmq0d43/0 [allocating] waiting: waiting for machine
+08:10:58 INFO Waiting for model:
+  test-vmmq0d43/0 [allocating] waiting: waiting for machine
+08:11:28 INFO Waiting for model:
+  test-vmmq0d43/0 [executing] maintenance: Update image for runners
+08:11:58 INFO Waiting for model:
+  test-vmmq0d43/0 [executing] maintenance: Reconciling runners
+08:12:28 INFO Waiting for model:
+  test-vmmq0d43/0 [executing] maintenance: Reconciling runners
+08:12:58 INFO Waiting for model:
+  test-vmmq0d43/0 [executing] maintenance: Reconciling runners
+08:13:28 INFO Waiting for model:
+  test-vmmq0d43/0 [idle] active: 
+08:14:26 INFO Waiting for model:
+  test-vmmq0d43/0 [executing] active: 
+08:14:56 INFO Waiting for model:
+  test-vmmq0d43/0 [idle] active:
+08:15:26 INFO Model status:
+
+Model                    Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-atu1  lxd         localhost/localhost  3.1.10   unsupported  08:15:26Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-vmmq0d43                         active      1  github-runner                               1  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.140.171.30          
+test-vmmq0d43/0*                active    idle   1        10.140.171.188         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.140.171.30   juju-b30aba-0  ubuntu@22.04      Running
+1        started  10.140.171.188  juju-b30aba-1  ubuntu@22.04      Running
+
+08:15:26 INFO Juju error logs:
+
+machine-0: 08:08:01 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 08:08:01 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 08:08:01 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 08:08:01 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 08:11:05 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 08:11:05 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 08:11:05 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-vmmq0d43-0: 08:11:05 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+08:15:27 INFO Forgetting model main...
