@@ -336,7 +336,7 @@ async def image_builder_fixture(
             constraints="cores=2 mem=2G root-disk=20G virt-type=virtual-machine",
             config={
                 "app-channel": "edge",
-                "build-interval": "60",
+                "build-interval": "12",
                 "revision-history-limit": "5",
                 "openstack-auth-url": private_endpoint_config["auth_url"],
                 # Bandit thinks this is a hardcoded password
