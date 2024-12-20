@@ -1,0 +1,98 @@
+12:03:31 INFO Adding model lxd:test-charm-scheduled-events-9ubi on cloud localhost
+12:03:31 WARNING unexpected facade AgentLifeFlag received from the controller
+12:03:31 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+12:03:31 WARNING unexpected facade SecretsDrain received from the controller
+12:03:33 INFO Deploying ch:amd64/github-runner-image-builder-2
+12:03:33 INFO Waiting for model:
+  github-runner-image-builder (not enough units yet - 0/1)
+12:04:03 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+12:04:33 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+12:05:03 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+12:05:33 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+12:06:03 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+12:06:33 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+12:07:03 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+12:07:33 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+12:07:53 INFO Deploying local:jammy/github-runner-0
+12:07:53 INFO Waiting for model:
+  test-hrkeuq5s/0 [allocating] waiting: waiting for machine
+12:08:23 INFO Waiting for model:
+  test-hrkeuq5s/0 [allocating] waiting: waiting for machine
+12:08:53 INFO Waiting for model:
+  test-hrkeuq5s/0 [executing] maintenance: installing charm software
+12:09:23 INFO Waiting for model:
+  test-hrkeuq5s/0 [executing] active: 
+12:09:39 INFO Waiting for model:
+  test-hrkeuq5s/0 [idle] active: 
+12:10:09 INFO Waiting for model:
+  test-hrkeuq5s/0 [executing] maintenance: Reconciling runners
+12:10:39 INFO Waiting for model:
+  test-hrkeuq5s/0 [executing] maintenance: Reconciling runners
+12:11:09 INFO Waiting for model:
+  test-hrkeuq5s/0 [executing] maintenance: Reconciling runners
+12:11:39 INFO Waiting for model:
+  test-hrkeuq5s/0 [executing] maintenance: Reconciling runners
+12:12:09 INFO Waiting for model:
+  test-hrkeuq5s/0 [idle] active: 
+12:12:29 INFO Waiting for model:
+  test-hrkeuq5s/0 [idle] active:
+12:12:47 INFO Wait for condition not met, sleeping 3
+12:12:50 INFO Wait for condition not met, sleeping 3
+12:12:54 INFO Wait for condition not met, sleeping 3
+12:12:58 INFO Wait for condition not met, sleeping 3
+12:13:02 INFO Wait for condition not met, sleeping 3
+12:13:05 INFO Wait for condition not met, sleeping 3
+12:13:09 INFO Wait for condition not met, sleeping 3
+12:13:12 INFO Wait for 10 minutes
+12:23:12 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+  test-hrkeuq5s/0 [idle] active:
+12:23:29 INFO Model status:
+
+Model                             Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-9ubi  lxd         localhost/localhost  3.1.10   unsupported  12:23:29Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-hrkeuq5s                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.87.130.234          
+test-hrkeuq5s/0*                active    idle   1        10.87.130.123          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.87.130.234  juju-41a1dc-0  ubuntu@22.04      Running
+1        started  10.87.130.123  juju-41a1dc-1  ubuntu@22.04      Running
+
+12:23:29 INFO Juju error logs:
+
+machine-0: 12:05:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 12:05:20 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 12:05:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 12:05:20 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 12:08:33 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 12:08:33 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 12:08:33 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-hrkeuq5s-0: 12:08:33 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-hrkeuq5s-0: 12:16:02 ERROR unit.test-hrkeuq5s/0.juju-log image:0: runner-installed.timestamp not found for runner test-hrkeuq5s-0-7c6b18f42501
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hrkeuq5s-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-hrkeuq5s-0-7c6b18f42501/runner-installed.timestamp'
+unit-test-hrkeuq5s-0: 12:16:02 ERROR unit.test-hrkeuq5s/0.juju-log image:0: installed timestamp not found for runner test-hrkeuq5s-0-7c6b18f42501, will not extract any metrics.
+
+12:23:30 INFO Forgetting model main...

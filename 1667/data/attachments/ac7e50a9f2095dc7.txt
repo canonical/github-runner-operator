@@ -1,0 +1,63 @@
+12:46:17 INFO Adding model lxd:test-charm-fork-path-change-h2t9 on cloud localhost
+12:46:19 INFO Deploying ch:amd64/jammy/github-runner-image-builder-2
+12:46:19 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+12:46:50 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+12:47:20 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+12:47:50 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+12:48:21 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+12:48:51 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+12:49:22 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+12:49:52 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+12:50:30 INFO Deploying local:jammy/github-runner-0
+12:50:30 INFO Waiting for model:
+  test-iagsh62i/0 [allocating] waiting: waiting for machine
+12:51:01 INFO Waiting for model:
+  test-iagsh62i/0 [allocating] waiting: waiting for machine
+12:51:31 INFO Waiting for model:
+  test-iagsh62i/0 [allocating] waiting: agent initialising
+12:52:01 INFO Waiting for model:
+  test-iagsh62i/0 [executing] maintenance: Update image for runners
+12:52:31 INFO GitHub token rate limit: Rate(reset=2024-12-20 13:06:31+00:00, remaining=4365, limit=5000)
+12:56:31 INFO Waiting for model:
+  test-iagsh62i/0 [executing] maintenance: Reconciling runners
+12:57:01 INFO Waiting for model:
+  test-iagsh62i/0 [executing] maintenance: Reconciling runners
+12:57:45 INFO Waiting for model:
+  test-iagsh62i/0 [executing] active: 
+12:58:15 INFO Waiting for model:
+  test-iagsh62i/0 [idle] active:
+12:58:24 INFO Model status:
+
+Model                             Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-h2t9  lxd         localhost/localhost  3.6.1    unsupported  12:58:24Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-iagsh62i                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.150.83.243          
+test-iagsh62i/0*                active    idle   1        10.150.83.119          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.150.83.243  juju-06a686-0  ubuntu@22.04      Running
+1        started  10.150.83.119  juju-06a686-1  ubuntu@22.04      Running
+
+12:58:24 INFO Juju error logs:
+
+machine-0: 12:48:15 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 12:48:15 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 12:48:15 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 12:51:27 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 12:51:27 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-iagsh62i-0: 12:51:27 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+12:58:24 INFO Forgetting model main...

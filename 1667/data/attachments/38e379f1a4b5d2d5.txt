@@ -1,0 +1,40 @@
+12:46:49 INFO Adding model lxd:test-charm-metrics-success-sqy9 on cloud localhost
+12:46:51 INFO Deploying ch:amd64/jammy/github-runner-image-builder-2
+12:46:51 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+12:47:22 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+12:47:52 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+12:48:22 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+12:48:52 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+12:49:22 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+12:49:53 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+12:50:23 INFO Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+12:51:02 INFO Deploying local:jammy/github-runner-0
+12:51:02 INFO Waiting for model:
+  test-pfhatw9f/0 [allocating] waiting: waiting for machine
+12:51:32 INFO Waiting for model:
+  test-pfhatw9f/0 [allocating] waiting: waiting for machine
+12:52:02 INFO Waiting for model:
+  test-pfhatw9f/0 [allocating] waiting: agent initialising
+12:52:33 INFO Waiting for model:
+  test-pfhatw9f/0 [executing] maintenance: Reconciling runners
+12:56:16 INFO Waiting for model:
+  test-pfhatw9f/0 [executing] maintenance: Reconciling runners
+12:56:46 INFO Waiting for model:
+  test-pfhatw9f/0 [idle] active: 
+12:57:28 INFO Waiting for model:
+  test-pfhatw9f/0 [executing] active: 
+12:57:58 INFO Waiting for model:
+  test-pfhatw9f/0 [idle] active: 
+12:58:12 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1734699375.4525034, "event": "reconciliation", "flavor": "test-pfhatw9f", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 200.16815209388733}
+{"timestamp": 1734699394.9077003, "event": "reconciliation", "flavor": "test-pfhatw9f", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 18.469658374786377}
+{"timestamp": 1734699345.0, "event": "runner_installed", "flavor": "test-pfhatw9f", "duration": 160.29292964935303}
+{"timestamp": 1734699447.7728927, "event": "reconciliation", "flavor": "test-pfhatw9f", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 34.65931224822998}
+{"timestamp": 1734699475.5708263, "event": "reconciliation", "flavor": "test-pfhatw9f", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 26.823400497436523}
