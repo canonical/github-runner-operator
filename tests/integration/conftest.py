@@ -505,7 +505,7 @@ async def tmate_ssh_server_unit_ip_fixture(
     status: FullStatus = await model.get_status([tmate_ssh_server_app.name])
     try:
         unit_status: UnitStatus = next(
-            iter(status.applications[tmate_ssh_server_app.name].units.values())
+            iter(status.applications[tmate_ssh_server_app.name].units.values())  # type: ignore[union-attr]
         )
         assert unit_status.public_address, "Invalid unit address"
         return unit_status.public_address
