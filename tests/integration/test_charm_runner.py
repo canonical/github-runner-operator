@@ -145,13 +145,12 @@ async def test_repo_policy_enabled(
     act: Dispatch a workflow.
     assert: Workflow run successfully passed.
     """
-    if isinstance(instance_helper, OpenStackInstanceHelper):
-        await setup_repo_policy(
-            app=app,
-            openstack_connection=instance_helper.openstack_connection,
-            token=token,
-            https_proxy=https_proxy,
-        )
+    await setup_repo_policy(
+        app=app,
+        openstack_connection=instance_helper.openstack_connection,
+        token=token,
+        https_proxy=https_proxy,
+    )
 
     await dispatch_workflow(
         app=app,
