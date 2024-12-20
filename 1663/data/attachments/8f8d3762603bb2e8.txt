@@ -1,0 +1,329 @@
+00:02:57 INFO Adding model lxd:test-charm-upgrade-dlac on cloud localhost
+00:02:57 WARNING unexpected facade AgentLifeFlag received from the controller
+00:02:57 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+00:02:57 WARNING unexpected facade SecretsDrain received from the controller
+00:02:59 INFO Deploying ch:amd64/github-runner-image-builder-2
+00:02:59 INFO Waiting for model:
+  github-runner-image-builder (not enough units yet - 0/1)
+00:03:29 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+00:03:59 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+00:04:29 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+00:04:59 INFO Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+00:05:29 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:05:59 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:06:29 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:06:59 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:07:30 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:08:00 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:08:30 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:09:00 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:09:30 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:10:00 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:10:30 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:11:00 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:11:30 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:12:00 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:12:30 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:13:00 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:13:30 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:14:00 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:14:30 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:15:00 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:15:30 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:16:01 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:16:31 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:17:01 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:17:31 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:18:01 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:18:31 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:19:01 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:19:31 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:20:01 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:20:31 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:21:01 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:21:31 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:22:01 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:22:31 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:23:01 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:23:31 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:24:01 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:24:31 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:25:02 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:25:32 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:26:02 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:26:32 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:27:02 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:27:32 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:28:02 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:28:32 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:29:02 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:29:32 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:30:02 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:30:32 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:31:02 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:31:32 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:32:02 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:32:32 INFO Waiting for model:
+  github-runner-image-builder/0 [idle] blocked: Build interval must not be smaller than 1 or greater than 24
+00:32:59 INFO Model status:
+
+Model                    Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-dlac  lxd         localhost/localhost  3.1.10   unsupported  00:32:59Z
+
+App                          Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           blocked      1  github-runner-image-builder  latest/edge    2  no       Build interval must not be smaller than 1 or greater than 24
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  blocked   idle   0        10.39.27.225           Build interval must not be smaller than 1 or greater than 24
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.39.27.225  juju-26609b-0  ubuntu@22.04      Running
+
+00:32:59 INFO Juju error logs:
+
+machine-0: 00:04:42 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 00:04:42 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 00:04:42 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 00:04:42 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-0: 00:05:01 ERROR unit.github-runner-image-builder/0.juju-log Wrong Charm Configuration
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 396, in from_charm
+    build_interval = _parse_build_interval(charm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 259, in _parse_build_interval
+    raise ValueError("Build interval must not be smaller than 1 or greater than 24")
+ValueError: Build interval must not be smaller than 1 or greater than 24
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/./src/charm.py", line 81, in _on_install
+    init_config = state.BuilderInitConfig.from_charm(self)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 398, in from_charm
+    raise BuilderSetupConfigInvalidError(msg=str(exc)) from exc
+state.BuilderSetupConfigInvalidError
+unit-github-runner-image-builder-0: 00:05:01 ERROR unit.github-runner-image-builder/0.juju-log Wrong Charm Configuration
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 396, in from_charm
+    build_interval = _parse_build_interval(charm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 259, in _parse_build_interval
+    raise ValueError("Build interval must not be smaller than 1 or greater than 24")
+ValueError: Build interval must not be smaller than 1 or greater than 24
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/./src/charm.py", line 81, in _on_install
+    init_config = state.BuilderInitConfig.from_charm(self)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 398, in from_charm
+    raise BuilderSetupConfigInvalidError(msg=str(exc)) from exc
+state.BuilderSetupConfigInvalidError
+unit-github-runner-image-builder-0: 00:05:01 ERROR unit.github-runner-image-builder/0.juju-log Wrong Charm Configuration
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 396, in from_charm
+    build_interval = _parse_build_interval(charm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 259, in _parse_build_interval
+    raise ValueError("Build interval must not be smaller than 1 or greater than 24")
+ValueError: Build interval must not be smaller than 1 or greater than 24
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/./src/charm.py", line 81, in _on_install
+    init_config = state.BuilderInitConfig.from_charm(self)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 398, in from_charm
+    raise BuilderSetupConfigInvalidError(msg=str(exc)) from exc
+state.BuilderSetupConfigInvalidError
+unit-github-runner-image-builder-0: 00:05:01 ERROR unit.github-runner-image-builder/0.juju-log Wrong Charm Configuration
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 396, in from_charm
+    build_interval = _parse_build_interval(charm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 259, in _parse_build_interval
+    raise ValueError("Build interval must not be smaller than 1 or greater than 24")
+ValueError: Build interval must not be smaller than 1 or greater than 24
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/./src/charm.py", line 125, in _on_config_changed
+    init_config = state.BuilderInitConfig.from_charm(self)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 398, in from_charm
+    raise BuilderSetupConfigInvalidError(msg=str(exc)) from exc
+state.BuilderSetupConfigInvalidError
+unit-github-runner-image-builder-0: 00:05:02 ERROR unit.github-runner-image-builder/0.juju-log Wrong Charm Configuration
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 396, in from_charm
+    build_interval = _parse_build_interval(charm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 259, in _parse_build_interval
+    raise ValueError("Build interval must not be smaller than 1 or greater than 24")
+ValueError: Build interval must not be smaller than 1 or greater than 24
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/./src/charm.py", line 81, in _on_install
+    init_config = state.BuilderInitConfig.from_charm(self)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 398, in from_charm
+    raise BuilderSetupConfigInvalidError(msg=str(exc)) from exc
+state.BuilderSetupConfigInvalidError
+unit-github-runner-image-builder-0: 00:10:07 ERROR unit.github-runner-image-builder/0.juju-log Wrong Charm Configuration
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 396, in from_charm
+    build_interval = _parse_build_interval(charm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 259, in _parse_build_interval
+    raise ValueError("Build interval must not be smaller than 1 or greater than 24")
+ValueError: Build interval must not be smaller than 1 or greater than 24
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/./src/charm.py", line 81, in _on_install
+    init_config = state.BuilderInitConfig.from_charm(self)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 398, in from_charm
+    raise BuilderSetupConfigInvalidError(msg=str(exc)) from exc
+state.BuilderSetupConfigInvalidError
+unit-github-runner-image-builder-0: 00:15:29 ERROR unit.github-runner-image-builder/0.juju-log Wrong Charm Configuration
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 396, in from_charm
+    build_interval = _parse_build_interval(charm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 259, in _parse_build_interval
+    raise ValueError("Build interval must not be smaller than 1 or greater than 24")
+ValueError: Build interval must not be smaller than 1 or greater than 24
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/./src/charm.py", line 81, in _on_install
+    init_config = state.BuilderInitConfig.from_charm(self)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 398, in from_charm
+    raise BuilderSetupConfigInvalidError(msg=str(exc)) from exc
+state.BuilderSetupConfigInvalidError
+unit-github-runner-image-builder-0: 00:20:35 ERROR unit.github-runner-image-builder/0.juju-log Wrong Charm Configuration
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 396, in from_charm
+    build_interval = _parse_build_interval(charm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 259, in _parse_build_interval
+    raise ValueError("Build interval must not be smaller than 1 or greater than 24")
+ValueError: Build interval must not be smaller than 1 or greater than 24
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/./src/charm.py", line 81, in _on_install
+    init_config = state.BuilderInitConfig.from_charm(self)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 398, in from_charm
+    raise BuilderSetupConfigInvalidError(msg=str(exc)) from exc
+state.BuilderSetupConfigInvalidError
+unit-github-runner-image-builder-0: 00:24:45 ERROR unit.github-runner-image-builder/0.juju-log Wrong Charm Configuration
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 396, in from_charm
+    build_interval = _parse_build_interval(charm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 259, in _parse_build_interval
+    raise ValueError("Build interval must not be smaller than 1 or greater than 24")
+ValueError: Build interval must not be smaller than 1 or greater than 24
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/./src/charm.py", line 81, in _on_install
+    init_config = state.BuilderInitConfig.from_charm(self)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 398, in from_charm
+    raise BuilderSetupConfigInvalidError(msg=str(exc)) from exc
+state.BuilderSetupConfigInvalidError
+unit-github-runner-image-builder-0: 00:29:51 ERROR unit.github-runner-image-builder/0.juju-log Wrong Charm Configuration
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 396, in from_charm
+    build_interval = _parse_build_interval(charm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 259, in _parse_build_interval
+    raise ValueError("Build interval must not be smaller than 1 or greater than 24")
+ValueError: Build interval must not be smaller than 1 or greater than 24
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/./src/charm.py", line 81, in _on_install
+    init_config = state.BuilderInitConfig.from_charm(self)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-0/charm/src/state.py", line 398, in from_charm
+    raise BuilderSetupConfigInvalidError(msg=str(exc)) from exc
+state.BuilderSetupConfigInvalidError
+
+00:33:00 INFO Forgetting model main...
