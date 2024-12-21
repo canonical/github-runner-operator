@@ -1,0 +1,61 @@
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:132 Creating 1 runners
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:220 Creating openstack server with test-d3z94of6-0-ca3352d6844b
+WARNING  github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:349 Unable to SSH into test-d3z94of6-0-ca3352d6844b with address 10.145.193.197
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 338, in get_ssh_connection
+    result = connection.run(f"echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/fabric/connection.py", line 22, in opens
+    self.open()
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/fabric/connection.py", line 665, in open
+    result = self.client.connect(**kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/paramiko/client.py", line 409, in connect
+    raise NoValidConnectionsError(errors)
+paramiko.ssh_exception.NoValidConnectionsError: [Errno None] Unable to connect to port 22 on 10.145.193.197
+WARNING  github_runner_manager.openstack_cloud.openstack_runner_manager:utilities.py:88 Retrying error in 60 seconds: Failed to SSH to test-d3z94of6-0-ca3352d6844b during creation possible due to setup not completed
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:672 Runner startup process found to be healthy on test-d3z94of6-0-ca3352d6844b
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:705 Runner test-d3z94of6-0-ca3352d6844b found to be healthy
+INFO     github_runner_manager.openstack_cloud.openstack_runner_manager:openstack_runner_manager.py:224 Runner test-d3z94of6-0-ca3352d6844b created successfully
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-d3z94of6-0-1829d5d75818', 'test-d3z94of6-0-ca3352d6844b'}
+WARNING  github_runner_manager.manager.runner_manager:runner_manager.py:171 Found runner instance on cloud but not registered on GitHub: {'test-d3z94of6-0-1829d5d75818'}
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-d3z94of6-0-1829d5d75818', 'test-d3z94of6-0-ca3352d6844b'}
+WARNING  github_runner_manager.manager.runner_manager:runner_manager.py:171 Found runner instance on cloud but not registered on GitHub: {'test-d3z94of6-0-1829d5d75818'}
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-d3z94of6-0-1829d5d75818', 'test-d3z94of6-0-ca3352d6844b'}
+WARNING  github_runner_manager.manager.runner_manager:runner_manager.py:171 Found runner instance on cloud but not registered on GitHub: {'test-d3z94of6-0-1829d5d75818'}
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-d3z94of6-0-1829d5d75818', 'test-d3z94of6-0-ca3352d6844b'}
+WARNING  github_runner_manager.manager.runner_manager:runner_manager.py:171 Found runner instance on cloud but not registered on GitHub: {'test-d3z94of6-0-1829d5d75818'}
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-d3z94of6-0-1829d5d75818', 'test-d3z94of6-0-ca3352d6844b'}
+WARNING  github_runner_manager.manager.runner_manager:runner_manager.py:171 Found runner instance on cloud but not registered on GitHub: {'test-d3z94of6-0-1829d5d75818'}
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     paramiko.transport:transport.py:1944 Connected (version 2.0, client OpenSSH_9.6p1)
+INFO     paramiko.transport:transport.py:1944 Authentication (publickey) successful!
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: {'test-d3z94of6-0-ca3352d6844b'}

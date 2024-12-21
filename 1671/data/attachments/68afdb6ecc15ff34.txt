@@ -1,0 +1,85 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-fork-repo-95o5 on cloud localhost
+INFO     juju.model:__init__.py:2301 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:2301 Deploying local:jammy/github-runner-0
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-hi6kes0v/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-hi6kes0v/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-hi6kes0v/0 [allocating] waiting: agent initialising
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-hi6kes0v/0 [executing] maintenance: Reconciling runners
+INFO     root:conftest.py:589 GitHub token rate limit: Rate(reset=2024-12-21 07:27:05+00:00, remaining=4962, limit=5000)
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-hi6kes0v/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-hi6kes0v/0 [idle] active: 
+INFO     tests.integration.helpers.openstack:openstack.py:49 [TEST SETUP] Exposing port 8080 on test-hi6kes0v-0-deea2d21aeb1
+WARNING  tests.integration.helpers.openstack:openstack.py:51 dict_values([[{'version': 4, 'addr': '10.145.193.141', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5c:d3:0a'}]])
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command nc -z localhost 8080 on test-hi6kes0v-0-deea2d21aeb1
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.141', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5c:d3:0a'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-hi6kes0v-0-deea2d21aeb1.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.141 nc -z localhost 8080'
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command curl http://localhost:8080 on test-hi6kes0v-0-deea2d21aeb1
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.141', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5c:d3:0a'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-hi6kes0v-0-deea2d21aeb1.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.141 curl http://localhost:8080'
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                      Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-95o5  lxd         localhost/localhost  3.6.1    unsupported  06:34:57Z
+
+App                          Version  Status       Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active           1  github-runner-image-builder  latest/edge    2  no       
+test-hi6kes0v                         maintenance      1  github-runner                               0  yes      Update image for runners
+
+Unit                            Workload     Agent      Machine  Public address  Ports     Message
+github-runner-image-builder/0*  active       idle       0        10.104.56.60              
+test-hi6kes0v/0*                maintenance  executing  1        10.104.56.139   8080/tcp  Update image for runners
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.104.56.60   juju-eff6be-0  ubuntu@22.04      Running
+1        started  10.104.56.139  juju-eff6be-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 06:24:52 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:24:52 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 06:24:52 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:28:08 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:28:08 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-hi6kes0v-0: 06:28:08 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-hi6kes0v-0: 06:28:24 CRITICAL unit.test-hi6kes0v/0.juju-log test mode is enabled
+unit-test-hi6kes0v-0: 06:28:25 CRITICAL unit.test-hi6kes0v/0.juju-log test mode is enabled
+unit-test-hi6kes0v-0: 06:28:29 CRITICAL unit.test-hi6kes0v/0.juju-log image:0: test mode is enabled
+unit-test-hi6kes0v-0: 06:28:29 CRITICAL unit.test-hi6kes0v/0.juju-log test mode is enabled
+unit-test-hi6kes0v-0: 06:28:30 CRITICAL unit.test-hi6kes0v/0.juju-log test mode is enabled
+unit-test-hi6kes0v-0: 06:28:32 CRITICAL unit.test-hi6kes0v/0.juju-log test mode is enabled
+unit-test-hi6kes0v-0: 06:28:33 CRITICAL unit.test-hi6kes0v/0.juju-log test mode is enabled
+unit-test-hi6kes0v-0: 06:28:34 CRITICAL unit.test-hi6kes0v/0.juju-log image:0: test mode is enabled
+unit-test-hi6kes0v-0: 06:28:35 CRITICAL unit.test-hi6kes0v/0.juju-log image:0: test mode is enabled
+unit-test-hi6kes0v-0: 06:29:21 CRITICAL unit.test-hi6kes0v/0.juju-log test mode is enabled
+unit-test-hi6kes0v-0: 06:29:22 CRITICAL unit.test-hi6kes0v/0.juju-log test mode is enabled
+unit-test-hi6kes0v-0: 06:30:11 CRITICAL unit.test-hi6kes0v/0.juju-log test mode is enabled
+unit-test-hi6kes0v-0: 06:30:12 CRITICAL unit.test-hi6kes0v/0.juju-log test mode is enabled
+unit-test-hi6kes0v-0: 06:32:54 CRITICAL unit.test-hi6kes0v/0.juju-log test mode is enabled
+unit-test-hi6kes0v-0: 06:34:10 CRITICAL unit.test-hi6kes0v/0.juju-log test mode is enabled
+unit-test-hi6kes0v-0: 06:34:46 CRITICAL unit.test-hi6kes0v/0.juju-log image:0: test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
