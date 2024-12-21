@@ -57,6 +57,7 @@ async def app_fixture(
     await reconcile(app_for_reactive, app_for_reactive.model)
 
 
+@pytest.mark.abort_on_fail
 async def test_reactive_mode_spawns_runner(
     ops_test: OpsTest,
     app: Application,
@@ -123,6 +124,7 @@ async def test_reactive_mode_spawns_runner(
     await _assert_metrics_are_logged(app, github_repository)
 
 
+@pytest.mark.abort_on_fail
 async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
     ops_test: OpsTest,
     app: Application,
@@ -160,6 +162,7 @@ async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
         run.cancel()  # cancel the run to avoid a queued run in GitHub actions page
 
 
+@pytest.mark.abort_on_fail
 async def test_reactive_mode_scale_down(
     ops_test: OpsTest,
     app: Application,

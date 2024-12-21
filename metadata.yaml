@@ -13,7 +13,7 @@ description: |
   A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) managing
   [self-hosted runners for GitHub Actions](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners).
 
-  Each unit of this charm will start a configurable number of LXD based virtual machines to host
+  Each unit of this charm will start a configurable number of virtual machines to host
   self-hosted runners. Each runner performs only one job, after which it unregisters from GitHub to 
   ensure that each job runs in a clean environment. The charm will periodically check the number of 
   runners and spawn or destroy them as necessary to maintain the configured number of runners. Both 

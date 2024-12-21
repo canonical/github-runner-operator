@@ -1,6 +1,6 @@
 # GitHub Runner Operator
 
-A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) for deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines. The charm maintains a set of ephemeral self-hosted runners, each isolated in a single-use virtual machine instance. 
+A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) for deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines. The charm maintains a set of self-hosted runners, each isolated in a single-use virtual machine instance. 
 
 Like any Juju charm, this charm supports one-line deployment, configuration, integration, scaling, and more. 
 For the github-runner-operator charm, this includes:
@@ -21,8 +21,10 @@ The charm enforces a set of GitHub repository settings as best practice. This is
 
 | | |
 |--|--|
-|  [Tutorials](https://charmhub.io/github-runner/docs/quick-start)</br>  Get started - a hands-on introduction to using the GitHub runner charm for new users </br> | [How-to guides](https://charmhub.io/github-runner/docs/run-on-lxd) </br> Step-by-step guides covering key operations and common tasks |
-| [Reference](https://charmhub.io/github-runner/docs/actions) </br> Technical information - specifications, APIs, architecture | [Explanation](https://charmhub.io/github-runner/docs/charm-architecture) </br> Concepts - discussion and clarification of key topics  |
+|  [Overview](https://charmhub.io/github-runner)</br>  Overview of the charm </br> | [How-to guides](https://charmhub.io/github-runner/docs/how-to-openstack-runner) </br> Step-by-step guides covering key operations and common tasks |
+| [Reference](https://charmhub.io/github-runner/docs/reference-actions) </br> Technical information - specifications, APIs, architecture | [Explanation](https://charmhub.io/github-runner/docs/explanation-charm-architecture) </br> Concepts - discussion and clarification of key topics  |
+
+If you want to use ephemeral LXD virtual machines spawned by charm, you can refer to the section [Track local-lxd](https://charmhub.io/github-runner/docs/local-lxd).
 
 ## Contributing to this documentation
 
@@ -43,33 +45,53 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
 
 # Contents
 
-1. [Tutorial](tutorial)
-  1. [Managing resource usage](tutorial/managing-resource-usage.md)
-  1. [Quick start](tutorial/quick-start.md)
 1. [How to](how-to)
   1. [Add custom labels](how-to/add-custom-labels.md)
   1. [Change repository or organization](how-to/change-path.md)
   1. [Change GitHub personal access token](how-to/change-token.md)
   1. [Comply with security requirements](how-to/comply-security.md)
-  1. [Restrict self-hosted runner network access](how-to/configure-denylist.md)
-  1. [Configure runner storage](how-to/configure-runner-storage.md)
   1. [Contribute](how-to/contribute.md)
   1. [Debug with SSH](how-to/debug-with-ssh.md)
-  1. [Deploy on ARM64](how-to/deploy-on-arm64.md)
   1. [Integrate with COS](how-to/integrate-with-cos.md)
   1. [Spawn OpenStack runner](how-to/openstack-runner.md)
   1. [Comply with repository policies](how-to/repo-policy.md)
-  1. [Run on LXD cloud](how-to/run-on-lxd.md)
-  1. [Set base image](how-to/set-base-image.md)
   1. [Set up reactive spawning](how-to/reactive.md)
 1. [Reference](reference)
   1. [Actions](reference/actions.md)
-  1. [ARM64](reference/arm64.md)
   1. [Configurations](reference/configurations.md)
   1. [COS Integration](reference/cos.md)
   1. [External Access](reference/external-access.md)
   1. [Integrations](reference/integrations.md)
   1. [Token scopes](reference/token-scopes.md)
 1. [Explanation](explanation)
-  1. [ARM64](explanation/arm64.md)
   1. [Charm architecture](explanation/charm-architecture.md)
+  1. [SSH Debug](explanation/ssh-debug.md)
+1. [Track local-lxd](local-lxd)
+  1. [Tutorial](local-lxd/tutorial)
+    1. [Managing resource usage](local-lxd/tutorial/managing-resource-usage.md)
+    1. [Quick start](local-lxd/tutorial/quick-start.md)
+  1. [How to](local-lxd/how-to)
+    1. [Add custom labels](local-lxd/how-to/add-custom-labels.md)
+    1. [Change repository or organization](local-lxd/how-to/change-path.md)
+    1. [Change GitHub personal access token](local-lxd/how-to/change-token.md)
+    1. [Comply with security requirements](local-lxd/how-to/comply-security.md)
+    1. [Restrict self-hosted runner network access](local-lxd/how-to/configure-denylist.md)
+    1. [Configure runner storage](local-lxd/how-to/configure-runner-storage.md)
+    1. [Debug with SSH](local-lxd/how-to/debug-with-ssh.md)
+    1. [Deploy on ARM64](local-lxd/how-to/deploy-on-arm64.md)
+    1. [Integrate with COS](local-lxd/how-to/integrate-with-cos.md)
+    1. [Comply with repository policies](local-lxd/how-to/repo-policy.md)
+    1. [Run on LXD cloud](local-lxd/how-to/run-on-lxd.md)
+    1. [Set base image](local-lxd/how-to/set-base-image.md)
+  1. [Reference](local-lxd/reference)
+    1. [Actions](local-lxd/reference/actions.md)
+    1. [ARM64](local-lxd/reference/arm64.md)
+    1. [Configurations](local-lxd/reference/configurations.md)
+    1. [COS Integration](local-lxd/reference/cos.md)
+    1. [External Access](local-lxd/reference/external-access.md)
+    1. [Integrations](local-lxd/reference/integrations.md)
+    1. [Token scopes](local-lxd/reference/token-scopes.md)
+  1. [Explanation](local-lxd/explanation)
+    1. [ARM64](local-lxd/explanation/arm64.md)
+    1. [Charm architecture](local-lxd/explanation/charm-architecture.md)
+    1. [SSH Debug](local-lxd/explanation/ssh-debug.md)
