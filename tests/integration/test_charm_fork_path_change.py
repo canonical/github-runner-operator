@@ -36,10 +36,9 @@ async def test_path_config_change(
     assert: No runners connected to the forked repository and one runner in the main repository.
     """
     logger.info("test_path_config_change")
-    await model.wait_for_idle(apps=[app_with_forked_repo.name],
-                              status=ActiveStatus.name,
-                              idle_period=30,
-                              timeout=10 * 60)
+    await model.wait_for_idle(
+        apps=[app_with_forked_repo.name], status=ActiveStatus.name, idle_period=30, timeout=10 * 60
+    )
 
     unit = app_with_forked_repo.units[0]
 
@@ -57,29 +56,10 @@ async def test_path_config_change(
     runner_name = runner_names[0]
 
     runners_in_repo = github_repository.get_self_hosted_runners()
-    logger.info("runners in github repo: %s", runners_in_repo)
+    logger.info("runners in github repo: %s", list(runners_in_repo))
 
     runner_in_repo_with_same_name = tuple(
         filter(lambda runner: runner.name == runner_name, runners_in_repo)
     )
 
     assert len(runner_in_repo_with_same_name) == 1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
