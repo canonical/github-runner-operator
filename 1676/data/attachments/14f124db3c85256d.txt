@@ -1,0 +1,43 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-metrics-success-yp1d on cloud localhost
+INFO     juju.model:__init__.py:2301 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:2301 Deploying local:jammy/github-runner-0
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-a4cje9kg/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-a4cje9kg/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-a4cje9kg/0 [allocating] waiting: agent initialising
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-a4cje9kg/0 [executing] maintenance: Update image for runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-a4cje9kg/0 [idle] active: 
+INFO     root:charm_metrics.py:127 Loop device None not found
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-a4cje9kg/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-a4cje9kg/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-a4cje9kg/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-a4cje9kg/0 [idle] active: 
+INFO     root:common.py:609 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734892491.230556, "event": "reconciliation", "flavor": "test-a4cje9kg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 324.2176971435547}
+{"timestamp": 1734892505.3960478, "event": "reconciliation", "flavor": "test-a4cje9kg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 13.15194296836853}
+{"timestamp": 1734892532.599491, "event": "reconciliation", "flavor": "test-a4cje9kg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 11.798659801483154}
+{"timestamp": 1734892569.3973453, "event": "reconciliation", "flavor": "test-a4cje9kg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.38432478904724}
+{"timestamp": 1734892587.6367233, "event": "reconciliation", "flavor": "test-a4cje9kg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.233141899108887}

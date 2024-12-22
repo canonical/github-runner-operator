@@ -1,0 +1,83 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-reactive-0mb8 on cloud localhost
+INFO     root:conftest.py:589 GitHub token rate limit: Rate(reset=2024-12-22 18:32:23+00:00, remaining=4470, limit=5000)
+INFO     juju.model:__init__.py:2301 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+INFO     juju.model:__init__.py:2301 Deploying local:jammy/github-runner-0
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-llc09mjd/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-llc09mjd/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-llc09mjd/0 [allocating] waiting: agent initialising
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-llc09mjd/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:2301 Deploying ch:amd64/jammy/mongodb-206
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  mongodb/0 [executing] active: 
+WARNING  juju.model:__init__.py:1683 relate is deprecated and will be removed. Use integrate instead.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-llc09mjd/0 [idle] active: 
+  mongodb/0 [idle] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-llc09mjd/0 [idle] active: 
+  mongodb/0 [idle] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-llc09mjd/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-llc09mjd/0 [idle] active:
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-llc09mjd/0 [idle] active: 
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-llc09mjd/0 [idle] active: 
+INFO     root:common.py:609 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734892395.3607569, "event": "reconciliation", "flavor": "test-llc09mjd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 33.02245569229126}
+{"timestamp": 1734892572.6619678, "event": "reconciliation", "flavor": "test-llc09mjd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 33.230809450149536}
+{"timestamp": 1734892702.0, "event": "runner_installed", "flavor": "test-llc09mjd", "duration": 339.3274359703064}
+{"timestamp": 1734892713.0, "event": "runner_start", "flavor": "test-llc09mjd", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 11.0, "queue_duration": 362.0}
+{"timestamp": 1734892721.0, "event": "runner_stop", "flavor": "test-llc09mjd", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 8.0, "job_conclusion": "success"}
+{"timestamp": 1734892805.8235247, "event": "reconciliation", "flavor": "test-llc09mjd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 23.77548122406006}
+
+INFO     root:common.py:609 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734892395.3607569, "event": "reconciliation", "flavor": "test-llc09mjd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 33.02245569229126}
+{"timestamp": 1734892572.6619678, "event": "reconciliation", "flavor": "test-llc09mjd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 33.230809450149536}
+{"timestamp": 1734892702.0, "event": "runner_installed", "flavor": "test-llc09mjd", "duration": 339.3274359703064}
+{"timestamp": 1734892713.0, "event": "runner_start", "flavor": "test-llc09mjd", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 11.0, "queue_duration": 362.0}
+{"timestamp": 1734892721.0, "event": "runner_stop", "flavor": "test-llc09mjd", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 8.0, "job_conclusion": "success"}
+{"timestamp": 1734892805.8235247, "event": "reconciliation", "flavor": "test-llc09mjd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 23.77548122406006}
+
+INFO     root:common.py:609 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734892395.3607569, "event": "reconciliation", "flavor": "test-llc09mjd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 33.02245569229126}
+{"timestamp": 1734892572.6619678, "event": "reconciliation", "flavor": "test-llc09mjd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 33.230809450149536}
+{"timestamp": 1734892702.0, "event": "runner_installed", "flavor": "test-llc09mjd", "duration": 339.3274359703064}
+{"timestamp": 1734892713.0, "event": "runner_start", "flavor": "test-llc09mjd", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 11.0, "queue_duration": 362.0}
+{"timestamp": 1734892721.0, "event": "runner_stop", "flavor": "test-llc09mjd", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 8.0, "job_conclusion": "success"}
+{"timestamp": 1734892805.8235247, "event": "reconciliation", "flavor": "test-llc09mjd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 23.77548122406006}
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-llc09mjd/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-llc09mjd/0 [idle] active:
