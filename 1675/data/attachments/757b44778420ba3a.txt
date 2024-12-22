@@ -1,0 +1,80 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-reactive-kuqf on cloud localhost
+INFO     root:conftest.py:589 GitHub token rate limit: Rate(reset=2024-12-22 07:27:45+00:00, remaining=4474, limit=5000)
+INFO     juju.model:__init__.py:2301 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+INFO     juju.model:__init__.py:2301 Deploying local:jammy/github-runner-0
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [allocating] waiting: agent initialising
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:2301 Deploying ch:amd64/jammy/mongodb-206
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  mongodb/0 [executing] active: 
+WARNING  juju.model:__init__.py:1683 relate is deprecated and will be removed. Use integrate instead.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [idle] active: 
+  mongodb/0 [idle] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [idle] active: 
+  mongodb/0 [idle] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [idle] active:
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [idle] active: 
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [executing] maintenance: Update image for runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [executing] maintenance: Reconciling runners
+INFO     root:common.py:609 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734850647.6871812, "event": "reconciliation", "flavor": "test-oykheyab", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 37.050485372543335}
+{"timestamp": 1734850690.0, "event": "runner_installed", "flavor": "test-oykheyab", "duration": 79.09782004356384}
+{"timestamp": 1734850701.0, "event": "runner_start", "flavor": "test-oykheyab", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 11.0, "queue_duration": 100.0}
+{"timestamp": 1734850709.0, "event": "runner_stop", "flavor": "test-oykheyab", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 8.0, "job_conclusion": "success"}
+{"timestamp": 1734850752.2929597, "event": "reconciliation", "flavor": "test-oykheyab", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 26.145386695861816}
+{"timestamp": 1734850785.8619704, "event": "reconciliation", "flavor": "test-oykheyab", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 18.992857456207275}
+
+INFO     root:common.py:609 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734850647.6871812, "event": "reconciliation", "flavor": "test-oykheyab", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 37.050485372543335}
+{"timestamp": 1734850690.0, "event": "runner_installed", "flavor": "test-oykheyab", "duration": 79.09782004356384}
+{"timestamp": 1734850701.0, "event": "runner_start", "flavor": "test-oykheyab", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 11.0, "queue_duration": 100.0}
+{"timestamp": 1734850709.0, "event": "runner_stop", "flavor": "test-oykheyab", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 8.0, "job_conclusion": "success"}
+{"timestamp": 1734850752.2929597, "event": "reconciliation", "flavor": "test-oykheyab", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 26.145386695861816}
+{"timestamp": 1734850785.8619704, "event": "reconciliation", "flavor": "test-oykheyab", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 18.992857456207275}
+
+INFO     root:common.py:609 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734850647.6871812, "event": "reconciliation", "flavor": "test-oykheyab", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 37.050485372543335}
+{"timestamp": 1734850690.0, "event": "runner_installed", "flavor": "test-oykheyab", "duration": 79.09782004356384}
+{"timestamp": 1734850701.0, "event": "runner_start", "flavor": "test-oykheyab", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 11.0, "queue_duration": 100.0}
+{"timestamp": 1734850709.0, "event": "runner_stop", "flavor": "test-oykheyab", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 8.0, "job_conclusion": "success"}
+{"timestamp": 1734850752.2929597, "event": "reconciliation", "flavor": "test-oykheyab", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 26.145386695861816}
+{"timestamp": 1734850785.8619704, "event": "reconciliation", "flavor": "test-oykheyab", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "duration": 18.992857456207275}
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [idle] active:

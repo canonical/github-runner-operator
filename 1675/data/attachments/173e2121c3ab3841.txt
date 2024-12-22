@@ -1,0 +1,164 @@
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [idle] active:
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [idle] active: 
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [idle] active: 
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [idle] active:
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-oykheyab/0 [idle] active: 
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model               Controller  Cloud/Region         Version  SLA          Timestamp
+test-reactive-kuqf  lxd         localhost/localhost  3.6.1    unsupported  07:18:39Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+mongodb                               active      1  mongodb                      6/edge       206  no       
+test-oykheyab                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder/0*  active    idle   0        10.198.59.201              
+mongodb/0*                      active    idle   2        10.198.59.2     27017/tcp  Primary
+test-oykheyab/0*                active    idle   1        10.198.59.53               
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.198.59.201  juju-0d3b59-0  ubuntu@22.04      Running
+1        started  10.198.59.53   juju-0d3b59-1  ubuntu@22.04      Running
+2        started  10.198.59.2    juju-0d3b59-2  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 06:48:49 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:48:49 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 06:48:49 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:51:55 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:51:55 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-oykheyab-0: 06:51:55 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-oykheyab-0: 06:52:07 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 06:52:09 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 06:52:12 CRITICAL unit.test-oykheyab/0.juju-log image:0: test mode is enabled
+unit-test-oykheyab-0: 06:52:13 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 06:52:14 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 06:52:16 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 06:52:17 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 06:52:18 CRITICAL unit.test-oykheyab/0.juju-log image:0: test mode is enabled
+unit-test-oykheyab-0: 06:52:19 CRITICAL unit.test-oykheyab/0.juju-log image:0: test mode is enabled
+machine-2: 06:53:43 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:53:43 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 06:53:43 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 06:54:00 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 06:54:00 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 06:54:36 ERROR unit.mongodb/0.juju-log _on_secret_remove: Secret secret:ctjrf5of0dmt58sjak70 seems to have no observers, could be removed
+unit-test-oykheyab-0: 06:54:55 CRITICAL unit.test-oykheyab/0.juju-log mongodb:3: test mode is enabled
+unit-test-oykheyab-0: 06:54:56 CRITICAL unit.test-oykheyab/0.juju-log mongodb:3: test mode is enabled
+unit-test-oykheyab-0: 06:54:57 CRITICAL unit.test-oykheyab/0.juju-log mongodb:3: test mode is enabled
+unit-test-oykheyab-0: 06:54:59 CRITICAL unit.test-oykheyab/0.juju-log mongodb:3: test mode is enabled
+unit-test-oykheyab-0: 06:55:40 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 06:55:41 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 06:56:01 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 06:56:50 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 06:56:59 ERROR unit.test-oykheyab/0.juju-log SSH connection failure with test-oykheyab-0-fd2cee6e24ef during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oykheyab-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-oykheyab-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-oykheyab-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-oykheyab-0-fd2cee6e24ef
+unit-test-oykheyab-0: 06:57:04 ERROR unit.test-oykheyab/0.juju-log SSH connection failure with test-oykheyab-0-fd2cee6e24ef during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oykheyab-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-oykheyab-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-oykheyab-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-oykheyab-0-fd2cee6e24ef
+unit-test-oykheyab-0: 06:57:14 ERROR unit.test-oykheyab/0.juju-log SSH connection failure with test-oykheyab-0-fd2cee6e24ef during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oykheyab-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-oykheyab-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-oykheyab-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-oykheyab-0-fd2cee6e24ef
+unit-test-oykheyab-0: 06:57:14 ERROR unit.test-oykheyab/0.juju-log Retry limit of 3 exceed: No addresses found for OpenStack server test-oykheyab-0-fd2cee6e24ef
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oykheyab-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-oykheyab-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-oykheyab-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-oykheyab-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-oykheyab-0-fd2cee6e24ef
+unit-test-oykheyab-0: 06:57:39 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 06:58:45 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 06:59:13 CRITICAL unit.test-oykheyab/0.juju-log image:0: test mode is enabled
+unit-test-oykheyab-0: 07:00:05 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:00:07 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:00:26 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:01:00 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:01:02 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:01:20 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:02:17 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:02:23 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:02:25 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:02:42 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:03:19 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:03:21 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:03:40 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:04:16 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:04:17 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:04:36 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:06:41 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:07:05 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:07:07 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:07:43 ERROR unit.test-oykheyab/0.juju-log post-job-metrics.json not found for runner test-oykheyab-0-e49b53d4289e
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oykheyab-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-oykheyab-0-e49b53d4289e/post-job-metrics.json'
+unit-test-oykheyab-0: 07:07:48 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:11:31 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:16:43 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:17:39 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+unit-test-oykheyab-0: 07:18:10 CRITICAL unit.test-oykheyab/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...

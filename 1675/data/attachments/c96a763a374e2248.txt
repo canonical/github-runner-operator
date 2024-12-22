@@ -1,0 +1,190 @@
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                   Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-7jc0  lxd         localhost/localhost  3.6.1    unsupported  06:39:07Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-kcxs9hlu                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.170.186.134         
+test-kcxs9hlu/0*                active    idle   1        10.170.186.82          
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.170.186.134  juju-28a2a4-0  ubuntu@22.04      Running
+1        started  10.170.186.82   juju-28a2a4-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 06:25:03 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:03 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 06:25:03 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:28:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:28:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-kcxs9hlu-0: 06:28:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-kcxs9hlu-0: 06:28:20 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:28:22 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:28:25 CRITICAL unit.test-kcxs9hlu/0.juju-log image:0: test mode is enabled
+unit-test-kcxs9hlu-0: 06:28:26 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:28:27 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:28:28 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:28:30 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:28:31 CRITICAL unit.test-kcxs9hlu/0.juju-log image:0: test mode is enabled
+unit-test-kcxs9hlu-0: 06:28:32 CRITICAL unit.test-kcxs9hlu/0.juju-log image:0: test mode is enabled
+unit-test-kcxs9hlu-0: 06:29:10 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:29:12 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:31:15 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:31:50 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:31:57 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:31:59 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:32:27 ERROR unit.test-kcxs9hlu/0.juju-log pre-job-metrics.json not found for runner test-kcxs9hlu-0-934a4217b27d
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-kcxs9hlu-0-934a4217b27d/pre-job-metrics.json'
+unit-test-kcxs9hlu-0: 06:32:27 ERROR unit.test-kcxs9hlu/0.juju-log Pre-job metrics for runner test-kcxs9hlu-0-934a4217b27d not found, stop extracting post-jobs metrics.
+unit-test-kcxs9hlu-0: 06:32:34 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:33:05 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:33:06 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:36:49 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:37:09 CRITICAL unit.test-kcxs9hlu/0.juju-log image:0: test mode is enabled
+unit-test-kcxs9hlu-0: 06:37:35 ERROR unit.test-kcxs9hlu/0.juju-log image:0: pre-job-metrics.json not found for runner test-kcxs9hlu-0-16a05a2b243d
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-kcxs9hlu-0-16a05a2b243d/pre-job-metrics.json'
+unit-test-kcxs9hlu-0: 06:37:35 ERROR unit.test-kcxs9hlu/0.juju-log image:0: Pre-job metrics for runner test-kcxs9hlu-0-16a05a2b243d not found, stop extracting post-jobs metrics.
+unit-test-kcxs9hlu-0: 06:37:41 ERROR unit.test-kcxs9hlu/0.juju-log image:0: Unable to get SSH connection for instance test-kcxs9hlu-0-16a05a2b243d, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kcxs9hlu-0-16a05a2b243d, key path: /home/runner-manager/.ssh/test-kcxs9hlu-0-16a05a2b243d.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kcxs9hlu-0-16a05a2b243d
+unit-test-kcxs9hlu-0: 06:37:41 ERROR unit.test-kcxs9hlu/0.juju-log image:0: Failed to get SSH connection while removing test-kcxs9hlu-0-16a05a2b243d
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 441, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kcxs9hlu-0-16a05a2b243d, key path: /home/runner-manager/.ssh/test-kcxs9hlu-0-16a05a2b243d.key
+unit-test-kcxs9hlu-0: 06:37:49 ERROR unit.test-kcxs9hlu/0.juju-log image:0: Unable to get SSH connection for instance test-kcxs9hlu-0-16a05a2b243d, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kcxs9hlu-0-16a05a2b243d, key path: /home/runner-manager/.ssh/test-kcxs9hlu-0-16a05a2b243d.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kcxs9hlu-0-16a05a2b243d
+unit-test-kcxs9hlu-0: 06:37:53 ERROR unit.test-kcxs9hlu/0.juju-log image:0: Unable to get SSH connection for instance test-kcxs9hlu-0-16a05a2b243d, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kcxs9hlu-0-16a05a2b243d, key path: /home/runner-manager/.ssh/test-kcxs9hlu-0-16a05a2b243d.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kcxs9hlu-0-16a05a2b243d
+unit-test-kcxs9hlu-0: 06:38:10 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:38:14 ERROR unit.test-kcxs9hlu/0.juju-log Unable to get SSH connection for instance test-kcxs9hlu-0-16a05a2b243d, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kcxs9hlu-0-16a05a2b243d, key path: /home/runner-manager/.ssh/test-kcxs9hlu-0-16a05a2b243d.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kcxs9hlu-0-16a05a2b243d
+unit-test-kcxs9hlu-0: 06:38:16 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:38:17 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:38:22 ERROR unit.test-kcxs9hlu/0.juju-log Unable to get SSH connection for instance test-kcxs9hlu-0-16a05a2b243d, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kcxs9hlu-0-16a05a2b243d, key path: /home/runner-manager/.ssh/test-kcxs9hlu-0-16a05a2b243d.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kcxs9hlu-0-16a05a2b243d
+unit-test-kcxs9hlu-0: 06:38:22 ERROR unit.test-kcxs9hlu/0.juju-log Failed to get SSH connection while removing test-kcxs9hlu-0-16a05a2b243d
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 441, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kcxs9hlu-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kcxs9hlu-0-16a05a2b243d, key path: /home/runner-manager/.ssh/test-kcxs9hlu-0-16a05a2b243d.key
+unit-test-kcxs9hlu-0: 06:38:34 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+unit-test-kcxs9hlu-0: 06:38:49 CRITICAL unit.test-kcxs9hlu/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...

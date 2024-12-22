@@ -1,0 +1,40 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-metrics-success-h04w on cloud localhost
+INFO     juju.model:__init__.py:2301 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:2301 Deploying local:jammy/github-runner-0
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-zhp1moyq/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-zhp1moyq/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-zhp1moyq/0 [allocating] waiting: agent initialising
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-zhp1moyq/0 [executing] maintenance: Reconciling runners
+INFO     root:charm_metrics.py:127 Loop device None not found
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-zhp1moyq/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-zhp1moyq/0 [idle] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-zhp1moyq/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-zhp1moyq/0 [executing] maintenance: Reconciling runners
+INFO     root:common.py:609 File content of /var/log/github-runner-metrics.log: {"timestamp": 1734849185.3310592, "event": "reconciliation", "flavor": "test-zhp1moyq", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 252.69553184509277}
+{"timestamp": 1734849204.0153384, "event": "reconciliation", "flavor": "test-zhp1moyq", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 17.647809267044067}
+{"timestamp": 1734849156.0, "event": "runner_installed", "flavor": "test-zhp1moyq", "duration": 213.35191750526428}
+{"timestamp": 1734849267.4179428, "event": "reconciliation", "flavor": "test-zhp1moyq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 45.10321354866028}
+{"timestamp": 1734849281.9569929, "event": "reconciliation", "flavor": "test-zhp1moyq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.310527801513672}
+{"timestamp": 1734849306.4773216, "event": "reconciliation", "flavor": "test-zhp1moyq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.959543943405151}
