@@ -1,0 +1,566 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-debug-ssh-xwq4 on cloud localhost
+WARNING  juju.client.connection:connection.py:893 unexpected facade AgentLifeFlag received from the controller
+WARNING  juju.client.connection:connection.py:909 unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+WARNING  juju.client.connection:connection.py:893 unexpected facade SecretsDrain received from the controller
+INFO     juju.model:model.py:1988 Deploying ch:amd64/github-runner-image-builder-2
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder (not enough units yet - 0/1)
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+INFO     juju.model:model.py:1988 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [executing] blocked: Please provide image integration.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-o77uc7by/0 [idle] blocked: Invalid token.
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                Controller  Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-xwq4  lxd         localhost/localhost  3.1.10   unsupported  07:56:38Z
+
+App                          Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active       1  github-runner-image-builder  latest/edge    2  no       
+test-o77uc7by                         blocked      1  github-runner                               0  no       Invalid token.
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.204.195.235         
+test-o77uc7by/0*                blocked   idle   1        10.204.195.19          Invalid token.
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.204.195.235  juju-e6c050-0  ubuntu@22.04      Running
+1        started  10.204.195.19   juju-e6c050-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 06:24:30 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:24:30 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:24:30 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-github-runner-image-builder-0: 06:24:30 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:27:15 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 06:27:15 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:15 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-o77uc7by-0: 06:27:15 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-o77uc7by-0: 06:27:26 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 06:27:28 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 06:27:31 CRITICAL unit.test-o77uc7by/0.juju-log image:0: test mode is enabled
+unit-test-o77uc7by-0: 06:27:32 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 06:27:33 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 06:27:35 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 06:27:36 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 06:27:37 CRITICAL unit.test-o77uc7by/0.juju-log image:0: test mode is enabled
+unit-test-o77uc7by-0: 06:27:38 CRITICAL unit.test-o77uc7by/0.juju-log image:0: test mode is enabled
+unit-test-o77uc7by-0: 06:27:38 ERROR unit.test-o77uc7by/0.juju-log image:0: Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/./src/charm.py", line 1282, in _on_image_relation_changed
+    runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 147, in flush
+    metric_stats = self._manager.cleanup()
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 248, in cleanup
+    self._github.delete_runners([GitHubRunnerState.OFFLINE])
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 93, in delete_runners
+    runner_list = self.get_runners(states)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-o77uc7by-0: 06:33:13 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 06:33:42 CRITICAL unit.test-o77uc7by/0.juju-log image:0: test mode is enabled
+unit-test-o77uc7by-0: 06:33:42 ERROR unit.test-o77uc7by/0.juju-log image:0: Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/./src/charm.py", line 1282, in _on_image_relation_changed
+    runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 147, in flush
+    metric_stats = self._manager.cleanup()
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 248, in cleanup
+    self._github.delete_runners([GitHubRunnerState.OFFLINE])
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 93, in delete_runners
+    runner_list = self.get_runners(states)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-o77uc7by-0: 06:37:28 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 06:42:01 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 06:47:39 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 06:52:08 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 06:57:45 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 07:02:11 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 07:07:57 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 07:13:07 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 07:18:36 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 07:23:13 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 07:28:16 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 07:33:10 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 07:33:11 ERROR unit.test-o77uc7by/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-o77uc7by-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-o77uc7by-0: 07:33:31 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 07:38:25 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 07:43:05 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 07:48:27 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+unit-test-o77uc7by-0: 07:53:22 CRITICAL unit.test-o77uc7by/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
