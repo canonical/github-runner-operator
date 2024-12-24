@@ -1,0 +1,151 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-debug-ssh-gk8e on cloud localhost
+WARNING  juju.client.connection:connection.py:893 unexpected facade AgentLifeFlag received from the controller
+WARNING  juju.client.connection:connection.py:909 unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+WARNING  juju.client.connection:connection.py:893 unexpected facade SecretsDrain received from the controller
+INFO     juju.model:model.py:1988 Deploying ch:amd64/github-runner-image-builder-2
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder (not enough units yet - 0/1)
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+INFO     juju.model:model.py:1988 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-sepq0y76/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-sepq0y76/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-sepq0y76/0 [executing] maintenance: installing charm software
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-sepq0y76/0 [idle] active: 
+INFO     root:conftest.py:589 GitHub token rate limit: Rate(reset=2024-12-24 06:48:38+00:00, remaining=3815, limit=5000)
+INFO     juju.model:model.py:1988 Deploying ch:amd64/jammy/tmate-ssh-server-6
+WARNING  juju.model:model.py:1513 relate is deprecated and will be removed. Use integrate instead.
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [idle] active:
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+  test-sepq0y76/0 [executing] maintenance: Reconciling runners
+  tmate-ssh-server/0 [idle] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-sepq0y76/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-sepq0y76/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-sepq0y76/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-sepq0y76/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-sepq0y76/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-sepq0y76/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-sepq0y76/0 [idle] active:
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                Controller  Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-gk8e  lxd         localhost/localhost  3.1.10   unsupported  06:33:44Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-sepq0y76                         active      1  github-runner                               0  no       
+tmate-ssh-server                      active      1  tmate-ssh-server             edge           6  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder/0*  active    idle   0        10.186.81.192              
+test-sepq0y76/0*                active    idle   1        10.186.81.116              
+tmate-ssh-server/0*             active    idle   2        10.186.81.56    10022/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.186.81.192  juju-6a7635-0  ubuntu@22.04      Running
+1        started  10.186.81.116  juju-6a7635-1  ubuntu@22.04      Running
+2        started  10.186.81.56   juju-6a7635-2  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 06:24:39 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 06:24:39 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:24:39 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 06:24:39 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:27:36 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 06:27:36 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:36 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-sepq0y76-0: 06:27:36 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-sepq0y76-0: 06:27:51 CRITICAL unit.test-sepq0y76/0.juju-log test mode is enabled
+unit-test-sepq0y76-0: 06:27:53 CRITICAL unit.test-sepq0y76/0.juju-log test mode is enabled
+unit-test-sepq0y76-0: 06:27:56 CRITICAL unit.test-sepq0y76/0.juju-log image:0: test mode is enabled
+unit-test-sepq0y76-0: 06:27:57 CRITICAL unit.test-sepq0y76/0.juju-log test mode is enabled
+unit-test-sepq0y76-0: 06:27:57 CRITICAL unit.test-sepq0y76/0.juju-log test mode is enabled
+unit-test-sepq0y76-0: 06:27:59 CRITICAL unit.test-sepq0y76/0.juju-log test mode is enabled
+unit-test-sepq0y76-0: 06:28:00 CRITICAL unit.test-sepq0y76/0.juju-log test mode is enabled
+unit-test-sepq0y76-0: 06:28:01 CRITICAL unit.test-sepq0y76/0.juju-log image:0: test mode is enabled
+unit-test-sepq0y76-0: 06:28:02 CRITICAL unit.test-sepq0y76/0.juju-log image:0: test mode is enabled
+unit-test-sepq0y76-0: 06:28:43 CRITICAL unit.test-sepq0y76/0.juju-log test mode is enabled
+unit-test-sepq0y76-0: 06:28:45 CRITICAL unit.test-sepq0y76/0.juju-log test mode is enabled
+machine-2: 06:29:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:29:23 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-2: 06:29:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-tmate-ssh-server-0: 06:29:24 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-sepq0y76-0: 06:32:13 CRITICAL unit.test-sepq0y76/0.juju-log debug-ssh:1: test mode is enabled
+unit-test-sepq0y76-0: 06:32:14 CRITICAL unit.test-sepq0y76/0.juju-log test mode is enabled
+unit-test-sepq0y76-0: 06:32:15 CRITICAL unit.test-sepq0y76/0.juju-log test mode is enabled
+unit-test-sepq0y76-0: 06:32:38 CRITICAL unit.test-sepq0y76/0.juju-log debug-ssh:1: test mode is enabled
+unit-test-sepq0y76-0: 06:32:39 CRITICAL unit.test-sepq0y76/0.juju-log debug-ssh:1: test mode is enabled
+unit-test-sepq0y76-0: 06:33:06 ERROR unit.test-sepq0y76/0.juju-log debug-ssh:1: pre-job-metrics.json not found for runner test-sepq0y76-0-87c31730433d
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sepq0y76-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-sepq0y76-0-87c31730433d/pre-job-metrics.json'
+unit-test-sepq0y76-0: 06:33:06 ERROR unit.test-sepq0y76/0.juju-log debug-ssh:1: Pre-job metrics for runner test-sepq0y76-0-87c31730433d not found, stop extracting post-jobs metrics.
+unit-test-sepq0y76-0: 06:33:11 ERROR unit.test-sepq0y76/0.juju-log debug-ssh:1: Unable to get SSH connection for instance test-sepq0y76-0-87c31730433d, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sepq0y76-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-sepq0y76-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sepq0y76-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-sepq0y76-0-87c31730433d, key path: /home/runner-manager/.ssh/test-sepq0y76-0-87c31730433d.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sepq0y76-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-sepq0y76-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sepq0y76-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-sepq0y76-0-87c31730433d
+unit-test-sepq0y76-0: 06:33:11 ERROR unit.test-sepq0y76/0.juju-log debug-ssh:1: Failed to get SSH connection while removing test-sepq0y76-0-87c31730433d
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sepq0y76-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 441, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-sepq0y76-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sepq0y76-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-sepq0y76-0-87c31730433d, key path: /home/runner-manager/.ssh/test-sepq0y76-0-87c31730433d.key
+unit-test-sepq0y76-0: 06:33:24 CRITICAL unit.test-sepq0y76/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
